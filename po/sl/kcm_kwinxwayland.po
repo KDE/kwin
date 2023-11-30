@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-07 18:18+0100\n"
+"PO-Revision-Date: 2023-11-29 22:43+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -50,13 +50,12 @@ msgid "Only non-character keys"
 msgstr "Samo tipke brez znakov"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "As above, plus any key typed while a modifier key is pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"Kot zgoraj in katerikoli pritisnjena tipka s hkratnim pritiskom tipke za "
-"spremenilnik"
+"Kot zgoraj in katerikoli pritisnjena tipka s hkratnim pritiskom tipke "
+"Control, Alt ali Meta"
 
 #: ui/main.qml:75
 #, kde-format

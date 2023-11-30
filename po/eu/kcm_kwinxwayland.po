@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-07 23:11+0100\n"
+"PO-Revision-Date: 2023-11-29 22:34+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.2\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -53,13 +53,12 @@ msgid "Only non-character keys"
 msgstr "Karaktere ez diren teklak bakarrik"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "As above, plus any key typed while a modifier key is pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"Gorago bezala, gehi tekla aldarazle bat sakatu bitartean tekleatutako "
-"edozein tekla"
+"Gorago bezala, gehi, Kontrol, Alt, edo Meta teklak sakatu bitartean "
+"tekleatutako edozein tekla"
 
 #: ui/main.qml:75
 #, kde-format

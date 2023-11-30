@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-07 13:08+0100\n"
+"PO-Revision-Date: 2023-11-29 13:42+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -52,13 +52,12 @@ msgid "Only non-character keys"
 msgstr "Només tecles que no siguin caràcters"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "As above, plus any key typed while a modifier key is pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"Com a dalt, més qualsevol tecla teclejada mentre es prem una tecla "
-"modificadora"
+"Com a dalt, més qualsevol tecla teclejada mentre es premen les tecles "
+"Control, Alt o Meta"
 
 #: ui/main.qml:75
 #, kde-format

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2023-11-30 01:35+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -31,44 +31,45 @@ msgstr ""
 "anarchist_tomato@herzeleid.net, dwayne@translate.org.za, steve."
 "allewell@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:277
+#: backends/wayland/wayland_output.cpp:276
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Press right control to ungrab pointer"
 
-#: backends/wayland/wayland_output.cpp:279
+#: backends/wayland/wayland_output.cpp:278
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Press right control key to grab pointer"
 
-#: backends/wayland/wayland_output.cpp:283
-#, kde-format
+#: backends/wayland/wayland_output.cpp:282
+#, fuzzy, kde-format
+#| msgid "KDE Wayland Compositor"
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
-msgid "KDE Wayland Compositor %1 (%2)"
-msgstr "KDE Wayland Compositor %1 (%2)"
+msgid "KDE Wayland Compositor %1"
+msgstr "KDE Wayland Compositor"
 
-#: backends/wayland/wayland_output.cpp:286
+#: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Output disabled"
 
-#: backends/wayland/wayland_output.cpp:288
+#: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Output dimmed"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Press right control to ungrab input"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Press right control key to grab input"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:517
+#: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
@@ -4221,6 +4222,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland has crashed"
+
+#~ msgctxt ""
+#~ "Title of nested KWin Wayland with Wayland socket identifier as argument"
+#~ msgid "KDE Wayland Compositor %1 (%2)"
+#~ msgstr "KDE Wayland Compositor %1 (%2)"
 
 #~ msgctxt "@info"
 #~ msgid "<b>Application \"%1\" is not responding</b>"

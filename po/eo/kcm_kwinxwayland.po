@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-07 06:43+0100\n"
+"PO-Revision-Date: 2023-11-2922:05+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -49,11 +49,12 @@ msgid "Only non-character keys"
 msgstr "Nur ne-signajn klavojn"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "As above, plus any key typed while a modifier key is pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
-msgstr "Kiel supre, plus iu klavo tajpita dum modifklavo estas premata"
+msgstr ""
+"Kiel supre, plus iu klavo tajpita dum kiam la Ctrl-, Alt- aŭ Meta-klavo "
+"estas premata"
 
 #: ui/main.qml:75
 #, kde-format
