@@ -2368,11 +2368,7 @@ msgid "Move to New Desktop"
 msgstr "Movu al Nova Labortablo"
 
 #: useractions.cpp:702
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "@item:inmenu List of all Screens to send a window to. First argument is a "
-#| "¦number, second the output identifier. E.g. Screen 1 (HDMI1)"
-#| msgid "Screen &%1 (%2)"
+#, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
