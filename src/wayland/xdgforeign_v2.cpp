@@ -18,7 +18,7 @@ static const quint32 s_importerVersion = 1;
 
 XdgExportedSurface::XdgExportedSurface(SurfaceInterface *surface)
     : QObject()
-    , m_handle(QUuid::createUuid().toString())
+    , m_handle(QUuid::createUuid().toString(QUuid::WithoutBraces))
     , m_surface(surface)
 {
     connect(m_surface, &QObject::destroyed, this, &XdgExportedSurface::handleSurfaceDestroyed);
