@@ -675,7 +675,7 @@ void LayerShellV1WindowTest::testUnmap()
 void LayerShellV1WindowTest::testScreenEdge()
 {
     auto config = kwinApp()->config();
-    config->group("Windows").writeEntry("ElectricBorderDelay", 150);
+    config->group(QStringLiteral("Windows")).writeEntry("ElectricBorderDelay", 150);
     config->sync();
     workspace()->slotReconfigure();
 
