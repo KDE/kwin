@@ -674,6 +674,11 @@ void LayerShellV1WindowTest::testUnmap()
 
 void LayerShellV1WindowTest::testScreenEdge()
 {
+    auto config = kwinApp()->config();
+    config->group("Windows").writeEntry("ElectricBorderDelay", 150);
+    config->sync();
+    workspace()->slotReconfigure();
+
     // Create a layer shell surface.
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("test")));
@@ -717,8 +722,11 @@ void LayerShellV1WindowTest::testScreenEdge()
         QVERIFY(windowHiddenSpy.wait());
         QVERIFY(!window->isShown());
 
-        Test::pointerMotion(QPointF(640, 1023), timestamp++);
-        Test::pointerMotion(QPointF(640, 512), timestamp++);
+        Test::pointerMotion(QPointF(640, 1023), timestamp);
+        timestamp += 160;
+        Test::pointerMotion(QPointF(640, 1023), timestamp);
+        timestamp += 160;
+        Test::pointerMotion(QPointF(640, 512), timestamp);
         QVERIFY(windowShowSpy.wait());
         QVERIFY(window->isShown());
     }

@@ -78,7 +78,7 @@ void ScreenEdgesTest::initTestCase()
     Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
     // Disable effects, in particular present windows, which reserves a screen edge.
-    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    auto config = kwinApp()->config();
     KConfigGroup plugins(config, QStringLiteral("Plugins"));
     const auto builtinNames = EffectLoader().listOfKnownEffects();
     for (const QString &name : builtinNames) {
@@ -378,6 +378,11 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
     // This test verifies that _KDE_NET_WM_SCREEN_EDGE_SHOW is handled properly. Note that
     // _KDE_NET_WM_SCREEN_EDGE_SHOW has oneshot effect. It's deleted when the window is shown.
 
+    auto config = kwinApp()->config();
+    config->group("Windows").writeEntry("ElectricBorderDelay", 150);
+    config->sync();
+    workspace()->slotReconfigure();
+
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
 
@@ -420,11 +425,13 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
         QVERIFY(windowHiddenSpy.wait());
         QVERIFY(!window->isShown());
 
-        Test::pointerMotion(QPointF(640, 1024), timestamp++);
+        Test::pointerMotion(QPointF(640, 1023), timestamp);
+        timestamp += 160;
+        Test::pointerMotion(QPointF(640, 1023), timestamp);
         QVERIFY(withdrawnSpy.wait());
         QVERIFY(window->isShown());
-
-        Test::pointerMotion(QPointF(640, 512), timestamp++);
+        timestamp += 160;
+        Test::pointerMotion(QPointF(640, 512), timestamp);
         QVERIFY(window->isShown());
     }
 

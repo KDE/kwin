@@ -308,7 +308,7 @@ bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool for
         return false;
     }
     // no pushback so we have to activate at once
-    bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isNull() || m_client;
+    bool directActivate = forceNoPushBack || edges()->cursorPushBackDistance().isNull();
     if (directActivate || canActivate(cursorPos, triggerTime)) {
         markAsTriggered(cursorPos, triggerTime);
         handle(cursorPos);
