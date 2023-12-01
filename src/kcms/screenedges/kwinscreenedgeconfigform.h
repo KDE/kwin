@@ -57,7 +57,7 @@ private Q_SLOTS:
     void updateDefaultIndicators();
 
 private:
-    bool m_remainActiveOnFullscreen = true;
+    bool m_remainActiveOnFullscreen = false;
 
     // electricBorderCornerRatio value between 0. and 1.
     double m_referenceCornerRatio = 0.;

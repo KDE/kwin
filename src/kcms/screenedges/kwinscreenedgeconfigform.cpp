@@ -126,7 +126,7 @@ void KWinScreenEdgesConfigForm::updateDefaultIndicators()
 {
     ui->electricBorderCornerRatioSpin->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && (electricBorderCornerRatio() != m_defaultCornerRatio));
     ui->electricBorderCornerRatioSpin->update();
-    ui->remainActiveOnFullscreen->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && remainActiveOnFullscreen() == false);
+    ui->remainActiveOnFullscreen->setProperty("_kde_highlight_neutral", m_defaultIndicatorVisible && remainActiveOnFullscreen() == true);
     ui->remainActiveOnFullscreen->update();
 }
 
