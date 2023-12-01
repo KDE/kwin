@@ -4169,7 +4169,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgctxt "@info"
-#~ msgid "<b>Application \"%1\" is not responding</b>"
-#~ msgstr "<b>Programmet «%1» svarer ikke</b>"

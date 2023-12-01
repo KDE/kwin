@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-11-28 20:59+0100\n"
+"PO-Revision-Date: 2023-11-30 18:56+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -46,12 +46,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Premu dekstran kontrolklavon por kapti montrilon"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland Komponisto"
+msgstr "KDE Wayland Komponilo %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -4206,8 +4205,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgctxt ""
-#~ "Title of nested KWin Wayland with Wayland socket identifier as argument"
-#~ msgid "KDE Wayland Compositor %1 (%2)"
-#~ msgstr "KDE Wayland Komponilo %1 (%2)"

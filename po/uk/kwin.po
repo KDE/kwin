@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-11-28 17:30+0200\n"
+"PO-Revision-Date: 2023-11-30 11:31+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -45,12 +45,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Натисніть праву клавішу Ctrl для захоплення вказівника"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "Засіб композиції KDE для Wayland"
+msgstr "Засіб композиції KDE для %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format

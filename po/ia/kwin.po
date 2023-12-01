@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-11-28 08:45+0100\n"
+"PO-Revision-Date: 2023-11-30 09:04+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -40,12 +40,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Pressa controlo dextere per prender punctator"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland Compositor"
+msgstr "KDE Wayland Compositor %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
