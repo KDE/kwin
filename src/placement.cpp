@@ -190,17 +190,22 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     y_optimal = y;
 
     // client gabarit
-    int ch = window->height();
-    int cw = window->width();
+    int ch = std::ceil(window->height());
+    int cw = std::ceil(window->width());
+
+    // Explicitly converts those to int to avoid accidentally
+    // mixing ints and qreal in the calculations below.
+    int area_xr = std::floor(area.x() + area.width());
+    int area_yb = std::floor(area.y() + area.height());
 
     bool first_pass = true; // CT lame flag. Don't like it. What else would do?
 
     // loop over possible positions
     do {
         // test if enough room in x and y directions
-        if (y + ch > area.y() + area.height() && ch < area.height()) {
+        if (y + ch > area_yb && ch < area.height()) {
             overlap = h_wrong; // this throws the algorithm to an exit
-        } else if (x + cw > area.x() + area.width()) {
+        } else if (x + cw > area_xr) {
             overlap = w_wrong;
         } else {
             overlap = none; // initialize
@@ -257,7 +262,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         // really need to loop? test if there's any overlap
         if (overlap > none) {
 
-            possible = area.x() + area.width();
+            possible = area_xr;
             if (possible - cw > x) {
                 possible -= cw;
             }
@@ -294,7 +299,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
         // ... else ==> not enough x dimension (overlap was wrong on horizontal)
         else if (overlap == w_wrong) {
             x = area.left();
-            possible = area.y() + area.height();
+            possible = area_yb;
 
             if (possible - ch > y) {
                 possible -= ch;
@@ -325,7 +330,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
             }
             y = possible;
         }
-    } while ((overlap != none) && (overlap != h_wrong) && (y < area.y() + area.height()));
+    } while ((overlap != none) && (overlap != h_wrong) && (y < area_yb));
 
     if (ch >= area.height()) {
         y_optimal = area.top();
