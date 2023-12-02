@@ -36,7 +36,7 @@
       <string comment="Duration of rotation">Default</string>
      </property>
      <property name="suffix">
-      <string>milliseconds</string>
+      <string> milliseconds</string>
      </property>
      <property name="maximum">
       <number>5000</number>
