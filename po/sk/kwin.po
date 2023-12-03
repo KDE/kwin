@@ -1,4 +1,5 @@
 # translation of kwin.po to Slovak
+# SPDX-FileCopyrightText: 2019, 2020, 2021, 2023 Matej Mrenica <matejm98mthw@gmail.com>
 # Stanislav Visnovsky <stano@ms.mff.cuni.cz>, 2002.
 # Stanislav Višňovský <visnovsky@nenya.ms.mff.cuni.cz>, 2002.
 # Stanislav Visnovsky <visnovsky@nenya.ms.mff.cuni.cz>, 2002.
@@ -7,22 +8,22 @@
 # Michal Sulek <misurel@gmail.com>, 2009, 2010, 2011.
 # Roman Paholík <wizzardsk@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2019.
 # Mthw <jari_45@hotmail.com>, 2018.
-# SPDX-FileCopyrightText: 2019, 2020, 2021, 2023 Matej Mrenica <matejm98mthw@gmail.com>
 # Dušan Kazik <prescott66@gmail.com>, 2020.
 # Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-11-11 15:53+0100\n"
+"PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 24.01.80\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #, kde-format
@@ -49,12 +50,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Stlačením pravého klávesu Control zachytíte kurzor"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland Compositor"
+msgstr "KDE Wayland Compositor %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1190,39 +1190,34 @@ msgstr ""
 "stratené.</warning></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Ukončiť aplikáciu %1"
+msgstr "&Ukončiť %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Čakať dlhšie"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Neodpovedá)"
+msgstr "Neodpovedá"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Process ID: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "názov hostiteľa"
+msgstr "Názov hostiteľa: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -2232,24 +2227,19 @@ msgid "Arrow draw modifier keys:"
 msgstr "Modifikačné klávesy:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Nočná farba vypnutá"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Nočná farba zapnutá"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
 msgstr "Prepnúť Nočnú farbu"
 
@@ -2284,8 +2274,7 @@ msgid "Toggle Overview"
 msgstr "Prepnúť prehľad"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Prepnúť prehľad"
@@ -2342,8 +2331,7 @@ msgid "Toggle Overview"
 msgstr "Prepnúť prehľad"
 
 #: plugins/overview/overvieweffect.cpp:150
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Prepnúť prehľad"
@@ -2359,11 +2347,10 @@ msgid "Add Virtual Desktop"
 msgstr "Pridať virtuálnu plochu"
 
 #: plugins/overview/qml/main.qml:374
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Vymazať virtuálnu plochu"
+msgstr "Žiadne ďalšie virtuálne plochy, ktoré by sa zobrazili"
 
 #: plugins/overview/qml/main.qml:380
 #, kde-format
@@ -3570,13 +3557,13 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Zrušiť odhlásenie"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Odhlásiť sa aj tak"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

@@ -1,24 +1,25 @@
 # translation of kcmkwinrules.po to Slovak
+# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023 Matej Mrenica <matejm98mthw@gmail.com>
 # Stanislav Visnovsky <visnovsky@kde.org>, 2004.
 # Richard Fric <Richard.Fric@kdemail.net>, 2006, 2009, 2010.
 # Michal Sulek <misurel@gmail.com>, 2009, 2010.
 # Roman Paholík <wizzardsk@gmail.com>, 2012, 2013, 2015, 2017.
 # Mthw <jari_45@hotmail.com>, 2018, 2019.
-# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023 Matej Mrenica <matejm98mthw@gmail.com>
 # Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
+# Matej Mrenica <matejm98mthw@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-23 01:40+0000\n"
-"PO-Revision-Date: 2023-11-11 15:54+0100\n"
+"PO-Revision-Date: 2023-12-02 20:10+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 24.01.80\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: kcmrules.cpp:228
@@ -781,13 +782,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Žiadne pravidlá pre konkrétne okná nie sú aktuálne nastavené"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"Kliknite na tlačidlo <interface>Pridať nové...</interface> nižšie a pridajte "
+"Kliknite na tlačidlo <interface>Pridať nové</interface> nižšie a pridajte "
 "nejaké"
 
 #: ui/main.qml:71
