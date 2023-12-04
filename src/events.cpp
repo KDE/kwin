@@ -1045,8 +1045,12 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
         x = x_root - frameGeometry().x();
         y = y_root - frameGeometry().y();
         // New API processes core events FIRST and only passes unused ones to the decoration
-        QMouseEvent ev(QMouseEvent::MouseButtonPress, QPoint(x, y), QPoint(x_root, y_root),
-                       x11ToQtMouseButton(button), x11ToQtMouseButtons(state), Qt::KeyboardModifiers());
+        QMouseEvent ev(QMouseEvent::MouseButtonPress,
+                       QPoint(x, y),
+                       QPoint(x_root, y_root),
+                       x11ToQtMouseButton(button),
+                       x11ToQtMouseButtons(state) | x11ToQtMouseButton(button),
+                       Qt::KeyboardModifiers());
         return processDecorationButtonPress(&ev, true);
     }
     if (w == frameId() && isDecorated()) {
@@ -1074,8 +1078,12 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
                 }
             }
         } else {
-            QMouseEvent event(QEvent::MouseButtonPress, QPointF(x, y), QPointF(x_root, y_root),
-                              x11ToQtMouseButton(button), x11ToQtMouseButtons(state), x11ToQtKeyboardModifiers(state));
+            QMouseEvent event(QEvent::MouseButtonPress,
+                              QPointF(x, y),
+                              QPointF(x_root, y_root),
+                              x11ToQtMouseButton(button),
+                              x11ToQtMouseButtons(state) | x11ToQtMouseButton(button),
+                              x11ToQtKeyboardModifiers(state));
             event.setTimestamp(time);
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
