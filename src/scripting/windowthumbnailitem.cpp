@@ -30,6 +30,127 @@
 
 namespace KWin
 {
+
+static bool useGlThumbnails()
+{
+    static bool qtQuickIsSoftware = QStringList({QStringLiteral("software"), QStringLiteral("softwarecontext")}).contains(QQuickWindow::sceneGraphBackend());
+    return Compositor::self()->backend()->compositingType() == OpenGLCompositing && !qtQuickIsSoftware;
+}
+
+WindowThumbnailSource::WindowThumbnailSource(QQuickWindow *view, Window *handle)
+    : m_view(view)
+    , m_handle(handle)
+{
+    connect(handle, &Window::frameGeometryChanged, this, [this]() {
+        m_dirty = true;
+        Q_EMIT changed();
+    });
+    connect(handle, &Window::damaged, this, [this]() {
+        m_dirty = true;
+        Q_EMIT changed();
+    });
+
+    connect(Compositor::self()->scene(), &WorkspaceScene::preFrameRender, this, &WindowThumbnailSource::update);
+}
+
+WindowThumbnailSource::~WindowThumbnailSource()
+{
+    if (!m_offscreenTexture) {
+        return;
+    }
+    if (WorkspaceScene *scene = Compositor::self()->scene()) {
+        scene->makeOpenGLContextCurrent();
+        m_offscreenTarget.reset();
+        m_offscreenTexture.reset();
+
+        if (m_acquireFence) {
+            glDeleteSync(m_acquireFence);
+            m_acquireFence = 0;
+        }
+        scene->doneOpenGLContextCurrent();
+    }
+}
+
+std::shared_ptr<WindowThumbnailSource> WindowThumbnailSource::getOrCreate(QQuickWindow *window, Window *handle)
+{
+    using WindowThumbnailSourceKey = std::pair<QQuickWindow *, Window *>;
+    const WindowThumbnailSourceKey key{window, handle};
+
+    static std::map<WindowThumbnailSourceKey, std::weak_ptr<WindowThumbnailSource>> sources;
+    auto &source = sources[key];
+    if (!source.expired()) {
+        return source.lock();
+    }
+
+    auto s = std::make_shared<WindowThumbnailSource>(window, handle);
+    source = s;
+
+    QObject::connect(handle, &Window::destroyed, [key]() {
+        sources.erase(key);
+    });
+    QObject::connect(window, &QQuickWindow::destroyed, [key]() {
+        sources.erase(key);
+    });
+    return s;
+}
+
+WindowThumbnailSource::Frame WindowThumbnailSource::acquire()
+{
+    return Frame{
+        .texture = m_offscreenTexture,
+        .fence = std::exchange(m_acquireFence, nullptr),
+    };
+}
+
+void WindowThumbnailSource::update()
+{
+    if (m_acquireFence || !m_dirty || !m_handle) {
+        return;
+    }
+    Q_ASSERT(m_view);
+
+    const QRectF geometry = m_handle->visibleGeometry();
+    const qreal devicePixelRatio = m_view->devicePixelRatio();
+    const QSize textureSize = geometry.toAlignedRect().size() * devicePixelRatio;
+
+    if (!m_offscreenTexture || m_offscreenTexture->size() != textureSize) {
+        m_offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize);
+        if (!m_offscreenTexture) {
+            return;
+        }
+        m_offscreenTexture->setFilter(GL_LINEAR);
+        m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
+        m_offscreenTarget = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
+    }
+
+    RenderTarget offscreenRenderTarget(m_offscreenTarget.get());
+    RenderViewport offscreenViewport(geometry, devicePixelRatio, offscreenRenderTarget);
+    GLFramebuffer::pushFramebuffer(m_offscreenTarget.get());
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    QMatrix4x4 projectionMatrix;
+    projectionMatrix.ortho(geometry.x() * devicePixelRatio, (geometry.x() + geometry.width()) * devicePixelRatio,
+                           geometry.y() * devicePixelRatio, (geometry.y() + geometry.height()) * devicePixelRatio, -1, 1);
+
+    WindowPaintData data;
+    data.setProjectionMatrix(projectionMatrix);
+
+    // The thumbnail must be rendered using kwin's opengl context as VAOs are not
+    // shared across contexts. Unfortunately, this also introduces a latency of 1
+    // frame, which is not ideal, but it is acceptable for things such as thumbnails.
+    const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
+    Compositor::self()->scene()->renderer()->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, infiniteRegion(), data);
+    GLFramebuffer::popFramebuffer();
+
+    // The fence is needed to avoid the case where qtquick renderer starts using
+    // the texture while all rendering commands to it haven't completed yet.
+    m_dirty = false;
+    m_acquireFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
+
+    Q_EMIT changed();
+}
+
 class ThumbnailTextureProvider : public QSGTextureProvider
 {
 public:
@@ -100,18 +221,15 @@ WindowThumbnailItem::WindowThumbnailItem(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(ItemHasContents);
-    updateFrameRenderingConnection();
 
     connect(Compositor::self(), &Compositor::aboutToToggleCompositing,
-            this, &WindowThumbnailItem::destroyOffscreenTexture);
+            this, &WindowThumbnailItem::resetSource);
     connect(Compositor::self(), &Compositor::compositingToggled,
-            this, &WindowThumbnailItem::updateFrameRenderingConnection);
+            this, &WindowThumbnailItem::updateSource);
 }
 
 WindowThumbnailItem::~WindowThumbnailItem()
 {
-    destroyOffscreenTexture();
-
     if (m_provider) {
         if (window()) {
             window()->scheduleRenderJob(new ThumbnailTextureProviderCleanupJob(m_provider),
@@ -134,7 +252,7 @@ void WindowThumbnailItem::releaseResources()
 void WindowThumbnailItem::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
 {
     if (change == QQuickItem::ItemSceneChange) {
-        updateFrameRenderingConnection();
+        updateSource();
     }
     QQuickItem::itemChange(change, value);
 }
@@ -155,88 +273,50 @@ QSGTextureProvider *WindowThumbnailItem::textureProvider() const
     return m_provider;
 }
 
-void WindowThumbnailItem::updateFrameRenderingConnection()
+void WindowThumbnailItem::resetSource()
 {
-    disconnect(m_frameRenderingConnection);
-
-    if (!Compositor::compositing()) {
-        return;
-    }
-    if (!window()) {
-        return;
-    }
-
-    if (useGlThumbnails()) {
-        m_frameRenderingConnection = connect(Compositor::self()->scene(), &WorkspaceScene::preFrameRender, this, &WindowThumbnailItem::updateOffscreenTexture);
-    }
+    m_source.reset();
 }
 
-bool WindowThumbnailItem::useGlThumbnails()
+void WindowThumbnailItem::updateSource()
 {
-    static bool qtQuickIsSoftware = QStringList({QStringLiteral("software"), QStringLiteral("softwarecontext")}).contains(QQuickWindow::sceneGraphBackend());
-    return Compositor::self()->backend()->compositingType() == OpenGLCompositing && !qtQuickIsSoftware;
-}
-
-QSize WindowThumbnailItem::sourceSize() const
-{
-    return m_sourceSize;
-}
-
-void WindowThumbnailItem::setSourceSize(const QSize &sourceSize)
-{
-    if (m_sourceSize != sourceSize) {
-        m_sourceSize = sourceSize;
-        invalidateOffscreenTexture();
-        Q_EMIT sourceSizeChanged();
-    }
-}
-
-void WindowThumbnailItem::destroyOffscreenTexture()
-{
-    if (!Compositor::compositing()) {
-        return;
-    }
-    if (!useGlThumbnails()) {
-        return;
-    }
-
-    if (m_offscreenTexture) {
-        WorkspaceScene *scene = Compositor::self()->scene();
-        scene->makeOpenGLContextCurrent();
-        m_offscreenTarget.reset();
-        m_offscreenTexture.reset();
-
-        if (m_acquireFence) {
-            glDeleteSync(m_acquireFence);
-            m_acquireFence = 0;
-        }
-        scene->doneOpenGLContextCurrent();
+    if (useGlThumbnails() && window() && m_client) {
+        m_source = WindowThumbnailSource::getOrCreate(window(), m_client);
+        connect(m_source.get(), &WindowThumbnailSource::changed, this, &WindowThumbnailItem::update);
+    } else {
+        m_source.reset();
     }
 }
 
 QSGNode *WindowThumbnailItem::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *)
 {
-    if (Compositor::compositing() && !m_offscreenTexture) {
-        return oldNode;
-    }
+    if (Compositor::compositing()) {
+        if (!m_source) {
+            return oldNode;
+        }
 
-    // Wait for rendering commands to the offscreen texture complete if there are any.
-    if (m_acquireFence) {
-        glWaitSync(m_acquireFence, 0, GL_TIMEOUT_IGNORED);
-        glDeleteSync(m_acquireFence);
-        m_acquireFence = 0;
-    }
+        auto [texture, acquireFence] = m_source->acquire();
+        if (!texture) {
+            return oldNode;
+        }
 
-    if (!m_provider) {
-        m_provider = new ThumbnailTextureProvider(window());
-    }
+        // Wait for rendering commands to the offscreen texture complete if there are any.
+        if (acquireFence) {
+            glWaitSync(acquireFence, 0, GL_TIMEOUT_IGNORED);
+            glDeleteSync(acquireFence);
+        }
 
-    if (m_offscreenTexture) {
-        m_provider->setTexture(m_offscreenTexture);
+        if (!m_provider) {
+            m_provider = new ThumbnailTextureProvider(window());
+        }
+        m_provider->setTexture(texture);
     } else {
+        if (!m_provider) {
+            m_provider = new ThumbnailTextureProvider(window());
+        }
+
         const QImage placeholderImage = fallbackImage();
         m_provider->setTexture(window()->createTextureFromImage(placeholderImage));
-        m_devicePixelRatio = placeholderImage.devicePixelRatio();
     }
 
     QSGImageNode *node = static_cast<QSGImageNode *>(oldNode);
@@ -266,6 +346,7 @@ void WindowThumbnailItem::setWId(const QUuid &wId)
         setClient(workspace()->findWindow(wId));
     } else if (m_client) {
         m_client = nullptr;
+        updateSource();
         updateImplicitSize();
         Q_EMIT clientChanged();
     }
@@ -284,25 +365,17 @@ void WindowThumbnailItem::setClient(Window *client)
     }
     if (m_client) {
         disconnect(m_client, &Window::frameGeometryChanged,
-                   this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        disconnect(m_client, &Window::damaged,
-                   this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        disconnect(m_client, &Window::frameGeometryChanged,
                    this, &WindowThumbnailItem::updateImplicitSize);
     }
     m_client = client;
     if (m_client) {
-        connect(m_client, &Window::frameGeometryChanged,
-                this, &WindowThumbnailItem::invalidateOffscreenTexture);
-        connect(m_client, &Window::damaged,
-                this, &WindowThumbnailItem::invalidateOffscreenTexture);
         connect(m_client, &Window::frameGeometryChanged,
                 this, &WindowThumbnailItem::updateImplicitSize);
         setWId(m_client->internalId());
     } else {
         setWId(QUuid());
     }
-    invalidateOffscreenTexture();
+    updateSource();
     updateImplicitSize();
     Q_EMIT clientChanged();
 }
@@ -337,7 +410,7 @@ QRectF WindowThumbnailItem::paintedRect() const
     if (!m_client) {
         return QRectF();
     }
-    if (!m_offscreenTexture) {
+    if (!Compositor::compositing()) {
         const QSizeF iconSize = m_client->icon().actualSize(window(), boundingRect().size().toSize());
         return centeredSize(boundingRect(), iconSize);
     }
@@ -358,70 +431,6 @@ QRectF WindowThumbnailItem::paintedRect() const
     paintedRect.moveTop(paintedRect.y() + (visibleGeometry.y() - frameGeometry.y()) * yScale);
 
     return paintedRect;
-}
-
-void WindowThumbnailItem::invalidateOffscreenTexture()
-{
-    m_dirty = true;
-    update();
-}
-
-void WindowThumbnailItem::updateOffscreenTexture()
-{
-    if (m_acquireFence || !m_dirty || !m_client) {
-        return;
-    }
-    Q_ASSERT(window());
-
-    const QRectF geometry = m_client->visibleGeometry();
-    QSize textureSize = geometry.toAlignedRect().size();
-    if (sourceSize().width() > 0) {
-        textureSize.setWidth(sourceSize().width());
-    }
-    if (sourceSize().height() > 0) {
-        textureSize.setHeight(sourceSize().height());
-    }
-
-    m_devicePixelRatio = window()->devicePixelRatio();
-    textureSize *= m_devicePixelRatio;
-
-    if (!m_offscreenTexture || m_offscreenTexture->size() != textureSize) {
-        m_offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize);
-        if (!m_offscreenTexture) {
-            return;
-        }
-        m_offscreenTexture->setFilter(GL_LINEAR);
-        m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-        m_offscreenTarget = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
-    }
-
-    RenderTarget offscreenRenderTarget(m_offscreenTarget.get());
-    RenderViewport offscreenViewport(geometry, m_devicePixelRatio, offscreenRenderTarget);
-    GLFramebuffer::pushFramebuffer(m_offscreenTarget.get());
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x() * m_devicePixelRatio, (geometry.x() + geometry.width()) * m_devicePixelRatio,
-                           geometry.y() * m_devicePixelRatio, (geometry.y() + geometry.height()) * m_devicePixelRatio, -1, 1);
-
-    WindowPaintData data;
-    data.setProjectionMatrix(projectionMatrix);
-
-    // The thumbnail must be rendered using kwin's opengl context as VAOs are not
-    // shared across contexts. Unfortunately, this also introduces a latency of 1
-    // frame, which is not ideal, but it is acceptable for things such as thumbnails.
-    const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    Compositor::self()->scene()->renderer()->renderItem(offscreenRenderTarget, offscreenViewport, m_client->windowItem(), mask, infiniteRegion(), data);
-    GLFramebuffer::popFramebuffer();
-
-    // The fence is needed to avoid the case where qtquick renderer starts using
-    // the texture while all rendering commands to it haven't completed yet.
-    m_dirty = false;
-    m_acquireFence = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
-
-    // We know that the texture has changed, so schedule an item update.
-    update();
 }
 
 } // namespace KWin
