@@ -10,6 +10,7 @@
 #pragma once
 
 #include "core/graphicsbuffer.h"
+#include "utils/filedescriptor.h"
 
 namespace KWin
 {
@@ -32,11 +33,14 @@ public:
     void releaseBuffer();
     bool isReadable();
 
+    const FileDescriptor &syncFd() const;
+
 protected:
     const uint32_t m_framebufferId;
     DrmGpu *const m_gpu;
     GraphicsBufferRef m_bufferRef;
     bool m_readable = false;
+    FileDescriptor m_syncFd;
 };
 
 }

@@ -65,6 +65,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
                                                          })
     , vmHotspotX(this, QByteArrayLiteral("HOTSPOT_X"))
     , vmHotspotY(this, QByteArrayLiteral("HOTSPOT_Y"))
+    , inFenceFd(this, QByteArrayLiteral("IN_FENCE_FD"))
 {
 }
 
@@ -95,6 +96,7 @@ bool DrmPlane::updateProperties()
     colorRange.update(props);
     vmHotspotX.update(props);
     vmHotspotY.update(props);
+    inFenceFd.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {

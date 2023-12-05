@@ -90,6 +90,7 @@ public:
     DrmEnumProperty<ColorRange> colorRange;
     DrmProperty vmHotspotX;
     DrmProperty vmHotspotY;
+    DrmProperty inFenceFd;
 
     static int32_t transformationToDegrees(Transformations transformation);
 
