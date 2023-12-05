@@ -88,6 +88,8 @@ public:
     DrmEnumProperty<PixelBlendMode> pixelBlendMode;
     DrmEnumProperty<ColorEncoding> colorEncoding;
     DrmEnumProperty<ColorRange> colorRange;
+    DrmProperty vmHotspotX;
+    DrmProperty vmHotspotY;
 
     static int32_t transformationToDegrees(Transformations transformation);
 

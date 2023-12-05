@@ -140,6 +140,7 @@ private:
     bool m_isNVidia;
     bool m_isI915;
     bool m_isVirtualMachine;
+    bool m_supportsCursorPlaneHotspot = false;
     bool m_asyncPageflipSupported = false;
     bool m_isRemoved = false;
     bool m_isActive = true;

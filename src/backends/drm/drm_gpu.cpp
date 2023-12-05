@@ -37,6 +37,10 @@
 #include <xf86drm.h>
 #include <xf86drmMode.h>
 
+#ifndef DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT
+#define DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT 6
+#endif
+
 namespace KWin
 {
 
@@ -146,8 +150,9 @@ void DrmGpu::initDrmResources()
 {
     // try atomic mode setting
     bool isEnvVarSet = false;
-    bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
-    if (m_isVirtualMachine && !isEnvVarSet) {
+    const bool supportsVmCursorHotspot = drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) == 0;
+    const bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
+    if (m_isVirtualMachine && !supportsVmCursorHotspot && !isEnvVarSet) {
         qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
     } else if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << m_devNode;

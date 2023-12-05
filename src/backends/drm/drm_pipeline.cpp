@@ -271,6 +271,10 @@ void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
     plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
     commit->addProperty(plane->crtcId, layer->isEnabled() ? m_pending.crtc->id() : 0);
     commit->addBuffer(plane, layer->isEnabled() ? layer->currentBuffer() : nullptr);
+    if (plane->vmHotspotX.isValid() && plane->vmHotspotY.isValid()) {
+        commit->addProperty(plane->vmHotspotX, std::round(layer->hotspot().x()));
+        commit->addProperty(plane->vmHotspotY, std::round(layer->hotspot().y()));
+    }
 }
 
 void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)

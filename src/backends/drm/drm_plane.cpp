@@ -63,6 +63,8 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
                                                              QByteArrayLiteral("YCbCr limited range"),
                                                              QByteArrayLiteral("YCbCr full range"),
                                                          })
+    , vmHotspotX(this, QByteArrayLiteral("HOTSPOT_X"))
+    , vmHotspotY(this, QByteArrayLiteral("HOTSPOT_Y"))
 {
 }
 
@@ -91,6 +93,8 @@ bool DrmPlane::updateProperties()
     pixelBlendMode.update(props);
     colorEncoding.update(props);
     colorRange.update(props);
+    vmHotspotX.update(props);
+    vmHotspotY.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
