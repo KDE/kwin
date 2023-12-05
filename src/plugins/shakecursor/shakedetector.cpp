@@ -72,7 +72,7 @@ std::optional<qreal> ShakeDetector::update(QMouseEvent *event)
     const qreal boundsWidth = right - left;
     const qreal boundsHeight = bottom - top;
     const qreal diagonal = std::sqrt(boundsWidth * boundsWidth + boundsHeight * boundsHeight);
-    if (diagonal == 0) {
+    if (diagonal < 100) {
         return std::nullopt;
     }
 
