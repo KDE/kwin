@@ -277,40 +277,72 @@ static float linearToSRGB(float linear)
     }
 }
 
+static float nitsToPQ(float nits)
+{
+    const float normalized = std::clamp(nits / 10000.0f, 0.0f, 1.0f);
+    const float c1 = 0.8359375;
+    const float c2 = 18.8515625;
+    const float c3 = 18.6875;
+    const float m1 = 0.1593017578125;
+    const float m2 = 78.84375;
+    const float powed = std::pow(normalized, m1);
+    const float num = c1 + c2 * powed;
+    const float denum = 1 + c3 * powed;
+    return std::pow(num / denum, m2);
+}
+
+static float pqToNits(float pq)
+{
+    const float c1 = 0.8359375;
+    const float c2 = 18.8515625;
+    const float c3 = 18.6875;
+    const float m1_inv = 1.0 / 0.1593017578125;
+    const float m2_inv = 1.0 / 78.84375;
+    const float powed = std::pow(pq, m2_inv);
+    const float num = std::max(powed - c1, 0.0f);
+    const float den = c2 - c3 * powed;
+    return 10000.0f * std::pow(num / den, m1_inv);
+}
+
+static QVector3D clamp(const QVector3D &vect, float min = 0, float max = 1)
+{
+    return QVector3D(std::clamp(vect.x(), min, max), std::clamp(vect.y(), min, max), std::clamp(vect.z(), min, max));
+}
+
 QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
 {
-    Q_ASSERT_X(m_transferFunction != NamedTransferFunction::PerceptualQuantizer && dst.transferFunction() != NamedTransferFunction::PerceptualQuantizer,
-               "ColorDescription::mapTo", "PQ isn't supported yet");
+    // transfer function -> nits
     switch (m_transferFunction) {
     case NamedTransferFunction::sRGB:
-        rgb /= m_sdrBrightness;
-        rgb = QVector3D(srgbToLinear(rgb.x()), srgbToLinear(rgb.y()), srgbToLinear(rgb.z()));
+        rgb = m_sdrBrightness * QVector3D(srgbToLinear(rgb.x()), srgbToLinear(rgb.y()), srgbToLinear(rgb.z()));
         break;
     case NamedTransferFunction::gamma22:
-        rgb /= m_sdrBrightness;
-        rgb = QVector3D(std::pow(rgb.x(), 2.2), std::pow(rgb.y(), 2.2), std::pow(rgb.z(), 2.2));
+        rgb = m_sdrBrightness * QVector3D(std::pow(rgb.x(), 2.2), std::pow(rgb.y(), 2.2), std::pow(rgb.z(), 2.2));
         break;
     case NamedTransferFunction::linear:
-        rgb /= m_sdrBrightness;
         break;
     case NamedTransferFunction::scRGB:
-        rgb /= 80.0;
+        rgb *= 80.0f;
         break;
     case NamedTransferFunction::PerceptualQuantizer:
-        return QVector3D();
+        rgb = QVector3D(pqToNits(rgb.x()), pqToNits(rgb.y()), pqToNits(rgb.z()));
+        break;
     }
     rgb = m_colorimetry.toOther(dst.colorimetry()) * rgb;
+    // nits -> transfer function
     switch (dst.transferFunction()) {
     case NamedTransferFunction::sRGB:
+        rgb = clamp(rgb / dst.sdrBrightness());
         return QVector3D(linearToSRGB(rgb.x()), linearToSRGB(rgb.y()), linearToSRGB(rgb.z()));
     case NamedTransferFunction::gamma22:
+        rgb = clamp(rgb / dst.sdrBrightness());
         return QVector3D(std::pow(rgb.x(), 1 / 2.2), std::pow(rgb.y(), 1 / 2.2), std::pow(rgb.z(), 1 / 2.2));
     case NamedTransferFunction::linear:
-        return rgb * dst.sdrBrightness();
+        return rgb;
     case NamedTransferFunction::scRGB:
-        return rgb * 80.0;
+        return rgb / 80.0f;
     case NamedTransferFunction::PerceptualQuantizer:
-        return QVector3D();
+        return QVector3D(nitsToPQ(rgb.x()), nitsToPQ(rgb.y()), nitsToPQ(rgb.z()));
     }
     return QVector3D();
 }
