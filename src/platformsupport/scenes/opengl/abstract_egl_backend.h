@@ -42,7 +42,6 @@ public:
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
     dev_t deviceId() const;
-    virtual bool prefer10bpc() const;
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;

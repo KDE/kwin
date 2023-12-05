@@ -313,11 +313,10 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_connector->underscanHBorder, hborder);
     }
     if (m_connector->maxBpc.isValid()) {
-        uint64_t preferred = 8;
-        if (auto backend = dynamic_cast<EglGbmBackend *>(gpu()->platform()->renderBackend()); backend && backend->prefer10bpc()) {
-            preferred = 10;
-        }
-        commit->addProperty(m_connector->maxBpc, preferred);
+        // TODO migrate this env var to a proper setting
+        static bool ok = false;
+        static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &ok);
+        commit->addProperty(m_connector->maxBpc, ok && preferred == 24 ? 8 : 10);
     }
     if (m_connector->hdrMetadata.isValid()) {
         commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.colorDescription.transferFunction()));

@@ -172,13 +172,6 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::tex
     return std::make_pair(layer->texture(), layer->colorDescription());
 }
 
-bool EglGbmBackend::prefer10bpc() const
-{
-    static bool ok = false;
-    static const int preferred = qEnvironmentVariableIntValue("KWIN_DRM_PREFER_COLOR_DEPTH", &ok);
-    return !ok || preferred == 30;
-}
-
 std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
 {
     return std::make_shared<EglGbmLayer>(this, pipeline);

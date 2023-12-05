@@ -199,13 +199,11 @@ void AbstractEglBackend::initWayland()
         return formats;
     };
 
-    if (prefer10bpc()) {
-        m_tranches.append({
-            .device = deviceId(),
-            .flags = {},
-            .formatTable = filterFormats(10, false),
-        });
-    }
+    m_tranches.append({
+        .device = deviceId(),
+        .flags = {},
+        .formatTable = filterFormats(10, false),
+    });
     m_tranches.append({
         .device = deviceId(),
         .flags = {},
@@ -282,11 +280,6 @@ QList<LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
 dev_t AbstractEglBackend::deviceId() const
 {
     return m_deviceId;
-}
-
-bool AbstractEglBackend::prefer10bpc() const
-{
-    return false;
 }
 
 EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size)
