@@ -7,20 +7,20 @@
 # Pjetur G. Hjaltason <pjetur@pjetur.net>, 2003.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
 # Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2022.
-# Guðmundur Erlingsson <gudmundure@gmail.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023 Guðmundur Erlingsson <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-09-09 09:37+0000\n"
+"PO-Revision-Date: 2023-12-03 21:42+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -48,12 +48,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Ýttu á hægri stjórnlykil til að grípa bendil"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland myndsmiður"
+msgstr "KDE Wayland myndsmiður %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1164,6 +1163,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> svarar ekki. Viltu stöðva þetta forrit "
+"alveg?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1172,57 +1173,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" frá <application>%2</application> svarar ekki. Viltu stöðva "
+"þetta forrit alveg?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Viltu stöðva þetta forrit?</para><para><warning>Ef forritinu er lokað "
-"lokast allir gluggar sem því tilheyra. Öll óvistuð gögn glatast.</warning></"
-"para>"
+"<para><emphasis strong='true'>Ef forritið er stöðvað verður öllum gluggum "
+"þess lokað. Öll óvistuð gögn glatast.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Loka forritinu %1"
+msgstr "&Stöðva forritið %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Bíða lengur"
+msgstr "&Bíða lengur"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(svarar ekki)"
+msgstr "Svarar ekki"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Vinnsluauðkenni: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "vélarheiti"
+msgstr "Vélarheiti: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -1529,46 +1521,46 @@ msgstr "Styrkur suðs:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Rautt"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Grænt"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Blátt"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Fjólublátt"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Snið:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Rauðblinda (protanopia)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Grænblinda (deuteranopia)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Bláblinda (tritanopia)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -2229,24 +2221,19 @@ msgid "Arrow draw modifier keys:"
 msgstr "Breytilyklar fyrir örvateikningu:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Næturlitir af"
+msgstr "Næturlitir slökktir"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Næturlitir á"
+msgstr "Næturlitir kveiktir"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
 msgstr "Víxla næturlitum af/á"
 
@@ -2265,28 +2252,26 @@ msgstr "Óþekkt"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Keyra í gegnum yfirlit og reitayfirlit"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Keyra í gegnum reitayfirlit og yfirlit"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Víxla yfirsýn"
+msgstr "Víxla yfirliti"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Víxla yfirsýn"
+msgstr "Víxla reitayfirliti"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2313,39 +2298,37 @@ msgstr "Eðlilegt"
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
 #, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Hunsa minnkaða glugga:"
+msgstr "Hunsa falda glugga:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Raða gluggum í reitayfirliti:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Leitarniðurstöður innifela síaða glugga:"
 
 #: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Keyra í gegnum yfirlit og reitayfirlit"
 
 #: plugins/overview/overvieweffect.cpp:142
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Víxla yfirsýn"
+msgstr "Víxla yfirliti"
 
 #: plugins/overview/overvieweffect.cpp:150
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Víxla yfirsýn"
+msgstr "Víxla reitayfirliti"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2358,29 +2341,25 @@ msgid "Add Virtual Desktop"
 msgstr "Bæta við sýndarskjáborði"
 
 #: plugins/overview/qml/main.qml:374
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Eyða sýndarskjáborði"
+msgstr "Ekkert annað sýndarskjáborð til að sýna"
 
 #: plugins/overview/qml/main.qml:380
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Bæta við sýndarskjáborði"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "S&tilla gluggahegðan..."
+msgstr "Grunnstilla sýndarskjáborð…"
 
 #: plugins/overview/qml/main.qml:715
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Engir samsvarandi gluggar"
@@ -3563,18 +3542,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Eftirfarandi forrit lokaðist ekki:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Hætta við útskráningu"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Skrá samt út"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
