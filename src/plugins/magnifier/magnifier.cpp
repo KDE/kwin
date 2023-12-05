@@ -206,7 +206,7 @@ void MagnifierEffect::zoomIn()
     }
     if (effects->isOpenGLCompositing() && !m_texture) {
         effects->makeOpenGLContextCurrent();
-        m_texture = GLTexture::allocate(GL_RGBA8, m_magnifierSize);
+        m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
         if (!m_texture) {
             return;
         }
@@ -246,7 +246,7 @@ void MagnifierEffect::toggle()
         }
         if (effects->isOpenGLCompositing() && !m_texture) {
             effects->makeOpenGLContextCurrent();
-            m_texture = GLTexture::allocate(GL_RGBA8, m_magnifierSize);
+            m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
             if (!m_texture) {
                 return;
             }
