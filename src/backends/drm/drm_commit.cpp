@@ -157,7 +157,7 @@ bool DrmAtomicCommit::areBuffersReadable() const
 
 std::optional<bool> DrmAtomicCommit::isVrr() const
 {
-    return m_vrr.value_or(false);
+    return m_vrr;
 }
 
 const std::unordered_set<DrmPlane *> &DrmAtomicCommit::modifiedPlanes() const
