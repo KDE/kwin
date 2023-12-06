@@ -90,7 +90,6 @@
         "Name[zh_TW]": "總覽"
     },
     "X-KDE-ConfigModule": "kwin_overview_config",
-    "X-KWin-Border-Activate": true,
     "org.kde.kwin.effect": {
         "video": "https://files.kde.org/plasma/kwin/effect-videos/present_windows.mp4"
     }

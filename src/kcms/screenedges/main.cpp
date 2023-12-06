@@ -101,7 +101,9 @@ void KWinScreenEdgesConfig::save()
                                          QStringLiteral("/Effects"),
                                          QDBusConnection::sessionBus());
 
+    interface.reconfigureEffect(QStringLiteral("overview"));
     interface.reconfigureEffect(QStringLiteral("windowview"));
+
     for (const auto &effectId : std::as_const(m_effects)) {
         interface.reconfigureEffect(effectId);
     }
@@ -159,6 +161,8 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("%1 - All Desktops", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Desktop", presentWindowsName));
     m_form->monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
+
+    m_form->monitorAddItem(i18n("Overview"));
 
     m_form->monitorAddItem(i18n("Toggle window switching"));
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
@@ -221,6 +225,9 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
     // PresentWindows BorderActivateClass
     m_form->monitorChangeEdge(m_data->settings()->borderActivateClass(), PresentWindowsClass);
 
+    // Overview
+    m_form->monitorChangeEdge(m_data->settings()->borderActivateOverview(), Overview);
+
     // TabBox
     m_form->monitorChangeEdge(m_data->settings()->borderActivateTabBox(), TabBox);
     // Alternative TabBox
@@ -263,6 +270,9 @@ void KWinScreenEdgesConfig::monitorLoadDefaultSettings()
     // PresentWindows BorderActivateClass
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateClassValue(), PresentWindowsClass);
 
+    // Overview
+    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateOverviewValue(), Overview);
+
     // TabBox
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultBorderActivateTabBoxValue(), TabBox);
     // Alternative TabBox
@@ -287,6 +297,9 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
     m_data->settings()->setBorderActivateAll(m_form->monitorCheckEffectHasEdge(PresentWindowsAll));
     m_data->settings()->setBorderActivatePresentWindows(m_form->monitorCheckEffectHasEdge(PresentWindowsCurrent));
     m_data->settings()->setBorderActivateClass(m_form->monitorCheckEffectHasEdge(PresentWindowsClass));
+
+    // Overview
+    m_data->settings()->setBorderActivateOverview(m_form->monitorCheckEffectHasEdge(Overview));
 
     // TabBox
     m_data->settings()->setBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
@@ -315,6 +328,9 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     bool enabled = config.readEntry("windowviewEnabled", true);
     m_form->monitorItemSetEnabled(PresentWindowsCurrent, enabled);
     m_form->monitorItemSetEnabled(PresentWindowsAll, enabled);
+
+    // Overview
+    m_form->monitorItemSetEnabled(Overview, config.readEntry("overviewEnabled", true));
 
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, QStringLiteral("Windows"));

@@ -52,7 +52,7 @@
     </group>
     <group name="Effect-windowview">
         <entry key="BorderActivateAll" type="IntList">
-            <default>ElectricTopLeft</default>
+            <default>ElectricNone</default>
         </entry>
         <entry name="BorderActivatePresentWindows" key="BorderActivate" type="IntList">
             <default>ElectricNone</default>
@@ -66,9 +66,9 @@
             <default>ElectricNone</default>
         </entry>
     </group>
-    <group name="Effect-Overview">
+    <group name="Effect-overview">
         <entry name="BorderActivateOverview" key="BorderActivate" type="IntList">
-            <default>ElectricNone</default>
+            <default>ElectricTopLeft</default>
         </entry>
     </group>
     <group name="TabBox">

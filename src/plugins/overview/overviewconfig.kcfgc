@@ -7,3 +7,4 @@ ClassName=OverviewConfig
 NameSpace=KWin
 Singleton=true
 Mutators=true
+IncludeFiles=\"effect/globals.h\"

@@ -18,9 +18,7 @@
         </entry>
 
         <entry name="BorderActivate" type="IntList" />
-        <entry name="BorderActivateAll" type="IntList">
-            <default code="true">QList&lt;int&gt;() &lt;&lt; int(ElectricTopLeft)</default>
-        </entry>
+        <entry name="BorderActivateAll" type="IntList" />
         <entry name="BorderActivateClass" type="IntList" />
         <entry name="BorderActivateClassCurrentDesktop" type="IntList" />
 
