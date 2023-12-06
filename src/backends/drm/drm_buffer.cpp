@@ -47,7 +47,7 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
         // See https://gitlab.freedesktop.org/drm/intel/-/issues/9415
         m_readable = true;
     } else {
-#ifdef Q_OS_LINUX
+#if defined(Q_OS_LINUX) && defined(DMA_BUF_IOCTL_EXPORT_SYNC_FILE)
         dma_buf_export_sync_file req{
             .flags = DMA_BUF_SYNC_READ,
             .fd = -1,
