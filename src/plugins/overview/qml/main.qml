@@ -118,7 +118,7 @@ FocusScope {
     transitions: Transition {
         to: "initial, grid, overview"
         NumberAnimation {
-            duration: Kirigami.Units.shortDuration
+            duration: effect.animationDuration
             properties: "gridVal, overviewVal"
             easing.type: Easing.OutCubic
         }
