@@ -170,8 +170,6 @@ KCM.ScrollViewKCM {
     Kirigami.OverlaySheet {
         id: propertySheet
 
-        parent: view
-
         title: i18n("Add property to the rule")
 
         footer: Kirigami.SearchField {
