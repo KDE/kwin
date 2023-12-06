@@ -171,7 +171,7 @@ Item {
         PlasmaExtras.ShadowedLabel {
             id: caption
             visible: thumb.windowTitleVisible
-            width: thumb.width
+            width: cell.width
             anchors.top: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
