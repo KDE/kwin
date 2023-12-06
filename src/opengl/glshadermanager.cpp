@@ -130,6 +130,18 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         textureLookup = glsl_es_300 ? QByteArrayLiteral("texture") : QByteArrayLiteral("texture2D");
         output = glsl_es_300 ? QByteArrayLiteral("fragColor") : QByteArrayLiteral("gl_FragColor");
     }
+    if (!gl->isGLES() || gl->glslVersion() >= Version(3, 0)) {
+        stream << "\n";
+        stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
+        stream << "    return mix(left, right, rightFactor);\n";
+        stream << "}\n";
+    } else {
+        // GLES 2 doesn't natively support mix with bvec3
+        stream << "\n";
+        stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
+        stream << "    return mix(left, right, vec3(rightFactor.r ? 1.0 : 0.0, rightFactor.g ? 1.0 : 0.0, rightFactor.b ? 1.0 : 0.0));\n";
+        stream << "}\n";
+    }
 
     if (traits & ShaderTrait::MapTexture) {
         stream << "uniform sampler2D sampler;\n";
@@ -190,14 +202,14 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.04045f));\n";
         stream << "    vec3 loPart = color / 12.92f;\n";
         stream << "    vec3 hiPart = pow((color + 0.055f) / 1.055f, vec3(12.0f / 5.0f));\n";
-        stream << "    return mix(hiPart, loPart, isLow);\n";
+        stream << "    return doMix(hiPart, loPart, isLow);\n";
         stream << "}\n";
         stream << "\n";
         stream << "vec3 linearToSrgb(vec3 color) {\n";
         stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.0031308f));\n";
         stream << "    vec3 loPart = color * 12.92f;\n";
         stream << "    vec3 hiPart = pow(color, vec3(5.0f / 12.0f)) * 1.055f - 0.055f;\n";
-        stream << "    return mix(hiPart, loPart, isLow);\n";
+        stream << "    return doMix(hiPart, loPart, isLow);\n";
         stream << "}\n";
         stream << "\n";
         stream << "vec3 doTonemapping(vec3 color, float maxBrightness) {\n";
