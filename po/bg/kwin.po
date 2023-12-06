@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-30 01:35+0000\n"
+"POT-Creation-Date: 2023-12-06 01:38+0000\n"
 "PO-Revision-Date: 2023-11-28 20:07+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1629,7 +1629,8 @@ msgid "Default"
 msgstr "По подразбиране"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
-#: plugins/glide/glide_config.ui:35
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
 #, kde-format
 msgid " milliseconds"
@@ -1970,12 +1971,6 @@ msgstr "Продължителност на анимацията:"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "По подразбиране"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
-#: plugins/magiclamp/magiclamp_config.ui:39
-#, kde-format
-msgid "milliseconds"
-msgstr "милисекунди"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
@@ -4215,6 +4210,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
+
+#~ msgid "milliseconds"
+#~ msgstr "милисекунди"
 
 #~ msgctxt ""
 #~ "Title of nested KWin Wayland with Wayland socket identifier as argument"

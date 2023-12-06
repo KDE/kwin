@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-30 01:35+0000\n"
+"POT-Creation-Date: 2023-12-06 01:38+0000\n"
 "PO-Revision-Date: 2021-10-03 17:31-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -1642,7 +1642,8 @@ msgid "Default"
 msgstr "標準"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
-#: plugins/glide/glide_config.ui:35
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
 #, fuzzy, kde-format
 #| msgid " milliseconds"
@@ -2030,13 +2031,6 @@ msgstr "アニメーションの長さ:"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "標準"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
-#: plugins/magiclamp/magiclamp_config.ui:39
-#, fuzzy, kde-format
-#| msgid "milliseconds"
-msgid "milliseconds"
-msgstr " ミリ秒"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
@@ -4440,6 +4434,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "milliseconds"
+#~ msgid "milliseconds"
+#~ msgstr " ミリ秒"
 
 #~ msgctxt "@info"
 #~ msgid "<b>Application \"%1\" is not responding</b>"

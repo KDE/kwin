@@ -16,21 +16,21 @@
 # Julia Dronova <juliette.tux@gmail.com>, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
 # Olesya Gerasimenko <gammaray@basealt.ru>, 2018.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023 Alexander Yavorsky <kekcuha@gmail.com>
 # Мария Шикунова <translation-team@basealt.ru>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-02-21 14:02+0300\n"
+"POT-Creation-Date: 2023-12-06 01:38+0000\n"
+"PO-Revision-Date: 2023-12-05 16:00+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -1187,6 +1187,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para>Приложение <application>%1</application> не отвечает. Завершить работу "
+"этого приложения?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1213,39 +1215,34 @@ msgstr ""
 "Несохранённые данные могут быть потеряны.</warning></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Завершить"
+msgstr "&Завершить %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Подождать ещё"
+msgstr "&Подождать ещё"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(не отвечает)"
+msgstr "Не отвечает"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Идентификатор процесса: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "имя_хоста"
+msgstr "Имя хоста: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -1673,7 +1670,8 @@ msgid "Default"
 msgstr "По умолчанию"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
-#: plugins/glide/glide_config.ui:35
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
 #, kde-format
 msgid " milliseconds"
@@ -2031,12 +2029,6 @@ msgstr "Длительность анимации:"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "По умолчанию"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
-#: plugins/magiclamp/magiclamp_config.ui:39
-#, kde-format
-msgid "milliseconds"
-msgstr " мс"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
@@ -4389,6 +4381,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "milliseconds"
+#~ msgstr " мс"
 
 #~ msgctxt "@info"
 #~ msgid "<b>Application \"%1\" is not responding</b>"

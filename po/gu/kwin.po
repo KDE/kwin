@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin-gu\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-30 01:35+0000\n"
+"POT-Creation-Date: 2023-12-06 01:38+0000\n"
 "PO-Revision-Date: 2009-01-04 13:06+0530\n"
 "Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
 "Language-Team: Gujarati <kde-i18n-doc@kde.org>\n"
@@ -1619,7 +1619,8 @@ msgid "Default"
 msgstr "મૂળભૂત"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
-#: plugins/glide/glide_config.ui:35
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
 #, fuzzy, kde-format
 #| msgid " millisecond"
@@ -1986,14 +1987,6 @@ msgstr "એનિમેશન સમયગાળો:"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "મૂળભૂત"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
-#: plugins/magiclamp/magiclamp_config.ui:39
-#, fuzzy, kde-format
-#| msgid " millisecond"
-#| msgid_plural " milliseconds"
-msgid "milliseconds"
-msgstr "મીલીસેકન્ડ"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
@@ -4347,6 +4340,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid " millisecond"
+#~| msgid_plural " milliseconds"
+#~ msgid "milliseconds"
+#~ msgstr "મીલીસેકન્ડ"
 
 #~ msgid "&Terminate Application %1"
 #~ msgstr "કાર્યક્રમ %1 બંધ કરો (&T)"

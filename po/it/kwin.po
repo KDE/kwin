@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-30 01:35+0000\n"
-"PO-Revision-Date: 2023-11-21 14:08+0100\n"
+"POT-Creation-Date: 2023-12-06 01:38+0000\n"
+"PO-Revision-Date: 2023-11-30 13:02+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -42,12 +42,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Premere il tasto control destro per acquisire il puntatore"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "Compositore KDE Wayland"
+msgstr "Compositore KDE Wayland %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1163,6 +1162,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> non risponde. Vuoi terminare questa "
+"applicazione?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1171,57 +1172,49 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>«%1» di <application>%2</application> non risponde. Vuoi terminare "
+"questa applicazione?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Vuoi terminare l'applicazione?</para><para><warning>Terminando "
-"l'applicazione verranno chiuse tutte le sue finestre figlie. Tutti i dati "
-"non salvati saranno persi.</warning></para>"
+"<para><emphasis strong='true'>Terminando questa applicazione saranno chiuse "
+"tutte le sue finestre. Tutti i dati non salvati saranno persi.</emphasis></"
+"para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Termina"
+msgstr "&Termina %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Aspetta più a lungo"
+msgstr "&Aspetta più a lungo"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Non risponde)"
+msgstr "Non risponde"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "ID del processo: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "nome host"
+msgstr "Nome host: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -1649,7 +1642,8 @@ msgid "Default"
 msgstr "Predefinita"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
-#: plugins/glide/glide_config.ui:35
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
+#: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
 #, kde-format
 msgid " milliseconds"
@@ -1994,12 +1988,6 @@ msgstr "Durata dell'animazione:"
 msgctxt "Duration of rotation"
 msgid "Default"
 msgstr "Predefinita"
-
-#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
-#: plugins/magiclamp/magiclamp_config.ui:39
-#, kde-format
-msgid "milliseconds"
-msgstr "millisecondi"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupSize)
 #: plugins/magnifier/magnifier_config.ui:17
@@ -4246,6 +4234,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland è stato terminato in modo inatteso"
+
+#~ msgid "milliseconds"
+#~ msgstr "millisecondi"
 
 #~ msgctxt ""
 #~ "Title of nested KWin Wayland with Wayland socket identifier as argument"
