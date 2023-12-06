@@ -140,8 +140,11 @@ KCM.ScrollViewKCM {
             }
         }
 
-        Kirigami.SwipeListItem {
+        QQC2.ItemDelegate {
             id: ruleBookItem
+
+            width: ruleBookView.width
+            down: false  // Disable press effect
 
             contentItem: RowLayout {
                 Kirigami.ListItemDragHandle {
@@ -188,6 +191,24 @@ KCM.ScrollViewKCM {
                     }
                 }
 
+                DelegateButton {
+                    text: i18n("Edit")
+                    icon.name: "edit-entry"
+                    onClicked: kcm.editRule(index);
+                }
+
+                DelegateButton {
+                    text: i18n("Duplicate")
+                    icon.name: "edit-duplicate"
+                    onClicked: kcm.duplicateRule(index);
+                }
+
+                DelegateButton {
+                    text: i18n("Delete")
+                    icon.name: "entry-delete"
+                    onClicked: kcm.removeRule(index);
+                }
+
                 QQC2.CheckBox {
                     id: itemSelectionCheck
                     visible: exportInfo.visible
@@ -203,36 +224,14 @@ KCM.ScrollViewKCM {
                     }
                 }
             }
-
-            actions: [
-                Kirigami.Action {
-                    text: i18n("Edit")
-                    icon.name: "edit-entry"
-                    visible: !exportInfo.visible
-                    onTriggered: {
-                        kcm.editRule(index);
-                    }
-                }
-                ,
-                Kirigami.Action {
-                    text: i18n("Duplicate")
-                    icon.name: "edit-duplicate"
-                    visible: !exportInfo.visible
-                    onTriggered: {
-                        kcm.duplicateRule(index);
-                    }
-                }
-                ,
-                Kirigami.Action {
-                    text: i18n("Delete")
-                    icon.name: "entry-delete"
-                    visible: !exportInfo.visible
-                    onTriggered: {
-                        kcm.removeRule(index);
-                    }
-                }
-            ]
         }
+    }
+
+    component DelegateButton: QQC2.ToolButton {
+        visible: !exportInfo.visible
+        display: QQC2.AbstractButton.IconOnly
+        QQC2.ToolTip.text: text
+        QQC2.ToolTip.visible: hovered
     }
 
     FileDialogLoader {

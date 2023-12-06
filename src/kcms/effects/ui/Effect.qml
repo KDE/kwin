@@ -13,7 +13,7 @@ import QtQuick.Layouts
 import org.kde.kirigami 2 as Kirigami
 import org.kde.kcmutils as KCM
 
-Kirigami.SwipeListItem {
+QQC2.ItemDelegate {
     id: listItem
 
     hoverEnabled: true
@@ -118,21 +118,26 @@ Kirigami.SwipeListItem {
                 }
             }
         }
-    }
 
-    actions: [
-        Kirigami.Action {
+        QQC2.ToolButton {
             visible: model.VideoRole.toString() !== ""
             icon.name: "videoclip-amarok"
-            tooltip: i18nc("@info:tooltip", "Show/Hide Video")
-            onTriggered: videoItem.showHide()
-        },
-        Kirigami.Action {
+            text: i18nc("@info:tooltip", "Show/Hide Video")
+            display: QQC2.AbstractButton.IconOnly
+            QQC2.ToolTip.text: text
+            QQC2.ToolTip.visible: hovered
+            onClicked: videoItem.showHide()
+        }
+
+        QQC2.ToolButton  {
             visible: model.ConfigurableRole
             enabled: model.StatusRole != Qt.Unchecked
             icon.name: "configure"
-            tooltip: i18nc("@info:tooltip", "Configure…")
-            onTriggered: kcm.configure(model.ServiceNameRole, listItem)
+            text: i18nc("@info:tooltip", "Configure…")
+            display: QQC2.AbstractButton.IconOnly
+            QQC2.ToolTip.text: text
+            QQC2.ToolTip.visible: hovered
+            onClicked: kcm.configure(model.ServiceNameRole, listItem)
         }
-    ]
+    }
 }

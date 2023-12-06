@@ -20,6 +20,7 @@ QQC2.ItemDelegate {
     width: ListView.view.width
     highlighted: false
     hoverEnabled: false
+    down: false
 
     contentItem: RowLayout {
 

@@ -31,8 +31,10 @@ KCM.ScrollViewKCM {
     Component {
         id: desktopsListItemComponent
 
-        Kirigami.SwipeListItem {
-            id: listItem
+        QQC2.ItemDelegate {
+            width: ListView.view.width
+            down: false  // Disable press effect
+            hoverEnabled: false
 
             contentItem: RowLayout {
                 QQC2.TextField {
@@ -64,7 +66,7 @@ KCM.ScrollViewKCM {
                         enabled: nameField.readOnly
 
                         onDoubleClicked: {
-                            renameAction.trigger();
+                            renameAction.clicked();
                         }
                     }
                 }
@@ -78,38 +80,44 @@ KCM.ScrollViewKCM {
                     opacity: model ? !model.IsDefault : 0.0
                     color: Kirigami.Theme.neutralTextColor
                 }
-            }
 
-            actions: [
-                Kirigami.Action {
+                DelegateButton {
                     id: renameAction
                     enabled: model && !model.IsMissing
                     visible: !applyAction.visible
                     icon.name: "edit-rename"
-                    tooltip: i18nc("@info:tooltip", "Rename")
-                    onTriggered: {
+                    text: i18nc("@info:tooltip", "Rename")
+                    onClicked: {
                         nameField.readOnly = false;
                         nameField.selectAll();
                         nameField.forceActiveFocus();
                     }
-                },
-                Kirigami.Action {
+                }
+
+                DelegateButton {
                     id: applyAction
                     visible: !nameField.readOnly
                     icon.name: "dialog-ok-apply"
-                    tooltip: i18nc("@info:tooltip", "Confirm new name")
-                    onTriggered: {
+                    text: i18nc("@info:tooltip", "Confirm new name")
+                    onClicked: {
                         nameField.readOnly = true;
                     }
-                },
-                Kirigami.Action {
+                }
+
+                DelegateButton {
                     enabled: model && !model.IsMissing && desktopsList.count !== 1
                     icon.name: "edit-delete"
-                    tooltip: i18nc("@info:tooltip", "Remove")
-                    onTriggered: kcm.desktopsModel.removeDesktop(model.Id)
+                    text: i18nc("@info:tooltip", "Remove")
+                    onClicked: kcm.desktopsModel.removeDesktop(model.Id)
                 }
-            ]
+            }
         }
+    }
+
+    component DelegateButton: QQC2.ToolButton {
+        display: QQC2.AbstractButton.IconOnly
+        QQC2.ToolTip.text: text
+        QQC2.ToolTip.visible: hovered
     }
 
     header: ColumnLayout {
