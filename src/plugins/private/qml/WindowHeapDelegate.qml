@@ -127,17 +127,14 @@ Item {
             thumb.windowHeap.deleteDND(thumb.window.internalId);
         }
 
-        KSvg.FrameSvgItem {
-            anchors {
-                fill: parent
-                topMargin: -Kirigami.Units.smallSpacing * 2
-                leftMargin: -Kirigami.Units.smallSpacing * 2
-                rightMargin: -Kirigami.Units.smallSpacing * 2
-                bottomMargin: -(Math.round(icon.height / 4) + (thumb.windowTitleVisible ? caption.height : 0) + (Kirigami.Units.smallSpacing * 2))
-            }
-            imagePath: "widgets/viewitem"
-            prefix: "hover"
-            z: -1
+        // Not using FrameSvg hover element intentionally for stylistic reasons
+        Rectangle {
+            border.width: Kirigami.Units.largeSpacing
+            border.color: Kirigami.Theme.highlightColor
+            anchors.fill: parent
+            anchors.margins: -border.width
+            radius: border.width
+            color: "transparent"
             visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || (thumb.selected && Window.window.activeFocusItem)) && windowHeap.effectiveOrganized
         }
 
