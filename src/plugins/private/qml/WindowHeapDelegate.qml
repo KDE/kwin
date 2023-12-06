@@ -81,7 +81,7 @@ Item {
     }
 
     component TweenBehavior : Behavior {
-        enabled: thumb.state !== "partial" && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
+        enabled: thumb.state === "active-normal" && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.OutCubic
@@ -336,15 +336,6 @@ Item {
             NumberAnimation {
                 duration: thumb.windowHeap.animationDuration
                 properties: "x, y, width, height"
-                easing.type: Easing.OutCubic
-            }
-        },
-        Transition {
-            to: "initial, initial-hidden, active-normal, active-hidden"
-            enabled: thumb.windowHeap.animationEnabled
-            NumberAnimation {
-                duration: thumb.windowHeap.animationDuration
-                properties: "x, y, width, height, opacity"
                 easing.type: Easing.OutCubic
             }
         }

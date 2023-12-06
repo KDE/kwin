@@ -200,8 +200,27 @@ Item {
                             ~KWinComponents.WindowFilterModel.CriticalNotification
             }
             delegate: WindowHeapDelegate {
+                id: delegate
                 windowHeap: heap
                 partialActivationFactor: container.organized ? 1 : 0
+                Behavior on partialActivationFactor {
+                    SequentialAnimation {
+                        PropertyAction {
+                            target: delegate
+                            property: "gestureInProgress"
+                            value: true
+                        }
+                        NumberAnimation {
+                            duration: container.effect.animationDuration
+                            easing.type: Easing.OutCubic
+                        }
+                        PropertyAction {
+                            target: delegate
+                            property: "gestureInProgress"
+                            value: false
+                        }
+                    }
+                }
                 opacity: 1 - downGestureProgress
                 onDownGestureTriggered: window.closeWindow()
 
