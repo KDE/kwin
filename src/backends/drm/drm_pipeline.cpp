@@ -433,13 +433,12 @@ void DrmPipeline::atomicCommitSuccessful()
             m_pending.crtc->cursorPlane()->commit();
         }
     }
-    m_current = m_pending;
+    m_current = m_next = m_pending;
 }
 
 void DrmPipeline::atomicModesetSuccessful()
 {
     atomicCommitSuccessful();
-    m_pending.needsModeset = false;
     if (activePending()) {
         pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
     }
