@@ -157,7 +157,14 @@ OverviewEffect::OverviewEffect()
     OverviewConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
-    setSource(QUrl(QStringLiteral("qrc:/overview/qml/main.qml")));
+    auto delegate = new QQmlComponent(effects->qmlEngine());
+    connect(delegate, &QQmlComponent::statusChanged, this, [delegate]() {
+        if (delegate->isError()) {
+            qWarning() << "Failed to load overview:" << delegate->errorString();
+        }
+    });
+    delegate->loadUrl(QUrl(QStringLiteral("qrc:/overview/qml/main.qml")), QQmlComponent::Asynchronous);
+    setDelegate(delegate);
 }
 
 OverviewEffect::~OverviewEffect()

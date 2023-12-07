@@ -478,6 +478,10 @@ void QuickSceneEffect::startInternal()
         Q_EMIT delegateChanged();
     }
 
+    if (!d->delegate->isReady()) {
+        return;
+    }
+
     effects->setActiveFullScreenEffect(this);
     d->running = true;
 
