@@ -181,6 +181,7 @@ KCM.ScrollViewKCM {
             id: overlayView
             model: overlayModel
             Layout.preferredWidth: Kirigami.Units.gridUnit * 28
+            clip: true
 
             section {
                 property: "section"
