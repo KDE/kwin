@@ -431,28 +431,29 @@ Item {
         }
     }
 
-    PC3.Button {
+    Loader {
         id: closeButton
+        LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
 
         anchors {
             right: thumbSource.right
             top: thumbSource.top
             margins: Kirigami.Units.smallSpacing
         }
+        active: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active
 
-        visible: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active
-        LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+        sourceComponent: PC3.Button {
+            text: i18ndc("kwin", "@info:tooltip as in: 'close this window'", "Close window")
+            icon.name: "window-close"
+            display: PC3.AbstractButton.IconOnly
 
-        text: i18ndc("kwin", "@info:tooltip as in: 'close this window'", "Close window")
-        icon.name: "window-close"
-        display: PC3.AbstractButton.IconOnly
+            PC3.ToolTip.text: text
+            PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
+            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+            Accessible.name: text
 
-        PC3.ToolTip.text: text
-        PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
-        PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
-        Accessible.name: text
-
-        onClicked: thumb.window.closeWindow();
+            onClicked: thumb.window.closeWindow();
+        }
     }
 
     Component.onDestruction: {
