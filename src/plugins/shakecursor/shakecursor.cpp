@@ -85,12 +85,16 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
         });
         m_resetCursorScaleTimer.start(1000);
         m_resetCursorScaleAnimation.stop();
-    } else {
+    } else if (m_cursorMagnification != 1.0) {
+        if (m_resetCursorScaleAnimation.state() != QVariantAnimation::Running) {
+            m_resetCursorScaleTimer.start(0);
+        }
         update(Transaction{
-            .magnification = 1.0,
+            .position = m_cursor->pos(),
+            .hotspot = m_cursor->hotspot(),
+            .size = m_cursor->geometry().size(),
+            .magnification = m_cursorMagnification,
         });
-        m_resetCursorScaleTimer.stop();
-        m_resetCursorScaleAnimation.stop();
     }
 }
 
