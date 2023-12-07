@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2019-10-04 20:20+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -26,13 +26,13 @@ msgstr ""
 "Upphovsman: %1\n"
 "Licens: %2"
 
-#: ui/Effect.qml:127
+#: ui/Effect.qml:125
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "Visa eller dölj video"
 
-#: ui/Effect.qml:134
+#: ui/Effect.qml:136
 #, fuzzy, kde-format
 #| msgctxt "@info:tooltip"
 #| msgid "Configure..."

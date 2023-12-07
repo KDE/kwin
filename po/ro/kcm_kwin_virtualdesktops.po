@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-14 01:49+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2021-07-25 12:31+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian\n"
@@ -64,19 +64,19 @@ msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Redenumește"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Confirmă noua denumire"
 
-#: ui/main.qml:108
+#: ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Elimină"
 
-#: ui/main.qml:135
+#: ui/main.qml:143
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -85,18 +85,18 @@ msgstr ""
 "Birourile virtuale au fost modificate în afara acestei aplicații de "
 "configurare. Salvarea acum va suprascrie modificările."
 
-#: ui/main.qml:151
+#: ui/main.qml:159
 #, kde-format
 msgid "Row %1"
 msgstr "Rândul %1"
 
-#: ui/main.qml:161
+#: ui/main.qml:169
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Adaugă"
 
-#: ui/main.qml:179
+#: ui/main.qml:187
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -104,32 +104,32 @@ msgstr[0] "1 rând"
 msgstr[1] "%1 rânduri"
 msgstr[2] "%1 de rânduri"
 
-#: ui/main.qml:195
+#: ui/main.qml:203
 #, kde-format
 msgid "Options:"
 msgstr "Opțiuni:"
 
-#: ui/main.qml:197
+#: ui/main.qml:205
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navigarea o ia de la capăt"
 
-#: ui/main.qml:215
+#: ui/main.qml:223
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Arată animație la schimbare:"
 
-#: ui/main.qml:266
+#: ui/main.qml:274
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Arată afișaj pe ecran la schimbare:"
 
-#: ui/main.qml:285
+#: ui/main.qml:293
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:309
+#: ui/main.qml:317
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Arată indicatorii de așezare a birourilor"

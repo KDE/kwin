@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-06-03 09:06+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -843,27 +843,27 @@ msgstr "Скасувати експортування"
 msgid "Export…"
 msgstr "Експортувати…"
 
-#: ui/main.qml:209
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "Змінити"
 
-#: ui/main.qml:218
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr "Дублювати"
 
-#: ui/main.qml:227
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "Вилучити"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr "Правила імпортування"
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, kde-format
 msgid "Export Rules"
 msgstr "Експортування правил"
@@ -931,33 +931,33 @@ msgstr[1] "За %1 секунди"
 msgstr[2] "За %1 секунд"
 msgstr[3] "За секунду"
 
-#: ui/RulesEditor.qml:175
+#: ui/RulesEditor.qml:173
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Додати властивість до правила"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Так"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ні"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:278
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

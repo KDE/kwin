@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-08-17 21:32+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -797,27 +797,27 @@ msgstr "取消匯出"
 msgid "Export…"
 msgstr "匯出…"
 
-#: ui/main.qml:209
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "編輯"
 
-#: ui/main.qml:218
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr "再製"
 
-#: ui/main.qml:227
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "刪除"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr "匯入規則"
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, kde-format
 msgid "Export Rules"
 msgstr "匯出規則"
@@ -879,33 +879,33 @@ msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] "%1 秒後"
 
-#: ui/RulesEditor.qml:175
+#: ui/RulesEditor.qml:173
 #, kde-format
 msgid "Add property to the rule"
 msgstr "新增屬性至規則"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "是"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "否"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:278
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_virtualdesktops\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-14 01:49+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2022-12-15 09:12+0200\n"
 "Last-Translator: Fracture dept <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -63,19 +63,19 @@ msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Перейменувати"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Підтвердження нової назви"
 
-#: ui/main.qml:108
+#: ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Вилучити"
 
-#: ui/main.qml:135
+#: ui/main.qml:143
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -84,18 +84,18 @@ msgstr ""
 "До параметрів віртуальних стільниць було внесено зміни з-поза меж цієї "
 "програми. Зараз збереження параметрів призведе до перезапису цих змін."
 
-#: ui/main.qml:151
+#: ui/main.qml:159
 #, kde-format
 msgid "Row %1"
 msgstr "Рядок %1"
 
-#: ui/main.qml:161
+#: ui/main.qml:169
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Додати"
 
-#: ui/main.qml:179
+#: ui/main.qml:187
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -104,32 +104,32 @@ msgstr[1] "%1 рядки"
 msgstr[2] "%1 рядків"
 msgstr[3] "1 рядок"
 
-#: ui/main.qml:195
+#: ui/main.qml:203
 #, kde-format
 msgid "Options:"
 msgstr "Параметри:"
 
-#: ui/main.qml:197
+#: ui/main.qml:205
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Циклічна навігація"
 
-#: ui/main.qml:215
+#: ui/main.qml:223
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Показувати анімацію під час перемикання:"
 
-#: ui/main.qml:266
+#: ui/main.qml:274
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Показувати екранну панель під час перемикання:"
 
-#: ui/main.qml:285
+#: ui/main.qml:293
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 мс"
 
-#: ui/main.qml:309
+#: ui/main.qml:317
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Показувати компонування стільниці"

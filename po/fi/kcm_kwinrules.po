@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-07-04 21:32+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -828,27 +828,27 @@ msgstr "Peru vienti"
 msgid "Export…"
 msgstr "Vie…"
 
-#: ui/main.qml:209
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: ui/main.qml:218
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr "Monista"
 
-#: ui/main.qml:227
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "Poista"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr "Tuontisäännöt"
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, kde-format
 msgid "Export Rules"
 msgstr "Vientisäännöt"
@@ -912,33 +912,33 @@ msgid_plural "After %1 seconds"
 msgstr[0] "%1 sekunnin kuluttua"
 msgstr[1] "%1 sekunnin kuluttua"
 
-#: ui/RulesEditor.qml:175
+#: ui/RulesEditor.qml:173
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Lisää sääntöön ominaisuus"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Kyllä"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ei"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:278
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

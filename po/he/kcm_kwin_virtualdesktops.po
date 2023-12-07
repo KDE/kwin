@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-14 01:49+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-10-21 19:41+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -64,19 +64,19 @@ msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "שינוי שם"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "אישור השם החדש"
 
-#: ui/main.qml:108
+#: ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "הסרה"
 
-#: ui/main.qml:135
+#: ui/main.qml:143
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -85,18 +85,18 @@ msgstr ""
 "שולחנות העבודה הווירטואליים השתנו מחוץ ליישום הגדרות זה. השמירה תדרוס את "
 "השינויים האלה."
 
-#: ui/main.qml:151
+#: ui/main.qml:159
 #, kde-format
 msgid "Row %1"
 msgstr "שורה %1"
 
-#: ui/main.qml:161
+#: ui/main.qml:169
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "הוספה"
 
-#: ui/main.qml:179
+#: ui/main.qml:187
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -105,32 +105,32 @@ msgstr[1] "שתי שורות"
 msgstr[2] "%1 שורות"
 msgstr[3] "%1 שורות"
 
-#: ui/main.qml:195
+#: ui/main.qml:203
 #, kde-format
 msgid "Options:"
 msgstr "אפשרויות:"
 
-#: ui/main.qml:197
+#: ui/main.qml:205
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "ניווט חוזר להתחלה אחרי הסוף"
 
-#: ui/main.qml:215
+#: ui/main.qml:223
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "הצגת הנפשה במעבר:"
 
-#: ui/main.qml:266
+#: ui/main.qml:274
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "הצגת תצוגה על המסך בעת מעבר:"
 
-#: ui/main.qml:285
+#: ui/main.qml:293
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 מ״ש"
 
-#: ui/main.qml:309
+#: ui/main.qml:317
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "הצגת מחווני פריסת שולחן העבודה"

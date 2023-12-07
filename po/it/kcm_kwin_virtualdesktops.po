@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-14 01:49+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2022-12-17 08:25+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -57,19 +57,19 @@ msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Rinomina"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Conferma il nuovo nome"
 
-#: ui/main.qml:108
+#: ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: ui/main.qml:135
+#: ui/main.qml:143
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -78,50 +78,50 @@ msgstr ""
 "I desktop virtuali sono stati modificati al di fuori di questa applicazione "
 "per le impostazioni. Salvando adesso, le modifiche verranno sovrascritte."
 
-#: ui/main.qml:151
+#: ui/main.qml:159
 #, kde-format
 msgid "Row %1"
 msgstr "Riga %1"
 
-#: ui/main.qml:161
+#: ui/main.qml:169
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Aggiungi"
 
-#: ui/main.qml:179
+#: ui/main.qml:187
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "Una riga"
 msgstr[1] "%1 righe"
 
-#: ui/main.qml:195
+#: ui/main.qml:203
 #, kde-format
 msgid "Options:"
 msgstr "Opzioni:"
 
-#: ui/main.qml:197
+#: ui/main.qml:205
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Scorrimento ad anello"
 
-#: ui/main.qml:215
+#: ui/main.qml:223
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostra animazione al cambio:"
 
-#: ui/main.qml:266
+#: ui/main.qml:274
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostra visualizzazione su schermo durante il cambio:"
 
-#: ui/main.qml:285
+#: ui/main.qml:293
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:309
+#: ui/main.qml:317
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostra indicatori per la disposizione del desktop"

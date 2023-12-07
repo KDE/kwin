@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1666647 2023-12-06 02:03:39Z scripty $
+# $Id: kwin.po 1666715 2023-12-07 02:06:45Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-06 01:38+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-11-30 07:34+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2375,7 +2375,7 @@ msgstr "Ni ustreznih oken"
 msgid "Drag Down To Close"
 msgstr "Potegni dol za zapiranje"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:458
+#: plugins/private/qml/WindowHeapDelegate.qml:449
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

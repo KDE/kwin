@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-06 01:38+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-08-14 21:55+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2408,7 +2408,7 @@ msgstr "Keine passenden Fenster"
 msgid "Drag Down To Close"
 msgstr "Zum Schließen nach unten ziehen"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:458
+#: plugins/private/qml/WindowHeapDelegate.qml:449
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

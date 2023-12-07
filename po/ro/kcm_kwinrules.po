@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2022-05-05 12:47+0100\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -785,27 +785,27 @@ msgstr "Anulează exportul"
 msgid "Export…"
 msgstr "Export..."
 
-#: ui/main.qml:209
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "Modifică"
 
-#: ui/main.qml:218
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplică"
 
-#: ui/main.qml:227
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "Șterge"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr "Import reguli"
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, kde-format
 msgid "Export Rules"
 msgstr "Export reguli"
@@ -872,33 +872,33 @@ msgstr[0] "După %1 secundă"
 msgstr[1] "După %1 secunde"
 msgstr[2] "După %1 de secunde"
 
-#: ui/RulesEditor.qml:175
+#: ui/RulesEditor.qml:173
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Adaugă proprietate la regulă"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Da"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Nu"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:278
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-07 02:19+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-11-11 15:55+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -25,13 +25,13 @@ msgstr ""
 "Autor: %1\n"
 "Licencia: %2"
 
-#: ui/Effect.qml:127
+#: ui/Effect.qml:125
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Show/Hide Video"
 msgstr "Zobraziť/Skryť Video"
 
-#: ui/Effect.qml:134
+#: ui/Effect.qml:136
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"

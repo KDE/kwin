@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-14 01:49+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2023-07-03 11:22+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -61,19 +61,19 @@ msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Canvia el nom"
 
-#: ui/main.qml:100
+#: ui/main.qml:101
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Confirmeu el nom nou"
 
-#: ui/main.qml:108
+#: ui/main.qml:110
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Elimina"
 
-#: ui/main.qml:135
+#: ui/main.qml:143
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -82,50 +82,50 @@ msgstr ""
 "S'han canviat els escriptoris virtuals fora d'esta aplicació de "
 "configuració. Ara, la guardada sobreescriurà els canvis."
 
-#: ui/main.qml:151
+#: ui/main.qml:159
 #, kde-format
 msgid "Row %1"
 msgstr "Fila %1"
 
-#: ui/main.qml:161
+#: ui/main.qml:169
 #, kde-format
 msgctxt "@action:button"
 msgid "Add"
 msgstr "Afig"
 
-#: ui/main.qml:179
+#: ui/main.qml:187
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
 msgstr[0] "1 fila"
 msgstr[1] "%1 files"
 
-#: ui/main.qml:195
+#: ui/main.qml:203
 #, kde-format
 msgid "Options:"
 msgstr "Opcions:"
 
-#: ui/main.qml:197
+#: ui/main.qml:205
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "La navegació dona la volta"
 
-#: ui/main.qml:215
+#: ui/main.qml:223
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "En canviar, mostra l'animació:"
 
-#: ui/main.qml:266
+#: ui/main.qml:274
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "En canviar, mostra en la pantalla:"
 
-#: ui/main.qml:285
+#: ui/main.qml:293
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:309
+#: ui/main.qml:317
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostra els indicadors de la disposició dels escriptoris"

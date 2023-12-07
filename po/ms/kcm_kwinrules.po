@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-23 01:40+0000\n"
+"POT-Creation-Date: 2023-12-07 01:42+0000\n"
 "PO-Revision-Date: 2010-07-24 23:55+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -788,27 +788,27 @@ msgstr ""
 msgid "Export…"
 msgstr "Edit..."
 
-#: ui/main.qml:209
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "Sunting"
 
-#: ui/main.qml:218
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
-#: ui/main.qml:227
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "Padam"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr ""
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, kde-format
 msgid "Export Rules"
 msgstr ""
@@ -874,35 +874,35 @@ msgid_plural "After %1 seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: ui/RulesEditor.qml:175
+#: ui/RulesEditor.qml:173
 #, kde-format
 msgid "Add property to the rule"
 msgstr ""
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr ""
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
 msgid "No"
 msgstr "Tiada"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:278
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:280
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
