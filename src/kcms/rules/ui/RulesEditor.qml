@@ -32,7 +32,10 @@ KCM.ScrollViewKCM {
         }
         section {
             property: "section"
-            delegate: Kirigami.ListSectionHeader { label: section }
+            delegate: Kirigami.ListSectionHeader {
+                width: ListView.view.width
+                label: section
+            }
         }
 
         highlightRangeMode: ListView.ApplyRange
