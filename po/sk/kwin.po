@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -2365,12 +2365,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Žiadne zhodné okná"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Ťahaním nadol zatvoríte"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:449
+#: plugins/private/qml/WindowHeapDelegate.qml:446
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

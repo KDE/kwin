@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2428,12 +2428,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "X11 İdarəedilməyən Pəncərələri"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Bağlamaq üçün aşağı çəkin"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:449
+#: plugins/private/qml/WindowHeapDelegate.qml:446
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

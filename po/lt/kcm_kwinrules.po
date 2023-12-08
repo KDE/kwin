@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
 "PO-Revision-Date: 2022-12-12 21:54+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -833,12 +833,12 @@ msgstr[1] "%1 pažymėti"
 msgstr[2] "%1 pažymėtų"
 msgstr[3] "%1 pažymėtas"
 
-#: ui/RulesEditor.qml:63
+#: ui/RulesEditor.qml:66
 #, kde-format
 msgid "No window properties changed"
 msgstr "Nepasikeitė jokios lango savybės"
 
-#: ui/RulesEditor.qml:64
+#: ui/RulesEditor.qml:67
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -848,27 +848,27 @@ msgstr ""
 "Norėdami pridėti lango savybių, kurias paveiks taisyklė, žemiau spustelėkite "
 "mygtuką <interface>Pridėti savybę...</interface>"
 
-#: ui/RulesEditor.qml:85
+#: ui/RulesEditor.qml:88
 #, kde-format
 msgid "Close"
 msgstr "Užverti"
 
-#: ui/RulesEditor.qml:85
+#: ui/RulesEditor.qml:88
 #, kde-format
 msgid "Add Property..."
 msgstr "Pridėti savybę..."
 
-#: ui/RulesEditor.qml:98
+#: ui/RulesEditor.qml:101
 #, kde-format
 msgid "Detect Window Properties"
 msgstr "Aptikti lango savybes"
 
-#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#: ui/RulesEditor.qml:117 ui/RulesEditor.qml:124
 #, kde-format
 msgid "Instantly"
 msgstr "Nedelsiant"
 
-#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#: ui/RulesEditor.qml:118 ui/RulesEditor.qml:129
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
@@ -877,33 +877,33 @@ msgstr[1] "Po %1 sekundžių"
 msgstr[2] "Po %1 sekundžių"
 msgstr[3] "Po %1 sekundės"
 
-#: ui/RulesEditor.qml:173
+#: ui/RulesEditor.qml:176
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Pridėti savybę į taisyklę"
 
-#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Taip"
 
-#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ne"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:280 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:278
+#: ui/RulesEditor.qml:282
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:284
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
 "PO-Revision-Date: 2023-02-09 08:31\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -2446,12 +2446,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Вокны X11 без кіравання"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Перацягнуць уніз, каб закрыць"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:449
+#: plugins/private/qml/WindowHeapDelegate.qml:446
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

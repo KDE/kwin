@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
 "PO-Revision-Date: 2023-11-01 09:27+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -883,12 +883,12 @@ msgid_plural "%1 selected"
 msgstr[0] "%1 selezionata"
 msgstr[1] "%1 selezionate"
 
-#: ui/RulesEditor.qml:63
+#: ui/RulesEditor.qml:66
 #, kde-format
 msgid "No window properties changed"
 msgstr "Nessuna proprietà delle finestre modificata"
 
-#: ui/RulesEditor.qml:64
+#: ui/RulesEditor.qml:67
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -899,60 +899,60 @@ msgstr ""
 "per aggiungere alcune proprietà delle finestre che saranno interessate dalla "
 "regola"
 
-#: ui/RulesEditor.qml:85
+#: ui/RulesEditor.qml:88
 #, kde-format
 msgid "Close"
 msgstr "Chiudi"
 
-#: ui/RulesEditor.qml:85
+#: ui/RulesEditor.qml:88
 #, kde-format
 msgid "Add Property..."
 msgstr "Aggiungi proprietà..."
 
-#: ui/RulesEditor.qml:98
+#: ui/RulesEditor.qml:101
 #, kde-format
 msgid "Detect Window Properties"
 msgstr "Rileva le proprietà della finestra"
 
-#: ui/RulesEditor.qml:114 ui/RulesEditor.qml:121
+#: ui/RulesEditor.qml:117 ui/RulesEditor.qml:124
 #, kde-format
 msgid "Instantly"
 msgstr "Immediatamente"
 
-#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:126
+#: ui/RulesEditor.qml:118 ui/RulesEditor.qml:129
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] "Dopo %1 secondo"
 msgstr[1] "Dopo %1 secondi"
 
-#: ui/RulesEditor.qml:173
+#: ui/RulesEditor.qml:176
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Aggiungi proprietà alla regola"
 
-#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Sì"
 
-#: ui/RulesEditor.qml:274 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "No"
 
-#: ui/RulesEditor.qml:276 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:280 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:278
+#: ui/RulesEditor.qml:282
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:280
+#: ui/RulesEditor.qml:284
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

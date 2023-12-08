@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
 "PO-Revision-Date: 2023-11-30 11:57+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2375,12 +2375,12 @@ msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "No coincidix amb cap finestra"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Arrossegueu cap avall per a tancar"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:449
+#: plugins/private/qml/WindowHeapDelegate.qml:446
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

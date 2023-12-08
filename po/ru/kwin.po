@@ -22,8 +22,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
-"PO-Revision-Date: 2023-12-05 16:00+0300\n"
+"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"PO-Revision-Date: 2023-12-07 22:13+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -64,7 +64,7 @@ msgstr ""
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "Графический сервер Wayland для KDE %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1345,11 +1345,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Влад Загородний"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Гигантские"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1532,11 +1530,9 @@ msgstr "Сила размытия:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Правая"
+msgstr "Слабее"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1554,59 +1550,56 @@ msgstr "Сила шума:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Красный"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Зелёный"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Синий"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Пурпурный"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Режим:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Протаномалия (сниженное восприятие красного цвета)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Дейтераномалия (сниженное восприятие зелёного цвета)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Тританомалия (сниженное восприятие синего и жёлтого цветов)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Чтобы принудительно закрыть окно, щёлкните по нему левой кнопкой\n"
-"мыши или наведите на него курсор и нажмите Enter. Для отмены\n"
-"нажмите Esc или правую кнопку мыши."
+"Щёлкните левой кнопкой мыши или нажмите Enter на точке,\n"
+"цвет которой следует выбрать. Для отмены нажмите Esc или\n"
+"правую кнопку мыши."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
@@ -1628,39 +1621,34 @@ msgstr "Панели"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&На рабочих столах"
+msgstr "Рабочий стол"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Поддерживать поверх других"
+msgstr "Окна, поддерживаемые поверх других"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "Роль окна"
+msgstr "По группе окон"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Во весь экран"
+msgstr "Распахнутые на весь экран окна"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "заголовок"
+msgstr "Длительность:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1679,18 +1667,16 @@ msgstr " мс"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Расположение окна"
+msgstr "Анимация открытия окна"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Поворот"
+msgstr "Край вращения:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1704,9 +1690,7 @@ msgstr "Сверху"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "Правая"
 
@@ -1722,19 +1706,16 @@ msgstr "Внизу"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "Левая"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Поворот"
+msgstr "Угол поворота:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1745,10 +1726,9 @@ msgstr "Перемещение:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Расположение окна"
+msgstr "Анимация закрытия окна"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1802,25 +1782,22 @@ msgid "Very Huge"
 msgstr "Гигантские"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "&Изменить размер"
+msgstr "Невероятно большие"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "Кнопки"
+msgstr "Размер кнопок:"
 
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "Диалоговое окно"
+msgstr "Диалог настройки"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1846,10 +1823,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "Скрыть границы окна"
+msgstr "Цветная рамка окна"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -1863,10 +1839,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate desktop changes"
+#, kde-format
 msgid "Animate buttons"
-msgstr "Анимировать смену рабочего стола"
+msgstr "Анимация кнопок"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:49
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:51
@@ -2052,42 +2027,33 @@ msgstr " пикселов"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Правая"
+msgstr "&Высота:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Инвертировать"
+msgstr "Включить или выключить анимацию щелчка мыши"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
-msgstr "Левая"
+msgstr "Левая кнопка"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "Средняя"
+msgstr "Средняя кнопка"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
-msgstr "Правая"
+msgstr "Правая кнопка"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: plugins/mouseclick/mouseclick_config.ui:21
@@ -2097,32 +2063,27 @@ msgstr "Основные параметры"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Нет кнопок мыши"
+msgstr "Цвет щелчка левой кнопкой:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Нет кнопок мыши"
+msgstr "Цвет щелчка средней кнопкой:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Нет кнопок мыши"
+msgstr "Цвет щелчка правой кнопкой:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "Сложный"
+msgstr "Дополнительные параметры"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
@@ -2164,11 +2125,9 @@ msgstr "Радиус:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Количество пальцев"
+msgstr "Количество:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2184,10 +2143,9 @@ msgstr "Шрифт:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Показать рабочий стол"
+msgstr "Показывать текст:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2209,10 +2167,10 @@ msgstr "Очистить нарисованные линии"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] " пиксел"
+msgstr[1] " пиксела"
+msgstr[2] " пикселов"
+msgstr[3] " пиксел"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2235,18 +2193,16 @@ msgstr "&Цвет:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr ""
-"Рисовать при помощи мыши, удерживая клавиши Shift+Meta и перемещая мышь."
+"Рисовать при помощи мыши, удерживая клавиши модификатора и перемещая мышь."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Клавиши-модификаторы"
+msgstr "Клавиши-модификаторы для рисования от руки:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2254,9 +2210,7 @@ msgstr "Клавиши-модификаторы"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2276,9 +2230,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2288,38 +2240,30 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Клавиши-модификаторы"
+msgstr "Клавиши-модификаторы для рисования стрелок:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Ночная цветовая схема отключена"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Ночная цветовая схема включена"
+msgstr "Ночная цветовая схема отключена"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
 msgstr "Включить или отключить ночную цветовую схему"
 
@@ -2350,11 +2294,10 @@ msgid "Cycle through Grid View and Overview"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Инвертировать"
+msgstr "Включить или отключить режим обзора"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
 #, fuzzy, kde-format
@@ -2366,33 +2309,29 @@ msgstr "Инвертировать"
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Layout mode:"
-msgstr "Режим планшета"
+msgstr "Размещение:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "&Закрыть"
+msgstr "Как можно ближе"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:35
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:35
 #, kde-format
 msgid "Natural"
-msgstr "Естественный"
+msgstr "Естественное"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Свернуть окно"
+msgstr "Игнорировать свёрнутые окна:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
@@ -2413,11 +2352,10 @@ msgid "Cycle through Overview and Grid View"
 msgstr ""
 
 #: plugins/overview/overvieweffect.cpp:142
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Инвертировать"
+msgstr "Включить или отключить режим обзора"
 
 #: plugins/overview/overvieweffect.cpp:150
 #, fuzzy, kde-format
@@ -2427,53 +2365,45 @@ msgid "Toggle Grid View"
 msgstr "Инвертировать"
 
 #: plugins/overview/qml/DesktopBar.qml:172
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Взглянуть на рабочий стол"
+msgstr "Удалить рабочий стол"
 
 #: plugins/overview/qml/DesktopBar.qml:269
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Добавить на &новый рабочий стол"
+msgstr "Добавить рабочий стол"
 
 #: plugins/overview/qml/main.qml:374
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Взглянуть на рабочий стол"
+msgstr "Нет ни одного рабочего стола для показа"
 
 #: plugins/overview/qml/main.qml:380
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "Добавить на &новый рабочий стол"
+msgstr "Добавить рабочий стол"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgid "Configure virtual keyboards..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Настроить виртуальные клавиатуры..."
+msgstr "Настроить рабочие столы..."
 
 #: plugins/overview/qml/main.qml:715
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "Неуправляемые окна X11"
+msgstr "Не найдено ни одного совпадающего окна"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:152
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Перетаскивание вниз для закрытия"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:449
+#: plugins/private/qml/WindowHeapDelegate.qml:446
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
@@ -2685,32 +2615,25 @@ msgid "Load Layout..."
 msgstr "Загрузить макет…"
 
 #: plugins/tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Закрыть"
+msgstr "Закрыть"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "По горизонтали"
+msgstr "Разделить по горизонтали"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "По вертикали"
+msgstr "Разделить по вертикали"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgctxt "Floating layout, windows aren't tiled at all"
-#| msgid "Floating"
+#, kde-format
 msgid "Add Floating Tile"
-msgstr "Свободно перемещаемые окна"
+msgstr "Добавить плавающий блок"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
@@ -2731,17 +2654,15 @@ msgstr "Активация:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Клавиатура"
+msgstr "Комбинация клавиш:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Клавиши-модификаторы"
+msgstr "Клавиши-модификаторы:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2772,10 +2693,9 @@ msgstr "Непрозрачное"
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "Диалоговое окно"
+msgstr "Диалоги:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2787,24 +2707,21 @@ msgstr "Прозрачное"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menu"
+#, kde-format
 msgid "Menus:"
-msgstr "Меню"
+msgstr "Меню:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Переместить окно"
+msgstr "Перемещаемые окна:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Внутренние окна"
+msgstr "Неактивные окна:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2858,11 +2775,9 @@ msgstr "Разделённый запятыми список классов ок
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "Все"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
@@ -2890,24 +2805,21 @@ msgstr "Показать все окна со всех рабочих столо
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:64
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (All desktops)"
+#, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Показать все окна со всех рабочих столов "
+msgstr "Показать окна одного класса"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:73
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Показать все окна с текущего рабочего стола"
+msgstr "Показать все окна одного класса с текущего рабочего стола"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Свернуть окно"
+msgstr "Игнорировать св&ёрнутые окна"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
@@ -2915,24 +2827,20 @@ msgid "No Matches"
 msgstr "Совпадений не найдено"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Окна"
+msgstr "Окон нет"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Внутренние окна"
+msgstr "Фильтровать окна…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced"
-msgstr "Сложный"
+msgstr "Дополнительно"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/wobblywindows/wobblywindows_config.ui:26
@@ -2948,9 +2856,9 @@ msgstr "П&еретаскивание:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
+#, kde-format
 msgid "&Move factor:"
-msgstr "Слева"
+msgstr "П&еремещение:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -2989,16 +2897,14 @@ msgid "More"
 msgstr "Больше"
 
 #: plugins/zoom/zoom.cpp:68
-#, fuzzy, kde-format
-#| msgid "Move Window One Screen to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Переместить окно на один экран влево"
+msgstr "Переместить увеличенную область влево"
 
 #: plugins/zoom/zoom.cpp:75
-#, fuzzy, kde-format
-#| msgid "Move Window One Screen to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Переместить окно на один экран вправо"
+msgstr "Переместить увеличенную область вправо"
 
 #: plugins/zoom/zoom.cpp:82
 #, kde-format
@@ -3011,36 +2917,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Переместить увеличенную область вниз"
 
 #: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Нет кнопок мыши"
+msgstr "Переместить мышь в фокус ввода"
 
 #: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "Переместить окно в центр"
+msgstr "Переместить мышь в центр"
 
 #: plugins/zoom/zoom_config.cpp:70
-#, fuzzy, kde-format
+#, kde-format
 msgid "Move Left"
-msgstr "Слева"
+msgstr "Переместить влево"
 
 #: plugins/zoom/zoom_config.cpp:77
-#, fuzzy, kde-format
+#, kde-format
 msgid "Move Right"
-msgstr "Справа"
+msgstr "Переместить вправо"
 
 #: plugins/zoom/zoom_config.cpp:84
-#, fuzzy, kde-format
+#, kde-format
 msgid "Move Up"
-msgstr "&Переместить"
+msgstr "Переместить вверх"
 
 #: plugins/zoom/zoom_config.cpp:91
-#, fuzzy, kde-format
+#, kde-format
 msgid "Move Down"
-msgstr "Переместить окно"
+msgstr "Переместить вниз"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3103,11 +3007,9 @@ msgstr "Отображение курсора мыши."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
-msgstr "Масштаб"
+msgstr "Масштабировать"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:108
@@ -3129,15 +3031,13 @@ msgstr "Отслеживание перемещения курсора мыши.
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "Положение"
+msgstr "Пропорционально"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Centered"
 msgstr "По центру"
 
@@ -3149,10 +3049,9 @@ msgstr "Выдвижением"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
-#, fuzzy, kde-format
-#| msgid "Tiling Disabled"
+#, kde-format
 msgid "Disabled"
-msgstr "Мозаичный режим выключен"
+msgstr "Отключить"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:148
@@ -3701,18 +3600,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Следующие приложения продолжают работать:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Отменить завершение сеанса"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Завершить сеанс"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3825,22 +3726,19 @@ msgid "&No Titlebar and Frame"
 msgstr "С&крыть заголовок и границы окна"
 
 #: useractions.cpp:254
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Задать &комбинацию клавиш для переключения в это окно..."
+msgstr "Задать &комбинацию клавиш для переключения в это окно…"
 
 #: useractions.cpp:260
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Настроить индивидуальные параметры &окна..."
+msgstr "Настроить индивидуальные параметры &окна…"
 
 #: useractions.cpp:265
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Настроить индивидуальные параметры &приложения..."
+msgstr "Настроить индивидуальные параметры &приложения…"
 
 #: useractions.cpp:271
 #, kde-format
@@ -4344,18 +4242,7 @@ msgstr "(не отвечает)"
 
 # BUGME: please proofread this translation, it's full of worms --aspotashev
 #: workspace.cpp:1616
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4370,7 +4257,7 @@ msgid ""
 msgstr ""
 "Информационная поддержка KWin:\n"
 "Следующая информация должна быть предоставлена при запросе поддержки,"
-"например, на https://forum.kde.org.\n"
+"например, на https://discuss.kde.org.\n"
 "Она предоставляет сведения о текущем запущенном экземпляре программы, о том, "
 "какие параметры используются,\n"
 "какой OpenGL драйвер и эффекты запущены.\n"
@@ -4380,7 +4267,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:271
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Произошло аварийное завершение Xwayland"
 
 #~ msgid "milliseconds"
 #~ msgstr " мс"
