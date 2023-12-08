@@ -242,14 +242,21 @@ FocusScope {
     }
     Keys.priority: Keys.AfterItem
 
-    KWinComponents.DesktopBackground {
-        id: backgroundItem
-        activity: KWinComponents.Workspace.currentActivity
-        desktop: KWinComponents.Workspace.currentDesktop
-        outputName: targetScreen.name
-
-        layer.enabled: true
-        layer.effect: FastBlur {radius: 64}
+    Item {
+        width: backgroundItem.width
+        height: backgroundItem.height
+        KWinComponents.DesktopBackground {
+            id: backgroundItem
+            activity: KWinComponents.Workspace.currentActivity
+            desktop: KWinComponents.Workspace.currentDesktop
+            outputName: targetScreen.name
+            visible: false
+        }
+        FastBlur {
+            anchors.fill: parent
+            source: backgroundItem
+            radius: 64
+        }
     }
 
     Rectangle {
@@ -515,15 +522,16 @@ FocusScope {
                     activity: KWinComponents.Workspace.currentActivity
                     desktop: KWinComponents.Workspace.currentDesktop
                     outputName: targetScreen.name
-
-                    layer.enabled: true
-                    layer.effect: OpacityMask {
-                        maskSource: Rectangle {
-                            anchors.centerIn: parent
-                            width: desktopElement.width
-                            height: desktopElement.height
-                            radius: mainBackground.radius
-                        }
+                    visible: false
+                }
+                OpacityMask {
+                    anchors.fill: parent
+                    source: desktopElement
+                    maskSource: Rectangle {
+                        anchors.centerIn: parent
+                        width: desktopElement.width
+                        height: desktopElement.height
+                        radius: mainBackground.radius
                     }
                 }
 
