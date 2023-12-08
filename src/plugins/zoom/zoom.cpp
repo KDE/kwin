@@ -114,8 +114,11 @@ ZoomEffect::ZoomEffect()
     connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
 #if HAVE_ACCESSIBILITY
-    m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
-    connect(m_accessibilityIntegration, &ZoomAccessibilityIntegration::focusPointChanged, this, &ZoomEffect::moveFocus);
+    if (!effects->waylandDisplay()) {
+        // on Wayland, the accessibility integration can cause KWin to hang
+        m_accessibilityIntegration = new ZoomAccessibilityIntegration(this);
+        connect(m_accessibilityIntegration, &ZoomAccessibilityIntegration::focusPointChanged, this, &ZoomEffect::moveFocus);
+    }
 #endif
 
     const auto windows = effects->stackingOrder();
@@ -139,7 +142,7 @@ ZoomEffect::~ZoomEffect()
 bool ZoomEffect::isFocusTrackingEnabled() const
 {
 #if HAVE_ACCESSIBILITY
-    return m_accessibilityIntegration->isFocusTrackingEnabled();
+    return m_accessibilityIntegration && m_accessibilityIntegration->isFocusTrackingEnabled();
 #else
     return false;
 #endif
@@ -148,7 +151,7 @@ bool ZoomEffect::isFocusTrackingEnabled() const
 bool ZoomEffect::isTextCaretTrackingEnabled() const
 {
 #if HAVE_ACCESSIBILITY
-    return m_accessibilityIntegration->isTextCaretTrackingEnabled();
+    return m_accessibilityIntegration && m_accessibilityIntegration->isTextCaretTrackingEnabled();
 #else
     return false;
 #endif
@@ -216,10 +219,12 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     // Track moving of the mouse.
     mouseTracking = MouseTrackingType(ZoomConfig::mouseTracking());
 #if HAVE_ACCESSIBILITY
-    // Enable tracking of the focused location.
-    m_accessibilityIntegration->setFocusTrackingEnabled(ZoomConfig::enableFocusTracking());
-    // Enable tracking of the text caret.
-    m_accessibilityIntegration->setTextCaretTrackingEnabled(ZoomConfig::enableTextCaretTracking());
+    if (m_accessibilityIntegration) {
+        // Enable tracking of the focused location.
+        m_accessibilityIntegration->setFocusTrackingEnabled(ZoomConfig::enableFocusTracking());
+        // Enable tracking of the text caret.
+        m_accessibilityIntegration->setTextCaretTrackingEnabled(ZoomConfig::enableTextCaretTracking());
+    }
 #endif
     // The time in milliseconds to wait before a focus-event takes away a mouse-move.
     focusDelay = std::max(uint(0), ZoomConfig::focusDelay());
