@@ -78,6 +78,7 @@ public:
     bool addFB2ModifiersSupported() const;
     bool asyncPageflipSupported() const;
     bool isI915() const;
+    bool isNVidia() const;
     gbm_device *gbmDevice() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;

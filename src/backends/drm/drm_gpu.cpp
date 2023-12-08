@@ -79,6 +79,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     // find out what driver this kms device is using
     DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
     m_isI915 = strstr(version->name, "i915");
+    m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
 
@@ -693,6 +694,11 @@ bool DrmGpu::asyncPageflipSupported() const
 bool DrmGpu::isI915() const
 {
     return m_isI915;
+}
+
+bool DrmGpu::isNVidia() const
+{
+    return m_isNVidia;
 }
 
 bool DrmGpu::isRemoved() const

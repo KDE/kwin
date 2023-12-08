@@ -57,7 +57,8 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
 {
     addProperty(plane->fbId, buffer ? buffer->framebufferId() : 0);
     m_buffers[plane] = buffer;
-    if (plane->inFenceFd.isValid()) {
+    // atomic commits with IN_FENCE_FD fail with NVidia
+    if (plane->inFenceFd.isValid() && !plane->gpu()->isNVidia()) {
         addProperty(plane->inFenceFd, buffer ? buffer->syncFd().get() : -1);
     }
     m_planes.emplace(plane);
