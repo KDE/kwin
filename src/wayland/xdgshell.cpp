@@ -346,6 +346,13 @@ void XdgToplevelInterfacePrivate::apply(XdgToplevelCommit *commit)
 
     xdgSurfacePrivate->apply(commit);
 
+    const auto minSize = commit->minimumSize.value_or(minimumSize);
+    const auto maxSize = commit->maximumSize.value_or(maximumSize);
+    if (!minSize.isEmpty() && !maxSize.isEmpty() && (minSize.width() > maxSize.width() || minSize.height() > maxSize.height())) {
+        wl_resource_post_error(resource()->handle, error_invalid_size, "minimum size can't be bigger than the maximum");
+        return;
+    }
+
     if (commit->minimumSize && commit->minimumSize != minimumSize) {
         minimumSize = commit->minimumSize.value();
         Q_EMIT q->minimumSizeChanged(minimumSize);
@@ -456,7 +463,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_resize(Resource *resource, ::wl_r
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, int32_t width, int32_t height)
 {
     if (width < 0 || height < 0) {
-        wl_resource_post_error(resource->handle, -1, "width and height must be positive or zero");
+        wl_resource_post_error(resource->handle, error_invalid_size, "width and height must be positive or zero");
         return;
     }
     pending.maximumSize = QSize(width, height);
@@ -465,7 +472,7 @@ void XdgToplevelInterfacePrivate::xdg_toplevel_set_max_size(Resource *resource, 
 void XdgToplevelInterfacePrivate::xdg_toplevel_set_min_size(Resource *resource, int32_t width, int32_t height)
 {
     if (width < 0 || height < 0) {
-        wl_resource_post_error(resource->handle, -1, "width and height must be positive or zero");
+        wl_resource_post_error(resource->handle, error_invalid_size, "width and height must be positive or zero");
         return;
     }
     pending.minimumSize = QSize(width, height);
