@@ -130,7 +130,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         textureLookup = glsl_es_300 ? QByteArrayLiteral("texture") : QByteArrayLiteral("texture2D");
         output = glsl_es_300 ? QByteArrayLiteral("fragColor") : QByteArrayLiteral("gl_FragColor");
     }
-    if (!gl->isGLES() || gl->glslVersion() >= Version(3, 0)) {
+    if (!gl->isGLES() || gl->glVersion() >= Version(3, 0)) {
         stream << "\n";
         stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
         stream << "    return mix(left, right, rightFactor);\n";
