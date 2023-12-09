@@ -46,6 +46,7 @@ public:
     void initialize();
 
     Item *containerItem() const;
+    Item *overlayItem() const;
 
     SurfaceItem *scanoutCandidate() const override;
     QRegion prePaint(SceneDelegate *delegate) override;
@@ -129,6 +130,7 @@ private:
     int m_paintScreenCount = 0;
     PaintContext m_paintContext;
     std::unique_ptr<Item> m_containerItem;
+    std::unique_ptr<Item> m_overlayItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;
 };
 

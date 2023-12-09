@@ -86,6 +86,7 @@ namespace KWin
 WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
     : Scene(std::move(renderer))
     , m_containerItem(std::make_unique<Item>(this))
+    , m_overlayItem(std::make_unique<Item>(this))
 {
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
@@ -108,7 +109,7 @@ void WorkspaceScene::createDndIconItem()
     if (!dragIcon) {
         return;
     }
-    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, this);
+    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, this, m_overlayItem.get());
     if (waylandServer()->seat()->isDragPointer()) {
         auto updatePosition = [this]() {
             const auto pointerPos = waylandServer()->seat()->pointerPos();
@@ -138,6 +139,11 @@ void WorkspaceScene::destroyDndIconItem()
 Item *WorkspaceScene::containerItem() const
 {
     return m_containerItem.get();
+}
+
+Item *WorkspaceScene::overlayItem() const
+{
+    return m_overlayItem.get();
 }
 
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
@@ -305,6 +311,7 @@ void WorkspaceScene::preparePaintGenericScreen()
         });
     }
 
+    resetRepaintsHelper(m_overlayItem.get(), painted_delegate);
     m_paintContext.damage = infiniteRegion();
 }
 
@@ -348,9 +355,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
         }
     }
 
-    if (m_dndIcon) {
-        accumulateRepaints(m_dndIcon.get(), painted_delegate, &m_paintContext.damage);
-    }
+    accumulateRepaints(m_overlayItem.get(), painted_delegate, &m_paintContext.damage);
 }
 
 void WorkspaceScene::postPaint()
@@ -373,8 +378,15 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
 
     effects->paintScreen(renderTarget, viewport, m_paintContext.mask, region, painted_screen);
     m_paintScreenCount = 0;
-    Q_EMIT frameRendered();
 
+    if (m_overlayItem) {
+        const QRegion repaint = region & m_overlayItem->mapToScene(m_overlayItem->boundingRect()).toRect();
+        if (!repaint.isEmpty()) {
+            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), 0, repaint, WindowPaintData(viewport.projectionMatrix()));
+        }
+    }
+
+    Q_EMIT frameRendered();
     m_renderer->endFrame();
 }
 
@@ -430,13 +442,6 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
 
     for (const Phase2Data &paintData : std::as_const(m_paintContext.phase2Data)) {
         paintWindow(renderTarget, viewport, paintData.item, paintData.mask, paintData.region);
-    }
-
-    if (m_dndIcon) {
-        const QRegion repaint = region & m_dndIcon->mapToScene(m_dndIcon->boundingRect()).toRect();
-        if (!repaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, viewport, m_dndIcon.get(), 0, repaint, WindowPaintData(viewport.projectionMatrix()));
-        }
     }
 }
 
