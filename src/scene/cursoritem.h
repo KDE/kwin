@@ -15,7 +15,7 @@ class ImageItem;
 class SurfaceInterface;
 class SurfaceItemWayland;
 
-class CursorItem : public Item
+class KWIN_EXPORT CursorItem : public Item
 {
     Q_OBJECT
 
