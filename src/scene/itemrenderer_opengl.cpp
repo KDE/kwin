@@ -139,11 +139,19 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
 {
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
-    QMatrix4x4 matrix;
     const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
     const auto scale = context->renderTargetScale;
+
+    QMatrix4x4 matrix;
     matrix.translate(roundVector(logicalPosition * scale).toVector3D());
-    matrix *= item->transform();
+    if (context->transformStack.size() == 1) {
+        matrix *= context->rootTransform;
+    }
+    if (!item->transform().isIdentity()) {
+        matrix.scale(scale, scale);
+        matrix *= item->transform();
+        matrix.scale(1 / scale, 1 / scale);
+    }
     context->transformStack.push(context->transformStack.top() * matrix);
 
     context->opacityStack.push(context->opacityStack.top() * item->opacity());
@@ -261,6 +269,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     RenderContext renderContext{
         .projectionMatrix = viewport.projectionMatrix(),
+        .rootTransform = data.toMatrix(viewport.scale()), // TODO: unify transforms
         .clip = region,
         .hardwareClipping = region != infiniteRegion() && ((mask & Scene::PAINT_WINDOW_TRANSFORMED) || (mask & Scene::PAINT_SCREEN_TRANSFORMED)),
         .renderTargetScale = viewport.scale(),
@@ -268,8 +277,6 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
 
     renderContext.transformStack.push(QMatrix4x4());
     renderContext.opacityStack.push(data.opacity());
-
-    item->setTransform(data.toMatrix(renderContext.renderTargetScale));
 
     createRenderNode(item, &renderContext);
 

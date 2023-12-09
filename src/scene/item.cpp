@@ -82,6 +82,7 @@ void Item::setParentItem(Item *item)
         Q_ASSERT(m_parentItem->m_scene == m_scene);
         m_parentItem->addChild(this);
     }
+    updateItemToSceneTransform();
     updateEffectiveVisibility();
 }
 
@@ -93,7 +94,7 @@ void Item::addChild(Item *item)
     markSortedChildItemsDirty();
 
     updateBoundingRect();
-    scheduleRepaint(item->boundingRect().translated(item->position()));
+    scheduleRepaint(item->transform().mapRect(item->boundingRect()).translated(item->position()));
 
     Q_EMIT childAdded(item);
 }
@@ -101,7 +102,7 @@ void Item::addChild(Item *item)
 void Item::removeChild(Item *item)
 {
     Q_ASSERT(m_childItems.contains(item));
-    scheduleRepaint(item->boundingRect().translated(item->position()));
+    scheduleRepaint(item->transform().mapRect(item->boundingRect()).translated(item->position()));
 
     m_childItems.removeOne(item);
     markSortedChildItemsDirty();
@@ -124,6 +125,7 @@ void Item::setPosition(const QPointF &point)
     if (m_position != point) {
         scheduleRepaint(boundingRect());
         m_position = point;
+        updateItemToSceneTransform();
         if (m_parentItem) {
             m_parentItem->updateBoundingRect();
         }
@@ -163,7 +165,7 @@ void Item::updateBoundingRect()
 {
     QRectF boundingRect = rect();
     for (Item *item : std::as_const(m_childItems)) {
-        boundingRect |= item->boundingRect().translated(item->position());
+        boundingRect |= item->transform().mapRect(item->boundingRect()).translated(item->position());
     }
     if (m_boundingRect != boundingRect) {
         m_boundingRect = boundingRect;
@@ -184,51 +186,63 @@ QRegion Item::opaque() const
     return QRegion();
 }
 
-QPointF Item::rootPosition() const
-{
-    QPointF ret = position();
-
-    Item *parent = parentItem();
-    while (parent) {
-        ret += parent->position();
-        parent = parent->parentItem();
-    }
-
-    return ret;
-}
-
-QMatrix4x4 Item::transform() const
+QTransform Item::transform() const
 {
     return m_transform;
 }
 
-void Item::setTransform(const QMatrix4x4 &transform)
+void Item::setTransform(const QTransform &transform)
 {
+    if (m_transform == transform) {
+        return;
+    }
+    scheduleRepaint(boundingRect());
     m_transform = transform;
+    updateItemToSceneTransform();
+    if (m_parentItem) {
+        m_parentItem->updateBoundingRect();
+    }
+    scheduleRepaint(boundingRect());
 }
 
-QRegion Item::mapToGlobal(const QRegion &region) const
+void Item::updateItemToSceneTransform()
+{
+    m_itemToSceneTransform = m_transform;
+    if (!m_position.isNull()) {
+        m_itemToSceneTransform *= QTransform::fromTranslate(m_position.x(), m_position.y());
+    }
+    if (m_parentItem) {
+        m_itemToSceneTransform *= m_parentItem->m_itemToSceneTransform;
+    }
+    m_sceneToItemTransform = m_itemToSceneTransform.inverted();
+
+    for (Item *childItem : std::as_const(m_childItems)) {
+        childItem->updateItemToSceneTransform();
+    }
+}
+
+QRegion Item::mapToScene(const QRegion &region) const
 {
     if (region.isEmpty()) {
         return QRegion();
     }
-    return region.translated(rootPosition().toPoint());
+    return m_itemToSceneTransform.map(region);
 }
 
-QRectF Item::mapToGlobal(const QRectF &rect) const
+QRectF Item::mapToScene(const QRectF &rect) const
 {
     if (rect.isEmpty()) {
         return QRect();
     }
-    return rect.translated(rootPosition());
+    return m_itemToSceneTransform.mapRect(rect);
 }
 
-QRectF Item::mapFromGlobal(const QRectF &rect) const
+QRectF Item::mapFromScene(const QRectF &rect) const
 {
     if (rect.isEmpty()) {
         return QRect();
     }
-    return rect.translated(-rootPosition());
+    return m_sceneToItemTransform.mapRect(rect);
 }
 
 void Item::stackBefore(Item *sibling)
@@ -303,7 +317,7 @@ void Item::scheduleRepaint(SceneDelegate *delegate, const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
-    const QRegion globalRegion = mapToGlobal(region);
+    const QRegion globalRegion = mapToScene(region);
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
         const QRegion dirtyRegion = globalRegion & delegate->viewport();
@@ -316,7 +330,7 @@ void Item::scheduleRepaintInternal(const QRegion &region)
 
 void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region)
 {
-    const QRegion globalRegion = mapToGlobal(region);
+    const QRegion globalRegion = mapToScene(region);
     const QRegion dirtyRegion = globalRegion & delegate->viewport();
     if (!dirtyRegion.isEmpty()) {
         m_repaints[delegate] += dirtyRegion;
@@ -329,7 +343,7 @@ void Item::scheduleFrame()
     if (!isVisible()) {
         return;
     }
-    const QRect geometry = mapToGlobal(rect()).toRect();
+    const QRect geometry = mapToScene(rect()).toRect();
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
         if (delegate->viewport().intersects(geometry)) {
@@ -412,7 +426,7 @@ void Item::updateEffectiveVisibility()
 
     m_effectiveVisible = effectiveVisible;
     if (!m_effectiveVisible) {
-        m_scene->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
+        m_scene->addRepaint(mapToScene(boundingRect()).toAlignedRect());
     } else {
         scheduleRepaintInternal(boundingRect().toAlignedRect());
     }

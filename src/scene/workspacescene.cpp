@@ -320,12 +320,12 @@ void WorkspaceScene::preparePaintSimpleScreen()
         if (window->opacity() == 1.0) {
             const SurfaceItem *surfaceItem = windowItem->surfaceItem();
             if (Q_LIKELY(surfaceItem)) {
-                data.opaque = surfaceItem->mapToGlobal(surfaceItem->opaque());
+                data.opaque = surfaceItem->mapToScene(surfaceItem->opaque());
             }
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.opaque += decorationItem->mapToGlobal(decorationItem->opaque());
+                data.opaque += decorationItem->mapToScene(decorationItem->opaque());
             }
         }
 
@@ -418,7 +418,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         data->region = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->region &= data->item->mapToGlobal(data->item->boundingRect()).toAlignedRect();
+            data->region &= data->item->mapToScene(data->item->boundingRect()).toAlignedRect();
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
                 visible -= data->opaque;
@@ -433,7 +433,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     }
 
     if (m_dndIcon) {
-        const QRegion repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect()).toRect();
+        const QRegion repaint = region & m_dndIcon->mapToScene(m_dndIcon->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
             m_renderer->renderItem(renderTarget, viewport, m_dndIcon.get(), 0, repaint, WindowPaintData{});
         }

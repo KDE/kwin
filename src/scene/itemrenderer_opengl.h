@@ -36,6 +36,7 @@ public:
         QStack<QMatrix4x4> transformStack;
         QStack<qreal> opacityStack;
         const QMatrix4x4 projectionMatrix;
+        const QMatrix4x4 rootTransform;
         const QRegion clip;
         const bool hardwareClipping;
         const qreal renderTargetScale;

@@ -159,7 +159,7 @@ QDebug operator<<(QDebug debug, const Window *window)
 QRectF Window::visibleGeometry() const
 {
     if (const WindowItem *item = windowItem()) {
-        return item->mapToGlobal(item->boundingRect());
+        return item->mapToScene(item->boundingRect());
     }
     return QRectF();
 }
