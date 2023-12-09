@@ -25,8 +25,8 @@ public:
 
 private:
     void refresh();
-    void setSurface(SurfaceInterface *surface);
-    void setImage(const QImage &image);
+    void setSurface(SurfaceInterface *surface, const QPointF &hotspot);
+    void setImage(const QImage &image, const QPointF &hotspot);
 
     std::unique_ptr<ImageItem> m_imageItem;
     std::unique_ptr<SurfaceItemWayland> m_surfaceItem;
