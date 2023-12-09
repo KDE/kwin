@@ -9,45 +9,69 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "trackmouse.h"
-
-// KConfigSkeleton
-#include "trackmouseconfig.h"
-
-#include <QAction>
-#include <QMatrix4x4>
-#include <QPainter>
-#include <QTime>
-
-#include "core/rendertarget.h"
-#include "core/renderviewport.h"
+#include "plugins/trackmouse/trackmouse.h"
 #include "effect/effecthandler.h"
-#include "opengl/glutils.h"
+#include "plugins/trackmouse/trackmouseconfig.h"
+#include "scene/imageitem.h"
+#include "scene/itemrenderer.h"
+#include "scene/workspacescene.h"
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
-#include <cmath>
+#include <QAction>
+#include <QTime>
 
 namespace KWin
 {
 
+RotatingArcsItem::RotatingArcsItem(Item *parentItem)
+    : Item(parentItem->scene(), parentItem)
+{
+    const QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
+                          QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
+    if (f[0].isEmpty() || f[1].isEmpty()) {
+        return;
+    }
+
+    const QImage outerImage(f[0]);
+    m_outerArcItem = scene()->renderer()->createImageItem(scene(), this);
+    m_outerArcItem->setImage(outerImage);
+    m_outerArcItem->setSize(outerImage.size());
+    m_outerArcItem->setPosition(QPointF(-outerImage.width() / 2, -outerImage.height() / 2));
+
+    const QImage innerImage(f[1]);
+    m_innerArcItem = scene()->renderer()->createImageItem(scene(), this);
+    m_innerArcItem->setImage(innerImage);
+    m_innerArcItem->setSize(innerImage.size());
+    m_innerArcItem->setPosition(QPointF(-innerImage.width() / 2, -innerImage.height() / 2));
+}
+
+void RotatingArcsItem::rotate(qreal angle)
+{
+    m_outerArcItem->setTransform(
+        QTransform()
+            .translate(m_outerArcItem->size().width() / 2, m_outerArcItem->size().height() / 2)
+            .rotate(angle)
+            .translate(-m_outerArcItem->size().width() / 2, -m_outerArcItem->size().height() / 2));
+
+    m_innerArcItem->setTransform(
+        QTransform()
+            .translate(m_innerArcItem->size().width() / 2, m_innerArcItem->size().height() / 2)
+            .rotate(-2 * angle)
+            .translate(-m_innerArcItem->size().width() / 2, -m_innerArcItem->size().height() / 2));
+}
+
 TrackMouseEffect::TrackMouseEffect()
-    : m_angle(0)
 {
     TrackMouseConfig::instance(effects->config());
-    if (effects->isOpenGLCompositing() || effects->compositingType() == QPainterCompositing) {
-        m_angleBase = 90.0;
-    }
-    m_mousePolling = false;
 
-    m_action = new QAction(this);
-    m_action->setObjectName(QStringLiteral("TrackMouse"));
-    m_action->setText(i18n("Track mouse"));
-    KGlobalAccel::self()->setDefaultShortcut(m_action, QList<QKeySequence>());
-    KGlobalAccel::self()->setShortcut(m_action, QList<QKeySequence>());
-
-    connect(m_action, &QAction::triggered, this, &TrackMouseEffect::toggle);
+    QAction *action = new QAction(this);
+    action->setObjectName(QStringLiteral("TrackMouse"));
+    action->setText(i18n("Track mouse"));
+    KGlobalAccel::self()->setDefaultShortcut(action, QList<QKeySequence>());
+    KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>());
+    connect(action, &QAction::triggered, this, &TrackMouseEffect::toggle);
 
     connect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
     reconfigure(ReconfigureAll);
@@ -91,75 +115,10 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
 void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     QTime t = QTime::currentTime();
-    m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
-    m_lastRect[0].moveCenter(cursorPos().toPoint());
-    m_lastRect[1].moveCenter(cursorPos().toPoint());
-    data.paint += m_lastRect[0].adjusted(-1, -1, 1, 1);
+    m_angle = ((t.second() % 4) * 90.0) + (t.msec() / 1000.0 * 90.0);
+    m_rotatingArcsItem->rotate(m_angle);
 
     effects->prePaintScreen(data, presentTime);
-}
-
-void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
-{
-    effects->paintScreen(renderTarget, viewport, mask, region, screen); // paint normal screen
-
-    if (effects->isOpenGLCompositing() && m_texture[0] && m_texture[1]) {
-        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        GLShader *shader(binder.shader());
-        if (!shader) {
-            return;
-        }
-        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-        QMatrix4x4 matrix(viewport.projectionMatrix());
-        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
-        const float x = p.x();
-        const float y = p.y();
-        const auto scale = viewport.scale();
-        for (int i = 0; i < 2; ++i) {
-            matrix.translate(x * scale, y * scale, 0.0);
-            matrix.rotate(i ? -2 * m_angle : m_angle, 0, 0, 1.0);
-            matrix.translate(-x * scale, -y * scale, 0.0);
-            QMatrix4x4 mvp(matrix);
-            mvp.translate(m_lastRect[i].x() * scale, m_lastRect[i].y() * scale);
-            shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-            m_texture[i]->render(m_lastRect[i].size() * scale);
-        }
-        glDisable(GL_BLEND);
-    } else if (effects->compositingType() == QPainterCompositing && !m_image[0].isNull() && !m_image[1].isNull()) {
-        QPainter *painter = effects->scenePainter();
-        const QPointF p = m_lastRect[0].topLeft() + QPoint(m_lastRect[0].width() / 2.0, m_lastRect[0].height() / 2.0);
-        for (int i = 0; i < 2; ++i) {
-            painter->save();
-            painter->translate(p.x(), p.y());
-            painter->rotate(i ? -2 * m_angle : m_angle);
-            painter->translate(-p.x(), -p.y());
-            painter->drawImage(m_lastRect[i], m_image[i]);
-            painter->restore();
-        }
-    }
-}
-
-void TrackMouseEffect::postPaintScreen()
-{
-    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
-    effects->postPaintScreen();
-}
-
-bool TrackMouseEffect::init()
-{
-    effects->makeOpenGLContextCurrent();
-    if (!m_texture[0] && m_image[0].isNull()) {
-        loadTexture();
-        if (!m_texture[0] && m_image[0].isNull()) {
-            return false;
-        }
-    }
-    m_lastRect[0].moveCenter(cursorPos().toPoint());
-    m_lastRect[1].moveCenter(cursorPos().toPoint());
-    m_angle = 0;
-    return true;
 }
 
 void TrackMouseEffect::toggle()
@@ -174,9 +133,6 @@ void TrackMouseEffect::toggle()
         break;
 
     case State::Inactive:
-        if (!init()) {
-            return;
-        }
         m_state = State::ActivatedByShortcut;
         break;
 
@@ -185,7 +141,14 @@ void TrackMouseEffect::toggle()
         break;
     }
 
-    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
+    if (m_state == State::Inactive) {
+        m_rotatingArcsItem.reset();
+    } else {
+        if (!m_rotatingArcsItem) {
+            m_rotatingArcsItem = std::make_unique<RotatingArcsItem>(effects->scene()->overlayItem());
+        }
+        m_rotatingArcsItem->setPosition(effects->cursorPos());
+    }
 }
 
 void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
@@ -198,23 +161,18 @@ void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
 
     switch (m_state) {
     case State::ActivatedByModifiers:
-        if (modifiers == m_modifiers) {
-            return;
+        if (modifiers != m_modifiers) {
+            m_state = State::Inactive;
         }
-        m_state = State::Inactive;
         break;
 
     case State::ActivatedByShortcut:
-        return;
+        break;
 
     case State::Inactive:
-        if (modifiers != m_modifiers) {
-            return;
+        if (modifiers == m_modifiers) {
+            m_state = State::ActivatedByModifiers;
         }
-        if (!init()) {
-            return;
-        }
-        m_state = State::ActivatedByModifiers;
         break;
 
     default:
@@ -222,27 +180,13 @@ void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
         break;
     }
 
-    effects->addRepaint(m_lastRect[0].adjusted(-1, -1, 1, 1));
-}
-
-void TrackMouseEffect::loadTexture()
-{
-    QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
-                    QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
-    if (f[0].isEmpty() || f[1].isEmpty()) {
-        return;
-    }
-
-    for (int i = 0; i < 2; ++i) {
-        if (effects->isOpenGLCompositing()) {
-            QImage img(f[i]);
-            m_texture[i] = GLTexture::upload(img);
-            m_lastRect[i].setSize(img.size());
+    if (m_state == State::Inactive) {
+        m_rotatingArcsItem.reset();
+    } else {
+        if (!m_rotatingArcsItem) {
+            m_rotatingArcsItem = std::make_unique<RotatingArcsItem>(effects->scene()->overlayItem());
         }
-        if (effects->compositingType() == QPainterCompositing) {
-            m_image[i] = QImage(f[i]);
-            m_lastRect[i].setSize(m_image[i].size());
-        }
+        m_rotatingArcsItem->setPosition(effects->cursorPos());
     }
 }
 
