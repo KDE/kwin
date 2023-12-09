@@ -40,7 +40,8 @@ std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
 }
 
 EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context)
-    : m_display(display)
+    : OpenGlContext(EglDisplay::isOpenGLES())
+    , m_display(display)
     , m_handle(context)
     , m_config(config)
     , m_shaderManager(std::make_unique<ShaderManager>())
@@ -102,7 +103,7 @@ bool EglContext::isValid() const
     const bool haveResetOnVideoMemoryPurge = display->hasExtension(QByteArrayLiteral("EGL_NV_robustness_video_memory_purge"));
 
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
-    if (isOpenGLES()) {
+    if (EglDisplay::isOpenGLES()) {
         if (haveCreateContext && haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
             auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setResetOnVideoMemoryPurge(true);

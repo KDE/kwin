@@ -114,7 +114,7 @@ static eglFuncPtr getProcAddress(const char *name)
 void AbstractEglBackend::initKWinGL()
 {
     GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect(EglPlatformInterface);
+    glPlatform->detect(EglPlatformInterface, m_context.get());
     glPlatform->printResults();
     initGL(&getProcAddress);
 }

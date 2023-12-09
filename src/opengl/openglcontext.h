@@ -22,7 +22,7 @@ namespace KWin
 class KWIN_EXPORT OpenGlContext
 {
 public:
-    explicit OpenGlContext();
+    explicit OpenGlContext(bool openglES = false);
     virtual ~OpenGlContext() = default;
 
     bool hasVersion(const Version &version) const;

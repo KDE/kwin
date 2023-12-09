@@ -224,7 +224,7 @@ void GlxBackend::init()
 
     // Initialize OpenGL
     GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect(GlxPlatformInterface);
+    glPlatform->detect(GlxPlatformInterface, m_context.get());
 
     m_swapStrategy = options->glPreferBufferSwap();
     if (m_swapStrategy == Options::AutoSwapStrategy) {

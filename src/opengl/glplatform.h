@@ -162,7 +162,7 @@ public:
     /**
      * Runs the detection code using the current OpenGL context.
      */
-    void detect(OpenGLPlatformInterface platformInterface);
+    void detect(OpenGLPlatformInterface platformInterface, OpenGlContext *context);
 
     /**
      * Prints the results of the detection code.
@@ -387,7 +387,7 @@ private:
     bool m_virtualMachine : 1;
     bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;
-    std::unique_ptr<OpenGlContext> m_context;
+    OpenGlContext *m_context = nullptr;
     static std::unique_ptr<GLPlatform> s_platform;
 };
 

@@ -52,6 +52,7 @@ public:
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const;
 
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
+    static bool isOpenGLES();
 
 private:
     QHash<uint32_t, DrmFormatInfo> queryImportFormats() const;

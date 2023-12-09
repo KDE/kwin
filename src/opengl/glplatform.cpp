@@ -727,11 +727,10 @@ GLPlatform::~GLPlatform()
 {
 }
 
-void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
+void GLPlatform::detect(OpenGLPlatformInterface platformInterface, OpenGlContext *context)
 {
     m_platformInterface = platformInterface;
-
-    m_context = std::make_unique<OpenGlContext>();
+    m_context = context;
 
     // Parse the Mesa version
     const auto versionTokens = m_context->openglVersionString().toByteArray().split(' ');

@@ -233,12 +233,13 @@ void GLPlatformTest::testDetect()
                                                    QByteArrayLiteral("GL_ARB_texture_non_power_of_two")};
     s_gl->getString.extensionsString = QByteArray();
 
+    const KConfigGroup settingsGroup = config.group(QStringLiteral("Settings"));
+
     auto *gl = GLPlatform::instance();
     QVERIFY(gl);
-    gl->detect(EglPlatformInterface);
+    auto context = std::make_unique<OpenGlContext>(settingsGroup.readEntry("GLES", false));
+    gl->detect(EglPlatformInterface, context.get());
     QCOMPARE(gl->platformInterface(), EglPlatformInterface);
-
-    const KConfigGroup settingsGroup = config.group(QStringLiteral("Settings"));
 
     QCOMPARE(gl->supports(GLFeature::LooseBinding), settingsGroup.readEntry("LooseBinding", false));
 

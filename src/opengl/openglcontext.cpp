@@ -35,12 +35,12 @@ static QSet<QByteArray> getExtensions(OpenGlContext *context)
     return ret;
 }
 
-OpenGlContext::OpenGlContext()
+OpenGlContext::OpenGlContext(bool openglES)
     : m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
     , m_vendor((const char *)glGetString(GL_VENDOR))
     , m_renderer((const char *)glGetString(GL_RENDERER))
-    , m_isOpenglES(m_versionString.startsWith("OpenGL ES"))
+    , m_isOpenglES(openglES)
     , m_extensions(getExtensions(this))
     , m_supportsTimerQueries(checkTimerQuerySupport())
 {
