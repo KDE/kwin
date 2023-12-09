@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-08 01:36+0000\n"
-"PO-Revision-Date: 2023-11-26 16:02+0100\n"
+"PO-Revision-Date: 2023-12-08 19:15+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -72,7 +72,7 @@ msgstr "%1 - Aktuala Apliko"
 #: main.cpp:165
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "Superrigardo"
 
 #: main.cpp:167 touch.cpp:130
 #, kde-format
