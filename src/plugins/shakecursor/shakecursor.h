@@ -17,7 +17,7 @@ namespace KWin
 {
 
 class Cursor;
-class GLTexture;
+class CursorItem;
 
 class ShakeCursorEffect : public Effect, public InputEventSpy
 {
@@ -32,36 +32,17 @@ public:
     void reconfigure(ReconfigureFlags flags) override;
     void pointerEvent(MouseEvent *event) override;
     bool isActive() const override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
 
 private:
-    GLTexture *ensureCursorTexture();
-    void markCursorTextureDirty();
-
-    void showCursor();
-    void hideCursor();
-
-    struct Transaction
-    {
-        QPointF position;
-        QPointF hotspot;
-        QSizeF size;
-        qreal magnification;
-        bool damaged = false;
-    };
-    void update(const Transaction &transaction);
+    void magnify(qreal magnification);
 
     QTimer m_resetCursorScaleTimer;
     QVariantAnimation m_resetCursorScaleAnimation;
     ShakeDetector m_shakeDetector;
 
     Cursor *m_cursor;
-    QRectF m_cursorGeometry;
+    std::unique_ptr<CursorItem> m_cursorItem;
     qreal m_cursorMagnification = 1.0;
-
-    std::unique_ptr<GLTexture> m_cursorTexture;
-    bool m_cursorTextureDirty = false;
-    bool m_mouseHidden = false;
 };
 
 } // namespace KWin

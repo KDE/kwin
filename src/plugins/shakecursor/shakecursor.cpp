@@ -5,15 +5,13 @@
 */
 
 #include "plugins/shakecursor/shakecursor.h"
-#include "core/rendertarget.h"
-#include "core/renderviewport.h"
 #include "cursor.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
-#include "opengl/gltexture.h"
-#include "opengl/glutils.h"
 #include "plugins/shakecursor/shakecursorconfig.h"
 #include "pointer_input.h"
+#include "scene/cursoritem.h"
+#include "scene/workspacescene.h"
 
 namespace KWin
 {
@@ -33,12 +31,7 @@ ShakeCursorEffect::ShakeCursorEffect()
     });
 
     connect(&m_resetCursorScaleAnimation, &QVariantAnimation::valueChanged, this, [this]() {
-        update(Transaction{
-            .position = m_cursor->pos(),
-            .hotspot = m_cursor->hotspot(),
-            .size = m_cursor->geometry().size(),
-            .magnification = m_resetCursorScaleAnimation.currentValue().toReal(),
-        });
+        magnify(m_resetCursorScaleAnimation.currentValue().toReal());
     });
 
     ShakeCursorConfig::instance(effects->config());
@@ -47,7 +40,7 @@ ShakeCursorEffect::ShakeCursorEffect()
 
 ShakeCursorEffect::~ShakeCursorEffect()
 {
-    showCursor();
+    magnify(1.0);
 }
 
 bool ShakeCursorEffect::supported()
@@ -82,130 +75,35 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
     }
 
     if (const auto shakeFactor = m_shakeDetector.update(event)) {
-        update(Transaction{
-            .position = m_cursor->pos(),
-            .hotspot = m_cursor->hotspot(),
-            .size = m_cursor->geometry().size(),
-            .magnification = std::max(m_cursorMagnification, 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value()),
-        });
         m_resetCursorScaleTimer.start(animationTime(2000));
         m_resetCursorScaleAnimation.stop();
-    } else if (m_cursorMagnification != 1.0) {
-        update(Transaction{
-            .position = m_cursor->pos(),
-            .hotspot = m_cursor->hotspot(),
-            .size = m_cursor->geometry().size(),
-            .magnification = m_cursorMagnification,
-        });
+
+        magnify(std::max(m_cursorMagnification, 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value()));
     }
 }
 
-GLTexture *ShakeCursorEffect::ensureCursorTexture()
+void ShakeCursorEffect::magnify(qreal magnification)
 {
-    if (!m_cursorTexture || m_cursorTextureDirty) {
-        m_cursorTexture.reset();
-        m_cursorTextureDirty = false;
-        const auto cursor = effects->cursorImage();
-        if (!cursor.image().isNull()) {
-            m_cursorTexture = GLTexture::upload(cursor.image());
-            if (!m_cursorTexture) {
-                return nullptr;
-            }
-            m_cursorTexture->setWrapMode(GL_CLAMP_TO_EDGE);
-            m_cursorTexture->setFilter(GL_LINEAR);
-        }
-    }
-    return m_cursorTexture.get();
-}
-
-void ShakeCursorEffect::markCursorTextureDirty()
-{
-    m_cursorTextureDirty = true;
-
-    update(Transaction{
-        .position = m_cursor->pos(),
-        .hotspot = m_cursor->hotspot(),
-        .size = m_cursor->geometry().size(),
-        .magnification = m_cursorMagnification,
-        .damaged = true,
-    });
-}
-
-void ShakeCursorEffect::showCursor()
-{
-    if (m_mouseHidden) {
-        disconnect(effects, &EffectsHandler::cursorShapeChanged, this, &ShakeCursorEffect::markCursorTextureDirty);
-        effects->showCursor();
-        if (m_cursorTexture) {
-            effects->makeOpenGLContextCurrent();
-            m_cursorTexture.reset();
-        }
-        m_cursorTextureDirty = false;
-        m_mouseHidden = false;
-    }
-}
-
-void ShakeCursorEffect::hideCursor()
-{
-    if (!m_mouseHidden) {
-        effects->hideCursor();
-        connect(effects, &EffectsHandler::cursorShapeChanged, this, &ShakeCursorEffect::markCursorTextureDirty);
-        m_mouseHidden = true;
-    }
-}
-
-void ShakeCursorEffect::update(const Transaction &transaction)
-{
-    if (transaction.magnification == 1.0) {
-        if (m_cursorMagnification == 1.0) {
-            return;
-        }
-
-        const QRectF oldCursorGeometry = m_cursorGeometry;
-        showCursor();
-
-        m_cursorGeometry = QRectF();
+    if (magnification == 1.0) {
         m_cursorMagnification = 1.0;
-
-        effects->addRepaint(oldCursorGeometry);
+        if (m_cursorItem) {
+            m_cursorItem.reset();
+            effects->showCursor();
+        }
     } else {
-        const QRectF oldCursorGeometry = m_cursorGeometry;
-        hideCursor();
+        m_cursorMagnification = magnification;
 
-        m_cursorMagnification = transaction.magnification;
-        m_cursorGeometry = QRectF(transaction.position - transaction.hotspot * transaction.magnification, transaction.size * transaction.magnification);
+        if (!m_cursorItem) {
+            effects->hideCursor();
 
-        if (transaction.damaged || oldCursorGeometry != m_cursorGeometry) {
-            effects->addRepaint(oldCursorGeometry.united(m_cursorGeometry));
+            m_cursorItem = std::make_unique<CursorItem>(effects->scene());
+            m_cursorItem->setParentItem(effects->scene()->overlayItem());
+            m_cursorItem->setPosition(m_cursor->pos());
+            connect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), [this]() {
+                m_cursorItem->setPosition(m_cursor->pos());
+            });
         }
-    }
-}
-
-void ShakeCursorEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
-{
-    effects->paintScreen(renderTarget, viewport, mask, region, screen);
-
-    if (GLTexture *texture = ensureCursorTexture()) {
-        const bool clipping = region != infiniteRegion();
-        const QRegion clipRegion = clipping ? viewport.mapToRenderTarget(region) : infiniteRegion();
-        if (clipping) {
-            glEnable(GL_SCISSOR_TEST);
-        }
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-        shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
-        QMatrix4x4 mvp = viewport.projectionMatrix();
-        mvp.translate(m_cursorGeometry.x() * viewport.scale(), m_cursorGeometry.y() * viewport.scale());
-        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-        texture->render(clipRegion, m_cursorGeometry.size() * viewport.scale(), clipping);
-        ShaderManager::instance()->popShader();
-        glDisable(GL_BLEND);
-
-        if (clipping) {
-            glDisable(GL_SCISSOR_TEST);
-        }
+        m_cursorItem->setTransform(QTransform::fromScale(magnification, magnification));
     }
 }
 
