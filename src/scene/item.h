@@ -11,9 +11,9 @@
 #include "scene/itemgeometry.h"
 
 #include <QList>
-#include <QMatrix4x4>
 #include <QObject>
 #include <QPointer>
+#include <QTransform>
 
 #include <optional>
 
@@ -69,26 +69,24 @@ public:
     QList<Item *> childItems() const;
     QList<Item *> sortedChildItems() const;
 
-    QPointF rootPosition() const;
-
-    QMatrix4x4 transform() const;
-    void setTransform(const QMatrix4x4 &transform);
+    QTransform transform() const;
+    void setTransform(const QTransform &transform);
 
     /**
      * Maps the given @a region from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRegion mapToGlobal(const QRegion &region) const;
+    QRegion mapToScene(const QRegion &region) const;
     /**
      * Maps the given @a rect from the item's coordinate system to the scene's coordinate
      * system.
      */
-    QRectF mapToGlobal(const QRectF &rect) const;
+    QRectF mapToScene(const QRectF &rect) const;
     /**
      * Maps the given @a rect from the scene's coordinate system to the item's coordinate
      * system.
      */
-    QRectF mapFromGlobal(const QRectF &rect) const;
+    QRectF mapFromScene(const QRectF &rect) const;
 
     /**
      * Moves this item right before the specified @a sibling in the parent's children list.
@@ -142,6 +140,7 @@ private:
     void addChild(Item *item);
     void removeChild(Item *item);
     void updateBoundingRect();
+    void updateItemToSceneTransform();
     void scheduleRepaintInternal(const QRegion &region);
     void scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region);
     void markSortedChildItemsDirty();
@@ -153,7 +152,9 @@ private:
     Scene *m_scene;
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
-    QMatrix4x4 m_transform;
+    QTransform m_transform;
+    QTransform m_itemToSceneTransform;
+    QTransform m_sceneToItemTransform;
     QRectF m_boundingRect;
     QPointF m_position;
     QSizeF m_size = QSize(0, 0);

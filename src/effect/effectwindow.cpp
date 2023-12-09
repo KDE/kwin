@@ -208,7 +208,7 @@ void EffectWindow::addRepaintFull()
 
 void EffectWindow::addLayerRepaint(const QRect &r)
 {
-    d->m_windowItem->scheduleRepaint(d->m_windowItem->mapFromGlobal(r));
+    d->m_windowItem->scheduleRepaint(d->m_windowItem->mapFromScene(r));
 }
 
 const EffectWindowGroup *EffectWindow::group() const
