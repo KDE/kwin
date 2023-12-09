@@ -6,13 +6,13 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "nightcolormanager.h"
 #include "clockskewnotifier.h"
 #include "colors/colordevice.h"
 #include "colors/colormanager.h"
-#include "nightcolordbusinterface.h"
-#include "nightcolorlogging.h"
-#include "nightcolorsettings.h"
+#include "nightlightdbusinterface.h"
+#include "nightlightlogging.h"
+#include "nightlightmanager.h"
+#include "nightlightsettings.h"
 #include "suncalc.h"
 
 #include <core/outputbackend.h>
@@ -33,28 +33,28 @@ namespace KWin
 
 static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
-static NightColorManager *s_instance = nullptr;
+static NightLightManager *s_instance = nullptr;
 
 static bool checkLocation(double lat, double lng)
 {
     return -90 <= lat && lat <= 90 && -180 <= lng && lng <= 180;
 }
 
-NightColorManager *NightColorManager::self()
+NightLightManager *NightLightManager::self()
 {
     return s_instance;
 }
 
-NightColorManager::NightColorManager()
+NightLightManager::NightLightManager()
 {
-    NightColorSettings::instance(kwinApp()->config());
+    NightLightSettings::instance(kwinApp()->config());
     s_instance = this;
 
-    m_iface = new NightColorDBusInterface(this);
+    m_iface = new NightLightDBusInterface(this);
     m_skewNotifier = new ClockSkewNotifier(this);
 
-    // Display a message when Night Color is (un)inhibited.
-    connect(this, &NightColorManager::inhibitedChanged, this, [this] {
+    // Display a message when Night Light is (un)inhibited.
+    connect(this, &NightLightManager::inhibitedChanged, this, [this] {
         const QString iconName = isInhibited()
             ? QStringLiteral("redshift-status-off")
             : m_daylight && m_targetTemperature != DEFAULT_DAY_TEMPERATURE ? QStringLiteral("redshift-status-day")
@@ -75,7 +75,7 @@ NightColorManager::NightColorManager()
     });
 
     m_configWatcher = KConfigWatcher::create(kwinApp()->config());
-    connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, &NightColorManager::reconfigure);
+    connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, &NightLightManager::reconfigure);
 
     // we may always read in the current config
     readConfig();
@@ -85,9 +85,9 @@ NightColorManager::NightColorManager()
     toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
     toggleAction->setText(i18n("Toggle Night Light"));
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
-    connect(toggleAction, &QAction::triggered, this, &NightColorManager::toggle);
+    connect(toggleAction, &QAction::triggered, this, &NightLightManager::toggle);
 
-    connect(kwinApp()->colorManager(), &ColorManager::deviceAdded, this, &NightColorManager::hardReset);
+    connect(kwinApp()->colorManager(), &ColorManager::deviceAdded, this, &NightLightManager::hardReset);
 
     connect(kwinApp()->session(), &Session::activeChanged, this, [this](bool active) {
         if (active) {
@@ -111,7 +111,7 @@ NightColorManager::NightColorManager()
         if (reply.isValid()) {
             comingFromSuspend = reply.value().toBool();
         } else {
-            qCDebug(KWIN_NIGHTCOLOR) << "Failed to get PreparingForSleep Property of logind session:" << reply.error().message();
+            qCDebug(KWIN_NIGHTLIGHT) << "Failed to get PreparingForSleep Property of logind session:" << reply.error().message();
             // Always do a hard reset in case we have no further information.
             comingFromSuspend = true;
         }
@@ -126,12 +126,12 @@ NightColorManager::NightColorManager()
     hardReset();
 }
 
-NightColorManager::~NightColorManager()
+NightLightManager::~NightLightManager()
 {
     s_instance = nullptr;
 }
 
-void NightColorManager::hardReset()
+void NightLightManager::hardReset()
 {
     cancelAllTimers();
 
@@ -145,25 +145,25 @@ void NightColorManager::hardReset()
     resetAllTimers();
 }
 
-void NightColorManager::reconfigure()
+void NightLightManager::reconfigure()
 {
     cancelAllTimers();
     readConfig();
     resetAllTimers();
 }
 
-void NightColorManager::toggle()
+void NightLightManager::toggle()
 {
     m_isGloballyInhibited = !m_isGloballyInhibited;
     m_isGloballyInhibited ? inhibit() : uninhibit();
 }
 
-bool NightColorManager::isInhibited() const
+bool NightLightManager::isInhibited() const
 {
     return m_inhibitReferenceCount;
 }
 
-void NightColorManager::inhibit()
+void NightLightManager::inhibit()
 {
     m_inhibitReferenceCount++;
 
@@ -173,7 +173,7 @@ void NightColorManager::inhibit()
     }
 }
 
-void NightColorManager::uninhibit()
+void NightLightManager::uninhibit()
 {
     m_inhibitReferenceCount--;
 
@@ -183,69 +183,69 @@ void NightColorManager::uninhibit()
     }
 }
 
-bool NightColorManager::isEnabled() const
+bool NightLightManager::isEnabled() const
 {
     return m_active;
 }
 
-bool NightColorManager::isRunning() const
+bool NightLightManager::isRunning() const
 {
     return m_running;
 }
 
-int NightColorManager::currentTemperature() const
+int NightLightManager::currentTemperature() const
 {
     return m_currentTemp;
 }
 
-int NightColorManager::targetTemperature() const
+int NightLightManager::targetTemperature() const
 {
     return m_targetTemperature;
 }
 
-NightColorMode NightColorManager::mode() const
+NightLightMode NightLightManager::mode() const
 {
     return m_mode;
 }
 
-QDateTime NightColorManager::previousTransitionDateTime() const
+QDateTime NightLightManager::previousTransitionDateTime() const
 {
     return m_prev.first;
 }
 
-qint64 NightColorManager::previousTransitionDuration() const
+qint64 NightLightManager::previousTransitionDuration() const
 {
     return m_prev.first.msecsTo(m_prev.second);
 }
 
-QDateTime NightColorManager::scheduledTransitionDateTime() const
+QDateTime NightLightManager::scheduledTransitionDateTime() const
 {
     return m_next.first;
 }
 
-qint64 NightColorManager::scheduledTransitionDuration() const
+qint64 NightLightManager::scheduledTransitionDuration() const
 {
     return m_next.first.msecsTo(m_next.second);
 }
 
-void NightColorManager::readConfig()
+void NightLightManager::readConfig()
 {
-    NightColorSettings *s = NightColorSettings::self();
+    NightLightSettings *s = NightLightSettings::self();
     s->load();
 
     setEnabled(s->active());
 
-    const NightColorMode mode = s->mode();
+    const NightLightMode mode = s->mode();
     switch (s->mode()) {
-    case NightColorMode::Automatic:
-    case NightColorMode::Location:
-    case NightColorMode::Timings:
-    case NightColorMode::Constant:
+    case NightLightMode::Automatic:
+    case NightLightMode::Location:
+    case NightLightMode::Timings:
+    case NightLightMode::Constant:
         setMode(mode);
         break;
     default:
         // Fallback for invalid setting values.
-        setMode(NightColorMode::Automatic);
+        setMode(NightLightMode::Automatic);
         break;
     }
 
@@ -292,7 +292,7 @@ void NightColorManager::readConfig()
     m_trTime = std::max(trTime / 1000 / 60, 1);
 }
 
-void NightColorManager::resetAllTimers()
+void NightLightManager::resetAllTimers()
 {
     cancelAllTimers();
     setRunning(isEnabled() && !isInhibited());
@@ -302,14 +302,14 @@ void NightColorManager::resetAllTimers()
     resetQuickAdjustTimer(currentTargetTemp());
 }
 
-void NightColorManager::cancelAllTimers()
+void NightLightManager::cancelAllTimers()
 {
     m_slowUpdateStartTimer.reset();
     m_slowUpdateTimer.reset();
     m_quickAdjustTimer.reset();
 }
 
-void NightColorManager::resetQuickAdjustTimer(int targetTemp)
+void NightLightManager::resetQuickAdjustTimer(int targetTemp)
 {
     int tempDiff = std::abs(targetTemp - m_currentTemp);
     // allow tolerance of one TEMPERATURE_STEP to compensate if a slow update is coincidental
@@ -331,7 +331,7 @@ void NightColorManager::resetQuickAdjustTimer(int targetTemp)
     }
 }
 
-void NightColorManager::quickAdjust(int targetTemp)
+void NightLightManager::quickAdjust(int targetTemp)
 {
     if (!m_quickAdjustTimer) {
         return;
@@ -353,7 +353,7 @@ void NightColorManager::quickAdjust(int targetTemp)
     }
 }
 
-void NightColorManager::resetSlowUpdateStartTimer()
+void NightLightManager::resetSlowUpdateStartTimer()
 {
     m_slowUpdateStartTimer.reset();
 
@@ -364,21 +364,21 @@ void NightColorManager::resetSlowUpdateStartTimer()
 
     // There is no need for starting the slow update timer. Screen color temperature
     // will be constant all the time now.
-    if (m_mode == NightColorMode::Constant) {
+    if (m_mode == NightLightMode::Constant) {
         return;
     }
 
     // set up the next slow update
     m_slowUpdateStartTimer = std::make_unique<QTimer>();
     m_slowUpdateStartTimer->setSingleShot(true);
-    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, &NightColorManager::resetSlowUpdateStartTimer);
+    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, &NightLightManager::resetSlowUpdateStartTimer);
 
     updateTransitionTimings(false);
     updateTargetTemperature();
 
     const int diff = QDateTime::currentDateTime().msecsTo(m_next.first);
     if (diff <= 0) {
-        qCCritical(KWIN_NIGHTCOLOR) << "Error in time calculation. Deactivating Night Color.";
+        qCCritical(KWIN_NIGHTLIGHT) << "Error in time calculation. Deactivating Night Light.";
         return;
     }
     m_slowUpdateStartTimer->start(diff);
@@ -387,7 +387,7 @@ void NightColorManager::resetSlowUpdateStartTimer()
     resetSlowUpdateTimer();
 }
 
-void NightColorManager::resetSlowUpdateTimer()
+void NightLightManager::resetSlowUpdateTimer()
 {
     m_slowUpdateTimer.reset();
 
@@ -424,7 +424,7 @@ void NightColorManager::resetSlowUpdateTimer()
     }
 }
 
-void NightColorManager::slowUpdate(int targetTemp)
+void NightLightManager::slowUpdate(int targetTemp)
 {
     if (!m_slowUpdateTimer) {
         return;
@@ -442,7 +442,7 @@ void NightColorManager::slowUpdate(int targetTemp)
     }
 }
 
-void NightColorManager::preview(uint previewTemp)
+void NightLightManager::preview(uint previewTemp)
 {
     resetQuickAdjustTimer((int)previewTemp);
     if (m_previewTimer) {
@@ -450,7 +450,7 @@ void NightColorManager::preview(uint previewTemp)
     }
     m_previewTimer = std::make_unique<QTimer>();
     m_previewTimer->setSingleShot(true);
-    connect(m_previewTimer.get(), &QTimer::timeout, this, &NightColorManager::stopPreview);
+    connect(m_previewTimer.get(), &QTimer::timeout, this, &NightLightManager::stopPreview);
     m_previewTimer->start(15000);
 
     QDBusMessage message = QDBusMessage::createMethodCall(
@@ -464,7 +464,7 @@ void NightColorManager::preview(uint previewTemp)
     QDBusConnection::sessionBus().asyncCall(message);
 }
 
-void NightColorManager::stopPreview()
+void NightLightManager::stopPreview()
 {
     if (m_previewTimer && m_previewTimer->isActive()) {
         updateTransitionTimings(false);
@@ -473,9 +473,9 @@ void NightColorManager::stopPreview()
     }
 }
 
-void NightColorManager::updateTargetTemperature()
+void NightLightManager::updateTargetTemperature()
 {
-    const int targetTemperature = mode() != NightColorMode::Constant && daylight() ? m_dayTargetTemp : m_nightTargetTemp;
+    const int targetTemperature = mode() != NightLightMode::Constant && daylight() ? m_dayTargetTemp : m_nightTargetTemp;
 
     if (m_targetTemperature == targetTemperature) {
         return;
@@ -486,16 +486,16 @@ void NightColorManager::updateTargetTemperature()
     Q_EMIT targetTemperatureChanged();
 }
 
-void NightColorManager::updateTransitionTimings(bool force)
+void NightLightManager::updateTransitionTimings(bool force)
 {
     const auto oldPrev = m_prev;
     const auto oldNext = m_next;
 
-    if (m_mode == NightColorMode::Constant) {
+    if (m_mode == NightLightMode::Constant) {
         setDaylight(false);
         m_next = DateTimes();
         m_prev = DateTimes();
-    } else if (m_mode == NightColorMode::Timings) {
+    } else if (m_mode == NightLightMode::Timings) {
         const QDateTime todayNow = QDateTime::currentDateTime();
 
         const QDateTime nextMorB = QDateTime(todayNow.date().addDays(m_morning < todayNow.time()), m_morning);
@@ -516,7 +516,7 @@ void NightColorManager::updateTransitionTimings(bool force)
         const QDateTime todayNow = QDateTime::currentDateTime();
 
         double lat, lng;
-        if (m_mode == NightColorMode::Automatic) {
+        if (m_mode == NightLightMode::Automatic) {
             lat = m_latAuto;
             lng = m_lngAuto;
         } else {
@@ -569,7 +569,7 @@ void NightColorManager::updateTransitionTimings(bool force)
     }
 }
 
-DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
+DateTimes NightLightManager::getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const
 {
     DateTimes dateTimes = calculateSunTimings(dateTime, latitude, longitude, morning);
     // At locations near the poles it is possible, that we can't
@@ -584,7 +584,7 @@ DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double lat
             dateTimes.first = dateTimes.second.addMSecs(-FALLBACK_SLOW_UPDATE_TIME);
         } else {
             // Just use default values for morning and evening, but the user
-            // will probably deactivate Night Color anyway if he is living
+            // will probably deactivate Night Light anyway if he is living
             // in a region without clear sun rise and set.
             const QTime referenceTime = morning ? QTime(6, 0) : QTime(18, 0);
             dateTimes.first = QDateTime(dateTime.date(), referenceTime);
@@ -594,7 +594,7 @@ DateTimes NightColorManager::getSunTimings(const QDateTime &dateTime, double lat
     return dateTimes;
 }
 
-bool NightColorManager::checkAutomaticSunTimings() const
+bool NightLightManager::checkAutomaticSunTimings() const
 {
     if (m_prev.first.isValid() && m_prev.second.isValid() && m_next.first.isValid() && m_next.second.isValid()) {
         const QDateTime todayNow = QDateTime::currentDateTime();
@@ -603,18 +603,18 @@ bool NightColorManager::checkAutomaticSunTimings() const
     return false;
 }
 
-bool NightColorManager::daylight() const
+bool NightLightManager::daylight() const
 {
     return m_daylight;
 }
 
-int NightColorManager::currentTargetTemp() const
+int NightLightManager::currentTargetTemp() const
 {
     if (!m_running) {
         return DEFAULT_DAY_TEMPERATURE;
     }
 
-    if (m_mode == NightColorMode::Constant) {
+    if (m_mode == NightLightMode::Constant) {
         return m_nightTargetTemp;
     }
 
@@ -640,7 +640,7 @@ int NightColorManager::currentTargetTemp() const
     }
 }
 
-void NightColorManager::commitGammaRamps(int temperature)
+void NightLightManager::commitGammaRamps(int temperature)
 {
     const QList<ColorDevice *> devices = kwinApp()->colorManager()->devices();
     for (ColorDevice *device : devices) {
@@ -650,9 +650,9 @@ void NightColorManager::commitGammaRamps(int temperature)
     setCurrentTemperature(temperature);
 }
 
-void NightColorManager::autoLocationUpdate(double latitude, double longitude)
+void NightLightManager::autoLocationUpdate(double latitude, double longitude)
 {
-    qCDebug(KWIN_NIGHTCOLOR, "Received new location (lat: %f, lng: %f)", latitude, longitude);
+    qCDebug(KWIN_NIGHTLIGHT, "Received new location (lat: %f, lng: %f)", latitude, longitude);
 
     if (!checkLocation(latitude, longitude)) {
         return;
@@ -666,7 +666,7 @@ void NightColorManager::autoLocationUpdate(double latitude, double longitude)
     m_latAuto = latitude;
     m_lngAuto = longitude;
 
-    NightColorSettings *s = NightColorSettings::self();
+    NightLightSettings *s = NightLightSettings::self();
     s->setLatitudeAuto(latitude);
     s->setLongitudeAuto(longitude);
     s->save();
@@ -674,7 +674,7 @@ void NightColorManager::autoLocationUpdate(double latitude, double longitude)
     resetAllTimers();
 }
 
-void NightColorManager::setEnabled(bool enabled)
+void NightLightManager::setEnabled(bool enabled)
 {
     if (m_active == enabled) {
         return;
@@ -684,7 +684,7 @@ void NightColorManager::setEnabled(bool enabled)
     Q_EMIT enabledChanged();
 }
 
-void NightColorManager::setRunning(bool running)
+void NightLightManager::setRunning(bool running)
 {
     if (m_running == running) {
         return;
@@ -693,7 +693,7 @@ void NightColorManager::setRunning(bool running)
     Q_EMIT runningChanged();
 }
 
-void NightColorManager::setCurrentTemperature(int temperature)
+void NightLightManager::setCurrentTemperature(int temperature)
 {
     if (m_currentTemp == temperature) {
         return;
@@ -702,7 +702,7 @@ void NightColorManager::setCurrentTemperature(int temperature)
     Q_EMIT currentTemperatureChanged();
 }
 
-void NightColorManager::setMode(NightColorMode mode)
+void NightLightManager::setMode(NightLightMode mode)
 {
     if (m_mode == mode) {
         return;
@@ -711,7 +711,7 @@ void NightColorManager::setMode(NightColorMode mode)
     Q_EMIT modeChanged();
 }
 
-void NightColorManager::setDaylight(bool daylight)
+void NightLightManager::setDaylight(bool daylight)
 {
     if (m_daylight == daylight) {
         return;
@@ -722,4 +722,4 @@ void NightColorManager::setDaylight(bool daylight)
 
 } // namespace KWin
 
-#include "moc_nightcolormanager.cpp"
+#include "moc_nightlightmanager.cpp"

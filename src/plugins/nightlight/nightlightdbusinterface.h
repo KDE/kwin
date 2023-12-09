@@ -15,9 +15,9 @@
 namespace KWin
 {
 
-class NightColorManager;
+class NightLightManager;
 
-class NightColorDBusInterface : public QObject, public QDBusContext
+class NightLightDBusInterface : public QObject, public QDBusContext
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.ColorCorrect")
@@ -35,8 +35,8 @@ class NightColorDBusInterface : public QObject, public QDBusContext
     Q_PROPERTY(quint32 scheduledTransitionDuration READ scheduledTransitionDuration)
 
 public:
-    explicit NightColorDBusInterface(NightColorManager *parent);
-    ~NightColorDBusInterface() override;
+    explicit NightLightDBusInterface(NightLightManager *parent);
+    ~NightLightDBusInterface() override;
 
     bool isInhibited() const;
     bool isEnabled() const;
@@ -57,10 +57,10 @@ public Q_SLOTS:
      * @return void
      * @since 5.12
      */
-    void nightColorAutoLocationUpdate(double latitude, double longitude);
+    void nightLightAutoLocationUpdate(double latitude, double longitude);
 
     /**
-     * @brief Temporarily blocks Night Color.
+     * @brief Temporarily blocks Night Light.
      * @since 5.18
      */
     uint inhibit();
@@ -86,7 +86,7 @@ private Q_SLOTS:
 private:
     void uninhibit(const QString &serviceName, uint cookie);
 
-    NightColorManager *m_manager;
+    NightLightManager *m_manager;
     QDBusServiceWatcher *m_inhibitorWatcher;
     QMultiHash<QString, uint> m_inhibitors;
     uint m_lastInhibitionCookie = 0;

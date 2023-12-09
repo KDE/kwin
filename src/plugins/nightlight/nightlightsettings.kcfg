@@ -4,18 +4,18 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
                           http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile arg="true" />
-    <group name="NightColor">
+    <group name="NightLight">
         <entry name="Active" type="Bool">
             <default>false</default>
         </entry>
         <entry name="Mode" type="Enum">
-            <choices name="KWin::NightColorMode">
+            <choices name="KWin::NightLightMode">
                 <choice name="Automatic"/>
                 <choice name="Location"/>
                 <choice name="Times"/>
                 <choice name="Constant"/>
             </choices>
-            <default>NightColorMode::Automatic</default>
+            <default>NightLightMode::Automatic</default>
         </entry>
         <entry name="DayTemperature" type="Int">
             <default>6500</default>
