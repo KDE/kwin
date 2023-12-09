@@ -12,15 +12,28 @@
 #pragma once
 
 #include "effect/effect.h"
-
-class QAction;
+#include "scene/item.h"
 
 namespace KWin
 {
-class GLTexture;
 
-class TrackMouseEffect
-    : public Effect
+class ImageItem;
+
+class RotatingArcsItem : public Item
+{
+    Q_OBJECT
+
+public:
+    explicit RotatingArcsItem(Item *parentItem);
+
+    void rotate(qreal angle);
+
+private:
+    std::unique_ptr<ImageItem> m_outerArcItem;
+    std::unique_ptr<ImageItem> m_innerArcItem;
+};
+
+class TrackMouseEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(Qt::KeyboardModifiers modifiers READ modifiers)
@@ -28,9 +41,8 @@ class TrackMouseEffect
 public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
+
     void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
-    void postPaintScreen() override;
     void reconfigure(ReconfigureFlags) override;
     bool isActive() const override;
 
@@ -50,23 +62,16 @@ private Q_SLOTS:
                           Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers oldmodifiers);
 
 private:
-    bool init();
-    void loadTexture();
-    QRect m_lastRect[2];
-    bool m_mousePolling;
-    float m_angle;
-    float m_angleBase;
-    std::unique_ptr<GLTexture> m_texture[2];
-    QAction *m_action;
-    QImage m_image[2];
-    Qt::KeyboardModifiers m_modifiers;
-
     enum class State {
         ActivatedByModifiers,
         ActivatedByShortcut,
         Inactive
     };
     State m_state = State::Inactive;
+    bool m_mousePolling = false;
+    float m_angle = 0;
+    Qt::KeyboardModifiers m_modifiers;
+    std::unique_ptr<RotatingArcsItem> m_rotatingArcsItem;
 };
 
 } // namespace
