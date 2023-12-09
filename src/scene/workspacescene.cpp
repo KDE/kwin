@@ -382,7 +382,7 @@ void WorkspaceScene::paint(const RenderTarget &renderTarget, const QRegion &regi
     if (m_overlayItem) {
         const QRegion repaint = region & m_overlayItem->mapToScene(m_overlayItem->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), 0, repaint, WindowPaintData(viewport.projectionMatrix()));
+            m_renderer->renderItem(renderTarget, viewport, m_overlayItem.get(), PAINT_SCREEN_TRANSFORMED, repaint, WindowPaintData(viewport.projectionMatrix()));
         }
     }
 
