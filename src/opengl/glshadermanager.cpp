@@ -130,13 +130,13 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         textureLookup = glsl_es_300 ? QByteArrayLiteral("texture") : QByteArrayLiteral("texture2D");
         output = glsl_es_300 ? QByteArrayLiteral("fragColor") : QByteArrayLiteral("gl_FragColor");
     }
-    if (!gl->isGLES() || gl->glVersion() >= Version(3, 0)) {
+    if (gl->glslVersion() >= Version(1, 30)) {
+        // mix with bvec3 is only supported with glsl 1.30 and greater
         stream << "\n";
         stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
         stream << "    return mix(left, right, rightFactor);\n";
         stream << "}\n";
     } else {
-        // GLES 2 doesn't natively support mix with bvec3
         stream << "\n";
         stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
         stream << "    return mix(left, right, vec3(rightFactor.r ? 1.0 : 0.0, rightFactor.g ? 1.0 : 0.0, rightFactor.b ? 1.0 : 0.0));\n";
