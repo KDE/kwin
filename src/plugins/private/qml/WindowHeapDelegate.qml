@@ -366,6 +366,11 @@ Item {
         }
     }
 
+    TapHandler {
+        acceptedButtons: Qt.MiddleButton
+        onTapped: thumb.window.closeWindow();
+    }
+
     component DragManager : DragHandler {
         target: null
         grabPermissions: PointerHandler.CanTakeOverFromAnything
