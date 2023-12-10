@@ -476,6 +476,7 @@ FocusScope {
                     // Scales down further, still in grid, to have some gaps between
                     // the desktops.
                     Scale {
+                        id: gapsScale
                         origin.x: width / 2
                         origin.y: height / 2
                         xScale: 1 - 0.02 * gridVal
@@ -501,6 +502,7 @@ FocusScope {
                     },
                     // Scales down the preview slighly when in Overview mode
                     Scale {
+                        id: overviewScale
                         origin.x: width / 2
                         origin.y: height / 2
                         property real scale: Math.min(maxWidth / width, maxHeight / height)
@@ -632,6 +634,7 @@ FocusScope {
                     }
                     delegate: WindowHeapDelegate {
                         windowHeap: heap
+                        elementScale: overviewScale.xScale * gridScale.xScale * gapsScale.xScale
 
                         // This is preferable over using gestureInProgress values since gridVal and
                         // overviewVal are animated even after the gesture ends, and since the partial

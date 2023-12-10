@@ -25,6 +25,7 @@ Item {
     readonly property bool selected: windowHeap.selectedIndex === index
     property real partialActivationFactor: effect.partialActivationFactor
     property bool gestureInProgress: effect.gestureInProgress
+    property real elementScale: 1
 
     // no desktops is a special value which means "All Desktops"
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
@@ -453,6 +454,13 @@ Item {
             Accessible.name: text
 
             onClicked: thumb.window.closeWindow();
+
+            transform: Scale {
+                origin.x: closeButton.width
+                origin.y: 0
+                xScale: 1 / elementScale
+                yScale: xScale
+            }
         }
     }
 
