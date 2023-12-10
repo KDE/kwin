@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2023-12-10 01:59+0000\n"
 "PO-Revision-Date: 2005-11-28 12:28+0200\n"
 "Last-Translator: Kobus Venter <kabousv@therugby.co.za>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -2348,28 +2348,28 @@ msgstr "Na Werkskerm"
 msgid "Add Virtual Desktop"
 msgstr "Wissel na Werkskerm 1"
 
-#: plugins/overview/qml/main.qml:374
+#: plugins/overview/qml/main.qml:381
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Na Werkskerm"
 
-#: plugins/overview/qml/main.qml:380
+#: plugins/overview/qml/main.qml:387
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Wissel na Werkskerm 1"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:394
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Konfigureer Venster Gedrag..."
 
-#: plugins/overview/qml/main.qml:715
+#: plugins/overview/qml/main.qml:723
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgctxt "@info:placeholder"

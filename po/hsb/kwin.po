@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2023-12-10 01:59+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -2351,28 +2351,28 @@ msgstr "Na &dźěłowy powjerch"
 msgid "Add Virtual Desktop"
 msgstr "Na &dźěłowy powjerch"
 
-#: plugins/overview/qml/main.qml:374
+#: plugins/overview/qml/main.qml:381
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Na &dźěłowy powjerch"
 
-#: plugins/overview/qml/main.qml:380
+#: plugins/overview/qml/main.qml:387
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Na &dźěłowy powjerch"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:394
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Zadźerženje woknow nastajić..."
 
-#: plugins/overview/qml/main.qml:715
+#: plugins/overview/qml/main.qml:723
 #, fuzzy, kde-format
 #| msgid "Close window?"
 msgctxt "@info:placeholder"

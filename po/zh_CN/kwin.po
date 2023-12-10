@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
-"PO-Revision-Date: 2023-11-25 02:26\n"
+"POT-Creation-Date: 2023-12-10 01:59+0000\n"
+"PO-Revision-Date: 2023-12-09 09:24\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -38,12 +38,11 @@ msgid "Press right control key to grab pointer"
 msgstr "按右 Ctrl 键抓取指针"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland 显示特效混合器"
+msgstr "KDE Wayland 显示特效混合器 %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1153,6 +1152,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> 没有响应。您想要强制终止此应用程序吗？</"
+"para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1161,56 +1162,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para><application>%2</application> 的“%1”没有响应。您想要强制终止此应用程序"
+"吗？</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>您想要强制关闭这个程序吗？</para><para><warning>强制关闭该程序将关闭它"
-"的所有子窗口。所有未保存的数据都将丢失。</warning></para>"
+"<para><emphasis strong='true'>强制终止此应用程序将会关闭它的所有窗口。所有尚"
+"未保存的数据都将丢失。</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "终止程序 %1(&T)"
+msgstr "终止 %1(&T)"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "继续等待"
+msgstr "继续等待(&W)"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(没有响应)"
+msgstr "没有响应"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "进程 ID：%1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "主机名"
+msgstr "主机名：%1"
 
 #: input.cpp:2022
 #, kde-format
@@ -2315,25 +2308,25 @@ msgstr "删除虚拟桌面"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
-#: plugins/overview/qml/main.qml:374
+#: plugins/overview/qml/main.qml:381
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "没有其他可显示的虚拟桌面"
 
-#: plugins/overview/qml/main.qml:380
+#: plugins/overview/qml/main.qml:387
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:394
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "配置虚拟桌面…"
 
-#: plugins/overview/qml/main.qml:715
+#: plugins/overview/qml/main.qml:723
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -4177,32 +4170,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "milliseconds"
-#~ msgstr "毫秒"
-
-#~ msgctxt ""
-#~ "Title of nested KWin Wayland with Wayland socket identifier as argument"
-#~ msgid "KDE Wayland Compositor %1 (%2)"
-#~ msgstr "KDE Wayland 显示特效混合器 %1 (%2)"
-
-#~ msgctxt "@info"
-#~ msgid "<b>Application \"%1\" is not responding</b>"
-#~ msgstr "<b>应用程序“%1”没有响应</b>"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3) but the application is not responding.</para>"
-#~ msgstr ""
-#~ "<para>您尝试关闭应用程序“%2”的窗口“%1”(进程 ID：%3)，但是该程序未响应。</"
-#~ "para>"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
-#~ "para>"
-#~ msgstr ""
-#~ "<para>您尝试关闭运行于主机“%4”的应用程序“%2”的窗口“%1”(进程 ID：%3)，但是"
-#~ "该程序未响应。</para>"

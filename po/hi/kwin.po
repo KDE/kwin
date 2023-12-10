@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2023-12-10 01:59+0000\n"
 "PO-Revision-Date: 2021-08-21 16:25+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -2401,28 +2401,28 @@ msgstr "डेस्कटॉप पर (&D)"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटॉप ग्रिड दिखाएँ"
 
-#: plugins/overview/qml/main.qml:374
+#: plugins/overview/qml/main.qml:381
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "डेस्कटॉप पर (&D)"
 
-#: plugins/overview/qml/main.qml:380
+#: plugins/overview/qml/main.qml:387
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटॉप ग्रिड दिखाएँ"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:394
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "विंडो बर्ताव कॉन्फ़िगर करें... (&e)"
 
-#: plugins/overview/qml/main.qml:715
+#: plugins/overview/qml/main.qml:723
 #, fuzzy, kde-format
 #| msgid "Moved or resized windows:"
 msgctxt "@info:placeholder"

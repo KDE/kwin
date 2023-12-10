@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
-"PO-Revision-Date: 2023-11-30 17:12+0300\n"
+"POT-Creation-Date: 2023-12-10 01:59+0000\n"
+"PO-Revision-Date: 2023-12-09 22:16+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.01.80\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1401,7 +1401,7 @@ msgstr ""
 #: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr "Önayarlanmış XWayland ekranı"
+msgstr "Önceden ayarlanan XWayland görüntüsü"
 
 #: main_wayland.cpp:334
 #, kde-format
@@ -2335,25 +2335,25 @@ msgstr "Sanal Masaüstünü Sil"
 msgid "Add Virtual Desktop"
 msgstr "Sanal Masaüstü Ekle"
 
-#: plugins/overview/qml/main.qml:374
+#: plugins/overview/qml/main.qml:381
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Gösterilecek başka sanal masaüstü yok"
 
-#: plugins/overview/qml/main.qml:380
+#: plugins/overview/qml/main.qml:387
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Sanal Masaüstü Ekle"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:394
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Sanal Masaüstlerini Yapılandır…"
 
-#: plugins/overview/qml/main.qml:715
+#: plugins/overview/qml/main.qml:723
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
