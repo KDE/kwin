@@ -10,6 +10,7 @@
 #include "core/graphicsbuffer.h"
 #include "drm_buffer.h"
 #include "drm_commit.h"
+#include "drm_commit_thread.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_gpu.h"
@@ -37,9 +38,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
     }
-    // the pageflip takes ownership of the object
-    commit.release();
-    m_legacyPageflipPending = true;
+    m_commitThread->setPendingCommit(std::move(commit));
     return Error::None;
 }
 

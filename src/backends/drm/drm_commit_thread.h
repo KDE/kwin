@@ -18,7 +18,9 @@ namespace KWin
 {
 
 class DrmGpu;
+class DrmCommit;
 class DrmAtomicCommit;
+class DrmLegacyCommit;
 
 using TimePoint = std::chrono::steady_clock::time_point;
 
@@ -30,6 +32,7 @@ public:
     ~DrmCommitThread();
 
     void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
+    void setPendingCommit(std::unique_ptr<DrmLegacyCommit> &&commit);
 
     void setRefreshRate(uint32_t maximum);
     void pageFlipped(std::chrono::nanoseconds timestamp);
@@ -43,6 +46,7 @@ private:
     TimePoint estimateNextVblank(TimePoint now) const;
     void optimizeCommits();
 
+    std::unique_ptr<DrmCommit> m_committed;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commits;
     std::unique_ptr<QThread> m_thread;
     std::mutex m_mutex;
@@ -52,7 +56,6 @@ private:
     std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
     bool m_vrr = false;
-    bool m_pageflipPending = false;
 };
 
 }

@@ -562,7 +562,6 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
     commit->pageFlipped(timestamp);
-    delete commit;
 }
 
 void DrmGpu::dispatchEvents()

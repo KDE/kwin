@@ -437,7 +437,6 @@ DrmGpu *DrmPipeline::gpu() const
 void DrmPipeline::pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type, PresentationMode mode)
 {
     m_commitThread->pageFlipped(timestamp);
-    m_legacyPageflipPending = false;
     if (type == PageflipType::Modeset && !activePending()) {
         return;
     }
@@ -520,7 +519,7 @@ void DrmPipeline::revertPendingChanges()
 
 bool DrmPipeline::pageflipsPending() const
 {
-    return gpu()->atomicModeSetting() ? m_commitThread->pageflipsPending() : m_legacyPageflipPending;
+    return m_commitThread->pageflipsPending();
 }
 
 bool DrmPipeline::modesetPresentPending() const

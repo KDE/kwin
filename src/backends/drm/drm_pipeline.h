@@ -170,7 +170,6 @@ private:
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;
 
-    bool m_legacyPageflipPending = false;
     bool m_modesetPresentPending = false;
 
     struct State

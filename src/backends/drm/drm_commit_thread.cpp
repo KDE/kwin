@@ -33,7 +33,7 @@ DrmCommitThread::DrmCommitThread(const QString &name)
             if (m_commits.empty()) {
                 m_commitPending.wait(lock);
             }
-            if (m_pageflipPending) {
+            if (m_committed) {
                 // the commit would fail with EBUSY, wait until the pageflip is done
                 continue;
             }
@@ -58,10 +58,8 @@ DrmCommitThread::DrmCommitThread(const QString &name)
                 const auto vrr = commit->isVrr();
                 const bool success = commit->commit();
                 if (success) {
-                    m_pageflipPending = true;
                     m_vrr = vrr.value_or(m_vrr);
-                    // the atomic commit takes ownership of the object
-                    commit.release();
+                    m_committed = std::move(commit);
                     m_commits.erase(m_commits.begin());
                 } else {
                     const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
@@ -197,6 +195,11 @@ void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     m_commitPending.notify_all();
 }
 
+void DrmCommitThread::setPendingCommit(std::unique_ptr<DrmLegacyCommit> &&commit)
+{
+    m_committed = std::move(commit);
+}
+
 void DrmCommitThread::clearDroppedCommits()
 {
     std::unique_lock lock(m_mutex);
@@ -213,7 +216,7 @@ void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
     m_lastPageflip = TimePoint(timestamp);
-    m_pageflipPending = false;
+    m_committed.reset();
     if (!m_commits.empty()) {
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());
         m_commitPending.notify_all();
@@ -223,7 +226,7 @@ void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 bool DrmCommitThread::pageflipsPending()
 {
     std::unique_lock lock(m_mutex);
-    return !m_commits.empty() || m_pageflipPending;
+    return !m_commits.empty() || m_committed;
 }
 
 TimePoint DrmCommitThread::estimateNextVblank(TimePoint now) const
