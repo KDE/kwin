@@ -152,6 +152,7 @@ private:
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
 
+    std::optional<QByteArray> preprocess(const QByteArray &src, int recursionDepth = 0) const;
     QByteArray generateVertexSource(ShaderTraits traits) const;
     QByteArray generateFragmentSource(ShaderTraits traits) const;
     std::unique_ptr<GLShader> generateShader(ShaderTraits traits);

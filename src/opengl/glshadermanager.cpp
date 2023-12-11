@@ -130,18 +130,6 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         textureLookup = glsl_es_300 ? QByteArrayLiteral("texture") : QByteArrayLiteral("texture2D");
         output = glsl_es_300 ? QByteArrayLiteral("fragColor") : QByteArrayLiteral("gl_FragColor");
     }
-    if (gl->glslVersion() >= Version(1, 30)) {
-        // mix with bvec3 is only supported with glsl 1.30 and greater
-        stream << "\n";
-        stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
-        stream << "    return mix(left, right, rightFactor);\n";
-        stream << "}\n";
-    } else {
-        stream << "\n";
-        stream << "vec3 doMix(vec3 left, vec3 right, bvec3 rightFactor) {\n";
-        stream << "    return mix(left, right, vec3(rightFactor.r ? 1.0 : 0.0, rightFactor.g ? 1.0 : 0.0, rightFactor.b ? 1.0 : 0.0));\n";
-        stream << "}\n";
-    }
 
     if (traits & ShaderTrait::MapTexture) {
         stream << "uniform sampler2D sampler;\n";
@@ -159,64 +147,10 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "uniform vec4 modulation;\n";
     }
     if (traits & ShaderTrait::AdjustSaturation) {
-        stream << "uniform float saturation;\n";
-        stream << "uniform vec3 primaryBrightness;\n";
+        stream << "#include \"saturation.glsl\"\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        stream << "const int sRGB_EOTF = 0;\n";
-        stream << "const int linear_EOTF = 1;\n";
-        stream << "const int PQ_EOTF = 2;\n";
-        stream << "const int scRGB_EOTF = 3;\n";
-        stream << "const int gamma22_EOTF = 4;\n";
-        stream << "\n";
-        stream << "uniform mat3 colorimetryTransform;\n";
-        stream << "uniform int sourceNamedTransferFunction;\n";
-        stream << "uniform int destinationNamedTransferFunction;\n";
-        stream << "uniform float sdrBrightness;// in nits\n";
-        stream << "uniform float maxHdrBrightness; // in nits\n";
-        stream << "\n";
-        stream << "vec3 nitsToPq(vec3 nits) {\n";
-        stream << "    vec3 normalized = clamp(nits / 10000.0, vec3(0), vec3(1));\n";
-        stream << "    const float c1 = 0.8359375;\n";
-        stream << "    const float c2 = 18.8515625;\n";
-        stream << "    const float c3 = 18.6875;\n";
-        stream << "    const float m1 = 0.1593017578125;\n";
-        stream << "    const float m2 = 78.84375;\n";
-        stream << "    vec3 powed = pow(normalized, vec3(m1));\n";
-        stream << "    vec3 num = vec3(c1) + c2 * powed;\n";
-        stream << "    vec3 denum = vec3(1.0) + c3 * powed;\n";
-        stream << "    return pow(num / denum, vec3(m2));\n";
-        stream << "}\n";
-        stream << "vec3 pqToNits(vec3 pq) {\n";
-        stream << "    const float c1 = 0.8359375;\n";
-        stream << "    const float c2 = 18.8515625;\n";
-        stream << "    const float c3 = 18.6875;\n";
-        stream << "    const float m1_inv = 1.0 / 0.1593017578125;\n";
-        stream << "    const float m2_inv = 1.0 / 78.84375;\n";
-        stream << "    vec3 powed = pow(pq, vec3(m2_inv));\n";
-        stream << "    vec3 num = max(powed - c1, vec3(0.0));\n";
-        stream << "    vec3 den = c2 - c3 * powed;\n";
-        stream << "    return 10000.0 * pow(num / den, vec3(m1_inv));\n";
-        stream << "}\n";
-        stream << "vec3 srgbToLinear(vec3 color) {\n";
-        stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.04045f));\n";
-        stream << "    vec3 loPart = color / 12.92f;\n";
-        stream << "    vec3 hiPart = pow((color + 0.055f) / 1.055f, vec3(12.0f / 5.0f));\n";
-        stream << "    return doMix(hiPart, loPart, isLow);\n";
-        stream << "}\n";
-        stream << "\n";
-        stream << "vec3 linearToSrgb(vec3 color) {\n";
-        stream << "    bvec3 isLow = lessThanEqual(color, vec3(0.0031308f));\n";
-        stream << "    vec3 loPart = color * 12.92f;\n";
-        stream << "    vec3 hiPart = pow(color, vec3(5.0f / 12.0f)) * 1.055f - 0.055f;\n";
-        stream << "    return doMix(hiPart, loPart, isLow);\n";
-        stream << "}\n";
-        stream << "\n";
-        stream << "vec3 doTonemapping(vec3 color, float maxBrightness) {\n";
-        stream << "    // colorimetric 'tonemapping': just clip to the output color space\n";
-        stream << "    return clamp(color, vec3(0.0), vec3(maxBrightness));\n";
-        stream << "}\n";
-        stream << "\n";
+        stream << "#include \"colormanagement.glsl\"";
     }
 
     if (output != QByteArrayLiteral("gl_FragColor")) {
@@ -252,48 +186,16 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "    result = geometryColor;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        stream << "    if (sourceNamedTransferFunction == sRGB_EOTF) {\n";
-        stream << "        result.rgb /= max(result.a, 0.001);\n";
-        stream << "        result.rgb = sdrBrightness * srgbToLinear(result.rgb);\n";
-        stream << "        result.rgb *= result.a;\n";
-        stream << "    } else if (sourceNamedTransferFunction == PQ_EOTF) {\n";
-        stream << "        result.rgb /= max(result.a, 0.001);\n";
-        stream << "        result.rgb = pqToNits(result.rgb);\n";
-        stream << "        result.rgb *= result.a;\n";
-        stream << "    } else if (sourceNamedTransferFunction == scRGB_EOTF) {\n";
-        stream << "        result.rgb *= 80.0;\n";
-        stream << "    } else if (sourceNamedTransferFunction == gamma22_EOTF) {\n";
-        stream << "        result.rgb /= max(result.a, 0.001);\n";
-        stream << "        result.rgb = sdrBrightness * pow(result.rgb, vec3(2.2));\n";
-        stream << "        result.rgb *= result.a;\n";
-        stream << "    }\n";
-        stream << "    result.rgb = doTonemapping(colorimetryTransform * result.rgb, maxHdrBrightness);\n";
+        stream << "    result = sourceEncodingToNitsInDestinationColorspace(result);\n";
     }
     if (traits & ShaderTrait::AdjustSaturation) {
-        // this calculates the Y component of the XYZ color representation for the color,
-        // which roughly corresponds to the brightness of the RGB tuple
-        stream << "    float Y = dot(result.rgb, primaryBrightness);\n";
-        stream << "    result.rgb = mix(vec3(Y), result.rgb, saturation);\n";
+        stream << "    result = adjustSaturation(result);\n";
     }
     if (traits & ShaderTrait::Modulate) {
         stream << "    result *= modulation;\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        stream << "    if (destinationNamedTransferFunction == sRGB_EOTF) {\n";
-        stream << "        result.rgb /= max(result.a, 0.001);\n";
-        stream << "        result.rgb = linearToSrgb(doTonemapping(result.rgb, sdrBrightness) / sdrBrightness);\n";
-        stream << "        result.rgb *= result.a;\n";
-        stream << "    } else if (destinationNamedTransferFunction == PQ_EOTF) {\n";
-        stream << "        result.rgb /= max(result.a, 0.001);\n";
-        stream << "        result.rgb = nitsToPq(result.rgb);\n";
-        stream << "        result.rgb *= result.a;\n";
-        stream << "    } else if (destinationNamedTransferFunction == scRGB_EOTF) {\n";
-        stream << "        result.rgb /= 80.0;\n";
-        stream << "    } else if (destinationNamedTransferFunction == gamma22_EOTF) {\n";
-        stream << "        result.rgb /= max(result.a, 0.001);\n";
-        stream << "        result.rgb = pow(result.rgb / sdrBrightness, vec3(1.0 / 2.2));\n";
-        stream << "        result.rgb *= result.a;\n";
-        stream << "    }\n";
+        stream << "    result = nitsToDestinationEncoding(result);\n";
     }
 
     stream << "    " << output << " = result;\n";
@@ -307,21 +209,85 @@ std::unique_ptr<GLShader> ShaderManager::generateShader(ShaderTraits traits)
     return generateCustomShader(traits);
 }
 
+std::optional<QByteArray> ShaderManager::preprocess(const QByteArray &src, int recursionDepth) const
+{
+    recursionDepth++;
+    if (recursionDepth > 10) {
+        qCWarning(KWIN_OPENGL, "shader has too many recursive includes!");
+        return std::nullopt;
+    }
+    QByteArray ret;
+    ret.reserve(src.size());
+    const auto split = src.split('\n');
+    for (auto it = split.begin(); it != split.end(); it++) {
+        const auto &line = *it;
+        if (line.startsWith("#include \"") && line.endsWith("\"")) {
+            static constexpr ssize_t includeLength = QByteArrayView("#include \"").size();
+            const QByteArray path = ":/opengl/" + line.mid(includeLength, line.size() - includeLength - 1);
+            QFile file(path);
+            if (!file.open(QIODevice::ReadOnly)) {
+                qCWarning(KWIN_OPENGL, "failed to read include line %s", qPrintable(line));
+                return std::nullopt;
+            }
+            const auto processed = preprocess(file.readAll(), recursionDepth);
+            if (!processed) {
+                return std::nullopt;
+            }
+            ret.append(*processed);
+        } else if (line.startsWith("#if glslVersion ")) {
+            static constexpr ssize_t ifLength = QByteArrayView("#if glslVersion ").size();
+            if (line.size() < ifLength + 3) {
+                qCWarning(KWIN_OPENGL, "failed parsing #if condition in line %s", qPrintable(line));
+                return std::nullopt;
+            }
+            const QByteArray condition = line.mid(ifLength);
+            const QByteArray versionString = line.mid(ifLength + 2);
+            if (!condition.startsWith(">=")) {
+                qCWarning(KWIN_OPENGL, "unsupported comparison operator in line %s", qPrintable(line));
+                return std::nullopt;
+            }
+            const Version version = Version::parseString(versionString);
+            if (!version.isValid()) {
+                qCWarning(KWIN_OPENGL, "invalid version in line %s", qPrintable(line));
+                return std::nullopt;
+            }
+            const bool keep = GLPlatform::instance()->glslVersion() >= version;
+            for (it = it + 1; it != split.end(); it++) {
+                if (it->startsWith("#endif")) {
+                    break;
+                } else if (it->startsWith("#else")) {
+                    for (; it != split.end(); it++) {
+                        if (it->startsWith("#endif")) {
+                            break;
+                        } else if (!keep) {
+                            ret.append(*it);
+                            ret.append('\n');
+                        }
+                    }
+                    break;
+                } else if (keep) {
+                    ret.append(*it);
+                    ret.append('\n');
+                }
+            }
+        } else {
+            ret.append(line);
+            ret.append('\n');
+        }
+    }
+    return ret;
+}
+
 std::unique_ptr<GLShader> ShaderManager::generateCustomShader(ShaderTraits traits, const QByteArray &vertexSource, const QByteArray &fragmentSource)
 {
-    const QByteArray vertex = vertexSource.isEmpty() ? generateVertexSource(traits) : vertexSource;
-    const QByteArray fragment = fragmentSource.isEmpty() ? generateFragmentSource(traits) : fragmentSource;
-
-#if 0
-    qCDebug(KWIN_OPENGL) << "**************";
-    qCDebug(KWIN_OPENGL) << vertex;
-    qCDebug(KWIN_OPENGL) << "**************";
-    qCDebug(KWIN_OPENGL) << fragment;
-    qCDebug(KWIN_OPENGL) << "**************";
-#endif
+    const auto vertex = preprocess(vertexSource.isEmpty() ? generateVertexSource(traits) : vertexSource);
+    const auto fragment = preprocess(fragmentSource.isEmpty() ? generateFragmentSource(traits) : fragmentSource);
+    if (!vertex || !fragment) {
+        return nullptr;
+    }
 
     std::unique_ptr<GLShader> shader{new GLShader(GLShader::ExplicitLinking)};
-    shader->load(vertex, fragment);
+    shader->load(*vertex, *fragment);
 
     shader->bindAttributeLocation("position", VA_Position);
     shader->bindAttributeLocation("texcoord", VA_TexCoord);
