@@ -361,8 +361,6 @@ bool DrmGpu::updateOutputs()
 
 void DrmGpu::removeOutputs()
 {
-    waitIdle();
-
     const auto outputs = m_drmOutputs;
     for (const auto &output : outputs) {
         removeOutput(output);
