@@ -502,12 +502,14 @@ MaximizeMode XdgToplevelWindow::requestedMaximizeMode() const
 QSizeF XdgToplevelWindow::minSize() const
 {
     const int enforcedMinimum = m_nextDecoration ? 150 : 20;
-    return rules()->checkMinSize(QSize(std::max(enforcedMinimum, m_shellSurface->minimumSize().width()), std::max(enforcedMinimum, m_shellSurface->minimumSize().height())));
+    return rules()->checkMinSize(m_shellSurface->minimumSize()).expandedTo(QSizeF(enforcedMinimum, enforcedMinimum));
 }
 
 QSizeF XdgToplevelWindow::maxSize() const
 {
-    return rules()->checkMaxSize(m_shellSurface->maximumSize());
+    // enforce the same minimum as for minSize, so that maxSize is always bigger than minSize
+    const int enforcedMinimum = m_nextDecoration ? 150 : 20;
+    return rules()->checkMaxSize(m_shellSurface->maximumSize()).expandedTo(QSizeF(enforcedMinimum, enforcedMinimum));
 }
 
 bool XdgToplevelWindow::isFullScreen() const
