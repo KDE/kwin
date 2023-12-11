@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1666958 $
+# Version: $Revision: 1667024 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -10,14 +10,14 @@
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2009, 2013.
 # Maciej Wikło <maciej.wiklo@wp.pl>, 2010.
 # Mirek Sabiniewicz <m.sabiniewicz@gmail.com>, 2010.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-10 01:59+0000\n"
-"PO-Revision-Date: 2023-10-21 11:33+0200\n"
-"Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
+"PO-Revision-Date: 2023-12-10 14:17+0100\n"
+"Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmai.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr ""
 ">\n"
 ">\n"
 ">\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -57,12 +57,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Naciśnij prawy przycisk Ctrl, aby przechwycić wskaźnik"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "Kompozytor KDE Wayland"
+msgstr "Kompozytor KDE Wayland %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1173,6 +1172,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> nie odpowiada. Czy chcesz zakończyć tę "
+"aplikację?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1181,57 +1182,49 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" od <application>%2</application> nie odpowiada. Czy chcesz "
+"zakończyć tę aplikację?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Czy na pewno zakończyć ten program?</para><para><warning>Zakończenie "
-"tego programu spowoduje zamknięcie wszystkich okien mu podległych oraz "
-"utratę niezapisanych danych.</warning></para>"
+"<para><emphasis strong='true'>Zakończenie tej aplikacji spowoduje zamknięcie "
+"wszystkich okien jej podległych oraz utratę niezapisanych danych.</"
+"emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Zakończ program %1"
+msgstr "&Zakończ %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Poczekaj dłużej"
+msgstr "&Poczekaj dłużej"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Nie odpowiada)"
+msgstr "Nie odpowiada"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "ID procesu: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "nazwa hosta"
+msgstr "Nazwa gospodarza: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -2240,31 +2233,26 @@ msgid "Arrow draw modifier keys:"
 msgstr "Klawisze odmieniające do rysowania strzałkami:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Barwy nocne wyłączone"
+msgstr "Nocne światło wyłączone"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Barwy nocne włączone"
+msgstr "Nocne światło włączone"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Przełącz barwy nocne"
+msgstr "Przełącz nocne światło"
 
 #: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr "Podgląd temperatury kolorów"
+msgstr "Podgląd temperatury barw"
 
 #: plugins/outputlocator/outputlocator.cpp:50
 #, kde-format
@@ -3569,18 +3557,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Następująca aplikacja nie zamknęła się:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Nie wychodź"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Wyjdź mimo tego"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format

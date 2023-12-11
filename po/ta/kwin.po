@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-10 01:59+0000\n"
-"PO-Revision-Date: 2023-10-22 17:35+0530\n"
+"PO-Revision-Date: 2023-12-10 13:15+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -42,12 +42,11 @@ msgid "Press right control key to grab pointer"
 msgstr "சுட்டிக்குறியை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
+msgstr "கே.டீ.யீ. Wayland சாளரநிரல் %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -585,11 +584,10 @@ msgid "Swipe cancelled"
 msgstr ""
 
 #: debug_console.cpp:461
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 10"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "மேசை 10க்கு மாற்று "
+msgstr ""
 
 #: debug_console.cpp:467
 #, kde-format
@@ -971,13 +969,13 @@ msgstr ""
 #: debug_console.ui:136
 #, kde-format
 msgid "Vendor:"
-msgstr ""
+msgstr "வியாபாரி:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: debug_console.ui:143
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "வரைநிரல்:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:150
@@ -995,25 +993,25 @@ msgstr ""
 #: debug_console.ui:164
 #, kde-format
 msgid "Driver:"
-msgstr "இயக்கி:"
+msgstr "சாதனநிரல்:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: debug_console.ui:171
 #, kde-format
 msgid "GPU class:"
-msgstr ""
+msgstr "GPU வகை"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:178
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "OpenGL பதிப்பு:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:185
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "GLSL பதிப்பு:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:251
@@ -1159,6 +1157,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> பதிலளிக்கவில்லை. அதைக் கட்டாயப்படுத்தி மூட "
+"வேண்டுமா?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1167,57 +1167,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para><application>%2</application> என்பதன் \"%1\" பதிலளிக்கவில்லை. அதைக் "
+"கட்டாயப்படுத்தி மூட வேண்டுமா?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>இச்செயலியை கட்டாயப்படுத்தி மூட வேண்டுமா?</para><para><warning>ஒரு செயலியை "
-"கட்டாயப்படுத்தி மூடுதல், அதனில் சார்ந்த அனைத்து சாளரங்களையும் மூடும். சேமிக்கப்படாத "
-"தரவுகளை இழப்பீர்கள்.</warning></para>"
+"<para><emphasis strong='true'>இந்த செயலியை கட்டாயப்படுத்தி மூடுவது, அதன் அனைத்து "
+"சாளரங்களையும் மூடும். சேமிக்காதவற்றை இழப்பீர்.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "%1 என்ற செயலியை &கட்டாயமாக மூடு"
+msgstr "%1 என்பதை &நிறுத்து"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "காத்திரு"
+msgstr "இன்னும் நேரம் &காத்திரு"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(பதிலளிக்கவில்லை)"
+msgstr "பதிலளிக்கவில்லை"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "பணியின் எண்: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "புரவன்பெயர்"
+msgstr "புரவன் பெயர்: %1"
 
 #: input.cpp:2022
 #, kde-format
@@ -2214,26 +2205,21 @@ msgid "Arrow draw modifier keys:"
 msgstr "அம்பு வரைவிற்கான மாற்றிவிசைகள்:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:64
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "இரவு நிறமாற்றம் முடக்கப்பட்டது"
 
 #: plugins/nightcolor/nightcolormanager.cpp:65
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
 
 #: plugins/nightcolor/nightcolormanager.cpp:86
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "இரவு நிறமாற்றத்தை நிலைமாற்றி"
+msgstr "இரவு நிறமாற்றத்தை நிலைமாற்று"
 
 #: plugins/nightcolor/nightcolormanager.cpp:463
 #, kde-format
@@ -3546,18 +3532,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"பின்வரும் செயலிகள் மூடவில்லை:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "வெளியேறுவதை ரத்து செய்"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "இருப்பினும் வெளியேறு"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
