@@ -703,28 +703,29 @@ FocusScope {
 
     }
 
-    Column {
+    Loader {
+        id: searchResults
+        active: effect.searchText.length > 0 && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows)
         anchors.left: container.verticalDesktopBar ? desktopBar.right : parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.top: topBar.bottom
 
-        Item {
+        sourceComponent: Item {
             width: parent.width
             height: parent.height - topBar.height
-            visible: effect.searchText.length > 0 && (allDesktopHeaps.currentHeap.count === 0 || !effect.filterWindows)
             opacity: overviewVal
 
             PlasmaExtras.PlaceholderMessage {
                 id: placeholderMessage
-                visible: effect.searchText.length > 0 && allDesktopHeaps.currentHeap.count === 0 && effect.filterWindows
+                visible: allDesktopHeaps.currentHeap.count === 0 && effect.filterWindows
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: i18ndc("kwin", "@info:placeholder", "No matching windows")
             }
 
             Milou.ResultsView {
-                id: searchResults
+                id: milouView
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
@@ -735,7 +736,11 @@ FocusScope {
                     effect.deactivate();
                 }
             }
+
+            Keys.forwardTo: milouView
         }
+
+        Keys.forwardTo: item
     }
 
     Repeater {
