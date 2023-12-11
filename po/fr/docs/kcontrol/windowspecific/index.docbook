@@ -1118,7 +1118,7 @@
   <varlistentry
 ><term
 ><emphasis role="bold"
->Fermable</emphasis
+>Refermable</emphasis
 ></term>
     <listitem>
     <para
@@ -1255,12 +1255,12 @@
 >Épingler une fenêtre à un bureau et paramétrer d'autres attributs</title>
 <para
 >Épinglez &akregator; au <emphasis
->2ème Bureau virtuel</emphasis
+>deuxième bureau virtuel</emphasis
 >. De plus, lancez l'application avec une taille et un emplacement préférés. Pour chaque attribut, utilisez le <link linkend="parameters"
 >paramètre</link
 > <emphasis
 >Appliquer initialement</emphasis
->. Ainsi il pourra être remplacé pendant l'exécution. </para>
+>. Ainsi, il pourra être remplacé pendant l'exécution. </para>
 <para
 >La règle &kwin; est créée comme suit : </para>
 <orderedlist>
@@ -2097,8 +2097,8 @@
 <para
 >&Emacs; et <guilabel
 >gVim</guilabel
->, quand ils sont maximisés (mode plein écran) et sous certaines conditions peuvent rencontrer des erreurs de redimensionnement de fenêtre - rendez-vous au rapport de bug <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
->Emacs window resizes...</ulink
+>, quand ils sont maximisés (mode plein écran) et sous certaines conditions peuvent rencontrer des erreurs de redimensionnement de fenêtre - Veuillez consulter le rapport de bogue <ulink url="https://bugs.kde.org/show_bug.cgi?id=252314"
+>La fenêtre Emacs se re-dimensionne...</ulink
 >. Une règle &kwin; contournera ce problème. </para>
 <para
 >En supposant qu'une fenêtre &Emacs; soit ouverte : </para>
