@@ -400,7 +400,10 @@ void ExpoLayout::calculateWindowTransformationsClosest()
         QRect target(area.x() + (slot % columns) * slotWidth,
                      area.y() + (slot / columns) * slotHeight,
                      slotWidth, slotHeight);
-        target.adjust(m_spacing, m_spacing, -m_spacing, -m_spacing); // Borders
+        QRect adjustedTarget = target.adjusted(m_spacing, m_spacing, -m_spacing, -m_spacing);
+        if (adjustedTarget.isValid()) {
+            target = adjustedTarget; // Borders
+        }
         target = target.marginsRemoved(cell->margins());
 
         qreal scale;
@@ -688,7 +691,12 @@ void ExpoLayout::calculateWindowTransformationsNatural()
     }
 
     for (ExpoCell *cell : std::as_const(m_cells)) {
-        const QRect rect = centered(cell, targets.value(cell).marginsRemoved(cell->margins()));
+        const QRect &cellRect = targets.value(cell);
+        QRect cellRectWithoutMargins = cellRect.marginsRemoved(cell->margins());
+        if (!cellRectWithoutMargins.isValid()) {
+            cellRectWithoutMargins = cellRect;
+        }
+        const QRect rect = centered(cell, cellRectWithoutMargins);
 
         cell->setX(rect.x());
         cell->setY(rect.y());

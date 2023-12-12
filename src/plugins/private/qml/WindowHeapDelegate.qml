@@ -169,6 +169,7 @@ Item {
             id: caption
             visible: thumb.windowTitleVisible
             width: cell.width
+            maximumLineCount: 1
             anchors.top: parent.bottom
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
