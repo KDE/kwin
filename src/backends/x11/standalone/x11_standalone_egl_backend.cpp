@@ -69,7 +69,9 @@ EglBackend::EglBackend(::Display *display, X11StandaloneBackend *backend)
     m_vsyncMonitor->setRefreshRate(backend->renderLoop()->refreshRate());
 
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &EglBackend::vblank);
+    Q_ASSERT(workspace());
     connect(workspace(), &Workspace::geometryChanged, this, &EglBackend::screenGeometryChanged);
+    overlayWindow()->resize(workspace()->geometry().size());
 }
 
 EglBackend::~EglBackend()

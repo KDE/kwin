@@ -141,7 +141,9 @@ GlxBackend::GlxBackend(::Display *display, X11StandaloneBackend *backend)
     // by Mesa when using DRI2.
     QOpenGLContext::supportsThreadedOpenGL();
 
+    Q_ASSERT(workspace());
     connect(workspace(), &Workspace::geometryChanged, this, &GlxBackend::screenGeometryChanged);
+    overlayWindow()->resize(workspace()->geometry().size());
 }
 
 GlxBackend::~GlxBackend()
@@ -676,7 +678,7 @@ void GlxBackend::screenGeometryChanged()
     doneCurrent();
 
     XMoveResizeWindow(display(), window, 0, 0, size.width(), size.height());
-    overlayWindow()->setup(window);
+    overlayWindow()->resize(size);
     Xcb::sync();
 
     // The back buffer contents are now undefined

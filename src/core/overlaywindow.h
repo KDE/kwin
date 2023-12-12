@@ -27,7 +27,6 @@ public:
     virtual void setup(xcb_window_t window) = 0;
     virtual void show() = 0;
     virtual void hide() = 0; // hides and resets overlay window
-    virtual void setShape(const QRegion &reg) = 0;
     virtual void resize(const QSize &size) = 0;
     /// Destroys XComposite overlay window
     virtual void destroy() = 0;
