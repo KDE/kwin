@@ -249,8 +249,8 @@ void ApplicationX11::lostSelection()
     }
     destroyPlugins();
     destroyColorManager();
-    destroyWorkspace();
     destroyCompositor();
+    destroyWorkspace();
     // Remove windowmanager privileges
     Xcb::selectInput(kwinApp()->x11RootWindow(), XCB_EVENT_MASK_PROPERTY_CHANGE);
     removeNativeX11EventFilter();
