@@ -1,0 +1,72 @@
+# Copyright (C) 2023 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2023 Guðmundur Erlingsson <gudmundure@gmail.com>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"PO-Revision-Date: 2023-12-10 22:16+0000\n"
+"Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
+"Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 23.08.3\n"
+
+#: ui/main.qml:47
+#, kde-format
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+"Eldri X11-forrit þurfa að geta greint lyklainnslátt sem gerður er í öðrum "
+"forritum fyrir eiginleika sem eru virkjaðir með altækum flýtilyklum. Þetta "
+"er sjálfgefið haft óvirkt af öryggisástæðum. Ef þú þarft að nota slíkforrit "
+"skaltu stilla hér jafnvægið á milli öryggis og notagildis eins og best "
+"hentar."
+
+#: ui/main.qml:64
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr "Leyfa eldri X11-forritum að greina lyklainnslátt úr öllum forritum:"
+
+#: ui/main.qml:65
+#, kde-format
+msgid "Never"
+msgstr "Aldrei"
+
+#: ui/main.qml:68
+#, kde-format
+msgid "Only non-character keys"
+msgstr "Einungis lykla sem eru ekki stafir"
+
+#: ui/main.qml:71
+#, kde-format
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
+msgstr ""
+"Eins og að ofan, auk allra lykla sem ýtt er á þegar Ctrl-, Alt- eða Meta-"
+"lyklum er haldið niðri."
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Always"
+msgstr "Alltaf"
+
+#: ui/main.qml:82
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
+"Athugaðu að notkun þessarar stillingar dregur úr öryggi kerfisins svo það "
+"samsvarar X11-setu með því að heimila spilliforritum að ræna lykilorðum og "
+"njósna um texta sem þú slærð inn. Vertu viss um að þú skiljir og samþykkir "
+"áhættuna."
