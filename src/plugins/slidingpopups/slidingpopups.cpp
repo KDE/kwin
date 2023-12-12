@@ -65,6 +65,8 @@ SlidingPopupsEffect::SlidingPopupsEffect()
             this, &SlidingPopupsEffect::stopAnimations);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
             this, &SlidingPopupsEffect::stopAnimations);
+    connect(effects, &EffectsHandler::screenLockingChanged,
+            this, &SlidingPopupsEffect::stopAnimations);
 
     reconfigure(ReconfigureAll);
 
