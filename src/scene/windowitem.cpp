@@ -124,6 +124,10 @@ void WindowItem::unrefVisible(int reason)
 void WindowItem::handleWindowClosed(Window *original, Deleted *deleted)
 {
     m_window = deleted;
+
+    if (m_surfaceItem) {
+        m_surfaceItem->freeze();
+    }
 }
 
 bool WindowItem::computeVisibility() const
