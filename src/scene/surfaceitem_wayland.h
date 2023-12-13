@@ -33,6 +33,7 @@ public:
     QVector<QRectF> shape() const override;
     QRegion opaque() const override;
     ContentType contentType() const override;
+    void freeze() override;
 
     KWaylandServer::SurfaceInterface *surface() const;
 

@@ -142,6 +142,23 @@ ContentType SurfaceItemWayland::contentType() const
     return m_surface->contentType();
 }
 
+void SurfaceItemWayland::freeze()
+{
+    if (!m_surface) {
+        return;
+    }
+
+    m_surface->disconnect(this);
+    if (auto subsurface = m_surface->subSurface()) {
+        subsurface->disconnect(this);
+    }
+
+    for (auto it = m_subsurfaces.begin(); it != m_subsurfaces.end(); ++it) {
+        SurfaceItemWayland *subsurfaceItem = it.value();
+        subsurfaceItem->freeze();
+    }
+}
+
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
     : SurfacePixmap(Compositor::self()->backend()->createSurfaceTextureWayland(this), parent)
     , m_item(item)

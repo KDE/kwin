@@ -42,6 +42,8 @@ public:
 
     virtual ContentType contentType() const;
 
+    virtual void freeze();
+
 Q_SIGNALS:
     void damaged();
 
