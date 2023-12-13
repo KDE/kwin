@@ -176,8 +176,9 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     m_surface->gbmSwapchain->release(m_surface->currentSlot);
     m_surface->timeQuery->end();
     glFlush();
-    if (m_eglBackend->contextObject()->isSoftwareRenderer()) {
+    if (m_eglBackend->contextObject()->isSoftwareRenderer() || m_eglBackend->gpu()->isNVidia()) {
         // llvmpipe doesn't do synchronization properly: https://gitlab.freedesktop.org/mesa/mesa/-/issues/9375
+        // and NVidia doesn't support implicit sync
         glFinish();
     }
     const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get());
@@ -547,6 +548,10 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 
     surface->importContext->shaderManager()->popShader();
     glFlush();
+    if (m_gpu->isNVidia()) {
+        // the proprietary NVidia driver desn't support implicit sync
+        glFinish();
+    }
     surface->importGbmSwapchain->release(slot);
     surface->importTimeQuery->end();
 
