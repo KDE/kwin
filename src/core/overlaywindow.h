@@ -22,7 +22,7 @@ class KWIN_EXPORT OverlayWindow
 public:
     virtual ~OverlayWindow();
     /// Creates XComposite overlay window, call initOverlay() afterwards
-    virtual bool create() = 0;
+    virtual bool create(const QSize &size) = 0;
     /// Init overlay and the destination window in it
     virtual void setup(xcb_window_t window) = 0;
     virtual void show() = 0;

@@ -223,7 +223,7 @@ bool EglBackend::initRenderingContext()
         return false;
     }
 
-    if (!m_overlayWindow->create()) {
+    if (!m_overlayWindow->create(workspace()->geometry().size())) {
         qCCritical(KWIN_X11STANDALONE) << "Could not get overlay window";
         return false;
     } else {

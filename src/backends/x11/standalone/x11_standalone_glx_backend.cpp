@@ -352,7 +352,8 @@ bool GlxBackend::initBuffer()
         return false;
     }
 
-    if (overlayWindow()->create()) {
+    const QSize size = workspace()->geometry().size();
+    if (overlayWindow()->create(size)) {
         xcb_connection_t *const c = connection();
 
         // Try to create double-buffered window in the overlay
@@ -366,8 +367,6 @@ bool GlxBackend::initBuffer()
 
         xcb_colormap_t colormap = xcb_generate_id(c);
         xcb_create_colormap(c, false, colormap, rootWindow(), visual);
-
-        const QSize size = workspace()->geometry().size();
 
         window = xcb_generate_id(c);
         xcb_create_window(c, visualDepth(visual), window, overlayWindow()->window(),

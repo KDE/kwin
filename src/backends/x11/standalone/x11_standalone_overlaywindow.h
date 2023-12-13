@@ -23,7 +23,7 @@ public:
     explicit OverlayWindowX11(X11StandaloneBackend *backend);
     ~OverlayWindowX11() override;
     /// Creates XComposite overlay window, call initOverlay() afterwards
-    bool create() override;
+    bool create(const QSize &size) override;
     /// Init overlay and the destination window in it
     void setup(xcb_window_t window) override;
     void show() override;
@@ -46,6 +46,7 @@ private:
 
     X11StandaloneBackend *m_backend;
     QRegion m_shape;
+    QSize m_size;
     xcb_window_t m_window;
 };
 } // namespace
