@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-10 01:59+0000\n"
+"POT-Creation-Date: 2023-12-13 01:35+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -2404,7 +2404,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "विंडो बर्ताव कान्फिगर करू... (&e)"
 
-#: plugins/overview/qml/main.qml:723
+#: plugins/overview/qml/main.qml:724
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgctxt "@info:placeholder"
@@ -2416,7 +2416,7 @@ msgstr "विंडोज़"
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:446
+#: plugins/private/qml/WindowHeapDelegate.qml:447
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

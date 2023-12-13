@@ -1,6 +1,6 @@
 # translation of kcmkwinscreenedges.po to Slovak
 # Michal Sulek <misurel@gmail.com>, 2009, 2010.
-# Roman Paholík <wizzardsk@gmail.com>, 2013, 2014, 2016, 2017, 2019.
+# SPDX-FileCopyrightText: 2013, 2014, 2016, 2017, 2019, 2023 Roman Paholík <wizzardsk@gmail.com>
 # Mthw <jari_45@hotmail.com>, 2018.
 # Matej Mrenica <matejm98mthw@gmail.com>, 2019, 2020, 2021, 2022.
 # Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-08 01:36+0000\n"
-"PO-Revision-Date: 2023-05-06 18:03+0200\n"
-"Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
-"Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
+"PO-Revision-Date: 2023-12-12 19:23+0100\n"
+"Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
+"Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: main.cpp:151 touch.cpp:116
@@ -70,10 +70,9 @@ msgid "%1 - Current Application"
 msgstr "%1 - Aktuálna aplikácia"
 
 #: main.cpp:165
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "Prepnúť prehľad"
+msgstr "Prehľad"
 
 #: main.cpp:167 touch.cpp:130
 #, kde-format
