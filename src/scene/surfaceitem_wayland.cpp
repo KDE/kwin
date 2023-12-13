@@ -168,6 +168,22 @@ ContentType SurfaceItemWayland::contentType() const
     return m_surface ? m_surface->contentType() : ContentType::None;
 }
 
+void SurfaceItemWayland::freeze()
+{
+    if (!m_surface) {
+        return;
+    }
+
+    m_surface->disconnect(this);
+    if (auto subsurface = m_surface->subSurface()) {
+        subsurface->disconnect(this);
+    }
+
+    for (auto &[subsurface, subsurfaceItem] : m_subsurfaces) {
+        subsurfaceItem->freeze();
+    }
+}
+
 void SurfaceItemWayland::handleColorDescriptionChanged()
 {
     setColorDescription(m_surface->colorDescription());

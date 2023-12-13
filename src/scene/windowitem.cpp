@@ -55,6 +55,8 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     connect(window, &Window::stackingOrderChanged, this, &WindowItem::updateStackingOrder);
     updateStackingOrder();
 
+    connect(window, &Window::closed, this, &WindowItem::freeze);
+
     m_effectWindow = std::make_unique<EffectWindow>(this);
 }
 
@@ -286,6 +288,13 @@ void WindowItem::updateStackingOrder()
 void WindowItem::markDamaged()
 {
     Q_EMIT m_window->damaged(m_window);
+}
+
+void WindowItem::freeze()
+{
+    if (m_surfaceItem) {
+        m_surfaceItem->freeze();
+    }
 }
 
 WindowItemX11::WindowItemX11(X11Window *window, Scene *scene, Item *parent)

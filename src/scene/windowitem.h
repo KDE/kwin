@@ -74,6 +74,7 @@ private:
     bool computeVisibility() const;
     void updateVisibility();
     void markDamaged();
+    void freeze();
 
     Window *m_window;
     std::unique_ptr<SurfaceItem> m_surfaceItem;

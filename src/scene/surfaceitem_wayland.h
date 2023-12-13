@@ -31,6 +31,7 @@ public:
     QList<QRectF> shape() const override;
     QRegion opaque() const override;
     ContentType contentType() const override;
+    void freeze() override;
 
     SurfaceInterface *surface() const;
 

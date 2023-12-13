@@ -227,6 +227,10 @@ ContentType SurfaceItem::contentType() const
     return ContentType::None;
 }
 
+void SurfaceItem::freeze()
+{
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }
