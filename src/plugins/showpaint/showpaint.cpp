@@ -10,6 +10,7 @@
 
 #include "showpaint.h"
 
+#include "core/pixelgrid.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
@@ -78,7 +79,7 @@ void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
     QList<QVector2D> verts;
     verts.reserve(m_painted.rectCount() * 12);
     for (const QRect &r : m_painted) {
-        const auto deviceRect = scaledRect(r, scale);
+        const auto deviceRect = snapToPixelGridF(scaledRect(r, scale));
         verts.push_back(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
         verts.push_back(QVector2D(deviceRect.x(), deviceRect.y()));
         verts.push_back(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
