@@ -2936,19 +2936,20 @@ void InputRedirection::setupInputFilters()
         installInputEventFilter(m_terminateServerFilter.get());
     }
 
-    m_dragAndDropFilter = std::make_unique<DragAndDropInputFilter>();
-    installInputEventFilter(m_dragAndDropFilter.get());
-
     m_lockscreenFilter = std::make_unique<LockScreenFilter>();
     installInputEventFilter(m_lockscreenFilter.get());
-
-    m_windowSelector = std::make_unique<WindowSelectorFilter>();
-    installInputEventFilter(m_windowSelector.get());
 
     if (hasGlobalShortcutSupport) {
         m_screenEdgeFilter = std::make_unique<ScreenEdgeInputFilter>();
         installInputEventFilter(m_screenEdgeFilter.get());
     }
+
+    m_dragAndDropFilter = std::make_unique<DragAndDropInputFilter>();
+    installInputEventFilter(m_dragAndDropFilter.get());
+
+    m_windowSelector = std::make_unique<WindowSelectorFilter>();
+    installInputEventFilter(m_windowSelector.get());
+
 #if KWIN_BUILD_TABBOX
     m_tabboxFilter = std::make_unique<TabBoxInputFilter>();
     installInputEventFilter(m_tabboxFilter.get());
