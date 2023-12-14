@@ -231,3 +231,14 @@ target_link_libraries(testUtils
 )
 add_test(NAME kwin-testUtils COMMAND testUtils)
 ecm_mark_as_test(testUtils)
+
+########################################################
+# Test OutputTransform
+########################################################
+add_executable(testOutputTransform output_transform_test.cpp)
+target_link_libraries(testOutputTransform
+    Qt::Test
+    kwin
+)
+add_test(NAME kwin-testOutputTransform COMMAND testOutputTransform)
+ecm_mark_as_test(testOutputTransform)
