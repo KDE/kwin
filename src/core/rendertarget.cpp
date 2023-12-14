@@ -49,6 +49,26 @@ QRect RenderTarget::applyTransformation(const QRect &rect, const QRect &viewport
     return applyTransformation(QRectF(rect), QRectF(viewport)).toRect();
 }
 
+QPointF RenderTarget::applyTransformation(const QPointF &point, const QRectF &viewport) const
+{
+    const auto center = viewport.center();
+    QMatrix4x4 relativeTransformation;
+    relativeTransformation.translate(center.x(), center.y());
+    relativeTransformation *= m_transformation;
+    relativeTransformation.translate(-center.x(), -center.y());
+    return relativeTransformation.map(point);
+}
+
+QPoint RenderTarget::applyTransformation(const QPoint &point, const QRect &viewport) const
+{
+    const auto center = viewport.center();
+    QMatrix4x4 relativeTransformation;
+    relativeTransformation.translate(center.x(), center.y());
+    relativeTransformation *= m_transformation;
+    relativeTransformation.translate(-center.x(), -center.y());
+    return relativeTransformation.map(point);
+}
+
 QMatrix4x4 RenderTarget::transformation() const
 {
     return m_transformation;

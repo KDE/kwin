@@ -504,6 +504,7 @@ install(FILES
 install(FILES
     core/colorspace.h
     core/output.h
+    core/pixelgrid.h
     core/renderloop.h
     core/rendertarget.h
     core/renderviewport.h

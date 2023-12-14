@@ -25,6 +25,7 @@
 #include <KWindowSystem>
 // KWin
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -198,13 +199,6 @@ void StartupFeedbackEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-static QRectF snapToPixelGrid(const QRectF &rect, qreal devicePixelRatio)
-{
-    const QVector2D topLeft = roundVector(QVector2D(rect.topLeft()) * devicePixelRatio);
-    const QVector2D bottomRight = roundVector(QVector2D(rect.bottomRight()) * devicePixelRatio);
-    return QRectF(topLeft.x(), topLeft.y(), bottomRight.x() - topLeft.x(), bottomRight.y() - topLeft.y());
-}
-
 void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
@@ -235,7 +229,7 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         } else {
             shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         }
-        const QRectF pixelGeometry = snapToPixelGrid(m_currentGeometry, viewport.scale());
+        const QRectF pixelGeometry = snapToPixelGridF(scaledRect(m_currentGeometry, viewport.scale()));
         QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(pixelGeometry.x(), pixelGeometry.y());
         shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);

@@ -39,10 +39,10 @@ public:
     QRegion mapToRenderTargetTexture(const QRegion &logicalGeometry) const;
 
 private:
+    const RenderTarget *m_renderTarget;
     const QRectF m_renderRect;
+    const QRect m_deviceRenderRect;
     const QMatrix4x4 m_projectionMatrix;
-    const QMatrix4x4 m_logicalToLocal;
-    const QMatrix4x4 m_logicalToLocalTexture;
     const double m_scale;
 };
 

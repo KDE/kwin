@@ -29,6 +29,8 @@ public:
     const ColorDescription &colorDescription() const;
     QRectF applyTransformation(const QRectF &rect, const QRectF &viewport) const;
     QRect applyTransformation(const QRect &rect, const QRect &viewport) const;
+    QPointF applyTransformation(const QPointF &point, const QRectF &viewport) const;
+    QPoint applyTransformation(const QPoint &point, const QRect &viewport) const;
 
     QImage *image() const;
     GLFramebuffer *framebuffer() const;

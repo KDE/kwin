@@ -5,6 +5,7 @@
 */
 
 #include "scene/itemrenderer_opengl.h"
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
@@ -95,12 +96,6 @@ static OpenGLSurfaceContents bindSurfaceTexture(SurfaceItem *surfaceItem)
     return platformSurfaceTexture->texture();
 }
 
-static QRectF logicalRectToDeviceRect(const QRectF &logical, qreal deviceScale)
-{
-    return QRectF(QPointF(std::round(logical.left() * deviceScale), std::round(logical.top() * deviceScale)),
-                  QPointF(std::round(logical.right() * deviceScale), std::round(logical.bottom() * deviceScale)));
-}
-
 static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
@@ -116,10 +111,10 @@ static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::Rend
     for (const WindowQuad &quad : std::as_const(quads)) {
         if (context->clip != infiniteRegion() && !context->hardwareClipping) {
             // Scale to device coordinates, rounding as needed.
-            QRectF deviceBounds = logicalRectToDeviceRect(quad.bounds(), scale);
+            QRectF deviceBounds = snapToPixelGridF(scaledRect(quad.bounds(), scale));
 
             for (const QRect &clipRect : std::as_const(context->clip)) {
-                QRectF deviceClipRect = logicalRectToDeviceRect(clipRect, scale).translated(-worldTranslation);
+                QRectF deviceClipRect = snapToPixelGridF(scaledRect(clipRect, scale)).translated(-worldTranslation);
 
                 const QRectF &intersected = deviceClipRect.intersected(deviceBounds);
                 if (intersected.isValid()) {
@@ -247,8 +242,7 @@ void ItemRendererOpenGL::renderBackground(const RenderTarget &renderTarget, cons
         glClearColor(0, 0, 0, 0);
         glEnable(GL_SCISSOR_TEST);
 
-        const auto targetSize = viewport.mapToRenderTarget(viewport.renderRect());
-
+        const auto targetSize = renderTarget.size();
         for (const QRect &r : region) {
             const auto deviceRect = viewport.mapToRenderTarget(r);
             glScissor(deviceRect.x(), targetSize.height() - (deviceRect.y() + deviceRect.height()), deviceRect.width(), deviceRect.height());
