@@ -28,6 +28,8 @@
 #include "pointer_input.h"
 #include "utils/common.h"
 #include "virtualdesktops.h"
+#include "wayland/seat.h"
+#include "wayland_server.h"
 #include <workspace.h>
 #include <x11window.h>
 // DBus generated
@@ -221,10 +223,16 @@ bool Edge::activatesForPointer() const
 {
     bool isMovingWindow = false;
 
-    // Don't activate edge when a mouse button is pressed, except when
-    // moving a window. Dragging a scroll bar all the way to the edge
-    // shouldn't activate the edge.
-    if (input()->pointer()->areButtonsPressed()) {
+    // Most actions do not handle drag and drop properly yet
+    // but at least allow "show desktop" and "application launcher".
+    if (waylandServer() && waylandServer()->seat()->isDragPointer()) {
+        if (!m_edges->isDesktopSwitching() && m_action != ElectricActionShowDesktop && m_action != ElectricActionApplicationLauncher) {
+            return false;
+        }
+        // Don't activate edge when a mouse button is pressed, except when
+        // moving a window. Dragging a scroll bar all the way to the edge
+        // shouldn't activate the edge.
+    } else if (input()->pointer()->areButtonsPressed()) {
         auto c = Workspace::self()->moveResizeWindow();
         if (!c || c->isInteractiveResize()) {
             return false;
