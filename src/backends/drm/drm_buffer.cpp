@@ -58,6 +58,7 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
     };
     if (drmIoctl(buffer->dmabufAttributes()->fd[0].get(), DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &req) == 0) {
         m_syncFd = FileDescriptor{req.fd};
+        qWarning() << "sync fd" << m_syncFd.get() << "is readable?" << m_syncFd.isReadable();
     }
 #endif
 }
