@@ -112,6 +112,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
 
 void ScreenTransformEffect::removeScreen(Output *screen)
 {
+    screen->disconnect(this);
     if (auto it = m_states.find(screen); it != m_states.end()) {
         effects->makeOpenGLContextCurrent();
         m_states.erase(it);
