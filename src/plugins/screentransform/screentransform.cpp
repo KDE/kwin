@@ -73,10 +73,6 @@ void ScreenTransformEffect::addScreen(Output *screen)
     connect(screen, &Output::aboutToChange, this, [this, screen](OutputChangeSet *changeSet) {
         const OutputTransform transform = changeSet->transform.value_or(screen->transform());
         if (screen->transform() == transform) {
-            if (auto it = m_states.find(screen); it != m_states.end()) {
-                effects->makeOpenGLContextCurrent();
-                m_states.erase(it);
-            }
             return;
         }
 
