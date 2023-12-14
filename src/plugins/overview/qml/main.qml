@@ -409,9 +409,9 @@ FocusScope {
             property Item currentHeap
             property Item currentBackgroundItem
 
-            Kirigami.ShadowedRectangle {
+            Item {
                 id: mainBackground
-                color: Kirigami.Theme.highlightColor
+
                 visible: gridVal > 0 || nearCurrent
                 anchors.fill: parent
                 property bool shouldBeVisibleInOverview: !(effect.searchText.length > 0 && current) || (heap.count !== 0 && effect.filterWindows)
@@ -430,13 +430,6 @@ FocusScope {
 
                 z: dragActive ? 1 : 0
                 readonly property bool dragActive: heap.dragActive || dragHandler.active
-
-                shadow {
-                    size: Kirigami.Units.gridUnit * 2
-                    color: Qt.rgba(0, 0, 0, 0.3)
-                    yOffset: 3
-                }
-                radius: Kirigami.Units.largeSpacing * 2 * (overviewVal + gridVal * 2)
 
                 property int gridSize: Math.max(rows, columns)
                 property real row: (index - column) / columns
@@ -524,14 +517,19 @@ FocusScope {
                     outputName: targetScreen.name
                     visible: false
                 }
-                OpacityMask {
+
+                Kirigami.ShadowedTexture {
                     anchors.fill: parent
+
+                    color: Kirigami.Theme.highlightColor
                     source: desktopElement
-                    maskSource: Rectangle {
-                        anchors.centerIn: parent
-                        width: desktopElement.width
-                        height: desktopElement.height
-                        radius: mainBackground.radius
+
+                    radius: Kirigami.Units.largeSpacing * 2 * (overviewVal + gridVal * 2)
+
+                    shadow {
+                        size: Kirigami.Units.gridUnit * 2
+                        color: Qt.rgba(0, 0, 0, 0.3)
+                        yOffset: 3
                     }
                 }
 
