@@ -40,20 +40,19 @@ enum class ContentType {
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
- * Rotation is clockwise.
  */
 class KWIN_EXPORT OutputTransform
 {
 public:
     enum Kind {
-        Normal,
-        Rotated90,
-        Rotated180,
-        Rotated270,
-        Flipped,
-        Flipped90,
-        Flipped180,
-        Flipped270
+        Normal, // no rotation
+        Rotated90, // rotate 90 degrees clockwise
+        Rotated180, // rotate 180 degrees clockwise
+        Rotated270, // rotate 270 degrees clockwise
+        Flipped, // mirror horizontally
+        Flipped90, // rotate 90 degrees clockwise, then mirror horizontally
+        Flipped180, // rotate 180 degrees clockwise, then mirror horizontally
+        Flipped270, // rotate 270 degrees clockwise, then mirror horizontally
     };
 
     OutputTransform() = default;
