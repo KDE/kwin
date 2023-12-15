@@ -25,8 +25,11 @@
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
+
+#if KWIN_BUILD_X11
 #include "xwayland/xwayland.h"
 #include "xwayland/xwaylandlauncher.h"
+#endif
 
 // KDE
 #include <KCrash>
@@ -121,7 +124,9 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         effects->unloadAllEffects();
     }
+#if KWIN_BUILD_X11
     m_xwayland.reset();
+#endif
     destroyColorManager();
     destroyWorkspace();
 
@@ -132,10 +137,12 @@ ApplicationWayland::~ApplicationWayland()
 
 void ApplicationWayland::performStartup()
 {
+#if KWIN_BUILD_X11
     if (m_startXWayland) {
         setOperationMode(OperationModeXwayland);
         setXwaylandScale(config()->group(QStringLiteral("Xwayland")).readEntry("Scale", 1.0));
     }
+#endif
     createOptions();
 
     if (!outputBackend()->initialize()) {
@@ -162,6 +169,7 @@ void ApplicationWayland::continueStartupWithScene()
         qFatal("Failed to initialze the Wayland server, exiting now");
     }
 
+#if KWIN_BUILD_X11
     if (operationMode() == OperationModeXwayland) {
         m_xwayland = std::make_unique<Xwl::Xwayland>(this);
         m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
@@ -170,6 +178,7 @@ void ApplicationWayland::continueStartupWithScene()
         m_xwayland->init();
         connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::applyXwaylandScale);
     }
+#endif
     startSession();
     notifyStarted();
 }
@@ -247,10 +256,12 @@ void ApplicationWayland::startSession()
     }
 }
 
+#if KWIN_BUILD_X11
 XwaylandInterface *ApplicationWayland::xwayland() const
 {
     return m_xwayland.get();
 }
+#endif
 
 } // namespace
 
@@ -287,14 +298,18 @@ int main(int argc, char *argv[])
 
     KWin::Application::createAboutData();
 
+#if KWIN_BUILD_X11
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
                                       i18n("Start a rootless Xwayland server."));
+#endif
     QCommandLineOption waylandSocketOption(QStringList{QStringLiteral("s"), QStringLiteral("socket")},
                                            i18n("Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."),
                                            QStringLiteral("socket"));
+#if KWIN_BUILD_X11
     QCommandLineOption x11DisplayOption(QStringLiteral("x11-display"),
                                         i18n("The X11 Display to use in windowed mode on platform X11."),
                                         QStringLiteral("display"));
+#endif
     QCommandLineOption waylandDisplayOption(QStringLiteral("wayland-display"),
                                             i18n("The Wayland Display to use in windowed mode on platform Wayland."),
                                             QStringLiteral("display"));
@@ -342,14 +357,18 @@ int main(int argc, char *argv[])
 
     QCommandLineParser parser;
     a.setupCommandLine(&parser);
+#if KWIN_BUILD_X11
     parser.addOption(xwaylandOption);
+#endif
     parser.addOption(waylandSocketOption);
     parser.addOption(waylandSocketFdOption);
     parser.addOption(xwaylandListenFdOption);
     parser.addOption(xwaylandDisplayOption);
     parser.addOption(xwaylandXAuthorityOption);
     parser.addOption(replaceOption);
+#if KWIN_BUILD_X11
     parser.addOption(x11DisplayOption);
+#endif
     parser.addOption(waylandDisplayOption);
     parser.addOption(virtualFbOption);
     parser.addOption(widthOption);
@@ -429,8 +448,10 @@ int main(int argc, char *argv[])
     // Decide what backend to use.
     if (parser.isSet(drmOption)) {
         backendType = BackendType::Kms;
+#if KWIN_BUILD_X11
     } else if (parser.isSet(x11DisplayOption)) {
         backendType = BackendType::X11;
+#endif
     } else if (parser.isSet(waylandDisplayOption)) {
         backendType = BackendType::Wayland;
     } else if (parser.isSet(virtualFbOption)) {
@@ -539,6 +560,7 @@ int main(int argc, char *argv[])
         a.setOutputBackend(std::move(outputBackend));
         break;
     }
+#if KWIN_BUILD_X11
     case BackendType::X11: {
         QString display = parser.value(x11DisplayOption);
         if (display.isEmpty()) {
@@ -553,6 +575,7 @@ int main(int argc, char *argv[])
         }));
         break;
     }
+#endif
     case BackendType::Wayland: {
         QString socketName = parser.value(waylandDisplayOption);
         if (socketName.isEmpty()) {
@@ -576,6 +599,7 @@ int main(int argc, char *argv[])
     }
     a.setProcessStartupEnvironment(environment);
 
+#if KWIN_BUILD_X11
     if (parser.isSet(xwaylandOption)) {
         a.setStartXwayland(true);
 
@@ -601,6 +625,7 @@ int main(int argc, char *argv[])
             }
         }
     }
+#endif
 
     a.setApplicationsToStart(parser.positionalArguments());
     a.setInputMethodServerToStart(parser.value(inputMethodOption));

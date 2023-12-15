@@ -9,11 +9,14 @@
 #include "kwin_wayland_test.h"
 
 #include "main.h"
-#include "utils/xcbutils.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
+#endif
 
 #include <KWayland/Client/surface.h>
 
@@ -28,8 +31,9 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-
+#if KWIN_BUILD_X11
     void testNetCurrentDesktop();
+#endif
     void testLastDesktopRemoved();
     void testWindowOnMultipleDesktops();
     void testRemoveDesktopWithWindow();
@@ -52,6 +56,7 @@ void VirtualDesktopTest::initTestCase()
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
 
+#if KWIN_BUILD_X11
     if (kwinApp()->x11Connection()) {
         // verify the current desktop x11 property on startup, see BUG: 391034
         Xcb::Atom currentDesktopAtom("_NET_CURRENT_DESKTOP");
@@ -61,6 +66,7 @@ void VirtualDesktopTest::initTestCase()
         QCOMPARE(currentDesktop.value(0, &ok), 0);
         QVERIFY(ok);
     }
+#endif
 }
 
 void VirtualDesktopTest::init()
@@ -75,6 +81,7 @@ void VirtualDesktopTest::cleanup()
     Test::destroyWaylandConnection();
 }
 
+#if KWIN_BUILD_X11
 void VirtualDesktopTest::testNetCurrentDesktop()
 {
     if (!kwinApp()->x11Connection()) {
@@ -115,6 +122,7 @@ void VirtualDesktopTest::testNetCurrentDesktop()
     QCOMPARE(currentDesktop.value(0, &ok), 0);
     QVERIFY(ok);
 }
+#endif
 
 void VirtualDesktopTest::testLastDesktopRemoved()
 {

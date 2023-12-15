@@ -30,8 +30,11 @@
 #include "virtualdesktops.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
+#include <window.h>
 #include <workspace.h>
-#include <x11window.h>
+#if KWIN_BUILD_X11
+#include "x11window.h"
+#endif
 // DBus generated
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlocker_interface.h"
@@ -49,6 +52,7 @@
 #include <QTextStream>
 #include <QTimer>
 #include <QWidget>
+#include <span>
 
 namespace KWin
 {
@@ -1463,6 +1467,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     return activated;
 }
 
+#if KWIN_BUILD_X11
 bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp)
 {
     bool activated = false;
@@ -1501,7 +1506,16 @@ bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, c
     }
     return activated;
 }
+#endif
 
+void ScreenEdges::ensureOnTop()
+{
+#if KWIN_BUILD_X11
+    Xcb::restackWindowsWithRaise(windows());
+#endif
+}
+
+#if KWIN_BUILD_X11
 bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
 {
     for (const auto &edge : m_edges) {
@@ -1515,11 +1529,6 @@ bool ScreenEdges::handleDndNotify(xcb_window_t window, const QPoint &point)
         }
     }
     return false;
-}
-
-void ScreenEdges::ensureOnTop()
-{
-    Xcb::restackWindowsWithRaise(windows());
 }
 
 QList<xcb_window_t> ScreenEdges::windows() const
@@ -1538,6 +1547,7 @@ QList<xcb_window_t> ScreenEdges::windows() const
     }
     return wins;
 }
+#endif
 
 void ScreenEdges::setRemainActiveOnFullscreen(bool remainActive)
 {

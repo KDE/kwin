@@ -11,10 +11,13 @@
 #include "core/output.h"
 #include "debug_console.h"
 #include "internalwindow.h"
-#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
+#endif
 
 #include <KWayland/Client/compositor.h>
 #include <KWayland/Client/connection_thread.h>
@@ -38,8 +41,10 @@ private Q_SLOTS:
     void cleanup();
     void topLevelTest_data();
     void topLevelTest();
+#if KWIN_BUILD_X11
     void testX11Window();
     void testX11Unmanaged();
+#endif
     void testWaylandClient();
     void testInternalWindow();
     void testClosingDebugConsole();
@@ -109,6 +114,7 @@ void DebugConsoleTest::topLevelTest()
     }
 }
 
+#if KWIN_BUILD_X11
 void DebugConsoleTest::testX11Window()
 {
     DebugConsoleModel model;
@@ -281,6 +287,7 @@ void DebugConsoleTest::testX11Unmanaged()
     QVERIFY(!model.hasChildren(unmanagedTopLevelIndex));
     QVERIFY(!model2.hasChildren(model2.index(1, 0, QModelIndex())));
 }
+#endif
 
 void DebugConsoleTest::testWaylandClient()
 {

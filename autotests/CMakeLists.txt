@@ -45,82 +45,97 @@ ecm_mark_as_test(testVirtualDesktops)
 ########################################################
 # Test ClientMachine
 ########################################################
-set(testClientMachine_SRCS
-    ../src/client_machine.cpp
-    test_client_machine.cpp
-    xcb_scaling_mock.cpp
-)
-add_executable(testClientMachine ${testClientMachine_SRCS})
-set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
+if(KWIN_BUILD_X11)
+    set(testClientMachine_SRCS
+        ../src/client_machine.cpp
+        test_client_machine.cpp
+        xcb_scaling_mock.cpp
+    )
+    add_executable(testClientMachine ${testClientMachine_SRCS})
+    set_target_properties(testClientMachine PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
 
-target_link_libraries(testClientMachine
-    Qt::Concurrent
-    Qt::GuiPrivate
-    Qt::Test
-    Qt::Widgets
+    target_link_libraries(testClientMachine
+        Qt::Concurrent
+        Qt::GuiPrivate
+        Qt::Test
+        Qt::Widgets
 
-    KF6::ConfigCore
-    KF6::WindowSystem
+        KF6::ConfigCore
+        KF6::WindowSystem
 
-    XCB::XCB
-    XCB::XFIXES
+        XCB::XCB
+        XCB::XFIXES
 
-    ${X11_X11_LIB} # to make jenkins happy
-)
-add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
-ecm_mark_as_test(testClientMachine)
+        ${X11_X11_LIB} # to make jenkins happy
+    )
+    add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
+    ecm_mark_as_test(testClientMachine)
 
-########################################################
-# Test XcbWrapper
-########################################################
-add_executable(testXcbWrapper test_xcb_wrapper.cpp xcb_scaling_mock.cpp)
+    ########################################################
+    # Test XcbWrapper
+    ########################################################
+    add_executable(testXcbWrapper test_xcb_wrapper.cpp xcb_scaling_mock.cpp)
 
-target_link_libraries(testXcbWrapper
-    Qt::GuiPrivate
-    Qt::Test
-    Qt::Widgets
+    target_link_libraries(testXcbWrapper
+        Qt::GuiPrivate
+        Qt::Test
+        Qt::Widgets
 
-    KF6::ConfigCore
-    KF6::WindowSystem
+        KF6::ConfigCore
+        KF6::WindowSystem
 
-    XCB::XCB
-)
-add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
-ecm_mark_as_test(testXcbWrapper)
+        XCB::XCB
+    )
+    add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
+    ecm_mark_as_test(testXcbWrapper)
 
-add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
-set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
-target_link_libraries(testXcbSizeHints
-    Qt::GuiPrivate
-    Qt::Test
-    Qt::Widgets
+    add_executable(testXcbSizeHints test_xcb_size_hints.cpp xcb_scaling_mock.cpp)
+    set_target_properties(testXcbSizeHints PROPERTIES COMPILE_DEFINITIONS "NO_NONE_WINDOW")
+    target_link_libraries(testXcbSizeHints
+        Qt::GuiPrivate
+        Qt::Test
+        Qt::Widgets
 
-    KF6::ConfigCore
-    KF6::WindowSystem
+        KF6::ConfigCore
+        KF6::WindowSystem
 
-    XCB::ICCCM
-    XCB::XCB
-)
-add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
-ecm_mark_as_test(testXcbSizeHints)
+        XCB::ICCCM
+        XCB::XCB
+    )
+    add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
+    ecm_mark_as_test(testXcbSizeHints)
 
-########################################################
-# Test XcbWindow
-########################################################
-add_executable(testXcbWindow test_xcb_window.cpp xcb_scaling_mock.cpp)
+    ########################################################
+    # Test XcbWindow
+    ########################################################
+    add_executable(testXcbWindow test_xcb_window.cpp xcb_scaling_mock.cpp)
 
-target_link_libraries(testXcbWindow
-    Qt::GuiPrivate
-    Qt::Test
-    Qt::Widgets
+    target_link_libraries(testXcbWindow
+        Qt::GuiPrivate
+        Qt::Test
+        Qt::Widgets
 
-    KF6::ConfigCore
-    KF6::WindowSystem
+        KF6::ConfigCore
+        KF6::WindowSystem
 
-    XCB::XCB
-)
-add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
-ecm_mark_as_test(testXcbWindow)
+        XCB::XCB
+    )
+    add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
+    ecm_mark_as_test(testXcbWindow)
+
+    ########################################################
+    # Test X11 TimestampUpdate
+    ########################################################
+    add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
+    target_link_libraries(testX11TimestampUpdate
+        KF6::CoreAddons
+        Qt::Test
+        Qt::GuiPrivate
+        kwin
+    )
+    add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
+    ecm_mark_as_test(testX11TimestampUpdate)
+endif()
 
 ########################################################
 # Test OnScreenNotification
@@ -160,19 +175,6 @@ target_link_libraries(testGestures
 
 add_test(NAME kwin-testGestures COMMAND testGestures)
 ecm_mark_as_test(testGestures)
-
-########################################################
-# Test X11 TimestampUpdate
-########################################################
-add_executable(testX11TimestampUpdate test_x11_timestamp_update.cpp)
-target_link_libraries(testX11TimestampUpdate
-    KF6::CoreAddons
-    Qt::Test
-    Qt::GuiPrivate
-    kwin
-)
-add_test(NAME kwin-testX11TimestampUpdate COMMAND testX11TimestampUpdate)
-ecm_mark_as_test(testX11TimestampUpdate)
 
 set(testOpenGLContextAttributeBuilder_SRCS
     ../src/opengl/abstract_opengl_context_attribute_builder.cpp

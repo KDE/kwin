@@ -7,6 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "config-kwin.h"
+
+#if !KWIN_BUILD_X11
+#error Do not include on non-X11 builds
+#endif
 
 #include "x11eventfilter.h"
 

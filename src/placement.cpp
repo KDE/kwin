@@ -18,9 +18,12 @@
 #include "rules.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
+#if KWIN_BUILD_X11
 #include "x11window.h"
 #endif
+#endif
 
+#include "window.h"
 #include <QTextStream>
 #include <QTimer>
 

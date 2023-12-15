@@ -12,7 +12,9 @@
 #include "decorationpalette.h"
 #include "window.h"
 #include "workspace.h"
+#if KWIN_BUILD_X11
 #include "x11window.h"
+#endif
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
@@ -136,17 +138,21 @@ DELEGATE(bool, isShaded, isShade)
 
 WId DecoratedClientImpl::windowId() const
 {
+#if KWIN_BUILD_X11
     if (X11Window *x11Window = qobject_cast<X11Window *>(m_window)) {
         return x11Window->window();
     }
+#endif
     return 0;
 }
 
 WId DecoratedClientImpl::decorationId() const
 {
+#if KWIN_BUILD_X11
     if (X11Window *x11Window = qobject_cast<X11Window *>(m_window)) {
         return x11Window->frameId();
     }
+#endif
     return 0;
 }
 

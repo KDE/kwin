@@ -13,8 +13,6 @@
 #include "keyboard_input.h"
 #include "xkb.h"
 
-#include <KKeyServer>
-
 #include <QMetaEnum>
 
 #include <linux/input-event-codes.h>
@@ -22,6 +20,8 @@
 #include <array>
 #include <optional>
 #include <utility>
+
+#include <private/qxkbcommon_p.h>
 
 // Tells us that we are already in a binding event
 class RebindScope
@@ -300,7 +300,8 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
         }
     }
 
-    const QList<int> syms(KKeyServer::keyQtToSymXs(keys[0]));
+    QKeyEvent ev(QEvent::KeyPress, keys[0], Qt::NoModifier);
+    const QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
     if (syms.empty()) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "to keysym";
         return false;

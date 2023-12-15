@@ -123,10 +123,12 @@ public:
     {
         return m_keyboardShortcutsInhibitManager;
     }
+#if KWIN_BUILD_X11
     XwaylandShellV1Interface *xwaylandShell() const
     {
         return m_xwaylandShell;
     }
+#endif
 
     bool isKeyboardShortcutsInhibited() const;
 
@@ -160,11 +162,13 @@ public:
      */
     XdgExportedSurface *exportAsForeign(SurfaceInterface *surface);
 
+#if KWIN_BUILD_X11
     /**
      * @returns file descriptor for Xwayland to connect to.
      */
     int createXWaylandConnection();
     void destroyXWaylandConnection();
+#endif
 
     /**
      * @returns file descriptor to the input method server's socket.
@@ -279,7 +283,9 @@ private:
     ClientConnection *m_screenLockerClientConnection = nullptr;
     XdgForeignV2Interface *m_XdgForeign = nullptr;
     XdgActivationV1Integration *m_xdgActivationIntegration = nullptr;
+#if KWIN_BUILD_X11
     XWaylandKeyboardGrabManagerV1Interface *m_xWaylandKeyboardGrabManager = nullptr;
+#endif
     ContentTypeManagerV1Interface *m_contentTypeManager = nullptr;
     TearingControlManagerV1Interface *m_tearingControlInterface = nullptr;
     XwaylandShellV1Interface *m_xwaylandShell = nullptr;

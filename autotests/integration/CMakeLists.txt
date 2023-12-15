@@ -33,20 +33,21 @@ target_sources(KWinIntegrationTestFramework PRIVATE
 target_link_libraries(KWinIntegrationTestFramework
     PUBLIC
         Qt::Test
+        Qt::Concurrent
         Plasma::KWaylandClient
         Wayland::Client
         Libdrm::Libdrm
         kwin
 
     PRIVATE
-        # Own libraries
-        KWinXwaylandServerModule
-
         # Static plugins
         KWinQpaPlugin
         KF6WindowSystemKWinPlugin
         KF6IdleTimeKWinPlugin
 )
+if(KWIN_BUILD_X11)
+    target_link_libraries(KWinIntegrationTestFramework PRIVATE KWinXwaylandServerModule)
+endif()
 if(TARGET KF6GlobalAccelKWinPlugin)
     target_link_libraries(KWinIntegrationTestFramework PUBLIC KF6GlobalAccelKWinPlugin)
 endif()
@@ -60,6 +61,9 @@ function(integrationTest)
     set(oneValueArgs NAME)
     set(multiValueArgs SRCS LIBS)
     cmake_parse_arguments(ARGS "${optionArgs}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    if (NOT KWIN_BUILD_X11 AND ARGS_LIBS MATCHES XCB::)
+        return()
+    endif()
     add_executable(${ARGS_NAME} ${ARGS_SRCS})
     target_link_libraries(${ARGS_NAME} KWinIntegrationTestFramework Qt::Test ${ARGS_LIBS})
     if(${ARGS_BUILTIN_EFFECTS})
@@ -67,8 +71,9 @@ function(integrationTest)
     endif()
     add_test(NAME kwin-${ARGS_NAME} COMMAND dbus-run-session ${CMAKE_BINARY_DIR}/bin/${ARGS_NAME})
 endfunction()
-
-integrationTest(NAME testDontCrashGlxgears SRCS dont_crash_glxgears.cpp LIBS KF6::I18n KDecoration2::KDecoration)
+if(KWIN_BUILD_X11)
+    integrationTest(NAME testDontCrashGlxgears SRCS dont_crash_glxgears.cpp LIBS KF6::I18n KDecoration2::KDecoration)
+endif()
 if (KWIN_BUILD_SCREENLOCKER)
     integrationTest(NAME testLockScreen SRCS lockscreen.cpp LIBS KF6::GlobalAccel)
 endif()
@@ -82,11 +87,9 @@ integrationTest(NAME testPlatformCursor SRCS platformcursor.cpp)
 integrationTest(NAME testDontCrashCancelAnimation SRCS dont_crash_cancel_animation.cpp LIBS KDecoration2::KDecoration)
 integrationTest(NAME testTransientPlacement SRCS transient_placement.cpp)
 integrationTest(NAME testDebugConsole SRCS debug_console_test.cpp)
-integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration2::KDecoration)
 integrationTest(NAME testPlasmaSurface SRCS plasma_surface_test.cpp)
 integrationTest(NAME testMaximized SRCS maximize_test.cpp LIBS KDecoration2::KDecoration KF6::Package)
 integrationTest(NAME testXdgShellWindow SRCS xdgshellwindow_test.cpp LIBS KDecoration2::KDecoration)
-integrationTest(NAME testXwaylandSelections SRCS xwayland_selections_test.cpp)
 integrationTest(NAME testSceneOpenGL SRCS scene_opengl_test.cpp )
 integrationTest(NAME testSceneOpenGLES SRCS scene_opengl_es_test.cpp )
 integrationTest(NAME testScreenChanges SRCS screen_changes_test.cpp)
@@ -131,7 +134,11 @@ integrationTest(NAME testXwaylandServerRestart SRCS xwaylandserver_restart_test.
 integrationTest(NAME testFakeInput SRCS fakeinput_test.cpp)
 integrationTest(NAME testSecurityContext SRCS security_context_test.cpp)
 integrationTest(NAME testStickyKeys SRCS sticky_keys_test.cpp)
-integrationTest(NAME testXinerama SRCS xinerama_test.cpp)
+if(KWIN_BUILD_X11)
+    integrationTest(NAME testDontCrashEmptyDeco SRCS dont_crash_empty_deco.cpp LIBS KDecoration2::KDecoration)
+    integrationTest(NAME testXwaylandSelections SRCS xwayland_selections_test.cpp)
+    integrationTest(NAME testXinerama SRCS xinerama_test.cpp)
+endif()
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})

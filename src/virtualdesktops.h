@@ -481,7 +481,9 @@ private:
     bool m_navigationWrapsAround;
     VirtualDesktopGrid m_grid;
     // TODO: QPointer
+#if KWIN_BUILD_X11
     NETRootInfo *m_rootInfo;
+#endif
     PlasmaVirtualDesktopManagementInterface *m_virtualDesktopManagement = nullptr;
     KSharedConfig::Ptr m_config;
 

@@ -71,14 +71,16 @@
 #include "wayland/xdgoutput_v1.h"
 #include "wayland/xdgshell.h"
 #include "wayland/xdgtopleveldrag_v1.h"
-#include "wayland/xwaylandkeyboardgrab_v1.h"
-#include "wayland/xwaylandshell_v1.h"
 #include "wayland/xx_colormanagement_v2.h"
 #include "workspace.h"
-#include "x11window.h"
 #include "xdgactivationv1.h"
 #include "xdgshellintegration.h"
 #include "xdgshellwindow.h"
+#if KWIN_BUILD_X11
+#include "wayland/xwaylandkeyboardgrab_v1.h"
+#include "wayland/xwaylandshell_v1.h"
+#include "x11window.h"
+#endif
 
 // Qt
 #include <QDir>
@@ -310,6 +312,7 @@ bool WaylandServer::init(InitializationFlags flags)
 {
     m_initFlags = flags;
     m_compositor = new CompositorInterface(m_display, m_display);
+#if KWIN_BUILD_X11
     connect(m_compositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
         // check whether we have a Window with the Surface's id
         Workspace *ws = Workspace::self();
@@ -359,6 +362,7 @@ bool WaylandServer::init(InitializationFlags flags)
             return;
         }
     });
+#endif
 
     m_tabletManagerV2 = new TabletManagerV2Interface(m_display, m_display);
     m_keyboardShortcutsInhibitManager = new KeyboardShortcutsInhibitManagerV1Interface(m_display, m_display);
@@ -455,7 +459,9 @@ bool WaylandServer::init(InitializationFlags flags)
     new SubCompositorInterface(m_display, m_display);
     m_XdgForeign = new XdgForeignV2Interface(m_display, m_display);
     m_inputMethod = new InputMethodV1Interface(m_display, m_display);
+#if KWIN_BUILD_X11
     m_xWaylandKeyboardGrabManager = new XWaylandKeyboardGrabManagerV1Interface(m_display, m_display);
+#endif
 
     auto activation = new XdgActivationV1Interface(m_display, this);
     auto init = [this, activation] {
@@ -677,6 +683,7 @@ int WaylandServer::createScreenLockerConnection()
     return socket.fd;
 }
 
+#if KWIN_BUILD_X11
 int WaylandServer::createXWaylandConnection()
 {
     const auto socket = createConnection();
@@ -701,6 +708,7 @@ void WaylandServer::destroyXWaylandConnection()
     m_xwaylandConnection->destroy();
     m_xwaylandConnection = nullptr;
 }
+#endif
 
 int WaylandServer::createInputMethodConnection()
 {
@@ -795,9 +803,11 @@ bool WaylandServer::isKeyboardShortcutsInhibited() const
         if (inhibitor && inhibitor->isActive()) {
             return true;
         }
+#if KWIN_BUILD_X11
         if (m_xWaylandKeyboardGrabManager->hasGrab(surface, seat())) {
             return true;
         }
+#endif
     }
     return false;
 }

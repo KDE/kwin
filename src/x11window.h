@@ -9,6 +9,11 @@
 */
 
 #pragma once
+#include "config-kwin.h"
+
+#if !KWIN_BUILD_X11
+#error Do not include on non-X11 builds
+#endif
 
 // kwin
 #include "scene/decorationitem.h"

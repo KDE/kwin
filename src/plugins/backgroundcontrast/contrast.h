@@ -49,7 +49,9 @@ public:
 public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
+#if KWIN_BUILD_X11
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
+#endif
     void slotScreenGeometryChanged();
 
 private:
@@ -62,7 +64,10 @@ private:
 
 private:
     std::unique_ptr<ContrastShader> m_shader;
+
+#if KWIN_BUILD_X11
     long m_net_wm_contrast_region = 0;
+#endif
     QHash<const EffectWindow *, QMetaObject::Connection> m_contrastChangedConnections; // used only in Wayland to keep track of effect changed
     struct Data
     {

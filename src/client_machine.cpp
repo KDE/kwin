@@ -8,11 +8,17 @@
 */
 // own
 #include "client_machine.h"
-#include "effect/xcb.h"
 #include "main.h"
 #include "utils/common.h"
+
+#if KWIN_BUILD_X11
+#include "effect/xcb.h"
+#endif
+
 // KF5
+#if KWIN_BUILD_X11
 #include <NETWM>
+#endif
 // Qt
 #include <QFutureWatcher>
 #include <QtConcurrentRun>
@@ -167,6 +173,7 @@ ClientMachine::~ClientMachine()
 {
 }
 
+#if KWIN_BUILD_X11
 void ClientMachine::resolve(xcb_window_t window, xcb_window_t clientLeader)
 {
     if (m_resolved) {
@@ -186,6 +193,7 @@ void ClientMachine::resolve(xcb_window_t window, xcb_window_t clientLeader)
     checkForLocalhost();
     m_resolved = true;
 }
+#endif
 
 void ClientMachine::checkForLocalhost()
 {

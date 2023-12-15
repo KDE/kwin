@@ -27,13 +27,16 @@
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 // KDecoration
 #include <KDecoration2/Decoration>
 // screenlocker
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
+#endif
+#if KWIN_BUILD_X11
+#include "x11window.h"
 #endif
 
 #include <KLocalizedString>

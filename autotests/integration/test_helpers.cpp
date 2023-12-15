@@ -1183,6 +1183,7 @@ bool renderNodeAvailable()
     });
 }
 
+#if KWIN_BUILD_X11
 void XcbConnectionDeleter::operator()(xcb_connection_t *pointer)
 {
     xcb_disconnect(pointer);
@@ -1200,6 +1201,7 @@ Test::XcbConnectionPtr createX11Connection()
     e.exec();
     return Test::XcbConnectionPtr(future.result());
 }
+#endif
 
 WaylandOutputManagementV2::WaylandOutputManagementV2(struct ::wl_registry *registry, int id, int version)
     : QObject()

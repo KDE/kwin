@@ -8,8 +8,11 @@
 */
 #include "activities.h"
 // KWin
+#include "window.h"
 #include "workspace.h"
+#if KWIN_BUILD_X11
 #include "x11window.h"
+#endif
 // KDE
 #include <KConfigGroup>
 // Qt
@@ -173,6 +176,7 @@ void Activities::reallyStop(const QString &id)
 
     QSet<QByteArray> saveSessionIds;
     QSet<QByteArray> dontCloseSessionIds;
+#if KWIN_BUILD_X11
     const auto windows = ws->windows();
     for (auto *const window : windows) {
         auto x11Window = qobject_cast<X11Window *>(window);
@@ -206,8 +210,8 @@ void Activities::reallyStop(const QString &id)
             }
         }
     }
-
     ws->sessionManager()->storeSubSession(id, saveSessionIds);
+#endif
 
     QStringList saveAndClose;
     QStringList saveOnly;

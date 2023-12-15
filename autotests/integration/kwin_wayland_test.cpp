@@ -15,11 +15,14 @@
 #include "inputmethod.h"
 #include "placement.h"
 #include "pluginmanager.h"
-#include "utils/xcbutils.h"
 #include "wayland_server.h"
 #include "workspace.h"
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
 #include "xwayland/xwayland.h"
 #include "xwayland/xwaylandlauncher.h"
+#endif
 
 #include <KPluginMetaData>
 
@@ -99,7 +102,9 @@ WaylandTestApplication::~WaylandTestApplication()
     if (effects) {
         effects->unloadAllEffects();
     }
+#if KWIN_BUILD_X11
     m_xwayland.reset();
+#endif
     destroyVirtualInputDevices();
     destroyColorManager();
     destroyWorkspace();
@@ -179,10 +184,12 @@ void WaylandTestApplication::continueStartupWithScene()
         qFatal("Failed to initialize the Wayland server, exiting now");
     }
 
+#if KWIN_BUILD_X11
     if (operationMode() == OperationModeXwayland) {
         m_xwayland = std::make_unique<Xwl::Xwayland>(this);
         m_xwayland->init();
     }
+#endif
 
     notifyStarted();
 }
@@ -202,10 +209,12 @@ Test::VirtualInputDevice *WaylandTestApplication::virtualTouch() const
     return m_virtualTouch.get();
 }
 
+#if KWIN_BUILD_X11
 XwaylandInterface *WaylandTestApplication::xwayland() const
 {
     return m_xwayland.get();
 }
+#endif
 
 Test::FractionalScaleManagerV1::~FractionalScaleManagerV1()
 {

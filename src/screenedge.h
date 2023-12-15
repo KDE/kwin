@@ -331,11 +331,13 @@ public:
     void ensureOnTop();
     bool isEntered(QMouseEvent *event);
 
+#if KWIN_BUILD_X11
     /**
      * Returns a QList of all existing screen edge windows
      * @return all existing screen edge windows in a QList
      */
     QList<xcb_window_t> windows() const;
+#endif
 
     bool isDesktopSwitching() const;
     bool isDesktopSwitchingMovingClients() const;
@@ -364,8 +366,10 @@ public:
         return m_gestureRecognizer;
     }
 
+#if KWIN_BUILD_X11
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
     bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
+#endif
     bool remainActiveOnFullscreen() const;
     const std::vector<std::unique_ptr<Edge>> &edges() const;
 

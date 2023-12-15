@@ -39,7 +39,6 @@ target_link_libraries(LibDrmTest
     KF6::WindowSystem
     KF6::CoreAddons
     KF6::I18n
-    XCB::XCB
     PkgConfig::Libxcvt
     gbm::gbm
     Libdrm::Libdrm

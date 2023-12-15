@@ -20,6 +20,8 @@
  * Usage kwin_wayland_wrapper [argForKwin] [argForKwin] ...
  */
 
+#include "config-kwin.h"
+
 #include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDebug>
@@ -33,8 +35,11 @@
 
 #include "wl-socket.h"
 #include "wrapper_logging.h"
+
+#if KWIN_BUILD_X11
 #include "xauthority.h"
 #include "xwaylandsocket.h"
+#endif
 
 using namespace std::chrono_literals;
 
@@ -55,10 +60,13 @@ private:
     int m_crashCount = 0;
     QProcess *m_kwinProcess = nullptr;
 
-    std::unique_ptr<KWin::XwaylandSocket> m_xwlSocket;
-    QTemporaryFile m_xauthorityFile;
     const std::chrono::microseconds m_watchdogInterval;
     bool m_watchdogIntervalOk;
+
+#if KWIN_BUILD_X11
+    std::unique_ptr<KWin::XwaylandSocket> m_xwlSocket;
+    QTemporaryFile m_xauthorityFile;
+#endif
 };
 
 KWinWrapper::KWinWrapper(QObject *parent)
@@ -71,6 +79,7 @@ KWinWrapper::KWinWrapper(QObject *parent)
         qFatal("Could not create wayland socket");
     }
 
+#if KWIN_BUILD_X11
     if (qApp->arguments().contains(QLatin1String("--xwayland"))) {
         m_xwlSocket = std::make_unique<KWin::XwaylandSocket>(KWin::XwaylandSocket::OperationMode::TransferFdsOnExec);
         if (!m_xwlSocket->isValid()) {
@@ -85,6 +94,7 @@ KWinWrapper::KWinWrapper(QObject *parent)
             }
         }
     }
+#endif
 }
 
 KWinWrapper::~KWinWrapper()
@@ -102,6 +112,7 @@ void KWinWrapper::run()
     args << "--wayland-fd" << QString::number(wl_socket_get_fd(m_socket));
     args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
 
+#if KWIN_BUILD_X11
     if (m_xwlSocket) {
         const auto xwaylandFileDescriptors = m_xwlSocket->fileDescriptors();
         for (const int &fileDescriptor : xwaylandFileDescriptors) {
@@ -112,6 +123,7 @@ void KWinWrapper::run()
             args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
         }
     }
+#endif
 
     // attach our main process arguments
     // the first entry is dropped as it will be our program name
@@ -143,12 +155,14 @@ void KWinWrapper::run()
 
     QProcessEnvironment env;
     env.insert("WAYLAND_DISPLAY", QString::fromUtf8(wl_socket_get_display_name(m_socket)));
+#if KWIN_BUILD_X11
     if (m_xwlSocket) {
         env.insert("DISPLAY", m_xwlSocket->name());
         if (m_xauthorityFile.open()) {
             env.insert("XAUTHORITY", m_xauthorityFile.fileName());
         }
     }
+#endif
     auto envSyncJob = new KUpdateLaunchEnvironmentJob(env);
     connect(envSyncJob, &KUpdateLaunchEnvironmentJob::finished, this, []() {
         // The service name is merely there to indicate to the world that we're up and ready with all envs exported

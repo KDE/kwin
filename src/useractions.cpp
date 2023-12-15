@@ -32,8 +32,11 @@
 #include "scripting/scripting.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
+#if KWIN_BUILD_X11
 #include "x11window.h"
+#endif
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -46,6 +49,7 @@
 #include <QAction>
 #include <QCheckBox>
 #include <QPushButton>
+#include <QWindow>
 
 #include <KGlobalAccel>
 #include <KLazyLocalizedString>
@@ -1817,19 +1821,6 @@ void Window::setShortcutInternal()
 {
     updateCaption();
     workspace()->windowShortcutUpdated(this);
-}
-
-void X11Window::setShortcutInternal()
-{
-    updateCaption();
-#if 0
-    workspace()->windowShortcutUpdated(this);
-#else
-    // Workaround for kwin<->kglobalaccel deadlock, when KWin has X grab and the kded
-    // kglobalaccel module tries to create the key grab. KWin should preferably grab
-    // they keys itself anyway :(.
-    QTimer::singleShot(0, this, std::bind(&Workspace::windowShortcutUpdated, workspace(), this));
-#endif
 }
 
 bool Workspace::shortcutAvailable(const QKeySequence &cut, Window *ignore) const

@@ -23,17 +23,19 @@ HighlightWindowEffect::HighlightWindowEffect()
     , m_fadeDuration(animationTime(150))
     , m_monitorWindow(nullptr)
 {
+#if KWIN_BUILD_X11
     // TODO KF6 remove atom support
     m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
-    connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
-    connect(effects, &EffectsHandler::windowClosed, this, &HighlightWindowEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::propertyNotify, this, [this](EffectWindow *w, long atom) {
-        slotPropertyNotify(w, atom, nullptr);
-    });
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         m_atom = effects->announceSupportProperty("_KDE_WINDOW_HIGHLIGHT", this);
     });
+    connect(effects, &EffectsHandler::propertyNotify, this, [this](EffectWindow *w, long atom) {
+        slotPropertyNotify(w, atom, nullptr);
+    });
+#endif
+    connect(effects, &EffectsHandler::windowAdded, this, &HighlightWindowEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &HighlightWindowEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &HighlightWindowEffect::slotWindowDeleted);
 
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/HighlightWindow"),
                                                  QStringLiteral("org.kde.KWin.HighlightWindow"),
@@ -93,7 +95,9 @@ void HighlightWindowEffect::slotWindowAdded(EffectWindow *w)
             complete(animationId);
         }
     }
+#if KWIN_BUILD_X11
     slotPropertyNotify(w, m_atom, w); // Check initial value
+#endif
 }
 
 void HighlightWindowEffect::slotWindowClosed(EffectWindow *w)
@@ -108,6 +112,7 @@ void HighlightWindowEffect::slotWindowDeleted(EffectWindow *w)
     m_animations.remove(w);
 }
 
+#if KWIN_BUILD_X11
 void HighlightWindowEffect::slotPropertyNotify(EffectWindow *w, long a, EffectWindow *addedWindow)
 {
     if (a != m_atom || m_atom == XCB_ATOM_NONE) {
@@ -156,6 +161,7 @@ void HighlightWindowEffect::slotPropertyNotify(EffectWindow *w, long a, EffectWi
     }
     prepareHighlighting();
 }
+#endif
 
 void HighlightWindowEffect::prepareHighlighting()
 {

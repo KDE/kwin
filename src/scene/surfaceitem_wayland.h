@@ -74,6 +74,7 @@ private:
     SurfaceItemWayland *m_item;
 };
 
+#if KWIN_BUILD_X11
 /**
  * The SurfaceItemXwayland class represents an Xwayland surface in the scene.
  */
@@ -90,5 +91,6 @@ public:
 private:
     X11Window *m_window;
 };
+#endif
 
 } // namespace KWin

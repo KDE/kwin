@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "config-kwin.h"
+
 #include "effect/animationeffect.h"
 
 namespace KWin
@@ -35,7 +37,9 @@ public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowClosed(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
+#if KWIN_BUILD_X11
     void slotPropertyNotify(KWin::EffectWindow *w, long atom, EffectWindow *addedWindow = nullptr);
+#endif
 
 private:
     quint64 startGhostAnimation(EffectWindow *window);
@@ -48,7 +52,9 @@ private:
     void finishHighlighting();
     void highlightWindows(const QList<KWin::EffectWindow *> &windows);
 
+#if KWIN_BUILD_X11
     long m_atom;
+#endif
     QList<EffectWindow *> m_highlightedWindows;
     QHash<EffectWindow *, quint64> m_animations;
     QEasingCurve m_easingCurve;

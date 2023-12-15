@@ -16,7 +16,9 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#if KWIN_BUILD_X11
 #include "x11window.h"
+#endif
 
 #include <KDecoration2/Decoration>
 
@@ -300,6 +302,7 @@ void WindowItem::freeze()
     }
 }
 
+#if KWIN_BUILD_X11
 WindowItemX11::WindowItemX11(X11Window *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
@@ -326,6 +329,7 @@ void WindowItemX11::initialize()
         Q_UNREACHABLE();
     }
 }
+#endif
 
 WindowItemWayland::WindowItemWayland(Window *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)

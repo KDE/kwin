@@ -17,7 +17,10 @@
 #include "main.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
+
+#if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
+#endif
 // KDE
 #include <KConfig>
 #include <KConfigGroup>
@@ -222,6 +225,7 @@ void Cursor::markAsRendered(std::chrono::milliseconds timestamp)
     Q_EMIT rendered(timestamp);
 }
 
+#if KWIN_BUILD_X11
 xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
 {
     return x11Cursor(shape.name());
@@ -261,6 +265,7 @@ xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
     xcb_cursor_context_free(ctx);
     return cursor;
 }
+#endif
 
 void Cursor::doSetPos()
 {

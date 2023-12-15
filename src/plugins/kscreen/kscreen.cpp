@@ -46,15 +46,19 @@ namespace KWin
 
 KscreenEffect::KscreenEffect()
     : Effect()
+#if KWIN_BUILD_X11
     , m_atom(effects->waylandDisplay() ? XCB_ATOM_NONE : effects->announceSupportProperty("_KDE_KWIN_KSCREEN_SUPPORT", this))
+#endif
 {
     KscreenConfig::instance(effects->config());
+#if KWIN_BUILD_X11
     if (!effects->waylandDisplay()) {
         connect(effects, &EffectsHandler::propertyNotify, this, &KscreenEffect::propertyNotify);
         connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
             m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_KWIN_KSCREEN_SUPPORT"), this);
         });
     }
+#endif
     reconfigure(ReconfigureAll);
 
     const QList<Output *> screens = effects->screens();
@@ -173,6 +177,7 @@ void KscreenEffect::setState(ScreenState &state, FadeOutState newState)
     effects->addRepaintFull();
 }
 
+#if KWIN_BUILD_X11
 void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
 {
     if (window || atom != m_atom || m_atom == XCB_ATOM_NONE) {
@@ -191,6 +196,7 @@ void KscreenEffect::propertyNotify(EffectWindow *window, long int atom)
 
     setState(m_xcbState, FadeOutState(data[0]));
 }
+#endif
 
 void KscreenEffect::switchState(ScreenState &state)
 {
@@ -202,19 +208,29 @@ void KscreenEffect::switchState(ScreenState &state)
         state.m_state = StateNormal;
         value = 0l;
     }
+#if KWIN_BUILD_X11
     if (value != -1l && m_atom != XCB_ATOM_NONE) {
         xcb_change_property(effects->xcbConnection(), XCB_PROP_MODE_REPLACE, effects->x11RootWindow(), m_atom, XCB_ATOM_CARDINAL, 32, 1, &value);
     }
+#endif
 }
 
 bool KscreenEffect::isActive() const
 {
-    return !m_waylandStates.isEmpty() || (!effects->waylandDisplay() && m_atom && m_xcbState.m_state != StateNormal);
+    return !m_waylandStates.isEmpty()
+#if KWIN_BUILD_X11
+        || (!effects->waylandDisplay() && m_atom && m_xcbState.m_state != StateNormal)
+#endif
+        ;
 }
 
 bool KscreenEffect::isScreenActive(Output *screen) const
 {
-    return m_waylandStates.contains(screen) || (!effects->waylandDisplay() && m_atom && m_xcbState.m_state != StateNormal);
+    return m_waylandStates.contains(screen)
+#if KWIN_BUILD_X11
+        || (!effects->waylandDisplay() && m_atom && m_xcbState.m_state != StateNormal)
+#endif
+        ;
 }
 
 } // namespace KWin

@@ -71,7 +71,9 @@ public Q_SLOTS:
     void slotWindowAdded(KWin::EffectWindow *w);
     void slotWindowDeleted(KWin::EffectWindow *w);
     void slotScreenRemoved(KWin::Output *screen);
+#if KWIN_BUILD_X11
     void slotPropertyNotify(KWin::EffectWindow *w, long atom);
+#endif
     void setupDecorationConnections(EffectWindow *w);
 
 private:
@@ -114,7 +116,9 @@ private:
     } m_noisePass;
 
     bool m_valid = false;
+#if KWIN_BUILD_X11
     long net_wm_blur_region = 0;
+#endif
     QRegion m_paintedArea; // keeps track of all painted areas (from bottom to top)
     QRegion m_currentBlur; // keeps track of the currently blured area of the windows(from bottom to top)
     Output *m_currentScreen = nullptr;

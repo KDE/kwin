@@ -9,11 +9,13 @@
 
 #pragma once
 
+#include "core/output.h"
 #include "kwin_export.h"
 
 #include "globals.h"
 
 #include <QObject>
+#include <QWindow>
 
 class QWindow;
 

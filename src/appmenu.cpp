@@ -9,8 +9,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "appmenu.h"
+#include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 #include <appmenu_interface.h>
 
 #include <QDBusObjectPath>

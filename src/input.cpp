@@ -30,7 +30,9 @@
 #include "tablet_input.h"
 #include "touch_input.h"
 #include "wayland/xdgtopleveldrag_v1.h"
+#if KWIN_BUILD_X11
 #include "x11window.h"
+#endif
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
@@ -2363,10 +2365,11 @@ static AbstractDropHandler *dropHandler(Window *window)
     if (dropTarget) {
         return dropTarget;
     }
-
+#if KWIN_BUILD_X11
     if (qobject_cast<X11Window *>(window) && kwinApp()->xwayland()) {
         return kwinApp()->xwayland()->xwlDropHandler();
     }
+#endif
 
     return nullptr;
 }

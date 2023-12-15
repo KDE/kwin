@@ -10,6 +10,7 @@
 #cmakedefine01 KWIN_BUILD_TABBOX
 #cmakedefine01 KWIN_BUILD_ACTIVITIES
 #cmakedefine01 KWIN_BUILD_GLOBALSHORTCUTS
+#cmakedefine01 KWIN_BUILD_X11
 constexpr QLatin1String KWIN_CONFIG("kwinrc");
 constexpr QLatin1String KWIN_VERSION_STRING("${PROJECT_VERSION}");
 constexpr QLatin1String XCB_VERSION_STRING("${XCB_VERSION}");

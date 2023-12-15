@@ -15,10 +15,13 @@
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glplatform.h"
-#include "utils/xcbutils.h"
 #include "wayland/blur.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
+#endif
 
 #include <QGuiApplication>
 #include <QMatrix4x4>
@@ -94,9 +97,11 @@ BlurEffect::BlurEffect()
     initBlurStrengthValues();
     reconfigure(ReconfigureAll);
 
+#if KWIN_BUILD_X11
     if (effects->xcbConnection()) {
         net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
     }
+#endif
 
     if (effects->waylandDisplay()) {
         if (!s_blurManagerRemoveTimer) {
@@ -116,10 +121,12 @@ BlurEffect::BlurEffect()
     connect(effects, &EffectsHandler::windowAdded, this, &BlurEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &BlurEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::screenRemoved, this, &BlurEffect::slotScreenRemoved);
+#if KWIN_BUILD_X11
     connect(effects, &EffectsHandler::propertyNotify, this, &BlurEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         net_wm_blur_region = effects->announceSupportProperty(s_blurAtomName, this);
     });
+#endif
 
     // Fetch the blur regions for all windows
     const auto stackingOrder = effects->stackingOrder();
@@ -215,6 +222,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     std::optional<QRegion> content;
     std::optional<QRegion> frame;
 
+#if KWIN_BUILD_X11
     if (net_wm_blur_region != XCB_ATOM_NONE) {
         const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
         QRegion region;
@@ -232,6 +240,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
             content = region;
         }
     }
+#endif
 
     SurfaceInterface *surf = w->surface();
 
@@ -305,12 +314,14 @@ void BlurEffect::slotScreenRemoved(KWin::Output *screen)
     }
 }
 
+#if KWIN_BUILD_X11
 void BlurEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
     if (w && atom == net_wm_blur_region && net_wm_blur_region != XCB_ATOM_NONE) {
         updateBlurRegion(w);
     }
 }
+#endif
 
 void BlurEffect::setupDecorationConnections(EffectWindow *w)
 {

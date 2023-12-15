@@ -1,18 +1,20 @@
-set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)
-add_executable(normalhintsbasesizetest ${normalhintsbasesizetest_SRCS})
-target_link_libraries(normalhintsbasesizetest XCB::XCB XCB::ICCCM KF6::WindowSystem)
+if(KWIN_BUILD_X11)
+    set(normalhintsbasesizetest_SRCS normalhintsbasesizetest.cpp)
+    add_executable(normalhintsbasesizetest ${normalhintsbasesizetest_SRCS})
+    target_link_libraries(normalhintsbasesizetest XCB::XCB XCB::ICCCM KF6::WindowSystem)
 
-# next target
-set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)
-add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
-target_link_libraries(screenedgeshowtest Qt::GuiPrivate Qt::Widgets KF6::ConfigCore KF6::WindowSystem Plasma::KWaylandClient ${XCB_XCB_LIBRARY})
+    # next target
+    set(screenedgeshowtest_SRCS screenedgeshowtest.cpp)
+    add_executable(screenedgeshowtest ${screenedgeshowtest_SRCS})
+    target_link_libraries(screenedgeshowtest Qt::GuiPrivate Qt::Widgets KF6::ConfigCore KF6::WindowSystem Plasma::KWaylandClient ${XCB_XCB_LIBRARY})
 
-add_executable(x11shadowreader x11shadowreader.cpp)
-target_link_libraries(x11shadowreader XCB::XCB Qt::GuiPrivate Qt::Widgets KF6::ConfigCore KF6::WindowSystem)
+    add_executable(x11shadowreader x11shadowreader.cpp)
+    target_link_libraries(x11shadowreader XCB::XCB Qt::GuiPrivate Qt::Widgets KF6::ConfigCore KF6::WindowSystem)
 
-add_executable(pointerconstraints pointerconstraintstest.cpp)
-add_definitions(-DDIR="${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(pointerconstraints XCB::XCB Qt::Gui Qt::Quick Plasma::KWaylandClient)
+    add_executable(pointerconstraints pointerconstraintstest.cpp)
+    add_definitions(-DDIR="${CMAKE_CURRENT_SOURCE_DIR}")
+    target_link_libraries(pointerconstraints XCB::XCB Qt::Gui Qt::Quick Plasma::KWaylandClient)
+endif()
 
 add_executable(pointergestures pointergesturestest.cpp)
 add_definitions(-DDIR="${CMAKE_CURRENT_SOURCE_DIR}")

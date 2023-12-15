@@ -47,6 +47,7 @@ option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
+option(KWIN_BUILD_X11 "Enable building kwin_x11 and Xwayland support" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -232,8 +233,58 @@ else()
     set(HAVE_XKBCOMMON_NO_SECURE_GETENV 0)
 endif()
 
-pkg_check_modules(XKBX11 IMPORTED_TARGET xkbcommon-x11 REQUIRED)
-add_feature_info(XKBX11 XKBX11_FOUND "Required for handling keyboard events in X11 backend")
+if (KWIN_BUILD_X11)
+    pkg_check_modules(XKBX11 IMPORTED_TARGET xkbcommon-x11 REQUIRED)
+    add_feature_info(XKBX11 XKBX11_FOUND "Required for handling keyboard events in X11 backend")
+
+    # All the required XCB components
+    find_package(XCB 1.10 REQUIRED COMPONENTS
+        COMPOSITE
+        CURSOR
+        DAMAGE
+        DRI3
+        GLX
+        ICCCM
+        IMAGE
+        KEYSYMS
+        PRESENT
+        RANDR
+        RENDER
+        SHAPE
+        SHM
+        SYNC
+        XCB
+        XFIXES
+        XKB
+        XINERAMA
+    )
+    set_package_properties(XCB PROPERTIES TYPE REQUIRED)
+
+    find_package(X11_XCB)
+    set_package_properties(X11_XCB PROPERTIES
+        PURPOSE "Required for building X11 windowed backend of kwin_wayland"
+        TYPE OPTIONAL
+    )
+
+    find_package(Xwayland)
+    set_package_properties(Xwayland PROPERTIES
+        URL "https://x.org"
+        DESCRIPTION "Xwayland X server"
+        TYPE RUNTIME
+        PURPOSE "Needed for running kwin_wayland"
+    )
+    set(HAVE_XWAYLAND_LISTENFD ${Xwayland_HAVE_LISTENFD})
+
+    set(HAVE_GLX ${epoxy_HAS_GLX})
+    get_target_property(QT_DISABLED_FEATURES Qt6::Gui QT_DISABLED_PUBLIC_FEATURES)
+    if("xcb_glx_plugin" IN_LIST QT_DISABLED_FEATURES)
+        message(STATUS "Disable GLX because Qt6::Gui was built without xcb_glx_plugin")
+        set(HAVE_GLX false)
+    endif()
+
+    # for kwin internal things
+    set(HAVE_X11_XCB ${X11_XCB_FOUND})
+endif()
 
 find_package(Libinput 1.19)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
@@ -282,35 +333,6 @@ set_package_properties(lcms2 PROPERTIES
     PURPOSE "Required for the color management system"
 )
 
-# All the required XCB components
-find_package(XCB 1.10 REQUIRED COMPONENTS
-    COMPOSITE
-    CURSOR
-    DAMAGE
-    DRI3
-    GLX
-    ICCCM
-    IMAGE
-    KEYSYMS
-    PRESENT
-    RANDR
-    RENDER
-    SHAPE
-    SHM
-    SYNC
-    XCB
-    XFIXES
-    XKB
-    XINERAMA
-)
-set_package_properties(XCB PROPERTIES TYPE REQUIRED)
-
-find_package(X11_XCB)
-set_package_properties(X11_XCB PROPERTIES
-    PURPOSE "Required for building X11 windowed backend of kwin_wayland"
-    TYPE OPTIONAL
-)
-
 find_package(Freetype)
 set_package_properties(Freetype PROPERTIES
     DESCRIPTION "A font rendering engine"
@@ -323,15 +345,6 @@ set_package_properties(Fontconfig PROPERTIES
     TYPE REQUIRED
     PURPOSE "Needed for KWin's QPA plugin."
 )
-
-find_package(Xwayland)
-set_package_properties(Xwayland PROPERTIES
-    URL "https://x.org"
-    DESCRIPTION "Xwayland X server"
-    TYPE RUNTIME
-    PURPOSE "Needed for running kwin_wayland"
-)
-set(HAVE_XWAYLAND_LISTENFD ${Xwayland_HAVE_LISTENFD})
 
 find_package(Libcap)
 set_package_properties(Libcap PROPERTIES
@@ -381,16 +394,6 @@ ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 ########### configure tests ###############
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "PlasmaActivities_FOUND" OFF)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
-
-set(HAVE_GLX ${epoxy_HAS_GLX})
-get_target_property(QT_DISABLED_FEATURES Qt6::Gui QT_DISABLED_PUBLIC_FEATURES)
-if("xcb_glx_plugin" IN_LIST QT_DISABLED_FEATURES)
-    message(STATUS "Disable GLX because Qt6::Gui was built without xcb_glx_plugin")
-    set(HAVE_GLX false)
-endif()
-
-# for kwin internal things
-set(HAVE_X11_XCB ${X11_XCB_FOUND})
 
 check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
 add_feature_info("SCHED_RESET_ON_FORK"

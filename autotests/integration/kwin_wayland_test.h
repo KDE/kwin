@@ -68,10 +68,12 @@ class ScreencastingV1;
 
 namespace KWin
 {
+#if KWIN_BUILD_X11
 namespace Xwl
 {
 class Xwayland;
 }
+#endif
 
 namespace Test
 {
@@ -93,7 +95,9 @@ public:
     Test::VirtualInputDevice *virtualPointer() const;
     Test::VirtualInputDevice *virtualKeyboard() const;
     Test::VirtualInputDevice *virtualTouch() const;
+#if KWIN_BUILD_X11
     XwaylandInterface *xwayland() const override;
+#endif
 
 protected:
     void performStartup() override;
@@ -104,8 +108,9 @@ private:
 
     void createVirtualInputDevices();
     void destroyVirtualInputDevices();
-
+#if KWIN_BUILD_X11
     std::unique_ptr<Xwl::Xwayland> m_xwayland;
+#endif
     QString m_inputMethodServerToStart;
 
     std::unique_ptr<Test::VirtualInputDevice> m_virtualPointer;
@@ -766,13 +771,14 @@ bool renderNodeAvailable();
  * with X on demand
  */
 
+#if KWIN_BUILD_X11
 struct XcbConnectionDeleter
 {
     void operator()(xcb_connection_t *pointer);
 };
-
 typedef std::unique_ptr<xcb_connection_t, XcbConnectionDeleter> XcbConnectionPtr;
 XcbConnectionPtr createX11Connection();
+#endif
 
 MockInputMethod *inputMethod();
 KWayland::Client::Surface *inputPanelSurface();

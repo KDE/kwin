@@ -17,22 +17,26 @@
 
 #include "cursor.h"
 #include "focuschain.h"
-#include "netinfo.h"
 #include "workspace.h"
-#include "x11window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
 #include "virtualdesktops.h"
 
-#include <KLocalizedString>
-#include <kstartupinfo.h>
-#include <kstringhandler.h>
-
+#if KWIN_BUILD_X11
 #include "atoms.h"
 #include "group.h"
+#include "netinfo.h"
+#include "x11window.h"
+#include <kstartupinfo.h>
+#endif
+
+#include <KLocalizedString>
+#include <kstringhandler.h>
+
 #include "rules.h"
 #include "useractions.h"
+#include "window.h"
 #include <QDebug>
 
 namespace KWin
@@ -259,9 +263,11 @@ void Workspace::setActiveWindow(Window *window)
 
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 
+#if KWIN_BUILD_X11
     if (rootInfo()) {
         rootInfo()->setActiveClient(m_activeWindow);
     }
+#endif
 
     Q_EMIT windowActivated(m_activeWindow);
     --m_setActiveWindowRecursion;
@@ -330,6 +336,7 @@ void Workspace::activateWindow(Window *window, bool force)
         requestFocus(window, force);
     }
 
+#if KWIN_BUILD_X11
     // Don't update user time for windows that have focus stealing workaround.
     // As they usually belong to the current active window but fail to provide
     // this information, updating their user time would make the user time
@@ -341,6 +348,7 @@ void Workspace::activateWindow(Window *window, bool force)
         // updateUserTime is X11 specific
         x11Window->updateUserTime();
     }
+#endif
 
     m_quickTileCombineTimer->stop();
 }
@@ -558,7 +566,7 @@ void Workspace::setShouldGetFocus(Window *window)
 // a window to be fully raised upon its own request (XRaiseWindow),
 // if refused, it will be raised only on top of windows belonging
 // to the same application
-bool Workspace::allowFullClientRaising(const KWin::Window *window, xcb_timestamp_t time)
+bool Workspace::allowFullClientRaising(const KWin::Window *window, uint32_t time)
 {
     int level = window->rules()->checkFSP(options->focusStealingPreventionLevel());
     if (sessionManager()->state() == SessionState::Saving && level <= 2) { // <= normal
@@ -583,10 +591,14 @@ bool Workspace::allowFullClientRaising(const KWin::Window *window, xcb_timestamp
     if (level == 3) { // high
         return false;
     }
+#if KWIN_BUILD_X11
     xcb_timestamp_t user_time = ac->userTime();
     qCDebug(KWIN_CORE) << "Raising, compared:" << time << ":" << user_time
                        << ":" << (NET::timestampCompare(time, user_time) >= 0);
     return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
+#else
+    return true;
+#endif
 }
 
 /**
@@ -601,7 +613,9 @@ bool Workspace::restoreFocus()
     // a timestamp *sigh*, kwin's timestamp would be older than the timestamp
     // that was used by whoever caused the focus change, and therefore
     // the attempt to restore the focus would fail due to old timestamp
+#if KWIN_BUILD_X11
     kwinApp()->updateXTime();
+#endif
     if (should_get_focus.count() > 0) {
         return requestFocus(should_get_focus.last());
     } else if (m_lastActiveWindow) {
@@ -617,314 +631,6 @@ void Workspace::windowAttentionChanged(Window *window, bool set)
         attention_chain.prepend(window);
     } else {
         attention_chain.removeAll(window);
-    }
-}
-
-//********************************************
-// Client
-//********************************************
-
-/**
- * Updates the user time (time of last action in the active window).
- * This is called inside  kwin for every action with the window
- * that qualifies for user interaction (clicking on it, activate it
- * externally, etc.).
- */
-void X11Window::updateUserTime(xcb_timestamp_t time)
-{
-    // copied in Group::updateUserTime
-    if (time == XCB_TIME_CURRENT_TIME) {
-        kwinApp()->updateXTime();
-        time = xTime();
-    }
-    if (time != -1U
-        && (m_userTime == XCB_TIME_CURRENT_TIME
-            || NET::timestampCompare(time, m_userTime) > 0)) { // time > user_time
-        m_userTime = time;
-        shade_below = nullptr; // do not hover re-shade a window after it got interaction
-    }
-    group()->updateUserTime(m_userTime);
-}
-
-xcb_timestamp_t X11Window::readUserCreationTime() const
-{
-    Xcb::Property prop(false, window(), atoms->kde_net_wm_user_creation_time, XCB_ATOM_CARDINAL, 0, 1);
-    return prop.value<xcb_timestamp_t>(-1);
-}
-
-xcb_timestamp_t X11Window::readUserTimeMapTimestamp(const KStartupInfoId *asn_id, const KStartupInfoData *asn_data,
-                                                    bool session) const
-{
-    xcb_timestamp_t time = info->userTime();
-    // qDebug() << "User timestamp, initial:" << time;
-    //^^ this deadlocks kwin --replace sometimes.
-
-    // newer ASN timestamp always replaces user timestamp, unless user timestamp is 0
-    // helps e.g. with konqy reusing
-    if (asn_data != nullptr && time != 0) {
-        if (asn_id->timestamp() != 0
-            && (time == -1U || NET::timestampCompare(asn_id->timestamp(), time) > 0)) {
-            time = asn_id->timestamp();
-        }
-    }
-    qCDebug(KWIN_CORE) << "User timestamp, ASN:" << time;
-    if (time == -1U) {
-        // The window doesn't have any timestamp.
-        // If it's the first window for its application
-        // (i.e. there's no other window from the same app),
-        // use the _KDE_NET_WM_USER_CREATION_TIME trick.
-        // Otherwise, refuse activation of a window
-        // from already running application if this application
-        // is not the active one (unless focus stealing prevention is turned off).
-        X11Window *act = dynamic_cast<X11Window *>(workspace()->mostRecentlyActivatedWindow());
-        if (act != nullptr && !belongToSameApplication(act, this, SameApplicationCheck::RelaxedForActive)) {
-            bool first_window = true;
-            auto sameApplicationActiveHackPredicate = [this](const X11Window *cl) {
-                // ignore already existing splashes, toolbars, utilities and menus,
-                // as the app may show those before the main window
-                return !cl->isSplash() && !cl->isToolbar() && !cl->isUtility() && !cl->isMenu()
-                    && cl != this && X11Window::belongToSameApplication(cl, this, SameApplicationCheck::RelaxedForActive);
-            };
-            if (isTransient()) {
-                auto clientMainClients = [this]() {
-                    QList<X11Window *> ret;
-                    const auto mcs = mainWindows();
-                    for (auto mc : mcs) {
-                        if (X11Window *c = dynamic_cast<X11Window *>(mc)) {
-                            ret << c;
-                        }
-                    }
-                    return ret;
-                };
-                if (act->hasTransient(this, true)) {
-                    ; // is transient for currently active window, even though it's not
-                    // the same app (e.g. kcookiejar dialog) -> allow activation
-                } else if (groupTransient() && findInList<X11Window, X11Window>(clientMainClients(), sameApplicationActiveHackPredicate) == nullptr) {
-                    ; // standalone transient
-                } else {
-                    first_window = false;
-                }
-            } else {
-                if (workspace()->findClient(sameApplicationActiveHackPredicate)) {
-                    first_window = false;
-                }
-            }
-            // don't refuse if focus stealing prevention is turned off
-            if (!first_window && rules()->checkFSP(options->focusStealingPreventionLevel()) > 0) {
-                qCDebug(KWIN_CORE) << "User timestamp, already exists:" << 0;
-                return 0; // refuse activation
-            }
-        }
-        // Creation time would just mess things up during session startup,
-        // as possibly many apps are started up at the same time.
-        // If there's no active window yet, no timestamp will be needed,
-        // as plain Workspace::allowWindowActivation() will return true
-        // in such case. And if there's already active window,
-        // it's better not to activate the new one.
-        // Unless it was the active window at the time
-        // of session saving and there was no user interaction yet,
-        // this check will be done in manage().
-        if (session) {
-            return -1U;
-        }
-        time = readUserCreationTime();
-    }
-    qCDebug(KWIN_CORE) << "User timestamp, final:" << this << ":" << time;
-    return time;
-}
-
-xcb_timestamp_t X11Window::userTime() const
-{
-    xcb_timestamp_t time = m_userTime;
-    if (time == 0) { // doesn't want focus after showing
-        return 0;
-    }
-    Q_ASSERT(group() != nullptr);
-    if (time == -1U
-        || (group()->userTime() != -1U
-            && NET::timestampCompare(group()->userTime(), time) > 0)) {
-        time = group()->userTime();
-    }
-    return time;
-}
-
-void X11Window::doSetActive()
-{
-    updateUrgency(); // demand attention again if it's still urgent
-    info->setState(isActive() ? NET::Focused : NET::States(), NET::Focused);
-}
-
-void X11Window::startupIdChanged()
-{
-    KStartupInfoId asn_id;
-    KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification(window(), asn_id, asn_data);
-    if (!asn_valid) {
-        return;
-    }
-    // If the ASN contains desktop, move it to the desktop, otherwise move it to the current
-    // desktop (since the new ASN should make the window act like if it's a new application
-    // launched). However don't affect the window's desktop if it's set to be on all desktops.
-
-    if (asn_data.desktop() != 0 && !isOnAllDesktops()) {
-        if (asn_data.desktop() == -1) {
-            workspace()->sendWindowToDesktops(this, {}, true);
-        } else {
-            if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(asn_data.desktop())) {
-                workspace()->sendWindowToDesktops(this, {desktop}, true);
-            }
-        }
-    }
-
-    if (asn_data.xinerama() != -1) {
-        Output *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
-        if (output) {
-            workspace()->sendWindowToOutput(this, output);
-        }
-    }
-    const xcb_timestamp_t timestamp = asn_id.timestamp();
-    if (timestamp != 0) {
-        bool activate = allowWindowActivation(timestamp);
-        if (activate) {
-            workspace()->activateWindow(this);
-        } else {
-            demandAttention();
-        }
-    }
-}
-
-void X11Window::updateUrgency()
-{
-    if (info->urgency()) {
-        demandAttention();
-    }
-}
-
-namespace FSP
-{
-enum Level {
-    None = 0,
-    Low,
-    Medium,
-    High,
-    Extreme,
-};
-}
-
-// focus_in -> the window got FocusIn event
-bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
-{
-    auto window = this;
-    // options->focusStealingPreventionLevel :
-    // 0 - none    - old KWin behaviour, new windows always get focus
-    // 1 - low     - focus stealing prevention is applied normally, when unsure, activation is allowed
-    // 2 - normal  - focus stealing prevention is applied normally, when unsure, activation is not allowed,
-    //              this is the default
-    // 3 - high    - new window gets focus only if it belongs to the active application,
-    //              or when no window is currently active
-    // 4 - extreme - no window gets focus without user intervention
-    if (time == -1U) {
-        time = window->userTime();
-    }
-    const FSP::Level level = (FSP::Level)window->rules()->checkFSP(options->focusStealingPreventionLevel());
-    if (workspace()->sessionManager()->state() == SessionState::Saving && level <= FSP::Medium) { // <= normal
-        return true;
-    }
-    Window *ac = workspace()->mostRecentlyActivatedWindow();
-    if (focus_in) {
-        if (workspace()->inShouldGetFocus(window)) {
-            return true; // FocusIn was result of KWin's action
-        }
-        // Before getting FocusIn, the active Client already
-        // got FocusOut, and therefore got deactivated.
-        ac = workspace()->lastActiveWindow();
-    }
-    if (time == 0) { // explicitly asked not to get focus
-        if (!window->rules()->checkAcceptFocus(false)) {
-            return false;
-        }
-    }
-    const FSP::Level protection = (FSP::Level)(ac ? ac->rules()->checkFPP(2) : FSP::None);
-
-    // stealing is unconditionally allowed (NETWM behavior)
-    if (level == FSP::None || protection == FSP::None) {
-        return true;
-    }
-
-    // The active window "grabs" the focus or stealing is generally forbidden
-    if (level == FSP::Extreme || protection == FSP::Extreme) {
-        return false;
-    }
-
-    // No active window, it's ok to pass focus
-    // NOTICE that extreme protection needs to be handled before to allow protection on unmanged windows
-    if (ac == nullptr || ac->isDesktop()) {
-        qCDebug(KWIN_CORE) << "Activation: No window active, allowing";
-        return true; // no active window -> always allow
-    }
-
-    // TODO window urgency  -> return true?
-
-    // Unconditionally allow intra-window passing around for lower stealing protections
-    // unless the active window has High interest
-    if (Window::belongToSameApplication(window, ac, Window::SameApplicationCheck::RelaxedForActive) && protection < FSP::High) {
-        qCDebug(KWIN_CORE) << "Activation: Belongs to active application";
-        return true;
-    }
-
-    // High FPS, not intr-window change. Only allow if the active window has only minor interest
-    if (level > FSP::Medium && protection > FSP::Low) {
-        return false;
-    }
-
-    if (time == -1U) { // no time known
-        qCDebug(KWIN_CORE) << "Activation: No timestamp at all";
-        // Only allow for Low protection unless active window has High interest in focus
-        if (level < FSP::Medium && protection < FSP::High) {
-            return true;
-        }
-        // no timestamp at all, don't activate - because there's also creation timestamp
-        // done on CreateNotify, this case should happen only in case application
-        // maps again already used window, i.e. this won't happen after app startup
-        return false;
-    }
-
-    // Low or medium FSP, usertime comparism is possible
-    const xcb_timestamp_t user_time = ac->userTime();
-    qCDebug(KWIN_CORE) << "Activation, compared:" << window << ":" << time << ":" << user_time
-                       << ":" << (NET::timestampCompare(time, user_time) >= 0);
-    return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
-}
-
-//****************************************
-// Group
-//****************************************
-
-void Group::startupIdChanged()
-{
-    KStartupInfoId asn_id;
-    KStartupInfoData asn_data;
-    bool asn_valid = workspace()->checkStartupNotification(leader_wid, asn_id, asn_data);
-    if (!asn_valid) {
-        return;
-    }
-    if (asn_id.timestamp() != 0 && user_time != -1U
-        && NET::timestampCompare(asn_id.timestamp(), user_time) > 0) {
-        user_time = asn_id.timestamp();
-    }
-}
-
-void Group::updateUserTime(xcb_timestamp_t time)
-{
-    // copy of X11Window::updateUserTime
-    if (time == XCB_CURRENT_TIME) {
-        kwinApp()->updateXTime();
-        time = xTime();
-    }
-    if (time != -1U
-        && (user_time == XCB_CURRENT_TIME
-            || NET::timestampCompare(time, user_time) > 0)) { // time > user_time
-        user_time = time;
     }
 }
 

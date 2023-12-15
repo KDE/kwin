@@ -9,13 +9,16 @@
 */
 #include "shadow.h"
 // kwin
-#include "atoms.h"
 #include "core/graphicsbufferview.h"
 #include "internalwindow.h"
 #include "wayland/shadow.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
+#include "window.h"
+#if KWIN_BUILD_X11
+#include "atoms.h"
 #include "x11window.h"
+#endif
 
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationShadow>
@@ -45,15 +48,18 @@ std::unique_ptr<Shadow> Shadow::createShadow(Window *window)
     if (!shadow && waylandServer()) {
         shadow = createShadowFromWayland(window);
     }
+#if KWIN_BUILD_X11
     if (!shadow && kwinApp()->x11Connection()) {
         shadow = createShadowFromX11(window);
     }
+#endif
     if (!shadow) {
         shadow = createShadowFromInternalWindow(window);
     }
     return shadow;
 }
 
+#if KWIN_BUILD_X11
 std::unique_ptr<Shadow> Shadow::createShadowFromX11(Window *window)
 {
     X11Window *x11Window = qobject_cast<X11Window *>(window);
@@ -71,6 +77,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromX11(Window *window)
         return nullptr;
     }
 }
+#endif
 
 std::unique_ptr<Shadow> Shadow::createShadowFromDecoration(Window *window)
 {
@@ -118,6 +125,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromInternalWindow(Window *window)
     return shadow;
 }
 
+#if KWIN_BUILD_X11
 QList<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
 {
     QList<uint32_t> ret;
@@ -133,9 +141,11 @@ QList<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
     }
     return ret;
 }
+#endif
 
 bool Shadow::init(const QList<uint32_t> &data)
 {
+#if KWIN_BUILD_X11
     QList<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
     QList<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
     auto *c = kwinApp()->x11Connection();
@@ -167,6 +177,7 @@ bool Shadow::init(const QList<uint32_t> &data)
         m_shadowElements[i] = image.copy();
         free(reply);
     }
+#endif
     m_offset = QMargins(data[ShadowElementsCount + 3],
                         data[ShadowElementsCount],
                         data[ShadowElementsCount + 1],
@@ -295,6 +306,7 @@ bool Shadow::updateShadow()
         }
     }
 
+#if KWIN_BUILD_X11
     if (X11Window *window = qobject_cast<X11Window *>(m_window)) {
         auto data = Shadow::readX11ShadowProperty(window->window());
         if (!data.isEmpty()) {
@@ -302,6 +314,7 @@ bool Shadow::updateShadow()
             return true;
         }
     }
+#endif
 
     return false;
 }

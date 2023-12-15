@@ -34,7 +34,6 @@
 
 #include <KLocalizedString>
 #include <KShell>
-#include <KKeyServer>
 
 #include <QDBusConnection>
 #include <QDBusMessage>
@@ -43,6 +42,7 @@
 #include <QMenu>
 
 #include <linux/input-event-codes.h>
+#include <private/qxkbcommon_p.h>
 #include <unistd.h>
 #include <xkbcommon/xkbcommon-keysyms.h>
 
@@ -60,13 +60,14 @@ static std::vector<quint32> textToKey(const QString &text)
         return {};
     }
 
-    const QList<int> syms(KKeyServer::keyQtToSymXs(sequence[0]));
+    QKeyEvent ev(QEvent::KeyPress, sequence[0], Qt::NoModifier);
+    const QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
     if (syms.empty()) {
         return {};
     }
 
-    std::optional<int> keyCode;
-    for (int sym : syms) {
+    std::optional<xkb_keycode_t> keyCode;
+    for (xkb_keysym_t sym : syms) {
         auto code = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
         if (code) {
             keyCode = code;

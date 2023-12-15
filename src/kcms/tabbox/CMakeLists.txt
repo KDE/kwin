@@ -27,8 +27,12 @@ target_link_libraries(kcm_kwintabbox
     KF6::Package
     KF6::Service
     KF6::XmlGui # For kkeysequencewidget
-    XCB::XCB
 )
+if (KWIN_BUILD_X11)
+    target_link_libraries(kcm_kwintabbox
+        XCB::XCB
+    )
+endif()
 
 ########### install files ###############
 install(FILES thumbnails/falkon.png

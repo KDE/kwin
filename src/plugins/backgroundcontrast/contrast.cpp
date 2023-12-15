@@ -13,10 +13,13 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
-#include "utils/xcbutils.h"
 #include "wayland/contrast.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
+
+#if KWIN_BUILD_X11
+#include "utils/xcbutils.h"
+#endif
 
 #include <QCoreApplication>
 #include <QMatrix4x4>
@@ -40,9 +43,11 @@ ContrastEffect::ContrastEffect()
     // ### Hackish way to announce support.
     //     Should be included in _NET_SUPPORTED instead.
     if (m_shader && m_shader->isValid()) {
+#if KWIN_BUILD_X11
         if (effects->xcbConnection()) {
             m_net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
+#endif
         if (effects->waylandDisplay()) {
             if (!s_contrastManagerRemoveTimer) {
                 s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
@@ -61,13 +66,16 @@ ContrastEffect::ContrastEffect()
 
     connect(effects, &EffectsHandler::windowAdded, this, &ContrastEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::windowDeleted, this, &ContrastEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::propertyNotify, this, &ContrastEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::virtualScreenGeometryChanged, this, &ContrastEffect::slotScreenGeometryChanged);
+
+#if KWIN_BUILD_X11
+    connect(effects, &EffectsHandler::propertyNotify, this, &ContrastEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         if (m_shader && m_shader->isValid()) {
             m_net_wm_contrast_region = effects->announceSupportProperty(s_contrastAtomName, this);
         }
     });
+#endif
 
     // Fetch the contrast regions for all windows
     const QList<EffectWindow *> windowList = effects->stackingOrder();
@@ -102,10 +110,11 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 {
     QRegion region;
     QMatrix4x4 matrix;
-    float colorTransform[16];
     bool valid = false;
 
+#if KWIN_BUILD_X11
     if (m_net_wm_contrast_region != XCB_ATOM_NONE) {
+        float colorTransform[16];
         const QByteArray value = w->readProperty(m_net_wm_contrast_region, m_net_wm_contrast_region, 32);
 
         if (value.size() > 0 && !((value.size() - (16 * sizeof(uint32_t))) % ((4 * sizeof(uint32_t))))) {
@@ -129,6 +138,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
 
         valid = !value.isNull();
     }
+#endif
 
     SurfaceInterface *surf = w->surface();
 
@@ -217,12 +227,14 @@ void ContrastEffect::slotWindowDeleted(EffectWindow *w)
     }
 }
 
+#if KWIN_BUILD_X11
 void ContrastEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
     if (w && atom == m_net_wm_contrast_region && m_net_wm_contrast_region != XCB_ATOM_NONE) {
         updateContrastRegion(w);
     }
 }
+#endif
 
 QMatrix4x4 ContrastEffect::colorMatrix(qreal contrast, qreal intensity, qreal saturation)
 {

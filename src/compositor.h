@@ -9,8 +9,12 @@
 */
 #pragma once
 
+#include "config-kwin.h"
 #include <kwin_export.h>
+
+#if KWIN_BUILD_X11
 #include <xcb/xcb.h>
+#endif
 
 #include <QHash>
 #include <QObject>
@@ -80,9 +84,11 @@ public:
         return s_compositor != nullptr && s_compositor->isActive();
     }
 
+#if KWIN_BUILD_X11
     // for delayed supportproperty management of effects
     void keepSupportProperty(xcb_atom_t atom);
     void removeSupportProperty(xcb_atom_t atom);
+#endif
 
     /**
      * Whether Compositing is possible in the Platform.
@@ -134,7 +140,9 @@ private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
 
 protected:
+#if KWIN_BUILD_X11
     void deleteUnusedSupportProperties();
+#endif
 
     Output *findOutput(RenderLoop *loop) const;
 
@@ -147,8 +155,10 @@ protected:
     void framePass(RenderLayer *layer, OutputFrame *frame);
 
     State m_state = State::Off;
+#if KWIN_BUILD_X11
     QList<xcb_atom_t> m_unusedSupportProperties;
     QTimer m_unusedSupportPropertyTimer;
+#endif
     std::unique_ptr<WorkspaceScene> m_scene;
     std::unique_ptr<CursorScene> m_cursorScene;
     std::unique_ptr<RenderBackend> m_backend;

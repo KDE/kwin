@@ -53,14 +53,16 @@ SlidingPopupsEffect::SlidingPopupsEffect()
 
     m_slideLength = QFontMetrics(QGuiApplication::font()).height() * 8;
 
+#if KWIN_BUILD_X11
     m_atom = effects->announceSupportProperty("_KDE_SLIDE", this);
-    connect(effects, &EffectsHandler::windowAdded, this, &SlidingPopupsEffect::slotWindowAdded);
-    connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slotWindowClosed);
-    connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
-    connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
     connect(effects, &EffectsHandler::xcbConnectionChanged, this, [this]() {
         m_atom = effects->announceSupportProperty(QByteArrayLiteral("_KDE_SLIDE"), this);
     });
+    connect(effects, &EffectsHandler::propertyNotify, this, &SlidingPopupsEffect::slotPropertyNotify);
+#endif
+    connect(effects, &EffectsHandler::windowAdded, this, &SlidingPopupsEffect::slotWindowAdded);
+    connect(effects, &EffectsHandler::windowClosed, this, &SlidingPopupsEffect::slotWindowClosed);
+    connect(effects, &EffectsHandler::windowDeleted, this, &SlidingPopupsEffect::slotWindowDeleted);
     connect(effects, &EffectsHandler::desktopChanged,
             this, &SlidingPopupsEffect::stopAnimations);
     connect(effects, &EffectsHandler::activeFullScreenEffectChanged,
@@ -209,10 +211,12 @@ void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
     connect(w, &EffectWindow::windowFrameGeometryChanged, this, &SlidingPopupsEffect::slotWindowFrameGeometryChanged);
     connect(w, &EffectWindow::windowHiddenChanged, this, &SlidingPopupsEffect::slotWindowHiddenChanged);
 
+#if KWIN_BUILD_X11
     // X11
     if (m_atom != XCB_ATOM_NONE) {
         slotPropertyNotify(w, m_atom);
     }
+#endif
 
     // Wayland
     if (auto surf = w->surface()) {
@@ -257,6 +261,7 @@ void SlidingPopupsEffect::slotWindowHiddenChanged(EffectWindow *w)
     }
 }
 
+#if KWIN_BUILD_X11
 void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
 {
     if (!w || atom != m_atom || m_atom == XCB_ATOM_NONE) {
@@ -333,6 +338,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
 
     setupAnimData(w);
 }
+#endif
 
 void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRectF &)
 {

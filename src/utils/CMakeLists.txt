@@ -10,9 +10,11 @@ target_sources(kwin PRIVATE
     subsurfacemonitor.cpp
     udev.cpp
     vsyncmonitor.cpp
-    xcbutils.cpp
     xcursortheme.cpp
 )
+if (KWIN_BUILD_X11)
+    target_sources(kwin PRIVATE xcbutils.cpp)
+endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     target_sources(kwin PRIVATE executable_path_proc.cpp)

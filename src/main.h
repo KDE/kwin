@@ -21,7 +21,9 @@
 #include <QApplication>
 #include <QProcessEnvironment>
 
+#if KWIN_BUILD_X11
 #include <xcb/xcb.h>
+#endif
 
 class KPluginMetaData;
 class QCommandLineParser;
@@ -69,9 +71,11 @@ private:
 class KWIN_EXPORT Application : public QApplication
 {
     Q_OBJECT
+#if KWIN_BUILD_X11
     Q_PROPERTY(quint32 x11Time READ x11Time WRITE setX11Time)
     Q_PROPERTY(quint32 x11RootWindow READ x11RootWindow CONSTANT)
     Q_PROPERTY(void *x11Connection READ x11Connection NOTIFY x11ConnectionChanged)
+#endif
     Q_PROPERTY(KSharedConfigPtr config READ config WRITE setConfig)
     Q_PROPERTY(KSharedConfigPtr kxkbConfig READ kxkbConfig WRITE setKxkbConfig)
 public:
@@ -140,6 +144,7 @@ public:
     void setupCommandLine(QCommandLineParser *parser);
     void processCommandLine(QCommandLineParser *parser);
 
+#if KWIN_BUILD_X11
     void registerEventFilter(X11EventFilter *filter);
     void unregisterEventFilter(X11EventFilter *filter);
     bool dispatchEvent(xcb_generic_event_t *event);
@@ -163,6 +168,7 @@ public:
      */
     void updateXTime();
     void updateX11Time(xcb_generic_event_t *event);
+#endif
 
     static void setCrashCount(int count);
     static bool wasCrash();
@@ -174,6 +180,7 @@ public:
      */
     static void createAboutData();
 
+#if KWIN_BUILD_X11
     /**
      * @returns the X11 root window.
      */
@@ -197,7 +204,6 @@ public:
     {
         return m_connection;
     }
-
     /**
      * Inheriting classes should use this method to set the X11 root window
      * before accessing any X11 specific code pathes.
@@ -218,6 +224,7 @@ public:
     {
         m_compositeWindow = window;
     }
+#endif
 
     qreal xwaylandScale() const
     {
@@ -372,19 +379,23 @@ protected:
     static int crashes;
 
 private:
+#if KWIN_BUILD_X11
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     std::unique_ptr<XcbEventFilter> m_eventFilter;
+#endif
     bool m_followLocale1 = false;
     bool m_configLock;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
     KSharedConfigPtr m_inputConfig;
     OperationMode m_operationMode;
+#if KWIN_BUILD_X11
     xcb_timestamp_t m_x11Time = XCB_TIME_CURRENT_TIME;
     xcb_window_t m_rootWindow = XCB_WINDOW_NONE;
     xcb_window_t m_compositeWindow = XCB_WINDOW_NONE;
     xcb_connection_t *m_connection = nullptr;
+#endif
 #if KWIN_BUILD_ACTIVITIES
     bool m_useKActivities = true;
 #endif

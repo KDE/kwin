@@ -11,7 +11,10 @@
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
 #include "window.h"
+
+#if KWIN_BUILD_X11
 #include "x11window.h"
+#endif
 
 namespace KWin
 {
@@ -208,6 +211,7 @@ bool SurfacePixmapWayland::isValid() const
     return m_bufferRef;
 }
 
+#if KWIN_BUILD_X11
 SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *parent)
     : SurfaceItemWayland(window->surface(), scene, parent)
     , m_window(window)
@@ -237,6 +241,7 @@ QRegion SurfaceItemXwayland::opaque() const
     }
     return QRegion();
 }
+#endif
 
 } // namespace KWin
 

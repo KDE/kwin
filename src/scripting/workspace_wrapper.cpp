@@ -16,10 +16,13 @@
 #include "outline.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
-#include "x11window.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
+#endif
+#if KWIN_BUILD_X11
+#include "x11window.h"
 #endif
 
 #include <QQmlEngine>
@@ -292,12 +295,14 @@ void WorkspaceWrapper::raiseWindow(KWin::Window *window)
     }
 }
 
+#if KWIN_BUILD_X11
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     auto window = Workspace::self()->findClient(Predicate::WindowMatch, windowId);
     QQmlEngine::setObjectOwnership(window, QQmlEngine::CppOwnership);
     return window;
 }
+#endif
 
 QList<KWin::Window *> WorkspaceWrapper::windowAt(const QPointF &pos, int count) const
 {

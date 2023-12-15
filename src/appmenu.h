@@ -11,8 +11,6 @@
 #pragma once
 // Qt
 #include <QObject>
-// xcb
-#include <xcb/xcb.h>
 
 class QPoint;
 class OrgKdeKappmenuInterface;
