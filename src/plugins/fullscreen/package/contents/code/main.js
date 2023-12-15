@@ -43,33 +43,55 @@ class FullScreenEffect {
             oldGeometry = window.olderGeometry;
         window.olderGeometry = Object.assign({}, window.oldGeometry);
         window.oldGeometry = Object.assign({}, newGeometry);
-        window.fullScreenAnimation1 = animate({
-            window: window,
-            duration: this.duration,
-            animations: [{
-                type: Effect.Size,
-                to: {
+
+        let couldRetarget = false;
+        if (window.fullScreenAnimation1) {
+            if (window.fullScreenAnimation1[0]) {
+                couldRetarget = retarget(window.fullScreenAnimation1[0], {
                     value1: newGeometry.width,
                     value2: newGeometry.height
-                },
-                from: {
-                    value1: oldGeometry.width,
-                    value2: oldGeometry.height
-                },
-                curve: QEasingCurve.OutCubic
-            }, {
-                type: Effect.Translation,
-                to: {
-                    value1: 0,
-                    value2: 0
-                },
-                from: {
-                    value1: oldGeometry.x - newGeometry.x - (newGeometry.width / 2 - oldGeometry.width / 2),
-                    value2: oldGeometry.y - newGeometry.y - (newGeometry.height / 2 - oldGeometry.height / 2)
-                },
-                curve: QEasingCurve.OutCubic
-            }]
-        });
+                }, this.duration);
+            }
+            if (window.fullScreenAnimation1[1]) {
+                couldRetarget = retarget(window.fullScreenAnimation1[1], {
+                    value1: newGeometry.x + newGeometry.width / 2,
+                    value2: newGeometry.y + newGeometry.height / 2
+                }, this.duration);
+            }
+        }
+        if (!couldRetarget) {
+            if (window.fullScreenAnimation1) {
+                cancel(window.fullScreenAnimation1);
+                delete window.fullScreenAnimation1;
+            }
+            window.fullScreenAnimation1 = animate({
+                window: window,
+                duration: this.duration,
+                animations: [{
+                    type: Effect.Size,
+                    to: {
+                        value1: newGeometry.width,
+                        value2: newGeometry.height
+                    },
+                    from: {
+                        value1: oldGeometry.width,
+                        value2: oldGeometry.height
+                    },
+                    curve: QEasingCurve.OutCubic
+                }, {
+                    type: Effect.Position,
+                    to: {
+                        value1: newGeometry.x + newGeometry.width / 2,
+                        value2: newGeometry.y + newGeometry.height / 2
+                    },
+                    from: {
+                        value1: oldGeometry.x + oldGeometry.width / 2,
+                        value2: oldGeometry.y + oldGeometry.height / 2
+                    },
+                    curve: QEasingCurve.OutCubic
+                }]
+            });
+        }
         if (!window.resize) {
             window.fullScreenAnimation2 =animate({
                 window: window,
@@ -92,8 +114,6 @@ class FullScreenEffect {
         if (window.fullScreenAnimation1) {
             if (window.geometry.width != window.oldGeometry.width ||
                 window.geometry.height != window.oldGeometry.height) {
-                cancel(window.fullScreenAnimation1);
-                delete window.fullScreenAnimation1;
                 if (window.fullScreenAnimation2) {
                     cancel(window.fullScreenAnimation2);
                     delete window.fullScreenAnimation2;
