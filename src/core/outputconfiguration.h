@@ -31,7 +31,7 @@ public:
     std::optional<OutputTransform> manualTransform;
     std::optional<uint32_t> overscan;
     std::optional<Output::RgbRange> rgbRange;
-    std::optional<RenderLoop::VrrPolicy> vrrPolicy;
+    std::optional<VrrPolicy> vrrPolicy;
     std::optional<bool> highDynamicRange;
     std::optional<uint32_t> sdrBrightness;
     std::optional<bool> wideColorGamut;

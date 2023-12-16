@@ -209,12 +209,12 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_vrr_policy(
     if (invalid) {
         return;
     }
-    if (policy > static_cast<uint32_t>(RenderLoop::VrrPolicy::Automatic)) {
+    if (policy > static_cast<uint32_t>(VrrPolicy::Automatic)) {
         qCWarning(KWIN_CORE) << "Invalid Vrr Policy requested:" << policy;
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(policy);
+        config.changeSet(output->handle())->vrrPolicy = static_cast<VrrPolicy>(policy);
     }
 }
 

@@ -92,22 +92,7 @@ public:
      */
     void setFullscreenSurface(Item *surface);
 
-    enum class VrrPolicy : uint32_t {
-        Never = 0,
-        Always = 1,
-        Automatic = 2,
-    };
-    Q_ENUM(VrrPolicy)
-
-    /**
-     * the current policy regarding the use of variable refresh rate
-     */
-    VrrPolicy vrrPolicy() const;
-
-    /**
-     * Set the policy regarding the use of variable refresh rate with RenderLoop
-     */
-    void setVrrPolicy(VrrPolicy vrrPolicy);
+    void setPresentationMode(PresentationMode mode);
 
 Q_SIGNALS:
     /**

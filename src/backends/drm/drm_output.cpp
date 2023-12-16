@@ -40,7 +40,6 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     , m_pipeline(conn->pipeline())
     , m_connector(conn)
 {
-    RenderLoopPrivate::get(m_renderLoop.get())->canDoTearing = gpu()->asyncPageflipSupported();
     m_pipeline->setOutput(this);
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
 
@@ -53,7 +52,9 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     }
     if (conn->vrrCapable.isValid() && conn->vrrCapable.value()) {
         capabilities |= Capability::Vrr;
-        setVrrPolicy(RenderLoop::VrrPolicy::Automatic);
+    }
+    if (gpu()->asyncPageflipSupported()) {
+        capabilities |= Capability::Tearing;
     }
     if (conn->broadcastRGB.isValid()) {
         capabilities |= Capability::RgbRange;
@@ -269,19 +270,19 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
     auto type = m_pipeline->contentType();
     if (frame->contentType()) {
         type = DrmConnector::kwinToDrmContentType(*frame->contentType());
     }
-    if (m_pipeline->presentationMode() != renderLoopPrivate->presentationMode || type != m_pipeline->contentType()) {
-        m_pipeline->setPresentationMode(renderLoopPrivate->presentationMode);
+    if (m_pipeline->presentationMode() != frame->presentationMode() || type != m_pipeline->contentType()) {
+        m_pipeline->setPresentationMode(frame->presentationMode());
         m_pipeline->setContentType(type);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
             m_pipeline->applyPendingChanges();
         } else {
             m_pipeline->revertPendingChanges();
         }
+        m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     }
     const bool needsModeset = gpu()->needsModeset();
     bool success;
@@ -387,8 +388,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
     next.colorDescription = m_pipeline->colorDescription();
+    next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     setState(next);
-    setVrrPolicy(props->vrrPolicy.value_or(vrrPolicy()));
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset();

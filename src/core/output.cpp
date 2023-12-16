@@ -361,9 +361,9 @@ void Output::applyChanges(const OutputConfiguration &config)
     if (props->iccProfilePath) {
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
     }
+    next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
 
     setState(next);
-    setVrrPolicy(props->vrrPolicy.value_or(vrrPolicy()));
 
     Q_EMIT changed();
 }
@@ -451,6 +451,9 @@ void Output::setState(const State &state)
     if (oldState.sdrGamutWideness != state.sdrGamutWideness) {
         Q_EMIT sdrGamutWidenessChanged();
     }
+    if (oldState.vrrPolicy != state.vrrPolicy) {
+        Q_EMIT vrrPolicyChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -526,17 +529,9 @@ uint32_t Output::overscan() const
     return m_state.overscan;
 }
 
-void Output::setVrrPolicy(RenderLoop::VrrPolicy policy)
+VrrPolicy Output::vrrPolicy() const
 {
-    if (renderLoop()->vrrPolicy() != policy && (capabilities() & Capability::Vrr)) {
-        renderLoop()->setVrrPolicy(policy);
-        Q_EMIT vrrPolicyChanged();
-    }
-}
-
-RenderLoop::VrrPolicy Output::vrrPolicy() const
-{
-    return renderLoop()->vrrPolicy();
+    return m_state.vrrPolicy;
 }
 
 bool Output::isPlaceholder() const

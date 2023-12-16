@@ -403,7 +403,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .manualTransform = existingData.manualTransform.value_or(output->panelOrientation()),
             .overscan = existingData.overscan.value_or(0),
             .rgbRange = existingData.rgbRange.value_or(Output::RgbRange::Automatic),
-            .vrrPolicy = existingData.vrrPolicy.value_or(RenderLoop::VrrPolicy::Automatic),
+            .vrrPolicy = existingData.vrrPolicy.value_or(VrrPolicy::Automatic),
             .highDynamicRange = existingData.highDynamicRange.value_or(false),
             .sdrBrightness = existingData.sdrBrightness.value_or(200),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
@@ -638,11 +638,11 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("vrrPolicy"); it != data.end()) {
             const auto str = it->toString();
             if (str == "Never") {
-                state.vrrPolicy = RenderLoop::VrrPolicy::Never;
+                state.vrrPolicy = VrrPolicy::Never;
             } else if (str == "Automatic") {
-                state.vrrPolicy = RenderLoop::VrrPolicy::Automatic;
+                state.vrrPolicy = VrrPolicy::Automatic;
             } else if (str == "Always") {
-                state.vrrPolicy = RenderLoop::VrrPolicy::Always;
+                state.vrrPolicy = VrrPolicy::Always;
             }
         }
         if (const auto it = data.find("highDynamicRange"); it != data.end() && it->isBool()) {
@@ -848,11 +848,11 @@ void OutputConfigurationStore::save()
         } else if (output.rgbRange == Output::RgbRange::Full) {
             o["rgbRange"] = "Full";
         }
-        if (output.vrrPolicy == RenderLoop::VrrPolicy::Never) {
+        if (output.vrrPolicy == VrrPolicy::Never) {
             o["vrrPolicy"] = "Never";
-        } else if (output.vrrPolicy == RenderLoop::VrrPolicy::Automatic) {
+        } else if (output.vrrPolicy == VrrPolicy::Automatic) {
             o["vrrPolicy"] = "Automatic";
-        } else if (output.vrrPolicy == RenderLoop::VrrPolicy::Always) {
+        } else if (output.vrrPolicy == VrrPolicy::Always) {
             o["vrrPolicy"] = "Always";
         }
         if (output.highDynamicRange) {

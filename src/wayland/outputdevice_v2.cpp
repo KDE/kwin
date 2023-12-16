@@ -61,7 +61,7 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     return ret;
 }
 
-static QtWaylandServer::kde_output_device_v2::vrr_policy kwinVrrPolicyToOutputDeviceVrrPolicy(RenderLoop::VrrPolicy policy)
+static QtWaylandServer::kde_output_device_v2::vrr_policy kwinVrrPolicyToOutputDeviceVrrPolicy(VrrPolicy policy)
 {
     return static_cast<QtWaylandServer::kde_output_device_v2::vrr_policy>(policy);
 }

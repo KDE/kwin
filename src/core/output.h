@@ -140,6 +140,7 @@ public:
         WideColorGamut = 1 << 5,
         AutoRotation = 1 << 6,
         IccProfile = 1 << 7,
+        Tearing = 1 << 8,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -308,8 +309,7 @@ public:
      */
     static QMatrix4x4 logicalToNativeMatrix(const QRectF &rect, qreal scale, OutputTransform transform);
 
-    void setVrrPolicy(RenderLoop::VrrPolicy policy);
-    RenderLoop::VrrPolicy vrrPolicy() const;
+    VrrPolicy vrrPolicy() const;
     RgbRange rgbRange() const;
 
     bool isPlaceholder() const;
@@ -450,6 +450,7 @@ protected:
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;
         double sdrGamutWideness = 0;
+        VrrPolicy vrrPolicy = VrrPolicy::Automatic;
     };
 
     void setInformation(const Information &information);

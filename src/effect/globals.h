@@ -289,6 +289,13 @@ enum class ContentType {
 };
 Q_ENUM_NS(ContentType);
 
+enum class VrrPolicy {
+    Never = 0,
+    Always = 1,
+    Automatic = 2,
+};
+Q_ENUM_NS(VrrPolicy);
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

@@ -20,8 +20,10 @@
 #include "ftrace.h"
 #include "scene/cursorscene.h"
 #include "scene/surfaceitem.h"
+#include "scene/surfaceitem_wayland.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -165,9 +167,16 @@ void Compositor::composite(RenderLoop *renderLoop)
         prePaintPass(superLayer, &surfaceDamage);
 
         SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
+        const SurfaceItemWayland *scanoutCandidateWayland = qobject_cast<SurfaceItemWayland *>(scanoutCandidate);
         renderLoop->setFullscreenSurface(scanoutCandidate);
         frame->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
-
+        const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && scanoutCandidate));
+        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && scanoutCandidateWayland && scanoutCandidateWayland->surface()->presentationHint() == PresentationHint::Async;
+        if (vrr) {
+            frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
+        } else {
+            frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
+        }
         bool directScanout = false;
         if (scanoutCandidate) {
             const auto sublayers = superLayer->sublayers();

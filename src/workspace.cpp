@@ -1754,13 +1754,13 @@ QString Workspace::supportInformation() const
             QString vrr = QStringLiteral("incapable");
             if (output->capabilities() & Output::Capability::Vrr) {
                 switch (output->vrrPolicy()) {
-                case RenderLoop::VrrPolicy::Never:
+                case VrrPolicy::Never:
                     vrr = QStringLiteral("never");
                     break;
-                case RenderLoop::VrrPolicy::Always:
+                case VrrPolicy::Always:
                     vrr = QStringLiteral("always");
                     break;
-                case RenderLoop::VrrPolicy::Automatic:
+                case VrrPolicy::Automatic:
                     vrr = QStringLiteral("automatic");
                     break;
                 }

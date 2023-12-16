@@ -52,10 +52,14 @@ public:
     void setContentType(ContentType type);
     std::optional<ContentType> contentType() const;
 
+    void setPresentationMode(PresentationMode mode);
+    PresentationMode presentationMode() const;
+
 private:
     RenderLoop *const m_loop;
     std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
+    PresentationMode m_presentationMode = PresentationMode::VSync;
 };
 
 /**

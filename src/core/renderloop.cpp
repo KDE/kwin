@@ -8,9 +8,7 @@
 #include "options.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
-#include "scene/surfaceitem_wayland.h"
 #include "utils/common.h"
-#include "wayland/surface.h"
 
 namespace KWin
 {
@@ -37,13 +35,8 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
 
 void RenderLoopPrivate::scheduleRepaint()
 {
-    if (kwinApp()->isTerminating() || (compositeTimer.isActive() && !allowTearing)) {
+    if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
         return;
-    }
-    if (vrrPolicy == RenderLoop::VrrPolicy::Always || (vrrPolicy == RenderLoop::VrrPolicy::Automatic && fullscreenItem != nullptr)) {
-        presentationMode = allowTearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync;
-    } else {
-        presentationMode = allowTearing ? PresentationMode::Async : PresentationMode::VSync;
     }
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
@@ -223,21 +216,11 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 void RenderLoop::setFullscreenSurface(Item *surfaceItem)
 {
     d->fullscreenItem = surfaceItem;
-    if (SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem)) {
-        d->allowTearing = d->canDoTearing && options->allowTearing() && wayland->surface()->presentationHint() == PresentationHint::Async;
-    } else {
-        d->allowTearing = false;
-    }
 }
 
-RenderLoop::VrrPolicy RenderLoop::vrrPolicy() const
+void RenderLoop::setPresentationMode(PresentationMode mode)
 {
-    return d->vrrPolicy;
-}
-
-void RenderLoop::setVrrPolicy(VrrPolicy policy)
-{
-    d->vrrPolicy = policy;
+    d->presentationMode = mode;
 }
 
 } // namespace KWin

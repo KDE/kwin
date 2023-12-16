@@ -229,7 +229,7 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(
                 props->overscan = globalInfo["overscan"].toInt();
             }
             if (const QJsonValue vrrpolicy = globalInfo["vrrpolicy"]; !vrrpolicy.isUndefined()) {
-                props->vrrPolicy = static_cast<RenderLoop::VrrPolicy>(vrrpolicy.toInt());
+                props->vrrPolicy = static_cast<VrrPolicy>(vrrpolicy.toInt());
             }
             if (const QJsonValue rgbrange = globalInfo["rgbrange"]; !rgbrange.isUndefined()) {
                 props->rgbRange = static_cast<Output::RgbRange>(rgbrange.toInt());
