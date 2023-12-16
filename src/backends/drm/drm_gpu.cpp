@@ -41,6 +41,9 @@
 #ifndef DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT
 #define DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT 6
 #endif
+#ifndef DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP
+#define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
+#endif
 
 namespace KWin
 {
@@ -90,8 +93,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     initDrmResources();
 
     if (m_atomicModeSetting == false) {
-        // only supported with legacy
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
+    } else {
+        m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
 }
 

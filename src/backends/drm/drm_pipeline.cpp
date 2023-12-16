@@ -77,9 +77,20 @@ DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &fram
 {
     Q_ASSERT(m_pending.crtc);
     if (gpu()->atomicModeSetting()) {
+        if (m_pending.presentationMode == PresentationMode::Async || m_pending.presentationMode == PresentationMode::AdaptiveAsync) {
+            if (m_commitThread->hasCommitsQueued()) {
+                // with tearing, we can only queue one commit at a time or the atomic test result won't be accurate
+                // because the pending commits will change the atomic state and async pageflips aren't really atomic...
+                return Error::FramePending;
+            }
+        }
         // test the full state, to take pending commits into account
-        if (auto err = DrmPipeline::commitPipelinesAtomic({this}, CommitMode::Test, frame, {}); err != Error::None) {
+        auto commit = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{this});
+        if (Error err = prepareAtomicCommit(commit.get(), CommitMode::Test, frame); err != Error::None) {
             return err;
+        }
+        if (!commit->test(m_commitThread->currentStateCommit())) {
+            return Error::InvalidArguments;
         }
         // only give the actual state update to the commit thread, so that it can potentially reorder the commits
         auto primaryPlaneUpdate = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{this});
@@ -166,6 +177,9 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
         }
         for (const auto pipeline : pipelines) {
             pipeline->m_next.needsModeset = pipeline->m_pending.needsModeset = false;
+            auto throwaway = std::make_unique<DrmAtomicCommit>(QList<DrmPipeline *>{pipeline});
+            pipeline->prepareAtomicCommit(throwaway.get(), CommitMode::CommitModeset, frame);
+            pipeline->m_commitThread->mergeStateCommit(std::move(throwaway));
         }
         commit->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
         return Error::None;
@@ -205,6 +219,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicCommit(DrmAtomicCommit *commit, Com
 DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame)
 {
     commit->setPresentationMode(m_pending.presentationMode);
+    commit->setTearing(m_pending.presentationMode == PresentationMode::Async || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     if (m_connector->contentType.isValid()) {
         commit->addEnum(m_connector->contentType, m_pending.contentType);
     }
