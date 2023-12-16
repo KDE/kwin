@@ -19,7 +19,9 @@
 
 #include <linux/input-event-codes.h>
 
+#include <array>
 #include <optional>
+#include <utility>
 
 // Tells us that we are already in a binding event
 class RebindScope
@@ -275,12 +277,33 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     return false;
 }
 
+static constexpr std::array<std::pair<int, int>, 4> s_modifierKeyTable = {
+    std::pair(Qt::Key_Control, KEY_LEFTCTRL),
+    std::pair(Qt::Key_Alt, KEY_LEFTALT),
+    std::pair(Qt::Key_Shift, KEY_LEFTSHIFT),
+    std::pair(Qt::Key_Meta, KEY_LEFTMETA),
+};
+
 bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed, std::chrono::microseconds time)
 {
     if (keys.isEmpty()) {
         return false;
     }
+
     const auto &key = keys[0];
+    auto sendKey = [this, pressed, time](xkb_keycode_t key) {
+        auto state = pressed ? KWin::InputRedirection::KeyboardKeyPressed : KWin::InputRedirection::KeyboardKeyReleased;
+        Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
+    };
+
+    // handle modifier-only keys
+    for (const auto &[keySymQt, keySymLinux] : s_modifierKeyTable) {
+        if (key == keySymQt) {
+            RebindScope scope;
+            sendKey(keySymLinux);
+            return true;
+        }
+    }
 
     int sym = -1;
     if (!KKeyServer::keyQtToSymX(keys[0], &sym)) {
@@ -295,10 +318,6 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     }
 
     RebindScope scope;
-    auto sendKey = [this, pressed, time](xkb_keycode_t key) {
-        auto state = pressed ? KWin::InputRedirection::KeyboardKeyPressed : KWin::InputRedirection::KeyboardKeyReleased;
-        Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
-    };
 
     if (key & Qt::ShiftModifier) {
         sendKey(KEY_LEFTSHIFT);
