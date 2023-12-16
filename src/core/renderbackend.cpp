@@ -5,6 +5,7 @@
 */
 
 #include "renderbackend.h"
+#include "outputlayer.h"
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
 
@@ -13,8 +14,9 @@
 namespace KWin
 {
 
-OutputFrame::OutputFrame(RenderLoop *loop)
+OutputFrame::OutputFrame(RenderLoop *loop, OutputLayer *layer)
     : m_loop(loop)
+    , m_layer(layer)
 {
 }
 
@@ -25,8 +27,12 @@ void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
     m_feedbacks.push_back(std::move(feedback));
 }
 
-void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode)
+void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
+    std::chrono::nanoseconds renderTime;
+    if (m_layer) {
+        renderTime = m_layer->queryRenderTime();
+    }
     RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(refreshDuration, timestamp, mode);

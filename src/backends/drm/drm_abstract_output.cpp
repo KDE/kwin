@@ -35,8 +35,7 @@ void DrmAbstractOutput::frameFailed() const
 
 void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
-    const auto gpuTime = primaryLayer() ? primaryLayer()->queryRenderTime() : std::chrono::nanoseconds::zero();
-    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, gpuTime, mode);
+    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, mode);
     m_frame.reset();
 }
 

@@ -759,7 +759,7 @@ void GlxBackend::present(Output *output, const std::shared_ptr<OutputFrame> &fra
 
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
+    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, PresentationMode::VSync);
     m_frame.reset();
 }
 

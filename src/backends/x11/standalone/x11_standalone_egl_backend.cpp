@@ -424,7 +424,7 @@ std::chrono::nanoseconds EglBackend::queryRenderTime()
 
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
+    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, PresentationMode::VSync);
     m_frame.reset();
 }
 

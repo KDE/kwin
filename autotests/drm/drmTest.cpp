@@ -385,7 +385,7 @@ void DrmTest::testModeset()
     output->renderLoop()->prepareNewFrame();
     output->renderLoop()->beginPaint();
     layer->endFrame(infiniteRegion(), infiniteRegion());
-    QVERIFY(output->present(std::make_shared<OutputFrame>(output->renderLoop())));
+    QVERIFY(output->present(std::make_shared<OutputFrame>(output->renderLoop(), layer)));
 
     gpu.reset();
     verifyCleanup(mockGpu.get());

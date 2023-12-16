@@ -157,7 +157,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     superLayer->setOutputLayer(primaryLayer);
 
     renderLoop->prepareNewFrame();
-    auto frame = std::make_shared<OutputFrame>(renderLoop);
+    auto frame = std::make_shared<OutputFrame>(renderLoop, primaryLayer);
 
     if (superLayer->needsRepaint()) {
         renderLoop->beginPaint();

@@ -125,8 +125,7 @@ WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
 
     connect(m_surface.get(), &KWayland::Client::Surface::frameRendered, this, [this]() {
         Q_ASSERT(m_frame);
-        const auto primary = Compositor::self()->backend()->primaryLayer(this);
-        m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), std::chrono::steady_clock::now().time_since_epoch(), primary ? primary->queryRenderTime() : std::chrono::nanoseconds::zero(), PresentationMode::VSync);
+        m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
         m_frame.reset();
     });
 
