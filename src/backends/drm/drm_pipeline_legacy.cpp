@@ -26,11 +26,8 @@ namespace KWin
 
 DrmPipeline::Error DrmPipeline::presentLegacy()
 {
-    if (!m_pending.crtc->current()) {
-        Error err = legacyModeset();
-        if (err != Error::None) {
-            return err;
-        }
+    if (Error err = applyPendingChangesLegacy(); err != Error::None) {
+        return err;
     }
     const auto buffer = m_primaryLayer->currentBuffer();
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
