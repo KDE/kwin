@@ -274,27 +274,27 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     if (frame->contentType()) {
         type = DrmConnector::kwinToDrmContentType(*frame->contentType());
     }
-    if (m_pipeline->presentationMode() != frame->presentationMode() || type != m_pipeline->contentType()) {
-        m_pipeline->setPresentationMode(frame->presentationMode());
-        m_pipeline->setContentType(type);
-        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
-            m_pipeline->applyPendingChanges();
-        } else {
-            m_pipeline->revertPendingChanges();
-        }
-        m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
-    }
     const bool needsModeset = gpu()->needsModeset();
     bool success;
     if (needsModeset) {
+        m_pipeline->setPresentationMode(PresentationMode::VSync);
+        m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
         success = m_pipeline->maybeModeset();
     } else {
+        m_pipeline->setPresentationMode(frame->presentationMode());
+        m_pipeline->setContentType(type);
         DrmPipeline::Error err = m_pipeline->present();
+        if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
+            // retry with a more basic presentation mode
+            m_pipeline->setPresentationMode(PresentationMode::VSync);
+            err = m_pipeline->present();
+        }
         success = err == DrmPipeline::Error::None;
         if (err == DrmPipeline::Error::InvalidArguments) {
             QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
         }
     }
+    m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     if (success) {
         Q_EMIT outputChange(m_pipeline->primaryLayer()->currentDamage());
         return true;
