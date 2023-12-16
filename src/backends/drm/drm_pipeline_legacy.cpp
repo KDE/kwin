@@ -111,7 +111,9 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
             m_connector->scalingMode.setEnumLegacy(DrmConnector::ScalingMode::None);
         }
-        if (m_pending.crtc != m_next.crtc || m_pending.mode != m_next.mode) {
+        const auto currentModeContent = m_pending.crtc->queryCurrentMode();
+        if (m_pending.crtc != m_next.crtc || *m_pending.mode != currentModeContent) {
+            qCDebug(KWIN_DRM) << "Using legacy path to set mode" << m_pending.mode->nativeMode()->name;
             Error err = legacyModeset();
             if (err != Error::None) {
                 return err;

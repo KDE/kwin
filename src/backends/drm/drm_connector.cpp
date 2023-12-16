@@ -23,11 +23,6 @@
 namespace KWin
 {
 
-static bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
-{
-    return std::memcmp(one, two, sizeof(drmModeModeInfo)) == 0;
-}
-
 static QSize resolutionForMode(const drmModeModeInfo *info)
 {
     return QSize(info->hdisplay, info->vdisplay);
@@ -79,9 +74,19 @@ drmModeModeInfo *DrmConnectorMode::nativeMode()
     return &m_nativeMode;
 }
 
+static inline bool checkIfEqual(const drmModeModeInfo *one, const drmModeModeInfo *two)
+{
+    return std::memcmp(one, two, sizeof(drmModeModeInfo)) == 0;
+}
+
 bool DrmConnectorMode::operator==(const DrmConnectorMode &otherMode)
 {
     return checkIfEqual(&m_nativeMode, &otherMode.m_nativeMode);
+}
+
+bool DrmConnectorMode::operator==(const drmModeModeInfo &otherMode)
+{
+    return checkIfEqual(&m_nativeMode, &otherMode);
 }
 
 DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)

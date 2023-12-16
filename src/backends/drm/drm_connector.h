@@ -39,6 +39,7 @@ public:
     std::shared_ptr<DrmBlob> blob();
 
     bool operator==(const DrmConnectorMode &otherMode);
+    bool operator==(const drmModeModeInfo &otherMode);
 
 private:
     DrmConnector *m_connector;
