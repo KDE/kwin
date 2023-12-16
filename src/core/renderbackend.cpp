@@ -38,6 +38,16 @@ void OutputFrame::failed()
     RenderLoopPrivate::get(m_loop)->notifyFrameFailed();
 }
 
+void OutputFrame::setContentType(ContentType type)
+{
+    m_contentType = type;
+}
+
+std::optional<ContentType> OutputFrame::contentType() const
+{
+    return m_contentType;
+}
+
 RenderBackend::RenderBackend(QObject *parent)
     : QObject(parent)
 {

@@ -270,7 +270,10 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
-    const auto type = DrmConnector::kwinToDrmContentType(contentType());
+    auto type = m_pipeline->contentType();
+    if (frame->contentType()) {
+        type = DrmConnector::kwinToDrmContentType(*frame->contentType());
+    }
     if (m_pipeline->presentationMode() != renderLoopPrivate->presentationMode || type != m_pipeline->contentType()) {
         m_pipeline->setPresentationMode(renderLoopPrivate->presentationMode);
         m_pipeline->setContentType(type);

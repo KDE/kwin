@@ -31,13 +31,6 @@ class ColorTransformation;
 class IccProfile;
 class OutputChangeSet;
 
-enum class ContentType {
-    None = 0,
-    Photo = 1,
-    Video = 2,
-    Game = 3,
-};
-
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
  */
@@ -319,9 +312,6 @@ public:
     RenderLoop::VrrPolicy vrrPolicy() const;
     RgbRange rgbRange() const;
 
-    ContentType contentType() const;
-    void setContentType(ContentType contentType);
-
     bool isPlaceholder() const;
     bool isNonDesktop() const;
     OutputTransform panelOrientation() const;
@@ -470,7 +460,6 @@ protected:
     QUuid m_uuid;
     int m_directScanoutCount = 0;
     int m_refCount = 1;
-    ContentType m_contentType = ContentType::None;
 };
 
 inline QRect Output::rect() const

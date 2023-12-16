@@ -564,16 +564,6 @@ bool Output::setGammaRamp(const std::shared_ptr<ColorTransformation> &transforma
     return false;
 }
 
-ContentType Output::contentType() const
-{
-    return m_contentType;
-}
-
-void Output::setContentType(ContentType contentType)
-{
-    m_contentType = contentType;
-}
-
 OutputTransform Output::panelOrientation() const
 {
     return m_information.panelOrientation;

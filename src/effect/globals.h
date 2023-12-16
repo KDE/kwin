@@ -281,6 +281,14 @@ enum class PresentationMode {
 };
 Q_ENUM_NS(PresentationMode);
 
+enum class ContentType {
+    None = 0,
+    Photo = 1,
+    Video = 2,
+    Game = 3,
+};
+Q_ENUM_NS(ContentType);
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)
