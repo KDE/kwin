@@ -63,11 +63,12 @@ public:
     void addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob);
     void addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame);
     void setVrr(DrmCrtc *crtc, bool vrr);
+    void setTearing(bool enable);
     void setPresentationMode(PresentationMode mode);
 
-    bool test();
+    bool test(DrmAtomicCommit *currentState = nullptr);
     bool testAllowModeset();
-    bool commit();
+    bool commit(DrmAtomicCommit *currentState = nullptr);
     bool commitModeset();
 
     void pageFlipped(std::chrono::nanoseconds timestamp) override;
@@ -85,8 +86,10 @@ public:
     std::optional<std::chrono::steady_clock::time_point> targetPageflipTime() const;
     bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
 
+    bool tearing() const;
+
 private:
-    bool doCommit(uint32_t flags);
+    bool doCommit(uint32_t flags, DrmAtomicCommit *currentState = nullptr);
 
     const QList<DrmPipeline *> m_pipelines;
     std::optional<std::chrono::steady_clock::time_point> m_targetPageflipTime;
@@ -95,6 +98,7 @@ private:
     std::unordered_map<DrmPlane *, std::shared_ptr<OutputFrame>> m_frames;
     std::unordered_set<DrmPlane *> m_planes;
     std::optional<bool> m_vrr;
+    bool m_tearing = false;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_cursorOnly = false;
     bool m_modeset = false;

@@ -155,6 +155,12 @@ DrmLease *DrmOutput::lease() const
 
 bool DrmOutput::updateCursorLayer()
 {
+    const bool tearingDesired = m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync;
+    if (m_pipeline->gpu()->atomicModeSetting() && tearingDesired && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
+        // The kernel rejects async commits that have anything but the primary plane FB_ID property in it.
+        // This disables the hardware cursor entirely, so it doesn't interfere with that
+        return false;
+    }
     return m_pipeline->updateCursor();
 }
 
@@ -281,6 +287,7 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
+    m_desiredPresentationMode = frame->presentationMode();
     const bool needsModeset = gpu()->needsModeset();
     bool success;
     if (needsModeset) {
@@ -290,6 +297,9 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
         DrmPipeline::Error err = m_pipeline->present(frame);
+        if (err == DrmPipeline::Error::FramePending) {
+            return false;
+        }
         if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
             // retry with a more basic presentation mode
             m_pipeline->setPresentationMode(PresentationMode::VSync);
@@ -303,11 +313,8 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     if (success) {
         Q_EMIT outputChange(frame->damage());
-        return true;
-    } else if (!needsModeset) {
-        qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
     }
-    return false;
+    return success;
 }
 
 DrmConnector *DrmOutput::connector() const
