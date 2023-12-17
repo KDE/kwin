@@ -250,11 +250,7 @@ RemoteMatch WindowsRunner::desktopMatch(const VirtualDesktop *desktop, const Win
     match.iconName = QStringLiteral("user-desktop");
     match.text = desktop->name();
     match.relevance = relevance;
-
-    QVariantMap properties;
-
-    properties[QStringLiteral("subtext")] = i18n("Switch to desktop %1", desktop->name());
-    match.properties = properties;
+    match.properties.insert(QStringLiteral("subtext"), i18n("Switch to desktop %1", desktop->name()));
     return match;
 }
 
@@ -266,7 +262,6 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
     match.iconName = window->icon().name();
     match.relevance = relevance;
     match.categoryRelevance = categoryRelevance;
-    QVariantMap properties;
 
     const QList<VirtualDesktop *> desktops = window->desktops();
     bool allDesktops = window->isOnAllDesktops();
@@ -288,38 +283,37 @@ RemoteMatch WindowsRunner::windowsMatch(const Window *window, const WindowsRunne
             8, // bitsPerSample
             4, // channels
             QByteArray(reinterpret_cast<const char *>(convertedImage.constBits()), convertedImage.sizeInBytes())};
-        properties.insert(QStringLiteral("icon-data"), QVariant::fromValue(remoteImage));
+        match.properties.insert(QStringLiteral("icon-data"), QVariant::fromValue(remoteImage));
     }
 
     const QString desktopName = targetDesktop->name();
     switch (action) {
     case CloseAction:
-        properties[QStringLiteral("subtext")] = i18n("Close running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("Close running window on %1", desktopName);
         break;
     case MinimizeAction:
-        properties[QStringLiteral("subtext")] = i18n("(Un)minimize running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("(Un)minimize running window on %1", desktopName);
         break;
     case MaximizeAction:
-        properties[QStringLiteral("subtext")] = i18n("Maximize/restore running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("Maximize/restore running window on %1", desktopName);
         break;
     case FullscreenAction:
-        properties[QStringLiteral("subtext")] = i18n("Toggle fullscreen for running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("Toggle fullscreen for running window on %1", desktopName);
         break;
     case ShadeAction:
-        properties[QStringLiteral("subtext")] = i18n("(Un)shade running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("(Un)shade running window on %1", desktopName);
         break;
     case KeepAboveAction:
-        properties[QStringLiteral("subtext")] = i18n("Toggle keep above for running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("Toggle keep above for running window on %1", desktopName);
         break;
     case KeepBelowAction:
-        properties[QStringLiteral("subtext")] = i18n("Toggle keep below running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("Toggle keep below running window on %1", desktopName);
         break;
     case ActivateAction:
     default:
-        properties[QStringLiteral("subtext")] = i18n("Activate running window on %1", desktopName);
+        match.properties[QStringLiteral("subtext")] = i18n("Activate running window on %1", desktopName);
         break;
     }
-    match.properties = properties;
     return match;
 }
 
