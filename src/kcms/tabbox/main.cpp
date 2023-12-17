@@ -12,6 +12,8 @@
 #include <kwin_effects_interface.h>
 
 // Qt
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QHBoxLayout>
@@ -22,7 +24,6 @@
 #include <QStandardPaths>
 #include <QTabWidget>
 #include <QVBoxLayout>
-#include <QtDBus>
 
 // KDE
 #include <KLocalizedString>

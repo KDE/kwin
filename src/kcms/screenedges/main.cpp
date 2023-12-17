@@ -17,8 +17,8 @@
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KPluginFactory>
+#include <QDBusConnection>
 #include <QVBoxLayout>
-#include <QtDBus>
 
 #include "kwinscreenedgeconfigform.h"
 #include "kwinscreenedgedata.h"

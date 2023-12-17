@@ -9,8 +9,9 @@
 
 #pragma once
 
+#include <QDBusContext>
+#include <QDBusServiceWatcher>
 #include <QObject>
-#include <QtDBus>
 
 namespace KWin
 {

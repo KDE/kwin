@@ -6,7 +6,7 @@
 #include "decorationplugin.h"
 #include "colorhelper.h"
 #include "decorationoptions.h"
-#include <QtQml>
+#include <QQmlEngine>
 
 void DecorationPlugin::registerTypes(const char *uri)
 {

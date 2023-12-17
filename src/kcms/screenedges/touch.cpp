@@ -17,8 +17,9 @@
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
 #include <KPluginFactory>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QVBoxLayout>
-#include <QtDBus>
 
 #include "kwintouchscreendata.h"
 #include "kwintouchscreenedgeconfigform.h"

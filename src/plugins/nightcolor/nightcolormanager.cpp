@@ -26,6 +26,9 @@
 
 #include <QAction>
 #include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingReply>
+#include <QDBusReply>
 #include <QTimer>
 
 namespace KWin
