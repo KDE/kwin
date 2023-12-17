@@ -32,7 +32,6 @@ class WindowsRunner : public Plugin, protected QDBusContext
     Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.WindowsRunner")
 public:
     explicit WindowsRunner();
-    ~WindowsRunner() override;
 
     RemoteActions Actions()
     {
@@ -53,7 +52,7 @@ private:
         KeepAboveAction,
         KeepBelowAction,
         // Desktop related actions
-        ActivateDesktopAction
+        ActivateDesktopAction,
     };
 
     RemoteMatch desktopMatch(const VirtualDesktop *desktop, const WindowsRunnerAction action = ActivateDesktopAction, qreal relevance = 1.0) const;
