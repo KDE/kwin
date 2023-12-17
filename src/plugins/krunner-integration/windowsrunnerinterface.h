@@ -34,7 +34,10 @@ public:
     explicit WindowsRunner();
     ~WindowsRunner() override;
 
-    RemoteActions Actions();
+    RemoteActions Actions()
+    {
+        return {};
+    }
     RemoteMatches Match(const QString &searchTerm);
     void Run(const QString &id, const QString &actionId);
 

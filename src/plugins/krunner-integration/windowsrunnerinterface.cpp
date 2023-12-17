@@ -32,14 +32,6 @@ WindowsRunner::WindowsRunner()
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin"));
 }
 
-WindowsRunner::~WindowsRunner() = default;
-
-RemoteActions WindowsRunner::Actions()
-{
-    RemoteActions actions;
-    return actions;
-}
-
 RemoteMatches WindowsRunner::Match(const QString &searchTerm)
 {
     RemoteMatches matches;
