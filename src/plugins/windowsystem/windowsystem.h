@@ -23,6 +23,9 @@ public:
     void requestToken(QWindow *win, uint32_t serial, const QString &app_id) override;
     void setCurrentToken(const QString &token) override;
     quint32 lastInputSerial(QWindow *window) override;
+    void exportWindow(QWindow *window) override;
+    void unexportWindow(QWindow *window) override;
+    void setMainWindow(QWindow *window, const QString &handle) override;
 };
 
 }
