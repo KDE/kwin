@@ -437,13 +437,13 @@ int main(int argc, char *argv[])
         backendType = BackendType::Virtual;
     } else {
         if (qEnvironmentVariableIsSet("WAYLAND_DISPLAY")) {
-            qWarning("No backend specified, automatically choosing Wayland because WAYLAND_DISPLAY is set");
+            qInfo("No backend specified, automatically choosing Wayland because WAYLAND_DISPLAY is set");
             backendType = BackendType::Wayland;
         } else if (qEnvironmentVariableIsSet("DISPLAY")) {
-            qWarning("No backend specified, automatically choosing X11 because DISPLAY is set");
+            qInfo("No backend specified, automatically choosing X11 because DISPLAY is set");
             backendType = BackendType::X11;
         } else {
-            qWarning("No backend specified, automatically choosing drm");
+            qInfo("No backend specified, automatically choosing drm");
             backendType = BackendType::Kms;
         }
     }
