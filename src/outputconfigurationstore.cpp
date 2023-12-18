@@ -577,7 +577,7 @@ void OutputConfigurationStore::load()
                 && data->connectorName == state.connectorName;
         });
         if (hasDuplicate) {
-            qCWarning(KWIN_CORE, "Duplicate output found in config");
+            qCWarning(KWIN_CORE) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier.value_or("<empty>") << "; connectorName:" << state.connectorName.value_or("<empty>") << "; mstPath:" << state.mstPath;
             outputDatas.push_back(std::nullopt);
             continue;
         }
