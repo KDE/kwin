@@ -359,7 +359,7 @@ static constexpr const auto s_appAltRev = kli18n("Walk Through Windows of Curren
 void TabBox::initShortcuts()
 {
     key(s_windows, &TabBox::slotWalkThroughWindows, Qt::ALT | Qt::Key_Tab);
-    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, Qt::ALT | Qt::SHIFT | Qt::Key_Backtab);
+    key(s_windowsRev, &TabBox::slotWalkBackThroughWindows, Qt::ALT | Qt::SHIFT | Qt::Key_Tab);
     key(s_app, &TabBox::slotWalkThroughCurrentAppWindows, Qt::ALT | Qt::Key_QuoteLeft);
     key(s_appRev, &TabBox::slotWalkBackThroughCurrentAppWindows, Qt::ALT | Qt::Key_AsciiTilde);
     key(s_windowsAlt, &TabBox::slotWalkThroughWindowsAlternative);
