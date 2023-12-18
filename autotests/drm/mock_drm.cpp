@@ -14,6 +14,8 @@ extern "C" {
 }
 #include <math.h>
 
+#include <memory>
+
 #include <QMap>
 #include <QDebug>
 
@@ -609,6 +611,14 @@ drmModeEncoderPtr drmModeGetEncoder(int fd, uint32_t encoder_id)
     }
 }
 
+// Instance ID of (some) specific connector type, incremented
+// for each new connector (of any type) being created.
+// There are no particular guarantees on the _stability_ of
+// connector type "instance IDs" issued by the kernel,
+// so simply giving each (new) connector a fresh ID is
+// acceptable.
+static std::atomic<int> autoIncrementedConnectorId{};
+
 drmModeConnectorPtr drmModeGetConnector(int fd, uint32_t connectorId)
 {
     GPU(fd, nullptr);
@@ -616,7 +626,10 @@ drmModeConnectorPtr drmModeGetConnector(int fd, uint32_t connectorId)
         drmModeConnectorPtr c = new drmModeConnector{};
         c->connector_id = conn->id;
         c->connection = conn->connection;
+
         c->connector_type = conn->type;
+        c->connector_type_id = autoIncrementedConnectorId++;
+
         c->encoder_id = conn->encoder ? conn->encoder->id : 0;
         c->count_encoders = conn->encoder ? 1 : 0;
         c->encoders = c->count_encoders ? new uint32_t[1] : nullptr;
@@ -631,8 +644,6 @@ drmModeConnectorPtr drmModeGetConnector(int fd, uint32_t connectorId)
         c->mmHeight = 900;
         c->mmWidth = 1600;
         c->subpixel = DRM_MODE_SUBPIXEL_HORIZONTAL_RGB;
-
-        c->connector_type_id = DRM_MODE_CONNECTOR_DisplayPort;// ?
 
         // these are not used nor will they be
         c->count_props = -1;
