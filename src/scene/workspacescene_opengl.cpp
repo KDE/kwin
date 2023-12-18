@@ -348,9 +348,9 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     const qreal devicePixelRatio = effectiveDevicePixelRatio();
-    const int topHeight = std::ceil(top.height() * devicePixelRatio);
-    const int bottomHeight = std::ceil(bottom.height() * devicePixelRatio);
-    const int leftWidth = std::ceil(left.width() * devicePixelRatio);
+    const int topHeight = std::round(top.height() * devicePixelRatio);
+    const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
+    const int leftWidth = std::round(left.width() * devicePixelRatio);
 
     const QPoint topPosition(0, 0);
     const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * TexturePad));
@@ -478,7 +478,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
 
 int SceneOpenGLDecorationRenderer::toNativeSize(int size) const
 {
-    return std::ceil(size * effectiveDevicePixelRatio());
+    return std::round(size * effectiveDevicePixelRatio());
 }
 
 } // namespace
