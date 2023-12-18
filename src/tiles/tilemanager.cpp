@@ -224,9 +224,6 @@ void TileManager::readSettings()
     qreal padding = cg.readEntry("padding", 4);
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
 
-    QJsonParseError error;
-    QJsonDocument doc = QJsonDocument::fromJson(cg.readEntry("tiles", QByteArray()), &error);
-
     auto createDefaultSetup = [this]() {
         Q_ASSERT(m_rootTile->childCount() == 0);
         // If empty create an horizontal 3 columns layout
@@ -237,6 +234,16 @@ void TileManager::readSettings()
         // Resize middle column, the other two will be auto resized accordingly
         m_rootTile->childTile(1)->setRelativeGeometry({0.25, 0.0, 0.5, 1.0});
     };
+
+    QJsonParseError error;
+    const auto tiles = cg.readEntry("tiles", QByteArray());
+    if (tiles.isEmpty()) {
+        qCDebug(KWIN_CORE) << "Empty tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":"
+                           << "Creating default setup";
+        createDefaultSetup();
+        return;
+    }
+    QJsonDocument doc = QJsonDocument::fromJson(tiles, &error);
 
     if (error.error != QJsonParseError::NoError) {
         qCWarning(KWIN_CORE) << "Parse error in tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":" << error.errorString() << "Creating default setup";
