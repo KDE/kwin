@@ -413,7 +413,7 @@ void Workspace::cleanupX11()
     // Use stacking_order, so that kwin --replace keeps stacking order.
     const auto stack = stacking_order;
     for (Window *window : stack) {
-        if (auto x11 = qobject_cast<X11Window *>(window)) {
+        if (auto x11 = qobject_cast<X11Window *>(window); x11 && !x11->isDeleted()) {
             x11->releaseWindow(true);
             removeFromStack(window);
         }
