@@ -158,87 +158,14 @@ QSizeF OutputTransform::map(const QSizeF &size) const
 
 OutputTransform OutputTransform::combine(OutputTransform other) const
 {
-    int rotations = 0;
-    switch (other.kind()) {
-    case Kind::Normal:
-    case Kind::Flipped:
-        rotations = 0;
-        break;
-    case Kind::Rotated90:
-    case Kind::Flipped90:
-        rotations = 1;
-        break;
-    case Kind::Rotated180:
-    case Kind::Flipped180:
-        rotations = 2;
-        break;
-    case Kind::Rotated270:
-    case Kind::Flipped270:
-        rotations = 3;
-        break;
+    const int flip = (m_kind ^ other.m_kind) & 0x4;
+    int rotate;
+    if (m_kind & 0x4) {
+        rotate = (m_kind - other.m_kind) & 0x3; // rotate counter-clockwise if flipped
+    } else {
+        rotate = (m_kind + other.m_kind) & 0x3;
     }
-    OutputTransform ret = m_kind;
-    for (int i = 0; i < rotations; i++) {
-        switch (ret.kind()) {
-        case Kind::Normal:
-            ret = Kind::Rotated90;
-            break;
-        case Kind::Rotated90:
-            ret = Kind::Rotated180;
-            break;
-        case Kind::Rotated180:
-            ret = Kind::Rotated270;
-            break;
-        case Kind::Rotated270:
-            ret = Kind::Normal;
-            break;
-        case Kind::Flipped:
-            ret = Kind::Flipped270;
-            break;
-        case Kind::Flipped90:
-            ret = Kind::Flipped;
-            break;
-        case Kind::Flipped180:
-            ret = Kind::Flipped90;
-            break;
-        case Kind::Flipped270:
-            ret = Kind::Flipped180;
-            break;
-        }
-    }
-    const bool otherFlipped = other.kind() == OutputTransform::Kind::Flipped
-        || other.kind() == OutputTransform::Kind::Flipped90
-        || other.kind() == OutputTransform::Kind::Flipped180
-        || other.kind() == OutputTransform::Kind::Flipped270;
-    if (otherFlipped) {
-        switch (ret.kind()) {
-        case Kind::Normal:
-            ret = Kind::Flipped;
-            break;
-        case Kind::Rotated90:
-            ret = Kind::Flipped90;
-            break;
-        case Kind::Rotated180:
-            ret = Kind::Flipped180;
-            break;
-        case Kind::Rotated270:
-            ret = Kind::Flipped270;
-            break;
-        case Kind::Flipped:
-            ret = Kind::Normal;
-            break;
-        case Kind::Flipped90:
-            ret = Kind::Rotated90;
-            break;
-        case Kind::Flipped180:
-            ret = Kind::Rotated180;
-            break;
-        case Kind::Flipped270:
-            ret = Kind::Rotated270;
-            break;
-        }
-    }
-    return ret;
+    return OutputTransform(Kind(flip | rotate));
 }
 
 Output::Output(QObject *parent)
