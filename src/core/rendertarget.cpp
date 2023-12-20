@@ -10,39 +10,9 @@
 namespace KWin
 {
 
-static OutputTransform textureTransformToOutputTransform(TextureTransforms transforms) // TODO: Kill TextureTransform?
-{
-    if (transforms == TextureTransforms()) {
-        return OutputTransform::Normal;
-    } else if (transforms == TextureTransform::Rotate90) {
-        return OutputTransform::Rotate90;
-    } else if (transforms == TextureTransform::Rotate180) {
-        return OutputTransform::Rotate180;
-    } else if (transforms == TextureTransform::Rotate270) {
-        return OutputTransform::Rotate270;
-    } else if (transforms == TextureTransform::MirrorX) {
-        return OutputTransform::FlipX;
-    } else if (transforms == TextureTransforms(TextureTransform::MirrorX | TextureTransform::Rotate90)) {
-        return OutputTransform::FlipX90;
-    } else if (transforms == TextureTransforms(TextureTransform::MirrorX | TextureTransform::Rotate180)) {
-        return OutputTransform::FlipX180;
-    } else if (transforms == TextureTransforms(TextureTransform::MirrorX | TextureTransform::Rotate270)) {
-        return OutputTransform::FlipX270;
-    } else if (transforms == TextureTransform::MirrorY) {
-        return OutputTransform::FlipY;
-    } else if (transforms == TextureTransforms(TextureTransform::MirrorY | TextureTransform::Rotate90)) {
-        return OutputTransform::FlipY90;
-    } else if (transforms == TextureTransforms(TextureTransform::MirrorY | TextureTransform::Rotate180)) {
-        return OutputTransform::FlipY180;
-    } else if (transforms == TextureTransforms(TextureTransform::MirrorY | TextureTransform::Rotate270)) {
-        return OutputTransform::FlipY270;
-    }
-    Q_UNREACHABLE();
-}
-
 RenderTarget::RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription)
     : m_framebuffer(fbo)
-    , m_transform(fbo->colorAttachment() ? textureTransformToOutputTransform(fbo->colorAttachment()->contentTransforms()) : OutputTransform())
+    , m_transform(fbo->colorAttachment() ? fbo->colorAttachment()->contentTransform() : OutputTransform())
     , m_colorDescription(colorDescription)
 {
 }

@@ -86,7 +86,7 @@ GLTexture::GLTexture(GLenum target)
     d->m_target = target;
 }
 
-GLTexture::GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform)
+GLTexture::GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, OutputTransform transform)
     : GLTexture(target)
 {
     d->m_owning = owning;
@@ -337,7 +337,7 @@ void GLTexture::render(const QSizeF &size)
 
 void GLTexture::render(const QRegion &region, const QSizeF &targetSize, bool hardwareClipping)
 {
-    const auto rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
+    const auto rotatedSize = d->m_textureToBufferTransform.map(size());
     render(QRectF(QPoint(), rotatedSize), region, targetSize, hardwareClipping);
 }
 
@@ -355,11 +355,11 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
         const float texWidth = (target() == GL_TEXTURE_RECTANGLE_ARB) ? width() : 1.0f;
         const float texHeight = (target() == GL_TEXTURE_RECTANGLE_ARB) ? height() : 1.0f;
 
-        const QSize rotatedSize = d->m_textureToBufferMatrix.mapRect(QRect(QPoint(), size())).size();
+        const QSize rotatedSize = d->m_textureToBufferTransform.map(size());
 
         QMatrix4x4 textureMat;
         textureMat.translate(texWidth / 2, texHeight / 2);
-        textureMat *= d->m_textureToBufferMatrix;
+        textureMat *= d->m_textureToBufferTransform.toMatrix();
         // our Y axis is flipped vs OpenGL
         textureMat.scale(1, -1);
         textureMat.translate(-texWidth / 2, -texHeight / 2);
@@ -487,20 +487,7 @@ void GLTexture::onDamage()
 
 void GLTexturePrivate::updateMatrix()
 {
-    m_textureToBufferMatrix.setToIdentity();
-    if (m_textureToBufferTransform & TextureTransform::MirrorX) {
-        m_textureToBufferMatrix.scale(-1, 1);
-    }
-    if (m_textureToBufferTransform & TextureTransform::MirrorY) {
-        m_textureToBufferMatrix.scale(1, -1);
-    }
-    if (m_textureToBufferTransform & TextureTransform::Rotate90) {
-        m_textureToBufferMatrix.rotate(90, 0, 0, 1);
-    } else if (m_textureToBufferTransform & TextureTransform::Rotate180) {
-        m_textureToBufferMatrix.rotate(180, 0, 0, 1);
-    } else if (m_textureToBufferTransform & TextureTransform::Rotate270) {
-        m_textureToBufferMatrix.rotate(270, 0, 0, 1);
-    }
+    const QMatrix4x4 textureToBufferMatrix = m_textureToBufferTransform.toMatrix();
 
     m_matrix[NormalizedCoordinates].setToIdentity();
     m_matrix[UnnormalizedCoordinates].setToIdentity();
@@ -512,18 +499,18 @@ void GLTexturePrivate::updateMatrix()
     }
 
     m_matrix[NormalizedCoordinates].translate(0.5, 0.5);
-    m_matrix[NormalizedCoordinates] *= m_textureToBufferMatrix;
+    m_matrix[NormalizedCoordinates] *= textureToBufferMatrix;
     // our Y axis is flipped vs OpenGL
     m_matrix[NormalizedCoordinates].scale(1, -1);
     m_matrix[NormalizedCoordinates].translate(-0.5, -0.5);
 
     m_matrix[UnnormalizedCoordinates].translate(m_size.width() / 2, m_size.height() / 2);
-    m_matrix[UnnormalizedCoordinates] *= m_textureToBufferMatrix;
+    m_matrix[UnnormalizedCoordinates] *= textureToBufferMatrix;
     m_matrix[UnnormalizedCoordinates].scale(1, -1);
     m_matrix[UnnormalizedCoordinates].translate(-m_size.width() / 2, -m_size.height() / 2);
 }
 
-void GLTexture::setContentTransform(TextureTransforms transform)
+void GLTexture::setContentTransform(OutputTransform transform)
 {
     if (d->m_textureToBufferTransform != transform) {
         d->m_textureToBufferTransform = transform;
@@ -531,14 +518,9 @@ void GLTexture::setContentTransform(TextureTransforms transform)
     }
 }
 
-TextureTransforms GLTexture::contentTransforms() const
+OutputTransform GLTexture::contentTransform() const
 {
     return d->m_textureToBufferTransform;
-}
-
-QMatrix4x4 GLTexture::contentTransformMatrix() const
-{
-    return d->m_textureToBufferMatrix;
 }
 
 void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
@@ -606,7 +588,7 @@ QImage GLTexture::toImage() const
 
 std::unique_ptr<GLTexture> GLTexture::createNonOwningWrapper(GLuint textureId, GLenum internalFormat, const QSize &size)
 {
-    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, textureId, internalFormat, size, 1, false, TextureTransforms{}));
+    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, textureId, internalFormat, size, 1, false, OutputTransform{}));
 }
 
 std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSize &size, int levels)
@@ -639,7 +621,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
         // internalFormat() won't need to be specialized for GLES2.
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, size, levels, true, TextureTransforms{}));
+    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, size, levels, true, OutputTransform{}));
 }
 
 std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
@@ -699,7 +681,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
         }
     }
     glBindTexture(GL_TEXTURE_2D, 0);
-    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, image.size(), 1, true, TextureTransform::MirrorY));
+    return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, image.size(), 1, true, OutputTransform::FlipY));
 }
 
 std::unique_ptr<GLTexture> GLTexture::upload(const QPixmap &pixmap)

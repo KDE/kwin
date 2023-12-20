@@ -684,7 +684,7 @@ static PlatformCursorImage grabCursorOpenGL()
     if (!texture) {
         return PlatformCursorImage{};
     }
-    texture->setContentTransform(TextureTransform::MirrorY);
+    texture->setContentTransform(OutputTransform::FlipY);
     GLFramebuffer framebuffer(texture.get());
     RenderTarget renderTarget(&framebuffer);
 

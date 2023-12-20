@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/output.h"
 
 #include <QExplicitlySharedDataPointer>
 #include <QMatrix4x4>
@@ -30,15 +30,6 @@ namespace KWin
 
 class GLVertexBuffer;
 class GLTexturePrivate;
-
-enum class TextureTransform {
-    Rotate90 = 0b00001,
-    Rotate180 = 0b00010,
-    Rotate270 = 0b00100,
-    MirrorY = 0b01000,
-    MirrorX = 0b10000,
-};
-Q_DECLARE_FLAGS(TextureTransforms, TextureTransform);
 
 enum TextureCoordinateType {
     NormalizedCoordinates = 0,
@@ -67,17 +58,12 @@ public:
     /**
      * sets the transform between the content and the buffer
      */
-    void setContentTransform(TextureTransforms transform);
+    void setContentTransform(OutputTransform transform);
 
     /**
      * @returns the transform between the content and the buffer
      */
-    TextureTransforms contentTransforms() const;
-
-    /**
-     * @returns the transform between the content and the buffer as a matrix
-     */
-    QMatrix4x4 contentTransformMatrix() const;
+    OutputTransform contentTransform() const;
 
     /**
      * Specifies which component of a texel is placed in each respective
@@ -152,7 +138,7 @@ public:
     static std::unique_ptr<GLTexture> upload(const QPixmap &pixmap);
 
 protected:
-    explicit GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, TextureTransforms transform);
+    explicit GLTexture(GLenum target, GLuint textureId, GLenum internalFormat, const QSize &size, int levels, bool owning, OutputTransform transform);
 
     const std::unique_ptr<GLTexturePrivate> d;
 
@@ -160,7 +146,5 @@ protected:
 };
 
 } // namespace
-
-Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::TextureTransforms)
 
 /** @} */

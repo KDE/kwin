@@ -281,11 +281,15 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
 
 bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget, const RenderViewport &sourceViewport, const QRect &source, const QRect &destination)
 {
-    TextureTransforms transform = sourceRenderTarget.texture() ? sourceRenderTarget.texture()->contentTransforms() : TextureTransforms();
-    const bool hasRotation = (transform & TextureTransform::Rotate90) || (transform & TextureTransform::Rotate180) || (transform & TextureTransform::Rotate270);
-    if (!hasRotation && blitSupported()) {
+    OutputTransform transform = sourceRenderTarget.texture() ? sourceRenderTarget.texture()->contentTransform() : OutputTransform();
+
+    // TODO: Also blit if rotated 180 degrees, it's equivalent to flipping both x and y axis
+    const bool normal = transform == OutputTransform::Normal;
+    const bool mirrorX = transform == OutputTransform::FlipX;
+    const bool mirrorY = transform == OutputTransform::FlipY;
+    if ((normal || mirrorX || mirrorY) && blitSupported()) {
         // either no transformation or flipping only
-        blitFromFramebuffer(sourceViewport.mapToRenderTarget(source), destination, GL_LINEAR, transform & TextureTransform::MirrorX, transform & TextureTransform::MirrorY);
+        blitFromFramebuffer(sourceViewport.mapToRenderTarget(source), destination, GL_LINEAR, mirrorX, mirrorY);
         return true;
     } else {
         const auto texture = sourceRenderTarget.texture();

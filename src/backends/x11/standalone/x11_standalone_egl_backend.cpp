@@ -490,7 +490,7 @@ bool EglPixmapTexture::create(SurfacePixmapX11 *pixmap)
     }
     glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, static_cast<GLeglImageOES>(m_image));
     unbind();
-    setContentTransform(TextureTransform::MirrorY);
+    setContentTransform(OutputTransform::FlipY);
     d->m_size = pixmap->size();
     d->updateMatrix();
     return true;

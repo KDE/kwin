@@ -50,7 +50,7 @@ static GLenum closestGLType(spa_video_format format)
 static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format format)
 {
     const QSize size = texture->size();
-    const bool invertNeeded = GLPlatform::instance()->isGLES() ^ !(texture->contentTransforms() & TextureTransform::MirrorY);
+    const bool invertNeeded = GLPlatform::instance()->isGLES() ^ (texture->contentTransform() != OutputTransform::FlipY);
     const bool invertNeededAndSupported = invertNeeded && GLPlatform::instance()->supports(GLFeature::PackInvert);
     GLboolean prev;
     if (invertNeededAndSupported) {
@@ -84,9 +84,10 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
 static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format format)
 {
     // transform to correct orientation with the GPU first
-    const QSize size = texture->contentTransformMatrix().mapRect(QRect(QPoint(), texture->size())).size();
-    constexpr auto everythingExceptY = TextureTransforms() | TextureTransform::MirrorX | TextureTransform::Rotate90 | TextureTransform::Rotate180 | TextureTransform::Rotate270;
-    if (texture->contentTransforms() & everythingExceptY) {
+    const QSize size = texture->contentTransform().map(texture->size());
+    if (texture->contentTransform() == OutputTransform::FlipY) {
+        doGrabTexture(texture, spa, format);
+    } else {
         // need to transform the texture to a usable transformation first
         const auto backingTexture = GLTexture::allocate(GL_RGBA8, size);
         if (!backingTexture) {
@@ -103,8 +104,6 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
         texture->render(size);
         GLFramebuffer::popFramebuffer();
         doGrabTexture(backingTexture.get(), spa, format);
-    } else {
-        doGrabTexture(texture, spa, format);
     }
 }
 
