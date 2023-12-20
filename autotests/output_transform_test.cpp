@@ -26,6 +26,8 @@ private Q_SLOTS:
     void inverted();
     void combine_data();
     void combine();
+    void matrix_data();
+    void matrix();
 };
 
 TestOutputTransform::TestOutputTransform()
@@ -198,6 +200,46 @@ void TestOutputTransform::combine()
     const QRectF box(10, 20, 30, 40);
     const QSizeF bounds(100, 200);
     QCOMPARE(combinedTransform.map(box, bounds), secondTransform.map(firstTransform.map(box, bounds), firstTransform.map(bounds)));
+}
+
+void TestOutputTransform::matrix_data()
+{
+    QTest::addColumn<OutputTransform::Kind>("kind");
+    QTest::addColumn<QRectF>("source");
+    QTest::addColumn<QRectF>("target");
+
+    QTest::addRow("rotate-0") << OutputTransform::Normal << QRectF(10, 20, 30, 40) << QRectF(10, 20, 30, 40);
+    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QRectF(10, 20, 30, 40) << QRectF(140, 10, 40, 30);
+    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QRectF(10, 20, 30, 40) << QRectF(60, 140, 30, 40);
+    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QRectF(10, 20, 30, 40) << QRectF(20, 60, 40, 30);
+    QTest::addRow("flip-0") << OutputTransform::Flipped << QRectF(10, 20, 30, 40) << QRectF(60, 20, 30, 40);
+    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QRectF(10, 20, 30, 40) << QRectF(20, 10, 40, 30);
+    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QRectF(10, 20, 30, 40) << QRectF(10, 140, 30, 40);
+    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QRectF(10, 20, 30, 40) << QRectF(140, 60, 40, 30);
+}
+
+void TestOutputTransform::matrix()
+{
+    QFETCH(OutputTransform::Kind, kind);
+    QFETCH(QRectF, source);
+    QFETCH(QRectF, target);
+
+    const OutputTransform transform = kind;
+    const QSizeF sourceBounds = QSizeF(100, 200);
+    const QSizeF targetBounds = transform.map(sourceBounds);
+
+    QMatrix4x4 matrix;
+    matrix.scale(targetBounds.width(), targetBounds.height());
+    matrix.translate(0.5, 0.5);
+    matrix.scale(0.5, -0.5);
+    matrix.scale(1, -1); // flip the y axis back
+    matrix *= transform.toMatrix();
+    matrix.scale(1, -1); // undo ortho() flipping the y axis
+    matrix.ortho(QRectF(0, 0, sourceBounds.width(), sourceBounds.height()));
+
+    const QRectF mapped = matrix.mapRect(source);
+    QCOMPARE(mapped, target);
+    QCOMPARE(mapped, transform.map(source, sourceBounds));
 }
 
 QTEST_MAIN(TestOutputTransform)

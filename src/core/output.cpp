@@ -168,6 +168,42 @@ OutputTransform OutputTransform::combine(OutputTransform other) const
     return OutputTransform(Kind(flip | rotate));
 }
 
+QMatrix4x4 OutputTransform::toMatrix() const
+{
+    QMatrix4x4 matrix;
+    switch (m_kind) {
+    case Kind::Normal:
+        break;
+    case Kind::Rotated90:
+        matrix.rotate(90, 0, 0, 1);
+        break;
+    case Kind::Rotated180:
+        matrix.rotate(180, 0, 0, 1);
+        break;
+    case Kind::Rotated270:
+        matrix.rotate(270, 0, 0, 1);
+        break;
+    case Kind::Flipped:
+        matrix.scale(-1, 1);
+        break;
+    case Kind::Flipped90:
+        matrix.scale(-1, 1);
+        matrix.rotate(90, 0, 0, 1);
+        break;
+    case Kind::Flipped180:
+        matrix.scale(-1, 1);
+        matrix.rotate(180, 0, 0, 1);
+        break;
+    case Kind::Flipped270:
+        matrix.scale(-1, 1);
+        matrix.rotate(270, 0, 0, 1);
+        break;
+    default:
+        Q_UNREACHABLE();
+    }
+    return matrix;
+}
+
 Output::Output(QObject *parent)
     : QObject(parent)
 {

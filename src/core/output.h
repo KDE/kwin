@@ -83,6 +83,11 @@ public:
      */
     OutputTransform combine(OutputTransform other) const;
 
+    /**
+     * Returns the matrix corresponding to this output transform.
+     */
+    QMatrix4x4 toMatrix() const;
+
 private:
     Kind m_kind = Kind::Normal;
 };
