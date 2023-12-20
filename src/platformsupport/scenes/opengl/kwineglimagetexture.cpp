@@ -18,7 +18,7 @@ namespace KWin
 {
 
 EGLImageTexture::EGLImageTexture(EglDisplay *display, EGLImage image, uint textureId, int internalFormat, const QSize &size, uint32_t target)
-    : GLTexture(target, textureId, internalFormat, size, 1, true, TextureTransform::MirrorY)
+    : GLTexture(target, textureId, internalFormat, size, 1, true, OutputTransform::FlipY)
     , m_image(image)
     , m_display(display)
 {

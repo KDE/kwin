@@ -73,7 +73,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, TextureTransforms transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -88,7 +88,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         return std::nullopt;
     }
 
-    if (slot->framebuffer()->colorAttachment()->contentTransforms() != transformation) {
+    if (slot->framebuffer()->colorAttachment()->contentTransform() != transformation) {
         m_surface->damageJournal.clear();
     }
     slot->framebuffer()->colorAttachment()->setContentTransform(transformation);
@@ -127,7 +127,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             }
             m_surface->shadowBuffer = std::make_unique<GLFramebuffer>(m_surface->shadowTexture.get());
         }
-        m_surface->shadowTexture->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransforms());
+        m_surface->shadowTexture->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransform());
         m_surface->renderStart = std::chrono::steady_clock::now();
         m_surface->timeQuery->begin();
         return OutputLayerBeginFrameInfo{
@@ -165,7 +165,10 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
             binder.shader()->setUniform(GLShader::FloatUniform::SdrBrightness, m_surface->intermediaryColorDescription.sdrBrightness());
             binder.shader()->setUniform(GLShader::FloatUniform::MaxHdrBrightness, m_surface->intermediaryColorDescription.maxHdrHighlightBrightness());
         }
-        QMatrix4x4 mat = fbo->colorAttachment()->contentTransformMatrix();
+        QMatrix4x4 mat;
+        mat.scale(1, -1);
+        mat *= fbo->colorAttachment()->contentTransform().toMatrix();
+        mat.scale(1, -1);
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::MatrixUniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);

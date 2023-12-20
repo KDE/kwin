@@ -26,22 +26,22 @@
 namespace KWin
 {
 
-static TextureTransforms drmToTextureRotation(DrmPipeline *pipeline)
+static OutputTransform drmToOutputTransform(DrmPipeline *pipeline)
 {
     auto angle = DrmPlane::transformationToDegrees(pipeline->renderOrientation());
     if (angle < 0) {
         angle += 360;
     }
-    TextureTransforms flip = (pipeline->renderOrientation() & DrmPlane::Transformation::ReflectX) ? TextureTransform::MirrorX : TextureTransforms();
+    OutputTransform flip = (pipeline->renderOrientation() & DrmPlane::Transformation::ReflectX) ? OutputTransform::FlipX : OutputTransform();
     switch (angle % 360) {
     case 0:
-        return TextureTransforms() | flip;
+        return flip;
     case 90:
-        return TextureTransforms(TextureTransform::Rotate90) | flip;
+        return flip.combine(OutputTransform::Rotate90);
     case 180:
-        return TextureTransforms(TextureTransform::Rotate180) | flip;
+        return flip.combine(OutputTransform::Rotate180);
     case 270:
-        return TextureTransforms(TextureTransform::Rotate270) | flip;
+        return flip.combine(OutputTransform::Rotate270);
     default:
         Q_UNREACHABLE();
     }
@@ -59,7 +59,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->mode()->size(), drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY, m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
+    return m_surface.startRendering(m_pipeline->mode()->size(), drmToOutputTransform(m_pipeline).combine(OutputTransform::FlipY), m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -85,7 +85,7 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
-        ret->setContentTransform(drmToTextureRotation(m_pipeline) | TextureTransform::MirrorY);
+        ret->setContentTransform(drmToOutputTransform(m_pipeline).combine(OutputTransform::FlipY));
         return ret;
     } else {
         return m_surface.texture();

@@ -41,8 +41,7 @@ public:
     QSize m_size;
     QSizeF m_scale; // to un-normalize GL_TEXTURE_2D
     QMatrix4x4 m_matrix[2];
-    QMatrix4x4 m_textureToBufferMatrix;
-    TextureTransforms m_textureToBufferTransform;
+    OutputTransform m_textureToBufferTransform;
     bool m_canUseMipmaps;
     bool m_markedDirty;
     bool m_filterChanged;

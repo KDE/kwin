@@ -467,7 +467,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
         if (!m_texture) {
             return;
         }
-        m_texture->setContentTransform(TextureTransform::MirrorY);
+        m_texture->setContentTransform(OutputTransform::FlipY);
         m_texture->setFilter(GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_texture->clear();

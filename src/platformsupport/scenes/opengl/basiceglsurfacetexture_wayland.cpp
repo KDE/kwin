@@ -74,7 +74,7 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(GraphicsBuffer *buffer)
 
     texture->setFilter(GL_LINEAR);
     texture->setWrapMode(GL_CLAMP_TO_EDGE);
-    texture->setContentTransform(TextureTransform::MirrorY);
+    texture->setContentTransform(OutputTransform::FlipY);
 
     m_texture = {{texture}};
 
@@ -121,7 +121,7 @@ bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
         glEGLImageTargetTexture2DOES(target, static_cast<GLeglImageOES>(image));
         texture->unbind();
         if (m_pixmap->bufferOrigin() == GraphicsBufferOrigin::TopLeft) {
-            texture->setContentTransform(TextureTransform::MirrorY);
+            texture->setContentTransform(OutputTransform::FlipY);
         }
         return texture;
     };
