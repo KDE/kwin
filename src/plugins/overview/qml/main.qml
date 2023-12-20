@@ -541,7 +541,7 @@ FocusScope {
                     }
                     onDropped: (drop) => {
                         drop.accepted = true;
-                        if (drag.source instanceof Item) {
+                        if (drop.keys.includes("kwin-desktop")) {
                             // dragging a desktop as a whole
                             if (drag.source === mainBackground) {
                                 drop.action = Qt.IgnoreAction;
@@ -607,6 +607,7 @@ FocusScope {
                     Drag.supportedActions: Qt.MoveAction
                     Drag.source: mainBackground
                     Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
+                    Drag.keys: ["kwin-desktop"]
 
                     layout.mode: effect.layout
                     focus: current

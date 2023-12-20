@@ -103,6 +103,7 @@ Item {
         Drag.hotSpot: Qt.point(
             thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
             thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale)
+        Drag.keys: ["kwin-window"]
 
         onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
         onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
