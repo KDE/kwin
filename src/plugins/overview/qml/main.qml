@@ -409,7 +409,6 @@ FocusScope {
             property Item currentHeap
             property Item currentBackgroundItem
 
-            // Later we use its type to check whether the user is dragging a desktop or a window
             Item {
                 id: mainBackground
 
