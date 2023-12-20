@@ -296,6 +296,12 @@ enum class VrrPolicy {
 };
 Q_ENUM_NS(VrrPolicy);
 
+enum class PresentationModeHint {
+    VSync,
+    Async
+};
+Q_ENUM_NS(PresentationModeHint);
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

@@ -34,11 +34,6 @@ class SubSurfaceInterface;
 class SurfaceInterfacePrivate;
 class Transaction;
 
-enum class PresentationHint {
-    VSync,
-    Async
-};
-
 /**
  * The SurfaceRole class represents a role assigned to a wayland surface.
  */
@@ -347,7 +342,7 @@ public:
     /**
      * @returns if the client thinks the content of this surface is suitable for presentation with tearing
      */
-    PresentationHint presentationHint() const;
+    PresentationModeHint presentationModeHint() const;
 
     /**
      * Sets a preferred buffer scale that clients should provide buffers in
@@ -470,6 +465,7 @@ Q_SIGNALS:
     void inhibitsIdleChanged();
 
     void colorDescriptionChanged();
+    void presentationModeHintChanged();
 
     /**
      * Emitted when the Surface has been committed.

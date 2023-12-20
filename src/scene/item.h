@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/colorspace.h"
+#include "effect/globals.h"
 #include "scene/itemgeometry.h"
 
 #include <QList>
@@ -112,6 +113,7 @@ public:
     WindowQuadList quads() const;
     virtual void preprocess();
     const ColorDescription &colorDescription() const;
+    PresentationModeHint presentationHint() const;
 
 Q_SIGNALS:
     void childAdded(Item *item);
@@ -134,6 +136,7 @@ protected:
     virtual WindowQuadList buildQuads() const;
     void discardQuads();
     void setColorDescription(const ColorDescription &description);
+    void setPresentationHint(PresentationModeHint hint);
 
 private:
     void addChild(Item *item);
@@ -162,6 +165,7 @@ private:
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     ColorDescription m_colorDescription = ColorDescription::sRGB;
+    PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
 };
 
 } // namespace KWin

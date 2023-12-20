@@ -452,6 +452,16 @@ void Item::setColorDescription(const ColorDescription &description)
     m_colorDescription = description;
 }
 
+PresentationModeHint Item::presentationHint() const
+{
+    return m_presentationHint;
+}
+
+void Item::setPresentationHint(PresentationModeHint hint)
+{
+    m_presentationHint = hint;
+}
+
 } // namespace KWin
 
 #include "moc_item.cpp"

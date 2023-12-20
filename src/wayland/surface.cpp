@@ -641,9 +641,9 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->contentType = contentType;
         target->contentTypeIsSet = true;
     }
-    if (tearingIsSet) {
+    if (presentationModeHintIsSet) {
         target->presentationHint = presentationHint;
-        target->tearingIsSet = true;
+        target->presentationModeHintIsSet = true;
     }
     if (colorDescriptionIsSet) {
         target->colorDescription = colorDescription;
@@ -671,6 +671,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool subsurfaceOrderChanged = next->subsurfaceOrderChanged;
     const bool visibilityChanged = bufferChanged && bool(current->buffer) != bool(next->buffer);
     const bool colorDescriptionChanged = next->colorDescriptionIsSet;
+    const bool presentationModeHintChanged = next->presentationModeHintIsSet;
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
@@ -768,6 +769,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (colorDescriptionChanged) {
         Q_EMIT q->colorDescriptionChanged();
+    }
+    if (presentationModeHintChanged) {
+        Q_EMIT q->presentationModeHintChanged();
     }
 
     if (bufferChanged) {
@@ -1154,7 +1158,7 @@ QPointF SurfaceInterface::toSurfaceLocal(const QPointF &point) const
     return QPointF(point.x() * d->scaleOverride, point.y() * d->scaleOverride);
 }
 
-PresentationHint SurfaceInterface::presentationHint() const
+PresentationModeHint SurfaceInterface::presentationModeHint() const
 {
     return d->current->presentationHint;
 }

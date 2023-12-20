@@ -167,11 +167,10 @@ void Compositor::composite(RenderLoop *renderLoop)
         prePaintPass(superLayer, &surfaceDamage);
 
         SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
-        const SurfaceItemWayland *scanoutCandidateWayland = qobject_cast<SurfaceItemWayland *>(scanoutCandidate);
         renderLoop->setFullscreenSurface(scanoutCandidate);
         frame->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
         const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && scanoutCandidate));
-        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && scanoutCandidateWayland && scanoutCandidateWayland->surface()->presentationHint() == PresentationHint::Async;
+        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && scanoutCandidate && scanoutCandidate->presentationHint() == PresentationModeHint::Async;
         if (vrr) {
             frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
         } else {

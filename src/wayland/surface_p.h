@@ -55,7 +55,7 @@ struct SurfaceState
     bool bufferScaleIsSet = false;
     bool bufferTransformIsSet = false;
     bool contentTypeIsSet = false;
-    bool tearingIsSet = false;
+    bool presentationModeHintIsSet = false;
     bool colorDescriptionIsSet = false;
     qint32 bufferScale = 1;
     OutputTransform bufferTransform = OutputTransform::Normal;
@@ -67,7 +67,7 @@ struct SurfaceState
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;
-    PresentationHint presentationHint = PresentationHint::VSync;
+    PresentationModeHint presentationHint = PresentationModeHint::VSync;
     ColorDescription colorDescription = ColorDescription::sRGB;
     std::unique_ptr<PresentationTimeFeedback> presentationFeedback;
 

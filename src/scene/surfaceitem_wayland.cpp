@@ -42,6 +42,8 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
             this, &SurfaceItemWayland::handleChildSubSurfaceRemoved);
     connect(surface, &SurfaceInterface::colorDescriptionChanged,
             this, &SurfaceItemWayland::handleColorDescriptionChanged);
+    connect(surface, &SurfaceInterface::presentationModeHintChanged,
+            this, &SurfaceItemWayland::handlePresentationModeHintChanged);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -187,6 +189,11 @@ void SurfaceItemWayland::freeze()
 void SurfaceItemWayland::handleColorDescriptionChanged()
 {
     setColorDescription(m_surface->colorDescription());
+}
+
+void SurfaceItemWayland::handlePresentationModeHintChanged()
+{
+    setPresentationHint(m_surface->presentationModeHint());
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

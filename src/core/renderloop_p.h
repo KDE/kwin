@@ -46,7 +46,6 @@ public:
     Item *fullscreenItem = nullptr;
 
     PresentationMode presentationMode = PresentationMode::VSync;
-    bool canDoTearing = false;
 };
 
 } // namespace KWin
