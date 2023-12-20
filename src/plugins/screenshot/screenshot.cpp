@@ -76,10 +76,10 @@ static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform 
     }
 
     QMatrix4x4 matrix;
-    // OpenGL textures are flipped vs QImage
-    matrix.scale(1, -1);
     // apply render target transformation
     matrix *= renderTargetTransformation.inverted().toMatrix();
+    // OpenGL textures are flipped vs QImage
+    matrix.scale(1, -1);
     img = img.transformed(matrix.toTransform());
 }
 
