@@ -137,7 +137,7 @@ void GlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderView
     //  [move to the origin] -> [rotate] -> [translate] ->
     //    -> [perspective projection] -> [reverse "move to the origin"]
 
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale(), renderTarget.transformation());
+    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale(), renderTarget.transform().toMatrix());
     const auto frame = w->frameGeometry();
     const QRectF windowGeo = scaledRect(frame, viewport.scale());
     const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));

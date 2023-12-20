@@ -57,7 +57,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
-    QMatrix4x4 mvp = renderTarget.transformation();
+    QMatrix4x4 mvp = renderTarget.transform().toMatrix();
     mvp.ortho(QRectF(QPointF(0, 0), m_output->transform().map(renderTarget.size())));
     mvp.translate(std::round(cursorRect.x() * scale), std::round(cursorRect.y() * scale));
 

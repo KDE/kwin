@@ -10,9 +10,39 @@
 namespace KWin
 {
 
+static OutputTransform textureTransformToOutputTransform(TextureTransforms transforms) // TODO: Kill TextureTransform?
+{
+    if (transforms == TextureTransforms()) {
+        return OutputTransform::Normal;
+    } else if (transforms == TextureTransform::Rotate90) {
+        return OutputTransform::Rotate90;
+    } else if (transforms == TextureTransform::Rotate180) {
+        return OutputTransform::Rotate180;
+    } else if (transforms == TextureTransform::Rotate270) {
+        return OutputTransform::Rotate270;
+    } else if (transforms == TextureTransform::MirrorX) {
+        return OutputTransform::FlipX;
+    } else if (transforms == TextureTransforms(TextureTransform::MirrorX | TextureTransform::Rotate90)) {
+        return OutputTransform::FlipX90;
+    } else if (transforms == TextureTransforms(TextureTransform::MirrorX | TextureTransform::Rotate180)) {
+        return OutputTransform::FlipX180;
+    } else if (transforms == TextureTransforms(TextureTransform::MirrorX | TextureTransform::Rotate270)) {
+        return OutputTransform::FlipX270;
+    } else if (transforms == TextureTransform::MirrorY) {
+        return OutputTransform::FlipY;
+    } else if (transforms == TextureTransforms(TextureTransform::MirrorY | TextureTransform::Rotate90)) {
+        return OutputTransform::FlipY90;
+    } else if (transforms == TextureTransforms(TextureTransform::MirrorY | TextureTransform::Rotate180)) {
+        return OutputTransform::FlipY180;
+    } else if (transforms == TextureTransforms(TextureTransform::MirrorY | TextureTransform::Rotate270)) {
+        return OutputTransform::FlipY270;
+    }
+    Q_UNREACHABLE();
+}
+
 RenderTarget::RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription)
     : m_framebuffer(fbo)
-    , m_transformation(fbo->colorAttachment() ? fbo->colorAttachment()->contentTransformMatrix() : QMatrix4x4())
+    , m_transform(fbo->colorAttachment() ? textureTransformToOutputTransform(fbo->colorAttachment()->contentTransforms()) : OutputTransform())
     , m_colorDescription(colorDescription)
 {
 }
@@ -34,44 +64,9 @@ QSize RenderTarget::size() const
     }
 }
 
-QRectF RenderTarget::applyTransformation(const QRectF &rect) const
+OutputTransform RenderTarget::transform() const
 {
-    const auto bounds = size();
-    QMatrix4x4 relativeTransformation;
-    relativeTransformation.translate(bounds.width() / 2.0, bounds.height() / 2.0);
-    relativeTransformation *= m_transformation;
-    relativeTransformation.translate(-bounds.width() / 2.0, -bounds.height() / 2.0);
-    return relativeTransformation.mapRect(rect);
-}
-
-QRect RenderTarget::applyTransformation(const QRect &rect) const
-{
-    return applyTransformation(QRectF(rect)).toRect();
-}
-
-QPointF RenderTarget::applyTransformation(const QPointF &point) const
-{
-    const auto bounds = size();
-    QMatrix4x4 relativeTransformation;
-    relativeTransformation.translate(bounds.width() / 2.0, bounds.height() / 2.0);
-    relativeTransformation *= m_transformation;
-    relativeTransformation.translate(-bounds.width() / 2.0, -bounds.height() / 2.0);
-    return relativeTransformation.map(point);
-}
-
-QPoint RenderTarget::applyTransformation(const QPoint &point) const
-{
-    const auto bounds = size();
-    QMatrix4x4 relativeTransformation;
-    relativeTransformation.translate(bounds.width() / 2.0, bounds.height() / 2.0);
-    relativeTransformation *= m_transformation;
-    relativeTransformation.translate(-bounds.width() / 2.0, -bounds.height() / 2.0);
-    return relativeTransformation.map(point);
-}
-
-QMatrix4x4 RenderTarget::transformation() const
-{
-    return m_transformation;
+    return m_transform;
 }
 
 GLFramebuffer *RenderTarget::framebuffer() const

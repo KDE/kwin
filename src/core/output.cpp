@@ -643,49 +643,6 @@ Output::DpmsMode Output::dpmsMode() const
     return m_state.dpmsMode;
 }
 
-QMatrix4x4 Output::logicalToNativeMatrix(const QRectF &rect, qreal scale, OutputTransform transform)
-{
-    QMatrix4x4 matrix;
-    matrix.scale(scale);
-
-    switch (transform.kind()) {
-    case OutputTransform::Normal:
-    case OutputTransform::FlipX:
-        break;
-    case OutputTransform::Rotate90:
-    case OutputTransform::FlipX90:
-        matrix.translate(0, rect.width());
-        matrix.rotate(-90, 0, 0, 1);
-        break;
-    case OutputTransform::Rotate180:
-    case OutputTransform::FlipX180:
-        matrix.translate(rect.width(), rect.height());
-        matrix.rotate(-180, 0, 0, 1);
-        break;
-    case OutputTransform::Rotate270:
-    case OutputTransform::FlipX270:
-        matrix.translate(rect.height(), 0);
-        matrix.rotate(-270, 0, 0, 1);
-        break;
-    }
-
-    switch (transform.kind()) {
-    case OutputTransform::FlipX:
-    case OutputTransform::FlipX90:
-    case OutputTransform::FlipX180:
-    case OutputTransform::FlipX270:
-        matrix.translate(rect.width(), 0);
-        matrix.scale(-1, 1);
-        break;
-    default:
-        break;
-    }
-
-    matrix.translate(-rect.x(), -rect.y());
-
-    return matrix;
-}
-
 uint32_t Output::overscan() const
 {
     return m_state.overscan;

@@ -7,10 +7,9 @@
 #pragma once
 
 #include "core/colorspace.h"
+#include "core/output.h"
 
 #include <QImage>
-#include <QMatrix4x4>
-#include <variant>
 
 namespace KWin
 {
@@ -25,12 +24,8 @@ public:
     explicit RenderTarget(QImage *image, const ColorDescription &colorDescription = ColorDescription::sRGB);
 
     QSize size() const;
-    QMatrix4x4 transformation() const;
+    OutputTransform transform() const;
     const ColorDescription &colorDescription() const;
-    QRectF applyTransformation(const QRectF &rect) const;
-    QRect applyTransformation(const QRect &rect) const;
-    QPointF applyTransformation(const QPointF &point) const;
-    QPoint applyTransformation(const QPoint &point) const;
 
     QImage *image() const;
     GLFramebuffer *framebuffer() const;
@@ -39,7 +34,7 @@ public:
 private:
     QImage *m_image = nullptr;
     GLFramebuffer *m_framebuffer = nullptr;
-    QMatrix4x4 m_transformation;
+    const OutputTransform m_transform;
     const ColorDescription m_colorDescription;
 };
 

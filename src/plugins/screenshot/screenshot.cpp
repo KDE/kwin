@@ -47,7 +47,7 @@ struct ScreenShotScreenData
     Output *screen = nullptr;
 };
 
-static void convertFromGLImage(QImage &img, int w, int h, const QMatrix4x4 &renderTargetTransformation)
+static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform &renderTargetTransformation)
 {
     // from QtOpenGL/qgl.cpp
     // SPDX-FileCopyrightText: 2010 Nokia Corporation and /or its subsidiary(-ies)
@@ -79,7 +79,7 @@ static void convertFromGLImage(QImage &img, int w, int h, const QMatrix4x4 &rend
     // OpenGL textures are flipped vs QImage
     matrix.scale(1, -1);
     // apply render target transformation
-    matrix *= renderTargetTransformation.inverted();
+    matrix *= renderTargetTransformation.inverted().toMatrix();
     img = img.transformed(matrix.toTransform());
 }
 
@@ -284,7 +284,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
                           static_cast<GLvoid *>(img.bits()));
             GLFramebuffer::popFramebuffer();
-            convertFromGLImage(img, img.width(), img.height(), renderTarget.transformation());
+            convertFromGLImage(img, img.width(), img.height(), renderTarget.transform());
         }
 
         if (screenshot->flags & ScreenShotIncludeCursor) {
@@ -371,10 +371,10 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
 
     if (effects->isOpenGLCompositing()) {
         const auto screenGeometry = m_paintedScreen ? m_paintedScreen->geometry() : effects->virtualScreenGeometry();
-        const QSize nativeSize = renderTarget.applyTransformation(
-                                                 snapToPixelGrid(scaledRect(geometry, devicePixelRatio))
-                                                     .translated(-snapToPixelGrid(scaledRect(screenGeometry, devicePixelRatio)).topLeft()))
-                                     .size();
+        const QSize nativeSize = renderTarget.transform().map(
+            snapToPixelGrid(scaledRect(geometry, devicePixelRatio))
+                .translated(-snapToPixelGrid(scaledRect(screenGeometry, devicePixelRatio)).topLeft())
+                .size());
         image = QImage(nativeSize, QImage::Format_ARGB32);
 
         const auto texture = GLTexture::allocate(GL_RGBA8, nativeSize);
@@ -397,7 +397,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
         glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
                      GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
         GLFramebuffer::popFramebuffer();
-        convertFromGLImage(image, nativeSize.width(), nativeSize.height(), renderTarget.transformation());
+        convertFromGLImage(image, nativeSize.width(), nativeSize.height(), renderTarget.transform());
     }
 
     image.setDevicePixelRatio(devicePixelRatio);

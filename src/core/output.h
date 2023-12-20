@@ -15,7 +15,6 @@
 
 #include <QDebug>
 #include <QList>
-#include <QMatrix3x3>
 #include <QMatrix4x4>
 #include <QObject>
 #include <QRect>
@@ -326,11 +325,6 @@ public:
     virtual void setDpmsMode(DpmsMode mode);
 
     uint32_t overscan() const;
-
-    /**
-     * Returns a matrix that can translate into the display's coordinates system
-     */
-    static QMatrix4x4 logicalToNativeMatrix(const QRectF &rect, qreal scale, OutputTransform transform);
 
     void setVrrPolicy(RenderLoop::VrrPolicy policy);
     RenderLoop::VrrPolicy vrrPolicy() const;
