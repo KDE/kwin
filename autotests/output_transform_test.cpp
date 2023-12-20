@@ -20,8 +20,12 @@ public:
 private Q_SLOTS:
     void mapSizeF_data();
     void mapSizeF();
+    void mapSize_data();
+    void mapSize();
     void mapRectF_data();
     void mapRectF();
+    void mapRect_data();
+    void mapRect();
     void inverted_data();
     void inverted();
     void combine_data();
@@ -59,6 +63,31 @@ void TestOutputTransform::mapSizeF()
     QCOMPARE(OutputTransform(kind).map(source), target);
 }
 
+void TestOutputTransform::mapSize_data()
+{
+    QTest::addColumn<OutputTransform::Kind>("kind");
+    QTest::addColumn<QSize>("source");
+    QTest::addColumn<QSize>("target");
+
+    QTest::addRow("rotate-0") << OutputTransform::Normal << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("flip-0") << OutputTransform::Flipped << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QSize(10, 20) << QSize(20, 10);
+}
+
+void TestOutputTransform::mapSize()
+{
+    QFETCH(OutputTransform::Kind, kind);
+    QFETCH(QSize, source);
+    QFETCH(QSize, target);
+
+    QCOMPARE(OutputTransform(kind).map(source), target);
+}
+
 void TestOutputTransform::mapRectF_data()
 {
     QTest::addColumn<OutputTransform::Kind>("kind");
@@ -82,6 +111,31 @@ void TestOutputTransform::mapRectF()
     QFETCH(QRectF, target);
 
     QCOMPARE(OutputTransform(kind).map(source, QSizeF(100, 200)), target);
+}
+
+void TestOutputTransform::mapRect_data()
+{
+    QTest::addColumn<OutputTransform::Kind>("kind");
+    QTest::addColumn<QRect>("source");
+    QTest::addColumn<QRect>("target");
+
+    QTest::addRow("rotate-0") << OutputTransform::Normal << QRect(10, 20, 30, 40) << QRect(10, 20, 30, 40);
+    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QRect(10, 20, 30, 40) << QRect(140, 10, 40, 30);
+    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QRect(10, 20, 30, 40) << QRect(60, 140, 30, 40);
+    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QRect(10, 20, 30, 40) << QRect(20, 60, 40, 30);
+    QTest::addRow("flip-0") << OutputTransform::Flipped << QRect(10, 20, 30, 40) << QRect(60, 20, 30, 40);
+    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QRect(10, 20, 30, 40) << QRect(20, 10, 40, 30);
+    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QRect(10, 20, 30, 40) << QRect(10, 140, 30, 40);
+    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QRect(10, 20, 30, 40) << QRect(140, 60, 40, 30);
+}
+
+void TestOutputTransform::mapRect()
+{
+    QFETCH(OutputTransform::Kind, kind);
+    QFETCH(QRect, source);
+    QFETCH(QRect, target);
+
+    QCOMPARE(OutputTransform(kind).map(source, QSize(100, 200)), target);
 }
 
 void TestOutputTransform::inverted_data()
