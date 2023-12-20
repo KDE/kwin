@@ -89,114 +89,92 @@ OutputTransform OutputTransform::inverted() const
 
 QRectF OutputTransform::map(const QRectF &rect, const QSizeF &bounds) const
 {
-    QRectF dest;
-
     switch (m_kind) {
     case Kind::Normal:
-    case Kind::Rotated180:
-    case Kind::Flipped:
-    case Kind::Flipped180:
-        dest.setWidth(rect.width());
-        dest.setHeight(rect.height());
-        break;
-    default:
-        dest.setWidth(rect.height());
-        dest.setHeight(rect.width());
-        break;
-    }
-
-    switch (m_kind) {
-    case Kind::Normal:
-        dest.moveLeft(rect.x());
-        dest.moveTop(rect.y());
-        break;
+        return rect;
     case Kind::Rotated90:
-        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
-        dest.moveTop(rect.x());
-        break;
+        return QRectF(bounds.height() - (rect.y() + rect.height()),
+                      rect.x(),
+                      rect.height(),
+                      rect.width());
     case Kind::Rotated180:
-        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
-        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
-        break;
+        return QRectF(bounds.width() - (rect.x() + rect.width()),
+                      bounds.height() - (rect.y() + rect.height()),
+                      rect.width(),
+                      rect.height());
     case Kind::Rotated270:
-        dest.moveLeft(rect.y());
-        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
-        break;
+        return QRectF(rect.y(),
+                      bounds.width() - (rect.x() + rect.width()),
+                      rect.height(),
+                      rect.width());
     case Kind::Flipped:
-        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
-        dest.moveTop(rect.y());
-        break;
+        return QRectF(bounds.width() - (rect.x() + rect.width()),
+                      rect.y(),
+                      rect.width(),
+                      rect.height());
     case Kind::Flipped90:
-        dest.moveLeft(rect.y());
-        dest.moveTop(rect.x());
-        break;
+        return QRectF(rect.y(),
+                      rect.x(),
+                      rect.height(),
+                      rect.width());
     case Kind::Flipped180:
-        dest.moveLeft(rect.x());
-        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
-        break;
+        return QRectF(rect.x(),
+                      bounds.height() - (rect.y() + rect.height()),
+                      rect.width(),
+                      rect.height());
     case Kind::Flipped270:
-        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
-        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
-        break;
+        return QRectF(bounds.height() - (rect.y() + rect.height()),
+                      bounds.width() - (rect.x() + rect.width()),
+                      rect.height(),
+                      rect.width());
+    default:
+        Q_UNREACHABLE();
     }
-
-    return dest;
 }
 
 QRect OutputTransform::map(const QRect &rect, const QSize &bounds) const
 {
-    QRect dest;
-
     switch (m_kind) {
     case Kind::Normal:
-    case Kind::Rotated180:
-    case Kind::Flipped:
-    case Kind::Flipped180:
-        dest.setWidth(rect.width());
-        dest.setHeight(rect.height());
-        break;
-    default:
-        dest.setWidth(rect.height());
-        dest.setHeight(rect.width());
-        break;
-    }
-
-    switch (m_kind) {
-    case Kind::Normal:
-        dest.moveLeft(rect.x());
-        dest.moveTop(rect.y());
-        break;
+        return rect;
     case Kind::Rotated90:
-        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
-        dest.moveTop(rect.x());
-        break;
+        return QRect(bounds.height() - (rect.y() + rect.height()),
+                     rect.x(),
+                     rect.height(),
+                     rect.width());
     case Kind::Rotated180:
-        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
-        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
-        break;
+        return QRect(bounds.width() - (rect.x() + rect.width()),
+                     bounds.height() - (rect.y() + rect.height()),
+                     rect.width(),
+                     rect.height());
     case Kind::Rotated270:
-        dest.moveLeft(rect.y());
-        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
-        break;
+        return QRect(rect.y(),
+                     bounds.width() - (rect.x() + rect.width()),
+                     rect.height(),
+                     rect.width());
     case Kind::Flipped:
-        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
-        dest.moveTop(rect.y());
-        break;
+        return QRect(bounds.width() - (rect.x() + rect.width()),
+                     rect.y(),
+                     rect.width(),
+                     rect.height());
     case Kind::Flipped90:
-        dest.moveLeft(rect.y());
-        dest.moveTop(rect.x());
-        break;
+        return QRect(rect.y(),
+                     rect.x(),
+                     rect.height(),
+                     rect.width());
     case Kind::Flipped180:
-        dest.moveLeft(rect.x());
-        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
-        break;
+        return QRect(rect.x(),
+                     bounds.height() - (rect.y() + rect.height()),
+                     rect.width(),
+                     rect.height());
     case Kind::Flipped270:
-        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
-        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
-        break;
+        return QRect(bounds.height() - (rect.y() + rect.height()),
+                     bounds.width() - (rect.x() + rect.width()),
+                     rect.height(),
+                     rect.width());
+    default:
+        Q_UNREACHABLE();
     }
-
-    return dest;
 }
 
 QPointF OutputTransform::map(const QPointF &point, const QSizeF &bounds) const
