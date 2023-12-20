@@ -40,11 +40,12 @@ public:
      * @returns a matrix adapting XYZ values from the source whitepoint to the destination whitepoint with the Bradford transform
      */
     static QMatrix4x4 chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint);
+    static QMatrix4x4 blackPointCompensationMatrix(QVector3D sourceBlackpoint, QVector3D destinationBlackpoint, QVector3D whitePoint);
 
     static QMatrix4x4 calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
-    explicit Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white);
-    explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+    explicit Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white, QVector3D black);
+    explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white, QVector3D black);
 
     /**
      * @returns a matrix that transforms from the linear RGB representation of colors in this colorimetry to the XYZ representation
@@ -74,12 +75,14 @@ public:
     const QVector2D &green() const;
     const QVector2D &blue() const;
     const QVector2D &white() const;
+    const QVector3D &black() const;
 
 private:
     QVector2D m_red;
     QVector2D m_green;
     QVector2D m_blue;
     QVector2D m_white;
+    QVector3D m_black;
     QMatrix4x4 m_toXYZ;
     QMatrix4x4 m_fromXYZ;
 };

@@ -75,6 +75,16 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
     return inverseBradford * adaptation * bradford;
 }
 
+QMatrix4x4 Colorimetry::blackPointCompensationMatrix(QVector3D sourceBlackpoint, QVector3D destinationBlackpoint, QVector3D whitePoint)
+{
+    // see https://www.color.org/WP40-Black_Point_Compensation_2010-07-27.pdf for an explanation of the calculation
+    const double ratio = (1 - destinationBlackpoint.y()) / (1 - sourceBlackpoint.y());
+    QMatrix4x4 ret;
+    ret.translate((1 - ratio) * whitePoint);
+    ret.scale(ratio);
+    return ret;
+}
+
 static QVector3D normalizeToY1(const QVector3D &vect)
 {
     return vect.y() == 0 ? vect : QVector3D(vect.x() / vect.y(), 1, vect.z() / vect.y());
@@ -93,24 +103,27 @@ Colorimetry Colorimetry::interpolateGamutTo(const Colorimetry &one, double facto
         m_green * (1 - factor) + one.green() * factor,
         m_blue * (1 - factor) + one.blue() * factor,
         m_white, // whitepoint should stay the same
+        m_black // blackpoint should stay the same as well
     };
 }
 
-Colorimetry::Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white)
+Colorimetry::Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white, QVector3D black)
     : m_red(red)
     , m_green(green)
     , m_blue(blue)
     , m_white(white)
+    , m_black(black)
     , m_toXYZ(calculateToXYZMatrix(xyToXYZ(red), xyToXYZ(green), xyToXYZ(blue), xyToXYZ(white)))
     , m_fromXYZ(m_toXYZ.inverted())
 {
 }
 
-Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
+Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white, QVector3D black)
     : m_red(xyzToXY(red))
     , m_green(xyzToXY(green))
     , m_blue(xyzToXY(blue))
     , m_white(xyzToXY(white))
+    , m_black(black)
     , m_toXYZ(calculateToXYZMatrix(normalizeToY1(red), normalizeToY1(green), normalizeToY1(blue), normalizeToY1(white)))
     , m_fromXYZ(m_toXYZ.inverted())
 {
@@ -129,7 +142,7 @@ const QMatrix4x4 &Colorimetry::fromXYZ() const
 QMatrix4x4 Colorimetry::toOther(const Colorimetry &other) const
 {
     // rendering intent is relative colorimetric, so adapt to the different whitepoint
-    return other.fromXYZ() * chromaticAdaptationMatrix(this->white(), other.white()) * toXYZ();
+    return other.fromXYZ() * blackPointCompensationMatrix(this->black(), other.black(), xyToXYZ(other.white())) * chromaticAdaptationMatrix(this->white(), other.white()) * toXYZ();
 }
 
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
@@ -140,6 +153,7 @@ Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
         xyzToXY(mat * xyToXYZ(green())),
         xyzToXY(mat * xyToXYZ(blue())),
         newWhitepoint,
+        this->black(),
     };
 }
 
@@ -173,11 +187,17 @@ const QVector2D &Colorimetry::white() const
     return m_white;
 }
 
+const QVector3D &Colorimetry::black() const
+{
+    return m_black;
+}
+
 static const Colorimetry BT709 = Colorimetry{
     QVector2D{0.64, 0.33},
     QVector2D{0.30, 0.60},
     QVector2D{0.15, 0.06},
     QVector2D{0.3127, 0.3290},
+    QVector3D{0, 0, 0},
 };
 
 static const Colorimetry BT2020 = Colorimetry{
@@ -185,6 +205,7 @@ static const Colorimetry BT2020 = Colorimetry{
     QVector2D{0.170, 0.797},
     QVector2D{0.131, 0.046},
     QVector2D{0.3127, 0.3290},
+    QVector3D{0, 0, 0},
 };
 
 const Colorimetry &Colorimetry::fromName(NamedColorimetry name)

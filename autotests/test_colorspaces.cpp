@@ -21,6 +21,8 @@ private Q_SLOTS:
     void roundtripConversion_data();
     void roundtripConversion();
     void nonNormalizedPrimaries();
+    void testBlackPointCompensation_data();
+    void testBlackPointCompensation();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -77,12 +79,37 @@ void TestColorspaces::nonNormalizedPrimaries()
 {
     // this test ensures that non-normalized primaries don't mess up the transformations between color spaces
     const auto from = Colorimetry::fromName(NamedColorimetry::BT709);
-    const auto to = Colorimetry(Colorimetry::xyToXYZ(from.red()) * 2, Colorimetry::xyToXYZ(from.green()) * 2, Colorimetry::xyToXYZ(from.blue()) * 2, Colorimetry::xyToXYZ(from.white()) * 2);
+    const auto to = Colorimetry(Colorimetry::xyToXYZ(from.red()) * 2, Colorimetry::xyToXYZ(from.green()) * 2, Colorimetry::xyToXYZ(from.blue()) * 2, Colorimetry::xyToXYZ(from.white()) * 2, QVector3D(0, 0, 0));
 
     const auto convertedWhite = from.toOther(to) * QVector3D(1, 1, 1);
     QCOMPARE_LE(std::abs(1 - convertedWhite.x()), s_resolution10bit);
     QCOMPARE_LE(std::abs(1 - convertedWhite.y()), s_resolution10bit);
     QCOMPARE_LE(std::abs(1 - convertedWhite.z()), s_resolution10bit);
+}
+
+void TestColorspaces::testBlackPointCompensation_data()
+{
+    QTest::addColumn<QVector3D>("input");
+    QTest::addColumn<QVector3D>("output");
+
+    for (double input = 0; input < 1.05; input += 0.1) {
+        const double output = 0.1 + input * 0.9;
+        QTest::addRow("%f -> %f", input, output) << QVector3D(input, input, input) << QVector3D(output, output, output);
+    }
+}
+
+void TestColorspaces::testBlackPointCompensation()
+{
+    const auto from = Colorimetry::fromName(NamedColorimetry::BT709);
+    const auto to = Colorimetry(from.red(), from.green(), from.blue(), from.white(), QVector3D(0.1, 0.1, 0.1));
+
+    QFETCH(QVector3D, input);
+    QFETCH(QVector3D, output);
+
+    const auto converted = from.toOther(to) * input;
+    QCOMPARE_LE(std::abs(converted.x() - output.x()), 2 * s_resolution10bit);
+    QCOMPARE_LE(std::abs(converted.y() - output.y()), 2 * s_resolution10bit);
+    QCOMPARE_LE(std::abs(converted.z() - output.z()), 2 * s_resolution10bit);
 }
 
 QTEST_MAIN(TestColorspaces)

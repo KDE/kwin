@@ -163,6 +163,7 @@ Edid::Edid(const void *data, uint32_t size)
             QVector2D{chromaticity->green_x, chromaticity->green_y},
             QVector2D{chromaticity->blue_x, chromaticity->blue_y},
             QVector2D{chromaticity->white_x, chromaticity->white_y},
+            QVector3D(),
         };
     } else {
         m_colorimetry.reset();

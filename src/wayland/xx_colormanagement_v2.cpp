@@ -215,7 +215,9 @@ void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_set_prim
         QVector2D(r_x / 10'000.0, r_y / 10'000.0),
         QVector2D(g_x / 10'000.0, g_y / 10'000.0),
         QVector2D(b_x / 10'000.0, b_y / 10'000.0),
-        QVector2D(w_x / 10'000.0, w_y / 10'000.0)};
+        QVector2D(w_x / 10'000.0, w_y / 10'000.0),
+        QVector3D(0, 0, 0),
+    };
 }
 
 void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_set_mastering_display_primaries(Resource *resource, uint32_t r_x, uint32_t r_y, uint32_t g_x, uint32_t g_y, uint32_t b_x, uint32_t b_y, uint32_t w_x, uint32_t w_y)
