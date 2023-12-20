@@ -10,7 +10,6 @@
 #include "core/output.h"
 #include "core/renderbackend.h"
 
-#include <QMatrix4x4>
 #include <QObject>
 #include <QRegion>
 
@@ -122,37 +121,6 @@ public:
      */
     SurfaceRole *role() const;
     void setRole(SurfaceRole *role);
-
-    /**
-     * Maps the specified @a point from the surface-local coordinates to buffer pixel coordinates.
-     *
-     * Note that there is no direct connection between points in the surface-local coordinates
-     * and points in the buffer pixel coordinates. In order to map points between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
-     *
-     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     */
-    QPointF mapToBuffer(const QPointF &point) const;
-    /**
-     * Maps the specified @a region from the surface-local coordinates to buffer pixel coordinates.
-     *
-     * Note that there is no direct connection between regions in the surface-local coordinates
-     * and regions in the buffer pixel coordinates. In order to map regions between the two spaces,
-     * one has to use mapToBuffer() and mapFromBuffer().
-     *
-     * The returned value will become invalid when the surfaceToBufferMatrixChanged() signal is emitted.
-     *
-     * @see surfaceToBufferMatrix(), surfaceToBufferMatrixChanged()
-     */
-    QRegion mapToBuffer(const QRegion &region) const;
-    /**
-     * Returns the projection matrix from the surface-local coordinates to buffer coordinates.
-     *
-     * @see surfaceToBufferMatrixChanged()
-     */
-    QMatrix4x4 surfaceToBufferMatrix() const;
 
     /**
      * Maps the specified @a point in this surface's coordinate system to the equivalent point
@@ -395,14 +363,6 @@ Q_SIGNALS:
      * signal is emitted.
      */
     void aboutToBeDestroyed();
-    /**
-     * This signal is emitted when the projection matrix from the surface-local coordinate space
-     * to the buffer coordinate space has been changed.
-     *
-     * Note that the compositor will most likely need to re-compute the texture coordinates after
-     * the surface-to-buffer matrix has been changed.
-     */
-    void surfaceToBufferMatrixChanged();
     /**
      * Emitted whenever the SurfaceInterface got damaged.
      * The signal is only emitted during the commit of state.

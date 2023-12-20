@@ -482,73 +482,6 @@ bool SurfaceInterface::hasFrameCallbacks() const
     return !wl_list_empty(&d->current->frameCallbacks);
 }
 
-QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
-{
-    // The order of transforms is reversed, i.e. the viewport transform is the first one.
-
-    QMatrix4x4 surfaceToBufferMatrix;
-
-    if (!current->buffer) {
-        return surfaceToBufferMatrix;
-    }
-
-    surfaceToBufferMatrix.scale(current->bufferScale, current->bufferScale);
-    surfaceToBufferMatrix.scale(scaleOverride, scaleOverride);
-
-    switch (current->bufferTransform.kind()) {
-    case OutputTransform::Normal:
-    case OutputTransform::FlipX:
-        break;
-    case OutputTransform::Rotate90:
-    case OutputTransform::FlipX90:
-        surfaceToBufferMatrix.translate(0, bufferSize.height() / current->bufferScale);
-        surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
-        break;
-    case OutputTransform::Rotate180:
-    case OutputTransform::FlipX180:
-        surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, bufferSize.height() / current->bufferScale);
-        surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
-        break;
-    case OutputTransform::Rotate270:
-    case OutputTransform::FlipX270:
-        surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, 0);
-        surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
-        break;
-    }
-
-    switch (current->bufferTransform.kind()) {
-    case OutputTransform::FlipX:
-    case OutputTransform::FlipX180:
-        surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, 0);
-        surfaceToBufferMatrix.scale(-1, 1);
-        break;
-    case OutputTransform::FlipX90:
-    case OutputTransform::FlipX270:
-        surfaceToBufferMatrix.translate(bufferSize.height() / current->bufferScale, 0);
-        surfaceToBufferMatrix.scale(-1, 1);
-        break;
-    default:
-        break;
-    }
-
-    if (current->viewport.sourceGeometry.isValid()) {
-        surfaceToBufferMatrix.translate(current->viewport.sourceGeometry.x(), current->viewport.sourceGeometry.y());
-    }
-
-    QSizeF sourceSize;
-    if (current->viewport.sourceGeometry.isValid()) {
-        sourceSize = current->viewport.sourceGeometry.size();
-    } else {
-        sourceSize = implicitSurfaceSize;
-    }
-
-    if (sourceSize != surfaceSize) {
-        surfaceToBufferMatrix.scale(sourceSize.width() / surfaceSize.width(), sourceSize.height() / surfaceSize.height());
-    }
-
-    return surfaceToBufferMatrix;
-}
-
 QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
 {
     if (!current->viewport.sourceGeometry.isValid()) {
@@ -561,7 +494,7 @@ QRectF SurfaceInterfacePrivate::computeBufferSourceBox() const
                      current->viewport.sourceGeometry.width() * current->bufferScale,
                      current->viewport.sourceGeometry.height() * current->bufferScale);
 
-    return current->bufferTransform.inverted().map(box, bounds);
+    return current->bufferTransform.map(box, bounds);
 }
 
 SurfaceState::SurfaceState()
@@ -675,7 +608,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
     const QRectF oldBufferSourceBox = bufferSourceBox;
-    const QMatrix4x4 oldSurfaceToBufferMatrix = surfaceToBufferMatrix;
     const QRegion oldInputRegion = inputRegion;
 
     if (!next->damage.isEmpty() || !next->bufferDamage.isEmpty()) {
@@ -688,14 +620,13 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     if (current->buffer) {
         bufferSize = current->buffer->size();
         bufferSourceBox = computeBufferSourceBox();
-        implicitSurfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
 
         if (current->viewport.destinationSize.isValid()) {
             surfaceSize = current->viewport.destinationSize;
         } else if (current->viewport.sourceGeometry.isValid()) {
             surfaceSize = current->viewport.sourceGeometry.size();
         } else {
-            surfaceSize = implicitSurfaceSize;
+            surfaceSize = current->bufferTransform.map(current->buffer->size() / current->bufferScale);
         }
 
         const QRectF surfaceRect(QPoint(0, 0), surfaceSize);
@@ -715,17 +646,13 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         opaqueRegion = map_helper(scaleOverrideMatrix, opaqueRegion);
         inputRegion = map_helper(scaleOverrideMatrix, inputRegion);
         surfaceSize = surfaceSize / scaleOverride;
-        implicitSurfaceSize = implicitSurfaceSize / scaleOverride;
     } else {
         surfaceSize = QSizeF(0, 0);
-        implicitSurfaceSize = QSizeF(0, 0);
         bufferSize = QSize(0, 0);
         bufferSourceBox = QRectF();
         inputRegion = QRegion();
         opaqueRegion = QRegion();
     }
-
-    surfaceToBufferMatrix = buildSurfaceToBufferMatrix();
 
     if (opaqueRegionChanged) {
         Q_EMIT q->opaqueChanged(opaqueRegion);
@@ -738,9 +665,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (visibilityChanged) {
         updateEffectiveMapped();
-    }
-    if (surfaceToBufferMatrix != oldSurfaceToBufferMatrix) {
-        Q_EMIT q->surfaceToBufferMatrixChanged();
     }
     if (bufferSourceBox != oldBufferSourceBox) {
         Q_EMIT q->bufferSourceBoxChanged();
@@ -774,7 +698,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         if (current->buffer && (!current->damage.isEmpty() || !current->bufferDamage.isEmpty())) {
             const QRect bufferRect = QRect(QPoint(0, 0), current->buffer->size());
             bufferDamage = current->bufferDamage
-                               .united(q->mapToBuffer(current->damage))
+                               .united(mapToBuffer(current->damage))
                                .intersected(bufferRect);
             Q_EMIT q->damaged(bufferDamage);
         }
@@ -840,6 +764,23 @@ bool SurfaceInterfacePrivate::contains(const QPointF &position) const
 bool SurfaceInterfacePrivate::inputContains(const QPointF &position) const
 {
     return contains(position) && inputRegion.contains(QPoint(std::floor(position.x()), std::floor(position.y())));
+}
+
+QRegion SurfaceInterfacePrivate::mapToBuffer(const QRegion &region) const
+{
+    if (region.isEmpty()) {
+        return QRegion();
+    }
+
+    const QRectF sourceBox = current->bufferTransform.inverted().map(bufferSourceBox, bufferSize);
+    const qreal xScale = sourceBox.width() / surfaceSize.width();
+    const qreal yScale = sourceBox.height() / surfaceSize.height();
+
+    QRegion result;
+    for (QRectF rect : region) {
+        result += current->bufferTransform.map(QRectF(rect.x() * xScale, rect.y() * yScale, rect.width() * xScale, rect.height() * yScale), sourceBox.size()).translated(bufferSourceBox.topLeft()).toAlignedRect();
+    }
+    return result;
 }
 
 QRegion SurfaceInterface::bufferDamage() const
@@ -1095,21 +1036,6 @@ LinuxDmaBufV1Feedback *SurfaceInterface::dmabufFeedbackV1() const
 ContentType SurfaceInterface::contentType() const
 {
     return d->current->contentType;
-}
-
-QPointF SurfaceInterface::mapToBuffer(const QPointF &point) const
-{
-    return d->surfaceToBufferMatrix.map(point);
-}
-
-QRegion SurfaceInterface::mapToBuffer(const QRegion &region) const
-{
-    return map_helper(d->surfaceToBufferMatrix, region);
-}
-
-QMatrix4x4 SurfaceInterface::surfaceToBufferMatrix() const
-{
-    return d->surfaceToBufferMatrix;
 }
 
 QPointF SurfaceInterface::mapToChild(SurfaceInterface *child, const QPointF &point) const

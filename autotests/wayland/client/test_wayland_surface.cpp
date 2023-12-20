@@ -288,7 +288,7 @@ void TestWaylandSurface::testDamage()
     {
         const QRegion surfaceDamage = QRegion(5, 8, 3, 6).united(QRect(10, 11, 6, 1));
         const QRegion expectedDamage = QRegion(10, 16, 6, 12).united(QRect(20, 22, 12, 2));
-        QImage img(QSize(40, 35), QImage::Format_ARGB32_Premultiplied);
+        QImage img(QSize(80, 70), QImage::Format_ARGB32_Premultiplied);
         img.fill(Qt::black);
         auto b = m_shm->createBuffer(img);
         s->attachBuffer(b);

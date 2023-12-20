@@ -36,7 +36,6 @@ public:
     SurfaceInterface *surface() const;
 
 private Q_SLOTS:
-    void handleSurfaceToBufferMatrixChanged();
     void handleSurfaceCommitted();
     void handleSurfaceSizeChanged();
     void handleBufferSizeChanged();

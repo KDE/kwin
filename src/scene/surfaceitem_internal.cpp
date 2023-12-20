@@ -20,13 +20,8 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, I
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
 
     setSize(window->bufferGeometry().size());
-    setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size()));
+    setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
     setBufferSize((window->bufferGeometry().size() * window->bufferScale()).toSize());
-
-    // The device pixel ratio of the internal window is static.
-    QMatrix4x4 surfaceToBufferMatrix;
-    surfaceToBufferMatrix.scale(window->bufferScale());
-    setSurfaceToBufferMatrix(surfaceToBufferMatrix);
 }
 
 InternalWindow *SurfaceItemInternal::window() const
@@ -44,13 +39,10 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
     return std::make_unique<SurfacePixmapInternal>(this);
 }
 
-void SurfaceItemInternal::handleBufferGeometryChanged(const QRectF &old)
+void SurfaceItemInternal::handleBufferGeometryChanged()
 {
-    if (m_window->bufferGeometry().size() != old.size()) {
-        discardPixmap();
-    }
     setSize(m_window->bufferGeometry().size());
-    setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size()));
+    setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size() * m_window->bufferScale()));
     setBufferSize((m_window->bufferGeometry().size() * m_window->bufferScale()).toSize());
 }
 

@@ -114,7 +114,6 @@ public:
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
-    QMatrix4x4 buildSurfaceToBufferMatrix();
     QRectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);
 
@@ -127,16 +126,15 @@ public:
      */
     bool contains(const QPointF &position) const;
     bool inputContains(const QPointF &position) const;
+    QRegion mapToBuffer(const QRegion &region) const;
 
     CompositorInterface *compositor;
     SurfaceInterface *q;
     SurfaceRole *role = nullptr;
     std::unique_ptr<SurfaceState> current;
     std::unique_ptr<SurfaceState> pending;
-    QMatrix4x4 surfaceToBufferMatrix;
     QSize bufferSize = QSize(0, 0);
     QRectF bufferSourceBox;
-    QSizeF implicitSurfaceSize = QSizeF(0, 0);
     QSizeF surfaceSize = QSizeF(0, 0);
 
     QRegion inputRegion;
