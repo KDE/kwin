@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2023-12-20 01:35+0000\n"
 "PO-Revision-Date: 2022-07-22 16:20+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
@@ -18,52 +18,52 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.04.3\n"
 
-#: main.cpp:151 touch.cpp:116
+#: main.cpp:151 touch.cpp:117
 #, kde-format
 msgid "No Action"
 msgstr "No Action"
 
-#: main.cpp:152 touch.cpp:117
+#: main.cpp:152 touch.cpp:118
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Peek at Desktop"
 
-#: main.cpp:153 touch.cpp:118
+#: main.cpp:153 touch.cpp:119
 #, kde-format
 msgid "Lock Screen"
 msgstr "Lock Screen"
 
-#: main.cpp:154 touch.cpp:119
+#: main.cpp:154 touch.cpp:120
 #, kde-format
 msgid "Show KRunner"
 msgstr "Show KRunner"
 
-#: main.cpp:155 touch.cpp:120
+#: main.cpp:155 touch.cpp:121
 #, kde-format
 msgid "Activity Manager"
 msgstr "Activity Manager"
 
-#: main.cpp:156 touch.cpp:121
+#: main.cpp:156 touch.cpp:122
 #, kde-format
 msgid "Application Launcher"
 msgstr "Application Launcher"
 
-#: main.cpp:160 touch.cpp:125
+#: main.cpp:160 touch.cpp:126
 #, kde-format
 msgid "Present Windows"
 msgstr "Present Windows"
 
-#: main.cpp:161 touch.cpp:126
+#: main.cpp:161 touch.cpp:127
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - All Desktops"
 
-#: main.cpp:162 touch.cpp:127
+#: main.cpp:162 touch.cpp:128
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Current Desktop"
 
-#: main.cpp:163 touch.cpp:128
+#: main.cpp:163 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Current Application"
@@ -74,12 +74,12 @@ msgstr "%1 - Current Application"
 msgid "Overview"
 msgstr "Toggle Overview"
 
-#: main.cpp:167 touch.cpp:130
+#: main.cpp:167 touch.cpp:131
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Toggle window switching"
 
-#: main.cpp:168 touch.cpp:131
+#: main.cpp:168 touch.cpp:132
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Toggle alternative window switching"

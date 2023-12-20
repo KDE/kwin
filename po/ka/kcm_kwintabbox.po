@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-08 01:01+0000\n"
+"POT-Creation-Date: 2023-12-20 01:35+0000\n"
 "PO-Revision-Date: 2023-02-07 07:26+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -29,22 +29,22 @@ msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "სამუშაო მაგიდა 1"
 
-#: main.cpp:66
+#: main.cpp:67
 #, kde-format
 msgid "Main"
 msgstr "მთავარი"
 
-#: main.cpp:67
+#: main.cpp:68
 #, kde-format
 msgid "Alternative"
 msgstr "სხვები"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "ამოცანების სხვა გადამრთველების მიღება..."
 
-#: main.cpp:83
+#: main.cpp:84
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

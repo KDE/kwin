@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-15 01:37+0000\n"
+"POT-Creation-Date: 2023-12-20 01:35+0000\n"
 "PO-Revision-Date: 2023-12-01 15:49+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1807,142 +1807,133 @@ msgstr ""
 msgid "Animate buttons"
 msgstr "הנפשת כפתורים"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:49
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:51
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
 msgstr "הפעלה"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:52
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:54
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:44
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
 msgstr "סגירה"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:55
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:57
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
 msgstr "מזערי"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:60
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:50
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
 msgstr "מזעור"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:61
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:63
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
 msgstr "מרבי"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:64
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:66
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:56
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:58
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
 msgstr "הגדלה"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:67
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:69
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:59
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
 msgstr "מסך מלא"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:70
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:72
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:62
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
 msgstr "הצללה"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:73
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:75
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:65
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
 msgstr "לרחף מעל"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:76
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:78
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:68
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
 msgstr "לשקוע מתחת"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:83
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:75
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
 msgstr "חלון"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:93
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:85
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
 msgstr "שם"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:95
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:87
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
 msgstr "שם יישום"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:89
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:145
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "שולחן עבודה"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "מעבר לשולחן עבודה %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
 #, kde-format
 msgid "Close running window on %1"
 msgstr "סגירת החלון הפעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "מזעור/שחזור חלון פעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "הגדלה/שחזור חלון פעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "החלפת מצב מסך מלא לחלון הפעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "הצללה/הבהרה של חלון פעיל על גבי %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "החלפת מצב ‚ריחוף מעל’ לחלון הפעיל ב־%1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "החלפת מצב ‚שקיעה מתחת’ לחלון הפעיל ב־%1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "הפעלת החלון הפעיל על %1"
@@ -2210,24 +2201,24 @@ msgstr "מטא (כפתור Windows)"
 msgid "Arrow draw modifier keys:"
 msgstr "מקשי החלפה לציור עם החיצים:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:67
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "תאורת לילה כבויה"
 
-#: plugins/nightcolor/nightcolormanager.cpp:65
+#: plugins/nightcolor/nightcolormanager.cpp:68
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "תאורת לילה פעילה"
 
-#: plugins/nightcolor/nightcolormanager.cpp:86
+#: plugins/nightcolor/nightcolormanager.cpp:89
 #, kde-format
 msgid "Toggle Night Light"
 msgstr "מתג תאורת לילה"
 
-#: plugins/nightcolor/nightcolormanager.cpp:463
+#: plugins/nightcolor/nightcolormanager.cpp:466
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "תצוגת חום צבע מקדימה"
@@ -2466,7 +2457,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "האפקט הזה אינו מיועד למדד ביצועים"
 
-#: plugins/showpaint/showpaint.cpp:40 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "החלפת הצגת צביעה"

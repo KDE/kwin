@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-15 01:37+0000\n"
+"POT-Creation-Date: 2023-12-20 01:35+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -1858,142 +1858,133 @@ msgstr ""
 msgid "Animate buttons"
 msgstr "Animar os botões"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:49
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:51
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
 msgstr "activar"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:52
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:54
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:44
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
 msgstr "fechar"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:55
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:57
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
 msgstr "min"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:60
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:50
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
 msgstr "minimizar"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:61
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:63
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
 msgstr "max"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:64
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:66
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:56
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:58
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
 msgstr "maximizar"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:67
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:69
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:59
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
 msgstr "ecrã-completo"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:70
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:72
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:62
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
 msgstr "enrolar"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:73
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:75
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:65
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
 msgstr "manter acima"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:76
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:78
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:68
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
 msgstr "manter abaixo"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:83
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:75
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
 msgstr "janela"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:93
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:85
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
 msgstr "nome"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:95
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:87
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
 msgstr "nome-aplicação"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:97
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:153
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:89
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:145
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
 msgstr "ecrã"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:264
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:253
 #, kde-format
 msgid "Switch to desktop %1"
 msgstr "Mudar para o ecrã %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:305
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:292
 #, kde-format
 msgid "Close running window on %1"
 msgstr "Fechar a janela activa em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:308
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
 msgstr "Repor/Minimizar a janela activa em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:311
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
 msgstr "Maximizar/repor a janela activa em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
 msgstr "Activar o ecrã completo para a janela activa em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:317
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
 msgstr "(Des)enrolar a janela activa em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:320
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
 msgstr "Manter a janela activa acima em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:323
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "Toggle keep below running window on %1"
 msgstr "Manter a janela activa abaixo em %1"
 
-#: plugins/krunner-integration/windowsrunnerinterface.cpp:327
+#: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Activate running window on %1"
 msgstr "Activar a janela em execução em %1"
@@ -2285,7 +2276,7 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Modificadores"
 
-#: plugins/nightcolor/nightcolormanager.cpp:64
+#: plugins/nightcolor/nightcolormanager.cpp:67
 #, fuzzy, kde-format
 #| msgctxt "Night Color was disabled"
 #| msgid "Night Color Off"
@@ -2293,7 +2284,7 @@ msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Cor Nocturna Desligada"
 
-#: plugins/nightcolor/nightcolormanager.cpp:65
+#: plugins/nightcolor/nightcolormanager.cpp:68
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
@@ -2301,13 +2292,13 @@ msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Cor Nocturna Ligada"
 
-#: plugins/nightcolor/nightcolormanager.cpp:86
+#: plugins/nightcolor/nightcolormanager.cpp:89
 #, fuzzy, kde-format
 #| msgid "Toggle Night Color"
 msgid "Toggle Night Light"
 msgstr "Comutar a Cor Nocturna"
 
-#: plugins/nightcolor/nightcolormanager.cpp:463
+#: plugins/nightcolor/nightcolormanager.cpp:466
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Antevisão da Temperatura de Cor"
@@ -2577,7 +2568,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Este efeito não é um teste de performance"
 
-#: plugins/showpaint/showpaint.cpp:40 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Comutar a Apresentação da Pintura"
