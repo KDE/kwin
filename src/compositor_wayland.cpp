@@ -291,18 +291,17 @@ void WaylandCompositor::addOutput(Output *output)
             if (!outputLayer || forceSoftwareCursor) {
                 return false;
             }
-            const QMatrix4x4 monitorMatrix = Output::logicalToNativeMatrix(output->rect(), output->scale(), output->transform());
-            QRectF nativeCursorRect = monitorMatrix.mapRect(outputLocalRect);
+            QRectF nativeCursorRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize());
             QSize bufferSize(std::ceil(nativeCursorRect.width()), std::ceil(nativeCursorRect.height()));
             if (const auto fixedSize = outputLayer->fixedSize()) {
                 if (fixedSize->width() < bufferSize.width() || fixedSize->height() < bufferSize.height()) {
                     return false;
                 }
                 bufferSize = *fixedSize;
-                nativeCursorRect = monitorMatrix.mapRect(QRectF(outputLocalRect.topLeft(), QSizeF(bufferSize) / output->scale()));
+                nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), bufferSize), output->pixelSize());
             }
             outputLayer->setPosition(nativeCursorRect.topLeft());
-            outputLayer->setHotspot(Output::logicalToNativeMatrix(QRectF(QPointF(), QSizeF(bufferSize) / output->scale()), output->scale(), output->transform()).map(cursor->hotspot()));
+            outputLayer->setHotspot(output->transform().map(cursor->hotspot() * output->scale(), bufferSize));
             outputLayer->setSize(bufferSize);
             if (auto beginInfo = outputLayer->beginFrame()) {
                 const RenderTarget &renderTarget = beginInfo->renderTarget;
@@ -345,8 +344,8 @@ void WaylandCompositor::addOutput(Output *output)
         bool hardwareCursor = false;
         if (outputLayer) {
             if (outputLayer->isEnabled()) {
-                const QMatrix4x4 monitorMatrix = Output::logicalToNativeMatrix(output->rect(), output->scale(), output->transform());
-                const QRectF nativeCursorRect = monitorMatrix.mapRect(QRectF(outputLocalRect.topLeft(), outputLayer->size() / output->scale()));
+                const QRectF nativeCursorRect = output->transform()
+                                                    .map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->size()), output->pixelSize());
                 outputLayer->setPosition(nativeCursorRect.topLeft());
                 hardwareCursor = output->updateCursorLayer();
             } else if (!cursorLayer->isVisible() && !forceSoftwareCursor) {

@@ -476,7 +476,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     QMatrix4x4 textureMatrix;
     // apply texture->buffer transformation
     textureMatrix.translate(0.5, 0.5);
-    textureMatrix *= renderTarget.transformation();
+    textureMatrix *= renderTarget.transform().toMatrix();
     textureMatrix.translate(-0.5, -0.5);
     // scaled logical to texture coordinates
     textureMatrix.scale(1, -1);

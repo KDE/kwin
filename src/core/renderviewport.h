@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "kwin_export.h"
+#include "core/output.h"
 
 #include <QMatrix4x4>
 #include <QRectF>
@@ -39,7 +39,8 @@ public:
     QRegion mapToRenderTargetTexture(const QRegion &logicalGeometry) const;
 
 private:
-    const RenderTarget *m_renderTarget;
+    const OutputTransform m_transform;
+    const QSize m_transformBounds;
     const QRectF m_renderRect;
     const QRect m_deviceRenderRect;
     const QMatrix4x4 m_projectionMatrix;
