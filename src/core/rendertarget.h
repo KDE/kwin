@@ -27,10 +27,10 @@ public:
     QSize size() const;
     QMatrix4x4 transformation() const;
     const ColorDescription &colorDescription() const;
-    QRectF applyTransformation(const QRectF &rect, const QRectF &viewport) const;
-    QRect applyTransformation(const QRect &rect, const QRect &viewport) const;
-    QPointF applyTransformation(const QPointF &point, const QRectF &viewport) const;
-    QPoint applyTransformation(const QPoint &point, const QRect &viewport) const;
+    QRectF applyTransformation(const QRectF &rect) const;
+    QRect applyTransformation(const QRect &rect) const;
+    QPointF applyTransformation(const QPointF &point) const;
+    QPoint applyTransformation(const QPoint &point) const;
 
     QImage *image() const;
     GLFramebuffer *framebuffer() const;

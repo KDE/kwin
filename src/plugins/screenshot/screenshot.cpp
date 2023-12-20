@@ -12,6 +12,7 @@
 #include "screenshotdbusinterface2.h"
 
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -370,7 +371,10 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
 
     if (effects->isOpenGLCompositing()) {
         const auto screenGeometry = m_paintedScreen ? m_paintedScreen->geometry() : effects->virtualScreenGeometry();
-        const QSize nativeSize = renderTarget.applyTransformation(geometry, screenGeometry).size() * devicePixelRatio;
+        const QSize nativeSize = renderTarget.applyTransformation(
+                                                 snapToPixelGrid(scaledRect(geometry, devicePixelRatio))
+                                                     .translated(-snapToPixelGrid(scaledRect(screenGeometry, devicePixelRatio)).topLeft()))
+                                     .size();
         image = QImage(nativeSize, QImage::Format_ARGB32);
 
         const auto texture = GLTexture::allocate(GL_RGBA8, nativeSize);
