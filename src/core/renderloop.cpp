@@ -9,6 +9,8 @@
 #include "renderloop_p.h"
 #include "scene/surfaceitem.h"
 #include "utils/common.h"
+#include "window.h"
+#include "workspace.h"
 
 namespace KWin
 {
@@ -193,8 +195,15 @@ void RenderLoop::setRefreshRate(int refreshRate)
 
 void RenderLoop::scheduleRepaint(Item *item)
 {
-    if (d->pendingRepaint || (d->fullscreenItem != nullptr && item != nullptr && item != d->fullscreenItem)) {
+    if (d->pendingRepaint) {
         return;
+    }
+    const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
+    if (vrr && workspace()->activeWindow()) {
+        Window *const activeWindow = workspace()->activeWindow();
+        if (activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->refreshRateEstimation() >= 30) {
+            return;
+        }
     }
     if (!d->pendingFrameCount && !d->inhibitCount) {
         d->scheduleRepaint();
@@ -211,11 +220,6 @@ std::chrono::nanoseconds RenderLoop::lastPresentationTimestamp() const
 std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 {
     return d->nextPresentationTimestamp;
-}
-
-void RenderLoop::setFullscreenSurface(Item *surfaceItem)
-{
-    d->fullscreenItem = surfaceItem;
 }
 
 void RenderLoop::setPresentationMode(PresentationMode mode)

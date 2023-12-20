@@ -10,6 +10,8 @@
 #include "core/output.h"
 #include "scene/item.h"
 
+#include <deque>
+
 namespace KWin
 {
 
@@ -56,6 +58,8 @@ public:
 
     virtual void freeze();
 
+    double refreshRateEstimation() const;
+
 Q_SIGNALS:
     void damaged();
 
@@ -75,6 +79,9 @@ protected:
     QMatrix4x4 m_surfaceToBufferMatrix;
     QMatrix4x4 m_bufferToSurfaceMatrix;
     int m_referencePixmapCounter = 0;
+    std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
+    std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
+    double m_refreshRate = 0;
 };
 
 class KWIN_EXPORT SurfaceTexture

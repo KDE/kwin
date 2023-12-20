@@ -16,6 +16,8 @@
 namespace KWin
 {
 
+class SurfaceItem;
+
 class KWIN_EXPORT RenderLoopPrivate
 {
 public:
@@ -43,7 +45,6 @@ public:
     int inhibitCount = 0;
     bool pendingReschedule = false;
     bool pendingRepaint = false;
-    Item *fullscreenItem = nullptr;
 
     PresentationMode presentationMode = PresentationMode::VSync;
 };

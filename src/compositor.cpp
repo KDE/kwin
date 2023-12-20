@@ -25,6 +25,7 @@
 #include "utils/common.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KLocalizedString>
@@ -166,18 +167,20 @@ void Compositor::composite(RenderLoop *renderLoop)
         primaryLayer->resetRepaints();
         prePaintPass(superLayer, &surfaceDamage);
 
-        SurfaceItem *scanoutCandidate = superLayer->delegate()->scanoutCandidate();
-        renderLoop->setFullscreenSurface(scanoutCandidate);
-        frame->setContentType(scanoutCandidate ? scanoutCandidate->contentType() : ContentType::None);
-        const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && scanoutCandidate));
-        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && scanoutCandidate && scanoutCandidate->presentationHint() == PresentationModeHint::Async;
+        Window *const activeWindow = workspace()->activeWindow();
+        SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() ? activeWindow->surfaceItem() : nullptr;
+        frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
+
+        const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && activeFullscreenItem));
+        const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeFullscreenItem->presentationHint() == PresentationModeHint::Async;
         if (vrr) {
             frame->setPresentationMode(tearing ? PresentationMode::AdaptiveAsync : PresentationMode::AdaptiveSync);
         } else {
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
+
         bool directScanout = false;
-        if (scanoutCandidate) {
+        if (const auto scanoutCandidate = superLayer->delegate()->scanoutCandidate()) {
             const auto sublayers = superLayer->sublayers();
             const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
                 return sublayer->isVisible();

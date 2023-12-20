@@ -14,6 +14,7 @@ namespace KWin
 {
 
 class RenderLoopPrivate;
+class SurfaceItem;
 class Item;
 
 /**
@@ -85,12 +86,6 @@ public:
      * from the monotonic clock.
      */
     std::chrono::nanoseconds nextPresentationTimestamp() const;
-
-    /**
-     * Sets the surface that currently gets scanned out,
-     * so that this RenderLoop can adjust its timing behavior to that surface
-     */
-    void setFullscreenSurface(Item *surface);
 
     void setPresentationMode(PresentationMode mode);
 

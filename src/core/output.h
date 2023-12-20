@@ -265,6 +265,7 @@ public:
     /**
      * Returns the RenderLoop for this output. If the platform does not support per screen
      * rendering, all outputs will share the same render loop.
+     * FIXME: remove this and decouple RenderLoop from Output
      */
     virtual RenderLoop *renderLoop() const = 0;
 

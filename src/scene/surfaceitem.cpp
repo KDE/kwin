@@ -81,6 +81,16 @@ static QRegion expandRegion(const QRegion &region, const QMargins &padding)
 
 void SurfaceItem::addDamage(const QRegion &region)
 {
+    if (m_lastDamage) {
+        const auto diff = std::chrono::steady_clock::now() - *m_lastDamage;
+        m_lastDamageTimeDiffs.push_back(diff);
+        if (m_lastDamageTimeDiffs.size() > 100) {
+            m_lastDamageTimeDiffs.pop_front();
+        }
+        const auto average = std::accumulate(m_lastDamageTimeDiffs.begin(), m_lastDamageTimeDiffs.end(), std::chrono::nanoseconds::zero()) / m_lastDamageTimeDiffs.size();
+        m_refreshRate = std::chrono::nanoseconds(1'000'000'000) / average;
+    }
+    m_lastDamage = std::chrono::steady_clock::now();
     m_damage += region;
 
     const QRectF sourceBox = m_bufferTransform.map(m_bufferSourceBox, m_bufferSize);
@@ -229,6 +239,17 @@ ContentType SurfaceItem::contentType() const
 
 void SurfaceItem::freeze()
 {
+}
+
+double SurfaceItem::refreshRateEstimation() const
+{
+    if (m_lastDamage) {
+        const auto diff = std::chrono::steady_clock::now() - *m_lastDamage;
+        const double refreshRate = std::chrono::nanoseconds(1'000'000'000) / diff;
+        return std::min(m_refreshRate, refreshRate);
+    } else {
+        return m_refreshRate;
+    }
 }
 
 SurfaceTexture::~SurfaceTexture()
