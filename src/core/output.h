@@ -50,9 +50,9 @@ public:
         Rotated180 = 2, // rotate 180 degrees counterclockwise
         Rotated270 = 3, // rotate 270 degrees counterclockwise
         Flipped = 4, // mirror horizontally
-        Flipped90 = 5, // rotate 90 degrees counterclockwise, then mirror horizontally
-        Flipped180 = 6, // rotate 180 degrees counterclockwise, then mirror horizontally
-        Flipped270 = 7, // rotate 270 degrees counterclockwise, then mirror horizontally
+        Flipped90 = 5, // mirror horizontally, then rotate 90 degrees counterclockwise
+        Flipped180 = 6, // mirror horizontally, then rotate 180 degrees counterclockwise
+        Flipped270 = 7, // mirror horizontally, then rotate 270 degrees counterclockwise
     };
 
     OutputTransform() = default;
