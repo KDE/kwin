@@ -199,6 +199,68 @@ QRect OutputTransform::map(const QRect &rect, const QSize &bounds) const
     return dest;
 }
 
+QPointF OutputTransform::map(const QPointF &point, const QSizeF &bounds) const
+{
+    switch (m_kind) {
+    case Kind::Normal:
+        return point;
+    case Kind::Rotated90:
+        return QPointF(bounds.height() - point.y(),
+                       point.x());
+    case Kind::Rotated180:
+        return QPointF(bounds.width() - point.x(),
+                       bounds.height() - point.y());
+    case Kind::Rotated270:
+        return QPointF(point.y(),
+                       bounds.width() - point.x());
+    case Kind::Flipped:
+        return QPointF(bounds.width() - point.x(),
+                       point.y());
+    case Kind::Flipped90:
+        return QPointF(point.y(),
+                       point.x());
+    case Kind::Flipped180:
+        return QPointF(point.x(),
+                       bounds.height() - point.y());
+    case Kind::Flipped270:
+        return QPointF(bounds.height() - point.y(),
+                       bounds.width() - point.x());
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+QPoint OutputTransform::map(const QPoint &point, const QSize &bounds) const
+{
+    switch (m_kind) {
+    case Kind::Normal:
+        return point;
+    case Kind::Rotated90:
+        return QPoint(bounds.height() - point.y(),
+                      point.x());
+    case Kind::Rotated180:
+        return QPoint(bounds.width() - point.x(),
+                      bounds.height() - point.y());
+    case Kind::Rotated270:
+        return QPoint(point.y(),
+                      bounds.width() - point.x());
+    case Kind::Flipped:
+        return QPoint(bounds.width() - point.x(),
+                      point.y());
+    case Kind::Flipped90:
+        return QPoint(point.y(),
+                      point.x());
+    case Kind::Flipped180:
+        return QPoint(point.x(),
+                      bounds.height() - point.y());
+    case Kind::Flipped270:
+        return QPoint(bounds.height() - point.y(),
+                      bounds.width() - point.x());
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
 QSizeF OutputTransform::map(const QSizeF &size) const
 {
     switch (m_kind) {
