@@ -5,6 +5,7 @@
 */
 
 #include "scene/surfaceitem.h"
+#include "core/pixelgrid.h"
 #include "scene/scene.h"
 
 namespace KWin
@@ -15,17 +16,6 @@ SurfaceItem::SurfaceItem(Scene *scene, Item *parent)
 {
 }
 
-QMatrix4x4 SurfaceItem::surfaceToBufferMatrix() const
-{
-    return m_surfaceToBufferMatrix;
-}
-
-void SurfaceItem::setSurfaceToBufferMatrix(const QMatrix4x4 &matrix)
-{
-    m_surfaceToBufferMatrix = matrix;
-    m_bufferToSurfaceMatrix = matrix.inverted();
-}
-
 QRectF SurfaceItem::bufferSourceBox() const
 {
     return m_bufferSourceBox;
@@ -33,17 +23,24 @@ QRectF SurfaceItem::bufferSourceBox() const
 
 void SurfaceItem::setBufferSourceBox(const QRectF &box)
 {
-    m_bufferSourceBox = box;
+    if (m_bufferSourceBox != box) {
+        m_bufferSourceBox = box;
+        discardQuads();
+    }
 }
 
 OutputTransform SurfaceItem::bufferTransform() const
 {
-    return m_bufferTransform;
+    return m_surfaceToBufferTransform;
 }
 
 void SurfaceItem::setBufferTransform(OutputTransform transform)
 {
-    m_bufferTransform = transform;
+    if (m_surfaceToBufferTransform != transform) {
+        m_surfaceToBufferTransform = transform;
+        m_bufferToSurfaceTransform = transform.inverted();
+        discardQuads();
+    }
 }
 
 QSize SurfaceItem::bufferSize() const
@@ -53,14 +50,23 @@ QSize SurfaceItem::bufferSize() const
 
 void SurfaceItem::setBufferSize(const QSize &size)
 {
-    m_bufferSize = size;
+    if (m_bufferSize != size) {
+        m_bufferSize = size;
+        discardPixmap();
+        discardQuads();
+    }
 }
 
 QRegion SurfaceItem::mapFromBuffer(const QRegion &region) const
 {
+    const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
+    const qreal xScale = size().width() / sourceBox.width();
+    const qreal yScale = size().height() / sourceBox.height();
+
     QRegion result;
-    for (const QRect &rect : region) {
-        result += m_bufferToSurfaceMatrix.mapRect(QRectF(rect)).toAlignedRect();
+    for (QRectF rect : region) {
+        const QRectF r = m_bufferToSurfaceTransform.map(rect, m_bufferSize).translated(-sourceBox.topLeft());
+        result += QRectF(r.x() * xScale, r.y() * yScale, r.width() * xScale, r.height() * yScale).toAlignedRect();
     }
     return result;
 }
@@ -93,7 +99,7 @@ void SurfaceItem::addDamage(const QRegion &region)
     m_lastDamage = std::chrono::steady_clock::now();
     m_damage += region;
 
-    const QRectF sourceBox = m_bufferTransform.map(m_bufferSourceBox, m_bufferSize);
+    const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
     const qreal xScale = sourceBox.width() / size().width();
     const qreal yScale = sourceBox.height() / size().height();
     const QRegion logicalDamage = mapFromBuffer(region);
@@ -204,27 +210,25 @@ WindowQuadList SurfaceItem::buildQuads() const
     }
 
     const QList<QRectF> region = shape();
-    const auto size = pixmap()->size();
-
     WindowQuadList quads;
     quads.reserve(region.count());
+
+    const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
+    const qreal xScale = sourceBox.width() / size().width();
+    const qreal yScale = sourceBox.height() / size().height();
 
     for (const QRectF rect : region) {
         WindowQuad quad;
 
-        // Use toPoint to round the device position to match what we eventually
-        // do for the geometry, otherwise we end up with mismatched UV
-        // coordinates as the texture size is going to be in (rounded) device
-        // coordinates as well.
-        const QPointF bufferTopLeft = m_surfaceToBufferMatrix.map(rect.topLeft()).toPoint();
-        const QPointF bufferTopRight = m_surfaceToBufferMatrix.map(rect.topRight()).toPoint();
-        const QPointF bufferBottomRight = m_surfaceToBufferMatrix.map(rect.bottomRight()).toPoint();
-        const QPointF bufferBottomLeft = m_surfaceToBufferMatrix.map(rect.bottomLeft()).toPoint();
+        const QPointF bufferTopLeft = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.left() * xScale, rect.top() * yScale), sourceBox.size()));
+        const QPointF bufferTopRight = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.right() * xScale, rect.top() * yScale), sourceBox.size()));
+        const QPointF bufferBottomRight = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.right() * xScale, rect.bottom() * yScale), sourceBox.size()));
+        const QPointF bufferBottomLeft = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.left() * xScale, rect.bottom() * yScale), sourceBox.size()));
 
-        quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / size.width(), bufferTopLeft.y() / size.height()});
-        quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / size.width(), bufferTopRight.y() / size.height()});
-        quad[2] = WindowVertex(rect.bottomRight(), QPointF{bufferBottomRight.x() / size.width(), bufferBottomRight.y() / size.height()});
-        quad[3] = WindowVertex(rect.bottomLeft(), QPointF{bufferBottomLeft.x() / size.width(), bufferBottomLeft.y() / size.height()});
+        quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / m_bufferSize.width(), bufferTopLeft.y() / m_bufferSize.height()});
+        quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / m_bufferSize.width(), bufferTopRight.y() / m_bufferSize.height()});
+        quad[2] = WindowVertex(rect.bottomRight(), QPointF{bufferBottomRight.x() / m_bufferSize.width(), bufferBottomRight.y() / m_bufferSize.height()});
+        quad[3] = WindowVertex(rect.bottomLeft(), QPointF{bufferBottomLeft.x() / m_bufferSize.width(), bufferBottomLeft.y() / m_bufferSize.height()});
 
         quads << quad;
     }

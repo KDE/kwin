@@ -20,9 +20,6 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
     : SurfaceItem(scene, parent)
     , m_surface(surface)
 {
-    connect(surface, &SurfaceInterface::surfaceToBufferMatrixChanged,
-            this, &SurfaceItemWayland::handleSurfaceToBufferMatrixChanged);
-
     connect(surface, &SurfaceInterface::sizeChanged,
             this, &SurfaceItemWayland::handleSurfaceSizeChanged);
     connect(surface, &SurfaceInterface::bufferSizeChanged,
@@ -62,7 +59,6 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
     setBufferTransform(surface->bufferTransform());
     setBufferSourceBox(surface->bufferSourceBox());
     setBufferSize(surface->bufferSize());
-    setSurfaceToBufferMatrix(surface->surfaceToBufferMatrix());
     setColorDescription(surface->colorDescription());
 }
 
@@ -84,22 +80,15 @@ SurfaceInterface *SurfaceItemWayland::surface() const
     return m_surface;
 }
 
-void SurfaceItemWayland::handleSurfaceToBufferMatrixChanged()
-{
-    setSurfaceToBufferMatrix(m_surface->surfaceToBufferMatrix());
-    discardQuads();
-    discardPixmap();
-}
-
 void SurfaceItemWayland::handleSurfaceSizeChanged()
 {
     setSize(m_surface->size());
+    discardQuads();
 }
 
 void SurfaceItemWayland::handleBufferSizeChanged()
 {
     setBufferSize(m_surface->bufferSize());
-    discardPixmap();
 }
 
 void SurfaceItemWayland::handleBufferSourceBoxChanged()

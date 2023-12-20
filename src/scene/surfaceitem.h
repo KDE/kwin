@@ -26,9 +26,6 @@ class KWIN_EXPORT SurfaceItem : public Item
     Q_OBJECT
 
 public:
-    QMatrix4x4 surfaceToBufferMatrix() const;
-    void setSurfaceToBufferMatrix(const QMatrix4x4 &matrix);
-
     QRectF bufferSourceBox() const;
     void setBufferSourceBox(const QRectF &box);
 
@@ -71,13 +68,12 @@ protected:
     WindowQuadList buildQuads() const override;
 
     QRegion m_damage;
-    OutputTransform m_bufferTransform;
+    OutputTransform m_bufferToSurfaceTransform;
+    OutputTransform m_surfaceToBufferTransform;
     QRectF m_bufferSourceBox;
     QSize m_bufferSize;
     std::unique_ptr<SurfacePixmap> m_pixmap;
     std::unique_ptr<SurfacePixmap> m_previousPixmap;
-    QMatrix4x4 m_surfaceToBufferMatrix;
-    QMatrix4x4 m_bufferToSurfaceMatrix;
     int m_referencePixmapCounter = 0;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;

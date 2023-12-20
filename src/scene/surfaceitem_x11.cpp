@@ -140,11 +140,8 @@ void SurfaceItemX11::destroyDamage()
     }
 }
 
-void SurfaceItemX11::handleBufferGeometryChanged(const QRectF &old)
+void SurfaceItemX11::handleBufferGeometryChanged()
 {
-    if (m_window->bufferGeometry().size() != old.size()) {
-        discardPixmap();
-    }
     setSize(m_window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size()));
     setBufferSize(m_window->bufferGeometry().size().toSize());

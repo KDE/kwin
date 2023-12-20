@@ -60,11 +60,6 @@ Q_SIGNALS:
      */
     void subSurfaceUnmapped();
     /**
-     * This signal is emitted when the mapping between the surface-local coordinate space
-     * and the buffer coordinate space for a sub-surface has changed.
-     */
-    void subSurfaceSurfaceToBufferMatrixChanged();
-    /**
      * This signal is emitted when the buffer size of a subsurface has changed.
      */
     void subSurfaceBufferSizeChanged();

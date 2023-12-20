@@ -28,7 +28,7 @@ public:
     QList<QRectF> shape() const override;
 
 private Q_SLOTS:
-    void handleBufferGeometryChanged(const QRectF &old);
+    void handleBufferGeometryChanged();
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;
