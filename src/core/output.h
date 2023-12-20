@@ -87,6 +87,12 @@ public:
     QRect map(const QRect &rect, const QSize &bounds) const;
 
     /**
+     * Applies the output transform to the given @a point.
+     */
+    QPointF map(const QPointF &point, const QSizeF &bounds) const;
+    QPoint map(const QPoint &point, const QSize &bounds) const;
+
+    /**
      * Returns an output transform that is equivalent to applying this transform and @a other
      * transform sequentially.
      */
