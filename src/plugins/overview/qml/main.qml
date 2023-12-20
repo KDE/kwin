@@ -409,6 +409,7 @@ FocusScope {
             property Item currentHeap
             property Item currentBackgroundItem
 
+            // Later we use its type to check whether the user is dragging a desktop or a window
             Item {
                 id: mainBackground
 
@@ -540,7 +541,7 @@ FocusScope {
                     }
                     onDropped: (drop) => {
                         drop.accepted = true;
-                        if (drag.source instanceof Kirigami.ShadowedRectangle) {
+                        if (drag.source instanceof Item) {
                             // dragging a desktop as a whole
                             if (drag.source === mainBackground) {
                                 drop.action = Qt.IgnoreAction;
