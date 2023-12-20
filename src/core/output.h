@@ -78,11 +78,13 @@ public:
      * Applies the output transform to the given @a size.
      */
     QSizeF map(const QSizeF &size) const;
+    QSize map(const QSize &size) const;
 
     /**
      * Applies the output transform to the given @a rect within a buffer with dimensions @a bounds.
      */
     QRectF map(const QRectF &rect, const QSizeF &bounds) const;
+    QRect map(const QRect &rect, const QSize &bounds) const;
 
     /**
      * Returns an output transform that is equivalent to applying this transform and @a other

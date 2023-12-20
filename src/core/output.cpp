@@ -143,7 +143,76 @@ QRectF OutputTransform::map(const QRectF &rect, const QSizeF &bounds) const
     return dest;
 }
 
+QRect OutputTransform::map(const QRect &rect, const QSize &bounds) const
+{
+    QRect dest;
+
+    switch (m_kind) {
+    case Kind::Normal:
+    case Kind::Rotated180:
+    case Kind::Flipped:
+    case Kind::Flipped180:
+        dest.setWidth(rect.width());
+        dest.setHeight(rect.height());
+        break;
+    default:
+        dest.setWidth(rect.height());
+        dest.setHeight(rect.width());
+        break;
+    }
+
+    switch (m_kind) {
+    case Kind::Normal:
+        dest.moveLeft(rect.x());
+        dest.moveTop(rect.y());
+        break;
+    case Kind::Rotated90:
+        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
+        dest.moveTop(rect.x());
+        break;
+    case Kind::Rotated180:
+        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
+        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
+        break;
+    case Kind::Rotated270:
+        dest.moveLeft(rect.y());
+        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
+        break;
+    case Kind::Flipped:
+        dest.moveLeft(bounds.width() - (rect.x() + rect.width()));
+        dest.moveTop(rect.y());
+        break;
+    case Kind::Flipped90:
+        dest.moveLeft(rect.y());
+        dest.moveTop(rect.x());
+        break;
+    case Kind::Flipped180:
+        dest.moveLeft(rect.x());
+        dest.moveTop(bounds.height() - (rect.y() + rect.height()));
+        break;
+    case Kind::Flipped270:
+        dest.moveLeft(bounds.height() - (rect.y() + rect.height()));
+        dest.moveTop(bounds.width() - (rect.x() + rect.width()));
+        break;
+    }
+
+    return dest;
+}
+
 QSizeF OutputTransform::map(const QSizeF &size) const
+{
+    switch (m_kind) {
+    case Kind::Normal:
+    case Kind::Rotated180:
+    case Kind::Flipped:
+    case Kind::Flipped180:
+        return size;
+    default:
+        return size.transposed();
+    }
+}
+
+QSize OutputTransform::map(const QSize &size) const
 {
     switch (m_kind) {
     case Kind::Normal:
