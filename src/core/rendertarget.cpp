@@ -34,38 +34,38 @@ QSize RenderTarget::size() const
     }
 }
 
-QRectF RenderTarget::applyTransformation(const QRectF &rect, const QRectF &viewport) const
+QRectF RenderTarget::applyTransformation(const QRectF &rect) const
 {
-    const auto center = viewport.center();
+    const auto bounds = size();
     QMatrix4x4 relativeTransformation;
-    relativeTransformation.translate(center.x(), center.y());
+    relativeTransformation.translate(bounds.width() / 2.0, bounds.height() / 2.0);
     relativeTransformation *= m_transformation;
-    relativeTransformation.translate(-center.x(), -center.y());
+    relativeTransformation.translate(-bounds.width() / 2.0, -bounds.height() / 2.0);
     return relativeTransformation.mapRect(rect);
 }
 
-QRect RenderTarget::applyTransformation(const QRect &rect, const QRect &viewport) const
+QRect RenderTarget::applyTransformation(const QRect &rect) const
 {
-    return applyTransformation(QRectF(rect), QRectF(viewport)).toRect();
+    return applyTransformation(QRectF(rect)).toRect();
 }
 
-QPointF RenderTarget::applyTransformation(const QPointF &point, const QRectF &viewport) const
+QPointF RenderTarget::applyTransformation(const QPointF &point) const
 {
-    const auto center = viewport.center();
+    const auto bounds = size();
     QMatrix4x4 relativeTransformation;
-    relativeTransformation.translate(center.x(), center.y());
+    relativeTransformation.translate(bounds.width() / 2.0, bounds.height() / 2.0);
     relativeTransformation *= m_transformation;
-    relativeTransformation.translate(-center.x(), -center.y());
+    relativeTransformation.translate(-bounds.width() / 2.0, -bounds.height() / 2.0);
     return relativeTransformation.map(point);
 }
 
-QPoint RenderTarget::applyTransformation(const QPoint &point, const QRect &viewport) const
+QPoint RenderTarget::applyTransformation(const QPoint &point) const
 {
-    const auto center = viewport.center();
+    const auto bounds = size();
     QMatrix4x4 relativeTransformation;
-    relativeTransformation.translate(center.x(), center.y());
+    relativeTransformation.translate(bounds.width() / 2.0, bounds.height() / 2.0);
     relativeTransformation *= m_transformation;
-    relativeTransformation.translate(-center.x(), -center.y());
+    relativeTransformation.translate(-bounds.width() / 2.0, -bounds.height() / 2.0);
     return relativeTransformation.map(point);
 }
 
