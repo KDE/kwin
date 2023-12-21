@@ -41,6 +41,7 @@ RuntimeDependencies:
   'require':
     'frameworks/kirigami': '@latest-kf6'
     'plasma/libplasma': '@same'
+    'plasma/plasma-workspace': '@same' # kscreenlocker needs it
 
 Options:
   ctest-arguments: '--repeat until-pass:5'
