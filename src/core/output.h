@@ -53,6 +53,10 @@ public:
         FlipX90 = 5, // mirror horizontally, then rotate 90 degrees counterclockwise
         FlipX180 = 6, // mirror horizontally, then rotate 180 degrees counterclockwise
         FlipX270 = 7, // mirror horizontally, then rotate 270 degrees counterclockwise
+        FlipY = FlipX180, // mirror vertically
+        FlipY90 = FlipX270, // mirror vertically, then rotate 90 degrees counterclockwise
+        FlipY180 = FlipX, // mirror vertically, then rotate 180 degrees counterclockwise
+        FlipY270 = FlipX90, // mirror vertically, then rotate 270 degrees counterclockwise
     };
 
     OutputTransform() = default;
