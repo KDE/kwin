@@ -18,7 +18,7 @@
 
 namespace KWin
 {
-static const int s_version = 3;
+static const int s_version = 5;
 
 class LayerShellV1InterfacePrivate : public QtWaylandServer::zwlr_layer_shell_v1
 {
@@ -45,6 +45,7 @@ struct LayerSurfaceV1Commit
     std::optional<QMargins> margins;
     std::optional<QSize> desiredSize;
     std::optional<int> exclusiveZone;
+    std::optional<Qt::Edge> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
 };
@@ -57,6 +58,7 @@ struct LayerSurfaceV1State
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
+    Qt::Edge exclusiveEdge = Qt::Edge();
     bool acceptsFocus = false;
     bool configured = false;
     bool closed = false;
@@ -82,6 +84,7 @@ protected:
     void zwlr_layer_surface_v1_destroy_resource(Resource *resource) override;
     void zwlr_layer_surface_v1_set_size(Resource *resource, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor) override;
+    void zwlr_layer_surface_v1_set_exclusive_edge(Resource *resource, uint32_t edge) override;
     void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone) override;
     void zwlr_layer_surface_v1_set_margin(Resource *resource, int32_t top, int32_t right, int32_t bottom, int32_t left) override;
     void zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity) override;
@@ -203,6 +206,23 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor(Resource *
     }
 }
 
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_edge(Resource *resource, uint32_t edge)
+{
+    if (!edge) {
+        pending.exclusiveEdge = Qt::Edge();
+    } else if (edge == anchor_top) {
+        pending.exclusiveEdge = Qt::TopEdge;
+    } else if (edge == anchor_right) {
+        pending.exclusiveEdge = Qt::RightEdge;
+    } else if (edge == anchor_bottom) {
+        pending.exclusiveEdge = Qt::BottomEdge;
+    } else if (edge == anchor_left) {
+        pending.exclusiveEdge = Qt::LeftEdge;
+    } else {
+        wl_resource_post_error(resource->handle, error_invalid_exclusive_edge, "Invalid exclusive edge: %d", edge);
+    }
+}
+
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t zone)
 {
     pending.exclusiveZone = zone;
@@ -302,6 +322,15 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
         }
     }
 
+    if (commit->exclusiveEdge.has_value() || commit->anchor.has_value()) {
+        const quint32 exclusiveEdge = commit->exclusiveEdge.value_or(state.exclusiveEdge);
+        const quint32 anchor = commit->anchor.value_or(state.anchor);
+        if (exclusiveEdge && !(exclusiveEdge & anchor)) {
+            wl_resource_post_error(resource()->handle, error_invalid_exclusive_edge, "Exclusive edge is not of the anchors");
+            return;
+        }
+    }
+
     // detect reset
     if (!surface->isMapped() && state.firstBufferAttached) {
         state = LayerSurfaceV1State();
@@ -333,6 +362,10 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveZone.has_value()) {
         state.exclusiveZone = commit->exclusiveZone.value();
     }
+    if (commit->exclusiveEdge.has_value()) {
+        state.exclusiveEdge = commit->exclusiveEdge.value();
+    }
+
     if (commit->acceptsFocus.has_value()) {
         state.acceptsFocus = commit->acceptsFocus.value();
     }
@@ -449,6 +482,11 @@ Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const
     if (exclusiveZone() <= 0) {
         return Qt::Edge();
     }
+
+    if (d->state.exclusiveEdge) {
+        return d->state.exclusiveEdge;
+    }
+
     if (anchor() == (Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge) || anchor() == Qt::TopEdge) {
         return Qt::TopEdge;
     }
