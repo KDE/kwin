@@ -146,13 +146,17 @@ GLShader *IccShader::shader() const
     return m_shader.get();
 }
 
-void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness)
+void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness, const QVector3D &channelFactors)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
     setProfile(profile);
 
+    QMatrix3x3 nightColor;
+    nightColor(0, 0) = channelFactors.x();
+    nightColor(1, 1) = channelFactors.y();
+    nightColor(2, 2) = channelFactors.z();
+    m_shader->setUniform(m_locations.matrix1, m_matrix1 * nightColor);
     m_shader->setUniform(m_locations.sdrBrightness, sdrBrightness);
-    m_shader->setUniform(m_locations.matrix1, m_matrix1);
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {

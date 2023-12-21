@@ -25,7 +25,7 @@ public:
     ~IccShader();
 
     GLShader *shader() const;
-    void setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness);
+    void setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness, const QVector3D &channelFactors);
 
 private:
     bool setProfile(const std::shared_ptr<IccProfile> &profile);

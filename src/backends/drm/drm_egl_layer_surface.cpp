@@ -153,7 +153,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness());
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness(), m_surface->channelFactors);
         } else {
             QMatrix3x3 ctm;
             ctm(0, 0) = m_surface->channelFactors.x();
