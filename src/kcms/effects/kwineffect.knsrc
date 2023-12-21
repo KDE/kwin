@@ -57,7 +57,7 @@ Name[zh_CN]=桌面特效
 Name[zh_TW]=桌面效果
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
-Categories=KWin Effects
+Categories=KWin Effects Plasma 6
 StandardResource=tmp
 Uncompress=kpackage
 KPackageStructure=KWin/Effect

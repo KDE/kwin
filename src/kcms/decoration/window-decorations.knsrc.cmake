@@ -62,7 +62,7 @@ Name[zh_CN]=窗口装饰元素
 Name[zh_TW]=視窗裝飾
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
-Categories=Window Decoration Aurorae
+Categories=Plasma 6 Window Decorations
 TargetDir=aurorae/themes
 Uncompress=archive
 AdoptionCommand=@KDE_INSTALL_FULL_LIBEXECDIR@/kwin-applywindowdecoration %f

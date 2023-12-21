@@ -51,7 +51,7 @@ Name[zh_CN]=窗口管理器脚本
 Name[zh_TW]=視窗管理員指令稿
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
-Categories=KWin Scripts
+Categories=Kwin Scripts Plasma 6
 StandardResource=tmp
 Uncompress=kpackage
 KPackageStructure=KWin/Script
