@@ -146,32 +146,32 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
     switch (surfaceToBufferTransform.kind()) {
     case OutputTransform::Normal:
         break;
-    case OutputTransform::Rotated90:
+    case OutputTransform::Rotate90:
         painter->translate(0, transformedSize.width());
         painter->rotate(-90);
         break;
-    case OutputTransform::Rotated180:
+    case OutputTransform::Rotate180:
         painter->translate(transformedSize.width(), transformedSize.height());
         painter->rotate(-180);
         break;
-    case OutputTransform::Rotated270:
+    case OutputTransform::Rotate270:
         painter->translate(transformedSize.height(), 0);
         painter->rotate(-270);
         break;
-    case OutputTransform::Flipped:
+    case OutputTransform::FlipX:
         painter->translate(transformedSize.width(), 0);
         painter->scale(-1, 1);
         break;
-    case OutputTransform::Flipped90:
+    case OutputTransform::FlipX90:
         painter->rotate(-90);
         painter->scale(-1, 1);
         break;
-    case OutputTransform::Flipped180:
+    case OutputTransform::FlipX180:
         painter->translate(0, transformedSize.height());
         painter->rotate(-180);
         painter->scale(-1, 1);
         break;
-    case OutputTransform::Flipped270:
+    case OutputTransform::FlipX270:
         painter->translate(transformedSize.height(), transformedSize.width());
         painter->rotate(-270);
         painter->scale(-1, 1);

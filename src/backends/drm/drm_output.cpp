@@ -215,19 +215,19 @@ DrmPlane::Transformations outputToPlaneTransform(OutputTransform transform)
     switch (transform.kind()) {
     case OutputTransform::Normal:
         return PlaneTrans::Rotate0;
-    case OutputTransform::Flipped:
+    case OutputTransform::FlipX:
         return PlaneTrans::ReflectX | PlaneTrans::Rotate0;
-    case OutputTransform::Rotated90:
+    case OutputTransform::Rotate90:
         return PlaneTrans::Rotate90;
-    case OutputTransform::Flipped90:
+    case OutputTransform::FlipX90:
         return PlaneTrans::ReflectX | PlaneTrans::Rotate90;
-    case OutputTransform::Rotated180:
+    case OutputTransform::Rotate180:
         return PlaneTrans::Rotate180;
-    case OutputTransform::Flipped180:
+    case OutputTransform::FlipX180:
         return PlaneTrans::ReflectX | PlaneTrans::Rotate180;
-    case OutputTransform::Rotated270:
+    case OutputTransform::Rotate270:
         return PlaneTrans::Rotate270;
-    case OutputTransform::Flipped270:
+    case OutputTransform::FlipX270:
         return PlaneTrans::ReflectX | PlaneTrans::Rotate270;
     default:
         Q_UNREACHABLE();

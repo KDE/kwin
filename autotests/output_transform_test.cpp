@@ -49,13 +49,13 @@ void TestOutputTransform::mapSizeF_data()
     QTest::addColumn<QSizeF>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QSizeF(10, 20) << QSizeF(10, 20);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QSizeF(10, 20) << QSizeF(20, 10);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QSizeF(10, 20) << QSizeF(10, 20);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QSizeF(10, 20) << QSizeF(20, 10);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QSizeF(10, 20) << QSizeF(10, 20);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QSizeF(10, 20) << QSizeF(20, 10);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QSizeF(10, 20) << QSizeF(10, 20);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QSizeF(10, 20) << QSizeF(20, 10);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QSizeF(10, 20) << QSizeF(20, 10);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QSizeF(10, 20) << QSizeF(10, 20);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QSizeF(10, 20) << QSizeF(20, 10);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QSizeF(10, 20) << QSizeF(10, 20);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QSizeF(10, 20) << QSizeF(20, 10);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QSizeF(10, 20) << QSizeF(10, 20);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QSizeF(10, 20) << QSizeF(20, 10);
 }
 
 void TestOutputTransform::mapSizeF()
@@ -74,13 +74,13 @@ void TestOutputTransform::mapSize_data()
     QTest::addColumn<QSize>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QSize(10, 20) << QSize(10, 20);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QSize(10, 20) << QSize(20, 10);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QSize(10, 20) << QSize(10, 20);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QSize(10, 20) << QSize(20, 10);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QSize(10, 20) << QSize(10, 20);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QSize(10, 20) << QSize(20, 10);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QSize(10, 20) << QSize(10, 20);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QSize(10, 20) << QSize(20, 10);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QSize(10, 20) << QSize(10, 20);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QSize(10, 20) << QSize(20, 10);
 }
 
 void TestOutputTransform::mapSize()
@@ -99,13 +99,13 @@ void TestOutputTransform::mapRectF_data()
     QTest::addColumn<QRectF>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QRectF(10, 20, 30, 40) << QRectF(10, 20, 30, 40);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QRectF(10, 20, 30, 40) << QRectF(20, 60, 40, 30);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QRectF(10, 20, 30, 40) << QRectF(60, 140, 30, 40);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QRectF(10, 20, 30, 40) << QRectF(140, 10, 40, 30);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QRectF(10, 20, 30, 40) << QRectF(60, 20, 30, 40);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QRectF(10, 20, 30, 40) << QRectF(20, 10, 40, 30);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QRectF(10, 20, 30, 40) << QRectF(10, 140, 30, 40);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QRectF(10, 20, 30, 40) << QRectF(140, 60, 40, 30);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QRectF(10, 20, 30, 40) << QRectF(20, 60, 40, 30);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QRectF(10, 20, 30, 40) << QRectF(60, 140, 30, 40);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QRectF(10, 20, 30, 40) << QRectF(140, 10, 40, 30);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QRectF(10, 20, 30, 40) << QRectF(60, 20, 30, 40);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QRectF(10, 20, 30, 40) << QRectF(20, 10, 40, 30);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QRectF(10, 20, 30, 40) << QRectF(10, 140, 30, 40);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QRectF(10, 20, 30, 40) << QRectF(140, 60, 40, 30);
 }
 
 void TestOutputTransform::mapRectF()
@@ -124,13 +124,13 @@ void TestOutputTransform::mapRect_data()
     QTest::addColumn<QRect>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QRect(10, 20, 30, 40) << QRect(10, 20, 30, 40);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QRect(10, 20, 30, 40) << QRect(20, 60, 40, 30);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QRect(10, 20, 30, 40) << QRect(60, 140, 30, 40);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QRect(10, 20, 30, 40) << QRect(140, 10, 40, 30);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QRect(10, 20, 30, 40) << QRect(60, 20, 30, 40);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QRect(10, 20, 30, 40) << QRect(20, 10, 40, 30);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QRect(10, 20, 30, 40) << QRect(10, 140, 30, 40);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QRect(10, 20, 30, 40) << QRect(140, 60, 40, 30);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QRect(10, 20, 30, 40) << QRect(20, 60, 40, 30);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QRect(10, 20, 30, 40) << QRect(60, 140, 30, 40);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QRect(10, 20, 30, 40) << QRect(140, 10, 40, 30);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QRect(10, 20, 30, 40) << QRect(60, 20, 30, 40);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QRect(10, 20, 30, 40) << QRect(20, 10, 40, 30);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QRect(10, 20, 30, 40) << QRect(10, 140, 30, 40);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QRect(10, 20, 30, 40) << QRect(140, 60, 40, 30);
 }
 
 void TestOutputTransform::mapRect()
@@ -149,13 +149,13 @@ void TestOutputTransform::mapPointF_data()
     QTest::addColumn<QPointF>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QPointF(10, 20) << QPointF(10, 20);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QPointF(10, 20) << QPointF(20, 90);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QPointF(10, 20) << QPointF(90, 180);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QPointF(10, 20) << QPointF(180, 10);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QPointF(10, 20) << QPointF(90, 20);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QPointF(10, 20) << QPointF(20, 10);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QPointF(10, 20) << QPointF(10, 180);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QPointF(10, 20) << QPointF(180, 90);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QPointF(10, 20) << QPointF(20, 90);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QPointF(10, 20) << QPointF(90, 180);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QPointF(10, 20) << QPointF(180, 10);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QPointF(10, 20) << QPointF(90, 20);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QPointF(10, 20) << QPointF(20, 10);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QPointF(10, 20) << QPointF(10, 180);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QPointF(10, 20) << QPointF(180, 90);
 }
 
 void TestOutputTransform::mapPointF()
@@ -177,13 +177,13 @@ void TestOutputTransform::mapPoint_data()
     QTest::addColumn<QPoint>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QPoint(10, 20) << QPoint(10, 20);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QPoint(10, 20) << QPoint(20, 90);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QPoint(10, 20) << QPoint(90, 180);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QPoint(10, 20) << QPoint(180, 10);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QPoint(10, 20) << QPoint(90, 20);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QPoint(10, 20) << QPoint(20, 10);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QPoint(10, 20) << QPoint(10, 180);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QPoint(10, 20) << QPoint(180, 90);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QPoint(10, 20) << QPoint(20, 90);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QPoint(10, 20) << QPoint(90, 180);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QPoint(10, 20) << QPoint(180, 10);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QPoint(10, 20) << QPoint(90, 20);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QPoint(10, 20) << QPoint(20, 10);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QPoint(10, 20) << QPoint(10, 180);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QPoint(10, 20) << QPoint(180, 90);
 }
 
 void TestOutputTransform::mapPoint()
@@ -204,13 +204,13 @@ void TestOutputTransform::inverted_data()
     QTest::addColumn<OutputTransform::Kind>("inverted");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << OutputTransform::Normal;
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << OutputTransform::Rotated270;
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << OutputTransform::Rotated180;
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << OutputTransform::Rotated90;
-    QTest::addRow("flip-0") << OutputTransform::Flipped << OutputTransform::Flipped;
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << OutputTransform::Flipped90;
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << OutputTransform::Flipped180;
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << OutputTransform::Flipped270;
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << OutputTransform::Rotate270;
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << OutputTransform::Rotate180;
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << OutputTransform::Rotate90;
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << OutputTransform::FlipX;
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << OutputTransform::FlipX90;
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << OutputTransform::FlipX180;
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << OutputTransform::FlipX270;
 }
 
 void TestOutputTransform::inverted()
@@ -228,76 +228,76 @@ void TestOutputTransform::combine_data()
     QTest::addColumn<OutputTransform::Kind>("result");
 
     QTest::addRow("rotate-0 | rotate-0") << OutputTransform::Normal << OutputTransform::Normal << OutputTransform::Normal;
-    QTest::addRow("rotate-90 | rotate-0") << OutputTransform::Rotated90 << OutputTransform::Normal << OutputTransform::Rotated90;
-    QTest::addRow("rotate-180 | rotate-0") << OutputTransform::Rotated180 << OutputTransform::Normal << OutputTransform::Rotated180;
-    QTest::addRow("rotate-270 | rotate-0") << OutputTransform::Rotated270 << OutputTransform::Normal << OutputTransform::Rotated270;
-    QTest::addRow("flip-0 | rotate-0") << OutputTransform::Flipped << OutputTransform::Normal << OutputTransform::Flipped;
-    QTest::addRow("flip-90 | rotate-0") << OutputTransform::Flipped90 << OutputTransform::Normal << OutputTransform::Flipped90;
-    QTest::addRow("flip-180 | rotate-0") << OutputTransform::Flipped180 << OutputTransform::Normal << OutputTransform::Flipped180;
-    QTest::addRow("flip-270 | rotate-0") << OutputTransform::Flipped270 << OutputTransform::Normal << OutputTransform::Flipped270;
+    QTest::addRow("rotate-90 | rotate-0") << OutputTransform::Rotate90 << OutputTransform::Normal << OutputTransform::Rotate90;
+    QTest::addRow("rotate-180 | rotate-0") << OutputTransform::Rotate180 << OutputTransform::Normal << OutputTransform::Rotate180;
+    QTest::addRow("rotate-270 | rotate-0") << OutputTransform::Rotate270 << OutputTransform::Normal << OutputTransform::Rotate270;
+    QTest::addRow("flip-x-0 | rotate-0") << OutputTransform::FlipX << OutputTransform::Normal << OutputTransform::FlipX;
+    QTest::addRow("flip-x-90 | rotate-0") << OutputTransform::FlipX90 << OutputTransform::Normal << OutputTransform::FlipX90;
+    QTest::addRow("flip-x-180 | rotate-0") << OutputTransform::FlipX180 << OutputTransform::Normal << OutputTransform::FlipX180;
+    QTest::addRow("flip-x-270 | rotate-0") << OutputTransform::FlipX270 << OutputTransform::Normal << OutputTransform::FlipX270;
 
-    QTest::addRow("rotate-0 | rotate-90") << OutputTransform::Normal << OutputTransform::Rotated90 << OutputTransform::Rotated90;
-    QTest::addRow("rotate-90 | rotate-90") << OutputTransform::Rotated90 << OutputTransform::Rotated90 << OutputTransform::Rotated180;
-    QTest::addRow("rotate-180 | rotate-90") << OutputTransform::Rotated180 << OutputTransform::Rotated90 << OutputTransform::Rotated270;
-    QTest::addRow("rotate-270 | rotate-90") << OutputTransform::Rotated270 << OutputTransform::Rotated90 << OutputTransform::Normal;
-    QTest::addRow("flip-0 | rotate-90") << OutputTransform::Flipped << OutputTransform::Rotated90 << OutputTransform::Flipped90;
-    QTest::addRow("flip-90 | rotate-90") << OutputTransform::Flipped90 << OutputTransform::Rotated90 << OutputTransform::Flipped180;
-    QTest::addRow("flip-180 | rotate-90") << OutputTransform::Flipped180 << OutputTransform::Rotated90 << OutputTransform::Flipped270;
-    QTest::addRow("flip-270 | rotate-90") << OutputTransform::Flipped270 << OutputTransform::Rotated90 << OutputTransform::Flipped;
+    QTest::addRow("rotate-0 | rotate-90") << OutputTransform::Normal << OutputTransform::Rotate90 << OutputTransform::Rotate90;
+    QTest::addRow("rotate-90 | rotate-90") << OutputTransform::Rotate90 << OutputTransform::Rotate90 << OutputTransform::Rotate180;
+    QTest::addRow("rotate-180 | rotate-90") << OutputTransform::Rotate180 << OutputTransform::Rotate90 << OutputTransform::Rotate270;
+    QTest::addRow("rotate-270 | rotate-90") << OutputTransform::Rotate270 << OutputTransform::Rotate90 << OutputTransform::Normal;
+    QTest::addRow("flip-x-0 | rotate-90") << OutputTransform::FlipX << OutputTransform::Rotate90 << OutputTransform::FlipX90;
+    QTest::addRow("flip-x-90 | rotate-90") << OutputTransform::FlipX90 << OutputTransform::Rotate90 << OutputTransform::FlipX180;
+    QTest::addRow("flip-x-180 | rotate-90") << OutputTransform::FlipX180 << OutputTransform::Rotate90 << OutputTransform::FlipX270;
+    QTest::addRow("flip-x-270 | rotate-90") << OutputTransform::FlipX270 << OutputTransform::Rotate90 << OutputTransform::FlipX;
 
-    QTest::addRow("rotate-0 | rotate-180") << OutputTransform::Normal << OutputTransform::Rotated180 << OutputTransform::Rotated180;
-    QTest::addRow("rotate-90 | rotate-180") << OutputTransform::Rotated90 << OutputTransform::Rotated180 << OutputTransform::Rotated270;
-    QTest::addRow("rotate-180 | rotate-180") << OutputTransform::Rotated180 << OutputTransform::Rotated180 << OutputTransform::Normal;
-    QTest::addRow("rotate-270 | rotate-180") << OutputTransform::Rotated270 << OutputTransform::Rotated180 << OutputTransform::Rotated90;
-    QTest::addRow("flip-0 | rotate-180") << OutputTransform::Flipped << OutputTransform::Rotated180 << OutputTransform::Flipped180;
-    QTest::addRow("flip-90 | rotate-180") << OutputTransform::Flipped90 << OutputTransform::Rotated180 << OutputTransform::Flipped270;
-    QTest::addRow("flip-180 | rotate-180") << OutputTransform::Flipped180 << OutputTransform::Rotated180 << OutputTransform::Flipped;
-    QTest::addRow("flip-270 | rotate-180") << OutputTransform::Flipped270 << OutputTransform::Rotated180 << OutputTransform::Flipped90;
+    QTest::addRow("rotate-0 | rotate-180") << OutputTransform::Normal << OutputTransform::Rotate180 << OutputTransform::Rotate180;
+    QTest::addRow("rotate-90 | rotate-180") << OutputTransform::Rotate90 << OutputTransform::Rotate180 << OutputTransform::Rotate270;
+    QTest::addRow("rotate-180 | rotate-180") << OutputTransform::Rotate180 << OutputTransform::Rotate180 << OutputTransform::Normal;
+    QTest::addRow("rotate-270 | rotate-180") << OutputTransform::Rotate270 << OutputTransform::Rotate180 << OutputTransform::Rotate90;
+    QTest::addRow("flip-x-0 | rotate-180") << OutputTransform::FlipX << OutputTransform::Rotate180 << OutputTransform::FlipX180;
+    QTest::addRow("flip-x-90 | rotate-180") << OutputTransform::FlipX90 << OutputTransform::Rotate180 << OutputTransform::FlipX270;
+    QTest::addRow("flip-x-180 | rotate-180") << OutputTransform::FlipX180 << OutputTransform::Rotate180 << OutputTransform::FlipX;
+    QTest::addRow("flip-x-270 | rotate-180") << OutputTransform::FlipX270 << OutputTransform::Rotate180 << OutputTransform::FlipX90;
 
-    QTest::addRow("rotate-0 | rotate-270") << OutputTransform::Normal << OutputTransform::Rotated270 << OutputTransform::Rotated270;
-    QTest::addRow("rotate-90 | rotate-270") << OutputTransform::Rotated90 << OutputTransform::Rotated270 << OutputTransform::Normal;
-    QTest::addRow("rotate-180 | rotate-270") << OutputTransform::Rotated180 << OutputTransform::Rotated270 << OutputTransform::Rotated90;
-    QTest::addRow("rotate-270 | rotate-270") << OutputTransform::Rotated270 << OutputTransform::Rotated270 << OutputTransform::Rotated180;
-    QTest::addRow("flip-0 | rotate-270") << OutputTransform::Flipped << OutputTransform::Rotated270 << OutputTransform::Flipped270;
-    QTest::addRow("flip-90 | rotate-270") << OutputTransform::Flipped90 << OutputTransform::Rotated270 << OutputTransform::Flipped;
-    QTest::addRow("flip-180 | rotate-270") << OutputTransform::Flipped180 << OutputTransform::Rotated270 << OutputTransform::Flipped90;
-    QTest::addRow("flip-270 | rotate-270") << OutputTransform::Flipped270 << OutputTransform::Rotated270 << OutputTransform::Flipped180;
+    QTest::addRow("rotate-0 | rotate-270") << OutputTransform::Normal << OutputTransform::Rotate270 << OutputTransform::Rotate270;
+    QTest::addRow("rotate-90 | rotate-270") << OutputTransform::Rotate90 << OutputTransform::Rotate270 << OutputTransform::Normal;
+    QTest::addRow("rotate-180 | rotate-270") << OutputTransform::Rotate180 << OutputTransform::Rotate270 << OutputTransform::Rotate90;
+    QTest::addRow("rotate-270 | rotate-270") << OutputTransform::Rotate270 << OutputTransform::Rotate270 << OutputTransform::Rotate180;
+    QTest::addRow("flip-x-0 | rotate-270") << OutputTransform::FlipX << OutputTransform::Rotate270 << OutputTransform::FlipX270;
+    QTest::addRow("flip-x-90 | rotate-270") << OutputTransform::FlipX90 << OutputTransform::Rotate270 << OutputTransform::FlipX;
+    QTest::addRow("flip-x-180 | rotate-270") << OutputTransform::FlipX180 << OutputTransform::Rotate270 << OutputTransform::FlipX90;
+    QTest::addRow("flip-x-270 | rotate-270") << OutputTransform::FlipX270 << OutputTransform::Rotate270 << OutputTransform::FlipX180;
 
-    QTest::addRow("rotate-0 | flip-0") << OutputTransform::Normal << OutputTransform::Flipped << OutputTransform::Flipped;
-    QTest::addRow("rotate-90 | flip-0") << OutputTransform::Rotated90 << OutputTransform::Flipped << OutputTransform::Flipped270;
-    QTest::addRow("rotate-180 | flip-0") << OutputTransform::Rotated180 << OutputTransform::Flipped << OutputTransform::Flipped180;
-    QTest::addRow("rotate-270 | flip-0") << OutputTransform::Rotated270 << OutputTransform::Flipped << OutputTransform::Flipped90;
-    QTest::addRow("flip-0 | flip-0") << OutputTransform::Flipped << OutputTransform::Flipped << OutputTransform::Normal;
-    QTest::addRow("flip-90 | flip-0") << OutputTransform::Flipped90 << OutputTransform::Flipped << OutputTransform::Rotated270;
-    QTest::addRow("flip-180 | flip-0") << OutputTransform::Flipped180 << OutputTransform::Flipped << OutputTransform::Rotated180;
-    QTest::addRow("flip-270 | flip-0") << OutputTransform::Flipped270 << OutputTransform::Flipped << OutputTransform::Rotated90;
+    QTest::addRow("rotate-0 | flip-x-0") << OutputTransform::Normal << OutputTransform::FlipX << OutputTransform::FlipX;
+    QTest::addRow("rotate-90 | flip-x-0") << OutputTransform::Rotate90 << OutputTransform::FlipX << OutputTransform::FlipX270;
+    QTest::addRow("rotate-180 | flip-x-0") << OutputTransform::Rotate180 << OutputTransform::FlipX << OutputTransform::FlipX180;
+    QTest::addRow("rotate-270 | flip-x-0") << OutputTransform::Rotate270 << OutputTransform::FlipX << OutputTransform::FlipX90;
+    QTest::addRow("flip-x-0 | flip-x-0") << OutputTransform::FlipX << OutputTransform::FlipX << OutputTransform::Normal;
+    QTest::addRow("flip-x-90 | flip-x-0") << OutputTransform::FlipX90 << OutputTransform::FlipX << OutputTransform::Rotate270;
+    QTest::addRow("flip-x-180 | flip-x-0") << OutputTransform::FlipX180 << OutputTransform::FlipX << OutputTransform::Rotate180;
+    QTest::addRow("flip-x-270 | flip-x-0") << OutputTransform::FlipX270 << OutputTransform::FlipX << OutputTransform::Rotate90;
 
-    QTest::addRow("rotate-0 | flip-90") << OutputTransform::Normal << OutputTransform::Flipped90 << OutputTransform::Flipped90;
-    QTest::addRow("rotate-90 | flip-90") << OutputTransform::Rotated90 << OutputTransform::Flipped90 << OutputTransform::Flipped;
-    QTest::addRow("rotate-180 | flip-90") << OutputTransform::Rotated180 << OutputTransform::Flipped90 << OutputTransform::Flipped270;
-    QTest::addRow("rotate-270 | flip-90") << OutputTransform::Rotated270 << OutputTransform::Flipped90 << OutputTransform::Flipped180;
-    QTest::addRow("flip-0 | flip-90") << OutputTransform::Flipped << OutputTransform::Flipped90 << OutputTransform::Rotated90;
-    QTest::addRow("flip-90 | flip-90") << OutputTransform::Flipped90 << OutputTransform::Flipped90 << OutputTransform::Normal;
-    QTest::addRow("flip-180 | flip-90") << OutputTransform::Flipped180 << OutputTransform::Flipped90 << OutputTransform::Rotated270;
-    QTest::addRow("flip-270 | flip-90") << OutputTransform::Flipped270 << OutputTransform::Flipped90 << OutputTransform::Rotated180;
+    QTest::addRow("rotate-0 | flip-x-90") << OutputTransform::Normal << OutputTransform::FlipX90 << OutputTransform::FlipX90;
+    QTest::addRow("rotate-90 | flip-x-90") << OutputTransform::Rotate90 << OutputTransform::FlipX90 << OutputTransform::FlipX;
+    QTest::addRow("rotate-180 | flip-x-90") << OutputTransform::Rotate180 << OutputTransform::FlipX90 << OutputTransform::FlipX270;
+    QTest::addRow("rotate-270 | flip-x-90") << OutputTransform::Rotate270 << OutputTransform::FlipX90 << OutputTransform::FlipX180;
+    QTest::addRow("flip-x-0 | flip-x-90") << OutputTransform::FlipX << OutputTransform::FlipX90 << OutputTransform::Rotate90;
+    QTest::addRow("flip-x-90 | flip-x-90") << OutputTransform::FlipX90 << OutputTransform::FlipX90 << OutputTransform::Normal;
+    QTest::addRow("flip-x-180 | flip-x-90") << OutputTransform::FlipX180 << OutputTransform::FlipX90 << OutputTransform::Rotate270;
+    QTest::addRow("flip-x-270 | flip-x-90") << OutputTransform::FlipX270 << OutputTransform::FlipX90 << OutputTransform::Rotate180;
 
-    QTest::addRow("rotate-0 | flip-180") << OutputTransform::Normal << OutputTransform::Flipped180 << OutputTransform::Flipped180;
-    QTest::addRow("rotate-90 | flip-180") << OutputTransform::Rotated90 << OutputTransform::Flipped180 << OutputTransform::Flipped90;
-    QTest::addRow("rotate-180 | flip-180") << OutputTransform::Rotated180 << OutputTransform::Flipped180 << OutputTransform::Flipped;
-    QTest::addRow("rotate-270 | flip-180") << OutputTransform::Rotated270 << OutputTransform::Flipped180 << OutputTransform::Flipped270;
-    QTest::addRow("flip-0 | flip-180") << OutputTransform::Flipped << OutputTransform::Flipped180 << OutputTransform::Rotated180;
-    QTest::addRow("flip-90 | flip-180") << OutputTransform::Flipped90 << OutputTransform::Flipped180 << OutputTransform::Rotated90;
-    QTest::addRow("flip-180 | flip-180") << OutputTransform::Flipped180 << OutputTransform::Flipped180 << OutputTransform::Normal;
-    QTest::addRow("flip-270 | flip-180") << OutputTransform::Flipped270 << OutputTransform::Flipped180 << OutputTransform::Rotated270;
+    QTest::addRow("rotate-0 | flip-x-180") << OutputTransform::Normal << OutputTransform::FlipX180 << OutputTransform::FlipX180;
+    QTest::addRow("rotate-90 | flip-x-180") << OutputTransform::Rotate90 << OutputTransform::FlipX180 << OutputTransform::FlipX90;
+    QTest::addRow("rotate-180 | flip-x-180") << OutputTransform::Rotate180 << OutputTransform::FlipX180 << OutputTransform::FlipX;
+    QTest::addRow("rotate-270 | flip-x-180") << OutputTransform::Rotate270 << OutputTransform::FlipX180 << OutputTransform::FlipX270;
+    QTest::addRow("flip-x-0 | flip-x-180") << OutputTransform::FlipX << OutputTransform::FlipX180 << OutputTransform::Rotate180;
+    QTest::addRow("flip-x-90 | flip-x-180") << OutputTransform::FlipX90 << OutputTransform::FlipX180 << OutputTransform::Rotate90;
+    QTest::addRow("flip-x-180 | flip-x-180") << OutputTransform::FlipX180 << OutputTransform::FlipX180 << OutputTransform::Normal;
+    QTest::addRow("flip-x-270 | flip-x-180") << OutputTransform::FlipX270 << OutputTransform::FlipX180 << OutputTransform::Rotate270;
 
-    QTest::addRow("rotate-0 | flip-270") << OutputTransform::Normal << OutputTransform::Flipped270 << OutputTransform::Flipped270;
-    QTest::addRow("rotate-90 | flip-270") << OutputTransform::Rotated90 << OutputTransform::Flipped270 << OutputTransform::Flipped180;
-    QTest::addRow("rotate-180 | flip-270") << OutputTransform::Rotated180 << OutputTransform::Flipped270 << OutputTransform::Flipped90;
-    QTest::addRow("rotate-270 | flip-270") << OutputTransform::Rotated270 << OutputTransform::Flipped270 << OutputTransform::Flipped;
-    QTest::addRow("flip-0 | flip-270") << OutputTransform::Flipped << OutputTransform::Flipped270 << OutputTransform::Rotated270;
-    QTest::addRow("flip-90 | flip-270") << OutputTransform::Flipped90 << OutputTransform::Flipped270 << OutputTransform::Rotated180;
-    QTest::addRow("flip-180 | flip-270") << OutputTransform::Flipped180 << OutputTransform::Flipped270 << OutputTransform::Rotated90;
-    QTest::addRow("flip-270 | flip-270") << OutputTransform::Flipped270 << OutputTransform::Flipped270 << OutputTransform::Normal;
+    QTest::addRow("rotate-0 | flip-x-270") << OutputTransform::Normal << OutputTransform::FlipX270 << OutputTransform::FlipX270;
+    QTest::addRow("rotate-90 | flip-x-270") << OutputTransform::Rotate90 << OutputTransform::FlipX270 << OutputTransform::FlipX180;
+    QTest::addRow("rotate-180 | flip-x-270") << OutputTransform::Rotate180 << OutputTransform::FlipX270 << OutputTransform::FlipX90;
+    QTest::addRow("rotate-270 | flip-x-270") << OutputTransform::Rotate270 << OutputTransform::FlipX270 << OutputTransform::FlipX;
+    QTest::addRow("flip-x-0 | flip-x-270") << OutputTransform::FlipX << OutputTransform::FlipX270 << OutputTransform::Rotate270;
+    QTest::addRow("flip-x-90 | flip-x-270") << OutputTransform::FlipX90 << OutputTransform::FlipX270 << OutputTransform::Rotate180;
+    QTest::addRow("flip-x-180 | flip-x-270") << OutputTransform::FlipX180 << OutputTransform::FlipX270 << OutputTransform::Rotate90;
+    QTest::addRow("flip-x-270 | flip-x-270") << OutputTransform::FlipX270 << OutputTransform::FlipX270 << OutputTransform::Normal;
 }
 
 void TestOutputTransform::combine()
@@ -323,13 +323,13 @@ void TestOutputTransform::matrix_data()
     QTest::addColumn<QRectF>("target");
 
     QTest::addRow("rotate-0") << OutputTransform::Normal << QRectF(10, 20, 30, 40) << QRectF(10, 20, 30, 40);
-    QTest::addRow("rotate-90") << OutputTransform::Rotated90 << QRectF(10, 20, 30, 40) << QRectF(20, 60, 40, 30);
-    QTest::addRow("rotate-180") << OutputTransform::Rotated180 << QRectF(10, 20, 30, 40) << QRectF(60, 140, 30, 40);
-    QTest::addRow("rotate-270") << OutputTransform::Rotated270 << QRectF(10, 20, 30, 40) << QRectF(140, 10, 40, 30);
-    QTest::addRow("flip-0") << OutputTransform::Flipped << QRectF(10, 20, 30, 40) << QRectF(60, 20, 30, 40);
-    QTest::addRow("flip-90") << OutputTransform::Flipped90 << QRectF(10, 20, 30, 40) << QRectF(20, 10, 40, 30);
-    QTest::addRow("flip-180") << OutputTransform::Flipped180 << QRectF(10, 20, 30, 40) << QRectF(10, 140, 30, 40);
-    QTest::addRow("flip-270") << OutputTransform::Flipped270 << QRectF(10, 20, 30, 40) << QRectF(140, 60, 40, 30);
+    QTest::addRow("rotate-90") << OutputTransform::Rotate90 << QRectF(10, 20, 30, 40) << QRectF(20, 60, 40, 30);
+    QTest::addRow("rotate-180") << OutputTransform::Rotate180 << QRectF(10, 20, 30, 40) << QRectF(60, 140, 30, 40);
+    QTest::addRow("rotate-270") << OutputTransform::Rotate270 << QRectF(10, 20, 30, 40) << QRectF(140, 10, 40, 30);
+    QTest::addRow("flip-x-0") << OutputTransform::FlipX << QRectF(10, 20, 30, 40) << QRectF(60, 20, 30, 40);
+    QTest::addRow("flip-x-90") << OutputTransform::FlipX90 << QRectF(10, 20, 30, 40) << QRectF(20, 10, 40, 30);
+    QTest::addRow("flip-x-180") << OutputTransform::FlipX180 << QRectF(10, 20, 30, 40) << QRectF(10, 140, 30, 40);
+    QTest::addRow("flip-x-270") << OutputTransform::FlipX270 << QRectF(10, 20, 30, 40) << QRectF(140, 60, 40, 30);
 }
 
 void TestOutputTransform::matrix()

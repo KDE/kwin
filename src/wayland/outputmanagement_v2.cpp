@@ -133,19 +133,19 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_transform(Resou
     auto toTransform = [transform]() {
         switch (transform) {
         case WL_OUTPUT_TRANSFORM_90:
-            return OutputTransform::Rotated90;
+            return OutputTransform::Rotate90;
         case WL_OUTPUT_TRANSFORM_180:
-            return OutputTransform::Rotated180;
+            return OutputTransform::Rotate180;
         case WL_OUTPUT_TRANSFORM_270:
-            return OutputTransform::Rotated270;
+            return OutputTransform::Rotate270;
         case WL_OUTPUT_TRANSFORM_FLIPPED:
-            return OutputTransform::Flipped;
+            return OutputTransform::FlipX;
         case WL_OUTPUT_TRANSFORM_FLIPPED_90:
-            return OutputTransform::Flipped90;
+            return OutputTransform::FlipX90;
         case WL_OUTPUT_TRANSFORM_FLIPPED_180:
-            return OutputTransform::Flipped180;
+            return OutputTransform::FlipX180;
         case WL_OUTPUT_TRANSFORM_FLIPPED_270:
-            return OutputTransform::Flipped270;
+            return OutputTransform::FlipX270;
         case WL_OUTPUT_TRANSFORM_NORMAL:
         default:
             return OutputTransform::Normal;

@@ -172,19 +172,19 @@ QPointF devicePointToGlobalPosition(const QPointF &devicePos, const Output *outp
     // TODO: Do we need to handle the flipped cases differently?
     switch (output->transform().kind()) {
     case OutputTransform::Normal:
-    case OutputTransform::Flipped:
+    case OutputTransform::FlipX:
         break;
-    case OutputTransform::Rotated90:
-    case OutputTransform::Flipped90:
+    case OutputTransform::Rotate90:
+    case OutputTransform::FlipX90:
         pos = QPointF(output->modeSize().height() - devicePos.y(), devicePos.x());
         break;
-    case OutputTransform::Rotated180:
-    case OutputTransform::Flipped180:
+    case OutputTransform::Rotate180:
+    case OutputTransform::FlipX180:
         pos = QPointF(output->modeSize().width() - devicePos.x(),
                       output->modeSize().height() - devicePos.y());
         break;
-    case OutputTransform::Rotated270:
-    case OutputTransform::Flipped270:
+    case OutputTransform::Rotate270:
+    case OutputTransform::FlipX270:
         pos = QPointF(devicePos.y(), output->modeSize().width() - devicePos.x());
         break;
     default:

@@ -80,19 +80,19 @@ static quint32 kwaylandServerTransformToWaylandTransform(OutputTransform transfo
     switch (transform.kind()) {
     case OutputTransform::Normal:
         return OutputInterfacePrivate::transform_normal;
-    case OutputTransform::Rotated90:
+    case OutputTransform::Rotate90:
         return OutputInterfacePrivate::transform_90;
-    case OutputTransform::Rotated180:
+    case OutputTransform::Rotate180:
         return OutputInterfacePrivate::transform_180;
-    case OutputTransform::Rotated270:
+    case OutputTransform::Rotate270:
         return OutputInterfacePrivate::transform_270;
-    case OutputTransform::Flipped:
+    case OutputTransform::FlipX:
         return OutputInterfacePrivate::transform_flipped;
-    case OutputTransform::Flipped90:
+    case OutputTransform::FlipX90:
         return OutputInterfacePrivate::transform_flipped_90;
-    case OutputTransform::Flipped180:
+    case OutputTransform::FlipX180:
         return OutputInterfacePrivate::transform_flipped_180;
-    case OutputTransform::Flipped270:
+    case OutputTransform::FlipX270:
         return OutputInterfacePrivate::transform_flipped_270;
     default:
         Q_UNREACHABLE();

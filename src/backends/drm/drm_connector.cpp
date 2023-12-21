@@ -472,11 +472,11 @@ OutputTransform DrmConnector::toKWinTransform(PanelOrientation orientation)
     case PanelOrientation::Normal:
         return KWin::OutputTransform::Normal;
     case PanelOrientation::RightUp:
-        return KWin::OutputTransform::Rotated270;
+        return KWin::OutputTransform::Rotate270;
     case PanelOrientation::LeftUp:
-        return KWin::OutputTransform::Rotated90;
+        return KWin::OutputTransform::Rotate90;
     case PanelOrientation::UpsideDown:
-        return KWin::OutputTransform::Rotated180;
+        return KWin::OutputTransform::Rotate180;
     default:
         Q_UNREACHABLE();
     }

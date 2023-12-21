@@ -46,13 +46,13 @@ class KWIN_EXPORT OutputTransform
 public:
     enum Kind {
         Normal = 0, // no rotation
-        Rotated90 = 1, // rotate 90 degrees counterclockwise
-        Rotated180 = 2, // rotate 180 degrees counterclockwise
-        Rotated270 = 3, // rotate 270 degrees counterclockwise
-        Flipped = 4, // mirror horizontally
-        Flipped90 = 5, // mirror horizontally, then rotate 90 degrees counterclockwise
-        Flipped180 = 6, // mirror horizontally, then rotate 180 degrees counterclockwise
-        Flipped270 = 7, // mirror horizontally, then rotate 270 degrees counterclockwise
+        Rotate90 = 1, // rotate 90 degrees counterclockwise
+        Rotate180 = 2, // rotate 180 degrees counterclockwise
+        Rotate270 = 3, // rotate 270 degrees counterclockwise
+        FlipX = 4, // mirror horizontally
+        FlipX90 = 5, // mirror horizontally, then rotate 90 degrees counterclockwise
+        FlipX180 = 6, // mirror horizontally, then rotate 180 degrees counterclockwise
+        FlipX270 = 7, // mirror horizontally, then rotate 270 degrees counterclockwise
     };
 
     OutputTransform() = default;

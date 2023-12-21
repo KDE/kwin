@@ -154,11 +154,11 @@ OutputTransform toKWinTransform(int rotation)
     case None:
         return OutputTransform::Normal;
     case Left:
-        return OutputTransform::Rotated90;
+        return OutputTransform::Rotate90;
     case Inverted:
-        return OutputTransform::Rotated180;
+        return OutputTransform::Rotate180;
     case Right:
-        return OutputTransform::Rotated270;
+        return OutputTransform::Rotate270;
     default:
         Q_UNREACHABLE();
     }
