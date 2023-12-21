@@ -53,7 +53,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, 
     }
 
     handleChildSubSurfacesChanged();
-    setSize(surface->size());
+    setDestinationSize(surface->size());
     setBufferTransform(surface->bufferTransform());
     setBufferSourceBox(surface->bufferSourceBox());
     setBufferSize(surface->bufferSize());
@@ -80,8 +80,7 @@ SurfaceInterface *SurfaceItemWayland::surface() const
 
 void SurfaceItemWayland::handleSurfaceSizeChanged()
 {
-    setSize(m_surface->size());
-    discardQuads();
+    setDestinationSize(m_surface->size());
 }
 
 void SurfaceItemWayland::handleBufferSizeChanged()

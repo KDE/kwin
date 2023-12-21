@@ -140,7 +140,7 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
     surfaceItem->resetDamage();
 
     const OutputTransform surfaceToBufferTransform = surfaceItem->bufferTransform();
-    const QSizeF transformedSize = surfaceToBufferTransform.map(surfaceItem->size());
+    const QSizeF transformedSize = surfaceToBufferTransform.map(surfaceItem->destinationSize());
 
     painter->save();
     switch (surfaceToBufferTransform.kind()) {

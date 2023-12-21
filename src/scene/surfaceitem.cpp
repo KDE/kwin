@@ -16,6 +16,20 @@ SurfaceItem::SurfaceItem(Scene *scene, Item *parent)
 {
 }
 
+QSizeF SurfaceItem::destinationSize() const
+{
+    return m_destinationSize;
+}
+
+void SurfaceItem::setDestinationSize(const QSizeF &size)
+{
+    if (m_destinationSize != size) {
+        m_destinationSize = size;
+        setSize(size);
+        discardQuads();
+    }
+}
+
 QRectF SurfaceItem::bufferSourceBox() const
 {
     return m_bufferSourceBox;
@@ -60,8 +74,8 @@ void SurfaceItem::setBufferSize(const QSize &size)
 QRegion SurfaceItem::mapFromBuffer(const QRegion &region) const
 {
     const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
-    const qreal xScale = size().width() / sourceBox.width();
-    const qreal yScale = size().height() / sourceBox.height();
+    const qreal xScale = m_destinationSize.width() / sourceBox.width();
+    const qreal yScale = m_destinationSize.height() / sourceBox.height();
 
     QRegion result;
     for (QRectF rect : region) {
@@ -90,8 +104,8 @@ void SurfaceItem::addDamage(const QRegion &region)
     m_damage += region;
 
     const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
-    const qreal xScale = sourceBox.width() / size().width();
-    const qreal yScale = sourceBox.height() / size().height();
+    const qreal xScale = sourceBox.width() / m_destinationSize.width();
+    const qreal yScale = sourceBox.height() / m_destinationSize.height();
     const QRegion logicalDamage = mapFromBuffer(region);
 
     const auto delegates = scene()->delegates();
@@ -204,8 +218,8 @@ WindowQuadList SurfaceItem::buildQuads() const
     quads.reserve(region.count());
 
     const QRectF sourceBox = m_bufferToSurfaceTransform.map(m_bufferSourceBox, m_bufferSize);
-    const qreal xScale = sourceBox.width() / size().width();
-    const qreal yScale = sourceBox.height() / size().height();
+    const qreal xScale = sourceBox.width() / m_destinationSize.width();
+    const qreal yScale = sourceBox.height() / m_destinationSize.height();
 
     for (const QRectF rect : region) {
         WindowQuad quad;

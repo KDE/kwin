@@ -24,6 +24,9 @@ class KWIN_EXPORT SurfaceItem : public Item
     Q_OBJECT
 
 public:
+    QSizeF destinationSize() const;
+    void setDestinationSize(const QSizeF &size);
+
     QRectF bufferSourceBox() const;
     void setBufferSourceBox(const QRectF &box);
 
@@ -68,6 +71,7 @@ protected:
     OutputTransform m_surfaceToBufferTransform;
     QRectF m_bufferSourceBox;
     QSize m_bufferSize;
+    QSizeF m_destinationSize;
     std::unique_ptr<SurfacePixmap> m_pixmap;
     std::unique_ptr<SurfacePixmap> m_previousPixmap;
     int m_referencePixmapCounter = 0;
