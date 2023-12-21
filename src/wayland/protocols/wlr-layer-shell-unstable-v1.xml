@@ -187,6 +187,10 @@
       <arg name="zone" type="int"/>
     </request>
 
+    <request name="set_exclusive_edge">
+      <arg name="edge" type="uint"/>
+    </request>
+
     <request name="set_margin">
       <description summary="sets a margin from the anchor point">
         Requests that the surface be placed some distance away from the anchor

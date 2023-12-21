@@ -45,6 +45,7 @@ struct LayerSurfaceV1Commit
     std::optional<QMargins> margins;
     std::optional<QSize> desiredSize;
     std::optional<int> exclusiveZone;
+    std::optional<quint32> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
 };
@@ -57,6 +58,7 @@ struct LayerSurfaceV1State
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
+    quint32 exclusiveEdge = 0;
     bool acceptsFocus = false;
     bool configured = false;
     bool closed = false;
@@ -82,6 +84,7 @@ protected:
     void zwlr_layer_surface_v1_destroy_resource(Resource *resource) override;
     void zwlr_layer_surface_v1_set_size(Resource *resource, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor) override;
+    void zwlr_layer_surface_v1_set_exclusive_edge(Resource *, uint32_t edge) override;
     void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone) override;
     void zwlr_layer_surface_v1_set_margin(Resource *resource, int32_t top, int32_t right, int32_t bottom, int32_t left) override;
     void zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity) override;
@@ -201,6 +204,11 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor(Resource *
     if (anchor & anchor_left) {
         *pending.anchor |= Qt::LeftEdge;
     }
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_edge(Resource *, uint32_t edge)
+{
+    pending.exclusiveEdge = edge;
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t zone)
@@ -333,6 +341,9 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveZone.has_value()) {
         state.exclusiveZone = commit->exclusiveZone.value();
     }
+    if (commit->exclusiveEdge.has_value()) {
+        state.exclusiveEdge = commit->exclusiveEdge.value();
+    }
     if (commit->acceptsFocus.has_value()) {
         state.acceptsFocus = commit->acceptsFocus.value();
     }
@@ -449,6 +460,22 @@ Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const
     if (exclusiveZone() <= 0) {
         return Qt::Edge();
     }
+
+    if (d->state.exclusiveEdge > 0) {
+        switch (d->state.exclusiveEdge) {
+        case LayerSurfaceV1InterfacePrivate::anchor_left:
+            return Qt::LeftEdge;
+        case LayerSurfaceV1InterfacePrivate::anchor_top:
+            return Qt::TopEdge;
+        case LayerSurfaceV1InterfacePrivate::anchor_right:
+            return Qt::RightEdge;
+        case LayerSurfaceV1InterfacePrivate::anchor_bottom:
+            return Qt::BottomEdge;
+        default:
+            break;
+        }
+    }
+
     if (anchor() == (Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge) || anchor() == Qt::TopEdge) {
         return Qt::TopEdge;
     }
