@@ -175,9 +175,15 @@ void WaylandCompositor::start()
     if (m_selectedCompositor == NoCompositing) {
         m_selectedCompositor = m_backend->compositingType();
 
-        // Force qtquick to software rendering if kwin uses software rendering too.
-        if (m_selectedCompositor == QPainterCompositing) {
+        switch (m_selectedCompositor) {
+        case NoCompositing:
+            break;
+        case OpenGLCompositing:
+            QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+            break;
+        case QPainterCompositing:
             QQuickWindow::setGraphicsApi(QSGRendererInterface::Software);
+            break;
         }
     }
 
