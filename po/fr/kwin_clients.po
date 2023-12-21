@@ -6,7 +6,7 @@
 # Matthieu Robin <kde@macolu.org>, 2004, 2006.
 # Nicolas Ternisien <nicolast@libertysurf.fr>, 2004, 2005.
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2007, 2008, 2010, 2012.
-# xavier <ktranslator31@yahoo.fr>, 2013.
+# Xavier Besnard <xavier.besnard@kde.org>, 2013.
 # Bruno Patri <bruno.patri@gmail.com>, 2013.
 # Vincent Pinon <vpinon@kde.org>, 2016.
 #

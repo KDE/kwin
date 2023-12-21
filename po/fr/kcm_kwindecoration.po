@@ -7,11 +7,11 @@
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2004, 2005.
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2007, 2008, 2010.
 # Sébastien Renard <renard@kde.org>, 2010, 2014, 2015.
-# xavier <ktranslator31@yahoo.fr>, 2013.
+# Xavier Besnard <xavier.besnard@kde.org>, 2013.
 # Vincent PINON <vincent.pinon@st.com>, 2013.
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019.
-# SPDX-FileCopyrightText: 2020, 2021, 2023 Xavier Besnard <xavier.besnard@neuf.fr>
-# Xavier BESNARD <xavier.besnard@neuf.fr>, 2023.
+# SPDX-FileCopyrightText: 2020, 2021, 2023 Xavier Besnard <xavier.besnard@kde.org>
+# Xavier BESNARD <xavier.besnard@kde.org>, 2023.
 #
 msgid ""
 msgstr ""
