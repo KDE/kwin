@@ -153,7 +153,7 @@ private:
     Error legacyModeset();
     Error applyPendingChangesLegacy();
     bool setCursorLegacy();
-    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode);
+    static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
     Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode);

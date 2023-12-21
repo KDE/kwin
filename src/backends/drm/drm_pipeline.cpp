@@ -118,7 +118,7 @@ DrmPipeline::Error DrmPipeline::commitPipelines(const QList<DrmPipeline *> &pipe
     if (pipelines[0]->gpu()->atomicModeSetting()) {
         return commitPipelinesAtomic(pipelines, mode, unusedObjects);
     } else {
-        return commitPipelinesLegacy(pipelines, mode);
+        return commitPipelinesLegacy(pipelines, mode, unusedObjects);
     }
 }
 

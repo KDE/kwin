@@ -57,7 +57,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
     return Error::None;
 }
 
-DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode)
+DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects)
 {
     Error err = Error::None;
     for (const auto &pipeline : pipelines) {
@@ -77,6 +77,11 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
             pipeline->applyPendingChanges();
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
                 pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), PageflipType::Normal, PresentationMode::VSync);
+            }
+        }
+        for (const auto &obj : unusedObjects) {
+            if (auto crtc = dynamic_cast<DrmCrtc *>(obj)) {
+                drmModeSetCrtc(pipelines.front()->gpu()->fd(), crtc->id(), 0, 0, 0, nullptr, 0, nullptr);
             }
         }
     }
