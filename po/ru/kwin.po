@@ -6,6 +6,7 @@
 # KDE3 - kwin.pot Russian translationю
 # Copyright (C) 2000 KDE Team.
 #
+# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023 Alexander Yavorsky <kekcuha@gmail.com>
 # Alex Miller <asm@som.kiev.ua>, 2000.
 # Leonid Kanter <leon@asplinux.ru>, 2004, 2005.
 # Gregory Mokhin <mok@kde.ru>, 2005.
@@ -16,21 +17,21 @@
 # Julia Dronova <juliette.tux@gmail.com>, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
 # Olesya Gerasimenko <gammaray@basealt.ru>, 2018.
-# SPDX-FileCopyrightText: 2019, 2020, 2021, 2022, 2023 Alexander Yavorsky <kekcuha@gmail.com>
 # Мария Шикунова <translation-team@basealt.ru>, 2022.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
-"PO-Revision-Date: 2023-12-07 22:13+0300\n"
+"POT-Creation-Date: 2023-12-21 02:00+0000\n"
+"PO-Revision-Date: 2023-12-20 12:06+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 21.08.3\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -69,27 +70,27 @@ msgstr "Графический сервер Wayland для KDE %1"
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- вывод отключён"
 
 #: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- вывод затемнён"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Чтобы освободить ввод нажмите правую клавишу Ctrl"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Чтобы захватить ввод нажмите правую клавишу Ctrl"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "Графический сервер Wayland для KDE"
 
 #: compositor.cpp:144
 #, kde-format
@@ -1197,22 +1198,18 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>Окно «%1» приложения <application>%2</application> не отвечает. "
+"Завершить работу этого приложения?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Завершить это приложение?</para>\n"
-"<para><warning>При этом будут закрыты все относящиеся к нему окна. "
-"Несохранённые данные могут быть потеряны.</warning></para>"
+"<para> <emphasis strong='true'>При завершении работы этого приложения будут "
+"закрыты все его окна. Несохранённые данные будут потеряны.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
 #, kde-format
@@ -1257,7 +1254,7 @@ msgstr "Планшет переключен на %1"
 #: input.cpp:2101
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Переключённые выводы планшета"
 
 #: input.cpp:3199
 #, kde-format
@@ -1455,6 +1452,8 @@ msgstr "Отрисовка через DRM."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Сведения о региональных стандартах locale1 отличаются от заданных в "
+"параметрах пользователя"
 
 #: main_wayland.cpp:363
 #, kde-format
@@ -2383,18 +2382,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Настроить рабочие столы..."
 
-#: plugins/overview/qml/main.qml:722
+#: plugins/overview/qml/main.qml:724
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Не найдено ни одного совпадающего окна"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Перетаскивание вниз для закрытия"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:447
+#: plugins/private/qml/WindowHeapDelegate.qml:448
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

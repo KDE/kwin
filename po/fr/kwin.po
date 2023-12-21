@@ -12,19 +12,19 @@
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2008, 2010.
 # Sébastien Renard <Sebastien.Renard@digitalfox.org>, 2008.
 # Anne-Marie Mahfouf <annemarie.mahfouf@free.fr>, 2009, 2011, 2012.
-# xavier <ktranslator31@yahoo.fr>, 2013.
+# Xavier Besnard <xavier.besnard@kde.org>, 2013.
 # Sebastien Renard <renard@kde.org>, 2013, 2014, 2015.
 # Vincent Pinon <vpinon@kde.org>, 2016, 2017.
 # Yoann Laissus <yoann.laissus@gmail.com>, 2017, 2018.
 # Simon Depiets <sdepiets@gmail.com>, 2018, 2019, 2020.
-# SPDX-FileCopyrightText: 2020, 2021, 2022, 2023 Xavier Besnard <xavier.besnard@neuf.fr>
-# Xavier BESNARD <xavier.besnard@neuf.fr>, 2022, 2023.
+# SPDX-FileCopyrightText: 2020, 2021, 2022, 2023 Xavier Besnard <xavier.besnard@kde.org>
+# Xavier Besnard <xavier.besnard@kde.org>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2023-12-21 02:00+0000\n"
 "PO-Revision-Date: 2023-12-01 09:50+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
 "Language-Team: \n"
@@ -2385,18 +2385,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurer les claviers virtuels..."
 
-#: plugins/overview/qml/main.qml:722
+#: plugins/overview/qml/main.qml:724
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Aucune correspondance de fenêtres"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Faire glisser vers le bas pour fermer"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:447
+#: plugins/private/qml/WindowHeapDelegate.qml:448
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

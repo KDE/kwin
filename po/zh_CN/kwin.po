@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
-"PO-Revision-Date: 2023-12-17 11:26\n"
+"POT-Creation-Date: 2023-12-21 02:00+0000\n"
+"PO-Revision-Date: 2023-12-20 11:21\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -2317,18 +2317,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "配置虚拟桌面…"
 
-#: plugins/overview/qml/main.qml:722
+#: plugins/overview/qml/main.qml:724
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "没有匹配的窗口"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "向下拖动以关闭"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:447
+#: plugins/private/qml/WindowHeapDelegate.qml:448
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

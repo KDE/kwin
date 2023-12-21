@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2023-12-21 02:00+0000\n"
 "PO-Revision-Date: 2022-11-19 06:00-0800\n"
 "Last-Translator: A S Alam <aalam@satluj.org>\n"
 "Language-Team: Punjabi <punjabi-users@lists.sf.net>\n"
@@ -2406,19 +2406,19 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "...ਫ਼ਰਜ਼ੀ ਕੀਬੋਰਡਾਂ ਦੀ ਸੰਰਚਨਾ"
 
-#: plugins/overview/qml/main.qml:722
+#: plugins/overview/qml/main.qml:724
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "ਹਿਲਦੀਆਂ ਵਿੰਡੋਜ਼:"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:152
+#: plugins/private/qml/WindowHeapDelegate.qml:153
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:447
+#: plugins/private/qml/WindowHeapDelegate.qml:448
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"
