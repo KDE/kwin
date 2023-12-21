@@ -19,7 +19,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, I
     connect(window, &Window::bufferGeometryChanged,
             this, &SurfaceItemInternal::handleBufferGeometryChanged);
 
-    setSize(window->bufferGeometry().size());
+    setDestinationSize(window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
     setBufferSize((window->bufferGeometry().size() * window->bufferScale()).toSize());
 }
@@ -41,7 +41,7 @@ std::unique_ptr<SurfacePixmap> SurfaceItemInternal::createPixmap()
 
 void SurfaceItemInternal::handleBufferGeometryChanged()
 {
-    setSize(m_window->bufferGeometry().size());
+    setDestinationSize(m_window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size() * m_window->bufferScale()));
     setBufferSize((m_window->bufferGeometry().size() * m_window->bufferScale()).toSize());
 }

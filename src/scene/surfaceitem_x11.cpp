@@ -34,7 +34,7 @@ SurfaceItemX11::SurfaceItemX11(X11Window *window, Scene *scene, Item *parent)
         m_isDamaged = true;
     }
 
-    setSize(window->bufferGeometry().size());
+    setDestinationSize(window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size()));
     setBufferSize(window->bufferGeometry().size().toSize());
 }
@@ -142,7 +142,7 @@ void SurfaceItemX11::destroyDamage()
 
 void SurfaceItemX11::handleBufferGeometryChanged()
 {
-    setSize(m_window->bufferGeometry().size());
+    setDestinationSize(m_window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), m_window->bufferGeometry().size()));
     setBufferSize(m_window->bufferGeometry().size().toSize());
 }
