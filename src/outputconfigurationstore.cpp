@@ -84,13 +84,13 @@ void OutputConfigurationStore::applyOrientationReading(OutputConfiguration &conf
         changeset->transform = panelOrientation;
         return;
     case QOrientationReading::Orientation::TopDown:
-        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotated180);
+        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate180);
         return;
     case QOrientationReading::Orientation::LeftUp:
-        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotated90);
+        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate90);
         return;
     case QOrientationReading::Orientation::RightUp:
-        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotated270);
+        changeset->transform = panelOrientation.combine(OutputTransform::Kind::Rotate270);
         return;
     case QOrientationReading::Orientation::FaceUp:
     case QOrientationReading::Orientation::FaceDown:
@@ -604,19 +604,19 @@ void OutputConfigurationStore::load()
             if (str == "Normal") {
                 state.transform = state.manualTransform = OutputTransform::Kind::Normal;
             } else if (str == "Rotated90") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Rotated90;
+                state.transform = state.manualTransform = OutputTransform::Kind::Rotate90;
             } else if (str == "Rotated180") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Rotated180;
+                state.transform = state.manualTransform = OutputTransform::Kind::Rotate180;
             } else if (str == "Rotated270") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Rotated270;
+                state.transform = state.manualTransform = OutputTransform::Kind::Rotate270;
             } else if (str == "Flipped") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Flipped;
+                state.transform = state.manualTransform = OutputTransform::Kind::FlipX;
             } else if (str == "Flipped90") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Flipped90;
+                state.transform = state.manualTransform = OutputTransform::Kind::FlipX90;
             } else if (str == "Flipped180") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Flipped180;
+                state.transform = state.manualTransform = OutputTransform::Kind::FlipX180;
             } else if (str == "Flipped270") {
-                state.transform = state.manualTransform = OutputTransform::Kind::Flipped270;
+                state.transform = state.manualTransform = OutputTransform::Kind::FlipX270;
             }
         }
         if (const auto it = data.find("overscan"); it != data.end()) {
@@ -823,19 +823,19 @@ void OutputConfigurationStore::save()
         }
         if (output.manualTransform == OutputTransform::Kind::Normal) {
             o["transform"] = "Normal";
-        } else if (output.manualTransform == OutputTransform::Kind::Rotated90) {
+        } else if (output.manualTransform == OutputTransform::Kind::Rotate90) {
             o["transform"] = "Rotated90";
-        } else if (output.manualTransform == OutputTransform::Kind::Rotated180) {
+        } else if (output.manualTransform == OutputTransform::Kind::Rotate180) {
             o["transform"] = "Rotated180";
-        } else if (output.manualTransform == OutputTransform::Kind::Rotated270) {
+        } else if (output.manualTransform == OutputTransform::Kind::Rotate270) {
             o["transform"] = "Rotated270";
-        } else if (output.manualTransform == OutputTransform::Kind::Flipped) {
+        } else if (output.manualTransform == OutputTransform::Kind::FlipX) {
             o["transform"] = "Flipped";
-        } else if (output.manualTransform == OutputTransform::Kind::Flipped90) {
+        } else if (output.manualTransform == OutputTransform::Kind::FlipX90) {
             o["transform"] = "Flipped90";
-        } else if (output.manualTransform == OutputTransform::Kind::Flipped180) {
+        } else if (output.manualTransform == OutputTransform::Kind::FlipX180) {
             o["transform"] = "Flipped180";
-        } else if (output.manualTransform == OutputTransform::Kind::Flipped270) {
+        } else if (output.manualTransform == OutputTransform::Kind::FlipX270) {
             o["transform"] = "Flipped270";
         }
         if (output.overscan) {

@@ -279,13 +279,13 @@ void TestWaylandOutput::testTransform_data()
     QTest::addColumn<KWayland::Client::Output::Transform>("expected");
     QTest::addColumn<KWin::OutputTransform::Kind>("actual");
 
-    QTest::newRow("90") << KWayland::Client::Output::Transform::Rotated90 << KWin::OutputTransform::Rotated90;
-    QTest::newRow("180") << KWayland::Client::Output::Transform::Rotated180 << KWin::OutputTransform::Rotated180;
-    QTest::newRow("270") << KWayland::Client::Output::Transform::Rotated270 << KWin::OutputTransform::Rotated270;
-    QTest::newRow("Flipped") << KWayland::Client::Output::Transform::Flipped << KWin::OutputTransform::Flipped;
-    QTest::newRow("Flipped 90") << KWayland::Client::Output::Transform::Flipped90 << KWin::OutputTransform::Flipped90;
-    QTest::newRow("Flipped 180") << KWayland::Client::Output::Transform::Flipped180 << KWin::OutputTransform::Flipped180;
-    QTest::newRow("Flipped 280") << KWayland::Client::Output::Transform::Flipped270 << KWin::OutputTransform::Flipped270;
+    QTest::newRow("90") << KWayland::Client::Output::Transform::Rotated90 << KWin::OutputTransform::Rotate90;
+    QTest::newRow("180") << KWayland::Client::Output::Transform::Rotated180 << KWin::OutputTransform::Rotate180;
+    QTest::newRow("270") << KWayland::Client::Output::Transform::Rotated270 << KWin::OutputTransform::Rotate270;
+    QTest::newRow("Flipped") << KWayland::Client::Output::Transform::Flipped << KWin::OutputTransform::FlipX;
+    QTest::newRow("Flipped 90") << KWayland::Client::Output::Transform::Flipped90 << KWin::OutputTransform::FlipX90;
+    QTest::newRow("Flipped 180") << KWayland::Client::Output::Transform::Flipped180 << KWin::OutputTransform::FlipX180;
+    QTest::newRow("Flipped 280") << KWayland::Client::Output::Transform::Flipped270 << KWin::OutputTransform::FlipX270;
 }
 
 void TestWaylandOutput::testTransform()

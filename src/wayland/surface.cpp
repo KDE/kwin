@@ -497,33 +497,33 @@ QMatrix4x4 SurfaceInterfacePrivate::buildSurfaceToBufferMatrix()
 
     switch (current->bufferTransform.kind()) {
     case OutputTransform::Normal:
-    case OutputTransform::Flipped:
+    case OutputTransform::FlipX:
         break;
-    case OutputTransform::Rotated90:
-    case OutputTransform::Flipped90:
+    case OutputTransform::Rotate90:
+    case OutputTransform::FlipX90:
         surfaceToBufferMatrix.translate(0, bufferSize.height() / current->bufferScale);
         surfaceToBufferMatrix.rotate(-90, 0, 0, 1);
         break;
-    case OutputTransform::Rotated180:
-    case OutputTransform::Flipped180:
+    case OutputTransform::Rotate180:
+    case OutputTransform::FlipX180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, bufferSize.height() / current->bufferScale);
         surfaceToBufferMatrix.rotate(-180, 0, 0, 1);
         break;
-    case OutputTransform::Rotated270:
-    case OutputTransform::Flipped270:
+    case OutputTransform::Rotate270:
+    case OutputTransform::FlipX270:
         surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, 0);
         surfaceToBufferMatrix.rotate(-270, 0, 0, 1);
         break;
     }
 
     switch (current->bufferTransform.kind()) {
-    case OutputTransform::Flipped:
-    case OutputTransform::Flipped180:
+    case OutputTransform::FlipX:
+    case OutputTransform::FlipX180:
         surfaceToBufferMatrix.translate(bufferSize.width() / current->bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
-    case OutputTransform::Flipped90:
-    case OutputTransform::Flipped270:
+    case OutputTransform::FlipX90:
+    case OutputTransform::FlipX270:
         surfaceToBufferMatrix.translate(bufferSize.height() / current->bufferScale, 0);
         surfaceToBufferMatrix.scale(-1, 1);
         break;
