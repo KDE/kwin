@@ -30,7 +30,9 @@ Item {
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
     readonly property bool initialHidden: window.minimized || !presentOnCurrentDesktop
     readonly property bool activeHidden: {
-        if (windowHeap.showOnly === "activeClass") {
+        if (window.skipSwitcher) {
+            return true;
+        } else if (windowHeap.showOnly === "activeClass") {
             if (!KWinComponents.Workspace.activeWindow) {
                 return true;
             } else {
