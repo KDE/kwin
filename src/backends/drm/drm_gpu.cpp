@@ -578,6 +578,8 @@ void DrmGpu::removeOutput(DrmOutput *output)
     m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     output->unref();
+    // force a modeset to make sure unused objects are cleaned up
+    m_forceModeset = true;
 }
 
 DrmBackend *DrmGpu::platform() const
@@ -740,9 +742,9 @@ bool DrmGpu::isActive() const
 
 bool DrmGpu::needsModeset() const
 {
-    return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
-        return pipeline->needsModeset();
-    });
+    return m_forceModeset || std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
+               return pipeline->needsModeset();
+           });
 }
 
 bool DrmGpu::maybeModeset()
@@ -771,6 +773,7 @@ bool DrmGpu::maybeModeset()
             }
         }
     }
+    m_forceModeset = false;
     if (err == DrmPipeline::Error::None) {
         return true;
     } else {
@@ -783,9 +786,6 @@ bool DrmGpu::maybeModeset()
 
 QList<DrmObject *> DrmGpu::unusedObjects() const
 {
-    if (!m_atomicModeSetting) {
-        return {};
-    }
     QList<DrmObject *> ret = m_allObjects;
     for (const auto &pipeline : m_pipelines) {
         ret.removeOne(pipeline->connector());

@@ -143,6 +143,7 @@ private:
     bool m_asyncPageflipSupported = false;
     bool m_isRemoved = false;
     bool m_isActive = true;
+    bool m_forceModeset = false;
     clockid_t m_presentationClock;
     gbm_device *m_gbmDevice;
     FileDescriptor m_gbmFd;
