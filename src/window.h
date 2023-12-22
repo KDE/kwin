@@ -69,6 +69,11 @@ class KWIN_EXPORT Window : public QObject
     Q_PROPERTY(QRectF bufferGeometry READ bufferGeometry)
 
     /**
+     * The geometry of the Window without frame borders.
+     */
+    Q_PROPERTY(QRectF clientGeometry READ clientGeometry)
+
+    /**
      * This property holds the position of the Window's frame geometry.
      */
     Q_PROPERTY(QPointF pos READ pos)
