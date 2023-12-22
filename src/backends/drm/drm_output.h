@@ -66,6 +66,7 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     bool doSetChannelFactors(const QVector3D &rgb);
+    ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 

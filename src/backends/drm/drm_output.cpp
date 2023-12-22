@@ -324,13 +324,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setRenderOrientation(outputToPlaneTransform(props->transform.value_or(transform())));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
-    m_pipeline->setBT2020(bt2020);
-    m_pipeline->setNamedTransferFunction(hdr ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::sRGB);
-    m_pipeline->setSdrBrightness(props->sdrBrightness.value_or(m_state.sdrBrightness));
-    m_pipeline->setSdrGamutWideness(props->sdrGamutWideness.value_or(m_state.sdrGamutWideness));
-    m_pipeline->setBrightnessOverrides(props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride),
-                                       props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride),
-                                       props->minBrightnessOverride.value_or(m_state.minBrightnessOverride));
+    m_pipeline->setColorDescription(createColorDescription(props));
     if (bt2020 || hdr) {
         // ICC profiles don't support HDR (yet)
         m_pipeline->setIccProfile(nullptr);
@@ -343,6 +337,23 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
         m_pipeline->setCTM(QMatrix3x3{});
     }
     return true;
+}
+
+ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const
+{
+    if (props->highDynamicRange.value_or(m_state.highDynamicRange) && m_connector->edid()) {
+        const auto colorimetry = props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
+        const auto sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
+        return ColorDescription(colorimetry, NamedTransferFunction::PerceptualQuantizer, sdrBrightness,
+                                props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()),
+                                props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(sdrBrightness)),
+                                props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)),
+                                props->sdrGamutWideness.value_or(m_state.sdrGamutWideness));
+    } else if (const auto profile = props->iccProfile.value_or(m_state.iccProfile)) {
+        return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, 200, 0, 200, 200, 0);
+    } else {
+        return ColorDescription::sRGB;
+    }
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)

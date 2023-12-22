@@ -130,12 +130,8 @@ public:
     void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     void setCTM(const QMatrix3x3 &ctm);
     void setContentType(DrmConnector::DrmContentType type);
-    void setBT2020(bool useBT2020);
-    void setNamedTransferFunction(NamedTransferFunction tf);
+    void setColorDescription(const ColorDescription &description);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
-    void setSdrBrightness(double sdrBrightness);
-    void setSdrGamutWideness(double sdrGamutWideness);
-    void setBrightnessOverrides(std::optional<double> peakBrightnessOverride, std::optional<double> averageBrightnessOverride, std::optional<double> minBrightnessOverride);
 
     enum class CommitMode {
         Test,
@@ -150,7 +146,6 @@ private:
     uint32_t calculateUnderscan();
     static Error errnoToError();
     std::shared_ptr<DrmBlob> createHdrMetadata(NamedTransferFunction transferFunction) const;
-    ColorDescription createColorDescription() const;
 
     // legacy only
     Error presentLegacy();
@@ -189,15 +184,8 @@ private:
         std::shared_ptr<DrmBlob> ctm;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
-        bool BT2020 = false;
-        NamedTransferFunction transferFunction = NamedTransferFunction::sRGB;
-        double sdrBrightness = 200;
-        double sdrGamutWideness = 0;
         std::shared_ptr<IccProfile> iccProfile;
         ColorDescription colorDescription = ColorDescription::sRGB;
-        std::optional<double> peakBrightnessOverride;
-        std::optional<double> averageBrightnessOverride;
-        std::optional<double> minBrightnessOverride;
 
         // the transformation that buffers submitted to the pipeline should have
         DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;

@@ -314,11 +314,11 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_connector->maxBpc, preferred);
     }
     if (m_connector->hdrMetadata.isValid()) {
-        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.transferFunction));
-    } else if (m_pending.transferFunction != NamedTransferFunction::sRGB) {
+        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.colorDescription.transferFunction()));
+    } else if (m_pending.colorDescription.transferFunction() != NamedTransferFunction::gamma22) {
         return false;
     }
-    if (m_pending.BT2020) {
+    if (m_pending.colorDescription.colorimetry().name == NamedColorimetry::BT2020) {
         if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
             return false;
         }
@@ -710,74 +710,20 @@ void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
     }
 }
 
+void DrmPipeline::setColorDescription(const ColorDescription &description)
+{
+    m_pending.colorDescription = description;
+}
+
 void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 {
     m_pending.contentType = type;
-}
-
-void DrmPipeline::setBT2020(bool useBT2020)
-{
-    if (m_pending.BT2020 != useBT2020) {
-        m_pending.BT2020 = useBT2020;
-        m_pending.colorDescription = createColorDescription();
-    }
-}
-
-void DrmPipeline::setNamedTransferFunction(NamedTransferFunction tf)
-{
-    if (m_pending.transferFunction != tf) {
-        m_pending.transferFunction = tf;
-        m_pending.colorDescription = createColorDescription();
-    }
-}
-
-void DrmPipeline::setSdrBrightness(double sdrBrightness)
-{
-    if (m_pending.sdrBrightness != sdrBrightness) {
-        m_pending.sdrBrightness = sdrBrightness;
-        m_pending.colorDescription = createColorDescription();
-    }
-}
-
-void DrmPipeline::setSdrGamutWideness(double sdrGamutWideness)
-{
-    if (m_pending.sdrGamutWideness != sdrGamutWideness) {
-        m_pending.sdrGamutWideness = sdrGamutWideness;
-        m_pending.colorDescription = createColorDescription();
-    }
-}
-
-void DrmPipeline::setBrightnessOverrides(std::optional<double> peakBrightnessOverride, std::optional<double> averageBrightnessOverride, std::optional<double> minBrightnessOverride)
-{
-    if (m_pending.peakBrightnessOverride != peakBrightnessOverride || m_pending.averageBrightnessOverride != averageBrightnessOverride || m_pending.minBrightnessOverride != minBrightnessOverride) {
-        m_pending.peakBrightnessOverride = peakBrightnessOverride;
-        m_pending.averageBrightnessOverride = averageBrightnessOverride;
-        m_pending.minBrightnessOverride = minBrightnessOverride;
-        m_pending.colorDescription = createColorDescription();
-    }
 }
 
 void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
 {
     if (m_pending.iccProfile != profile) {
         m_pending.iccProfile = profile;
-        m_pending.colorDescription = createColorDescription();
-    }
-}
-
-ColorDescription DrmPipeline::createColorDescription() const
-{
-    if (m_pending.transferFunction == NamedTransferFunction::PerceptualQuantizer && m_connector->edid()) {
-        const auto colorimetry = m_pending.BT2020 ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
-        return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness,
-                                m_pending.minBrightnessOverride.value_or(m_connector->edid()->desiredMinLuminance()),
-                                m_pending.averageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_pending.sdrBrightness)),
-                                m_pending.peakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)),
-                                m_pending.sdrGamutWideness);
-    } else if (m_pending.iccProfile) {
-        return ColorDescription(m_pending.iccProfile->colorimetry(), NamedTransferFunction::sRGB, 200, 0, 200, 200, 0);
-    } else {
-        return ColorDescription::sRGB;
     }
 }
 
