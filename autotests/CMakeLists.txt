@@ -242,3 +242,14 @@ target_link_libraries(testOutputTransform
 )
 add_test(NAME kwin-testOutputTransform COMMAND testOutputTransform)
 ecm_mark_as_test(testOutputTransform)
+
+########################################################
+# Test Colorspace
+########################################################
+add_executable(testColorspaces test_colorspaces.cpp)
+target_link_libraries(testColorspaces
+    Qt::Test
+    kwin
+)
+add_test(NAME kwin-testColorspaces COMMAND testColorspaces)
+ecm_mark_as_test(testColorspaces)
