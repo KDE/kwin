@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-21 02:00+0000\n"
+"POT-Creation-Date: 2023-12-22 01:40+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -2376,19 +2376,19 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "&Naładź pavodziny akna..."
 
-#: plugins/overview/qml/main.qml:724
+#: plugins/overview/qml/main.qml:723
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Pierasuń akno"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:153
+#: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:448
+#: plugins/private/qml/WindowHeapDelegate.qml:450
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

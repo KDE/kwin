@@ -1,6 +1,6 @@
 # Burkhard Lück <lueck@hube-lueck.de>, 2009, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2009.
-# Johannes Obermayr <johannesobermayr@gmx.de>, 2009, 2010.
+# Johannes Obermayr <johannesobermayr@gmx.de>, 2009, 2010, 2023.
 # Frederik Schwarzer <schwarzer@kde.org>, 2012, 2016, 2020, 2022.
 # Frank Steinmetzger <dev-kde@felsenfleischer.de>, 2022.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: main.cpp:151 touch.cpp:117
 #, kde-format
@@ -72,7 +72,7 @@ msgstr "%1 - Aktuelle Anwendung"
 #: main.cpp:165
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "Übersicht"
 
 #: main.cpp:167 touch.cpp:131
 #, kde-format

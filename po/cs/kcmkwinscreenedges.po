@@ -74,7 +74,7 @@ msgstr "%1 - Aktuální aplikace"
 #: main.cpp:165
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "Přehled"
 
 #: main.cpp:167 touch.cpp:131
 #, kde-format
