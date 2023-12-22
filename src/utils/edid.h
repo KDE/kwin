@@ -81,16 +81,11 @@ public:
 
     Colorimetry colorimetry() const;
 
-    struct HDRMetadata
-    {
-        bool hasValidBrightnessValues;
-        float desiredContentMinLuminance;
-        float desiredContentMaxLuminance;
-        float desiredMaxFrameAverageLuminance;
-        bool supportsPQ;
-        bool supportsBT2020;
-    };
-    std::optional<HDRMetadata> hdrMetadata() const;
+    double desiredMinLuminance() const;
+    std::optional<double> desiredMaxFrameAverageLuminance() const;
+    std::optional<double> desiredMaxLuminance() const;
+    bool supportsPQ() const;
+    bool supportsBT2020() const;
 
     /**
      * @returns a string that is intended to identify the monitor uniquely.
@@ -106,6 +101,14 @@ private:
     QByteArray m_serialNumber;
     QString m_hash;
     Colorimetry m_colorimetry;
+    struct HDRMetadata
+    {
+        double desiredContentMinLuminance;
+        std::optional<double> desiredContentMaxLuminance;
+        std::optional<double> desiredMaxFrameAverageLuminance;
+        bool supportsPQ;
+        bool supportsBT2020;
+    };
     std::optional<HDRMetadata> m_hdrMetadata;
 
     QByteArray m_identifier;

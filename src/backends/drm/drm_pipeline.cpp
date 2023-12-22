@@ -769,13 +769,11 @@ ColorDescription DrmPipeline::createColorDescription() const
 {
     if (m_pending.transferFunction == NamedTransferFunction::PerceptualQuantizer && m_connector->edid()) {
         const auto colorimetry = m_pending.BT2020 ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
-        if (const auto hdr = m_connector->edid()->hdrMetadata(); hdr && hdr->hasValidBrightnessValues) {
-            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, hdr->desiredContentMinLuminance, hdr->desiredMaxFrameAverageLuminance, hdr->desiredContentMaxLuminance, m_pending.sdrGamutWideness);
-        } else if (m_pending.peakBrightnessOverride && m_pending.averageBrightnessOverride) {
-            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, m_pending.minBrightnessOverride.value_or(0), *m_pending.averageBrightnessOverride, *m_pending.peakBrightnessOverride, m_pending.sdrGamutWideness);
-        } else {
-            return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness, 0, m_pending.sdrBrightness, m_pending.sdrBrightness, m_pending.sdrGamutWideness);
-        }
+        return ColorDescription(colorimetry, m_pending.transferFunction, m_pending.sdrBrightness,
+                                m_pending.minBrightnessOverride.value_or(m_connector->edid()->desiredMinLuminance()),
+                                m_pending.averageBrightnessOverride.value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_pending.sdrBrightness)),
+                                m_pending.peakBrightnessOverride.value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)),
+                                m_pending.sdrGamutWideness);
     } else if (m_pending.iccProfile) {
         return ColorDescription(m_pending.iccProfile->colorimetry(), NamedTransferFunction::sRGB, 200, 0, 200, 200, 0);
     } else {
@@ -789,11 +787,7 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
         // for sRGB / gamma 2.2, don't send any metadata, to ensure the non-HDR experience stays the same
         return nullptr;
     }
-    if (!m_connector->edid() || !m_connector->edid()->hdrMetadata()) {
-        return nullptr;
-    }
-    const auto metadata = *m_connector->edid()->hdrMetadata();
-    if (!metadata.supportsPQ) {
+    if (!m_connector->edid()->supportsPQ()) {
         return nullptr;
     }
     const auto colorimetry = m_connector->edid()->colorimetry();
@@ -820,12 +814,12 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
             },
             .white_point = {to16Bit(colorimetry.white.x()), to16Bit(colorimetry.white.y())},
             // in nits
-            .max_display_mastering_luminance = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
+            .max_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
             // in 0.0001 nits
-            .min_display_mastering_luminance = uint16_t(std::round(metadata.desiredContentMinLuminance * 10000)),
+            .min_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxLuminance().value_or(0) * 10000)),
             // in nits
-            .max_cll = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
-            .max_fall = uint16_t(std::round(metadata.desiredMaxFrameAverageLuminance)),
+            .max_cll = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
+            .max_fall = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
         },
     };
     return DrmBlob::create(gpu(), &data, sizeof(data));

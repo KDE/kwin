@@ -624,14 +624,14 @@ const ColorDescription &Output::colorDescription() const
     return m_state.colorDescription;
 }
 
-double Output::maxPeakBrightness() const
+std::optional<double> Output::maxPeakBrightness() const
 {
-    return m_state.maxPeakBrightnessOverride.value_or(m_information.maxPeakBrightness);
+    return m_state.maxPeakBrightnessOverride ? m_state.maxPeakBrightnessOverride : m_information.maxPeakBrightness;
 }
 
-double Output::maxAverageBrightness() const
+std::optional<double> Output::maxAverageBrightness() const
 {
-    return m_state.maxAverageBrightnessOverride.value_or(m_information.maxAverageBrightness);
+    return m_state.maxAverageBrightnessOverride ? *m_state.maxAverageBrightnessOverride : m_information.maxAverageBrightness;
 }
 
 double Output::minBrightness() const

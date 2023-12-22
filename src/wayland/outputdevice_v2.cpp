@@ -133,8 +133,8 @@ public:
     bool m_wideColorGamut = false;
     auto_rotate_policy m_autoRotation = auto_rotate_policy::auto_rotate_policy_in_tablet_mode;
     QString m_iccProfilePath;
-    double m_maxPeakBrightness = 0;
-    double m_maxAverageBrightness = 0;
+    std::optional<double> m_maxPeakBrightness;
+    std::optional<double> m_maxAverageBrightness;
     double m_minBrightness = 0;
     double m_sdrGamutWideness = 0;
     std::optional<double> m_maxPeakBrightnessOverride;
@@ -445,7 +445,7 @@ void OutputDeviceV2InterfacePrivate::sendIccProfilePath(Resource *resource)
 void OutputDeviceV2InterfacePrivate::sendBrightnessMetadata(Resource *resource)
 {
     if (resource->version() >= KDE_OUTPUT_DEVICE_V2_BRIGHTNESS_METADATA_SINCE_VERSION) {
-        send_brightness_metadata(resource->handle, std::round(m_maxPeakBrightness), std::round(m_maxAverageBrightness), std::round(m_minBrightness * 10'000));
+        send_brightness_metadata(resource->handle, std::round(m_maxPeakBrightness.value_or(0)), std::round(m_maxAverageBrightness.value_or(0)), std::round(m_minBrightness * 10'000));
     }
 }
 

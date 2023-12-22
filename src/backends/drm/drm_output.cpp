@@ -59,11 +59,10 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         capabilities |= Capability::RgbRange;
         initialState.rgbRange = DrmConnector::broadcastRgbToRgbRange(conn->broadcastRGB.enumValue());
     }
-    if (m_connector->hdrMetadata.isValid() && m_connector->edid() && m_connector->edid()->hdrMetadata() && m_connector->edid()->hdrMetadata()->supportsPQ) {
+    if (m_connector->hdrMetadata.isValid() && m_connector->edid()->supportsPQ()) {
         capabilities |= Capability::HighDynamicRange;
     }
-    if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)
-        && m_connector->edid() && m_connector->edid()->hdrMetadata() && m_connector->edid()->hdrMetadata()->supportsBT2020) {
+    if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) && m_connector->edid()->supportsBT2020()) {
         capabilities |= Capability::WideColorGamut;
     }
     if (conn->isInternal()) {
@@ -72,8 +71,6 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     }
 
     const Edid *edid = conn->edid();
-
-    const auto hdrData = edid->hdrMetadata();
     setInformation(Information{
         .name = conn->connectorName(),
         .manufacturer = edid->manufacturerString(),
@@ -88,9 +85,9 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         .internal = conn->isInternal(),
         .nonDesktop = conn->isNonDesktop(),
         .mstPath = conn->mstPath(),
-        .maxPeakBrightness = hdrData && hdrData->hasValidBrightnessValues ? hdrData->desiredContentMaxLuminance : 0,
-        .maxAverageBrightness = hdrData && hdrData->hasValidBrightnessValues ? hdrData->desiredMaxFrameAverageLuminance : 0,
-        .minBrightness = hdrData && hdrData->hasValidBrightnessValues ? hdrData->desiredContentMinLuminance : 0,
+        .maxPeakBrightness = edid->desiredMaxLuminance(),
+        .maxAverageBrightness = edid->desiredMaxFrameAverageLuminance(),
+        .minBrightness = edid->desiredMinLuminance(),
     });
 
     initialState.modes = getModes();

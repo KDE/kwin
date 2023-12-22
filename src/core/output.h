@@ -341,8 +341,8 @@ public:
 
     virtual bool updateCursorLayer();
 
-    double maxPeakBrightness() const;
-    double maxAverageBrightness() const;
+    std::optional<double> maxPeakBrightness() const;
+    std::optional<double> maxAverageBrightness() const;
     double minBrightness() const;
     std::optional<double> maxPeakBrightnessOverride() const;
     std::optional<double> maxAverageBrightnessOverride() const;
@@ -431,8 +431,8 @@ protected:
         bool placeholder = false;
         bool nonDesktop = false;
         QByteArray mstPath;
-        double maxPeakBrightness = 0;
-        double maxAverageBrightness = 0;
+        std::optional<double> maxPeakBrightness;
+        std::optional<double> maxAverageBrightness;
         double minBrightness = 0;
     };
 
@@ -456,9 +456,9 @@ protected:
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
         ColorDescription colorDescription = ColorDescription::sRGB;
-        std::optional<float> maxPeakBrightnessOverride;
-        std::optional<float> maxAverageBrightnessOverride;
-        std::optional<float> minBrightnessOverride;
+        std::optional<double> maxPeakBrightnessOverride;
+        std::optional<double> maxAverageBrightnessOverride;
+        std::optional<double> minBrightnessOverride;
         double sdrGamutWideness = 0;
     };
 

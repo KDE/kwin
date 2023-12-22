@@ -166,10 +166,9 @@ Edid::Edid(const void *data, uint32_t size)
         }
         if (hdr_static_metadata) {
             m_hdrMetadata = HDRMetadata{
-                .hasValidBrightnessValues = hdr_static_metadata->desired_content_min_luminance > 0 && hdr_static_metadata->desired_content_max_luminance > 0 && hdr_static_metadata->desired_content_max_frame_avg_luminance,
                 .desiredContentMinLuminance = hdr_static_metadata->desired_content_min_luminance,
-                .desiredContentMaxLuminance = hdr_static_metadata->desired_content_max_luminance,
-                .desiredMaxFrameAverageLuminance = hdr_static_metadata->desired_content_max_frame_avg_luminance,
+                .desiredContentMaxLuminance = hdr_static_metadata->desired_content_max_luminance > 0 ? std::make_optional(hdr_static_metadata->desired_content_max_luminance) : std::nullopt,
+                .desiredMaxFrameAverageLuminance = hdr_static_metadata->desired_content_max_frame_avg_luminance > 0 ? std::make_optional(hdr_static_metadata->desired_content_max_frame_avg_luminance) : std::nullopt,
                 .supportsPQ = hdr_static_metadata->eotfs->pq,
                 .supportsBT2020 = colorimetry && colorimetry->bt2020_rgb,
             };
@@ -252,9 +251,29 @@ Colorimetry Edid::colorimetry() const
     return m_colorimetry;
 }
 
-std::optional<Edid::HDRMetadata> Edid::hdrMetadata() const
+double Edid::desiredMinLuminance() const
 {
-    return m_hdrMetadata;
+    return m_hdrMetadata ? m_hdrMetadata->desiredContentMinLuminance : 0;
+}
+
+std::optional<double> Edid::desiredMaxFrameAverageLuminance() const
+{
+    return m_hdrMetadata ? m_hdrMetadata->desiredMaxFrameAverageLuminance : std::nullopt;
+}
+
+std::optional<double> Edid::desiredMaxLuminance() const
+{
+    return m_hdrMetadata ? m_hdrMetadata->desiredContentMaxLuminance : std::nullopt;
+}
+
+bool Edid::supportsPQ() const
+{
+    return m_hdrMetadata && m_hdrMetadata->supportsPQ;
+}
+
+bool Edid::supportsBT2020() const
+{
+    return m_hdrMetadata && m_hdrMetadata->supportsBT2020;
 }
 
 QByteArray Edid::identifier() const
