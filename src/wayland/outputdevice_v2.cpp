@@ -252,6 +252,7 @@ OutputDeviceV2Interface::OutputDeviceV2Interface(Display *display, Output *handl
     connect(handle, &Output::autoRotationPolicyChanged, this, &OutputDeviceV2Interface::updateAutoRotate);
     connect(handle, &Output::iccProfileChanged, this, &OutputDeviceV2Interface::updateIccProfilePath);
     connect(handle, &Output::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessMetadata);
+    connect(handle, &Output::brightnessMetadataChanged, this, &OutputDeviceV2Interface::updateBrightnessOverrides);
     connect(handle, &Output::sdrGamutWidenessChanged, this, &OutputDeviceV2Interface::updateSdrGamutWideness);
 }
 
@@ -309,6 +310,7 @@ void OutputDeviceV2InterfacePrivate::kde_output_device_v2_bind_resource(Resource
     sendAutoRotationPolicy(resource);
     sendIccProfilePath(resource);
     sendBrightnessMetadata(resource);
+    sendBrightnessOverrides(resource);
     sendSdrGamutWideness(resource);
     sendDone(resource);
 }
