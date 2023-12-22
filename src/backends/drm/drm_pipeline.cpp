@@ -762,7 +762,7 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
             // in nits
             .max_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
             // in 0.0001 nits
-            .min_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxLuminance().value_or(0) * 10000)),
+            .min_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMinLuminance() * 10000)),
             // in nits
             .max_cll = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
             .max_fall = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
