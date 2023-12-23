@@ -1,6 +1,6 @@
 # Maxime Corteel <mcorteel@gmail.com>, 2019.
 # Simon Depiets <sdepiets@gmail.com>, 2019.
-# Xavier Besnard <xavier.besnard@neuf.fr>, 2021, 2022.
+# Xavier Besnard <xavier.besnard@kde.org>, 2021, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"

@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-26 02:32+0000\n"
 "PO-Revision-Date: 2023-10-26 18:50+0200\n"
-"Last-Translator: Xavier BESNARD <xavier.besnard@neuf.fr>\n"
+"Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -43,7 +43,7 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "cousin@kde.org, nicolas.ternisien@gmail.com, renard@kde.org, sdepiets@gmail."
-"com, xavier.besnard@neuf.fr"
+"com, xavier.besnard@kde.org"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
