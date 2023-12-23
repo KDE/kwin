@@ -1624,6 +1624,99 @@ QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
     return nextMoveResizeGeom;
 }
 
+QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
+{
+    const QRectF currentMoveResizeGeom = moveResizeGeometry();
+    QRectF nextMoveResizeGeom = moveResizeGeometry();
+
+    if (!isMovable()) {
+        return nextMoveResizeGeom;
+    }
+
+    QPointF topleft = global - interactiveMoveOffset();
+    // first move, then snap, then check bounds
+    QRectF geometry = nextMoveResizeGeom;
+    geometry.moveTopLeft(topleft);
+    geometry.moveTopLeft(workspace()->adjustWindowPosition(this, geometry.topLeft(),
+                                                           isUnrestrictedInteractiveMoveResize()));
+    nextMoveResizeGeom = geometry;
+
+    if (!isUnrestrictedInteractiveMoveResize()) {
+        const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+        QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
+        for (const QRect &rect : strut) {
+            availableArea -= rect; // Strut areas
+        }
+        bool transposed = false;
+        int requiredPixels;
+        QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
+        for (;;) {
+            QRectF currentTry = nextMoveResizeGeom;
+            const QRectF titleRect(bTitleRect.translated(currentTry.topLeft()));
+            int visiblePixels = 0;
+            for (const QRect &rect : availableArea) {
+                const QRect r = rect & titleRect.toRect();
+                if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
+                    (!transposed && r.height() == titleRect.height())) { // ...prevents long slim areas
+                    visiblePixels += r.width() * r.height();
+                }
+            }
+            if (visiblePixels >= requiredPixels) {
+                break; // We have reached a valid position
+            }
+
+            // (esp.) if there're more screens with different struts (panels) it the titlebar
+            // will be movable outside the movearea (covering one of the panels) until it
+            // crosses the panel "too much" (not enough visiblePixels) and then stucks because
+            // it's usually only pushed by 1px to either direction
+            // so we first check whether we intersect suc strut and move the window below it
+            // immediately (it's still possible to hit the visiblePixels >= titlebarArea break
+            // by moving the window slightly downwards, but it won't stuck)
+            // see bug #274466
+            // and bug #301805 for why we can't just match the titlearea against the screen
+            if (workspace()->outputs().count() > 1) { // optimization
+                // TODO: could be useful on partial screen struts (half-width panels etc.)
+                int newTitleTop = -1;
+                for (const QRect &region : strut) {
+                    QRectF r = region;
+                    if (r.top() == 0 && r.width() > r.height() && // "top panel"
+                        r.intersects(currentTry) && currentTry.top() < r.bottom()) {
+                        newTitleTop = r.bottom();
+                        break;
+                    }
+                }
+                if (newTitleTop > -1) {
+                    currentTry.moveTop(newTitleTop); // invalid position, possibly on screen change
+                    nextMoveResizeGeom = currentTry;
+                    break;
+                }
+            }
+
+            int dx = sign(currentMoveResizeGeom.x() - currentTry.x()),
+                dy = sign(currentMoveResizeGeom.y() - currentTry.y());
+            if (visiblePixels && dx) { // means there's no full width cap -> favor horizontally
+                dy = 0;
+            } else if (dy) {
+                dx = 0;
+            }
+
+            // Move it back
+            currentTry.translate(dx, dy);
+            nextMoveResizeGeom = currentTry;
+
+            // sinces nextMoveResizeGeom is fractional, at best it is within 1 unit of currentMoveResizeGeom
+            if (std::abs(currentMoveResizeGeom.left() - nextMoveResizeGeom.left()) <= 1.0
+                && std::abs(currentMoveResizeGeom.right() - nextMoveResizeGeom.right()) <= 1.0
+                && std::abs(currentMoveResizeGeom.top() - nextMoveResizeGeom.top()) <= 1.0
+                && std::abs(currentMoveResizeGeom.bottom() - nextMoveResizeGeom.bottom()) <= 1.0) {
+                break; // Prevent lockup
+            }
+        }
+    }
+
+    return nextMoveResizeGeom;
+}
+
 void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root)
 {
     if (isWaitingForInteractiveMoveResizeSync()) {
@@ -1658,7 +1751,6 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
     QPointF globalPos(x_root, y_root);
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
-    QPointF topleft = globalPos - interactiveMoveOffset();
     const QRectF currentMoveResizeGeom = moveResizeGeometry();
     QRectF nextMoveResizeGeom = moveResizeGeometry();
 
@@ -1688,85 +1780,7 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
                 }
             }
         } else {
-            // first move, then snap, then check bounds
-            QRectF geometry = nextMoveResizeGeom;
-            geometry.moveTopLeft(topleft);
-            geometry.moveTopLeft(workspace()->adjustWindowPosition(this, geometry.topLeft(),
-                                                                   isUnrestrictedInteractiveMoveResize()));
-            nextMoveResizeGeom = geometry;
-
-            if (!isUnrestrictedInteractiveMoveResize()) {
-                const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
-                QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
-                for (const QRect &rect : strut) {
-                    availableArea -= rect; // Strut areas
-                }
-                bool transposed = false;
-                int requiredPixels;
-                QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
-                for (;;) {
-                    QRectF currentTry = nextMoveResizeGeom;
-                    const QRect titleRect = bTitleRect.translated(currentTry.topLeft()).toRect();
-                    int visiblePixels = 0;
-                    for (const QRect &rect : availableArea) {
-                        const QRect r = rect & titleRect;
-                        if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
-                            (!transposed && r.height() == titleRect.height())) { // ...prevents long slim areas
-                            visiblePixels += r.width() * r.height();
-                        }
-                    }
-                    if (visiblePixels >= requiredPixels) {
-                        break; // We have reached a valid position
-                    }
-
-                    // (esp.) if there're more screens with different struts (panels) it the titlebar
-                    // will be movable outside the movearea (covering one of the panels) until it
-                    // crosses the panel "too much" (not enough visiblePixels) and then stucks because
-                    // it's usually only pushed by 1px to either direction
-                    // so we first check whether we intersect suc strut and move the window below it
-                    // immediately (it's still possible to hit the visiblePixels >= titlebarArea break
-                    // by moving the window slightly downwards, but it won't stuck)
-                    // see bug #274466
-                    // and bug #301805 for why we can't just match the titlearea against the screen
-                    if (workspace()->outputs().count() > 1) { // optimization
-                        // TODO: could be useful on partial screen struts (half-width panels etc.)
-                        int newTitleTop = -1;
-                        for (const QRect &region : strut) {
-                            QRectF r = region;
-                            if (r.top() == 0 && r.width() > r.height() && // "top panel"
-                                r.intersects(currentTry) && currentTry.top() < r.bottom()) {
-                                newTitleTop = r.bottom();
-                                break;
-                            }
-                        }
-                        if (newTitleTop > -1) {
-                            currentTry.moveTop(newTitleTop); // invalid position, possibly on screen change
-                            nextMoveResizeGeom = currentTry;
-                            break;
-                        }
-                    }
-
-                    int dx = sign(currentMoveResizeGeom.x() - currentTry.x()),
-                        dy = sign(currentMoveResizeGeom.y() - currentTry.y());
-                    if (visiblePixels && dx) { // means there's no full width cap -> favor horizontally
-                        dy = 0;
-                    } else if (dy) {
-                        dx = 0;
-                    }
-
-                    // Move it back
-                    currentTry.translate(dx, dy);
-                    nextMoveResizeGeom = currentTry;
-
-                    // sinces nextMoveResizeGeom is fractional, at best it is within 1 unit of currentMoveResizeGeom
-                    if (std::abs(currentMoveResizeGeom.left() - nextMoveResizeGeom.left()) <= 1.0
-                        && std::abs(currentMoveResizeGeom.right() - nextMoveResizeGeom.right()) <= 1.0
-                        && std::abs(currentMoveResizeGeom.top() - nextMoveResizeGeom.top()) <= 1.0
-                        && std::abs(currentMoveResizeGeom.bottom() - nextMoveResizeGeom.bottom()) <= 1.0) {
-                        break; // Prevent lockup
-                    }
-                }
-            }
+            nextMoveResizeGeom = nextInteractiveMoveGeometry(globalPos);
         }
     } else {
         Q_UNREACHABLE();

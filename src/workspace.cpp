@@ -2596,7 +2596,7 @@ void Workspace::setActiveCursorOutput(const QPointF &pos)
  * effective snap zones. When 1.0, it means that the snap zones will be
  * used without change.
  */
-QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrestricted, double snapAdjust)
+QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool unrestricted, double snapAdjust) const
 {
     QSizeF borderSnapZone(options->borderSnapZone(), options->borderSnapZone());
     QRectF maxRect;
