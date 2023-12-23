@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-22 01:40+0000\n"
+"POT-Creation-Date: 2023-12-23 01:46+0000\n"
 "PO-Revision-Date: 2022-05-14 17:24+0200\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -4303,7 +4303,7 @@ msgstr ""
 "aktive skærm.\n"
 "Derfor er det ikke muligt at skifte til en skærm eksplicit."
 
-#: utils/edid.cpp:241
+#: utils/edid.cpp:240
 #, kde-format
 msgid "unknown"
 msgstr "ukendt"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-22 01:40+0000\n"
+"POT-Creation-Date: 2023-12-23 01:46+0000\n"
 "PO-Revision-Date: 2023-11-30 09:04+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -4119,7 +4119,7 @@ msgstr ""
 "super illo como lo active.\n"
 "Ergo il non es possibile commutar le schermo explicitemente"
 
-#: utils/edid.cpp:241
+#: utils/edid.cpp:240
 #, kde-format
 msgid "unknown"
 msgstr "incognite"

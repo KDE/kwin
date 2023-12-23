@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-22 01:40+0000\n"
+"POT-Creation-Date: 2023-12-23 01:46+0000\n"
 "PO-Revision-Date: 2023-11-30 11:31+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -4124,7 +4124,7 @@ msgstr ""
 "якому показано вказівник миші як активний.\n"
 "Тому перемикання на певний екран явним чином неможливе."
 
-#: utils/edid.cpp:241
+#: utils/edid.cpp:240
 #, kde-format
 msgid "unknown"
 msgstr "невідомий"
