@@ -224,7 +224,7 @@ public:
 
     QRectF adjustClientArea(Window *window, const QRectF &area) const;
     QPointF adjustWindowPosition(Window *window, QPointF pos, bool unrestricted, double snapAdjust = 1.0);
-    QRectF adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravity gravity);
+    QRectF adjustWindowSize(const Window *window, QRectF moveResizeGeom, Gravity gravity) const;
     void raiseWindow(Window *window, bool nogroup = false);
     void lowerWindow(Window *window, bool nogroup = false);
     void raiseWindowRequest(Window *window, NET::RequestSource src = NET::FromApplication, xcb_timestamp_t timestamp = 0);

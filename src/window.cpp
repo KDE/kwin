@@ -1448,6 +1448,182 @@ QRectF Window::titleBarRect(const QRectF &rect, bool &transposed, int &requiredP
     return titleRect;
 }
 
+QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
+{
+    const QRectF currentMoveResizeGeom = moveResizeGeometry();
+    QRectF nextMoveResizeGeom = moveResizeGeometry();
+
+    const Gravity gravity = interactiveMoveResizeGravity();
+    if (gravity == Gravity::None || isShade() || !isResizable()) {
+        return nextMoveResizeGeom;
+    }
+
+    // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
+    // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
+    QPointF topleft = global - interactiveMoveOffset();
+    QPointF bottomright = global + invertedInteractiveMoveOffset();
+
+    // TODO move whole group when moving its leader or when the leader is not mapped?
+
+    QRectF orig = initialInteractiveMoveResizeGeometry();
+    SizeMode sizeMode = SizeModeAny;
+    auto calculateMoveResizeGeom = [&topleft, &bottomright, &orig, &nextMoveResizeGeom, &sizeMode, &gravity]() {
+        switch (gravity) {
+        case Gravity::TopLeft:
+            nextMoveResizeGeom = QRectF(topleft, orig.bottomRight());
+            break;
+        case Gravity::BottomRight:
+            nextMoveResizeGeom = QRectF(orig.topLeft(), bottomright);
+            break;
+        case Gravity::BottomLeft:
+            nextMoveResizeGeom = QRectF(QPointF(topleft.x(), orig.y()), QPointF(orig.right(), bottomright.y()));
+            break;
+        case Gravity::TopRight:
+            nextMoveResizeGeom = QRectF(QPointF(orig.x(), topleft.y()), QPointF(bottomright.x(), orig.bottom()));
+            break;
+        case Gravity::Top:
+            nextMoveResizeGeom = QRectF(QPointF(orig.left(), topleft.y()), orig.bottomRight());
+            sizeMode = SizeModeFixedH; // try not to affect height
+            break;
+        case Gravity::Bottom:
+            nextMoveResizeGeom = QRectF(orig.topLeft(), QPointF(orig.right(), bottomright.y()));
+            sizeMode = SizeModeFixedH;
+            break;
+        case Gravity::Left:
+            nextMoveResizeGeom = QRectF(QPointF(topleft.x(), orig.top()), orig.bottomRight());
+            sizeMode = SizeModeFixedW;
+            break;
+        case Gravity::Right:
+            nextMoveResizeGeom = QRectF(orig.topLeft(), QPointF(bottomright.x(), orig.bottom()));
+            sizeMode = SizeModeFixedW;
+            break;
+        case Gravity::None:
+            Q_UNREACHABLE();
+            break;
+        }
+    };
+
+    // first resize (without checking constrains), then snap, then check bounds, then check constrains
+    calculateMoveResizeGeom();
+    // adjust new size to snap to other windows/borders
+    nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
+
+    if (!isUnrestrictedInteractiveMoveResize()) {
+        // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
+        // the other directions. If not visible enough, move the window to the closest valid
+        // point. We bruteforce this by slowly moving the window back to its previous position
+        const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+        QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
+        for (const QRect &rect : strut) {
+            availableArea -= rect;
+        }
+        bool transposed = false;
+        int requiredPixels;
+        QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
+        int lastVisiblePixels = -1;
+        QRectF lastTry = nextMoveResizeGeom;
+        bool titleFailed = false;
+        for (;;) {
+            const QRect titleRect = bTitleRect.translated(nextMoveResizeGeom.topLeft()).toRect();
+            int visiblePixels = 0;
+            int realVisiblePixels = 0;
+            for (const QRect &rect : availableArea) {
+                const QRect r = rect & titleRect;
+                realVisiblePixels += r.width() * r.height();
+                if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
+                    (!transposed && r.height() == titleRect.height())) { // ...prevents long slim areas
+                    visiblePixels += r.width() * r.height();
+                }
+            }
+
+            if (visiblePixels >= requiredPixels) {
+                break; // We have reached a valid position
+            }
+
+            if (realVisiblePixels <= lastVisiblePixels) {
+                if (titleFailed && realVisiblePixels < lastVisiblePixels) {
+                    break; // we won't become better
+                } else {
+                    if (!titleFailed) {
+                        nextMoveResizeGeom = lastTry;
+                    }
+                    titleFailed = true;
+                }
+            }
+            lastVisiblePixels = realVisiblePixels;
+            QRectF currentTry = nextMoveResizeGeom;
+            lastTry = currentTry;
+
+            // Not visible enough, move the window to the closest valid point. We bruteforce
+            // this by slowly moving the window back to its previous position.
+            // The geometry changes at up to two edges, the one with the title (if) shall take
+            // precedence. The opposing edge has no impact on visiblePixels and only one of
+            // the adjacent can alter at a time, ie. it's enough to ignore adjacent edges
+            // if the title edge altered
+            bool leftChanged = !qFuzzyCompare(currentMoveResizeGeom.left(), currentTry.left());
+            bool rightChanged = !qFuzzyCompare(currentMoveResizeGeom.right(), currentTry.right());
+            bool topChanged = !qFuzzyCompare(currentMoveResizeGeom.top(), currentTry.top());
+            bool btmChanged = !qFuzzyCompare(currentMoveResizeGeom.bottom(), currentTry.bottom());
+            auto fixChangedState = [titleFailed](bool &major, bool &counter, bool &ad1, bool &ad2) {
+                counter = false;
+                if (titleFailed) {
+                    major = false;
+                }
+                if (major) {
+                    ad1 = ad2 = false;
+                }
+            };
+            switch (titlebarPosition()) {
+            default:
+            case Qt::TopEdge:
+                fixChangedState(topChanged, btmChanged, leftChanged, rightChanged);
+                break;
+            case Qt::LeftEdge:
+                fixChangedState(leftChanged, rightChanged, topChanged, btmChanged);
+                break;
+            case Qt::BottomEdge:
+                fixChangedState(btmChanged, topChanged, leftChanged, rightChanged);
+                break;
+            case Qt::RightEdge:
+                fixChangedState(rightChanged, leftChanged, topChanged, btmChanged);
+                break;
+            }
+            if (topChanged) {
+                currentTry.setTop(currentTry.y() + qBound(-1.0, currentMoveResizeGeom.y() - currentTry.y(), 1.0));
+            } else if (leftChanged) {
+                currentTry.setLeft(currentTry.x() + qBound(-1.0, currentMoveResizeGeom.x() - currentTry.x(), 1.0));
+            } else if (btmChanged) {
+                currentTry.setBottom(currentTry.bottom() + qBound(-1.0, currentMoveResizeGeom.bottom() - currentTry.bottom(), 1.0));
+            } else if (rightChanged) {
+                currentTry.setRight(currentTry.right() + qBound(-1.0, currentMoveResizeGeom.right() - currentTry.right(), 1.0));
+            } else {
+                break; // no position changed - that's certainly not good
+            }
+            nextMoveResizeGeom = currentTry;
+        }
+    }
+
+    // Always obey size hints, even when in "unrestricted" mode
+    QSizeF size = constrainFrameSize(nextMoveResizeGeom.size(), sizeMode);
+    // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
+    topleft = QPointF(nextMoveResizeGeom.right() - size.width(), nextMoveResizeGeom.bottom() - size.height());
+    bottomright = QPointF(nextMoveResizeGeom.left() + size.width(), nextMoveResizeGeom.top() + size.height());
+    orig = nextMoveResizeGeom;
+
+    // if aspect ratios are specified, both dimensions may change.
+    // Therefore grow to the right/bottom if needed.
+    // TODO it should probably obey gravity rather than always using right/bottom ?
+    if (sizeMode == SizeModeFixedH) {
+        orig.setRight(bottomright.x());
+    } else if (sizeMode == SizeModeFixedW) {
+        orig.setBottom(bottomright.y());
+    }
+
+    calculateMoveResizeGeom();
+
+    return nextMoveResizeGeom;
+}
+
 void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root)
 {
     if (isWaitingForInteractiveMoveResizeSync()) {
@@ -1483,7 +1659,6 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
     QPointF topleft = globalPos - interactiveMoveOffset();
-    QPointF bottomright = globalPos + invertedInteractiveMoveOffset();
     const QRectF currentMoveResizeGeom = moveResizeGeometry();
     QRectF nextMoveResizeGeom = moveResizeGeometry();
 
@@ -1495,161 +1670,7 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
             return;
         }
 
-        QRectF orig = initialInteractiveMoveResizeGeometry();
-        SizeMode sizeMode = SizeModeAny;
-        auto calculateMoveResizeGeom = [&topleft, &bottomright, &orig, &nextMoveResizeGeom, &sizeMode, &gravity]() {
-            switch (gravity) {
-            case Gravity::TopLeft:
-                nextMoveResizeGeom = QRectF(topleft, orig.bottomRight());
-                break;
-            case Gravity::BottomRight:
-                nextMoveResizeGeom = QRectF(orig.topLeft(), bottomright);
-                break;
-            case Gravity::BottomLeft:
-                nextMoveResizeGeom = QRectF(QPointF(topleft.x(), orig.y()), QPointF(orig.right(), bottomright.y()));
-                break;
-            case Gravity::TopRight:
-                nextMoveResizeGeom = QRectF(QPointF(orig.x(), topleft.y()), QPointF(bottomright.x(), orig.bottom()));
-                break;
-            case Gravity::Top:
-                nextMoveResizeGeom = QRectF(QPointF(orig.left(), topleft.y()), orig.bottomRight());
-                sizeMode = SizeModeFixedH; // try not to affect height
-                break;
-            case Gravity::Bottom:
-                nextMoveResizeGeom = QRectF(orig.topLeft(), QPointF(orig.right(), bottomright.y()));
-                sizeMode = SizeModeFixedH;
-                break;
-            case Gravity::Left:
-                nextMoveResizeGeom = QRectF(QPointF(topleft.x(), orig.top()), orig.bottomRight());
-                sizeMode = SizeModeFixedW;
-                break;
-            case Gravity::Right:
-                nextMoveResizeGeom = QRectF(orig.topLeft(), QPointF(bottomright.x(), orig.bottom()));
-                sizeMode = SizeModeFixedW;
-                break;
-            case Gravity::None:
-                Q_UNREACHABLE();
-                break;
-            }
-        };
-
-        // first resize (without checking constrains), then snap, then check bounds, then check constrains
-        calculateMoveResizeGeom();
-        // adjust new size to snap to other windows/borders
-        nextMoveResizeGeom = workspace()->adjustWindowSize(this, nextMoveResizeGeom, gravity);
-
-        if (!isUnrestrictedInteractiveMoveResize()) {
-            // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
-            // the other directions. If not visible enough, move the window to the closest valid
-            // point. We bruteforce this by slowly moving the window back to its previous position
-            const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
-            QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
-            for (const QRect &rect : strut) {
-                availableArea -= rect;
-            }
-            bool transposed = false;
-            int requiredPixels;
-            QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
-            int lastVisiblePixels = -1;
-            QRectF lastTry = nextMoveResizeGeom;
-            bool titleFailed = false;
-            for (;;) {
-                const QRect titleRect = bTitleRect.translated(nextMoveResizeGeom.topLeft()).toRect();
-                int visiblePixels = 0;
-                int realVisiblePixels = 0;
-                for (const QRect &rect : availableArea) {
-                    const QRect r = rect & titleRect;
-                    realVisiblePixels += r.width() * r.height();
-                    if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
-                        (!transposed && r.height() == titleRect.height())) { // ...prevents long slim areas
-                        visiblePixels += r.width() * r.height();
-                    }
-                }
-
-                if (visiblePixels >= requiredPixels) {
-                    break; // We have reached a valid position
-                }
-
-                if (realVisiblePixels <= lastVisiblePixels) {
-                    if (titleFailed && realVisiblePixels < lastVisiblePixels) {
-                        break; // we won't become better
-                    } else {
-                        if (!titleFailed) {
-                            nextMoveResizeGeom = lastTry;
-                        }
-                        titleFailed = true;
-                    }
-                }
-                lastVisiblePixels = realVisiblePixels;
-                QRectF currentTry = nextMoveResizeGeom;
-                lastTry = currentTry;
-
-                // Not visible enough, move the window to the closest valid point. We bruteforce
-                // this by slowly moving the window back to its previous position.
-                // The geometry changes at up to two edges, the one with the title (if) shall take
-                // precedence. The opposing edge has no impact on visiblePixels and only one of
-                // the adjacent can alter at a time, ie. it's enough to ignore adjacent edges
-                // if the title edge altered
-                bool leftChanged = !qFuzzyCompare(currentMoveResizeGeom.left(), currentTry.left());
-                bool rightChanged = !qFuzzyCompare(currentMoveResizeGeom.right(), currentTry.right());
-                bool topChanged = !qFuzzyCompare(currentMoveResizeGeom.top(), currentTry.top());
-                bool btmChanged = !qFuzzyCompare(currentMoveResizeGeom.bottom(), currentTry.bottom());
-                auto fixChangedState = [titleFailed](bool &major, bool &counter, bool &ad1, bool &ad2) {
-                    counter = false;
-                    if (titleFailed) {
-                        major = false;
-                    }
-                    if (major) {
-                        ad1 = ad2 = false;
-                    }
-                };
-                switch (titlebarPosition()) {
-                default:
-                case Qt::TopEdge:
-                    fixChangedState(topChanged, btmChanged, leftChanged, rightChanged);
-                    break;
-                case Qt::LeftEdge:
-                    fixChangedState(leftChanged, rightChanged, topChanged, btmChanged);
-                    break;
-                case Qt::BottomEdge:
-                    fixChangedState(btmChanged, topChanged, leftChanged, rightChanged);
-                    break;
-                case Qt::RightEdge:
-                    fixChangedState(rightChanged, leftChanged, topChanged, btmChanged);
-                    break;
-                }
-                if (topChanged) {
-                    currentTry.setTop(currentTry.y() + qBound(-1.0, currentMoveResizeGeom.y() - currentTry.y(), 1.0));
-                } else if (leftChanged) {
-                    currentTry.setLeft(currentTry.x() + qBound(-1.0, currentMoveResizeGeom.x() - currentTry.x(), 1.0));
-                } else if (btmChanged) {
-                    currentTry.setBottom(currentTry.bottom() + qBound(-1.0, currentMoveResizeGeom.bottom() - currentTry.bottom(), 1.0));
-                } else if (rightChanged) {
-                    currentTry.setRight(currentTry.right() + qBound(-1.0, currentMoveResizeGeom.right() - currentTry.right(), 1.0));
-                } else {
-                    break; // no position changed - that's certainly not good
-                }
-                nextMoveResizeGeom = currentTry;
-            }
-        }
-
-        // Always obey size hints, even when in "unrestricted" mode
-        QSizeF size = constrainFrameSize(nextMoveResizeGeom.size(), sizeMode);
-        // the new topleft and bottomright corners (after checking size constrains), if they'll be needed
-        topleft = QPointF(nextMoveResizeGeom.right() - size.width(), nextMoveResizeGeom.bottom() - size.height());
-        bottomright = QPointF(nextMoveResizeGeom.left() + size.width(), nextMoveResizeGeom.top() + size.height());
-        orig = nextMoveResizeGeom;
-
-        // if aspect ratios are specified, both dimensions may change.
-        // Therefore grow to the right/bottom if needed.
-        // TODO it should probably obey gravity rather than always using right/bottom ?
-        if (sizeMode == SizeModeFixedH) {
-            orig.setRight(bottomright.x());
-        } else if (sizeMode == SizeModeFixedW) {
-            orig.setBottom(bottomright.y());
-        }
-
-        calculateMoveResizeGeom();
+        nextMoveResizeGeom = nextInteractiveResizeGeometry(globalPos);
     } else if (isInteractiveMove()) {
         Q_ASSERT(gravity == Gravity::None);
         if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here

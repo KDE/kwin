@@ -2763,7 +2763,7 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
     return pos;
 }
 
-QRectF Workspace::adjustWindowSize(Window *window, QRectF moveResizeGeom, Gravity gravity)
+QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, Gravity gravity) const
 {
     // adapted from adjustWindowPosition on 29May2004
     // this function is called when resizing a window and will modify
