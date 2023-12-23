@@ -1420,6 +1420,34 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
     }
 }
 
+QRectF Window::titleBarRect(const QRectF &rect, bool &transposed, int &requiredPixels) const
+{
+    QRectF titleRect = rect;
+    titleRect.moveTopLeft(QPointF(0, 0));
+    switch (titlebarPosition()) {
+    default:
+    case Qt::TopEdge:
+        titleRect.setHeight(borderTop());
+        break;
+    case Qt::LeftEdge:
+        titleRect.setWidth(borderLeft());
+        transposed = true;
+        break;
+    case Qt::BottomEdge:
+        titleRect.setTop(titleRect.bottom() - borderBottom());
+        break;
+    case Qt::RightEdge:
+        titleRect.setLeft(titleRect.right() - borderRight());
+        transposed = true;
+        break;
+    }
+    // When doing a restricted move we must always keep 100px of the titlebar
+    // visible to allow the user to be able to move it again.
+    requiredPixels = std::min(100 * (transposed ? titleRect.width() : titleRect.height()),
+                              rect.width() * rect.height());
+    return titleRect;
+}
+
 void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root)
 {
     if (isWaitingForInteractiveMoveResizeSync()) {
@@ -1460,33 +1488,6 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
     QRectF nextMoveResizeGeom = moveResizeGeometry();
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
-
-    auto titleBarRect = [this](const QRectF &rect, bool &transposed, int &requiredPixels) -> QRectF {
-        QRectF titleRect = rect;
-        titleRect.moveTopLeft(QPointF(0, 0));
-        switch (titlebarPosition()) {
-        default:
-        case Qt::TopEdge:
-            titleRect.setHeight(borderTop());
-            break;
-        case Qt::LeftEdge:
-            titleRect.setWidth(borderLeft());
-            transposed = true;
-            break;
-        case Qt::BottomEdge:
-            titleRect.setTop(titleRect.bottom() - borderBottom());
-            break;
-        case Qt::RightEdge:
-            titleRect.setLeft(titleRect.right() - borderRight());
-            transposed = true;
-            break;
-        }
-        // When doing a restricted move we must always keep 100px of the titlebar
-        // visible to allow the user to be able to move it again.
-        requiredPixels = std::min(100 * (transposed ? titleRect.width() : titleRect.height()),
-                                  rect.width() * rect.height());
-        return titleRect;
-    };
 
     if (isInteractiveResize()) {
         if (m_tile && m_tile->supportsResizeGravity(gravity)) {
