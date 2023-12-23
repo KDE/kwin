@@ -1379,39 +1379,117 @@ void Window::updateInteractiveMoveResize(const QPointF &currentGlobalCursor)
 
 void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &global)
 {
-    const QRectF oldGeo = moveResizeGeometry();
-    handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y());
-    if (!isRequestedFullScreen() && isInteractiveMove()) {
-        if (quickTileMode() != QuickTileMode(QuickTileFlag::None) && oldGeo != moveResizeGeometry()) {
-            GeometryUpdatesBlocker blocker(this);
-            setQuickTileMode(QuickTileFlag::None);
-            const QRectF &geom_restore = geometryRestore();
-            setInteractiveMoveOffset(QPointF(double(interactiveMoveOffset().x()) / double(oldGeo.width()) * double(geom_restore.width()),
-                                             double(interactiveMoveOffset().y()) / double(oldGeo.height()) * double(geom_restore.height())));
-            if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore) {
-                setMoveResizeGeometry(geom_restore);
+    if (isWaitingForInteractiveMoveResizeSync()) {
+        return; // we're still waiting for the client or the timeout
+    }
+
+    const Gravity gravity = interactiveMoveResizeGravity();
+    if ((gravity == Gravity::None && !isMovableAcrossScreens())
+        || (gravity != Gravity::None && (isShade() || !isResizable()))) {
+        return;
+    }
+
+    if (!isInteractiveMoveResize()) {
+        QPointF p(local - interactiveMoveOffset());
+        if (p.manhattanLength() >= QApplication::startDragDistance()) {
+            if (!startInteractiveMoveResize()) {
+                setInteractiveMoveResizePointerButtonDown(false);
+                updateCursor();
+                return;
             }
-            handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
+            updateCursor();
+        } else {
+            return;
+        }
+    }
+
+    // ShadeHover or ShadeActive, ShadeNormal was already avoided above
+    if (gravity != Gravity::None && shadeMode() != ShadeNone) {
+        setShade(ShadeNone);
+    }
+
+    if (isInteractiveResize()) {
+        if (m_tile && m_tile->supportsResizeGravity(gravity)) {
+            m_tile->resizeFromGravity(gravity, global.x(), global.y());
+            return;
+        }
+    }
+
+    const QRectF currentMoveResizeGeom = moveResizeGeometry();
+    QRectF nextMoveResizeGeom = currentMoveResizeGeom;
+
+    if (isInteractiveResize()) {
+        nextMoveResizeGeom = nextInteractiveResizeGeometry(global);
+        if (nextMoveResizeGeom != currentMoveResizeGeom) {
+            doInteractiveResizeSync(nextMoveResizeGeom);
+            Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
+        }
+    } else if (isInteractiveMove()) {
+        auto nextMoveGeometry = [this, &global]() {
+            if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
+                // Special moving of maximized windows on Xinerama screens
+                Output *output = workspace()->outputAt(global);
+                QRectF nextMoveResizeGeom;
+                if (isRequestedFullScreen()) {
+                    nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, output);
+                } else {
+                    nextMoveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
+                    const QSizeF adjSize = constrainFrameSize(nextMoveResizeGeom.size(), SizeModeMax);
+                    if (adjSize != nextMoveResizeGeom.size()) {
+                        QRectF r(nextMoveResizeGeom);
+                        nextMoveResizeGeom.setSize(adjSize);
+                        nextMoveResizeGeom.moveCenter(r.center());
+                    }
+                }
+
+                return nextMoveResizeGeom;
+            }
+
+            return nextInteractiveMoveGeometry(global);
+        };
+
+        nextMoveResizeGeom = nextMoveGeometry();
+        if (nextMoveResizeGeom != currentMoveResizeGeom) {
+            GeometryUpdatesBlocker blocker(this);
+
+            if (!isRequestedFullScreen() && quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+                setQuickTileMode(QuickTileFlag::None);
+
+                const QRectF &geom_restore = geometryRestore();
+                setInteractiveMoveOffset(QPointF(double(interactiveMoveOffset().x()) / double(currentMoveResizeGeom.width()) * double(geom_restore.width()),
+                                                 double(interactiveMoveOffset().y()) / double(currentMoveResizeGeom.height()) * double(geom_restore.height())));
+                if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore) {
+                    setMoveResizeGeometry(geom_restore);
+                }
+                nextMoveResizeGeom = nextMoveGeometry(); // fix position
+            }
+
+            if (!isWaitingForInteractiveMoveResizeSync()) {
+                move(nextMoveResizeGeom.topLeft());
+                Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
+            }
         }
 
-        if (input()->keyboardModifiers() & Qt::ShiftModifier) {
-            resetQuickTilingMaximizationZones();
-            const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
-            if (r.isEmpty()) {
-                workspace()->outline()->hide();
-            } else {
-                if (!workspace()->outline()->isActive() || workspace()->outline()->geometry() != r.toRect()) {
-                    workspace()->outline()->show(r.toRect(), moveResizeGeometry().toRect());
+        if (!isRequestedFullScreen()) {
+            if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) {
+                resetQuickTilingMaximizationZones();
+                const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
+                if (r.isEmpty()) {
+                    workspace()->outline()->hide();
+                } else {
+                    if (!workspace()->outline()->isActive() || workspace()->outline()->geometry() != r.toRect()) {
+                        workspace()->outline()->show(r.toRect(), moveResizeGeometry().toRect());
+                    }
                 }
-            }
-        } else {
-            if (quickTileMode() == QuickTileMode(QuickTileFlag::None) && isResizable()) {
-                checkQuickTilingMaximizationZones(global.x(), global.y());
-            }
-            if (!m_electricMaximizing) {
-                // Only if we are in an electric maximizing gesture we should keep the outline,
-                // otherwise we must make sure it's hidden
-                workspace()->outline()->hide();
+            } else {
+                if (quickTileMode() == QuickTileMode(QuickTileFlag::None) && isResizable()) {
+                    checkQuickTilingMaximizationZones(global.x(), global.y());
+                }
+                if (!m_electricMaximizing) {
+                    // Only if we are in an electric maximizing gesture we should keep the outline,
+                    // otherwise we must make sure it's hidden
+                    workspace()->outline()->hide();
+                }
             }
         }
     }
@@ -1712,86 +1790,6 @@ QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
     }
 
     return nextMoveResizeGeom;
-}
-
-void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root)
-{
-    if (isWaitingForInteractiveMoveResizeSync()) {
-        return; // we're still waiting for the client or the timeout
-    }
-
-    const Gravity gravity = interactiveMoveResizeGravity();
-    if ((gravity == Gravity::None && !isMovableAcrossScreens())
-        || (gravity != Gravity::None && (isShade() || !isResizable()))) {
-        return;
-    }
-
-    if (!isInteractiveMoveResize()) {
-        QPointF p(QPointF(x /* - padding_left*/, y /* - padding_top*/) - interactiveMoveOffset());
-        if (p.manhattanLength() >= QApplication::startDragDistance()) {
-            if (!startInteractiveMoveResize()) {
-                setInteractiveMoveResizePointerButtonDown(false);
-                updateCursor();
-                return;
-            }
-            updateCursor();
-        } else {
-            return;
-        }
-    }
-
-    // ShadeHover or ShadeActive, ShadeNormal was already avoided above
-    if (gravity != Gravity::None && shadeMode() != ShadeNone) {
-        setShade(ShadeNone);
-    }
-
-    QPointF globalPos(x_root, y_root);
-    // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
-    // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
-    const QRectF currentMoveResizeGeom = moveResizeGeometry();
-    QRectF nextMoveResizeGeom = moveResizeGeometry();
-
-    // TODO move whole group when moving its leader or when the leader is not mapped?
-
-    if (isInteractiveResize()) {
-        if (m_tile && m_tile->supportsResizeGravity(gravity)) {
-            m_tile->resizeFromGravity(gravity, x_root, y_root);
-            return;
-        }
-
-        nextMoveResizeGeom = nextInteractiveResizeGeometry(globalPos);
-    } else if (isInteractiveMove()) {
-        Q_ASSERT(gravity == Gravity::None);
-        if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
-            // Special moving of maximized windows on Xinerama screens
-            Output *output = workspace()->outputAt(globalPos);
-            if (isRequestedFullScreen()) {
-                nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, output);
-            } else {
-                nextMoveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
-                const QSizeF adjSize = constrainFrameSize(nextMoveResizeGeom.size(), SizeModeMax);
-                if (adjSize != nextMoveResizeGeom.size()) {
-                    QRectF r(nextMoveResizeGeom);
-                    nextMoveResizeGeom.setSize(adjSize);
-                    nextMoveResizeGeom.moveCenter(r.center());
-                }
-            }
-        } else {
-            nextMoveResizeGeom = nextInteractiveMoveGeometry(globalPos);
-        }
-    } else {
-        Q_UNREACHABLE();
-    }
-
-    if (nextMoveResizeGeom != currentMoveResizeGeom) {
-        if (isInteractiveMove()) {
-            move(nextMoveResizeGeom.topLeft());
-        } else {
-            doInteractiveResizeSync(nextMoveResizeGeom);
-        }
-
-        Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
-    }
 }
 
 StrutRect Window::strutRect(StrutArea area) const
@@ -2739,7 +2737,7 @@ void Window::layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRe
 void Window::processDecorationMove(const QPointF &localPos, const QPointF &globalPos)
 {
     if (isInteractiveMoveResizePointerButtonDown()) {
-        handleInteractiveMoveResize(localPos.x(), localPos.y(), globalPos.x(), globalPos.y());
+        handleInteractiveMoveResize(localPos, globalPos);
         return;
     }
     // TODO: handle modifiers

@@ -1676,7 +1676,6 @@ protected:
      * Default implementation does nothing.
      */
     virtual void doInteractiveResizeSync(const QRectF &rect);
-    void handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y_root);
     void handleInteractiveMoveResize(const QPointF &local, const QPointF &global);
     QRectF titleBarRect(const QRectF &rect, bool &transposed, int &requiredPixels) const;
     QRectF nextInteractiveMoveGeometry(const QPointF &global) const;
