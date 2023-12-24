@@ -4,41 +4,42 @@
 # Andhika Padmawan <andhika.padmawan@gmail.com>, 2010-2014.
 # Wantoyo <wantoyek@gmail.com>, 2017, 2018, 2019, 2020, 2022.
 # Aziz Adam Adrian <4.adam.adrian@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2023 Linerly <linerly@linerly.xyz>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-23 01:46+0000\n"
-"PO-Revision-Date: 2022-09-27 18:25+0700\n"
-"Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
+"PO-Revision-Date: 2023-12-03 14:01+0700\n"
+"Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Andhika Padmawan,Wantoyo"
+msgstr "Andhika Padmawan,Wantoyo,Linerly"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "andhika.padmawan@gmail.com,wantoyek@gmail.com"
+msgstr "andhika.padmawan@gmail.com,wantoyek@gmail.com,linerly@protonmail.com"
 
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Tekan Ctrl kanan untuk melepaskan penunjuk"
 
 #: backends/wayland/wayland_output.cpp:278
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Tekan tombol Ctrl kanan untuk melepaskan penunjuk"
 
 #: backends/wayland/wayland_output.cpp:282
 #, kde-format
@@ -50,27 +51,27 @@ msgstr ""
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- Keluaran dinonaktifkan"
 
 #: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- Keluaran dikecilkan"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Tekan Ctrl kanan untuk melepaskan masukan"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Tekan tombol Ctrl kanan untuk melepaskan masukan"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "Kompositor Wayland KDE"
 
 #: compositor.cpp:144
 #, kde-format
@@ -83,37 +84,28 @@ msgid "Suspend Compositing"
 msgstr "Suspensi Pengompositan"
 
 #: compositor_x11.cpp:513
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>Pengompositan OpenGL (standar) telah memacetkan KWin di masa lalu.</"
-"b><br>Ini kelihatannya disebabkan kutu penggerak.<p>Jika anda pikir anda "
-"telah memutakhirkan ke penggerak stabil,<br>anda dapat reset perlindungan "
-"ini tapi <b>hati-hati bahwa ini juga bisa berakibat macet seketika!</b></"
-"p><p>Sebagai alternatif, anda mungkin ingin menggunakan ujung belakang "
-"XRender.</p>"
+"<b>Pengomposisian OpenGL(yang bawaan) pernah membuat KWin mengalami "
+"kemogokan di masa lalu.</b><br>Ini kemungkinan besar disebabkan oleh kutu "
+"driver.<p>Jika Anda berpikir bahwa Anda telah beralih ke driver yang stabil "
+"sejak itu,<br>Anda dapat mereset perlindungan ini, tetapi <b>harap diingat "
+"bahwa ini mungkin menyebabkan kemogokan secara tiba-tiba!</b></p>"
 
 #: compositor_x11.cpp:520
-#, fuzzy, kde-format
+#, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr "Ekstensi X yang diperlukan (XComposite dan XDamage) tidak tersedia."
+msgstr "Ekstensi X (XComposite dan XDamage) tidak tersedia."
 
 #: compositor_x11.cpp:523
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL dan XRender/XFixes tidak tersedia."
+msgstr "GLX/OpenGL tidak tersedia."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -1228,7 +1220,7 @@ msgstr "nama host"
 #: input.cpp:2022
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Pindahkan tablet ke keluaran berikutnya"
 
 #: input.cpp:2101
 #, fuzzy, kde-format
@@ -1240,7 +1232,7 @@ msgstr "Mode tablet"
 #: input.cpp:2101
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tablet beralih keluaran"
 
 #: input.cpp:3199
 #, kde-format
@@ -1327,11 +1319,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Sangat Besar"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1442,6 +1432,7 @@ msgstr "Render melalui node drm."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Ekstrak informasi lokalisasi dari locale1 daripada konfigurasi pengguna."
 
 #: main_wayland.cpp:363
 #, kde-format
@@ -1512,10 +1503,9 @@ msgstr "Ganti pengelola jendela sesuai-ICCCM2.0 yang telah berjalan"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Blur strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "Kekuatan buram:"
+msgstr "Kekuatan keburaman:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
@@ -1526,65 +1516,62 @@ msgstr "Kekuatan buram:"
 msgid "Light"
 msgstr "Kanan"
 
-# Lawan kata Lemah
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
-#, fuzzy, kde-format
-#| msgid "Strong"
+#, kde-format
 msgid "Strong"
 msgstr "Kuat"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "Noise strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "Kekuatan desis:"
+msgstr "Kekuatan bising:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Merah"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Hijau"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Biru"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Ungu"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Mode:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopia (lemah merah)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deuteranopia (lemah hijau)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopia (biru-kuning)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, fuzzy, kde-format
@@ -1600,24 +1587,21 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Strength:"
+#, kde-format
 msgid "Strength:"
 msgstr "Kekuatan:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:40
-#, fuzzy, kde-format
-#| msgid "Dim:"
+#, kde-format
 msgid "Dim:"
 msgstr "Redup:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:47
-#, fuzzy, kde-format
-#| msgid "Docks and panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "Dock dan panel"
+msgstr "Dok dan panel"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
@@ -1658,19 +1642,17 @@ msgstr "bab"
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgid "Default"
+#, kde-format
 msgid "Default"
-msgstr "Baku"
+msgstr "Bawaan"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: plugins/glide/glide_config.ui:35 plugins/magiclamp/magiclamp_config.ui:39
 #: plugins/scale/package/contents/ui/config.ui:33
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid " milliseconds"
-msgstr " milidetik"
+msgstr "milidetik"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
@@ -1690,8 +1672,7 @@ msgstr "Perotasian"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
-#, fuzzy, kde-format
-#| msgid "Top"
+#, kde-format
 msgid "Top"
 msgstr "Atas"
 
@@ -1709,8 +1690,7 @@ msgstr "Kanan"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
-#, fuzzy, kde-format
-#| msgid "Bottom"
+#, kde-format
 msgid "Bottom"
 msgstr "Bawah"
 
@@ -1736,8 +1716,7 @@ msgstr "Perotasian"
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
-#, fuzzy, kde-format
-#| msgid "Distance:"
+#, kde-format
 msgid "Distance:"
 msgstr "Jarak:"
 
@@ -1749,16 +1728,14 @@ msgid "Window Close Animation"
 msgstr "Posisi jendela"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Jungkit Efek Invert"
+msgstr "Alihkan Efek Balikkan"
 
 #: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect on Window"
+#, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Jungkit Efek Invert pada Jendela"
+msgstr "Alihkan Efek Balikkan pada Jendela"
 
 #: plugins/invert/invert.cpp:57
 #, kde-format
@@ -1766,55 +1743,40 @@ msgid "Invert Screen Colors"
 msgstr "Balik Warna Layar"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Tiny"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Tiny"
-msgstr "Mungil"
+msgstr "Kecil"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Normal"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Normal"
 msgstr "Normal"
 
-# Sengaja diterjemahkan Agak Besar karena tampil satu level dengan tingkat ukuran
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Large"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Large"
-msgstr "Agak Besar"
-
-# Sengaja diterjemahkan Besar karena tampil satu level dengan tingkat ukuran
-#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Large"
-msgctxt "@item:inlistbox Button size:"
-msgid "Very Large"
 msgstr "Besar"
 
-# Sengaja diterjemahkan Besar Banget karena tampil satu level dengan tingkat ukuran
+#: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:51
+#, kde-format
+msgctxt "@item:inlistbox Button size:"
+msgid "Very Large"
+msgstr "Sangat Besar"
+
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:52
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Huge"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Huge"
-msgstr "Besar Banget"
+msgstr "Besar Sekali"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:53
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Very Huge"
-msgstr "Sangat Besar"
+msgstr "Sangat Besar Sekali"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
 #, fuzzy, kde-format

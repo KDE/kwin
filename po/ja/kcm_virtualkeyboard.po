@@ -1,10 +1,11 @@
+# SPDX-FileCopyrightText: 2023 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-31 02:17+0000\n"
-"PO-Revision-Date: 2021-05-02 18:05-0700\n"
-"Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2023-12-18 20:19+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -13,13 +14,14 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #: kcmvirtualkeyboard.cpp:61
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "なし"
 
 #: kcmvirtualkeyboard.cpp:65
 #, kde-format
 msgid "Do not use any virtual keyboard"
-msgstr ""
+msgstr "仮想キーボードを使用しない"
