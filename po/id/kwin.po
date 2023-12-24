@@ -4,31 +4,32 @@
 # Andhika Padmawan <andhika.padmawan@gmail.com>, 2010-2014.
 # Wantoyo <wantoyek@gmail.com>, 2017, 2018, 2019, 2020, 2022.
 # Aziz Adam Adrian <4.adam.adrian@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2023 Linerly <linerly@linerly.xyz>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2022-09-27 18:25+0700\n"
-"Last-Translator: Wantoyèk <wantoyek@gmail.com>\n"
+"PO-Revision-Date: 2023-12-03 14:01+0700\n"
+"Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.08.3\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Andhika Padmawan,Wantoyo"
+msgstr "Andhika Padmawan,Wantoyo,Linerly"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "andhika.padmawan@gmail.com,wantoyek@gmail.com"
+msgstr "andhika.padmawan@gmail.com,wantoyek@gmail.com,linerly@protonmail.com"
 
 #: composite.cpp:646
 #, kde-format
@@ -45,37 +46,28 @@ msgstr ""
 "dengan menggunakan pintasan '%1'."
 
 #: composite.cpp:1064
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>Pengompositan OpenGL (standar) telah memacetkan KWin di masa lalu.</"
-"b><br>Ini kelihatannya disebabkan kutu penggerak.<p>Jika anda pikir anda "
-"telah memutakhirkan ke penggerak stabil,<br>anda dapat reset perlindungan "
-"ini tapi <b>hati-hati bahwa ini juga bisa berakibat macet seketika!</b></"
-"p><p>Sebagai alternatif, anda mungkin ingin menggunakan ujung belakang "
-"XRender.</p>"
+"<b>Pengomposisian OpenGL(yang bawaan) pernah membuat KWin mengalami "
+"kemogokan di masa lalu.</b><br>Ini kemungkinan besar disebabkan oleh kutu "
+"driver.<p>Jika Anda berpikir bahwa Anda telah beralih ke driver yang stabil "
+"sejak itu,<br>Anda dapat mereset perlindungan ini, tetapi <b>harap diingat "
+"bahwa ini mungkin menyebabkan kemogokan secara tiba-tiba!</b></p>"
 
 #: composite.cpp:1071
-#, fuzzy, kde-format
+#, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
-msgstr "Ekstensi X yang diperlukan (XComposite dan XDamage) tidak tersedia."
+msgstr "Ekstensi X (XComposite dan XDamage) tidak tersedia."
 
 #: composite.cpp:1074
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL dan XRender/XFixes tidak tersedia."
+msgstr "GLX/OpenGL tidak tersedia."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -1172,7 +1164,7 @@ msgstr "Tunggu Lebih Lama"
 #: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Pindahkan tablet ke keluaran berikutnya"
 
 #: input.cpp:2093
 #, fuzzy, kde-format
@@ -1184,7 +1176,7 @@ msgstr "Mode tablet"
 #: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tablet beralih keluaran"
 
 #: input.cpp:3098
 #, kde-format
@@ -1369,6 +1361,7 @@ msgstr "Render melalui node drm."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Ekstrak informasi lokalisasi dari locale1 daripada konfigurasi pengguna."
 
 #: main_wayland.cpp:386
 #, kde-format
