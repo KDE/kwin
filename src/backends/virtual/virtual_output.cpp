@@ -75,8 +75,10 @@ void VirtualOutput::updateEnabled(bool enabled)
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
-    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, PresentationMode::VSync);
-    m_frame.reset();
+    if (m_frame) {
+        m_frame->presented(timestamp, PresentationMode::VSync);
+        m_frame.reset();
+    }
 }
 }
 

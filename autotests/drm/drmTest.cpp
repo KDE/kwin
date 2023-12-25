@@ -384,7 +384,7 @@ void DrmTest::testModeset()
     layer->beginFrame();
     output->renderLoop()->prepareNewFrame();
     output->renderLoop()->beginPaint();
-    const auto frame = std::make_shared<OutputFrame>(output->renderLoop());
+    const auto frame = std::make_shared<OutputFrame>(output->renderLoop(), std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
     layer->endFrame(infiniteRegion(), infiniteRegion(), frame.get());
     QVERIFY(output->present(frame));
 
