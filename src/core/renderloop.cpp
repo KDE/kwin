@@ -81,7 +81,7 @@ void RenderLoopPrivate::maybeScheduleRepaint()
     }
 }
 
-void RenderLoopPrivate::notifyFrameFailed()
+void RenderLoopPrivate::notifyFrameDropped()
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;

@@ -740,13 +740,16 @@ bool DrmGpu::isActive() const
 
 bool DrmGpu::needsModeset() const
 {
-    return m_forceModeset || std::ranges::any_of(m_pipelines, [](const auto &pipeline) {
-               return pipeline->needsModeset();
-           });
+    return std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
+        return pipeline->needsModeset();
+    }) || m_forceModeset || !m_pendingModesetFrames.empty();
 }
 
-bool DrmGpu::maybeModeset()
+bool DrmGpu::maybeModeset(const std::shared_ptr<OutputFrame> &frame)
 {
+    if (frame) {
+        m_pendingModesetFrames.push_back(frame);
+    }
     auto pipelines = m_pipelines;
     for (const auto &output : std::as_const(m_drmOutputs)) {
         if (output->lease()) {
@@ -766,18 +769,20 @@ bool DrmGpu::maybeModeset()
     for (DrmPipeline *pipeline : std::as_const(pipelines)) {
         if (pipeline->modesetPresentPending()) {
             pipeline->resetModesetPresentPending();
-            if (err != DrmPipeline::Error::None) {
-                pipeline->output()->frameFailed();
-            }
         }
     }
     m_forceModeset = false;
     if (err == DrmPipeline::Error::None) {
+        for (const auto &frame : m_pendingModesetFrames) {
+            frame->presented(std::chrono::steady_clock::now().time_since_epoch(), PresentationMode::VSync);
+        }
+        m_pendingModesetFrames.clear();
         return true;
     } else {
         if (err != DrmPipeline::Error::FramePending) {
             QTimer::singleShot(0, m_platform, &DrmBackend::updateOutputs);
         }
+        m_pendingModesetFrames.clear();
         return false;
     }
 }

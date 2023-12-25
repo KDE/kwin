@@ -277,20 +277,19 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
-    m_frame = frame;
     const bool needsModeset = gpu()->needsModeset();
     bool success;
     if (needsModeset) {
         m_pipeline->setPresentationMode(PresentationMode::VSync);
         m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
-        success = m_pipeline->maybeModeset();
+        success = m_pipeline->maybeModeset(frame);
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
-        DrmPipeline::Error err = m_pipeline->present();
+        DrmPipeline::Error err = m_pipeline->present(frame);
         if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
             // retry with a more basic presentation mode
             m_pipeline->setPresentationMode(PresentationMode::VSync);
-            err = m_pipeline->present();
+            err = m_pipeline->present(frame);
         }
         success = err == DrmPipeline::Error::None;
         if (err == DrmPipeline::Error::InvalidArguments) {
@@ -303,7 +302,6 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         return true;
     } else if (!needsModeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
-        m_frame->failed();
     }
     return false;
 }
@@ -406,7 +404,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     setState(next);
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
-        m_gpu->maybeModeset();
+        m_gpu->maybeModeset(nullptr);
     }
 
     m_renderLoop->setRefreshRate(refreshRate());

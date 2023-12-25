@@ -111,7 +111,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     return true;
 }
 
-bool WaylandEglPrimaryLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
+bool WaylandEglPrimaryLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame)
 {
     Q_ASSERT(!m_presentationBuffer);
     // TODO use viewporter to relax this check

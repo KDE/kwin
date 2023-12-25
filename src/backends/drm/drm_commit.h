@@ -32,6 +32,7 @@ class DrmGpu;
 class DrmPlane;
 class DrmProperty;
 class DrmPipeline;
+class OutputFrame;
 
 class DrmCommit
 {
@@ -39,7 +40,7 @@ public:
     virtual ~DrmCommit();
 
     DrmGpu *gpu() const;
-    virtual void pageFlipped(std::chrono::nanoseconds timestamp) const = 0;
+    virtual void pageFlipped(std::chrono::nanoseconds timestamp) = 0;
 
 protected:
     DrmCommit(DrmGpu *gpu);
@@ -60,7 +61,7 @@ public:
         addProperty(prop, prop.valueForEnum(enumValue));
     }
     void addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob);
-    void addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer);
+    void addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame);
     void setVrr(DrmCrtc *crtc, bool vrr);
     void setPresentationMode(PresentationMode mode);
 
@@ -69,7 +70,7 @@ public:
     bool commit();
     bool commitModeset();
 
-    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
+    void pageFlipped(std::chrono::nanoseconds timestamp) override;
 
     bool areBuffersReadable() const;
     void setDeadline(std::chrono::steady_clock::time_point deadline);
@@ -87,6 +88,7 @@ private:
     const QList<DrmPipeline *> m_pipelines;
     std::unordered_map<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
+    std::unordered_map<DrmPlane *, std::shared_ptr<OutputFrame>> m_frames;
     std::unordered_set<DrmPlane *> m_planes;
     std::optional<bool> m_vrr;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
@@ -98,16 +100,16 @@ private:
 class DrmLegacyCommit : public DrmCommit
 {
 public:
-    DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer);
+    DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame);
 
     bool doModeset(DrmConnector *connector, DrmConnectorMode *mode);
     bool doPageflip(PresentationMode mode);
-    void pageFlipped(std::chrono::nanoseconds timestamp) const override;
+    void pageFlipped(std::chrono::nanoseconds timestamp) override;
 
 private:
     DrmPipeline *const m_pipeline;
     const std::shared_ptr<DrmFramebuffer> m_buffer;
-    bool m_modeset = false;
+    std::shared_ptr<OutputFrame> m_frame;
     PresentationMode m_mode = PresentationMode::VSync;
 };
 

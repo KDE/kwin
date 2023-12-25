@@ -11,7 +11,7 @@
 #include "utils/filedescriptor.h"
 
 #include <QObject>
-
+#include <QPointer>
 #include <memory>
 
 namespace KWin
@@ -79,7 +79,6 @@ public:
     ~OutputFrame();
 
     void presented(std::chrono::nanoseconds timestamp, PresentationMode mode);
-    void failed();
 
     void addFeedback(std::unique_ptr<PresentationFeedback> &&feedback);
 
@@ -103,6 +102,7 @@ private:
     PresentationMode m_presentationMode = PresentationMode::VSync;
     QRegion m_damage;
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
+    bool m_presented = false;
 };
 
 /**

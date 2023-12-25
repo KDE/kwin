@@ -39,7 +39,7 @@ private:
     void setDpmsMode(DpmsMode mode) override;
 
     std::shared_ptr<DrmOutputLayer> m_layer;
-    bool m_pageFlipPending = true;
+    std::shared_ptr<OutputFrame> m_frame;
 
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
 };

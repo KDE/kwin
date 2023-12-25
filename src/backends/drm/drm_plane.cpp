@@ -162,7 +162,7 @@ void DrmPlane::setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b)
 void DrmPlane::disable(DrmAtomicCommit *commit)
 {
     commit->addProperty(crtcId, 0);
-    commit->addBuffer(this, nullptr);
+    commit->addBuffer(this, nullptr, nullptr);
 }
 
 void DrmPlane::releaseCurrentBuffer()

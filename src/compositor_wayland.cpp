@@ -321,7 +321,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             });
             if (scanoutPossible) {
                 primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidate->size()), output->modeSize()));
-                directScanout = primaryLayer->attemptScanout(scanoutCandidate);
+                directScanout = primaryLayer->attemptScanout(scanoutCandidate, frame);
             }
         } else {
             primaryLayer->notifyNoScanoutCandidate();

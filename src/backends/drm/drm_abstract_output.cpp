@@ -27,17 +27,6 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-void DrmAbstractOutput::frameFailed() const
-{
-    m_frame->failed();
-}
-
-void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode)
-{
-    m_frame->presented(timestamp, mode);
-    m_frame.reset();
-}
-
 DrmGpu *DrmAbstractOutput::gpu() const
 {
     return m_gpu;
