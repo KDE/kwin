@@ -92,6 +92,8 @@ public:
 
     void setPresentationMode(PresentationMode mode);
 
+    void setMaxPendingFrameCount(uint32_t maxCount);
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.

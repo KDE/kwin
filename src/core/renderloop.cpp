@@ -12,14 +12,10 @@
 #include "window.h"
 #include "workspace.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
-
-template<typename T>
-T alignTimestamp(const T &timestamp, const T &alignment)
-{
-    return timestamp + ((alignment - (timestamp % alignment)) % alignment);
-}
 
 RenderLoopPrivate *RenderLoopPrivate::get(RenderLoop *loop)
 {
@@ -36,36 +32,51 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     });
 }
 
-void RenderLoopPrivate::scheduleRepaint()
+static std::chrono::nanoseconds estimateNextPageflip(std::chrono::nanoseconds earliestSubmitTime, std::chrono::nanoseconds lastPageflip, std::chrono::nanoseconds vblankInterval)
+{
+    // the last pageflip may be in the future
+    const uint64_t pageflipsSince = earliestSubmitTime > lastPageflip ? (earliestSubmitTime - lastPageflip) / vblankInterval : 0;
+    return lastPageflip + vblankInterval * (pageflipsSince + 1);
+}
+
+void RenderLoopPrivate::scheduleNextRepaint()
 {
     if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
         return;
     }
+    scheduleRepaint(nextPresentationTimestamp);
+}
+
+void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp)
+{
+    pendingReschedule = false;
     const std::chrono::nanoseconds vblankInterval(1'000'000'000'000ull / refreshRate);
     const std::chrono::nanoseconds currentTime(std::chrono::steady_clock::now().time_since_epoch());
 
-    // Estimate when the next presentation will occur. Note that this is a prediction.
-    nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
-    if (nextPresentationTimestamp < currentTime && presentationMode == PresentationMode::VSync) {
-        nextPresentationTimestamp = lastPresentationTimestamp
-            + alignTimestamp(currentTime - lastPresentationTimestamp, vblankInterval);
-    }
-
     // Estimate when it's a good time to perform the next compositing cycle.
     // the 1ms on top of the safety margin is required for timer and scheduler inaccuracies
-    std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - renderJournal.result() - safetyMargin - std::chrono::milliseconds(1);
+    const std::chrono::nanoseconds expectedCompositingTime = std::min(renderJournal.result() + safetyMargin + 1ms, 2 * vblankInterval);
 
-    // If we can't render the frame before the deadline, start compositing immediately.
-    if (nextRenderTimestamp < currentTime) {
-        nextRenderTimestamp = currentTime;
-    }
-
-    if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
-        compositeTimer.start(0);
+    if (presentationMode == PresentationMode::VSync) {
+        // normal presentation: pageflips only happen at vblank
+        if (maxPendingFrameCount == 1) {
+            // keep the old behavior for backends not supporting triple buffering
+            nextPresentationTimestamp = estimateNextPageflip(currentTime, lastPresentationTimestamp, vblankInterval);
+        } else {
+            // estimate the next pageflip that can realistically be hit
+            nextPresentationTimestamp = estimateNextPageflip(std::max(lastTargetTimestamp, currentTime + expectedCompositingTime), lastPresentationTimestamp, vblankInterval);
+        }
+    } else if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
+        // tearing: pageflips happen ASAP
+        nextPresentationTimestamp = currentTime;
     } else {
-        const std::chrono::nanoseconds waitInterval = nextRenderTimestamp - currentTime;
-        compositeTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(waitInterval));
+        // adaptive sync: pageflips happen after one vblank interval
+        // TODO read minimum refresh rate from the EDID and take it into account here
+        nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
     }
+
+    const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
+    compositeTimer.start(std::max(0ms, std::chrono::duration_cast<std::chrono::milliseconds>(nextRenderTimestamp - currentTime)));
 }
 
 void RenderLoopPrivate::delayScheduleRepaint()
@@ -73,21 +84,13 @@ void RenderLoopPrivate::delayScheduleRepaint()
     pendingReschedule = true;
 }
 
-void RenderLoopPrivate::maybeScheduleRepaint()
-{
-    if (pendingReschedule) {
-        scheduleRepaint();
-        pendingReschedule = false;
-    }
-}
-
 void RenderLoopPrivate::notifyFrameDropped()
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
 
-    if (!inhibitCount) {
-        maybeScheduleRepaint();
+    if (!inhibitCount && pendingReschedule) {
+        scheduleNextRepaint();
     }
 }
 
@@ -101,8 +104,12 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
     if (renderTime) {
         renderJournal.add(*renderTime, timestamp);
     }
-    if (!inhibitCount) {
-        maybeScheduleRepaint();
+    if (compositeTimer.isActive()) {
+        // reschedule to match the new timestamp and render time
+        scheduleRepaint(lastPresentationTimestamp);
+    }
+    if (!inhibitCount && pendingReschedule) {
+        scheduleNextRepaint();
     }
 
     Q_EMIT q->framePresented(q, timestamp, mode);
@@ -165,7 +172,7 @@ void RenderLoop::uninhibit()
     d->inhibitCount--;
 
     if (d->inhibitCount == 0) {
-        d->maybeScheduleRepaint();
+        d->scheduleNextRepaint();
     }
 }
 
@@ -210,8 +217,8 @@ void RenderLoop::scheduleRepaint(Item *item)
             return;
         }
     }
-    if (!d->pendingFrameCount && !d->inhibitCount) {
-        d->scheduleRepaint();
+    if (d->pendingFrameCount < d->maxPendingFrameCount && !d->inhibitCount) {
+        d->scheduleNextRepaint();
     } else {
         d->delayScheduleRepaint();
     }
@@ -230,6 +237,11 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 void RenderLoop::setPresentationMode(PresentationMode mode)
 {
     d->presentationMode = mode;
+}
+
+void RenderLoop::setMaxPendingFrameCount(uint32_t maxCount)
+{
+    d->maxPendingFrameCount = maxCount;
 }
 
 } // namespace KWin
