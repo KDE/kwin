@@ -42,8 +42,9 @@ std::optional<RenderTimeSpan> CpuRenderTimeQuery::query()
     };
 }
 
-OutputFrame::OutputFrame(RenderLoop *loop)
+OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration)
     : m_loop(loop)
+    , m_refreshDuration(refreshDuration)
 {
 }
 
@@ -74,12 +75,12 @@ std::optional<std::chrono::nanoseconds> OutputFrame::queryRenderTime() const
     return ret.end - ret.start;
 }
 
-void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
+void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
     std::optional<std::chrono::nanoseconds> renderTime = queryRenderTime();
     RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
     for (const auto &feedback : m_feedbacks) {
-        feedback->presented(refreshDuration, timestamp, mode);
+        feedback->presented(m_refreshDuration, timestamp, mode);
     }
 }
 

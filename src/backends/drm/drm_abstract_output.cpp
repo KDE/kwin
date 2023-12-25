@@ -34,7 +34,7 @@ void DrmAbstractOutput::frameFailed() const
 
 void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
-    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, mode);
+    m_frame->presented(timestamp, mode);
     m_frame.reset();
 }
 
