@@ -12,6 +12,8 @@
 #include "drm_logging.h"
 #include "utils/realtime.h"
 
+#include <span>
+
 using namespace std::chrono_literals;
 
 namespace KWin
@@ -116,7 +118,7 @@ void DrmCommitThread::submit()
                 auto toMerge = std::move(m_commits[1]);
                 m_commits.erase(m_commits.begin() + 1);
                 m_commits.front()->merge(toMerge.get());
-                m_droppedCommits.push_back(std::move(toMerge));
+                m_commitsToDelete.push_back(std::move(toMerge));
             }
             if (commit->test()) {
                 // presentation didn't fail after all, try again
@@ -124,19 +126,22 @@ void DrmCommitThread::submit()
                 return;
             }
         }
-        const bool cursorOnly = std::ranges::all_of(m_commits, [](const auto &commit) {
-            return commit->isCursorOnly();
-        });
         for (auto &commit : m_commits) {
-            m_droppedCommits.push_back(std::move(commit));
+            m_commitsToDelete.push_back(std::move(commit));
         }
         m_commits.clear();
         qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
-        if (!cursorOnly) {
-            QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
-        }
     }
     QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
+}
+
+static std::unique_ptr<DrmAtomicCommit> mergeCommits(std::span<const std::unique_ptr<DrmAtomicCommit>> commits)
+{
+    auto ret = std::make_unique<DrmAtomicCommit>(*commits.front());
+    for (const auto &onTop : commits.subspan(1)) {
+        ret->merge(onTop.get());
+    }
+    return ret;
 }
 
 void DrmCommitThread::optimizeCommits()
@@ -146,22 +151,31 @@ void DrmCommitThread::optimizeCommits()
     }
     // merge commits in the front that are already ready (regardless of which planes they modify)
     if (m_commits.front()->areBuffersReadable()) {
-        auto it = m_commits.begin() + 1;
-        while (it != m_commits.end() && (*it)->areBuffersReadable()) {
-            m_commits.front()->merge(it->get());
-            m_droppedCommits.push_back(std::move(*it));
-            it = m_commits.erase(it);
+        const auto firstNotReadable = std::find_if(m_commits.begin() + 1, m_commits.end(), [](const auto &commit) {
+            return !commit->areBuffersReadable();
+        });
+        if (firstNotReadable != m_commits.begin() + 1) {
+            auto merged = mergeCommits(std::span(m_commits.begin(), firstNotReadable));
+            std::move(m_commits.begin(), firstNotReadable, std::back_inserter(m_commitsToDelete));
+            m_commits.erase(m_commits.begin() + 1, firstNotReadable);
+            m_commits.front() = std::move(merged);
         }
     }
     // merge commits that are ready and modify the same drm planes
     for (auto it = m_commits.begin(); it != m_commits.end();) {
-        DrmAtomicCommit *const commit = it->get();
-        it++;
-        while (it != m_commits.end() && commit->modifiedPlanes() == (*it)->modifiedPlanes() && (*it)->areBuffersReadable()) {
-            commit->merge(it->get());
-            m_droppedCommits.push_back(std::move(*it));
-            it = m_commits.erase(it);
+        const auto startIt = it;
+        auto &startCommit = *startIt;
+        const auto firstNotSamePlaneReadable = std::find_if(startIt + 1, m_commits.end(), [&startCommit](const auto &commit) {
+            return startCommit->modifiedPlanes() != commit->modifiedPlanes() || !commit->areBuffersReadable();
+        });
+        if (firstNotSamePlaneReadable == startIt + 1) {
+            it++;
+            continue;
         }
+        auto merged = mergeCommits(std::span(startIt, firstNotSamePlaneReadable));
+        std::move(startIt, firstNotSamePlaneReadable, std::back_inserter(m_commitsToDelete));
+        startCommit = std::move(merged);
+        it = m_commits.erase(startIt + 1, firstNotSamePlaneReadable);
     }
     if (m_commits.size() == 1) {
         // already done
@@ -169,7 +183,10 @@ void DrmCommitThread::optimizeCommits()
     }
     std::unique_ptr<DrmAtomicCommit> front;
     if (m_commits.front()->areBuffersReadable()) {
-        front = std::move(m_commits.front());
+        // can't just move the commit, or merging might drop the last reference
+        // to an OutputFrame, which should only happen in the main thread
+        front = std::make_unique<DrmAtomicCommit>(*m_commits.front());
+        m_commitsToDelete.push_back(std::move(m_commits.front()));
         m_commits.erase(m_commits.begin());
     }
     // try to move commits that are ready to the front
@@ -192,7 +209,7 @@ void DrmCommitThread::optimizeCommits()
             duplicate = std::make_unique<DrmAtomicCommit>(*front);
             duplicate->merge(commit.get());
             if (!duplicate->test()) {
-                m_droppedCommits.push_back(std::move(duplicate));
+                m_commitsToDelete.push_back(std::move(duplicate));
                 it++;
                 continue;
             }
@@ -213,13 +230,14 @@ void DrmCommitThread::optimizeCommits()
                 }
             }
         }
-        m_droppedCommits.push_back(std::move(duplicate));
+        m_commitsToDelete.push_back(std::move(duplicate));
         if (success) {
             if (front) {
                 front->merge(commit.get());
-                m_droppedCommits.push_back(std::move(commit));
+                m_commitsToDelete.push_back(std::move(commit));
             } else {
-                front = std::move(commit);
+                front = std::make_unique<DrmAtomicCommit>(*commit);
+                m_commitsToDelete.push_back(std::move(commit));
             }
             it = m_commits.erase(it);
         } else {
@@ -262,7 +280,7 @@ void DrmCommitThread::setPendingCommit(std::unique_ptr<DrmLegacyCommit> &&commit
 void DrmCommitThread::clearDroppedCommits()
 {
     std::unique_lock lock(m_mutex);
-    m_droppedCommits.clear();
+    m_commitsToDelete.clear();
 }
 
 void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)

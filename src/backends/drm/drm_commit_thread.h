@@ -43,9 +43,6 @@ public:
      */
     std::chrono::nanoseconds safetyMargin() const;
 
-Q_SIGNALS:
-    void commitFailed();
-
 private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;
@@ -60,7 +57,7 @@ private:
     TimePoint m_lastPageflip;
     TimePoint m_targetPageflipTime;
     std::chrono::nanoseconds m_minVblankInterval;
-    std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
+    std::vector<std::unique_ptr<DrmAtomicCommit>> m_commitsToDelete;
     bool m_vrr = false;
     std::chrono::nanoseconds m_safetyMargin{0};
 };

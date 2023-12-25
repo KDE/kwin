@@ -9,6 +9,8 @@
 #include "scene/surfaceitem.h"
 #include "syncobjtimeline.h"
 
+#include <QCoreApplication>
+#include <QThread>
 #include <drm_fourcc.h>
 #include <ranges>
 
@@ -48,7 +50,13 @@ OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDurat
 {
 }
 
-OutputFrame::~OutputFrame() = default;
+OutputFrame::~OutputFrame()
+{
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+    if (!m_presented) {
+        RenderLoopPrivate::get(m_loop)->notifyFrameDropped();
+    }
+}
 
 void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
 {
@@ -79,14 +87,10 @@ void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode
 {
     std::optional<std::chrono::nanoseconds> renderTime = queryRenderTime();
     RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
+    m_presented = true;
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(m_refreshDuration, timestamp, mode);
     }
-}
-
-void OutputFrame::failed()
-{
-    RenderLoopPrivate::get(m_loop)->notifyFrameFailed();
 }
 
 void OutputFrame::setContentType(ContentType type)

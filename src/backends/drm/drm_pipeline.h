@@ -34,6 +34,7 @@ class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
 class DrmCommitThread;
+class OutputFrame;
 
 class DrmGammaRamp
 {
@@ -69,9 +70,9 @@ public:
      * tests the pending commit first and commits it if the test passes
      * if the test fails, there is a guarantee for no lasting changes
      */
-    Error present();
-    bool testScanout();
-    bool maybeModeset();
+    Error present(const std::shared_ptr<OutputFrame> &frame);
+    bool testScanout(const std::shared_ptr<OutputFrame> &frame);
+    bool maybeModeset(const std::shared_ptr<OutputFrame> &frame);
     void forceLegacyModeset();
 
     bool needsModeset() const;
@@ -83,12 +84,7 @@ public:
     DrmConnector *connector() const;
     DrmGpu *gpu() const;
 
-    enum class PageflipType {
-        Normal,
-        CursorOnly,
-        Modeset,
-    };
-    void pageFlipped(std::chrono::nanoseconds timestamp, PageflipType type, PresentationMode mode);
+    void pageFlipped(std::chrono::nanoseconds timestamp);
     bool pageflipsPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
@@ -151,7 +147,7 @@ private:
     std::shared_ptr<DrmBlob> createHdrMetadata(NamedTransferFunction transferFunction) const;
 
     // legacy only
-    Error presentLegacy();
+    Error presentLegacy(const std::shared_ptr<OutputFrame> &frame);
     Error legacyModeset();
     Error setLegacyGamma();
     Error applyPendingChangesLegacy();
@@ -159,12 +155,12 @@ private:
     static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 
     // atomic modesetting only
-    Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode);
+    Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode, const std::shared_ptr<OutputFrame> &frame);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
-    Error prepareAtomicPresentation(DrmAtomicCommit *commit);
+    Error prepareAtomicPresentation(DrmAtomicCommit *commit, const std::shared_ptr<OutputFrame> &frame);
     void prepareAtomicCursor(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
-    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
+    static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const std::shared_ptr<OutputFrame> &frame, const QList<DrmObject *> &unusedObjects);
 
     DrmOutput *m_output = nullptr;
     DrmConnector *m_connector = nullptr;

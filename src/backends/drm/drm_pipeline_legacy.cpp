@@ -24,7 +24,7 @@
 namespace KWin
 {
 
-DrmPipeline::Error DrmPipeline::presentLegacy()
+DrmPipeline::Error DrmPipeline::presentLegacy(const std::shared_ptr<OutputFrame> &frame)
 {
     if (Error err = applyPendingChangesLegacy(); err != Error::None) {
         return err;
@@ -33,7 +33,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
     if (m_primaryLayer->sourceRect() != m_primaryLayer->targetRect() || m_primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
-    auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
+    auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, frame);
     if (!commit->doPageflip(m_pending.presentationMode)) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
         return errnoToError();
@@ -57,7 +57,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
     if (m_primaryLayer->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
-    auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
+    auto commit = std::make_unique<DrmLegacyCommit>(this, buffer, nullptr);
     if (!commit->doModeset(m_connector, m_pending.mode.get())) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         return errnoToError();
@@ -84,7 +84,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesLegacy(const QList<DrmPipeline *>
         for (const auto &pipeline : pipelines) {
             pipeline->applyPendingChanges();
             if (mode == CommitMode::CommitModeset && pipeline->activePending()) {
-                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch(), PageflipType::Normal, PresentationMode::VSync);
+                pipeline->pageFlipped(std::chrono::steady_clock::now().time_since_epoch());
             }
         }
         for (const auto &obj : unusedObjects) {

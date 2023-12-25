@@ -39,7 +39,7 @@ public:
     std::optional<QSize> fixedSize() const override;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;
+    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
 

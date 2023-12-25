@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_commit.h"
+#include "core/renderbackend.h"
 #include "drm_blob.h"
 #include "drm_buffer.h"
 #include "drm_connector.h"
@@ -54,10 +55,11 @@ void DrmAtomicCommit::addBlob(const DrmProperty &prop, const std::shared_ptr<Drm
     m_blobs[&prop] = blob;
 }
 
-void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer)
+void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)
 {
     addProperty(plane->fbId, buffer ? buffer->framebufferId() : 0);
     m_buffers[plane] = buffer;
+    m_frames[plane] = frame;
     // atomic commits with IN_FENCE_FD fail with NVidia
     if (plane->inFenceFd.isValid() && !plane->gpu()->isNVidia()) {
         addProperty(plane->inFenceFd, buffer ? buffer->syncFd().get() : -1);
@@ -132,20 +134,20 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
     return drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_ATOMIC, &commitData) == 0;
 }
 
-void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
+void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
     for (const auto &[plane, buffer] : m_buffers) {
         plane->setCurrentBuffer(buffer);
     }
-    DrmPipeline::PageflipType type = DrmPipeline::PageflipType::Normal;
-    if (m_modeset) {
-        type = DrmPipeline::PageflipType::Modeset;
-    } else if (m_cursorOnly) {
-        type = DrmPipeline::PageflipType::CursorOnly;
+    for (const auto &[plane, frame] : m_frames) {
+        if (frame) {
+            frame->presented(timestamp, m_mode);
+        }
     }
+    m_frames.clear();
     for (const auto pipeline : std::as_const(m_pipelines)) {
-        pipeline->pageFlipped(timestamp, type, m_mode);
+        pipeline->pageFlipped(timestamp);
     }
 }
 
@@ -186,6 +188,7 @@ void DrmAtomicCommit::merge(DrmAtomicCommit *onTop)
     }
     for (const auto &[plane, buffer] : onTop->m_buffers) {
         m_buffers[plane] = buffer;
+        m_frames[plane] = onTop->m_frames[plane];
         m_planes.emplace(plane);
     }
     for (const auto &[prop, blob] : onTop->m_blobs) {
@@ -207,16 +210,16 @@ bool DrmAtomicCommit::isCursorOnly() const
     return m_cursorOnly;
 }
 
-DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer)
+DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)
     : DrmCommit(pipeline->gpu())
     , m_pipeline(pipeline)
     , m_buffer(buffer)
+    , m_frame(frame)
 {
 }
 
 bool DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
 {
-    m_modeset = true;
     uint32_t connectorId = connector->id();
     if (drmModeSetCrtc(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0) {
         m_pipeline->crtc()->setCurrent(m_buffer);
@@ -236,10 +239,14 @@ bool DrmLegacyCommit::doPageflip(PresentationMode mode)
     return drmModePageFlip(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), flags, this) == 0;
 }
 
-void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
+void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
     m_pipeline->crtc()->setCurrent(m_buffer);
-    m_pipeline->pageFlipped(timestamp, m_modeset ? DrmPipeline::PageflipType::Modeset : DrmPipeline::PageflipType::Normal, m_mode);
+    if (m_frame) {
+        m_frame->presented(timestamp, m_mode);
+        m_frame.reset();
+    }
+    m_pipeline->pageFlipped(timestamp);
 }
 }

@@ -65,7 +65,7 @@ public:
      * Tries to import the newest buffer of the surface for direct scanout
      * Returns @c true if scanout succeeds, @c false if rendering is necessary
      */
-    bool attemptScanout(SurfaceItem *item);
+    bool attemptScanout(SurfaceItem *item, const std::shared_ptr<OutputFrame> &frame);
 
     /**
      * Notify that there's no scanout candidate this frame
@@ -95,7 +95,7 @@ public:
     OutputTransform bufferTransform() const;
 
 protected:
-    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color);
+    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame);
     virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
     virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) = 0;
 
