@@ -28,8 +28,8 @@ public:
     void invalidate();
 
     void delayScheduleRepaint();
-    void scheduleRepaint();
-    void maybeScheduleRepaint();
+    void scheduleNextRepaint();
+    void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp);
 
     void notifyFrameDropped();
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<std::chrono::nanoseconds> renderTime, PresentationMode mode = PresentationMode::VSync);
@@ -49,6 +49,7 @@ public:
     std::chrono::nanoseconds safetyMargin{0};
 
     PresentationMode presentationMode = PresentationMode::VSync;
+    int maxPendingFrameCount = 1;
 };
 
 } // namespace KWin
