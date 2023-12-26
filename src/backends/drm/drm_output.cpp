@@ -36,6 +36,7 @@ namespace KWin
 {
 
 static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_INTEL_COLORSPACE") == 1;
+static const bool s_disableTripleBuffering = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING") == 1;
 
 DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     : DrmAbstractOutput(conn->gpu())
@@ -44,6 +45,9 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
 {
     m_pipeline->setOutput(this);
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
+    if (m_gpu->atomicModeSetting() && !s_disableTripleBuffering) {
+        m_renderLoop->setMaxPendingFrameCount(2);
+    }
 
     Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
     State initialState;
