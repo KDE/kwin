@@ -1551,6 +1551,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
+        setTile(nullptr);
     } else {
         updateQuickTileMode(QuickTileFlag::None);
     }

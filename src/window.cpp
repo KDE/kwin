@@ -1178,7 +1178,7 @@ void Window::setMaximize(bool vertically, bool horizontally)
     if (horizontally) {
         mode = MaximizeMode(mode | MaximizeHorizontal);
     }
-    setTile(nullptr);
+
     maximize(mode);
 }
 

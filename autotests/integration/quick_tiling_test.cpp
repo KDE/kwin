@@ -269,6 +269,7 @@ void QuickTilingTest::testQuickMaximizing()
     // window is now set to maximised
     QCOMPARE(maximizeChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->tile(), nullptr);
 
     // go back to quick tile none
     QFETCH(QuickTileMode, mode);

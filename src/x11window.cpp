@@ -4663,6 +4663,7 @@ void X11Window::maximize(MaximizeMode mode)
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
+        setTile(nullptr);
         info->setState(NET::Max, NET::Max);
         break;
     }
