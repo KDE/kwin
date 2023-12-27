@@ -11,7 +11,7 @@
 #include "core/outputbackend.h"
 #include "eglhelpers.h"
 #include "main.h"
-#include "platformsupport/scenes/opengl/egldisplay.h"
+#include "opengl/egldisplay.h"
 
 #include <QOffscreenSurface>
 

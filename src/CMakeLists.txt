@@ -128,10 +128,18 @@ target_sources(kwin PRIVATE
     moving_client_x11_filter.cpp
     netinfo.cpp
     onscreennotification.cpp
+    opengl/abstract_opengl_context_attribute_builder.cpp
+    opengl/egl_context_attribute_builder.cpp
+    opengl/eglcontext.cpp
+    opengl/egldisplay.cpp
+    opengl/eglimagetexture.cpp
+    opengl/eglnativefence.cpp
+    opengl/eglswapchain.cpp
     opengl/glframebuffer.cpp
     opengl/gllut.cpp
     opengl/gllut3D.cpp
     opengl/glplatform.cpp
+    opengl/glrendertimequery.cpp
     opengl/glshader.cpp
     opengl/glshadermanager.cpp
     opengl/gltexture.cpp
@@ -457,7 +465,6 @@ install(FILES
     keyboard_repeat.h
     killwindow.h
     kscreenintegration.h
-    kwineglutils_p.h
     layershellv1integration.h
     layershellv1window.h
     lidswitchtracker.h
@@ -536,13 +543,11 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/core COMPONENT Devel)
 
 install(FILES
-    utils/abstract_opengl_context_attribute_builder.h
     utils/c_ptr.h
     utils/common.h
     utils/damagejournal.h
     utils/drm_format_helper.h
     utils/edid.h
-    utils/egl_context_attribute_builder.h
     utils/executable_path.h
     utils/filedescriptor.h
     utils/kernel.h
@@ -575,15 +580,25 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/effect COMPONENT Devel)
 
 install(FILES
+    opengl/abstract_opengl_context_attribute_builder.h
+    opengl/egl_context_attribute_builder.h
+    opengl/eglcontext.h
+    opengl/egldisplay.h
+    opengl/eglimagetexture.h
+    opengl/eglnativefence.h
+    opengl/eglswapchain.h
+    opengl/eglutils_p.h
     opengl/glframebuffer.h
-    opengl/gllut.h
     opengl/gllut3D.h
+    opengl/gllut.h
     opengl/glplatform.h
+    opengl/glrendertimequery.h
     opengl/glshader.h
     opengl/glshadermanager.h
     opengl/gltexture.h
-    opengl/glutils.h
+    opengl/gltexture_p.h
     opengl/glutils_funcs.h
+    opengl/glutils.h
     opengl/glvertexbuffer.h
     opengl/openglcontext.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/opengl COMPONENT Devel

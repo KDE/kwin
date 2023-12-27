@@ -7,15 +7,15 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "platformsupport/scenes/opengl/eglswapchain.h"
+#include "opengl/eglswapchain.h"
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferallocator.h"
+#include "opengl/eglcontext.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/eglcontext.h"
 #include "utils/common.h"
 
-#include <errno.h>
 #include <drm_fourcc.h>
+#include <errno.h>
 
 namespace KWin
 {

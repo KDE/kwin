@@ -16,10 +16,10 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "icc_shader.h"
+#include "opengl/eglnativefence.h"
+#include "opengl/eglswapchain.h"
 #include "opengl/gllut.h"
-#include "platformsupport/scenes/opengl/eglnativefence.h"
-#include "platformsupport/scenes/opengl/eglswapchain.h"
-#include "platformsupport/scenes/opengl/glrendertimequery.h"
+#include "opengl/glrendertimequery.h"
 #include "platformsupport/scenes/qpainter/qpainterswapchain.h"
 #include "utils/drm_format_helper.h"
 

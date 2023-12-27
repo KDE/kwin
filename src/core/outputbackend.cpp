@@ -10,9 +10,9 @@
 #include "outputbackend.h"
 
 #include "inputbackend.h"
+#include "opengl/egldisplay.h"
 #include "output.h"
 #include "outputconfiguration.h"
-#include "platformsupport/scenes/opengl/egldisplay.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "platformsupport/scenes/qpainter/qpainterbackend.h"
 

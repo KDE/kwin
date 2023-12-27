@@ -13,9 +13,9 @@
 #include "eglhelpers.h"
 #include "internalwindow.h"
 #include "offscreensurface.h"
+#include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "opengl/glutils.h"
-#include "platformsupport/scenes/opengl/eglcontext.h"
-#include "platformsupport/scenes/opengl/egldisplay.h"
 #include "swapchain.h"
 #include "window.h"
 

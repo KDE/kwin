@@ -9,12 +9,12 @@
 #include "eglcontext.h"
 #include "core/graphicsbuffer.h"
 #include "egldisplay.h"
-#include "kwineglimagetexture.h"
-#include "kwineglutils_p.h"
+#include "eglimagetexture.h"
+#include "opengl/egl_context_attribute_builder.h"
+#include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
 #include "utils/common.h"
 #include "utils/drm_format_helper.h"
-#include "utils/egl_context_attribute_builder.h"
 
 #include <QOpenGLContext>
 #include <drm_fourcc.h>

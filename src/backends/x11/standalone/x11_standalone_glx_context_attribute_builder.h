@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "utils/abstract_opengl_context_attribute_builder.h"
+#include "opengl/abstract_opengl_context_attribute_builder.h"
 
 namespace KWin
 {

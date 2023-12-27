@@ -7,7 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "kwineglimagetexture.h"
+#include "eglimagetexture.h"
 #include "egldisplay.h"
 #include "opengl/gltexture_p.h"
 

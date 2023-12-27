@@ -7,8 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include "platformsupport/scenes/opengl/eglcontext.h"
-#include "platformsupport/scenes/opengl/egldisplay.h"
+#include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "wayland/linuxdmabufv1clientbuffer.h"
 

@@ -9,7 +9,7 @@
 */
 
 #include "eglhelpers.h"
-#include "platformsupport/scenes/opengl/egldisplay.h"
+#include "opengl/egldisplay.h"
 
 #include <logging.h>
 

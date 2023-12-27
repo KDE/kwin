@@ -11,8 +11,8 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
-#include "platformsupport/scenes/opengl/eglswapchain.h"
-#include "platformsupport/scenes/opengl/glrendertimequery.h"
+#include "opengl/eglswapchain.h"
+#include "opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
 #include "wayland/surface.h"
 

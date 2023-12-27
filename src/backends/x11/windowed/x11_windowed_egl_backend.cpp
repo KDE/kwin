@@ -8,9 +8,9 @@
 */
 #include "x11_windowed_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
+#include "opengl/eglswapchain.h"
+#include "opengl/glrendertimequery.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
-#include "platformsupport/scenes/opengl/eglswapchain.h"
-#include "platformsupport/scenes/opengl/glrendertimequery.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
 #include "x11_windowed_output.h"

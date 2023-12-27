@@ -6,8 +6,8 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "utils/abstract_opengl_context_attribute_builder.h"
-#include "utils/egl_context_attribute_builder.h"
+#include "opengl/abstract_opengl_context_attribute_builder.h"
+#include "opengl/egl_context_attribute_builder.h"
 #include <QTest>
 #include <epoxy/egl.h>
 

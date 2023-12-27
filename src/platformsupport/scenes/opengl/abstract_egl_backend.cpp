@@ -10,16 +10,16 @@
 #include "compositor.h"
 #include "core/outputbackend.h"
 #include "main.h"
+#include "opengl/egl_context_attribute_builder.h"
 #include "utils/common.h"
-#include "utils/egl_context_attribute_builder.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland_server.h"
 // kwin libs
-#include "kwineglimagetexture.h"
+#include "opengl/eglimagetexture.h"
+#include "opengl/eglutils_p.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "utils/drm_format_helper.h"
-#include <kwineglutils_p.h>
 // Qt
 #include <QOpenGLContext>
 

@@ -8,8 +8,7 @@
 */
 #include "egldisplay.h"
 #include "core/graphicsbuffer.h"
-#include "kwineglimagetexture.h"
-#include "kwineglutils_p.h"
+#include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
 #include "utils/common.h"
 
@@ -267,8 +266,8 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
         return {};
     }
 
-    typedef EGLBoolean (*eglQueryDmaBufFormatsEXT_func)(EGLDisplay dpy, EGLint max_formats, EGLint * formats, EGLint * num_formats);
-    typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func)(EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR * modifiers, EGLBoolean * external_only, EGLint * num_modifiers);
+    typedef EGLBoolean (*eglQueryDmaBufFormatsEXT_func)(EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
+    typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func)(EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
     eglQueryDmaBufFormatsEXT_func eglQueryDmaBufFormatsEXT = nullptr;
     eglQueryDmaBufModifiersEXT_func eglQueryDmaBufModifiersEXT = nullptr;
     eglQueryDmaBufFormatsEXT = (eglQueryDmaBufFormatsEXT_func)eglGetProcAddress("eglQueryDmaBufFormatsEXT");
