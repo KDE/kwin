@@ -10,6 +10,7 @@
 #include "effect/offscreenquickview.h"
 #include "effect/effecthandler.h"
 
+#include "core/output.h"
 #include "logging_p.h"
 #include "opengl/glutils.h"
 
@@ -208,13 +209,20 @@ void OffscreenQuickView::update()
 
     bool usingGl = d->m_glcontext != nullptr;
 
+    double scale = 1;
+    const auto outputs = effects->screens();
+    for (const auto &output : outputs) {
+        if (geometry().intersects(output->geometry())) {
+            scale = std::max(output->scale(), scale);
+        }
+    }
     if (usingGl) {
         if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.get())) {
             // probably a context loss event, kwin is about to reset all the effects anyway
             return;
         }
 
-        const QSize nativeSize = d->m_view->size() * d->m_view->effectiveDevicePixelRatio();
+        const QSize nativeSize = d->m_view->size() * scale;
         if (!d->m_fbo || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
 
@@ -231,7 +239,7 @@ void OffscreenQuickView::update()
         }
 
         QQuickRenderTarget renderTarget = QQuickRenderTarget::fromOpenGLTexture(d->m_fbo->texture(), d->m_fbo->size());
-        renderTarget.setDevicePixelRatio(d->m_view->devicePixelRatio());
+        renderTarget.setDevicePixelRatio(scale);
 
         d->m_view->setRenderTarget(renderTarget);
     }
@@ -249,7 +257,7 @@ void OffscreenQuickView::update()
     if (d->m_useBlit) {
         if (usingGl) {
             d->m_image = d->m_fbo->toImage();
-            d->m_image.setDevicePixelRatio(d->m_view->devicePixelRatio());
+            d->m_image.setDevicePixelRatio(scale);
         } else {
             d->m_image = d->m_view->grabWindow();
         }
