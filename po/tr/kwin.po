@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-23 01:46+0000\n"
-"PO-Revision-Date: 2023-12-09 22:16+0300\n"
+"POT-Creation-Date: 2023-12-28 01:34+0000\n"
+"PO-Revision-Date: 2023-12-27 14:21+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.01.80\n"
+"X-Generator: Lokalize 24.01.85\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -462,7 +462,7 @@ msgstr "Utf8"
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
-msgstr "Değiştiriciler"
+msgstr "Niteleyiciler"
 
 #: debug_console.cpp:314
 #, kde-format
@@ -671,7 +671,7 @@ msgstr "Düğmeler"
 #: debug_console.cpp:507 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
-msgstr "Değiştiriciler"
+msgstr "Niteleyiciler"
 
 #: debug_console.cpp:516
 #, kde-format
@@ -1054,7 +1054,7 @@ msgstr "Geçerli Düzen:"
 #: debug_console.ui:372
 #, kde-format
 msgid "Active Modifiers"
-msgstr "Etkin Değiştiriciler"
+msgstr "Etkin Niteleyiciler"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:388
@@ -1232,7 +1232,7 @@ msgstr "Tablet şuraya taşındı: %1"
 msgid "Tablets switched outputs"
 msgstr "Tabletler çıktılarını değiştirdiler"
 
-#: input.cpp:3199
+#: input.cpp:3200
 #, kde-format
 msgid "Touchpad"
 msgstr "Dokunmatik Yüzey"
@@ -2151,14 +2151,13 @@ msgstr "&Renk:"
 #: plugins/mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr ""
-"Değiştirici düğmeleri basılı tutarak ve fareyi hareket ettirerek çizin."
+msgstr "Niteleyici düğmeleri basılı tutarak ve fareyi hareket ettirerek çizin."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
 #, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Serbest çizim değiştirici düğmeleri:"
+msgstr "Serbest çizim niteleyici düğmeleri:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2204,7 +2203,7 @@ msgstr "Meta"
 #: plugins/mousemark/mousemark_config.ui:157
 #, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Ok çizimi değiştirici düğmeleri:"
+msgstr "Ok çizimi niteleyici düğmeleri:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:67
 #, kde-format
@@ -2593,7 +2592,7 @@ msgstr "Klavye kısayolu:"
 #: plugins/trackmouse/trackmouse_config.ui:43
 #, kde-format
 msgid "Modifier keys:"
-msgstr "Değiştirici düğmeler:"
+msgstr "Niteleyici düğmeler:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -3915,42 +3914,42 @@ msgstr "Pencereyi Dikey Küçült"
 #: useractions.cpp:979
 #, kde-format
 msgid "Quick Tile Window to the Left"
-msgstr "Pencereyi Sola Hızlı Döşe"
+msgstr "Tez Pencereyi Sola Döşe"
 
 #: useractions.cpp:981
 #, kde-format
 msgid "Quick Tile Window to the Right"
-msgstr "Pencereyi Sağa Hızlı Döşe"
+msgstr "Tez Pencereyi Sağa Döşe"
 
 #: useractions.cpp:983
 #, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "Pencereyi Üste Hızlı Döşe"
+msgstr "Tez Pencereyi Üste Döşe"
 
 #: useractions.cpp:985
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "Pencereyi Alta Hızlı Döşe"
+msgstr "Tez Pencereyi Alta Döşe"
 
 #: useractions.cpp:987
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr "Pencereyi Üst Sola Hızlı Döşe"
+msgstr "Tez Pencereyi Üst Sola Döşe"
 
 #: useractions.cpp:989
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "Pencereyi Alt Sola Hızlı Döşe"
+msgstr "Tez Pencereyi Alt Sola Döşe"
 
 #: useractions.cpp:991
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr "Pencereyi Üst Sağa Hızlı Döşe"
+msgstr "Tez Pencereyi Üst Sağa Döşe"
 
 #: useractions.cpp:993
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "Pencereyi Alt Sağa Hızlı Döşe"
+msgstr "Tez Pencereyi Alt Sağa Döşe"
 
 #: useractions.cpp:995
 #, kde-format
