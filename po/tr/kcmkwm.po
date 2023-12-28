@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-11-25 20:24+0300\n"
+"PO-Revision-Date: 2023-12-27 13:02+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.01.85\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -183,7 +183,7 @@ msgstr "İç Pencere, Başlık Çubuğu ve Çerçeve Eylemleri"
 #: actions.ui:195
 #, kde-format
 msgid "Mo&difier key:"
-msgstr "&Değiştirici düğme:"
+msgstr "&Niteleyici düğme:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
 #: actions.ui:205
@@ -400,7 +400,7 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
-"Bir pencereye değiştirici düğmeye basarken fare tekerleğini sardığınızdaki "
+"Bir pencerede niteleyici düğmeye basarken fare tekerleğini sardığınızdaki "
 "KDE davranışını buradan özelleştirebilirsiniz."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
@@ -946,7 +946,7 @@ msgstr "Pencere etkinleştirme ilke açıklaması"
 #: main.cpp:73
 #, kde-format
 msgid "&Focus"
-msgstr "&Odakla"
+msgstr "&Odak"
 
 #: main.cpp:79
 #, kde-format
