@@ -20,7 +20,7 @@
         "Description[sk]": "Zväčší kurzor pri rýchlom pohybe ukazovateľa tam a späť",
         "Description[sl]": "Poveča kazalec, kadar se kazalec hitro premika naprej in nazaj",
         "Description[ta]": "சுட்டியை வேகமாக ஆட்டும்போது சுட்டிக்குறியைப் பெரிதாக்கும்",
-        "Description[tr]": "İşaretçi hızla ileri geri hareket ettirildiğinde imleci büyütür",
+        "Description[tr]": "İşaretçi tez ileri geri hareket ettirildiğinde imleci büyütür",
         "Description[uk]": "Робити курсор більшим, коли вказівник швидко рухається туди-сюди",
         "Description[x-test]": "xxMakes the cursor larger when the pointer is quickly moved back and forthxx",
         "Description[zh_CN]": "快速往返移动指针后加大显示光标",
