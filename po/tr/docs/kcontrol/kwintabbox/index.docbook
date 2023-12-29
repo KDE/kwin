@@ -149,7 +149,7 @@
 >İleri</guibutton
 > veya <guibutton
 >Geri</guibutton
-> düğmesine tıklayın ve istediğiniz kısayol kombinasyonunu yazın. &Ctrl; gibi bir değiştirici düğme kullandığınızdan veya &Alt; düğmesinin kısayolun bir parçası olduğundan emin olun; aksi takdirde pencere listesinde düzgün bir şekilde dolaşamayabilirsiniz.</para>
+> düğmesine tıklayın ve istediğiniz kısayol kombinasyonunu yazın. &Ctrl; gibi bir niteleyici düğme kullandığınızdan veya &Alt; düğmesinin kısayolun bir parçası olduğundan emin olun; aksi takdirde pencere listesinde düzgün bir şekilde dolaşamayabilirsiniz.</para>
 
 <note
 ><para
@@ -229,7 +229,7 @@
 >Geçerli ekran</guilabel
 >'ı seçin. Diğer tüm ekranlardaki pencereleri göstermek için <guilabel
 >Diğer tüm ekranlar</guilabel
->'ı seçin. Bu seçenek, çoklu monitör kurulumunda aynı monitörde bulunan pencereler arasında hızla geçiş yapmak isteyen kullanıcılar için yararlı olabilir.</para>
+>'ı seçin. Bu seçenek, çoklu monitör kurulumunda aynı monitörde bulunan pencereler arasında tez geçiş yapmak isteyen kullanıcılar için yararlı olabilir.</para>
 <note
 ><para
 >Etkin ekran, o anda etkin pencerenin açık olduğu ekran değil, fare işaretçisinin o anda üzerinde olduğu ekrandır.</para
@@ -256,7 +256,7 @@
 <para
 ><guilabel
 >Alternatif</guilabel
-> Görev Değiştiricisi yapılandırmasının kullanılabilirliği, size pencere listelerini kolayca süzmek ve göz atmak için ikinci bir yol sunar. İki Görev Değiştiricisi yapılandırmasında bulunan sekiz düğme kombinasyonuyla, çok sayıda pencere arasında kolay ve hızlı bir biçimde dolaşabilirsiniz.</para>
+> Görev Değiştiricisi yapılandırmasının kullanılabilirliği, size pencere listelerini kolayca süzmek ve göz atmak için ikinci bir yol sunar. İki Görev Değiştiricisi yapılandırmasında bulunan sekiz düğme kombinasyonuyla, çok sayıda pencere arasında kolay ve tez dolaşabilirsiniz.</para>
 </sect2>
 </sect1>
 </article>

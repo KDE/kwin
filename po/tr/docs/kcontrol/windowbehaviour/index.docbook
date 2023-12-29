@@ -889,11 +889,11 @@
 ></title>
 
 <para
->Bu alt bölüm, bir değiştirici düğmeye basılırken bir pencereye tıklandığında gerçekleştirilen ek eylemleri yapılandırmanıza izin verir. </para>
+>Bu alt bölüm, bir niteleyici düğmeye basılırken bir pencereye tıklandığında gerçekleştirilen ek eylemleri yapılandırmanıza izin verir. </para>
 
 <para
 >Bir <guilabel
->Değiştirici düğme</guilabel
+>Niteleyici düğme</guilabel
 > olarak, <guilabel
 >Meta</guilabel
 > (öntanımlı) veya <guilabel
@@ -1193,7 +1193,7 @@
 >Çalışma Alanı Davranışı</guilabel
 > bölümündeki <guilabel
 >Ekran Kenarları</guilabel
-> ayarları modülünde, pencereleri ekran kenarlarına yakın sürüklendiğinde ekranın tamamına, yarısına veya çeyreğine hızla döşenecek şekilde yapılandırabilirsiniz. </para>
+> ayarları modülünde, pencereleri ekran kenarlarına yakın sürüklendiğinde ekranın tamamına, yarısına veya çeyreğine tez döşenecek şekilde yapılandırabilirsiniz. </para>
 </tip>
 
 </sect2>
