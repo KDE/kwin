@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the kwin package.
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 # Frederik Schwarzer <schwarzer@kde.org>, 2023.
+# SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
 #
 # Automatically generated, 2022.
-# Johannes Obermayr <johannesobermayr@gmx.de>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-12-17 21:11+0100\n"
+"PO-Revision-Date: 2023-12-21 17:47+0100\n"
 "Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
@@ -30,7 +30,7 @@ msgid ""
 "can choose your preferred balance of security and functionality here."
 msgstr ""
 "Klassische X11-Anwendungen benötigen Zugriff auf Tastendrücke, die in "
-"anderen Anwendungen getippt werden, um Funktionen zu aktivieren, die über "
+"anderen Anwendungen getippt werden. um Funktionen zu aktivieren, die über "
 "globale Kurzbefehle ausgelöst werden. Daher ist es standardmäßig aus "
 "Sicherheitsgründen ausgeschaltet. Wenn Sie solche Anwendungen verwenden, "
 "können Sie hier Ihren eigenen Kompromiss aus Sicherheit und Funktionalität "
