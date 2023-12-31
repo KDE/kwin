@@ -4425,39 +4425,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~| msgid "milliseconds"
-#~ msgid "milliseconds"
-#~ msgstr " ミリ秒"
-
-#~ msgctxt "@info"
-#~ msgid "<b>Application \"%1\" is not responding</b>"
-#~ msgstr "<b>アプリケーション \"%1\" は応答していません</b>"
-
-#, fuzzy
-#~| msgctxt "@info"
-#~| msgid ""
-#~| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#~| "%3) but the application is not responding.</p>"
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3) but the application is not responding.</para>"
-#~ msgstr ""
-#~ "<p>アプリケーション \"%2\" (プロセス ID: %3) のウィンドウ \"%1\"を閉じよう"
-#~ "としましたが、アプリケーションは応答していません。</p>"
-
-#, fuzzy
-#~| msgctxt "@info"
-#~| msgid ""
-#~| "<p>You tried to close window \"%1\" from application \"%2\" (Process ID: "
-#~| "%3) but the application is not responding.</p>"
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
-#~ "para>"
-#~ msgstr ""
-#~ "<p>アプリケーション \"%2\" (プロセス ID: %3) のウィンドウ \"%1\"を閉じよう"
-#~ "としましたが、アプリケーションは応答していません。</p>"
