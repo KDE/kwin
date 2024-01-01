@@ -66,6 +66,7 @@ public:
     void destroyResources();
     EglGbmBackend *eglBackend() const;
     std::shared_ptr<DrmFramebuffer> renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QList<uint64_t>> &formats);
+    void forgetDamage();
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
     const ColorDescription &colorDescription() const;

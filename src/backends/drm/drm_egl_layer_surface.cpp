@@ -251,6 +251,13 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize
     }
 }
 
+void EglGbmLayerSurface::forgetDamage()
+{
+    if (m_surface) {
+        m_surface->damageJournal.clear();
+    }
+}
+
 bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats)
 {
     if (doesSurfaceFit(m_surface.get(), size, formats)) {
@@ -262,6 +269,9 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QL
     }
     if (auto newSurface = createSurface(size, formats)) {
         m_oldSurface = std::move(m_surface);
+        if (m_oldSurface) {
+            m_oldSurface->damageJournal.clear(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal
+        }
         m_surface = std::move(newSurface);
         return true;
     }

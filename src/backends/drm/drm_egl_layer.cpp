@@ -146,6 +146,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         surfaceItem->resetDamage();
         // ensure the pixmap is updated when direct scanout ends
         surfaceItem->destroyPixmap();
+        m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
         return true;
     } else {
         m_dmabufFeedback.scanoutFailed(surface, formats);
