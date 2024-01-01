@@ -4971,7 +4971,7 @@ void X11Window::updateWindowRules(Rules::Types selection)
     Window::updateWindowRules(selection);
 }
 
-void X11Window::damageNotifyEvent()
+void X11Window::damageNotifyEvent(xcb_damage_notify_event_t *e)
 {
     Q_ASSERT(kwinApp()->operationMode() == Application::OperationModeX11);
 
@@ -4983,7 +4983,10 @@ void X11Window::damageNotifyEvent()
 
     SurfaceItemX11 *item = static_cast<SurfaceItemX11 *>(surfaceItem());
     if (item) {
-        item->processDamage();
+        item->addDamage(QRegion(e->area.x,
+                                e->area.y,
+                                e->area.width,
+                                e->area.height));
     }
 }
 

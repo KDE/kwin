@@ -31,9 +31,6 @@ public:
 
     void preprocess() override;
 
-    void processDamage();
-    bool fetchDamage();
-    void waitForDamage();
     void forgetDamage();
     void destroyDamage();
 
@@ -50,9 +47,6 @@ protected:
 private:
     X11Window *m_window;
     xcb_damage_damage_t m_damageHandle = XCB_NONE;
-    xcb_xfixes_fetch_region_cookie_t m_damageCookie;
-    bool m_isDamaged = false;
-    bool m_havePendingDamageRegion = false;
 };
 
 class KWIN_EXPORT SurfacePixmapX11 final : public SurfacePixmap

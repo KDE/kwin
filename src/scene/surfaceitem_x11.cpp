@@ -24,15 +24,7 @@ SurfaceItemX11::SurfaceItemX11(X11Window *window, Scene *scene, Item *parent)
 
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
     xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
-                      XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
-
-    // With unmanaged windows there is a race condition between the client painting the window
-    // and us setting up damage tracking.  If the client wins we won't get a damage event even
-    // though the window has been painted.  To avoid this we mark the whole window as damaged
-    // immediately after creating the damage object.
-    if (window->isUnmanaged()) {
-        m_isDamaged = true;
-    }
+                      XCB_DAMAGE_REPORT_LEVEL_BOUNDING_BOX);
 
     setDestinationSize(window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size()));
@@ -60,81 +52,9 @@ void SurfaceItemX11::preprocess()
     SurfaceItem::preprocess();
 }
 
-void SurfaceItemX11::processDamage()
-{
-    m_isDamaged = true;
-    scheduleFrame();
-}
-
-bool SurfaceItemX11::fetchDamage()
-{
-    if (!m_isDamaged) {
-        return false;
-    }
-
-    if (m_damageHandle == XCB_NONE) {
-        return true;
-    }
-
-    xcb_xfixes_region_t region = xcb_generate_id(kwinApp()->x11Connection());
-    xcb_xfixes_create_region(kwinApp()->x11Connection(), region, 0, nullptr);
-    xcb_damage_subtract(kwinApp()->x11Connection(), m_damageHandle, 0, region);
-
-    m_damageCookie = xcb_xfixes_fetch_region_unchecked(kwinApp()->x11Connection(), region);
-    xcb_xfixes_destroy_region(kwinApp()->x11Connection(), region);
-
-    m_havePendingDamageRegion = true;
-
-    return true;
-}
-
-void SurfaceItemX11::waitForDamage()
-{
-    if (!m_havePendingDamageRegion) {
-        return;
-    }
-    m_havePendingDamageRegion = false;
-
-    xcb_xfixes_fetch_region_reply_t *reply =
-        xcb_xfixes_fetch_region_reply(kwinApp()->x11Connection(), m_damageCookie, nullptr);
-    if (!reply) {
-        qCDebug(KWIN_CORE) << "Failed to check damage region";
-        return;
-    }
-
-    const int rectCount = xcb_xfixes_fetch_region_rectangles_length(reply);
-    QRegion region;
-
-    if (rectCount > 1 && rectCount < 16) {
-        xcb_rectangle_t *rects = xcb_xfixes_fetch_region_rectangles(reply);
-
-        QList<QRect> qtRects;
-        qtRects.reserve(rectCount);
-
-        for (int i = 0; i < rectCount; ++i) {
-            qtRects << QRect(rects[i].x, rects[i].y, rects[i].width, rects[i].height);
-        }
-        region.setRects(qtRects.constData(), rectCount);
-    } else {
-        region = QRect(reply->extents.x, reply->extents.y, reply->extents.width, reply->extents.height);
-    }
-    free(reply);
-
-    addDamage(region);
-    m_isDamaged = false;
-}
-
-void SurfaceItemX11::forgetDamage()
-{
-    // If the window is destroyed, we cannot destroy XDamage handle. :/
-    m_isDamaged = false;
-    m_damageHandle = XCB_NONE;
-}
-
 void SurfaceItemX11::destroyDamage()
 {
     if (m_damageHandle != XCB_NONE) {
-        m_isDamaged = false;
         xcb_damage_destroy(kwinApp()->x11Connection(), m_damageHandle);
         m_damageHandle = XCB_NONE;
     }

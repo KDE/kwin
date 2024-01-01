@@ -416,7 +416,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
     // without waiting for a reply
     for (Window *window : std::as_const(windows)) {
         SurfaceItemX11 *surfaceItem = static_cast<SurfaceItemX11 *>(window->surfaceItem());
-        if (surfaceItem->fetchDamage()) {
+        if (!surfaceItem->damage().isEmpty()) {
             dirtyItems.append(surfaceItem);
         }
     }
@@ -426,11 +426,6 @@ void X11Compositor::composite(RenderLoop *renderLoop)
             m_syncManager->triggerFence();
         }
         xcb_flush(kwinApp()->x11Connection());
-    }
-
-    // Get the replies
-    for (SurfaceItemX11 *item : std::as_const(dirtyItems)) {
-        item->waitForDamage();
     }
 
     if (m_framesToTestForSafety > 0 && (backend()->compositingType() & OpenGLCompositing)) {

@@ -374,7 +374,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
                 Q_EMIT shapeChanged();
             }
             if (eventType == Xcb::Extensions::self()->damageNotifyEvent()) {
-                damageNotifyEvent();
+                damageNotifyEvent(reinterpret_cast<xcb_damage_notify_event_t *>(e));
             }
             break;
         }
@@ -557,7 +557,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
             updateShape();
         }
         if (eventType == Xcb::Extensions::self()->damageNotifyEvent() && reinterpret_cast<xcb_damage_notify_event_t *>(e)->drawable == frameId()) {
-            damageNotifyEvent();
+            damageNotifyEvent(reinterpret_cast<xcb_damage_notify_event_t *>(e));
         }
         break;
     }

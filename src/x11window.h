@@ -29,6 +29,8 @@ class QTimer;
 class KStartupInfoData;
 class KStartupInfoId;
 
+struct xcb_damage_notify_event_t;
+
 namespace KWin
 {
 
@@ -315,7 +317,7 @@ private:
     void leaveNotifyEvent(xcb_leave_notify_event_t *e);
     void focusInEvent(xcb_focus_in_event_t *e);
     void focusOutEvent(xcb_focus_out_event_t *e);
-    void damageNotifyEvent();
+    void damageNotifyEvent(xcb_damage_notify_event_t *e);
 
     bool buttonPressEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root, xcb_timestamp_t time = XCB_CURRENT_TIME);
     bool buttonReleaseEvent(xcb_window_t w, int button, int state, int x, int y, int x_root, int y_root);
