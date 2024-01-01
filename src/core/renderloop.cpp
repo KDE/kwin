@@ -128,15 +128,7 @@ void RenderLoopPrivate::notifyVblank(std::chrono::nanoseconds timestamp)
 
 void RenderLoopPrivate::dispatch()
 {
-    // On X11, we want to ignore repaints that are scheduled by windows right before
-    // the Compositor starts repainting.
-    pendingRepaint = true;
-
     Q_EMIT q->frameRequested(q);
-
-    // The Compositor may decide to not repaint when the frameRequested() signal is
-    // emitted, in which case the pending repaint flag has to be reset manually.
-    pendingRepaint = false;
 }
 
 void RenderLoopPrivate::invalidate()
@@ -179,11 +171,6 @@ void RenderLoop::prepareNewFrame()
     d->pendingFrameCount++;
 }
 
-void RenderLoop::beginPaint()
-{
-    d->pendingRepaint = false;
-}
-
 int RenderLoop::refreshRate() const
 {
     return d->refreshRate;
@@ -200,7 +187,7 @@ void RenderLoop::setRefreshRate(int refreshRate)
 
 void RenderLoop::scheduleRepaint(Item *item)
 {
-    if (d->pendingRepaint || (d->fullscreenItem != nullptr && item != nullptr && item != d->fullscreenItem)) {
+    if (d->fullscreenItem != nullptr && item != nullptr && item != d->fullscreenItem) {
         return;
     }
     if (!d->pendingFrameCount && !d->inhibitCount) {

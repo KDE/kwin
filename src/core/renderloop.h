@@ -53,12 +53,6 @@ public:
     void prepareNewFrame();
 
     /**
-     * This function must be called before the Compositor starts rendering the next
-     * frame.
-     */
-    void beginPaint();
-
-    /**
      * Returns the refresh rate at which the output is being updated, in millihertz.
      */
     int refreshRate() const;

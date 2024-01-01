@@ -42,7 +42,6 @@ public:
     int pendingFrameCount = 0;
     int inhibitCount = 0;
     bool pendingReschedule = false;
-    bool pendingRepaint = false;
     RenderLoop::VrrPolicy vrrPolicy = RenderLoop::VrrPolicy::Never;
     Item *fullscreenItem = nullptr;
     bool allowTearing = false;

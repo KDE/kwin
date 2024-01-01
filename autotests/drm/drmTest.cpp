@@ -383,7 +383,6 @@ void DrmTest::testModeset()
     const auto layer = renderBackend->primaryLayer(output);
     layer->beginFrame();
     output->renderLoop()->prepareNewFrame();
-    output->renderLoop()->beginPaint();
     layer->endFrame(infiniteRegion(), infiniteRegion());
     QVERIFY(output->present(std::make_shared<OutputFrame>(output->renderLoop())));
 
