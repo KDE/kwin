@@ -377,6 +377,18 @@ install(TARGETS kwin_x11 ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 
 add_executable(kwin_wayland main_wayland.cpp)
 
+if(TARGET PkgConfig::libsystemd)
+    ecm_qt_declare_logging_category(kwin_wayland
+        HEADER watchdoglogging.h
+        IDENTIFIER KWIN_WATCHDOG
+        CATEGORY_NAME kwin_watchdog
+        DEFAULT_SEVERITY Info
+    )
+
+    target_sources(kwin_wayland PRIVATE watchdog.cpp)
+    target_link_libraries(kwin_wayland PkgConfig::libsystemd)
+endif()
+
 target_link_libraries(kwin_wayland
     kwin
     KWinXwaylandServerModule

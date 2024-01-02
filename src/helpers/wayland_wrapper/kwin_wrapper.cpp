@@ -36,13 +36,18 @@
 #include "xauthority.h"
 #include "xwaylandsocket.h"
 
+using namespace std::chrono_literals;
+
 class KWinWrapper : public QObject
 {
     Q_OBJECT
 public:
     KWinWrapper(QObject *parent);
     ~KWinWrapper();
+
     void run();
+    void restart();
+    void terminate(std::chrono::milliseconds timeout);
 
 private:
     wl_socket *m_socket;
@@ -52,11 +57,14 @@ private:
 
     std::unique_ptr<KWin::XwaylandSocket> m_xwlSocket;
     QTemporaryFile m_xauthorityFile;
+    const std::chrono::microseconds m_watchdogInterval;
+    bool m_watchdogIntervalOk;
 };
 
 KWinWrapper::KWinWrapper(QObject *parent)
     : QObject(parent)
     , m_kwinProcess(new QProcess(this))
+    , m_watchdogInterval(std::chrono::microseconds(qEnvironmentVariableIntValue("WATCHDOG_USEC", &m_watchdogIntervalOk) / 2))
 {
     m_socket = wl_socket_create();
     if (!m_socket) {
@@ -82,13 +90,7 @@ KWinWrapper::KWinWrapper(QObject *parent)
 KWinWrapper::~KWinWrapper()
 {
     wl_socket_destroy(m_socket);
-    if (m_kwinProcess) {
-        disconnect(m_kwinProcess, nullptr, this, nullptr);
-        m_kwinProcess->terminate();
-        m_kwinProcess->waitForFinished();
-        m_kwinProcess->kill();
-        m_kwinProcess->waitForFinished();
-    }
+    terminate(30s);
 }
 
 void KWinWrapper::run()
@@ -147,12 +149,30 @@ void KWinWrapper::run()
             env.insert("XAUTHORITY", m_xauthorityFile.fileName());
         }
     }
-
     auto envSyncJob = new KUpdateLaunchEnvironmentJob(env);
     connect(envSyncJob, &KUpdateLaunchEnvironmentJob::finished, this, []() {
         // The service name is merely there to indicate to the world that we're up and ready with all envs exported
         QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWinWrapper"));
     });
+}
+
+void KWinWrapper::terminate(std::chrono::milliseconds timeout)
+{
+    if (m_kwinProcess) {
+        disconnect(m_kwinProcess, nullptr, this, nullptr);
+        m_kwinProcess->terminate();
+        m_kwinProcess->waitForFinished(timeout.count() / 2);
+        if (m_kwinProcess->state() != QProcess::NotRunning) {
+            m_kwinProcess->kill();
+            m_kwinProcess->waitForFinished(timeout.count() / 2);
+        }
+    }
+}
+
+void KWinWrapper::restart()
+{
+    terminate(m_watchdogIntervalOk ? std::chrono::duration_cast<std::chrono::milliseconds>(m_watchdogInterval) : 30000ms);
+    m_kwinProcess->start();
 }
 
 int main(int argc, char **argv)
@@ -161,14 +181,18 @@ int main(int argc, char **argv)
     app.setQuitLockEnabled(false); // don't exit when the first KJob finishes
 
     KSignalHandler::self()->watchSignal(SIGTERM);
-    QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived, &app, [&app](int signal) {
-        if (signal == SIGTERM) {
-            app.quit();
-        }
-    });
+    KSignalHandler::self()->watchSignal(SIGHUP);
 
     KWinWrapper wrapper(&app);
     wrapper.run();
+
+    QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived, &app, [&app, &wrapper](int signal) {
+        if (signal == SIGTERM) {
+            app.quit();
+        } else if (signal == SIGHUP) { // The systemd service will issue SIGHUP when it's locked up so that we can restarted
+            wrapper.restart();
+        }
+    });
 
     return app.exec();
 }
