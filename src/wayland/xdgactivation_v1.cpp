@@ -5,6 +5,7 @@
 */
 
 #include "xdgactivation_v1.h"
+#include "clientconnection.h"
 #include "display.h"
 #include "seat.h"
 #include "surface.h"

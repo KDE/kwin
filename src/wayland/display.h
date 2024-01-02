@@ -11,10 +11,9 @@
 #include <QList>
 #include <QObject>
 
-#include "clientconnection.h"
-
 struct wl_client;
 struct wl_display;
+struct wl_resource;
 
 namespace KWin
 {

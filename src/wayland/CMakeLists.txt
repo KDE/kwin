@@ -327,6 +327,7 @@ install(FILES
     datadevicemanager.h
     dataoffer.h
     datasource.h
+    display.h
     dpms.h
     drmlease_v1.h
     fractionalscale_v1.h

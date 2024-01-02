@@ -5,6 +5,7 @@
 */
 
 #include "wayland/cursorshape_v1.h"
+#include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/pointer.h"
 #include "wayland/surface.h"

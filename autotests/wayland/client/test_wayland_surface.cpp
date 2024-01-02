@@ -11,6 +11,7 @@
 // KWin
 #include "core/graphicsbuffer.h"
 #include "core/graphicsbufferview.h"
+#include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
 #include "wayland/display.h"
 #include "wayland/idleinhibit_v1.h"

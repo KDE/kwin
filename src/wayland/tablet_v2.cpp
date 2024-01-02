@@ -5,6 +5,7 @@
 */
 
 #include "tablet_v2.h"
+#include "clientconnection.h"
 #include "display.h"
 #include "seat.h"
 #include "surface.h"

@@ -22,6 +22,7 @@
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
+#include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
 #include "wayland/cursorshape_v1.h"

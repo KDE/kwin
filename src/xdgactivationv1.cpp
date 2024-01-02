@@ -10,6 +10,7 @@
 #include "xdgactivationv1.h"
 #include "effect/effecthandler.h"
 #include "utils/common.h"
+#include "wayland/clientconnection.h"
 #include "wayland/display.h"
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/surface.h"
