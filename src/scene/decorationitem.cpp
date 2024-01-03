@@ -105,8 +105,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
     connect(renderer(), &DecorationRenderer::damaged,
             this, qOverload<const QRegion &>(&Item::scheduleRepaint));
 
-    // this toSize is to match that DecoratedWindow also rounds
-    setSize(window->size().toSize());
+    setSize(window->size());
     handleOutputChanged();
 }
 
@@ -164,6 +163,7 @@ void DecorationItem::handleOutputScaleChanged()
 {
     const qreal dpr = m_output->scale();
     if (m_renderer->devicePixelRatio() != dpr) {
+        qDebug() << this << "setting dpr to " << dpr;
         m_renderer->setDevicePixelRatio(dpr);
         discardQuads();
     }
@@ -171,7 +171,8 @@ void DecorationItem::handleOutputScaleChanged()
 
 void DecorationItem::handleFrameGeometryChanged()
 {
-    setSize(m_window->size().toSize());
+    qDebug() << this << "frame geometry changed to " << m_window->size();
+    setSize(m_window->size());
 }
 
 DecorationRenderer *DecorationItem::renderer() const
@@ -190,10 +191,12 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
     const QRectF &r = partRect;
     const int p = DecorationRenderer::TexturePad;
 
-    const int x0 = r.x();
-    const int y0 = r.y();
-    const int x1 = r.x() + r.width();
-    const int y1 = r.y() + r.height();
+    const qreal x0 = r.x();
+    const qreal y0 = r.y();
+    const qreal x1 = r.x() + r.width();
+    const qreal y1 = r.y() + r.height();
+
+    qDebug() << partRect;
 
     WindowQuad quad;
     if (rotated) {

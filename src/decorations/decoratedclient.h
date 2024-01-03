@@ -31,7 +31,7 @@ public:
     ~DecoratedClientImpl() override;
     QString caption() const override;
     WId decorationId() const override;
-    int height() const override;
+    qreal height() const override;
     QIcon icon() const override;
     bool isActive() const override;
     bool isCloseable() const override;
@@ -51,8 +51,8 @@ public:
     QPalette palette() const override;
     QColor color(KDecoration2::ColorGroup group, KDecoration2::ColorRole role) const override;
     bool providesContextHelp() const override;
-    QSize size() const override;
-    int width() const override;
+    QSizeF size() const override;
+    qreal width() const override;
     qreal devicePixelRatio() const override;
     QString windowClass() const override;
     WId windowId() const override;
@@ -94,9 +94,9 @@ private Q_SLOTS:
 
 private:
     Window *m_window;
-    QSize m_clientSize;
+
+    QSizeF m_clientSize;
     qreal m_dpr = 1.0;
-    ;
 
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;

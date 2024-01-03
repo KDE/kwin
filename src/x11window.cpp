@@ -1269,7 +1269,7 @@ void X11Window::updateInputWindow()
                              -top,
                              decoration()->size().width() + left + right,
                              decoration()->size().height() + top + bottom);
-            region = region.subtracted(decoration()->rect());
+            region = region.subtracted(decoration()->rect().toRect());
         }
     }
 
@@ -3680,7 +3680,7 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     w = std::max(min_size.width(), w);
     h = std::max(min_size.height(), h);
 
-    if (!rules()->checkStrictGeometry(!isFullScreen())) {
+    if (!rules()->checkStrictGeometry(!isFullScreen()) || true) {
         // Disobey increments and aspect by explicit rule.
         return QSizeF(w, h);
     }
