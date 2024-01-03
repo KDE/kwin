@@ -328,7 +328,7 @@ bool Decoration::init()
     updateBorders();
     if (m_view) {
         auto resizeWindow = [this] {
-            QRect rect(QPoint(0, 0), size());
+            QRect rect(QPoint(0, 0), size().toSize());
             if (m_padding && !client()->isMaximized()) {
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }

@@ -30,7 +30,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     : QObject()
     , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
     , m_window(window)
-    , m_clientSize(window->clientSize().toSize())
+    , m_clientSize(window->clientSize())
 {
     window->setDecoratedClient(this);
     connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
@@ -41,7 +41,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
             return;
         }
         const auto oldSize = m_clientSize;
-        m_clientSize = m_window->clientSize().toSize();
+        m_clientSize = m_window->clientSize();
         if (oldSize.width() != m_clientSize.width()) {
             Q_EMIT decoratedClient->widthChanged(m_clientSize.width());
         }
@@ -269,17 +269,17 @@ void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperat
     Workspace::self()->performWindowOperation(m_window, operation);
 }
 
-int DecoratedClientImpl::width() const
+qreal DecoratedClientImpl::width() const
 {
     return m_clientSize.width();
 }
 
-int DecoratedClientImpl::height() const
+qreal DecoratedClientImpl::height() const
 {
     return m_clientSize.height();
 }
 
-QSize DecoratedClientImpl::size() const
+QSizeF DecoratedClientImpl::size() const
 {
     return m_clientSize;
 }
