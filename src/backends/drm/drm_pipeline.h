@@ -185,7 +185,7 @@ private:
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<IccProfile> iccProfile;
-        ColorDescription colorDescription = ColorDescription::sRGB;
+        ColorDescription colorDescription = ColorDescription::sRGBf();
 
         // the transformation that buffers submitted to the pipeline should have
         DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;

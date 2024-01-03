@@ -62,16 +62,18 @@ QVector2D Colorimetry::xyzToXY(QVector3D xyz)
 
 QMatrix3x3 Colorimetry::toXYZ() const
 {
-    const auto r_xyz = xyToXYZ(red);
-    const auto g_xyz = xyToXYZ(green);
-    const auto b_xyz = xyToXYZ(blue);
-    const auto w_xyz = xyToXYZ(white);
+    const auto r_xyz = xyToXYZ(m_red);
+    const auto g_xyz = xyToXYZ(m_green);
+    const auto b_xyz = xyToXYZ(m_blue);
+    const auto w_xyz = xyToXYZ(white());
     const auto component_scale = inverse(matrixFromColumns(r_xyz, g_xyz, b_xyz)) * w_xyz;
     return matrixFromColumns(r_xyz * component_scale.x(), g_xyz * component_scale.y(), b_xyz * component_scale.z());
 }
 
 QMatrix3x3 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint)
 {
+    Q_ASSERT(sourceWhitepoint.y() != 0);
+    Q_ASSERT(destinationWhitepoint.y() != 0);
     static const QMatrix3x3 bradford = []() {
         QMatrix3x3 ret;
         ret(0, 0) = 0.8951;
@@ -109,45 +111,47 @@ QMatrix3x3 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
 QMatrix3x3 Colorimetry::toOther(const Colorimetry &other) const
 {
     // rendering intent is relative colorimetric, so adapt to the different whitepoint
-    if (white == other.white) {
+    Q_ASSERT(m_white);
+    Q_ASSERT(other.m_white);
+    if (m_white == other.m_white) {
         return inverse(other.toXYZ()) * toXYZ();
     } else {
-        return inverse(other.toXYZ()) * chromaticAdaptationMatrix(this->white, other.white) * toXYZ();
+        return inverse(other.toXYZ()) * chromaticAdaptationMatrix(white(), other.white()) * toXYZ();
     }
 }
 
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
 {
-    const auto mat = chromaticAdaptationMatrix(this->white, newWhitepoint);
+    const auto mat = chromaticAdaptationMatrix(white(), newWhitepoint);
     return Colorimetry{
-        .red = xyzToXY(mat * xyToXYZ(red)),
-        .green = xyzToXY(mat * xyToXYZ(green)),
-        .blue = xyzToXY(mat * xyToXYZ(blue)),
-        .white = newWhitepoint,
-        .name = std::nullopt,
+        xyzToXY(mat * xyToXYZ(m_red)),
+        xyzToXY(mat * xyToXYZ(m_green)),
+        xyzToXY(mat * xyToXYZ(m_blue)),
+        newWhitepoint,
+        std::nullopt,
     };
 }
 
 bool Colorimetry::operator==(const Colorimetry &other) const
 {
-    return (name || other.name) ? (name == other.name)
-                                : (red == other.red && green == other.green && blue == other.blue && white == other.white);
+    return (m_name || other.m_name) ? (m_name == other.m_name)
+                                    : (m_red == other.m_red && m_green == other.m_green && m_blue == other.m_blue && m_white == other.m_white);
 }
 
 static const Colorimetry BT709 = Colorimetry{
-    .red = {0.64, 0.33},
-    .green = {0.30, 0.60},
-    .blue = {0.15, 0.06},
-    .white = {0.3127, 0.3290},
-    .name = NamedColorimetry::BT709,
+    {0.64, 0.33},
+    {0.30, 0.60},
+    {0.15, 0.06},
+    {0.3127, 0.3290},
+    NamedColorimetry::BT709,
 };
 
 static const Colorimetry BT2020 = Colorimetry{
-    .red = {0.708, 0.292},
-    .green = {0.170, 0.797},
-    .blue = {0.131, 0.046},
-    .white = {0.3127, 0.3290},
-    .name = NamedColorimetry::BT2020,
+    {0.708, 0.292},
+    {0.170, 0.797},
+    {0.131, 0.046},
+    {0.3127, 0.3290},
+    NamedColorimetry::BT2020,
 };
 
 Colorimetry Colorimetry::fromName(NamedColorimetry name)
@@ -164,24 +168,41 @@ Colorimetry Colorimetry::fromName(NamedColorimetry name)
 Colorimetry Colorimetry::fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
 {
     return Colorimetry{
-        .red = xyzToXY(red),
-        .green = xyzToXY(green),
-        .blue = xyzToXY(blue),
-        .white = xyzToXY(white),
-        .name = std::nullopt,
+        xyzToXY(red),
+        xyzToXY(green),
+        xyzToXY(blue),
+        xyzToXY(white),
+        std::nullopt,
     };
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0);
+ColorDescription create(ColorDescription ret)
+{
+    Q_ASSERT(ret.isValid());
+    return ret;
+}
+
+// const ColorDescription ColorDescription::sRGB = create(ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0));
+
+ColorDescription ColorDescription::sRGBf()
+{
+    static const auto sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0);
+    Q_ASSERT(ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0) == sRGB);
+    Q_ASSERT(sRGB.isValid());
+    return sRGB;
+}
 
 static Colorimetry sRGBColorimetry(double factor)
 {
-    return Colorimetry{
-        .red = BT709.red * (1 - factor) + BT2020.red * factor,
-        .green = BT709.green * (1 - factor) + BT2020.green * factor,
-        .blue = BT709.blue * (1 - factor) + BT2020.blue * factor,
-        .white = BT709.white, // whitepoint is the same
-    };
+    Q_ASSERT(BT709.white().y() != 0);
+    Colorimetry ret{
+        BT709.red() * (1 - factor) + BT2020.red() * factor,
+        BT709.green() * (1 - factor) + BT2020.green() * factor,
+        BT709.blue() * (1 - factor) + BT2020.blue() * factor,
+        BT709.white(), // whitepoint is the same
+        std::nullopt};
+    Q_ASSERT(ret.isValid());
+    return ret;
 }
 
 ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness)
@@ -194,6 +215,7 @@ ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferF
     , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
     , m_maxHdrHighlightBrightness(maxHdrHighlightBrightness)
 {
+    Q_ASSERT(isValid());
 }
 
 ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness)
@@ -206,6 +228,26 @@ ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFu
     , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
     , m_maxHdrHighlightBrightness(maxHdrHighlightBrightness)
 {
+    Q_ASSERT(isValid());
+}
+
+ColorDescription::ColorDescription(const ColorDescription &ret)
+    : ColorDescription(ret.m_colorimetry, ret.m_transferFunction, ret.m_sdrGamutWideness, ret.m_sdrBrightness, ret.m_minHdrBrightness, ret.m_maxFrameAverageBrightness, ret.m_maxHdrHighlightBrightness)
+{
+}
+
+ColorDescription ColorDescription::operator=(const ColorDescription &other)
+{
+    m_colorimetry = other.m_colorimetry;
+    m_transferFunction = other.m_transferFunction;
+    m_sdrColorimetry = other.m_sdrColorimetry;
+    m_sdrGamutWideness = other.m_sdrGamutWideness;
+    m_sdrBrightness = other.m_sdrBrightness;
+    m_minHdrBrightness = other.m_minHdrBrightness;
+    m_maxFrameAverageBrightness = other.m_maxFrameAverageBrightness;
+    m_maxHdrHighlightBrightness = other.m_maxHdrHighlightBrightness;
+    Q_ASSERT(isValid() == other.isValid());
+    return *this;
 }
 
 const Colorimetry &ColorDescription::colorimetry() const

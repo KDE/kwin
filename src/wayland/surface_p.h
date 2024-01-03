@@ -68,7 +68,7 @@ struct SurfaceState
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;
     PresentationHint presentationHint = PresentationHint::VSync;
-    ColorDescription colorDescription = ColorDescription::sRGB;
+    ColorDescription colorDescription = ColorDescription::sRGBf();
     std::unique_ptr<PresentationTimeFeedback> presentationFeedback;
 
     struct

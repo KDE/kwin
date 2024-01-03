@@ -100,8 +100,8 @@ private:
         bool colormanagementEnabled = false;
         std::shared_ptr<GLTexture> shadowTexture;
         std::unique_ptr<GLFramebuffer> shadowBuffer;
-        ColorDescription targetColorDescription = ColorDescription::sRGB;
-        ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
+        ColorDescription targetColorDescription = ColorDescription::sRGBf();
+        ColorDescription intermediaryColorDescription = ColorDescription::sRGBf();
         QVector3D channelFactors = {1, 1, 1};
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;

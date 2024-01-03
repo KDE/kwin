@@ -161,7 +161,7 @@ private:
     QMap<SceneDelegate *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
-    ColorDescription m_colorDescription = ColorDescription::sRGB;
+    ColorDescription m_colorDescription = ColorDescription::sRGBf();
 };
 
 } // namespace KWin

@@ -224,7 +224,7 @@ const ColorDescription &EglGbmLayerSurface::colorDescription() const
     if (m_surface) {
         return m_surface->shadowTexture ? m_surface->intermediaryColorDescription : m_surface->targetColorDescription;
     } else {
-        return ColorDescription::sRGB;
+        return ColorDescription::sRGBf();
     }
 }
 

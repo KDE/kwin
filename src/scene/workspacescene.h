@@ -70,7 +70,7 @@ public:
 
     virtual std::pair<std::shared_ptr<GLTexture>, ColorDescription> textureForOutput(Output *output) const
     {
-        return {nullptr, ColorDescription::sRGB};
+        return {nullptr, ColorDescription::sRGBf()};
     }
 
 Q_SIGNALS:

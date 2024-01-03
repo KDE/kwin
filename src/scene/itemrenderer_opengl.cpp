@@ -376,6 +376,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setUniform(GLShader::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
         }
         if (traits & ShaderTrait::TransformColorspace) {
+            Q_ASSERT(renderNode.colorDescription.colorimetry().isValid());
+            Q_ASSERT(renderTarget.colorDescription().colorimetry().isValid());
+            Q_ASSERT(renderTarget.colorDescription().sdrColorimetry().isValid());
             shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
         }
 

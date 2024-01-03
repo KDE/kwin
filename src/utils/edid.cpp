@@ -129,19 +129,19 @@ Edid::Edid(const void *data, uint32_t size)
     const auto chromaticity = di_edid_get_chromaticity_coords(edid);
     if (chromaticity) {
         m_colorimetry = {
-            .red = {chromaticity->red_x, chromaticity->red_y},
-            .green = {chromaticity->green_x, chromaticity->green_y},
-            .blue = {chromaticity->blue_x, chromaticity->blue_y},
-            .white = {chromaticity->white_x, chromaticity->white_y},
+            {chromaticity->red_x, chromaticity->red_y},
+            {chromaticity->green_x, chromaticity->green_y},
+            {chromaticity->blue_x, chromaticity->blue_y},
+            {chromaticity->white_x, chromaticity->white_y},
         };
     } else {
         // assume sRGB
         m_colorimetry = {
-            .red = {0.64, 0.33},
-            .green = {0.30, 0.60},
-            .blue = {0.15, 0.06},
-            .white = {0.3127, 0.3290},
-            .name = NamedColorimetry::BT709,
+            {0.64, 0.33},
+            {0.30, 0.60},
+            {0.15, 0.06},
+            {0.3127, 0.3290},
+            NamedColorimetry::BT709,
         };
     }
 

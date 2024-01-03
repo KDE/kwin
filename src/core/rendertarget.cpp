@@ -15,12 +15,14 @@ RenderTarget::RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDesc
     , m_transformation(fbo->colorAttachment() ? fbo->colorAttachment()->contentTransformMatrix() : QMatrix4x4())
     , m_colorDescription(colorDescription)
 {
+    Q_ASSERT(m_colorDescription.isValid());
 }
 
 RenderTarget::RenderTarget(QImage *image, const ColorDescription &colorDescription)
     : m_image(image)
     , m_colorDescription(colorDescription)
 {
+    Q_ASSERT(m_colorDescription.isValid());
 }
 
 QSize RenderTarget::size() const

@@ -352,7 +352,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     } else if (const auto profile = props->iccProfile.value_or(m_state.iccProfile)) {
         return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, 200, 0, 200, 200, 0);
     } else {
-        return ColorDescription::sRGB;
+        return ColorDescription::sRGBf();
     }
 }
 

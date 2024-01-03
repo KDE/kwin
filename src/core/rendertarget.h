@@ -21,8 +21,8 @@ class GLTexture;
 class KWIN_EXPORT RenderTarget
 {
 public:
-    explicit RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription = ColorDescription::sRGB);
-    explicit RenderTarget(QImage *image, const ColorDescription &colorDescription = ColorDescription::sRGB);
+    explicit RenderTarget(GLFramebuffer *fbo, const ColorDescription &colorDescription = ColorDescription::sRGBf());
+    explicit RenderTarget(QImage *image, const ColorDescription &colorDescription = ColorDescription::sRGBf());
 
     QSize size() const;
     QMatrix4x4 transformation() const;

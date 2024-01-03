@@ -320,7 +320,7 @@ bool WaylandEglBackend::initRenderingContext()
 
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> WaylandEglBackend::textureForOutput(KWin::Output *output) const
 {
-    return std::make_pair(m_outputs.at(output).primaryLayer->texture(), ColorDescription::sRGB);
+    return std::make_pair(m_outputs.at(output).primaryLayer->texture(), ColorDescription::sRGBf());
 }
 
 std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(SurfacePixmap *pixmap)

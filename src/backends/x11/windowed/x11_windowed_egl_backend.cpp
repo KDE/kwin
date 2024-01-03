@@ -295,9 +295,9 @@ std::pair<std::shared_ptr<GLTexture>, ColorDescription> X11WindowedEglBackend::t
 {
     auto it = m_outputs.find(output);
     if (it == m_outputs.end()) {
-        return {nullptr, ColorDescription::sRGB};
+        return {nullptr, ColorDescription::sRGBf()};
     }
-    return std::make_pair(it->second.primaryLayer->texture(), ColorDescription::sRGB);
+    return std::make_pair(it->second.primaryLayer->texture(), ColorDescription::sRGBf());
 }
 
 } // namespace

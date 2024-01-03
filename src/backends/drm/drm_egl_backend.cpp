@@ -168,7 +168,7 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::tex
 {
     const auto drmOutput = static_cast<DrmAbstractOutput *>(output);
     if (const auto virtualLayer = dynamic_cast<VirtualEglGbmLayer *>(drmOutput->primaryLayer())) {
-        return std::make_pair(virtualLayer->texture(), ColorDescription::sRGB);
+        return std::make_pair(virtualLayer->texture(), ColorDescription::sRGBf());
     }
     const auto layer = static_cast<EglGbmLayer *>(drmOutput->primaryLayer());
     return std::make_pair(layer->texture(), layer->colorDescription());

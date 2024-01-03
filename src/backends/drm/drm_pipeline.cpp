@@ -318,7 +318,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     } else if (m_pending.colorDescription.transferFunction() != NamedTransferFunction::gamma22) {
         return false;
     }
-    if (m_pending.colorDescription.colorimetry().name == NamedColorimetry::BT2020) {
+    if (m_pending.colorDescription.colorimetry().name() == NamedColorimetry::BT2020) {
         if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
             return false;
         }
@@ -754,11 +754,11 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
             .metadata_type = 0,
             // in 0.00002 nits
             .display_primaries = {
-                {to16Bit(colorimetry.red.x()), to16Bit(colorimetry.red.y())},
-                {to16Bit(colorimetry.green.x()), to16Bit(colorimetry.green.y())},
-                {to16Bit(colorimetry.blue.x()), to16Bit(colorimetry.blue.y())},
+                {to16Bit(colorimetry.red().x()), to16Bit(colorimetry.red().y())},
+                {to16Bit(colorimetry.green().x()), to16Bit(colorimetry.green().y())},
+                {to16Bit(colorimetry.blue().x()), to16Bit(colorimetry.blue().y())},
             },
-            .white_point = {to16Bit(colorimetry.white.x()), to16Bit(colorimetry.white.y())},
+            .white_point = {to16Bit(colorimetry.white().x()), to16Bit(colorimetry.white().y())},
             // in nits
             .max_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
             // in 0.0001 nits

@@ -278,7 +278,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
     data.viewport = rect;
 
-    const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
+    const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGBf() ? GL_RGBA8 : GL_RGBA16F;
     if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
         data.texture = GLTexture::allocate(textureFormat, nativeSize);
         if (!data.texture) {

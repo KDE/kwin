@@ -195,9 +195,9 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> VirtualEglBackend:
 {
     auto it = m_outputs.find(output);
     if (it == m_outputs.end()) {
-        return {nullptr, ColorDescription::sRGB};
+        return {nullptr, ColorDescription::sRGBf()};
     }
-    return std::make_pair(it->second->texture(), ColorDescription::sRGB);
+    return std::make_pair(it->second->texture(), ColorDescription::sRGBf());
 }
 
 } // namespace

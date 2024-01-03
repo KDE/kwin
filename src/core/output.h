@@ -455,7 +455,7 @@ protected:
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
-        ColorDescription colorDescription = ColorDescription::sRGB;
+        ColorDescription colorDescription = ColorDescription::sRGBf();
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;

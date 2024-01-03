@@ -57,11 +57,61 @@ public:
      */
     Colorimetry adaptedTo(QVector2D newWhitepoint) const;
 
-    QVector2D red;
-    QVector2D green;
-    QVector2D blue;
-    QVector2D white;
-    std::optional<NamedColorimetry> name;
+    Colorimetry()
+        : m_red({})
+        , m_green({})
+        , m_blue({})
+        , m_white({})
+        , m_name({})
+    {
+    }
+    Colorimetry(QVector2D red,
+                QVector2D green,
+                QVector2D blue,
+                QVector2D white,
+                std::optional<NamedColorimetry> name = std::nullopt)
+        : m_red(red)
+        , m_green(green)
+        , m_blue(blue)
+        , m_white(white)
+        , m_name(name)
+    {
+        Q_ASSERT(white.y() != 0);
+    }
+
+    bool isValid() const
+    {
+        return m_white.has_value();
+    }
+
+    QVector2D red() const
+    {
+        return m_red;
+    }
+    QVector2D green() const
+    {
+        return m_green;
+    }
+    QVector2D blue() const
+    {
+        return m_blue;
+    }
+    QVector2D white() const
+    {
+        Q_ASSERT(m_white.has_value());
+        return m_white.value();
+    }
+    std::optional<NamedColorimetry> name() const
+    {
+        return m_name;
+    }
+
+private:
+    QVector2D m_red;
+    QVector2D m_green;
+    QVector2D m_blue;
+    std::optional<QVector2D> m_white;
+    std::optional<NamedColorimetry> m_name;
 };
 
 /**
@@ -110,7 +160,16 @@ public:
     /**
      * This color description describes display-referred sRGB, with a gamma22 transfer function
      */
-    static const ColorDescription sRGB;
+    //     static const ColorDescription sRGB;
+    static ColorDescription sRGBf();
+
+    bool isValid() const
+    {
+        return m_colorimetry.isValid() && m_sdrColorimetry.isValid();
+    }
+
+    ColorDescription(const ColorDescription &ret);
+    ColorDescription operator=(const ColorDescription &other);
 
 private:
     Colorimetry m_colorimetry;

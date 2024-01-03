@@ -55,7 +55,7 @@ void OpenGLBackend::copyPixels(const QRegion &region, const QSize &screenSize)
 
 std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> OpenGLBackend::textureForOutput(Output *output) const
 {
-    return {nullptr, ColorDescription::sRGB};
+    return {nullptr, ColorDescription::sRGBf()};
 }
 
 bool OpenGLBackend::checkGraphicsReset()
