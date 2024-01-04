@@ -117,6 +117,11 @@ QSize PreviewClient::size() const
     return QSize(m_width, m_height);
 }
 
+qreal PreviewClient::devicePixelRatio() const
+{
+    return 1.0;
+}
+
 QString PreviewClient::caption() const
 {
     return m_caption;

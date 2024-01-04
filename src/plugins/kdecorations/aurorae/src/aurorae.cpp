@@ -346,7 +346,7 @@ bool Decoration::init()
         // create a dummy shadow for the configuration interface
         if (m_padding) {
             auto s = std::make_shared<KDecoration2::DecorationShadow>();
-            s->setPadding(*m_padding);
+            s->setPadding(QMargins(*m_padding));
             s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
             setShadow(s);
         }
@@ -409,7 +409,7 @@ void Decoration::updateShadow()
             updateShadow = true;
         } else {
             // compare padding
-            if (oldShadow->padding() != *m_padding) {
+            if (oldShadow->padding() != QMargins(*m_padding)) {
                 updateShadow = true;
             }
         }
@@ -438,7 +438,7 @@ void Decoration::updateShadow()
         if (updateShadow) {
             auto s = std::make_shared<KDecoration2::DecorationShadow>();
             s->setShadow(img);
-            s->setPadding(*m_padding);
+            s->setPadding(QMargins(*m_padding));
             s->setInnerShadowRect(QRect(m_padding->left(),
                                         m_padding->top(),
                                         imageSize.width() - m_padding->left() - m_padding->right(),

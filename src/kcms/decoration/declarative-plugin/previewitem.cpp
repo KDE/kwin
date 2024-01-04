@@ -144,24 +144,24 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
     const QRect outerRect(-paddingLeft, -paddingTop, width(), height());
     const QRect shadowRect(shadowPixmap.rect());
 
-    const QSize topLeftSize(shadow->topLeftGeometry().size());
+    const QSize topLeftSize(shadow->topLeftGeometry().size().toSize());
     QRect topLeftTarget(
         QPoint(outerRect.x(), outerRect.y()),
         topLeftSize);
 
-    const QSize topRightSize(shadow->topRightGeometry().size());
+    const QSize topRightSize(shadow->topRightGeometry().size().toSize());
     QRect topRightTarget(
         QPoint(outerRect.x() + outerRect.width() - topRightSize.width(),
                outerRect.y()),
         topRightSize);
 
-    const QSize bottomRightSize(shadow->bottomRightGeometry().size());
+    const QSize bottomRightSize(shadow->bottomRightGeometry().size().toSize());
     QRect bottomRightTarget(
         QPoint(outerRect.x() + outerRect.width() - bottomRightSize.width(),
                outerRect.y() + outerRect.height() - bottomRightSize.height()),
         bottomRightSize);
 
-    const QSize bottomLeftSize(shadow->bottomLeftGeometry().size());
+    const QSize bottomLeftSize(shadow->bottomLeftGeometry().size().toSize());
     QRect bottomLeftTarget(
         QPoint(outerRect.x(),
                outerRect.y() + outerRect.height() - bottomLeftSize.height()),
@@ -229,7 +229,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
                         topLeftTarget.y(),
                         topRightTarget.x() - topLeftTarget.x() - topLeftTarget.width(),
                         topRightTarget.height());
-        QRect topSource(shadow->topGeometry());
+        QRect topSource(shadow->topGeometry().toRect());
         topSource.setHeight(topTarget.height());
         topSource.moveTop(shadowRect.top());
         painter->drawImage(topTarget, shadowPixmap, topSource);
@@ -240,7 +240,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
                           topRightTarget.y() + topRightTarget.height(),
                           topRightTarget.width(),
                           bottomRightTarget.y() - topRightTarget.y() - topRightTarget.height());
-        QRect rightSource(shadow->rightGeometry());
+        QRect rightSource(shadow->rightGeometry().toRect());
         rightSource.setWidth(rightTarget.width());
         rightSource.moveRight(shadowRect.right());
         painter->drawImage(rightTarget, shadowPixmap, rightSource);
@@ -251,7 +251,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
                            bottomLeftTarget.y(),
                            bottomRightTarget.x() - bottomLeftTarget.x() - bottomLeftTarget.width(),
                            bottomRightTarget.height());
-        QRect bottomSource(shadow->bottomGeometry());
+        QRect bottomSource(shadow->bottomGeometry().toRect());
         bottomSource.setHeight(bottomTarget.height());
         bottomSource.moveBottom(shadowRect.bottom());
         painter->drawImage(bottomTarget, shadowPixmap, bottomSource);
@@ -262,7 +262,7 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
                          topLeftTarget.y() + topLeftTarget.height(),
                          topLeftTarget.width(),
                          bottomLeftTarget.y() - topLeftTarget.y() - topLeftTarget.height());
-        QRect leftSource(shadow->leftGeometry());
+        QRect leftSource(shadow->leftGeometry().toRect());
         leftSource.setWidth(leftTarget.width());
         leftSource.moveLeft(shadowRect.left());
         painter->drawImage(leftTarget, shadowPixmap, leftSource);

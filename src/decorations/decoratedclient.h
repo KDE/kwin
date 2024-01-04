@@ -53,6 +53,7 @@ public:
     bool providesContextHelp() const override;
     QSize size() const override;
     int width() const override;
+    qreal devicePixelRatio() const override;
     QString windowClass() const override;
     WId windowId() const override;
 
@@ -89,10 +90,13 @@ public:
 
 private Q_SLOTS:
     void delayedRequestToggleMaximization(Options::WindowOperation operation);
+    void updateDevicePixelRatio();
 
 private:
     Window *m_window;
     QSize m_clientSize;
+    qreal m_dpr = 1.0;
+    ;
 
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;

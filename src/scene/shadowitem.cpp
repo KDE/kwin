@@ -112,8 +112,8 @@ WindowQuadList ShadowItem::buildQuads() const
 
     const QRectF outerRect = rect();
 
-    const int width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
-    const int height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
+    const qreal width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
+    const qreal height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
 
     QRectF topLeftRect;
     if (!topLeft.isEmpty()) {
@@ -150,6 +150,7 @@ WindowQuadList ShadowItem::buildQuads() const
         bottomLeftRect = QRectF(outerRect.left() + shadowMargins.left(),
                                 outerRect.bottom() - shadowMargins.bottom(), 0, 0);
     }
+    const qreal textureDpr = m_shadow->decorationShadowImage().devicePixelRatio();
 
     // Re-distribute the corner tiles so no one of them is overlapping with others.
     // By doing this, we assume that shadow's corner tiles are symmetric
@@ -177,10 +178,10 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = topLeftRect.width();
         ty2 = topLeftRect.height();
         WindowQuad topLeftQuad;
-        topLeftQuad[0] = WindowVertex(topLeftRect.left(), topLeftRect.top(), tx1, ty1);
-        topLeftQuad[1] = WindowVertex(topLeftRect.right(), topLeftRect.top(), tx2, ty1);
-        topLeftQuad[2] = WindowVertex(topLeftRect.right(), topLeftRect.bottom(), tx2, ty2);
-        topLeftQuad[3] = WindowVertex(topLeftRect.left(), topLeftRect.bottom(), tx1, ty2);
+        topLeftQuad[0] = WindowVertex(topLeftRect.left(), topLeftRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        topLeftQuad[1] = WindowVertex(topLeftRect.right(), topLeftRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        topLeftQuad[2] = WindowVertex(topLeftRect.right(), topLeftRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        topLeftQuad[3] = WindowVertex(topLeftRect.left(), topLeftRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(topLeftQuad);
     }
 
@@ -190,10 +191,10 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = width;
         ty2 = topRightRect.height();
         WindowQuad topRightQuad;
-        topRightQuad[0] = WindowVertex(topRightRect.left(), topRightRect.top(), tx1, ty1);
-        topRightQuad[1] = WindowVertex(topRightRect.right(), topRightRect.top(), tx2, ty1);
-        topRightQuad[2] = WindowVertex(topRightRect.right(), topRightRect.bottom(), tx2, ty2);
-        topRightQuad[3] = WindowVertex(topRightRect.left(), topRightRect.bottom(), tx1, ty2);
+        topRightQuad[0] = WindowVertex(topRightRect.left(), topRightRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        topRightQuad[1] = WindowVertex(topRightRect.right(), topRightRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        topRightQuad[2] = WindowVertex(topRightRect.right(), topRightRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        topRightQuad[3] = WindowVertex(topRightRect.left(), topRightRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(topRightQuad);
     }
 
@@ -203,10 +204,10 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = height - bottomRightRect.height();
         ty2 = height;
         WindowQuad bottomRightQuad;
-        bottomRightQuad[0] = WindowVertex(bottomRightRect.left(), bottomRightRect.top(), tx1, ty1);
-        bottomRightQuad[1] = WindowVertex(bottomRightRect.right(), bottomRightRect.top(), tx2, ty1);
-        bottomRightQuad[2] = WindowVertex(bottomRightRect.right(), bottomRightRect.bottom(), tx2, ty2);
-        bottomRightQuad[3] = WindowVertex(bottomRightRect.left(), bottomRightRect.bottom(), tx1, ty2);
+        bottomRightQuad[0] = WindowVertex(bottomRightRect.left(), bottomRightRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        bottomRightQuad[1] = WindowVertex(bottomRightRect.right(), bottomRightRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        bottomRightQuad[2] = WindowVertex(bottomRightRect.right(), bottomRightRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        bottomRightQuad[3] = WindowVertex(bottomRightRect.left(), bottomRightRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(bottomRightQuad);
     }
 
@@ -216,10 +217,10 @@ WindowQuadList ShadowItem::buildQuads() const
         ty1 = height - bottomLeftRect.height();
         ty2 = height;
         WindowQuad bottomLeftQuad;
-        bottomLeftQuad[0] = WindowVertex(bottomLeftRect.left(), bottomLeftRect.top(), tx1, ty1);
-        bottomLeftQuad[1] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.top(), tx2, ty1);
-        bottomLeftQuad[2] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.bottom(), tx2, ty2);
-        bottomLeftQuad[3] = WindowVertex(bottomLeftRect.left(), bottomLeftRect.bottom(), tx1, ty2);
+        bottomLeftQuad[0] = WindowVertex(bottomLeftRect.left(), bottomLeftRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        bottomLeftQuad[1] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        bottomLeftQuad[2] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        bottomLeftQuad[3] = WindowVertex(bottomLeftRect.left(), bottomLeftRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(bottomLeftQuad);
     }
 
@@ -249,10 +250,10 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = tx1 + top.width();
         ty2 = topRect.height();
         WindowQuad topQuad;
-        topQuad[0] = WindowVertex(topRect.left(), topRect.top(), tx1, ty1);
-        topQuad[1] = WindowVertex(topRect.right(), topRect.top(), tx2, ty1);
-        topQuad[2] = WindowVertex(topRect.right(), topRect.bottom(), tx2, ty2);
-        topQuad[3] = WindowVertex(topRect.left(), topRect.bottom(), tx1, ty2);
+        topQuad[0] = WindowVertex(topRect.left(), topRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        topQuad[1] = WindowVertex(topRect.right(), topRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        topQuad[2] = WindowVertex(topRect.right(), topRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        topQuad[3] = WindowVertex(topRect.left(), topRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(topQuad);
     }
 
@@ -262,10 +263,10 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = width;
         ty2 = ty1 + right.height();
         WindowQuad rightQuad;
-        rightQuad[0] = WindowVertex(rightRect.left(), rightRect.top(), tx1, ty1);
-        rightQuad[1] = WindowVertex(rightRect.right(), rightRect.top(), tx2, ty1);
-        rightQuad[2] = WindowVertex(rightRect.right(), rightRect.bottom(), tx2, ty2);
-        rightQuad[3] = WindowVertex(rightRect.left(), rightRect.bottom(), tx1, ty2);
+        rightQuad[0] = WindowVertex(rightRect.left(), rightRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        rightQuad[1] = WindowVertex(rightRect.right(), rightRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        rightQuad[2] = WindowVertex(rightRect.right(), rightRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        rightQuad[3] = WindowVertex(rightRect.left(), rightRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(rightQuad);
     }
 
@@ -275,10 +276,10 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = tx1 + bottom.width();
         ty2 = height;
         WindowQuad bottomQuad;
-        bottomQuad[0] = WindowVertex(bottomRect.left(), bottomRect.top(), tx1, ty1);
-        bottomQuad[1] = WindowVertex(bottomRect.right(), bottomRect.top(), tx2, ty1);
-        bottomQuad[2] = WindowVertex(bottomRect.right(), bottomRect.bottom(), tx2, ty2);
-        bottomQuad[3] = WindowVertex(bottomRect.left(), bottomRect.bottom(), tx1, ty2);
+        bottomQuad[0] = WindowVertex(bottomRect.left(), bottomRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        bottomQuad[1] = WindowVertex(bottomRect.right(), bottomRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        bottomQuad[2] = WindowVertex(bottomRect.right(), bottomRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        bottomQuad[3] = WindowVertex(bottomRect.left(), bottomRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(bottomQuad);
     }
 
@@ -288,10 +289,10 @@ WindowQuadList ShadowItem::buildQuads() const
         tx2 = leftRect.width();
         ty2 = ty1 + left.height();
         WindowQuad leftQuad;
-        leftQuad[0] = WindowVertex(leftRect.left(), leftRect.top(), tx1, ty1);
-        leftQuad[1] = WindowVertex(leftRect.right(), leftRect.top(), tx2, ty1);
-        leftQuad[2] = WindowVertex(leftRect.right(), leftRect.bottom(), tx2, ty2);
-        leftQuad[3] = WindowVertex(leftRect.left(), leftRect.bottom(), tx1, ty2);
+        leftQuad[0] = WindowVertex(leftRect.left(), leftRect.top(), tx1 * textureDpr, ty1 * textureDpr);
+        leftQuad[1] = WindowVertex(leftRect.right(), leftRect.top(), tx2 * textureDpr, ty1 * textureDpr);
+        leftQuad[2] = WindowVertex(leftRect.right(), leftRect.bottom(), tx2 * textureDpr, ty2 * textureDpr);
+        leftQuad[3] = WindowVertex(leftRect.left(), leftRect.bottom(), tx1 * textureDpr, ty2 * textureDpr);
         quads.append(leftQuad);
     }
 

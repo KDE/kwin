@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "decoratedclient.h"
+#include "core/output.h"
 #include "cursor.h"
 #include "decorationbridge.h"
 #include "decorationpalette.h"
@@ -83,6 +84,10 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
         QToolTip::showText(Cursors::self()->mouse()->pos().toPoint(), this->m_toolTipText);
         m_toolTipShowing = true;
     });
+
+    connect(workspace(), &Workspace::outputsChanged, this, &DecoratedClientImpl::updateDevicePixelRatio);
+    connect(window, &Window::outputChanged, this, &DecoratedClientImpl::updateDevicePixelRatio);
+    updateDevicePixelRatio();
 }
 
 DecoratedClientImpl::~DecoratedClientImpl()
@@ -269,9 +274,27 @@ void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperat
     Workspace::self()->performWindowOperation(m_window, operation);
 }
 
+void DecoratedClientImpl::updateDevicePixelRatio()
+{
+    if (!m_window->output()) {
+        return;
+    }
+    qreal dpr = m_window->output()->scale();
+    if (m_dpr == dpr) {
+        return;
+    }
+    m_dpr = dpr;
+    Q_EMIT decoratedClient()->devicePixelRatioChanged();
+}
+
 int DecoratedClientImpl::width() const
 {
     return m_clientSize.width();
+}
+
+qreal DecoratedClientImpl::devicePixelRatio() const
+{
+    return m_dpr;
 }
 
 int DecoratedClientImpl::height() const
