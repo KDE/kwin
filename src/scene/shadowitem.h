@@ -51,6 +51,7 @@ private Q_SLOTS:
     void updateGeometry();
 
 private:
+    QRectF toTextureGeometry(const QRectF &coordinate) const;
     Window *m_window;
     Shadow *m_shadow = nullptr;
     std::unique_ptr<ShadowTextureProvider> m_textureProvider;

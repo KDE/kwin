@@ -328,7 +328,15 @@ QImage Shadow::decorationShadowImage() const
     return m_decorationShadow->shadow();
 }
 
-QSize Shadow::elementSize(Shadow::ShadowElements element) const
+qreal Shadow::devicePixelRatio() const
+{
+    if (m_decorationShadow) {
+        return m_decorationShadow->shadow().devicePixelRatio();
+    }
+    return 1.0;
+}
+
+QSizeF Shadow::elementSize(Shadow::ShadowElements element) const
 {
     if (m_decorationShadow) {
         switch (element) {

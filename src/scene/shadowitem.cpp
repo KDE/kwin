@@ -59,6 +59,16 @@ void ShadowItem::updateGeometry()
     discardQuads();
 }
 
+QRectF ShadowItem::toTextureGeometry(const QRectF &logicalRect) const
+{
+    const qreal dpr = m_shadow->devicePixelRatio();
+    const qreal topLeftX = std::round(logicalRect.topLeft().x() * dpr);
+    const qreal topLeftY = std::round(logicalRect.topLeft().y() * dpr);
+    const qreal bottomRightX = std::round(logicalRect.bottomRight().x() * dpr);
+    const qreal bottomRightY = std::round(logicalRect.bottomRight().y() * dpr);
+    return QRectF(QPointF(topLeftX, topLeftY), QPointF(bottomRightX, bottomRightY));
+}
+
 void ShadowItem::handleTextureChanged()
 {
     scheduleRepaint(rect());
@@ -112,8 +122,8 @@ WindowQuadList ShadowItem::buildQuads() const
 
     const QRectF outerRect = rect();
 
-    const int width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
-    const int height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
+    const qreal width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
+    const qreal height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
 
     QRectF topLeftRect;
     if (!topLeft.isEmpty()) {
@@ -150,7 +160,6 @@ WindowQuadList ShadowItem::buildQuads() const
         bottomLeftRect = QRectF(outerRect.left() + shadowMargins.left(),
                                 outerRect.bottom() - shadowMargins.bottom(), 0, 0);
     }
-
     // Re-distribute the corner tiles so no one of them is overlapping with others.
     // By doing this, we assume that shadow's corner tiles are symmetric
     // and it is OK to not draw top/right/bottom/left tile between corners.
@@ -163,63 +172,38 @@ WindowQuadList ShadowItem::buildQuads() const
     distributeVertically(topLeftRect, bottomLeftRect);
     distributeVertically(topRightRect, bottomRightRect);
 
-    qreal tx1 = 0.0,
-          tx2 = 0.0,
-          ty1 = 0.0,
-          ty2 = 0.0;
-
     WindowQuadList quads;
     quads.reserve(8);
 
     if (topLeftRect.isValid()) {
-        tx1 = 0.0;
-        ty1 = 0.0;
-        tx2 = topLeftRect.width();
-        ty2 = topLeftRect.height();
-        WindowQuad topLeftQuad;
-        topLeftQuad[0] = WindowVertex(topLeftRect.left(), topLeftRect.top(), tx1, ty1);
-        topLeftQuad[1] = WindowVertex(topLeftRect.right(), topLeftRect.top(), tx2, ty1);
-        topLeftQuad[2] = WindowVertex(topLeftRect.right(), topLeftRect.bottom(), tx2, ty2);
-        topLeftQuad[3] = WindowVertex(topLeftRect.left(), topLeftRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(0, 0);
+        const QPointF t2 = QPointF(topLeftRect.width(), topLeftRect.height());
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        WindowQuad topLeftQuad = WindowQuad::fromRect(topLeftRect, textureRect);
         quads.append(topLeftQuad);
     }
 
     if (topRightRect.isValid()) {
-        tx1 = width - topRightRect.width();
-        ty1 = 0.0;
-        tx2 = width;
-        ty2 = topRightRect.height();
-        WindowQuad topRightQuad;
-        topRightQuad[0] = WindowVertex(topRightRect.left(), topRightRect.top(), tx1, ty1);
-        topRightQuad[1] = WindowVertex(topRightRect.right(), topRightRect.top(), tx2, ty1);
-        topRightQuad[2] = WindowVertex(topRightRect.right(), topRightRect.bottom(), tx2, ty2);
-        topRightQuad[3] = WindowVertex(topRightRect.left(), topRightRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(width - topRightRect.width(), 0);
+        const QPointF t2 = QPointF(width, topRightRect.height());
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        WindowQuad topRightQuad = WindowQuad::fromRect(topRightRect, textureRect);
         quads.append(topRightQuad);
     }
 
     if (bottomRightRect.isValid()) {
-        tx1 = width - bottomRightRect.width();
-        tx2 = width;
-        ty1 = height - bottomRightRect.height();
-        ty2 = height;
-        WindowQuad bottomRightQuad;
-        bottomRightQuad[0] = WindowVertex(bottomRightRect.left(), bottomRightRect.top(), tx1, ty1);
-        bottomRightQuad[1] = WindowVertex(bottomRightRect.right(), bottomRightRect.top(), tx2, ty1);
-        bottomRightQuad[2] = WindowVertex(bottomRightRect.right(), bottomRightRect.bottom(), tx2, ty2);
-        bottomRightQuad[3] = WindowVertex(bottomRightRect.left(), bottomRightRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(width - bottomRightRect.width(), height - bottomRightRect.height());
+        const QPointF t2 = QPointF(width, height);
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        WindowQuad bottomRightQuad = WindowQuad::fromRect(bottomRightRect, textureRect);
         quads.append(bottomRightQuad);
     }
 
     if (bottomLeftRect.isValid()) {
-        tx1 = 0.0;
-        tx2 = bottomLeftRect.width();
-        ty1 = height - bottomLeftRect.height();
-        ty2 = height;
-        WindowQuad bottomLeftQuad;
-        bottomLeftQuad[0] = WindowVertex(bottomLeftRect.left(), bottomLeftRect.top(), tx1, ty1);
-        bottomLeftQuad[1] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.top(), tx2, ty1);
-        bottomLeftQuad[2] = WindowVertex(bottomLeftRect.right(), bottomLeftRect.bottom(), tx2, ty2);
-        bottomLeftQuad[3] = WindowVertex(bottomLeftRect.left(), bottomLeftRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(0, height - bottomLeftRect.height());
+        const QPointF t2 = QPointF(bottomLeftRect.width(), height);
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        WindowQuad bottomLeftQuad = WindowQuad::fromRect(bottomLeftRect, textureRect);
         quads.append(bottomLeftQuad);
     }
 
@@ -244,54 +228,34 @@ WindowQuadList ShadowItem::buildQuads() const
     distributeVertically(topRect, bottomRect);
 
     if (topRect.isValid()) {
-        tx1 = shadowMargins.left();
-        ty1 = 0.0;
-        tx2 = tx1 + top.width();
-        ty2 = topRect.height();
-        WindowQuad topQuad;
-        topQuad[0] = WindowVertex(topRect.left(), topRect.top(), tx1, ty1);
-        topQuad[1] = WindowVertex(topRect.right(), topRect.top(), tx2, ty1);
-        topQuad[2] = WindowVertex(topRect.right(), topRect.bottom(), tx2, ty2);
-        topQuad[3] = WindowVertex(topRect.left(), topRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(shadowMargins.left(), 0);
+        const QPointF t2 = QPointF(t1.x() + top.width(), topRect.height());
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        const WindowQuad topQuad = WindowQuad::fromRect(topRect, textureRect);
         quads.append(topQuad);
     }
 
     if (rightRect.isValid()) {
-        tx1 = width - rightRect.width();
-        ty1 = shadowMargins.top();
-        tx2 = width;
-        ty2 = ty1 + right.height();
-        WindowQuad rightQuad;
-        rightQuad[0] = WindowVertex(rightRect.left(), rightRect.top(), tx1, ty1);
-        rightQuad[1] = WindowVertex(rightRect.right(), rightRect.top(), tx2, ty1);
-        rightQuad[2] = WindowVertex(rightRect.right(), rightRect.bottom(), tx2, ty2);
-        rightQuad[3] = WindowVertex(rightRect.left(), rightRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(width - rightRect.width(), shadowMargins.top());
+        const QPointF t2 = QPointF(width, t1.y() - right.height());
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        const WindowQuad rightQuad = WindowQuad::fromRect(rightRect, textureRect);
         quads.append(rightQuad);
     }
 
     if (bottomRect.isValid()) {
-        tx1 = shadowMargins.left();
-        ty1 = height - bottomRect.height();
-        tx2 = tx1 + bottom.width();
-        ty2 = height;
-        WindowQuad bottomQuad;
-        bottomQuad[0] = WindowVertex(bottomRect.left(), bottomRect.top(), tx1, ty1);
-        bottomQuad[1] = WindowVertex(bottomRect.right(), bottomRect.top(), tx2, ty1);
-        bottomQuad[2] = WindowVertex(bottomRect.right(), bottomRect.bottom(), tx2, ty2);
-        bottomQuad[3] = WindowVertex(bottomRect.left(), bottomRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(shadowMargins.left(), height - bottom.height());
+        const QPointF t2 = QPointF(t1.x() + bottom.width(), height);
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        const WindowQuad bottomQuad = WindowQuad::fromRect(bottomRect, textureRect);
         quads.append(bottomQuad);
     }
 
     if (leftRect.isValid()) {
-        tx1 = 0.0;
-        ty1 = shadowMargins.top();
-        tx2 = leftRect.width();
-        ty2 = ty1 + left.height();
-        WindowQuad leftQuad;
-        leftQuad[0] = WindowVertex(leftRect.left(), leftRect.top(), tx1, ty1);
-        leftQuad[1] = WindowVertex(leftRect.right(), leftRect.top(), tx2, ty1);
-        leftQuad[2] = WindowVertex(leftRect.right(), leftRect.bottom(), tx2, ty2);
-        leftQuad[3] = WindowVertex(leftRect.left(), leftRect.bottom(), tx1, ty2);
+        const QPointF t1 = QPointF(0, shadowMargins.top());
+        const QPointF t2 = QPointF(leftRect.width(), t1.y() - left.height());
+        const QRectF textureRect = toTextureGeometry(QRectF(t1, t2));
+        const WindowQuad leftQuad = WindowQuad::fromRect(leftRect, textureRect);
         quads.append(leftQuad);
     }
 

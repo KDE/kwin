@@ -71,6 +71,8 @@ public:
     double bottom() const;
     QRectF bounds() const;
 
+    static WindowQuad fromRect(const QRectF &position, const QRectF &texturePosition);
+
 private:
     friend class WindowQuadList;
     WindowVertex verts[4];

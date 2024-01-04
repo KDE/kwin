@@ -82,6 +82,8 @@ public:
     }
     QImage decorationShadowImage() const;
 
+    qreal devicePixelRatio() const;
+
     std::weak_ptr<KDecoration2::DecorationShadow> decorationShadow() const
     {
         return m_decorationShadow;
@@ -98,13 +100,13 @@ public:
         ShadowElementTopLeft,
         ShadowElementsCount
     };
-    QSize elementSize(ShadowElements element) const;
+    QSizeF elementSize(ShadowElements element) const;
 
     QRectF rect() const
     {
         return QRectF(QPoint(0, 0), m_cachedSize);
     }
-    QMargins offset() const
+    QMarginsF offset() const
     {
         return m_offset;
     }
@@ -135,7 +137,7 @@ private:
     // shadow elements
     QImage m_shadowElements[ShadowElementsCount];
     // shadow offsets
-    QMargins m_offset;
+    QMarginsF m_offset;
     // caches
     QSizeF m_cachedSize;
     // Decoration based shadows

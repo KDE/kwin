@@ -45,6 +45,16 @@ WindowQuad WindowQuad::makeSubQuad(double x1, double y1, double x2, double y2) c
     return ret;
 }
 
+WindowQuad WindowQuad::fromRect(const QRectF &position, const QRectF &texturePosition)
+{
+    WindowQuad quad;
+    quad[0] = WindowVertex(position.topLeft(), texturePosition.topLeft());
+    quad[1] = WindowVertex(position.topRight(), texturePosition.topRight());
+    quad[2] = WindowVertex(position.bottomRight(), texturePosition.bottomRight());
+    quad[3] = WindowVertex(position.bottomLeft(), texturePosition.bottomLeft());
+    return quad;
+}
+
 WindowQuadList WindowQuadList::splitAtX(double x) const
 {
     WindowQuadList ret;
