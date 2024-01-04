@@ -1,7 +1,7 @@
 # translation of kwin.po to Turkish
 # translation of kwin.po to
 # Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
-# SPDX-FileCopyrightText: 2022, 2023 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
 # Murat Sisman <muratsisman@mailcity.com>, 2000.
 # Ömer Fadıl USTA <omer_fad@hotmail.com>, 2003.
 # Görkem Çetin <gorkem@kde.org>, 2003, 2004.
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-28 01:34+0000\n"
-"PO-Revision-Date: 2023-12-27 14:21+0300\n"
+"PO-Revision-Date: 2024-01-03 22:10+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -994,7 +994,7 @@ msgstr "Sürüm:"
 #: debug_console.ui:157
 #, kde-format
 msgid "Shading Language Version:"
-msgstr "Gölgeleme Dil Sürümü:"
+msgstr "Gölgeleme dili sürümü:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:164
@@ -1012,13 +1012,13 @@ msgstr "GPU sınıfı:"
 #: debug_console.ui:178
 #, kde-format
 msgid "OpenGL Version:"
-msgstr "OpenGL Sürümü:"
+msgstr "OpenGL sürümü:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:185
 #, kde-format
 msgid "GLSL Version:"
-msgstr "GLSL Sürümü:"
+msgstr "GLSL sürümü:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:251
@@ -1042,13 +1042,13 @@ msgstr "Klavye"
 #: debug_console.ui:315
 #, kde-format
 msgid "Keymap Layouts"
-msgstr "Düğme Eşlem Düzenleri"
+msgstr "Düğme Eşlem Yerleşimleri"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:337
 #, kde-format
 msgid "Current Layout:"
-msgstr "Geçerli Düzen:"
+msgstr "Geçerli yerleşim:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:372
@@ -1240,7 +1240,7 @@ msgstr "Dokunmatik Yüzey"
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Klavye Düzeni Değiştirici"
+msgstr "Klavye Yerleşimi Değiştiricisi"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -2023,19 +2023,19 @@ msgstr "Temel Ayarlar"
 #: plugins/mouseclick/mouseclick_config.ui:37
 #, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Sol Fare Düğmesi Rengi:"
+msgstr "Sol fare düğmesi rengi:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
 #, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Orta Fare Düğmesi Rengi:"
+msgstr "Orta fare düğmesi rengi:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
 #, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Sağ Fare Düğmesi Rengi:"
+msgstr "Sağ fare düğmesi rengi:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
@@ -2053,7 +2053,7 @@ msgstr "Halkalar"
 #: plugins/mouseclick/mouseclick_config.ui:103
 #, kde-format
 msgid "Line Width:"
-msgstr "Çizgi Genişliği:"
+msgstr "Çizgi genişliği:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
@@ -2073,19 +2073,19 @@ msgstr " msan"
 #: plugins/mouseclick/mouseclick_config.ui:145
 #, kde-format
 msgid "Ring Duration:"
-msgstr "Halka Süresi:"
+msgstr "Halka süresi:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: plugins/mouseclick/mouseclick_config.ui:155
 #, kde-format
 msgid "Ring Radius:"
-msgstr "Halka Yarıçapı:"
+msgstr "Halka yarıçapı:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
 #, kde-format
 msgid "Ring Count:"
-msgstr "Halka Sayısı:"
+msgstr "Halka sayısı:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2103,7 +2103,7 @@ msgstr "Yazıtipi:"
 #: plugins/mouseclick/mouseclick_config.ui:233
 #, kde-format
 msgid "Show Text:"
-msgstr "Metni Göster:"
+msgstr "Metni göster:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2887,7 +2887,7 @@ msgstr ""
 #: plugins/zoom/zoom_config.ui:28
 #, kde-format
 msgid "Zoom Factor:"
-msgstr "Yakınlaştırma Çarpanı:"
+msgstr "Yakınlaştırma çarpanı:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:66
@@ -2927,7 +2927,7 @@ msgstr "Metin İmleci İzlemeyi Etkinleştir"
 #: plugins/zoom/zoom_config.ui:86
 #, kde-format
 msgid "Mouse Pointer:"
-msgstr "Fare İşaretçisi:"
+msgstr "Fare işaretçisi:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:99
@@ -2987,7 +2987,7 @@ msgstr "Devre Dışı"
 #: plugins/zoom/zoom_config.ui:148
 #, kde-format
 msgid "Mouse Tracking:"
-msgstr "Fare İzleme:"
+msgstr "Fare izleme:"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -4182,7 +4182,7 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-"KWin Destek Bilgisi:\n"
+"KWin destek bilgisi:\n"
 "Aşağıdaki bilgi; örneğin, http://discuss.kde.org veya benzer kanallardan\n"
 "destek alırken kullanılmalıdır. Şu anda çalışan örnek, hangi seçeneklerin\n"
 "kullanıldığı, hangi OpenGL sürücüsü ve hangi efektlerin çalıştığı hakkında\n"
