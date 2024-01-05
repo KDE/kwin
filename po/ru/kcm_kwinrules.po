@@ -8,13 +8,13 @@
 # Alexey D. <lq07829icatm@rambler.ru>, 2012.
 # Yuri Efremov <yur.arh@gmail.com>, 2012, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2018, 2019, 2020, 2021, 2022, 2023.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-08 01:36+0000\n"
-"PO-Revision-Date: 2023-02-17 11:01+0300\n"
+"PO-Revision-Date: 2024-01-04 19:45+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -530,6 +530,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Используйте этот параметр, чтобы отключить обработку общесистемных "
+"комбинаций клавиш, пока окно находится в фокусе. Это может быть полезно для "
+"таких приложений, как эмуляторы или виртуальные машины, которые сами "
+"обрабатывают такие же комбинации клавиш.<nl/><nl/>Обратите внимание, что вы "
+"не сможете использовать <shortcut>Alt+Tab</shortcut> для переключения окна и "
+"использовать любые другие сочетания клавиш, такие как <shortcut>Alt+Space</"
+"shortcut>, чтобы активировать строку поиска и запуска KRunner."
 
 #: rulesmodel.cpp:704
 #, kde-format
@@ -745,14 +752,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Особые параметры окон не заданы"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"Нажмите <interface>Создать...</interface> чтобы добавить особые параметры "
-"окон"
+"Нажмите <interface>Создать…</interface> чтобы добавить особые параметры окон"
 
 #: ui/main.qml:71
 #, kde-format
@@ -775,16 +779,14 @@ msgid "Save Rules"
 msgstr "Сохранить правила"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Создать..."
+msgstr "Создать…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Импорт..."
+msgstr "Импорт…"
 
 # BUGME: please add ellipsis --aspotashev
 #: ui/main.qml:119
@@ -793,10 +795,9 @@ msgid "Cancel Export"
 msgstr "Отменить экспорт"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Экспорт..."
+msgstr "Экспорт…"
 
 #: ui/main.qml:195
 #, kde-format

@@ -7,14 +7,14 @@
 # Andrey Cherepanov <skull@kde.ru>, 2009.
 # Yuri Efremov <yur.arh@gmail.com>, 2012.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2021, 2022.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2021, 2022, 2024.
 # Olesya Gerasimenko <translation-team@basealt.ru>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-20 01:35+0000\n"
-"PO-Revision-Date: 2022-09-23 22:38+0300\n"
+"PO-Revision-Date: 2024-01-04 21:48+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -79,8 +79,7 @@ msgid "%1 - Current Application"
 msgstr "%1 — Текущее приложение"
 
 #: main.cpp:165
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
 msgstr "Режим обзора"
 
