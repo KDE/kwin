@@ -1635,6 +1635,10 @@ public:
             workspace()->tabbox()->keyPress(event->modifiersRelevantForTabBox() | event->key());
         } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
+            // update keyboard facus if the tabbox no longer grabs keys
+            if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
+                input()->keyboard()->update();
+            }
         }
         return true;
     }
