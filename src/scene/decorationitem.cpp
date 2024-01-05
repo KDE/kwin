@@ -124,7 +124,17 @@ QRegion DecorationItem::opaque() const
     }
     QRectF left, top, right, bottom;
     m_window->layoutDecorationRects(left, top, right, bottom);
-    return QRegion(left.toRect()).united(top.toRect()).united(right.toRect()).united(bottom.toRect());
+
+    // We have to map to integers which has rounding issues
+    // it's safer for a region to be considered transparent than opaque
+    // so always align inwards
+    const QMargins roundingPad = QMargins(1, 1, 1, 1);
+    QRegion roundedLeft = left.toAlignedRect().marginsRemoved(roundingPad);
+    QRegion roundedTop = top.toAlignedRect().marginsRemoved(roundingPad);
+    QRegion roundedRight = right.toAlignedRect().marginsRemoved(roundingPad);
+    QRegion roundedBottom = bottom.toAlignedRect().marginsRemoved(roundingPad);
+
+    return roundedLeft | roundedTop | roundedRight | roundedBottom;
 }
 
 void DecorationItem::preprocess()
