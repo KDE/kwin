@@ -180,6 +180,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(double defaultPressureRangeMin READ defaultPressureRangeMin CONSTANT)
     Q_PROPERTY(double defaultPressureRangeMax READ defaultPressureRangeMax CONSTANT)
 
+    Q_PROPERTY(bool relative READ isRelative WRITE setRelative NOTIFY relativeChanged)
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
@@ -725,6 +727,18 @@ public:
     void setInputArea(const QRectF &inputArea);
     QRectF defaultInputArea() const;
 
+    bool isRelative() const override
+    {
+        return m_relative;
+    }
+
+    void setRelative(bool relative);
+
+    bool defaultRelative() const
+    {
+        return defaultValue("TabletToolRelativeMode", false);
+    }
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -757,6 +771,7 @@ Q_SIGNALS:
     void pressureRangeMinChanged();
     void pressureRangeMaxChanged();
     void inputAreaChanged();
+    void relativeChanged();
 
 private:
     template<typename T>
@@ -859,6 +874,7 @@ private:
     double m_defaultPressureRangeMax;
 
     QRectF m_inputArea;
+    bool m_relative = false;
 };
 
 }
