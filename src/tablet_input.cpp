@@ -132,6 +132,13 @@ void TabletInputRedirection::integrateDevice(InputDevice *device)
     if (device->isTabletPad()) {
         tabletSeat->addPad(device);
     }
+
+    // Ensure that the cursor position to set to the center of the screen in relative (mouse) mode
+    if (device->isRelative()) {
+        if (auto output = workspace()->activeOutput(); output != nullptr) {
+            m_lastPosition = output->geometry().center();
+        }
+    }
 }
 
 void TabletInputRedirection::removeDevice(InputDevice *device)
@@ -201,15 +208,50 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     ensureTabletTool(tool);
 
     m_lastPosition = pos;
-    m_cursorByTool[tool]->setPos(pos);
+    m_cursorByTool[tool]->setPos(m_lastPosition);
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     TabletToolAxisEvent ev{
         .device = device,
         .rotation = rotation,
         .position = pos,
+        .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
+        .pressure = pressure,
+        .sliderPosition = sliderPosition,
+        .xTilt = xTilt,
+        .yTilt = yTilt,
+        .distance = distance,
+        .timestamp = time,
+        .tool = tool,
+    };
+
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->setLastInputHandler(this);
+}
+
+void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
+                                                         qreal pressure, qreal xTilt, qreal yTilt, qreal rotation, qreal distance, bool tipDown, qreal sliderPosition, InputDeviceTabletTool *tool,
+                                                         std::chrono::microseconds time, InputDevice *device)
+{
+    if (!inited()) {
+        return;
+    }
+
+    ensureTabletTool(tool);
+
+    m_lastPosition += delta;
+    m_cursorByTool[tool]->setPos(m_lastPosition);
+
+    update();
+    workspace()->setActiveOutput(m_lastPosition);
+
+    TabletToolAxisEvent ev{
+        .device = device,
+        .rotation = rotation,
+        .position = m_lastPosition,
         .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
         .pressure = pressure,
         .sliderPosition = sliderPosition,
@@ -233,19 +275,22 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
 
     ensureTabletTool(tool);
 
-    m_lastPosition = pos;
+    if (device->isRelative()) {
+        m_lastPosition = pos;
+    }
+
     if (tipNear) {
-        m_cursorByTool[tool]->setPos(pos);
+        m_cursorByTool[tool]->setPos(m_lastPosition);
     }
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     TabletToolProximityEvent ev{
         .type = tipNear ? TabletToolProximityEvent::EnterProximity : TabletToolProximityEvent::LeaveProximity,
         .device = device,
         .rotation = rotation,
-        .position = pos,
+        .position = m_lastPosition,
         .sliderPosition = sliderPosition,
         .xTilt = xTilt,
         .yTilt = yTilt,
@@ -267,19 +312,22 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
 
     ensureTabletTool(tool);
 
-    m_lastPosition = pos;
+    if (device->isRelative()) {
+        m_lastPosition = pos;
+    }
+
     if (tipDown) {
-        m_cursorByTool[tool]->setPos(pos);
+        m_cursorByTool[tool]->setPos(m_lastPosition);
     }
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     TabletToolTipEvent ev{
         .type = tipDown ? TabletToolTipEvent::Press : TabletToolTipEvent::Release,
         .device = device,
         .rotation = rotation,
-        .position = pos,
+        .position = m_lastPosition,
         .buttons = tipDown ? Qt::LeftButton : Qt::NoButton,
         .pressure = pressure,
         .sliderPosition = sliderPosition,

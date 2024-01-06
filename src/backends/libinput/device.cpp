@@ -154,6 +154,7 @@ enum class ConfigKey {
     TabletToolPressureRangeMin,
     TabletToolPressureRangeMax,
     InputArea,
+    TabletToolRelativeMode,
 };
 
 struct ConfigDataBase
@@ -259,6 +260,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::TabletToolPressureRangeMin, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMin"), &Device::setPressureRangeMin, &Device::defaultPressureRangeMin)},
     {ConfigKey::TabletToolPressureRangeMax, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMax"), &Device::setPressureRangeMax, &Device::defaultPressureRangeMax)},
     {ConfigKey::InputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("InputArea"), &Device::setInputArea, &Device::defaultInputArea)},
+    {ConfigKey::TabletToolRelativeMode, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TabletToolRelativeMode"), &Device::setRelative, &Device::defaultRelative)},
 };
 
 namespace
@@ -1056,6 +1058,18 @@ QMatrix4x4 Device::deserializeMatrix(const QString &matrix)
 
     return QMatrix4x4{};
 }
+
+void Device::setRelative(bool relative)
+{
+    if (relative == m_relative) {
+        return;
+    }
+
+    m_relative = relative;
+    writeEntry(ConfigKey::TabletToolRelativeMode, m_relative);
+    Q_EMIT relativeChanged();
+}
+
 }
 }
 
