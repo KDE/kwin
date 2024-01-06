@@ -477,17 +477,32 @@ void Connection::processEvents()
                 tte->device()->setSupportsPressureRange(true);
                 libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
             }
-            Q_EMIT event->device()->tabletToolAxisEvent(tabletToolPosition(tte),
-                                                        tte->device()->pressureCurve().valueForProgress(tte->pressure()),
-                                                        tte->xTilt(),
-                                                        tte->yTilt(),
-                                                        tte->rotation(),
-                                                        tte->distance(),
-                                                        tte->isTipDown(),
-                                                        tte->sliderPosition(),
-                                                        getOrCreateTool(tte->tool()),
-                                                        tte->time(),
-                                                        tte->device());
+
+            if (event->device()->tabletToolIsRelative()) {
+                Q_EMIT event->device()->tabletToolAxisEventRelative(tte->delta(),
+                                                                    tte->device()->pressureCurve().valueForProgress(tte->pressure()),
+                                                                    tte->xTilt(),
+                                                                    tte->yTilt(),
+                                                                    tte->rotation(),
+                                                                    tte->distance(),
+                                                                    tte->isTipDown(),
+                                                                    tte->sliderPosition(),
+                                                                    getOrCreateTool(tte->tool()),
+                                                                    tte->time(),
+                                                                    tte->device());
+            } else {
+                Q_EMIT event->device()->tabletToolAxisEvent(tabletToolPosition(tte),
+                                                            tte->device()->pressureCurve().valueForProgress(tte->pressure()),
+                                                            tte->xTilt(),
+                                                            tte->yTilt(),
+                                                            tte->rotation(),
+                                                            tte->distance(),
+                                                            tte->isTipDown(),
+                                                            tte->sliderPosition(),
+                                                            getOrCreateTool(tte->tool()),
+                                                            tte->time(),
+                                                            tte->device());
+            }
             break;
         }
         case LIBINPUT_EVENT_TABLET_TOOL_PROXIMITY: {

@@ -67,6 +67,11 @@ QList<InputDeviceTabletPadModeGroup> InputDevice::modeGroups() const
     return {};
 }
 
+bool InputDevice::tabletToolIsRelative() const
+{
+    return false;
+}
+
 } // namespace KWin
 
 #include "moc_inputdevice.cpp"
