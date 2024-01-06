@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "tablet_input.h"
+#include "backends/libinput/device.h"
 #include "core/inputdevice.h"
 #include "cursorsource.h"
 #include "decorations/decoratedwindow.h"
@@ -132,6 +133,15 @@ void TabletInputRedirection::integrateDevice(InputDevice *device)
     if (device->isTabletPad()) {
         tabletSeat->addPad(device);
     }
+
+    // Ensure that the cursor position to set to the center of the screen in relative (mouse) mode
+    if (auto libInputDevice = qobject_cast<LibInput::Device *>(device); libInputDevice != nullptr) {
+        if (libInputDevice->isRelative()) {
+            if (auto output = workspace()->activeOutput(); output != nullptr) {
+                m_lastPosition = output->geometry().center();
+            }
+        }
+    }
 }
 
 void TabletInputRedirection::removeDevice(InputDevice *device)
@@ -201,15 +211,15 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     ensureTabletTool(tool);
 
     m_lastPosition = pos;
-    m_cursorByTool[tool]->setPos(pos);
+    m_cursorByTool[tool]->setPos(m_lastPosition);
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
     const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(QEvent::TabletMove, dev, pos, pos, pressure,
+    TabletEvent ev(QEvent::TabletMove, dev, m_lastPosition, m_lastPosition, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
@@ -220,6 +230,41 @@ void TabletInputRedirection::tabletToolAxisEvent(const QPointF &pos, qreal press
     input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
     input()->processFilters(std::bind(&InputEventFilter::tabletToolAxisEvent, std::placeholders::_1, &ev));
     input()->setLastInputHandler(this);
+
+}
+
+void TabletInputRedirection::tabletToolAxisEventRelative(const QPointF &delta,
+                                                         qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
+                                                         bool tipNear, InputDeviceTabletTool *tool,
+                                                         std::chrono::microseconds time, InputDevice *device)
+{
+    if (!inited()) {
+        return;
+    }
+
+    ensureTabletTool(tool);
+
+    m_lastPosition += delta;
+    m_cursorByTool[tool]->setPos(m_lastPosition);
+
+    update();
+    workspace()->setActiveOutput(m_lastPosition);
+
+    // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
+    const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
+    const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
+    TabletEvent ev(QEvent::TabletMove, dev, m_lastPosition, m_lastPosition, pressure,
+                   xTilt, yTilt,
+                   0, // tangentialPressure
+                   rotation,
+                   distance,
+                   Qt::NoModifier, button, button, tool, device);
+    ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+
+    input()->processSpies(std::bind(&InputEventSpy::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->processFilters(std::bind(&InputEventFilter::tabletToolAxisEvent, std::placeholders::_1, &ev));
+    input()->setLastInputHandler(this);
+
 }
 
 void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device)
@@ -230,18 +275,21 @@ void TabletInputRedirection::tabletToolProximityEvent(const QPointF &pos, qreal 
 
     ensureTabletTool(tool);
 
-    m_lastPosition = pos;
+    if (auto libInputDevice = qobject_cast<LibInput::Device *>(device); !libInputDevice || !libInputDevice->isRelative()) {
+        m_lastPosition = pos;
+    }
+
     if (tipNear) {
-        m_cursorByTool[tool]->setPos(pos);
+        m_cursorByTool[tool]->setPos(m_lastPosition);
     }
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
     const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity, dev, pos, pos, pressure,
+    TabletEvent ev(tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity, dev, m_lastPosition, m_lastPosition, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
@@ -262,18 +310,21 @@ void TabletInputRedirection::tabletToolTipEvent(const QPointF &pos, qreal pressu
 
     ensureTabletTool(tool);
 
-    m_lastPosition = pos;
+    if (auto libInputDevice = qobject_cast<LibInput::Device *>(device); !libInputDevice || !libInputDevice->isRelative()) {
+        m_lastPosition = pos;
+    }
+
     if (tipDown) {
-        m_cursorByTool[tool]->setPos(pos);
+        m_cursorByTool[tool]->setPos(m_lastPosition);
     }
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
     const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
-    TabletEvent ev(tipDown ? QEvent::TabletPress : QEvent::TabletRelease, dev, pos, pos, pressure,
+    TabletEvent ev(tipDown ? QEvent::TabletPress : QEvent::TabletRelease, dev, m_lastPosition, m_lastPosition, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,

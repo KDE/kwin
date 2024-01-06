@@ -3145,6 +3145,8 @@ void InputRedirection::addInputDevice(InputDevice *device)
             m_tablet, &TabletInputRedirection::tabletToolProximityEvent);
     connect(device, &InputDevice::tabletToolTipEvent,
             m_tablet, &TabletInputRedirection::tabletToolTipEvent);
+    connect(device, &InputDevice::tabletToolAxisEventRelative,
+            m_tablet, &TabletInputRedirection::tabletToolAxisEventRelative);
     connect(device, &InputDevice::tabletToolButtonEvent,
             m_tablet, &TabletInputRedirection::tabletToolButtonEvent);
     connect(device, &InputDevice::tabletPadButtonEvent,

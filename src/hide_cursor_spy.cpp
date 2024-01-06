@@ -11,6 +11,8 @@
 #include "input_event.h"
 #include "main.h"
 
+#include <backends/libinput/device.h>
+
 namespace KWin
 {
 
@@ -36,6 +38,12 @@ void HideCursorSpy::touchDown(qint32 id, const QPointF &pos, std::chrono::micros
 
 void HideCursorSpy::tabletToolProximityEvent(TabletEvent *event)
 {
+    // If the tablet is in relative/mouse mode, keep it on the screen even if the pen is no longer in proximity
+    if (auto libInputDevice = qobject_cast<LibInput::Device *>(event->device())) {
+        if (libInputDevice->isRelative()) {
+            return;
+        }
+    }
     if (event->type() == QEvent::Type::TabletLeaveProximity) {
         hideCursor();
     } else {
