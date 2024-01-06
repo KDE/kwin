@@ -177,6 +177,7 @@ enum class ConfigKey {
     TabletToolPressureCurve,
     TabletToolPressureRangeMin,
     TabletToolPressureRangeMax,
+    TabletToolRelativeMode,
 };
 
 struct ConfigDataBase
@@ -288,6 +289,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
     {ConfigKey::TabletToolPressureRangeMin, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMin"), &Device::setPressureRangeMin, &Device::defaultPressureRangeMin)},
     {ConfigKey::TabletToolPressureRangeMax, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMax"), &Device::setPressureRangeMax, &Device::defaultPressureRangeMax)},
+    {ConfigKey::TabletToolRelativeMode, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("TabletToolRelativeMode"), &Device::setRelative, &Device::defaultRelative)},
 };
 
 namespace
@@ -944,6 +946,17 @@ double Device::defaultPressureRangeMin() const
 double Device::defaultPressureRangeMax() const
 {
     return m_defaultPressureRangeMax;
+}
+
+void Device::setRelative(bool relative)
+{
+    if (relative == m_relative) {
+        return;
+    }
+
+    m_relative = relative;
+    writeEntry(ConfigKey::TabletToolRelativeMode, m_relative);
+    Q_EMIT relativeChanged();
 }
 }
 }

@@ -489,10 +489,17 @@ void Connection::processEvents()
                     libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
                 }
 
-                Q_EMIT event->device()->tabletToolEvent(tabletEventType,
-                                                        globalPos, pressure,
-                                                        tte->xTilt(), tte->yTilt(), tte->rotation(), tte->distance(),
-                                                        tte->isTipDown(), tte->isNearby(), getOrCreateTool(tte->tool()), tte->time(), tte->device());
+                if (tte->device()->isRelative()) {
+                    Q_EMIT event->device()->tabletToolRelativeEvent(tabletEventType,
+                                                                    tte->delta(), pressure,
+                                                                    tte->xTilt(), tte->yTilt(), tte->rotation(), tte->distance(),
+                                                                    tte->isTipDown(), tte->isNearby(), getOrCreateTool(tte->tool()), tte->time(), event->device());
+                } else {
+                    Q_EMIT event->device()->tabletToolEvent(tabletEventType,
+                                                            globalPos, pressure,
+                                                            tte->xTilt(), tte->yTilt(), tte->rotation(), tte->distance(),
+                                                            tte->isTipDown(), tte->isNearby(), getOrCreateTool(tte->tool()), tte->time(), tte->device());
+                }
             }
             break;
         }

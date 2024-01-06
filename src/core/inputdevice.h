@@ -126,6 +126,11 @@ public:
     virtual int tabletPadModeCount() const;
     virtual int tabletPadMode() const;
 
+    enum class TabletMoveMode {
+        Absolute,
+        Relative,
+    };
+
 Q_SIGNALS:
     void keyChanged(quint32 key, KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
     void pointerButtonChanged(quint32 button, PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
@@ -151,6 +156,9 @@ Q_SIGNALS:
     void holdGestureCancelled(std::chrono::microseconds time, InputDevice *device);
     void switchToggle(SwitchState state, std::chrono::microseconds time, InputDevice *device);
     void tabletToolEvent(TabletEventType type, const QPointF &pos, qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown, bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
+    void tabletToolRelativeEvent(TabletEventType type, const QPointF &delta,
+                                 qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
+                                 bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device);
     void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);
     void tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);

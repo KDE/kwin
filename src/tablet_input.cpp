@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "tablet_input.h"
+#include "backends/libinput/device.h"
 #include "core/inputdevice.h"
 #include "cursorsource.h"
 #include "decorations/decoratedwindow.h"
@@ -132,6 +133,15 @@ void TabletInputRedirection::integrateDevice(InputDevice *device)
     if (device->isTabletPad()) {
         tabletSeat->addPad(device);
     }
+
+    // Ensure that the cursor position to set to the center of the screen in relative (mouse) mode
+    if (auto libInputDevice = qobject_cast<LibInput::Device *>(device); libInputDevice != nullptr) {
+        if (libInputDevice->isRelative()) {
+            if (auto output = workspace()->activeOutput(); output != nullptr) {
+                m_lastPosition = output->geometry().center();
+            }
+        }
+    }
 }
 
 void TabletInputRedirection::removeDevice(InputDevice *device)
@@ -192,17 +202,37 @@ void TabletInputRedirection::ensureTabletTool(InputDeviceTabletTool *device)
     m_cursorByTool[device] = cursor;
 }
 
-void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType type, const QPointF &pos,
+void TabletInputRedirection::tabletToolEvent(InputDevice::TabletEventType type, const QPointF &pos,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
                                              bool tipNear, InputDeviceTabletTool *tool,
                                              std::chrono::microseconds time,
                                              InputDevice *device)
 {
+    processTabletToolInternal(type, pos, pressure, xTilt, yTilt, rotation, distance, tipDown, tipNear, tool, time, device, InputDevice::TabletMoveMode::Absolute);
+}
+
+void TabletInputRedirection::tabletToolRelativeEvent(InputDevice::TabletEventType type, const QPointF &delta,
+                                                     qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
+                                                     bool tipNear, InputDeviceTabletTool *tool,
+                                                     std::chrono::microseconds time, InputDevice *device)
+{
+    processTabletToolInternal(type, delta, pressure, xTilt, yTilt, rotation, distance, tipDown, tipNear, tool, time, device, InputDevice::TabletMoveMode::Relative);
+}
+
+void TabletInputRedirection::processTabletToolInternal(InputDevice::TabletEventType type, const QPointF &posOrDelta,
+                                                       qreal pressure, int xTilt, int yTilt, qreal rotation, qreal distance, bool tipDown,
+                                                       bool tipNear, InputDeviceTabletTool *tool, std::chrono::microseconds time, InputDevice *device, InputDevice::TabletMoveMode mode)
+{
     if (!inited()) {
         return;
     }
     input()->setLastInputHandler(this);
-    m_lastPosition = pos;
+
+    if (mode == InputDevice::TabletMoveMode::Absolute) {
+        m_lastPosition = posOrDelta;
+    } else {
+        m_lastPosition += posOrDelta;
+    }
 
     QEvent::Type t;
     switch (type) {
@@ -222,20 +252,20 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputDevice::TabletEventType 
     case QEvent::TabletEnterProximity:
     case QEvent::TabletPress:
     case QEvent::TabletMove:
-        m_cursorByTool[tool]->setPos(pos);
+        m_cursorByTool[tool]->setPos(m_lastPosition);
         break;
     default:
         break;
     }
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     const auto button = tipDown ? Qt::LeftButton : Qt::NoButton;
 
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
-    TabletEvent ev(t, dev, pos, pos, pressure,
+    TabletEvent ev(t, dev, m_lastPosition, m_lastPosition, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,
