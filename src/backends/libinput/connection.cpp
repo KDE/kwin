@@ -539,9 +539,9 @@ void Connection::processEvents()
                 const qreal pressure = event->device()->pressureCurve().valueForProgress(tte->pressure());
 
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
-                                                        globalPos, pressure,
+                                                        globalPos, tte->delta(), pressure,
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time());
+                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), event->device()->isRelative() ? InputDevice::TabletMoveMode::Relative : InputDevice::TabletMoveMode::Absolute, tte->time());
             }
             break;
         }

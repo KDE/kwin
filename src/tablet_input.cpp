@@ -263,16 +263,21 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletTool
     return tool;
 }
 
-void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
+void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos, const QPointF &delta,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                                             bool tipNear, const TabletToolId &tabletToolId,
+                                             bool tipNear, const TabletToolId &tabletToolId, KWin::InputDevice::TabletMoveMode mode,
                                              std::chrono::microseconds time)
 {
     if (!inited()) {
         return;
     }
     input()->setLastInputHandler(this);
-    m_lastPosition = pos;
+
+    if (mode == InputDevice::TabletMoveMode::Absolute) {
+        m_lastPosition = pos;
+    } else {
+        m_lastPosition += delta;
+    }
 
     QEvent::Type t;
     switch (type) {
@@ -299,13 +304,13 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     }
 
     update();
-    workspace()->setActiveOutput(pos);
+    workspace()->setActiveOutput(m_lastPosition);
 
     const auto button = m_tipDown ? Qt::LeftButton : Qt::NoButton;
 
     // TODO: Not correct, but it should work fine. In long term, we need to stop using QTabletEvent.
     const QPointingDevice *dev = QPointingDevice::primaryPointingDevice();
-    TabletEvent ev(t, dev, pos, pos, pressure,
+    TabletEvent ev(t, dev, m_lastPosition, m_lastPosition, pressure,
                    xTilt, yTilt,
                    0, // tangentialPressure
                    rotation,

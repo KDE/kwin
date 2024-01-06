@@ -148,6 +148,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(QString defaultPressureCurve READ defaultPressureCurve CONSTANT)
     Q_PROPERTY(QString pressureCurve READ serializedPressureCurve WRITE setPressureCurve NOTIFY pressureCurveChanged)
 
+    Q_PROPERTY(bool relative READ isRelative WRITE setRelative NOTIFY relativeChanged)
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
@@ -662,6 +664,18 @@ public:
         return m_deviceGroupId;
     }
 
+    bool isRelative() const
+    {
+        return m_relative;
+    }
+
+    void setRelative(bool relative);
+
+    bool defaultRelative() const
+    {
+        return defaultValue("TabletToolRelativeMode", false);
+    }
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -689,6 +703,7 @@ Q_SIGNALS:
     void outputAreaChanged();
     void mapToWorkspaceChanged();
     void pressureCurveChanged();
+    void relativeChanged();
 
 private:
     template<typename T>
@@ -779,6 +794,7 @@ private:
     QRectF m_outputArea = QRectF(0, 0, 1, 1);
     bool m_mapToWorkspace = false;
     QString m_deviceGroupId;
+    bool m_relative = false;
 };
 
 }

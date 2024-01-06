@@ -48,6 +48,11 @@ public:
 
     virtual bool isNaturalScroll() const;
 
+    enum class TabletMoveMode {
+        Absolute,
+        Relative,
+    };
+
 Q_SIGNALS:
     void keyChanged(quint32 key, InputRedirection::KeyboardKeyState, std::chrono::microseconds time, InputDevice *device);
     void pointerButtonChanged(quint32 button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device);
@@ -75,9 +80,9 @@ Q_SIGNALS:
     void switchToggledOn(std::chrono::microseconds time, InputDevice *device);
     void switchToggledOff(std::chrono::microseconds time, InputDevice *device);
 
-    void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
+    void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos, const QPointF &delta,
                          qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                         bool tipNear, const TabletToolId &tabletToolId, std::chrono::microseconds time);
+                         bool tipNear, const TabletToolId &tabletToolId, TabletMoveMode mode, std::chrono::microseconds time);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId, std::chrono::microseconds time);
 
     void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
