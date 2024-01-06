@@ -230,7 +230,7 @@ void TestButtonRebind::testBindingTabletTool()
     QVERIFY(enteredSpy.wait());
 
     const QRectF startGeometry = window->frameGeometry();
-    Test::tabletToolEvent(InputRedirection::Proximity, startGeometry.center(), 1.0, 0, 0, 0, false, false, timestamp++);
+    Test::tabletToolEvent(InputRedirection::Proximity, startGeometry.center(), QPointF(), 1.0, 0, 0, 0, false, false, InputDevice::TabletMoveMode::Absolute, timestamp++);
 
     Test::tabletToolButtonPressed(BTN_STYLUS, timestamp++);
 
@@ -262,7 +262,7 @@ void TestButtonRebind::testMouseTabletCursorSync()
     QVERIFY(enteredSpy.wait());
 
     // Move the tablet cursor to (10,10)
-    Test::tabletToolEvent(InputRedirection::Proximity, startGeometry.topLeft() + QPointF{10.f, 10.f}, 1.0, 0, 0, 0, false, false, timestamp++);
+    Test::tabletToolEvent(InputRedirection::Proximity, startGeometry.topLeft() + QPointF{10.f, 10.f}, QPointF{10.f, 10.f}, 1.0, 0, 0, 0, false, false, InputDevice::TabletMoveMode::Absolute, timestamp++);
 
     // Verify they are not starting in the same place
     QVERIFY(input()->pointer()->pos() != input()->tablet()->position());

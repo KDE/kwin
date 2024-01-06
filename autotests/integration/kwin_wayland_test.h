@@ -668,8 +668,9 @@ void tabletPadButtonReleased(quint32 button, quint32 time);
 void tabletToolButtonPressed(quint32 button, quint32 time);
 void tabletToolButtonReleased(quint32 button, quint32 time);
 void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
-                     qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                     bool tipNear, quint32 time);
+                     const QPointF &delta, qreal pressure, int xTilt, int yTilt,
+                     qreal rotation, bool tipDown, bool tipNear,
+                     KWin::InputDevice::TabletMoveMode mode, quint32 time);
 
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various

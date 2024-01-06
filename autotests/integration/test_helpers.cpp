@@ -1772,14 +1772,15 @@ void tabletToolButtonReleased(quint32 button, quint32 time)
 }
 
 void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
-                     qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                     bool tipNear, quint32 time)
+                     const QPointF &delta, qreal pressure, int xTilt, int yTilt,
+                     qreal rotation, bool tipDown, bool tipNear,
+                     KWin::InputDevice::TabletMoveMode mode, quint32 time)
 {
     auto virtualTabletTool = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletTool();
     TabletToolId toolId{
         .m_name = virtualTabletTool->name(),
     };
-    Q_EMIT virtualTabletTool->tabletToolEvent(type, pos, pressure, xTilt, yTilt, rotation, tipDown, tipNear, toolId, std::chrono::milliseconds(time));
+    Q_EMIT virtualTabletTool->tabletToolEvent(type, pos, delta, pressure, xTilt, yTilt, rotation, tipDown, tipNear, toolId, mode, std::chrono::milliseconds(time));
 }
 }
 }

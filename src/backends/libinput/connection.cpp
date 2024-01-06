@@ -536,10 +536,11 @@ void Connection::processEvents()
 #else
                 const QPointF globalPos;
 #endif
+                const auto mode = tte->device()->isRelative() ? KWin::InputDevice::TabletMoveMode::Relative : KWin::InputDevice::TabletMoveMode::Absolute;
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
-                                                        globalPos, tte->pressure(),
+                                                        globalPos, tte->delta(), tte->pressure(),
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(),
-                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time());
+                                                        tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), mode, tte->time());
             }
             break;
         }
