@@ -1,13 +1,13 @@
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2012, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
 # Kiszel Kristóf <kiszel.kristof@gmail.com>, 2017, 2021.
-# Kristof Kiszel <ulysses@fsf.hu>, 2021.
+# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.1\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-08 01:36+0000\n"
-"PO-Revision-Date: 2021-11-18 14:18+0100\n"
+"PO-Revision-Date: 2024-01-05 13:22+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -180,6 +180,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"A rendkívül alacsony átlátszatlansági értékek esetén az olvashatóság "
+"romolhat. 0%-nál az ablak láthatatlanná válik."
 
 #: rulesmodel.cpp:388
 #, kde-format
@@ -311,6 +313,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Egyes alkalmazások saját geometriát állíthatnak be, felülbírálva az "
+"ablakkezelő beállításait. Ennek a tulajdonságnak a beállítása felülírja az "
+"elhelyezési kéréseiket.<nl/><nl/>Ez vonatkozik a <interface>Méretre</"
+"interface> és a <interface>Pozícióra</interface>-re, de a "
+"<interface>Maximalizált</interface> vagy <interface>Teljes képernyős</"
+"interface> állapotokra nem.<nl/><nl/>Ne feledje, hogy a pozíció egy másik "
+"<interface>Képernyőre</interface> leképezésére is használható."
 
 #: rulesmodel.cpp:552
 #, kde-format
@@ -328,13 +337,7 @@ msgid "Obey geometry restrictions"
 msgstr "Méret- és elhelyezkedéskorlátozások betartása"
 
 #: rulesmodel.cpp:564
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -343,11 +346,13 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"A terminálok és videolejátszók kérhetik egy bizonyos méretarány megtartását\n"
-"vagy csak egy egynél nagyobb értékkel való növelését (például egy karakter\n"
-"méreteivel).\n"
-"Ez értelmetlen lehet és a korlátozás megakadályozhatja bizonyos területek,\n"
-"vagy akár a teljes képernyőterület használatát."
+"Egyes alkalmazások, például videólejátszók és terminálok kérhetik a KWint, "
+"hogy korlátozza őket bizonyos képarányokra, vagy csak egy karakter méreténél "
+"nagyobb értékkel növekedhessenek. Ezzel a tulajdonsággal figyelmen kívül "
+"hagyhatja ezeket a korlátozásokat, és lehetővé teszi, hogy ezeket az "
+"ablakokat tetszőleges méretre lehessen átméretezni.<nl/><nl/>Ez hasznos "
+"lehet olyan ablakok esetében, amelyek maximalizálva nem férnek el a teljes "
+"képernyőfelületen."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -374,7 +379,7 @@ msgstr "Kihagyás a feladatlistából"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Szabályozza, hogy az ablak megjelenjen-e a Feladatkezelőben."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -387,6 +392,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Szabályozza, hogy az ablak megjelenjen-e a Virtuális asztal kezelőjében."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -400,6 +406,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Szabályozza, hogy az ablak megjelenjen-e a <shortcut>Alt+Tab</shortcut> "
+"ablaklistában."
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -459,6 +467,24 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"A KWin megpróbálja megakadályozni, hogy a közvetlen felhasználói művelet "
+"nélkül megnyitott ablakok felemelkedjenek és átvegyék a fókuszt, miközben Ön "
+"éppen egy másik ablakkal van interakcióban. Ezzel a tulajdonsággal "
+"módosítható az egyes ablakokra és alkalmazásokra alkalmazott fókuszlopás-"
+"megelőzés szintje.<nl/><nl/>Íme, mi fog történni a közvetlen beavatkozás "
+"nélkül megnyitott ablakkal a fókuszlopás megelőzésének minden szintjén:<nl/"
+"><list><item><emphasis strong='true'>Semmi:</emphasis> Az ablak felemelkedik "
+"és főkuszt kap.</item><item><emphasis strong='true'>Alacsony:</emphasis>A "
+"fókuszlopás megelőzése alkalmazva lesz, de olyan helyzetben, amelyet a KWin "
+"kétértelműnek ítél, az ablak felemelkedik és fókuszt kap.</"
+"item><item><emphasis strong='true'>Normál:</emphasis> A fókuszlopás "
+"megelőzése alkalmazva lesz, de olyan helyzetben, amelyet a KWin "
+"kétértelműnek ítél, az ablak <emphasis>nem</emphasis> emelkedik fel, és kap "
+"fókuszt.</item><item><emphasis strong='true'>Magas:</emphasis> Az ablak csak "
+"akkor lesz felemelve és fókuszálva, ha ugyanahhoz az alkalmazáshoz tartozik, "
+"mint az aktuálisan fókuszált ablak.</item><item><emphasis "
+"strong='true'>Extrém:</emphasis> Az ablak soha nem emelkedik fel, és soha "
+"nem kap fókuszt.</item></list>"
 
 #: rulesmodel.cpp:658
 #, kde-format
@@ -488,6 +514,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Ez a tulajdonság szabályozza a jelenleg aktív ablak fókuszvédelmi szintjét. "
+"A közvetlen beavatkozás nélkül megnyitott új ablakokra alkalmazott "
+"fókuszlops elleni védelem felülírására szolgál.<nl/><nl/>Íme, mi történik az "
+"Ön közvetlen beavatkozása nélkül megnyitott új ablakokkal a fókuszvédelem "
+"egyes szintjein, amíg az ezt a tulajdonságot használó ablak van fókuszban:"
+"<nl/><list><item><emphasis strong='true'>Nincs:</emphasis> Az újonnan "
+"megnyitott ablakok mindig felemelkednek, és fókuszt kapnak.</"
+"item><item><emphasis strong='true'>Alacsony:</emphasis> A fókuszlopás "
+"megelőzése alkalmazva lesz, de olyan helyzetben, amelyet a KWin "
+"kétértelműnek ítél, az ablak felemelkedik és fókuszt kap.</"
+"item><item><emphasis strong='true'>Normál:</emphasis> A fókuszlopás "
+"megelőzése alkalmazva lesz, de olyan helyzetben, amelyet a KWin "
+"kétértelműnek ítél, az ablak <emphasis>nem</emphasis> emelkedik fel, és kap "
+"fókuszt.</item><item><emphasis strong='true'>Magas:</emphasis> Az újonnan "
+"megnyitott ablak csak akkor lesz felemelve és fókuszálva, ha ugyanahhoz az "
+"alkalmazáshoz tartozik, mint az aktuálisan fókuszált ablak.</"
+"item><item><emphasis strong='true'>Extrém:</emphasis> Az újonnan megnyitott "
+"ablak soha nem emelkedik fel, és soha nem kap fókuszt.</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -498,6 +542,7 @@ msgstr "Fókusz elfogadása"
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
+"Szabályozza, hogy az ablak fókuszált legyen-e vagy sem, amikor rákattintanak."
 
 #: rulesmodel.cpp:692
 #, kde-format
@@ -515,6 +560,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Ezzel a tulajdonsággal megakadályozhatja, hogy a globális billentyűparancsok "
+"működjenek, miközben az ablak fókuszálva van. Ez olyan alkalmazásoknál lehet "
+"hasznos, mint az emulátorok vagy a virtuális gépek, amelyek maguk is kezelik "
+"ugyanezen billentyűparancsok egy részét.<nl/><nl/>Vegye figyelembe, hogy nem "
+"lesz képes az ablakból való kilépésre <shortcut>Alt+Tab</shortcut>bal vagy "
+"más globális gyorsbillentyűket, például az <shortcut>Alt+Space</shortcut> "
+"billentyűparancsot használni a a KRunner aktiválásához."
 
 #: rulesmodel.cpp:704
 #, kde-format
@@ -537,10 +589,9 @@ msgid "Block compositing"
 msgstr "Kompozitálás blokkolása"
 
 #: rulesmodel.cpp:772
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Ablakosztály (alkalmazás)"
+msgstr "Az ablakosztály nem érhető el"
 
 #: rulesmodel.cpp:773
 #, kde-kuit-format
@@ -551,12 +602,16 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Ez az alkalmazás nem biztosít osztályt az ablakhoz, így a KWin nem tudja "
+"használni a szabályok illesztésére és alkalmazására. Ha mégis alkalmazni "
+"szeretne néhány szabályt, próbálkozzon más tulajdonságokkal, például az "
+"ablak címével.<nl/><nl/>Kérjük, fontolja meg, hogy jelentse ezt a hibát az "
+"alkalmazás fejlesztőinek."
 
 #: rulesmodel.cpp:807
-#, fuzzy, kde-format
-#| msgid "Window types"
+#, kde-format
 msgid "All Window Types"
-msgstr "Ablaktípusok"
+msgstr "Minden ablaktípus"
 
 #: rulesmodel.cpp:808
 #, kde-format
@@ -618,7 +673,7 @@ msgstr "Összes asztalra"
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
-msgstr ""
+msgstr "Az ablak elérhetővé tétele az összes asztalon"
 
 #: rulesmodel.cpp:849
 #, kde-format
@@ -629,7 +684,7 @@ msgstr "Összes aktivitásra"
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
-msgstr ""
+msgstr "Az ablak elérhetővé tétele az összes aktivitáson"
 
 #: rulesmodel.cpp:872
 #, kde-format
@@ -702,8 +757,7 @@ msgid "Extreme"
 msgstr "Rendkívüli"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Nem kezelt ablak"
 
@@ -730,9 +784,7 @@ msgid "No rules for specific windows are currently set"
 msgstr "Nincsenek megadva szabályok adott ablakokhoz"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
@@ -760,14 +812,12 @@ msgid "Save Rules"
 msgstr "Szabályok mentése"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
 msgstr "Új hozzáadása…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
 msgstr "Importálás…"
 
@@ -777,8 +827,7 @@ msgid "Cancel Export"
 msgstr "Exportálás megszakítása"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
 msgstr "Exportálás…"
 

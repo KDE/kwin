@@ -3,13 +3,13 @@
 #
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2012, 2014, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2014.
-# Kristof Kiszel <ulysses@fsf.hu>, 2021.
+# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-20 01:35+0000\n"
-"PO-Revision-Date: 2021-11-19 12:00+0100\n"
+"PO-Revision-Date: 2024-01-05 13:24+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: main.cpp:151 touch.cpp:117
 #, kde-format
@@ -27,7 +27,7 @@ msgstr "Nincs művelet"
 #: main.cpp:152 touch.cpp:118
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Pillantás az asztalra"
 
 #: main.cpp:153 touch.cpp:119
 #, kde-format
@@ -70,10 +70,9 @@ msgid "%1 - Current Application"
 msgstr "%1 - Aktuális alkalmazás"
 
 #: main.cpp:165
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "Áttekintés ki-be kapcsolása"
+msgstr "Áttekintés"
 
 #: main.cpp:167 touch.cpp:131
 #, kde-format
@@ -123,13 +122,13 @@ msgstr "Az ablakot a bal vagy jobb oldali élhez húzták"
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Működés:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Maradjon aktív, ha az ablakok teljes képernyősek"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115

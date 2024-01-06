@@ -2,13 +2,13 @@
 # Marcell Lengyel <miketkf@yahoo.com>, 1999.
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013, 2014.
-# Kristof Kiszel <kiszel.kristof@gmail.com>, 2021.
+# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <kiszel.kristof@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-28 01:34+0000\n"
-"PO-Revision-Date: 2021-11-23 11:35+0100\n"
+"PO-Revision-Date: 2024-01-05 13:26+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -16,17 +16,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Kiszel Kristóf,Lengyel Marcell,Szántó Tamás"
+msgstr "Kiszel Kristóf"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "ulysses@fsf.hu,miketkf@yahoo.com,tszanto@interware.hu"
+msgstr "ulysses@fsf.hu"
 
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
@@ -4262,10 +4262,9 @@ msgid "Switch to Screen Below"
 msgstr "Váltás a 0. képernyőre"
 
 #: useractions.cpp:1072
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Áthelyezé&s asztalra"
+msgstr "Pillantás az asztalra"
 
 #: useractions.cpp:1075
 #, kde-format
@@ -4340,18 +4339,7 @@ msgid "(Not Responding)"
 msgstr "(Nem válaszol)"
 
 #: workspace.cpp:1616
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4366,7 +4354,7 @@ msgid ""
 msgstr ""
 "KWin támogatási információ:\n"
 "Az alábbi információkat kell használni, ha segítséget kér például a https://"
-"forum.kde.org oldalon.\n"
+"discuss.kde.org oldalon.\n"
 "Információkat ad a futó példányról, a használt beállításokról, és hogy "
 "melyik OpenGL illesztőprogram és mely effektusok futnak.\n"
 "Kérjük töltse fel az alábbi információkat egy szövegmegosztó oldalra, "
