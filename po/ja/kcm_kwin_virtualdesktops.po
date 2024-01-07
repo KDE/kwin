@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # R.Suga <21r.suga@gmail.com>, 2022.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2022.
@@ -6,8 +7,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-07 01:42+0000\n"
-"PO-Revision-Date: 2022-03-12 18:12-0800\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
+"PO-Revision-Date: 2024-01-06 01:31+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -16,40 +17,39 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "R.Suga"
+msgstr "R.Suga, Ryuichi Yamada"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "21r.suga@gmail.com"
+msgstr "21r.suga@gmail.com, ryuichi_ya220@outlook.jp"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
-msgstr[0] "新しいデスクトップ"
+msgstr[0] "デスクトップ %1"
 
 #: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr "コンポジターへの接続でエラーが発生しました。"
+msgstr "コンポジタへの接続中にエラーが発生しました。"
 
 #: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr "コンポジターの設定の保存中にエラーが発生しました。"
+msgstr "コンポジタ設定の保存中にエラーが発生しました。"
 
 #: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr "コンポジターからの情報の取得中にエラーが発生しました。"
+msgstr "コンポジタからの情報の取得中にエラーが発生しました。"
 
 #: ui/main.qml:89
 #, kde-format
@@ -103,7 +103,7 @@ msgstr "オプション:"
 #: ui/main.qml:205
 #, kde-format
 msgid "Navigation wraps around"
-msgstr "ナビゲーションを循環"
+msgstr "ナビゲーションを循環させる"
 
 #: ui/main.qml:223
 #, kde-format
@@ -118,7 +118,7 @@ msgstr "切り替え時にオンスクリーンディスプレイを表示:"
 #: ui/main.qml:293
 #, kde-format
 msgid "%1 ms"
-msgstr "%1 ms"
+msgstr "%1 ミリ秒"
 
 #: ui/main.qml:317
 #, kde-format

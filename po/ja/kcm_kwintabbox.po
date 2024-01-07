@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2010.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2010, 2015.
 msgid ""
@@ -5,8 +6,8 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-12-20 01:35+0000\n"
-"PO-Revision-Date: 2015-05-23 16:26-0700\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
+"PO-Revision-Date: 2024-01-06 01:35+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -15,13 +16,12 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: layoutpreview.cpp:131
-#, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
+#, kde-format
 msgid "Show Desktop"
-msgstr "デスクトップ 1"
+msgstr "デスクトップを表示"
 
 #: layoutpreview.cpp:161
 #, kde-format
@@ -42,7 +42,7 @@ msgstr "代替"
 #: main.cpp:70
 #, kde-format
 msgid "Get New Task Switchers..."
-msgstr ""
+msgstr "新しいタスクスイッチャーを入手..."
 
 #: main.cpp:84
 #, kde-format
@@ -54,14 +54,13 @@ msgstr "ウィンドウの巡回はフォーカスポリシーの設定によっ
 #: main.ui:32
 #, kde-format
 msgid "Content"
-msgstr ""
+msgstr "内容"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include desktop"
+#, kde-format
 msgid "Include \"Show Desktop\" icon"
-msgstr "デスクトップを含む"
+msgstr "「デスクトップを表示」アイコンを含む"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -79,13 +78,13 @@ msgstr "積み重ね順"
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr ""
+msgstr "アプリケーションにつき一つのウィンドウのみ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "最小化されたウィンドウをされていないウィンドウの後に"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -95,10 +94,9 @@ msgstr "ソート順:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: main.ui:114
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Filter windows by"
-msgstr "ウィンドウのリスト:"
+msgstr "ウィンドウをフィルタ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
@@ -122,25 +120,25 @@ msgstr "他のすべてのデスクトップ"
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr ""
+msgstr "アクティビティ"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
 #, kde-format
 msgid "Current activity"
-msgstr ""
+msgstr "現在のアクティビティ"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
 #: main.ui:235
 #, kde-format
 msgid "All other activities"
-msgstr ""
+msgstr "他のすべてのアクティビティ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
 #: main.ui:245
 #, kde-format
 msgid "Screens"
-msgstr ""
+msgstr "スクリーン"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
 #: main.ui:289
@@ -152,7 +150,7 @@ msgstr "現在のスクリーン"
 #: main.ui:296
 #, kde-format
 msgid "All other screens"
-msgstr ""
+msgstr "他のすべてのスクリーン"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
 #: main.ui:306
@@ -162,30 +160,28 @@ msgstr "最小化"
 
 #. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
 #: main.ui:350
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Visible windows"
-msgstr "ウィンドウのリスト:"
+msgstr "表示されるウィンドウ"
 
 #. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
 #: main.ui:357
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Hidden windows"
-msgstr "ウィンドウのリスト:"
+msgstr "表示されないウィンドウ"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
 #: main.ui:396
 #, kde-format
 msgid "Shortcuts"
-msgstr ""
+msgstr "ショートカット"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: main.ui:405 main.ui:448
 #, kde-format
 msgid "Forward"
-msgstr ""
+msgstr "進む"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:428
@@ -198,7 +194,7 @@ msgstr "すべてのウィンドウ"
 #: main.ui:438 main.ui:458
 #, kde-format
 msgid "Reverse"
-msgstr ""
+msgstr "戻る"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:480
@@ -235,7 +231,7 @@ msgstr ""
 #: main.ui:562
 #, kde-format
 msgid "Show selected window"
-msgstr "選択したウィンドウを表示する"
+msgstr "選択したウィンドウを表示"
 
 #: shortcutsettings.cpp:132
 #, kde-format
@@ -250,29 +246,29 @@ msgstr "ウィンドウを巡回 (反対回り)"
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "現在のアプリケーションのウィンドウを巡回"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "現在のアプリケーションのウィンドウを巡回 (反対回り)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr "ウィンドウを巡回の代替"
+msgstr "ウィンドウを巡回 (代替)"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "ウィンドウを巡回 (反対回り) の代替"
+msgstr "ウィンドウを巡回 (代替、反対回り)"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "現在のアプリケーションのウィンドウを巡回 (代替)"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "現在のアプリケーションのウィンドウを巡回 (代替、反対回り)"
