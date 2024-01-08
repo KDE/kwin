@@ -306,6 +306,11 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         }
     }
 
+    if (red.y() == 0 || green.y() == 0 || blue.y() == 0 || white.y() == 0) {
+        qCWarning(KWIN_CORE, "Profile has invalid primaries");
+        return nullptr;
+    }
+
     BToATagData lutData;
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
         qCWarning(KWIN_CORE, "Profiles with only BToD tags aren't supported yet");
