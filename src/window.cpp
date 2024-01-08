@@ -3392,7 +3392,7 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 void Window::updateElectricGeometryRestore()
 {
     m_electricGeometryRestore = geometryRestore();
-    if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+    if (m_interactiveMoveResize.initialQuickTileMode == QuickTileMode(QuickTileFlag::None)) {
         if (!(requestedMaximizeMode() & MaximizeHorizontal)) {
             m_electricGeometryRestore.setX(x());
             m_electricGeometryRestore.setWidth(width());
