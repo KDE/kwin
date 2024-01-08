@@ -2,20 +2,20 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2009, 2010.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022.
+# SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-07-15 00:48+0000\n"
-"PO-Revision-Date: 2022-07-31 09:27+0200\n"
+"PO-Revision-Date: 2024-01-07 12:14+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.03.70\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -32,7 +32,7 @@ msgstr "lukasz.wojnilowicz@gmail.com"
 #: main.cpp:130 touch.cpp:124
 #, kde-format
 msgid "No Action"
-msgstr "Brak działania"
+msgstr "Nic nie rób"
 
 #: main.cpp:131 touch.cpp:125
 #, kde-format
@@ -52,42 +52,42 @@ msgstr "Pokaż KRunnera"
 #: main.cpp:134 touch.cpp:128
 #, kde-format
 msgid "Activity Manager"
-msgstr "Zarządzanie aktywnościami"
+msgstr "Zarządzaj aktywnościami"
 
 #: main.cpp:135 touch.cpp:129
 #, kde-format
 msgid "Application Launcher"
-msgstr "Skróty do programów"
+msgstr "Pokaż uruchamiacza programów"
 
 #: main.cpp:139 touch.cpp:133
 #, kde-format
 msgid "Present Windows"
-msgstr "Przedstawienie okien"
+msgstr "Przedstaw okna"
 
 #: main.cpp:140 touch.cpp:134
 #, kde-format
 msgid "%1 - All Desktops"
-msgstr "%1 - Wszystkie pulpity"
+msgstr "%1 - ze wszystkich pulpitów"
 
 #: main.cpp:141 touch.cpp:135
 #, kde-format
 msgid "%1 - Current Desktop"
-msgstr "%1 - Bieżący pulpit"
+msgstr "%1 - z bieżącego pulpitu"
 
 #: main.cpp:142 touch.cpp:136
 #, kde-format
 msgid "%1 - Current Application"
-msgstr "%1 - Bieżący program"
+msgstr "%1 - z bieżącego programu"
 
 #: main.cpp:144 touch.cpp:138
 #, kde-format
 msgid "Toggle window switching"
-msgstr "Przełącznik okien"
+msgstr "Rozpocznij przełączanie okien głównym sposobem"
 
 #: main.cpp:145 touch.cpp:139
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr "Zamienny przełącznik okien"
+msgstr "Rozpocznij przełączanie okien drugim sposobem"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
@@ -95,9 +95,7 @@ msgstr "Zamienny przełącznik okien"
 msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
-msgstr ""
-"Wyzwala działanie, przy napieraniu wskaźnikiem myszy na daną krawędź lub "
-"narożnik ekranu"
+msgstr "Wykona działanie po najechaniu na krawędź ekranu lub w jego narożnik."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67

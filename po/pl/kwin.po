@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1662747 $
+# Version: $Revision: 1669356 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -10,13 +10,13 @@
 # Marta Rybczyńska <kde-i18n@rybczynska.net>, 2009, 2013.
 # Maciej Wikło <maciej.wiklo@wp.pl>, 2010.
 # Mirek Sabiniewicz <m.sabiniewicz@gmail.com>, 2010.
-# Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2023-01-21 10:05+0100\n"
+"PO-Revision-Date: 2024-01-07 13:00+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -31,7 +31,7 @@ msgstr ""
 ">\n"
 ">\n"
 ">\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
 
@@ -2166,51 +2166,51 @@ msgstr "Pokaż pulpit"
 
 #: tabbox/tabbox.cpp:521
 msgid "Walk Through Windows"
-msgstr "Przełączanie okien"
+msgstr "Przełącz okno"
 
 #: tabbox/tabbox.cpp:522
 msgid "Walk Through Windows (Reverse)"
-msgstr "Przełączanie okien (odwrotne)"
+msgstr "Przełącz okno (w drugą stronę)"
 
 #: tabbox/tabbox.cpp:523
 msgid "Walk Through Windows Alternative"
-msgstr "Alternatywne przełączanie okien"
+msgstr "Przełącz okno w drugi sposób"
 
 #: tabbox/tabbox.cpp:524
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "Alternatywne przełączanie okien (odwrotne)"
+msgstr "Przełącz okno w drugi sposób (w drugą stronę)"
 
 #: tabbox/tabbox.cpp:525
 msgid "Walk Through Windows of Current Application"
-msgstr "Przełączanie okien bieżącego programu"
+msgstr "Przełącz okno bieżącego programu"
 
 #: tabbox/tabbox.cpp:526
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Przełączanie okien bieżącego programu (odwrotne)"
+msgstr "Przełącz okno bieżącego programu (w drugą stronę)"
 
 #: tabbox/tabbox.cpp:527
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Alternatywne przełączanie okien bieżącego programu"
+msgstr "Przełącz okno bieżącego programu w drugi sposób"
 
 #: tabbox/tabbox.cpp:528
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Alternatywne przełączanie okien bieżącego programu (odwrotne)"
+msgstr "Przełącz okno bieżącego programu w drugi sposób (w drugą stronę)"
 
 #: tabbox/tabbox.cpp:529
 msgid "Walk Through Desktops"
-msgstr "Przełączanie pulpitów"
+msgstr "Przełącz pulpit"
 
 #: tabbox/tabbox.cpp:530
 msgid "Walk Through Desktops (Reverse)"
-msgstr "Przełączanie pulpitów (odwrotne)"
+msgstr "Przełącz pulpit (w drugą stronę)"
 
 #: tabbox/tabbox.cpp:531
 msgid "Walk Through Desktop List"
-msgstr "Przełączanie pulpitów z listy"
+msgstr "Przełącz na pulpit z listy"
 
 #: tabbox/tabbox.cpp:532
 msgid "Walk Through Desktop List (Reverse)"
-msgstr "Przełączanie pulpitów z listy (odwrotne)"
+msgstr "Przełącz na pulpit z listy (w drugą stronę)"
 
 #: tabbox/tabboxhandler.cpp:290
 #, kde-format
@@ -2249,7 +2249,7 @@ msgstr ""
 #: useractions.cpp:238
 #, kde-format
 msgid "&Move"
-msgstr "&Przenieś"
+msgstr "Z&mień położenie"
 
 #: useractions.cpp:243
 #, kde-format
@@ -2259,22 +2259,22 @@ msgstr "Zmień &rozmiar"
 #: useractions.cpp:248
 #, kde-format
 msgid "Keep &Above Others"
-msgstr "Z&awsze na wierzchu"
+msgstr "Wyświetlaj n&ad innymi"
 
 #: useractions.cpp:254
 #, kde-format
 msgid "Keep &Below Others"
-msgstr "Zawsze na &spodzie"
+msgstr "Wyświetlaj po&d innymi"
 
 #: useractions.cpp:260
 #, kde-format
 msgid "&Fullscreen"
-msgstr "Na całym &ekranie"
+msgstr "Wyświetlaj na całym &ekranie"
 
 #: useractions.cpp:266
 #, kde-format
 msgid "&Shade"
-msgstr "&Zwinięte"
+msgstr "&Zwiń"
 
 #: useractions.cpp:272
 #, kde-format
@@ -2450,12 +2450,12 @@ msgstr "Zwiń okno"
 #: useractions.cpp:997
 #, kde-format
 msgid "Move Window"
-msgstr "Przenieś okno"
+msgstr "Rozpocznij zmianę położenia okna"
 
 #: useractions.cpp:999
 #, kde-format
 msgid "Resize Window"
-msgstr "Zmień rozmiar okna"
+msgstr "Rozpocznij zmianę rozmiaru okna"
 
 #: useractions.cpp:1001
 #, kde-format
@@ -2470,82 +2470,82 @@ msgstr "Odwołaj okno"
 #: useractions.cpp:1005
 #, kde-format
 msgid "Toggle Window Raise/Lower"
-msgstr "Przełącz przywołanie/odwołanie okna"
+msgstr "Przywołaj/odwołaj okno"
 
 #: useractions.cpp:1007
 #, kde-format
 msgid "Make Window Fullscreen"
-msgstr "Uczyń oknem pełnoekranowym"
+msgstr "Wyświetlaj okno na całym ekranie"
 
 #: useractions.cpp:1009
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Wł./Wył. pasek nazwy i obramowanie"
+msgstr "Usuń pasek nazwy i obramowanie okna"
 
 #: useractions.cpp:1011
 #, kde-format
 msgid "Keep Window Above Others"
-msgstr "Okno zawsze na wierzchu"
+msgstr "Wyświetlaj okno nad innymi"
 
 #: useractions.cpp:1013
 #, kde-format
 msgid "Keep Window Below Others"
-msgstr "Okno zawsze pod spodem"
+msgstr "Wyświetlaj okno pod innymi"
 
 #: useractions.cpp:1015
 #, kde-format
 msgid "Activate Window Demanding Attention"
-msgstr "Uaktywnij okno żądające uwagi"
+msgstr "Przełącz na okno, żądające uwagi"
 
 #: useractions.cpp:1017
 #, kde-format
 msgid "Setup Window Shortcut"
-msgstr "Ustawienia skrótu okna"
+msgstr "Ustaw skrót do okna"
 
 #: useractions.cpp:1019
 #, kde-format
 msgid "Move Window to the Center"
-msgstr "Przenieś okno na środek"
+msgstr "Przesuń okno na środek"
 
 #: useractions.cpp:1021
 #, kde-format
 msgid "Move Window Right"
-msgstr "Przenieś okno w prawo"
+msgstr "Dosuń okno do prawej"
 
 #: useractions.cpp:1023
 #, kde-format
 msgid "Move Window Left"
-msgstr "Przenieś okno w lewo"
+msgstr "Dosuń okno do lewej"
 
 #: useractions.cpp:1025
 #, kde-format
 msgid "Move Window Up"
-msgstr "Przenieś okno wyżej"
+msgstr "Dosuń okno do góry"
 
 #: useractions.cpp:1027
 #, kde-format
 msgid "Move Window Down"
-msgstr "Przenieś okno niżej"
+msgstr "Dosuń okno do dołu"
 
 #: useractions.cpp:1029
 #, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Rozszerz okna w poziomie"
+msgstr "Rozszerz okno w poziomie"
 
 #: useractions.cpp:1031
 #, kde-format
 msgid "Expand Window Vertically"
-msgstr "Rozszerz okna w pionie"
+msgstr "Rozszerz okno w pionie"
 
 #: useractions.cpp:1033
 #, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Skurcz okna w poziomie"
+msgstr "Skurcz okno w poziomie"
 
 #: useractions.cpp:1035
 #, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Skurcz okna w pionie"
+msgstr "Skurcz okno w pionie"
 
 #: useractions.cpp:1037
 #, kde-format
@@ -2735,7 +2735,7 @@ msgstr "Podejrzyj pulpit"
 #: useractions.cpp:1133
 #, kde-format
 msgid "Kill Window"
-msgstr "Zniszcz okno"
+msgstr "Wymuś zamknięcie okna"
 
 #: useractions.cpp:1134
 #, kde-format
