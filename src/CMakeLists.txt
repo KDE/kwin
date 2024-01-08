@@ -512,7 +512,29 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/core COMPONENT Devel)
 
 install(FILES
+    utils/abstract_opengl_context_attribute_builder.h
+    utils/c_ptr.h
+    utils/common.h
+    utils/damagejournal.h
+    utils/drm_format_helper.h
     utils/edid.h
+    utils/egl_context_attribute_builder.h
+    utils/executable_path.h
+    utils/filedescriptor.h
+    utils/kernel.h
+    utils/memorymap.h
+    utils/orientationsensor.h
+    utils/ramfile.h
+    utils/realtime.h
+    utils/resource.h
+    utils/serviceutils.h
+    utils/softwarevsyncmonitor.h
+    utils/subsurfacemonitor.h
+    utils/udev.h
+    utils/version.h
+    utils/vsyncmonitor.h
+    utils/xcbutils.h
+    utils/xcursortheme.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
 install(FILES
