@@ -60,16 +60,6 @@ QVector2D Colorimetry::xyzToXY(QVector3D xyz)
     return QVector2D(xyz.x() / (xyz.x() + xyz.y() + xyz.z()), xyz.y() / (xyz.x() + xyz.y() + xyz.z()));
 }
 
-QMatrix3x3 Colorimetry::toXYZ() const
-{
-    const auto r_xyz = xyToXYZ(red);
-    const auto g_xyz = xyToXYZ(green);
-    const auto b_xyz = xyToXYZ(blue);
-    const auto w_xyz = xyToXYZ(white);
-    const auto component_scale = inverse(matrixFromColumns(r_xyz, g_xyz, b_xyz)) * w_xyz;
-    return matrixFromColumns(r_xyz * component_scale.x(), g_xyz * component_scale.y(), b_xyz * component_scale.z());
-}
-
 QMatrix3x3 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint)
 {
     static const QMatrix3x3 bradford = []() {
@@ -98,6 +88,9 @@ QMatrix3x3 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
         ret(2, 2) = 0.9684867;
         return ret;
     }();
+    if (sourceWhitepoint == destinationWhitepoint) {
+        return QMatrix3x3{};
+    }
     const QVector3D factors = (bradford * xyToXYZ(destinationWhitepoint)) / (bradford * xyToXYZ(sourceWhitepoint));
     QMatrix3x3 adaptation{};
     adaptation(0, 0) = factors.x();
@@ -106,51 +99,104 @@ QMatrix3x3 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
     return inverseBradford * adaptation * bradford;
 }
 
+QMatrix3x3 Colorimetry::calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
+{
+    const auto component_scale = inverse(matrixFromColumns(red, green, blue)) * white;
+    return matrixFromColumns(red * component_scale.x(), green * component_scale.y(), blue * component_scale.z());
+}
+
+Colorimetry::Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white)
+    : m_red(red)
+    , m_green(green)
+    , m_blue(blue)
+    , m_white(white)
+    , m_toXYZ(calculateToXYZMatrix(xyToXYZ(red), xyToXYZ(green), xyToXYZ(blue), xyToXYZ(white)))
+    , m_fromXYZ(inverse(m_toXYZ))
+{
+}
+
+Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
+    : m_red(xyzToXY(red))
+    , m_green(xyzToXY(green))
+    , m_blue(xyzToXY(blue))
+    , m_white(xyzToXY(white))
+    , m_toXYZ(calculateToXYZMatrix(red, green, blue, white))
+    , m_fromXYZ(inverse(m_toXYZ))
+{
+}
+
+const QMatrix3x3 &Colorimetry::toXYZ() const
+{
+    return m_toXYZ;
+}
+
+const QMatrix3x3 &Colorimetry::fromXYZ() const
+{
+    return m_fromXYZ;
+}
+
 QMatrix3x3 Colorimetry::toOther(const Colorimetry &other) const
 {
     // rendering intent is relative colorimetric, so adapt to the different whitepoint
-    if (white == other.white) {
-        return inverse(other.toXYZ()) * toXYZ();
-    } else {
-        return inverse(other.toXYZ()) * chromaticAdaptationMatrix(this->white, other.white) * toXYZ();
-    }
+    return other.fromXYZ() * chromaticAdaptationMatrix(this->white(), other.white()) * toXYZ();
 }
 
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
 {
-    const auto mat = chromaticAdaptationMatrix(this->white, newWhitepoint);
+    const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint);
     return Colorimetry{
-        .red = xyzToXY(mat * xyToXYZ(red)),
-        .green = xyzToXY(mat * xyToXYZ(green)),
-        .blue = xyzToXY(mat * xyToXYZ(blue)),
-        .white = newWhitepoint,
-        .name = std::nullopt,
+        xyzToXY(mat * xyToXYZ(red())),
+        xyzToXY(mat * xyToXYZ(green())),
+        xyzToXY(mat * xyToXYZ(blue())),
+        newWhitepoint,
     };
 }
 
 bool Colorimetry::operator==(const Colorimetry &other) const
 {
-    return (name || other.name) ? (name == other.name)
-                                : (red == other.red && green == other.green && blue == other.blue && white == other.white);
+    return red() == other.red() && green() == other.green() && blue() == other.blue() && white() == other.white();
+}
+
+bool Colorimetry::operator==(NamedColorimetry name) const
+{
+    return *this == fromName(name);
+}
+
+const QVector2D &Colorimetry::red() const
+{
+    return m_red;
+}
+
+const QVector2D &Colorimetry::green() const
+{
+    return m_green;
+}
+
+const QVector2D &Colorimetry::blue() const
+{
+    return m_blue;
+}
+
+const QVector2D &Colorimetry::white() const
+{
+    return m_white;
 }
 
 static const Colorimetry BT709 = Colorimetry{
-    .red = {0.64, 0.33},
-    .green = {0.30, 0.60},
-    .blue = {0.15, 0.06},
-    .white = {0.3127, 0.3290},
-    .name = NamedColorimetry::BT709,
+    QVector2D{0.64, 0.33},
+    QVector2D{0.30, 0.60},
+    QVector2D{0.15, 0.06},
+    QVector2D{0.3127, 0.3290},
 };
 
 static const Colorimetry BT2020 = Colorimetry{
-    .red = {0.708, 0.292},
-    .green = {0.170, 0.797},
-    .blue = {0.131, 0.046},
-    .white = {0.3127, 0.3290},
-    .name = NamedColorimetry::BT2020,
+    QVector2D{0.708, 0.292},
+    QVector2D{0.170, 0.797},
+    QVector2D{0.131, 0.046},
+    QVector2D{0.3127, 0.3290},
 };
 
-Colorimetry Colorimetry::fromName(NamedColorimetry name)
+const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
 {
     switch (name) {
     case NamedColorimetry::BT709:
@@ -161,26 +207,15 @@ Colorimetry Colorimetry::fromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
-Colorimetry Colorimetry::fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
-{
-    return Colorimetry{
-        .red = xyzToXY(red),
-        .green = xyzToXY(green),
-        .blue = xyzToXY(blue),
-        .white = xyzToXY(white),
-        .name = std::nullopt,
-    };
-}
-
 const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0);
 
 static Colorimetry sRGBColorimetry(double factor)
 {
     return Colorimetry{
-        .red = BT709.red * (1 - factor) + BT2020.red * factor,
-        .green = BT709.green * (1 - factor) + BT2020.green * factor,
-        .blue = BT709.blue * (1 - factor) + BT2020.blue * factor,
-        .white = BT709.white, // whitepoint is the same
+        BT709.red() * (1 - factor) + BT2020.red() * factor,
+        BT709.green() * (1 - factor) + BT2020.green() * factor,
+        BT709.blue() * (1 - factor) + BT2020.blue() * factor,
+        BT709.white(), // whitepoint is the same
     };
 }
 

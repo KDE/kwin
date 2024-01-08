@@ -128,21 +128,14 @@ Edid::Edid(const void *data, uint32_t size)
     // colorimetry and HDR metadata
     const auto chromaticity = di_edid_get_chromaticity_coords(edid);
     if (chromaticity) {
-        m_colorimetry = {
-            .red = {chromaticity->red_x, chromaticity->red_y},
-            .green = {chromaticity->green_x, chromaticity->green_y},
-            .blue = {chromaticity->blue_x, chromaticity->blue_y},
-            .white = {chromaticity->white_x, chromaticity->white_y},
+        m_colorimetry = Colorimetry{
+            QVector2D{chromaticity->red_x, chromaticity->red_y},
+            QVector2D{chromaticity->green_x, chromaticity->green_y},
+            QVector2D{chromaticity->blue_x, chromaticity->blue_y},
+            QVector2D{chromaticity->white_x, chromaticity->white_y},
         };
     } else {
-        // assume sRGB
-        m_colorimetry = {
-            .red = {0.64, 0.33},
-            .green = {0.30, 0.60},
-            .blue = {0.15, 0.06},
-            .white = {0.3127, 0.3290},
-            .name = NamedColorimetry::BT709,
-        };
+        m_colorimetry.reset();
     }
 
     const di_edid_cta *cta = nullptr;
@@ -246,7 +239,7 @@ QString Edid::hash() const
     return m_hash;
 }
 
-Colorimetry Edid::colorimetry() const
+std::optional<Colorimetry> Edid::colorimetry() const
 {
     return m_colorimetry;
 }

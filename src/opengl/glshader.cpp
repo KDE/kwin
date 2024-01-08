@@ -441,7 +441,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
 
 bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst)
 {
-    const auto &srcColorimetry = src.colorimetry().name == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.colorimetry();
+    const auto &srcColorimetry = src.colorimetry() == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.colorimetry();
     return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, srcColorimetry.toOther(dst.colorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))

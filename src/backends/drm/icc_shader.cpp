@@ -63,7 +63,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
         std::unique_ptr<GlLookUpTable3D> C;
         std::unique_ptr<GlLookUpTable> A;
         if (const IccProfile::BToATagData *tag = profile->BtToATag()) {
-            matrix1 = Colorimetry::chromaticAdaptationMatrix(profile->colorimetry().white, D50) * profile->colorimetry().toXYZ();
+            matrix1 = Colorimetry::chromaticAdaptationMatrix(profile->colorimetry().white(), D50) * profile->colorimetry().toXYZ();
             if (tag->B) {
                 const auto sample = [&tag](size_t x) {
                     const float relativeX = x / double(lutSize - 1);

@@ -76,10 +76,10 @@ void FrogColorManagementSurfaceV1::setPreferredColorDescription(const ColorDescr
 {
     const auto &color = colorDescription.colorimetry();
     send_preferred_metadata(kwinToFrogTransferFunction(colorDescription.transferFunction()),
-                            encodePrimary(color.red.x()), encodePrimary(color.red.y()),
-                            encodePrimary(color.green.x()), encodePrimary(color.green.y()),
-                            encodePrimary(color.blue.x()), encodePrimary(color.blue.y()),
-                            encodePrimary(color.white.x()), encodePrimary(color.white.y()),
+                            encodePrimary(color.red().x()), encodePrimary(color.red().y()),
+                            encodePrimary(color.green().x()), encodePrimary(color.green().y()),
+                            encodePrimary(color.blue().x()), encodePrimary(color.blue().y()),
+                            encodePrimary(color.white().x()), encodePrimary(color.white().y()),
                             std::round(colorDescription.maxHdrHighlightBrightness()),
                             std::round(colorDescription.minHdrBrightness() / 0.0001),
                             std::round(colorDescription.maxFrameAverageBrightness()));

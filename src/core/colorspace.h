@@ -27,8 +27,7 @@ enum class NamedColorimetry {
 class KWIN_EXPORT Colorimetry
 {
 public:
-    static Colorimetry fromName(NamedColorimetry name);
-    static Colorimetry fromXYZ(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+    static const Colorimetry &fromName(NamedColorimetry name);
     /**
      * @returns the XYZ representation of the xyY color passed in. Y is assumed to be one
      */
@@ -42,26 +41,43 @@ public:
      */
     static QMatrix3x3 chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint);
 
+    static QMatrix3x3 calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+
+    explicit Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white);
+    explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+
     /**
      * @returns a matrix that transforms from the linear RGB representation of colors in this colorimetry to the XYZ representation
      */
-    QMatrix3x3 toXYZ() const;
+    const QMatrix3x3 &toXYZ() const;
+    /**
+     * @returns a matrix that transforms from the XYZ representation to the linear RGB representation of colors in this colorimetry
+     */
+    const QMatrix3x3 &fromXYZ() const;
     /**
      * @returns a matrix that transforms from linear RGB in this colorimetry to linear RGB in the other colorimetry
      * the rendering intent is relative colorimetric
      */
     QMatrix3x3 toOther(const Colorimetry &colorimetry) const;
     bool operator==(const Colorimetry &other) const;
+    bool operator==(NamedColorimetry name) const;
     /**
      * @returns this colorimetry, adapted to the new whitepoint using the Bradford transform
      */
     Colorimetry adaptedTo(QVector2D newWhitepoint) const;
 
-    QVector2D red;
-    QVector2D green;
-    QVector2D blue;
-    QVector2D white;
-    std::optional<NamedColorimetry> name;
+    const QVector2D &red() const;
+    const QVector2D &green() const;
+    const QVector2D &blue() const;
+    const QVector2D &white() const;
+
+private:
+    QVector2D m_red;
+    QVector2D m_green;
+    QVector2D m_blue;
+    QVector2D m_white;
+    QMatrix3x3 m_toXYZ;
+    QMatrix3x3 m_fromXYZ;
 };
 
 /**
