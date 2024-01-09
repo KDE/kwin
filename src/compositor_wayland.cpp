@@ -272,8 +272,11 @@ void WaylandCompositor::addOutput(Output *output)
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);
 
-    static bool valid;
-    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &valid) == 1 && valid;
+    // Software cursor is forced for intel devices because there are screen stuttering issues with hardware cursor,
+    // possibly a kernel driver bug. Remove the workaround when https://gitlab.freedesktop.org/drm/intel/-/issues/9571 is fixed.
+    static bool forceSoftwareCursorIsSet;
+    static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &forceSoftwareCursorIsSet) == 1
+        || (!forceSoftwareCursorIsSet && GLPlatform::instance() && GLPlatform::instance()->isIntel());
 
     auto updateCursorLayer = [this, output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();
