@@ -32,7 +32,8 @@ CursorDelegateOpenGL::~CursorDelegateOpenGL()
 
 void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion &region)
 {
-    if (!region.intersects(layer()->mapToGlobal(layer()->rect()).toAlignedRect())) {
+    const QRegion dirty = region.intersected(layer()->mapToGlobal(layer()->rect()).toAlignedRect());
+    if (dirty.isEmpty()) {
         return;
     }
 
@@ -64,6 +65,13 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
+    const bool clipping = region != infiniteRegion();
+    const QRegion clipRegion = clipping ? RenderViewport(m_output->fractionalGeometry(), m_output->scale(), renderTarget).mapToRenderTarget(dirty) : infiniteRegion();
+
+    if (clipping) {
+        glEnable(GL_SCISSOR_TEST);
+    }
+
     // Don't need to call GLVertexBuffer::beginFrame() and GLVertexBuffer::endOfFrame() because
     // the GLVertexBuffer::streamingBuffer() is not being used when painting cursor.
     glEnable(GL_BLEND);
@@ -71,8 +79,12 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_texture->render(region, cursorRect.size());
+    m_texture->render(clipRegion, cursorRect.size(), clipping);
     glDisable(GL_BLEND);
+
+    if (clipping) {
+        glDisable(GL_SCISSOR_TEST);
+    }
 
     GLFramebuffer::popFramebuffer();
 }
