@@ -461,7 +461,7 @@ Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const
         return Qt::Edge();
     }
 
-    if (d->state.exclusiveEdge > 0) {
+    if (const Qt::Edge edge = d->state.anchor & d->state.exclusiveEdge) {
         switch (d->state.exclusiveEdge) {
         case LayerSurfaceV1InterfacePrivate::anchor_left:
             return Qt::LeftEdge;
