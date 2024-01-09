@@ -7,6 +7,7 @@
 #include "scene/cursordelegate_opengl.h"
 #include "compositor.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "core/renderlayer.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
@@ -36,11 +37,10 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     }
 
     // Show the rendered cursor scene on the screen.
-    const QRectF cursorRect = layer()->mapToGlobal(layer()->rect());
-    const double scale = m_output->scale();
+    const QRect cursorRect = snapToPixelGrid(scaledRect(layer()->mapToGlobal(layer()->rect()), m_output->scale()));
 
     // Render the cursor scene in an offscreen render target.
-    const QSize bufferSize = (Cursors::self()->currentCursor()->rect().size() * scale).toSize();
+    const QSize bufferSize = cursorRect.size();
     if (!m_texture || m_texture->size() != bufferSize || m_texture->internalFormat() != renderTarget.framebuffer()->colorAttachment()->internalFormat()) {
         m_texture = GLTexture::allocate(renderTarget.framebuffer()->colorAttachment()->internalFormat(), bufferSize);
         if (!m_texture) {
@@ -59,7 +59,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     QMatrix4x4 mvp = renderTarget.transformation();
     mvp.ortho(QRectF(QPointF(0, 0), m_output->transform().map(renderTarget.size())));
-    mvp.translate(std::round(cursorRect.x() * scale), std::round(cursorRect.y() * scale));
+    mvp.translate(cursorRect.x(), cursorRect.y());
 
     GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
@@ -71,7 +71,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
 
     ShaderBinder binder(ShaderTrait::MapTexture);
     binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
-    m_texture->render(region, cursorRect.size(), scale);
+    m_texture->render(region, cursorRect.size());
     glDisable(GL_BLEND);
 
     GLFramebuffer::popFramebuffer();
