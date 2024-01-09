@@ -187,10 +187,6 @@
       <arg name="zone" type="int"/>
     </request>
 
-    <request name="set_exclusive_edge">
-      <arg name="edge" type="uint"/>
-    </request>
-
     <request name="set_margin">
       <description summary="sets a margin from the anchor point">
         Requests that the surface be placed some distance away from the anchor
@@ -324,6 +320,19 @@
         Layer is double-buffered, see wl_surface.commit.
       </description>
       <arg name="layer" type="uint" enum="zwlr_layer_shell_v1.layer" summary="layer to move this surface to"/>
+    </request>
+
+    <!-- Version 5 additions -->
+
+    <request name="set_exclusive_edge" since="5">
+      <description summary="set the edge the exclusive zone will be applied to">
+        Requests an edge for the exclusive zone to apply.
+        The edge must be one the surface is anchored to, otherwise a protocol error will be raised.
+        The exclusive edge will be automatically deduced from anchor points when possible, but when when
+        the surface is anchored to a corner, it will be necessary to set it explicitly to disambiguate,
+        as is not possible to deduce which one of the two corner edges should be used.
+      </description>
+      <arg name="edge" type="uint"/>
     </request>
   </interface>
 </protocol>
