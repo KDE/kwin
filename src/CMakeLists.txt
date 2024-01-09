@@ -502,13 +502,37 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
 
 install(FILES
+    core/colorlut.h
+    core/colorlut3d.h
+    core/colorpipelinestage.h
     core/colorspace.h
+    core/colortransformation.h
+    core/gbmgraphicsbufferallocator.h
+    core/graphicsbuffer.h
+    core/graphicsbufferallocator.h
+    core/graphicsbufferview.h
+    core/iccprofile.h
+    core/inputbackend.h
+    core/inputdevice.h
     core/output.h
+    core/outputbackend.h
+    core/outputconfiguration.h
+    core/outputlayer.h
+    core/overlaywindow.h
     core/pixelgrid.h
     core/renderbackend.h
+    core/renderjournal.h
+    core/renderlayer.h
+    core/renderlayerdelegate.h
     core/renderloop.h
+    core/renderloop_p.h
     core/rendertarget.h
     core/renderviewport.h
+    core/session.h
+    core/session_consolekit.h
+    core/session_logind.h
+    core/session_noop.h
+    core/shmgraphicsbufferallocator.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/core COMPONENT Devel)
 
 install(FILES
