@@ -18,7 +18,7 @@
 
 namespace KWin
 {
-static const int s_version = 3;
+static const int s_version = 5;
 
 class LayerShellV1InterfacePrivate : public QtWaylandServer::zwlr_layer_shell_v1
 {
