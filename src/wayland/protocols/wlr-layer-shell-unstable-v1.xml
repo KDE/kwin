@@ -327,10 +327,12 @@
     <request name="set_exclusive_edge" since="5">
       <description summary="set the edge the exclusive zone will be applied to">
         Requests an edge for the exclusive zone to apply.
-        The edge must be one the surface is anchored to, otherwise a protocol error will be raised.
-        The exclusive edge will be automatically deduced from anchor points when possible, but when when
-        the surface is anchored to a corner, it will be necessary to set it explicitly to disambiguate,
-        as is not possible to deduce which one of the two corner edges should be used.
+        The edge must be one the surface is anchored to, otherwise a protocol
+        error will be raised.
+        The exclusive edge will be automatically deduced from anchor points
+        when possible, but when when the surface is anchored to a corner,
+        it will be necessary to set it explicitly to disambiguate, as is not
+        possible to deduce which one of the two corner edges should be used.
       </description>
       <arg name="edge" type="uint"/>
     </request>
