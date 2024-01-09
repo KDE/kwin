@@ -344,6 +344,10 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveEdge.has_value()) {
         state.exclusiveEdge = commit->exclusiveEdge.value();
     }
+    // We check unconditionally as either of the two states might have changed
+    if (!(state.anchor & state.exclusiveEdge)) {
+        wl_resource_post_error(resource()->handle, error_invalid_anchor, "Exclusive edge invalid for anchor");
+    }
     if (commit->acceptsFocus.has_value()) {
         state.acceptsFocus = commit->acceptsFocus.value();
     }
