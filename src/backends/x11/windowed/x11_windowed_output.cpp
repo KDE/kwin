@@ -106,7 +106,7 @@ void X11WindowedCursor::update(const QImage &image, const QPointF &hotspot)
         // right now on X we only have one scale between all screens, and we know we will have at least one screen
         const qreal outputScale = 1;
         const QSize targetSize = image.size() * outputScale / image.devicePixelRatio();
-        const QImage img = image.scaled(targetSize, Qt::KeepAspectRatio);
+        const QImage img = image.scaled(targetSize, Qt::KeepAspectRatio).convertedTo(QImage::Format_ARGB32_Premultiplied);
 
         xcb_create_pixmap(connection, 32, pix, backend->screen()->root, img.width(), img.height());
         xcb_create_gc(connection, gc, pix, 0, nullptr);
