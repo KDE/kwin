@@ -131,6 +131,7 @@ integrationTest(NAME testXwaylandServerRestart SRCS xwaylandserver_restart_test.
 integrationTest(NAME testFakeInput SRCS fakeinput_test.cpp)
 integrationTest(NAME testSecurityContext SRCS security_context_test.cpp)
 integrationTest(NAME testStickyKeys SRCS sticky_keys_test.cpp)
+integrationTest(NAME testXinerama SRCS xinerama_test.cpp)
 
 qt_add_dbus_interfaces(DBUS_SRCS ${CMAKE_BINARY_DIR}/src/org.kde.kwin.VirtualKeyboard.xml)
 integrationTest(NAME testVirtualKeyboardDBus SRCS test_virtualkeyboard_dbus.cpp ${DBUS_SRCS})
