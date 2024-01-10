@@ -67,7 +67,7 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     GLFramebuffer::pushFramebuffer(fbo);
 
     const bool clipping = region != infiniteRegion();
-    const QRegion clipRegion = clipping ? RenderViewport(m_output->fractionalGeometry(), m_output->scale(), renderTarget).mapToRenderTarget(dirty) : infiniteRegion();
+    const QRegion clipRegion = clipping ? RenderViewport(m_output->rectF(), m_output->scale(), renderTarget).mapToRenderTarget(dirty) : infiniteRegion();
 
     if (clipping) {
         glEnable(GL_SCISSOR_TEST);

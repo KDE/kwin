@@ -257,9 +257,9 @@ void WaylandCompositor::addOutput(Output *output)
     }
     auto workspaceLayer = new RenderLayer(output->renderLoop());
     workspaceLayer->setDelegate(std::make_unique<SceneDelegate>(m_scene.get(), output));
-    workspaceLayer->setGeometry(output->rect());
+    workspaceLayer->setGeometry(output->rectF());
     connect(output, &Output::geometryChanged, workspaceLayer, [output, workspaceLayer]() {
-        workspaceLayer->setGeometry(output->rect());
+        workspaceLayer->setGeometry(output->rectF());
     });
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
