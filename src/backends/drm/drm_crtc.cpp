@@ -11,10 +11,8 @@
 #include "drm_buffer.h"
 #include "drm_commit.h"
 #include "drm_gpu.h"
-#include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pointer.h"
-#include <cerrno>
 
 namespace KWin
 {

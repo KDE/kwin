@@ -11,7 +11,7 @@
 
 #include <QObject>
 
-#include "kcmoduledata.h"
+#include <KCModuleData>
 
 class KWinCompositingSetting;
 

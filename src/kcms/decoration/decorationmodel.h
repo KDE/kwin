@@ -5,8 +5,6 @@
 */
 #pragma once
 
-#include "utils.h"
-
 #include <KDecoration2/DecorationThemeProvider>
 #include <QAbstractListModel>
 

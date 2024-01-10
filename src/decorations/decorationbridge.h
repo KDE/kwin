@@ -8,14 +8,11 @@
 */
 #pragma once
 
-#include "effect/globals.h"
-
+#include "kwin_export.h"
 #include <KDecoration2/Private/DecorationBridge>
-
 #include <QObject>
 
 class KPluginFactory;
-
 namespace KDecoration2
 {
 class DecorationSettings;

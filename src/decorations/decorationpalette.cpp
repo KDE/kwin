@@ -11,7 +11,6 @@
 */
 
 #include "decorationpalette.h"
-#include "decorations_logging.h"
 
 #include <KConfigGroup>
 

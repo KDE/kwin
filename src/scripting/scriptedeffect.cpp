@@ -9,8 +9,9 @@
 */
 
 #include "scriptedeffect.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
 #include "scripting_logging.h"
-#include "scriptingutils.h"
 #include "workspace_wrapper.h"
 
 #include "core/output.h"
@@ -19,7 +20,6 @@
 #include "screenedge.h"
 #include "workspace.h"
 // KDE
-#include "opengl/glutils.h"
 #include <KConfigGroup>
 #include <KGlobalAccel>
 #include <KPluginMetaData>

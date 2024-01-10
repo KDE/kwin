@@ -11,7 +11,6 @@
 #include "opengl/gllut3D.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
-#include "opengl/gltexture.h"
 
 namespace KWin
 {

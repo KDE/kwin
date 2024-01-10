@@ -11,8 +11,6 @@
 #include "effect/anidata_p.h"
 #include "effect/effecthandler.h"
 
-#include "logging_p.h"
-
 namespace KWin
 {
 

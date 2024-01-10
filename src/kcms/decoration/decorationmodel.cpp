@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
 */
 #include "decorationmodel.h"
+#include "utils.h"
 // KDecoration2
 #include <KDecoration2/Decoration>
 #include <KDecoration2/DecorationSettings>

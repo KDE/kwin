@@ -9,8 +9,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-// KWin
-#include "effect/globals.h"
 // Qt
 #include <QObject>
 // xcb

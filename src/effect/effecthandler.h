@@ -29,11 +29,7 @@
 
 #include <netwm.h>
 
-#include <climits>
-#include <cmath>
 #include <functional>
-#include <optional>
-#include <span>
 
 class KConfigGroup;
 class QFont;
