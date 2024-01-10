@@ -119,8 +119,7 @@ bool DecorationBridge::initPlugin()
         return false;
     }
     qCDebug(KWIN_DECORATIONS) << "Trying to load decoration plugin: " << metaData.fileName();
-    auto factoryResult = KPluginFactory::loadFactory(metaData);
-    if (factoryResult) {
+    if (auto factoryResult = KPluginFactory::loadFactory(metaData)) {
         m_factory.reset(factoryResult.plugin);
         loadMetaData(metaData.rawData());
         return true;
@@ -241,7 +240,7 @@ KDecoration2::Decoration *DecorationBridge::createDecoration(Window *window)
     if (!m_theme.isEmpty()) {
         args.insert(QStringLiteral("theme"), m_theme);
     }
-    auto deco = m_factory->create<KDecoration2::Decoration>(window, QVariantList({args}));
+    auto deco = m_factory->create<KDecoration2::Decoration>(window, QVariantList{args});
     deco->setSettings(m_settings);
     deco->init();
     return deco;
