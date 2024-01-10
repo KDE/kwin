@@ -212,8 +212,8 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME cursor-shape-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL protocols/qt-toplevel-drag-v1.xml
-    BASENAME qt-toplevel-drag-v1
+    PROTOCOL protocols/xdg-toplevel-drag-v1.xml
+    BASENAME xdg-toplevel-drag-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-color-management-v1.xml
