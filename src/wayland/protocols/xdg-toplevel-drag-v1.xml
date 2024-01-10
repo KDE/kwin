@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<protocol name="qt_toplevel_drag_v1">
+<protocol name="xdg_toplevel_drag_v1">
 
   <copyright>
     Copyright 2023 David Redondo  &lt;kde@david-redondo.de&gt;
@@ -24,7 +24,7 @@
     DEALINGS IN THE SOFTWARE.
   </copyright>
 
-  <interface name="qt_toplevel_drag_manager_v1" version="1">
+  <interface name="xdg_toplevel_drag_manager_v1" version="1">
     <description summary="Move a window during a drag">
       This protocol enhances normal drag and drop with the ability to move a
       window at the same time. This allows having detachable parts of a window
@@ -33,16 +33,16 @@
 
       A typical workflow would be when the user starts dragging on top of a
       detachable part of a window, the client would create a wl_data_source and
-      a qt_toplevel_drag_v1 object and start the drag as normal via
+      a xdg_toplevel_drag_v1 object and start the drag as normal via
       wl_data_device.start_drag. Once the client determines that the detachable
       window contents should be detached from the originating window, it creates
       a new xdg_toplevel with these contents and issues a
-      qt_toplevel_drag_v1.attach request. From now on the new window is moved
+      xdg_toplevel_drag_v1.attach request. From now on the new window is moved
       by the compositor during the drag as if the client called
       xdg_toplevel.move.
 
       Dragging an existing window is similar. The client creates a
-      qt_toplevel_drag_v1 object and attaches the existing toplevel before
+      xdg_toplevel_drag_v1 object and attaches the existing toplevel before
       starting the drag.
 
       Clients use the existing drag and drop mechanism to detect when a window
@@ -60,9 +60,9 @@
       only be done by creating a new major version of the extension.
     </description>
 
-    <request name="get_qt_toplevel_drag">
-      <description summary="get an qt_toplevel_drag for a wl_data_source">
-        Create an qt_toplevel_drag for a drag and drop operation that is going
+    <request name="get_xdg_toplevel_drag">
+      <description summary="get an xdg_toplevel_drag for a wl_data_source">
+        Create an xdg_toplevel_drag for a drag and drop operation that is going
         to be started with data_source.
 
         This request can only be made on sources used in drag-and-drop, so it
@@ -71,17 +71,17 @@
         wl_data_device.set_selection will raise an invalid_source error.
 
         Destroying data_source while a toplevel is attached to the
-        qt_toplevel_drag is undefined.
+        xdg_toplevel_drag is undefined.
       </description>
 
-      <arg name="id" type="new_id" interface="qt_toplevel_drag_v1"/>
+      <arg name="id" type="new_id" interface="xdg_toplevel_drag_v1"/>
       <arg name="data_source" type="object" interface="wl_data_source"/>
     </request>
 
     <request name="destroy" type="destructor">
-      <description summary="destroy the qt_toplevel_drag_manager_v1 object">
-        Destroy this qt_toplevel_drag_manager_v1 object. Other objects,
-        including qt_toplevel_drag_v1 objects created by this factory, are not
+      <description summary="destroy the xdg_toplevel_drag_manager_v1 object">
+        Destroy this xdg_toplevel_drag_manager_v1 object. Other objects,
+        including xdg_toplevel_drag_v1 objects created by this factory, are not
         affected by this request.
       </description>
     </request>
@@ -92,7 +92,7 @@
     </enum>
   </interface>
 
-  <interface name="qt_toplevel_drag_v1" version="1">
+  <interface name="xdg_toplevel_drag_v1" version="1">
     <description summary="Object representing a toplevel move during a drag">
     </description>
 
@@ -119,8 +119,8 @@
     </request>
 
     <request name="destroy" type="destructor">
-      <description summary="destroy an qt_toplevel_drag_v1 object">
-        Destroy this qt_toplevel_drag_v1 object. This request must only be
+      <description summary="destroy an xdg_toplevel_drag_v1 object">
+        Destroy this xdg_toplevel_drag_v1 object. This request must only be
         called after the underlying wl_data_source drag has ended, as indicated
         by the dnd_drop_performed or cancelled events. In any other case an
         ongoing_drag error is raised.

@@ -13,7 +13,7 @@
 #include "utils/resource.h"
 #include "xdgshell.h"
 
-#include <qwayland-server-qt-toplevel-drag-v1.h>
+#include <qwayland-server-xdg-toplevel-drag-v1.h>
 
 #include <QPointer>
 
@@ -23,11 +23,11 @@ namespace KWin
 {
 constexpr int version = 1;
 
-class XdgToplevelDragV1InterfacePrivate : public QtWaylandServer::qt_toplevel_drag_v1
+class XdgToplevelDragV1InterfacePrivate : public QtWaylandServer::xdg_toplevel_drag_v1
 {
 public:
     XdgToplevelDragV1InterfacePrivate(wl_resource *resource, XdgToplevelDragV1Interface *q)
-        : qt_toplevel_drag_v1(resource)
+        : xdg_toplevel_drag_v1(resource)
         , q(q)
     {
     }
@@ -37,7 +37,7 @@ public:
     QPoint pos;
 
 private:
-    void toplevel_drag_v1_attach(Resource *resource, wl_resource *toplevelResource, int32_t x_offset, int32_t y_offset) override
+    void xdg_toplevel_drag_v1_attach(Resource *resource, wl_resource *toplevelResource, int32_t x_offset, int32_t y_offset) override
     {
         if (toplevel) {
             wl_resource_post_error(resource->handle, error_toplevel_attached, "Valid toplevel already attached");
@@ -51,11 +51,11 @@ private:
         Q_EMIT q->toplevelChanged();
     }
 
-    void toplevel_drag_v1_destroy_resource(Resource *resource) override
+    void xdg_toplevel_drag_v1_destroy_resource(Resource *resource) override
     {
         delete q;
     }
-    void toplevel_drag_v1_destroy(Resource *resource) override
+    void xdg_toplevel_drag_v1_destroy(Resource *resource) override
     {
         if (!dataSource || dataSource->isDndCancelled() || dataSource->isDropPerformed()) {
             wl_resource_destroy(resource->handle);
@@ -89,26 +89,26 @@ QPoint XdgToplevelDragV1Interface::offset() const
     return d->pos;
 }
 
-class XdgToplevelDragManagerV1InterfacePrivate : public QtWaylandServer::qt_toplevel_drag_manager_v1
+class XdgToplevelDragManagerV1InterfacePrivate : public QtWaylandServer::xdg_toplevel_drag_manager_v1
 {
 public:
     XdgToplevelDragManagerV1InterfacePrivate(XdgToplevelDragManagerV1Interface *q, Display *display)
-        : qt_toplevel_drag_manager_v1(*display, version)
+        : xdg_toplevel_drag_manager_v1(*display, version)
         , q(q)
     {
     }
 
 protected:
-    void toplevel_drag_manager_v1_destroy(Resource *resource) override
+    void xdg_toplevel_drag_manager_v1_destroy(Resource *resource) override
     {
         wl_resource_destroy(resource->handle);
     }
 
-    void toplevel_drag_manager_v1_get_qt_toplevel_drag(Resource *resource, uint32_t id, wl_resource *data_source) override
+    void xdg_toplevel_drag_manager_v1_get_xdg_toplevel_drag(Resource *resource, uint32_t id, wl_resource *data_source) override
     {
         auto dataSource = DataSourceInterface::get(data_source);
 
-        wl_resource *xdg_toplevel_drag = wl_resource_create(resource->client(), &qt_toplevel_drag_v1_interface, resource->version(), id);
+        wl_resource *xdg_toplevel_drag = wl_resource_create(resource->client(), &xdg_toplevel_drag_v1_interface, resource->version(), id);
         if (!xdg_toplevel_drag) {
             wl_resource_post_no_memory(resource->handle);
             return;
