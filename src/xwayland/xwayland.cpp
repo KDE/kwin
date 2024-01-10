@@ -593,10 +593,11 @@ void Xwayland::updatePrimary()
     }
 
     Output *const primaryOutput = workspace()->outputOrder().front();
+    const QRect primaryOutputGeometry = Xcb::toXNative(primaryOutput->fractionalGeometry());
     for (int i = 0; i < resources->num_crtcs; ++i) {
         Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
         const QRect geometry = crtcInfo.rect();
-        if (geometry.topLeft() == primaryOutput->geometry().topLeft()) {
+        if (geometry.topLeft() == primaryOutputGeometry.topLeft()) {
             auto outputs = crtcInfo.outputs();
             if (outputs && crtcInfo->num_outputs > 0) {
                 qCDebug(KWIN_XWL) << "Setting primary" << primaryOutput << outputs[0];
