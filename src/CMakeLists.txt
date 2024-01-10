@@ -577,6 +577,7 @@ install(FILES
     effect/offscreenquickview.h
     effect/quickeffect.h
     effect/timeline.h
+    effect/xcb.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/effect COMPONENT Devel)
 
 install(FILES
