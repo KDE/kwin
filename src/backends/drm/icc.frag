@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2023 Xaver Hugl <xaver.hugl@gmail.com>
 // SPDX-License-Identifier: GPL-2.0-or-later
 precision highp float;
+precision highp sampler2D;
+precision highp sampler3D;
 
 in vec2 texcoord0;
 
@@ -10,25 +12,25 @@ uniform float sdrBrightness;
 uniform mat3 matrix1;
 
 uniform int Bsize;
-uniform sampler1D Bsampler;
+uniform sampler2D Bsampler;
 
 uniform mat4 matrix2;
 
 uniform int Msize;
-uniform sampler1D Msamplrt;
+uniform sampler2D Msamplrt;
 
 uniform ivec3 Csize;
 uniform sampler3D Csampler;
 
 uniform int Asize;
-uniform sampler1D Asampler;
+uniform sampler2D Asampler;
 
-vec3 sample1DLut(vec3 input, sampler1D lut, int lutSize) {
-    float lutOffset = 0.5 / lutSize;
-    float lutScale = 1 - lutOffset * 2;
-    float lutR = texture1D(lut, lutOffset + input.r * lutScale).r;
-    float lutG = texture1D(lut, lutOffset + input.g * lutScale).g;
-    float lutB = texture1D(lut, lutOffset + input.b * lutScale).b;
+vec3 sample1DLut(vec3 input, sampler2D lut, int lutSize) {
+    float lutOffset = 0.5 / float(lutSize);
+    float lutScale = 1.0 - lutOffset * 2.0;
+    float lutR = texture2D(lut, vec2(lutOffset + input.r * lutScale, 0.5)).r;
+    float lutG = texture2D(lut, vec2(lutOffset + input.g * lutScale, 0.5)).g;
+    float lutB = texture2D(lut, vec2(lutOffset + input.b * lutScale, 0.5)).b;
     return vec3(lutR, lutG, lutB);
 }
 
@@ -45,8 +47,8 @@ void main()
         tex.rgb = sample1DLut(tex.rgb, Msampler, Msize);
     }
     if (Csize > 0) {
-        vec3 lutOffset = vec3(0.5) / Csize;
-        vec3 lutScale = vec3(1) - lutOffset * 2;
+        vec3 lutOffset = vec3(0.5) / vec3(Csize);
+        vec3 lutScale = vec3(1.0) - lutOffset * 2.0;
         tex.rgb = texture3D(Csampler, lutOffset + tex.rgb * lutScale).rgb;
     }
     if (Asize > 0) {
