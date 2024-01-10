@@ -11,7 +11,6 @@
 
 #pragma once
 
-#include "tabbox/tabboxconfig.h"
 #include <kcmodule.h>
 #include <ksharedconfig.h>
 

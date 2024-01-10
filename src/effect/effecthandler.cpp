@@ -16,7 +16,6 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderbackend.h"
-#include "core/renderlayer.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "decorations/decorationbridge.h"
@@ -28,7 +27,9 @@
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
-#include "opengl/glutils.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
+#include "opengl/gltexture.h"
 #include "osd.h"
 #include "pointer_input.h"
 #include "scene/itemrenderer.h"
@@ -64,8 +65,6 @@
 #include <QVariant>
 #include <QWindow>
 #include <QtMath>
-
-#include <optional>
 
 namespace KWin
 {

@@ -8,9 +8,7 @@
 */
 
 #include "tilemodel.h"
-#include "core/output.h"
 #include "tiles/tilemanager.h"
-#include "virtualdesktops.h"
 #include "workspace.h"
 
 #include <KConfigGroup>

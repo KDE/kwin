@@ -12,16 +12,15 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effect.h"
+#include "opengl/glframebuffer.h"
 #include "scene/itemrenderer.h"
 #include "scene/windowitem.h"
 #include "scene/workspacescene.h"
 #include "scripting_logging.h"
-#include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
 
 #include "opengl/gltexture.h"
-#include "opengl/glutils.h"
 
 #include <QQuickWindow>
 #include <QRunnable>
@@ -350,6 +349,7 @@ void WindowThumbnailItem::setWId(const QUuid &wId)
         updateImplicitSize();
         Q_EMIT clientChanged();
     }
+
     Q_EMIT wIdChanged();
 }
 

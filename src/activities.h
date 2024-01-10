@@ -8,10 +8,9 @@
 */
 #pragma once
 
-#include "effect/globals.h"
-
 #include <QObject>
 #include <QStringList>
+#include <kwin_export.h>
 
 #include <PlasmaActivities/Controller>
 

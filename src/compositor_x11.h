@@ -11,6 +11,7 @@
 #pragma once
 
 #include "compositor.h"
+#include <QSet>
 
 namespace KWin
 {

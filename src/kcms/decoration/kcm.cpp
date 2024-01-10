@@ -24,6 +24,7 @@
 
 #include "kwindecorationdata.h"
 #include "kwindecorationsettings.h"
+#include "utils.h"
 
 K_PLUGIN_FACTORY_WITH_JSON(KCMKWinDecorationFactory, "kcm_kwindecoration.json", registerPlugin<KCMKWinDecoration>(); registerPlugin<KWinDecorationData>();)
 

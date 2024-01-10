@@ -11,7 +11,6 @@
 
 #include "core/graphicsbuffer.h"
 #include "drm_gpu.h"
-#include "drm_logging.h"
 
 // system
 #include <sys/mman.h>
@@ -19,8 +18,6 @@
 #include <linux/dma-buf.h>
 #include <linux/sync_file.h>
 #endif
-// c++
-#include <cerrno>
 // drm
 #include <drm_fourcc.h>
 #include <sys/ioctl.h>

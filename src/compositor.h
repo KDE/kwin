@@ -9,9 +9,10 @@
 */
 #pragma once
 
-#include "effect/globals.h"
+#include <kwin_export.h>
 #include <xcb/xcb.h>
 
+#include <QHash>
 #include <QObject>
 #include <QRegion>
 #include <QTimer>

@@ -36,7 +36,6 @@
 
 // own
 #include "kwinpluginssettings.h"
-#include "kwinswitcheffectsettings.h"
 #include "kwintabboxconfigform.h"
 #include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"

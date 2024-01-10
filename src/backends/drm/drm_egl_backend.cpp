@@ -18,10 +18,8 @@
 #include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_egl_layer.h"
-#include "opengl/eglutils_p.h"
 // system
 #include <drm_fourcc.h>
-#include <errno.h>
 #include <gbm.h>
 #include <unistd.h>
 

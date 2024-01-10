@@ -11,7 +11,8 @@
 #include "effect/animationeffect.h"
 #include "effect/anidata_p.h"
 #include "effect/effecthandler.h"
-#include "opengl/glutils.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
 
 #include <QDateTime>
 #include <QTimer>

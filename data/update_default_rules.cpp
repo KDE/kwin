@@ -9,11 +9,13 @@
 
 // read additional window rules and add them to kwinrulesrc
 
+#include <KConfig>
+#include <KConfigGroup>
+#include <QCoreApplication>
+#include <QDBusConnection>
+#include <QDBusMessage>
 #include <QDebug>
 #include <QStandardPaths>
-#include <QtDBus>
-#include <kconfig.h>
-#include <kconfiggroup.h>
 
 int main(int argc, char *argv[])
 {
