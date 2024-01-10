@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-09 01:33+0000\n"
+"POT-Creation-Date: 2024-01-10 01:35+0000\n"
 "PO-Revision-Date: 2023-12-01 09:50+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: \n"
@@ -96,7 +96,7 @@ msgstr "Appuyez sur la touche de contrôle droite pour saisir l'entrée"
 msgid "KDE Wayland Compositor"
 msgstr "Compositeur Wayland de KDE"
 
-#: compositor.cpp:146
+#: compositor.cpp:147
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -4165,7 +4165,7 @@ msgstr ""
 "comme celui ayant la souris.\n"
 "Cependant, il n'est pas possible de changer d'écran explicitement."
 
-#: utils/edid.cpp:240
+#: utils/edid.cpp:233
 #, kde-format
 msgid "unknown"
 msgstr "inconnu"
