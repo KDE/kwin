@@ -2518,7 +2518,7 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     const QRect needle(infos[index].x_org, infos[index].y_org, infos[index].width, infos[index].height);
 
     for (Output *output : std::as_const(m_outputs)) {
-        if (Xcb::toXNative(output->geometry()) == needle) {
+        if (Xcb::toXNative(output->fractionalGeometry()) == needle) {
             return output;
         }
     }

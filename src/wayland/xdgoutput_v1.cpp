@@ -108,8 +108,8 @@ XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output)
 
     name = handle->name();
     description = handle->description();
-    pos = handle->geometry().topLeft();
-    size = handle->geometry().size();
+    pos = handle->fractionalGeometry().topLeft();
+    size = handle->fractionalGeometry().size();
 
     connect(handle, &Output::geometryChanged, this, &XdgOutputV1Interface::update);
 }
