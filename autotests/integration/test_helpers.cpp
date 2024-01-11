@@ -326,12 +326,25 @@ void MockInputMethod::zwp_input_method_v1_activate(struct ::zwp_input_method_con
 {
     if (!m_inputSurface) {
         m_inputSurface = Test::createSurface();
-        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection.outputs.first());
+        m_inputMethodSurface = Test::createInputPanelSurfaceV1(m_inputSurface.get(), s_waylandConnection.outputs.first(), m_mode);
     }
     m_context = context;
-    Test::render(m_inputSurface.get(), QSize(1280, 400), Qt::blue);
+
+    switch (m_mode) {
+    case Mode::TopLevel:
+        Test::render(m_inputSurface.get(), QSize(1280, 400), Qt::blue);
+        break;
+    case Mode::Overlay:
+        Test::render(m_inputSurface.get(), QSize(200, 50), Qt::blue);
+        break;
+    }
 
     Q_EMIT activate();
+}
+
+void MockInputMethod::setMode(MockInputMethod::Mode mode)
+{
+    m_mode = mode;
 }
 
 void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_context_v1 *context)
@@ -924,7 +937,7 @@ LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const Q
     return shellSurface;
 }
 
-QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output)
+QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output, MockInputMethod::Mode mode)
 {
     if (!s_waylandConnection.inputPanelV1) {
         qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";
@@ -937,7 +950,14 @@ QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Clien
         return nullptr;
     }
 
-    s->set_toplevel(output->output(), QtWayland::zwp_input_panel_surface_v1::position_center_bottom);
+    switch (mode) {
+    case MockInputMethod::Mode::TopLevel:
+        s->set_toplevel(output->output(), QtWayland::zwp_input_panel_surface_v1::position_center_bottom);
+        break;
+    case MockInputMethod::Mode::Overlay:
+        s->set_overlay_panel();
+        break;
+    }
 
     return s;
 }
