@@ -239,6 +239,11 @@ public:
     QRect rect() const;
 
     /**
+     * Equivalent to `QRectF(QPointF(0, 0), geometryF().size())`
+     */
+    QRectF rectF() const;
+
+    /**
      * Returns the approximate vertical refresh rate of this output, in mHz.
      */
     uint32_t refreshRate() const;
@@ -478,6 +483,11 @@ protected:
 inline QRect Output::rect() const
 {
     return QRect(QPoint(0, 0), geometry().size());
+}
+
+inline QRectF Output::rectF() const
+{
+    return QRectF(QPointF(0, 0), geometryF().size());
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Output *output);
