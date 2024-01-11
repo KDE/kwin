@@ -19,10 +19,12 @@
 #include "scene/scene.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
+#include "wayland/backgroundeffect_v1.h"
 #include "wayland/contrast.h"
 #include "wayland/display.h"
 #include "wayland/kde_blur.h"
 #include "wayland/surface.h"
+#include "wayland_server.h"
 #include "window.h"
 
 #if KWIN_BUILD_X11
@@ -180,6 +182,7 @@ BlurEffect::BlurEffect()
     if (!s_blurManager) {
         s_blurManager = new BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
     }
+    waylandServer()->backgroundEffectManager()->addBlurCapability();
 
     if (!s_contrastManagerRemoveTimer) {
         s_contrastManagerRemoveTimer = new QTimer(QCoreApplication::instance());
@@ -219,6 +222,7 @@ BlurEffect::~BlurEffect()
     if (s_blurManager) {
         s_blurManagerRemoveTimer->start(1000);
     }
+    waylandServer()->backgroundEffectManager()->removeBlurCapability();
 
     if (s_contrastManager) {
         s_contrastManagerRemoveTimer->start(1000);

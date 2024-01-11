@@ -51,6 +51,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${WaylandProtocols_DATADIR}/staging/content-type/content-type-v1.xml
         ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
         ${WaylandProtocols_DATADIR}/staging/drm-lease/drm-lease-v1.xml
+        ${WaylandProtocols_DATADIR}/staging/ext-background-effect/ext-background-effect-v1.xml
         ${WaylandProtocols_DATADIR}/staging/ext-data-control/ext-data-control-v1.xml
         ${WaylandProtocols_DATADIR}/staging/ext-idle-notify/ext-idle-notify-v1.xml
         ${WaylandProtocols_DATADIR}/staging/fifo/fifo-v1.xml
@@ -88,6 +89,7 @@ target_sources(kwin PRIVATE
     abstract_drop_handler.cpp
     alphamodifier_v1.cpp
     appmenu.cpp
+    backgroundeffect_v1.cpp
     clientconnection.cpp
     colormanagement_v1.cpp
     colorrepresentation_v1.cpp
@@ -183,6 +185,7 @@ target_sources(kwin PRIVATE
 install(FILES
     alphamodifier_v1.h
     appmenu.h
+    backgroundeffect_v1.h
     clientconnection.h
     colormanagement_v1.h
     colorrepresentation_v1.h
