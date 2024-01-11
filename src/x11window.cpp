@@ -2337,8 +2337,7 @@ void X11Window::setCaption(const QString &_s, bool force)
             machine_suffix = QLatin1String(" <@") + clientMachine()->hostName() + QLatin1Char('>') + LRM;
         }
     }
-    QString shortcut_suffix = shortcutCaptionSuffix();
-    cap_suffix = machine_suffix + shortcut_suffix;
+    cap_suffix = machine_suffix;
     if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
         int i = 2;
         do {

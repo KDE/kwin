@@ -78,6 +78,7 @@ public:
     QColor color(ColorGroup group, ColorRole role) const override;
     Qt::Edges adjacentScreenEdges() const override;
     QString windowClass() const override;
+    QKeySequence shortcut() const override;
 
     bool hasApplicationMenu() const override;
     bool isApplicationMenuActive() const override;

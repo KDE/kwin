@@ -75,6 +75,10 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     connect(window, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration2::DecoratedClient::hasApplicationMenuChanged);
     connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration2::DecoratedClient::applicationMenuActiveChanged);
 
+    connect(window, &Window::shortcutChanged, decoratedClient, [decoratedClient, window]() {
+        Q_EMIT decoratedClient->shortcutChanged(window->shortcut());
+    });
+
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
         int fallAsleepDelay = QApplication::style()->styleHint(QStyle::SH_ToolTip_FallAsleepDelay);
@@ -339,6 +343,11 @@ bool DecoratedClientImpl::isApplicationMenuActive() const
 QString DecoratedClientImpl::windowClass() const
 {
     return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
+}
+
+QKeySequence DecoratedClientImpl::shortcut() const
+{
+    return m_window->shortcut();
 }
 
 }

@@ -55,6 +55,7 @@ public:
     int width() const override;
     QString windowClass() const override;
     WId windowId() const override;
+    QKeySequence shortcut() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
 

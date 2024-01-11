@@ -3068,14 +3068,6 @@ void Window::setUnresponsive(bool unresponsive)
     }
 }
 
-QString Window::shortcutCaptionSuffix() const
-{
-    if (shortcut().isEmpty()) {
-        return QString();
-    }
-    return QLatin1String(" {") + shortcut().toString() + QLatin1Char('}');
-}
-
 Window *Window::findWindowWithSameCaption() const
 {
     auto fetchNameInternalPredicate = [this](const Window *cl) {

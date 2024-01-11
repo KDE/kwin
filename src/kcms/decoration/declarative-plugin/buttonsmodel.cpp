@@ -22,16 +22,19 @@ ButtonsModel::ButtonsModel(const QList<DecorationButtonType> &buttons, QObject *
 }
 
 ButtonsModel::ButtonsModel(QObject *parent)
-    : ButtonsModel(QList<DecorationButtonType>({DecorationButtonType::Menu,
-                                                DecorationButtonType::ApplicationMenu,
-                                                DecorationButtonType::OnAllDesktops,
-                                                DecorationButtonType::Minimize,
-                                                DecorationButtonType::Maximize,
-                                                DecorationButtonType::Close,
-                                                DecorationButtonType::ContextHelp,
-                                                DecorationButtonType::Shade,
-                                                DecorationButtonType::KeepBelow,
-                                                DecorationButtonType::KeepAbove}),
+    : ButtonsModel(QList<DecorationButtonType>({
+                       DecorationButtonType::Menu,
+                       DecorationButtonType::ApplicationMenu,
+                       DecorationButtonType::OnAllDesktops,
+                       DecorationButtonType::Minimize,
+                       DecorationButtonType::Maximize,
+                       DecorationButtonType::Close,
+                       DecorationButtonType::ContextHelp,
+                       DecorationButtonType::Shade,
+                       DecorationButtonType::KeepBelow,
+                       DecorationButtonType::KeepAbove,
+                       DecorationButtonType::Shortcut,
+                   }),
                    parent)
 {
 }
@@ -69,6 +72,8 @@ static QString buttonToName(DecorationButtonType type)
         return i18n("Keep below other windows");
     case DecorationButtonType::KeepAbove:
         return i18n("Keep above other windows");
+    case DecorationButtonType::Shortcut:
+        return i18n("Shortcut");
     default:
         return QString();
     }

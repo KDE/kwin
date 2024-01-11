@@ -255,6 +255,11 @@ QString PreviewClient::windowClass() const
     return QString();
 }
 
+QKeySequence PreviewClient::shortcut() const
+{
+    return QKeySequence();
+}
+
 bool PreviewClient::hasApplicationMenu() const
 {
     return true;

@@ -1771,6 +1771,7 @@ void Window::setShortcut(const QString &_cut)
         }
         _shortcut = cut;
         setShortcutInternal();
+        Q_EMIT shortcutChanged();
     };
     if (cut.isEmpty()) {
         updateShortcut();
@@ -1828,13 +1829,11 @@ void Window::setShortcut(const QString &_cut)
 
 void Window::setShortcutInternal()
 {
-    updateCaption();
     workspace()->windowShortcutUpdated(this);
 }
 
 void X11Window::setShortcutInternal()
 {
-    updateCaption();
 #if 0
     workspace()->windowShortcutUpdated(this);
 #else

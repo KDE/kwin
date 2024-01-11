@@ -412,12 +412,11 @@ void InternalWindow::doInteractiveResizeSync(const QRectF &rect)
 void InternalWindow::updateCaption()
 {
     const QString oldSuffix = m_captionSuffix;
-    const auto shortcut = shortcutCaptionSuffix();
-    m_captionSuffix = shortcut;
+    m_captionSuffix = QString();
     if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
         int i = 2;
         do {
-            m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
+            m_captionSuffix = QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
             i++;
         } while (findWindowWithSameCaption());
     }

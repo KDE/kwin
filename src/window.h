@@ -1434,6 +1434,7 @@ Q_SIGNALS:
     void hiddenChanged();
     void hiddenByShowDesktopChanged();
     void lockScreenOverlayChanged();
+    void shortcutChanged();
 
 protected:
     Window();
@@ -1704,7 +1705,6 @@ protected:
     void setUnresponsive(bool unresponsive);
 
     virtual void setShortcutInternal();
-    QString shortcutCaptionSuffix() const;
     virtual void updateCaption() = 0;
 
     /**
