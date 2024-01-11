@@ -476,6 +476,7 @@ void InternalWindow::setCaption(const QString &caption)
     const QString oldCaptionSuffix = m_captionSuffix;
     updateCaption();
 
+    Q_EMIT captionNormalChanged();
     if (m_captionSuffix == oldCaptionSuffix) {
         Q_EMIT captionChanged();
     }

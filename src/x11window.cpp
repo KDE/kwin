@@ -2329,10 +2329,6 @@ void X11Window::setCaption(const QString &_s, bool force)
         return;
     }
     cap_normal = s;
-    if (!force && !changed) {
-        Q_EMIT captionChanged();
-        return;
-    }
 
     bool reset_name = force;
     bool was_suffix = (!cap_suffix.isEmpty());
@@ -2363,6 +2359,9 @@ void X11Window::setCaption(const QString &_s, bool force)
         info->setVisibleIconName(QString(cap_iconic + cap_suffix).toUtf8().constData());
     }
 
+    if (changed) {
+        Q_EMIT captionNormalChanged();
+    }
     Q_EMIT captionChanged();
 }
 
