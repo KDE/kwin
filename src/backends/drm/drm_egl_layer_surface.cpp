@@ -413,6 +413,8 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         const auto importDrmFormat = ret->importContext->displayObject()->allSupportedDrmFormats()[format];
         renderModifiers = filterModifiers(importDrmFormat.allModifiers,
                                           drmFormat.nonExternalOnlyModifiers);
+        // transferring non-linear buffers with implicit modifiers between GPUs is likely to yield wrong results
+        renderModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
     } else if (cpuCopy) {
         if (!cpuCopyFormats.contains(format)) {
             return nullptr;
