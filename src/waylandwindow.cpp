@@ -204,9 +204,15 @@ void WaylandWindow::updateCaption()
 
 void WaylandWindow::setCaption(const QString &caption)
 {
+    const QString oldNormal = m_captionNormal;
     const QString oldSuffix = m_captionSuffix;
+
     m_captionNormal = caption.simplified();
     updateCaption();
+
+    if (m_captionNormal != oldNormal) {
+        Q_EMIT captionNormalChanged();
+    }
     if (m_captionSuffix == oldSuffix) {
         // Don't emit caption change twice it already got emitted by the changing suffix.
         Q_EMIT captionChanged();
