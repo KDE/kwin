@@ -27,6 +27,7 @@
 #include "input_event.h"
 #include "inputmethod.h"
 #include "inputpanelv1window.h"
+#include "keyboard_input.h"
 #include "opengl/glutils.h"
 #include "osd.h"
 #include "pointer_input.h"
@@ -443,6 +444,7 @@ void EffectsHandler::ungrabKeyboard()
     Q_ASSERT(keyboard_grab_effect != nullptr);
     doUngrabKeyboard();
     keyboard_grab_effect = nullptr;
+    input()->keyboard()->update();
 }
 
 void EffectsHandler::doUngrabKeyboard()
