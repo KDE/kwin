@@ -16,6 +16,7 @@
 #include <private/qeventdispatcher_glib_p.h>
 
 #include <iostream>
+#include <sys/select.h>
 #include <unistd.h>
 
 static int startXServer()
