@@ -10,6 +10,7 @@
 */
 
 #include "gltexture_p.h"
+#include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "opengl/glutils_funcs.h"
@@ -566,22 +567,28 @@ bool GLTexture::supportsFormatRG()
     return GLTexturePrivate::s_supportsTextureFormatRG;
 }
 
-QImage GLTexture::toImage() const
+QImage GLTexture::toImage()
 {
     if (target() != GL_TEXTURE_2D) {
         return QImage();
     }
     QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
 
-    GLint currentTextureBinding;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTextureBinding);
-
-    if (GLuint(currentTextureBinding) != texture()) {
-        glBindTexture(GL_TEXTURE_2D, texture());
-    }
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
-    if (GLuint(currentTextureBinding) != texture()) {
-        glBindTexture(GL_TEXTURE_2D, currentTextureBinding);
+    if (GLPlatform::instance()->isGLES()) {
+        GLFramebuffer fbo(this);
+        GLFramebuffer::pushFramebuffer(&fbo);
+        glReadPixels(0, 0, width(), height(), GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
+        GLFramebuffer::popFramebuffer();
+    } else {
+        GLint currentTextureBinding;
+        glGetIntegerv(GL_TEXTURE_BINDING_2D, &currentTextureBinding);
+        if (GLuint(currentTextureBinding) != texture()) {
+            glBindTexture(GL_TEXTURE_2D, texture());
+        }
+        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
+        if (GLuint(currentTextureBinding) != texture()) {
+            glBindTexture(GL_TEXTURE_2D, currentTextureBinding);
+        }
     }
     return ret;
 }
