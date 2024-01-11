@@ -83,7 +83,7 @@ void Tile::setGeometryFromWindow(const QRectF &geom)
 
 void Tile::setGeometryFromAbsolute(const QRectF &geom)
 {
-    const QRectF outGeom = m_tiling->output()->fractionalGeometry();
+    const QRectF outGeom = m_tiling->output()->geometryF();
     const QRectF relGeom((geom.x() - outGeom.x()) / outGeom.width(),
                          (geom.y() - outGeom.y()) / outGeom.height(),
                          geom.width() / outGeom.width(),
@@ -120,7 +120,7 @@ QRectF Tile::relativeGeometry() const
 
 QRectF Tile::absoluteGeometry() const
 {
-    const QRectF geom = m_tiling->output()->fractionalGeometry();
+    const QRectF geom = m_tiling->output()->geometryF();
     return QRectF(std::round(geom.x() + m_relativeGeometry.x() * geom.width()),
                   std::round(geom.y() + m_relativeGeometry.y() * geom.height()),
                   std::round(m_relativeGeometry.width() * geom.width()),
@@ -129,7 +129,7 @@ QRectF Tile::absoluteGeometry() const
 
 QRectF Tile::absoluteGeometryInScreen() const
 {
-    const QRectF geom = m_tiling->output()->fractionalGeometry();
+    const QRectF geom = m_tiling->output()->geometryF();
     return QRectF(std::round(m_relativeGeometry.x() * geom.width()),
                   std::round(m_relativeGeometry.y() * geom.height()),
                   std::round(m_relativeGeometry.width() * geom.width()),
@@ -208,7 +208,7 @@ void Tile::resizeFromGravity(Gravity gravity, int x_root, int y_root)
         return;
     }
 
-    const QRectF outGeom = m_tiling->output()->fractionalGeometry();
+    const QRectF outGeom = m_tiling->output()->geometryF();
     const QPointF relativePos = QPointF((x_root - outGeom.x()) / outGeom.width(), (y_root - outGeom.y()) / outGeom.height());
     QRectF newGeom = m_relativeGeometry;
 
@@ -251,7 +251,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
         return;
     }
 
-    const auto outGeom = m_tiling->output()->fractionalGeometry();
+    const auto outGeom = m_tiling->output()->geometryF();
     auto newGeom = m_relativeGeometry;
 
     switch (edge) {

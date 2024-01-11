@@ -96,7 +96,7 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
             if (!exclusiveContains(r, pos)) {
                 // This gives a strong preference for tiles that contain the point
                 // still base on distance though as floating tiles can overlap
-                distance += m_output->fractionalGeometry().width();
+                distance += m_output->geometryF().width();
             }
             if (distance < minimumDistance) {
                 minimumDistance = distance;

@@ -108,8 +108,8 @@ XdgOutputV1Interface::XdgOutputV1Interface(OutputInterface *output)
 
     name = handle->name();
     description = handle->description();
-    pos = handle->fractionalGeometry().topLeft();
-    size = handle->fractionalGeometry().size();
+    pos = handle->geometryF().topLeft();
+    size = handle->geometryF().size();
 
     connect(handle, &Output::geometryChanged, this, &XdgOutputV1Interface::update);
 }
@@ -120,7 +120,7 @@ void XdgOutputV1Interface::update()
         return;
     }
 
-    const QRectF geometry = output->handle()->fractionalGeometry();
+    const QRectF geometry = output->handle()->geometryF();
     const auto resources = resourceMap();
 
     if (pos != geometry.topLeft()) {

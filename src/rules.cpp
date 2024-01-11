@@ -781,7 +781,7 @@ QPointF WindowRules::checkPositionSafe(QPointF pos, bool init) const
     }
     const auto outputs = workspace()->outputs();
     const bool inAnyOutput = std::any_of(outputs.begin(), outputs.end(), [ret](const auto output) {
-        return output->fractionalGeometry().contains(ret);
+        return output->geometryF().contains(ret);
     });
     if (inAnyOutput) {
         return ret;
