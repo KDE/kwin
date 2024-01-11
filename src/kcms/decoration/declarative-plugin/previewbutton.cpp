@@ -118,10 +118,17 @@ void PreviewButtonItem::paint(QPainter *painter)
     if (!m_button) {
         return;
     }
-    QRect size{0, 0, (int)width(), (int)height()};
-    m_button->paint(painter, size);
+
+    const QRect rect(0, 0, width(), height());
+    if (type() == KDecoration2::DecorationButtonType::Spacer) {
+        static const QIcon icon = QIcon::fromTheme(QStringLiteral("distribute-horizontal"));
+        icon.paint(painter, rect);
+    } else {
+        m_button->paint(painter, rect);
+    }
+
     painter->setCompositionMode(QPainter::CompositionMode_SourceAtop);
-    painter->fillRect(size, m_color);
+    painter->fillRect(rect, m_color);
 }
 
 void PreviewButtonItem::setColor(const QColor &color)

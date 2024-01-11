@@ -42,7 +42,9 @@ const QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames{
     {KDecoration2::DecorationButtonType::Close, QChar('X')},
     {KDecoration2::DecorationButtonType::KeepAbove, QChar('F')},
     {KDecoration2::DecorationButtonType::KeepBelow, QChar('B')},
-    {KDecoration2::DecorationButtonType::Shade, QChar('L')}};
+    {KDecoration2::DecorationButtonType::Shade, QChar('L')},
+    {KDecoration2::DecorationButtonType::Spacer, QChar('_')},
+};
 }
 
 namespace Utils
