@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="ext_blur_v1">
+  <copyright>
+    Copyright (C) 2015 Martin Gräßlin
+    Copyright (C) 2015 Marco Martin
+    Copyright (C) 2020 Vlad Zahorodnii
+    Copyright (C) 2024 Xaver Hugl
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Lesser General Public License as published by
+    the Free Software Foundation, either version 2.1 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public License
+    along with this program.  If not, see http://www.gnu.org/licenses/.
+  </copyright>
+
+  <interface name="ext_blur_manager_v1" version="1">
+    <description summary="blur object factory">
+      This protocol provides a way to improve visuals of translucent surfaces
+      by blurring background behind them.
+
+      Warning! The protocol described in this file is currently in the testing
+      phase. Backward compatible changes may be added together with the
+      corresponding interface version bump. Backward incompatible changes can
+      only be done by creating a new major version of the extension.
+    </description>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the blur manager object">
+        Informs the server that the client will no longer be using this
+        protocol object. Existing objects created by this object are not
+        affected.
+      </description>
+    </request>
+
+    <enum name="error">
+      <entry name="blur_exists" value="0"
+             summary="the surface has already a blur object associated"/>
+    </enum>
+
+    <request name="get_blur">
+      <description summary="get a blur object">
+        Instantiate an interface extension for the given wl_surface to
+        blur background behind it. If the given wl_surface already has
+        a ext_blur_surface_v1 object associated, the blur_exists protocol
+        error will be raised.
+      </description>
+      <arg name="id" type="new_id" interface="ext_blur_surface_v1"
+           summary="the new ext_blur_surface_v1 object"/>
+      <arg name="surface" type="object" interface="wl_surface"
+           summary="the surface"/>
+    </request>
+  </interface>
+
+  <interface name="ext_blur_surface_v1" version="1">
+    <description summary="blur object for a surface">
+      The blur object provides a way to specify a region behind a surface
+      that should be blurred by the compositor.
+
+      If the wl_surface associated with the ext_blur_surface_v1 object has been
+      destroyed, this object becomes inert.
+    </description>
+
+    <request name="destroy" type="destructor">
+      <description summary="release the blur object">
+        Informs the server that the client will no longer be using this
+        protocol object. The blur region will be unset on the next commit.
+      </description>
+    </request>
+
+    <request name="set_region">
+      <description summary="set blur region">
+        This request sets the region of the surface that will have its
+        background blurred.
+
+        The blur region is specified in the surface-local coordinates.
+
+        The initial value for the blur region is empty. Setting the pending
+        blur region has copy semantics, and the wl_region object can be
+        destroyed immediately. A NULL wl_region causes the blur region to be
+        set to infinite.
+
+        The blur region is double-buffered state, and will be applied on
+        the next wl_surface.commit.
+
+        The blur algorithm is subject to compositor policies.
+      </description>
+      <arg name="region" type="object" interface="wl_region" allow-null="true"
+           summary="blur region of the surface"/>
+    </request>
+  </interface>
+</protocol>
