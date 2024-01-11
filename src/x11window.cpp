@@ -644,8 +644,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     setupWindowRules();
     connect(this, &X11Window::windowClassChanged, this, &X11Window::evaluateWindowRules);
 
-    updateCaption(); // in case the window type has been changed by a window rule and <N> has been dropped
-
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
     }
@@ -2340,7 +2338,6 @@ void X11Window::setCaption(const QString &_s, bool force)
     }
     cap_normal = s;
 
-    bool reset_name = force;
     bool was_suffix = (!cap_suffix.isEmpty());
     cap_suffix.clear();
     QString machine_suffix;
@@ -2351,16 +2348,7 @@ void X11Window::setCaption(const QString &_s, bool force)
     }
     QString shortcut_suffix = shortcutCaptionSuffix();
     cap_suffix = machine_suffix + shortcut_suffix;
-    if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
-        int i = 2;
-        do {
-            cap_suffix = machine_suffix + QLatin1String(" <") + QString::number(i) + QLatin1Char('>') + LRM;
-            i++;
-        } while (findWindowWithSameCaption());
-        info->setVisibleName(caption().toUtf8().constData());
-        reset_name = false;
-    }
-    if ((was_suffix && cap_suffix.isEmpty()) || reset_name) {
+    if ((was_suffix && cap_suffix.isEmpty()) || force) {
         // If it was new window, it may have old value still set, if the window is reused
         info->setVisibleName("");
         info->setVisibleIconName("");

@@ -43,7 +43,6 @@ private Q_SLOTS:
     void testFocusInWithWaylandLastActiveWindow();
     void testCaptionChanges();
     void testCaptionWmName();
-    void testCaptionMultipleWindows();
     void testFullscreenWindowGroups();
     void testActivateFocusedWindow();
     void testReentrantMoveResize();
@@ -780,80 +779,6 @@ void X11WindowTest::testCaptionWmName()
 
     glxgears.terminate();
     QVERIFY(glxgears.waitForFinished());
-}
-
-void X11WindowTest::testCaptionMultipleWindows()
-{
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
-    // BUG 384760
-    // create first window
-    Test::XcbConnectionPtr c = Test::createX11Connection();
-    QVERIFY(!xcb_connection_has_error(c.get()));
-    const QRect windowGeometry(0, 0, 100, 200);
-    xcb_window_t windowId = xcb_generate_id(c.get());
-    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
-    xcb_icccm_size_hints_set_position(&hints, 1, windowGeometry.x(), windowGeometry.y());
-    xcb_icccm_size_hints_set_size(&hints, 1, windowGeometry.width(), windowGeometry.height());
-    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
-    NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
-    info.setName("foo");
-    xcb_map_window(c.get(), windowId);
-    xcb_flush(c.get());
-
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(window);
-    QCOMPARE(window->window(), windowId);
-    QCOMPARE(window->caption(), QStringLiteral("foo"));
-
-    // create second window with same caption
-    xcb_window_t w2 = xcb_generate_id(c.get());
-    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, w2, rootWindow(),
-                      windowGeometry.x(),
-                      windowGeometry.y(),
-                      windowGeometry.width(),
-                      windowGeometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_icccm_set_wm_normal_hints(c.get(), w2, &hints);
-    NETWinInfo info2(c.get(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
-    info2.setName("foo");
-    info2.setIconName("foo");
-    xcb_map_window(c.get(), w2);
-    xcb_flush(c.get());
-
-    windowCreatedSpy.clear();
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window2 = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(window2);
-    QCOMPARE(window2->window(), w2);
-    QCOMPARE(window2->caption(), QStringLiteral("foo <2>\u200E"));
-    NETWinInfo info3(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
-    QCOMPARE(QByteArray(info3.visibleName()), QByteArrayLiteral("foo <2>\u200E"));
-    QCOMPARE(QByteArray(info3.visibleIconName()), QByteArrayLiteral("foo <2>\u200E"));
-
-    QSignalSpy captionChangedSpy(window2, &X11Window::captionChanged);
-
-    NETWinInfo info4(c.get(), w2, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
-    info4.setName("foobar");
-    info4.setIconName("foobar");
-    xcb_map_window(c.get(), w2);
-    xcb_flush(c.get());
-
-    QVERIFY(captionChangedSpy.wait());
-    QCOMPARE(window2->caption(), QStringLiteral("foobar"));
-    NETWinInfo info5(kwinApp()->x11Connection(), w2, kwinApp()->x11RootWindow(), NET::WMVisibleName | NET::WMVisibleIconName, NET::Properties2());
-    QCOMPARE(QByteArray(info5.visibleName()), QByteArray());
-    QTRY_COMPARE(QByteArray(info5.visibleIconName()), QByteArray());
 }
 
 void X11WindowTest::testFullscreenWindowGroups()

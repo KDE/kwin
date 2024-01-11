@@ -411,17 +411,9 @@ void InternalWindow::doInteractiveResizeSync(const QRectF &rect)
 
 void InternalWindow::updateCaption()
 {
-    const QString oldSuffix = m_captionSuffix;
-    const auto shortcut = shortcutCaptionSuffix();
-    m_captionSuffix = shortcut;
-    if ((!isSpecialWindow() || isToolbar()) && findWindowWithSameCaption()) {
-        int i = 2;
-        do {
-            m_captionSuffix = shortcut + QLatin1String(" <") + QString::number(i) + QLatin1Char('>');
-            i++;
-        } while (findWindowWithSameCaption());
-    }
-    if (m_captionSuffix != oldSuffix) {
+    const QString suffix = shortcutCaptionSuffix();
+    if (m_captionSuffix != suffix) {
+        m_captionSuffix = suffix;
         Q_EMIT captionChanged();
     }
 }
@@ -472,14 +464,8 @@ void InternalWindow::setCaption(const QString &caption)
     }
 
     m_captionNormal = caption;
-
-    const QString oldCaptionSuffix = m_captionSuffix;
-    updateCaption();
-
     Q_EMIT captionNormalChanged();
-    if (m_captionSuffix == oldCaptionSuffix) {
-        Q_EMIT captionChanged();
-    }
+    Q_EMIT captionChanged();
 }
 
 void InternalWindow::markAsMapped()

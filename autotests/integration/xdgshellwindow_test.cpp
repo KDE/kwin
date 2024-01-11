@@ -72,7 +72,6 @@ private Q_SLOTS:
     void testHidden();
     void testDesktopFileName();
     void testCaptionSimplified();
-    void testCaptionMultipleWindows();
     void testUnresponsiveWindow_data();
     void testUnresponsiveWindow();
     void testAppMenu();
@@ -706,52 +705,6 @@ void TestXdgShellWindow::testCaptionSimplified()
     QVERIFY(window);
     QVERIFY(window->caption() != origTitle);
     QCOMPARE(window->caption(), origTitle.simplified());
-}
-
-void TestXdgShellWindow::testCaptionMultipleWindows()
-{
-    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
-    shellSurface->set_title(QStringLiteral("foo"));
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(window);
-    QCOMPARE(window->caption(), QStringLiteral("foo"));
-    QCOMPARE(window->captionNormal(), QStringLiteral("foo"));
-    QCOMPARE(window->captionSuffix(), QString());
-
-    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
-    shellSurface2->set_title(QStringLiteral("foo"));
-    auto c2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(c2);
-    QCOMPARE(c2->caption(), QStringLiteral("foo <2>"));
-    QCOMPARE(c2->captionNormal(), QStringLiteral("foo"));
-    QCOMPARE(c2->captionSuffix(), QStringLiteral(" <2>"));
-
-    std::unique_ptr<KWayland::Client::Surface> surface3(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface3(Test::createXdgToplevelSurface(surface3.get()));
-    shellSurface3->set_title(QStringLiteral("foo"));
-    auto c3 = Test::renderAndWaitForShown(surface3.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(c3);
-    QCOMPARE(c3->caption(), QStringLiteral("foo <3>"));
-    QCOMPARE(c3->captionNormal(), QStringLiteral("foo"));
-    QCOMPARE(c3->captionSuffix(), QStringLiteral(" <3>"));
-
-    std::unique_ptr<KWayland::Client::Surface> surface4(Test::createSurface());
-    std::unique_ptr<Test::XdgToplevel> shellSurface4(Test::createXdgToplevelSurface(surface4.get()));
-    shellSurface4->set_title(QStringLiteral("bar"));
-    auto c4 = Test::renderAndWaitForShown(surface4.get(), QSize(100, 50), Qt::blue);
-    QVERIFY(c4);
-    QCOMPARE(c4->caption(), QStringLiteral("bar"));
-    QCOMPARE(c4->captionNormal(), QStringLiteral("bar"));
-    QCOMPARE(c4->captionSuffix(), QString());
-    QSignalSpy captionChangedSpy(c4, &Window::captionChanged);
-    shellSurface4->set_title(QStringLiteral("foo"));
-    QVERIFY(captionChangedSpy.wait());
-    QCOMPARE(captionChangedSpy.count(), 1);
-    QCOMPARE(c4->caption(), QStringLiteral("foo <4>"));
-    QCOMPARE(c4->captionNormal(), QStringLiteral("foo"));
-    QCOMPARE(c4->captionSuffix(), QStringLiteral(" <4>"));
 }
 
 void TestXdgShellWindow::testUnresponsiveWindow_data()
