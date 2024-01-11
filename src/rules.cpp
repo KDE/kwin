@@ -408,10 +408,7 @@ bool Rules::match(const Window *c) const
         return false;
     }
     if (titlematch != UnimportantMatch) { // track title changes to rematch rules
-        QObject::connect(c, &Window::captionChanged, c, &Window::evaluateWindowRules,
-                         // QueuedConnection, because title may change before
-                         // the client is ready (could segfault!)
-                         static_cast<Qt::ConnectionType>(Qt::QueuedConnection | Qt::UniqueConnection));
+        QObject::connect(c, &Window::captionNormalChanged, c, &Window::evaluateWindowRules, Qt::UniqueConnection);
     }
     if (!matchTitle(c->captionNormal())) {
         return false;
