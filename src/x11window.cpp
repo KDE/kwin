@@ -639,14 +639,12 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     readWmClientLeader(wmClientLeaderCookie);
     getWmClientMachine();
     getSyncCounter();
-    // First only read the caption text, so that setupWindowRules() can use it for matching,
-    // and only then really set the caption using setCaption(), which checks for duplicates etc.
-    // and also relies on rules already existing
-    cap_normal = readName();
-    setupWindowRules();
-    setCaption(cap_normal, true);
+    setCaption(readName());
 
+    setupWindowRules();
     connect(this, &X11Window::windowClassChanged, this, &X11Window::evaluateWindowRules);
+
+    updateCaption(); // in case the window type has been changed by a window rule and <N> has been dropped
 
     if (Xcb::Extensions::self()->isShapeAvailable()) {
         xcb_shape_select_input(kwinApp()->x11Connection(), window(), true);
