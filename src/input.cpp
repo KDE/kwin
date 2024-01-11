@@ -292,22 +292,6 @@ public:
     }
 };
 
-class TerminateServerFilter : public InputEventFilter
-{
-public:
-    bool keyEvent(KeyEvent *event) override
-    {
-        if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
-            if (event->nativeVirtualKey() == XKB_KEY_Terminate_Server) {
-                qCWarning(KWIN_CORE) << "Request to terminate server";
-                QMetaObject::invokeMethod(QCoreApplication::instance(), &QCoreApplication::quit, Qt::QueuedConnection);
-                return true;
-            }
-        }
-        return false;
-    }
-};
-
 class LockScreenFilter : public InputEventFilter
 {
 public:
@@ -2934,11 +2918,6 @@ void InputRedirection::setupInputFilters()
 
     m_windowInteractedSpy = std::make_unique<WindowInteractedSpy>();
     installInputEventSpy(m_windowInteractedSpy.get());
-
-    if (hasGlobalShortcutSupport) {
-        m_terminateServerFilter = std::make_unique<TerminateServerFilter>();
-        installInputEventFilter(m_terminateServerFilter.get());
-    }
 
     m_lockscreenFilter = std::make_unique<LockScreenFilter>();
     installInputEventFilter(m_lockscreenFilter.get());
