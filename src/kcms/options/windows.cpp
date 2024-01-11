@@ -142,11 +142,9 @@ void KFocusConfig::focusPolicyChanged()
         break;
     }
 
-    m_unmanagedChangeState = m_settings->focusPolicy() != selectedFocusPolicy || loadedNextFocusPrefersMouseItem != selectedNextFocusPrefersMouseItem;
-    unmanagedWidgetChangeState(m_unmanagedChangeState);
+    unmanagedWidgetChangeState(m_settings->focusPolicy() != selectedFocusPolicy || loadedNextFocusPrefersMouseItem != selectedNextFocusPrefersMouseItem);
 
-    m_unmanagedDefaultState = focusPolicy == defaultFocusPolicyIndex;
-    unmanagedWidgetDefaultState(m_unmanagedDefaultState);
+    unmanagedWidgetDefaultState(focusPolicy == defaultFocusPolicyIndex);
 
     // the auto raise related widgets are: autoRaise
     m_ui->kcfg_AutoRaise->setEnabled(focusPolicy != CLICK_TO_FOCUS && focusPolicy != CLICK_TO_FOCUS_MOUSE_PRECEDENT);
@@ -224,16 +222,6 @@ void KFocusConfig::defaults()
     m_ui->windowFocusPolicy->setCurrentIndex(defaultFocusPolicyIndex);
 }
 
-bool KFocusConfig::isDefaults() const
-{
-    return managedWidgetDefaultState() && m_unmanagedDefaultState;
-}
-
-bool KFocusConfig::isSaveNeeded() const
-{
-    return managedWidgetChangeState() || m_unmanagedChangeState;
-}
-
 KWinAdvancedConfigForm::KWinAdvancedConfigForm(QWidget *parent)
     : QWidget(parent)
 {
@@ -286,16 +274,6 @@ void KAdvancedConfig::save(void)
     }
 }
 
-bool KAdvancedConfig::isDefaults() const
-{
-    return managedWidgetDefaultState();
-}
-
-bool KAdvancedConfig::isSaveNeeded() const
-{
-    return managedWidgetChangeState();
-}
-
 KWinMovingConfigForm::KWinMovingConfigForm(QWidget *parent)
     : QWidget(parent)
 {
@@ -328,16 +306,6 @@ void KMovingConfig::save(void)
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
-}
-
-bool KMovingConfig::isDefaults() const
-{
-    return managedWidgetDefaultState();
-}
-
-bool KMovingConfig::isSaveNeeded() const
-{
-    return managedWidgetChangeState();
 }
 
 #include "moc_windows.cpp"

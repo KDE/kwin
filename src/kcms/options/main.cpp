@@ -144,21 +144,21 @@ void KWinOptions::defaults()
 
 void KWinOptions::updateUnmanagedState()
 {
-    bool isNeedSave = false;
-    isNeedSave |= mFocus->isSaveNeeded();
-    isNeedSave |= mTitleBarActions->isSaveNeeded();
-    isNeedSave |= mWindowActions->isSaveNeeded();
-    isNeedSave |= mMoving->isSaveNeeded();
-    isNeedSave |= mAdvanced->isSaveNeeded();
+    bool changed = false;
+    changed |= mFocus->needsSave();
+    changed |= mTitleBarActions->needsSave();
+    changed |= mWindowActions->needsSave();
+    changed |= mMoving->needsSave();
+    changed |= mAdvanced->needsSave();
 
-    unmanagedWidgetChangeState(isNeedSave);
+    unmanagedWidgetChangeState(changed);
 
     bool isDefault = true;
-    isDefault &= mFocus->isDefaults();
-    isDefault &= mTitleBarActions->isDefaults();
-    isDefault &= mWindowActions->isDefaults();
-    isDefault &= mMoving->isDefaults();
-    isDefault &= mAdvanced->isDefaults();
+    isDefault &= mFocus->representsDefaults();
+    isDefault &= mTitleBarActions->representsDefaults();
+    isDefault &= mWindowActions->representsDefaults();
+    isDefault &= mMoving->representsDefaults();
+    isDefault &= mAdvanced->representsDefaults();
 
     unmanagedWidgetDefaultState(isDefault);
 }

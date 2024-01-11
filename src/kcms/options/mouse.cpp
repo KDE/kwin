@@ -50,16 +50,6 @@ void KTitleBarActionsConfig::save()
     }
 }
 
-bool KTitleBarActionsConfig::isDefaults() const
-{
-    return managedWidgetDefaultState();
-}
-
-bool KTitleBarActionsConfig::isSaveNeeded() const
-{
-    return managedWidgetChangeState();
-}
-
 KWindowActionsConfig::KWindowActionsConfig(bool _standAlone, KWinOptionsSettings *settings, QWidget *parent)
     : KCModule(parent, KPluginMetaData())
     , standAlone(_standAlone)
@@ -86,16 +76,6 @@ void KWindowActionsConfig::save()
             QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
         QDBusConnection::sessionBus().send(message);
     }
-}
-
-bool KWindowActionsConfig::isDefaults() const
-{
-    return managedWidgetDefaultState();
-}
-
-bool KWindowActionsConfig::isSaveNeeded() const
-{
-    return managedWidgetChangeState();
 }
 
 #include "moc_mouse.cpp"
