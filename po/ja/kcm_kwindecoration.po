@@ -1,4 +1,5 @@
 # Translation of kcmkwindecoration into Japanese.
+# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # This file is distributed under the same license as the kdebase package.
 # Taiki Komoda <kom@kde.gr.jp>, 2002, 2010.
 # Toyohiro Asukai <toyohiro@ksmplus.com>, 2004.
@@ -8,21 +9,20 @@
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2019.
 # R.Suga <21r.suga@gmail.com>, 2022.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2005, 2010, 2015, 2019, 2022.
-# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-06 02:04+0000\n"
-"PO-Revision-Date: 2023-02-23 18:19+0900\n"
+"PO-Revision-Date: 2024-01-09 16:05+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
@@ -175,7 +175,7 @@ msgstr "ここにボタンをドラッグして削除"
 #: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr "ボタンをここからビューの中にあるタイトルバーへドラッグ"
+msgstr "ボタンをここからタイトルバーへドラッグ"
 
 #: ui/ConfigureTitlebar.qml:16
 #, kde-format
@@ -216,7 +216,7 @@ msgstr "タイトルバーのボタンを設定..."
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "新規入手..."
 
 #: ui/Themes.qml:93
 #, kde-format
@@ -224,59 +224,46 @@ msgid "Edit %1 Theme"
 msgstr "テーマ %1 を編集"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "横の枠なし"
+msgstr "ウィンドウの枠なし"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
 msgstr "横の枠なし"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "ウィンドウの枠のサイズ:"
+msgstr "小さいウィンドウの枠"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "横の枠なし"
+msgstr "普通のウィンドウの枠"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "ウィンドウの枠のサイズ:"
+msgstr "大きいウィンドウの枠"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "より大きいウィンドウの枠"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "ウィンドウの枠のサイズ:"
+msgstr "とても大きいウィンドウの枠"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "ウィンドウの枠のサイズ:"
+msgstr "さらに大きいウィンドウの枠"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "ウィンドウの枠のサイズ:"
+msgstr "特大のウィンドウの枠"
