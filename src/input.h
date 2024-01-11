@@ -337,7 +337,6 @@ private:
     KConfigWatcher::Ptr m_inputConfigWatcher;
 
     std::unique_ptr<InputEventFilter> m_virtualTerminalFilter;
-    std::unique_ptr<InputEventFilter> m_terminateServerFilter;
     std::unique_ptr<InputEventFilter> m_dragAndDropFilter;
     std::unique_ptr<InputEventFilter> m_lockscreenFilter;
     std::unique_ptr<InputEventFilter> m_screenEdgeFilter;
