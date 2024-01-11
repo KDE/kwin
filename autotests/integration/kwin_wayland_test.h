@@ -446,6 +446,11 @@ class MockInputMethod : public QObject, QtWayland::zwp_input_method_v1
 {
     Q_OBJECT
 public:
+    enum class Mode {
+        TopLevel,
+        Overlay,
+    };
+
     MockInputMethod(struct wl_registry *registry, int id, int version);
     ~MockInputMethod();
 
@@ -458,6 +463,8 @@ public:
         return m_context;
     }
 
+    void setMode(Mode mode);
+
 Q_SIGNALS:
     void activate();
 
@@ -469,6 +476,7 @@ private:
     std::unique_ptr<KWayland::Client::Surface> m_inputSurface;
     QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
+    Mode m_mode = Mode::TopLevel;
 };
 
 class FractionalScaleManagerV1 : public QObject, public QtWayland::wp_fractional_scale_manager_v1
@@ -683,7 +691,8 @@ enum class CreationSetup {
 };
 
 QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
-                                                                 KWayland::Client::Output *output);
+                                                                 KWayland::Client::Output *output,
+                                                                 MockInputMethod::Mode mode);
 
 FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface);
 

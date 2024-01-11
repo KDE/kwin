@@ -140,10 +140,17 @@ void InputPanelV1Window::reposition()
                     QRectF(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, m_windowGeometry.size()), m_windowGeometry.size());
 
                 // if it still doesn't fit we should continue with the unflipped version
-                if (flippedPopupRect.top() >= screen.top() || flippedPopupRect.bottom() <= screen.bottom()) {
+                if (flippedPopupRect.top() >= screen.top() && flippedPopupRect.bottom() <= screen.bottom()) {
                     popupRect.moveTop(flippedPopupRect.top());
                 }
             }
+            if (popupRect.top() < screen.top()) {
+                popupRect.moveTop(screen.top());
+            }
+            if (popupRect.bottom() > screen.bottom()) {
+                popupRect.moveBottom(screen.bottom());
+            }
+
             moveResize(popupRect);
         }
     } break;
