@@ -69,6 +69,7 @@ class AlphaModifierManagerV1;
 class FifoManagerV1;
 class SinglePixelBufferManagerV1;
 class ColorRepresentationManagerV1;
+class ExtBackgroundEffectManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -222,6 +223,7 @@ public:
 
     LinuxDrmSyncObjV1Interface *linuxSyncObj() const;
     ExternalBrightnessV1 *externalBrightness() const;
+    ExtBackgroundEffectManagerV1 *backgroundEffectManager() const;
 
     void setRenderBackend(RenderBackend *backend);
 
@@ -299,6 +301,7 @@ private:
     SinglePixelBufferManagerV1 *m_singlePixelBuffer = nullptr;
     XdgToplevelTagManagerV1 *m_toplevelTag = nullptr;
     ColorRepresentationManagerV1 *m_colorRepresentation = nullptr;
+    ExtBackgroundEffectManagerV1 *m_backgroundEffect = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

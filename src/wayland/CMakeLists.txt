@@ -41,6 +41,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-pip-v1.xml
         ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-session-management-v1.xml
 
+        ${WaylandProtocols_DATADIR}/staging/ext-background-effect/ext-background-effect-v1.xml
         ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
         ${WaylandProtocols_DATADIR}/stable/tablet/tablet-v2.xml
         ${WaylandProtocols_DATADIR}/stable/viewporter/viewporter.xml
@@ -87,6 +88,7 @@ target_sources(kwin PRIVATE
     abstract_drop_handler.cpp
     alphamodifier_v1.cpp
     appmenu.cpp
+    backgroundeffect_v1.cpp
     clientconnection.cpp
     colormanagement_v1.cpp
     colorrepresentation_v1.cpp
@@ -181,6 +183,7 @@ target_sources(kwin PRIVATE
 install(FILES
     alphamodifier_v1.h
     appmenu.h
+    backgroundeffect_v1.h
     clientconnection.h
     colormanagement_v1.h
     colorrepresentation_v1.h
