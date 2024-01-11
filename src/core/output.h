@@ -231,7 +231,7 @@ public:
     /**
      * Returns geometry of this output in device independent pixels, without rounding
      */
-    QRectF fractionalGeometry() const;
+    QRectF geometryF() const;
 
     /**
      * Equivalent to `QRect(QPoint(0, 0), geometry().size())`

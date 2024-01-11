@@ -2306,7 +2306,7 @@ void Workspace::updateClientArea()
         workAreas[desktop] = m_geometry;
 
         for (const Output *output : std::as_const(m_outputs)) {
-            screenAreas[desktop][output] = output->fractionalGeometry();
+            screenAreas[desktop][output] = output->geometryF();
         }
     }
 
@@ -2356,7 +2356,7 @@ void Workspace::updateClientArea()
             }
             restrictedAreas[vd] += strutRegion;
             for (Output *output : std::as_const(m_outputs)) {
-                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->fractionalGeometry()));
+                const auto geo = screenAreas[vd][output].intersected(adjustClientArea(window, output->geometryF()));
                 // ignore the geometry if it results in the screen getting removed completely
                 if (!geo.isEmpty()) {
                     screenAreas[vd][output] = geo;
@@ -2407,12 +2407,12 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const V
                 return *outputIt;
             }
         }
-        return output->fractionalGeometry();
+        return output->geometryF();
     case MaximizeFullArea:
     case FullScreenArea:
     case MovementArea:
     case ScreenArea:
-        return output->fractionalGeometry();
+        return output->geometryF();
     case WorkArea:
         return m_workAreas.value(desktop, m_geometry);
     case FullArea:
@@ -2518,7 +2518,7 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     const QRect needle(infos[index].x_org, infos[index].y_org, infos[index].width, infos[index].height);
 
     for (Output *output : std::as_const(m_outputs)) {
-        if (Xcb::toXNative(output->fractionalGeometry()) == needle) {
+        if (Xcb::toXNative(output->geometryF()) == needle) {
             return output;
         }
     }

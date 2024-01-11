@@ -593,7 +593,7 @@ void Xwayland::updatePrimary()
     }
 
     Output *const primaryOutput = workspace()->outputOrder().front();
-    const QRect primaryOutputGeometry = Xcb::toXNative(primaryOutput->fractionalGeometry());
+    const QRect primaryOutputGeometry = Xcb::toXNative(primaryOutput->geometryF());
     for (int i = 0; i < resources->num_crtcs; ++i) {
         Xcb::RandR::CrtcInfo crtcInfo(crtcs[i], resources->config_timestamp);
         const QRect geometry = crtcInfo.rect();
