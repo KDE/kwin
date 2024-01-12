@@ -64,6 +64,11 @@ void OutputLayer::resetRepaints()
     m_repaints = QRegion();
 }
 
+bool OutputLayer::needsRepaint() const
+{
+    return !m_repaints.isEmpty();
+}
+
 bool OutputLayer::scanout(SurfaceItem *surfaceItem)
 {
     return false;

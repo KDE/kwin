@@ -48,6 +48,7 @@ public:
     QRegion repaints() const;
     void resetRepaints();
     void addRepaint(const QRegion &region);
+    bool needsRepaint() const;
 
     /**
      * @arg position in device coordinates
