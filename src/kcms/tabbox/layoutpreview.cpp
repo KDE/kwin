@@ -66,7 +66,6 @@ LayoutPreview::LayoutPreview(const QString &path, bool showDesktopThumbnail, QOb
     };
     if (QQuickWindow *w = findWindow()) {
         w->setKeyboardGrabEnabled(true);
-        w->setMouseGrabEnabled(true);
         w->installEventFilter(this);
     }
 }
@@ -89,13 +88,9 @@ bool LayoutPreview::eventFilter(QObject *object, QEvent *event)
         if (m_item && keyEvent->key() == Qt::Key_Backtab) {
             m_item->decrementIndex();
         }
-    } else if (event->type() == QEvent::MouseButtonPress) {
-        if (QWindow *w = qobject_cast<QWindow *>(object)) {
-            if (!w->geometry().contains(static_cast<QMouseEvent *>(event)->globalPos())) {
-                object->deleteLater();
-                deleteLater();
-            }
-        }
+    } else if (event->type() == QEvent::FocusOut) {
+        object->deleteLater();
+        deleteLater();
     }
     return QObject::eventFilter(object, event);
 }
