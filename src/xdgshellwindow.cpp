@@ -708,10 +708,12 @@ void XdgToplevelWindow::handleRoleCommit()
 
 void XdgToplevelWindow::doMinimize()
 {
-    if (isMinimized()) {
-        workspace()->windowHidden(this);
-    } else {
-        Q_EMIT windowShown(this);
+    if (m_isInitialized) {
+        if (isMinimized()) {
+            workspace()->windowHidden(this);
+        } else {
+            Q_EMIT windowShown(this);
+        }
     }
     workspace()->updateMinimizedOfTransients(this);
 }
