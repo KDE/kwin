@@ -24,9 +24,10 @@ static constexpr auto s_safetyMargin = 1800us;
 DrmCommitThread::DrmCommitThread(const QString &name)
 {
     m_thread.reset(QThread::create([this]() {
+        const auto thread = QThread::currentThread();
         gainRealTime();
         while (true) {
-            if (QThread::currentThread()->isInterruptionRequested()) {
+            if (thread->isInterruptionRequested()) {
                 return;
             }
             std::unique_lock lock(m_mutex);
