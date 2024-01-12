@@ -133,6 +133,11 @@ bool GLShader::compile(GLuint program, GLenum shaderType, const QByteArray &sour
         qCCritical(KWIN_OPENGL) << "Failed to compile" << typeName << "shader:"
                                 << "\n"
                                 << log;
+        size_t line = 0;
+        const auto split = source.split('\n');
+        for (const auto &l : split) {
+            qCCritical(KWIN_OPENGL).nospace() << "line " << line++ << ":" << l;
+        }
     } else if (length > 0) {
         qCDebug(KWIN_OPENGL) << "Shader compile log:" << log;
     }
