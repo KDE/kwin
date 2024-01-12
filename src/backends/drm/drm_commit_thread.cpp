@@ -31,7 +31,7 @@ DrmCommitThread::DrmCommitThread(const QString &name)
                 return;
             }
             std::unique_lock lock(m_mutex);
-            if (m_commits.empty()) {
+            if (m_commits.empty() || m_committed) {
                 m_commitPending.wait(lock);
             }
             if (m_committed) {
