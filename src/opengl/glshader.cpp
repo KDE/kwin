@@ -463,7 +463,7 @@ bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
 {
     return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(src.sdrColorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
-        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::sRGB))
+        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::gamma22))
         && setUniform(FloatUniform::SdrBrightness, src.sdrBrightness())
         && setUniform(FloatUniform::MaxHdrBrightness, src.sdrBrightness());
 }
