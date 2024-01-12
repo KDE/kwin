@@ -181,7 +181,13 @@ DELEGATE(requestContextHelp, showContextHelp)
 
 void DecoratedClientImpl::requestMinimize()
 {
+    if (m_window->isDeleted()) {
+        return;
+    }
     m_window->setMinimized(true);
+    if (m_window->isMinimized() && m_window->isActive()) {
+        workspace()->activateNextWindow(m_window);
+    }
 }
 
 void DecoratedClientImpl::requestClose()

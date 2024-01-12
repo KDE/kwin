@@ -1195,6 +1195,9 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         break;
     case Options::MinimizeOp:
         window->setMinimized(true);
+        if (window->isMinimized() && window->isActive()) {
+            activateNextWindow(window);
+        }
         break;
     case Options::ShadeOp:
         window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());

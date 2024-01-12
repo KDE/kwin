@@ -221,6 +221,11 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         break;
     case MinimizeAction:
         window->setMinimized(!window->isMinimized());
+        if (window->isMinimized()) {
+            if (window->isActive()) {
+                workspace()->activateNextWindow(window);
+            }
+        }
         break;
     case MaximizeAction:
         window->setMaximize(window->maximizeMode() == MaximizeRestore, window->maximizeMode() == MaximizeRestore);
