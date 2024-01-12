@@ -265,7 +265,7 @@ void KWinTabBoxConfig::configureEffectClicked()
     if (form->effectComboCurrentData(KWinTabBoxConfigForm::AddonEffect).toBool()) {
         // Show the preview for addon effect
         new LayoutPreview(form->effectComboCurrentData(KWinTabBoxConfigForm::LayoutPath).toString(),
-                          form->config()->desktopMode(),
+                          form->config()->showDesktopMode(),
                           this);
     }
 }
