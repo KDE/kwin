@@ -160,7 +160,7 @@ void Compositor::composite(RenderLoop *renderLoop)
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop);
 
-    if (superLayer->needsRepaint()) {
+    if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         renderLoop->beginPaint();
 
         QRegion surfaceDamage = primaryLayer->repaints();
