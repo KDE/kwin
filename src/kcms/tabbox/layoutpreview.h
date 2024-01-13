@@ -44,7 +44,8 @@ public:
         MinimizedRole,
         DesktopNameRole,
         IconRole,
-        WindowIdRole
+        WindowIdRole,
+        CloseableRole,
     };
 
     explicit ExampleClientModel(QObject *parent = nullptr);
