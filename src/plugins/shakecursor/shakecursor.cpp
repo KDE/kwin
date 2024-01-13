@@ -72,7 +72,7 @@ bool ShakeCursorEffect::isActive() const
 
 void ShakeCursorEffect::pointerEvent(MouseEvent *event)
 {
-    if (event->type() != QEvent::MouseMove) {
+    if (event->type() != QEvent::MouseMove || event->buttons() != Qt::NoButton) {
         return;
     }
 
