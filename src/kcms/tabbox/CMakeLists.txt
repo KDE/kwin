@@ -31,7 +31,7 @@ target_link_libraries(kcm_kwintabbox
 )
 
 ########### install files ###############
-install(FILES thumbnails/konqueror.png
+install(FILES thumbnails/falkon.png
               thumbnails/kmail.png
               thumbnails/systemsettings.png
               thumbnails/dolphin.png
