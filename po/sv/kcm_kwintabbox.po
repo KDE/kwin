@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2024-01-13 00:39+0000\n"
 "PO-Revision-Date: 2022-06-15 21:50+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -17,12 +17,12 @@ msgstr ""
 "X-Generator: Lokalize 20.08.1\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: layoutpreview.cpp:131
+#: layoutpreview.cpp:126
 #, kde-format
 msgid "Show Desktop"
 msgstr "Visa skrivbord"
 
-#: layoutpreview.cpp:161
+#: layoutpreview.cpp:156
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"

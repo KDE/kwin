@@ -1,17 +1,18 @@
 #
+# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
 # John Zero <johnzero@telnet.hu>, 1997.
 # Balazs Nagy <julian7@kva.hu>, 1998.
 # Csaba Major <major@terrasoft.hu>, 1998.
 # Marcell Lengyel <miketkf@yahoo.com>, 1998.
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2010, 2011, 2012, 2014, 2015, 2019.
 # Balázs Úr <urbalazs@gmail.com>, 2012, 2013.
-# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
+# Kristof Kiszel <ulysses@fsf.hu>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-02 01:40+0000\n"
-"PO-Revision-Date: 2024-01-05 13:25+0100\n"
+"PO-Revision-Date: 2024-01-12 11:50+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.01.85\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -615,13 +616,13 @@ msgstr "Az eszközablakok elrejtése inaktív alkalmazásoknál"
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Virtuális asztal működése:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Ablak aktiválásakor egy másik virtuális asztalon:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -635,18 +636,25 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Ez a beállítás vezérli, hogy mi történjen, ha egy, a "
+"jelenlegitől eltérő virtuális asztalon aktiválódott egy ablak.</p><p>A <span "
+"style=\" font-style:italic;\">Váltás arra a virtuális asztalra</span> átvált "
+"arra a virtuális asztalra, amelyen az ablak jelenleg található.</p><p>Az "
+"<span style=\" font-style:italic;\">Ablak áthozása a jelenlegi virtuális "
+"asztalra</span> áthelyezi az ablakot az aktív virtuális asztalra.</p></"
+"body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Váltás arra a virtuális asztalra"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Ablak áthozása a jelenlegi virtuális asztalra"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
