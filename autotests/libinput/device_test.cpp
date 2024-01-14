@@ -155,6 +155,8 @@ private Q_SLOTS:
     void testLoadLmrTapButtonMap();
     void testLoadLeftHanded_data();
     void testLoadLeftHanded();
+    void testLoadPressureCurve_data();
+    void testLoadPressureCurve();
     void testOrientation_data();
     void testOrientation();
     void testCalibrationWithDefault();
@@ -2183,6 +2185,51 @@ void TestLibinputDevice::testLoadLeftHanded()
     if (configValue != initValue) {
         d.setLeftHanded(initValue);
         QCOMPARE(inputConfig.readEntry("LeftHanded", configValue), initValue);
+    }
+}
+
+void TestLibinputDevice::testLoadPressureCurve_data()
+{
+    QTest::addColumn<QEasingCurve>("initValue");
+    QTest::addColumn<QEasingCurve>("configValue");
+
+    const auto defaultCurve = Device::deserializePressureCurve("0.0,0.0;1.0,1.0;");
+    const auto modifiedCurve = Device::deserializePressureCurve("1.0,0.0;1.0,1.0;");
+
+    QTest::newRow("default -> modified") << defaultCurve << modifiedCurve;
+    QTest::newRow("modified -> default") << modifiedCurve << defaultCurve;
+    QTest::newRow("default -> default") << defaultCurve << defaultCurve;
+}
+
+void TestLibinputDevice::testLoadPressureCurve()
+{
+    auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    KConfigGroup inputConfig(config, QStringLiteral("Test"));
+
+    QFETCH(QEasingCurve, configValue);
+    const QString configValueString = Device::serializePressureCurve(configValue);
+    QFETCH(QEasingCurve, initValue);
+    const QString initValueString = Device::serializePressureCurve(initValue);
+
+    inputConfig.writeEntry("TabletToolPressureCurve", configValueString);
+
+    libinput_device device;
+    Device d(&device);
+    d.setPressureCurve(initValueString);
+    QCOMPARE(d.pressureCurve(), initValue);
+    // no config group set, should not change
+    d.loadConfiguration();
+    QCOMPARE(d.pressureCurve(), initValue);
+
+    // set the group
+    d.setConfig(inputConfig);
+    d.loadConfiguration();
+    QCOMPARE(d.pressureCurve(), configValue);
+
+    // and try to store
+    if (configValue != initValue) {
+        d.setPressureCurve(initValueString);
+        QCOMPARE(inputConfig.readEntry("TabletToolPressureCurve", configValueString), initValueString);
     }
 }
 

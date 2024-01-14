@@ -13,6 +13,7 @@
 #include <libinput.h>
 
 #include <KConfigGroup>
+#include <QEasingCurve>
 
 #include <QList>
 #include <QMatrix4x4>
@@ -144,6 +145,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool defaultMapToWorkspace READ defaultMapToWorkspace CONSTANT)
     Q_PROPERTY(bool mapToWorkspace READ isMapToWorkspace WRITE setMapToWorkspace NOTIFY mapToWorkspaceChanged)
     Q_PROPERTY(QString deviceGroupId READ deviceGroupId CONSTANT)
+    Q_PROPERTY(QString defaultPressureCurve READ defaultPressureCurve CONSTANT)
+    Q_PROPERTY(QString pressureCurve READ serializedPressureCurve WRITE setPressureCurve NOTIFY pressureCurveChanged)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -437,6 +440,14 @@ public:
     }
     void setCalibrationMatrix(const QMatrix4x4 &matrix);
 
+    QString defaultPressureCurve() const;
+    QEasingCurve pressureCurve() const;
+    QString serializedPressureCurve() const;
+    void setPressureCurve(const QString &curve);
+
+    static QString serializePressureCurve(const QEasingCurve &curve);
+    static QEasingCurve deserializePressureCurve(const QString &curve);
+
     Qt::ScreenOrientation defaultOrientation() const
     {
         quint32 orientation = defaultValue("Orientation", static_cast<quint32>(Qt::PrimaryOrientation));
@@ -677,6 +688,7 @@ Q_SIGNALS:
     void clickMethodChanged();
     void outputAreaChanged();
     void mapToWorkspaceChanged();
+    void pressureCurveChanged();
 
 private:
     template<typename T>
@@ -758,6 +770,7 @@ private:
     Qt::ScreenOrientation m_orientation = Qt::PrimaryOrientation;
     QMatrix4x4 m_defaultCalibrationMatrix;
     QMatrix4x4 m_calibrationMatrix;
+    QEasingCurve m_pressureCurve;
     quint32 m_supportedClickMethods;
     enum libinput_config_click_method m_defaultClickMethod;
     enum libinput_config_click_method m_clickMethod;

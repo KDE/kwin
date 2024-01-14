@@ -100,7 +100,8 @@ enum class ConfigKey {
     Calibration,
     OutputName,
     OutputArea,
-    MapToWorkspace
+    MapToWorkspace,
+    TabletToolPressureCurve,
 };
 
 struct ConfigDataBase
@@ -206,6 +207,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::ScrollFactor, std::make_shared<ConfigData<qreal>>(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, std::make_shared<ConfigData<DeviceOrientation>>()},
     {ConfigKey::Calibration, std::make_shared<ConfigData<CalibrationMatrix>>()},
+    {ConfigKey::TabletToolPressureCurve, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("TabletToolPressureCurve"), &Device::setPressureCurve, &Device::defaultPressureCurve)},
     {ConfigKey::OutputName, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)},
     {ConfigKey::OutputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("OutputArea"), &Device::setOutputArea, &Device::defaultOutputArea)},
     {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
@@ -325,6 +327,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_config()
     , m_defaultCalibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_default_matrix))
     , m_calibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_matrix))
+    , m_pressureCurve(deserializePressureCurve(defaultPressureCurve()))
     , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
     , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
     , m_clickMethod(libinput_device_config_click_get_method(m_device))
@@ -616,6 +619,67 @@ void Device::setCalibrationMatrix(const QMatrix4x4 &matrix)
         m_calibrationMatrix = matrix;
         Q_EMIT calibrationMatrixChanged();
     }
+}
+
+QString Device::defaultPressureCurve() const
+{
+    return QStringLiteral("0.0,0.0;1.0,1.0;");
+}
+
+QEasingCurve Device::pressureCurve() const
+{
+    return m_pressureCurve;
+}
+
+QString Device::serializedPressureCurve() const
+{
+    return serializePressureCurve(m_pressureCurve);
+}
+
+void Device::setPressureCurve(const QString &curve)
+{
+    const auto easingCurve = deserializePressureCurve(curve);
+    if (m_pressureCurve != easingCurve) {
+        writeEntry(ConfigKey::TabletToolPressureCurve, curve);
+        m_pressureCurve = easingCurve;
+        Q_EMIT pressureCurveChanged();
+    }
+}
+
+QString Device::serializePressureCurve(const QEasingCurve &curve)
+{
+    // We only care about the first two points. toCubicSpline adds the end point as the third, but to us that's always (1,1).
+    const auto points = curve.toCubicSpline().first(2);
+    QString serializedString;
+    for (const QPointF &pair : points) {
+        serializedString += QString::number(pair.x());
+        serializedString += ',';
+        serializedString += QString::number(pair.y());
+        serializedString += ';';
+    }
+
+    return serializedString;
+}
+
+QEasingCurve Device::deserializePressureCurve(const QString &curve)
+{
+    const QStringList data = curve.split(';');
+
+    QList<QPointF> points;
+    for (const QString &pair : data) {
+        if (pair.indexOf(',') > -1) {
+            points.append({pair.section(',', 0, 0).toDouble(),
+                           pair.section(',', 1, 1).toDouble()});
+        }
+    }
+
+    auto easingCurve = QEasingCurve(QEasingCurve::Type::BezierSpline);
+
+    // We only support 2 points
+    if (points.size() >= 2) {
+        easingCurve.addCubicBezierSegment(points.at(0), points.at(1), QPointF{1.0f, 1.0f});
+    }
+    return easingCurve;
 }
 
 void Device::setOrientation(Qt::ScreenOrientation orientation)
