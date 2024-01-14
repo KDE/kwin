@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2024-01-14 03:08+0000\n"
 "PO-Revision-Date: 2011-01-17 23:42+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -19,35 +19,35 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=1;\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: layoutpreview.cpp:131
+#: layoutpreview.cpp:127
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "Show Desktop"
 msgstr "Semua Desktop"
 
-#: layoutpreview.cpp:161
+#: layoutpreview.cpp:157
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Semua Desktop"
 
-#: main.cpp:67
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Utama"
 
-#: main.cpp:68
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternatif"
 
-#: main.cpp:70
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr ""
 
-#: main.cpp:84
+#: main.cpp:83
 #, fuzzy, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

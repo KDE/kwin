@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-10 01:35+0000\n"
+"POT-Creation-Date: 2024-01-14 03:08+0000\n"
 "PO-Revision-Date: 2023-10-08 23:38+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1215,22 +1215,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "호스트 이름"
 
-#: input.cpp:2022
+#: input.cpp:2010
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "다음 출력으로 태블릿 이동"
 
-#: input.cpp:2101
+#: input.cpp:2089
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "%1(으)로 태블릿 이동됨"
 
-#: input.cpp:2101
+#: input.cpp:2089
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "태블릿에서 출력 변경됨"
 
-#: input.cpp:3200
+#: input.cpp:3183
 #, kde-format
 msgid "Touchpad"
 msgstr "터치패드"
