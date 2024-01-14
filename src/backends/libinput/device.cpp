@@ -16,6 +16,7 @@
 #include "main.h"
 #include "mousebuttons.h"
 #include "pointer_input.h"
+#include "utils/cubic_curve.h"
 
 #include <QCryptographicHash>
 #include <QDBusArgument>
@@ -100,7 +101,8 @@ enum class ConfigKey {
     Calibration,
     OutputName,
     OutputArea,
-    MapToWorkspace
+    MapToWorkspace,
+    PressureCurve,
 };
 
 struct ConfigDataBase
@@ -206,6 +208,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::ScrollFactor, std::make_shared<ConfigData<qreal>>(QByteArrayLiteral("ScrollFactor"), &Device::setScrollFactor, &Device::scrollFactorDefault)},
     {ConfigKey::Orientation, std::make_shared<ConfigData<DeviceOrientation>>()},
     {ConfigKey::Calibration, std::make_shared<ConfigData<CalibrationMatrix>>()},
+    {ConfigKey::PressureCurve, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("PressureCurve"), &Device::setPressureCurve, &Device::defaultPressureCurve)},
     {ConfigKey::OutputName, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)},
     {ConfigKey::OutputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("OutputArea"), &Device::setOutputArea, &Device::defaultOutputArea)},
     {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
@@ -325,6 +328,7 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_config()
     , m_defaultCalibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_default_matrix))
     , m_calibrationMatrix(getMatrix(m_device, &libinput_device_config_calibration_get_matrix))
+    , m_pressureCurve(CubicCurve())
     , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
     , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
     , m_clickMethod(libinput_device_config_click_get_method(m_device))
@@ -616,6 +620,32 @@ void Device::setCalibrationMatrix(const QMatrix4x4 &matrix)
         m_calibrationMatrix = matrix;
         Q_EMIT calibrationMatrixChanged();
     }
+}
+
+QString Device::defaultPressureCurve() const
+{
+    return QStringLiteral("0.0,0.0;1.0,1.0;");
+}
+
+CubicCurve const &Device::pressureCurve() const
+{
+    return m_pressureCurve;
+}
+
+QString Device::serializedPressureCurve() const
+{
+    return m_pressureCurve.toString();
+}
+
+void Device::setPressureCurve(const QString &curve)
+{
+    if (m_pressureCurve.toString() == curve) {
+        return;
+    }
+
+    writeEntry(ConfigKey::PressureCurve, curve);
+    m_pressureCurve = m_pressureCurve.fromString(curve);
+    Q_EMIT pressureCurveChanged();
 }
 
 void Device::setOrientation(Qt::ScreenOrientation orientation)
