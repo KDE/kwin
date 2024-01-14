@@ -536,8 +536,10 @@ void Connection::processEvents()
 #else
                 const QPointF globalPos;
 #endif
+                const qreal pressure = event->device()->pressureCurve().valueForProgress(tte->pressure());
+
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
-                                                        globalPos, tte->pressure(),
+                                                        globalPos, pressure,
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(),
                                                         tte->isTipDown(), tte->isNearby(), createTabletId(tte->tool(), event->device()), tte->time());
             }
