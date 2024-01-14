@@ -1,6 +1,7 @@
 target_sources(kwin PRIVATE
     common.cpp
     drm_format_helper.cpp
+    cubic_curve.cpp
     edid.cpp
     filedescriptor.cpp
     orientationsensor.cpp

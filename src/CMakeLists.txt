@@ -583,6 +583,7 @@ install(FILES
 install(FILES
     utils/c_ptr.h
     utils/common.h
+    utils/cubic_curve.h
     utils/damagejournal.h
     utils/drm_format_helper.h
     utils/edid.h
