@@ -126,8 +126,8 @@ FocusScope {
 
         anchors.fill: parent
         anchors.margins: heap.padding
-        fillGaps: true
-        spacing: Kirigami.Units.smallSpacing * 5
+
+        placementMode: width >= height ? ExpoLayout.Rows : ExpoLayout.Columns
 
         Instantiator {
             id: windowsInstantiator

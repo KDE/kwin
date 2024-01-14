@@ -178,7 +178,6 @@ Item {
                         return container.effect.selectedIds;
                 }
             }
-            layout.mode: effect.layout
             model: KWinComponents.WindowFilterModel {
                 activity: KWinComponents.Workspace.currentActivity
                 desktop: {

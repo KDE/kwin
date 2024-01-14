@@ -133,19 +133,6 @@ void WindowViewEffect::setAnimationDuration(int duration)
     }
 }
 
-int WindowViewEffect::layout() const
-{
-    return m_layout;
-}
-
-void WindowViewEffect::setLayout(int layout)
-{
-    if (m_layout != layout) {
-        m_layout = layout;
-        Q_EMIT layoutChanged();
-    }
-}
-
 bool WindowViewEffect::ignoreMinimized() const
 {
     return WindowViewConfig::ignoreMinimized();
@@ -160,7 +147,6 @@ void WindowViewEffect::reconfigure(ReconfigureFlags)
 {
     WindowViewConfig::self()->read();
     setAnimationDuration(animationTime(300));
-    setLayout(WindowViewConfig::layoutMode());
 
     for (ElectricBorder border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);

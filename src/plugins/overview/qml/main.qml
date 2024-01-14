@@ -602,7 +602,6 @@ FocusScope {
                     Drag.hotSpot: Qt.point(width * 0.5, height * 0.5)
                     Drag.keys: ["kwin-desktop"]
 
-                    layout.mode: effect.layout
                     focus: current
                     padding: Kirigami.Units.largeSpacing
                     animationDuration: effect.animationDuration

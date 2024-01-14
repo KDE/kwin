@@ -19,7 +19,6 @@ class WindowViewEffect : public QuickSceneEffect
 {
     Q_OBJECT
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
-    Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
     Q_PROPERTY(PresentWindowsMode mode READ mode NOTIFY modeChanged)
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor NOTIFY partialActivationFactorChanged)
@@ -49,9 +48,6 @@ public:
 
     int animationDuration() const;
     void setAnimationDuration(int duration);
-
-    int layout() const;
-    void setLayout(int layout);
 
     bool ignoreMinimized() const;
 
@@ -85,7 +81,6 @@ Q_SIGNALS:
     void partialActivationFactorChanged();
     void gestureInProgressChanged();
     void modeChanged();
-    void layoutChanged();
     void ignoreMinimizedChanged();
     void searchTextChanged();
     void selectedIdsChanged();
@@ -121,7 +116,6 @@ private:
     qreal m_partialActivationFactor = 0;
     PresentWindowsMode m_mode;
     int m_animationDuration = 400;
-    int m_layout = 1;
     bool m_gestureInProgress = false;
 };
 

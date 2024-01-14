@@ -18,7 +18,6 @@ class OverviewEffect : public QuickSceneEffect
 {
     Q_OBJECT
     Q_PROPERTY(int animationDuration READ animationDuration NOTIFY animationDurationChanged)
-    Q_PROPERTY(int layout READ layout NOTIFY layoutChanged)
     Q_PROPERTY(bool ignoreMinimized READ ignoreMinimized NOTIFY ignoreMinimizedChanged)
     Q_PROPERTY(bool filterWindows READ filterWindows NOTIFY filterWindowsChanged)
     Q_PROPERTY(bool organizedGrid READ organizedGrid NOTIFY organizedGridChanged)
@@ -35,9 +34,6 @@ class OverviewEffect : public QuickSceneEffect
 public:
     OverviewEffect();
     ~OverviewEffect() override;
-
-    int layout() const;
-    void setLayout(int layout);
 
     bool ignoreMinimized() const;
     bool organizedGrid() const;
@@ -65,7 +61,6 @@ public:
 
 Q_SIGNALS:
     void animationDurationChanged();
-    void layoutChanged();
     void overviewPartialActivationFactorChanged();
     void overviewGestureInProgressChanged();
     void transitionPartialActivationFactorChanged();
@@ -102,7 +97,6 @@ private:
     QPointF m_desktopOffset;
     bool m_filterWindows = true;
     int m_animationDuration = 400;
-    int m_layout = 1;
 };
 
 } // namespace KWin

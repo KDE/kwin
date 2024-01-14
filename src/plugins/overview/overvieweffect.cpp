@@ -172,7 +172,6 @@ OverviewEffect::~OverviewEffect()
 void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
-    setLayout(OverviewConfig::layoutMode());
     setAnimationDuration(animationTime(300));
     setFilterWindows(OverviewConfig::filterWindows());
 
@@ -252,11 +251,6 @@ QPointF OverviewEffect::desktopOffset() const
     return m_desktopOffset;
 }
 
-int OverviewEffect::layout() const
-{
-    return m_layout;
-}
-
 bool OverviewEffect::ignoreMinimized() const
 {
     return OverviewConfig::ignoreMinimized();
@@ -265,14 +259,6 @@ bool OverviewEffect::ignoreMinimized() const
 bool OverviewEffect::organizedGrid() const
 {
     return OverviewConfig::organizedGrid();
-}
-
-void OverviewEffect::setLayout(int layout)
-{
-    if (m_layout != layout) {
-        m_layout = layout;
-        Q_EMIT layoutChanged();
-    }
 }
 
 int OverviewEffect::requestedEffectChainPosition() const
