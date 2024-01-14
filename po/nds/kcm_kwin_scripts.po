@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-21 02:02+0000\n"
+"POT-Creation-Date: 2024-01-14 00:38+0000\n"
 "PO-Revision-Date: 2014-02-15 01:43+0100\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-doc@kde.org>\n"
@@ -19,17 +19,17 @@ msgstr ""
 "X-Generator: Lokalize 1.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: module.cpp:50
+#: module.cpp:49
 #, kde-format
 msgid "Import KWin Script"
 msgstr "KWin-Skripten importeren"
 
-#: module.cpp:51
+#: module.cpp:50
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin-Skripten (*.kwinscript)"
 
-#: module.cpp:62
+#: module.cpp:61
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -37,14 +37,14 @@ msgid ""
 "%1"
 msgstr ""
 
-#: module.cpp:66
+#: module.cpp:65
 #, fuzzy, kde-format
 #| msgid "The selected script was exported successfully!"
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "Dat utsöchte Skript wöör mit Spood exporteert."
 
-#: module.cpp:125
+#: module.cpp:124
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr ""

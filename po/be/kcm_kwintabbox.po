@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:39+0000\n"
+"POT-Creation-Date: 2024-01-14 00:38+0000\n"
 "PO-Revision-Date: 2023-02-08 13:48\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -21,33 +21,33 @@ msgstr ""
 "X-Crowdin-File: /main/be/kwin/kcm_kwintabbox.po\n"
 "X-Crowdin-File-ID: 8760\n"
 
-#: layoutpreview.cpp:126
+#: layoutpreview.cpp:127
 #, kde-format
 msgid "Show Desktop"
 msgstr "Паказаць працоўны стол"
 
-#: layoutpreview.cpp:156
+#: layoutpreview.cpp:157
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Працоўны стол 1"
 
-#: main.cpp:67
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Асноўныя"
 
-#: main.cpp:68
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Альтэрнатыўны"
 
-#: main.cpp:70
+#: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
 msgstr "Атрымаць новыя сродкі пераключэння задач..."
 
-#: main.cpp:84
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

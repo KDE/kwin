@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:39+0000\n"
+"POT-Creation-Date: 2024-01-14 00:38+0000\n"
 "PO-Revision-Date: 2014-10-20 19:41+0000\n"
 "Last-Translator: Admir Salkanović <asalkanovi2@etf.unsa.ba>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -20,36 +20,36 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
-#: layoutpreview.cpp:126
+#: layoutpreview.cpp:127
 #, fuzzy, kde-format
 #| msgctxt "An example Desktop Name"
 #| msgid "Desktop 1"
 msgid "Show Desktop"
 msgstr "Desktop 1"
 
-#: layoutpreview.cpp:156
+#: layoutpreview.cpp:157
 #, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
 msgstr "Desktop 1"
 
-#: main.cpp:67
+#: main.cpp:66
 #, kde-format
 msgid "Main"
 msgstr "Glavni"
 
-#: main.cpp:68
+#: main.cpp:67
 #, kde-format
 msgid "Alternative"
 msgstr "Alternativa"
 
-#: main.cpp:70
+#: main.cpp:69
 #, fuzzy, kde-format
 #| msgid "Get New Window Switcher Layout"
 msgid "Get New Task Switchers..."
 msgstr "Nabavite Novi Prozor Switcher Izgled"
 
-#: main.cpp:84
+#: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."

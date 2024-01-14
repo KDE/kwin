@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-21 02:02+0000\n"
+"POT-Creation-Date: 2024-01-14 00:38+0000\n"
 "PO-Revision-Date: 2012-05-14 16:25-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
 "3 : 4\n"
 
-#: module.cpp:50
+#: module.cpp:49
 #, fuzzy, kde-format
 #| msgid "Import KWin script..."
 msgid "Import KWin Script"
 msgstr "Iompórtáil script KWin..."
 
-#: module.cpp:51
+#: module.cpp:50
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr ""
 
-#: module.cpp:62
+#: module.cpp:61
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -36,13 +36,13 @@ msgid ""
 "%1"
 msgstr ""
 
-#: module.cpp:66
+#: module.cpp:65
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr ""
 
-#: module.cpp:125
+#: module.cpp:124
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr ""

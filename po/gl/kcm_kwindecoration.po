@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-06 02:04+0000\n"
+"POT-Creation-Date: 2024-01-14 00:38+0000\n"
 "PO-Revision-Date: 2023-10-12 23:43+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -75,7 +75,7 @@ msgstr "Manter debaixo doutras xanelas"
 msgid "Keep above other windows"
 msgstr "Manter enriba doutras xanelas"
 
-#: kcm.cpp:176
+#: kcm.cpp:177
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"

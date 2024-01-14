@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-21 02:02+0000\n"
-"PO-Revision-Date: 2024-01-06 03:31\n"
+"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"PO-Revision-Date: 2024-01-13 05:59\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -17,17 +17,17 @@ msgstr ""
 "X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwin_scripts.pot\n"
 "X-Crowdin-File-ID: 43545\n"
 
-#: module.cpp:50
+#: module.cpp:49
 #, kde-format
 msgid "Import KWin Script"
 msgstr "导入 KWin 脚本"
 
-#: module.cpp:51
+#: module.cpp:50
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin 脚本 (*.kwinscript)"
 
-#: module.cpp:62
+#: module.cpp:61
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -37,13 +37,13 @@ msgstr ""
 "无法导入选定的脚本。\n"
 "%1"
 
-#: module.cpp:66
+#: module.cpp:65
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "脚本“%1”已成功导入。"
 
-#: module.cpp:125
+#: module.cpp:124
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "卸载 KWin 脚本时出错：%1"
