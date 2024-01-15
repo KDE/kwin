@@ -59,7 +59,10 @@ void CursorDelegateOpenGL::paint(const RenderTarget &renderTarget, const QRegion
     renderLayer.delegate()->paint(offscreenRenderTarget, infiniteRegion());
     renderLayer.delegate()->postPaint();
 
-    QMatrix4x4 mvp = renderTarget.transform().toMatrix();
+    QMatrix4x4 mvp;
+    mvp.scale(1, -1); // flip the y axis back
+    mvp *= renderTarget.transform().toMatrix();
+    mvp.scale(1, -1); // undo ortho() flipping the y axis
     mvp.ortho(QRectF(QPointF(0, 0), m_output->transform().map(renderTarget.size())));
     mvp.translate(cursorRect.x(), cursorRect.y());
 
