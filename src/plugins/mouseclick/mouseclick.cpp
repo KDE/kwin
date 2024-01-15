@@ -203,8 +203,7 @@ void MouseClickEffect::repaint()
         for (auto &click : m_clicks) {
             dirtyRegion |= QRect(click->m_pos.x() - radius, click->m_pos.y() - radius, 2 * radius, 2 * radius);
             if (click->m_frame) {
-                // we grant the plasma style 32px padding for stuff like shadows...
-                dirtyRegion |= click->m_frame->geometry().adjusted(-32, -32, 32, 32);
+                dirtyRegion |= click->m_frame->geometry();
             }
         }
         effects->addRepaint(dirtyRegion);

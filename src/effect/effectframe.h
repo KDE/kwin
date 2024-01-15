@@ -139,7 +139,7 @@ public:
     void setAlignment(Qt::Alignment alignment);
     Qt::Alignment alignment() const;
     void setGeometry(const QRect &geometry, bool force = false);
-    const QRect &geometry() const;
+    QRect geometry() const;
 
     void setText(const QString &text);
     const QString &text() const;
@@ -198,7 +198,6 @@ public:
 
 private:
     EffectFrameQuickScene *m_view;
-    QRect m_geometry;
 };
 
 } // namespace KWin

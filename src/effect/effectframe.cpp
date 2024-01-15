@@ -229,9 +229,8 @@ EffectFrame::EffectFrame(EffectFrameStyle style, bool staticSize, QPoint positio
     connect(m_view, &OffscreenQuickScene::repaintNeeded, this, [this] {
         effects->addRepaint(geometry());
     });
-    connect(m_view, &OffscreenQuickScene::geometryChanged, this, [this](const QRect &oldGeometry, const QRect &newGeometry) {
+    connect(m_view, &OffscreenQuickScene::geometryChanged, this, [](const QRect &oldGeometry, const QRect &newGeometry) {
         effects->addRepaint(oldGeometry);
-        m_geometry = newGeometry;
         effects->addRepaint(newGeometry);
     });
 }
@@ -270,10 +269,9 @@ void EffectFrame::free()
     m_view->hide();
 }
 
-const QRect &EffectFrame::geometry() const
+QRect EffectFrame::geometry() const
 {
-    // Can't forward to OffscreenQuickScene::geometry() because we return a reference.
-    return m_geometry;
+    return m_view->geometry();
 }
 
 void EffectFrame::setGeometry(const QRect &geometry, bool force)
