@@ -207,6 +207,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
     qCDebug(KWIN_SCREENCAST) << "Stream format found, defining buffers";
     newStreamParams();
+    m_streaming = true;
 }
 
 void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
