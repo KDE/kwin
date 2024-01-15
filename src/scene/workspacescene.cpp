@@ -238,12 +238,7 @@ QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
     const std::chrono::milliseconds presentTime =
         std::chrono::duration_cast<std::chrono::milliseconds>(renderLoop->nextPresentationTimestamp());
 
-    if (Q_UNLIKELY(presentTime < m_expectedPresentTimestamp)) {
-        qCDebug(KWIN_CORE,
-                "Provided presentation timestamp is invalid: %lld (current: %lld)",
-                static_cast<long long>(presentTime.count()),
-                static_cast<long long>(m_expectedPresentTimestamp.count()));
-    } else {
+    if (presentTime > m_expectedPresentTimestamp) {
         m_expectedPresentTimestamp = presentTime;
     }
 
