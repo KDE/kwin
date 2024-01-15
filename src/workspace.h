@@ -612,6 +612,8 @@ private:
     void createDpmsFilter();
     void maybeDestroyDpmsFilter();
 
+    bool breaksShowingDesktop(Window *window) const;
+
     struct Constraint
     {
         Window *below;

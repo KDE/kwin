@@ -687,6 +687,10 @@ X11Window *Workspace::createUnmanaged(xcb_window_t windowId)
 
 void Workspace::addX11Window(X11Window *window)
 {
+    if (showingDesktop() && breaksShowingDesktop(window)) {
+        setShowingDesktop(false);
+    }
+
     Group *grp = findGroup(window->window());
     if (grp != nullptr) {
         grp->gotLeader(window);
@@ -769,6 +773,10 @@ void Workspace::removeDeleted(Window *c)
 
 void Workspace::addWaylandWindow(Window *window)
 {
+    if (showingDesktop() && breaksShowingDesktop(window)) {
+        setShowingDesktop(false);
+    }
+
     setupWindowConnections(window);
     window->updateLayer();
 
@@ -1548,6 +1556,11 @@ void Workspace::focusToNull()
     }
 }
 
+bool Workspace::breaksShowingDesktop(Window *window) const
+{
+    return !(window->isUnmanaged() || window->isDock() || window->isDesktop() || window->belongsToDesktop());
+}
+
 void Workspace::setShowingDesktop(bool showing, bool animated)
 {
     const bool changed = showing != showing_desktop;
@@ -1558,13 +1571,12 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
 
     for (int i = stacking_order.count() - 1; i > -1; --i) {
         auto window = stacking_order.at(i);
-        if (window->isDeleted() || window->isUnmanaged()) {
+        if (window->isDeleted()) {
             continue;
         }
-        if (window->isDock() || window->isDesktop() || window->belongsToDesktop()) {
-            continue;
+        if (breaksShowingDesktop(window)) {
+            window->setHiddenByShowDesktop(showing_desktop);
         }
-        window->setHiddenByShowDesktop(showing_desktop);
     }
 
     if (showing_desktop) {
