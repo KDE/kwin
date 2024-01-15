@@ -30,6 +30,8 @@ private Q_SLOTS:
     void testRestoreFocusWithDesktopWindow();
     void testQuitAfterActivatingHiddenWindow();
     void testDontQuitAfterActivatingDock();
+    void testQuitAfterAddingWindow();
+    void testDontQuitAfterAddingDock();
 };
 
 void ShowingDesktopTest::initTestCase()
@@ -185,6 +187,52 @@ void ShowingDesktopTest::testDontQuitAfterActivatingDock()
 
     workspace()->slotToggleShowDesktop();
     QVERIFY(!workspace()->showingDesktop());
+}
+
+void ShowingDesktopTest::testQuitAfterAddingWindow()
+{
+    // This test verifies that the show desktop mode is deactivated after mapping a new window.
+
+    std::unique_ptr<KWayland::Client::Surface> surface1(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1(Test::createXdgToplevelSurface(surface1.get()));
+    Test::renderAndWaitForShown(surface1.get(), QSize(100, 50), Qt::blue);
+
+    workspace()->slotToggleShowDesktop();
+    QVERIFY(workspace()->showingDesktop());
+
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::blue);
+
+    QVERIFY(!workspace()->showingDesktop());
+}
+
+void ShowingDesktopTest::testDontQuitAfterAddingDock()
+{
+    // This test verifies that the show desktop mode is not broken after adding a dock.
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window->isActive());
+
+    workspace()->slotToggleShowDesktop();
+    QVERIFY(workspace()->showingDesktop());
+
+    std::unique_ptr<KWayland::Client::Surface> dockSurface{Test::createSurface()};
+    std::unique_ptr<Test::LayerSurfaceV1> dockShellSurface{Test::createLayerSurfaceV1(dockSurface.get(), QStringLiteral("dock"))};
+    dockShellSurface->set_size(1280, 50);
+    dockShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
+    dockShellSurface->set_exclusive_zone(50);
+    dockShellSurface->set_keyboard_interactivity(1);
+    dockSurface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QSignalSpy dockConfigureRequestedSpy(dockShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(dockConfigureRequestedSpy.wait());
+    auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
+    QVERIFY(dock->isActive());
+
+    QVERIFY(workspace()->showingDesktop());
+    workspace()->slotToggleShowDesktop();
 }
 
 WAYLANDTEST_MAIN(ShowingDesktopTest)
