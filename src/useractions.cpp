@@ -1131,6 +1131,11 @@ void Workspace::windowShortcutUpdated(Window *window)
     if (!window->shortcut().isEmpty()) {
         if (action == nullptr) { // new shortcut
             action = new QAction(this);
+            connect(window, &Window::closed, action, [action]() {
+                KGlobalAccel::self()->removeAllShortcuts(action);
+                delete action;
+            });
+
             action->setProperty("componentName", QStringLiteral("kwin"));
             action->setObjectName(key);
             action->setText(i18n("Activate Window (%1)", window->caption()));
