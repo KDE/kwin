@@ -154,7 +154,7 @@ Item {
         verticalAlignment: Text.AlignVCenter
         text: i18nd("kwin", "Drag Down To Close")
         opacity: thumbSource.opacity
-        visible: !thumb.activeHidden && activeDragHandler.active
+        visible: !thumb.activeHidden && touchDragHandler.active
     }
 
     Kirigami.Icon {
