@@ -48,20 +48,19 @@ public:
     EffectFrameStyle style() const;
     bool isStatic() const;
 
-    // has to be const-ref to match EffectFrameImpl...
-    const QFont &font() const;
+    QFont font() const;
     void setFont(const QFont &font);
     Q_SIGNAL void fontChanged(const QFont &font);
 
-    const QIcon &icon() const;
+    QIcon icon() const;
     void setIcon(const QIcon &icon);
     Q_SIGNAL void iconChanged(const QIcon &icon);
 
-    const QSize &iconSize() const;
+    QSize iconSize() const;
     void setIconSize(const QSize &iconSize);
     Q_SIGNAL void iconSizeChanged(const QSize &iconSize);
 
-    const QString &text() const;
+    QString text() const;
     void setText(const QString &text);
     Q_SIGNAL void textChanged(const QString &text);
 
@@ -142,16 +141,16 @@ public:
     QRect geometry() const;
 
     void setText(const QString &text);
-    const QString &text() const;
+    QString text() const;
     void setFont(const QFont &font);
-    const QFont &font() const;
+    QFont font() const;
     /**
      * Set the icon that will appear on the left-hand size of the frame.
      */
     void setIcon(const QIcon &icon);
-    const QIcon &icon() const;
+    QIcon icon() const;
     void setIconSize(const QSize &size);
-    const QSize &iconSize() const;
+    QSize iconSize() const;
 
     /**
      * @returns The style of this EffectFrame.

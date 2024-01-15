@@ -59,7 +59,7 @@ bool EffectFrameQuickScene::isStatic() const
     return m_static;
 }
 
-const QFont &EffectFrameQuickScene::font() const
+QFont EffectFrameQuickScene::font() const
 {
     return m_font;
 }
@@ -75,7 +75,7 @@ void EffectFrameQuickScene::setFont(const QFont &font)
     reposition();
 }
 
-const QIcon &EffectFrameQuickScene::icon() const
+QIcon EffectFrameQuickScene::icon() const
 {
     return m_icon;
 }
@@ -87,7 +87,7 @@ void EffectFrameQuickScene::setIcon(const QIcon &icon)
     reposition();
 }
 
-const QSize &EffectFrameQuickScene::iconSize() const
+QSize EffectFrameQuickScene::iconSize() const
 {
     return m_iconSize;
 }
@@ -103,7 +103,7 @@ void EffectFrameQuickScene::setIconSize(const QSize &iconSize)
     reposition();
 }
 
-const QString &EffectFrameQuickScene::text() const
+QString EffectFrameQuickScene::text() const
 {
     return m_text;
 }
@@ -254,7 +254,7 @@ void EffectFrame::setAlignment(Qt::Alignment alignment)
     m_view->setAlignment(alignment);
 }
 
-const QFont &EffectFrame::font() const
+QFont EffectFrame::font() const
 {
     return m_view->font();
 }
@@ -279,7 +279,7 @@ void EffectFrame::setGeometry(const QRect &geometry, bool force)
     m_view->setGeometry(geometry);
 }
 
-const QIcon &EffectFrame::icon() const
+QIcon EffectFrame::icon() const
 {
     return m_view->icon();
 }
@@ -293,7 +293,7 @@ void EffectFrame::setIcon(const QIcon &icon)
     }
 }
 
-const QSize &EffectFrame::iconSize() const
+QSize EffectFrame::iconSize() const
 {
     return m_view->iconSize();
 }
@@ -322,7 +322,7 @@ void EffectFrame::render(const RenderTarget &renderTarget, const RenderViewport 
     effects->renderOffscreenQuickView(renderTarget, viewport, m_view);
 }
 
-const QString &EffectFrame::text() const
+QString EffectFrame::text() const
 {
     return m_view->text();
 }
