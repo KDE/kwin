@@ -836,10 +836,6 @@ void Workspace::removeWindow(Window *window)
     if (m_windowKeysWindow == window) {
         setupWindowShortcutDone(false);
     }
-    if (!window->shortcut().isEmpty()) {
-        window->setShortcut(QString()); // Remove from client_keys
-        windowShortcutUpdated(window); // Needed, since this is otherwise delayed by setShortcut() and wouldn't run
-    }
     if (window->hasStrut()) {
         updateClientArea();
     }
