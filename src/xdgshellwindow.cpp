@@ -713,8 +713,6 @@ void XdgToplevelWindow::doMinimize()
     if (m_isInitialized) {
         if (isMinimized()) {
             workspace()->windowHidden(this);
-        } else {
-            Q_EMIT windowShown(this);
         }
     }
     workspace()->updateMinimizedOfTransients(this);
