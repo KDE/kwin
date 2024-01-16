@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:39+0000\n"
+"POT-Creation-Date: 2024-01-16 00:38+0000\n"
 "PO-Revision-Date: 2024-01-04 18:05+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2407,7 +2407,7 @@ msgstr "Nevalida regiono"
 msgid "Region outside the workspace"
 msgstr "Regiono ekster la laborspaco"
 
-#: plugins/screencast/screencaststream.cpp:359
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Malsukcesis krei PipeWire-rivereton"
@@ -4096,12 +4096,12 @@ msgstr "Rigardi Labortablon"
 msgid "Kill Window"
 msgstr "Mortigi fenestron"
 
-#: useractions.cpp:1136
+#: useractions.cpp:1141
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivigi Fenestron (%1)"
 
-#: useractions.cpp:1273
+#: useractions.cpp:1278
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4163,7 +4163,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne respondante)"
 
-#: workspace.cpp:1616
+#: workspace.cpp:1624
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

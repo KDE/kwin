@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:39+0000\n"
+"POT-Creation-Date: 2024-01-16 00:38+0000\n"
 "PO-Revision-Date: 2023-12-10 13:15+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2398,7 +2398,7 @@ msgstr "செல்லுபடியாகாத பரப்பளவு"
 msgid "Region outside the workspace"
 msgstr "பணிமேடைக்கு வெளியேயான பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:359
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4093,12 +4093,12 @@ msgstr "பணிமேடையைக் காட்டு"
 msgid "Kill Window"
 msgstr "சாளரத்தை கட்டாயமாக மூடு"
 
-#: useractions.cpp:1136
+#: useractions.cpp:1141
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "சாளரத்தை செயல்படுத்து (%1)"
 
-#: useractions.cpp:1273
+#: useractions.cpp:1278
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4159,7 +4159,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(பதிலளிக்கவில்லை)"
 
-#: workspace.cpp:1616
+#: workspace.cpp:1624
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

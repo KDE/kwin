@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-13 00:39+0000\n"
+"POT-Creation-Date: 2024-01-16 00:38+0000\n"
 "PO-Revision-Date: 2023-11-14 13:11+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2395,7 +2395,7 @@ msgstr "Neplatná oblast"
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:359
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4075,12 +4075,12 @@ msgstr "Nakouknout na pracovní plochu"
 msgid "Kill Window"
 msgstr "Zabít okno"
 
-#: useractions.cpp:1136
+#: useractions.cpp:1141
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktivovat okno (%1)"
 
-#: useractions.cpp:1273
+#: useractions.cpp:1278
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
@@ -4139,7 +4139,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovídá)"
 
-#: workspace.cpp:1616
+#: workspace.cpp:1624
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
