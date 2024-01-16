@@ -37,6 +37,7 @@ public:
 
     drmModeModeInfo *nativeMode();
     std::shared_ptr<DrmBlob> blob();
+    std::chrono::nanoseconds vblankTime() const;
 
     bool operator==(const DrmConnectorMode &otherMode);
     bool operator==(const drmModeModeInfo &otherMode);

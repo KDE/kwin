@@ -51,11 +51,8 @@ void RenderLoopPrivate::scheduleRepaint()
     }
 
     // Estimate when it's a good time to perform the next compositing cycle.
-    // this safety margin is required for
-    // - the buffer readiness deadline in the drm backend, which is 1.8ms before vblank
-    // - scheduling and timer inaccuracies (estimated to be up to 1.2ms here)
-    const std::chrono::nanoseconds safetyMargin = std::chrono::milliseconds(3);
-    std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - renderJournal.result() - safetyMargin;
+    // the 1ms on top of the safety margin is required for timer and scheduler inaccuracies
+    std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - renderJournal.result() - safetyMargin - std::chrono::milliseconds(1);
 
     // If we can't render the frame before the deadline, start compositing immediately.
     if (nextRenderTimestamp < currentTime) {
@@ -191,6 +188,11 @@ void RenderLoop::setRefreshRate(int refreshRate)
     }
     d->refreshRate = refreshRate;
     Q_EMIT refreshRateChanged();
+}
+
+void RenderLoop::setPresentationSafetyMargin(std::chrono::nanoseconds safetyMargin)
+{
+    d->safetyMargin = safetyMargin;
 }
 
 void RenderLoop::scheduleRepaint(Item *item)
