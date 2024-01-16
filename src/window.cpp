@@ -1684,10 +1684,10 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
                 QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
                 for (;;) {
                     QRectF currentTry = nextMoveResizeGeom;
-                    const QRectF titleRect(bTitleRect.translated(currentTry.topLeft()));
+                    const QRect titleRect = bTitleRect.translated(currentTry.topLeft()).toRect();
                     int visiblePixels = 0;
                     for (const QRect &rect : availableArea) {
-                        const QRect r = rect & titleRect.toRect();
+                        const QRect r = rect & titleRect;
                         if ((transposed && r.width() == titleRect.width()) || // Only the full size regions...
                             (!transposed && r.height() == titleRect.height())) { // ...prevents long slim areas
                             visiblePixels += r.width() * r.height();
