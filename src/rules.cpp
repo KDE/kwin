@@ -33,7 +33,8 @@ namespace KWin
 {
 
 Rules::Rules()
-    : wmclassmatch(UnimportantMatch)
+    : layerrule(UnusedForceRule)
+    , wmclassmatch(UnimportantMatch)
     , wmclasscomplete(UnimportantMatch)
     , windowrolematch(UnimportantMatch)
     , titlematch(UnimportantMatch)
@@ -160,6 +161,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(shortcut);
     READ_FORCE_RULE(disableglobalshortcuts, );
     READ_SET_RULE(desktopfile);
+    READ_FORCE_RULE(layer, );
 }
 
 #undef READ_MATCH_STRING
@@ -238,6 +240,7 @@ void Rules::write(RuleSettings *settings) const
     WRITE_SET_RULE(shortcut, Shortcut, );
     WRITE_FORCE_RULE(disableglobalshortcuts, Disableglobalshortcuts, );
     WRITE_SET_RULE(desktopfile, Desktopfile, );
+    WRITE_FORCE_RULE(layer, Layer, );
 }
 
 #undef WRITE_MATCH_STRING
@@ -282,7 +285,8 @@ bool Rules::isEmpty() const
             && strictgeometryrule == UnusedForceRule
             && shortcutrule == UnusedSetRule
             && disableglobalshortcutsrule == UnusedForceRule
-            && desktopfilerule == UnusedSetRule);
+            && desktopfilerule == UnusedSetRule
+            && layerrule == UnusedForceRule);
 }
 
 Rules::ForceRule Rules::convertForceRule(int v)
@@ -575,6 +579,7 @@ APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
 APPLY_FORCE_RULE(type, Type, NET::WindowType)
+APPLY_FORCE_RULE(layer, Layer, enum Layer)
 
 bool Rules::applyDesktops(QList<VirtualDesktop *> &vds, bool init) const
 {
@@ -698,6 +703,7 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(shortcut);
     DISCARD_USED_FORCE_RULE(disableglobalshortcuts);
     DISCARD_USED_SET_RULE(desktopfile);
+    DISCARD_USED_FORCE_RULE(layer);
 
     return changed;
 }
@@ -845,6 +851,7 @@ CHECK_FORCE_RULE(StrictGeometry, bool)
 CHECK_RULE(Shortcut, QString)
 CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
 CHECK_RULE(DesktopFile, QString)
+CHECK_FORCE_RULE(Layer, Layer)
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE

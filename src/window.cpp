@@ -552,7 +552,7 @@ void Window::markAsDeleted()
 Layer Window::layer() const
 {
     if (m_layer == UnknownLayer) {
-        const_cast<Window *>(this)->m_layer = belongsToLayer();
+        const_cast<Window *>(this)->m_layer = rules()->checkLayer(belongsToLayer());
     }
     return m_layer;
 }
@@ -562,7 +562,7 @@ void Window::updateLayer()
     if (isDeleted()) {
         return;
     }
-    if (layer() == belongsToLayer()) {
+    if (layer() == rules()->checkLayer(belongsToLayer())) {
         return;
     }
     StackingUpdatesBlocker blocker(workspace());
@@ -4139,6 +4139,7 @@ void Window::applyWindowRules()
     setFullScreen(isRequestedFullScreen());
     setNoBorder(noBorder());
     updateColorScheme();
+    updateLayer();
     // FSP
     // AcceptFocus :
     if (workspace()->mostRecentlyActivatedWindow() == this
