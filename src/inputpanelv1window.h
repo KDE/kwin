@@ -70,7 +70,7 @@ public:
     {
         return true;
     }
-    NET::WindowType windowType(bool direct = false) const override;
+    NET::WindowType windowType() const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const override;
 
     Mode mode() const

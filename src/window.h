@@ -693,7 +693,7 @@ public:
     QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
 
     // prefer isXXX() instead
-    virtual NET::WindowType windowType(bool direct = false) const = 0;
+    virtual NET::WindowType windowType() const = 0;
     bool hasNETSupport() const;
     bool isDesktop() const;
     bool isDock() const;

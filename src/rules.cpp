@@ -51,7 +51,6 @@ Rules::Rules()
     , desktopsrule(UnusedSetRule)
     , screenrule(UnusedSetRule)
     , activityrule(UnusedSetRule)
-    , typerule(UnusedForceRule)
     , maximizevertrule(UnusedSetRule)
     , maximizehorizrule(UnusedSetRule)
     , minimizerule(UnusedSetRule)
@@ -128,10 +127,6 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(desktops);
     READ_SET_RULE(screen);
     READ_SET_RULE(activity);
-    READ_FORCE_RULE(type, static_cast<NET::WindowType>);
-    if (type == NET::Unknown) {
-        typerule = UnusedForceRule;
-    }
     READ_SET_RULE(maximizevert);
     READ_SET_RULE(maximizehoriz);
     READ_SET_RULE(minimize);
@@ -208,7 +203,6 @@ void Rules::write(RuleSettings *settings) const
     WRITE_SET_RULE(desktops, Desktops, );
     WRITE_SET_RULE(screen, Screen, );
     WRITE_SET_RULE(activity, Activity, );
-    WRITE_FORCE_RULE(type, Type, );
     WRITE_SET_RULE(maximizevert, Maximizevert, );
     WRITE_SET_RULE(maximizehoriz, Maximizehoriz, );
     WRITE_SET_RULE(minimize, Minimize, );
@@ -261,7 +255,6 @@ bool Rules::isEmpty() const
             && desktopsrule == UnusedSetRule
             && screenrule == UnusedSetRule
             && activityrule == UnusedSetRule
-            && typerule == UnusedForceRule
             && maximizevertrule == UnusedSetRule
             && maximizehorizrule == UnusedSetRule
             && minimizerule == UnusedSetRule
@@ -399,7 +392,7 @@ bool Rules::matchClientMachine(const QString &match_machine, bool local) const
 #ifndef KCMRULES
 bool Rules::match(const Window *c) const
 {
-    if (!matchType(c->windowType(true))) {
+    if (!matchType(c->windowType())) {
         return false;
     }
     if (!matchWMClass(c->resourceClass(), c->resourceName())) {
@@ -578,7 +571,6 @@ APPLY_RULE(ignoregeometry, IgnoreGeometry, bool)
 
 APPLY_RULE(screen, Screen, int)
 APPLY_RULE(activity, Activity, QStringList)
-APPLY_FORCE_RULE(type, Type, NET::WindowType)
 APPLY_FORCE_RULE(layer, Layer, enum Layer)
 
 bool Rules::applyDesktops(QList<VirtualDesktop *> &vds, bool init) const
@@ -678,7 +670,6 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(desktops);
     DISCARD_USED_SET_RULE(screen);
     DISCARD_USED_SET_RULE(activity);
-    DISCARD_USED_FORCE_RULE(type);
     DISCARD_USED_SET_RULE(maximizevert);
     DISCARD_USED_SET_RULE(maximizehoriz);
     DISCARD_USED_SET_RULE(minimize);
@@ -803,7 +794,6 @@ CHECK_RULE(IgnoreGeometry, bool)
 
 CHECK_RULE(Desktops, QList<VirtualDesktop *>)
 CHECK_RULE(Activity, QStringList)
-CHECK_FORCE_RULE(Type, NET::WindowType)
 CHECK_RULE(MaximizeVert, MaximizeMode)
 CHECK_RULE(MaximizeHoriz, MaximizeMode)
 

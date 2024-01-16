@@ -704,12 +704,6 @@ void RulesModel::populateRuleList()
                          i18n("Closeable"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("dialog-close")));
 
-    auto type = addRule(new RuleItem(QLatin1String("type"),
-                                     RulePolicy::ForceRule, RuleItem::Option,
-                                     i18n("Set window type"), i18n("Appearance & Fixes"),
-                                     QIcon::fromTheme("window-duplicate")));
-    type->setOptionsData(windowTypesModelData());
-
     addRule(new RuleItem(QLatin1String("desktopfile"),
                          RulePolicy::SetRule, RuleItem::String,
                          i18n("Desktop file name"), i18n("Appearance & Fixes"),
@@ -744,7 +738,6 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         {"skipTaskbar", "skiptaskbar"},
         {"skipPager", "skippager"},
         {"skipSwitcher", "skipswitcher"},
-        {"type", "type"},
         {"desktopFile", "desktopfile"},
         {"desktops", "desktops"},
         {"layer", "layer"},

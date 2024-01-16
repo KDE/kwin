@@ -179,17 +179,6 @@
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
 
-    <entry name="type" type="Int">
-      <label>Set window type to</label>
-      <min code="true">NET::Normal</min>
-      <max code="true">NET::CriticalNotification</max>
-      <default code="true">NET::Unknown</default>
-    </entry>
-    <entry name="typerule" type="Int">
-      <label>Set window type rule type</label>
-      <default code="true">Rules::UnusedForceRule</default>
-    </entry>
-
     <entry name="maximizevert" type="Bool">
       <label>Maximized vertically</label>
       <default>false</default>

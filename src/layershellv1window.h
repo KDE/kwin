@@ -28,7 +28,7 @@ public:
     LayerSurfaceV1Interface *shellSurface() const;
     Output *desiredOutput() const;
 
-    NET::WindowType windowType(bool direct = false) const override;
+    NET::WindowType windowType() const override;
     bool isPlaceable() const override;
     bool isCloseable() const override;
     bool isMovable() const override;

@@ -2758,21 +2758,13 @@ bool X11Window::isOutline() const
     return m_outline;
 }
 
-NET::WindowType X11Window::windowType(bool direct) const
+NET::WindowType X11Window::windowType() const
 {
     if (m_unmanaged) {
         return info->windowType(SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK);
     }
 
     NET::WindowType wt = info->windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK);
-    if (direct) {
-        return wt;
-    }
-    NET::WindowType wt2 = rules()->checkType(wt);
-    if (wt != wt2) {
-        wt = wt2;
-        info->setWindowType(wt); // force hint change
-    }
     // hacks here
     if (wt == NET::Unknown) { // this is more or less suggested in NETWM spec
         wt = isTransient() ? NET::Dialog : NET::Normal;
