@@ -9,7 +9,7 @@
             <default>0</default>
         </entry>
         <entry key="ElectricBorderDelay" type="Int">
-            <default>150</default>
+            <default>75</default>
         </entry>
         <entry key="ElectricBorderCooldown" type="Int">
             <default>350</default>
