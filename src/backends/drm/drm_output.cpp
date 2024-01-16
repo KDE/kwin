@@ -478,7 +478,8 @@ QVector3D DrmOutput::channelFactors() const
 
 bool DrmOutput::needsColormanagement() const
 {
-    return m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_channelFactorsNeedShaderFallback;
+    static bool forceColorManagement = qEnvironmentVariableIntValue("KWIN_DRM_FORCE_COLOR_MANAGEMENT") != 0;
+    return forceColorManagement || m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_channelFactorsNeedShaderFallback;
 }
 }
 
