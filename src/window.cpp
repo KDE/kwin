@@ -1736,7 +1736,11 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
                     currentTry.translate(dx, dy);
                     nextMoveResizeGeom = currentTry;
 
-                    if (nextMoveResizeGeom == currentMoveResizeGeom) {
+                    // sinces nextMoveResizeGeom is fractional, at best it is within 1 unit of currentMoveResizeGeom
+                    if (std::abs(currentMoveResizeGeom.left() - nextMoveResizeGeom.left()) <= 1.0
+                        && std::abs(currentMoveResizeGeom.right() - nextMoveResizeGeom.right()) <= 1.0
+                        && std::abs(currentMoveResizeGeom.top() - nextMoveResizeGeom.top()) <= 1.0
+                        && std::abs(currentMoveResizeGeom.bottom() - nextMoveResizeGeom.bottom()) <= 1.0) {
                         break; // Prevent lockup
                     }
                 }
