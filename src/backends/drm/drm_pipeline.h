@@ -105,6 +105,7 @@ public:
     void setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer);
     DrmPipelineLayer *primaryLayer() const;
     DrmPipelineLayer *cursorLayer() const;
+    std::chrono::nanoseconds presentationDeadline() const;
 
     DrmCrtc *crtc() const;
     std::shared_ptr<DrmConnectorMode> mode() const;

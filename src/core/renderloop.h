@@ -69,6 +69,8 @@ public:
      */
     void setRefreshRate(int refreshRate);
 
+    void setPresentationSafetyMargin(std::chrono::nanoseconds safetyMargin);
+
     /**
      * Schedules a compositing cycle at the next available moment.
      */

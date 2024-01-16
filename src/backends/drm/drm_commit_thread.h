@@ -34,9 +34,14 @@ public:
     void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
     void setPendingCommit(std::unique_ptr<DrmLegacyCommit> &&commit);
 
-    void setRefreshRate(uint32_t maximum);
+    void setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime);
     void pageFlipped(std::chrono::nanoseconds timestamp);
     bool pageflipsPending();
+    /**
+     * @return how long before the desired presentation timestamp the commit has to be added
+     *         in order to get presented at that timestamp
+     */
+    std::chrono::nanoseconds safetyMargin() const;
 
 Q_SIGNALS:
     void commitFailed();
@@ -56,6 +61,7 @@ private:
     std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_droppedCommits;
     bool m_vrr = false;
+    std::chrono::nanoseconds m_safetyMargin{0};
 };
 
 }

@@ -421,7 +421,10 @@ bool DrmPipeline::updateCursor()
 void DrmPipeline::applyPendingChanges()
 {
     m_next = m_pending;
-    m_commitThread->setRefreshRate(m_pending.mode->refreshRate());
+    m_commitThread->setModeInfo(m_pending.mode->refreshRate(), m_pending.mode->vblankTime());
+    if (m_output) {
+        m_output->renderLoop()->setPresentationSafetyMargin(m_commitThread->safetyMargin());
+    }
 }
 
 DrmConnector *DrmPipeline::connector() const
@@ -769,5 +772,10 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction tr
         },
     };
     return DrmBlob::create(gpu(), &data, sizeof(data));
+}
+
+std::chrono::nanoseconds DrmPipeline::presentationDeadline() const
+{
+    return m_commitThread->safetyMargin();
 }
 }

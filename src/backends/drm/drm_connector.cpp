@@ -69,6 +69,11 @@ std::shared_ptr<DrmBlob> DrmConnectorMode::blob()
     return m_blob;
 }
 
+std::chrono::nanoseconds DrmConnectorMode::vblankTime() const
+{
+    return std::chrono::nanoseconds(((m_nativeMode.vsync_end - m_nativeMode.vsync_start) * m_nativeMode.htotal * 1'000'000ULL) / m_nativeMode.clock);
+}
+
 drmModeModeInfo *DrmConnectorMode::nativeMode()
 {
     return &m_nativeMode;

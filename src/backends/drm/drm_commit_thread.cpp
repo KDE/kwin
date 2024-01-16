@@ -17,10 +17,6 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-// This value was chosen experimentally and should be adjusted if needed
-// committing takes about 800µs, the rest is accounting for sleep not being accurate enough
-static constexpr auto s_safetyMargin = 1800us;
-
 DrmCommitThread::DrmCommitThread(const QString &name)
 {
     m_thread.reset(QThread::create([this]() {
@@ -40,9 +36,9 @@ DrmCommitThread::DrmCommitThread(const QString &name)
             }
             if (!m_commits.empty()) {
                 const auto now = std::chrono::steady_clock::now();
-                if (m_targetPageflipTime > now + s_safetyMargin) {
+                if (m_targetPageflipTime > now + m_safetyMargin) {
                     lock.unlock();
-                    std::this_thread::sleep_until(m_targetPageflipTime - s_safetyMargin);
+                    std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
                     lock.lock();
                 }
                 optimizeCommits();
@@ -192,7 +188,7 @@ void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     } else {
         m_targetPageflipTime = estimateNextVblank(now);
     }
-    m_commits.back()->setDeadline(m_targetPageflipTime - s_safetyMargin);
+    m_commits.back()->setDeadline(m_targetPageflipTime - m_safetyMargin);
     m_commitPending.notify_all();
 }
 
@@ -207,10 +203,13 @@ void DrmCommitThread::clearDroppedCommits()
     m_droppedCommits.clear();
 }
 
-void DrmCommitThread::setRefreshRate(uint32_t maximum)
+void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vblankTime)
 {
     std::unique_lock lock(m_mutex);
     m_minVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / maximum);
+    // the kernel rejects commits that happen during vblank
+    // the 1.5ms on top of that was chosen experimentally, for the time it takes to commit + scheduling inaccuracies
+    m_safetyMargin = vblankTime + 1500us;
 }
 
 void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
@@ -235,5 +234,10 @@ TimePoint DrmCommitThread::estimateNextVblank(TimePoint now) const
     // the pageflip timestamp may be in the future
     const uint64_t pageflipsSince = now >= m_lastPageflip ? (now - m_lastPageflip) / m_minVblankInterval : 0;
     return m_lastPageflip + m_minVblankInterval * (pageflipsSince + 1);
+}
+
+std::chrono::nanoseconds DrmCommitThread::safetyMargin() const
+{
+    return m_safetyMargin;
 }
 }
