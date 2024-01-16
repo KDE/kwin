@@ -121,23 +121,46 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
     const QRegion repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), infiniteRegion()) : infiniteRegion();
     if (enableColormanagement) {
-        if (!m_surface->shadowBuffer || m_surface->shadowTexture->size() != m_surface->gbmSwapchain->size()) {
-            m_surface->shadowTexture = GLTexture::allocate(GL_RGBA16F, m_surface->gbmSwapchain->size());
-            if (!m_surface->shadowTexture) {
-                return std::nullopt;
+        if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->gbmSwapchain->size()) {
+            const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
+            const auto createSwapchain = [&formats, this](bool requireAlpha) {
+                for (auto it = formats.begin(); it != formats.end(); it++) {
+                    const auto info = FormatInfo::get(it.key());
+                    if (!info || info->bitsPerColor != 16 || !info->floatingPoint) {
+                        continue;
+                    }
+                    if (requireAlpha && info->alphaBits == 0) {
+                        continue;
+                    }
+                    m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), it.key(), it.value());
+                    if (m_surface->shadowSwapchain) {
+                        break;
+                    }
+                }
+            };
+            createSwapchain(true);
+            if (!m_surface->shadowSwapchain && m_formatOption != FormatOption::RequireAlpha) {
+                createSwapchain(false);
             }
-            m_surface->shadowBuffer = std::make_unique<GLFramebuffer>(m_surface->shadowTexture.get());
         }
-        m_surface->shadowTexture->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransform());
+        if (!m_surface->shadowSwapchain) {
+            qCCritical(KWIN_DRM) << "Failed to create shadow swapchain!";
+            return std::nullopt;
+        }
+        m_surface->currentShadowSlot = m_surface->shadowSwapchain->acquire();
+        if (!m_surface->currentShadowSlot) {
+            return std::nullopt;
+        }
+        m_surface->currentShadowSlot->texture()->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransform());
         m_surface->renderStart = std::chrono::steady_clock::now();
         m_surface->timeQuery->begin();
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(m_surface->shadowBuffer.get(), m_surface->intermediaryColorDescription),
-            .repaint = repaint,
+            .renderTarget = RenderTarget(m_surface->currentShadowSlot->framebuffer(), m_surface->intermediaryColorDescription),
+            .repaint = infiniteRegion(),
         };
     } else {
-        m_surface->shadowTexture.reset();
-        m_surface->shadowBuffer.reset();
+        m_surface->shadowSwapchain.reset();
+        m_surface->currentShadowSlot.reset();
         m_surface->renderStart = std::chrono::steady_clock::now();
         m_surface->timeQuery->begin();
         return OutputLayerBeginFrameInfo{
@@ -173,7 +196,9 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
-        m_surface->shadowTexture->render(m_surface->gbmSwapchain->size());
+        m_surface->currentShadowSlot->texture()->render(m_surface->gbmSwapchain->size());
+        EGLNativeFence fence(m_surface->context->displayObject());
+        m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.fileDescriptor().duplicate());
         GLFramebuffer::popFramebuffer();
     }
     m_surface->damageJournal.add(damagedRegion);
@@ -227,7 +252,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::currentBuffer() const
 const ColorDescription &EglGbmLayerSurface::colorDescription() const
 {
     if (m_surface) {
-        return m_surface->shadowTexture ? m_surface->intermediaryColorDescription : m_surface->targetColorDescription;
+        return m_surface->currentShadowSlot ? m_surface->intermediaryColorDescription : m_surface->targetColorDescription;
     } else {
         return ColorDescription::sRGB;
     }
@@ -241,7 +266,7 @@ bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, 
 std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
 {
     if (m_surface) {
-        return m_surface->shadowTexture ? m_surface->shadowTexture : m_surface->currentSlot->texture();
+        return m_surface->currentShadowSlot ? m_surface->currentShadowSlot->texture() : m_surface->currentSlot->texture();
     } else {
         return nullptr;
     }

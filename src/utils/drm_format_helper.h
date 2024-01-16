@@ -45,6 +45,7 @@ struct KWIN_EXPORT FormatInfo
     uint32_t alphaBits;
     uint32_t bitsPerPixel;
     GLint openglFormat;
+    bool floatingPoint;
 
     std::optional<YuvConversion> yuvConversion() const
     {

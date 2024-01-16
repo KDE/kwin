@@ -24,6 +24,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGBA8,
+            .floatingPoint = false,
         };
     case DRM_FORMAT_ARGB8888:
     case DRM_FORMAT_ABGR8888:
@@ -35,6 +36,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 8,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGBA8,
+            .floatingPoint = false,
         };
     case DRM_FORMAT_XRGB2101010:
     case DRM_FORMAT_XBGR2101010:
@@ -46,6 +48,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGB10_A2,
+            .floatingPoint = false,
         };
     case DRM_FORMAT_ARGB2101010:
     case DRM_FORMAT_ABGR2101010:
@@ -57,6 +60,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 2,
             .bitsPerPixel = 32,
             .openglFormat = GL_RGB10_A2,
+            .floatingPoint = false,
         };
     case DRM_FORMAT_XRGB16161616F:
     case DRM_FORMAT_XBGR16161616F:
@@ -66,6 +70,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 64,
             .openglFormat = GL_RGBA16F,
+            .floatingPoint = true,
         };
     case DRM_FORMAT_ARGB16161616F:
     case DRM_FORMAT_ABGR16161616F:
@@ -75,6 +80,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 16,
             .bitsPerPixel = 64,
             .openglFormat = GL_RGBA16F,
+            .floatingPoint = true,
         };
     case DRM_FORMAT_ARGB4444:
     case DRM_FORMAT_ABGR4444:
@@ -86,6 +92,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 4,
             .bitsPerPixel = 16,
             .openglFormat = GL_RGBA4,
+            .floatingPoint = false,
         };
     case DRM_FORMAT_ARGB1555:
     case DRM_FORMAT_ABGR1555:
@@ -97,6 +104,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 1,
             .bitsPerPixel = 16,
             .openglFormat = GL_RGB5_A1,
+            .floatingPoint = false,
         };
     case DRM_FORMAT_NV12:
         return FormatInfo{
@@ -105,6 +113,7 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .alphaBits = 0,
             .bitsPerPixel = 24,
             .openglFormat = GL_R8,
+            .floatingPoint = false,
         };
     default:
         return std::nullopt;

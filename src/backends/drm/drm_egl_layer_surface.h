@@ -99,8 +99,8 @@ private:
 
         // for color management
         bool colormanagementEnabled = false;
-        std::shared_ptr<GLTexture> shadowTexture;
-        std::unique_ptr<GLFramebuffer> shadowBuffer;
+        std::shared_ptr<EglSwapchain> shadowSwapchain;
+        std::shared_ptr<EglSwapchainSlot> currentShadowSlot;
         ColorDescription targetColorDescription = ColorDescription::sRGB;
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
