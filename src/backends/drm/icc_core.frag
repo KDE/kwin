@@ -40,6 +40,7 @@ vec3 sample1DLut(in vec3 srcColor, in sampler2D lut, in int lutSize) {
 void main()
 {
     vec4 tex = texture(src, texcoord0);
+    tex.rgb /= max(tex.a, 0.001);
     tex.rgb /= sdrBrightness;
     tex.rgb = matrix1 * tex.rgb;
     if (Bsize > 0) {
@@ -57,5 +58,6 @@ void main()
     if (Asize > 0) {
         tex.rgb = sample1DLut(tex.rgb, Asampler, Asize);
     }
+    tex.rgb *= tex.a;
     fragColor = tex;
 }
