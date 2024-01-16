@@ -431,5 +431,26 @@
       <max code="true">static_cast&lt;Rules::SetRule&gt;(Rules::ForceTemporarily)</max>
       <default code="true">Rules::UnusedSetRule</default>
     </entry>
+
+    <entry name="layer" type="Enum">
+      <label>Layer</label>
+      <choices name="KWin::Layer">
+        <choice name="DesktopLayer" value="desktop" />
+        <choice name="BelowLayer" value="below" />
+        <choice name="NormalLayer" value="normal" />
+        <choice name="AboveLayer" value="above" />
+        <choice name="NotificationLayer" value="notification" />
+        <choice name="ActiveLayer" value="fullscreen" />
+        <choice name="PopupLayer" value="popup" />
+        <choice name="CriticalNotificationLayer" value="critical-notification" />
+        <choice name="OnScreenDisplayLayer" value="osd" />
+        <choice name="UnmanagedLayer" value="overlay" />
+      </choices>
+      <default code="true">NormalLayer</default>
+    </entry>
+    <entry name="layerrule" type="Int">
+      <label>Layer rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
   </group>
 </kcfg>

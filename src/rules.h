@@ -77,6 +77,7 @@ public:
     QString checkShortcut(QString s, bool init = false) const;
     bool checkDisableGlobalShortcuts(bool disable) const;
     QString checkDesktopFile(QString desktopFile, bool init = false) const;
+    Layer checkLayer(Layer layer) const;
 
 private:
     MaximizeMode checkMaximizeVert(MaximizeMode mode, bool init) const;
@@ -111,6 +112,7 @@ public:
         Activity = 1 << 16,
         Screen = 1 << 17,
         DesktopFile = 1 << 18,
+        Layer = 1 << 19,
         All = 0xffffffff
     };
     Q_DECLARE_FLAGS(Types, Type)
@@ -184,6 +186,7 @@ public:
     bool applyShortcut(QString &shortcut, bool init) const;
     bool applyDisableGlobalShortcuts(bool &disable) const;
     bool applyDesktopFile(QString &desktopFile, bool init) const;
+    bool applyLayer(enum Layer &layer) const;
 
 private:
 #endif
@@ -204,6 +207,8 @@ private:
     static bool checkSetStop(SetRule rule);
     static bool checkForceStop(ForceRule rule);
 #endif
+    enum Layer layer;
+    ForceRule layerrule;
     QString description;
     QString wmclass;
     StringMatch wmclassmatch;

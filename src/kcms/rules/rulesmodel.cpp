@@ -719,6 +719,12 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Block compositing"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("composite-track-on")));
+
+    auto layer = addRule(new RuleItem(QLatin1String("layer"),
+                                      RulePolicy::ForceRule, RuleItem::Option,
+                                      i18n("Layer"), i18n("Appearance & Fixes"),
+                                      QIcon::fromTheme("view-sort")));
+    layer->setOptionsData(layerModelData());
 }
 
 const QHash<QString, QString> RulesModel::x11PropertyHash()
@@ -741,6 +747,7 @@ const QHash<QString, QString> RulesModel::x11PropertyHash()
         {"type", "type"},
         {"desktopFile", "desktopfile"},
         {"desktops", "desktops"},
+        {"layer", "layer"},
     };
     return propertyToRule;
 };
@@ -908,6 +915,23 @@ QList<OptionsModel::Data> RulesModel::colorSchemesModelData() const
             index.data(Qt::DecorationRole).value<QIcon>()};
     }
 
+    return modelData;
+}
+
+QList<OptionsModel::Data> RulesModel::layerModelData() const
+{
+    static const auto modelData = QList<OptionsModel::Data>{
+        {DesktopLayer, i18n("Desktop")},
+        {BelowLayer, i18n("Below")},
+        {NormalLayer, i18n("Normal")},
+        {AboveLayer, i18n("Above")},
+        {NotificationLayer, i18n("Notification")},
+        {ActiveLayer, i18n("Fullscreen")},
+        {PopupLayer, i18n("Popup")},
+        {CriticalNotificationLayer, i18n("Critical Notification")},
+        {OnScreenDisplayLayer, i18n("OSD")},
+        {UnmanagedLayer, i18n("Overlay")},
+    };
     return modelData;
 }
 

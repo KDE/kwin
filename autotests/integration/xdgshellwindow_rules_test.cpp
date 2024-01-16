@@ -151,6 +151,10 @@ private Q_SLOTS:
     void testScreenApplyNow();
     void testScreenForceTemporarily();
 
+    void testLayerDontAffect();
+    void testLayerForce();
+    void testLayerForceTemporarily();
+
     void testMatchAfterNameChange();
 
 private:
@@ -2978,6 +2982,43 @@ void TestXdgShellWindowRules::testMatchAfterNameChange()
     shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
     QVERIFY(desktopFileNameSpy.wait());
     QCOMPARE(window->keepAbove(), true);
+}
+
+void TestXdgShellWindowRules::testLayerDontAffect()
+{
+    setWindowRule("layer", QStringLiteral("overlay"), int(Rules::DontAffect));
+
+    createTestWindow();
+
+    // The layer should not be affected by the rule.
+    QCOMPARE(m_window->layer(), NormalLayer);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testLayerForce()
+{
+    setWindowRule("layer", QStringLiteral("overlay"), int(Rules::Force));
+
+    createTestWindow();
+    QCOMPARE(m_window->layer(), UnmanagedLayer);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testLayerForceTemporarily()
+{
+    setWindowRule("layer", QStringLiteral("overlay"), int(Rules::ForceTemporarily));
+
+    createTestWindow();
+    QCOMPARE(m_window->layer(), UnmanagedLayer);
+
+    // The rule should be discarded when the window is closed.
+    destroyTestWindow();
+    createTestWindow();
+    QCOMPARE(m_window->layer(), NormalLayer);
+
+    destroyTestWindow();
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindowRules)

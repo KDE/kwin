@@ -180,6 +180,7 @@ QVariantMap clientToVariantMap(const Window *c)
 #if KWIN_BUILD_ACTIVITIES
             {QStringLiteral("activities"), c->activities()},
 #endif
+            {QStringLiteral("layer"), c->layer()},
     };
 }
 }

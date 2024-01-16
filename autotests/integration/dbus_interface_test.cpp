@@ -140,6 +140,7 @@ void TestDbusInterface::testGetWindowInfoXdgShellClient()
 #if KWIN_BUILD_ACTIVITIES
         {QStringLiteral("activities"), QStringList()},
 #endif
+        {QStringLiteral("layer"), NormalLayer},
     };
 
     // let's get the window info
@@ -276,6 +277,7 @@ void TestDbusInterface::testGetWindowInfoX11Client()
 #if KWIN_BUILD_ACTIVITIES
         {QStringLiteral("activities"), QStringList()},
 #endif
+        {QStringLiteral("layer"), NormalLayer},
     };
 
     // let's get the window info
