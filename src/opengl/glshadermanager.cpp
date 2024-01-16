@@ -150,7 +150,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         stream << "#include \"saturation.glsl\"\n";
     }
     if (traits & ShaderTrait::TransformColorspace) {
-        stream << "#include \"colormanagement.glsl\"";
+        stream << "#include \"colormanagement.glsl\"\n";
     }
 
     if (output != QByteArrayLiteral("gl_FragColor")) {
