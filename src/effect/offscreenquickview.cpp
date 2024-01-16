@@ -159,9 +159,8 @@ OffscreenQuickView::~OffscreenQuickView()
         d->m_glcontext->makeCurrent(d->m_offscreenSurface.get());
     }
 
-    // Always delete render control first.
-    d->m_renderControl.reset();
     d->m_view.reset();
+    d->m_renderControl.reset();
 }
 
 bool OffscreenQuickView::automaticRepaint() const
