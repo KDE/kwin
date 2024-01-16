@@ -53,7 +53,6 @@ public:
     QList<VirtualDesktop *> checkDesktops(QList<VirtualDesktop *> desktops, bool init = false) const;
     Output *checkOutput(Output *output, bool init = false) const;
     QStringList checkActivity(QStringList activity, bool init = false) const;
-    NET::WindowType checkType(NET::WindowType type) const;
     MaximizeMode checkMaximize(MaximizeMode mode, bool init = false) const;
     bool checkMinimize(bool minimized, bool init = false) const;
     ShadeMode checkShade(ShadeMode shade, bool init = false) const;
@@ -161,7 +160,6 @@ public:
     bool applyDesktops(QList<VirtualDesktop *> &desktops, bool init) const;
     bool applyScreen(int &desktop, bool init) const;
     bool applyActivity(QStringList &activity, bool init) const;
-    bool applyType(NET::WindowType &type) const;
     bool applyMaximizeVert(MaximizeMode &mode, bool init) const;
     bool applyMaximizeHoriz(MaximizeMode &mode, bool init) const;
     bool applyMinimize(bool &minimized, bool init) const;
@@ -242,8 +240,6 @@ private:
     SetRule screenrule;
     QStringList activity;
     SetRule activityrule;
-    NET::WindowType type; // type for setting
-    ForceRule typerule;
     bool maximizevert;
     SetRule maximizevertrule;
     bool maximizehoriz;

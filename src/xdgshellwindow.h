@@ -56,7 +56,7 @@ public:
     explicit XdgSurfaceWindow(XdgSurfaceInterface *shellSurface);
     ~XdgSurfaceWindow() override;
 
-    NET::WindowType windowType(bool direct = false) const override;
+    NET::WindowType windowType() const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const override;
     void destroyWindow() override;
 

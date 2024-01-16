@@ -88,7 +88,7 @@ XdgSurfaceWindow::~XdgSurfaceWindow()
 {
 }
 
-NET::WindowType XdgSurfaceWindow::windowType(bool direct) const
+NET::WindowType XdgSurfaceWindow::windowType() const
 {
     return m_windowType;
 }
