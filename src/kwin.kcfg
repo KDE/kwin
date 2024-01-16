@@ -174,7 +174,7 @@
             <default>0</default>
         </entry>
         <entry name="ElectricBorderDelay" type="Int">
-            <default>150</default>
+            <default>75</default>
         </entry>
         <entry name="ElectricBorderCooldown" type="Int">
             <default>350</default>

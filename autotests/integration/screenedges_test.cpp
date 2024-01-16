@@ -379,7 +379,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
     // _KDE_NET_WM_SCREEN_EDGE_SHOW has oneshot effect. It's deleted when the window is shown.
 
     auto config = kwinApp()->config();
-    config->group(QStringLiteral("Windows")).writeEntry("ElectricBorderDelay", 150);
+    config->group(QStringLiteral("Windows")).writeEntry("ElectricBorderDelay", 75);
     config->sync();
     workspace()->slotReconfigure();
 
