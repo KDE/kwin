@@ -22,6 +22,7 @@
 
 #include "opengl/gltexture.h"
 
+#include <QOpenGLContext>
 #include <QQuickWindow>
 #include <QRunnable>
 #include <QSGImageNode>
@@ -57,16 +58,15 @@ WindowThumbnailSource::~WindowThumbnailSource()
     if (!m_offscreenTexture) {
         return;
     }
-    if (WorkspaceScene *scene = Compositor::self()->scene()) {
-        scene->makeOpenGLContextCurrent();
-        m_offscreenTarget.reset();
-        m_offscreenTexture.reset();
+    if (!QOpenGLContext::currentContext()) {
+        Compositor::self()->scene()->makeOpenGLContextCurrent();
+    }
+    m_offscreenTarget.reset();
+    m_offscreenTexture.reset();
 
-        if (m_acquireFence) {
-            glDeleteSync(m_acquireFence);
-            m_acquireFence = 0;
-        }
-        scene->doneOpenGLContextCurrent();
+    if (m_acquireFence) {
+        glDeleteSync(m_acquireFence);
+        m_acquireFence = 0;
     }
 }
 
