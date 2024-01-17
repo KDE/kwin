@@ -344,9 +344,9 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     Transaction *transaction;
     if (sync) {
         if (!subsurface.transaction) {
-            subsurface.transaction = new Transaction();
+            subsurface.transaction = std::make_unique<Transaction>();
         }
-        transaction = subsurface.transaction;
+        transaction = subsurface.transaction.get();
     } else {
         transaction = new Transaction();
     }
@@ -354,17 +354,15 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     for (SubSurfaceInterface *subsurface : std::as_const(pending->subsurface.below)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
         if (surfacePrivate->subsurface.transaction) {
-            transaction->merge(surfacePrivate->subsurface.transaction);
-            delete surfacePrivate->subsurface.transaction;
-            surfacePrivate->subsurface.transaction = nullptr;
+            transaction->merge(surfacePrivate->subsurface.transaction.get());
+            surfacePrivate->subsurface.transaction.reset();
         }
     }
     for (SubSurfaceInterface *subsurface : std::as_const(pending->subsurface.above)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
         if (surfacePrivate->subsurface.transaction) {
-            transaction->merge(surfacePrivate->subsurface.transaction);
-            delete surfacePrivate->subsurface.transaction;
-            surfacePrivate->subsurface.transaction = nullptr;
+            transaction->merge(surfacePrivate->subsurface.transaction.get());
+            surfacePrivate->subsurface.transaction.reset();
         }
     }
 
@@ -423,8 +421,6 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
-    delete d->subsurface.transaction;
-    d->subsurface.transaction = nullptr;
 }
 
 SurfaceRole *SurfaceInterface::role() const
