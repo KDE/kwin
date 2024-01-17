@@ -8,6 +8,7 @@
 
 #include <QMouseEvent>
 
+#include <deque>
 #include <optional>
 
 /**
@@ -37,7 +38,7 @@ private:
         quint64 timestamp;
     };
 
-    QList<HistoryItem> m_history;
+    std::deque<HistoryItem> m_history;
     quint64 m_interval = 1000;
     qreal m_sensitivity = 4;
 };
