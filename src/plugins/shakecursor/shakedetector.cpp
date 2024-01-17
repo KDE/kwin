@@ -32,6 +32,13 @@ void ShakeDetector::setSensitivity(qreal sensitivity)
     m_sensitivity = sensitivity;
 }
 
+static inline bool sameSign(qreal a, qreal b)
+{
+    constexpr qreal tolerance = 1;
+    // movements less than tolerance count as movements in any direction
+    return (a >= -tolerance && b >= -tolerance) || (a <= tolerance && b <= tolerance);
+}
+
 bool ShakeDetector::update(QMouseEvent *event)
 {
     // Prune the old entries in the history.
@@ -43,6 +50,18 @@ bool ShakeDetector::update(QMouseEvent *event)
     }
     if (it != m_history.begin()) {
         m_history.erase(m_history.begin(), it);
+    }
+
+    if (m_history.size() >= 2) {
+        HistoryItem &last = m_history[m_history.size() - 1];
+        const HistoryItem &prev = m_history[m_history.size() - 2];
+        if (sameSign(last.position.x() - prev.position.x(), event->localPos().x() - last.position.x()) && sameSign(last.position.y() - prev.position.y(), event->localPos().y() - last.position.y())) {
+            last = HistoryItem{
+                .position = event->localPos(),
+                .timestamp = event->timestamp(),
+            };
+            return false;
+        }
     }
 
     m_history.emplace_back(HistoryItem{
