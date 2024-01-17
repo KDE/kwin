@@ -4,6 +4,8 @@
 #include "utils/drm_format_helper.h"
 #include "wayland_display.h"
 
+#include "KWayland/Client/surface.h"
+
 #include <drm_fourcc.h>
 #include <xf86drm.h>
 
@@ -63,7 +65,7 @@ bool WaylandVulkanBackend::init()
     m_allocator = std::make_unique<GbmGraphicsBufferAllocator>(m_backend->gbmDevice());
 
     const auto createOutput = [this](Output *output) {
-        m_outputs[output] = std::make_unique<WaylandVulkanLayer>(static_cast<WaylandOutput *>(output), m_mainDevice, m_allocator.get(), m_backend->display());
+        m_outputs[output] = std::make_unique<WaylandVulkanLayer>(static_cast<WaylandOutput *>(output), this, m_mainDevice, m_allocator.get(), m_backend->display());
     };
     const auto outputs = m_backend->outputs();
     std::for_each(outputs.begin(), outputs.end(), createOutput);
@@ -92,11 +94,17 @@ OutputLayer *WaylandVulkanBackend::primaryLayer(Output *output)
 
 void WaylandVulkanBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    // TODO
+    static_cast<WaylandVulkanLayer *>(primaryLayer(output))->present(frame);
 }
 
-WaylandVulkanLayer::WaylandVulkanLayer(WaylandOutput *output, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display)
-    : m_output(output)
+WaylandBackend *WaylandVulkanBackend::backend() const
+{
+    return m_backend;
+}
+
+WaylandVulkanLayer::WaylandVulkanLayer(WaylandOutput *output, WaylandVulkanBackend *backend, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display)
+    : m_backend(backend)
+    , m_output(output)
     , m_device(device)
     , m_allocator(allocator)
     , m_display(display)
@@ -164,6 +172,21 @@ std::chrono::nanoseconds WaylandVulkanLayer::queryRenderTime() const
 {
     // TODO
     return std::chrono::nanoseconds::zero();
+}
+
+void WaylandVulkanLayer::present(const std::shared_ptr<OutputFrame> &frame)
+{
+    wl_buffer *buffer = m_backend->backend()->importBuffer(m_currentSlot->buffer());
+    Q_ASSERT(buffer);
+
+    KWayland::Client::Surface *surface = m_output->surface();
+    surface->attachBuffer(buffer);
+    surface->damage(QRect(QPoint(), surface->size()));
+    surface->setScale(std::ceil(m_output->scale()));
+    surface->commit();
+    Q_EMIT m_output->outputChange(infiniteRegion());
+
+    m_swapchain->release(m_currentSlot.get());
 }
 }
 }

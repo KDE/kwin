@@ -30,6 +30,7 @@ public:
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
     OutputLayer *primaryLayer(Output *output) override;
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
+    WaylandBackend *backend() const;
 
 private:
     VulkanDevice *findDevice(WaylandDisplay *display) const;
@@ -44,15 +45,17 @@ private:
 class WaylandVulkanLayer : public OutputLayer
 {
 public:
-    explicit WaylandVulkanLayer(WaylandOutput *output, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display);
+    explicit WaylandVulkanLayer(WaylandOutput *output, WaylandVulkanBackend *backend, VulkanDevice *device, GraphicsBufferAllocator *allocator, WaylandDisplay *display);
     ~WaylandVulkanLayer();
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    void present(const std::shared_ptr<OutputFrame> &frame);
 
 private:
+    WaylandVulkanBackend *const m_backend;
     WaylandOutput *const m_output;
     VulkanDevice *const m_device;
     GraphicsBufferAllocator *const m_allocator;
