@@ -21,17 +21,11 @@ ShakeCursorEffect::ShakeCursorEffect()
 {
     input()->installInputEventSpy(this);
 
-    m_resetCursorScaleTimer.setSingleShot(true);
-    connect(&m_resetCursorScaleTimer, &QTimer::timeout, this, [this]() {
-        m_resetCursorScaleAnimation.setStartValue(m_cursorMagnification);
-        m_resetCursorScaleAnimation.setEndValue(1.0);
-        m_resetCursorScaleAnimation.setDuration(animationTime(150));
-        m_resetCursorScaleAnimation.setEasingCurve(QEasingCurve::InOutCubic);
-        m_resetCursorScaleAnimation.start();
-    });
+    m_deflateTimer.setSingleShot(true);
+    connect(&m_deflateTimer, &QTimer::timeout, this, &ShakeCursorEffect::deflate);
 
-    connect(&m_resetCursorScaleAnimation, &QVariantAnimation::valueChanged, this, [this]() {
-        magnify(m_resetCursorScaleAnimation.currentValue().toReal());
+    connect(&m_scaleAnimation, &QVariantAnimation::valueChanged, this, [this]() {
+        magnify(m_scaleAnimation.currentValue().toReal());
     });
 
     ShakeCursorConfig::instance(effects->config());
@@ -59,9 +53,36 @@ void ShakeCursorEffect::reconfigure(ReconfigureFlags flags)
     m_shakeDetector.setSensitivity(ShakeCursorConfig::sensitivity());
 }
 
-bool ShakeCursorEffect::isActive() const
+void ShakeCursorEffect::inflate()
 {
-    return m_cursorMagnification != 1.0;
+    qreal magnification;
+    if (m_targetMagnification == 1.0) {
+        magnification = ShakeCursorConfig::magnification();
+    } else {
+        magnification = m_targetMagnification + ShakeCursorConfig::overMagnification();
+    }
+
+    animateTo(magnification);
+}
+
+void ShakeCursorEffect::deflate()
+{
+    animateTo(1.0);
+}
+
+void ShakeCursorEffect::animateTo(qreal magnification)
+{
+    if (m_targetMagnification != magnification) {
+        m_scaleAnimation.stop();
+
+        m_scaleAnimation.setStartValue(m_currentMagnification);
+        m_scaleAnimation.setEndValue(magnification);
+        m_scaleAnimation.setDuration(animationTime(200));
+        m_scaleAnimation.setEasingCurve(QEasingCurve::InOutCubic);
+        m_scaleAnimation.start();
+
+        m_targetMagnification = magnification;
+    }
 }
 
 void ShakeCursorEffect::pointerEvent(MouseEvent *event)
@@ -74,24 +95,22 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
         return;
     }
 
-    if (const auto shakeFactor = m_shakeDetector.update(event)) {
-        m_resetCursorScaleTimer.start(animationTime(2000));
-        m_resetCursorScaleAnimation.stop();
-
-        magnify(std::max(m_cursorMagnification, 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value()));
+    if (m_shakeDetector.update(event)) {
+        inflate();
+        m_deflateTimer.start(animationTime(2000));
     }
 }
 
 void ShakeCursorEffect::magnify(qreal magnification)
 {
     if (magnification == 1.0) {
-        m_cursorMagnification = 1.0;
+        m_currentMagnification = 1.0;
         if (m_cursorItem) {
             m_cursorItem.reset();
             effects->showCursor();
         }
     } else {
-        m_cursorMagnification = magnification;
+        m_currentMagnification = magnification;
 
         if (!m_cursorItem) {
             effects->hideCursor();

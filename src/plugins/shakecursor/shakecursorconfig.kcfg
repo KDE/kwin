@@ -12,7 +12,10 @@
             <default>4</default>
         </entry>
         <entry name="Magnification" type="Double">
-            <default>2</default>
+            <default>3</default>
+        </entry>
+        <entry name="OverMagnification" type="Double">
+            <default>1</default>
         </entry>
     </group>
 </kcfg>
