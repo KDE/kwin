@@ -360,9 +360,9 @@ void GLTexture::render(const QRectF &source, const QRegion &region, const QSizeF
 
         QMatrix4x4 textureMat;
         textureMat.translate(texWidth / 2, texHeight / 2);
-        textureMat *= d->m_textureToBufferTransform.toMatrix();
         // our Y axis is flipped vs OpenGL
         textureMat.scale(1, -1);
+        textureMat *= d->m_textureToBufferTransform.toMatrix();
         textureMat.translate(-texWidth / 2, -texHeight / 2);
         textureMat.scale(texWidth / rotatedSize.width(), texHeight / rotatedSize.height());
 

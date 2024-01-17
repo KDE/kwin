@@ -386,7 +386,10 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
             GLFramebuffer::pushFramebuffer(&target);
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
             binder.shader()->setColorspaceUniformsToSRGB(renderTarget.colorDescription());
-            QMatrix4x4 projectionMatrix = renderTarget.texture()->contentTransform().inverted().toMatrix();
+            QMatrix4x4 projectionMatrix;
+            projectionMatrix.scale(1, -1);
+            projectionMatrix *= renderTarget.transform().toMatrix();
+            projectionMatrix.scale(1, -1);
             projectionMatrix.ortho(QRect(QPoint(), nativeSize));
             binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
             renderTarget.texture()->render(viewport.mapToRenderTargetTexture(geometry), infiniteRegion(), nativeSize);
