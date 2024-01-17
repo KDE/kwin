@@ -31,18 +31,22 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
     void pointerEvent(MouseEvent *event) override;
-    bool isActive() const override;
 
 private:
     void magnify(qreal magnification);
 
-    QTimer m_resetCursorScaleTimer;
-    QVariantAnimation m_resetCursorScaleAnimation;
+    void inflate();
+    void deflate();
+    void animateTo(qreal magnification);
+
+    QTimer m_deflateTimer;
+    QVariantAnimation m_scaleAnimation;
     ShakeDetector m_shakeDetector;
 
     Cursor *m_cursor;
     std::unique_ptr<CursorItem> m_cursorItem;
-    qreal m_cursorMagnification = 1.0;
+    qreal m_targetMagnification = 1.0;
+    qreal m_currentMagnification = 1.0;
 };
 
 } // namespace KWin

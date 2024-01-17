@@ -32,7 +32,7 @@ void ShakeDetector::setSensitivity(qreal sensitivity)
     m_sensitivity = sensitivity;
 }
 
-std::optional<qreal> ShakeDetector::update(QMouseEvent *event)
+bool ShakeDetector::update(QMouseEvent *event)
 {
     // Prune the old entries in the history.
     auto it = m_history.begin();
@@ -49,6 +49,16 @@ std::optional<qreal> ShakeDetector::update(QMouseEvent *event)
         .position = event->localPos(),
         .timestamp = event->timestamp(),
     });
+
+    if (m_history.size() >= 3) {
+        const HistoryItem &t = m_history[m_history.size() - 3];
+        const HistoryItem &u = m_history[m_history.size() - 2];
+        const HistoryItem &v = m_history[m_history.size() - 1];
+        if ((t.position.x() < u.position.x()) == (u.position.x() < v.position.x())
+            && (t.position.y() < u.position.y()) == (u.position.y() < v.position.y())) {
+            return false;
+        }
+    }
 
     qreal left = m_history[0].position.x();
     qreal top = m_history[0].position.y();
@@ -73,13 +83,14 @@ std::optional<qreal> ShakeDetector::update(QMouseEvent *event)
     const qreal boundsHeight = bottom - top;
     const qreal diagonal = std::sqrt(boundsWidth * boundsWidth + boundsHeight * boundsHeight);
     if (diagonal < 100) {
-        return std::nullopt;
+        return false;
     }
 
     const qreal shakeFactor = distance / diagonal;
     if (shakeFactor > m_sensitivity) {
-        return shakeFactor - m_sensitivity;
+        m_history.clear();
+        return true;
     }
 
-    return std::nullopt;
+    return false;
 }
