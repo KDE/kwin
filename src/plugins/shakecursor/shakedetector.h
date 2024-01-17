@@ -9,7 +9,6 @@
 #include <QMouseEvent>
 
 #include <deque>
-#include <optional>
 
 /**
  * The ShakeDetector type provides a way to detect pointer shake gestures.
@@ -23,7 +22,7 @@ class ShakeDetector
 public:
     ShakeDetector();
 
-    std::optional<qreal> update(QMouseEvent *event);
+    bool update(QMouseEvent *event);
 
     quint64 interval() const;
     void setInterval(quint64 interval);
