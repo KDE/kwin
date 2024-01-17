@@ -324,28 +324,24 @@ bool VulkanDevice::submitCommandBufferBlocking(vk::CommandBuffer cmd)
 {
     const std::vector<vk::Semaphore> waitBeforeExecution{};
     const std::vector<vk::PipelineStageFlags> waitDestinationStageMask{};
-    const auto [semaphoreResult, semaphore] = m_logical.createSemaphoreUnique(vk::SemaphoreCreateInfo());
-    if (semaphoreResult != vk::Result::eSuccess) {
-        qWarning() << "failed to allocate semaphore" << vk::to_string(semaphoreResult);
+    const std::vector<vk::Semaphore> signalSemaphores{};
+    const std::vector<vk::CommandBuffer> commandBuffers{cmd};
+    const auto [fenceResult, executionDone] = m_logical.createFenceUnique(vk::FenceCreateInfo{});
+    if (fenceResult != vk::Result::eSuccess) {
+        qWarning() << "failed to create fence";
         return false;
     }
-    const std::vector<vk::CommandBuffer> commandBuffers{cmd};
-    const std::vector<vk::Semaphore> executionDone{semaphore.get()};
     const auto submitResult = m_queue.submit(vk::SubmitInfo(
-        waitBeforeExecution,
-        waitDestinationStageMask,
-        commandBuffers,
-        executionDone));
+                                                 waitBeforeExecution,
+                                                 waitDestinationStageMask,
+                                                 commandBuffers,
+                                                 signalSemaphores),
+                                             executionDone.get());
     if (submitResult != vk::Result::eSuccess) {
         qWarning() << "submitting command buffers failed:" << vk::to_string(submitResult);
         return false;
     }
-    const std::vector<uint64_t> values{1};
-    const auto waitResult = m_logical.waitSemaphores(vk::SemaphoreWaitInfo(
-                                                         vk::SemaphoreWaitFlags(),
-                                                         executionDone,
-                                                         values),
-                                                     std::numeric_limits<uint64_t>::max());
+    const auto waitResult = m_logical.waitForFences(executionDone.get(), true, 1'000'000'000);
     if (waitResult != vk::Result::eSuccess) {
         qWarning() << "waiting for rendering to complete failed:" << vk::to_string(waitResult);
         return false;
