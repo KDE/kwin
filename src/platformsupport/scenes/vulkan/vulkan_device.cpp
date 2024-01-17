@@ -162,7 +162,8 @@ std::optional<VulkanTexture> VulkanDevice::importDmabuf(GraphicsBuffer *buffer) 
     std::array<vk::BindImageMemoryInfo, 4> bindInfos;
     std::array<vk::BindImagePlaneMemoryInfo, 4> planeInfo;
     std::vector<vk::UniqueDeviceMemory> deviceMemory;
-    for (int i = 0; i < attributes->planeCount; i++) {
+    const uint32_t memoryCount = disjoint ? attributes->planeCount : 1;
+    for (uint32_t i = 0; i < memoryCount; i++) {
         const auto [memoryFdResult, memoryFdProperties] = m_logical.getMemoryFdPropertiesKHR(vk::ExternalMemoryHandleTypeFlagBits::eDmaBufEXT, attributes->fd[i].get(), m_loader);
         if (memoryFdResult != vk::Result::eSuccess) {
             qWarning() << "failed to get memory fd properties!" << vk::to_string(memoryFdResult);
@@ -208,7 +209,7 @@ std::optional<VulkanTexture> VulkanDevice::importDmabuf(GraphicsBuffer *buffer) 
         }
         deviceMemory.push_back(std::move(memory));
     }
-    const vk::Result bindResult = m_logical.bindImageMemory2(attributes->planeCount, bindInfos.data());
+    const vk::Result bindResult = m_logical.bindImageMemory2(memoryCount, bindInfos.data());
     if (bindResult != vk::Result::eSuccess) {
         qWarning() << "failed to bind image to memory";
         return std::nullopt;
