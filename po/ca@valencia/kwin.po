@@ -4214,6 +4214,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "milliseconds"
-#~ msgstr "mil·lisegons"
