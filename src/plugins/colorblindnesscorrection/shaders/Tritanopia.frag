@@ -5,9 +5,6 @@ uniform vec4 modulation;
 uniform float saturation;
 varying vec2 texcoord0;
 
-in vec2 texcoord0;
-out vec4 fragColor;
-
 void main()
 {
     vec4 tex = texture2D(sampler, texcoord0);
