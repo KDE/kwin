@@ -13,6 +13,7 @@
 #include <QList>
 #include <QString>
 
+#include <array>
 #include <epoxy/gl.h>
 #include <libdrm/drm_fourcc.h>
 #include <optional>
@@ -41,6 +42,37 @@ static const QHash<uint32_t, YuvConversion> s_drmConversions = {
     {DRM_FORMAT_NV12, YuvConversion{
                           {YuvFormat{DRM_FORMAT_R8, 1, 1}, YuvFormat{DRM_FORMAT_GR88, 2, 2}},
                       }},
+};
+
+static constexpr std::array s_knownDrmFormats = {
+    DRM_FORMAT_XRGB8888,
+    DRM_FORMAT_XBGR8888,
+    DRM_FORMAT_RGBX8888,
+    DRM_FORMAT_BGRX8888,
+    DRM_FORMAT_ARGB8888,
+    DRM_FORMAT_ABGR8888,
+    DRM_FORMAT_RGBA8888,
+    DRM_FORMAT_BGRA8888,
+    DRM_FORMAT_XRGB2101010,
+    DRM_FORMAT_XBGR2101010,
+    DRM_FORMAT_RGBX1010102,
+    DRM_FORMAT_BGRX1010102,
+    DRM_FORMAT_ARGB2101010,
+    DRM_FORMAT_ABGR2101010,
+    DRM_FORMAT_RGBA1010102,
+    DRM_FORMAT_BGRA1010102,
+    DRM_FORMAT_XRGB16161616F,
+    DRM_FORMAT_ARGB16161616F,
+    DRM_FORMAT_XBGR16161616F,
+    DRM_FORMAT_ABGR16161616F,
+    DRM_FORMAT_ARGB4444,
+    DRM_FORMAT_ABGR4444,
+    DRM_FORMAT_RGBA4444,
+    DRM_FORMAT_BGRA4444,
+    DRM_FORMAT_ARGB1555,
+    DRM_FORMAT_ABGR1555,
+    DRM_FORMAT_RGBA5551,
+    DRM_FORMAT_BGRA5551,
 };
 
 struct KWIN_EXPORT FormatInfo

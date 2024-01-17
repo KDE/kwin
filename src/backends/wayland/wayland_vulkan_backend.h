@@ -29,7 +29,7 @@ public:
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QVector<uint64_t>> supportedFormats() const override;
     OutputLayer *primaryLayer(Output *output) override;
-    void present(Output *output) override;
+    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
 
 private:
     VulkanDevice *findDevice(WaylandDisplay *display) const;
@@ -50,6 +50,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     quint32 format() const override;
+    std::chrono::nanoseconds queryRenderTime() const override;
 
 private:
     WaylandOutput *const m_output;

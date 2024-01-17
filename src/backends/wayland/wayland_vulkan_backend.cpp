@@ -90,7 +90,7 @@ OutputLayer *WaylandVulkanBackend::primaryLayer(Output *output)
     return m_outputs[output].get();
 }
 
-void WaylandVulkanBackend::present(Output *output)
+void WaylandVulkanBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     // TODO
 }
@@ -125,7 +125,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::beginFrame()
         for (auto it = formats.begin(); it != formats.end(); it++) {
             const uint32_t format = it.key();
             if (hostFormats.contains(format)) {
-                const auto info = formatInfo(format);
+                const auto info = FormatInfo::get(format);
                 Q_ASSERT(info);
                 // just pick the first 10 or 8 bpc format. More can be supported later
                 if (info->bitsPerColor == 8 || info->bitsPerColor == 10) {
@@ -160,5 +160,10 @@ quint32 WaylandVulkanLayer::format() const
     return m_swapchain ? m_swapchain->format() : DRM_FORMAT_ARGB8888;
 }
 
+std::chrono::nanoseconds WaylandVulkanLayer::queryRenderTime() const
+{
+    // TODO
+    return std::chrono::nanoseconds::zero();
+}
 }
 }

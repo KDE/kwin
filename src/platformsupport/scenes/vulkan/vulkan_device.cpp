@@ -118,7 +118,7 @@ std::optional<VulkanTexture> VulkanDevice::importDmabuf(GraphicsBuffer *buffer) 
     if (!attributes) {
         return std::nullopt;
     }
-    const auto format = formatInfo(attributes->format);
+    const auto format = FormatInfo::get(attributes->format);
     if (!format) {
         return std::nullopt;
     }
@@ -243,7 +243,7 @@ QHash<uint32_t, QVector<uint64_t>> VulkanDevice::queryFormats(vk::ImageUsageFlag
 {
     QHash<uint32_t, QVector<uint64_t>> ret;
     for (const uint32_t drmFormat : s_knownDrmFormats) {
-        const auto info = formatInfo(drmFormat).value();
+        const auto info = FormatInfo::get(drmFormat).value();
         if (info.vulkanFormat == vk::Format::eUndefined) {
             continue;
         }
