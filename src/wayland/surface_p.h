@@ -171,7 +171,7 @@ public:
     struct
     {
         SubSurfaceInterface *handle = nullptr;
-        Transaction *transaction = nullptr;
+        std::unique_ptr<Transaction> transaction;
     } subsurface;
 
     std::vector<std::unique_ptr<PresentationTimeFeedback>> pendingPresentationFeedbacks;
