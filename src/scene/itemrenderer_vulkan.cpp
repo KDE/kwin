@@ -59,12 +59,13 @@ void ItemRendererVulkan::endFrame(const RenderTarget &renderTarget)
 
 void ItemRendererVulkan::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
 {
-    std::vector<vk::ClearRect> rects(region.rectCount());
+    if (region.isEmpty()) {
+        return;
+    }
+    std::vector<vk::ClearRect> rects;
+    rects.reserve(region.rectCount());
     for (const auto &rect : region) {
-        rects.push_back(vk::ClearRect(vk::Rect2D(
-                                          vk::Offset2D(rect.x(), rect.y()),
-                                          vk::Extent2D(rect.width(), rect.height())),
-                                      0, 1));
+        rects.push_back(vk::ClearRect(vk::Rect2D(vk::Offset2D(rect.x(), rect.y()), vk::Extent2D(rect.width(), rect.height())), 0, 1));
     }
     renderTarget.commandBuffer().clearAttachments(vk::ClearAttachment(
                                                       vk::ImageAspectFlagBits::eColor,
