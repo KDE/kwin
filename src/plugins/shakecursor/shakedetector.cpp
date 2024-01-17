@@ -45,7 +45,7 @@ std::optional<qreal> ShakeDetector::update(QMouseEvent *event)
         m_history.erase(m_history.begin(), it);
     }
 
-    m_history.append(HistoryItem{
+    m_history.emplace_back(HistoryItem{
         .position = event->localPos(),
         .timestamp = event->timestamp(),
     });
@@ -56,7 +56,7 @@ std::optional<qreal> ShakeDetector::update(QMouseEvent *event)
     qreal bottom = m_history[0].position.y();
     qreal distance = 0;
 
-    for (int i = 1; i < m_history.size(); ++i) {
+    for (size_t i = 1; i < m_history.size(); ++i) {
         // Compute the length of the mouse path.
         const qreal deltaX = m_history.at(i).position.x() - m_history.at(i - 1).position.x();
         const qreal deltaY = m_history.at(i).position.y() - m_history.at(i - 1).position.y();
