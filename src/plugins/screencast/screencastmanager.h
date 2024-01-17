@@ -16,6 +16,7 @@ namespace KWin
 {
 class Output;
 class ScreenCastStream;
+class PipeWireCore;
 
 class ScreencastManager : public Plugin
 {
@@ -46,6 +47,7 @@ private:
     void integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
 
     ScreencastV1Interface *m_screencast;
+    std::shared_ptr<PipeWireCore> m_core;
 };
 
 } // namespace KWin

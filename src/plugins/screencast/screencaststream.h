@@ -50,7 +50,7 @@ class KWIN_EXPORT ScreenCastStream : public QObject
 {
     Q_OBJECT
 public:
-    explicit ScreenCastStream(ScreenCastSource *source, QObject *parent);
+    explicit ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent);
     ~ScreenCastStream();
 
     bool init();
