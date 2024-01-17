@@ -304,8 +304,9 @@ void ScreenCastStream::onStreamRenegotiateFormat(uint64_t)
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
-ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
+ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
     : QObject(parent)
+    , m_pwCore(pwCore)
     , m_source(source)
     , m_resolution(source->textureSize())
 {
@@ -347,7 +348,6 @@ ScreenCastStream::~ScreenCastStream()
 
 bool ScreenCastStream::init()
 {
-    m_pwCore = PipeWireCore::self();
     if (!m_pwCore->m_error.isEmpty()) {
         m_error = m_pwCore->m_error;
         return false;
