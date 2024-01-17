@@ -148,7 +148,8 @@ std::optional<VulkanTexture> VulkanDevice::importDmabuf(GraphicsBuffer *buffer) 
         1,
         vk::SampleCountFlagBits::e1,
         vk::ImageTiling::eDrmFormatModifierEXT,
-        vk::ImageUsageFlagBits::eSampled,
+        // TODO add some hint for how the texture will actually be used
+        vk::ImageUsageFlagBits::eSampled | vk::ImageUsageFlagBits::eColorAttachment,
         vk::SharingMode::eExclusive,
         queueFamilyIndices,
         vk::ImageLayout::eUndefined,

@@ -145,13 +145,13 @@ void WaylandCompositor::start()
     } else {
         candidateCompositors = availableCompositors;
 
-        const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
-        if (userConfigIt != candidateCompositors.end()) {
-            candidateCompositors.erase(userConfigIt);
-            candidateCompositors.prepend(options->compositingMode());
-        } else {
-            qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
-        }
+        // const auto userConfigIt = std::find(candidateCompositors.begin(), candidateCompositors.end(), options->compositingMode());
+        // if (userConfigIt != candidateCompositors.end()) {
+        //     candidateCompositors.erase(userConfigIt);
+        //     candidateCompositors.prepend(options->compositingMode());
+        // } else {
+        //     qCWarning(KWIN_CORE) << "Configured compositor not supported by Platform. Falling back to defaults";
+        // }
     }
 
     for (auto type : std::as_const(candidateCompositors)) {

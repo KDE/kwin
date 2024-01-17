@@ -15,6 +15,10 @@ ItemRendererVulkan::ItemRendererVulkan(VulkanBackend *backend)
 
 void ItemRendererVulkan::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
+    if (renderTarget.commandBuffer().begin(vk::CommandBufferBeginInfo{}) != vk::Result::eSuccess) {
+        qWarning() << "command buffer begin failed";
+        return;
+    }
     std::vector<vk::RenderingAttachmentInfo> colorAttachments{
         vk::RenderingAttachmentInfo(
             renderTarget.imageView(),
@@ -47,6 +51,10 @@ void ItemRendererVulkan::beginFrame(const RenderTarget &renderTarget, const Rend
 void ItemRendererVulkan::endFrame(const RenderTarget &renderTarget)
 {
     renderTarget.commandBuffer().endRendering();
+    if (renderTarget.commandBuffer().end() != vk::Result::eSuccess) {
+        qWarning() << "command buffer end failed";
+        return;
+    }
 }
 
 void ItemRendererVulkan::renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region)
