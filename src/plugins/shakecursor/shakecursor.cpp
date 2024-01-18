@@ -83,12 +83,9 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
             .size = m_cursor->geometry().size(),
             .magnification = std::max(m_cursorMagnification, 1.0 + ShakeCursorConfig::magnification() * shakeFactor.value()),
         });
-        m_resetCursorScaleTimer.start(1000);
+        m_resetCursorScaleTimer.start(animationTime(2000));
         m_resetCursorScaleAnimation.stop();
     } else if (m_cursorMagnification != 1.0) {
-        if (m_resetCursorScaleAnimation.state() != QVariantAnimation::Running) {
-            m_resetCursorScaleTimer.start(0);
-        }
         update(Transaction{
             .position = m_cursor->pos(),
             .hotspot = m_cursor->hotspot(),
