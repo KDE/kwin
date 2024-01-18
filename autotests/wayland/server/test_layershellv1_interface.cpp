@@ -326,14 +326,14 @@ void TestLayerShellV1Interface::testExclusiveZone()
     auto serverShellSurface = layerSurfaceCreatedSpy.last().first().value<LayerSurfaceV1Interface *>();
     QVERIFY(serverShellSurface);
 
-    clientShellSurface->set_exclusive_zone(10);
+    clientShellSurface->set_exclusive_zone(10, 10);
     clientShellSurface->set_size(100, 50);
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     QSignalSpy exclusiveZoneChangedSpy(serverShellSurface, &LayerSurfaceV1Interface::exclusiveZoneChanged);
     QVERIFY(exclusiveZoneChangedSpy.wait());
 
-    QCOMPARE(serverShellSurface->exclusiveZone(), 10);
+    QCOMPARE(serverShellSurface->exclusiveZone(), QSize(10, 10));
 }
 
 void TestLayerShellV1Interface::testExclusiveEdge_data()
@@ -390,7 +390,7 @@ void TestLayerShellV1Interface::testExclusiveEdge()
     QFETCH(int, anchor);
     QFETCH(Qt::Edge, expected);
 
-    clientShellSurface->set_exclusive_zone(10);
+    clientShellSurface->set_exclusive_zone(10, 10);
     clientShellSurface->set_size(100, 50);
     clientShellSurface->set_anchor(anchor);
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -398,7 +398,7 @@ void TestLayerShellV1Interface::testExclusiveEdge()
     QSignalSpy anchorChangedSpy(serverShellSurface, &LayerSurfaceV1Interface::anchorChanged);
     QVERIFY(anchorChangedSpy.wait());
 
-    QCOMPARE(serverShellSurface->exclusiveEdge(), expected);
+    QCOMPARE(serverShellSurface->exclusiveEdges(), expected);
 }
 
 void TestLayerShellV1Interface::testLayer_data()

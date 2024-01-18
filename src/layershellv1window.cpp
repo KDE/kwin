@@ -145,25 +145,25 @@ StrutRect LayerShellV1Window::strutRect(StrutArea area) const
 {
     switch (area) {
     case StrutAreaLeft:
-        if (m_shellSurface->exclusiveEdge() == Qt::LeftEdge) {
-            return StrutRect(x(), y(), m_shellSurface->exclusiveZone(), height(), StrutAreaLeft);
+        if (m_shellSurface->exclusiveEdges() & Qt::LeftEdge) {
+            return StrutRect(x(), y(), m_shellSurface->exclusiveZone().width(), height(), StrutAreaLeft);
         }
         return StrutRect();
     case StrutAreaRight:
-        if (m_shellSurface->exclusiveEdge() == Qt::RightEdge) {
-            return StrutRect(x() + width() - m_shellSurface->exclusiveZone(), y(),
-                             m_shellSurface->exclusiveZone(), height(), StrutAreaRight);
+        if (m_shellSurface->exclusiveEdges() & Qt::RightEdge) {
+            return StrutRect(x() + width() - m_shellSurface->exclusiveZone().width(), y(),
+                             m_shellSurface->exclusiveZone().width(), height(), StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaTop:
-        if (m_shellSurface->exclusiveEdge() == Qt::TopEdge) {
-            return StrutRect(x(), y(), width(), m_shellSurface->exclusiveZone(), StrutAreaTop);
+        if (m_shellSurface->exclusiveEdges() & Qt::TopEdge) {
+            return StrutRect(x(), y(), width(), m_shellSurface->exclusiveZone().height(), StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaBottom:
-        if (m_shellSurface->exclusiveEdge() == Qt::BottomEdge) {
-            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone(),
-                             width(), m_shellSurface->exclusiveZone(), StrutAreaBottom);
+        if (m_shellSurface->exclusiveEdges() & Qt::BottomEdge) {
+            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone().height(),
+                             width(), m_shellSurface->exclusiveZone().height(), StrutAreaBottom);
         }
         return StrutRect();
     default:
@@ -173,7 +173,14 @@ StrutRect LayerShellV1Window::strutRect(StrutArea area) const
 
 bool LayerShellV1Window::hasStrut() const
 {
-    return m_shellSurface->exclusiveZone() > 0;
+    bool hasZone = false;
+    if (m_shellSurface->anchor() & Qt::LeftEdge || m_shellSurface->anchor() & Qt::RightEdge) {
+        hasZone = m_shellSurface->exclusiveZone().width() > 0;
+    }
+    if (m_shellSurface->anchor() & Qt::TopEdge || m_shellSurface->anchor() & Qt::BottomEdge) {
+        hasZone = m_shellSurface->exclusiveZone().height() > 0;
+    }
+    return hasZone;
 }
 
 void LayerShellV1Window::destroyWindow()

@@ -13,6 +13,7 @@
 
 #include <QPointer>
 #include <QQueue>
+#include <qnamespace.h>
 
 #include "qwayland-server-wlr-layer-shell-unstable-v1.h"
 
@@ -44,8 +45,7 @@ struct LayerSurfaceV1Commit
     std::optional<Qt::Edges> anchor;
     std::optional<QMargins> margins;
     std::optional<QSize> desiredSize;
-    std::optional<int> exclusiveZone;
-    std::optional<quint32> exclusiveEdge;
+    std::optional<QSize> exclusiveZone;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
 };
@@ -57,8 +57,7 @@ struct LayerSurfaceV1State
     Qt::Edges anchor;
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
-    int exclusiveZone = 0;
-    quint32 exclusiveEdge = 0;
+    QSize exclusiveZone = QSize(0, 0);
     bool acceptsFocus = false;
     bool configured = false;
     bool closed = false;
@@ -84,8 +83,7 @@ protected:
     void zwlr_layer_surface_v1_destroy_resource(Resource *resource) override;
     void zwlr_layer_surface_v1_set_size(Resource *resource, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor) override;
-    void zwlr_layer_surface_v1_set_exclusive_edge(Resource *, uint32_t edge) override;
-    void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone) override;
+    void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t horizontal_zone, int32_t vertical_zone) override;
     void zwlr_layer_surface_v1_set_margin(Resource *resource, int32_t top, int32_t right, int32_t bottom, int32_t left) override;
     void zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity) override;
     void zwlr_layer_surface_v1_get_popup(Resource *resource, struct ::wl_resource *popup) override;
@@ -206,14 +204,9 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor(Resource *
     }
 }
 
-void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_edge(Resource *, uint32_t edge)
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t horizontal_zone, int32_t vertical_zone)
 {
-    pending.exclusiveEdge = edge;
-}
-
-void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t zone)
-{
-    pending.exclusiveZone = zone;
+    pending.exclusiveZone = QSize(horizontal_zone, vertical_zone);
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *, int32_t top, int32_t right, int32_t bottom, int32_t left)
@@ -341,13 +334,7 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveZone.has_value()) {
         state.exclusiveZone = commit->exclusiveZone.value();
     }
-    if (commit->exclusiveEdge.has_value()) {
-        state.exclusiveEdge = commit->exclusiveEdge.value();
-    }
-    // We check unconditionally as either of the two states might have changed
-    if (!(state.anchor & state.exclusiveEdge)) {
-        wl_resource_post_error(resource()->handle, error_invalid_anchor, "Exclusive edge invalid for anchor");
-    }
+
     if (commit->acceptsFocus.has_value()) {
         state.acceptsFocus = commit->acceptsFocus.value();
     }
@@ -454,45 +441,41 @@ int LayerSurfaceV1Interface::bottomMargin() const
     return d->state.margins.bottom();
 }
 
-int LayerSurfaceV1Interface::exclusiveZone() const
+QSize LayerSurfaceV1Interface::exclusiveZone() const
 {
     return d->state.exclusiveZone;
 }
 
-Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const
+Qt::Edges LayerSurfaceV1Interface::exclusiveEdges() const
 {
-    if (exclusiveZone() <= 0) {
-        return Qt::Edge();
+    if (exclusiveZone().width() <= 0 && exclusiveZone().height() <= 0) {
+        return Qt::Edges();
     }
 
-    if (d->state.anchor & d->state.exclusiveEdge) {
-        switch (d->state.exclusiveEdge) {
-        case LayerSurfaceV1InterfacePrivate::anchor_left:
-            return Qt::LeftEdge;
-        case LayerSurfaceV1InterfacePrivate::anchor_top:
-            return Qt::TopEdge;
-        case LayerSurfaceV1InterfacePrivate::anchor_right:
-            return Qt::RightEdge;
-        case LayerSurfaceV1InterfacePrivate::anchor_bottom:
-            return Qt::BottomEdge;
-        default:
-            break;
-        }
+    int horizontalZone = exclusiveZone().width();
+    int verticalZone = exclusiveZone().height();
+    if (anchor() & Qt::LeftEdge && anchor() & Qt::RightEdge) {
+        horizontalZone = 0;
+    }
+    if (anchor() & Qt::TopEdge && anchor() & Qt::BottomEdge) {
+        verticalZone = 0;
     }
 
-    if (anchor() == (Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge) || anchor() == Qt::TopEdge) {
-        return Qt::TopEdge;
+    Qt::Edges edges = Qt::Edges();
+    if (anchor() & Qt::LeftEdge && horizontalZone > 0) {
+        edges |= Qt::LeftEdge;
     }
-    if (anchor() == (Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge) || anchor() == Qt::RightEdge) {
-        return Qt::RightEdge;
+    if (anchor() & Qt::TopEdge && verticalZone > 0) {
+        edges |= Qt::TopEdge;
     }
-    if (anchor() == (Qt::RightEdge | Qt::BottomEdge | Qt::LeftEdge) || anchor() == Qt::BottomEdge) {
-        return Qt::BottomEdge;
+    if (anchor() & Qt::RightEdge && horizontalZone > 0) {
+        edges |= Qt::RightEdge;
     }
-    if (anchor() == (Qt::BottomEdge | Qt::LeftEdge | Qt::TopEdge) || anchor() == Qt::LeftEdge) {
-        return Qt::LeftEdge;
+    if (anchor() & Qt::BottomEdge && verticalZone > 0) {
+        edges |= Qt::BottomEdge;
     }
-    return Qt::Edge();
+
+    return edges;
 }
 
 OutputInterface *LayerSurfaceV1Interface::output() const

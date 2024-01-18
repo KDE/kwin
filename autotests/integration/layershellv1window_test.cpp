@@ -355,23 +355,23 @@ void LayerShellV1WindowTest::testPlacementArea_data()
 {
     QTest::addColumn<int>("anchor");
     QTest::addColumn<QMargins>("margins");
-    QTest::addColumn<int>("exclusiveZone");
+    QTest::addColumn<QSize>("exclusiveZone");
     QTest::addColumn<QRectF>("placementArea");
 
-    QTest::addRow("left") << int(Test::LayerSurfaceV1::anchor_left) << QMargins(0, 0, 0, 0) << 300 << QRectF(300, 0, 980, 1024);
-    QTest::addRow("top") << int(Test::LayerSurfaceV1::anchor_top) << QMargins(0, 0, 0, 0) << 300 << QRectF(0, 300, 1280, 724);
-    QTest::addRow("right") << int(Test::LayerSurfaceV1::anchor_right) << QMargins(0, 0, 0, 0) << 300 << QRectF(0, 0, 980, 1024);
-    QTest::addRow("bottom") << int(Test::LayerSurfaceV1::anchor_bottom) << QMargins(0, 0, 0, 0) << 300 << QRectF(0, 0, 1280, 724);
+    QTest::addRow("left") << int(Test::LayerSurfaceV1::anchor_left) << QMargins(0, 0, 0, 0) << QSize(300, 0) << QRectF(300, 0, 980, 1024);
+    QTest::addRow("top") << int(Test::LayerSurfaceV1::anchor_top) << QMargins(0, 0, 0, 0) << QSize(0, 300) << QRectF(0, 300, 1280, 724);
+    QTest::addRow("right") << int(Test::LayerSurfaceV1::anchor_right) << QMargins(0, 0, 0, 0) << QSize(300, 0) << QRectF(0, 0, 980, 1024);
+    QTest::addRow("bottom") << int(Test::LayerSurfaceV1::anchor_bottom) << QMargins(0, 0, 0, 0) << QSize(0, 300) << QRectF(0, 0, 1280, 724);
 
-    QTest::addRow("left, negative margin") << int(Test::LayerSurfaceV1::anchor_left) << QMargins(-5, 0, 0, 0) << 300 << QRectF(295, 0, 985, 1024);
-    QTest::addRow("top, negative margin") << int(Test::LayerSurfaceV1::anchor_top) << QMargins(0, -5, 0, 0) << 300 << QRectF(0, 295, 1280, 729);
-    QTest::addRow("right, negative margin") << int(Test::LayerSurfaceV1::anchor_right) << QMargins(0, 0, -5, 0) << 300 << QRectF(0, 0, 985, 1024);
-    QTest::addRow("bottom, negative margin") << int(Test::LayerSurfaceV1::anchor_bottom) << QMargins(0, 0, 0, -5) << 300 << QRectF(0, 0, 1280, 729);
+    QTest::addRow("left, negative margin") << int(Test::LayerSurfaceV1::anchor_left) << QMargins(-5, 0, 0, 0) << QSize(300, 0) << QRectF(295, 0, 985, 1024);
+    QTest::addRow("top, negative margin") << int(Test::LayerSurfaceV1::anchor_top) << QMargins(0, -5, 0, 0) << QSize(0, 300) << QRectF(0, 295, 1280, 729);
+    QTest::addRow("right, negative margin") << int(Test::LayerSurfaceV1::anchor_right) << QMargins(0, 0, -5, 0) << QSize(300, 0) << QRectF(0, 0, 985, 1024);
+    QTest::addRow("bottom, negative margin") << int(Test::LayerSurfaceV1::anchor_bottom) << QMargins(0, 0, 0, -5) << QSize(0, 300) << QRectF(0, 0, 1280, 729);
 
-    QTest::addRow("left, positive margin") << int(Test::LayerSurfaceV1::anchor_left) << QMargins(5, 0, 0, 0) << 300 << QRectF(305, 0, 975, 1024);
-    QTest::addRow("top, positive margin") << int(Test::LayerSurfaceV1::anchor_top) << QMargins(0, 5, 0, 0) << 300 << QRectF(0, 305, 1280, 719);
-    QTest::addRow("right, positive margin") << int(Test::LayerSurfaceV1::anchor_right) << QMargins(0, 0, 5, 0) << 300 << QRectF(0, 0, 975, 1024);
-    QTest::addRow("bottom, positive margin") << int(Test::LayerSurfaceV1::anchor_bottom) << QMargins(0, 0, 0, 5) << 300 << QRectF(0, 0, 1280, 719);
+    QTest::addRow("left, positive margin") << int(Test::LayerSurfaceV1::anchor_left) << QMargins(5, 0, 0, 0) << QSize(300, 0) << QRectF(305, 0, 975, 1024);
+    QTest::addRow("top, positive margin") << int(Test::LayerSurfaceV1::anchor_top) << QMargins(0, 5, 0, 0) << QSize(0, 300) << QRectF(0, 305, 1280, 719);
+    QTest::addRow("right, positive margin") << int(Test::LayerSurfaceV1::anchor_right) << QMargins(0, 0, 5, 0) << QSize(300, 0) << QRectF(0, 0, 975, 1024);
+    QTest::addRow("bottom, positive margin") << int(Test::LayerSurfaceV1::anchor_bottom) << QMargins(0, 0, 0, 5) << QSize(0, 300) << QRectF(0, 0, 1280, 719);
 }
 
 void LayerShellV1WindowTest::testPlacementArea()
@@ -383,10 +383,10 @@ void LayerShellV1WindowTest::testPlacementArea()
     // Set the initial state of the layer surface.
     QFETCH(int, anchor);
     QFETCH(QMargins, margins);
-    QFETCH(int, exclusiveZone);
+    QFETCH(QSize, exclusiveZone);
     shellSurface->set_anchor(anchor);
     shellSurface->set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
-    shellSurface->set_exclusive_zone(exclusiveZone);
+    shellSurface->set_exclusive_zone(exclusiveZone.width(), exclusiveZone.height());
     shellSurface->set_size(280, 124);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
@@ -470,12 +470,12 @@ void LayerShellV1WindowTest::testStack()
     // Set the initial state of the layer surface.
     shellSurface1->set_anchor(Test::LayerSurfaceV1::anchor_left);
     shellSurface1->set_size(80, 124);
-    shellSurface1->set_exclusive_zone(80);
+    shellSurface1->set_exclusive_zone(80, 0);
     surface1->commit(KWayland::Client::Surface::CommitFlag::None);
 
     shellSurface2->set_anchor(Test::LayerSurfaceV1::anchor_left);
     shellSurface2->set_size(200, 124);
-    shellSurface2->set_exclusive_zone(200);
+    shellSurface2->set_exclusive_zone(200, 0);
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surfaces.

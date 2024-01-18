@@ -14,6 +14,7 @@
 #include "workspace.h"
 
 #include <QTimer>
+#include <qnamespace.h>
 
 namespace KWin
 {
@@ -65,20 +66,22 @@ void LayerShellV1Integration::destroyWindow(LayerSurfaceV1Interface *shellSurfac
 
 static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *workArea)
 {
-    switch (shellSurface->exclusiveEdge()) {
-    case Qt::LeftEdge:
-        workArea->adjust(shellSurface->leftMargin() + shellSurface->exclusiveZone(), 0, 0, 0);
-        break;
-    case Qt::RightEdge:
-        workArea->adjust(0, 0, -shellSurface->rightMargin() - shellSurface->exclusiveZone(), 0);
-        break;
-    case Qt::TopEdge:
-        workArea->adjust(0, shellSurface->topMargin() + shellSurface->exclusiveZone(), 0, 0);
-        break;
-    case Qt::BottomEdge:
-        workArea->adjust(0, 0, 0, -shellSurface->bottomMargin() - shellSurface->exclusiveZone());
-        break;
+    QMargins adjust;
+
+    if (shellSurface->exclusiveEdges() & Qt::LeftEdge) {
+        adjust.setLeft(shellSurface->leftMargin() + shellSurface->exclusiveZone().width());
     }
+    if (shellSurface->exclusiveEdges() & Qt::RightEdge) {
+        adjust.setRight(-shellSurface->rightMargin() - shellSurface->exclusiveZone().width());
+    }
+    if (shellSurface->exclusiveEdges() & Qt::TopEdge) {
+        adjust.setTop(shellSurface->topMargin() + shellSurface->exclusiveZone().height());
+    }
+    if (shellSurface->exclusiveEdges() & Qt::BottomEdge) {
+        adjust.setBottom(-shellSurface->bottomMargin() - shellSurface->exclusiveZone().height());
+    }
+    qWarning() << "AAAAAAAA" << adjust << shellSurface->exclusiveEdges();
+    workArea->adjust(adjust.left(), adjust.top(), adjust.right(), adjust.bottom());
 }
 
 static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea,
@@ -90,12 +93,12 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         if (shellSurface->layer() != layer) {
             continue;
         }
-        if (exclusive != (shellSurface->exclusiveZone() > 0)) {
+        if (exclusive != (shellSurface->exclusiveZone().width() > 0 || shellSurface->exclusiveZone().height() > 0)) {
             continue;
         }
 
         QRect bounds;
-        if (shellSurface->exclusiveZone() == -1) {
+        if (shellSurface->exclusiveZone() == QSize(-1, -1)) {
             bounds = window->desiredOutput()->geometry();
         } else {
             bounds = *workArea;
@@ -142,7 +145,7 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         // Move the window's bottom if its virtual keyboard is overlapping it
-        if (shellSurface->exclusiveZone() >= 0 && !window->virtualKeyboardGeometry().isEmpty() && geometry.bottom() > window->virtualKeyboardGeometry().top()) {
+        if (shellSurface->exclusiveZone().width() >= 0 && shellSurface->exclusiveZone().height() >= 0 && !window->virtualKeyboardGeometry().isEmpty() && geometry.bottom() > window->virtualKeyboardGeometry().top()) {
             geometry.setBottom(window->virtualKeyboardGeometry().top());
         }
 
@@ -156,7 +159,7 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
             continue;
         }
 
-        if (exclusive && shellSurface->exclusiveZone() > 0) {
+        if (exclusive && (shellSurface->exclusiveZone().width() > 0 || shellSurface->exclusiveZone().height() > 0)) {
             adjustWorkArea(shellSurface, workArea);
         }
     }

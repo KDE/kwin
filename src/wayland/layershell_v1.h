@@ -141,13 +141,13 @@ public:
      * surfaces with a positive exclusion zone. If the exclusive zone is -1, the layer surface
      * indicates that it doesn't want to be moved to accomodate for other surfaces.
      */
-    int exclusiveZone() const;
+    QSize exclusiveZone() const;
 
     /**
      * If the exclusive zone is positive, this function returns the corresponding exclusive
      * anchor edge, otherwise returns a Qt::Edge() value.
      */
-    Qt::Edge exclusiveEdge() const;
+    Qt::Edges exclusiveEdges() const;
 
     /**
      * Returns the output where the surface wants to be displayed. This function can return

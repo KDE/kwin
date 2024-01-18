@@ -175,7 +175,7 @@ void TestPlacement::testPlaceMaximized()
     std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
     panelShellSurface->set_size(1280, 20);
     panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
-    panelShellSurface->set_exclusive_zone(20);
+    panelShellSurface->set_exclusive_zone(0, 20);
     panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(panelConfigureRequestedSpy.wait());
@@ -202,7 +202,7 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
     panelShellSurface->set_size(1280, 20);
     panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
-    panelShellSurface->set_exclusive_zone(20);
+    panelShellSurface->set_exclusive_zone(0, 20);
     panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
     QSignalSpy panelConfigureRequestedSpy(panelShellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
     QVERIFY(panelConfigureRequestedSpy.wait());
