@@ -20,6 +20,7 @@
 #include "platformsupport/scenes/vulkan/vulkan_backend.h"
 #include "scene/cursordelegate_opengl.h"
 #include "scene/cursordelegate_qpainter.h"
+#include "scene/cursordelegate_vulkan.h"
 #include "scene/cursorscene.h"
 #include "scene/itemrenderer_opengl.h"
 #include "scene/itemrenderer_qpainter.h"
@@ -287,10 +288,18 @@ void WaylandCompositor::addOutput(Output *output)
 
     auto cursorLayer = new RenderLayer(output->renderLoop());
     cursorLayer->setVisible(false);
-    if (m_backend->compositingType() == OpenGLCompositing) {
+    switch (m_backend->compositingType()) {
+    case OpenGLCompositing:
         cursorLayer->setDelegate(std::make_unique<CursorDelegateOpenGL>(output));
-    } else {
+        break;
+    case VulkanCompositing:
+        cursorLayer->setDelegate(std::make_unique<CursorDelegateVulkan>(output));
+        break;
+    case QPainterCompositing:
         cursorLayer->setDelegate(std::make_unique<CursorDelegateQPainter>(output));
+        break;
+    case NoCompositing:
+        Q_UNREACHABLE();
     }
     cursorLayer->setParent(workspaceLayer);
     cursorLayer->setSuperlayer(workspaceLayer);

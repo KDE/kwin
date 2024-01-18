@@ -165,6 +165,7 @@ target_sources(kwin PRIVATE
     rules.cpp
     scene/cursordelegate_opengl.cpp
     scene/cursordelegate_qpainter.cpp
+    scene/cursordelegate_vulkan.cpp
     scene/cursoritem.cpp
     scene/cursorscene.cpp
     scene/decorationitem.cpp
