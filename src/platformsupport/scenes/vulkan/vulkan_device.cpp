@@ -30,7 +30,7 @@ VulkanDevice::VulkanDevice(vk::Instance instance, vk::PhysicalDevice physicalDev
     , m_loader(instance, vkGetInstanceProcAddr, logicalDevice)
 {
     auto [result, cmdPool] = m_logical.createCommandPoolUnique(vk::CommandPoolCreateInfo{
-        vk::CommandPoolCreateFlags(),
+        vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
         m_queueFamilyIndex,
     });
     if (result != vk::Result::eSuccess) {

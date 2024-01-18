@@ -82,7 +82,7 @@ public:
     void updateDpmsMode(DpmsMode dpmsMode);
     void updateEnabled(bool enabled);
 
-    void framePending(const std::shared_ptr<OutputFrame> &frame);
+    void setPendingFrame(const std::shared_ptr<OutputFrame> &frame);
 
 private:
     void handleConfigure(const QSize &size, KWayland::Client::XdgShellSurface::States states, quint32 serial);

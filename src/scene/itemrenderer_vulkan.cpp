@@ -15,6 +15,7 @@ ItemRendererVulkan::ItemRendererVulkan(VulkanBackend *backend)
 
 void ItemRendererVulkan::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
+    renderTarget.commandBuffer().reset(vk::CommandBufferResetFlags());
     if (renderTarget.commandBuffer().begin(vk::CommandBufferBeginInfo{}) != vk::Result::eSuccess) {
         qWarning() << "command buffer begin failed";
         return;

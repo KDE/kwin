@@ -110,7 +110,7 @@ WaylandVulkanLayer::WaylandVulkanLayer(WaylandOutput *output, WaylandVulkanBacke
     , m_display(display)
 {
     auto [result, cmdPool] = m_device->logicalDevice().createCommandPoolUnique(vk::CommandPoolCreateInfo{
-        vk::CommandPoolCreateFlags(),
+        vk::CommandPoolCreateFlagBits::eResetCommandBuffer,
         m_device->queueFamilyIndex(),
     });
     if (result != vk::Result::eSuccess) {
@@ -176,6 +176,7 @@ std::chrono::nanoseconds WaylandVulkanLayer::queryRenderTime() const
 
 void WaylandVulkanLayer::present(const std::shared_ptr<OutputFrame> &frame)
 {
+    m_output->setPendingFrame(frame);
     wl_buffer *buffer = m_backend->backend()->importBuffer(m_currentSlot->buffer());
     Q_ASSERT(buffer);
 
