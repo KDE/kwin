@@ -71,7 +71,7 @@ void ItemRendererVulkan::renderBackground(const RenderTarget &renderTarget, cons
     renderTarget.commandBuffer().clearAttachments(vk::ClearAttachment(
                                                       vk::ImageAspectFlagBits::eColor,
                                                       0,
-                                                      vk::ClearColorValue(0, 0, 255, 255)),
+                                                      vk::ClearColorValue(0.2f, 0.2f, 0.8f, 1.0f)),
                                                   rects);
 }
 

@@ -127,7 +127,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandVulkanLayer::beginFrame()
     if (!m_cmdPool) {
         return std::nullopt;
     }
-    if (!m_swapchain) {
+    if (!m_swapchain || m_swapchain->size() != m_output->modeSize()) {
         const auto hostFormats = m_display->linuxDmabuf()->formats();
         const auto formats = m_device->supportedFormats();
         for (auto it = formats.begin(); it != formats.end(); it++) {
