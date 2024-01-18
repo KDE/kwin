@@ -500,14 +500,14 @@ void GLTexturePrivate::updateMatrix()
     }
 
     m_matrix[NormalizedCoordinates].translate(0.5, 0.5);
-    m_matrix[NormalizedCoordinates] *= textureToBufferMatrix;
     // our Y axis is flipped vs OpenGL
     m_matrix[NormalizedCoordinates].scale(1, -1);
+    m_matrix[NormalizedCoordinates] *= textureToBufferMatrix;
     m_matrix[NormalizedCoordinates].translate(-0.5, -0.5);
 
     m_matrix[UnnormalizedCoordinates].translate(m_size.width() / 2, m_size.height() / 2);
-    m_matrix[UnnormalizedCoordinates] *= textureToBufferMatrix;
     m_matrix[UnnormalizedCoordinates].scale(1, -1);
+    m_matrix[UnnormalizedCoordinates] *= textureToBufferMatrix;
     m_matrix[UnnormalizedCoordinates].translate(-m_size.width() / 2, -m_size.height() / 2);
 }
 
