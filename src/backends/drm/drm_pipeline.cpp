@@ -264,8 +264,14 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     return Error::None;
 }
 
+static const bool s_vrrCursorWorkaround = qEnvironmentVariableIntValue("KWIN_DRM_NO_VRR_CURSOR_WORKAROUND") == 0;
+
 void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
 {
+    if (s_vrrCursorWorkaround && m_pending.presentationMode != PresentationMode::VSync) {
+        // trigger a pageflip on the primary plane, as a workaround for https://gitlab.freedesktop.org/drm/amd/-/issues/3034
+        commit->addProperty(m_pending.crtc->primaryPlane()->srcX, 0);
+    }
     auto plane = m_pending.crtc->cursorPlane();
     const auto layer = cursorLayer();
     plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
