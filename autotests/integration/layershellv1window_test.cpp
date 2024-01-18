@@ -263,7 +263,7 @@ void LayerShellV1WindowTest::testLayer_data()
     QTest::addColumn<int>("protocolLayer");
     QTest::addColumn<Layer>("compositorLayer");
 
-    QTest::addRow("overlay") << int(Test::LayerShellV1::layer_overlay) << UnmanagedLayer;
+    QTest::addRow("overlay") << int(Test::LayerShellV1::layer_overlay) << OverlayLayer;
     QTest::addRow("top") << int(Test::LayerShellV1::layer_top) << AboveLayer;
     QTest::addRow("bottom") << int(Test::LayerShellV1::layer_bottom) << BelowLayer;
     QTest::addRow("background") << int(Test::LayerShellV1::layer_background) << DesktopLayer;

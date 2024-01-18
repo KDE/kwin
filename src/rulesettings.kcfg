@@ -433,7 +433,7 @@
         <choice name="PopupLayer" value="popup" />
         <choice name="CriticalNotificationLayer" value="critical-notification" />
         <choice name="OnScreenDisplayLayer" value="osd" />
-        <choice name="UnmanagedLayer" value="overlay" />
+        <choice name="OverlayLayer" value="overlay" />
       </choices>
       <default code="true">NormalLayer</default>
     </entry>

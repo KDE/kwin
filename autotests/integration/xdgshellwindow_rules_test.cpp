@@ -3001,7 +3001,7 @@ void TestXdgShellWindowRules::testLayerForce()
     setWindowRule("layer", QStringLiteral("overlay"), int(Rules::Force));
 
     createTestWindow();
-    QCOMPARE(m_window->layer(), UnmanagedLayer);
+    QCOMPARE(m_window->layer(), OverlayLayer);
 
     destroyTestWindow();
 }
@@ -3011,7 +3011,7 @@ void TestXdgShellWindowRules::testLayerForceTemporarily()
     setWindowRule("layer", QStringLiteral("overlay"), int(Rules::ForceTemporarily));
 
     createTestWindow();
-    QCOMPARE(m_window->layer(), UnmanagedLayer);
+    QCOMPARE(m_window->layer(), OverlayLayer);
 
     // The rule should be discarded when the window is closed.
     destroyTestWindow();
