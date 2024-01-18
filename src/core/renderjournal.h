@@ -23,13 +23,14 @@ class KWIN_EXPORT RenderJournal
 public:
     RenderJournal();
 
-    void add(std::chrono::nanoseconds renderTime);
+    void add(std::chrono::nanoseconds renderTime, std::chrono::nanoseconds presentationTimestamp);
 
     std::chrono::nanoseconds result() const;
 
 private:
     std::chrono::nanoseconds m_result{0};
-    std::optional<std::chrono::steady_clock::time_point> m_lastAdd;
+    std::chrono::nanoseconds m_variance{0};
+    std::optional<std::chrono::nanoseconds> m_lastAdd;
 };
 
 } // namespace KWin

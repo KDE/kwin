@@ -97,7 +97,7 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
 
     notifyVblank(timestamp);
 
-    renderJournal.add(renderTime);
+    renderJournal.add(renderTime, timestamp);
     if (!inhibitCount) {
         maybeScheduleRepaint();
     }
