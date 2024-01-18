@@ -578,9 +578,7 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->colorDescription = colorDescription;
         target->colorDescriptionIsSet = true;
     }
-    if (presentationFeedback) {
-        target->presentationFeedback = std::move(presentationFeedback);
-    }
+    target->presentationFeedback = std::move(presentationFeedback);
 
     *this = SurfaceState{};
     serial = target->serial;
@@ -607,9 +605,6 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const QRectF oldBufferSourceBox = bufferSourceBox;
     const QRegion oldInputRegion = inputRegion;
 
-    if (!next->damage.isEmpty() || !next->bufferDamage.isEmpty()) {
-        current->presentationFeedback.reset();
-    }
     next->mergeInto(current.get());
     bufferRef = current->buffer;
     scaleOverride = pendingScaleOverride;
