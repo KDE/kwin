@@ -210,7 +210,7 @@ Layer LayerShellV1Window::belongsToLayer() const
     case LayerSurfaceV1Interface::TopLayer:
         return AboveLayer;
     case LayerSurfaceV1Interface::OverlayLayer:
-        return UnmanagedLayer;
+        return OverlayLayer;
     default:
         Q_UNREACHABLE();
     }

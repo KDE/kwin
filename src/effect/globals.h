@@ -171,7 +171,7 @@ enum Layer {
     PopupLayer, // tooltips, sub- and context menus
     CriticalNotificationLayer, // layer for notifications that should be shown even on top of fullscreen
     OnScreenDisplayLayer, // layer for On Screen Display windows such as volume feedback
-    UnmanagedLayer, // layer for override redirect windows.
+    OverlayLayer,
     NumLayers, // number of layers, must be last
 };
 Q_ENUM_NS(Layer)

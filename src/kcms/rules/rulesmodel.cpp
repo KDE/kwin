@@ -923,7 +923,7 @@ QList<OptionsModel::Data> RulesModel::layerModelData() const
         {PopupLayer, i18n("Popup")},
         {CriticalNotificationLayer, i18n("Critical Notification")},
         {OnScreenDisplayLayer, i18n("OSD")},
-        {UnmanagedLayer, i18n("Overlay")},
+        {OverlayLayer, i18n("Overlay")},
     };
     return modelData;
 }

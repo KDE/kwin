@@ -575,16 +575,16 @@ void Window::updateLayer()
 Layer Window::belongsToLayer() const
 {
     if (isUnmanaged() || isInternal()) {
-        return UnmanagedLayer;
+        return OverlayLayer;
     }
     if (isLockScreen() && !waylandServer()) {
-        return UnmanagedLayer;
+        return OverlayLayer;
     }
     if (isInputMethod()) {
-        return UnmanagedLayer;
+        return OverlayLayer;
     }
     if (isLockScreenOverlay() && waylandServer() && waylandServer()->isScreenLocked()) {
-        return UnmanagedLayer;
+        return OverlayLayer;
     }
     if (isDesktop()) {
         return DesktopLayer;
