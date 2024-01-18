@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-16 02:27+0000\n"
+"POT-Creation-Date: 2024-01-18 02:24+0000\n"
 "PO-Revision-Date: 2023-10-08 23:38+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2385,22 +2385,22 @@ msgstr "PipeWire 콘텍스트를 만들 수 없음"
 msgid "Failed to connect PipeWire context"
 msgstr "PipeWire 콘텍스트에 연결할 수 없음"
 
-#: plugins/screencast/screencastmanager.cpp:104
+#: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "ID가 %1인 창을 찾을 수 없음"
 
-#: plugins/screencast/screencastmanager.cpp:144
+#: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Could not find output"
 msgstr "출력을 찾을 수 없음"
 
-#: plugins/screencast/screencastmanager.cpp:171
+#: plugins/screencast/screencastmanager.cpp:174
 #, kde-format
 msgid "Invalid region"
 msgstr "잘못된 영역"
 
-#: plugins/screencast/screencastmanager.cpp:202
+#: plugins/screencast/screencastmanager.cpp:205
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "작업 공간 밖에 영역이 있음"
@@ -3205,305 +3205,306 @@ msgstr "활동"
 msgid "Activity rule type"
 msgstr "활동 규칙 종류"
 
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "다음으로 창 종류 설정"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "다음으로 창 종류 설정 규칙 종류"
-
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
+#: rulesettings.kcfg:183
 #, kde-format
 msgid "Maximized vertically"
 msgstr "수직 최대화"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
+#: rulesettings.kcfg:187
 #, kde-format
 msgid "Maximized vertically rule type"
 msgstr "수직 최대화 규칙 종류"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
+#: rulesettings.kcfg:194
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "수평 최대화"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
+#: rulesettings.kcfg:198
 #, kde-format
 msgid "Maximized horizontally rule type"
 msgstr "수평 최대화 규칙 종류"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
+#: rulesettings.kcfg:205
 #, kde-format
 msgid "Minimized"
 msgstr "최소화됨"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
+#: rulesettings.kcfg:209
 #, kde-format
 msgid "Minimized rule type"
 msgstr "최소화됨 규칙 종류"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
+#: rulesettings.kcfg:216
 #, kde-format
 msgid "Shaded"
 msgstr "말아 올려짐"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
+#: rulesettings.kcfg:220
 #, kde-format
 msgid "Shaded rule type"
 msgstr "말아 올려짐 규칙 종류"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
+#: rulesettings.kcfg:227
 #, kde-format
 msgid "Skip taskbar"
 msgstr "작업 표시줄 건너뛰기"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
+#: rulesettings.kcfg:231
 #, kde-format
 msgid "Skip taskbar rule type"
 msgstr "작업 표시줄 건너뛰기 규칙 종류"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
+#: rulesettings.kcfg:238
 #, kde-format
 msgid "Skip pager"
 msgstr "호출기 건너뛰기"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
+#: rulesettings.kcfg:242
 #, kde-format
 msgid "Skip pager rule type"
 msgstr "호출기 건너뛰기 규칙 종류"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
+#: rulesettings.kcfg:249
 #, kde-format
 msgid "Skip switcher"
 msgstr "전환기 건너뛰기"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
+#: rulesettings.kcfg:253
 #, kde-format
 msgid "Skip switcher rule type"
 msgstr "전환기 건너뛰기 규칙 종류"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
+#: rulesettings.kcfg:260
 #, kde-format
 msgid "Keep above"
 msgstr "항상 위"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
+#: rulesettings.kcfg:264
 #, kde-format
 msgid "Keep above rule type"
 msgstr "항상 위 규칙 종류"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
+#: rulesettings.kcfg:271
 #, kde-format
 msgid "Keep below"
 msgstr "항상 아래"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
+#: rulesettings.kcfg:275
 #, kde-format
 msgid "Keep below rule type"
 msgstr "항상 아래 규칙 종류"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
+#: rulesettings.kcfg:282
 #, kde-format
 msgid "Fullscreen"
 msgstr "전체 화면"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
+#: rulesettings.kcfg:286
 #, kde-format
 msgid "Fullscreen rule type"
 msgstr "전체 화면 규칙 종류"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
+#: rulesettings.kcfg:293
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "제목 표시줄과 프레임 없음"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
+#: rulesettings.kcfg:297
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "제목 표시줄 없음 규칙 종류"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
+#: rulesettings.kcfg:304
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "제목 표시줄 색과 색 구성표"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "제목 표시줄 색 규칙 종류"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
+#: rulesettings.kcfg:312
 #, kde-format
 msgid "Block Compositing"
 msgstr "컴포지팅 중단하기"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
+#: rulesettings.kcfg:316
 #, kde-format
 msgid "Block Compositing rule type"
 msgstr "컴포지팅 중단하기 규칙 종류"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
+#: rulesettings.kcfg:321
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "포커스 훔치기 방지"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
+#: rulesettings.kcfg:327
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "포커스 훔치기 방지 규칙 종류"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
+#: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus protection"
 msgstr "포커스 보호"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
+#: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "포커스 보호 규칙 종류"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
+#: rulesettings.kcfg:343
 #, kde-format
 msgid "Accept Focus"
 msgstr "포커스 받아들이기"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
+#: rulesettings.kcfg:347
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "포커스 받아들이기 규칙 종류"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Closeable"
 msgstr "닫을 수 있음"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
+#: rulesettings.kcfg:356
 #, kde-format
 msgid "Closeable rule type"
 msgstr "닫을 수 있음 규칙 종류"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Autogroup with identical"
 msgstr "같은 속성으로 자동으로 묶기"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
+#: rulesettings.kcfg:365
 #, kde-format
 msgid "Autogroup with identical rule type"
 msgstr "같은 속성으로 자동으로 묶기 규칙 종류"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
+#: rulesettings.kcfg:370
 #, kde-format
 msgid "Autogroup in foreground"
 msgstr "배경에 있는 창 자동으로 묶기"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
+#: rulesettings.kcfg:374
 #, kde-format
 msgid "Autogroup in foreground rule type"
 msgstr "배경에 있는 창 자동으로 묶기 규칙 종류"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
+#: rulesettings.kcfg:379
 #, kde-format
 msgid "Autogroup by ID"
 msgstr "ID로 자동으로 묶기"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID rule type"
 msgstr "ID로 자동으로 묶기 규칙 종류"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
+#: rulesettings.kcfg:387
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "크기 제한 받아들이기"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
+#: rulesettings.kcfg:391
 #, kde-format
 msgid "Obey geometry restrictions rule type"
 msgstr "크기 제한 받아들이기 규칙 종류"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
+#: rulesettings.kcfg:396
 #, kde-format
 msgid "Shortcut"
 msgstr "단축키"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:399
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "단축키 규칙 종류"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
+#: rulesettings.kcfg:406
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "전역 단축키 무시"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
+#: rulesettings.kcfg:410
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "전역 단축키 무시 규칙 종류"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
+#: rulesettings.kcfg:415
 #, kde-format
 msgid "Desktop file name"
 msgstr "데스크톱 파일 이름"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "데스크톱 파일 이름 규칙 종류"
+
+#. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:425
+#, kde-format
+msgid "Layer"
+msgstr ""
+
+#. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:441
+#, fuzzy, kde-format
+#| msgid "Shaded rule type"
+msgid "Layer rule type"
+msgstr "말아 올려짐 규칙 종류"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4151,7 +4152,7 @@ msgstr "아래쪽 바탕 화면으로 전환"
 msgid "Switch to Desktop %1"
 msgstr "바탕 화면 %1(으)로 전환"
 
-#: window.cpp:3092
+#: window.cpp:3096
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4184,6 +4185,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland가 충돌함"
+
+#~ msgid "Set window type to"
+#~ msgstr "다음으로 창 종류 설정"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "다음으로 창 종류 설정 규칙 종류"
 
 #~ msgid "milliseconds"
 #~ msgstr "밀리초"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2024-01-18 02:24+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -305,7 +305,7 @@ msgid "Screen"
 msgstr "អេក្រង់​ស្វាគមន៍"
 
 #  i18n: file ruleswidgetbase.ui line 906
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:513 rulesmodel.cpp:922
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
@@ -465,7 +465,7 @@ msgstr "គ្មាន​​របារ​ចំណងជើង និង​�
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
-#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
 #, fuzzy, kde-format
 #| msgid "Appearance && &Fixes"
 msgid "Appearance & Fixes"
@@ -587,22 +587,20 @@ msgstr ""
 msgid "Closeable"
 msgstr "អាច​បិទ"
 
-#  i18n: file ruleswidgetbase.ui line 2055
 #: rulesmodel.cpp:709
-#, fuzzy, kde-format
-#| msgid "Window &type"
-msgid "Set window type"
-msgstr "ប្រភេទ​បង្អួច"
-
-#: rulesmodel.cpp:715
 #, kde-format
 msgid "Desktop file name"
 msgstr ""
 
-#: rulesmodel.cpp:720
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
 msgstr "ប្លុក compositing"
+
+#: rulesmodel.cpp:719
+#, kde-format
+msgid "Layer"
+msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 58
 #: rulesmodel.cpp:772
@@ -671,7 +669,7 @@ msgid "Splash Screen"
 msgstr "អេក្រង់​ស្វាគមន៍"
 
 #  i18n: file ruleswidgetbase.ui line 370
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:815 rulesmodel.cpp:917
 #, kde-format
 msgid "Desktop"
 msgstr "ផ្ទៃ​តុ"
@@ -779,7 +777,7 @@ msgid "Low"
 msgstr "ទាប"
 
 #  i18n: file ruleswidgetbase.ui line 2125
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:889 rulesmodel.cpp:919
 #, kde-format
 msgid "Normal"
 msgstr "ធម្មតា"
@@ -796,14 +794,51 @@ msgstr "ខ្ពស់"
 msgid "Extreme"
 msgstr "យ៉ាង​ខ្លាំង"
 
+#: rulesmodel.cpp:918
+#, kde-format
+msgid "Below"
+msgstr ""
+
+#: rulesmodel.cpp:920
+#, kde-format
+msgid "Above"
+msgstr ""
+
+#  i18n: file ruleswidgetbase.ui line 732
+#: rulesmodel.cpp:921
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Notification"
+msgstr "ទីតាំង"
+
+#: rulesmodel.cpp:923
+#, kde-format
+msgid "Popup"
+msgstr ""
+
+#: rulesmodel.cpp:924
+#, kde-format
+msgid "Critical Notification"
+msgstr ""
+
+#: rulesmodel.cpp:925
+#, kde-format
+msgid "OSD"
+msgstr ""
+
+#: rulesmodel.cpp:926
+#, kde-format
+msgid "Overlay"
+msgstr ""
+
 #  i18n: file ruleswidgetbase.ui line 1156
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:951
 #, fuzzy, kde-format
 #| msgid "Unmanaged Window"
 msgid "Unmanaged window"
 msgstr "បង្អួច​ដែល​មិនអាច​គ្រប់គ្រ​ងបាន"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:952
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -1005,6 +1040,12 @@ msgstr ""
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr ""
+
+#  i18n: file ruleswidgetbase.ui line 2055
+#, fuzzy
+#~| msgid "Window &type"
+#~ msgid "Set window type"
+#~ msgstr "ប្រភេទ​បង្អួច"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "បង្អួច​នឹង (មិន) បង្ហាញ​ក្នុង​របារ​ភារកិច្ច​ទេ ។"

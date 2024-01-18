@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-16 02:27+0000\n"
+"POT-Creation-Date: 2024-01-18 02:24+0000\n"
 "PO-Revision-Date: 2023-02-24 16:25-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2478,23 +2478,23 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:104
+#: plugins/screencast/screencastmanager.cpp:107
 #, fuzzy, kde-format
 #| msgid "Close running window on %1"
 msgid "Could not find window id %1"
 msgstr "Fechar a janela em execução em %1"
 
-#: plugins/screencast/screencastmanager.cpp:144
+#: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:171
+#: plugins/screencast/screencastmanager.cpp:174
 #, kde-format
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:202
+#: plugins/screencast/screencastmanager.cpp:205
 #, kde-format
 msgid "Region outside the workspace"
 msgstr ""
@@ -3343,305 +3343,306 @@ msgstr "Atividade"
 msgid "Activity rule type"
 msgstr "Tipo de regra de atividade"
 
-#. i18n: ectx: label, entry (type), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:183
-#, kde-format
-msgid "Set window type to"
-msgstr "Definir tipo de janela como"
-
-#. i18n: ectx: label, entry (typerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:189
-#, kde-format
-msgid "Set window type rule type"
-msgstr "Definir tipo de regra de tipo de janela"
-
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:194
+#: rulesettings.kcfg:183
 #, kde-format
 msgid "Maximized vertically"
 msgstr "Maximizado verticalmente"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:198
+#: rulesettings.kcfg:187
 #, kde-format
 msgid "Maximized vertically rule type"
 msgstr "Tipo de regra de maximizar verticalmente"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:205
+#: rulesettings.kcfg:194
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "Maximizado horizontalmente"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:209
+#: rulesettings.kcfg:198
 #, kde-format
 msgid "Maximized horizontally rule type"
 msgstr "Tipo de regra de maximizar horizontalmente"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:216
+#: rulesettings.kcfg:205
 #, kde-format
 msgid "Minimized"
 msgstr "Minimizada"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:220
+#: rulesettings.kcfg:209
 #, kde-format
 msgid "Minimized rule type"
 msgstr "Tipo de regra de minimizados"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:227
+#: rulesettings.kcfg:216
 #, kde-format
 msgid "Shaded"
 msgstr "Sombreado"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:231
+#: rulesettings.kcfg:220
 #, kde-format
 msgid "Shaded rule type"
 msgstr "Tipo de regras de sombreado"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:238
+#: rulesettings.kcfg:227
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Ignorar barra de tarefas"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:242
+#: rulesettings.kcfg:231
 #, kde-format
 msgid "Skip taskbar rule type"
 msgstr "Tipo de regra de ignorar a barra de tarefas"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:249
+#: rulesettings.kcfg:238
 #, kde-format
 msgid "Skip pager"
 msgstr "Ignorar paginador"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:253
+#: rulesettings.kcfg:242
 #, kde-format
 msgid "Skip pager rule type"
 msgstr "Tipo de regra de ignorar paginador"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:260
+#: rulesettings.kcfg:249
 #, kde-format
 msgid "Skip switcher"
 msgstr "Ignorar seletor"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:264
+#: rulesettings.kcfg:253
 #, kde-format
 msgid "Skip switcher rule type"
 msgstr "Tipo de regra de ignorar seletor"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:271
+#: rulesettings.kcfg:260
 #, kde-format
 msgid "Keep above"
 msgstr "Manter acima"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:275
+#: rulesettings.kcfg:264
 #, kde-format
 msgid "Keep above rule type"
 msgstr "Tipo de regra do manter acima"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:282
+#: rulesettings.kcfg:271
 #, kde-format
 msgid "Keep below"
 msgstr "Manter abaixo"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:286
+#: rulesettings.kcfg:275
 #, kde-format
 msgid "Keep below rule type"
 msgstr "Tipo de regra do manter abaixo"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:293
+#: rulesettings.kcfg:282
 #, kde-format
 msgid "Fullscreen"
 msgstr "Tela inteira"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:297
+#: rulesettings.kcfg:286
 #, kde-format
 msgid "Fullscreen rule type"
 msgstr "Tipo de regra de tela inteira"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:304
+#: rulesettings.kcfg:293
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Sem barra de título e moldura"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:308
+#: rulesettings.kcfg:297
 #, kde-format
 msgid "No titlebar rule type"
 msgstr "Tipo de regra de não ter barra de título"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:315
+#: rulesettings.kcfg:304
 #, kde-format
 msgid "Titlebar color and scheme"
 msgstr "Cor e esquema da barra de título"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:318
+#: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color rule type"
 msgstr "Tipo de regra de cor da barra de título"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:323
+#: rulesettings.kcfg:312
 #, kde-format
 msgid "Block Compositing"
 msgstr "Bloquear composição"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:327
+#: rulesettings.kcfg:316
 #, kde-format
 msgid "Block Compositing rule type"
 msgstr "Tipo de regra de bloqueio de composição"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:332
+#: rulesettings.kcfg:321
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Prevenção de captura de foco"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:338
+#: rulesettings.kcfg:327
 #, kde-format
 msgid "Focus stealing prevention rule type"
 msgstr "Tipo de regra de prevenção de captura de foco"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:343
+#: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus protection"
 msgstr "Proteção do foco"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:349
+#: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus protection rule type"
 msgstr "Tipo de regra de proteção de foco"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:354
+#: rulesettings.kcfg:343
 #, kde-format
 msgid "Accept Focus"
 msgstr "Aceitar foco"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:358
+#: rulesettings.kcfg:347
 #, kde-format
 msgid "Accept Focus rule type"
 msgstr "Tipo de regra de aceitar foco"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:363
+#: rulesettings.kcfg:352
 #, kde-format
 msgid "Closeable"
 msgstr "Pode ser fechada"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:367
+#: rulesettings.kcfg:356
 #, kde-format
 msgid "Closeable rule type"
 msgstr "Tipo de regra dos que podem ser fechados"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:372
+#: rulesettings.kcfg:361
 #, kde-format
 msgid "Autogroup with identical"
 msgstr "Agrupar automaticamente com as idênticas"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:376
+#: rulesettings.kcfg:365
 #, kde-format
 msgid "Autogroup with identical rule type"
 msgstr "Tipo de regra de agrupar automaticamente com as idênticas"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:381
+#: rulesettings.kcfg:370
 #, kde-format
 msgid "Autogroup in foreground"
 msgstr "Agrupar automaticamente em primeiro plano"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:385
+#: rulesettings.kcfg:374
 #, kde-format
 msgid "Autogroup in foreground rule type"
 msgstr "Tipo de regra de agrupar automaticamente em primeiro plano"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:390
+#: rulesettings.kcfg:379
 #, kde-format
 msgid "Autogroup by ID"
 msgstr "Agrupar automaticamente pelo ID"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:393
+#: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID rule type"
 msgstr "Tipo de regra de agrupar automaticamente por ID"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:398
+#: rulesettings.kcfg:387
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Obedecer às restrições de geometria"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:402
+#: rulesettings.kcfg:391
 #, kde-format
 msgid "Obey geometry restrictions rule type"
 msgstr "Tipo de regra de obedecer às restrições de geometria"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:407
+#: rulesettings.kcfg:396
 #, kde-format
 msgid "Shortcut"
 msgstr "Atalho"
 
 #. i18n: ectx: label, entry (shortcutrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:410
+#: rulesettings.kcfg:399
 #, kde-format
 msgid "Shortcut rule type"
 msgstr "Tipo de regra de atalho"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:417
+#: rulesettings.kcfg:406
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Ignorar atalhos globais"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:421
+#: rulesettings.kcfg:410
 #, kde-format
 msgid "Ignore global shortcuts rule type"
 msgstr "Tipo de regra de ignorar atalhos globais"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:426
+#: rulesettings.kcfg:415
 #, kde-format
 msgid "Desktop file name"
 msgstr "Nome do arquivo desktop"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
-#: rulesettings.kcfg:429
+#: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name rule type"
 msgstr "Tipo de regra de nome do arquivo da área de trabalho"
+
+#. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:425
+#, kde-format
+msgid "Layer"
+msgstr ""
+
+#. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:441
+#, fuzzy, kde-format
+#| msgid "Shaded rule type"
+msgid "Layer rule type"
+msgstr "Tipo de regras de sombreado"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4307,7 +4308,7 @@ msgstr "Mudar para a área de trabalho abaixo"
 msgid "Switch to Desktop %1"
 msgstr "Mudar para a área de trabalho %1"
 
-#: window.cpp:3092
+#: window.cpp:3096
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4353,6 +4354,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Set window type to"
+#~ msgstr "Definir tipo de janela como"
+
+#~ msgid "Set window type rule type"
+#~ msgstr "Definir tipo de regra de tipo de janela"
 
 #~ msgid "milliseconds"
 #~ msgstr "milissegundos"
