@@ -50,6 +50,7 @@ private:
         PresentWindowsAll = ELECTRIC_ACTION_COUNT, // Start at the end of built in actions
         PresentWindowsCurrent,
         PresentWindowsClass,
+        Overview,
         TabBox,
         TabBoxAlternative,
         EffectCount
