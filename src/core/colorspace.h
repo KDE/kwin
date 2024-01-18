@@ -127,6 +127,8 @@ public:
      * This color description describes display-referred sRGB, with a gamma22 transfer function
      */
     static const ColorDescription sRGB;
+    static QVector3D encodedToNits(const QVector3D &nits, NamedTransferFunction tf, double sdrBrightness);
+    static QVector3D nitsToEncoded(const QVector3D &rgb, NamedTransferFunction tf, double sdrBrightness);
 
 private:
     Colorimetry m_colorimetry;

@@ -437,11 +437,12 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
     if (!m_pipeline->activePending()) {
         return false;
     }
+    const auto inGamma22 = ColorDescription::nitsToEncoded(rgb, NamedTransferFunction::gamma22, 1);
     if (m_pipeline->hasCTM()) {
         QMatrix3x3 ctm;
-        ctm(0, 0) = rgb.x();
-        ctm(1, 1) = rgb.y();
-        ctm(2, 2) = rgb.z();
+        ctm(0, 0) = inGamma22.x();
+        ctm(1, 1) = inGamma22.y();
+        ctm(2, 2) = inGamma22.z();
         m_pipeline->setCTM(ctm);
         m_pipeline->setGammaRamp(nullptr);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
@@ -454,7 +455,7 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
         }
     }
     if (m_pipeline->hasGammaRamp()) {
-        auto lut = ColorTransformation::createScalingTransform(rgb);
+        auto lut = ColorTransformation::createScalingTransform(inGamma22);
         if (lut) {
             m_pipeline->setGammaRamp(std::move(lut));
             if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
