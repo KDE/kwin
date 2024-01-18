@@ -62,7 +62,8 @@ void ColorDevicePrivate::recalculateFactors()
         const qreal zWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 2],
                                               blackbodyColor[blackBodyColorIndex + 5],
                                               blendFactor);
-        temperatureFactors = QVector3D(xWhitePoint, yWhitePoint, zWhitePoint);
+        // the values in the blackbodyColor array are "gamma corrected", but we need a linear value
+        temperatureFactors = ColorDescription::encodedToNits(QVector3D(xWhitePoint, yWhitePoint, zWhitePoint), NamedTransferFunction::gamma22, 1);
     }
     simpleTransformation = brightnessFactors * temperatureFactors;
 }

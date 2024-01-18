@@ -344,34 +344,34 @@ static QVector3D clamp(const QVector3D &vect, float min = 0, float max = 1)
     return QVector3D(std::clamp(vect.x(), min, max), std::clamp(vect.y(), min, max), std::clamp(vect.z(), min, max));
 }
 
-QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
+QVector3D ColorDescription::encodedToNits(const QVector3D &nits, NamedTransferFunction tf, double sdrBrightness)
 {
-    // transfer function -> nits
-    switch (m_transferFunction) {
+    switch (tf) {
     case NamedTransferFunction::sRGB:
-        rgb = m_sdrBrightness * QVector3D(srgbToLinear(rgb.x()), srgbToLinear(rgb.y()), srgbToLinear(rgb.z()));
-        break;
+        return sdrBrightness * QVector3D(srgbToLinear(nits.x()), srgbToLinear(nits.y()), srgbToLinear(nits.z()));
     case NamedTransferFunction::gamma22:
-        rgb = m_sdrBrightness * QVector3D(std::pow(rgb.x(), 2.2), std::pow(rgb.y(), 2.2), std::pow(rgb.z(), 2.2));
-        break;
+        return sdrBrightness * QVector3D(std::pow(nits.x(), 2.2), std::pow(nits.y(), 2.2), std::pow(nits.z(), 2.2));
     case NamedTransferFunction::linear:
-        break;
+        return nits;
     case NamedTransferFunction::scRGB:
-        rgb *= 80.0f;
-        break;
+        return nits * 80.0f;
     case NamedTransferFunction::PerceptualQuantizer:
-        rgb = QVector3D(pqToNits(rgb.x()), pqToNits(rgb.y()), pqToNits(rgb.z()));
-        break;
+        return QVector3D(pqToNits(nits.x()), pqToNits(nits.y()), pqToNits(nits.z()));
     }
-    rgb = m_colorimetry.toOther(dst.colorimetry()) * rgb;
-    // nits -> transfer function
-    switch (dst.transferFunction()) {
-    case NamedTransferFunction::sRGB:
-        rgb = clamp(rgb / dst.sdrBrightness());
-        return QVector3D(linearToSRGB(rgb.x()), linearToSRGB(rgb.y()), linearToSRGB(rgb.z()));
-    case NamedTransferFunction::gamma22:
-        rgb = clamp(rgb / dst.sdrBrightness());
-        return QVector3D(std::pow(rgb.x(), 1 / 2.2), std::pow(rgb.y(), 1 / 2.2), std::pow(rgb.z(), 1 / 2.2));
+    Q_UNREACHABLE();
+}
+
+QVector3D ColorDescription::nitsToEncoded(const QVector3D &rgb, NamedTransferFunction tf, double sdrBrightness)
+{
+    switch (tf) {
+    case NamedTransferFunction::sRGB: {
+        const auto clamped = clamp(rgb / sdrBrightness);
+        return QVector3D(linearToSRGB(clamped.x()), linearToSRGB(clamped.y()), linearToSRGB(clamped.z()));
+    }
+    case NamedTransferFunction::gamma22: {
+        const auto clamped = clamp(rgb / sdrBrightness);
+        return QVector3D(std::pow(clamped.x(), 1 / 2.2), std::pow(clamped.y(), 1 / 2.2), std::pow(clamped.z(), 1 / 2.2));
+    }
     case NamedTransferFunction::linear:
         return rgb;
     case NamedTransferFunction::scRGB:
@@ -379,6 +379,13 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) co
     case NamedTransferFunction::PerceptualQuantizer:
         return QVector3D(nitsToPQ(rgb.x()), nitsToPQ(rgb.y()), nitsToPQ(rgb.z()));
     }
-    return QVector3D();
+    Q_UNREACHABLE();
+}
+
+QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
+{
+    rgb = encodedToNits(rgb, m_transferFunction, m_sdrBrightness);
+    rgb = m_colorimetry.toOther(dst.colorimetry()) * rgb;
+    return nitsToEncoded(rgb, dst.transferFunction(), dst.sdrBrightness());
 }
 }
