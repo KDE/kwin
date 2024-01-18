@@ -80,7 +80,6 @@ static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *w
     if (shellSurface->exclusiveEdges() & Qt::BottomEdge) {
         adjust.setBottom(-shellSurface->bottomMargin() - shellSurface->exclusiveZone().height());
     }
-    qWarning() << "AAAAAAAA" << adjust << shellSurface->exclusiveEdges();
     workArea->adjust(adjust.left(), adjust.top(), adjust.right(), adjust.bottom());
 }
 
