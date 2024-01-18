@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2024-01-18 00:38+0000\n"
 "PO-Revision-Date: 2016-01-22 22:58+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -286,7 +286,7 @@ msgstr "Όλες οι δραστηριότητες"
 msgid "Screen"
 msgstr "Οθόνη"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:513 rulesmodel.cpp:922
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
@@ -438,7 +438,7 @@ msgstr "&Χωρίς γραμμή τίτλου και πλαίσιο"
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
-#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
 #, fuzzy, kde-format
 #| msgid "Appearance && &Fixes"
 msgid "Appearance & Fixes"
@@ -554,20 +554,19 @@ msgid "Closeable"
 msgstr "&Ικανό να κλείσει"
 
 #: rulesmodel.cpp:709
-#, fuzzy, kde-format
-#| msgid "Window &type"
-msgid "Set window type"
-msgstr "&Τύπος παραθύρου"
-
-#: rulesmodel.cpp:715
 #, kde-format
 msgid "Desktop file name"
 msgstr ""
 
-#: rulesmodel.cpp:720
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
 msgstr "Μπλοκάρισμα σύνθεσης"
+
+#: rulesmodel.cpp:719
+#, kde-format
+msgid "Layer"
+msgstr ""
 
 #: rulesmodel.cpp:772
 #, fuzzy, kde-format
@@ -626,7 +625,7 @@ msgstr "Χωρισμός μενού"
 msgid "Splash Screen"
 msgstr "Αρχική οθόνη"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:815 rulesmodel.cpp:917
 #, kde-format
 msgid "Desktop"
 msgstr "Επιφάνεια εργασίας"
@@ -723,7 +722,7 @@ msgstr "Κανένα"
 msgid "Low"
 msgstr "Χαμηλό"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:889 rulesmodel.cpp:919
 #, kde-format
 msgid "Normal"
 msgstr "Κανονικό"
@@ -738,13 +737,49 @@ msgstr "Υψηλό"
 msgid "Extreme"
 msgstr "Ακραίο"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:918
+#, kde-format
+msgid "Below"
+msgstr ""
+
+#: rulesmodel.cpp:920
+#, kde-format
+msgid "Above"
+msgstr ""
+
+#: rulesmodel.cpp:921
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Notification"
+msgstr "Θέ&ση"
+
+#: rulesmodel.cpp:923
+#, kde-format
+msgid "Popup"
+msgstr ""
+
+#: rulesmodel.cpp:924
+#, kde-format
+msgid "Critical Notification"
+msgstr ""
+
+#: rulesmodel.cpp:925
+#, kde-format
+msgid "OSD"
+msgstr ""
+
+#: rulesmodel.cpp:926
+#, kde-format
+msgid "Overlay"
+msgstr ""
+
+#: rulesmodel.cpp:951
 #, fuzzy, kde-format
 #| msgid "Unmanaged Window"
 msgid "Unmanaged window"
 msgstr "Παράθυρο χωρίς διαχείριση"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:952
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -939,6 +974,11 @@ msgstr ""
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Window &type"
+#~ msgid "Set window type"
+#~ msgstr "&Τύπος παραθύρου"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "Το παράθυρο (δεν) πρέπει να εμφανίζεται στη γραμμή εργασιών."

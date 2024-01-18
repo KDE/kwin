@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2024-01-18 00:38+0000\n"
 "PO-Revision-Date: 2007-11-01 20:28+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -279,7 +279,7 @@ msgstr "% मा अस्पष्टता सक्रिय पार्न�
 msgid "Screen"
 msgstr "स्प्लास पर्दा"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:513 rulesmodel.cpp:922
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
@@ -416,7 +416,7 @@ msgstr ""
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
-#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr ""
@@ -532,19 +532,18 @@ msgid "Closeable"
 msgstr "बन्द गर्न सकिने"
 
 #: rulesmodel.cpp:709
-#, fuzzy, kde-format
-#| msgid "Window &type"
-msgid "Set window type"
-msgstr "सञ्झ्याल शैली"
-
-#: rulesmodel.cpp:715
 #, kde-format
 msgid "Desktop file name"
 msgstr ""
 
-#: rulesmodel.cpp:720
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
+msgstr ""
+
+#: rulesmodel.cpp:719
+#, kde-format
+msgid "Layer"
 msgstr ""
 
 #: rulesmodel.cpp:772
@@ -604,7 +603,7 @@ msgstr "Torn-Off मेनु"
 msgid "Splash Screen"
 msgstr "स्प्लास पर्दा"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:815 rulesmodel.cpp:917
 #, kde-format
 msgid "Desktop"
 msgstr "डेस्कटप"
@@ -700,7 +699,7 @@ msgstr "कुनै पनि होइन"
 msgid "Low"
 msgstr "न्यून"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:889 rulesmodel.cpp:919
 #, kde-format
 msgid "Normal"
 msgstr "सामान्य"
@@ -715,13 +714,49 @@ msgstr "उच्च"
 msgid "Extreme"
 msgstr "अत्याधिक"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:918
+#, kde-format
+msgid "Below"
+msgstr ""
+
+#: rulesmodel.cpp:920
+#, kde-format
+msgid "Above"
+msgstr ""
+
+#: rulesmodel.cpp:921
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Notification"
+msgstr "स्थिति"
+
+#: rulesmodel.cpp:923
+#, kde-format
+msgid "Popup"
+msgstr ""
+
+#: rulesmodel.cpp:924
+#, kde-format
+msgid "Critical Notification"
+msgstr ""
+
+#: rulesmodel.cpp:925
+#, kde-format
+msgid "OSD"
+msgstr ""
+
+#: rulesmodel.cpp:926
+#, kde-format
+msgid "Overlay"
+msgstr ""
+
+#: rulesmodel.cpp:951
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "Unmanaged window"
 msgstr "मुख्य सञ्झ्याल"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:952
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -913,6 +948,11 @@ msgstr ""
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Window &type"
+#~ msgid "Set window type"
+#~ msgstr "सञ्झ्याल शैली"
 
 #, fuzzy
 #~| msgid "WId of the window for special window settings."

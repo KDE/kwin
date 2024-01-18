@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2024-01-18 00:38+0000\n"
 "PO-Revision-Date: 2023-08-17 21:32+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -275,7 +275,7 @@ msgstr "活動"
 msgid "Screen"
 msgstr "螢幕"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:513 rulesmodel.cpp:922
 #, kde-format
 msgid "Fullscreen"
 msgstr "全螢幕"
@@ -411,7 +411,7 @@ msgstr "沒有標題列與外框"
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
-#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "外觀與修復"
@@ -547,18 +547,18 @@ msgstr "可關閉"
 
 #: rulesmodel.cpp:709
 #, kde-format
-msgid "Set window type"
-msgstr "設定視窗類型"
-
-#: rulesmodel.cpp:715
-#, kde-format
 msgid "Desktop file name"
 msgstr "桌面檔案名稱"
 
-#: rulesmodel.cpp:720
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
 msgstr "阻擋組合"
+
+#: rulesmodel.cpp:719
+#, kde-format
+msgid "Layer"
+msgstr ""
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -618,7 +618,7 @@ msgstr "撕下的選單"
 msgid "Splash Screen"
 msgstr "啟動畫面"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:815 rulesmodel.cpp:917
 #, kde-format
 msgid "Desktop"
 msgstr "桌面"
@@ -711,7 +711,7 @@ msgstr "無"
 msgid "Low"
 msgstr "低"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:889 rulesmodel.cpp:919
 #, kde-format
 msgid "Normal"
 msgstr "正常"
@@ -726,12 +726,48 @@ msgstr "高"
 msgid "Extreme"
 msgstr "極高"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:918
+#, kde-format
+msgid "Below"
+msgstr ""
+
+#: rulesmodel.cpp:920
+#, kde-format
+msgid "Above"
+msgstr ""
+
+#: rulesmodel.cpp:921
+#, fuzzy, kde-format
+#| msgid "Position"
+msgid "Notification"
+msgstr "位置"
+
+#: rulesmodel.cpp:923
+#, kde-format
+msgid "Popup"
+msgstr ""
+
+#: rulesmodel.cpp:924
+#, kde-format
+msgid "Critical Notification"
+msgstr ""
+
+#: rulesmodel.cpp:925
+#, kde-format
+msgid "OSD"
+msgstr ""
+
+#: rulesmodel.cpp:926
+#, kde-format
+msgid "Overlay"
+msgstr ""
+
+#: rulesmodel.cpp:951
 #, kde-format
 msgid "Unmanaged window"
 msgstr "未管理視窗"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:952
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "無法偵測視窗屬性。視窗未被 KWin 管理。"
@@ -916,6 +952,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Set window type"
+#~ msgstr "設定視窗類型"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "不讓視窗出現在工具列中。"

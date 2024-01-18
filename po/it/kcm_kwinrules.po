@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-08 01:36+0000\n"
+"POT-Creation-Date: 2024-01-18 00:38+0000\n"
 "PO-Revision-Date: 2023-11-01 09:27+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -282,7 +282,7 @@ msgstr "Attività"
 msgid "Screen"
 msgstr "Schermo"
 
-#: rulesmodel.cpp:513
+#: rulesmodel.cpp:513 rulesmodel.cpp:922
 #, kde-format
 msgid "Fullscreen"
 msgstr "Schermo intero"
@@ -426,7 +426,7 @@ msgstr "Nessuna barra del titolo e cornice"
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
-#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:715 rulesmodel.cpp:720
+#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Aspetto e correzioni"
@@ -585,18 +585,18 @@ msgstr "Chiudibile"
 
 #: rulesmodel.cpp:709
 #, kde-format
-msgid "Set window type"
-msgstr "Imposta tipo di finestra"
-
-#: rulesmodel.cpp:715
-#, kde-format
 msgid "Desktop file name"
 msgstr "Nome del file desktop"
 
-#: rulesmodel.cpp:720
+#: rulesmodel.cpp:714
 #, kde-format
 msgid "Block compositing"
 msgstr "Blocca la composizione"
+
+#: rulesmodel.cpp:719
+#, kde-format
+msgid "Layer"
+msgstr ""
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -658,7 +658,7 @@ msgstr "Menu staccabile"
 msgid "Splash Screen"
 msgstr "Schermata iniziale"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:815 rulesmodel.cpp:917
 #, kde-format
 msgid "Desktop"
 msgstr "Desktop"
@@ -751,7 +751,7 @@ msgstr "Nessuna"
 msgid "Low"
 msgstr "Bassa"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:889 rulesmodel.cpp:919
 #, kde-format
 msgid "Normal"
 msgstr "Normale"
@@ -766,12 +766,48 @@ msgstr "Alta"
 msgid "Extreme"
 msgstr "Estrema"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:918
+#, kde-format
+msgid "Below"
+msgstr ""
+
+#: rulesmodel.cpp:920
+#, kde-format
+msgid "Above"
+msgstr ""
+
+#: rulesmodel.cpp:921
+#, fuzzy, kde-format
+#| msgid "Position"
+msgid "Notification"
+msgstr "Posizione"
+
+#: rulesmodel.cpp:923
+#, kde-format
+msgid "Popup"
+msgstr ""
+
+#: rulesmodel.cpp:924
+#, kde-format
+msgid "Critical Notification"
+msgstr ""
+
+#: rulesmodel.cpp:925
+#, kde-format
+msgid "OSD"
+msgstr ""
+
+#: rulesmodel.cpp:926
+#, kde-format
+msgid "Overlay"
+msgstr ""
+
+#: rulesmodel.cpp:951
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Finestra non gestita"
 
-#: rulesmodel.cpp:935
+#: rulesmodel.cpp:952
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""
@@ -963,6 +999,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "Set window type"
+#~ msgstr "Imposta tipo di finestra"
 
 #~ msgid "Window shall (not) appear in the taskbar."
 #~ msgstr "La finestra (non) deve apparire nella barra delle applicazioni."
