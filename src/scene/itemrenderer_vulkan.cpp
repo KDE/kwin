@@ -128,15 +128,15 @@ void ItemRendererVulkan::renderItem(const RenderTarget &renderTarget, const Rend
     createRenderNodes(item, renderNodes);
 
     for (const auto &node : renderNodes) {
-        std::vector<vk::ClearRect> rects;
-        rects.push_back(vk::ClearRect(vk::Rect2D(
-                                          vk::Offset2D(node.rect.x(), node.rect.y()),
-                                          vk::Extent2D(node.rect.width(), node.rect.height())),
-                                      0, 1));
+        std::array rects = {
+            vk::ClearRect(vk::Rect2D(
+                              vk::Offset2D(node.rect.x(), node.rect.y()),
+                              vk::Extent2D(node.rect.width(), node.rect.height())),
+                          0, 1)};
         renderTarget.commandBuffer().clearAttachments(vk::ClearAttachment(
                                                           vk::ImageAspectFlagBits::eColor,
                                                           0,
-                                                          vk::ClearColorValue(node.color.red(), node.color.green(), node.color.blue(), 255)),
+                                                          vk::ClearColorValue(node.color.red() / 255.0f, node.color.green() / 255.0f, node.color.blue() / 255.0f, 1.0f)),
                                                       rects);
     }
 }
