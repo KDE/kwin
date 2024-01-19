@@ -137,10 +137,12 @@ std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
     });
     const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [uniqueEdid, uniqueMst, output](const auto &outputState) {
-        if (outputState.edidIdentifier != output->edid().identifier()) {
-            return false;
-        } else if (uniqueEdid) {
-            return true;
+        if (output->edid().isValid()) {
+            if (outputState.edidIdentifier != output->edid().identifier()) {
+                return false;
+            } else if (uniqueEdid) {
+                return true;
+            }
         }
         if (outputState.mstPath != output->mstPath()) {
             return false;
