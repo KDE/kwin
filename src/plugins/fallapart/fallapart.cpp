@@ -12,6 +12,8 @@
 // KConfigSkeleton
 #include "fallapartconfig.h"
 
+#include <QEasingCurve>
+
 #include <cmath>
 
 Q_LOGGING_CATEGORY(KWIN_FALLAPART, "kwin_effect_fallapart", QtWarningMsg)
@@ -72,7 +74,8 @@ void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
 {
     auto animationIt = windows.constFind(w);
     if (animationIt != windows.constEnd() && isRealWindow(w)) {
-        const qreal t = animationIt->progress;
+        QEasingCurve easing(QEasingCurve::InCubic);
+        const qreal t = easing.valueForProgress(animationIt->progress);
         // Request the window to be divided into cells
         quads = quads.makeGrid(blockSize);
         int cnt = 0;
@@ -94,7 +97,7 @@ void FallApartEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, Wi
             if (p1.y() > w->height() / 2) {
                 ydiff = (p1.y() - w->height() / 2) / w->height() * 100;
             }
-            double modif = t * t * 64;
+            double modif = t * 64;
             srandom(cnt); // change direction randomly but consistently
             xdiff += (rand() % 21 - 10);
             ydiff += (rand() % 21 - 10);
