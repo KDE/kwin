@@ -24,15 +24,13 @@ void main()
     float m = 0.494207 * L + 0.0 * M + 1.24827 * S;
     float s = 0.0 * L + 0.0 * M + 1.0 * S;
 
-    vec3 error;
-    error.r = (0.0809444479 * l) + (-0.130504409 * m) + (0.116721066 * s);
-    error.g = (-0.0102485335 * l) + (0.0540193266 * m) + (-0.113614708 * s);
-    error.b = (-0.000365296938 * l) + (-0.00412161469 * m) + (0.693511405 * s);
+    vec3 error = vec3((0.0809444479 * l) + (-0.130504409 * m) + (0.116721066 * s),
+                      (-0.0102485335 * l) + (0.0540193266 * m) + (-0.113614708 * s),
+                      (-0.000365296938 * l) + (-0.00412161469 * m) + (0.693511405 * s));
     vec3 diff = tex.rgb - error;
-    vec3 correction;
-    correction.r = 0.0;
-    correction.g =  (diff.r * 0.7) + (diff.g * 1.0);
-    correction.b =  (diff.r * 0.7) + (diff.b * 1.0);
+    vec3 correction = vec3(0.0,
+                           (diff.r * 0.7) + (diff.g * 1.0),
+                           (diff.r * 0.7) + (diff.b * 1.0));
 
     gl_FragColor = (tex + vec4(correction, 0.0)) * modulation;
 }
