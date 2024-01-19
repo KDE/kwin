@@ -256,6 +256,7 @@ std::optional<QByteArray> ShaderManager::preprocess(const QByteArray &src, int r
                 if (it->startsWith("#endif")) {
                     break;
                 } else if (it->startsWith("#else")) {
+                    it++;
                     for (; it != split.end(); it++) {
                         if (it->startsWith("#endif")) {
                             break;
