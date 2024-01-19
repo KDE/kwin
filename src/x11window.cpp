@@ -2220,7 +2220,10 @@ QStringList X11Window::activities() const
  */
 bool X11Window::takeFocus()
 {
-    if (rules()->checkAcceptFocus(info->input())) {
+    const bool effectiveAcceptFocus = rules()->checkAcceptFocus(info->input());
+    const bool effectiveTakeFocus = rules()->checkAcceptFocus(info->supportsProtocol(NET::TakeFocusProtocol));
+
+    if (effectiveAcceptFocus) {
         xcb_void_cookie_t cookie = xcb_set_input_focus_checked(kwinApp()->x11Connection(),
                                                                XCB_INPUT_FOCUS_POINTER_ROOT,
                                                                window(), XCB_TIME_CURRENT_TIME);
@@ -2232,11 +2235,14 @@ bool X11Window::takeFocus()
     } else {
         demandAttention(false); // window cannot take input, at least withdraw urgency
     }
-    if (info->supportsProtocol(NET::TakeFocusProtocol)) {
+    if (effectiveTakeFocus) {
         kwinApp()->updateXTime();
         sendClientMessage(window(), atoms->wm_protocols, atoms->wm_take_focus);
     }
-    workspace()->setShouldGetFocus(this);
+
+    if (effectiveAcceptFocus || effectiveTakeFocus) {
+        workspace()->setShouldGetFocus(this);
+    }
     return true;
 }
 
