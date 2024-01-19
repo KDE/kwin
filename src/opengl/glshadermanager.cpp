@@ -234,43 +234,6 @@ std::optional<QByteArray> ShaderManager::preprocess(const QByteArray &src, int r
                 return std::nullopt;
             }
             ret.append(*processed);
-        } else if (line.startsWith("#if glslVersion ")) {
-            static constexpr ssize_t ifLength = QByteArrayView("#if glslVersion ").size();
-            if (line.size() < ifLength + 3) {
-                qCWarning(KWIN_OPENGL, "failed parsing #if condition in line %s", qPrintable(line));
-                return std::nullopt;
-            }
-            const QByteArray condition = line.mid(ifLength);
-            const QByteArray versionString = line.mid(ifLength + 2);
-            if (!condition.startsWith(">=")) {
-                qCWarning(KWIN_OPENGL, "unsupported comparison operator in line %s", qPrintable(line));
-                return std::nullopt;
-            }
-            const Version version = Version::parseString(versionString);
-            if (!version.isValid()) {
-                qCWarning(KWIN_OPENGL, "invalid version in line %s", qPrintable(line));
-                return std::nullopt;
-            }
-            const bool keep = GLPlatform::instance()->glslVersion() >= version;
-            for (it = it + 1; it != split.end(); it++) {
-                if (it->startsWith("#endif")) {
-                    break;
-                } else if (it->startsWith("#else")) {
-                    it++;
-                    for (; it != split.end(); it++) {
-                        if (it->startsWith("#endif")) {
-                            break;
-                        } else if (!keep) {
-                            ret.append(*it);
-                            ret.append('\n');
-                        }
-                    }
-                    break;
-                } else if (keep) {
-                    ret.append(*it);
-                    ret.append('\n');
-                }
-            }
         } else {
             ret.append(line);
             ret.append('\n');
