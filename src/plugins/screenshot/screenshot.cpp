@@ -324,7 +324,9 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
                                screenshot->area.size() * screenshot->result.devicePixelRatio());
 
         QPainter painter(&screenshot->result);
-        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+        if (fmod(screenshot->result.devicePixelRatio(), 1) != 0) {
+            painter.setRenderHint(QPainter::SmoothPixmapTransform);
+        }
         painter.setWindow(nativeArea);
         painter.drawImage(sourceRect, snapshot);
         painter.end();
