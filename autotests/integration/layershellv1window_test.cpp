@@ -386,7 +386,7 @@ void LayerShellV1WindowTest::testPlacementArea()
     QFETCH(QSize, exclusiveZone);
     shellSurface->set_anchor(anchor);
     shellSurface->set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
-    shellSurface->set_exclusive_zone(exclusiveZone.width(), exclusiveZone.height());
+    shellSurface->set_exclusive_zones(exclusiveZone.width(), exclusiveZone.height());
     shellSurface->set_size(280, 124);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
@@ -470,12 +470,12 @@ void LayerShellV1WindowTest::testStack()
     // Set the initial state of the layer surface.
     shellSurface1->set_anchor(Test::LayerSurfaceV1::anchor_left);
     shellSurface1->set_size(80, 124);
-    shellSurface1->set_exclusive_zone(80, 0);
+    shellSurface1->set_exclusive_zones(80, 0);
     surface1->commit(KWayland::Client::Surface::CommitFlag::None);
 
     shellSurface2->set_anchor(Test::LayerSurfaceV1::anchor_left);
     shellSurface2->set_size(200, 124);
-    shellSurface2->set_exclusive_zone(200, 0);
+    shellSurface2->set_exclusive_zones(200, 0);
     surface2->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surfaces.

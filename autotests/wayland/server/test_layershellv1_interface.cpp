@@ -326,7 +326,7 @@ void TestLayerShellV1Interface::testExclusiveZone()
     auto serverShellSurface = layerSurfaceCreatedSpy.last().first().value<LayerSurfaceV1Interface *>();
     QVERIFY(serverShellSurface);
 
-    clientShellSurface->set_exclusive_zone(10, 10);
+    clientShellSurface->set_exclusive_zones(10, 10);
     clientShellSurface->set_size(100, 50);
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
@@ -390,7 +390,7 @@ void TestLayerShellV1Interface::testExclusiveEdge()
     QFETCH(int, anchor);
     QFETCH(Qt::Edge, expected);
 
-    clientShellSurface->set_exclusive_zone(10, 10);
+    clientShellSurface->set_exclusive_zones(10, 10);
     clientShellSurface->set_size(100, 50);
     clientShellSurface->set_anchor(anchor);
     clientSurface->commit(KWayland::Client::Surface::CommitFlag::None);

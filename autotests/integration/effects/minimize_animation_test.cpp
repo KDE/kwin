@@ -100,7 +100,7 @@ void MinimizeAnimationTest::testMinimizeUnminimize()
     std::unique_ptr<KWayland::Client::Surface> panelSurface{Test::createSurface()};
     std::unique_ptr<Test::LayerSurfaceV1> panelShellSurface{Test::createLayerSurfaceV1(panelSurface.get(), QStringLiteral("dock"))};
     panelShellSurface->set_size(panelRect.width(), panelRect.height());
-    panelShellSurface->set_exclusive_zone(0, panelRect.height());
+    panelShellSurface->set_exclusive_zones(0, panelRect.height());
     panelShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_top);
     panelSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 

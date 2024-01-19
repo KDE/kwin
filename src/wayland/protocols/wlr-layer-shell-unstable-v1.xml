@@ -184,8 +184,7 @@
 
         Exclusive zone is double-buffered, see wl_surface.commit.
       </description>
-      <arg name="horizontal_zone" type="int"/>
-      <arg name="vertical_zone" type="int"/>
+      <arg name="zone" type="int"/>
     </request>
 
     <request name="set_margin">
@@ -303,6 +302,7 @@
       <entry name="invalid_surface_state" value="0" summary="provided surface state is invalid"/>
       <entry name="invalid_size" value="1" summary="size is invalid"/>
       <entry name="invalid_anchor" value="2" summary="anchor bitfield is invalid"/>
+      <entry name="invalid_exclusive_zones" value="3" summary="specified exclusive zones are invalid"/>
     </enum>
 
     <enum name="anchor" bitfield="true">
@@ -321,6 +321,53 @@
         Layer is double-buffered, see wl_surface.commit.
       </description>
       <arg name="layer" type="uint" enum="zwlr_layer_shell_v1.layer" summary="layer to move this surface to"/>
+    </request>
+
+    <!-- Version 5 additions -->
+
+    <request name="set_exclusive_zones">
+      <description summary="configures the exclusive geometry of this surface">
+        Requests that the compositor avoids occluding an area with other
+        surfaces. The compositor's use of this information is
+        implementation-dependent - do not assume that this region will not
+        actually be occluded.
+
+        There are 2 separate values, horizontal_zone is to be used when the
+        surface is anchored to the left or right screen edge and vertical_zone
+        to be used when the surface is anchored to the top or bottom edge.
+        If a surface is anchored to a corner, setting either one will control
+        which screen edge to reserve space to, either just one or both.
+
+        If the surface is not anchored to left or right edge, or if the surface
+        is anchored to both and horizontal_zone is positive, the
+        invalid_exclusive_zones error will be emitted.
+        Same thing when vertical_zone is used and the surface is either not
+        anchored to the top or bottom edge, or anchored to both.
+
+        A positive zone is the distance from the edge in surface-local
+        coordinates to consider exclusive.
+
+        Surfaces that do not wish to have an exclusive zone may instead specify
+        how they should interact with surfaces that do. If set to zero, the
+        surface indicates that it would like to be moved to avoid occluding
+        surfaces with a positive exclusive zone. If set to (-1, -1) the surface
+        indicates that it would not like to be moved to accommodate for other
+        surfaces, and the compositor should extend it all the way to the edges
+        it is anchored to.
+
+        For example, a panel might set its exclusive zone to 10, so that
+        maximized shell surfaces are not shown on top of it. A notification
+        might set its exclusive zone to 0, so that it is moved to avoid
+        occluding the panel, but shell surfaces are shown underneath it. A
+        wallpaper or lock screen might set their exclusive zone to -1, so that
+        they stretch below or over the panel.
+
+        The default value is 0.
+
+        Exclusive zone is double-buffered, see wl_surface.commit.
+      </description>
+      <arg name="horizontal_zone" type="int"/>
+      <arg name="vertical_zone" type="int"/>
     </request>
 
   </interface>

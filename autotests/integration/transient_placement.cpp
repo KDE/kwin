@@ -472,7 +472,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     std::unique_ptr<Test::LayerSurfaceV1> dockShellSurface{Test::createLayerSurfaceV1(dockSurface.get(), QStringLiteral("dock"))};
     dockShellSurface->set_size(1280, 50);
     dockShellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
-    dockShellSurface->set_exclusive_zone(0, 50);
+    dockShellSurface->set_exclusive_zones(0, 50);
     dockSurface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // now render and map the window

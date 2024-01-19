@@ -83,7 +83,8 @@ protected:
     void zwlr_layer_surface_v1_destroy_resource(Resource *resource) override;
     void zwlr_layer_surface_v1_set_size(Resource *resource, uint32_t width, uint32_t height) override;
     void zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor) override;
-    void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t horizontal_zone, int32_t vertical_zone) override;
+    void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone) override;
+    void zwlr_layer_surface_v1_set_exclusive_zones(Resource *resource, int32_t horizontal_zone, int32_t vertical_zone) override;
     void zwlr_layer_surface_v1_set_margin(Resource *resource, int32_t top, int32_t right, int32_t bottom, int32_t left) override;
     void zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity) override;
     void zwlr_layer_surface_v1_get_popup(Resource *resource, struct ::wl_resource *popup) override;
@@ -204,7 +205,12 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor(Resource *
     }
 }
 
-void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t horizontal_zone, int32_t vertical_zone)
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone)
+{
+    wl_resource_post_error(resource->handle, error_invalid_exclusive_zones, "retired set_exclusive_zone used. use set_exclusive_zones instead");
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zones(Resource *, int32_t horizontal_zone, int32_t vertical_zone)
 {
     pending.exclusiveZone = QSize(horizontal_zone, vertical_zone);
 }
@@ -333,6 +339,9 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     }
     if (commit->exclusiveZone.has_value()) {
         state.exclusiveZone = commit->exclusiveZone.value();
+    }
+    if ((state.exclusiveZone.width() > 0 && !(state.anchor & (Qt::LeftEdge | Qt::RightEdge))) || (state.exclusiveZone.height() > 0 && !(state.anchor & (Qt::BottomEdge | Qt::TopEdge)))) {
+        wl_resource_post_error(resource()->handle, error_invalid_exclusive_zones, "exclusive zones incoherent with anchors used");
     }
 
     if (commit->acceptsFocus.has_value()) {
