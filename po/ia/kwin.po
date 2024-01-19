@@ -3,13 +3,13 @@
 #
 # SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2017, 2020, 2021, 2022, 2023 g.sora <g.sora@tiscali.it>
 # Giovanni Sora <g.sora@tioscali.it>, 2014, 2020, 2021.
-# giovanni <g.sora@tiscali.it>, 2023.
+# giovanni <g.sora@tiscali.it>, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2023-11-30 09:04+0100\n"
+"PO-Revision-Date: 2024-01-18 09:07+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -3504,14 +3504,13 @@ msgstr "Typo de regula de nomine de file de scriptorio"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Layer"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Typo de regula umbrate"
+msgstr "Typo de regula  de Layer"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

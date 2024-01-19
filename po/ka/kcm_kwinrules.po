@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2023-08-27 00:47+0200\n"
+"PO-Revision-Date: 2024-01-18 04:21+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -585,7 +585,7 @@ msgstr "კომპოზიტირების დაბლოკვა"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "ფენა"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -757,38 +757,37 @@ msgstr "ექსტრემალური"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "ქვემოდან"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "ზემოდან"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "თანამდებობა"
+msgstr "შეტყობინება"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "მხტუნარა"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "კრიტიკული გაფრთხილება"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "დადება"
 
 #: rulesmodel.cpp:951
 #, kde-format

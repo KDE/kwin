@@ -7,7 +7,7 @@
 # Rinse de Vries <rinsedevries@kde.nl>, 2004, 2005, 2007, 2008.
 # Wilbert Berendsen <wbsoft@xs4all.nl>, 2004.
 # Bram Schoenmakers <bramschoenmakers@kde.nl>, 2004, 2006, 2007.
-# Freek de Kruijf <f.de.kruijf@hetnet.nl>, 2009, 2010.
+# SPDX-FileCopyrightText: 2009, 2010, 2024 Freek de Kruijf <f.de.kruijf@hetnet.nl>
 # Freek de Kruijf <freek@opensuse.org>, 2009.
 # Freek de Kruijf <freekdekruijf@kde.nl>, 2009, 2010, 2011, 2012.
 # Freek de Kruijf <f.de.kruijf@gmail.com>, 2011, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
@@ -16,14 +16,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2023-06-03 11:57+0200\n"
+"PO-Revision-Date: 2024-01-18 09:57+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:228
@@ -600,7 +600,7 @@ msgstr "Compositing blokkeren"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Laag"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -773,38 +773,37 @@ msgstr "Extreem"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Eronder"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Boven"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Positie"
+msgstr "Melding"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Popup"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Kritieke melding"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Overlay"
 
 #: rulesmodel.cpp:951
 #, kde-format

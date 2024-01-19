@@ -73,10 +73,3 @@ msgstr ""
 "системата до тази на X11 като позволява на злонамерен софтуер да краде "
 "пароли и да шпионира текста, който въвеждате. Уверете се, че разбирате и "
 "приемате този риск."
-
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Само клавиши Meta, Control, Alt и Shift"
-
-#~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
-#~ msgstr ""
-#~ "Всички клавиши, но само докато са натиснати Meta, Ctrl, Alt или Shift"

@@ -3,13 +3,13 @@
 #
 # Zlatko Popov <zlatkopopov@fsa-bg.org>, 2006, 2007, 2008, 2009.
 # Yasen Pramatarov <yasen@lindeas.com>, 2009, 2010.
-# SPDX-FileCopyrightText: 2022, 2023 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2023-12-11 11:44+0100\n"
+"PO-Revision-Date: 2024-01-18 20:45+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -3505,14 +3505,13 @@ msgstr "Тип правило на името на файла за работн�
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Слой"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Тип правило на сгъване"
+msgstr "Тип правило на слой"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4201,91 +4200,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgid "Set window type to"
-#~ msgstr "Задаване на типа прозорец на"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Задаване на тип правило на прозореца"
-
-#~ msgid "milliseconds"
-#~ msgstr "милисекунди"
-
-#~ msgctxt ""
-#~ "Title of nested KWin Wayland with Wayland socket identifier as argument"
-#~ msgid "KDE Wayland Compositor %1 (%2)"
-#~ msgstr "KDE Wayland Compositor %1 (%2)"
-
-#~ msgctxt "@info"
-#~ msgid "<b>Application \"%1\" is not responding</b>"
-#~ msgstr "<b>Приложението\"%1\"не отговаря</b>"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3) but the application is not responding.</para>"
-#~ msgstr ""
-#~ "<p> Опитахте да затворите прозорец \"%1\"от приложение \"%2\" (Идент. на "
-#~ "процеса: %3) но приложението не отговаря. </p>"
-
-#~ msgctxt "@info"
-#~ msgid ""
-#~ "<para>You tried to close window \"%1\" from application \"%2\" (Process "
-#~ "ID: %3), running on host \"%4\", but the application is not responding.</"
-#~ "para>"
-#~ msgstr ""
-#~ "<p> Опитахте да затворите прозореца \"%1\"от приложението \"%2\"(Идент. "
-#~ "на процеса: %3), работи на хост \"%4\", но приложението не реагира. </p>"
-
-#~ msgid "Show Desktop Grid"
-#~ msgstr "Показване мрежа на работния плот"
-
-#~ msgctxt "Desktop name alignment:"
-#~ msgid "Disabled"
-#~ msgstr "Изключено"
-
-#~ msgid "Top-Right"
-#~ msgstr "Горе вдясно"
-
-#~ msgid "Bottom-Right"
-#~ msgstr "Долу вдясно"
-
-#~ msgid "Bottom-Left"
-#~ msgstr "Долу вляво"
-
-#~ msgid "Top-Left"
-#~ msgstr "Горе вляво"
-
-#~ msgid "Pager"
-#~ msgstr "Пейджър"
-
-#~ msgid "Automatic"
-#~ msgstr "Автоматично"
-
-#~ msgid "Custom"
-#~ msgstr "Потребителски"
-
-#~ msgid "N&umber of rows:"
-#~ msgstr "Брой на &редове:"
-
-#~ msgid "Desktop &name alignment:"
-#~ msgstr "Подравняване &имената на работния плот:"
-
-#~ msgid "Show buttons to alter count of virtual desktops"
-#~ msgstr "Показване на бутони за промяна на броя виртуални работни плотове"
-
-#~ msgid "&Grid layout mode:"
-#~ msgstr "&Режим на мрежа:"
-
-#~ msgid "Windows layout:"
-#~ msgstr "Оформление на прозорци:"
-
-#~ msgid "Activation"
-#~ msgstr "Включване"
-
-#~ msgid ""
-#~ "Desktop effects have been suspended by another application.<br/>You can "
-#~ "resume using the '%1' shortcut."
-#~ msgstr ""
-#~ "Ефектите на работния плот са спрени от друго приложение. <br/> Можете да "
-#~ "ги възобновете с помощта на комбинация \"%1\"."
