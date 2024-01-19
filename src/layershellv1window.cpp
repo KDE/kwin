@@ -146,24 +146,24 @@ StrutRect LayerShellV1Window::strutRect(StrutArea area) const
     switch (area) {
     case StrutAreaLeft:
         if (m_shellSurface->exclusiveEdges() & Qt::LeftEdge) {
-            return StrutRect(x(), y(), m_shellSurface->exclusiveZone().width(), height(), StrutAreaLeft);
+            return StrutRect(x(), y(), m_shellSurface->exclusiveZone().horizontal, height(), StrutAreaLeft);
         }
         return StrutRect();
     case StrutAreaRight:
         if (m_shellSurface->exclusiveEdges() & Qt::RightEdge) {
-            return StrutRect(x() + width() - m_shellSurface->exclusiveZone().width(), y(),
-                             m_shellSurface->exclusiveZone().width(), height(), StrutAreaRight);
+            return StrutRect(x() + width() - m_shellSurface->exclusiveZone().horizontal, y(),
+                             m_shellSurface->exclusiveZone().horizontal, height(), StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaTop:
         if (m_shellSurface->exclusiveEdges() & Qt::TopEdge) {
-            return StrutRect(x(), y(), width(), m_shellSurface->exclusiveZone().height(), StrutAreaTop);
+            return StrutRect(x(), y(), width(), m_shellSurface->exclusiveZone().vertical, StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaBottom:
         if (m_shellSurface->exclusiveEdges() & Qt::BottomEdge) {
-            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone().height(),
-                             width(), m_shellSurface->exclusiveZone().height(), StrutAreaBottom);
+            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone().vertical,
+                             width(), m_shellSurface->exclusiveZone().vertical, StrutAreaBottom);
         }
         return StrutRect();
     default:
@@ -175,10 +175,10 @@ bool LayerShellV1Window::hasStrut() const
 {
     bool hasZone = false;
     if (m_shellSurface->anchor() & Qt::LeftEdge || m_shellSurface->anchor() & Qt::RightEdge) {
-        hasZone = m_shellSurface->exclusiveZone().width() > 0;
+        hasZone = m_shellSurface->exclusiveZone().horizontal > 0;
     }
     if (m_shellSurface->anchor() & Qt::TopEdge || m_shellSurface->anchor() & Qt::BottomEdge) {
-        hasZone = m_shellSurface->exclusiveZone().height() > 0;
+        hasZone = m_shellSurface->exclusiveZone().vertical > 0;
     }
     return hasZone;
 }

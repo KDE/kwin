@@ -333,7 +333,8 @@ void TestLayerShellV1Interface::testExclusiveZone()
     QSignalSpy exclusiveZoneChangedSpy(serverShellSurface, &LayerSurfaceV1Interface::exclusiveZoneChanged);
     QVERIFY(exclusiveZoneChangedSpy.wait());
 
-    QCOMPARE(serverShellSurface->exclusiveZone(), QSize(10, 10));
+    QCOMPARE(serverShellSurface->exclusiveZone().horizontal, 10);
+    QCOMPARE(serverShellSurface->exclusiveZone().vertical, 10);
 }
 
 void TestLayerShellV1Interface::testExclusiveEdge_data()

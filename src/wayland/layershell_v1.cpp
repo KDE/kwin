@@ -45,7 +45,7 @@ struct LayerSurfaceV1Commit
     std::optional<Qt::Edges> anchor;
     std::optional<QMargins> margins;
     std::optional<QSize> desiredSize;
-    std::optional<QSize> exclusiveZone;
+    std::optional<LayerSurfaceExclusiveZoneV1> exclusiveZone;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
 };
@@ -57,7 +57,7 @@ struct LayerSurfaceV1State
     Qt::Edges anchor;
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
-    QSize exclusiveZone = QSize(0, 0);
+    LayerSurfaceExclusiveZoneV1 exclusiveZone;
     bool acceptsFocus = false;
     bool configured = false;
     bool closed = false;
@@ -212,7 +212,7 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Re
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zones(Resource *, int32_t horizontal_zone, int32_t vertical_zone)
 {
-    pending.exclusiveZone = QSize(horizontal_zone, vertical_zone);
+    pending.exclusiveZone = LayerSurfaceExclusiveZoneV1({horizontal_zone, vertical_zone});
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *, int32_t top, int32_t right, int32_t bottom, int32_t left)
@@ -340,7 +340,7 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveZone.has_value()) {
         state.exclusiveZone = commit->exclusiveZone.value();
     }
-    if ((state.exclusiveZone.width() > 0 && !(state.anchor & (Qt::LeftEdge | Qt::RightEdge))) || (state.exclusiveZone.height() > 0 && !(state.anchor & (Qt::BottomEdge | Qt::TopEdge)))) {
+    if ((state.exclusiveZone.horizontal > 0 && !(state.anchor & (Qt::LeftEdge | Qt::RightEdge))) || (state.exclusiveZone.vertical > 0 && !(state.anchor & (Qt::BottomEdge | Qt::TopEdge)))) {
         wl_resource_post_error(resource()->handle, error_invalid_exclusive_zones, "exclusive zones incoherent with anchors used");
     }
 
@@ -450,19 +450,19 @@ int LayerSurfaceV1Interface::bottomMargin() const
     return d->state.margins.bottom();
 }
 
-QSize LayerSurfaceV1Interface::exclusiveZone() const
+LayerSurfaceExclusiveZoneV1 LayerSurfaceV1Interface::exclusiveZone() const
 {
     return d->state.exclusiveZone;
 }
 
 Qt::Edges LayerSurfaceV1Interface::exclusiveEdges() const
 {
-    if (exclusiveZone().width() <= 0 && exclusiveZone().height() <= 0) {
+    if (exclusiveZone().horizontal <= 0 && exclusiveZone().vertical <= 0) {
         return Qt::Edges();
     }
 
-    int horizontalZone = exclusiveZone().width();
-    int verticalZone = exclusiveZone().height();
+    int horizontalZone = exclusiveZone().horizontal;
+    int verticalZone = exclusiveZone().vertical;
     if (anchor() & Qt::LeftEdge && anchor() & Qt::RightEdge) {
         horizontalZone = 0;
     }

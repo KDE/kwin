@@ -19,6 +19,16 @@ class OutputInterface;
 class SurfaceInterface;
 class SurfaceRole;
 
+struct LayerSurfaceExclusiveZoneV1
+{
+    int horizontal = 0;
+    int vertical = 0;
+    bool operator==(const LayerSurfaceExclusiveZoneV1 &other)
+    {
+        return horizontal == other.horizontal && vertical == other.vertical;
+    }
+};
+
 /**
  * The LayerShellV1Interface compositor extension allows to create desktop shell surfaces.
  *
@@ -141,7 +151,7 @@ public:
      * surfaces with a positive exclusion zone. If the exclusive zone is -1, the layer surface
      * indicates that it doesn't want to be moved to accomodate for other surfaces.
      */
-    QSize exclusiveZone() const;
+    LayerSurfaceExclusiveZoneV1 exclusiveZone() const;
 
     /**
      * If the exclusive zone is positive, this function returns the corresponding exclusive
