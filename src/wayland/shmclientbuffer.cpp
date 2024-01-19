@@ -21,7 +21,7 @@
 namespace KWin
 {
 
-static constexpr int s_version = 1;
+static constexpr int s_version = 2;
 
 static constexpr uint32_t s_formats[] = {
     WL_SHM_FORMAT_ARGB8888,
@@ -327,6 +327,11 @@ void ShmClientBufferIntegrationPrivate::shm_create_pool(Resource *resource, uint
     }
 
     new ShmPool(q, resource->client(), id, resource->version(), std::move(fileDescriptor), std::move(mapping));
+}
+
+void ShmClientBufferIntegrationPrivate::shm_release(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
 }
 
 ShmClientBufferIntegration::ShmClientBufferIntegration(Display *display)

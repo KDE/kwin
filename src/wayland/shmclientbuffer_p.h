@@ -26,6 +26,7 @@ public:
 protected:
     void shm_bind_resource(Resource *resource) override;
     void shm_create_pool(Resource *resource, uint32_t id, int32_t fd, int32_t size) override;
+    void shm_release(Resource *resource) override;
 };
 
 class ShmPool : public QtWaylandServer::wl_shm_pool
