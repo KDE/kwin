@@ -86,7 +86,7 @@ Item {
         enabled: thumb.state === "active-normal" && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
-            easing.type: Easing.OutCubic
+            easing.type: Easing.InOutCubic
         }
     }
 
@@ -337,7 +337,7 @@ Item {
             NumberAnimation {
                 duration: thumb.windowHeap.animationDuration
                 properties: "x, y, width, height"
-                easing.type: Easing.OutCubic
+                easing.type: Easing.InOutCubic
             }
         }
     ]
