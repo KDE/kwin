@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2024-01-19 02:29+0000\n"
 "PO-Revision-Date: 2022-12-28 21:12+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -20,68 +20,68 @@ msgstr ""
 "20)) ? 1 : 2;\n"
 "X-Generator: Lokalize 21.12.3\n"
 
-#: main.cpp:151 touch.cpp:117
+#: main.cpp:151 touch.cpp:118
 #, kde-format
 msgid "No Action"
 msgstr "Nicio acțiune"
 
-#: main.cpp:152 touch.cpp:118
+#: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Trage cu ochiul la birou"
 
-#: main.cpp:153 touch.cpp:119
+#: main.cpp:153 touch.cpp:120
 #, kde-format
 msgid "Lock Screen"
 msgstr "Blochează ecranul"
 
-#: main.cpp:154 touch.cpp:120
+#: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Show KRunner"
 msgstr "Arată KRunner"
 
-#: main.cpp:155 touch.cpp:121
+#: main.cpp:155 touch.cpp:122
 #, kde-format
 msgid "Activity Manager"
 msgstr "Gestionar de activități"
 
-#: main.cpp:156 touch.cpp:122
+#: main.cpp:156 touch.cpp:123
 #, kde-format
 msgid "Application Launcher"
 msgstr "Lansator de aplicații"
 
-#: main.cpp:160 touch.cpp:126
+#: main.cpp:160 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
 msgstr "Prezintă ferestrele"
 
-#: main.cpp:161 touch.cpp:127
+#: main.cpp:161 touch.cpp:128
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - Toate birourile"
 
-#: main.cpp:162 touch.cpp:128
+#: main.cpp:162 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Biroul actual"
 
-#: main.cpp:163 touch.cpp:129
+#: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Aplicația actuală"
 
-#: main.cpp:165
+#: main.cpp:165 touch.cpp:132
 #, fuzzy, kde-format
 #| msgid "Toggle Overview"
 msgid "Overview"
 msgstr "Comută sumarul"
 
-#: main.cpp:167 touch.cpp:131
+#: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Comută schimbarea ferestrelor"
 
-#: main.cpp:168 touch.cpp:132
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Comută schimbarea alternativă a ferestrelor"

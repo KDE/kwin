@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2024-01-19 02:29+0000\n"
 "PO-Revision-Date: 2023-12-13 16:14-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -20,67 +20,67 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 23.08.3\n"
 
-#: main.cpp:151 touch.cpp:117
+#: main.cpp:151 touch.cpp:118
 #, kde-format
 msgid "No Action"
 msgstr "Nenhuma ação"
 
-#: main.cpp:152 touch.cpp:118
+#: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Espiar área de trabalho"
 
-#: main.cpp:153 touch.cpp:119
+#: main.cpp:153 touch.cpp:120
 #, kde-format
 msgid "Lock Screen"
 msgstr "Bloquear tela"
 
-#: main.cpp:154 touch.cpp:120
+#: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Show KRunner"
 msgstr "Mostrar o KRunner"
 
-#: main.cpp:155 touch.cpp:121
+#: main.cpp:155 touch.cpp:122
 #, kde-format
 msgid "Activity Manager"
 msgstr "Gerenciador de Atividades"
 
-#: main.cpp:156 touch.cpp:122
+#: main.cpp:156 touch.cpp:123
 #, kde-format
 msgid "Application Launcher"
 msgstr "Lançador de aplicativo"
 
-#: main.cpp:160 touch.cpp:126
+#: main.cpp:160 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
 msgstr "Apresentar janelas"
 
-#: main.cpp:161 touch.cpp:127
+#: main.cpp:161 touch.cpp:128
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - Todas as áreas de trabalho"
 
-#: main.cpp:162 touch.cpp:128
+#: main.cpp:162 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Área de trabalho atual"
 
-#: main.cpp:163 touch.cpp:129
+#: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Aplicativo atual"
 
-#: main.cpp:165
+#: main.cpp:165 touch.cpp:132
 #, kde-format
 msgid "Overview"
 msgstr "Visão geral"
 
-#: main.cpp:167 touch.cpp:131
+#: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Alternar a mudança de janelas"
 
-#: main.cpp:168 touch.cpp:132
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Alternar a mudança alternativa de janelas"

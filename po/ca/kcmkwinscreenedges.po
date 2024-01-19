@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2024-01-19 02:29+0000\n"
 "PO-Revision-Date: 2023-12-08 11:57+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -22,67 +22,67 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
-#: main.cpp:151 touch.cpp:117
+#: main.cpp:151 touch.cpp:118
 #, kde-format
 msgid "No Action"
 msgstr "Cap acció"
 
-#: main.cpp:152 touch.cpp:118
+#: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Ullada a l'escriptori"
 
-#: main.cpp:153 touch.cpp:119
+#: main.cpp:153 touch.cpp:120
 #, kde-format
 msgid "Lock Screen"
 msgstr "Bloqueig de la pantalla"
 
-#: main.cpp:154 touch.cpp:120
+#: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Show KRunner"
 msgstr "Mostra el KRunner"
 
-#: main.cpp:155 touch.cpp:121
+#: main.cpp:155 touch.cpp:122
 #, kde-format
 msgid "Activity Manager"
 msgstr "Gestor d'activitats"
 
-#: main.cpp:156 touch.cpp:122
+#: main.cpp:156 touch.cpp:123
 #, kde-format
 msgid "Application Launcher"
 msgstr "Llançador d'aplicacions"
 
-#: main.cpp:160 touch.cpp:126
+#: main.cpp:160 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
 msgstr "Presenta les finestres"
 
-#: main.cpp:161 touch.cpp:127
+#: main.cpp:161 touch.cpp:128
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - Tots els escriptoris"
 
-#: main.cpp:162 touch.cpp:128
+#: main.cpp:162 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - Escriptori actual"
 
-#: main.cpp:163 touch.cpp:129
+#: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - Aplicació actual"
 
-#: main.cpp:165
+#: main.cpp:165 touch.cpp:132
 #, kde-format
 msgid "Overview"
 msgstr "Vista general"
 
-#: main.cpp:167 touch.cpp:131
+#: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Commuta al canvi de finestres"
 
-#: main.cpp:168 touch.cpp:132
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Commuta a un canvi de finestres alternatiu"

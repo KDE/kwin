@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-20 01:35+0000\n"
+"POT-Creation-Date: 2024-01-19 02:29+0000\n"
 "PO-Revision-Date: 2023-12-12 18:44+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -21,67 +21,67 @@ msgstr ""
 "X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: main.cpp:151 touch.cpp:117
+#: main.cpp:151 touch.cpp:118
 #, kde-format
 msgid "No Action"
 msgstr "沒有動作"
 
-#: main.cpp:152 touch.cpp:118
+#: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "看一下桌面"
 
-#: main.cpp:153 touch.cpp:119
+#: main.cpp:153 touch.cpp:120
 #, kde-format
 msgid "Lock Screen"
 msgstr "鎖定螢幕"
 
-#: main.cpp:154 touch.cpp:120
+#: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Show KRunner"
 msgstr "顯示 KRunner"
 
-#: main.cpp:155 touch.cpp:121
+#: main.cpp:155 touch.cpp:122
 #, kde-format
 msgid "Activity Manager"
 msgstr "活動管理員"
 
-#: main.cpp:156 touch.cpp:122
+#: main.cpp:156 touch.cpp:123
 #, kde-format
 msgid "Application Launcher"
 msgstr "應用程式啟動器"
 
-#: main.cpp:160 touch.cpp:126
+#: main.cpp:160 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
 msgstr "展示視窗"
 
-#: main.cpp:161 touch.cpp:127
+#: main.cpp:161 touch.cpp:128
 #, kde-format
 msgid "%1 - All Desktops"
 msgstr "%1 - 所有桌面"
 
-#: main.cpp:162 touch.cpp:128
+#: main.cpp:162 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Desktop"
 msgstr "%1 - 目前的桌面"
 
-#: main.cpp:163 touch.cpp:129
+#: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
 msgstr "%1 - 目前的應用程式"
 
-#: main.cpp:165
+#: main.cpp:165 touch.cpp:132
 #, kde-format
 msgid "Overview"
 msgstr "總覽"
 
-#: main.cpp:167 touch.cpp:131
+#: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Toggle window switching"
 msgstr "切換視窗切換器"
 
-#: main.cpp:168 touch.cpp:132
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "切換替代視窗切換器"
