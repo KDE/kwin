@@ -23,8 +23,6 @@
 #include <QPainter>
 #include <QScreen>
 
-Q_DECLARE_METATYPE(PipeWireFrame);
-
 #define QCOMPAREIMG(actual, expected, id)                                                        \
     {                                                                                            \
         if ((actual) != (expected)) {                                                            \
@@ -49,8 +47,6 @@ public:
     ScreencastingTest()
         : GenericSceneOpenGLTest(QByteArrayLiteral("O2"))
     {
-        qRegisterMetaType<PipeWireFrame>();
-
         auto wrap = [this](const QString &process, const QStringList &arguments = {}) {
             // Make sure PipeWire is running. If it's already running it will just exit
             QProcess *p = new QProcess(this);
