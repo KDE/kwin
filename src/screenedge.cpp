@@ -1108,12 +1108,7 @@ void ScreenEdges::recreateEdges()
     // copy over the effect/script reservations from the old edges
     for (const auto &edge : m_edges) {
         for (const auto &oldEdge : oldEdges) {
-            if (oldEdge->client()) {
-                // show the client again and don't recreate the edge
-                oldEdge->client()->showOnScreenEdge();
-                continue;
-            }
-            if (oldEdge->border() != edge->border()) {
+            if (oldEdge->border() != edge->border() || oldEdge->client()) {
                 continue;
             }
             const QHash<QObject *, QByteArray> &callbacks = oldEdge->callBacks();
