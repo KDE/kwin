@@ -19,8 +19,8 @@ class Svg;
 
 namespace KWin
 {
-class Glow;
-class GLTexture;
+
+class ImageItem;
 
 class ScreenEdgeEffect : public Effect
 {
@@ -28,8 +28,6 @@ class ScreenEdgeEffect : public Effect
 public:
     ScreenEdgeEffect();
     ~ScreenEdgeEffect() override;
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     bool isActive() const override;
 
     int requestedEffectChainPosition() const override
@@ -43,25 +41,15 @@ private Q_SLOTS:
 
 private:
     void ensureGlowSvg();
-    std::unique_ptr<Glow> createGlow(ElectricBorder border, qreal factor, const QRect &geometry);
-    QImage createCornerGlow(ElectricBorder border);
-    QImage createEdgeGlow(ElectricBorder border, const QSize &size);
-    QSize cornerGlowSize(ElectricBorder border);
+    QImage cornerGlowImage(ElectricBorder border);
+    QImage edgeGlowImage(ElectricBorder border, const QSize &size);
+    QImage glowImage(ElectricBorder border, const QSize &size);
+    std::unique_ptr<ImageItem> createGlowItem(ElectricBorder border, qreal factor, const QRect &geometry);
+
     KConfigWatcher::Ptr m_configWatcher;
     KSvg::Svg *m_glow = nullptr;
-    std::map<ElectricBorder, std::unique_ptr<Glow>> m_borders;
+    std::unordered_map<ElectricBorder, std::unique_ptr<ImageItem>> m_glowItems;
     QTimer *m_cleanupTimer;
 };
 
-class Glow
-{
-public:
-    std::unique_ptr<GLTexture> texture;
-    QImage image;
-    QSize pictureSize;
-    qreal strength;
-    QRect geometry;
-    ElectricBorder border;
-};
-
-}
+} // namespace KWin
