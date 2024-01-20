@@ -23,6 +23,7 @@ namespace KWin
 class ZoomAccessibilityIntegration;
 #endif
 
+class CursorItem;
 class GLFramebuffer;
 class GLTexture;
 class GLVertexBuffer;
@@ -96,9 +97,7 @@ private:
         QRect viewport;
     };
 
-    GLTexture *ensureCursorTexture();
     OffscreenData *ensureOffscreenData(const RenderTarget &renderTarget, const RenderViewport &viewport, Output *screen);
-    void markCursorTextureDirty();
 
 #if HAVE_ACCESSIBILITY
     ZoomAccessibilityIntegration *m_accessibilityIntegration = nullptr;
@@ -127,9 +126,8 @@ private:
     QPoint prevPoint;
     QTime lastMouseEvent;
     QTime lastFocusEvent;
-    std::unique_ptr<GLTexture> m_cursorTexture;
-    bool m_cursorTextureDirty = false;
-    bool isMouseHidden;
+    std::unique_ptr<CursorItem> m_cursorItem;
+    bool m_cursorHidden = false;
     QTimeLine timeline;
     int xMove, yMove;
     double moveFactor;
