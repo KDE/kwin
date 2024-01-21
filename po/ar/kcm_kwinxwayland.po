@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Zayed Al-Saidi <zayed.alsaidi@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2024 Zayed Al-Saidi <zayed.alsaidi@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2022-12-22 13:26+0400\n"
+"PO-Revision-Date: 2024-01-20 19:13+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -44,14 +44,15 @@ msgstr "لا، مطلقاً"
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "فقط المفاتيح غير حرفية"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
-msgstr "كل المفاتيح لكن فقط حينما تكون Meta أو Alt أو Shift مضغوطة"
+msgstr ""
+"كما هو مذكور أعلاه، بالإضافة إلى أي مفتاح يتم كتابته أثناء الضغط على مفاتيح "
+"Control أو Alt أو Meta"
 
 #: ui/main.qml:75
 #, kde-format

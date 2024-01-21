@@ -3,13 +3,13 @@
 # محمد سعد  Mohamed SAAD <metehyi@free.fr>, 2006.
 # AbdulAziz AlSharif <a.a-a.s@hotmail.com>, 2007.
 # Youssef Chahibi <chahibi@gmail.com>, 2007.
-# zayed <zayed.alsaidi@gmail.com>, 2008, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2008, 2021, 2022, 2023, 2024 zayed <zayed.alsaidi@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2023-06-08 12:05+0400\n"
+"PO-Revision-Date: 2024-01-20 21:09+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -485,7 +485,7 @@ msgid "Focus protection"
 msgstr "حماية التركيز"
 
 #: rulesmodel.cpp:660
-#, fuzzy, kde-kuit-format
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "This property controls the focus protection level of the currently active "
@@ -511,17 +511,18 @@ msgstr ""
 "الخاصية لتجاوز منع سرقة التركيز المطبق على النوافذ الجديدة التي تفتح دون "
 "إجراء مباشر من جانبك.<nl/> <nl/>إليك ما سيحدث للنوافذ الجديدة التي تفتح دون "
 "إجراء من قبلك في كل مستوى من مستويات حماية التركيز بينما النافذة التي يطبق "
-"عليها هذه الخاصية في وضع التركيز:<nl/><list><item> <focus strong = 'true'> "
-"لا شيء </emphasis>: النوافذ المفتوحة حديثًا ترفع نفسها دائمًا وتركز على نفسها. "
-"</item><item> <focus strong = 'true'> منخفض: </emphasis> سيطبق منع سرقة "
-"التركيز على النافذة المفتوحة حديثًا، ولكن في حالة وجود موقف يعتبره كوين "
-"غامضًا، سترفع النافذة ويركز عليها. </item><item> <focus strong = 'true'> "
-"عادي: </emphasis> سيطبق منع سرقة التركيز على النافذة المفتوحة حديثًا، ولكن في "
-"حالة وجود موقف يعتبره كوين غامضًا، فإن النافذة <emphasis> لن </emphasis>ترفع "
-"ولن يركز عليها. </item><item> <focus strong = 'true'> عالي: </emphasis> لن "
-"ترفع النوافذ المفتوحة حديثًا إلا إذا كانت تنتمي إلى نفس التطبيق مثل النافذة "
-"المركزة حاليًا. </item><item> <focus strong = 'true'> قصوى: </emphasis> "
-"النوافذ المفتوحة حديثًا لا ترفع نفسها أبدًا ولا يركز عليها. </item></list>"
+"عليها هذه الخاصية في وضع التركيز:<nl/><list><item> <emphasis strong = "
+"'true'> لا شيء </emphasis>: النوافذ المفتوحة حديثًا ترفع نفسها دائمًا وتركز "
+"على نفسها. </item><item> <emphasis strong = 'true'> منخفض: </emphasis> سيطبق "
+"منع سرقة التركيز على النافذة المفتوحة حديثًا، ولكن في حالة وجود موقف يعتبره "
+"كوين غامضًا، سترفع النافذة ويركز عليها. </item><item> <emphasis strong = "
+"'true'> عادي: </emphasis> سيطبق منع سرقة التركيز على النافذة المفتوحة حديثًا، "
+"ولكن في حالة وجود موقف يعتبره كوين غامضًا، فإن النافذة <emphasis> لن </"
+"emphasis>ترفع ولن يركز عليها. </item><item> <emphasis strong = 'true'> عالي: "
+"</emphasis> لن ترفع النوافذ المفتوحة حديثًا إلا إذا كانت تنتمي إلى نفس "
+"التطبيق مثل النافذة المركزة حاليًا. </item><item> <emphasis strong = 'true'> "
+"قصوى: </emphasis> النوافذ المفتوحة حديثًا لا ترفع نفسها أبدًا ولا يركز عليها. "
+"</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -575,7 +576,7 @@ msgstr "التركيب الكتلي"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "الطبقة"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -747,38 +748,37 @@ msgstr "قصوى"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "أسفل"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "أعلى"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "الموقع"
+msgstr "إخطار"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "منبثق"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "تحذير حَرِج"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "عرض على الشاشة"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "تراكب"
 
 #: rulesmodel.cpp:951
 #, kde-format
