@@ -23,6 +23,8 @@
 #include <QPainter>
 #include <QScreen>
 
+Q_DECLARE_METATYPE(PipeWireFrame);
+
 #define QCOMPAREIMG(actual, expected, id)                                                        \
     {                                                                                            \
         if ((actual) != (expected)) {                                                            \
@@ -108,17 +110,12 @@ std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStr
         pwStream.createStream(nodeId, 0);
     });
 
-    std::optional<QImage> img;
-    connect(&pwStream, &PipeWireSourceStream::frameReceived, qGuiApp, [&img](const PipeWireFrame &frame) {
-        img = frame.image;
-    });
-
     QSignalSpy spy(&pwStream, &PipeWireSourceStream::frameReceived);
     if (!spy.wait()) {
         qDebug() << "Did not receive any frames";
     }
     pwStream.stopStreaming();
-    return img;
+    return static_cast<const PipeWireFrame *>(spy[0][0].constData())->image;
 }
 
 void ScreencastingTest::testWindowCasting()
