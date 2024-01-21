@@ -8,20 +8,20 @@
 # Franklin Weng <franklin@goodhorse.idv.tw>, 2011, 2012, 2013, 2015.
 # Jeff Huang <s8321414@gmail.com>, 2016, 2022.
 # pan93412 <pan93412@gmail.com>, 2018, 2019, 2020.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 02:24+0000\n"
-"PO-Revision-Date: 2023-08-17 21:32+0900\n"
+"PO-Revision-Date: 2024-01-21 02:00+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: kcmrules.cpp:228
@@ -558,7 +558,7 @@ msgstr "阻擋組合"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "層級"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -729,38 +729,37 @@ msgstr "極高"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "在下方"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "在上方"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "位置"
+msgstr "通知"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "彈出視窗"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "緊急通知"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD 螢幕顯示"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "覆蓋"
 
 #: rulesmodel.cpp:951
 #, kde-format
