@@ -114,7 +114,7 @@ std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStr
 
     std::optional<QImage> img;
     connect(&pwStream, &PipeWireSourceStream::frameReceived, qGuiApp, [&img](const PipeWireFrame &frame) {
-        img = frame.dataFrame->toImage();
+        img = frame.image;
     });
 
     QSignalSpy spy(&pwStream, &PipeWireSourceStream::frameReceived);
