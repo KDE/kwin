@@ -71,7 +71,7 @@ if (NOT Qt6Test_FOUND)
 endif()
 
 if (BUILD_TESTING)
-    find_package(KPipeWire)
+    pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3 REQUIRED)
 endif()
 
 # required frameworks by Core

@@ -10,6 +10,7 @@
 #include "core/output.h"
 #include "generic_scene_opengl_test.h"
 #include "opengl/glplatform.h"
+#include "pipewiresourcestream.h"
 #include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "wayland_server.h"
@@ -19,7 +20,6 @@
 #include <KWayland/Client/output.h>
 #include <KWayland/Client/subsurface.h>
 #include <KWayland/Client/surface.h>
-#include <PipeWireSourceStream>
 #include <QPainter>
 #include <QScreen>
 
