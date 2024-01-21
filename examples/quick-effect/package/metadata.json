@@ -5,6 +5,7 @@
             {
                 "Email": "user@example.com",
                 "Name": "Real Name",
+                "Name[ar]": "الاسم الحقيقي",
                 "Name[bg]": "Истинско име",
                 "Name[ca@valencia]": "Nom real",
                 "Name[ca]": "Nom real",
@@ -35,6 +36,7 @@
         ],
         "Category": "Appearance",
         "Description": "Quick Effect",
+        "Description[ar]": "التّأثير السريع",
         "Description[bg]": "Бърз ефект",
         "Description[ca@valencia]": "Efecte ràpid",
         "Description[ca]": "Efecte ràpid",
@@ -63,6 +65,7 @@
         "Id": "quick-effect",
         "License": "GPL",
         "Name": "Quick Effect",
+        "Name[ar]": "التّأثير السريع",
         "Name[bg]": "Бърз ефект",
         "Name[ca@valencia]": "Efecte ràpid",
         "Name[ca]": "Efecte ràpid",

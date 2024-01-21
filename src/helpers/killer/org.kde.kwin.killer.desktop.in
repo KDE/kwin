@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=KWin Kill Helper
+Name[ar]=مساعد قاتل كوين
 Name[bg]=Помощник за прекратяване на приложения на KWin
 Name[ca]=Ajudant de matar del KWin
 Name[ca@valencia]=Ajudant de matar de KWin
@@ -27,6 +28,7 @@ Name[x-test]=xxKWin Kill Helperxx
 Name[zh_CN]=KWin 强制终止辅助程序
 Name[zh_TW]=KWin 強制中止工具程式
 Comment=Prompts whether to kill an unresponsive window
+Comment[ar]=يمكنك من قتل النوافذ التي لا تستجيب
 Comment[bg]=Запитва дали да прекрати принудително прозорец, който не реагира
 Comment[ca]=Demana si cal matar una finestra que no respon
 Comment[ca@valencia]=Demana si cal matar una finestra que no respon

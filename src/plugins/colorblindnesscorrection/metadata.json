@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Enhances color perception for color blindness",
+        "Description[ar]": "تحسن استقبال الألوان للأشخاص ذوي عمى الألوان",
         "Description[bg]": "Подобряване на цветното възприемане при цветна слепота",
         "Description[ca@valencia]": "Millora la percepció del color dels daltònics",
         "Description[ca]": "Millora la percepció del color dels daltònics",
@@ -31,6 +32,7 @@
         "EnabledByDefault": false,
         "License": "GPL-2.0+",
         "Name": "Colorblindness Correction",
+        "Name[ar]": "تصحيح عمى الألوان",
         "Name[bg]": "Корекция на цветна слепота",
         "Name[ca@valencia]": "Correcció del daltonisme",
         "Name[ca]": "Correcció del daltonisme",
