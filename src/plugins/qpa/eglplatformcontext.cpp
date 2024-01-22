@@ -162,7 +162,7 @@ void EGLPlatformContext::swapBuffers(QPlatformSurface *surface)
 
 GLuint EGLPlatformContext::defaultFramebufferObject(QPlatformSurface *surface) const
 {
-    if (Window *window = dynamic_cast<Window *>(surface)) {
+    if (surface->surface()->surfaceClass() == QSurface::Window) {
         if (m_current) {
             return m_current->fbo->handle();
         }
