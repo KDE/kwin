@@ -412,7 +412,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
         };
         if (enable) {
-            pos.setX(std::ceil(pos.x() + changeset->mode.value_or(output->currentMode()).lock()->size().width() / changeset->scale.value_or(output->scale())));
+            const auto modeSize = changeset->transform->map(mode->size());
+            pos.setX(std::ceil(pos.x() + modeSize.width() / *changeset->scale));
             outputOrder.push_back(output);
         }
     }
