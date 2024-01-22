@@ -24,7 +24,8 @@ public:
     SecurityContextManagerV1InterfacePrivate(Display *display);
 
 protected:
-    void wp_security_context_manager_v1_create_listener(Resource *resource, uint32_t id, int32_t listen_fd, int32_t close_fd);
+    void wp_security_context_manager_v1_destroy(Resource *resource) override;
+    void wp_security_context_manager_v1_create_listener(Resource *resource, uint32_t id, int32_t listen_fd, int32_t close_fd) override;
 
 private:
     Display *m_display;
@@ -67,6 +68,11 @@ SecurityContextManagerV1InterfacePrivate::SecurityContextManagerV1InterfacePriva
     : QtWaylandServer::wp_security_context_manager_v1(*display, s_version)
     , m_display(display)
 {
+}
+
+void SecurityContextManagerV1InterfacePrivate::wp_security_context_manager_v1_destroy(Resource *resource)
+{
+    wl_resource_destroy(resource->handle);
 }
 
 void SecurityContextManagerV1InterfacePrivate::wp_security_context_manager_v1_create_listener(Resource *resource, uint32_t id, int32_t listen_fd, int32_t close_fd)
