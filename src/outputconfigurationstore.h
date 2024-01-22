@@ -62,6 +62,7 @@ private:
         std::optional<QString> edidIdentifier;
         std::optional<QString> connectorName;
         // empty if invalid
+        QString edidHash;
         QString mstPath;
         // actual state
         std::optional<ModeData> mode;

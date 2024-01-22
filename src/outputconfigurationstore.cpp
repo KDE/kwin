@@ -133,14 +133,24 @@ std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const
     const bool uniqueEdid = !output->edid().identifier().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier();
     });
+    const bool uniqueEdidHash = !output->edid().hash().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
+        return otherOutput != output && otherOutput->edid().hash() == output->edid().hash();
+    });
     const bool uniqueMst = !output->mstPath().isEmpty() && std::none_of(allOutputs.begin(), allOutputs.end(), [output](Output *otherOutput) {
         return otherOutput != output && otherOutput->edid().identifier() == output->edid().identifier() && otherOutput->mstPath() == output->mstPath();
     });
-    const auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [uniqueEdid, uniqueMst, output](const auto &outputState) {
+    auto it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
         if (output->edid().isValid()) {
             if (outputState.edidIdentifier != output->edid().identifier()) {
                 return false;
             } else if (uniqueEdid) {
+                return true;
+            }
+        }
+        if (!output->edid().hash().isEmpty()) {
+            if (outputState.edidHash != output->edid().hash()) {
+                return false;
+            } else if (uniqueEdidHash) {
                 return true;
             }
         }
@@ -151,6 +161,12 @@ std::optional<size_t> OutputConfigurationStore::findOutput(Output *output, const
         }
         return outputState.connectorName == output->name();
     });
+    if (it == m_outputs.end() && uniqueEdidHash) {
+        // handle the edge case of EDID parsing failing in the past but not failing anymore
+        it = std::find_if(m_outputs.begin(), m_outputs.end(), [&](const auto &outputState) {
+            return outputState.edidHash == output->edid().hash();
+        });
+    }
     if (it != m_outputs.end()) {
         return std::distance(m_outputs.begin(), it);
     } else {
@@ -197,6 +213,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
+                .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
                 .mstPath = output->mstPath(),
                 .mode = ModeData{
                     .size = mode->size(),
@@ -229,6 +246,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
+                .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
                 .mstPath = output->mstPath(),
                 .mode = ModeData{
                     .size = mode->size(),
@@ -554,6 +572,12 @@ void OutputConfigurationStore::load()
                 hasIdentifier = true;
             }
         }
+        if (const auto it = data.find("edidHash"); it != data.end()) {
+            if (const auto str = it->toString(); !str.isEmpty()) {
+                state.edidHash = str;
+                hasIdentifier = true;
+            }
+        }
         if (const auto it = data.find("connectorName"); it != data.end()) {
             if (const auto str = it->toString(); !str.isEmpty()) {
                 state.connectorName = str;
@@ -576,6 +600,7 @@ void OutputConfigurationStore::load()
         const bool hasDuplicate = std::any_of(outputDatas.begin(), outputDatas.end(), [&state](const auto &data) {
             return data
                 && data->edidIdentifier == state.edidIdentifier
+                && data->edidHash == state.edidHash
                 && data->mstPath == state.mstPath
                 && data->connectorName == state.connectorName;
         });
@@ -807,6 +832,9 @@ void OutputConfigurationStore::save()
         QJsonObject o;
         if (output.edidIdentifier) {
             o["edidIdentifier"] = *output.edidIdentifier;
+        }
+        if (!output.edidHash.isEmpty()) {
+            o["edidHash"] = output.edidHash;
         }
         if (output.connectorName) {
             o["connectorName"] = *output.connectorName;
