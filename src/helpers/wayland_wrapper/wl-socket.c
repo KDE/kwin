@@ -37,7 +37,7 @@ struct wl_socket {
     int fd_lock;
     struct sockaddr_un addr;
     char lock_addr[UNIX_PATH_MAX + LOCK_SUFFIXLEN];
-    char display_name[16];
+    char display_name[20];
 };
 
 static struct wl_socket *wl_socket_alloc(void)
