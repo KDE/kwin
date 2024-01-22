@@ -43,11 +43,6 @@ WorkspaceSceneOpenGL::WorkspaceSceneOpenGL(OpenGLBackend *backend)
     : WorkspaceScene(std::make_unique<ItemRendererOpenGL>())
     , m_backend(backend)
 {
-    // It is not legal to not have a vertex array object bound in a core context
-    if (!GLPlatform::instance()->isGLES() && hasGLExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
-    }
 }
 
 WorkspaceSceneOpenGL::~WorkspaceSceneOpenGL()

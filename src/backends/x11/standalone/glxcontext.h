@@ -30,6 +30,7 @@ private:
     ::Display *const m_display;
     const GLXWindow m_window;
     const GLXContext m_handle;
+    uint32_t m_vao = 0;
 };
 
 }
