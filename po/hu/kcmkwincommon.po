@@ -1,14 +1,14 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
 # Kristóf Kiszel <ulysses@kubuntu.org>, 2019.
-# Kristof Kiszel <ulysses@fsf.hu>, 2021.
+# SPDX-FileCopyrightText: 2021, 2024 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-20 02:25+0000\n"
-"PO-Revision-Date: 2021-11-18 14:00+0100\n"
+"PO-Revision-Date: 2024-01-21 21:51+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -47,12 +47,10 @@ msgid "Focus"
 msgstr "Fókusz"
 
 #: effectsmodel.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "Category of Desktop Effects, used as section header"
-#| msgid "Show Desktop Animation"
+#, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Asztalmegjelenítési animációk"
+msgstr "Pillantási animációk"
 
 #: effectsmodel.cpp:50
 #, kde-format
@@ -87,19 +85,19 @@ msgstr "A KWin fejlesztői"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "A csomag metaadatai nem találhatók"
 
 #: genericscriptedconfig.cpp:77
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "A(z) %1 nem tartalmaz érvényes metadata.json fájlt"
 
 #: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "A(z) %1 nem létezik"
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"
