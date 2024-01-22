@@ -422,6 +422,11 @@ if (COMPILER_UNUSED_PARAMETER_SUPPORTED)
     add_compile_options(-Wno-unused-parameter)
 endif()
 
+check_cxx_compiler_flag(-Wno-missing-field-initializers COMPILER_MISSING_FIELD_INITIALIZERS_SUPPORTED)
+if (COMPILER_MISSING_FIELD_INITIALIZERS_SUPPORTED)
+    add_compile_options(-Wno-missing-field-initializers)
+endif()
+
 add_definitions(
     -DQT_DISABLE_DEPRECATED_BEFORE=0
     -DQT_NO_KEYWORDS
