@@ -938,6 +938,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Set window type"
-#~ msgstr "ウィンドウタイプを設定"

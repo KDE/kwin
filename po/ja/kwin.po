@@ -4425,8 +4425,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~| msgid "Setup Window Shortcut"
-#~ msgid "Set window type to"
-#~ msgstr "ウィンドウショートカットの設定"

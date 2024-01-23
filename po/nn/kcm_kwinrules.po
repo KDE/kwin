@@ -951,6 +951,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr " × "
-
-#~ msgid "Set window type"
-#~ msgstr "Vel vindaugstype"

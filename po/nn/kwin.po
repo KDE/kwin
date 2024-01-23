@@ -4213,9 +4213,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Set window type to"
-#~ msgstr "Set vindaugstype til"
-
-#~ msgid "Set window type rule type"
-#~ msgstr "Regeltype for setjing av vindaugstype"
