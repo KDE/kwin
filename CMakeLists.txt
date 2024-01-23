@@ -109,14 +109,14 @@ set_package_properties(Threads PROPERTIES
     TYPE REQUIRED
 )
 
-find_package(KWayland ${PROJECT_VERSION} CONFIG)
+find_package(KWayland CONFIG)
 set_package_properties(KWayland PROPERTIES
     PURPOSE "Required to build wayland platform plugin and tests"
     TYPE REQUIRED
 )
 
 # optional frameworks
-find_package(PlasmaActivities ${PROJECT_VERSION} CONFIG)
+find_package(PlasmaActivities CONFIG)
 set_package_properties(PlasmaActivities PROPERTIES
     PURPOSE "Enable building of KWin with kactivities support"
     TYPE OPTIONAL
@@ -136,14 +136,14 @@ set_package_properties(KF6Kirigami2 PROPERTIES
     PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
 )
-find_package(Plasma ${PROJECT_VERSION} CONFIG)
+find_package(Plasma CONFIG)
 set_package_properties(Plasma PROPERTIES
     DESCRIPTION "A QtQuick based components set"
     PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
 )
 
-find_package(KDecoration2 ${PROJECT_VERSION} CONFIG)
+find_package(KDecoration2 CONFIG)
 set_package_properties(KDecoration2 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for server side decoration support"
