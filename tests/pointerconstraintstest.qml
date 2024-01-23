@@ -167,8 +167,8 @@ ColumnLayout {
             enabled: root.waylandNative && !fullWindowChck.checked
 
             function rect() {
-                var globalPt = mapToGlobal(x, y);
-                return Qt.rect(globalPt.x, globalPt.y, width, height);
+                const scenePosition = mapToItem(null, x, y);
+                return Qt.rect(scenePosition.x, scenePosition.y, width, height);
             }
 
             border.color: enabled ? "black" : "lightgrey"
