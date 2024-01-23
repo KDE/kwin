@@ -10,12 +10,16 @@
 #include "core/renderviewport.h"
 #include "effect/effect.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
+#include "qjsondocument.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene_opengl.h"
 #include "utils/common.h"
+
+#include <QDir>
+#include <QFile>
 
 namespace KWin
 {
@@ -36,6 +40,9 @@ std::unique_ptr<ImageItem> ItemRendererOpenGL::createImageItem(Scene *scene, Ite
 
 void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const RenderViewport &viewport)
 {
+    if (m_debug.dumpPending) {
+        m_debug.dumpDir = QDir("/home/david/kwin_dump/frame1");
+    }
     GLFramebuffer *fbo = renderTarget.framebuffer();
     GLFramebuffer::pushFramebuffer(fbo);
 
@@ -44,6 +51,7 @@ void ItemRendererOpenGL::beginFrame(const RenderTarget &renderTarget, const Rend
 
 void ItemRendererOpenGL::endFrame()
 {
+    m_debug.dumpPending = false;
     GLVertexBuffer::streamingBuffer()->endOfFrame();
     GLFramebuffer::popFramebuffer();
 }
@@ -272,6 +280,16 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
     item->setTransform(data.toMatrix(renderContext.renderTargetScale));
 
     createRenderNode(item, &renderContext);
+
+    // QFile tempFile(m_debug.dumpDir.absoluteFilePath("item1"));
+    // qDebug() << tempFile.open(QIODevice::WriteOnly);
+    // qDebug() << m_debug.dumpDir.absoluteFilePath("item1");
+    // QJsonObject dump;
+    // dump["item"] = item->metaObject()->className();
+    // dump["bounds"] = QVariant(item->boundingRect()).toString();
+
+    // tempFile.write(QJsonDocument(dump).toJson());
+    // tempFile.flush();
 
     int totalVertexCount = 0;
     for (const RenderNode &node : std::as_const(renderContext.renderNodes)) {

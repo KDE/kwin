@@ -112,8 +112,8 @@ WindowQuadList ShadowItem::buildQuads() const
 
     const QRectF outerRect = rect();
 
-    const int width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
-    const int height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
+    const qreal width = shadowMargins.left() + std::max(top.width(), bottom.width()) + shadowMargins.right();
+    const qreal height = shadowMargins.top() + std::max(left.height(), right.height()) + shadowMargins.bottom();
 
     QRectF topLeftRect;
     if (!topLeft.isEmpty()) {
@@ -131,6 +131,13 @@ WindowQuadList ShadowItem::buildQuads() const
         topRightRect = QRectF(outerRect.right() - shadowMargins.right(),
                               outerRect.top() + shadowMargins.top(), 0, 0);
     }
+
+    qDebug() << "topleft shadow at " << topLeftRect;
+    qDebug() << "topright shadow at " << topRightRect;
+    qDebug() << "shadow image size is " << m_shadow->decorationShadowImage().size();
+    qDebug() << "dumped to /tmp/image " + QString::number(jj);
+    qDebug() << "bounding item is " << rect();
+    qDebug() << "window frame geom is " << m_window->frameGeometry();
 
     QRectF bottomRightRect;
     if (!bottomRight.isEmpty()) {

@@ -8,6 +8,7 @@
 
 #include "opengl/glutils.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
+#include "qdir.h"
 #include "scene/itemrenderer.h"
 
 namespace KWin
@@ -61,6 +62,8 @@ private:
 
     struct
     {
+        bool dumpPending = false;
+        QDir dumpDir;
         bool fractionalEnabled = false;
         std::unique_ptr<GLShader> fractionalShader;
     } m_debug;
