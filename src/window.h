@@ -592,7 +592,7 @@ public:
      * Note that the returned margins object will have all margins set to 0 if
      * the window doesn't have a server-side decoration.
      */
-    QMargins frameMargins() const;
+    QMarginsF frameMargins() const;
 
     virtual QSizeF minSize() const;
     virtual QSizeF maxSize() const;
@@ -1544,10 +1544,10 @@ protected:
 
     // geometry handling
     void checkOffscreenPosition(QRectF *geom, const QRectF &screenArea);
-    int borderLeft() const;
-    int borderRight() const;
-    int borderTop() const;
-    int borderBottom() const;
+    qreal borderLeft() const;
+    qreal borderRight() const;
+    qreal borderTop() const;
+    qreal borderBottom() const;
     void setGeometryRestore(const QRectF &rect);
     void setFullscreenGeometryRestore(const QRectF &geom);
 

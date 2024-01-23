@@ -414,9 +414,9 @@ bool Window::isLocalhost() const
     return m_clientMachine->isLocal();
 }
 
-QMargins Window::frameMargins() const
+QMarginsF Window::frameMargins() const
 {
-    return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
+    return QMarginsF(borderLeft(), borderTop(), borderRight(), borderBottom());
 }
 
 void Window::updateMouseGrab()
@@ -2353,22 +2353,22 @@ bool Window::isActiveFullScreen() const
     return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
 }
 
-int Window::borderBottom() const
+qreal Window::borderBottom() const
 {
     return isDecorated() ? decoration()->borderBottom() : 0;
 }
 
-int Window::borderLeft() const
+qreal Window::borderLeft() const
 {
     return isDecorated() ? decoration()->borderLeft() : 0;
 }
 
-int Window::borderRight() const
+qreal Window::borderRight() const
 {
     return isDecorated() ? decoration()->borderRight() : 0;
 }
 
-int Window::borderTop() const
+qreal Window::borderTop() const
 {
     return isDecorated() ? decoration()->borderTop() : 0;
 }
