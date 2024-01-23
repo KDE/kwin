@@ -168,7 +168,7 @@ QRegion SurfaceItemX11::opaque() const
 {
     QRegion shapeRegion;
     for (const QRectF &shapePart : shape()) {
-        shapeRegion |= shapePart.toRect();
+        shapeRegion += shapePart.toRect();
     }
     if (!m_window->hasAlpha()) {
         return shapeRegion;

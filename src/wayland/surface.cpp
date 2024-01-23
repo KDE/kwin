@@ -302,7 +302,7 @@ void SurfaceInterfacePrivate::surface_attach(Resource *resource, struct ::wl_res
 
 void SurfaceInterfacePrivate::surface_damage(Resource *, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    pending->damage |= QRect(x, y, width, height);
+    pending->damage += QRect(x, y, width, height);
 }
 
 void SurfaceInterfacePrivate::surface_frame(Resource *resource, uint32_t callback)
@@ -396,7 +396,7 @@ void SurfaceInterfacePrivate::surface_set_buffer_scale(Resource *resource, int32
 
 void SurfaceInterfacePrivate::surface_damage_buffer(Resource *resource, int32_t x, int32_t y, int32_t width, int32_t height)
 {
-    pending->bufferDamage |= QRect(x, y, width, height);
+    pending->bufferDamage += QRect(x, y, width, height);
 }
 
 void SurfaceInterfacePrivate::surface_offset(Resource *resource, int32_t x, int32_t y)

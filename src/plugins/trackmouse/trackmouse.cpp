@@ -94,7 +94,7 @@ void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
     m_angle = ((t.second() % 4) * m_angleBase) + (t.msec() / 1000.0 * m_angleBase);
     m_lastRect[0].moveCenter(cursorPos().toPoint());
     m_lastRect[1].moveCenter(cursorPos().toPoint());
-    data.paint |= m_lastRect[0].adjusted(-1, -1, 1, 1);
+    data.paint += m_lastRect[0].adjusted(-1, -1, 1, 1);
 
     effects->prePaintScreen(data, presentTime);
 }

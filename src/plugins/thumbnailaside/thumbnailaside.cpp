@@ -74,7 +74,7 @@ void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const R
 void ThumbnailAsideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
     effects->paintWindow(renderTarget, viewport, w, mask, region, data);
-    painted |= region;
+    painted += region;
 }
 
 void ThumbnailAsideEffect::slotWindowDamaged(EffectWindow *w)

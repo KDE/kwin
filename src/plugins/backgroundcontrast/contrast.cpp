@@ -305,7 +305,7 @@ QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
     if (const auto it = m_windowData.find(w); it != m_windowData.end()) {
         const QRegion &appRegion = it->second.contrastRegion;
         if (!appRegion.isEmpty()) {
-            region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
+            region += appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
         } else {
             // An empty region means that the blur effect should be enabled
             // for the whole window.
@@ -411,7 +411,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
                                       pt.y() + (r.y() - pt.y()) * data.yScale() + data.yTranslation());
                 const QPoint bottomRight(std::floor(topLeft.x() + r.width() * data.xScale()) - 1,
                                          std::floor(topLeft.y() + r.height() * data.yScale()) - 1);
-                scaledShape |= QRect(QPoint(std::floor(topLeft.x()), std::floor(topLeft.y())), bottomRight);
+                scaledShape += QRect(QPoint(std::floor(topLeft.x()), std::floor(topLeft.y())), bottomRight);
             }
             shape = scaledShape & region;
 
@@ -422,7 +422,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
                 const QRectF t = QRectF(r).translated(data.xTranslation(), data.yTranslation());
                 const QPoint topLeft(std::ceil(t.x()), std::ceil(t.y()));
                 const QPoint bottomRight(std::floor(t.x() + t.width() - 1), std::floor(t.y() + t.height() - 1));
-                translated |= QRect(topLeft, bottomRight);
+                translated += QRect(topLeft, bottomRight);
             }
             shape = translated & region;
         }

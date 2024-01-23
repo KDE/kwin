@@ -78,7 +78,7 @@ QRegion RenderViewport::mapToRenderTarget(const QRegion &logicalGeometry) const
 {
     QRegion ret;
     for (const auto &rect : logicalGeometry) {
-        ret |= mapToRenderTarget(rect);
+        ret += mapToRenderTarget(rect);
     }
     return ret;
 }
@@ -109,7 +109,7 @@ QRegion RenderViewport::mapToRenderTargetTexture(const QRegion &logicalGeometry)
 {
     QRegion ret;
     for (const auto &rect : logicalGeometry) {
-        ret |= mapToRenderTargetTexture(rect);
+        ret += mapToRenderTargetTexture(rect);
     }
     return ret;
 }

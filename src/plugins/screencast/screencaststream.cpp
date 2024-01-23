@@ -455,7 +455,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     Q_ASSERT(!m_stopped);
 
     if (!m_streaming) {
-        m_pendingDamages |= damagedRegion;
+        m_pendingDamages += damagedRegion;
         return;
     }
 
@@ -463,7 +463,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         auto frameInterval = (1000. * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
         auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
         if (lastSentAgo < frameInterval) {
-            m_pendingDamages |= damagedRegion;
+            m_pendingDamages += damagedRegion;
             if (!m_pendingFrame.isActive()) {
                 m_pendingFrame.start(frameInterval - lastSentAgo);
             }
@@ -590,7 +590,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 damagedRegion += QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
                 m_cursor.lastRect = cursorRect;
             } else {
-                damagedRegion |= m_cursor.lastRect.toAlignedRect();
+                damagedRegion += m_cursor.lastRect.toAlignedRect();
                 m_cursor.lastRect = {};
             }
         }

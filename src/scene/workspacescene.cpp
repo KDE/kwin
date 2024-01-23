@@ -325,7 +325,7 @@ void WorkspaceScene::preparePaintSimpleScreen()
 
             const DecorationItem *decorationItem = windowItem->decorationItem();
             if (decorationItem) {
-                data.opaque |= decorationItem->mapToGlobal(decorationItem->opaque());
+                data.opaque += decorationItem->mapToGlobal(decorationItem->opaque());
             }
         }
 
