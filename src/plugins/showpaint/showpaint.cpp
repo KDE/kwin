@@ -61,7 +61,7 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const Render
 
 void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    m_painted |= region;
+    m_painted += region;
     effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 

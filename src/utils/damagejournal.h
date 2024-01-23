@@ -68,7 +68,7 @@ public:
         QRegion region;
         if (bufferAge > 0 && bufferAge <= m_log.size()) {
             for (int i = 0; i < bufferAge - 1; ++i) {
-                region |= m_log[i];
+                region += m_log[i];
             }
         } else {
             region = fallback;

@@ -170,7 +170,7 @@ void TouchPointsEffect::repaint()
         QRegion dirtyRegion;
         const int radius = m_ringMaxSize + m_lineWidth;
         for (auto it = m_points.constBegin(), end = m_points.constEnd(); it != end; ++it) {
-            dirtyRegion |= QRect(it->pos.x() - radius, it->pos.y() - radius, 2 * radius, 2 * radius);
+            dirtyRegion += QRect(it->pos.x() - radius, it->pos.y() - radius, 2 * radius, 2 * radius);
         }
         effects->addRepaint(dirtyRegion);
     }

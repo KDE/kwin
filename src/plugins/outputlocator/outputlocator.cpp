@@ -98,7 +98,7 @@ void OutputLocatorEffect::hide()
 
     QRegion repaintRegion;
     for (const auto &[screen, scene] : m_scenesByScreens) {
-        repaintRegion |= scene->geometry();
+        repaintRegion += scene->geometry();
     }
 
     m_scenesByScreens.clear();

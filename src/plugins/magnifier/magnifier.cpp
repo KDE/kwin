@@ -111,7 +111,7 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
 
     effects->prePaintScreen(data, presentTime);
     if (m_zoom != 1.0) {
-        data.paint |= magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
+        data.paint += magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH);
     }
 }
 
