@@ -30,7 +30,10 @@ struct BlurRenderData
 struct BlurEffectData
 {
     /// The region that should be blurred behind the window
-    QRegion region;
+    std::optional<QRegion> content;
+
+    /// The region that should be blurred behind the frame
+    std::optional<QRegion> frame;
 
     /// The render data per screen. Screens can have different color spaces.
     std::unordered_map<Output *, BlurRenderData> render;

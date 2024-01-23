@@ -211,11 +211,12 @@ void BlurEffect::reconfigure(ReconfigureFlags flags)
 
 void BlurEffect::updateBlurRegion(EffectWindow *w)
 {
-    QRegion region;
-    bool valid = false;
+    std::optional<QRegion> content;
+    std::optional<QRegion> frame;
 
     if (net_wm_blur_region != XCB_ATOM_NONE) {
         const QByteArray value = w->readProperty(net_wm_blur_region, XCB_ATOM_CARDINAL, 32);
+        QRegion region;
         if (value.size() > 0 && !(value.size() % (4 * sizeof(uint32_t)))) {
             const uint32_t *cardinals = reinterpret_cast<const uint32_t *>(value.constData());
             for (unsigned int i = 0; i < value.size() / sizeof(uint32_t);) {
@@ -226,26 +227,32 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
                 region += Xcb::fromXNative(QRect(x, y, w, h)).toRect();
             }
         }
-        valid = !value.isNull();
+        if (!value.isNull()) {
+            content = region;
+        }
     }
 
     SurfaceInterface *surf = w->surface();
 
     if (surf && surf->blur()) {
-        region = surf->blur()->region();
-        valid = true;
+        content = surf->blur()->region();
     }
 
     if (auto internal = w->internalWindow()) {
         const auto property = internal->property("kwin_blur");
         if (property.isValid()) {
-            region = property.value<QRegion>();
-            valid = true;
+            content = property.value<QRegion>();
         }
     }
 
-    if (valid) {
-        m_windows[w].region = region;
+    if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
+        frame = decorationBlurRegion(w);
+    }
+
+    if (content.has_value() || frame.has_value()) {
+        BlurEffectData &data = m_windows[w];
+        data.content = content;
+        data.frame = frame;
     } else {
         if (auto it = m_windows.find(w); it != m_windows.end()) {
             effects->makeOpenGLContextCurrent();
@@ -376,21 +383,22 @@ QRegion BlurEffect::blurRegion(EffectWindow *w) const
     QRegion region;
 
     if (auto it = m_windows.find(w); it != m_windows.end()) {
-        const QRegion &appRegion = it->second.region;
-        if (!appRegion.isEmpty()) {
-            if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
-                region = decorationBlurRegion(w);
+        const std::optional<QRegion> &content = it->second.content;
+        const std::optional<QRegion> &frame = it->second.frame;
+        if (content.has_value()) {
+            if (content->isEmpty()) {
+                // An empty region means that the blur effect should be enabled
+                // for the whole window.
+                region = w->rect().toRect();
+            } else {
+                if (frame.has_value()) {
+                    region = frame.value();
+                }
+                region |= content->translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
             }
-            region |= appRegion.translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
-        } else {
-            // An empty region means that the blur effect should be enabled
-            // for the whole window.
-            region = w->rect().toRect();
+        } else if (frame.has_value()) {
+            region = frame.value();
         }
-    } else if (w->decorationHasAlpha() && decorationSupportsBlurBehind(w)) {
-        // If the client hasn't specified a blur region, we'll only enable
-        // the effect behind the decoration.
-        region = decorationBlurRegion(w);
     }
 
     return region;
