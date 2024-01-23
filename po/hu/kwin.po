@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 02:24+0000\n"
-"PO-Revision-Date: 2024-01-05 13:26+0100\n"
+"PO-Revision-Date: 2024-01-22 14:35+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.01.90\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -31,44 +31,44 @@ msgstr "ulysses@fsf.hu"
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Nyomja meg a jobb Controlt a mutató elengedéséhez"
 
 #: backends/wayland/wayland_output.cpp:278
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Nyomja meg a jobb Controlt a mutató elkapásához"
 
 #: backends/wayland/wayland_output.cpp:282
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE Wayland kompozitor %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- Kimenet letiltva"
 
 #: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- Kimenet halványítva"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Nyomja meg a jobb Controlt a bemenet elengedéséhez"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Nyomja meg a jobb Controlt a bemenet elkapásához"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE Wayland kompozitor"
 
 #: compositor.cpp:147
 #, kde-format
@@ -82,14 +82,7 @@ msgid "Suspend Compositing"
 msgstr "A kompozit kiterjesztés felfüggesztése"
 
 #: compositor_x11.cpp:513
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -100,8 +93,7 @@ msgstr ""
 "korábban.</b><br>Ez valószínűleg az illesztőprogram hibája miatt történt."
 "<p>Ha úgy gondolja, hogy azóta egy stabil illesztőprogramra frissített, "
 "<br>megszüntetheti ezt a védelmet, <b>ez azonban azonnali összeomlást "
-"okozhat.</b></p><p>Alternatívaként használhatja az XRender modult az OpenGL "
-"helyett.</p>"
+"okozhat.</b></p>"
 
 #: compositor_x11.cpp:520
 #, kde-format
@@ -109,10 +101,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "A szükséges X kiterjesztések (XComposite és XDamage) nem érhetők el."
 
 #: compositor_x11.cpp:523
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "A GLX/OpenGL és XRender/XFixes kiterjesztések nem érhetők el."
+msgstr "A GLX/OpenGL nem érhető el."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -906,10 +897,9 @@ msgid "task"
 msgstr "feladat"
 
 #: debug_console.cpp:1217
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Ablakok"
+msgstr "X11 ablakok"
 
 #: debug_console.cpp:1219
 #, kde-format
@@ -1165,6 +1155,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para>A(z) <application>%1</application> nem válaszol. Szeretné leállítani "
+"ezt az alkalmazást?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1173,74 +1165,63 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>A(z) <application>%2</application> „%1” ablaka nem válaszol. Szeretné "
+"leállítani ezt az alkalmazást?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Be szeretné zárni ezt az alkalmazást?</para><para><warning>Az "
-"alkalmazás bezárásával minden gyermekablaka is be fog záródni. Az összes "
-"mentetlen adat el fog veszni.</warning></para>"
+"<para><emphasis strong='true'>Az alkalmazás leállítása bezárja az összes "
+"ablakát. A nem mentett adatok elvesznek.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Bezárás"
+msgstr "%1 leállí&tása"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Várakozás tovább"
+msgstr "&Várakozás tovább"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Nem válaszol)"
+msgstr "Nem válaszol"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Folyamatazonosító: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "gépnév"
+msgstr "Gépnév: %1"
 
 #: input.cpp:2010
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Rajztábla áthelyezése a következő kimenetre"
 
 #: input.cpp:2089
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tablet mód"
+msgstr "Rajztábla áthelyezve ide: %1"
 
 #: input.cpp:2089
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "A rajztáblák kimenetet váltottak"
 
 #: input.cpp:3183
 #, kde-format
@@ -1328,11 +1309,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Óriási"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1440,6 +1419,8 @@ msgstr "Renderelés drm node-on."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Területi beállítások információinak kibontása a locale1-ből a felhasználó "
+"beállításai helyett"
 
 #: main_wayland.cpp:363
 #, kde-format
@@ -1517,11 +1498,9 @@ msgstr "Elmosás erőssége:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Jobb"
+msgstr "Gyenge"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1539,58 +1518,54 @@ msgstr "Zajerősség:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Vörös"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Zöld"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Kék"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Lila"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Mód:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanópia (vörös)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deuteranópia (zöld)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanópia (kék-sárga)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Válassza ki a bezárásra kényszerítendő ablakot bal egérgombbal vagy "
-"enterrel.\n"
+"Válassza ki a színválasztás helyét bal egérgombbal vagy enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
@@ -1613,39 +1588,34 @@ msgstr "Dokkok és panelek"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&Asztalok"
+msgstr "Asztal"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Maradjon felül"
+msgstr "Maradjon az ablakok felett"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "Ablakszerep"
+msgstr "Ablakcsoport szerint"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Teljes képernyő"
+msgstr "Teljes képernyős ablakok"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "felirat"
+msgstr "Időtartam:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1664,18 +1634,16 @@ msgstr " ezredmásodperc"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Ablakpozíció"
+msgstr "Ablakmegnyitási animáció"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Forgás"
+msgstr "Forgatási él:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1689,9 +1657,7 @@ msgstr "Felül"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "Jobb"
 
@@ -1707,19 +1673,16 @@ msgstr "Alul"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "Bal"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Forgás"
+msgstr "Forgatási szög:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1730,10 +1693,9 @@ msgstr "Távolság:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Ablakpozíció"
+msgstr "Ablakbezárási animáció"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1787,24 +1749,21 @@ msgid "Very Huge"
 msgstr "Óriási"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Át&méretezés"
+msgstr "Túlméretezett"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "Gombok"
+msgstr "Gombméret:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "Párbeszédablak"
+msgstr "Beállító párbeszédablak"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1830,10 +1789,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "Az ablakkeret elrejtése"
+msgstr "Színezett ablakszegély"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -2024,39 +1982,30 @@ msgstr " képpont"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Jobb"
+msgstr "&Magasság:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Invertálás ki-be"
+msgstr "Egérkattintási effektus ki-be"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Bal"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Középső"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "Jobb"
@@ -2069,32 +2018,27 @@ msgstr "Alapbeállítások"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Nincsenek egérgombok"
+msgstr "Bal egérgomb színe:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Nincsenek egérgombok"
+msgstr "Középső egérgomb színe:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Nincsenek egérgombok"
+msgstr "Jobb egérgomb színe:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "Speciális"
+msgstr "Speciális beállítások"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
@@ -2136,11 +2080,9 @@ msgstr "Gyűrű sugara:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Ujjszám"
+msgstr "Gyűrűszám:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2156,10 +2098,9 @@ msgstr "Betűtípus:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Asztal megjelenítése"
+msgstr "Szöveg megjelenítése:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2181,8 +2122,8 @@ msgstr "Tiszta egérnyom"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " képpont"
+msgstr[1] " képpont"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2205,17 +2146,16 @@ msgstr "&Szín:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Rajzolás az egérrel a Shift+Meta lenyomása után az egér mozgatásával."
+msgstr ""
+"Rajzolás az egérrel a módosítóbillentyűk lenyomása után az egér mozgatásával"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Módosítók"
+msgstr "Szabadkézi rajz módosítóbillentyűk:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2223,9 +2163,7 @@ msgstr "Módosítók"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2245,9 +2183,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2257,50 +2193,40 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Módosítók"
+msgstr "Nyílrajz módosítóbillentyűk:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Éjszakai színek ki"
+msgstr "Éjszakai fény ki"
 
 #: plugins/nightcolor/nightcolormanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Éjszakai színek be"
+msgstr "Éjszakai fény be"
 
 #: plugins/nightcolor/nightcolormanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Éjszakai színek váltása"
+msgstr "Éjszakai fény váltása"
 
 #: plugins/nightcolor/nightcolormanager.cpp:466
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Színhőmérséklet előnézete"
 
 #: plugins/outputlocator/outputlocator.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
 msgstr "Ismeretlen"
@@ -2335,11 +2261,9 @@ msgstr "Invertálás ki-be"
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Layout mode:"
-msgstr "Tablet mód"
+msgstr "Elrendezési mód:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
@@ -4364,7 +4288,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:271
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Az Xwayland összeomlott"
 
 #~ msgid "Set window type to"
 #~ msgstr "Ablaktípus beállítása"
