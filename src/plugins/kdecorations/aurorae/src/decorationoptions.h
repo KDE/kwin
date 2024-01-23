@@ -255,43 +255,44 @@ private:
 class Borders : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int left READ left WRITE setLeft NOTIFY leftChanged)
-    Q_PROPERTY(int right READ right WRITE setRight NOTIFY rightChanged)
-    Q_PROPERTY(int top READ top WRITE setTop NOTIFY topChanged)
-    Q_PROPERTY(int bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
+    Q_PROPERTY(qreal left READ left WRITE setLeft NOTIFY leftChanged)
+    Q_PROPERTY(qreal right READ right WRITE setRight NOTIFY rightChanged)
+    Q_PROPERTY(qreal top READ top WRITE setTop NOTIFY topChanged)
+    Q_PROPERTY(qreal bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
 public:
     Borders(QObject *parent = nullptr);
     ~Borders() override;
-    int left() const;
-    int right() const;
-    int top() const;
-    int bottom() const;
+    qreal left() const;
+    qreal right() const;
+    qreal top() const;
+    qreal bottom() const;
 
-    void setLeft(int left);
-    void setRight(int right);
-    void setTop(int top);
-    void setBottom(int bottom);
+    void setLeft(qreal left);
+    void setRight(qreal right);
+    void setTop(qreal top);
+    void setBottom(qreal bottom);
 
+    operator QMarginsF() const;
     operator QMargins() const;
 
 public Q_SLOTS:
     /**
      * Sets all four borders to @p value.
      */
-    void setAllBorders(int value);
+    void setAllBorders(qreal value);
     /**
      * Sets all borders except the title border to @p value.
      */
-    void setBorders(int value);
+    void setBorders(qreal value);
     /**
      * Sets the side borders (e.g. if title is on top, the left and right borders)
      * to @p value.
      */
-    void setSideBorders(int value);
+    void setSideBorders(qreal value);
     /**
      * Sets the title border to @p value.
      */
-    void setTitle(int value);
+    void setTitle(qreal value);
 
 Q_SIGNALS:
     void leftChanged();
@@ -300,16 +301,16 @@ Q_SIGNALS:
     void bottomChanged();
 
 private:
-    int m_left;
-    int m_right;
-    int m_top;
-    int m_bottom;
+    qreal m_left;
+    qreal m_right;
+    qreal m_top;
+    qreal m_bottom;
 };
 
-#define GETTER(name)                 \
-    inline int Borders::name() const \
-    {                                \
-        return m_##name;             \
+#define GETTER(name)                   \
+    inline qreal Borders::name() const \
+    {                                  \
+        return m_##name;               \
     }
 
 GETTER(left)

@@ -524,10 +524,10 @@ void Decoration::installTitleItem(QQuickItem *item)
 void Decoration::updateExtendedBorders()
 {
     // extended sizes
-    const int extSize = settings()->largeSpacing();
-    int extLeft = m_extendedBorders->left();
-    int extRight = m_extendedBorders->right();
-    int extBottom = m_extendedBorders->bottom();
+    const qreal extSize = settings()->largeSpacing();
+    qreal extLeft = m_extendedBorders->left();
+    qreal extRight = m_extendedBorders->right();
+    qreal extBottom = m_extendedBorders->bottom();
 
     if (settings()->borderSize() == KDecoration2::BorderSize::None) {
         if (!client()->isMaximizedHorizontally()) {

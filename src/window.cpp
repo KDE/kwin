@@ -2668,7 +2668,7 @@ void Window::updateDecorationInputShape()
         return;
     }
 
-    const QMargins borders = decoration()->borders();
+    const QMarginsF borders = decoration()->borders();
     const QMargins resizeBorders = decoration()->resizeOnlyBorders();
 
     const QRectF innerRect = QRectF(QPointF(borderLeft(), borderTop()), decoratedClient()->size());

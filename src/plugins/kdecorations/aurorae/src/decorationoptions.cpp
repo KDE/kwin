@@ -206,28 +206,28 @@ Borders::~Borders()
 {
 }
 
-void Borders::setLeft(int left)
+void Borders::setLeft(qreal left)
 {
     if (m_left != left) {
         m_left = left;
         Q_EMIT leftChanged();
     }
 }
-void Borders::setRight(int right)
+void Borders::setRight(qreal right)
 {
     if (m_right != right) {
         m_right = right;
         Q_EMIT rightChanged();
     }
 }
-void Borders::setTop(int top)
+void Borders::setTop(qreal top)
 {
     if (m_top != top) {
         m_top = top;
         Q_EMIT topChanged();
     }
 }
-void Borders::setBottom(int bottom)
+void Borders::setBottom(qreal bottom)
 {
     if (m_bottom != bottom) {
         m_bottom = bottom;
@@ -235,27 +235,32 @@ void Borders::setBottom(int bottom)
     }
 }
 
-void Borders::setAllBorders(int border)
+void Borders::setAllBorders(qreal border)
 {
     setBorders(border);
     setTitle(border);
 }
 
-void Borders::setBorders(int border)
+void Borders::setBorders(qreal border)
 {
     setSideBorders(border);
     setBottom(border);
 }
 
-void Borders::setSideBorders(int border)
+void Borders::setSideBorders(qreal border)
 {
     setLeft(border);
     setRight(border);
 }
 
-void Borders::setTitle(int value)
+void Borders::setTitle(qreal value)
 {
     setTop(value);
+}
+
+Borders::operator QMarginsF() const
+{
+    return QMarginsF(m_left, m_top, m_right, m_bottom);
 }
 
 Borders::operator QMargins() const
