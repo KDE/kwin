@@ -1346,7 +1346,7 @@ void Workspace::updateOutputs(const QList<Output *> &outputOrder)
         output->ref();
         m_tileManagers[output] = std::make_unique<TileManager>(output);
         connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
-        connect(output, &Output::dpmsModeChanged, this, &Workspace::maybeDestroyDpmsFilter);
+        connect(output, &Output::wakeUp, this, &Workspace::maybeDestroyDpmsFilter);
         if (output->dpmsMode() != Output::DpmsMode::On) {
             createDpmsFilter();
         }
