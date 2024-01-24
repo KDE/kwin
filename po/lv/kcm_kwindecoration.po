@@ -6,35 +6,35 @@
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2008.
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Rūdofls Mazurs <rudolfs.mazurs@gmail.com>, 2011.
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
-"PO-Revision-Date: 2011-07-09 19:35+0300\n"
-"Last-Translator: Rūdofls Mazurs <rudolfs.mazurs@gmail.com>\n"
-"Language-Team: Latvian <locale@laka.lv>\n"
+"PO-Revision-Date: 2024-01-19 17:40+0200\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
 msgid "More actions for this window"
-msgstr ""
+msgstr "Vairāk darbību ar šo logu"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
 msgid "Application menu"
-msgstr ""
+msgstr "Programmu izvēlne"
 
 #: declarative-plugin/buttonsmodel.cpp:57
-#, fuzzy, kde-format
-#| msgid "On All Desktops"
+#, kde-format
 msgid "On all desktops"
 msgstr "Visās darbvirsmās"
 
@@ -56,7 +56,7 @@ msgstr "Aizvērt"
 #: declarative-plugin/buttonsmodel.cpp:65
 #, kde-format
 msgid "Context help"
-msgstr ""
+msgstr "Konteksta palīdzība"
 
 #: declarative-plugin/buttonsmodel.cpp:67
 #, kde-format
@@ -66,18 +66,18 @@ msgstr "Saritināt"
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Turēt zem pārējiem logiem"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Turēt virs pārējiem logiem"
 
 #: kcm.cpp:177
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr ""
+msgstr "Motīva noklusējums (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -86,6 +86,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Šis rīks ļauj iestatīt logu noformējuma motīvu pašreizējai aktīvajai "
+"sesijai, to nejauši neiestatot uz motīvu, kas nav pieejams vai nav jau "
+"uzlikts."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -94,12 +97,15 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Logu noformējuma motīva nosaukums, kuru vēlaties iestatīt „KWin“. Pilna ceļa "
+"norādīšanas rezultātā sistēma mēģinās atrast motīvu attiecīgajā mapē un to "
+"uzlikt, ja tiks atrasts."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
-msgstr ""
+msgstr "Parādīt visus sistēmā pieejamos motīvus (un norādīt pašreiz aktīvo)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -107,6 +113,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Atrisināja %1 uz „KWin Aurorae“ motīvu „%2“, ko mēģinās iestatīt par "
+"pašreizējo motīvu."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -114,17 +122,19 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Mēģinājāt norādīt datnes ceļu, bet sistēma šajā ceļā neatrada motīvu, tāpēc "
+"darbības ir apturētas."
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
-msgstr ""
+msgstr "Pieprasītais motīvs „%1“ jau ir uzlikts kā logu noformējuma motīvs."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
-msgstr ""
+msgstr "Šai „Plasma“ sesijai ir uzlikts kursora motīvs „%1“"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -132,136 +142,127 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Neizdevās saglabāt motīva iestatījumus — nezināms iemesls, bet no šīs kļūdas "
+"nevar atkopties. Iespējams, darbība izdosies, ja vienkārši mēģināsiet "
+"vēlreiz."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
 msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
-msgstr ""
+msgstr "Neizdevās atrast motīvu „%1“. Motīvam ir jābūt kādam no šiem: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "Jūsu sistēmā ir šādi „KWin“ logu noformējuma motīvi:"
 
 #: ui/Buttons.qml:85
 #, kde-format
 msgid "Titlebar"
-msgstr ""
+msgstr "Virsrakstjosla"
 
 #: ui/Buttons.qml:245
 #, kde-format
 msgid "Drop button here to remove it"
-msgstr ""
+msgstr "Pogu nometiet šeit, lai to noņemtu"
 
 #: ui/Buttons.qml:261
 #, kde-format
 msgid "Drag buttons between here and the titlebar"
-msgstr ""
+msgstr "Velciet pogas starp šo vietu un virsrakstjoslu"
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
-msgstr "Pogas"
+msgstr "Virsrakstjoslas pogas"
 
 #: ui/ConfigureTitlebar.qml:35
 #, kde-format
 msgctxt "checkbox label"
 msgid "Close windows by double clicking the menu button"
-msgstr ""
+msgstr "Aizveriet logus, veicot dubultklikšķi uz izvēlnes pogas"
 
 #: ui/ConfigureTitlebar.qml:52
 #, kde-format
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
-msgstr ""
+msgstr "Nospiediet un turiet uz izvēlnes pogas, lai atvērtu izvēlni."
 
 #: ui/ConfigureTitlebar.qml:59
-#, fuzzy, kde-format
-#| msgid "&Show window button tooltips"
+#, kde-format
 msgctxt "checkbox label"
 msgid "Show titlebar button tooltips"
-msgstr "Rādīt loga pogu pa&skaidres"
+msgstr "Rādīt virsrakstjoslas pogu paskaidres"
 
 #: ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "Apmales izmērs:"
+msgstr "Logu apmales izmērs:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Pogas"
+msgstr "Pielāgot virsrakstjoslas pogas..."
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Iegūt jaunas..."
 
 #: ui/Themes.qml:93
 #, kde-format
 msgid "Edit %1 Theme"
-msgstr ""
+msgstr "Rediģēt %1 motīvu"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Bez logu apmalēm"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Bez logu sānu apmalēm"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Mazas logu apmales"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Normālas logu apmales"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Lielas logu apmales"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Ļoti lielas logu apmales"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Milzīgas logu apmales"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Pavisam milzīgas logu apmales"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Apmales izmērs:"
+msgstr "Pārmērīgi lielas logu apmales"
 
 #, fuzzy
 #~| msgid "Get New Decorations..."

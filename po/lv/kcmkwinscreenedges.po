@@ -3,19 +3,20 @@
 #
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Rūdofls Mazurs <rudolfs.mazurs@gmail.com>, 2011.
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-19 00:38+0000\n"
-"PO-Revision-Date: 2011-07-07 23:08+0300\n"
-"Last-Translator: Rūdofls Mazurs <rudolfs.mazurs@gmail.com>\n"
-"Language-Team: Latvian <locale@laka.lv>\n"
+"PO-Revision-Date: 2024-01-22 14:54+0200\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -27,157 +28,152 @@ msgstr "Nav darbības"
 #: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Palūkoties uz darbvirsmu"
 
 #: main.cpp:153 touch.cpp:120
 #, kde-format
 msgid "Lock Screen"
-msgstr "Bloķēt ekrānu"
+msgstr "Slēgt ekrānu"
 
 #: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Show KRunner"
-msgstr ""
+msgstr "Parādīt „KRunner“"
 
 #: main.cpp:155 touch.cpp:122
 #, kde-format
 msgid "Activity Manager"
-msgstr ""
+msgstr "Aktivitāšu pārvaldnieks"
 
 #: main.cpp:156 touch.cpp:123
 #, kde-format
 msgid "Application Launcher"
-msgstr ""
+msgstr "Programmu palaidējs"
 
 #: main.cpp:160 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "Parādīt visus logus"
 
 #: main.cpp:161 touch.cpp:128
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "%1 - All Desktops"
-msgstr "Visas darbvirsmas"
+msgstr "%1 — visas darbvirsmas"
 
 #: main.cpp:162 touch.cpp:129
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
+#, kde-format
 msgid "%1 - Current Desktop"
-msgstr "Aktīvā darbvirsma"
+msgstr "%1 — aktīvā darbvirsma"
 
 #: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
-msgstr ""
+msgstr "%1 — aktīvā programma"
 
 #: main.cpp:165 touch.cpp:132
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "Pārskats"
 
 #: main.cpp:167 touch.cpp:134
 #, kde-format
 msgid "Toggle window switching"
-msgstr ""
+msgstr "Iesl./izsl. logu pārslēgšanu"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle alternative window switching"
-msgstr ""
+msgstr "Iesl./izsl. alternatīvu logu pārslēgšanu"
 
 #. i18n: ectx: property (text), widget (QLabel, infoLabel)
 #: main.ui:23
-#, fuzzy, kde-format
-#| msgid ""
-#| "To trigger an action push your mouse cursor against the edge of the "
-#| "screen in the action's direction."
+#, kde-format
 msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
 msgstr ""
-"Darbību iedarbina stumjot peles kursoru pret ekrāna malu darbības virzienā."
+"Šo darbību varat ieslēgt, peles kursoru piespiežot pie attiecīgās ekrāna "
+"malas vai stūra."
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
 #, kde-format
 msgid "&Maximize:"
-msgstr ""
+msgstr "&Maksimizēt:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderMaximize)
 #: main.ui:77
 #, kde-format
 msgid "Windows dragged to top edge"
-msgstr ""
+msgstr "Logus aizvelkot līdz augšējai malai"
 
 #. i18n: ectx: property (text), widget (QLabel, quickTileLabel)
 #: main.ui:84
 #, kde-format
 msgid "&Tile:"
-msgstr ""
+msgstr "&Flīzēt:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ElectricBorderTiling)
 #: main.ui:94
-#, fuzzy, kde-format
-#| msgid "Tile windows by dragging them to the side of the screen"
+#, kde-format
 msgid "Windows dragged to left or right edge"
-msgstr "Flīzēt logus, pievieklot tos pie ekrāna sāna"
+msgstr "Flīzēt logus, pievelkot tos pie ekrāna sāna"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Uzvedība:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Palikt aktīvam, kad logi ir pilnekrāna režīmā"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115
 #, kde-format
 msgid "Trigger &quarter tiling in:"
-msgstr ""
+msgstr "Ieslēgt flīzēšanu četrās &daļās"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:130
 #, no-c-format, kde-format
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. i18n: ectx: property (prefix), widget (QSpinBox, electricBorderCornerRatioSpin)
 #: main.ui:133
 #, kde-format
 msgid "Outer "
-msgstr ""
+msgstr "Ārpuse "
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: main.ui:149
 #, kde-format
 msgid "of the screen"
-msgstr ""
+msgstr "ekrānam"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr "Izmainīt darbvirsmu, kad peles kursors tiek iestumts ekrāna stūrī"
+msgstr "Izmainīt darbvirsmu, kad peles kursors tiek stumts pret ekrāna malu"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
 #, kde-format
 msgid "&Switch desktop on edge:"
-msgstr "Pār&slēgt darbvirsmu pie ekrāna malas"
+msgstr "Pār&slēgt darbvirsmu pie ekrāna malas:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:188
 #, kde-format
 msgctxt "Switch desktop on edge"
 msgid "Disabled"
-msgstr "Atslēgts"
+msgstr "Izslēgts"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
@@ -197,7 +193,7 @@ msgstr "Vienmēr ieslēgts"
 msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
-msgstr "Cik ilgi peles kursors jāstumj ekrāna stūrī līdz iedarbināt darbību"
+msgstr "Cik ilgi peles kursors jāstumj pret ekrāna malu, lai ieslēgtos darbība"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -218,25 +214,21 @@ msgstr " ms"
 msgid ""
 "Amount of time required after triggering an action until the next trigger "
 "can occur"
-msgstr "Laiks pēc darbības aktivizēšanas līdz nākamajai aktivizēšanai"
+msgstr "Laiks pēc vienas darbības aktivizēšanas līdz nākamajai aktivizēšanai"
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241
 #, kde-format
 msgid "&Reactivation delay:"
-msgstr "At&k. aktivizesanas aizture:"
+msgstr "Dubultas aktivizācijas aizture:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
-#, fuzzy, kde-format
-#| msgid ""
-#| "To trigger an action push your mouse cursor against the edge of the "
-#| "screen in the action's direction."
+#, kde-format
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr ""
-"Darbību iedarbina stumjot peles kursoru pret ekrāna malu darbības virzienā."
+msgstr "Darbību var aktivizēt, velkot no ekrāna malas virzienā pret tā centru."
 
 #~ msgid "Show Desktop"
 #~ msgstr "Parādīt darbvirsmu"

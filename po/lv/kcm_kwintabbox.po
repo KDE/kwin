@@ -3,34 +3,33 @@
 #
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Rūdofls Mazurs <rudolfs.mazurs@gmail.com>, 2011.
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
-"PO-Revision-Date: 2011-07-07 23:17+0300\n"
-"Last-Translator: Rūdofls Mazurs <rudolfs.mazurs@gmail.com>\n"
-"Language-Team: Latvian <locale@laka.lv>\n"
+"PO-Revision-Date: 2024-01-19 20:05+0200\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
 #: layoutpreview.cpp:127
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Visām darbvirsmām"
+msgstr "Parādīt darbvirsmu"
 
 #: layoutpreview.cpp:157
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgctxt "An example Desktop Name"
 msgid "Desktop 1"
-msgstr "Visām darbvirsmām"
+msgstr "1. darbvirsma"
 
 #: main.cpp:66
 #, kde-format
@@ -45,28 +44,27 @@ msgstr "Alternatīvais"
 #: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
-msgstr ""
+msgstr "Iegūt jaunus uzdevumu pārvaldniekus..."
 
 #: main.cpp:83
 #, kde-format
 msgid ""
 "Focus policy settings limit the functionality of navigating through windows."
 msgstr ""
-"Fokusa politikas iestatījumi ierobežo navigēšanas starp logiem "
+"Fokusa politikas iestatījumi ierobežo pārvietošanās starp logiem "
 "funkcionalitāti."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
 #: main.ui:32
 #, kde-format
 msgid "Content"
-msgstr ""
+msgstr "Saturs"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include desktop"
+#, kde-format
 msgid "Include \"Show Desktop\" icon"
-msgstr "Iekļaut darbvirsmu"
+msgstr "Iekļauj „Parādīt darbvirsmu“ ikonu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -84,13 +82,13 @@ msgstr "Sakraušanas kārtība"
 #: main.ui:68
 #, kde-format
 msgid "Only one window per application"
-msgstr ""
+msgstr "Tikai viens logs uz programmu"
 
 #. i18n: ectx: property (text), widget (QCheckBox, orderMinimized)
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "Minimizētos logus kārtot pēc logiem, kas nav minimizēti"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -100,136 +98,125 @@ msgstr "Kārtošanas secība:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: main.ui:114
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Filter windows by"
-msgstr "Rādīt logus no:"
+msgstr "Filtrēt logus pēc"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual desktops"
-msgstr "Visām darbvirsmām"
+msgstr "Virtuālās darbvirsmas"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentDesktop)
 #: main.ui:167
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
+#, kde-format
 msgid "Current desktop"
-msgstr "Aktīvās darbvirsmas"
+msgstr "Pašreizējā darbvirsma"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherDesktops)
 #: main.ui:174
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All other desktops"
-msgstr "Visām darbvirsmām"
+msgstr "Visas pārējās darbvirsmas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterActivities)
 #: main.ui:184
 #, kde-format
 msgid "Activities"
-msgstr ""
+msgstr "Aktivitātes"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentActivity)
 #: main.ui:228
 #, kde-format
 msgid "Current activity"
-msgstr ""
+msgstr "Pašreizējā aktivitāte"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
 #: main.ui:235
 #, kde-format
 msgid "All other activities"
-msgstr ""
+msgstr "Visas pārējās aktivitātes"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
 #: main.ui:245
 #, kde-format
 msgid "Screens"
-msgstr ""
+msgstr "Ekrāni"
 
 #. i18n: ectx: property (text), widget (QRadioButton, currentScreen)
 #: main.ui:289
-#, fuzzy, kde-format
-#| msgid "Current Desktop"
+#, kde-format
 msgid "Current screen"
-msgstr "Aktīvās darbvirsmas"
+msgstr "Pašreizējais ekrāns"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherScreens)
 #: main.ui:296
 #, kde-format
 msgid "All other screens"
-msgstr ""
+msgstr "Visi pārējie ekrāni"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterMinimization)
 #: main.ui:306
-#, fuzzy, kde-format
-#| msgid "Minimum Size"
+#, kde-format
 msgid "Minimization"
-msgstr "Mazākais izmērs"
+msgstr "Minimizēšana"
 
 #. i18n: ectx: property (text), widget (QRadioButton, visibleWindows)
 #: main.ui:350
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Visible windows"
-msgstr "Rādīt logus no:"
+msgstr "Redzamie logi"
 
 #. i18n: ectx: property (text), widget (QRadioButton, hiddenWindows)
 #: main.ui:357
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "Hidden windows"
-msgstr "Rādīt logus no:"
+msgstr "Paslēptie logi"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_4)
 #: main.ui:396
 #, kde-format
 msgid "Shortcuts"
-msgstr ""
+msgstr "Saīsnes"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: main.ui:405 main.ui:448
 #, kde-format
 msgid "Forward"
-msgstr ""
+msgstr "Uz priekšu"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:428
-#, fuzzy, kde-format
-#| msgid "List windows:"
+#, kde-format
 msgid "All windows"
-msgstr "Rādīt logus no:"
+msgstr "Visi logi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: main.ui:438 main.ui:458
 #, kde-format
 msgid "Reverse"
-msgstr ""
+msgstr "Atpakaļ"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: main.ui:480
-#, fuzzy, kde-format
-#| msgid "Current Desktop Grouped by Applications"
+#, kde-format
 msgid "Current application"
-msgstr "Aktīvā darbvirsma grupēta pēc lietotnēm"
+msgstr "Pašreizējā programma"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: main.ui:499
-#, fuzzy, kde-format
-#| msgid "Navigation"
+#, kde-format
 msgid "Visualization"
-msgstr "Navigācija"
+msgstr "Vizualizācija"
 
 #. i18n: ectx: property (toolTip), widget (QComboBox, effectCombo)
 #: main.ui:529
 #, kde-format
 msgid "The effect to replace the list window when desktop effects are active."
-msgstr "Efekts, kas aizstās saraksta logu kad ieslēgti darbvirsmas efekti."
+msgstr "Efekts, kas aizstās saraksta logu, kad ir ieslēgti darbvirsmas efekti."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_HighlightWindows)
 #: main.ui:559
@@ -243,10 +230,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HighlightWindows)
 #: main.ui:562
-#, fuzzy, kde-format
-#| msgid "Show outline of selected window"
+#, kde-format
 msgid "Show selected window"
-msgstr "Rādīt aktīvā loga kontūru"
+msgstr "Rādīt aktīvo logu"
 
 #: shortcutsettings.cpp:132
 #, kde-format
@@ -256,19 +242,17 @@ msgstr "Iet caur logiem"
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr "Iet caur logiem (reversi)"
+msgstr "Iet caur logiem (pretējā virzienā)"
 
 #: shortcutsettings.cpp:134
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "Iet caur logiem alternatīva"
+msgstr "Iet caur pašreizējās programmas logiem"
 
 #: shortcutsettings.cpp:135
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Iet caur logiem alternatīva (reversi)"
+msgstr "Iet caur pašreizējās programmas logiem (pretējā virzienā)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
@@ -278,19 +262,17 @@ msgstr "Iet caur logiem alternatīva"
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "Iet caur logiem alternatīva (reversi)"
+msgstr "Iet caur logiem alternatīva (pretējā virzienā)"
 
 #: shortcutsettings.cpp:139
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Iet caur logiem alternatīva"
+msgstr "Iet caur pašreizējās programmas logiem, alternatīva"
 
 #: shortcutsettings.cpp:140
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Iet caur logiem alternatīva (reversi)"
+msgstr "Iet caur pašreizējās programmas logiem, alternatīva (pretējā virzienā)"
 
 #, fuzzy
 #~| msgid "Show outline of selected window"

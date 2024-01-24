@@ -7,19 +7,20 @@
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2008.
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 # Rūdofls Mazurs <rudolfs.mazurs@gmail.com>, 2011.
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-09 01:39+0000\n"
-"PO-Revision-Date: 2011-07-09 19:52+0300\n"
-"Last-Translator: Rūdofls Mazurs <rudolfs.mazurs@gmail.com>\n"
-"Language-Team: Latvian <locale@laka.lv>\n"
+"PO-Revision-Date: 2024-01-20 14:31+0200\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -33,6 +34,11 @@ msgid ""
 "you can reset this protection but be aware that this might result in an "
 "immediate crash!"
 msgstr ""
+"OpenGL kompozitēšana (noklusējuma) pagātnē ir likusi „KWin“ avarēt.\n"
+"Visdrīzāk, ka tam iemesls ir draivera kļūda.\n"
+"Ja domājat, ka pa šo laiku draiveris ar atjaunināts uz stabilāku versiju,\n"
+"varat atiestatīt šo aizsardzību, bet ievērojiet, ka tas var novest pie "
+"tūlītējas avārijas!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -41,21 +47,20 @@ msgid ""
 "Keeping the window thumbnail always interferes with the minimized state of "
 "windows. This can result in windows not suspending their work when minimized."
 msgstr ""
+"Logu sīktēlu paturēšana vienmēr traucē logu minimizētam stāvoklim. Rezultātā "
+"logi pēc minimizēšanas var neapturēt savu darbību."
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
-#, fuzzy, kde-format
-#| msgid "Compositing type:"
+#, kde-format
 msgid "Compositing:"
-msgstr "Kompozitēšanas tips:"
+msgstr "Kompozitēšanas:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
 #: compositing.ui:63
-#, fuzzy, kde-format
-#| msgctxt "@option:check"
-#| msgid "Enable desktop effects at startup"
+#, kde-format
 msgid "Enable on startup"
-msgstr "Startējoties aktivēt darbvirsmas efektus"
+msgstr "Ieslēgt palaižot"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:72
@@ -65,57 +70,50 @@ msgid ""
 " This brings performance improvements for e.g. games.\n"
 " The setting can be overruled by window-specific rules."
 msgstr ""
+"Programmas var iestatīt mājienu bloķēt kompozitēšanu, kad ir atvērts šis "
+"logs.\n"
+" Tas nodrošina veiktspējas uzlabojumus, piemēram, spēlēm.\n"
+" Šo iestatījumu var pārrakstīt logam specifiski noteikumi."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:75
 #, kde-format
 msgid "Allow applications to block compositing"
-msgstr ""
+msgstr "Ļaut programmām bloķēt kompozitēšanu"
 
 #. i18n: ectx: property (text), widget (QLabel, animationSpeedLabel)
 #: compositing.ui:82
-#, fuzzy, kde-format
-#| msgid "Animation speed:"
+#, kde-format
 msgid "Animation speed:"
 msgstr "Animācijas ātrums:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: compositing.ui:119
-#, fuzzy, kde-format
-#| msgid "Very Slow"
+#, kde-format
 msgid "Very slow"
-msgstr "Ļoti lēni"
+msgstr "Ļoti lēna"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: compositing.ui:139
 #, kde-format
 msgid "Instant"
-msgstr "Tūlītēji"
+msgstr "Tūlītēja"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HiddenPreviews)
 #: compositing.ui:151
-#, fuzzy, kde-format
-#| msgid "Keep window thumbnails:"
+#, kde-format
 msgid "Keep window thumbnails:"
 msgstr "Paturēt logu sīktēlus:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:159
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Windows are unmapped as they are requested. This can lead to not having "
-#| "updated thumbnials for windows on other desktops."
-#| msgid "Never"
+#, kde-format
 msgid "Never"
 msgstr "Nekad"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_HiddenPreviews)
 #: compositing.ui:164
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Windows are not unmapped if the window is somewhere visible on any of the "
-#| "virtual desktops."
-#| msgid "Only for Shown Windows"
+#, kde-format
 msgid "Only for Shown Windows"
 msgstr "Tikai redzamajiem logiem"
 
@@ -128,7 +126,7 @@ msgstr "Vienmēr"
 #: main.cpp:78
 #, kde-format
 msgid "Re-enable OpenGL detection"
-msgstr "Atkal aktivēt OpenGL noteikšanu"
+msgstr "Atkal ieslēgt „OpenGL“ noteikšanu"
 
 #, fuzzy
 #~| msgid "Various animations"

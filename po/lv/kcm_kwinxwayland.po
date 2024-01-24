@@ -1,0 +1,73 @@
+# Copyright (C) 2024 This file is copyright:
+# This file is distributed under the same license as the kwin package.
+#
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
+msgid ""
+msgstr ""
+"Project-Id-Version: kwin\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"PO-Revision-Date: 2024-01-22 18:24+0200\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
+"Language: lv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
+"2);\n"
+"X-Generator: Lokalize 23.08.4\n"
+
+#: ui/main.qml:47
+#, kde-format
+msgid ""
+"Legacy X11 apps require the ability to read keystrokes typed in other apps "
+"for features that are activated using global keyboard shortcuts. This is "
+"disabled by default for security reasons. If you need to use such apps, you "
+"can choose your preferred balance of security and functionality here."
+msgstr ""
+"Vecajām X11 programmām ir nepieciešams spēt nolasīt citās programmās "
+"spiestos taustiņus, lai darbotos iespējas, ko aktivē tastatūras globālo "
+"saīšņu lietojums. Drošības iemeslu pēc noklusējuma šāda pieeja ir liegta. "
+"Tomēr, ja jums ir nepieciešamas šādas programmas, varat izvēlēties sev "
+"vēlamo drošības un funkcionalitātes līdzsvaru."
+
+#: ui/main.qml:64
+#, kde-format
+msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
+msgstr ""
+"Atļaut vecajām X11 programmām lasīt taustiņu spiedienus visās programmās:"
+
+#: ui/main.qml:65
+#, kde-format
+msgid "Never"
+msgstr "Nekad"
+
+#: ui/main.qml:68
+#, kde-format
+msgid "Only non-character keys"
+msgstr "Tikai taustiņus, kas nav rakstzīme"
+
+#: ui/main.qml:71
+#, kde-format
+msgid ""
+"As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
+msgstr ""
+"Kā iepriekš un vēl jebkuru taustiņu, kas ir nospiests arī „Control“, „Alt“ "
+"vai „Meta“ taustiņš"
+
+#: ui/main.qml:75
+#, kde-format
+msgid "Always"
+msgstr "Vienmēr"
+
+#: ui/main.qml:82
+#, kde-format
+msgid ""
+"Note that using this setting will reduce system security to that of the X11 "
+"session by permitting malicious software to steal passwords and spy on the "
+"text that you type. Make sure you understand and accept this risk."
+msgstr ""
+"Ievērojiet, ka šis iestatījums samazinās X11 sesijas drošumu, ļaunprātīgām "
+"programmām atļaujot zagt paroles un spiegot rakstīto tekstu. "
+"Pārliecinieties, ka apzināties un saprotat risku."

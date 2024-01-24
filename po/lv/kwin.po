@@ -3,8 +3,9 @@
 # kwin.po tulkojums uz Latviešu valodu
 # Copyright (C) 2005, 2006, 2007, 2008 Free Software Foundation, Inc.
 #
+# SPDX-FileCopyrightText: 2024 Toms Trasuns <toms.trasuns@posteo.net>
 # Maris Nartiss <maris.nartiss@gmail.com>, 2005.
-# Maris Nartiss <maris.kde@gmail.com>, 2006, 2007, 2008.
+# Maris Nartiss <maris.kde@gmail.com>, 2006, 2007, 2008, 2024.
 # Viesturs Zarins <viesturs.zarins@mii.lu.lv>, 2007, 2008, 2009.
 # Viesturs Zariņš <viesturs.zarins@mii.lu.lv>, 2009.
 msgid ""
@@ -12,78 +13,78 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2009-12-05 20:43+0200\n"
-"Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
-"Language-Team: Latvian <locale@laka.lv>\n"
+"PO-Revision-Date: 2024-01-23 17:16+0200\n"
+"Last-Translator: Māris Nartišs <maris.kde@gmail.com>\n"
+"Language-Team: \n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.0\n"
+"X-Generator: Lokalize 22.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Andris Maziks, Māris Nartišs"
+msgstr "Andris Maziks, Māris Nartišs, Toms Trasūns"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "andris.m@delfi.lv, maris.kde@gmail.com"
+msgstr "andris.m@delfi.lv, maris.kde@gmail.com, toms.trasuns@posteo.net"
 
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Spiediet labo „Control“ taustiņu, lai atdotu peles kursoru"
 
 #: backends/wayland/wayland_output.cpp:278
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Spiediet labo „Control“ taustiņu, lai paņemtu peles kursoru"
 
 #: backends/wayland/wayland_output.cpp:282
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE „Wayland“ kompozitors „%1“"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "– Izvade ir izslēgta"
 
 #: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "– Izvade ir satumsināta"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Spiediet labo „Control“ taustiņu, lai atdotu ievadi"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Spiediet labo „Control“ taustiņu, lai paņemtu ievadi"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE „Wayland“ kompozitors"
 
 #: compositor.cpp:147
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
-msgstr ""
+msgstr "Darbvirsmas efekti ir pārstartēti grafikas atiestatīšanas rezultātā"
 
 #: compositor_x11.cpp:98
 #, kde-format
 msgid "Suspend Compositing"
-msgstr "Apturēt maisīšanu"
+msgstr "Apturēt kompozitēšanu"
 
 #: compositor_x11.cpp:513
 #, kde-format
@@ -93,6 +94,11 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL kompozitēšana (noklusējumā izmantotā) pagātnē ir likusi „KWin“ "
+"avarēt.</b><br>Visdrīzāk tas ir noticis draivera kļūdas dēļ.<p>Ja domājat, "
+"ja pa šo laiku atjauninājāt draiveri uz stabilāku versiju,<br>varat "
+"atiestatīt šo aizsardzību, bet <b>tā rezultātā sistēma var uzreiz avarēt!</"
+"b></p>"
 
 #: compositor_x11.cpp:520
 #, kde-format
@@ -100,839 +106,826 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Pieprasītie X paplašinājumi (XComposite un XDamage) nav pieejami."
 
 #: compositor_x11.cpp:523
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "Nav pieejams ne GLX/OpenGL ne XRender/XFixes."
+msgstr "GLX/OpenGL nav pieejams."
 
 #: debug_console.cpp:79
 #, kde-format
 msgid "Timestamp"
-msgstr ""
+msgstr "Laika zīmogs"
 
 #: debug_console.cpp:84
 #, kde-format
 msgid "Timestamp (µsec)"
-msgstr ""
+msgstr "Laika zīmogs (µsec)"
 
 #: debug_console.cpp:91
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgctxt "A mouse button"
 msgid "Left"
-msgstr "Pa kreisi"
+msgstr "Kreisais"
 
 #: debug_console.cpp:93
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgctxt "A mouse button"
 msgid "Right"
-msgstr "Pa labi"
+msgstr "Labais"
 
 #: debug_console.cpp:95
 #, kde-format
 msgctxt "A mouse button"
 msgid "Middle"
-msgstr ""
+msgstr "Vidējais"
 
 #: debug_console.cpp:97
 #, kde-format
 msgctxt "A mouse button"
 msgid "Back"
-msgstr ""
+msgstr "Atpakaļ"
 
 #: debug_console.cpp:99
 #, kde-format
 msgctxt "A mouse button"
 msgid "Forward"
-msgstr ""
+msgstr "Uz priekšu"
 
 #: debug_console.cpp:101
 #, kde-format
 msgctxt "A mouse button"
 msgid "Task"
-msgstr ""
+msgstr "Uzdevums"
 
 #: debug_console.cpp:103
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 4"
-msgstr ""
+msgstr "Papildu taustiņš 4"
 
 #: debug_console.cpp:105
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 5"
-msgstr ""
+msgstr "Papildu taustiņš 5"
 
 #: debug_console.cpp:107
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 6"
-msgstr ""
+msgstr "Papildu taustiņš 6"
 
 #: debug_console.cpp:109
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 7"
-msgstr ""
+msgstr "Papildu taustiņš 7"
 
 #: debug_console.cpp:111
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 8"
-msgstr ""
+msgstr "Papildu taustiņš 8"
 
 #: debug_console.cpp:113
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 9"
-msgstr ""
+msgstr "Papildu taustiņš 9"
 
 #: debug_console.cpp:115
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 10"
-msgstr ""
+msgstr "Papildu taustiņš 10"
 
 #: debug_console.cpp:117
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 11"
-msgstr ""
+msgstr "Papildu taustiņš 11"
 
 #: debug_console.cpp:119
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 12"
-msgstr ""
+msgstr "Papildu taustiņš 12"
 
 #: debug_console.cpp:121
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 13"
-msgstr ""
+msgstr "Papildu taustiņš 13"
 
 #: debug_console.cpp:123
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 14"
-msgstr ""
+msgstr "Papildu taustiņš 14"
 
 #: debug_console.cpp:125
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 15"
-msgstr ""
+msgstr "Papildu taustiņš 15"
 
 #: debug_console.cpp:127
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 16"
-msgstr ""
+msgstr "Papildu taustiņš 16"
 
 #: debug_console.cpp:129
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 17"
-msgstr ""
+msgstr "Papildu taustiņš 14"
 
 #: debug_console.cpp:131
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 18"
-msgstr ""
+msgstr "Papildu taustiņš 18"
 
 #: debug_console.cpp:133
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 19"
-msgstr ""
+msgstr "Papildu taustiņš 19"
 
 #: debug_console.cpp:135
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 20"
-msgstr ""
+msgstr "Papildu taustiņš 20"
 
 #: debug_console.cpp:137
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 21"
-msgstr ""
+msgstr "Papildu taustiņš 21"
 
 #: debug_console.cpp:139
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 22"
-msgstr ""
+msgstr "Papildu taustiņš 22"
 
 #: debug_console.cpp:141
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 23"
-msgstr ""
+msgstr "Papildu taustiņš 23"
 
 #: debug_console.cpp:143
 #, kde-format
 msgctxt "A mouse button"
 msgid "Extra Button 24"
-msgstr ""
+msgstr "Papildu taustiņš 24"
 
 #: debug_console.cpp:152 debug_console.cpp:154
 #, kde-format
 msgid "Input Device"
-msgstr ""
+msgstr "Ievades ierīce"
 
 #: debug_console.cpp:152
 #, kde-format
 msgctxt "The input device of the event is not known"
 msgid "Unknown"
-msgstr ""
+msgstr "Nezināma"
 
 #: debug_console.cpp:189
 #, kde-format
 msgctxt "A mouse pointer motion event"
 msgid "Pointer Motion"
-msgstr ""
+msgstr "Rādītāja kustība"
 
 #: debug_console.cpp:194
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta"
-msgstr ""
+msgstr "Delta"
 
 #: debug_console.cpp:198
 #, kde-format
 msgctxt "The relative mouse movement"
 msgid "Delta (not accelerated)"
-msgstr ""
+msgstr "Delta (bez paātrinājuma)"
 
 #: debug_console.cpp:201
 #, kde-format
 msgctxt "The global mouse pointer position"
 msgid "Global Position"
-msgstr ""
+msgstr "Globālā pozīcija"
 
 #: debug_console.cpp:205
 #, kde-format
 msgctxt "A mouse pointer button press event"
 msgid "Pointer Button Press"
-msgstr ""
+msgstr "Rādītāja taustiņa nospiešana"
 
 #: debug_console.cpp:208 debug_console.cpp:216
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Button"
-msgstr ""
+msgstr "Taustiņš"
 
 #: debug_console.cpp:209 debug_console.cpp:217
 #, kde-format
 msgctxt "A button in a mouse press/release event"
 msgid "Native Button code"
-msgstr ""
+msgstr "Savs taustiņa kods"
 
 #: debug_console.cpp:210 debug_console.cpp:218
 #, kde-format
 msgctxt "All currently pressed buttons in a mouse press/release event"
 msgid "Pressed Buttons"
-msgstr ""
+msgstr "Nospiestie taustiņi"
 
 #: debug_console.cpp:213
 #, kde-format
 msgctxt "A mouse pointer button release event"
 msgid "Pointer Button Release"
-msgstr ""
+msgstr "Rādītāja pogas atlaišana"
 
 #: debug_console.cpp:233
 #, kde-format
 msgctxt "A mouse pointer axis (wheel) event"
 msgid "Pointer Axis"
-msgstr ""
+msgstr "Rādītāja asis"
 
 #: debug_console.cpp:237
 #, kde-format
 msgctxt "The orientation of a pointer axis event"
 msgid "Orientation"
-msgstr ""
+msgstr "Orientācija"
 
 #: debug_console.cpp:238
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Horizontal"
-msgstr ""
+msgstr "Horizontāla"
 
 #: debug_console.cpp:239
 #, kde-format
 msgctxt "An orientation of a pointer axis event"
 msgid "Vertical"
-msgstr ""
+msgstr "Vertikāla"
 
 #: debug_console.cpp:240
 #, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
-msgstr ""
+msgstr "Delta"
 
 #: debug_console.cpp:255
 #, kde-format
 msgctxt "A key press event"
 msgid "Key Press"
-msgstr ""
+msgstr "Taustiņa spiediens"
 
 #: debug_console.cpp:258
 #, kde-format
 msgctxt "A key release event"
 msgid "Key Release"
-msgstr ""
+msgstr "Taustiņa atlaišana"
 
 #: debug_console.cpp:267
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Shift"
-msgstr ""
+msgstr "Shift"
 
 #: debug_console.cpp:271
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Control"
-msgstr ""
+msgstr "Control"
 
 #: debug_console.cpp:275
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Alt"
-msgstr ""
+msgstr "Alt"
 
 #: debug_console.cpp:279
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Meta"
-msgstr ""
+msgstr "Meta"
 
 #: debug_console.cpp:283
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
-msgstr ""
+msgstr "Ciparu bloks"
 
 #: debug_console.cpp:287
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr ""
+msgstr "Grupas pārslēgšana"
 
 #: debug_console.cpp:293
 #, kde-format
 msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
-msgstr ""
+msgstr "Atkārtot"
 
 #: debug_console.cpp:297
 #, kde-format
 msgctxt "The code as read from the input device"
 msgid "Scan code"
-msgstr ""
+msgstr "Skenēt kodu"
 
 #: debug_console.cpp:298
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr ""
+msgstr "Qt::Taustiņa kods"
 
 #: debug_console.cpp:300
 #, kde-format
 msgctxt "The translated code to an Xkb symbol"
 msgid "Xkb symbol"
-msgstr ""
+msgstr "Xkb simbols"
 
 #: debug_console.cpp:301
 #, kde-format
 msgctxt "The translated code interpreted as text"
 msgid "Utf8"
-msgstr ""
+msgstr "Utf8"
 
 #: debug_console.cpp:302
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
-msgstr ""
+msgstr "Modifikatori"
 
 #: debug_console.cpp:314
 #, kde-format
 msgctxt "A touch down event"
 msgid "Touch down"
-msgstr ""
+msgstr "Pieskaršanās"
 
 #: debug_console.cpp:316 debug_console.cpp:331 debug_console.cpp:346
 #, kde-format
 msgctxt "The id of the touch point in the touch event"
 msgid "Point identifier"
-msgstr ""
+msgstr "Punkta identifikators"
 
 #: debug_console.cpp:317 debug_console.cpp:332
 #, kde-format
 msgctxt "The global position of the touch point"
 msgid "Global position"
-msgstr ""
+msgstr "Globālais novietojums"
 
 #: debug_console.cpp:329
 #, kde-format
 msgctxt "A touch motion event"
 msgid "Touch Motion"
-msgstr ""
+msgstr "Skāriena kustība"
 
 #: debug_console.cpp:344
 #, kde-format
 msgctxt "A touch up event"
 msgid "Touch Up"
-msgstr ""
+msgstr "Atlaišana"
 
 #: debug_console.cpp:357
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr ""
+msgstr "Kniebšanas sākums"
 
 #: debug_console.cpp:359
 #, kde-format
 msgctxt "Number of fingers in this pinch gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "Pirkstu skaits"
 
 #: debug_console.cpp:370
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr ""
+msgstr "Kniebšanas atjauninājums"
 
 #: debug_console.cpp:372
 #, kde-format
 msgctxt "Current scale in pinch gesture"
 msgid "Scale"
-msgstr ""
+msgstr "Mērogs"
 
 #: debug_console.cpp:373
 #, kde-format
 msgctxt "Current angle in pinch gesture"
 msgid "Angle delta"
-msgstr ""
+msgstr "Leņķa delta"
 
 #: debug_console.cpp:374
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta x"
-msgstr ""
+msgstr "Delta x"
 
 #: debug_console.cpp:375
 #, kde-format
 msgctxt "Current delta in pinch gesture"
 msgid "Delta y"
-msgstr ""
+msgstr "Delta y"
 
 #: debug_console.cpp:386
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr ""
+msgstr "Kniebšanas beigas"
 
 #: debug_console.cpp:398
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr ""
+msgstr "Kniebšana atcelta"
 
 #: debug_console.cpp:410
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr ""
+msgstr "Pavilkšanas sākums"
 
 #: debug_console.cpp:412
 #, kde-format
 msgctxt "Number of fingers in this swipe gesture"
 msgid "Finger count"
-msgstr ""
+msgstr "Pirkstu skaits"
 
 #: debug_console.cpp:423
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr ""
+msgstr "Pavilkšana augšup"
 
 #: debug_console.cpp:425
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta x"
-msgstr ""
+msgstr "Delta x"
 
 #: debug_console.cpp:426
 #, kde-format
 msgctxt "Current delta in swipe gesture"
 msgid "Delta y"
-msgstr ""
+msgstr "Delta y"
 
 #: debug_console.cpp:437
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr ""
+msgstr "Pavilkšanas beigas"
 
 #: debug_console.cpp:449
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr ""
+msgstr "Pavilkšana atcelta"
 
 #: debug_console.cpp:461
-#, fuzzy, kde-format
-#| msgid "Switch to window tab"
+#, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "Pārslēgties uz loga cilni"
+msgstr "Iesl./izsl slēdzis"
 
 #: debug_console.cpp:467
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr ""
+msgstr "Klēpjdatora vāks"
 
 #: debug_console.cpp:469
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
-msgstr ""
+msgstr "Planšetdatora režīms"
 
 #: debug_console.cpp:471
-#, fuzzy, kde-format
-#| msgid "Switch to window tab"
+#, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "Pārslēgties uz loga cilni"
+msgstr "Slēdzis"
 
 #: debug_console.cpp:475
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr ""
+msgstr "Izslēgts"
 
 #: debug_console.cpp:478
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr ""
+msgstr "Ieslēgts"
 
 #: debug_console.cpp:483
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr ""
+msgstr "Stāvoklis"
 
 #: debug_console.cpp:498
 #, kde-format
 msgid "Tablet Tool"
-msgstr ""
+msgstr "Planšetdatora rīks"
 
 #: debug_console.cpp:499
 #, kde-format
 msgid "EventType"
-msgstr ""
+msgstr "Notikuma tips"
 
 #: debug_console.cpp:500 debug_console.cpp:545 debug_console.cpp:559
 #, kde-format
 msgid "Position"
-msgstr ""
+msgstr "Novietojums"
 
 #: debug_console.cpp:502
 #, kde-format
 msgid "Tilt"
-msgstr ""
+msgstr "Savērsums"
 
 #: debug_console.cpp:504
 #, kde-format
 msgid "Rotation"
-msgstr ""
+msgstr "Rotācija"
 
 #: debug_console.cpp:505
 #, kde-format
 msgid "Pressure"
-msgstr ""
+msgstr "Spiediens"
 
 #: debug_console.cpp:506
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Buttons"
-msgstr "Peles emulācija"
+msgstr "Taustiņi"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.cpp:507 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
-msgstr ""
+msgstr "Modifikatori"
 
 #: debug_console.cpp:516
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr ""
+msgstr "Planšetdatora rīka taustiņš"
 
 #: debug_console.cpp:517 debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Button"
-msgstr "Peles emulācija"
+msgstr "Taustiņš"
 
 #: debug_console.cpp:518 debug_console.cpp:532
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Pressed"
-msgstr "Peles emulācija"
+msgstr "Nospiests"
 
 #: debug_console.cpp:519 debug_console.cpp:533 debug_console.cpp:547
 #: debug_console.cpp:561
 #, kde-format
 msgid "Tablet"
-msgstr ""
+msgstr "Planšetdators"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr ""
+msgstr "Planšetdatora taustiņš"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "Planšetdatora josta"
 
 #: debug_console.cpp:544 debug_console.cpp:558
 #, kde-format
 msgid "Number"
-msgstr ""
+msgstr "Skaits"
 
 #: debug_console.cpp:546 debug_console.cpp:560
 #, kde-format
 msgid "isFinger"
-msgstr ""
+msgstr "ir Pirksts"
 
 #: debug_console.cpp:557
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "Planšetes riņķis"
 
 #: debug_console.cpp:794
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "No Mouse Buttons"
-msgstr "Peles emulācija"
+msgstr "Nav peles taustiņu"
 
 #: debug_console.cpp:798
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
-msgstr ""
+msgstr "kreisais"
 
 #: debug_console.cpp:801
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgctxt "Mouse Button"
 msgid "right"
-msgstr "Pa labi"
+msgstr "labais"
 
 #: debug_console.cpp:804
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
-msgstr ""
+msgstr "vidējais"
 
 #: debug_console.cpp:807
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
-msgstr ""
+msgstr "atpakaļ"
 
 #: debug_console.cpp:810
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
-msgstr ""
+msgstr "uz priekšu"
 
 #: debug_console.cpp:813
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
-msgstr ""
+msgstr "papildu 1"
 
 #: debug_console.cpp:816
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
-msgstr ""
+msgstr "papildu 2"
 
 #: debug_console.cpp:819
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
-msgstr ""
+msgstr "papildu 3"
 
 #: debug_console.cpp:822
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
-msgstr ""
+msgstr "papildu 4"
 
 #: debug_console.cpp:825
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
-msgstr ""
+msgstr "papildu 5"
 
 #: debug_console.cpp:828
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
-msgstr ""
+msgstr "papildu 6"
 
 #: debug_console.cpp:831
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
-msgstr ""
+msgstr "papildu 7"
 
 #: debug_console.cpp:834
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
-msgstr ""
+msgstr "papildu 8"
 
 #: debug_console.cpp:837
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
-msgstr ""
+msgstr "papildu 9"
 
 #: debug_console.cpp:840
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
-msgstr ""
+msgstr "papildu 10"
 
 #: debug_console.cpp:843
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
-msgstr ""
+msgstr "papildu 11"
 
 #: debug_console.cpp:846
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
-msgstr ""
+msgstr "papildu 12"
 
 #: debug_console.cpp:849
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
-msgstr ""
+msgstr "papildu 13"
 
 #: debug_console.cpp:852
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
-msgstr ""
+msgstr "papildu 14"
 
 #: debug_console.cpp:855
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
-msgstr ""
+msgstr "papildu 15"
 
 #: debug_console.cpp:858
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
-msgstr ""
+msgstr "papildu 16"
 
 #: debug_console.cpp:861
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
-msgstr ""
+msgstr "papildu 17"
 
 #: debug_console.cpp:864
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
-msgstr ""
+msgstr "papildu 18"
 
 #: debug_console.cpp:867
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
-msgstr ""
+msgstr "papildu 19"
 
 #: debug_console.cpp:870
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
-msgstr ""
+msgstr "papildu 20"
 
 #: debug_console.cpp:873
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
-msgstr ""
+msgstr "papildu 21"
 
 #: debug_console.cpp:876
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
-msgstr ""
+msgstr "papildu 22"
 
 #: debug_console.cpp:879
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
-msgstr ""
+msgstr "papildu 23"
 
 #: debug_console.cpp:882
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
-msgstr ""
+msgstr "papildu 24"
 
 #: debug_console.cpp:885
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
-msgstr ""
+msgstr "uzdevums"
 
 #: debug_console.cpp:1217
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Logi"
+msgstr "X11 logi"
 
 #: debug_console.cpp:1219
 #, kde-format
 msgid "X11 Unmanaged Windows"
-msgstr ""
+msgstr "X11 nepārvaldīti logi"
 
 #: debug_console.cpp:1221
-#, fuzzy, kde-format
-#| msgid "Shade Window"
+#, kde-format
 msgid "Wayland Windows"
-msgstr "Saritināt logu"
+msgstr "„Wayland“ logi"
 
 #: debug_console.cpp:1223
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Internal Windows"
-msgstr "Nolaist logu"
+msgstr "Iekšējie logi"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
 #, kde-format
 msgid "Quit Debug Console"
-msgstr ""
+msgstr "Iziet no atkļūdošanas konsoles"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:45
@@ -944,163 +937,161 @@ msgstr "Logi"
 #: debug_console.ui:59
 #, kde-format
 msgid "Surfaces"
-msgstr ""
+msgstr "Virsmas"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:69
 #, kde-format
 msgid "Input Events"
-msgstr ""
+msgstr "Ievades notikumi"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
 #: debug_console.ui:86
 #, kde-format
 msgid "Input Devices"
-msgstr ""
+msgstr "Ievades ierīces"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:96
 #, kde-format
 msgid "OpenGL"
-msgstr ""
+msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
 #: debug_console.ui:102
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr ""
+msgstr "Neviens „OpenGL“ kompozitors nestrādā"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:130
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "OpenGL (ES) draivera informācija"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:136
 #, kde-format
 msgid "Vendor:"
-msgstr ""
+msgstr "Piegādātājs:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: debug_console.ui:143
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "Atveidotājs:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:150
 #, kde-format
 msgid "Version:"
-msgstr ""
+msgstr "Versija:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: debug_console.ui:157
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "Ēnošanas valodas versija:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:164
 #, kde-format
 msgid "Driver:"
-msgstr ""
+msgstr "Draiveris:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: debug_console.ui:171
 #, kde-format
 msgid "GPU class:"
-msgstr ""
+msgstr "GPU klase:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:178
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "„OpenGL“ versija"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:185
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "„GLSL“ versija:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:251
 #, kde-format
 msgid "Platform Extensions"
-msgstr ""
+msgstr "Platformas paplašinājumi"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:267
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr ""
+msgstr "„OpenGL“ (ES) paplašinājumi"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:288
 #, kde-format
 msgid "Keyboard"
-msgstr ""
+msgstr "Tastatūra"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
 #: debug_console.ui:315
 #, kde-format
 msgid "Keymap Layouts"
-msgstr ""
+msgstr "Taustiņu kartes izkārtojumi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:337
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgid "Current Layout:"
-msgstr "&Konfigurēt loga izturēšanos..."
+msgstr "Pašreizējais izkārtojums:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:372
 #, kde-format
 msgid "Active Modifiers"
-msgstr ""
+msgstr "Aktīvie modifikatori"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:388
 #, kde-format
 msgid "LEDs"
-msgstr ""
+msgstr "Apgaismojums"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:404
 #, kde-format
 msgid "Active LEDs"
-msgstr ""
+msgstr "Aktīvais apgaismojums"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:425 debug_console.ui:445
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Starpliktuve"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "Primārā atlase"
 
 #: helpers/killer/killer.cpp:73
-#, fuzzy, kde-format
-#| msgid "KDE window manager"
+#, kde-format
 msgid "Window Manager"
-msgstr "KDE logu pārvaldnieks"
+msgstr "Logu pārvaldnieks"
 
 #: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "Nokaujamās programmas PID"
+msgstr "Nobeidzamās programmas PID"
 
 #: helpers/killer/killer.cpp:78
 #, kde-format
 msgid "pid"
-msgstr ""
+msgstr "pid"
 
 #: helpers/killer/killer.cpp:80
 #, kde-format
@@ -1110,27 +1101,27 @@ msgstr "Resursdators, uz kura darbojas programma"
 #: helpers/killer/killer.cpp:80
 #, kde-format
 msgid "hostname"
-msgstr ""
+msgstr "resursdatora nosaukums"
 
 #: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "Caption of the window to be terminated"
-msgstr "Nokaujamā loga virsraksts"
+msgstr "Nobeidzamā loga virsraksts"
 
 #: helpers/killer/killer.cpp:82
 #, kde-format
 msgid "caption"
-msgstr ""
+msgstr "virsraksts"
 
 #: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "Name of the application to be terminated"
-msgstr "Nokaujamās programmas nosaukums"
+msgstr "Nobeidzamās programmas nosaukums"
 
 #: helpers/killer/killer.cpp:84
 #, kde-format
 msgid "name"
-msgstr ""
+msgstr "nosaukums"
 
 #: helpers/killer/killer.cpp:86
 #, kde-format
@@ -1140,27 +1131,27 @@ msgstr "Programmai piederošā resursa ID"
 #: helpers/killer/killer.cpp:86
 #, kde-format
 msgid "id"
-msgstr ""
+msgstr "id"
 
 #: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "Time of user action causing termination"
-msgstr "Lietotāja darbības laiks, kas izsauc nokaušanu"
+msgstr "Lietotāja darbības, kas izsauc nobeigšanu, laiks"
 
 #: helpers/killer/killer.cpp:88
 #, kde-format
 msgid "time"
-msgstr ""
+msgstr "laiks"
 
 #: helpers/killer/killer.cpp:90
 #, kde-format
 msgid "KWin helper utility"
-msgstr "KWin palīdzības utilīta"
+msgstr "„KWin“ palīgprogramma"
 
 #: helpers/killer/killer.cpp:126
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
-msgstr "Šī palīdzības utilīta nav paredzēta tiešai izsaukšanai."
+msgstr "Šī palīgprogramma nav paredzēta tiešai izsaukšanai."
 
 #: helpers/killer/killer.cpp:148
 #, kde-kuit-format
@@ -1169,6 +1160,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> neatbild. Vai vēlaties nobeigt šo "
+"programmu?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1177,6 +1170,8 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>Programmas <application>%2</application> „%1“ nereaģē. Vai vēlaties šo "
+"programmu nobeigt?</para>"
 
 #: helpers/killer/killer.cpp:153
 #, kde-kuit-format
@@ -1185,62 +1180,63 @@ msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
+"<para><emphasis strong='true'>Šīs programmas nobeigšana aizvērs visus tās "
+"logus. Visa nesaglabātā informācija būs zudusi.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Pārtraukt programmas darbu"
+msgstr "&Nobeigt „%1“"
 
 #: helpers/killer/killer.cpp:156
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr ""
+msgstr "&Vēl uzgaidīt"
 
 #: helpers/killer/killer.cpp:164
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr ""
+msgstr "Nereaģē"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Procesa ID: %1"
 
 #: helpers/killer/killer.cpp:182
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr ""
+msgstr "Resursdatora nosaukums: %1"
 
 #: input.cpp:2010
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Pārvietojiet planšeti uz nākamo izvadi"
 
 #: input.cpp:2089
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr ""
+msgstr "Planšete ir pārvietota uz %1"
 
 #: input.cpp:2089
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Planšešu pārslēgšanas izvades"
 
 #: input.cpp:3183
 #, kde-format
 msgid "Touchpad"
-msgstr ""
+msgstr "Skārienpaliktnis"
 
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55
 #, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr ""
+msgstr "Tastatūras izkārtojuma pārslēdzējs"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -1248,6 +1244,8 @@ msgid ""
 "Select window to force close with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Atlasiet logu, kuru aizvērt piespiedu kārtā, un nospiediet „Enter“.\n"
+"Lai atceltu darbību, spiediet „Escape“ vai peles labo taustiņu."
 
 #: main.cpp:180 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
@@ -1270,10 +1268,9 @@ msgid "KDE window manager"
 msgstr "KDE logu pārvaldnieks"
 
 #: main.cpp:184
-#, fuzzy, kde-format
-#| msgid "(c) 1999-2008, The KDE Developers"
+#, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "(c) 1999-2008, KDE Izstrādātāji"
+msgstr "(c) 1999–2019, KDE Izstrādātāji"
 
 #: main.cpp:186
 #, kde-format
@@ -1298,29 +1295,27 @@ msgstr "Luboš Luňák"
 #: main.cpp:190
 #, kde-format
 msgid "Martin Flöser"
-msgstr ""
+msgstr "Martin Flöser"
 
 #: main.cpp:191
 #, kde-format
 msgid "David Edmundson"
-msgstr ""
+msgstr "David Edmundson"
 
 #: main.cpp:192
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: main.cpp:193
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr ""
+msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Ļoti milzīgs"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1330,54 +1325,56 @@ msgstr "Atslēgt konfigurācijas opcijas"
 #: main.cpp:204
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
-msgstr "Norādīt, ja KWin ir avarējis vairākas reizes pēc kārtas"
+msgstr "Parādīt, ja „KWin“ ir avarējis vairākas reizes pēc kārtas"
 
 #: main_wayland.cpp:291
 #, kde-format
 msgid "Start a rootless Xwayland server."
-msgstr ""
+msgstr "Sākt „XWayland“ serveri bez saknes lietotāja privilēģijām"
 
 #: main_wayland.cpp:293
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
+"„Wayland“ ligzdas nosaukums, ko klausīties. Ja nav norādīts, izmanto "
+"„wayland-0“."
 
 #: main_wayland.cpp:296
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
-msgstr ""
+msgstr "X11 displejs, ko izmanto logu režīmā X11 platformā"
 
 #: main_wayland.cpp:299
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
-msgstr ""
+msgstr "„Wayland“ displejs, ko izmantot logu režīmā „Wayland“ platformā."
 
 #: main_wayland.cpp:301
 #, kde-format
 msgid "Render to a virtual framebuffer."
-msgstr ""
+msgstr "Atveidot virtuālā kadru atjaunošanas buferī."
 
 #: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr ""
+msgstr "Logu režīma platums. Noklusējums ir 1024."
 
 #: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr ""
+msgstr "Logu režīma augstums. Noklusējums ir 768."
 
 #: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr ""
+msgstr "Logu režīma mērogs. Noklusējuma vērtība ir 1."
 
 #: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
-msgstr ""
+msgstr "Kā izejas logu režīmā atveramo logu skaits. Noklusējuma vērtība ir 1."
 
 #: main_wayland.cpp:322
 #, kde-format
@@ -1385,6 +1382,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"„Wayland“ ligzda ienākošiem savienojumiem. To iespējams kombinēt ar -- "
+"ligzdu, lai nosauktu ligzdu"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -1392,67 +1391,71 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"„XWayland“ ligzda „XWayland“ ienākošiem savienojumiem. To iespējams iestatīt "
+"vairākas reizes"
 
 #: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Iepriekš definētais „XWayland“ displeja nosaukums"
 
 #: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "„xauthority“ datnes nosaukums"
 
 #: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
+"Iziet no šīs instances, lai to varētu pārstartēt „kwin_wayland_wrapper“."
 
 #: main_wayland.cpp:340
 #, kde-format
 msgid "Render through drm node."
-msgstr ""
+msgstr "Renderēt caur drm režīmu."
 
 #: main_wayland.cpp:341
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Izvilkt lokāles informāciju no locale1, bet ne lietotāja konfigurācijas"
 
 #: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr ""
+msgstr "Ievades metode, kuru palaiž „KWin“."
 
 #: main_wayland.cpp:369
 #, kde-format
 msgid "Starts the session in locked mode."
-msgstr ""
+msgstr "Sāk sesiju slēgtā režīmā."
 
 #: main_wayland.cpp:373
 #, kde-format
 msgid "Starts the session without lock screen support."
-msgstr ""
+msgstr "Sāk sesiju bez ekrāna slēgšanas atbalsta."
 
 #: main_wayland.cpp:378
 #, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr ""
+msgstr "Sāk sesiju bez globālo taustiņu kombināciju atbalsta."
 
 #: main_wayland.cpp:383 main_x11.cpp:431
 #, kde-format
 msgid "Disable KActivities integration."
-msgstr ""
+msgstr "Izslēdz „KActivities“ integrāciju."
 
 #: main_wayland.cpp:388
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
-msgstr ""
+msgstr "Iziet pēc „KWin“ uzsāktās sesijas programmas aizvēršanas."
 
 #: main_wayland.cpp:393
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
-msgstr ""
+msgstr "Palaižamās programmas pēc „Wayland“ un „XWayland“ palaišanas"
 
 #: main_x11.cpp:66
 #, kde-format
@@ -1461,9 +1464,9 @@ msgid ""
 "It seems to have crashed several times in a row.\n"
 "You can select another window manager to run:"
 msgstr ""
-"KWin ir nestabils.\n"
+"„KWin“ ir nestabils.\n"
 "Tas avarēja vairākas reizes pēc kārtas.\n"
-"Jūs varat izvēlēties citu logu pārvaldnieku:"
+"Varat izvēlēties citu logu pārvaldnieku:"
 
 #: main_x11.cpp:266
 #, kde-format
@@ -1475,92 +1478,85 @@ msgstr ""
 "pārvaldnieks (mēģiniet darbināt ar --replace)\n"
 
 #: main_x11.cpp:286
-#, fuzzy, kde-format
-#| msgid ""
-#| "kwin: unable to claim manager selection, another wm running? (try using --"
-#| "replace)\n"
+#, kde-format
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr ""
-"kwin: neizdevās iegūt logu pārvaldnieka statusu. Vai darbojas cits logu "
-"pārvaldnieks (mēģiniet darbināt ar --replace)\n"
+"kwin: ir palaists cits logu pārvaldnieks (mēģiniet darbināt ar --replace)\n"
 
 #: main_x11.cpp:424
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
-msgstr "Aizvietot jau darbojošos ICCCM2.0 savietojamu logu pārvaldnieku"
+msgstr "Aizvietot jau darbojošos ar ICCCM2.0 savietojamu logu pārvaldnieku"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "&Stiprums:"
+msgstr "Aizmiglošanas stiprums:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Pa labi"
+msgstr "Viegls"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: plugins/blur/blur_config.ui:74 plugins/blur/blur_config.ui:137
 #, kde-format
 msgid "Strong"
-msgstr "Spēcīgs"
+msgstr "Stiprs"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "&Stiprums:"
+msgstr "Trokšņa stiprums:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Sarkans"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Zaļš"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Zils"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Violets"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Režīms:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "protanopija (vāja sarkanās krāsas uztvere)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deiteranopija (vāja zaļās krāsas uztvere)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopija (zila un dzeltena)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -1568,71 +1564,64 @@ msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Atlasiet krāsu atlases pozīciju ar kreiso klikšķi un spiediet „Enter“.\n"
+"Lai atceltu, spiediet „Escape“ vai peles labo klikšķi."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "&Stiprums:"
+msgstr "Stiprums:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:40
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "Aptumšot:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:47
-#, fuzzy, kde-format
-#| msgid "Do not animate panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "Neanimēt paneļus"
+msgstr "Doki un paneļi"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "Vis&as darbvirsmas"
+msgstr "Darbvirsma"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Paturēt virs citiem"
+msgstr "Paturēt virs logiem"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "By window group"
-msgstr "Logi"
+msgstr "Pēc loga grupas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "&Pilnekrāna režīms"
+msgstr "Pilnekrāna logi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Duration"
+#, kde-format
 msgid "Duration:"
 msgstr "Ilgums:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default"
-msgstr "Noklusētais"
+msgstr "Noklusējums"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
@@ -1644,90 +1633,83 @@ msgstr " milisekundes"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Loga darbību izvēlne"
+msgstr "Loga atvēršanas animācija"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Rotēšanas ilgums:"
+msgstr "Rotācijas mala:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:70 plugins/glide/glide_config.ui:168
 #, kde-format
 msgid "Top"
-msgstr "Augšā"
+msgstr "Augšējā"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "Right"
-msgstr "Pa labi"
+msgstr "Labā"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #: plugins/glide/glide_config.ui:80 plugins/glide/glide_config.ui:178
 #, kde-format
 msgid "Bottom"
-msgstr "Apakšā"
+msgstr "Apakšējā"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgid "Left"
-msgstr "Pa kreisi"
+msgstr "Kreisā"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation duration:"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Rotēšanas ilgums:"
+msgstr "Rotācijas leņķis:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr ""
+msgstr "Attālums:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Loga darbību izvēlne"
+msgstr "Loga aizvēršanas animācija"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
 msgid "Toggle Invert Effect"
-msgstr "Pārslēgt invertēšanas efektu"
+msgstr "Iesl./izsl. invertēšanas efektu"
 
 #: plugins/invert/invert.cpp:50 plugins/invert/invert_config.cpp:44
 #, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Pārslēgt loga invertēšanas efektu"
+msgstr "Iesl./izsl. loga invertēšanas efektu"
 
 #: plugins/invert/invert.cpp:57
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Invertēt kursora taustiņus"
+msgstr "Invertēt ekrāna krāsas"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:48
 #, kde-format
@@ -1766,17 +1748,15 @@ msgid "Very Huge"
 msgstr "Ļoti milzīgs"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "Re&size"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Mainīt &izmēru"
+msgstr "Pavisam liels"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Button size:"
-msgstr "Peles emulācija"
+msgstr "Taustiņa izmērs:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
@@ -1808,10 +1788,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgid "Colored window border"
-msgstr "Aizvērt logu"
+msgstr "Krāsaina loga apmale"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -1820,8 +1799,8 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
-"Ieslēdz šo opciju, ja vēlies, lai pogas nofokusētos, kad virs tām noliek "
-"peles kursoru un lai izplūstu, kad to aizbīda prom."
+"Ieslēdziet šo opciju, ja vēlaties, lai pogas fokusētos, kad virs tām noliek "
+"peles kursoru un lai fokuss pazustu, kad to aizbīda prom."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
@@ -1833,149 +1812,138 @@ msgstr "Animēt pogas"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr ""
+msgstr "aktivizēt"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:44
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "&Aizvērt"
+msgstr "aizvērt"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr ""
+msgstr "min"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:50
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "Minimizēt"
+msgstr "minimizēt"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
-msgstr ""
+msgstr "maks."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:56
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "Maksimizēt"
+msgstr "maksimizēt"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:59
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "&Pilnekrāna režīms"
+msgstr "pilnekrāna režīms"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
-#, fuzzy, kde-format
-#| msgid "Unshade"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "Atritināt"
+msgstr "atritināt"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:65
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Paturēt virs citiem"
+msgstr "paturēt virs citiem"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:68
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Paturēt zem citiem"
+msgstr "paturēt zem citiem"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "Logi"
+msgstr "logs"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:85
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
-msgstr ""
+msgstr "nosaukums"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:87
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr ""
+msgstr "programmas nosaukums"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "Vis&as darbvirsmas"
+msgstr "darbvirsma"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:253
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 1"
+#, kde-format
 msgid "Switch to desktop %1"
-msgstr "Pārslēgties uz 1. darbvirsmu"
+msgstr "Pārslēgties uz %1. darbvirsmu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:292
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "Aizvērt uz %1 atvērto logu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "Minimizēt (atcelt minimizēšanu) uz %1 atvērto logu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "Maksimizēt/atjaunot uz %1 atvērto logu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr ""
+msgstr "Iesl./izsk. uz %1 palaistā loga pilnekrānu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "Aizritināt (atritināt) uz %1 atvērto logu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "Iesl./izsl. uz %1 atvērto logu"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "Iesl./izsl. paturēšanu zem logiem uz %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Aktivizēt logu (%1)"
+msgstr "Aktivizēt atvērto logu uz %1"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
 #, kde-format
 msgid "Fade to black (fullscreen splash screens only)"
-msgstr ""
+msgstr "Izgaist uz melnu (tikai pilnekrāna ielādēšanās ekrāniem)"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/magiclamp/magiclamp_config.ui:17
@@ -2012,37 +1980,33 @@ msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Pa labi"
+msgstr "&Augstums"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Pārslēgt invertēšanas efektu"
+msgstr "Iesl./izsl. peles klikšķa efektu"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
-msgstr "Pa kreisi"
+msgstr "Kreisais"
 
 #: plugins/mouseclick/mouseclick.cpp:46
 #, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "Vidus"
+msgstr "Vidējais"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
-msgstr "Pa labi"
+msgstr "Labais"
 
 #. i18n: ectx: attribute (title), widget (QWidget, basic_tab)
 #: plugins/mouseclick/mouseclick_config.ui:21
@@ -2052,32 +2016,27 @@ msgstr "Pamata iestatījumi"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Peles emulācija"
+msgstr "Peles kreisā taustiņa krāsa:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Peles emulācija"
+msgstr "Peles vidējā taustiņa krāsa:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Peles emulācija"
+msgstr "Peles labā taustiņa krāsa:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "Paplašināti"
+msgstr "Paplašinātie iestatījumi"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
@@ -2095,9 +2054,7 @@ msgstr "Līnijas platums:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
 msgstr " pikselis"
 
@@ -2139,10 +2096,9 @@ msgstr "Fonts:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Rādīt darbvirsmu"
+msgstr "Rādīt tekstu:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2164,9 +2120,9 @@ msgstr "Tīrīt peles pēdas"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] " pikselis"
+msgstr[1] " pikseļi"
+msgstr[2] " pikseļu"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2179,7 +2135,7 @@ msgstr "Izskats"
 #: plugins/mousemark/mousemark_config.ui:23
 #, kde-format
 msgid "Wid&th:"
-msgstr ""
+msgstr "&Platums:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/mousemark/mousemark_config.ui:36
@@ -2189,17 +2145,15 @@ msgstr "&Krāsa:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Zīmē ar peli turot Shift+Meta taustiņu un kustinot peli."
+msgstr "Zīmē ar peli, turot modifikācijas taustiņus un pārvietojot peli."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Modifikatori"
+msgstr "Brīvroku zīmēšanas modifikācijas taustiņi:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2243,66 +2197,62 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Modifikatori"
+msgstr "Bultu zīmēšanas modifikatora taustiņi:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:67
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr ""
+msgstr "Nakts gaisma ir izslēgta"
 
 #: plugins/nightcolor/nightcolormanager.cpp:68
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr ""
+msgstr "Nakts gaisma ir ieslēgta"
 
 #: plugins/nightcolor/nightcolormanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Snow on Desktop"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Pārslēgt sniegu uz darbvirsmas"
+msgstr "Ieslēgt vai izslēgt nakts gaismu"
 
 #: plugins/nightcolor/nightcolormanager.cpp:466
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Krāsu temperatūras priekšskatījums"
 
 #: plugins/outputlocator/outputlocator.cpp:50
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Nav zināms"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Iet cauri pārskata un režģa skatam"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Iet cauri režģa skatam un pārskatam"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Pārslēgt invertēšanas efektu"
+msgstr "Ieslēgt/izslēgt pārskatu"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Pārslēgt invertēšanas efektu"
+msgstr "Ieslēgt/izslēgt režģa skatu"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2314,10 +2264,9 @@ msgstr "Izkārtojuma režīms:"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "&Aizvērt"
+msgstr "Tuvākais"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:35
@@ -2328,149 +2277,137 @@ msgstr "Dabīgs"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Minimizēt logu"
+msgstr "Ignorēt minimizētos logus:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Logus izkārtot režģa skatā:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Starp meklēšanas rezultātiem ir filtrētie logi:"
 
 #: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Iet cauri pārskatam un režģa skatam"
 
 #: plugins/overview/overvieweffect.cpp:142
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Pārslēgt invertēšanas efektu"
+msgstr "Ieslēgt/izslēgt pārskatu"
 
 #: plugins/overview/overvieweffect.cpp:150
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Pārslēgt invertēšanas efektu"
+msgstr "Ieslēgt/izslēgt režģa skatu"
 
 #: plugins/overview/qml/DesktopBar.qml:172
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "U&z darbvirsmu"
+msgstr "Dzēst virtuālo darbvirsmu"
 
 #: plugins/overview/qml/DesktopBar.qml:269
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Rādīt darbvirsmu"
+msgstr "Pievienot virtuālo darbvirsmu"
 
 #: plugins/overview/qml/main.qml:381
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "U&z darbvirsmu"
+msgstr "Nav parādītas citas virtuālās darbvirsmas"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "Rādīt darbvirsmu"
+msgstr "Pievienot virtuālo darbvirsmu"
 
 #: plugins/overview/qml/main.qml:394
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "&Konfigurēt loga izturēšanos..."
+msgstr "Konfigurēt virtuālās darbvirsmas..."
 
 #: plugins/overview/qml/main.qml:723
-#, fuzzy, kde-format
-#| msgid "Moving windows:"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "Pārvietojot logus:"
+msgstr "Nav atbilstošu logu"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Vilkt lejup, lai aizvērtu"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:450
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Aizvērt logu"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Logi"
+msgstr "Loga atvēršanas mērogs:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Logi"
+msgstr "Loga aizvēršanas mērogs:"
 
 #: plugins/screencast/pipewirecore.cpp:60
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Neizdevās palaist „PipeWire“ galveno ciklu"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Neizdevās palaist „PipeWire“ kontekstu"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Neizdevās pievienot „PipeWire“ kontekstu"
 
 #: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find window id %1"
-msgstr ""
+msgstr "Neizdevās atrast loga id %1"
 
 #: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Neizdevās atrast izvadi"
 
 #: plugins/screencast/screencastmanager.cpp:174
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Nederīgs reģions"
 
 #: plugins/screencast/screencastmanager.cpp:205
 #, kde-format
 msgid "Region outside the workspace"
-msgstr ""
+msgstr "Reģions ārpus darbvietas"
 
 #: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Neizdevās izveidot „PipeWire“ straumi"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:532
 #, kde-format
@@ -2478,6 +2415,9 @@ msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Atlasiet logu ar peles kreiso pogu vai „Enter“ taustiņu, lai uzņemtu "
+"ekrānattēlu.\n"
+"Lai atceltu darbību, spiediet „Escape“ vai peles labo pogu."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:550
 #, kde-format
@@ -2485,82 +2425,73 @@ msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+"Uzņemiet ekrānattēlu, spiežot peles kreiso pogu vai „Enter“.\n"
+"Lai atceltu darbību, spiediet „Escape“ vai peles labo pogu."
 
 #: plugins/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Riņķa ilgums:"
+msgstr "Krāsojuma ilgums"
 
 #: plugins/showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Riņķu skaits:"
+msgstr "Krāsojuma daudzums"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "&Konfigurēt loga izturēšanos..."
+msgstr "Pašreizējais FPS"
 
 #: plugins/showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Maksimālais &platums:"
+msgstr "Maksimālais FPS"
 
 #: plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr "Šis efekts nav veiktspējas tests"
+msgstr "Šis efekts nav veiktspējas mērījums"
 
 #: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
-#, fuzzy, kde-format
-#| msgid "Toggle Snow on Desktop"
+#, kde-format
 msgid "Toggle Show Paint"
-msgstr "Pārslēgt sniegu uz darbvirsmas"
+msgstr "Ieslēgt vai izslēgt krāsojuma rādīšanu"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
-#, fuzzy, kde-format
-#| msgctxt "Comment describing the KWin Effect"
-#| msgid "Magnify the entire desktop"
+#, kde-format
 msgid "Gap between desktops"
-msgstr "Palielina visu darbvirsmu"
+msgstr "Atstatums starp darbvirsmām"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Horizontāli"
+msgstr "Horizontāli:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Vertikāli"
+msgstr "Vertikāli:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Slide when grouping"
+#, kde-format
 msgid "Slide desktop background"
-msgstr "Slīdēt, kad grupē"
+msgstr "Slidināt darbvirsmu fonu"
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
 #, kde-format
 msgid "Toggle Thumbnail for Current Window"
-msgstr "Pārslēgt sīktēlu pašreizējam logam"
+msgstr "Pārslēgt sīktēlu aktīvajam logam"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:23
@@ -2584,10 +2515,9 @@ msgstr " pikseļi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity"
+#, kde-format
 msgid "&Opacity:"
-msgstr "&Necaurspīdīgums"
+msgstr "&Necaurspīdīgums:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -2599,47 +2529,43 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:30
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Iesl./izsl. flīžu redaktoru"
 
 #: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Atstarpes:"
 
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Ielādēt izkārtojumu..."
 
 #: plugins/tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Aizvērt"
+msgstr "Aizvērt"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Maksimizēt loga horizontāli"
+msgstr "Sadalīt horizontāli"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Maksimizēt logu vertikāli"
+msgstr "Sadalīt vertikāli"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgid "Add Floating Tile"
-msgstr "Aizvērt logu"
+msgstr "Pievienot peldošu flīzi"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Dzēst"
 
 #: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -2651,20 +2577,19 @@ msgstr "Izsekot pelei"
 #: plugins/trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "Pārslēgt efektu ar:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
 #, kde-format
 msgid "Keyboard shortcut:"
-msgstr ""
+msgstr "Taustiņu kombinācija:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Modifikatori"
+msgstr "Modifikatori:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2682,7 +2607,7 @@ msgstr "Pamata caurspīdīguma iestatījumi:"
 #: plugins/translucency/package/contents/ui/config.ui:64
 #, kde-format
 msgid "Combobox popups:"
-msgstr "Kombo lauka izlecošā daļa:"
+msgstr "Kombinētā loga uzlecošā daļa:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
@@ -2696,7 +2621,7 @@ msgstr "Necaurspīdīgs"
 #: plugins/translucency/package/contents/ui/config.ui:137
 #, kde-format
 msgid "Dialogs:"
-msgstr "Dialogi:"
+msgstr "Dialoglodziņi:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2708,30 +2633,27 @@ msgstr "Caurspīdīgs"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menu"
+#, kde-format
 msgid "Menus:"
-msgstr "Izvēlne"
+msgstr "Izvēlne:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Pārvietot logu"
+msgstr "Logu pārvietošana:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Nolaist logu"
+msgstr "Neaktīvie logi:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
 #, kde-format
 msgid "Set menu translucency independently"
-msgstr "Neatkarīgi norādīt izvēļņu caurspīdīgumu:"
+msgstr "Neatkarīgi norādīt izvēļņu caurspīdīgumu"
 
 #. i18n: ectx: property (text), widget (QLabel, dropdownmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:285
@@ -2743,7 +2665,7 @@ msgstr "Izkrītošās izvēlnes:"
 #: plugins/translucency/package/contents/ui/config.ui:329
 #, kde-format
 msgid "Popup menus:"
-msgstr "Uznirstošās izvēlnes:"
+msgstr "Uzlecošās izvēlnes:"
 
 #. i18n: ectx: property (text), widget (QLabel, tornoffmenus_label)
 #: plugins/translucency/package/contents/ui/config.ui:367
@@ -2755,19 +2677,19 @@ msgstr "Atdalītas izvēlnes:"
 #: plugins/videowall/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Video Wall"
-msgstr ""
+msgstr "Video siena"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ApplyTo)
 #: plugins/videowall/package/contents/ui/config.ui:20
 #, kde-format
 msgid "Apply to"
-msgstr ""
+msgstr "Piemērot"
 
 #. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
 #: plugins/videowall/package/contents/ui/config.ui:32
 #, kde-format
 msgid "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
-msgstr ""
+msgstr "vlc, xv, vdpau, smplayer, dragon, xine, ffplay"
 
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Whitelist)
 #. i18n: ectx: property (placeholderText), widget (QLineEdit, kcfg_Blacklist)
@@ -2775,81 +2697,74 @@ msgstr ""
 #: plugins/videowall/package/contents/ui/config.ui:66
 #, kde-format
 msgid "Comma separated list of window classes"
-msgstr ""
+msgstr "Ar komatu atdalīts logu klašu saraksts"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
 #, kde-format
 msgid "All"
-msgstr ""
+msgstr "Visas"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
 #, kde-format
 msgid "Ignore"
-msgstr ""
+msgstr "Ignorēt"
 
 #. i18n: ectx: property (text), widget (QLabel, ignoreLabel)
 #: plugins/videowall/package/contents/ui/config.ui:73
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nav"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
 #: plugins/windowview/windowvieweffect.cpp:46
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr "Pārslēgt 'Parādīt logus' (Aktīvā darbvirsma)"
+msgstr "Pārslēgt „Parādīt logus“ (aktīvā darbvirsma)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:55
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Pārslēgt 'Parādīt logus' (Visas darbvirsmas)"
+msgstr "Pārslēgt „Parādīt logus“ (visas darbvirsmas)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:64
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (All desktops)"
+#, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "Pārslēgt 'Parādīt logus' (Visas darbvirsmas)"
+msgstr "Pārslēgt „Parādīt logus“ (loga klase)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:73
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Pārslēgt 'Parādīt logus' (Aktīvā darbvirsma)"
+msgstr "Pārslēgt „Parādīt logus“ (loga klase aktīvajā darbvirsmā)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Minimizēt logu"
+msgstr "Ignorēt &minimizētos logus"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Nav atbilstību"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Logi"
+msgstr "Nav logu"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Lower Window"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Nolaist logu"
+msgstr "Filtrēt logus..."
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced"
 msgstr "Paplašināti"
 
@@ -2867,22 +2782,21 @@ msgstr "Vil&kt:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "&Move factor:"
-msgstr "U&z darbvirsmu"
+msgstr "&Pārvietošanas koeficients:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
 #, kde-format
 msgid "Wo&bble when moving"
-msgstr "Ļodzīties kad &pārvieto"
+msgstr "Ļodzīties &pārvietojot"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ResizeWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:162
 #, kde-format
 msgid "Wobble when &resizing"
-msgstr "Ļodzīties kad maina izmē&ru"
+msgstr "Ļodzīties, mainot izmē&ru"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AdvancedMode)
 #: plugins/wobblywindows/wobblywindows_config.ui:182
@@ -2909,16 +2823,14 @@ msgid "More"
 msgstr "Vairāk"
 
 #: plugins/zoom/zoom.cpp:68
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Logu uz vienu darbvirsmu pa kreisi"
+msgstr "Pietuvināto zonu pārvietot pa kreisi"
 
 #: plugins/zoom/zoom.cpp:75
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Logu uz vienu darbvirsmu pa labi"
+msgstr "Pietuvināto zonu pārvietot pa labi"
 
 #: plugins/zoom/zoom.cpp:82
 #, kde-format
@@ -2931,40 +2843,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Pārvietot pietuvināto apgabalu lejup"
 
 #: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
-#, fuzzy, kde-format
-#| msgid "Mouse Emulation"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Peles emulācija"
+msgstr "Pārvietot peli uz fokusu"
 
 #: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
-#, fuzzy, kde-format
-#| msgid "Move window to group"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "Pārvietot logu uz grupu"
+msgstr "Pārvietot peli uz centru"
 
 #: plugins/zoom/zoom_config.cpp:70
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Left"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot pa kreisi"
 
 #: plugins/zoom/zoom_config.cpp:77
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Right"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot pa labi"
 
 #: plugins/zoom/zoom_config.cpp:84
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Up"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot augšup"
 
 #: plugins/zoom/zoom_config.cpp:91
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Down"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot lejup"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -2972,6 +2878,8 @@ msgstr "Pārvietot logu"
 #, kde-format
 msgid "On zoom-in and zoom-out change the zoom by the defined zoom-factor."
 msgstr ""
+"Tālinot un tuvinot tālummaiņu mainīt pēc iepriekš definēta tāllummaiņas "
+"koeficienta."
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/zoom/zoom_config.ui:28
@@ -2986,6 +2894,9 @@ msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
+"Ieslēgt fokusā esošās vietas izsekošanu. Lai šī funkcija darbotos, katrā "
+"programmā jābūt ieslēgtam „QAccessible“ („export "
+"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1“)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:69
@@ -3000,13 +2911,14 @@ msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
+"Ieslēgt teksta kursora izsekošanu. Lai šī funkcija darbotos, katrā programmā "
+"jābūt ieslēgtam „QAccessible“ („export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1“)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr "Ieslēgt fokusa izsekošanu"
+msgstr "Ieslēgt teksta kursora izsekošanu"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:86
@@ -3052,21 +2964,19 @@ msgstr "Proporcionāls"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Centered"
-msgstr "Centrā"
+msgstr "Centrēts"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:135
 #, kde-format
 msgid "Push"
-msgstr ""
+msgstr "Spiest"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
-#, fuzzy, kde-format
-#| msgid "Disabled"
+#, kde-format
 msgid "Disabled"
 msgstr "Izslēgts"
 
@@ -3080,498 +2990,475 @@ msgstr "Peles izsekošana:"
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "Kopējais noteikumu skaits (vecie)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "Noteikumu grupu sakārtots saraksts"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
 #, kde-format
 msgid "Rule description"
-msgstr ""
+msgstr "Noteikuma apraksts"
 
 #. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "Noteikuma apraksts (vecais)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "Dzēst šo noteikumu (lietošanai importos)"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "Window class (application)"
-msgstr ""
+msgstr "Loga klase (programma)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "Loga klases virknes atbilstības tips"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:29
 #, kde-format
 msgid "Match whole window class"
-msgstr ""
+msgstr "Atbilst pilnai loga klasei"
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:34
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "Logi"
+msgstr "Loga loma"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:37
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "Loga lomas virknes atbilstības tips"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "Logi"
+msgstr "Loga nosaukums"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:47
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "Loga nosaukuma virknes atbilstības tips"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
 #, kde-format
 msgid "Machine (hostname)"
-msgstr ""
+msgstr "Mašīna (saimniekdators)"
 
 #. i18n: ectx: label, entry (clientmachinematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:57
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "Mašīnas virknes atbilstības tips"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:64
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "Atbilstošie loga tipi"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:69
 #, kde-format
 msgid "Initial placement"
-msgstr ""
+msgstr "Sākotnējā atrašanās vieta"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:74
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "&Pilnekrāna režīms"
+msgstr "Sākotnējās atrašanās vietas noteikuma tips"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
-#, fuzzy, kde-format
-#| msgid "Window Operations Menu"
+#, kde-format
 msgid "Window position"
-msgstr "Loga darbību izvēlne"
+msgstr "Loga novietojums"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
-#, fuzzy, kde-format
-#| msgid "Window to Screen 0"
+#, kde-format
 msgid "Window position rule type"
-msgstr "Logu uz 0. ekrānu"
+msgstr "Loga novietojuma noteikuma tips"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "Logi"
+msgstr "Loga izmērs"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:93
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "Loga izmēra noteikuma tips"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:100
 #, kde-format
 msgid "Window minimum size"
-msgstr ""
+msgstr "Loga minimālais izmērs"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "Loga minimālā izmēra noteikuma tips"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:109
 #, kde-format
 msgid "Window maximum size"
-msgstr ""
+msgstr "Loga maksimālais izmērs"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:113
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "Loga maksimālā izmēra noteikuma tips"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Active opacity"
-msgstr ""
+msgstr "Aktīvā necaurspīdība"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:124
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "Aktīvās necaurspīdības noteikuma tips"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "Neaktīvā necaurspīdība"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:135
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "Neaktīvās necaurspīdības noteikuma tips"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:140
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "Ignorēt pieprasīto ģeometriju"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:144
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "Ignorēt pieprasītās ģeometrijas noteikuma tipu"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 2"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Pārslēgties uz 2. darbvirsmu"
+msgstr "Darbvirsmas ID saraksts"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Darbvirsmas kubs"
+msgstr "Darbvirsmas ID noteikuma tips"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "Ekrāna numurs"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:166
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "Ekrāna numura noteikuma tips"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:173
 #, kde-format
 msgid "Activity"
-msgstr ""
+msgstr "Aktivitāte"
 
 #. i18n: ectx: label, entry (activityrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:176
 #, kde-format
 msgid "Activity rule type"
-msgstr ""
+msgstr "Aktivitātes noteikuma tips"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:183
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "Maksimizēt logu vertikāli"
+msgstr "Maksimizēt vertikāli"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:187
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Maksimizēt logu vertikāli"
+msgstr "Vertikālās maksimizēšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "Maksimizēt loga horizontāli"
+msgstr "Maksimizēt horizontāli"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "Maksimizēt loga horizontāli"
+msgstr "Horizontālās maksimizēšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgid "Minimized"
-msgstr "Minimizēt"
+msgstr "Minimizēts"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "Minimizēšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
-#, fuzzy, kde-format
-#| msgid "Shade"
+#, kde-format
 msgid "Shaded"
-msgstr "Saritināt"
+msgstr "Saritināts"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:220
 #, kde-format
 msgid "Shaded rule type"
-msgstr ""
+msgstr "Saritināšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "Izlaist uzdevumu joslu"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:231
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "Uzdevumu joslas uzlaišanas noteikuma tips"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:238
 #, kde-format
 msgid "Skip pager"
-msgstr ""
+msgstr "Izlaist lapotāju"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:242
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "Lapotāja izlaišanas noteikuma tips"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:249
-#, fuzzy, kde-format
-#| msgid "Switch to window tab"
+#, kde-format
 msgid "Skip switcher"
-msgstr "Pārslēgties uz loga cilni"
+msgstr "Izlaist pārslēdzēju"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "Pārslēdzēja izlaišanas noteikuma tips"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above"
 msgstr "Paturēt virs citiem"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "Paturēt virs citiem"
+msgstr "Paturēšanas virs citiem logiem noteikuma tips"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:271
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below"
 msgstr "Paturēt zem citiem"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:275
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "Paturēt zem citiem"
+msgstr "Paturēšanas zem citiem logiem noteikuma tips"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "&Pilnekrāna režīms"
+msgstr "Pilnekrāna"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "&Pilnekrāna režīms"
+msgstr "Pilnekrāna noteikuma tips"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:293
 #, kde-format
 msgid "No titlebar and frame"
-msgstr ""
+msgstr "Bez virsrakstjoslas un ietvara"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "Bez virsrakstjoslas un ietvara noteikuma tips"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "Virsrakstjoslas krāsa un shēma"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "Virsrakstjoslas krāsas noteikuma tips"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:312
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing"
-msgstr "Apturēt maisīšanu"
+msgstr "Bloķēt kompozitēšanu"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:316
 #, kde-format
 msgid "Block Compositing rule type"
-msgstr ""
+msgstr "Kompozitēšanas bloķēšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:321
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "Fokusa zaudēšanas novēršana"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:327
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "Fokusa zaudēšanas novēršanas noteikuma tips"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
 #, kde-format
 msgid "Focus protection"
-msgstr ""
+msgstr "Fokusa aizsardzība"
 
 #. i18n: ectx: label, entry (fpplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "Fokusa aizsardzības noteikuma tips"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "Pieņemt fokusu"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr ""
+msgstr "Fokusa pieņemšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:352
-#, fuzzy, kde-format
-#| msgid "Close"
+#, kde-format
 msgid "Closeable"
-msgstr "Aizvērt"
+msgstr "Aizverams"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:356
 #, kde-format
 msgid "Closeable rule type"
-msgstr ""
+msgstr "Aizveramā stāvokļa noteikuma tips"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:361
 #, kde-format
 msgid "Autogroup with identical"
-msgstr ""
+msgstr "Automātiska grupēšana ar identisku"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:365
 #, kde-format
 msgid "Autogroup with identical rule type"
-msgstr ""
+msgstr "Automātiskās grupēšana ar identisku noteikuma tips"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:370
 #, kde-format
 msgid "Autogroup in foreground"
-msgstr ""
+msgstr "Automātiskā grupēšana fonā"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:374
 #, kde-format
 msgid "Autogroup in foreground rule type"
-msgstr ""
+msgstr "Automātiskas grupēšans fonā noteikuma tips"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:379
 #, kde-format
 msgid "Autogroup by ID"
-msgstr ""
+msgstr "Automātiska grupēšana pēc ID"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID rule type"
-msgstr ""
+msgstr "Automātiskas grupēšana pēc ID noteikuma tips"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:387
 #, kde-format
 msgid "Obey geometry restrictions"
-msgstr ""
+msgstr "Ievērot ģeometrijas ierobežojumus"
 
 #. i18n: ectx: label, entry (strictgeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:391
 #, kde-format
 msgid "Obey geometry restrictions rule type"
-msgstr ""
+msgstr "Ievērot ģeometrijas ierobežojumu noteikumu tipu"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:396
@@ -3583,59 +3470,55 @@ msgstr "Saīsne"
 #: rulesettings.kcfg:399
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "Saīsnes noteikuma tips"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:406
-#, fuzzy, kde-format
-#| msgid "Block Global Shortcuts"
+#, kde-format
 msgid "Ignore global shortcuts"
-msgstr "Bloķēt globālos īsceļus"
+msgstr "Ignorēt globālās saīsnes"
 
 #. i18n: ectx: label, entry (disableglobalshortcutsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:410
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "Globālo saīšņu ignorēšanas noteikuma tips"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:415
-#, fuzzy, kde-format
-#| msgid "Desktop Cube"
+#, kde-format
 msgid "Desktop file name"
-msgstr "Darbvirsmas kubs"
+msgstr "Darbvirsmas datnes nosaukums"
 
 #. i18n: ectx: label, entry (desktopfilerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "Darbvirsmas datnes nosaukuma noteikuma tips"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Slānis"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Paturēt virs citiem"
+msgstr "Slāņa noteikuma tips"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
-#, fuzzy, kde-format
-#| msgid "Config Dialog"
+#, kde-format
 msgid "Dialog"
-msgstr "Konfigurācijas logs"
+msgstr "Dialoglodziņš"
 
 #. i18n: ectx: property (text), widget (QToolButton, clearButton)
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: sm.cpp:469
 #, kde-format
@@ -3643,22 +3526,23 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Šīs programmas neaizvērās:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Atcelt izrakstīšanos"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Izrakstīties tāpat"
 
 #: tabbox/clientmodel.cpp:58
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Rādīt darbvirsmu"
@@ -3669,7 +3553,7 @@ msgstr "Iet caur logiem"
 
 #: tabbox/tabbox.cpp:351
 msgid "Walk Through Windows (Reverse)"
-msgstr "Iet caur logiem (reversi)"
+msgstr "Iet caur logiem (pretējā virzienā)"
 
 #: tabbox/tabbox.cpp:352
 msgid "Walk Through Windows Alternative"
@@ -3677,31 +3561,23 @@ msgstr "Iet caur logiem alternatīvi"
 
 #: tabbox/tabbox.cpp:353
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr "Iet caur logiem alternatīvi (reversi)"
+msgstr "Iet caur logiem alternatīvi (pretējā virzienā)"
 
 #: tabbox/tabbox.cpp:354
-#, fuzzy
-#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application"
-msgstr "Iet caur logiem alternatīvi"
+msgstr "Iet caur aktīvās programmas logiem"
 
 #: tabbox/tabbox.cpp:355
-#, fuzzy
-#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Iet caur logiem alternatīvi (reversi)"
+msgstr "Iet caur aktīvās programmas logiem (pretējā virzienā)"
 
 #: tabbox/tabbox.cpp:356
-#, fuzzy
-#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Iet caur logiem alternatīvi"
+msgstr "Iet caur aktīvās programmas logiem, alternatīvi"
 
 #: tabbox/tabbox.cpp:357
-#, fuzzy
-#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Iet caur logiem alternatīvi (reversi)"
+msgstr "Iet caur pašreizējās programmas logiem (pretējā virzienā)"
 
 #: tabbox/tabboxhandler.cpp:247
 #, kde-format
@@ -3709,6 +3585,8 @@ msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
 "Contact your distribution about this."
 msgstr ""
+"Logu pārslēdzēja instalācija nedarbojas — trūkst resursu.\n"
+"Sazinieties ar operētājsistēmas izplatītāju."
 
 #: useractions.cpp:158
 #, kde-format
@@ -3719,8 +3597,8 @@ msgid ""
 "keyboard shortcut."
 msgstr ""
 "Jūs izvēlējāties rādīt logu bez tā ietvara.\n"
-"Bez ietvara jūs nevarēsiet atkal ieslēgt ietvaru, izmantojot peli. Tā vietā "
-"jums būs jāizmanto loga darbību izvēlne, ko var aktivizējot ar %1 taustiņu "
+"Bez ietvara nevarēsiet atkal ieslēgt ietvaru, izmantojot peli. Tā vietā jums "
+"būs jāizmanto loga darbību izvēlne, ko var aktivizējot ar „%1“ taustiņu "
 "kombināciju."
 
 #: useractions.cpp:165
@@ -3732,9 +3610,9 @@ msgid ""
 "window operations menu instead, activated using the %1 keyboard shortcut."
 msgstr ""
 "Jūs izvēlējāties rādīt logu pilnekrāna režīmā.\n"
-"Ja programmai nav opcijas, ar ko pilnekrāna režīmu var izslēgt, tad jūs "
-"nevarēsiet to izdarīt ar peli. Tā vietā izmantojiet loga darbību izvēlni, ko "
-"var izsaukt ar %1 taustiņu kombināciju."
+"Ja programmai nav opcijas, ar ko izslēgt pilnekrāna režīmu, jūs nevarēsiet "
+"to izdarīt ar peli. Tā vietā izmantojiet loga darbību izvēlni, ko var "
+"izsaukt ar „%1“ taustiņu kombināciju."
 
 #: useractions.cpp:212
 #, kde-format
@@ -3742,8 +3620,7 @@ msgid "&Move"
 msgstr "&Pārvietot"
 
 #: useractions.cpp:217
-#, fuzzy, kde-format
-#| msgid "Re&size"
+#, kde-format
 msgid "&Resize"
 msgstr "Mainīt &izmēru"
 
@@ -3763,33 +3640,29 @@ msgid "&Fullscreen"
 msgstr "&Pilnekrāna režīms"
 
 #: useractions.cpp:240
-#, fuzzy, kde-format
-#| msgid "Shade"
+#, kde-format
 msgid "&Shade"
-msgstr "Saritināt"
+msgstr "&Saritināt"
 
 #: useractions.cpp:246
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr ""
+msgstr "&Bez virsrakstjoslas un ietvara"
 
 #: useractions.cpp:254
-#, fuzzy, kde-format
-#| msgid "Window &Shortcut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Loga ī&sceļš..."
+msgstr "&Iestatīt loga saīsni..."
 
 #: useractions.cpp:260
-#, fuzzy, kde-format
-#| msgid "&Special Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "&Speciāli loga iestatījumi..."
+msgstr "&Konfigurēt speciālos loga iestatījumus..."
 
 #: useractions.cpp:265
-#, fuzzy, kde-format
-#| msgid "&Special Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "&Speciāli programmas iestatījumi..."
+msgstr "&Konfigurēt speciālos programmas iestatījumus..."
 
 #: useractions.cpp:271
 #, kde-format
@@ -3804,7 +3677,7 @@ msgstr "Mi&nimizēt"
 #: useractions.cpp:283
 #, kde-format
 msgid "&More Actions"
-msgstr ""
+msgstr "&Vairāk darbību"
 
 #: useractions.cpp:288
 #, kde-format
@@ -3814,36 +3687,32 @@ msgstr "&Aizvērt"
 #: useractions.cpp:358
 #, kde-format
 msgid "&Extensions"
-msgstr ""
+msgstr "&Paplašinājumi"
 
 #: useractions.cpp:409
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "Vis&as darbvirsmas"
+msgstr "&Visas darbvirsmas"
 
 #: useractions.cpp:423
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Move to &Desktop"
-msgstr "U&z darbvirsmu"
+msgstr "Pārvietot uz &darbvirsmu"
 
 #: useractions.cpp:440
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Move to &Screen"
-msgstr "U&z darbvirsmu"
+msgstr "Uz &ekrānu"
 
 #: useractions.cpp:456
 #, kde-format
 msgid "Show in &Activities"
-msgstr ""
+msgstr "Parādīt &aktivitātēs"
 
 #: useractions.cpp:473
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "U&z darbvirsmu"
+msgstr "&Pārvietot uz pašreizējo darbvirsmu"
 
 #: useractions.cpp:483 useractions.cpp:550
 #, kde-format
@@ -3851,62 +3720,57 @@ msgid "&All Desktops"
 msgstr "Vis&as darbvirsmas"
 
 #: useractions.cpp:523
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
-msgstr "Rādīt darbvirsmu"
+msgstr "&Jauna darbvirsma"
 
 #: useractions.cpp:594
 #, kde-format
 msgid "Move to %1 %2"
-msgstr ""
+msgstr "Pārvietot uz %1 %2"
 
 #: useractions.cpp:607
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "Rādīt darbvirsmu"
+msgstr "Pievienot &jaunai darbvirsmai"
 
 #: useractions.cpp:619
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "U&z darbvirsmu"
+msgstr "Pārvietot uz jaunu darbvirsmu"
 
 #: useractions.cpp:650
-#, fuzzy, kde-format
-#| msgid "Window to Screen 1"
+#, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
 "number, second the output identifier. E.g. Screen 1 (HDMI1)"
 msgid "Screen &%1 (%2)"
-msgstr "Logu uz 1. ekrānu"
+msgstr "&%1. ekrāns („%2“)"
 
 #: useractions.cpp:676
 #, kde-format
 msgid "&All Activities"
-msgstr ""
+msgstr "&Visas aktivitātes"
 
 #: useractions.cpp:724
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Move to %1"
-msgstr "U&z darbvirsmu"
+msgstr "Pārvietot uz %1"
 
 #: useractions.cpp:843
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
-msgstr ""
+msgstr "<b>%1</b> jau tiek lietots"
 
 #: useractions.cpp:845
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
-msgstr ""
+msgstr "<b>%1</b> jau lieto „%2“ darbība „%3“ programmā"
 
 #: useractions.cpp:925
 #, kde-format
@@ -3931,7 +3795,7 @@ msgstr "Maksimizēt logu vertikāli"
 #: useractions.cpp:933
 #, kde-format
 msgid "Maximize Window Horizontally"
-msgstr "Maksimizēt loga horizontāli"
+msgstr "Maksimizēt logu horizontāli"
 
 #: useractions.cpp:935
 #, kde-format
@@ -3974,10 +3838,9 @@ msgid "Make Window Fullscreen"
 msgstr "Rādīt logu pilnekrāna režīmā"
 
 #: useractions.cpp:951
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Slēpt loga ietvaru"
+msgstr "Slēpt vai parādīt loga virsrakstjoslu un ietvaru"
 
 #: useractions.cpp:953
 #, kde-format
@@ -3992,7 +3855,7 @@ msgstr "Paturēt logu zem citiem logiem"
 #: useractions.cpp:957
 #, kde-format
 msgid "Activate Window Demanding Attention"
-msgstr "Atktvizēt logu, kad tas pieprasa uzmanību"
+msgstr "Aktivizēt logu, kad tas pieprasa uzmanību"
 
 #: useractions.cpp:959
 #, kde-format
@@ -4000,58 +3863,49 @@ msgid "Setup Window Shortcut"
 msgstr "Iestatīt loga īsceļu"
 
 #: useractions.cpp:961
-#, fuzzy, kde-format
-#| msgid "Move window to group"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Pārvietot logu uz grupu"
+msgstr "Pārvietot logu uz centru"
 
 #: useractions.cpp:963
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Right"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot logu pa labi"
 
 #: useractions.cpp:965
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Left"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot logu pa kreisi"
 
 #: useractions.cpp:967
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Up"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot logu augšup"
 
 #: useractions.cpp:969
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Down"
-msgstr "Pārvietot logu"
+msgstr "Pārvietot logu lejup"
 
 #: useractions.cpp:971
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Maksimizēt loga horizontāli"
+msgstr "Paplašināt logu horizontāli"
 
 #: useractions.cpp:973
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "Maksimizēt logu vertikāli"
+msgstr "Paplašināt logu vertikāli"
 
 #: useractions.cpp:975
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Pārvietot un samazināt logu līdz tuvākajam logam vai malai horizontāli"
+msgstr "Saīsināt logu horizontāli"
 
 #: useractions.cpp:977
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Pārvietot un samazināt logu līdz tuvākajam logam vai malai vertikāli"
+msgstr "Saīsināt logu vertikāli"
 
 #: useractions.cpp:979
 #, kde-format
@@ -4064,81 +3918,74 @@ msgid "Quick Tile Window to the Right"
 msgstr "Ātri flīzēt logu pie labās malas"
 
 #: useractions.cpp:983
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Top"
-msgstr "Ātri flīzēt logu pie kreisās malas"
+msgstr "Ātri flīzēt logu pie augšējās malas"
 
 #: useractions.cpp:985
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Bottom"
-msgstr "Ātri flīzēt logu pie kreisās malas"
+msgstr "Ātri flīzēt logu pie apakšējās malas"
 
 #: useractions.cpp:987
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Top Left"
-msgstr "Ātri flīzēt logu pie kreisās malas"
+msgstr "Ātri flīzēt logu kreisajā augšējā stūrī"
 
 #: useractions.cpp:989
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Left"
+#, kde-format
 msgid "Quick Tile Window to the Bottom Left"
-msgstr "Ātri flīzēt logu pie kreisās malas"
+msgstr "Ātri flīzēt logu kreisajā apakšējā stūrī"
 
 #: useractions.cpp:991
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Quick Tile Window to the Top Right"
-msgstr "Ātri flīzēt logu pie labās malas"
+msgstr "Ātri flīzēt logu labajā augšējā stūrī"
 
 #: useractions.cpp:993
-#, fuzzy, kde-format
-#| msgid "Quick Tile Window to the Right"
+#, kde-format
 msgid "Quick Tile Window to the Bottom Right"
-msgstr "Ātri flīzēt logu pie labās malas"
+msgstr "Ātri flīzēt logu labajā apakšējā stūrī"
 
 #: useractions.cpp:995
 #, kde-format
 msgid "Switch to Window Above"
-msgstr "Pārslēgties uz logu virs"
+msgstr "Pārslēgties uz logu augstāk"
 
 #: useractions.cpp:997
 #, kde-format
 msgid "Switch to Window Below"
-msgstr "Pārslēgties uz logu zem"
+msgstr "Pārslēgties uz logu zemām"
 
 #: useractions.cpp:999
 #, kde-format
 msgid "Switch to Window to the Right"
-msgstr "Pārvietot logu pa labi"
+msgstr "Pārslēgties uz logu pa labi"
 
 #: useractions.cpp:1001
 #, kde-format
 msgid "Switch to Window to the Left"
-msgstr "Pārvietot logu pa kreisi"
+msgstr "Pārslēgties uz logu pa kreisi"
 
 #: useractions.cpp:1003
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr ""
+msgstr "Palielināt aktīvā loga necaurspīdību par 5%"
 
 #: useractions.cpp:1005
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr ""
+msgstr "Samazināt aktīvā loga necaurspīdību par 5%"
 
 #: useractions.cpp:1008
 #, kde-format
 msgid "Keep Window on All Desktops"
-msgstr "Paturēt logu uz visām darbvirsmām"
+msgstr "Paturēt logu visās darbvirsmās"
 
 #: useractions.cpp:1019
-#, fuzzy, kde-format
-#| msgid "Window to Desktop 1"
+#, kde-format
 msgid "Window to Desktop %1"
-msgstr "Logu uz 1. darbvirsmu"
+msgstr "Logu uz darbvirsmu „%1“"
 
 #: useractions.cpp:1021
 #, kde-format
@@ -4153,12 +4000,12 @@ msgstr "Logu uz iepriekšējo darbvirsmu"
 #: useractions.cpp:1023
 #, kde-format
 msgid "Window One Desktop to the Right"
-msgstr "Logu uz vienu darbvirsmu pa labi"
+msgstr "Logu vienu darbvirsmu pa labi"
 
 #: useractions.cpp:1025
 #, kde-format
 msgid "Window One Desktop to the Left"
-msgstr "Logu uz vienu darbvirsmu pa kreisi"
+msgstr "Logu vienu darbvirsmu pa kreisi"
 
 #: useractions.cpp:1027
 #, kde-format
@@ -4171,52 +4018,44 @@ msgid "Window One Desktop Down"
 msgstr "Logu vienu darbvirsmu uz leju"
 
 #: useractions.cpp:1033
-#, fuzzy, kde-format
-#| msgid "Window to Screen 1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Logu uz 1. ekrānu"
+msgstr "Pārvietot logu uz %1. ekrānu"
 
 #: useractions.cpp:1040
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Logu uz nākamo ekrānu"
+msgstr "Pārvietot logu uz nākamo ekrānu"
 
 #: useractions.cpp:1042
-#, fuzzy, kde-format
-#| msgid "Window to Previous Desktop"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Logu uz iepriekšējo darbvirsmu"
+msgstr "Pārvietot logu uz iepriekšējo ekrānu"
 
 #: useractions.cpp:1044
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Logu uz vienu darbvirsmu pa labi"
+msgstr "Pārvietot logu vienu ekrānu pa labi"
 
 #: useractions.cpp:1046
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Logu uz vienu darbvirsmu pa kreisi"
+msgstr "Pārvietot logu vienu ekrānu pa kreisi"
 
 #: useractions.cpp:1048
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Logu uz 2. ekrānu"
+msgstr "Pārvietot logu vienu ekrānu augstāk"
 
 #: useractions.cpp:1050
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Logu vienu darbvirsmu uz leju"
+msgstr "Pārvietot logu vienu ekrānu zemāk"
 
 #: useractions.cpp:1054
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 1"
+#, kde-format
 msgid "Switch to Screen %1"
-msgstr "Pārslēgties uz 1. ekrānu"
+msgstr "Pārslēgties uz %1. ekrānu"
 
 #: useractions.cpp:1061
 #, kde-format
@@ -4224,45 +4063,39 @@ msgid "Switch to Next Screen"
 msgstr "Pārslēgties uz nākamo ekrānu"
 
 #: useractions.cpp:1062
-#, fuzzy, kde-format
-#| msgid "Switch to Previous Desktop"
+#, kde-format
 msgid "Switch to Previous Screen"
-msgstr "Pārslēgties uz iepriekšējo darbvirsmu"
+msgstr "Pārslēgties uz iepriekšējo ekrānu"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Pārvietot logu pa labi"
+msgstr "Pārslēgties uz ekrānu pa labi"
 
 #: useractions.cpp:1065
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Pārvietot logu pa kreisi"
+msgstr "Pārslēgties uz ekrānu pa kreisi"
 
 #: useractions.cpp:1067
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Pārslēgties uz 0. ekrānu"
+msgstr "Pārslēgties uz ekrānu augšā"
 
 #: useractions.cpp:1069
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Pārslēgties uz 0. ekrānu"
+msgstr "Pārslēgties uz ekrānu apakšā"
 
 #: useractions.cpp:1072
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "U&z darbvirsmu"
+msgstr "Palūkoties uz darbvirsmu"
 
 #: useractions.cpp:1075
 #, kde-format
 msgid "Kill Window"
-msgstr "Nokaut logu"
+msgstr "Nobeigt logu"
 
 #: useractions.cpp:1141
 #, kde-format
@@ -4276,16 +4109,19 @@ msgid ""
 "as active one.\n"
 "Therefore it is not possible to switch to a screen explicitly."
 msgstr ""
+"Logu pārvaldnieks ir konfigurēts tā, ka ekrānu, kurā atrodas peles kursors, "
+"tas uzskata par aktīvo.\n"
+"Līdz ar to nav iespējams citādā veidā pārslēgties uz ekrānu."
 
 #: utils/edid.cpp:233
 #, kde-format
 msgid "unknown"
-msgstr ""
+msgstr "nezināms"
 
 #: virtualdesktops.cpp:691 virtualdesktops.cpp:762
 #, kde-format
 msgid "Desktop %1"
-msgstr "%1. darbvirsmas"
+msgstr "%1. darbvirsma"
 
 #: virtualdesktops.cpp:798
 #, kde-format
@@ -4318,16 +4154,15 @@ msgid "Switch One Desktop Down"
 msgstr "Pārslēgties vienu darbvirsmu uz leju"
 
 #: virtualdesktops.cpp:893
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 1"
+#, kde-format
 msgid "Switch to Desktop %1"
-msgstr "Pārslēgties uz 1. darbvirsmu"
+msgstr "Pārslēgties uz %1. darbvirsmu"
 
 #: window.cpp:3096
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
-msgstr ""
+msgstr "(Nereaģē)"
 
 #: workspace.cpp:1624
 #, kde-format
@@ -4343,11 +4178,20 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
+"„KWin“ atbalsta informācija:\n"
+"Lūdzot atbalstu https://discuss.kde.org. vai citur, ir jāizmanto šī "
+"informācija.\n"
+"Tā sniedz informāciju par šobrīd palaisto instanci, izmantotajām opcijām,\n"
+"kāds „OpenGL“ draiveris darbojas.\n"
+"Sniedziet informāciju, kas ir norādīta zem šī teksta, izmantojot kādu "
+"pieejamu teksta nosūtīšanas pakalpojumu,\n"
+"piemēram, https://paste.kde.org, tā vietā, lai tekstu ielīmētu pašās "
+"atbalsta ziņās.\n"
 
 #: xwayland/xwaylandlauncher.cpp:271
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "„Xwayland“ ir avarējis"
 
 #, fuzzy
 #~| msgid "Setup Window Shortcut"
