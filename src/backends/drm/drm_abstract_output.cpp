@@ -17,7 +17,7 @@ namespace KWin
 
 DrmAbstractOutput::DrmAbstractOutput(DrmGpu *gpu)
     : Output(gpu->platform())
-    , m_renderLoop(std::make_unique<RenderLoop>())
+    , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_gpu(gpu)
 {
 }

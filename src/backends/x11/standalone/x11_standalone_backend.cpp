@@ -98,7 +98,7 @@ X11StandaloneBackend::X11StandaloneBackend(QObject *parent)
     : OutputBackend(parent)
     , m_updateOutputsTimer(std::make_unique<QTimer>())
     , m_x11Display(QX11Info::display())
-    , m_renderLoop(std::make_unique<RenderLoop>())
+    , m_renderLoop(std::make_unique<RenderLoop>(nullptr))
 {
 #if HAVE_X11_XINPUT
     if (!qEnvironmentVariableIsSet("KWIN_NO_XI2")) {

@@ -21,7 +21,7 @@ namespace KWin
 VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal)
     : Output(parent)
     , m_backend(parent)
-    , m_renderLoop(std::make_unique<RenderLoop>())
+    , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &VirtualOutput::vblank);
