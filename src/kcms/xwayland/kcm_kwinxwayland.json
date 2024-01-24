@@ -18,6 +18,7 @@
         "Description[fr]": "Sélectionnez quelles touches doivent être totalement disponibles pour les applications anciennes sous X11",
         "Description[gl]": "Seleccionar que teclas estarán dispoñíbeis globalmente para aplicacións antigas de X11.",
         "Description[he]": "נא לבחור אילו מקשים יהיו זמינים באופן כוללני ליישומי X11 מיושנים",
+        "Description[hu]": "Az örökölt X11 alkalmazások számára globálisan elérhető billentyűk kiválasztása.",
         "Description[ia]": "Selige qual claves essera disponibile globalmente a apps de X11 legacy (hereditage)",
         "Description[is]": "Velja hvaða lyklar verða almennt í boði fyrir eldri X11-forrit",
         "Description[it]": "Seleziona quali tasti saranno disponibili a livello globale per le applicazioni X11 originali",
