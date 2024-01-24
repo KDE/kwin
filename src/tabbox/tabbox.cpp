@@ -1089,9 +1089,10 @@ void TabBox::close(bool abort)
         removeTabBoxGrab();
     }
     hide(abort);
-    input()->pointer()->setEnableConstraints(true);
     m_tabGrab = false;
     m_noModifierGrab = false;
+    input()->pointer()->update();
+    input()->pointer()->setEnableConstraints(true);
 }
 
 void TabBox::accept(bool closeTabBox)
@@ -1182,6 +1183,9 @@ Window *TabBox::previousClientStatic(Window *c) const
 bool TabBox::establishTabBoxGrab()
 {
     if (kwinApp()->shouldUseWaylandForCompositing()) {
+        // TODO: Add proper input grabs
+        input()->pointer()->setEnableConstraints(false);
+        input()->pointer()->setFocus(nullptr);
         m_forcedGlobalMouseGrab = true;
         return true;
     }

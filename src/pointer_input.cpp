@@ -35,6 +35,9 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
+#if KWIN_BUILD_TABBOX
+#include "tabbox/tabbox.h"
+#endif
 
 #include <KLocalizedString>
 
@@ -463,6 +466,11 @@ bool PointerInputRedirection::focusUpdatesBlocked()
         // ignore during touch operations
         return true;
     }
+#if KWIN_BUILD_TABBOX
+    if (workspace()->tabbox() && workspace()->tabbox()->isGrabbed()) {
+        return true;
+    }
+#endif
     if (input()->isSelectingWindow()) {
         return true;
     }
