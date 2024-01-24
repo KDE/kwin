@@ -22,7 +22,7 @@ class KWIN_EXPORT RenderLoopPrivate
 {
 public:
     static RenderLoopPrivate *get(RenderLoop *loop);
-    explicit RenderLoopPrivate(RenderLoop *q);
+    explicit RenderLoopPrivate(RenderLoop *q, Output *output);
 
     void dispatch();
     void invalidate();
@@ -35,7 +35,8 @@ public:
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode = PresentationMode::VSync);
     void notifyVblank(std::chrono::nanoseconds timestamp);
 
-    RenderLoop *q;
+    RenderLoop *const q;
+    Output *const output;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
     QTimer compositeTimer;

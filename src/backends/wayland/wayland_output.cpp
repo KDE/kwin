@@ -95,7 +95,7 @@ void WaylandCursor::sync()
 
 WaylandOutput::WaylandOutput(const QString &name, WaylandBackend *backend)
     : Output(backend)
-    , m_renderLoop(std::make_unique<RenderLoop>())
+    , m_renderLoop(std::make_unique<RenderLoop>(this))
     , m_surface(backend->display()->compositor()->createSurface())
     , m_xdgShellSurface(backend->display()->xdgShell()->createSurface(m_surface.get()))
     , m_backend(backend)

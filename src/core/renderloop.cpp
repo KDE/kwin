@@ -26,8 +26,9 @@ RenderLoopPrivate *RenderLoopPrivate::get(RenderLoop *loop)
     return loop->d.get();
 }
 
-RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q)
+RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     : q(q)
+    , output(output)
 {
     compositeTimer.setSingleShot(true);
     QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
@@ -138,8 +139,8 @@ void RenderLoopPrivate::invalidate()
     compositeTimer.stop();
 }
 
-RenderLoop::RenderLoop()
-    : d(std::make_unique<RenderLoopPrivate>(this))
+RenderLoop::RenderLoop(Output *output)
+    : d(std::make_unique<RenderLoopPrivate>(this, output))
 {
 }
 
@@ -201,9 +202,9 @@ void RenderLoop::scheduleRepaint(Item *item)
         return;
     }
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
-    if (vrr && workspace()->activeWindow()) {
+    if (vrr && workspace()->activeWindow() && d->output) {
         Window *const activeWindow = workspace()->activeWindow();
-        if (activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->refreshRateEstimation() >= 30) {
+        if (activeWindow->isOnOutput(d->output) && activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->refreshRateEstimation() >= 30) {
             return;
         }
     }

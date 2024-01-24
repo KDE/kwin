@@ -13,7 +13,7 @@ PlaceholderOutput::PlaceholderOutput(const QSize &size, qreal scale)
 {
     auto mode = std::make_shared<OutputMode>(size, 60000);
 
-    m_renderLoop = std::make_unique<RenderLoop>();
+    m_renderLoop = std::make_unique<RenderLoop>(this);
     m_renderLoop->setRefreshRate(mode->refreshRate());
     m_renderLoop->inhibit();
 

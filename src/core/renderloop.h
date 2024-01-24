@@ -16,6 +16,7 @@ namespace KWin
 class RenderLoopPrivate;
 class SurfaceItem;
 class Item;
+class Output;
 
 /**
  * The RenderLoop class represents the compositing scheduler on a particular output.
@@ -30,7 +31,7 @@ class KWIN_EXPORT RenderLoop : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderLoop();
+    explicit RenderLoop(Output *output);
     ~RenderLoop() override;
 
     /**
