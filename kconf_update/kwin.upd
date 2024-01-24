@@ -3,6 +3,10 @@
 
 Version=6
 
+# Delete old desktop switching shortcuts.
+Id=kwin-6.0-delete-desktop-switching-shortcuts
+Script=kwin-6.0-delete-desktop-switching-shortcuts
+
 # Changes the default Activities shortcut from Meta+Tab to Meta+A,
 # so that the Overview can take its place
 Id=change-activities-overview-shortcuts
