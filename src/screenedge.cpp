@@ -1110,24 +1110,24 @@ void ScreenEdges::recreateEdges()
     });
     // copy over the effect/script reservations from the old edges
     for (const auto &edge : m_edges) {
-        for (auto it = oldEdges.begin(); it != split; ++it) {
-            if ((*it)->border() != edge->border()) {
+        for (const auto &oldEdge : std::span(oldEdges.begin(), split)) {
+            if (oldEdge->border() != edge->border()) {
                 continue;
             }
-            const QHash<QObject *, QByteArray> &callbacks = (*it)->callBacks();
+            const QHash<QObject *, QByteArray> &callbacks = oldEdge->callBacks();
             for (auto callback = callbacks.begin(); callback != callbacks.end(); callback++) {
                 edge->reserve(callback.key(), callback.value().constData());
             }
-            const auto touchCallBacks = (*it)->touchCallBacks();
+            const auto touchCallBacks = oldEdge->touchCallBacks();
             for (auto c : touchCallBacks) {
                 edge->reserveTouchCallBack(c);
             }
         }
     }
     // copy over the window reservations from the old edges
-    for (auto it = split; it != oldEdges.end(); ++it) {
-        if (!reserve((*it)->client(), (*it)->border())) {
-            (*it)->client()->showOnScreenEdge();
+    for (const auto &oldEdge : std::span(split, oldEdges.end())) {
+        if (!reserve(oldEdge->client(), oldEdge->border())) {
+            oldEdge->client()->showOnScreenEdge();
         }
     }
 }
