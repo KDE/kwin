@@ -1341,71 +1341,58 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     int x = 0;
     int width = 0;
     int height = 0;
+
+    Output *output = client->output();
     const QRect geo = client->frameGeometry().toRect();
     const QRect fullArea = workspace()->geometry();
 
-    const auto outputs = workspace()->outputs();
-    Output *foundOutput = nullptr;
-    for (Output *output : outputs) {
-        foundOutput = output;
-        const QRect screen = output->geometry();
-        if (!screen.contains(geo)) {
-            // ignoring Clients having a geometry overlapping with multiple screens
-            // this would make the code more complex. If it's needed in future it can be added
-            continue;
+    const QRect screen = output->geometry();
+    switch (border) {
+    case ElectricTop:
+        if (!isTopScreen(screen, fullArea)) {
+            return false;
         }
-
-        if (border == ElectricTop) {
-            if (!isTopScreen(screen, fullArea)) {
-                continue;
-            }
-            y = screen.y();
-            x = geo.x();
-            height = 1;
-            width = geo.width();
-            break;
+        y = screen.y();
+        x = geo.x();
+        height = 1;
+        width = geo.width();
+        break;
+    case ElectricBottom:
+        if (!isBottomScreen(screen, fullArea)) {
+            return false;
         }
-        if (border == ElectricBottom) {
-            if (!isBottomScreen(screen, fullArea)) {
-                continue;
-            }
-            y = screen.y() + screen.height() - 1;
-            x = geo.x();
-            height = 1;
-            width = geo.width();
-            break;
+        y = screen.y() + screen.height() - 1;
+        x = geo.x();
+        height = 1;
+        width = geo.width();
+        break;
+    case ElectricLeft:
+        if (!isLeftScreen(screen, fullArea)) {
+            return false;
         }
-        if (border == ElectricLeft) {
-            if (!isLeftScreen(screen, fullArea)) {
-                continue;
-            }
-            x = screen.x();
-            y = geo.y();
-            width = 1;
-            height = geo.height();
-            break;
+        x = screen.x();
+        y = geo.y();
+        width = 1;
+        height = geo.height();
+        break;
+    case ElectricRight:
+        if (!isRightScreen(screen, fullArea)) {
+            return false;
         }
-        if (border == ElectricRight) {
-            if (!isRightScreen(screen, fullArea)) {
-                continue;
-            }
-            x = screen.x() + screen.width() - 1;
-            y = geo.y();
-            width = 1;
-            height = geo.height();
-            break;
-        }
+        x = screen.x() + screen.width() - 1;
+        y = geo.y();
+        width = 1;
+        height = geo.height();
+        break;
+    default:
+        return false;
     }
 
-    if (width > 0 && height > 0) {
-        m_edges.push_back(createEdge(border, x, y, width, height, foundOutput, false));
-        Edge *edge = m_edges.back().get();
-        edge->setClient(client);
-        edge->reserve();
-        return true;
-    }
-
-    return false;
+    m_edges.push_back(createEdge(border, x, y, width, height, output, false));
+    Edge *edge = m_edges.back().get();
+    edge->setClient(client);
+    edge->reserve();
+    return true;
 }
 
 void ScreenEdges::deleteEdgeForClient(Window *window)
