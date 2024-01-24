@@ -449,7 +449,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
         QVERIFY(window->isShown());
     }
 
-    // If the screen edge is destroyed (can happen when the screen layout changes), the window will be shown.
+    // The screen edge reservation won't be affected when recreating screen edges (can happen when the screen layout changes).
     {
         enableAutoHide(c.get(), windowId, ElectricBottom);
         xcb_flush(c.get());
@@ -457,7 +457,12 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
         QVERIFY(!window->isShown());
 
         workspace()->screenEdges()->recreateEdges();
-        QVERIFY(withdrawnSpy.wait());
+        QVERIFY(!withdrawnSpy.wait(50));
+        QVERIFY(!window->isShown());
+
+        enableAutoHide(c.get(), windowId, ElectricNone);
+        xcb_flush(c.get());
+        QVERIFY(windowShownSpy.wait());
         QVERIFY(window->isShown());
     }
 
