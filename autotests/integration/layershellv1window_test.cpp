@@ -52,6 +52,7 @@ private Q_SLOTS:
     void testActivate_data();
     void testActivate();
     void testUnmap();
+    void testScreenEdge_data();
     void testScreenEdge();
 };
 
@@ -694,6 +695,14 @@ void LayerShellV1WindowTest::testUnmap()
     QVERIFY(Test::waitForWindowClosed(window));
 }
 
+void LayerShellV1WindowTest::testScreenEdge_data()
+{
+    QTest::addColumn<QMargins>("margins");
+
+    QTest::addRow("normal") << QMargins(0, 0, 0, 0);
+    QTest::addRow("with margin") << QMargins(0, 0, 0, 10);
+}
+
 void LayerShellV1WindowTest::testScreenEdge()
 {
     auto config = kwinApp()->config();
@@ -707,9 +716,11 @@ void LayerShellV1WindowTest::testScreenEdge()
     std::unique_ptr<Test::AutoHideScreenEdgeV1> screenEdge(Test::createAutoHideScreenEdgeV1(surface.get(), Test::ScreenEdgeManagerV1::border_bottom));
 
     // Set the initial state of the layer surface.
+    QFETCH(QMargins, margins);
     shellSurface->set_layer(Test::LayerShellV1::layer_top);
     shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
     shellSurface->set_size(100, 50);
+    shellSurface->set_margin(margins.top(), margins.right(), margins.bottom(), margins.left());
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
 
     // Wait for the compositor to position the surface.

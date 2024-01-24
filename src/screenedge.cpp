@@ -1105,25 +1105,29 @@ void ScreenEdges::recreateEdges()
             }
         }
     }
+    auto split = std::partition(oldEdges.begin(), oldEdges.end(), [](const auto &edge) {
+        return !edge->client();
+    });
     // copy over the effect/script reservations from the old edges
     for (const auto &edge : m_edges) {
-        for (const auto &oldEdge : oldEdges) {
-            if (oldEdge->client()) {
-                // show the client again and don't recreate the edge
-                oldEdge->client()->showOnScreenEdge();
+        for (auto it = oldEdges.begin(); it != split; ++it) {
+            if ((*it)->border() != edge->border()) {
                 continue;
             }
-            if (oldEdge->border() != edge->border()) {
-                continue;
-            }
-            const QHash<QObject *, QByteArray> &callbacks = oldEdge->callBacks();
+            const QHash<QObject *, QByteArray> &callbacks = (*it)->callBacks();
             for (auto callback = callbacks.begin(); callback != callbacks.end(); callback++) {
                 edge->reserve(callback.key(), callback.value().constData());
             }
-            const auto touchCallBacks = oldEdge->touchCallBacks();
+            const auto touchCallBacks = (*it)->touchCallBacks();
             for (auto c : touchCallBacks) {
                 edge->reserveTouchCallBack(c);
             }
+        }
+    }
+    // copy over the window reservations from the old edges
+    for (auto it = split; it != oldEdges.end(); ++it) {
+        if (!reserve((*it)->client(), (*it)->border())) {
+            (*it)->client()->showOnScreenEdge();
         }
     }
 }
@@ -1350,46 +1354,42 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
             // this would make the code more complex. If it's needed in future it can be added
             continue;
         }
-        const bool bordersTop = (screen.y() == geo.y());
-        const bool bordersLeft = (screen.x() == geo.x());
-        const bool bordersBottom = (screen.y() + screen.height() == geo.y() + geo.height());
-        const bool bordersRight = (screen.x() + screen.width() == geo.x() + geo.width());
 
-        if (bordersTop && border == ElectricTop) {
+        if (border == ElectricTop) {
             if (!isTopScreen(screen, fullArea)) {
                 continue;
             }
-            y = geo.y();
+            y = screen.y();
             x = geo.x();
             height = 1;
             width = geo.width();
             break;
         }
-        if (bordersBottom && border == ElectricBottom) {
+        if (border == ElectricBottom) {
             if (!isBottomScreen(screen, fullArea)) {
                 continue;
             }
-            y = geo.y() + geo.height() - 1;
+            y = screen.y() + screen.height() - 1;
             x = geo.x();
             height = 1;
             width = geo.width();
             break;
         }
-        if (bordersLeft && border == ElectricLeft) {
+        if (border == ElectricLeft) {
             if (!isLeftScreen(screen, fullArea)) {
                 continue;
             }
-            x = geo.x();
+            x = screen.x();
             y = geo.y();
             width = 1;
             height = geo.height();
             break;
         }
-        if (bordersRight && border == ElectricRight) {
+        if (border == ElectricRight) {
             if (!isRightScreen(screen, fullArea)) {
                 continue;
             }
-            x = geo.x() + geo.width() - 1;
+            x = screen.x() + screen.width() - 1;
             y = geo.y();
             width = 1;
             height = geo.height();
