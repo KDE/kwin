@@ -49,6 +49,7 @@ private Q_SLOTS:
     void testUserActionsMenu();
     void testMetaShiftW();
     void testComponseKey();
+    void testKeypad();
     void testX11WindowShortcut();
     void testWaylandWindowShortcut();
     void testSetupWindowShortcut();
@@ -273,6 +274,44 @@ void GlobalShortcutsTest::testComponseKey()
     Test::keyboardKeyReleased(KEY_RESERVED, timestamp++);
 
     QTRY_COMPARE(triggeredSpy.count(), 0);
+}
+
+void GlobalShortcutsTest::testKeypad()
+{
+    auto zeroAction = std::make_unique<QAction>();
+    zeroAction->setProperty("componentName", QStringLiteral("kwin"));
+    zeroAction->setObjectName(QStringLiteral("globalshortcuts-test-keypad-0"));
+    QSignalSpy zeroActionTriggeredSpy(zeroAction.get(), &QAction::triggered);
+    KGlobalAccel::self()->setShortcut(zeroAction.get(), QList<QKeySequence>{Qt::MetaModifier | Qt::KeypadModifier | Qt::Key_0}, KGlobalAccel::NoAutoloading);
+
+    auto insertAction = std::make_unique<QAction>();
+    insertAction->setProperty("componentName", QStringLiteral("kwin"));
+    insertAction->setObjectName(QStringLiteral("globalshortcuts-test-keypad-ins"));
+    QSignalSpy insertActionTriggeredSpy(insertAction.get(), &QAction::triggered);
+    KGlobalAccel::self()->setShortcut(insertAction.get(), QList<QKeySequence>{Qt::MetaModifier | Qt::KeypadModifier | Qt::Key_Insert}, KGlobalAccel::NoAutoloading);
+
+    // Turn on numlock
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    Test::keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyPressed(KEY_KP0, timestamp++);
+    Test::keyboardKeyReleased(KEY_KP0, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    QTRY_COMPARE(zeroActionTriggeredSpy.count(), 1);
+    QCOMPARE(insertActionTriggeredSpy.count(), 0);
+
+    // Turn off numlock
+    Test::keyboardKeyPressed(KEY_NUMLOCK, timestamp++);
+    Test::keyboardKeyReleased(KEY_NUMLOCK, timestamp++);
+
+    Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
+    Test::keyboardKeyPressed(KEY_KP0, timestamp++);
+    Test::keyboardKeyReleased(KEY_KP0, timestamp++);
+    Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
+    QTRY_COMPARE(insertActionTriggeredSpy.count(), 1);
+    QCOMPARE(zeroActionTriggeredSpy.count(), 1);
 }
 
 void GlobalShortcutsTest::testX11WindowShortcut()
