@@ -690,7 +690,6 @@ void Xkb::setModifierLatched(Qt::KeyboardModifier mod, bool latched)
         break;
     }
     case Qt::KeypadModifier: {
-        modifier = m_numModifier;
         break;
     }
     case Qt::KeyboardModifierMask: {
@@ -738,7 +737,6 @@ void Xkb::setModifierLocked(Qt::KeyboardModifier mod, bool locked)
         break;
     }
     case Qt::KeypadModifier: {
-        modifier = m_numModifier;
         break;
     }
     case Qt::KeyboardModifierMask: {
