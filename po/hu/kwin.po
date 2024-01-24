@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 02:24+0000\n"
-"PO-Revision-Date: 2024-01-22 14:35+0100\n"
+"PO-Revision-Date: 2024-01-23 12:28+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -2235,28 +2235,26 @@ msgstr "Ismeretlen"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Áttekintés és Rácsnézet ciklikusan"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Rácsnézet és Áttekintés ciklikusan"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Invertálás ki-be"
+msgstr "Áttekintés ki-be"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Invertálás ki-be"
+msgstr "Rácsnézet ki-be"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2268,10 +2266,9 @@ msgstr "Elrendezési mód:"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "&Bezárás"
+msgstr "Legközelebbi"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:35
@@ -2282,220 +2279,190 @@ msgstr "Természetes"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Ablak minimalizálása"
+msgstr "Minimalizált ablakok mellőzése:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Ablakok rendezése a Rácsnézetben:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Keresési eredmények tartalmazzák a szűrt ablakokat is:"
 
 #: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Áttekintés és Rácsnézet ciklikusan"
 
 #: plugins/overview/overvieweffect.cpp:142
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Invertálás ki-be"
+msgstr "Áttekintés ki-be"
 
 #: plugins/overview/overvieweffect.cpp:150
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Invertálás ki-be"
+msgstr "Rácsnézet ki-be"
 
 #: plugins/overview/qml/DesktopBar.qml:172
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Áthelyezé&s asztalra"
+msgstr "Virtuális asztal törlése"
 
 #: plugins/overview/qml/DesktopBar.qml:269
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Hozzáadás ú&j asztalhoz"
+msgstr "Virtuális asztal hozzáadása"
 
 #: plugins/overview/qml/main.qml:381
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Áthelyezé&s asztalra"
+msgstr "Nincs másik megjelenítendő virtuális asztal"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "Hozzáadás ú&j asztalhoz"
+msgstr "Virtuális asztal hozzáadása"
 
 #: plugins/overview/qml/main.qml:394
-#, fuzzy, kde-format
-#| msgid "Configur&e Window Behavior..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Beá&llítás…"
+msgstr "Virtuális asztalok beállítása…"
 
 #: plugins/overview/qml/main.qml:723
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "Nem kezelt X11 ablakok"
+msgstr "Nincs illeszkedő ablak"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Húzza lefelé a bezáráshoz"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:450
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Ablak bezárása"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Ablakszerep"
+msgstr "Ablakmegnyitási méretezés:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Ablakszerep"
+msgstr "Ablakbezárási méretezés:"
 
 #: plugins/screencast/pipewirecore.cpp:60
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "A fő PipeWire ciklus indítása sikertelen"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "A fő PipeWire környezet létrehozása sikertelen"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Nem sikerült kapcsolódni a PipeWire környezethez"
 
 #: plugins/screencast/screencastmanager.cpp:107
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "A(z) %1 asztalon futó ablak bezárása"
+msgstr "A(z) %1 ablakazonosító nem található"
 
 #: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "A kimenet nem található"
 
 #: plugins/screencast/screencastmanager.cpp:174
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Érvénytelen terület"
 
 #: plugins/screencast/screencastmanager.cpp:205
 #, kde-format
 msgid "Region outside the workspace"
-msgstr ""
+msgstr "A terület kívül esik a munkaterületen"
 
 #: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "A PipeWire adatfolyam létrehozása sikertelen"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:532
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Válassza ki a bezárásra kényszerítendő ablakot bal egérgombbal vagy "
-"enterrel.\n"
+"Válassza ki a fotózandó ablakot bal egérgombbal vagy Enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:550
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Válassza ki a bezárásra kényszerítendő ablakot bal egérgombbal vagy "
-"enterrel.\n"
+"Készítsen képernyőképet bal egérgombbal vagy Enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
 #: plugins/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Mutató mozgás"
+msgstr "Rajzolás időtartama"
 
 #: plugins/showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Gyűrűk száma:"
+msgstr "Rajzolás mennyisége"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Jelenlegi kiosztás:"
+msgstr "Jelenlegi FPS"
 
 #: plugins/showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Max&imális szélesség:"
+msgstr "Maximális FPS"
 
 #: plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
-msgstr "Ez a hatás nem teljesítményteszt"
+msgstr "Ez az effektus nem teljesítményteszt"
 
 #: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
-#, fuzzy, kde-format
-#| msgid "Toggle Snow on Desktop"
+#, kde-format
 msgid "Toggle Show Paint"
-msgstr "Havazás az asztalon"
+msgstr "Rajzolásmegjelenítés ki-be"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
@@ -2505,19 +2472,15 @@ msgstr "Rés az asztalok között"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Vízszintes"
+msgstr "Vízszintes:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Függőleges"
+msgstr "Függőleges:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
@@ -2553,10 +2516,9 @@ msgstr " képpont"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity"
+#, kde-format
 msgid "&Opacity:"
-msgstr "Átt&etszőség"
+msgstr "Átt&etszőség:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -2568,56 +2530,49 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:30
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Mozaikszerkesztő ki-be"
 
 #: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Kitöltés:"
 
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Elrendezés betöltése…"
 
 #: plugins/tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Bezárás"
+msgstr "Bezárás"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Vízszintes"
+msgstr "Felosztás vízszintesen"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Függőleges"
+msgstr "Felosztás függőlegesen"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgctxt "Floating layout, windows aren't tiled at all"
-#| msgid "Floating"
+#, kde-format
 msgid "Add Floating Tile"
-msgstr "Lebegő"
+msgstr "Lebegő mozaik hozzáadása"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Törlés"
 
 #: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
-msgstr "Egér követő"
+msgstr "Egérkövetés"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/trackmouse/trackmouse_config.ui:26
@@ -2627,17 +2582,15 @@ msgstr "Effektus kiváltása:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Billentyűzet"
+msgstr "Billentyűparancs:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Módosítók"
+msgstr "Módosítóbilentyűk:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2667,10 +2620,9 @@ msgstr "Nem átlátszó"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "Párbeszédablak"
+msgstr "Párbeszédablakok:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2682,24 +2634,21 @@ msgstr "Átlátszó"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menu"
+#, kde-format
 msgid "Menus:"
-msgstr "Menü"
+msgstr "Menük:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Ablak mozgatása"
+msgstr "Ablakok mozgatása:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Belső ablakok"
+msgstr "Inaktív ablakok:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2753,11 +2702,9 @@ msgstr "Az ablakosztályok vesszővel elválasztott listája"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "Összes"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
@@ -2785,47 +2732,40 @@ msgstr "A jelenlegi ablakok átváltása (az összes asztalon)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:64
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (All desktops)"
+#, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "A jelenlegi ablakok átváltása (az összes asztalon)"
+msgstr "A jelenlegi ablakok átváltása (ablakosztály)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:73
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "A jelenlegi ablakok átváltása (ezen az asztalon)"
+msgstr "A jelenlegi ablakok átváltása (ablakosztály ezen az asztalon)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Ablak minimalizálása"
+msgstr "&Minimalizált ablakok mellőzése"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Nincs találat"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Ablakok"
+msgstr "Nincsenek ablakok"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Belső ablakok"
+msgstr "Ablakok szűrése…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced"
 msgstr "Speciális"
 
@@ -2843,10 +2783,9 @@ msgstr "&Húzás:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgid "&Move factor:"
-msgstr "Balról"
+msgstr "&Mozgási tényező:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -2885,16 +2824,14 @@ msgid "More"
 msgstr "Nagyobb"
 
 #: plugins/zoom/zoom.cpp:68
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Váltás a balra levő asztalra"
+msgstr "Nagyított terület mozgatása balra"
 
 #: plugins/zoom/zoom.cpp:75
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Váltás a jobbra levő asztalra"
+msgstr "Nagyított terület mozgatása jobbra"
 
 #: plugins/zoom/zoom.cpp:82
 #, kde-format
@@ -2907,40 +2844,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Nagyított terület mozgatása lefelé"
 
 #: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Nincsenek egérgombok"
+msgstr "Egér mozgatása a fókuszra"
 
 #: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "Ablak mozgatása középre"
+msgstr "Egér mozgatása középre"
 
 #: plugins/zoom/zoom_config.cpp:70
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgid "Move Left"
-msgstr "Balról"
+msgstr "Mozgatás balra"
 
 #: plugins/zoom/zoom_config.cpp:77
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "Move Right"
-msgstr "Jobbról"
+msgstr "Mozgatás jobbra"
 
 #: plugins/zoom/zoom_config.cpp:84
-#, fuzzy, kde-format
-#| msgid "&Move"
+#, kde-format
 msgid "Move Up"
-msgstr "&Mozgatás"
+msgstr "Mozgatás felfelé"
 
 #: plugins/zoom/zoom_config.cpp:91
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Down"
-msgstr "Ablak mozgatása"
+msgstr "Mozgatás lefelé"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3004,11 +2935,9 @@ msgstr "Az egérmutató láthatósága."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
-msgstr "Skálázás"
+msgstr "Méretezés"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:108
@@ -3030,17 +2959,15 @@ msgstr "Az egér mozgásának követése."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "Pozíció"
+msgstr "Arányos"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Centered"
-msgstr "Középen"
+msgstr "Középre"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:135
@@ -3050,8 +2977,7 @@ msgstr "Görgetés"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
-#, fuzzy, kde-format
-#| msgid "Disabled"
+#, kde-format
 msgid "Disabled"
 msgstr "Kikapcsolva"
 
@@ -3575,14 +3501,13 @@ msgstr "Asztali fájl neve szabálytípus"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Réteg"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Felgördítve szabálytípus"
+msgstr "Réteg szabálytípus"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3602,18 +3527,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"A következő alkalmazások nem záródtak be:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Kijelentkezés megszakítása"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Kijelentkezés mindenképp"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3721,26 +3648,22 @@ msgid "&Shade"
 msgstr "Felgördíté&s"
 
 #: useractions.cpp:246
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Nincs címsor és keret"
+msgstr "&Nincs címsor és keret"
 
 #: useractions.cpp:254
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
 msgstr "&Gyorsbillentyű rendelése az ablak…"
 
 #: useractions.cpp:260
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
 msgstr "Spe&ciális ablakbeállítások módosítása…"
 
 #: useractions.cpp:265
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
 msgstr "Spe&ciális alkalmazásbeállítások módosítása…"
 
@@ -3790,11 +3713,9 @@ msgid "Show in &Activities"
 msgstr "Megjelenítés az &aktivitásokon"
 
 #: useractions.cpp:473
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Áthelyezés új asztalra"
+msgstr "Mozgatás a &jelenlegi asztalra"
 
 #: useractions.cpp:483 useractions.cpp:550
 #, kde-format
@@ -3838,10 +3759,9 @@ msgid "&All Activities"
 msgstr "Az összes a&ktivitásra"
 
 #: useractions.cpp:724
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Áthelyezés ide: %1 %2"
+msgstr "Áthelyezés ide: %1"
 
 #: useractions.cpp:843
 #, kde-format
@@ -3923,10 +3843,9 @@ msgid "Make Window Fullscreen"
 msgstr "Ablak teljes képernyőre váltása"
 
 #: useractions.cpp:951
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Nincs címsor és keret"
+msgstr "Ablak címsorának és keretének kapcsolása"
 
 #: useractions.cpp:953
 #, kde-format
@@ -4054,14 +3973,12 @@ msgid "Switch to Window to the Left"
 msgstr "Váltás a balra eső ablakra"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Az aktív ablak átlátszóságának növelése 5%-kal"
 
 #: useractions.cpp:1005
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Az aktív ablak átlátszóságának csökkentése 5%-kal"
 
@@ -4106,46 +4023,39 @@ msgid "Window One Desktop Down"
 msgstr "Váltás a lefelé levő asztalra"
 
 #: useractions.cpp:1033
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Ablak áthelyezése a(z) %1. képernyőre"
 
 #: useractions.cpp:1040
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Ablak áthelyezése a következő képernyőre"
 
 #: useractions.cpp:1042
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Ablak áthelyezése az előző képernyőre"
 
 #: useractions.cpp:1044
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Váltás a jobbra levő asztalra"
+msgstr "Ablak áthelyezése egy képernyővel jobbra"
 
 #: useractions.cpp:1046
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Váltás a balra levő asztalra"
+msgstr "Ablak áthelyezése egy képernyővel balra"
 
 #: useractions.cpp:1048
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Ablak áthelyezése a 2. képernyőre"
+msgstr "Ablak áthelyezése egy képernyővel felfelé"
 
 #: useractions.cpp:1050
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Váltás a lefelé levő asztalra"
+msgstr "Ablak áthelyezése egy képernyővel lefelé"
 
 #: useractions.cpp:1054
 #, kde-format
@@ -4163,28 +4073,24 @@ msgid "Switch to Previous Screen"
 msgstr "Váltás az előző képernyőre"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Váltás a jobbra eső ablakra"
+msgstr "Váltás a jobbra lévő képernyőre"
 
 #: useractions.cpp:1065
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Váltás a balra eső ablakra"
+msgstr "Váltás a balra lévő képernyőre"
 
 #: useractions.cpp:1067
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Váltás a 0. képernyőre"
+msgstr "Váltás a felfelé lévő képernyőre"
 
 #: useractions.cpp:1069
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Váltás a 0. képernyőre"
+msgstr "Váltás a lefelé lévő képernyőre"
 
 #: useractions.cpp:1072
 #, kde-format
