@@ -34,7 +34,6 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     std::shared_ptr<GLTexture> texture() const;
-    quint32 format() const override;
     std::chrono::nanoseconds queryRenderTime() const override;
 
 private:

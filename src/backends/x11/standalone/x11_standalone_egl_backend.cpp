@@ -44,11 +44,6 @@ bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
     return true;
 }
 
-uint EglLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
-}
-
 std::chrono::nanoseconds EglLayer::queryRenderTime() const
 {
     return m_backend->queryRenderTime();

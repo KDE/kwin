@@ -184,14 +184,6 @@ void VirtualEglGbmLayer::releaseBuffers()
     }
 }
 
-quint32 VirtualEglGbmLayer::format() const
-{
-    if (!m_gbmSwapchain) {
-        return DRM_FORMAT_ARGB8888;
-    }
-    return m_gbmSwapchain->format();
-}
-
 std::chrono::nanoseconds VirtualEglGbmLayer::queryRenderTime() const
 {
     m_eglBackend->makeCurrent();

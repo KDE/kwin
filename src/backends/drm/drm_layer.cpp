@@ -22,11 +22,6 @@ QRegion DrmOutputLayer::currentDamage() const
     return {};
 }
 
-quint32 DrmOutputLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
-}
-
 std::shared_ptr<GLTexture> DrmOutputLayer::texture() const
 {
     return nullptr;

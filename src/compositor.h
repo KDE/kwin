@@ -110,13 +110,6 @@ public:
      */
     virtual bool openGLCompositingIsBroken() const;
 
-    /**
-     * @returns the format of the contents in the @p output
-     *
-     * This format is provided using the drm fourcc encoding
-     */
-    uint outputFormat(Output *output);
-
     virtual void inhibit(Window *window);
     virtual void uninhibit(Window *window);
 

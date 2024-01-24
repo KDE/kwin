@@ -90,11 +90,6 @@ void X11WindowedQPainterPrimaryLayer::present()
                        nullptr);
 }
 
-quint32 X11WindowedQPainterPrimaryLayer::format() const
-{
-    return m_current->buffer()->shmAttributes()->format;
-}
-
 std::chrono::nanoseconds X11WindowedQPainterPrimaryLayer::queryRenderTime() const
 {
     return m_renderTime;
@@ -118,11 +113,6 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFr
         .renderTarget = RenderTarget(&m_buffer),
         .repaint = infiniteRegion(),
     };
-}
-
-quint32 X11WindowedQPainterCursorLayer::format() const
-{
-    return DRM_FORMAT_ARGB8888;
 }
 
 std::chrono::nanoseconds X11WindowedQPainterCursorLayer::queryRenderTime() const

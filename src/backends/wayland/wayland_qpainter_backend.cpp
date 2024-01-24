@@ -80,11 +80,6 @@ bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const 
     return true;
 }
 
-quint32 WaylandQPainterPrimaryLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
-}
-
 std::chrono::nanoseconds WaylandQPainterPrimaryLayer::queryRenderTime() const
 {
     return m_renderTime;
@@ -129,11 +124,6 @@ bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const Q
     m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
     m_swapchain->release(m_back);
     return true;
-}
-
-quint32 WaylandQPainterCursorLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
 }
 
 std::chrono::nanoseconds WaylandQPainterCursorLayer::queryRenderTime() const

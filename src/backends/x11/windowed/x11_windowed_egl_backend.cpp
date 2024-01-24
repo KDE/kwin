@@ -112,11 +112,6 @@ std::shared_ptr<GLTexture> X11WindowedEglPrimaryLayer::texture() const
     return m_buffer->texture();
 }
 
-quint32 X11WindowedEglPrimaryLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
-}
-
 std::chrono::nanoseconds X11WindowedEglPrimaryLayer::queryRenderTime() const
 {
     m_backend->makeCurrent();
@@ -173,11 +168,6 @@ bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QR
     m_query->end();
 
     return true;
-}
-
-quint32 X11WindowedEglCursorLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
 }
 
 std::chrono::nanoseconds X11WindowedEglCursorLayer::queryRenderTime() const

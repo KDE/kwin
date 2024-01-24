@@ -14,6 +14,8 @@
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
 
+#include <drm_fourcc.h>
+
 namespace KWin
 {
 
@@ -36,7 +38,7 @@ bool OutputScreenCastSource::hasAlphaChannel() const
 
 quint32 OutputScreenCastSource::drmFormat() const
 {
-    return Compositor::self()->outputFormat(m_output);
+    return DRM_FORMAT_ARGB8888;
 }
 
 QSize OutputScreenCastSource::textureSize() const

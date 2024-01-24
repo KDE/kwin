@@ -96,11 +96,6 @@ void DrmQPainterLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
-quint32 DrmQPainterLayer::format() const
-{
-    return DRM_FORMAT_XRGB8888;
-}
-
 std::chrono::nanoseconds DrmQPainterLayer::queryRenderTime() const
 {
     return m_renderTime;

@@ -124,11 +124,6 @@ void WaylandEglPrimaryLayer::present()
     m_swapchain->release(m_buffer);
 }
 
-quint32 WaylandEglPrimaryLayer::format() const
-{
-    return m_buffer->buffer()->dmabufAttributes()->format;
-}
-
 std::chrono::nanoseconds WaylandEglPrimaryLayer::queryRenderTime() const
 {
     m_backend->makeCurrent();
@@ -198,11 +193,6 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
 
     m_swapchain->release(m_buffer);
     return true;
-}
-
-quint32 WaylandEglCursorLayer::format() const
-{
-    return m_buffer->buffer()->dmabufAttributes()->format;
 }
 
 std::chrono::nanoseconds WaylandEglCursorLayer::queryRenderTime() const
