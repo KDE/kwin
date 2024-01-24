@@ -69,11 +69,6 @@ bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &dam
     return true;
 }
 
-quint32 VirtualEglLayer::format() const
-{
-    return DRM_FORMAT_XRGB8888;
-}
-
 std::chrono::nanoseconds VirtualEglLayer::queryRenderTime() const
 {
     if (m_query) {

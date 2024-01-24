@@ -115,11 +115,6 @@ bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedReg
     return true;
 }
 
-uint GlxLayer::format() const
-{
-    return DRM_FORMAT_RGBA8888;
-}
-
 std::chrono::nanoseconds GlxLayer::queryRenderTime() const
 {
     return m_backend->queryRenderTime();

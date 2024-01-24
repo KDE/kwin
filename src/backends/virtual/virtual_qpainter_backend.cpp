@@ -59,11 +59,6 @@ QImage *VirtualQPainterLayer::image()
     return m_current->view()->image();
 }
 
-quint32 VirtualQPainterLayer::format() const
-{
-    return DRM_FORMAT_XRGB8888;
-}
-
 std::chrono::nanoseconds VirtualQPainterLayer::queryRenderTime() const
 {
     return m_renderTime;

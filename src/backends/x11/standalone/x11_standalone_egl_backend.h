@@ -33,7 +33,6 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    uint format() const override;
     std::chrono::nanoseconds queryRenderTime() const override;
 
 private:

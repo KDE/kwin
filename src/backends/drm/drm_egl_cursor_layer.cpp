@@ -79,11 +79,6 @@ void EglGbmCursorLayer::releaseBuffers()
     m_surface.destroyResources();
 }
 
-quint32 EglGbmCursorLayer::format() const
-{
-    return m_surface.currentBuffer()->buffer()->dmabufAttributes()->format;
-}
-
 std::chrono::nanoseconds EglGbmCursorLayer::queryRenderTime() const
 {
     return m_surface.queryRenderTime();

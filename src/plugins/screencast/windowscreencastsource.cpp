@@ -33,7 +33,7 @@ WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
 
 quint32 WindowScreenCastSource::drmFormat() const
 {
-    return DRM_FORMAT_RGBA8888;
+    return DRM_FORMAT_ARGB8888;
 }
 
 bool WindowScreenCastSource::hasAlphaChannel() const
