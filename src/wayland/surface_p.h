@@ -27,6 +27,7 @@ class TearingControlV1Interface;
 class FractionalScaleV1Interface;
 class FrogColorManagementSurfaceV1;
 class PresentationTimeFeedback;
+class ChromeColorManagementSurface;
 
 struct SurfaceState
 {
@@ -167,6 +168,7 @@ public:
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
     FrogColorManagementSurfaceV1 *frogColorManagement = nullptr;
+    ChromeColorManagementSurface *chromeColorManagement = nullptr;
 
     struct
     {

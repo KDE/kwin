@@ -6,6 +6,7 @@
 */
 #include "surface.h"
 #include "blur.h"
+#include "chromecolormanagement.h"
 #include "clientconnection.h"
 #include "compositor.h"
 #include "contrast.h"
@@ -1090,6 +1091,9 @@ void SurfaceInterface::setPreferredColorDescription(const ColorDescription &desc
     d->preferredColorDescription = descr;
     if (d->frogColorManagement) {
         d->frogColorManagement->setPreferredColorDescription(descr);
+    }
+    if (d->chromeColorManagement) {
+        d->chromeColorManagement->setPreferredColorDescription(descr);
     }
     for (auto child : std::as_const(d->current->subsurface.below)) {
         child->surface()->setPreferredColorDescription(descr);

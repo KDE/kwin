@@ -22,6 +22,7 @@
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
+#include "wayland/chromecolormanagement.h"
 #include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
 #include "wayland/contenttype_v1.h"
@@ -487,6 +488,7 @@ bool WaylandServer::init(InitializationFlags flags)
 
     new FrogColorManagementV1(m_display, m_display);
     new PresentationTime(m_display, m_display);
+    new ChromeColorManagementManager(m_display, m_display);
     return true;
 }
 
