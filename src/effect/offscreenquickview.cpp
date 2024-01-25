@@ -447,6 +447,8 @@ void OffscreenQuickView::setGeometry(const QRect &rect)
 {
     const QRect oldGeometry = d->m_view->geometry();
     d->m_view->setGeometry(rect);
+    // QWindow::setGeometry() won't sync output if there's no platform window.
+    d->m_view->setScreen(QGuiApplication::screenAt(rect.center()));
     Q_EMIT geometryChanged(oldGeometry, rect);
 }
 
