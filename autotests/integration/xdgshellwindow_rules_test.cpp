@@ -155,6 +155,10 @@ private Q_SLOTS:
     void testLayerForce();
     void testLayerForceTemporarily();
 
+    void testCloseableDontAffect();
+    void testCloseableForce();
+    void testCloseableForceTemporarily();
+
     void testMatchAfterNameChange();
 
 private:
@@ -3017,6 +3021,42 @@ void TestXdgShellWindowRules::testLayerForceTemporarily()
     destroyTestWindow();
     createTestWindow();
     QCOMPARE(m_window->layer(), NormalLayer);
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testCloseableDontAffect()
+{
+    setWindowRule("closeable", false, int(Rules::DontAffect));
+
+    createTestWindow();
+
+    QVERIFY(m_window->isCloseable());
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testCloseableForce()
+{
+    setWindowRule("closeable", false, int(Rules::Force));
+
+    createTestWindow();
+    QVERIFY(!m_window->isCloseable());
+
+    destroyTestWindow();
+}
+
+void TestXdgShellWindowRules::testCloseableForceTemporarily()
+{
+    setWindowRule("closeable", false, int(Rules::ForceTemporarily));
+
+    createTestWindow();
+    QVERIFY(!m_window->isCloseable());
+
+    // The rule should be discarded when the window is closed.
+    destroyTestWindow();
+    createTestWindow();
+    QVERIFY(m_window->isCloseable());
 
     destroyTestWindow();
 }
