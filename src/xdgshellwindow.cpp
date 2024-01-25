@@ -567,7 +567,7 @@ bool XdgToplevelWindow::isResizable() const
 
 bool XdgToplevelWindow::isCloseable() const
 {
-    return !isDesktop() && !isDock();
+    return rules()->checkCloseable(!isDesktop() && !isDock());
 }
 
 bool XdgToplevelWindow::isFullScreenable() const
