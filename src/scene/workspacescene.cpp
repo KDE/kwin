@@ -418,7 +418,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
         data->region = visible;
 
         if (!(data->mask & PAINT_WINDOW_TRANSFORMED)) {
-            data->region &= data->item->mapToGlobal(data->item->boundingRect()).toAlignedRect();
+            data->region &= data->item->mapToGlobal(data->item->boundingRect()).toRect();
 
             if (!(data->mask & PAINT_WINDOW_TRANSLUCENT)) {
                 visible -= data->opaque;

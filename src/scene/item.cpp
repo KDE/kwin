@@ -212,7 +212,14 @@ QRegion Item::mapToGlobal(const QRegion &region) const
     if (region.isEmpty()) {
         return QRegion();
     }
-    return region.translated(rootPosition().toPoint());
+
+    const QPointF offset = rootPosition();
+
+    QRegion ret;
+    for (QRectF rect : region) {
+        ret += rect.translated(offset).toAlignedRect();
+    }
+    return ret;
 }
 
 QRectF Item::mapToGlobal(const QRectF &rect) const
