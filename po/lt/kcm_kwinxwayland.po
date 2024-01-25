@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-02-18 01:00+0000\n"
+"PO-Revision-Date: 2024-01-24 16:41+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: lt\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: ui/main.qml:47
 #, kde-format
@@ -26,32 +27,42 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
+"Pasenusios X11 programos reikalauja turėti galimybę skaityti kitose "
+"programose paspaustus klavišus, kad galėtų įgyvendinti ypatybes, kurios "
+"aktyvuojamos visuotiniais sparčiaisiais klavišais. Tai, pagal numatymą, "
+"saugumo sumetimais yra išjungta. Jeigu jums reikia naudotis tokiomis "
+"programomis, čia galite pasirinkti pageidaujamą saugumo ir funkcionalumo "
+"balansą."
 
 #: ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
+"Leisti pasenusioms X11 programoms skaityti visose programose paspaudžiamus "
+"klavišus:"
 
 #: ui/main.qml:65
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "Niekada"
 
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "Tik ne simbolių klavišus"
 
 #: ui/main.qml:71
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
+"Tas pats, kaip aukščiau ir dar papildomai bet kuriuos klavišus, kurie rašomi "
+"nuspaudus Vald, Alt ar Meta klavišus"
 
 #: ui/main.qml:75
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "Visada"
 
 #: ui/main.qml:82
 #, kde-format
@@ -60,3 +71,7 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+"Turėkite omenyje, kad naudojant šią nuostatą, sistemos saugumas sumažės iki "
+"X11 seanso lygio, nes kenkėjiškai programinei įrangai atsiras galimybė vogti "
+"jūsų slaptažodžius ir šnipinėti renkamą tekstą. Įsitikinkite, kad suvokiate "
+"šią riziką ir sutinkate ją prisiimti."
