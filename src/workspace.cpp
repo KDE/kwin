@@ -2618,23 +2618,23 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
         if (maxRect.isNull()) {
             maxRect = clientArea(MaximizeArea, window, output);
         }
-        const int xmin = maxRect.left();
-        const int xmax = maxRect.right(); // desk size
-        const int ymin = maxRect.top();
-        const int ymax = maxRect.bottom();
+        const qreal xmin = maxRect.left();
+        const qreal xmax = maxRect.right(); // desk size
+        const qreal ymin = maxRect.top();
+        const qreal ymax = maxRect.bottom();
 
-        const int cx(pos.x());
-        const int cy(pos.y());
-        const int cw(window->width());
-        const int ch(window->height());
-        const int rx(cx + cw);
-        const int ry(cy + ch); // these don't change
+        const qreal cx(pos.x());
+        const qreal cy(pos.y());
+        const qreal cw(window->width());
+        const qreal ch(window->height());
+        const qreal rx(cx + cw);
+        const qreal ry(cy + ch); // these don't change
 
-        int nx(cx), ny(cy); // buffers
-        int deltaX(xmax);
-        int deltaY(ymax); // minimum distance to other windows
+        qreal nx(cx), ny(cy); // buffers
+        qreal deltaX(xmax);
+        qreal deltaY(ymax); // minimum distance to other windows
 
-        int lx, ly, lrx, lry; // coords and size for the comparison window, l
+        qreal lx, ly, lrx, lry; // coords and size for the comparison window, l
 
         // border snap
         const int borderXSnapZone = borderSnapZone.width() * snapAdjust; // snap trigger
@@ -2755,7 +2755,7 @@ QPointF Workspace::adjustWindowPosition(Window *window, QPointF pos, bool unrest
             }
         }
 
-        pos = QPoint(nx, ny);
+        pos = QPointF(nx, ny);
     }
     return pos;
 }
