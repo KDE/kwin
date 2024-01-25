@@ -263,7 +263,6 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
         showCursor();
     } else {
         hideCursor();
-        data.mask |= PAINT_SCREEN_TRANSFORMED;
     }
 
     effects->prePaintScreen(data, presentTime);
