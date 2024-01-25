@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-19 00:38+0000\n"
-"PO-Revision-Date: 2021-08-21 19:42+0300\n"
+"PO-Revision-Date: 2024-01-24 16:57+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -30,7 +30,7 @@ msgstr "Jokio veiksmo"
 #: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
-msgstr ""
+msgstr "Žvilgsnis į darbalaukį"
 
 #: main.cpp:153 touch.cpp:120
 #, kde-format
@@ -55,7 +55,7 @@ msgstr "Programų paleidyklė"
 #: main.cpp:160 touch.cpp:127
 #, kde-format
 msgid "Present Windows"
-msgstr ""
+msgstr "Pateikti langus"
 
 #: main.cpp:161 touch.cpp:128
 #, kde-format
@@ -73,10 +73,9 @@ msgid "%1 - Current Application"
 msgstr "%1 - Dabartinės programos"
 
 #: main.cpp:165 touch.cpp:132
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "Perjungti apžvalgą"
+msgstr "Apžvalga"
 
 #: main.cpp:167 touch.cpp:134
 #, kde-format
@@ -126,13 +125,13 @@ msgstr "Langai tempiami į kairįjį ar dešinįjį ekrano kraštą"
 #: main.ui:101
 #, kde-format
 msgid "Behavior:"
-msgstr ""
+msgstr "Elgsena:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, remainActiveOnFullscreen)
 #: main.ui:108
 #, kde-format
 msgid "Remain active when windows are fullscreen"
-msgstr ""
+msgstr "Palikti aktyvų, kai yra langų viso ekrano veiksenoje"
 
 #. i18n: ectx: property (text), widget (QLabel, electricBorderCornerRatioLabel)
 #: main.ui:115

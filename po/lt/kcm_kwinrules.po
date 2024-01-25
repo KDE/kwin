@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2022-12-12 21:54+0200\n"
+"PO-Revision-Date: 2024-01-24 16:15+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -185,6 +185,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Esant ženkliai mažoms nepermatomumo reikšmėms, skaitomumas gali suprastėti. "
+"Ties 0%, langas tampa nematomas."
 
 #: rulesmodel.cpp:388
 #, kde-format
@@ -316,6 +318,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Kai kurios programos gali nusistatyti geometriją, nustelbdamos langų "
+"tvarkytuvės nuostatas. Nustačius šią savybę, bus nustelbiamos programų "
+"išdėstymo užklausos.<nl/><nl/>Tai paveikia <interface>dydį</interface> ir "
+"<interface>poziciją</interface>, bet ne <interface>išskleidimo</interface> "
+"ar <interface>atvaizdavimo visame ekrane</interface> būsenas.<nl/><nl/"
+">Turėkite omenyje, kad pozicija taip pat gali būti naudojama, kai norima "
+"atvaizduoti kitame <interface>ekrane</interface>"
 
 #: rulesmodel.cpp:552
 #, kde-format
@@ -333,13 +342,7 @@ msgid "Obey geometry restrictions"
 msgstr "Paklusti geometrijos apribojimams"
 
 #: rulesmodel.cpp:564
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -348,13 +351,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Pvz., terminalai arba vaizdo leistuvės gali prašyti išlaikyti tam tikras "
-"proporcijas\n"
-"arba keisti dydį pagal tam tikras reikšmes, didesnes už vienetą\n"
-"(pvz., pagal vieno simbolio dydį).\n"
-"Tai gali būti beprasmiška, ir apribojimas neleidžia pasirenkamų išmatavimų, "
-"tokių kaip\n"
-"pavyzdžiui, visa jūsų ekrano sritis."
+"Kai kurios programos, tokios kaip vaizdo leistuvės ar terminalai gali "
+"prašyti KWin išlaikyti tam tikras jų proporcijas arba keisti jų dydį pagal "
+"tam tikras reikšmes, didesnes už vieno simbolio dydį. Naudokite šią savybę "
+"norėdami nepaisyti šių apribojimų ir leisti keisti tų langų dydį į "
+"pasirenkamus dydžius.<nl/><nl/>Tai gali praversti dirbant su langais, kurie, "
+"juos išskleidus, netelpa į visą ekraną."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -381,7 +383,7 @@ msgstr "Praleisti užduočių juostą"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Valdo, ar langas bus rodomas užduočių tvarkytuvėje, ar ne."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -394,6 +396,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Valdo, ar langas bus rodomas virtualių darbalaukių tvarkytuvėje, ar ne."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -407,6 +410,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Valdo, ar langas bus rodomas <shortcut>Alt+Tab</shortcut> langų sąraše, ar "
+"ne."
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -466,6 +471,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin stengiasi neleisti langams, kurie buvo atverti be aiškaus naudotojo "
+"veiksmo, išsikelti ir perimti fokusavimą, kol naudotojas sąveikauja su kitu "
+"langu. Ši savybė gali būti naudojama, kad būtų pakeistas fokusavimo vogimo "
+"prevencijos lygis, taikomas atskiriems langams ir programoms.<nl/><nl/>Štai, "
+"kas nutiks kiekviename fokusavimo vogimo prevencijos lygyje su langu, kuris "
+"buvo atvertas be tiesioginio jūsų veiksmo:<nl/><list><item><emphasis "
+"strong='true'>Nėra:</emphasis> Langas bus iškeltas ir sufokusuotas.</"
+"item><item><emphasis strong='true'>Žema:</emphasis> Fokusavimo vogimo "
+"prevencija bus pritaikyta, bet situacijoje, kurią KWin laiko abejotina, "
+"langas bus iškeltas ir sufokusuotas.</item><item><emphasis "
+"strong='true'>Įprasta:</emphasis> Fokusavimo vogimo prevencija bus "
+"pritaikyta, bet situacijoje, kurią KWin laiko abejotina, langas "
+"<emphasis>nebus</emphasis> iškeltas ir sufokusuotas.</item><item><emphasis "
+"strong='true'>Aukšta:</emphasis> Langas bus iškeltas ir sufokusuotas tik tuo "
+"atveju, jeigu jis priklauso tai pačiai programai, kuriai priklauso esamu "
+"metu sufokusuotas langas.</item><item><emphasis strong='true'>Ekstremali:</"
+"emphasis> Langas niekada nebus iškeltas ir sufokusuotas.</item></list>"
 
 #: rulesmodel.cpp:658
 #, kde-format
@@ -495,6 +517,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Ši savybė valdo šiuo metu aktyvaus lango fokusavimo apsaugos lygį. Ji yra "
+"naudojama nustelbti fokusavimo vogimo prevenciją, taikomą naujiems langams, "
+"kurie yra atveriami be tiesioginio jūsų veiksmo.<nl/><nl/>Štai, kas nutiks "
+"kiekviename fokusavimo apsaugos lygyje su kiekvienu nauju langu, kuris "
+"atvertas be tiesioginio jūsų veiksmo, kol langas, kuriam yra pritaikyta ši "
+"savybė, yra sufokusuotas:<nl/><list><item><emphasis strong='true'>Nėra</"
+"emphasis>: Naujai atverti langai visada bus iškeliami ir perims fokusavimą.</"
+"item><item><emphasis strong='true'>Žema:</emphasis> Fokusavimo vogimo "
+"prevencija bus pritaikyta naujai atvertam langui, bet situacijoje, kurią "
+"KWin laiko abejotina, langas bus iškeltas ir sufokusuotas.</"
+"item><item><emphasis strong='true'>Įprasta:</emphasis> Fokusavimo vogimo "
+"prevencija bus pritaikyta naujai atvertam langui, bet situacijoje, kurią "
+"KWin laiko abejotina, langas <emphasis>nebus</emphasis> iškeltas ir "
+"sufokusuotas.</item><item><emphasis strong='true'>Aukšta:</emphasis> Naujai "
+"atverti langai bus iškelti ir perims fokusavimą tik tuo atveju, jeigu jie "
+"priklausys tai pačiai programai, kuriai priklauso esamu metu sufokusuotas "
+"langas.</item><item><emphasis strong='true'>Ekstremali:</emphasis> Naujai "
+"atverti langai niekada nebus iškelti ir neperims fokusavimo.</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -504,7 +544,7 @@ msgstr "Priimti fokusavimą"
 #: rulesmodel.cpp:688
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Valdo, ar langas bus fokusuojamas, kai ant jo spustelėjama, ar ne."
 
 #: rulesmodel.cpp:692
 #, kde-format
@@ -522,6 +562,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Naudokite šią savybę, kad neleistumėte visuotiniams spartiesiems klavišams "
+"veikti tol, kol langas yra sufokusuotas. Tai gali praversti dirbant su "
+"emuliatoriaus programomis ar virtualiomis mašinomis, kurios ir pačios "
+"apdoroja kai kuriuos iš tų sparčiųjų klavišų.<nl/><nl/>Turėkite omenyje, kad "
+"negalėsite lange pasinaudoti <shortcut>Alt+Tab</shortcut> ar naudoti kokius "
+"nors visuotinius sparčiuosius klavišus, kaip, pavyzdžiui, <shortcut>Alt"
+"+Space</shortcut>, kuris yra skirtas aktyvuoti KRunner."
 
 #: rulesmodel.cpp:704
 #, kde-format
@@ -541,7 +588,7 @@ msgstr "Blokuoti komponavimą"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Sluoksnis"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -714,38 +761,37 @@ msgstr "Ekstremali"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Žemiau"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Aukščiau"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Vieta"
+msgstr "Pranešimas"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Iškylantysis langas"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Kritinis pranešimas"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Perdanga"
 
 #: rulesmodel.cpp:951
 #, kde-format
@@ -773,14 +819,12 @@ msgid "No rules for specific windows are currently set"
 msgstr "Šiuo metu jokiems konkretiems langams nėra nustatytų taisyklių"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr ""
-"Norėdami pridėti taisyklių, žemiau spustelėkite mygtuką <interface>Pridėti "
-"naują...</interface>"
+"Norėdami jas pridėti, žemiau spustelėkite mygtuką <interface>Pridėti naują…</"
+"interface>"
 
 #: ui/main.qml:71
 #, kde-format
@@ -803,16 +847,14 @@ msgid "Save Rules"
 msgstr "Įrašyti taisykles"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Pridėti naują..."
+msgstr "Pridėti naują…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Importuoti..."
+msgstr "Importuoti…"
 
 #: ui/main.qml:119
 #, kde-format
@@ -820,10 +862,9 @@ msgid "Cancel Export"
 msgstr "Atsisakyti importavimo"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Eksportuoti..."
+msgstr "Eksportuoti…"
 
 #: ui/main.qml:195
 #, kde-format

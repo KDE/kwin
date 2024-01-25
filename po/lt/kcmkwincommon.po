@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-20 02:25+0000\n"
-"PO-Revision-Date: 2019-06-04 22:15+0000\n"
+"PO-Revision-Date: 2024-01-24 16:44+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt\n"
 "Language: lt\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -48,12 +48,10 @@ msgid "Focus"
 msgstr "Fokusavimas"
 
 #: effectsmodel.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "Category of Desktop Effects, used as section header"
-#| msgid "Show Desktop Animation"
+#, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Rodyti darbalaukio animaciją"
+msgstr "Žvilgsnio į darbalaukį animacija"
 
 #: effectsmodel.cpp:50
 #, kde-format
@@ -88,19 +86,19 @@ msgstr "KWin plėtojimo komanda"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Nepavyko nustatyti paketo metaduomenų vietos"
 
 #: genericscriptedconfig.cpp:77
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 neturi tinkamo metadata.json failo"
 
 #: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 nėra"
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"

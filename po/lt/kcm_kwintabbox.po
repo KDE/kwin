@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
-"PO-Revision-Date: 2019-07-31 00:26+0300\n"
+"PO-Revision-Date: 2024-01-24 16:29+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -21,14 +21,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: layoutpreview.cpp:127
-#, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Darbalaukis 1"
+msgstr "Rodyti darbalaukį"
 
 #: layoutpreview.cpp:157
 #, kde-format
@@ -92,7 +90,7 @@ msgstr "Kiekvienai programai po vieną langą"
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "Rikiuoti suskleistus langus po tų, kurie nėra suskleisti"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -242,42 +240,42 @@ msgstr "Rodyti pasirinktą langą"
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "Eiti per langus"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "Eiti per langus (Atvirkštine tvarka)"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "Eiti per dabartinės programos langus"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "Eiti per dabartinės programos langus (Atvirkštine tvarka)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "Eiti per langus alternatyva"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "Eiti per langus alternatyva (Atvirkštine tvarka)"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "Eiti per dabartinės programos langus alternatyva"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "Eiti per dabartinės programos langus alternatyva (Atvirkštine tvarka)"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

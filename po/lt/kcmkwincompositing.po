@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-09 01:39+0000\n"
-"PO-Revision-Date: 2019-07-26 16:14+0300\n"
+"PO-Revision-Date: 2024-01-24 16:49+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -21,18 +21,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
-#, fuzzy, kde-format
-#| msgid ""
-#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
-#| "This was most likely due to a driver bug.\n"
-#| "If you think that you have meanwhile upgraded to a stable driver,\n"
-#| "you can reset this protection but be aware that this might result in an "
-#| "immediate crash!\n"
-#| "Alternatively, you might want to use the XRender backend instead."
+#, kde-format
 msgid ""
 "OpenGL compositing (the default) has crashed KWin in the past.\n"
 "This was most likely due to a driver bug.\n"
@@ -40,12 +33,11 @@ msgid ""
 "you can reset this protection but be aware that this might result in an "
 "immediate crash!"
 msgstr ""
-"OpenGL kompozicionavimas (numatytasis) praeityje užlaužė KWin.\n"
-"Greičiausiai, tai įvyko dėl tvarkyklės klaidos.\n"
-"Jei galvojate, kad per tą laiką atsinaujinote į stabilią tvarkyklę,\n"
-"tuomet galite atstatyti šią apsaugą, tačiau turėkite omenyje, kad tai iš "
-"karto gali sąlygoti lūžimą!\n"
-"Priešingu atveju, vietoj to, galite pageidauti naudoti XRender vidinę pusę."
+"OpenGL komponavimas (numatytasis) praeityje užstrigdino KWin.\n"
+"Greičiausiai, tai įvyko dėl klaidos tvarkyklėje.\n"
+"Jei galvojate, kad per tą laiką atnaujinote į stabilią tvarkyklės versiją,\n"
+"tuomet galite atstatyti šią apsaugą, vis dėlto, turėkite omenyje, kad tai "
+"gali nedelsiant sukelti strigtį!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -61,14 +53,13 @@ msgstr ""
 #: compositing.ui:56
 #, kde-format
 msgid "Compositing:"
-msgstr ""
+msgstr "Komponavimas:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
 #: compositing.ui:63
-#, fuzzy, kde-format
-#| msgid "Enable compositor on startup"
+#, kde-format
 msgid "Enable on startup"
-msgstr "Įjungti kompozitorių paleidimo metu"
+msgstr "Įjungti paleidimo metu"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:72

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
-"PO-Revision-Date: 2019-07-30 22:25+0300\n"
+"PO-Revision-Date: 2024-01-24 15:04+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #: declarative-plugin/buttonsmodel.cpp:53
 #, kde-format
 msgid "More actions for this window"
-msgstr ""
+msgstr "Daugiau veiksmų su šiuo langu"
 
 #: declarative-plugin/buttonsmodel.cpp:55
 #, kde-format
@@ -64,18 +64,18 @@ msgstr "Slėpti lango turinį"
 #: declarative-plugin/buttonsmodel.cpp:69
 #, kde-format
 msgid "Keep below other windows"
-msgstr ""
+msgstr "Laikyti žemiau kitų langų"
 
 #: declarative-plugin/buttonsmodel.cpp:71
 #, kde-format
 msgid "Keep above other windows"
-msgstr ""
+msgstr "Laikyti aukščiau kitų langų"
 
 #: kcm.cpp:177
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr ""
+msgstr "Pagal apipavidalinimo numatymą (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -84,6 +84,9 @@ msgid ""
 "active session, without accidentally setting it to one that is either not "
 "available, or which is already set."
 msgstr ""
+"Šis įrankis jums leidžia šiuo metu aktyviam seansui nustatyti langų "
+"dekoracijų apipavidalinimą, apsaugodamas, kad nenustatytumėte atsitiktinai į "
+"tą, kuris neprieinamas ar į tą, kuris jau yra nustatytas."
 
 #: kwin-applywindowdecoration.cpp:33
 #, kde-format
@@ -92,12 +95,17 @@ msgid ""
 "full path will attempt to find a theme in that directory, and then apply "
 "that if one can be deduced."
 msgstr ""
+"Langų dekoracijų apipavidalinimo, kurį norite nustatyti KWin, pavadinimas. "
+"Perdavus visą kelią, bus bandoma rasti apipavidalinimą nurodytame kataloge "
+"ir tuomet, jei pavyks nustatyti apipavidalinimą, bus bandoma jį taikyti."
 
 #: kwin-applywindowdecoration.cpp:34
 #, kde-format
 msgid ""
 "Show all the themes available on the system (and which is the current theme)"
 msgstr ""
+"Rodyti visus sistemoje prieinamus apipavidalinimus (ir kuris yra dabartinis "
+"apipavidalinimas)"
 
 #: kwin-applywindowdecoration.cpp:65
 #, kde-format
@@ -105,6 +113,8 @@ msgid ""
 "Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that "
 "as your current theme."
 msgstr ""
+"Rastas %1 ir nustatytas į KWin Aurorae apipavidalinimą „%2“. Bus bandoma jį "
+"nustatyti kaip jūsų dabartinį apipavidalinimą."
 
 #: kwin-applywindowdecoration.cpp:71
 #, kde-format
@@ -112,17 +122,24 @@ msgid ""
 "You attempted to pass a file path, but this could not be resolved to a "
 "theme, and we will have to abort, due to having no theme to set"
 msgstr ""
+"Jūs bandėte perduoti failo kelią, bet nepavyko jame rasti ir nustatyti "
+"apipavidalinimo, tad teks nutraukti šią užduotį, nes nėra apipavidalinimo, "
+"kurį galima būtų nustatyti"
 
 #: kwin-applywindowdecoration.cpp:77
 #, kde-format
 msgid ""
 "The requested theme \"%1\" is already set as the window decoration theme."
 msgstr ""
+"Užklaustas apipavidalinimas „%1“ jau yra nustatytas kaip langų dekoracijų "
+"apipavidalinimas."
 
 #: kwin-applywindowdecoration.cpp:99
 #, kde-format
 msgid "Successfully applied the cursor theme %1 to your current Plasma session"
 msgstr ""
+"Jūsų dabartiniam Plasma seansui sėkmingai pritaikytas žymeklio "
+"apipavidalinimas %1"
 
 #: kwin-applywindowdecoration.cpp:103
 #, kde-format
@@ -130,6 +147,8 @@ msgid ""
 "Failed to save your theme settings - the reason is unknown, but this is an "
 "unrecoverable error. You may find that simply trying again will work."
 msgstr ""
+"Nepavyko įrašyti apipavidalinimo nuostatų. Priežastis nežinoma, bet tai yra "
+"neatkuriamoji klaida. Gali būti, kad pabandžius dar kartą, viskas suveiks."
 
 #: kwin-applywindowdecoration.cpp:107
 #, kde-format
@@ -137,11 +156,13 @@ msgid ""
 "Could not find theme \"%1\". The theme should be one of the following "
 "options: %2"
 msgstr ""
+"Nepavyko rasti apipavidalinimo „%1“. Apipavidalinimas turėtų būti vienas iš "
+"šių variantų: %2"
 
 #: kwin-applywindowdecoration.cpp:112
 #, kde-format
 msgid "You have the following KWin window decoration themes on your system:"
-msgstr ""
+msgstr "Jūsų sistemoje yra šie KWin langų dekoracijų apipavidalinimai:"
 
 #: ui/Buttons.qml:85
 #, kde-format
@@ -159,9 +180,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Tempkite mygtukus tarp šios vietos ir antraštės juostos"
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Antraštės juostos mygtukai"
 
@@ -176,6 +195,7 @@ msgstr "Užverti langus du kartus spustelėjus meniu mygtuką"
 msgctxt "popup tip"
 msgid "Click and hold on the menu button to show the menu."
 msgstr ""
+"Spustelėkite ir palaikykite nuspaudę meniu mygtuką, norėdami rodyti meniu."
 
 #: ui/ConfigureTitlebar.qml:59
 #, kde-format
@@ -184,26 +204,22 @@ msgid "Show titlebar button tooltips"
 msgstr "Rodyti antraštės juostos mygtukų paaiškinimus"
 
 #: ui/main.qml:29
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
 msgstr "Lango rėmelio dydis:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Antraštės juostos mygtukai"
+msgstr "Konfigūruoti antraštės juostos mygtukus…"
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Gauti naują…"
 
 #: ui/Themes.qml:93
 #, kde-format
@@ -211,62 +227,49 @@ msgid "Edit %1 Theme"
 msgstr "Taisyti %1 apipavidalinimą"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Jokių šoninių rėmelių"
+msgstr "Jokių lango rėmelių"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Jokių šoninių rėmelių"
+msgstr "Jokių šoninių lango rėmelių"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Lango rėmelio dydis:"
+msgstr "Mažyčiai lango rėmeliai"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Jokių šoninių rėmelių"
+msgstr "Normalūs lango rėmeliai"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Lango rėmelio dydis:"
+msgstr "Dideli lango rėmeliai"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Labai dideli lango rėmeliai"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Lango rėmelio dydis:"
+msgstr "Didžiuliai lango rėmeliai"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Lango rėmelio dydis:"
+msgstr "Milžiniški lango rėmeliai"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "combobox label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Lango rėmelio dydis:"
+msgstr "Per dideli lango rėmeliai"
 
 #, fuzzy
 #~| msgctxt "button text"

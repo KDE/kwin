@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-02 01:40+0000\n"
-"PO-Revision-Date: 2020-05-16 20:17+0300\n"
+"PO-Revision-Date: 2024-01-25 00:39+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -478,35 +478,7 @@ msgstr "Langų iš&dėstymas:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>The placement policy determines where a new window "
-#| "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-"
-#| "bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;"
-#| "\"><li style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Smart</span> will try to achieve a minimum overlap "
-#| "of windows</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
-#| "left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
-#| "style=\" font-style:italic;\">Maximizing</span> will try to maximize "
-#| "every window to fill the whole screen. It might be useful to selectively "
-#| "affect placement of some windows using the window-specific settings.</"
-#| "li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; "
-#| "margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" "
-#| "font-style:italic;\">Cascade</span> will cascade the windows</li><li "
-#| "style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Random</span> will use a random position</li><li style=\" "
-#| "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
-#| "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-#| "\">Centered</span> will place the window centered</li><li style=\" margin-"
-#| "top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-#| "indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Zero-"
-#| "cornered</span> will place the window in the top-left corner</li><li "
-#| "style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
-#| "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-"
-#| "style:italic;\">Under mouse</span> will place the window under the "
-#| "pointer</li></ul></body></html>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -532,32 +504,30 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
-"<html><head/><body><p>Išdėstymo politika nustato kur darbalaukyje atsiras "
-"naujas langas.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; margin-"
-"left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" margin-"
-"top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Mažiausias "
-"persidengimas</span> bandys pasiekti mažiausią langų persidengimą</li><li "
-"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"<html><head/><body><p>Išdėstymo politika nustato, kurioje darbalaukio "
+"vietoje atsiras naujas langas.</p><ul style=\"margin-top: 0px; margin-"
+"bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li "
+"style=\" margin-top:12px; margin-bottom:0px; margin-left:0px; margin-"
 "right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
-"italic;\">Išskleidimas</span> bandys kiekvieną langą išskleisti taip, kad "
-"jis užpildytų visą ekraną. Gali praversti pasirinktinai paveikti kai kurių "
-"langų išdėstymą naudojant specifines lango nuostatas.</li><li style=\" "
+"italic;\">Mažiausias persidengimas</span> bandys pasiekti mažiausią langų "
+"persidengimą</li><li style=\" margin-top:0px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Išskleisti</span> bandys išskleisti kiekvieną "
+"langą, kad būtų užpildytas visas ekranas. Gali būti naudinga pasirinktinai "
+"paveikti tam tikrų langų išdėstymą, naudojant konkrečių langų nuostatas.</"
+"li><li style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Atsitiktinai</span> naudos atsitiktinę poziciją</li><li style=\" "
 "margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
 "block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Pakopomis</span> išdėstys langus pakopomis</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
-"\">Atsitiktinai</span> naudos atsitiktinę poziciją</li><li style=\" margin-"
-"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
-"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Centre</"
-"span> išdėstys langus centre</li><li style=\" margin-top:0px; margin-"
-"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
-"indent:0px;\"><span style=\" font-style:italic;\">Viršutiniame kairiajame "
-"kampe</span> išdėstys langus viršutiniame kairiajame kampe</li><li style=\" "
-"margin-top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-"
-"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Po "
-"pele</span> išdėstys langus po pelės rodykle</li></ul></body></html>"
+"\">Centre</span> išdėstys langus centre</li><li style=\" margin-top:0px; "
+"margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; "
+"text-indent:0px;\"><span style=\" font-style:italic;\">Viršutiniame "
+"kairiajame kampe</span> išdėstys langus viršutiniame kairiajame kampe</"
+"li><li style=\" margin-top:0px; margin-bottom:12px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Po pele</span> išdėstys langus po pelės rodykle</li></ul></body></"
+"html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -603,6 +573,9 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"Kai įjungta, programoms, kurios geba prisiminti savo langų pozicija, bus "
+"leidžiama tai daryti. Tai nustelbs aukščiau apibrėžtą langų išdėstymo "
+"veikseną."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
@@ -610,6 +583,7 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
+"Leisti programoms, jeigu jos tai palaiko, prisiminti savo langų pozicija"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
@@ -641,13 +615,13 @@ msgstr "Slėpti pasyvių programų paslaugų langus"
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Virtualaus darbalaukio elgsena:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Aktyvuojant langą kitame virtualiame darbalaukyje:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -661,18 +635,24 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Ši nuostata valdo, kas nutiks, kai bus aktyvuotas "
+"kitame virtualiame darbalaukyje esantis langas. </p><p><span style=\" font-"
+"style:italic;\">Perjungti į tą virtualų darbalaukį</span> perjungs į "
+"virtualų darbalaukį, kuriame esamu metu yra langas. </p><p><span style=\" "
+"font-style:italic;\">Perkelti langą į dabartinį virtualų darbalaukį</span> "
+"privers langą peršokti į aktyvų virtualų darbalaukį. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Perjungti į tą virtualų darbalaukį"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Perkelti langą į dabartinį virtualų darbalaukį"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -909,23 +889,15 @@ msgstr "Kelių ekranų elgsena:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
+#, kde-format
 msgid ""
 "When this option is enabled, the active screen (where new windows appear, "
 "for example) is the screen containing the mouse pointer. When disabled, the "
 "active screen is the screen containing the focused window."
 msgstr ""
-"Kai ši parinktis įjungta, aktyviu Xinerama ekranu (pavyzdžiui, tuo kuriame "
-"atsiras nauji langai) bus tas, kuriame bus pelės rodyklė. Išjungus, aktyviu "
-"Xinerama ekranu bus tas, kuriame bus fokusuotas langas. Pagal numatymą, ši "
-"parinktis yra išjungta \"Spustelėti norint fokusuoti\" politikoje, o visose "
-"kitose fokusavimo politikose įjungta."
+"Kai ši parinktis įjungta, aktyviu ekranu (pavyzdžiui, tuo, kuriame atsiras "
+"nauji langai) bus tas, kuriame bus pelės rodyklė. Išjungus, aktyviu ekranu "
+"bus tas, kuriame bus fokusuotas langas."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
 #: focus.ui:206
@@ -935,16 +907,12 @@ msgstr "Aktyvus ekranas seka paskui &pelę"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:213
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, focus operations are limited only to the "
-#| "active Xinerama screen"
+#, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"Įjungus šią parinktį, fokusavimo operacijos yra apribojamos tik iki aktyvaus "
-"Xinerama ekrano"
+"Įjungus šią parinktį, fokusavimo operacijos apsiribos tik aktyviu ekranu"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:216
