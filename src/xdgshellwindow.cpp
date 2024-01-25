@@ -268,7 +268,7 @@ QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
 {
     const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
     const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRectF(QPoint(left, top), surface()->size());
+    return QRectF(QPointF(left, top), surface()->size());
 }
 
 void XdgSurfaceWindow::handleRoleDestroyed()
