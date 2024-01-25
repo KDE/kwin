@@ -360,7 +360,7 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     renderPart(right.toRect().intersected(dirtyRect), right.toRect(), rightPosition, devicePixelRatio, true);
 }
 
-void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &partRect,
+void SceneOpenGLDecorationRenderer::renderPart(const QRectF &rect, const QRectF &partRect,
                                                const QPoint &textureOffset,
                                                qreal devicePixelRatio, bool rotated)
 {
@@ -405,7 +405,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     // fill padding pixels by copying from the neighbour row
     clamp(image, padClip);
 
-    QPoint dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio;
+    QPoint dirtyOffset = ((rect.topLeft() - partRect.topLeft()) * devicePixelRatio).toPoint();
     if (padding.top() == 0) {
         dirtyOffset.ry() += TexturePad;
     }
@@ -416,7 +416,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
 }
 
 const QMargins SceneOpenGLDecorationRenderer::texturePadForPart(
-    const QRect &rect, const QRect &partRect)
+    const QRectF &rect, const QRectF &partRect)
 {
     QMargins result = QMargins(0, 0, 0, 0);
     if (rect.top() == partRect.top()) {

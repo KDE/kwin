@@ -83,7 +83,7 @@ void DecorationRenderer::setDevicePixelRatio(qreal dpr)
     }
 }
 
-void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
+void DecorationRenderer::renderToPainter(QPainter *painter, const QRectF &rect)
 {
     client()->decoration()->paint(painter, rect);
 }

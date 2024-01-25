@@ -37,7 +37,7 @@ public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Decoration() override;
 
-    void paint(QPainter *painter, const QRect &repaintRegion) override;
+    void paint(QPainter *painter, const QRectF &repaintRegion) override;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 

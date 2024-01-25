@@ -25,7 +25,7 @@ public:
     {
     }
 
-    void paint(QPainter *painter, const QRect &repaintRegion) override
+    void paint(QPainter *painter, const QRectF &repaintRegion) override
     {
     }
 

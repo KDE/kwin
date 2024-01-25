@@ -382,7 +382,7 @@ void Decoration::updateBorders()
     updateExtendedBorders();
 }
 
-void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     if (!m_view) {
         return;
