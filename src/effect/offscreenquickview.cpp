@@ -213,7 +213,7 @@ void OffscreenQuickView::update()
             return;
         }
 
-        const QSize nativeSize = d->m_view->size() * d->m_view->effectiveDevicePixelRatio();
+        const QSize nativeSize = d->m_view->size() * d->m_view->devicePixelRatio();
         if (!d->m_fbo || d->m_fbo->size() != nativeSize) {
             d->m_textureExport.reset(nullptr);
 
