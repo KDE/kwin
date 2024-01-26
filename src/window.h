@@ -1434,6 +1434,7 @@ Q_SIGNALS:
     void hiddenChanged();
     void hiddenByShowDesktopChanged();
     void lockScreenOverlayChanged();
+    void readyForPaintingChanged();
 
 protected:
     Window();

@@ -209,7 +209,9 @@ void WaylandServer::registerWindow(Window *window)
     if (window->readyForPainting()) {
         Q_EMIT windowAdded(window);
     } else {
-        connect(window, &Window::windowShown, this, &WaylandServer::windowAdded, Qt::SingleShotConnection);
+        connect(window, &Window::readyForPaintingChanged, this, [this, window]() {
+            Q_EMIT windowAdded(window);
+        });
     }
     m_windows << window;
 }
