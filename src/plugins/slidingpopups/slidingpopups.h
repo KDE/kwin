@@ -50,6 +50,7 @@ public:
 
 private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
+    void slotWindowClosed(EffectWindow *w);
     void slotWindowDeleted(EffectWindow *w);
     void slotPropertyNotify(EffectWindow *w, long atom);
     void slotWaylandSlideOnShowChanged(EffectWindow *w);
