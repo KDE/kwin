@@ -126,9 +126,10 @@ void InputPanelV1Window::reposition()
 
             m_windowGeometry = QRectF(QPointF(0, 0), surface()->size());
 
-            // Reuse the similar logic like xdg popup
-            QRectF popupRect(popupOffset(cursorRectangle, Qt::BottomEdge | Qt::LeftEdge, Qt::RightEdge | Qt::BottomEdge, m_windowGeometry.size()), m_windowGeometry.size());
-
+            QRectF popupRect(cursorRectangle.left(),
+                             cursorRectangle.top() + cursorRectangle.height(),
+                             m_windowGeometry.width(),
+                             m_windowGeometry.height());
             if (popupRect.left() < screen.left()) {
                 popupRect.moveLeft(screen.left());
             }
@@ -136,8 +137,10 @@ void InputPanelV1Window::reposition()
                 popupRect.moveRight(screen.right());
             }
             if (popupRect.top() < screen.top() || popupRect.bottom() > screen.bottom()) {
-                auto flippedPopupRect =
-                    QRectF(popupOffset(cursorRectangle, Qt::TopEdge | Qt::LeftEdge, Qt::RightEdge | Qt::TopEdge, m_windowGeometry.size()), m_windowGeometry.size());
+                const QRectF flippedPopupRect(cursorRectangle.left(),
+                                              cursorRectangle.top() - m_windowGeometry.height(),
+                                              m_windowGeometry.width(),
+                                              m_windowGeometry.height());
 
                 // if it still doesn't fit we should continue with the unflipped version
                 if (flippedPopupRect.top() >= screen.top() && flippedPopupRect.bottom() <= screen.bottom()) {
