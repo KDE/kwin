@@ -229,7 +229,7 @@ void Window::setReadyForPainting()
 {
     if (!ready_for_painting) {
         ready_for_painting = true;
-        Q_EMIT windowShown(this);
+        Q_EMIT readyForPaintingChanged();
     }
 }
 

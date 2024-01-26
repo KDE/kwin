@@ -39,6 +39,9 @@ WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     if (waylandServer()) {
         connect(waylandServer(), &WaylandServer::lockStateChanged, this, &WindowItem::updateVisibility);
     }
+    if (!window->readyForPainting()) {
+        connect(window, &Window::readyForPaintingChanged, this, &WindowItem::updateVisibility);
+    }
     connect(window, &Window::lockScreenOverlayChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::minimizedChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::hiddenChanged, this, &WindowItem::updateVisibility);
