@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
+"POT-Creation-Date: 2024-01-26 00:38+0000\n"
 "PO-Revision-Date: 2024-01-23 12:28+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -70,7 +70,7 @@ msgstr "Nyomja meg a jobb Controlt a bemenet elkapásához"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland kompozitor"
 
-#: compositor.cpp:147
+#: compositor.cpp:141
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""

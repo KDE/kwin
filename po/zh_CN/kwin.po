@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
+"POT-Creation-Date: 2024-01-26 00:38+0000\n"
 "PO-Revision-Date: 2024-01-21 14:11\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -69,7 +69,7 @@ msgstr "按右 Ctrl 键抓取输入"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 显示特效混合器"
 
-#: compositor.cpp:147
+#: compositor.cpp:141
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "由于显卡重置，桌面效果已重启。"

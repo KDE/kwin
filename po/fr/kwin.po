@@ -12,7 +12,7 @@
 # Nicolas Ternisien <nicolas.ternisien@gmail.com>, 2005, 2008, 2010.
 # Sébastien Renard <Sebastien.Renard@digitalfox.org>, 2008.
 # Anne-Marie Mahfouf <annemarie.mahfouf@free.fr>, 2009, 2011, 2012.
-# Xavier Besnard <xavier.besnard@kde.org>, 2013.
+# SPDX-FileCopyrightText: 2013, 2024 Xavier Besnard <xavier.besnard@kde.org>
 # Sebastien Renard <renard@kde.org>, 2013, 2014, 2015.
 # Vincent Pinon <vpinon@kde.org>, 2016, 2017.
 # Yoann Laissus <yoann.laissus@gmail.com>, 2017, 2018.
@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2023-12-01 09:50+0100\n"
+"POT-Creation-Date: 2024-01-26 00:38+0000\n"
+"PO-Revision-Date: 2024-01-23 10:55+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -35,7 +35,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 "X-Text-Markup: kde4\n"
 
 #, kde-format
@@ -96,7 +96,7 @@ msgstr "Appuyez sur la touche de contrôle droite pour saisir l'entrée"
 msgid "KDE Wayland Compositor"
 msgstr "Compositeur Wayland de KDE"
 
-#: compositor.cpp:147
+#: compositor.cpp:141
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
@@ -3547,14 +3547,13 @@ msgstr "Type de règle pour nom du fichier de bureau"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Calque"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Type de règle sur l'ombrage"
+msgstr "Type de règle concernant les calques"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
