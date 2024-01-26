@@ -71,6 +71,10 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     qunsetenv("XKB_DEFAULT_VARIANT");
     qunsetenv("XKB_DEFAULT_OPTIONS");
 
+    auto breezerc = KSharedConfig::openConfig(QStringLiteral("breezerc"));
+    breezerc->group(QStringLiteral("Common")).writeEntry(QStringLiteral("OutlineIntensity"), QStringLiteral("OutlineOff"));
+    breezerc->sync();
+
     auto config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup windowsGroup = config->group(QStringLiteral("Windows"));
     windowsGroup.writeEntry("Placement", Placement::policyToString(PlacementSmart));
