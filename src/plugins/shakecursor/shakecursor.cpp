@@ -13,6 +13,7 @@
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "plugins/shakecursor/shakecursorconfig.h"
+#include "pointer_input.h"
 
 namespace KWin
 {
@@ -73,6 +74,10 @@ bool ShakeCursorEffect::isActive() const
 void ShakeCursorEffect::pointerEvent(MouseEvent *event)
 {
     if (event->type() != QEvent::MouseMove || event->buttons() != Qt::NoButton) {
+        return;
+    }
+
+    if (input()->pointer()->isConstrained()) {
         return;
     }
 
