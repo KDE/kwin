@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-26 00:38+0000\n"
-"PO-Revision-Date: 2022-12-12 22:06+0200\n"
+"PO-Revision-Date: 2024-01-26 17:32+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.0.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -33,44 +33,44 @@ msgstr "rch@richard.eu.org,dgvirtual@akl.lt, <>"
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Paspauskite dešinįjį valdymo klavišą norėdami paleisti rodyklę"
 
 #: backends/wayland/wayland_output.cpp:278
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Paspauskite dešinįjį valdymo klavišą norėdami pagriebti rodyklę"
 
 #: backends/wayland/wayland_output.cpp:282
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE Wayland kompozitorius %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "– Išvedimas išjungtas"
 
 #: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "– Išvedimas pritemdytas"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Paspauskite dešinįjį valdymo klavišą norėdami paleisti įvestį"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Paspauskite dešinįjį valdymo klavišą norėdami pagriebti įvestį"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:516
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE Wayland kompozitorius"
 
 #: compositor.cpp:141
 #, kde-format
@@ -83,26 +83,18 @@ msgid "Suspend Compositing"
 msgstr "Pristabdyti komponavimą"
 
 #: compositor_x11.cpp:513
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>OpenGL komponuoklis (numatytasis) praeityje yra nulaužęs Kwin.</b><br>Tai "
-"greičiausiai įvyko dėl tvarkyklės klaidos.<p>Jei manote, kad nuo to laiko "
-"tvarkyklę atnaujinote į stabilesnę versiją,<br>šią apsaugą galite "
-"panaikinti, tačiau <b>perspėjame, kad tai gali baigtis lūžiu iškart!</b></"
-"p><p>Kaip alternatyva, galite naudoti XRender programinę sąsają vietoje "
-"OpenGL.</p>"
+"<b>OpenGL komponavimas (numatytasis) praeityje yra užstrigdinęs Kwin.</"
+"b><br>Tai greičiausiai įvyko dėl klaidos tvarkyklėje.<p>Jei manote, kad nuo "
+"to laiko tvarkyklę atnaujinote į stabilią versiją,<br>galite atstatyti šią "
+"apsaugą, tačiau <b>turėkite omenyje, kad tai gali nedelsiant sukeltį strigtį!"
+"</b></p>"
 
 #: compositor_x11.cpp:520
 #, kde-format
@@ -110,10 +102,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Privaloma X praplėtimai  (XComposite and XDamage) nerasti."
 
 #: compositor_x11.cpp:523
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL ir XRender/XFixes nerasti."
+msgstr "GLX/OpenGL neprieinama."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -686,10 +677,9 @@ msgid "Button"
 msgstr "Mygtukas"
 
 #: debug_console.cpp:518 debug_console.cpp:532
-#, fuzzy, kde-format
-#| msgid "Pressure"
+#, kde-format
 msgid "Pressed"
-msgstr "Spaudimas"
+msgstr "Paspaustas"
 
 #: debug_console.cpp:519 debug_console.cpp:533 debug_console.cpp:547
 #: debug_console.cpp:561
@@ -1082,7 +1072,7 @@ msgstr "Iškarpinė"
 #: debug_console.ui:491
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "Pirminis pasirinkimas"
 
 #: helpers/killer/killer.cpp:73
 #, kde-format
@@ -1166,6 +1156,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> nereaguoja. Ar norite nutraukti šios "
+"programos darbą?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1174,62 +1166,53 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>„%1“ iš <application>%2</application> nereaguoja. Ar norite nutraukti "
+"šios programos darbą?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Ar norite baigti šios programos darbą?</para><para><warning>Baigus "
-"programos darbą, bus užverti visi jos antriniai langai. Bet kokie neįrašyti "
-"duomenys bus prarasti.</warning></para>"
+"<para><emphasis strong='true'>Nutraukus programos darbą, bus užverti visi "
+"jos langai. Bet kokie neįrašyti duomenys bus prarasti.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "&Baigti programos %1 darbą"
+msgstr "&Nutraukti programos %1 darbą"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Palaukti ilgiau"
+msgstr "&Palaukti ilgiau"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Neatsako)"
+msgstr "Nereaguoja"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Proceso ID: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "mazgo pavadinimas"
+msgstr "Mazgo pavadinimas: %1"
 
 #: input.cpp:2010
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Perkelti planšetę į kitą išvedimą"
 
 #: input.cpp:2089
 #, kde-format
@@ -1239,7 +1222,7 @@ msgstr "Planšetė perkelta į %1"
 #: input.cpp:2089
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Planšetės pakeitė išvedimus"
 
 #: input.cpp:3183
 #, kde-format
@@ -1258,7 +1241,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 "Pasirinkite langą, kurį priverstinai užverti,\n"
-"naudodami kairiojo mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
+"naudodami kairiojo pelės mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
@@ -1328,11 +1311,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:194
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Milžiniškas"
+msgstr "Xaver Hugl"
 
 #: main.cpp:203
 #, kde-format
@@ -1401,6 +1382,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Wayland lizdas, naudojamas gaunamiesiems ryšiams. Tai gali būti naudojama "
+"kartu su --socket, kad būtų išvardytas lizdas"
 
 #: main_wayland.cpp:326
 #, kde-format
@@ -1408,21 +1391,25 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"XWayland lizdas, skirtas naudoti Xwayland gaunamiesiems ryšiams. Tai gali "
+"būti nustatyta kelis kartus"
 
 #: main_wayland.cpp:330
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Xwayland ekrano, kuris iš anksto nustatytas, pavadinimas"
 
 #: main_wayland.cpp:334
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "Xauthority failo pavadinimas"
 
 #: main_wayland.cpp:338
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
+"Išeina iš šio egzemplioriaus, kad kwin_wayland_wrapper galėtų paleisti jį iš "
+"naujo."
 
 #: main_wayland.cpp:340
 #, kde-format
@@ -1434,6 +1421,7 @@ msgstr "Atvaizduoti per drm mazgą."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Išpakuoti lokalės informaciją iš locale1, o ne iš naudotojo konfigūracijos"
 
 #: main_wayland.cpp:363
 #, kde-format
@@ -1511,11 +1499,9 @@ msgstr "Suliejimo stiprumas:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Dešinysis"
+msgstr "Silpnas"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1533,58 +1519,55 @@ msgstr "Triukšmo stiprumas:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Raudona"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Žalia"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Mėlyna"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Violetinė"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Veiksena:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopija (aklumas raudonai spalvai)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deuteranopija (aklumas žaliai spalvai)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopija (aklumas mėlynai spalvai)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Pasirinkite langą, kurį priverstinai užverti,\n"
-"naudodami kairiojo mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
+"Pasirinkite spalvos parinkimo vietą,\n"
+"naudodami kairiojo pelės mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
@@ -1608,39 +1591,34 @@ msgstr "Dokai ir skydeliai"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&Darbalaukiai"
+msgstr "Darbalaukis"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Laikyti aukščiau"
+msgstr "Laikyti aukščiau langų"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "Lango vaidmuo"
+msgstr "Pagal lango grupę"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Visas ekranas"
+msgstr "Viso ekrano langai"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "antraštė"
+msgstr "Trukmė:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1659,18 +1637,16 @@ msgstr " milisek."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Lango pozicija"
+msgstr "Lango atvėrimo animacija"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Pasukimas"
+msgstr "Pasukimo kraštas:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1684,9 +1660,7 @@ msgstr "Viršuje"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "Dešinysis"
 
@@ -1702,19 +1676,16 @@ msgstr "Apačioje"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "Kairysis"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Pasukimas"
+msgstr "Pasukimo kampas:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1725,10 +1696,9 @@ msgstr "Atstumas:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Lango pozicija"
+msgstr "Lango užvėrimo animacija"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1782,24 +1752,21 @@ msgid "Very Huge"
 msgstr "Milžiniškas"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Keisti &dydį"
+msgstr "Per didelis"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "Mygtukai"
+msgstr "Mygtukų dydis:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "Dialogas"
+msgstr "Konfigūracijos dialogas"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1826,10 +1793,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Toggle Window Border"
+#, kde-format
 msgid "Colored window border"
-msgstr "Perjungti lango rėmelį"
+msgstr "Spalvotas lango rėmelis"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -1863,7 +1829,7 @@ msgstr "užverti"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr ""
+msgstr "sus"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:50
 #, kde-format
@@ -1875,7 +1841,7 @@ msgstr "suskleisti"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
-msgstr ""
+msgstr "išs"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:56
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
@@ -1891,25 +1857,22 @@ msgid "fullscreen"
 msgstr "visas ekranas"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
-#, fuzzy, kde-format
-#| msgid "Shaded"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "Pridengtas"
+msgstr "pridengti"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:65
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Laikyti aukščiau"
+msgstr "laikyti aukščiau"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:68
-#, fuzzy, kde-format
-#| msgid "Keep below"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Laikyti žemiau"
+msgstr "laikyti žemiau"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
 #, kde-format
@@ -1924,11 +1887,10 @@ msgid "name"
 msgstr "pavadinimas"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:87
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr "pavadinimas"
+msgstr "programos_pavadinimas"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
@@ -1945,43 +1907,42 @@ msgstr "Perjungti į darbalaukį %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:292
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "Užverti langą, veikiantį ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "Suskleisti (grąžinti iš suskleidimo) langą, veikianti ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "Išskleisti/atkurti langą, veikiantį ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr ""
+msgstr "Perjungti viso ekrano veikseną langui, veikiančiam ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "(Atidengti) pridengti langą, veikiantį ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "Perjungti laikymo aukščiau veikseną langui, veikiančiam ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "Perjungti laikymo žemiau veikseną langui, veikiančiam ties %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Aktyvuoti langą (%1)"
+msgstr "Aktyvuoti langą, veikiantį ties %1"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
@@ -2024,11 +1985,9 @@ msgstr " piks."
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Dešinysis"
+msgstr "A&ukštis:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2037,25 +1996,19 @@ msgid "Toggle Mouse Click Effect"
 msgstr "Perjungti pelės spustelėjimo efektą"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Kairysis"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Vidurinysis"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "Dešinysis"
@@ -2068,24 +2021,21 @@ msgstr "Pagrindinės nuostatos"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Nėra pelės mygtukų"
+msgstr "Kairiojo pelės mygtuko spalva:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Nėra pelės mygtukų"
+msgstr "Viduriniojo pelės mygtuko spalva:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Nėra pelės mygtukų"
+msgstr "Dešiniojo pelės mygtuko spalva:"
 
 # #-#-#-#-#  konsole.po (konsole)  #-#-#-#-# (pofilter) compendiumconflicts: checks for Gettext compendium conflicts (#-#-#-#-#)
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
@@ -2110,11 +2060,9 @@ msgstr "Linijos plotis:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
-msgstr " pikselis"
+msgstr " piks."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
@@ -2136,11 +2084,9 @@ msgstr "Žiedo spindulys:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Pirštų skaičius"
+msgstr "Žiedų skaičius:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2156,10 +2102,9 @@ msgstr "Šriftas:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Rodyti darbalaukį"
+msgstr "Rodyti tekstą:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2181,10 +2126,10 @@ msgstr "Išvalyti žymėjimus pele"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[0] " pikselis"
+msgstr[1] " pikseliai"
+msgstr[2] " pikselių"
+msgstr[3] " pikselis"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2207,18 +2152,16 @@ msgstr "&Spalva:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
 msgstr ""
-"Pieškite pele, laikydami nuspaustus Lyg2+Meta klavišus ir judindami pelę."
+"Pieškite pele, laikydami nuspaustus modifikavimo klavišus ir judindami pelę"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Modifikatoriai"
+msgstr "Laisvo piešimo modifikavimo klavišai:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2226,9 +2169,7 @@ msgstr "Modifikatoriai"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2248,9 +2189,7 @@ msgstr "Vald"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Lyg2"
 
@@ -2260,40 +2199,32 @@ msgstr "Lyg2"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Modifikatoriai"
+msgstr "Rodyklės piešimo modifikavimo klavišai:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "Naktinė spalva išjungta"
+msgstr "Naktinė šviesa išjungta"
 
 #: plugins/nightcolor/nightcolormanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "Naktinė spalva įjungta"
+msgstr "Naktinė šviesa įjungta"
 
 #: plugins/nightcolor/nightcolormanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "Perjungti naktinę spalvą"
+msgstr "Perjungti naktinę šviesą"
 
 #: plugins/nightcolor/nightcolormanager.cpp:466
 #, kde-format
@@ -2301,56 +2232,49 @@ msgid "Color Temperature Preview"
 msgstr "Spalvos temperatūros peržiūra"
 
 #: plugins/outputlocator/outputlocator.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr "Nežinomas"
+msgstr "Nežinoma"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:41
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Perjunginėti tarp apžvalgos ir tinklelio rodinio"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Perjunginėti tarp tinklelio rodinio ir apžvalgos"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Perjungti invertavimo efektą"
+msgstr "Perjungti apžvalgą"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Perjungti invertavimo efektą"
+msgstr "Perjungti tinklelio rodinį"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Layout mode:"
-msgstr "Planšetės veiksena"
+msgstr "Išdėstymo veiksena:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:30
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Closest"
-msgstr "&Užverti"
+msgstr "Artimiausia"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:35
@@ -2361,212 +2285,186 @@ msgstr "Natūrali"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:43
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Suskleisti langą"
+msgstr "Nepaisyti suskleistų langų:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Susisteminti langus į tinklelio rodinį:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Įtraukti filtruotus langus į paieškos rezultatus:"
 
 #: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Perjunginėti tarp apžvalgos ir tinklelio rodinio"
 
 #: plugins/overview/overvieweffect.cpp:142
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Perjungti invertavimo efektą"
+msgstr "Perjungti apžvalgą"
 
 #: plugins/overview/overvieweffect.cpp:150
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Perjungti invertavimo efektą"
+msgstr "Perjungti tinklelio rodinį"
 
 #: plugins/overview/qml/DesktopBar.qml:172
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Žvilgsnis į darbalaukį"
+msgstr "Ištrinti virtualų darbalaukį"
 
 #: plugins/overview/qml/DesktopBar.qml:269
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Pridėti į &naują darbalaukį"
+msgstr "Pridėti virtualų darbalaukį"
 
 #: plugins/overview/qml/main.qml:381
-#, fuzzy, kde-format
-#| msgid "Peek at Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Žvilgsnis į darbalaukį"
+msgstr "Nėra kitų virtualių darbalaukių"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and add the window to that desktop"
-#| msgid "Add to &New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "Pridėti į &naują darbalaukį"
+msgstr "Pridėti virtualų darbalaukį"
 
 #: plugins/overview/qml/main.qml:394
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Konfigūruoti išdėstymus..."
+msgstr "Konfigūruoti virtualius darbalaukius…"
 
 #: plugins/overview/qml/main.qml:723
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "X11 netvarkomi langai"
+msgstr "Nėra paiešką atitinkančių langų"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Tempkite žemyn norėdami užverti"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:450
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Užverti langą"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Lango vaidmuo"
+msgstr "Lango atvėrimo mastelis:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Lango vaidmuo"
+msgstr "Lango užvėrimo mastelis:"
 
 #: plugins/screencast/pipewirecore.cpp:60
 #: plugins/screencast/pipewirecore.cpp:89
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Nepavyko paleisti pagrindinio PipeWire ciklo"
 
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Nepavyko sukurti PipeWire konteksto"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Nepavyko prisijungti prie PipeWire konteksto"
 
 #: plugins/screencast/screencastmanager.cpp:107
 #, kde-format
 msgid "Could not find window id %1"
-msgstr ""
+msgstr "Nepavyko rasti lango id %1"
 
 #: plugins/screencast/screencastmanager.cpp:147
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Nepavyko rasti išvesties"
 
 #: plugins/screencast/screencastmanager.cpp:174
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Neteisinga sritis"
 
 #: plugins/screencast/screencastmanager.cpp:205
 #, kde-format
 msgid "Region outside the workspace"
-msgstr ""
+msgstr "Sritis už darbo srities ribų"
 
 #: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Nepavyko sukurti PipeWire srauto"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:532
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Pasirinkite langą, kurį priverstinai užverti,\n"
-"naudodami kairiojo mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
+"Pasirinkite langą, kurio ekrano kopiją norite padaryti,\n"
+"naudodami kairiojo pelės mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:550
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Pasirinkite langą, kurį priverstinai užverti,\n"
-"naudodami kairiojo mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
+"Darykite ekrano kopiją,\n"
+"naudodami kairiojo pelės mygtuko spustelėjimą ar Įvedimo (Enter) klavišą.\n"
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
 #: plugins/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Rodyklės judėjimas"
+msgstr "Piešimo trukmė"
 
 #: plugins/showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Žiedų kiekis:"
+msgstr "Piešimo kiekis"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Dabartinis išdėstymas:"
+msgstr "Šiuo metu kadr./sek."
 
 #: plugins/showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Didžiausias &plotis:"
+msgstr "Daugiausia kadr./sek."
 
 #: plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Šis efektas nėra našumo testas"
@@ -2584,25 +2482,21 @@ msgstr "Tarpas tarp darbalaukių"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Horizontali"
+msgstr "Horizontalus:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Vertikali"
+msgstr "Vertikalus:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
-msgstr "Praslinkti darbalaukio foną"
+msgstr "Slinkti darbalaukio foną"
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -2646,48 +2540,43 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:30
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Perjungti plytelių redaktorių"
 
 #: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Užpildas:"
 
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Įkelti išdėstymą..."
 
 #: plugins/tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Užverti"
+msgstr "Užverti"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Horizontali"
+msgstr "Padalyti horizontaliai"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Vertikali"
+msgstr "Padalyti vertikaliai"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Pridėti slankią plytelę"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Ištrinti"
 
 #: plugins/trackmouse/trackmouse.cpp:46
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -2703,17 +2592,15 @@ msgstr "Paleisti efektą naudojant:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Klaviatūra"
+msgstr "Spartusis klavišas:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Modifikatoriai"
+msgstr "Modifikavimo klavišai:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2743,10 +2630,9 @@ msgstr "Nepermatomas"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "Dialogas"
+msgstr "Dialogai:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2764,17 +2650,15 @@ msgstr "Meniu:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Perkelti langą"
+msgstr "Perkeliami langai:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Vidiniai langai"
+msgstr "Neaktyvūs langai:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2828,11 +2712,9 @@ msgstr "Kableliais atskirtų, langų klasių sąrašas"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
-msgstr "Alt"
+msgstr "Visi"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Ignore)
 #: plugins/videowall/package/contents/ui/config.ui:54
@@ -2854,10 +2736,9 @@ msgstr "Perjungti langų pateikimą (Dabartinis darbalaukis)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:55
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Laikyti langą visuose darbalaukiuose"
+msgstr "Perjungti langų pateikimą (Visi darbalaukiai)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:64
@@ -2867,34 +2748,30 @@ msgstr "Perjungti langų pateikimą (Lango klasė)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:73
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Perjungti langų pateikimą (Dabartinis darbalaukis)"
+msgstr "Perjungti langų pateikimą (Lango klasė dabartiniame darbalaukyje)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Suskleisti langą"
+msgstr "Nepaisyti susk&leistų langų"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Nėra atitikmenų"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Langai"
+msgstr "Nėra langų"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Vidiniai langai"
+msgstr "Filtruoti langus…"
 
 # #-#-#-#-#  konsole.po (konsole)  #-#-#-#-# (pofilter) compendiumconflicts: checks for Gettext compendium conflicts (#-#-#-#-#)
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
@@ -2917,10 +2794,9 @@ msgstr "Tem&pimas:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "&Move factor:"
-msgstr "Perkelti į %1 %2"
+msgstr "&Perkėlimo faktorius:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -2959,16 +2835,14 @@ msgid "More"
 msgstr "Daugiau"
 
 #: plugins/zoom/zoom.cpp:68
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Langą vienu darbalaukiu į kairę"
+msgstr "Perkelti pakeisto mastelio sritį kairėn"
 
 #: plugins/zoom/zoom.cpp:75
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Langą vienu darbalaukiu į dešinę"
+msgstr "Perkelti pakeisto mastelio sritį dešinėn"
 
 #: plugins/zoom/zoom.cpp:82
 #, kde-format
@@ -2981,40 +2855,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Perkelti didintą sritį į apačią"
 
 #: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Nėra pelės mygtukų"
+msgstr "Perkelti pelę į fokusavimą"
 
 #: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
-#, fuzzy, kde-format
-#| msgid "Move Window to the Center"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "Perkelti langą į centrą"
+msgstr "Perkelti pelę į centrą"
 
 #: plugins/zoom/zoom_config.cpp:70
-#, fuzzy, kde-format
-#| msgid "Move Window Left"
+#, kde-format
 msgid "Move Left"
-msgstr "Perkelti langą kairėn"
+msgstr "Perkelti kairėn"
 
 #: plugins/zoom/zoom_config.cpp:77
-#, fuzzy, kde-format
-#| msgid "Move Window Right"
+#, kde-format
 msgid "Move Right"
-msgstr "Perkelti langą dešinėn"
+msgstr "Perkelti dešinėn"
 
 #: plugins/zoom/zoom_config.cpp:84
-#, fuzzy, kde-format
-#| msgid "Move Window Up"
+#, kde-format
 msgid "Move Up"
-msgstr "Perkelti langą aukštyn"
+msgstr "Perkelti aukštyn"
 
 #: plugins/zoom/zoom_config.cpp:91
-#, fuzzy, kde-format
-#| msgid "Move Window Down"
+#, kde-format
 msgid "Move Down"
-msgstr "Perkelti langą žemyn"
+msgstr "Perkelti žemyn"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3031,16 +2899,13 @@ msgstr "Didinimo faktorius:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#, kde-format
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
 "Įjungti fokusuojamos vietos sekimą. Tai reikalauja, kad kiekvienai programai "
-"būtų įjungta QAccessible (\"export QT_ACCESSIBILITY=1\")."
+"būtų įjungta QAccessible (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:69
@@ -3050,23 +2915,19 @@ msgstr "Įjungti fokusavimo sekimą"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#, kde-format
 msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"Įjungti fokusuojamos vietos sekimą. Tai reikalauja, kad kiekvienai programai "
-"būtų įjungta QAccessible (\"export QT_ACCESSIBILITY=1\")."
+"Įjungti teksto žymeklio sekimą. Tai reikalauja, kad kiekvienai programai "
+"būtų įjungta QAccessible (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr "Įjungti fokusavimo sekimą"
+msgstr "Įjungti teksto žymeklio sekimą"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:86
@@ -3082,11 +2943,9 @@ msgstr "Pelės rodyklės matomumas."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
-msgstr "Mastelis"
+msgstr "Keisti mastelį"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:108
@@ -3108,10 +2967,9 @@ msgstr "Sekti pelės judėjimą."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "Pozicija"
+msgstr "Proporcionalus"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
@@ -3139,16 +2997,15 @@ msgstr "Pelės sekimas:"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
-#, fuzzy, kde-format
-#| msgid "Total rules count"
+#, kde-format
 msgid "Total rules count (legacy)"
-msgstr "Bendras taisyklių skaičius"
+msgstr "Bendras taisyklių skaičius (pasenę)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "Taisyklių grupių tvarkusis sąrašas"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
@@ -3326,17 +3183,15 @@ msgstr "Užklaustos geometrijos nepaisymo taisyklės tipas"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Perjungti į darbalaukį %1"
+msgstr "Darbalaukio ID sąrašas"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Desktop number rule type"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Darbalaukio numerio taisyklės tipas"
+msgstr "Darbalaukio ID taisyklės tipas"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
@@ -3654,14 +3509,13 @@ msgstr "Darbalaukio failo pavadinimo taisyklės tipas"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Sluoksnis"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Pridengimo taisyklės tipas"
+msgstr "Sluoksnio taisyklės tipas"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3681,18 +3535,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Šios programos neužsivėrė:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Atsisakyti atsijungimo"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Vis tiek atsijungti"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3798,28 +3654,24 @@ msgid "&Shade"
 msgstr "Pri&dengti"
 
 #: useractions.cpp:246
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Be antraštės juostos ir rėmelio"
+msgstr "&Be antraštės juostos ir rėmelio"
 
 #: useractions.cpp:254
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Nustatyti lango &spartųjį klavišą..."
+msgstr "Nustatyti lango &spartųjį klavišą…"
 
 #: useractions.cpp:260
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Konfigūruoti specialias lango nu&ostatas..."
+msgstr "Konfigūruoti specialias lango nu&ostatas…"
 
 #: useractions.cpp:265
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Konfigūruoti s&pecialias programos nuostatas..."
+msgstr "Konfigūruoti s&pecialias programos nuostatas…"
 
 #: useractions.cpp:271
 #, kde-format
@@ -3913,10 +3765,9 @@ msgid "&All Activities"
 msgstr "Vi&sos veiklos"
 
 #: useractions.cpp:724
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Perkelti į %1 %2"
+msgstr "Perkelti į %1"
 
 #: useractions.cpp:843
 #, kde-format
@@ -3996,10 +3847,9 @@ msgid "Make Window Fullscreen"
 msgstr "Išskleisti langą per visą ekraną"
 
 #: useractions.cpp:951
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Be antraštės juostos ir rėmelio"
+msgstr "Perjungti lango antraštės juostą ir rėmelį"
 
 #: useractions.cpp:953
 #, kde-format
@@ -4047,28 +3897,24 @@ msgid "Move Window Down"
 msgstr "Perkelti langą žemyn"
 
 #: useractions.cpp:971
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Išskleisti langą horizontaliai"
+msgstr "Išplėsti langą horizontaliai"
 
 #: useractions.cpp:973
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "Išskleisti langą vertikaliai"
+msgstr "Išplėsti langą vertikaliai"
 
 #: useractions.cpp:975
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Pakuoti langą suskleidžiant horizontaliai"
+msgstr "Sumažinti langą horizontaliai"
 
 #: useractions.cpp:977
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Pakuoti langą suskleidžiant vertikaliai"
+msgstr "Sumažinti langą vertikaliai"
 
 #: useractions.cpp:979
 #, kde-format
@@ -4131,16 +3977,14 @@ msgid "Switch to Window to the Left"
 msgstr "Perjungti į langą kairėje"
 
 #: useractions.cpp:1003
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Padidinti aktyvaus lango nepermatomumą 5 %"
+msgstr "Padidinti 5% aktyvaus lango nepermatomumą"
 
 #: useractions.cpp:1005
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Sumažinti aktyvaus lango nepermatomumą 5 %"
+msgstr "Sumažinti 5% aktyvaus lango nepermatomumą"
 
 #: useractions.cpp:1008
 #, kde-format
@@ -4183,46 +4027,39 @@ msgid "Window One Desktop Down"
 msgstr "Langą vienu darbalaukiu į apačią"
 
 #: useractions.cpp:1033
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Langą į ekraną %1"
+msgstr "Perkelti langą į ekraną %1"
 
 #: useractions.cpp:1040
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Langą į kitą ekraną"
+msgstr "Perkelti langą į kitą ekraną"
 
 #: useractions.cpp:1042
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Langą į ankstesnį ekraną"
+msgstr "Perkelti langą į ankstesnį ekraną"
 
 #: useractions.cpp:1044
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Langą vienu darbalaukiu į dešinę"
+msgstr "Perkelti langą vienu ekranu į dešinę"
 
 #: useractions.cpp:1046
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Langą vienu darbalaukiu į kairę"
+msgstr "Perkelti langą vienu ekranu į kairę"
 
 #: useractions.cpp:1048
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Langą į ekraną %1"
+msgstr "Perkelti langą vienu ekranu aukštyn"
 
 #: useractions.cpp:1050
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Langą vienu darbalaukiu į apačią"
+msgstr "Perkelti langą vienu ekranu žemyn"
 
 #: useractions.cpp:1054
 #, kde-format
@@ -4337,18 +4174,7 @@ msgid "(Not Responding)"
 msgstr "(Neatsako)"
 
 #: workspace.cpp:1624
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4362,19 +4188,19 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWin palaikymo informacija:\n"
-"Ši informacija turėtų būti pateikiama prašant palaikymo pvz., forume http://"
-"forum.kde.org.\n"
+"Ši informacija turėtų būti pateikiama prašant palaikymo pvz., forume https://"
+"discuss.kde.org.\n"
 "Čia pateikiama informacija apie šiuo metu veikiantį egzempliorių, kokios yra "
 "naudojamos parinktys,\n"
 "kokia naudojama OpenGL tvarkyklė ir kokie yra įjungti efektai.\n"
 "Prašome žemiau pateiktą informaciją įterpti į teksto įdėjimo paslaugas, "
 "pvz., \n"
-"http://paste.kde.org, o ne į palaikymo gijas.\n"
+"https://paste.kde.org, o ne į palaikymo gijas forumuose.\n"
 
 #: xwayland/xwaylandlauncher.cpp:271
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Xwayland užstrigo"
 
 #~ msgid "Set window type to"
 #~ msgstr "Nustatyti lango tipą į"
