@@ -20,6 +20,7 @@ namespace KWin
 
 class InputDevice;
 class InputRedirection;
+class TouchInputGrab;
 class Window;
 
 namespace Decoration
@@ -76,6 +77,7 @@ private:
 
     void focusUpdate(Window *focusOld, Window *focusNow) override;
 
+    std::unique_ptr<TouchInputGrab> m_grab;
     QSet<qint32> m_activeTouchPoints;
     qint32 m_decorationId = -1;
     qint32 m_internalId = -1;

@@ -36,6 +36,7 @@ class InputRedirection;
 class KeyboardLayout;
 class ModifiersChangedSpy;
 class Xkb;
+class KeyboardInputGrab;
 
 class KWIN_EXPORT KeyboardInputRedirection : public QObject
 {
@@ -63,6 +64,7 @@ Q_SIGNALS:
 
 private:
     InputRedirection *m_input;
+    std::unique_ptr<KeyboardInputGrab> m_grab;
     bool m_inited = false;
     const std::unique_ptr<Xkb> m_xkb;
     QMetaObject::Connection m_activeWindowSurfaceChangedConnection;

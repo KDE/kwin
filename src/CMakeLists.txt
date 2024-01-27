@@ -103,6 +103,7 @@ target_sources(kwin PRIVATE
     input.cpp
     input_event.cpp
     input_event_spy.cpp
+    inputgrab.cpp
     inputmethod.cpp
     inputpanelv1integration.cpp
     inputpanelv1window.cpp
@@ -490,6 +491,7 @@ install(FILES
     input_event.h
     input_event_spy.h
     input.h
+    inputgrab.h
     inputmethod.h
     inputpanelv1integration.h
     inputpanelv1window.h

@@ -13,6 +13,7 @@
 
 #include "decorations/decoratedclient.h"
 #include "input_event_spy.h"
+#include "inputgrab.h"
 #include "pointer_input.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -31,6 +32,63 @@
 namespace KWin
 {
 
+class DefaultTouchInputGrab : public TouchInputGrab
+{
+public:
+    void enter(Window *window, const QPointF &pos) override
+    {
+        window->pointerEnterEvent(pos);
+
+        auto seat = waylandServer()->seat();
+        if (window->surface()) {
+            seat->setFocusedTouchSurface(window->surface(), -1 * window->inputTransformation().map(window->pos()) + window->pos());
+        }
+    }
+
+    void leave(Window *window) override
+    {
+        window->pointerLeaveEvent();
+
+        auto seat = waylandServer()->seat();
+        if (window->surface()) {
+            seat->setFocusedTouchSurface(nullptr);
+        }
+    }
+
+    void cancel() override
+    {
+        auto seat = waylandServer()->seat();
+        seat->notifyTouchCancel();
+    }
+
+    void frame() override
+    {
+        auto seat = waylandServer()->seat();
+        seat->notifyTouchFrame();
+    }
+
+    void motion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->notifyTouchMotion(id, pos);
+    }
+
+    void down(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->notifyTouchDown(id, pos);
+    }
+
+    void up(qint32 id, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->notifyTouchUp(id);
+    }
+};
+
 TouchInputRedirection::TouchInputRedirection(InputRedirection *parent)
     : InputDeviceHandler(parent)
 {
@@ -47,6 +105,8 @@ void TouchInputRedirection::init()
 
     setInited(true);
     InputDeviceHandler::init();
+
+    m_grab = std::make_unique<TouchInputGrab>();
 
 #if KWIN_BUILD_SCREENLOCKER
     if (waylandServer()->hasScreenLockerIntegration()) {
@@ -91,26 +151,19 @@ void TouchInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
     // TODO: handle pointer grab aka popups
 
-    if (focusOld && focusOld->isClient()) {
-        focusOld->pointerLeaveEvent();
+    if (focusOld) {
+        m_grab->leave(focusOld);
     }
+
     disconnect(m_focusGeometryConnection);
     m_focusGeometryConnection = QMetaObject::Connection();
 
-    if (focusNow && focusNow->isClient()) {
-        focusNow->pointerEnterEvent(m_lastPosition);
-    }
-
-    auto seat = waylandServer()->seat();
-    if (!focusNow || !focusNow->surface()) {
-        seat->setFocusedTouchSurface(nullptr);
+    if (!focusNow) {
         return;
     }
 
-    // TODO: invalidate pointer focus?
+    m_grab->enter(focusNow, m_lastPosition);
 
-    // FIXME: add input transformation API to SeatInterface for touch input
-    seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
     m_focusGeometryConnection = connect(focusNow, &Window::frameGeometryChanged, this, [this]() {
         if (!focus()) {
             return;
@@ -142,7 +195,9 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     }
     input()->setLastInputHandler(this);
     input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::touchDown, std::placeholders::_1, id, pos, time))) {
+        m_grab->down(id, pos, time);
+    }
     m_windowUpdatedInCycle = false;
 }
 
@@ -157,7 +212,9 @@ void TouchInputRedirection::processUp(qint32 id, std::chrono::microseconds time,
     input()->setLastInputHandler(this);
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchUp, std::placeholders::_1, id, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::touchUp, std::placeholders::_1, id, time))) {
+        m_grab->up(id, time);
+    }
     m_windowUpdatedInCycle = false;
     if (m_activeTouchPoints.count() == 0) {
         update();
@@ -176,7 +233,9 @@ void TouchInputRedirection::processMotion(qint32 id, const QPointF &pos, std::ch
     m_lastPosition = pos;
     m_windowUpdatedInCycle = false;
     input()->processSpies(std::bind(&InputEventSpy::touchMotion, std::placeholders::_1, id, pos, time));
-    input()->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, pos, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::touchMotion, std::placeholders::_1, id, pos, time))) {
+        m_grab->motion(id, pos, time);
+    }
     m_windowUpdatedInCycle = false;
 }
 
@@ -191,7 +250,9 @@ void TouchInputRedirection::cancel()
     // the compositor will not receive any TOUCH_MOTION or TOUCH_UP events for that slot.
     if (!m_activeTouchPoints.isEmpty()) {
         m_activeTouchPoints.clear();
-        input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1));
+        if (!input()->processFilters(std::bind(&InputEventFilter::touchCancel, std::placeholders::_1))) {
+            m_grab->cancel();
+        }
     }
 }
 
@@ -200,7 +261,9 @@ void TouchInputRedirection::frame()
     if (!inited() || !waylandServer()->seat()->hasTouch()) {
         return;
     }
-    input()->processFilters(std::bind(&InputEventFilter::touchFrame, std::placeholders::_1));
+    if (!input()->processFilters(std::bind(&InputEventFilter::touchFrame, std::placeholders::_1))) {
+        m_grab->frame();
+    }
 }
 
 }

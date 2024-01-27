@@ -32,6 +32,7 @@ class ShapeCursorSource;
 class SurfaceCursorSource;
 class PointerSurfaceCursor;
 class SurfaceInterface;
+class PointerInputGrab;
 
 namespace Decoration
 {
@@ -160,6 +161,8 @@ private:
     void disconnectLockedPointerAboutToBeUnboundConnection();
     void disconnectPointerConstraintsConnection();
     void breakPointerConstraints(SurfaceInterface *surface);
+
+    std::unique_ptr<PointerInputGrab> m_grab;
     CursorImage *m_cursor;
     QPointF m_pos;
     QHash<uint32_t, InputRedirection::PointerButtonState> m_buttons;

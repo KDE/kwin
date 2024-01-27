@@ -19,6 +19,7 @@
 #include "effect/effecthandler.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputgrab.h"
 #include "mousebuttons.h"
 #include "osd.h"
 #include "wayland/display.h"
@@ -51,6 +52,160 @@
 
 namespace KWin
 {
+
+static PointerAxisSource kwinAxisSourceToKWaylandAxisSource(InputRedirection::PointerAxisSource source)
+{
+    switch (source) {
+    case InputRedirection::PointerAxisSourceWheel:
+        return PointerAxisSource::Wheel;
+    case InputRedirection::PointerAxisSourceFinger:
+        return PointerAxisSource::Finger;
+    case InputRedirection::PointerAxisSourceContinuous:
+        return PointerAxisSource::Continuous;
+    case InputRedirection::PointerAxisSourceWheelTilt:
+        return PointerAxisSource::WheelTilt;
+    case InputRedirection::PointerAxisSourceUnknown:
+    default:
+        return PointerAxisSource::Unknown;
+    }
+}
+
+class DefaultPointerInputGrab : public PointerInputGrab
+{
+public:
+    void enter(Window *window, const QPointF &pos) override
+    {
+        window->pointerEnterEvent(pos);
+
+        auto seat = waylandServer()->seat();
+        if (window->surface()) {
+            seat->notifyPointerEnter(window->surface(), pos, window->inputTransformation());
+        }
+    }
+
+    void leave(Window *window) override
+    {
+        window->pointerLeaveEvent();
+
+        auto seat = waylandServer()->seat();
+        if (window->surface()) {
+            seat->notifyPointerLeave();
+        }
+    }
+
+    void frame() override
+    {
+        auto seat = waylandServer()->seat();
+        seat->notifyPointerFrame();
+    }
+
+    void motion(MouseEvent *event) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerMotion(event->globalPosition());
+        if (!event->delta().isNull()) {
+            seat->relativePointerMotion(event->delta(), event->deltaUnaccelerated(), event->timestamp());
+        }
+    }
+
+    void button(MouseEvent *event) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        if (event->type() == QEvent::MouseButtonPress) {
+            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Pressed);
+        } else {
+            seat->notifyPointerButton(event->nativeButton(), PointerButtonState::Released);
+        }
+    }
+
+    void wheel(WheelEvent *event) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        seat->notifyPointerAxis(event->orientation(), event->delta(), event->deltaV120(),
+                                kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
+                                event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+    }
+
+    void pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->startPointerPinchGesture(fingerCount);
+    }
+
+    void pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->updatePointerPinchGesture(delta, scale, angleDelta);
+    }
+
+    void pinchGestureEnd(std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->endPointerPinchGesture();
+    }
+
+    void pinchGestureCancelled(std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->cancelPointerPinchGesture();
+    }
+
+    void swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->startPointerSwipeGesture(fingerCount);
+    }
+
+    void swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->updatePointerSwipeGesture(delta);
+    }
+
+    void swipeGestureEnd(std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->endPointerSwipeGesture();
+    }
+
+    void swipeGestureCancelled(std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->cancelPointerSwipeGesture();
+    }
+
+    void holdGestureBegin(int fingerCount, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->startPointerHoldGesture(fingerCount);
+    }
+
+    void holdGestureEnd(std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->endPointerHoldGesture();
+    }
+
+    void holdGestureCancelled(std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(time);
+        seat->cancelPointerHoldGesture();
+    }
+};
 
 static bool screenContainsPos(const QPointF &pos)
 {
@@ -85,6 +240,7 @@ void PointerInputRedirection::init()
     connect(input(), &InputRedirection::hasPointerChanged,
             waylandServer()->seat(), &SeatInterface::setHasPointer);
 
+    m_grab = std::make_unique<DefaultPointerInputGrab>();
     m_cursor = new CursorImage(this);
     setInited(true);
     InputDeviceHandler::init();
@@ -248,7 +404,10 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
 
     update();
     input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
-    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0));
+
+    if (!input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, 0))) {
+        m_grab->motion(&event);
+    }
 }
 
 void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
@@ -281,7 +440,9 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
         return;
     }
 
-    input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
+    if (!input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button))) {
+        m_grab->button(&event);
+    }
 
     if (state == InputRedirection::PointerButtonReleased) {
         update();
@@ -306,7 +467,9 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
     if (!inited()) {
         return;
     }
-    input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
+    if (!input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent))) {
+        m_grab->wheel(&wheelEvent);
+    }
 }
 
 void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)
@@ -317,7 +480,9 @@ void PointerInputRedirection::processSwipeGestureBegin(int fingerCount, std::chr
     }
 
     input()->processSpies(std::bind(&InputEventSpy::swipeGestureBegin, std::placeholders::_1, fingerCount, time));
-    input()->processFilters(std::bind(&InputEventFilter::swipeGestureBegin, std::placeholders::_1, fingerCount, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::swipeGestureBegin, std::placeholders::_1, fingerCount, time))) {
+        m_grab->swipeGestureBegin(fingerCount, time);
+    }
 }
 
 void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time, KWin::InputDevice *device)
@@ -329,7 +494,9 @@ void PointerInputRedirection::processSwipeGestureUpdate(const QPointF &delta, st
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::swipeGestureUpdate, std::placeholders::_1, delta, time));
-    input()->processFilters(std::bind(&InputEventFilter::swipeGestureUpdate, std::placeholders::_1, delta, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::swipeGestureUpdate, std::placeholders::_1, delta, time))) {
+        m_grab->swipeGestureUpdate(delta, time);
+    }
 }
 
 void PointerInputRedirection::processSwipeGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
@@ -341,7 +508,9 @@ void PointerInputRedirection::processSwipeGestureEnd(std::chrono::microseconds t
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::swipeGestureEnd, std::placeholders::_1, time));
-    input()->processFilters(std::bind(&InputEventFilter::swipeGestureEnd, std::placeholders::_1, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::swipeGestureEnd, std::placeholders::_1, time))) {
+        m_grab->swipeGestureEnd(time);
+    }
 }
 
 void PointerInputRedirection::processSwipeGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
@@ -353,7 +522,9 @@ void PointerInputRedirection::processSwipeGestureCancelled(std::chrono::microsec
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::swipeGestureCancelled, std::placeholders::_1, time));
-    input()->processFilters(std::bind(&InputEventFilter::swipeGestureCancelled, std::placeholders::_1, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::swipeGestureCancelled, std::placeholders::_1, time))) {
+        m_grab->swipeGestureCancelled(time);
+    }
 }
 
 void PointerInputRedirection::processPinchGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)
@@ -365,7 +536,9 @@ void PointerInputRedirection::processPinchGestureBegin(int fingerCount, std::chr
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::pinchGestureBegin, std::placeholders::_1, fingerCount, time));
-    input()->processFilters(std::bind(&InputEventFilter::pinchGestureBegin, std::placeholders::_1, fingerCount, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::pinchGestureBegin, std::placeholders::_1, fingerCount, time))) {
+        m_grab->pinchGestureBegin(fingerCount, time);
+    }
 }
 
 void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time, KWin::InputDevice *device)
@@ -377,7 +550,9 @@ void PointerInputRedirection::processPinchGestureUpdate(qreal scale, qreal angle
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time));
-    input()->processFilters(std::bind(&InputEventFilter::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::pinchGestureUpdate, std::placeholders::_1, scale, angleDelta, delta, time))) {
+        m_grab->pinchGestureUpdate(scale, angleDelta, delta, time);
+    }
 }
 
 void PointerInputRedirection::processPinchGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
@@ -389,7 +564,9 @@ void PointerInputRedirection::processPinchGestureEnd(std::chrono::microseconds t
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::pinchGestureEnd, std::placeholders::_1, time));
-    input()->processFilters(std::bind(&InputEventFilter::pinchGestureEnd, std::placeholders::_1, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::pinchGestureEnd, std::placeholders::_1, time))) {
+        m_grab->pinchGestureEnd(time);
+    }
 }
 
 void PointerInputRedirection::processPinchGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
@@ -401,7 +578,9 @@ void PointerInputRedirection::processPinchGestureCancelled(std::chrono::microsec
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::pinchGestureCancelled, std::placeholders::_1, time));
-    input()->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::pinchGestureCancelled, std::placeholders::_1, time))) {
+        m_grab->pinchGestureCancelled(time);
+    }
 }
 
 void PointerInputRedirection::processHoldGestureBegin(int fingerCount, std::chrono::microseconds time, KWin::InputDevice *device)
@@ -412,7 +591,9 @@ void PointerInputRedirection::processHoldGestureBegin(int fingerCount, std::chro
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::holdGestureBegin, std::placeholders::_1, fingerCount, time));
-    input()->processFilters(std::bind(&InputEventFilter::holdGestureBegin, std::placeholders::_1, fingerCount, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::holdGestureBegin, std::placeholders::_1, fingerCount, time))) {
+        m_grab->holdGestureBegin(fingerCount, time);
+    }
 }
 
 void PointerInputRedirection::processHoldGestureEnd(std::chrono::microseconds time, KWin::InputDevice *device)
@@ -423,7 +604,9 @@ void PointerInputRedirection::processHoldGestureEnd(std::chrono::microseconds ti
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::holdGestureEnd, std::placeholders::_1, time));
-    input()->processFilters(std::bind(&InputEventFilter::holdGestureEnd, std::placeholders::_1, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::holdGestureEnd, std::placeholders::_1, time))) {
+        m_grab->holdGestureEnd(time);
+    }
 }
 
 void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseconds time, KWin::InputDevice *device)
@@ -434,7 +617,9 @@ void PointerInputRedirection::processHoldGestureCancelled(std::chrono::microseco
     update();
 
     input()->processSpies(std::bind(&InputEventSpy::holdGestureCancelled, std::placeholders::_1, time));
-    input()->processFilters(std::bind(&InputEventFilter::holdGestureCancelled, std::placeholders::_1, time));
+    if (!input()->processFilters(std::bind(&InputEventFilter::holdGestureCancelled, std::placeholders::_1, time))) {
+        m_grab->holdGestureCancelled(time);
+    }
 }
 
 void PointerInputRedirection::processFrame(KWin::InputDevice *device)
@@ -443,7 +628,9 @@ void PointerInputRedirection::processFrame(KWin::InputDevice *device)
         return;
     }
 
-    input()->processFilters(std::bind(&InputEventFilter::pointerFrame, std::placeholders::_1));
+    if (!input()->processFilters(std::bind(&InputEventFilter::pointerFrame, std::placeholders::_1))) {
+        m_grab->frame();
+    }
 }
 
 bool PointerInputRedirection::areButtonsPressed() const
@@ -524,35 +711,32 @@ void PointerInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl 
 
 void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
 {
-    if (focusOld && focusOld->isClient()) {
-        focusOld->pointerLeaveEvent();
+    if (focusOld) {
+        m_grab->leave(focusOld);
         breakPointerConstraints(focusOld->surface());
         disconnectPointerConstraintsConnection();
     }
+
     disconnect(m_focusGeometryConnection);
     m_focusGeometryConnection = QMetaObject::Connection();
 
-    if (focusNow && focusNow->isClient()) {
-        focusNow->pointerEnterEvent(m_pos);
-    }
-
-    auto seat = waylandServer()->seat();
-    if (!focusNow || !focusNow->surface()) {
-        seat->notifyPointerLeave();
+    if (!focusNow) {
         return;
     }
 
-    seat->notifyPointerEnter(focusNow->surface(), m_pos, focusNow->inputTransformation());
+    m_grab->enter(focusNow, m_pos);
 
-    m_focusGeometryConnection = connect(focusNow, &Window::inputTransformationChanged, this, [this]() {
-        waylandServer()->seat()->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
-    });
+    if (focusNow->surface()) {
+        m_focusGeometryConnection = connect(focusNow, &Window::inputTransformationChanged, this, [this]() {
+            waylandServer()->seat()->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
+        });
 
-    m_constraintsConnection = connect(focusNow->surface(), &SurfaceInterface::pointerConstraintsChanged,
-                                      this, &PointerInputRedirection::updatePointerConstraints);
-    m_constraintsActivatedConnection = connect(workspace(), &Workspace::windowActivated,
-                                               this, &PointerInputRedirection::updatePointerConstraints);
-    updatePointerConstraints();
+        m_constraintsConnection = connect(focusNow->surface(), &SurfaceInterface::pointerConstraintsChanged,
+                                          this, &PointerInputRedirection::updatePointerConstraints);
+        m_constraintsActivatedConnection = connect(workspace(), &Workspace::windowActivated,
+                                                   this, &PointerInputRedirection::updatePointerConstraints);
+        updatePointerConstraints();
+    }
 }
 
 void PointerInputRedirection::breakPointerConstraints(SurfaceInterface *surface)

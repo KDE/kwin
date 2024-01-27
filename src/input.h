@@ -188,9 +188,9 @@ public:
      * bind.
      */
     template<class UnaryPredicate>
-    void processFilters(UnaryPredicate function)
+    bool processFilters(UnaryPredicate function)
     {
-        std::any_of(m_filters.constBegin(), m_filters.constEnd(), function);
+        return std::any_of(m_filters.constBegin(), m_filters.constEnd(), function);
     }
 
     /**
@@ -348,8 +348,6 @@ private:
     std::unique_ptr<InputEventFilter> m_windowActionFilter;
     std::unique_ptr<InputEventFilter> m_internalWindowFilter;
     std::unique_ptr<InputEventFilter> m_inputKeyboardFilter;
-    std::unique_ptr<InputEventFilter> m_forwardFilter;
-    std::unique_ptr<InputEventFilter> m_tabletFilter;
 
     std::unique_ptr<InputEventSpy> m_hideCursorSpy;
     std::unique_ptr<InputEventSpy> m_userActivitySpy;
@@ -366,7 +364,6 @@ private:
     friend InputRedirection *input();
     friend class DecorationEventFilter;
     friend class InternalWindowEventFilter;
-    friend class ForwardInputFilter;
 };
 
 /**

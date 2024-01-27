@@ -12,6 +12,7 @@
 
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "inputgrab.h"
 #include "inputmethod.h"
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
@@ -36,6 +37,32 @@
 
 namespace KWin
 {
+
+class DefaultKeyboardInputGrab : public KeyboardInputGrab
+{
+public:
+    void key(KeyEvent *event) override
+    {
+        if (event->isAutoRepeat()) {
+            return;
+        }
+
+        input()->keyboard()->update(); // FIXME: wrong, focus should not be updated before sending a key event
+
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
+        switch (event->type()) {
+        case QEvent::KeyPress:
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+            break;
+        case QEvent::KeyRelease:
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+            break;
+        default:
+            break;
+        }
+    }
+};
 
 KeyboardInputRedirection::KeyboardInputRedirection(InputRedirection *parent)
     : QObject(parent)
@@ -119,6 +146,8 @@ void KeyboardInputRedirection::init()
     const auto config = kwinApp()->kxkbConfig();
     m_xkb->setNumLockConfig(kwinApp()->inputConfig());
     m_xkb->setConfig(config);
+
+    m_grab = std::make_unique<DefaultKeyboardInputGrab>();
 
     waylandServer()->seat()->setHasKeyboard(true);
 
@@ -262,7 +291,9 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         return;
     }
     input()->setLastInputHandler(this);
-    m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
+    if (!m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event))) {
+        m_grab->key(&event);
+    }
 
     m_xkb->forwardModifiers();
     if (auto *inputmethod = kwinApp()->inputMethod()) {

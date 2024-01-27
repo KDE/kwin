@@ -19,6 +19,7 @@ namespace KWin
 {
 class Window;
 class TabletToolId;
+class TabletInputGrab;
 
 namespace Decoration
 {
@@ -66,6 +67,7 @@ private:
                            Decoration::DecoratedClientImpl *now) override;
     void focusUpdate(Window *focusOld, Window *focusNow) override;
 
+    std::unique_ptr<TabletInputGrab> m_grab;
     bool m_tipDown = false;
     bool m_tipNear = false;
 
