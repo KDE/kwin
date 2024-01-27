@@ -178,6 +178,11 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
         if (!keyQt && !mods) {
             return false;
         }
+        if (keyQt == Qt::Key_SysReq) {
+            // For shortcut handling SysReq is treated as Alt+Print
+            mods |= Qt::AltModifier;
+            keyQt = Qt::Key_Print;
+        }
         auto check = [this](Qt::KeyboardModifiers mods, int keyQt) {
             bool retVal = false;
             QMetaObject::invokeMethod(m_kglobalAccelInterface,
