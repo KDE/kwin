@@ -1396,10 +1396,6 @@ public:
         }
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease: {
-            const auto actionResult = performWindowMouseAction(event, decoration->window());
-            if (actionResult.first) {
-                return actionResult.second;
-            }
             QMouseEvent e(event->type(), p, event->screenPos(), event->button(), event->buttons(), event->modifiers());
             e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp()).count());
             e.setAccepted(false);
@@ -1422,13 +1418,6 @@ public:
         auto decoration = input()->pointer()->decoration();
         if (!decoration) {
             return false;
-        }
-        if (event->angleDelta().y() != 0) {
-            // client window action only on vertical scrolling
-            const auto actionResult = performWindowWheelAction(event, decoration->window());
-            if (actionResult.first) {
-                return actionResult.second;
-            }
         }
         const QPointF localPos = event->globalPosition() - decoration->window()->pos();
         const Qt::Orientation orientation = (event->angleDelta().x() != 0) ? Qt::Horizontal : Qt::Vertical;
@@ -1698,8 +1687,8 @@ public:
         if (event->type() != QEvent::MouseButtonPress) {
             return false;
         }
-        Window *window = input()->pointer()->focus();
-        if (!window || !window->isClient()) {
+        Window *window = pointerFocus();
+        if (!window) {
             return false;
         }
         const auto actionResult = performWindowMouseAction(event, window, MouseAction::ModifierAndWindow);
@@ -1714,8 +1703,8 @@ public:
             // only actions on vertical scroll
             return false;
         }
-        Window *window = input()->pointer()->focus();
-        if (!window || !window->isClient()) {
+        Window *window = pointerFocus();
+        if (!window) {
             return false;
         }
         const auto actionResult = performWindowWheelAction(event, window, MouseAction::ModifierAndWindow);
@@ -1730,8 +1719,8 @@ public:
         if (seat->isTouchSequence()) {
             return false;
         }
-        Window *window = input()->touch()->focus();
-        if (!window || !window->isClient()) {
+        Window *window = touchFocus();
+        if (!window) {
             return false;
         }
         bool wasAction = false;
@@ -1746,8 +1735,8 @@ public:
         if (event->type() != QEvent::TabletPress) {
             return false;
         }
-        Window *window = input()->tablet()->focus();
-        if (!window || !window->isClient()) {
+        Window *window = tabletFocus();
+        if (!window) {
             return false;
         }
         bool wasAction = false;
@@ -1756,6 +1745,52 @@ public:
             return !window->performMouseCommand(command, event->globalPosF());
         }
         return false;
+    }
+
+private:
+    Window *pointerFocus() const
+    {
+        if (Window *window = input()->pointer()->focus()) {
+            if (window->isClient()) {
+                return window;
+            } else {
+                return nullptr;
+            }
+        }
+        if (Decoration::DecoratedClientImpl *decoration = input()->pointer()->decoration()) {
+            return decoration->window();
+        }
+        return nullptr;
+    }
+
+    Window *touchFocus() const
+    {
+        if (Window *window = input()->touch()->focus()) {
+            if (window->isClient()) {
+                return window;
+            } else {
+                return nullptr;
+            }
+        }
+        if (Decoration::DecoratedClientImpl *decoration = input()->touch()->decoration()) {
+            return decoration->window();
+        }
+        return nullptr;
+    }
+
+    Window *tabletFocus() const
+    {
+        if (Window *window = input()->tablet()->focus()) {
+            if (window->isClient()) {
+                return window;
+            } else {
+                return nullptr;
+            }
+        }
+        if (Decoration::DecoratedClientImpl *decoration = input()->tablet()->decoration()) {
+            return decoration->window();
+        }
+        return nullptr;
     }
 };
 
@@ -2372,17 +2407,17 @@ void InputRedirection::setupInputFilters()
     m_popupFilter = std::make_unique<PopupInputFilter>();
     installInputEventFilter(m_popupFilter.get());
 
-    m_decorationFilter = std::make_unique<DecorationEventFilter>();
-    installInputEventFilter(m_decorationFilter.get());
+    m_inputKeyboardFilter = std::make_unique<InputKeyboardFilter>();
+    installInputEventFilter(m_inputKeyboardFilter.get());
 
     m_windowActionFilter = std::make_unique<WindowActionInputFilter>();
     installInputEventFilter(m_windowActionFilter.get());
 
+    m_decorationFilter = std::make_unique<DecorationEventFilter>();
+    installInputEventFilter(m_decorationFilter.get());
+
     m_internalWindowFilter = std::make_unique<InternalWindowEventFilter>();
     installInputEventFilter(m_internalWindowFilter.get());
-
-    m_inputKeyboardFilter = std::make_unique<InputKeyboardFilter>();
-    installInputEventFilter(m_inputKeyboardFilter.get());
 }
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)
