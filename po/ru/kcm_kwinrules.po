@@ -8,20 +8,20 @@
 # Alexey D. <lq07829icatm@rambler.ru>, 2012.
 # Yuri Efremov <yur.arh@gmail.com>, 2012, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# SPDX-FileCopyrightText: 2018, 2019, 2020, 2021, 2022, 2023, 2024 Alexander Yavorsky <kekcuha@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2024-01-04 19:45+0300\n"
+"PO-Revision-Date: 2024-01-27 17:28+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Environment: kde\n"
@@ -324,6 +324,14 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Некоторые приложения могу самостоятельно определять геометрию своих окон, "
+"переопределя значения, передаваемые диспетчером окон. Это свойство не "
+"позволяет таким приложениям игнорировать указания диспетчера окон.<nl/><nl/> "
+"Использование этого параметра влияет на следующие свойства окон: "
+"<interface>размер</interface>, <interface>расположение</interface>, и не "
+"влияет на свойства <interface>распахнуто</interface> или <interface>полный "
+"экран</interface>.<nl/><nl/> Обратите внимание, что свойство «расположение» "
+"позволяет размещать окна на других <interface>экранах</interface>."
 
 #: rulesmodel.cpp:552
 #, kde-format
@@ -341,13 +349,7 @@ msgid "Obey geometry restrictions"
 msgstr "Соблюдать требуемую приложением геометрию"
 
 #: rulesmodel.cpp:564
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -356,13 +358,13 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"В частности, приложения вроде эмуляторов терминала и\n"
-"видеопроигрывателей могут требовать поддержания определённого\n"
-"соотношения сторон окна, либо не позволять менять размеры окна\n"
-"с шагом в один пиксел (например, чтобы окно терминала\n"
-"всегда вмещало целое число символов/строк).\n"
-"Включение этого параметра может помешать развернуть окно,\n"
-"чтобы окно заполнило весь экран без отступов от его краёв."
+"Некоторые приложения, в частности, приложения вроде эмуляторов терминала и "
+"видеопроигрывателей могут требовать поддержания определённого соотношения "
+"сторон окна, либо не позволять менять размеры окна с шагом более размера "
+"одного символа. Этот параметр позволяет диспетчеру окон игнорировать такие "
+"запросы и произвольно изменять размеры окон.<nl/><nl/>Использование этого "
+"параметра может быть полезно, чтобы окно заполнило весь экран без отступов "
+"от его краёв."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -389,7 +391,7 @@ msgstr "Не показывать в панели задач"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Это свойство определяет, будет ли окно показано в панели задач."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -402,6 +404,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Это свойство определяет, будет ли окно показано в диспетчере виртуальных "
+"рабочих столов"
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -415,6 +419,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Это свойство определяет, будет ли окно показано в переключателе окон, "
+"вызываемом комбинацией клавиш <shortcut>Alt+Tab</shortcut>."
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -474,6 +480,28 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"Диспетчер окон KWin старается не допустить ситуации, когда окна, открытые "
+"без явного действия пользователя, появляются на переднем плане и получают "
+"фокус в то время, когда пользователь выполняет действия внутри другого "
+"активного окна. Это свойство можно использовать для изменения уровня "
+"предотвращения похищения фокуса, применяемого к отдельным окнам и "
+"приложениям.<nl/><nl/> Для таких окон, открытых без явного действия "
+"пользователя, возможны следующие правила поведения:<nl/><list> "
+"<item><emphasis strong='true'>Отключить:</emphasis> Окно будет открыто на "
+"переднем плане и в него будет передан фокус;</item> <item><emphasis "
+"strong='true'>Низкий приоритет:</emphasis> Будет применена защита от "
+"похищения фокуса, но в случае ситуации, которую KWin посчитает "
+"неоднозначной, окно будет открыто на переднем плане и в него будет передан "
+"фокус ввода;</item> <item><emphasis strong='true'>Обычный приоритет:</"
+"emphasis> Будет применена защита от похищения фокуса, но в случае ситуации, "
+"которую KWin посчитает неоднозначной, окно <emphasis strong='true'>не будет</"
+"emphasis> открыто на переднем плане и <emphasis strong='true'>не получит</"
+"emphasis> фокус ввода;</item><item><emphasis strong='true'>Высокий приоритет:"
+"</emphasis> Окно будет открыто на переднем плане и получит фокус ввода "
+"только в том случае, если оно принадлежит тому же приложению, что и окно, в "
+"котором находится фокус ввода.</item><item><emphasis strong='true'>Не "
+"передавать фокус автоматически:</emphasis> Окно никогда не будет открыто на "
+"переднем плане и никогда не получит фокус ввода.</item></list>"
 
 #: rulesmodel.cpp:658
 #, kde-format
@@ -503,6 +531,27 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Это свойство позволяет настроить уровень защиты фокуса текущего активного "
+"окна. Оно позволяет переопределить поведение предотвращения кражи фокуса, "
+"применяемого к новым окнам, которые открыты без явного действия пользователя."
+"<nl/><nl/> Вот что происходит с новыми окнами, которые были открыты без "
+"явного действия пользователя, на каждом уровне защиты фокуса, пока окно, к "
+"которому применено это свойство, имеет фокус:<nl /><list> <item><emphasis "
+"strong='true'>Отключить:</emphasis> Новое окно будет открыто на переднем "
+"плане и в него будет передан фокус;</item> <item><emphasis "
+"strong='true'>Низкий приоритет:</emphasis > Будет применена защита от "
+"похищения фокуса, но в случае ситуации, которую KWin посчитает "
+"неоднозначной, окно будет открыто на переднем плане и в него будет передан "
+"фокус ввода;</item> <item><emphasis strong='true'>Обычный приоритет:</"
+"emphasis> Будет применена защита от похищения фокуса, но в случае ситуации, "
+"которую KWin посчитает неоднозначной, окно <emphasis strong='true'>не будет</"
+"emphasis> открыто на переднем плане и <emphasis strong='true'>не получит</"
+"emphasis> фокус ввода;</item><item><emphasis strong='true'>Высокий приоритет:"
+"</emphasis> Новое окно будет открыто на переднем плане и получит фокус ввода "
+"только в том случае, если оно принадлежит тому же приложению, что и окно, в "
+"котором находится фокус ввода.</item> <item><emphasis strong='true'>Не "
+"передавать фокус автоматически:</emphasis> Новое окно никогда не будет "
+"открыто на переднем плане и никогда не получит фокус ввода.</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -513,6 +562,8 @@ msgstr "Может принимать фокус"
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr ""
+"Это свойство определяет, будет ли передан в окно фокус ввода при щелчке "
+"внутри такого окна."
 
 #: rulesmodel.cpp:692
 #, kde-format
@@ -556,7 +607,7 @@ msgstr "Не применять графические эффекты"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Слой"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -729,38 +780,37 @@ msgstr "Не передавать фокус автоматически"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Снизу"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Сверху"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Расположение"
+msgstr "Уведомление"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Всплывающее окно"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Критичное уведомление"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "Индикатор на экране"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Наложение"
 
 #: rulesmodel.cpp:951
 #, kde-format
