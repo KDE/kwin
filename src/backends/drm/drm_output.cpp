@@ -270,10 +270,6 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
-    auto type = m_pipeline->contentType();
-    if (frame->contentType()) {
-        type = DrmConnector::kwinToDrmContentType(*frame->contentType());
-    }
     const bool needsModeset = gpu()->needsModeset();
     bool success;
     if (needsModeset) {
@@ -282,7 +278,6 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         success = m_pipeline->maybeModeset();
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
-        m_pipeline->setContentType(type);
         DrmPipeline::Error err = m_pipeline->present();
         if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
             // retry with a more basic presentation mode
