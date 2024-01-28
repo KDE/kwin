@@ -4,7 +4,7 @@ const int PQ_EOTF = 2;
 const int scRGB_EOTF = 3;
 const int gamma22_EOTF = 4;
 
-uniform mat3 colorimetryTransform;
+uniform mat4 colorimetryTransform;
 uniform int sourceNamedTransferFunction;
 uniform int destinationNamedTransferFunction;
 uniform float sdrBrightness;// in nits
@@ -57,7 +57,7 @@ vec3 linearToSrgb(vec3 color) {
 
 vec3 doTonemapping(vec3 color, float maxBrightness) {
     // TODO do something better here
-    return clamp(color, vec3(0.0), vec3(maxBrightness));
+    return clamp(color.rgb, vec3(0.0), vec3(maxBrightness));
 }
 
 vec4 encodingToNits(vec4 color, int sourceTransferFunction) {
@@ -81,7 +81,8 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction) {
 
 vec4 sourceEncodingToNitsInDestinationColorspace(vec4 color) {
     color = encodingToNits(color, sourceNamedTransferFunction);
-    return vec4(doTonemapping(colorimetryTransform * color.rgb, maxHdrBrightness), color.a);
+    color.rgb = (colorimetryTransform * vec4(color.rgb, 1.0)).rgb;
+    return vec4(doTonemapping(color.rgb, maxHdrBrightness), color.a);
 }
 
 vec4 nitsToEncoding(vec4 color, int destinationTransferFunction) {

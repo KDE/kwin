@@ -33,7 +33,7 @@ private:
     std::unique_ptr<GLShader> m_shader;
     std::shared_ptr<IccProfile> m_profile;
 
-    QMatrix3x3 m_matrix1;
+    QMatrix4x4 m_toXYZD50;
     std::unique_ptr<GlLookUpTable> m_B;
     QMatrix4x4 m_matrix2;
     std::unique_ptr<GlLookUpTable> m_M;
@@ -43,7 +43,7 @@ private:
     {
         int src;
         int sdrBrightness;
-        int matrix1;
+        int toXYZD50;
         int bsize;
         int bsampler;
         int matrix2;

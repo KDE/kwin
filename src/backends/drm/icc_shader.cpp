@@ -23,7 +23,7 @@ IccShader::IccShader()
     m_locations = {
         .src = m_shader->uniformLocation("src"),
         .sdrBrightness = m_shader->uniformLocation("sdrBrightness"),
-        .matrix1 = m_shader->uniformLocation("matrix1"),
+        .toXYZD50 = m_shader->uniformLocation("toXYZD50"),
         .bsize = m_shader->uniformLocation("Bsize"),
         .bsampler = m_shader->uniformLocation("Bsampler"),
         .matrix2 = m_shader->uniformLocation("matrix2"),
@@ -45,7 +45,7 @@ static const QVector2D D50 = Colorimetry::xyzToXY(QVector3D(0.9642, 1.0, 0.8249)
 bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
 {
     if (!profile) {
-        m_matrix1.setToIdentity();
+        m_toXYZD50.setToIdentity();
         m_B.reset();
         m_matrix2.setToIdentity();
         m_M.reset();
@@ -55,14 +55,14 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
     }
     if (m_profile != profile) {
         const auto vcgt = profile->vcgt();
-        QMatrix3x3 matrix1;
+        QMatrix4x4 toXYZD50;
         std::unique_ptr<GlLookUpTable> B;
         QMatrix4x4 matrix2;
         std::unique_ptr<GlLookUpTable> M;
         std::unique_ptr<GlLookUpTable3D> C;
         std::unique_ptr<GlLookUpTable> A;
         if (const IccProfile::BToATagData *tag = profile->BtToATag()) {
-            matrix1 = Colorimetry::chromaticAdaptationMatrix(profile->colorimetry().white(), D50) * profile->colorimetry().toXYZ();
+            toXYZD50 = Colorimetry::chromaticAdaptationMatrix(profile->colorimetry().white(), D50) * profile->colorimetry().toXYZ();
             if (tag->B) {
                 const auto sample = [&tag](size_t x) {
                     const float relativeX = x / double(lutSize - 1);
@@ -129,7 +129,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
                 return false;
             }
         }
-        m_matrix1 = matrix1;
+        m_toXYZD50 = toXYZD50;
         m_B = std::move(B);
         m_matrix2 = matrix2;
         m_M = std::move(M);
@@ -150,11 +150,11 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sd
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
     setProfile(profile);
 
-    QMatrix3x3 nightColor;
+    QMatrix4x4 nightColor;
     nightColor(0, 0) = channelFactors.x();
     nightColor(1, 1) = channelFactors.y();
     nightColor(2, 2) = channelFactors.z();
-    m_shader->setUniform(m_locations.matrix1, m_matrix1 * nightColor);
+    m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50 * nightColor);
     m_shader->setUniform(m_locations.sdrBrightness, sdrBrightness);
 
     glActiveTexture(GL_TEXTURE1);
