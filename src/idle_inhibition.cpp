@@ -31,6 +31,10 @@ IdleInhibition::~IdleInhibition() = default;
 
 void IdleInhibition::registerClient(Window *client)
 {
+    if (!client->surface()) {
+        return;
+    }
+
     auto updateInhibit = [this, client] {
         update(client);
     };
@@ -81,6 +85,7 @@ void IdleInhibition::update(Window *client)
 
 void IdleInhibition::slotWorkspaceCreated()
 {
+    connect(workspace(), &Workspace::windowAdded, this, &IdleInhibition::registerClient);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &IdleInhibition::slotDesktopChanged);
 }
 
