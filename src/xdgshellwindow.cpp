@@ -322,7 +322,7 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
                 keepInArea(workspace()->clientArea(PlacementArea, this));
             }
         };
-        connect(this, &Window::windowShown, this, moveUnderCursor, Qt::SingleShotConnection);
+        connect(this, &Window::readyForPaintingChanged, this, moveUnderCursor, Qt::SingleShotConnection);
     };
     auto updateRole = [this, shellSurface] {
         WindowType type = WindowType::Unknown;
