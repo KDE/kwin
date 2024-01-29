@@ -2872,7 +2872,7 @@ QSizeF X11Window::clientSizeToFrameSize(const QSizeF &size) const
 
 QRectF X11Window::frameRectToBufferRect(const QRectF &rect) const
 {
-    if (isDecorated()) {
+    if (!waylandServer() && isDecorated()) {
         return rect;
     }
     return frameRectToClientRect(rect);
@@ -4377,10 +4377,10 @@ void X11Window::updateServerGeometry()
     const QRectF oldBufferGeometry = m_lastBufferGeometry;
 
     // Compute the old client rect, the client geometry is always inside the buffer geometry.
-    QRectF oldClientRect = m_lastClientGeometry;
-    oldClientRect.translate(-m_lastBufferGeometry.topLeft());
+    const QRectF oldClientRect = m_lastClientGeometry.translated(-m_lastBufferGeometry.topLeft());
+    const QRectF clientRect = m_clientGeometry.translated(-m_bufferGeometry.topLeft());
 
-    if (oldBufferGeometry.size() != m_bufferGeometry.size() || oldClientRect != QRectF(clientPos(), clientSize())) {
+    if (oldBufferGeometry.size() != m_bufferGeometry.size() || oldClientRect != clientRect) {
         resizeDecoration();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
@@ -4389,13 +4389,11 @@ void X11Window::updateServerGeometry()
             m_frame.setGeometry(m_bufferGeometry);
         }
         if (!isShade()) {
-            const QRectF requestedWrapperGeometry(clientPos(), clientSize());
-            if (m_wrapper.geometry() != requestedWrapperGeometry) {
-                m_wrapper.setGeometry(requestedWrapperGeometry);
+            if (m_wrapper.geometry() != clientRect) {
+                m_wrapper.setGeometry(clientRect);
             }
-            const QRectF requestedClientGeometry(QPoint(0, 0), clientSize());
-            if (m_client.geometry() != requestedClientGeometry) {
-                m_client.setGeometry(requestedClientGeometry);
+            if (m_client.geometry() != QRectF(QPointF(0, 0), clientRect.size())) {
+                m_client.setGeometry(QRectF(QPointF(0, 0), clientRect.size()));
             }
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
