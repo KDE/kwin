@@ -425,19 +425,6 @@ bool Workspace::takeActivity(Window *window, ActivityFlags flags)
     return ret;
 }
 
-/**
- * Informs the workspace that the window \a window has been hidden. If it
- * was the active window (or to-become the active window),
- * the workspace activates another one.
- *
- * @note @p c may already be destroyed.
- */
-void Workspace::windowHidden(Window *window)
-{
-    Q_ASSERT(!window->isShown() || !window->isOnCurrentDesktop() || !window->isOnCurrentActivity());
-    activateNextWindow(window);
-}
-
 Window *Workspace::windowUnderMouse(Output *output) const
 {
     auto it = stackingOrder().constEnd();

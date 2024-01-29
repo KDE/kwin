@@ -420,7 +420,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         exportMappingState(XCB_ICCCM_WM_STATE_WITHDRAWN);
         setModal(false); // Otherwise its mainwindow wouldn't get focus
         if (!on_shutdown) {
-            workspace()->windowHidden(this);
+            workspace()->activateNextWindow(this);
         }
         m_frame.unmap(); // Destroying decoration would cause ugly visual effect
         cleanGrouping();
@@ -493,7 +493,7 @@ void X11Window::destroyWindow()
         finishWindowRules();
         blockGeometryUpdates();
         setModal(false);
-        workspace()->windowHidden(this);
+        workspace()->activateNextWindow(this);
         cleanGrouping();
         workspace()->removeX11Window(this);
         if (WinInfo *cinfo = dynamic_cast<WinInfo *>(info)) {

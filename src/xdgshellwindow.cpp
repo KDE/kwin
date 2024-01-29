@@ -718,7 +718,7 @@ void XdgToplevelWindow::doMinimize()
 {
     if (m_isInitialized) {
         if (isMinimized()) {
-            workspace()->windowHidden(this);
+            workspace()->activateNextWindow(this);
         }
     }
     workspace()->updateMinimizedOfTransients(this);

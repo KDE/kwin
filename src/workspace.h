@@ -241,7 +241,6 @@ public:
     void constrain(Window *below, Window *above);
     void unconstrain(Window *below, Window *above);
 
-    void windowHidden(Window *);
     void windowAttentionChanged(Window *, bool set);
 
     /**

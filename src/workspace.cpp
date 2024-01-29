@@ -819,7 +819,7 @@ void Workspace::addWaylandWindow(Window *window)
 
 void Workspace::removeWaylandWindow(Window *window)
 {
-    windowHidden(window);
+    activateNextWindow(window);
     removeWindow(window);
 }
 

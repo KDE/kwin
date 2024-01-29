@@ -4289,7 +4289,7 @@ void Window::setHidden(bool hidden)
     m_hidden = hidden;
     doSetHidden();
     if (hidden) {
-        workspace()->windowHidden(this);
+        workspace()->activateNextWindow(this);
         Q_EMIT windowHidden(this);
     } else {
         Q_EMIT windowShown(this);
