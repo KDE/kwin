@@ -734,25 +734,24 @@ void LayerShellV1WindowTest::testScreenEdge()
     QVERIFY(window);
     QVERIFY(!window->isActive());
 
-    QSignalSpy windowShowSpy(window, &Window::windowShown);
-    QSignalSpy windowHiddenSpy(window, &Window::windowHidden);
+    QSignalSpy hiddenChangedSpy(window, &Window::hiddenChanged);
     quint32 timestamp = 0;
 
     // The layer surface will be hidden and shown when the screen edge is activated or deactivated.
     {
         screenEdge->activate();
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         screenEdge->deactivate();
-        QVERIFY(windowShowSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
     }
 
     // The layer surface will be shown when the screen edge is triggered.
     {
         screenEdge->activate();
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         Test::pointerMotion(QPointF(640, 1023), timestamp);
@@ -760,7 +759,7 @@ void LayerShellV1WindowTest::testScreenEdge()
         Test::pointerMotion(QPointF(640, 1023), timestamp);
         timestamp += 160;
         Test::pointerMotion(QPointF(640, 512), timestamp);
-        QVERIFY(windowShowSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
     }
 
@@ -768,7 +767,7 @@ void LayerShellV1WindowTest::testScreenEdge()
     {
         QSignalSpy approachingSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
         screenEdge->activate();
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         Test::pointerMotion(QPointF(640, 1020), timestamp++);
@@ -777,7 +776,7 @@ void LayerShellV1WindowTest::testScreenEdge()
         QVERIFY(approachingSpy.last().at(1).toReal() != 0.0);
 
         screenEdge->deactivate();
-        QVERIFY(windowShowSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
         QVERIFY(approachingSpy.last().at(1).toReal() == 0.0);
 
@@ -787,11 +786,11 @@ void LayerShellV1WindowTest::testScreenEdge()
     // The layer surface will be shown when the screen edge is destroyed.
     {
         screenEdge->activate();
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         screenEdge.reset();
-        QVERIFY(windowShowSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
     }
 }

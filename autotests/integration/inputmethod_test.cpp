@@ -213,12 +213,12 @@ void InputMethodTest::testEnableDisableV3()
     kwinApp()->inputMethod()->hide();
     QVERIFY(!keyboardClient->isShown());
 
-    QSignalSpy windowShownSpy(keyboardClient, &Window::windowShown);
+    QSignalSpy hiddenChangedSpy(keyboardClient, &Window::hiddenChanged);
     // Force enable the text input object. This is what's done by Gtk.
     textInputV3->enable();
     textInputV3->commit();
 
-    windowShownSpy.wait();
+    hiddenChangedSpy.wait();
     QVERIFY(keyboardClient->isShown());
 
     // disable text input and ensure that it is not hiding input panel without commit

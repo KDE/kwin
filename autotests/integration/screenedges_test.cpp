@@ -414,15 +414,14 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
 
     ScreenEdgePropertyMonitor screenEdgeMonitor(c.get(), windowId);
     QSignalSpy withdrawnSpy(&screenEdgeMonitor, &ScreenEdgePropertyMonitor::withdrawn);
-    QSignalSpy windowShownSpy(window, &Window::windowShown);
-    QSignalSpy windowHiddenSpy(window, &Window::windowHidden);
+    QSignalSpy hiddenChangedSpy(window, &Window::hiddenChanged);
     quint32 timestamp = 0;
 
     // The window will be shown when the pointer approaches its reserved screen edge.
     {
         enableAutoHide(c.get(), windowId, ElectricBottom);
         xcb_flush(c.get());
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         Test::pointerMotion(QPointF(640, 1023), timestamp);
@@ -439,7 +438,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
     {
         enableAutoHide(c.get(), windowId, ElectricBottom);
         xcb_flush(c.get());
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         Test::touchDown(0, QPointF(640, 1023), timestamp++);
@@ -453,7 +452,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
     {
         enableAutoHide(c.get(), windowId, ElectricBottom);
         xcb_flush(c.get());
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         workspace()->screenEdges()->recreateEdges();
@@ -462,7 +461,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
 
         enableAutoHide(c.get(), windowId, ElectricNone);
         xcb_flush(c.get());
-        QVERIFY(windowShownSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
     }
 
@@ -470,12 +469,12 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
     {
         enableAutoHide(c.get(), windowId, ElectricBottom);
         xcb_flush(c.get());
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         enableAutoHide(c.get(), windowId, ElectricNone);
         xcb_flush(c.get());
-        QVERIFY(windowShownSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
     }
 
@@ -484,7 +483,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
         QSignalSpy approachingSpy(workspace()->screenEdges(), &ScreenEdges::approaching);
         enableAutoHide(c.get(), windowId, ElectricBottom);
         xcb_flush(c.get());
-        QVERIFY(windowHiddenSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(!window->isShown());
 
         Test::pointerMotion(QPointF(640, 1020), timestamp++);
@@ -494,7 +493,7 @@ void ScreenEdgesTest::testKdeNetWmScreenEdgeShow()
 
         enableAutoHide(c.get(), windowId, ElectricNone);
         xcb_flush(c.get());
-        QVERIFY(windowShownSpy.wait());
+        QVERIFY(hiddenChangedSpy.wait());
         QVERIFY(window->isShown());
         QVERIFY(approachingSpy.last().at(1).toReal() == 0.0);
 

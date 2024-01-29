@@ -666,7 +666,7 @@ void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenX11Panel()
     QTEST(Workspace::self()->adjustWindowPosition(testWindow, targetPoint, false).toPoint(), "expectedAdjustedPoint");
 
     // now let's hide the panel
-    QSignalSpy panelHiddenSpy(panel, &Window::windowHidden);
+    QSignalSpy panelHiddenSpy(panel, &Window::hiddenChanged);
     QFETCH(quint32, hideLocation);
     xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->kde_screen_edge_show, XCB_ATOM_CARDINAL, 32, 1, &hideLocation);
     xcb_flush(c.get());
