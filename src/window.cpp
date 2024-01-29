@@ -72,9 +72,6 @@ Window::Window()
     connect(this, &Window::interactiveMoveResizeStarted, this, &Window::moveResizedChanged);
     connect(this, &Window::interactiveMoveResizeFinished, this, &Window::moveResizedChanged);
 
-    connect(this, &Window::windowShown, this, &Window::hiddenChanged);
-    connect(this, &Window::windowHidden, this, &Window::hiddenChanged);
-
     connect(this, &Window::paletteChanged, this, &Window::triggerDecorationRepaint);
 
     // If the user manually moved the window, don't restore it after the keyboard closes
@@ -4290,10 +4287,8 @@ void Window::setHidden(bool hidden)
     doSetHidden();
     if (hidden) {
         workspace()->activateNextWindow(this);
-        Q_EMIT windowHidden(this);
-    } else {
-        Q_EMIT windowShown(this);
     }
+    Q_EMIT hiddenChanged();
 }
 
 bool Window::isHiddenByShowDesktop() const

@@ -55,6 +55,7 @@ private Q_SLOTS:
     void slotPropertyNotify(EffectWindow *w, long atom);
     void slotWaylandSlideOnShowChanged(EffectWindow *w);
     void slotWindowFrameGeometryChanged(EffectWindow *w, const QRectF &);
+    void slotWindowHiddenChanged(EffectWindow *w);
 
     void slideIn(EffectWindow *w);
     void slideOut(EffectWindow *w);

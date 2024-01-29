@@ -57,11 +57,7 @@ EffectWindow::EffectWindow(WindowItem *windowItem)
     d->m_x11Window = qobject_cast<KWin::X11Window *>(d->m_window) != nullptr;
 
     connect(d->m_window, &Window::hiddenChanged, this, [this]() {
-        if (d->m_window->isHidden()) {
-            Q_EMIT windowHidden(this);
-        } else {
-            Q_EMIT windowShown(this);
-        }
+        Q_EMIT windowHiddenChanged(this);
     });
     connect(d->m_window, &Window::maximizedChanged, this, [this]() {
         const MaximizeMode mode = d->m_window->maximizeMode();

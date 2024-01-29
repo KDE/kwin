@@ -825,25 +825,9 @@ Q_SIGNALS:
     void windowDesktopsChanged(KWin::EffectWindow *window);
 
     /**
-     * The window @p w gets shown again. The window was previously
-     * initially shown with windowAdded and hidden with windowHidden.
-     *
-     * @see windowHidden
-     * @see windowAdded
+     * This signal is emitted when a window is hidden or shown.
      */
-    void windowShown(KWin::EffectWindow *w);
-
-    /**
-     * The window @p w got hidden but not yet closed.
-     * This can happen when a window is still being used and is supposed to be shown again
-     * with windowShown. On X11 an example is autohiding panels. On Wayland every
-     * window first goes through the window hidden state and might get shown again, or might
-     * get closed the normal way.
-     *
-     * @see windowShown
-     * @see windowClosed
-     */
-    void windowHidden(KWin::EffectWindow *w);
+    void windowHiddenChanged(KWin::EffectWindow *window);
 
 protected:
     friend EffectWindowVisibleRef;

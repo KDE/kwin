@@ -207,8 +207,7 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
 {
     connect(w, &EffectWindow::windowFrameGeometryChanged, this, &SlidingPopupsEffect::slotWindowFrameGeometryChanged);
-    connect(w, &EffectWindow::windowShown, this, &SlidingPopupsEffect::slideIn);
-    connect(w, &EffectWindow::windowHidden, this, &SlidingPopupsEffect::slideOut);
+    connect(w, &EffectWindow::windowHiddenChanged, this, &SlidingPopupsEffect::slotWindowHiddenChanged);
 
     // X11
     if (m_atom != XCB_ATOM_NONE) {
@@ -247,6 +246,15 @@ void SlidingPopupsEffect::slotWindowClosed(EffectWindow *w)
 void SlidingPopupsEffect::slotWindowDeleted(EffectWindow *w)
 {
     m_animationsData.remove(w);
+}
+
+void SlidingPopupsEffect::slotWindowHiddenChanged(EffectWindow *w)
+{
+    if (w->isHidden()) {
+        slideOut(w);
+    } else {
+        slideIn(w);
+    }
 }
 
 void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)

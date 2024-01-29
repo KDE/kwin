@@ -1332,8 +1332,6 @@ Q_SIGNALS:
     void damaged(KWin::Window *window);
     void inputTransformationChanged();
     void closed();
-    void windowShown(KWin::Window *window);
-    void windowHidden(KWin::Window *window);
     /**
      * Emitted whenever the Window's screen changes. This can happen either in consequence to
      * a screen being removed/added or if the Window's geometry changes.
