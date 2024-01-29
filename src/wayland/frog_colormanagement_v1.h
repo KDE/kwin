@@ -6,7 +6,7 @@
 #pragma once
 
 #include "core/colorspace.h"
-#include "qwayland-server-frog-color-management-v1.h"
+#include "wayland/qwayland-server-frog-color-management-v1.h"
 
 #include <QObject>
 #include <QPointer>

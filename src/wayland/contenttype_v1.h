@@ -7,7 +7,7 @@
 
 #include "surface.h"
 
-#include "qwayland-server-content-type-v1.h"
+#include "wayland/qwayland-server-content-type-v1.h"
 
 #include <QPointer>
 

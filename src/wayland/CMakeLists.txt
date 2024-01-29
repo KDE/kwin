@@ -382,4 +382,11 @@ install(FILES
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
 
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
+
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)
