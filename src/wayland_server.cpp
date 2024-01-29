@@ -388,8 +388,7 @@ bool WaylandServer::init(InitializationFlags flags)
     }
 
     m_idle = new IdleInterface(m_display, m_display);
-    auto idleInhibition = new IdleInhibition(m_idle);
-    connect(this, &WaylandServer::windowAdded, idleInhibition, &IdleInhibition::registerClient);
+    new IdleInhibition(m_idle);
     new IdleInhibitManagerV1Interface(m_display, m_display);
     new IdleNotifyV1Interface(m_display, m_display);
     m_plasmaShell = new PlasmaShellInterface(m_display, m_display);
