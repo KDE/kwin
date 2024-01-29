@@ -211,7 +211,6 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/cursor-shape/cursor-shape-v1.xml
     BASENAME cursor-shape-v1
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL protocols/qt-toplevel-drag-v1.xml
     BASENAME qt-toplevel-drag-v1
@@ -224,10 +223,13 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/stable/presentation-time/presentation-time.xml
     BASENAME presentation-time
 )
-
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/security-context/security-context-v1.xml
     BASENAME security-context-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v1.xml
+    BASENAME xx-color-management-v1
 )
 
 target_sources(kwin PRIVATE
@@ -310,6 +312,7 @@ target_sources(kwin PRIVATE
     xdgtopleveldrag_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
+    xx_colormanagement_v1.cpp
 )
 
 install(FILES
@@ -381,12 +384,15 @@ install(FILES
     xdgshell.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
+    xx_colormanagement_v1.h
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

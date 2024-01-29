@@ -57,6 +57,7 @@ class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class PresentationTime;
+class XXColorManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -289,6 +290,7 @@ private:
     QHash<Output *, OutputDeviceV2Interface *> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
+    XXColorManagerV1 *m_xxColorManager = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
