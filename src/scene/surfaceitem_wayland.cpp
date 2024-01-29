@@ -217,12 +217,9 @@ SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *
 
 QList<QRectF> SurfaceItemXwayland::shape() const
 {
-    const QRectF clipRect = rect() & m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
     QList<QRectF> shape = m_window->shapeRegion();
-
-    // bounded to clipRect
     for (QRectF &shapePart : shape) {
-        shapePart = shapePart.intersected(clipRect);
+        shapePart = shapePart.intersected(rect());
     }
     return shape;
 }
