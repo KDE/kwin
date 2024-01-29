@@ -619,6 +619,9 @@ void Output::setState(const State &state)
     if (oldState.vrrPolicy != state.vrrPolicy) {
         Q_EMIT vrrPolicyChanged();
     }
+    if (oldState.colorDescription != state.colorDescription) {
+        Q_EMIT colorDescriptionChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }

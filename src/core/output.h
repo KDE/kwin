@@ -420,6 +420,7 @@ Q_SIGNALS:
     void iccProfilePathChanged();
     void brightnessMetadataChanged();
     void sdrGamutWidenessChanged();
+    void colorDescriptionChanged();
 
 protected:
     struct Information

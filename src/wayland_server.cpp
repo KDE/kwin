@@ -73,6 +73,7 @@
 #include "wayland/xdgtopleveldrag_v1.h"
 #include "wayland/xwaylandkeyboardgrab_v1.h"
 #include "wayland/xwaylandshell_v1.h"
+#include "wayland/xx_colormanagement_v1.h"
 #include "workspace.h"
 #include "x11window.h"
 #include "xdgactivationv1.h"
@@ -489,6 +490,9 @@ bool WaylandServer::init(InitializationFlags flags)
 
     new FrogColorManagementV1(m_display, m_display);
     new PresentationTime(m_display, m_display);
+    if (qEnvironmentVariableIntValue("KWIN_ENABLE_XX_COLOR_MANAGEMENT")) {
+        m_xxColorManager = new XXColorManagerV1(m_display, m_display);
+    }
     return true;
 }
 
