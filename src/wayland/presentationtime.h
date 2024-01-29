@@ -10,7 +10,7 @@
 
 #include "core/renderbackend.h"
 #include "effect/globals.h"
-#include "qwayland-server-presentation-time.h"
+#include "wayland/qwayland-server-presentation-time.h"
 
 namespace KWin
 {
