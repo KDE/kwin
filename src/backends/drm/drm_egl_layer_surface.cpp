@@ -155,7 +155,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         if (m_surface->iccShader) {
             m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness(), m_surface->channelFactors);
         } else {
-            QMatrix3x3 ctm;
+            QMatrix4x4 ctm;
             ctm(0, 0) = m_surface->channelFactors.x();
             ctm(1, 1) = m_surface->channelFactors.y();
             ctm(2, 2) = m_surface->channelFactors.z();
