@@ -550,14 +550,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         }
         blurShape = scaledShape;
     } else if (data.xTranslation() || data.yTranslation()) {
-        QRegion translated;
-        for (const QRect &r : blurShape) {
-            const QRectF t = QRectF(r).translated(data.xTranslation(), data.yTranslation());
-            const QPoint topLeft(std::ceil(t.x()), std::ceil(t.y()));
-            const QPoint bottomRight(std::floor(t.x() + t.width() - 1), std::floor(t.y() + t.height() - 1));
-            translated += QRect(topLeft, bottomRight);
-        }
-        blurShape = translated;
+        blurShape.translate(std::round(data.xTranslation()), std::round(data.yTranslation()));
     }
 
     const QRect backgroundRect = blurShape.boundingRect();
