@@ -342,14 +342,15 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
 {
     if (props->highDynamicRange.value_or(m_state.highDynamicRange) && m_connector->edid()) {
         const auto colorimetry = props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
+        const auto nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
         const auto sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
         return ColorDescription(colorimetry, NamedTransferFunction::PerceptualQuantizer, sdrBrightness,
                                 props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()),
                                 props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(sdrBrightness)),
                                 props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)),
-                                props->sdrGamutWideness.value_or(m_state.sdrGamutWideness));
+                                Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)));
     } else if (const auto profile = props->iccProfile.value_or(m_state.iccProfile)) {
-        return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, 200, 0, 200, 200, 0);
+        return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, 200, 0, 200, 200);
     } else {
         return ColorDescription::sRGB;
     }

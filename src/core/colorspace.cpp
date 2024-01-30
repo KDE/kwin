@@ -81,6 +81,16 @@ QMatrix4x4 Colorimetry::calculateToXYZMatrix(QVector3D red, QVector3D green, QVe
     return matrixFromColumns(red * component_scale.x(), green * component_scale.y(), blue * component_scale.z());
 }
 
+Colorimetry Colorimetry::interpolateGamutTo(const Colorimetry &one, double factor) const
+{
+    return Colorimetry{
+        m_red * (1 - factor) + one.red() * factor,
+        m_green * (1 - factor) + one.green() * factor,
+        m_blue * (1 - factor) + one.blue() * factor,
+        m_white, // whitepoint should stay the same
+    };
+}
+
 Colorimetry::Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white)
     : m_red(red)
     , m_green(green)
@@ -183,23 +193,12 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100, 0);
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100);
 
-static Colorimetry sRGBColorimetry(double factor)
-{
-    return Colorimetry{
-        BT709.red() * (1 - factor) + BT2020.red() * factor,
-        BT709.green() * (1 - factor) + BT2020.green() * factor,
-        BT709.blue() * (1 - factor) + BT2020.blue() * factor,
-        BT709.white(), // whitepoint is the same
-    };
-}
-
-ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness)
+ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, const Colorimetry &sdrColorimetry)
     : m_colorimetry(colorimety)
     , m_transferFunction(tf)
-    , m_sdrColorimetry(sRGBColorimetry(sdrGamutWideness))
-    , m_sdrGamutWideness(sdrGamutWideness)
+    , m_sdrColorimetry(sdrColorimetry)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)
     , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
@@ -207,11 +206,10 @@ ColorDescription::ColorDescription(const Colorimetry &colorimety, NamedTransferF
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness)
+ColorDescription::ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, const Colorimetry &sdrColorimetry)
     : m_colorimetry(Colorimetry::fromName(colorimetry))
     , m_transferFunction(tf)
-    , m_sdrColorimetry(sRGBColorimetry(sdrGamutWideness))
-    , m_sdrGamutWideness(sdrGamutWideness)
+    , m_sdrColorimetry(sdrColorimetry)
     , m_sdrBrightness(sdrBrightness)
     , m_minHdrBrightness(minHdrBrightness)
     , m_maxFrameAverageBrightness(maxFrameAverageBrightness)
@@ -252,11 +250,6 @@ double ColorDescription::maxFrameAverageBrightness() const
 double ColorDescription::maxHdrHighlightBrightness() const
 {
     return m_maxHdrHighlightBrightness;
-}
-
-double ColorDescription::sdrGamutWideness() const
-{
-    return m_sdrGamutWideness;
 }
 
 bool ColorDescription::operator==(const ColorDescription &other) const

@@ -65,6 +65,10 @@ public:
      * @returns this colorimetry, adapted to the new whitepoint using the Bradford transform
      */
     Colorimetry adaptedTo(QVector2D newWhitepoint) const;
+    /**
+     * interpolates the primaries depending on the passed factor. The whitepoint stays unchanged
+     */
+    Colorimetry interpolateGamutTo(const Colorimetry &one, double factor) const;
 
     const QVector2D &red() const;
     const QVector2D &green() const;
@@ -105,10 +109,10 @@ public:
      * @param minHdrBrightness the minimum brightness of HDR content
      * @param maxFrameAverageBrightness the maximum brightness of HDR content, if the whole screen is white
      * @param maxHdrHighlightBrightness the maximum brightness of HDR content, for a small part of the screen only
-     * @param sdrGamutWideness the gamut wideness of sRGB content; 0 is rec.709, 1 is rec.2020, everything in between is interpolated
+     * @param sdrColorimetry
      */
-    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness);
-    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, double sdrGamutWideness);
+    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, const Colorimetry &sdrColorimetry = Colorimetry::fromName(NamedColorimetry::BT709));
+    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, const Colorimetry &sdrColorimetry = Colorimetry::fromName(NamedColorimetry::BT709));
 
     const Colorimetry &colorimetry() const;
     const Colorimetry &sdrColorimetry() const;
@@ -117,7 +121,6 @@ public:
     double minHdrBrightness() const;
     double maxFrameAverageBrightness() const;
     double maxHdrHighlightBrightness() const;
-    double sdrGamutWideness() const;
 
     bool operator==(const ColorDescription &other) const;
 
