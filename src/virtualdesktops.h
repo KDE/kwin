@@ -86,7 +86,7 @@ class VirtualDesktopGrid
 public:
     VirtualDesktopGrid();
     ~VirtualDesktopGrid();
-    void update(const QSize &size, Qt::Orientation orientation, const QList<VirtualDesktop *> &desktops);
+    void update(const QSize &size, const QList<VirtualDesktop *> &desktops);
     /**
      * @returns The coords of desktop @a id in grid units.
      */
@@ -446,10 +446,6 @@ private Q_SLOTS:
     void gestureReleasedX();
 
 private:
-    /**
-     * Generate a desktop layout from EWMH _NET_DESKTOP_LAYOUT property parameters.
-     */
-    void setNETDesktopLayout(Qt::Orientation orientation, uint width, uint height, int startingCorner);
     /**
      * @returns A default name for the given @p desktop
      */
