@@ -59,6 +59,20 @@ DrmCommitThread::DrmCommitThread(const QString &name)
                     m_committed = std::move(commit);
                     m_commits.erase(m_commits.begin());
                 } else {
+                    if (m_commits.size() > 1) {
+                        // the failure may have been because of the reordering of commits
+                        // -> collapse all commits into one and try again with an already tested state
+                        while (m_commits.size() > 1) {
+                            auto toMerge = std::move(m_commits[1]);
+                            m_commits.erase(m_commits.begin() + 1);
+                            m_commits.front()->merge(toMerge.get());
+                            m_droppedCommits.push_back(std::move(toMerge));
+                        }
+                        if (commit->test()) {
+                            // presentation didn't fail after all
+                            continue;
+                        }
+                    }
                     const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
                         return commit->isCursorOnly();
                     });
