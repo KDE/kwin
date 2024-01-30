@@ -213,11 +213,6 @@ void VirtualDesktopManager::setRootInfo(NETRootInfo *info)
 
     // Nothing will be connected to rootInfo
     if (m_rootInfo) {
-        int columns = count() / m_rows;
-        if (count() % m_rows > 0) {
-            columns++;
-        }
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
         updateRootInfo();
         m_rootInfo->setCurrentDesktop(currentDesktop()->x11DesktopNumber());
         for (auto *vd : std::as_const(m_desktops)) {
@@ -455,6 +450,7 @@ VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const
 
     save();
 
+    updateLayout();
     updateRootInfo();
     Q_EMIT desktopAdded(vd);
     Q_EMIT countChanged(m_desktops.count() - 1, m_desktops.count());
@@ -491,6 +487,7 @@ void VirtualDesktopManager::removeVirtualDesktop(VirtualDesktop *desktop)
         Q_EMIT currentChanged(desktop, m_current);
     }
 
+    updateLayout();
     updateRootInfo();
     save();
 
@@ -580,6 +577,7 @@ void VirtualDesktopManager::setCount(uint count)
         m_current = m_desktops.at(0);
     }
 
+    updateLayout();
     updateRootInfo();
 
     if (!s_loadingDesktopSettings) {
@@ -604,33 +602,20 @@ void VirtualDesktopManager::setRows(uint rows)
 
     m_rows = rows;
 
-    int columns = count() / m_rows;
-    if (count() % m_rows > 0) {
-        columns++;
-    }
-    if (m_rootInfo) {
-        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
-    }
-
     updateLayout();
-
-    // rowsChanged will be emitted by setNETDesktopLayout called by updateLayout
+    updateRootInfo();
 }
 
 void VirtualDesktopManager::updateRootInfo()
 {
-    if (!m_rootInfo) {
-        // Make sure the layout is still valid
-        updateLayout();
-        return;
+    if (m_rootInfo) {
+        const int n = count();
+        m_rootInfo->setNumberOfDesktops(n);
+        NETPoint *viewports = new NETPoint[n];
+        m_rootInfo->setDesktopViewport(n, *viewports);
+        delete[] viewports;
+        m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, m_grid.width(), m_grid.height(), NET::DesktopLayoutCornerTopLeft);
     }
-    const int n = count();
-    m_rootInfo->setNumberOfDesktops(n);
-    NETPoint *viewports = new NETPoint[n];
-    m_rootInfo->setDesktopViewport(n, *viewports);
-    delete[] viewports;
-    // Make sure the layout is still valid
-    updateLayout();
 }
 
 void VirtualDesktopManager::updateLayout()
@@ -643,7 +628,6 @@ void VirtualDesktopManager::updateLayout()
     }
 
     m_grid.update(QSize(columns, m_rows), m_desktops);
-    // TODO: why is there no call to m_rootInfo->setDesktopLayout?
 
     Q_EMIT layoutChanged(columns, m_rows);
     Q_EMIT rowsChanged(m_rows);
