@@ -2376,7 +2376,7 @@ public:
     DragAndDropInputFilter()
     {
         m_raiseTimer.setSingleShot(true);
-        m_raiseTimer.setInterval(250);
+        m_raiseTimer.setInterval(1000);
         connect(&m_raiseTimer, &QTimer::timeout, this, &DragAndDropInputFilter::raiseDragTarget);
 
         connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, [this] {
