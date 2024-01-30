@@ -346,6 +346,8 @@ void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const 
         if (rect.bottom() != wwi.resize_original_rect.bottom()) {
             wwi.can_wobble_bottom = true;
         }
+    } else {
+        startMovedResized(w);
     }
 }
 
@@ -944,7 +946,7 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
     qCDebug(KWIN_WOBBLYWINDOWS) << "sum_acc : " << acc_sum << "  ***  sum_vel :" << vel_sum;
 #endif
 
-    if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity) {
+    if (acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity) {
         windows.remove(w);
         unredirect(w);
         if (windows.isEmpty()) {
