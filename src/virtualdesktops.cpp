@@ -610,7 +610,6 @@ void VirtualDesktopManager::setRows(uint rows)
     }
     if (m_rootInfo) {
         m_rootInfo->setDesktopLayout(NET::OrientationHorizontal, columns, m_rows, NET::DesktopLayoutCornerTopLeft);
-        m_rootInfo->activate();
     }
 
     updateLayout();
