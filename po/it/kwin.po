@@ -1,5 +1,5 @@
 # translation of kwin.po to Italian
-# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Vincenzo Reale <smart2128vr@gmail.com>
+# SPDX-FileCopyrightText: 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Vincenzo Reale <smart2128vr@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2003, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011, 2012.
@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-26 02:28+0000\n"
-"PO-Revision-Date: 2023-11-30 13:02+0100\n"
+"PO-Revision-Date: 2024-01-19 03:44+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -3525,14 +3525,13 @@ msgstr "Tipo di regola Nome del file desktop"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Livello"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Tipo di regola Arrotolata"
+msgstr "Tipo di regola Livello"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

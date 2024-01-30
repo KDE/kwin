@@ -1,5 +1,5 @@
 # translation of kcmkwinrules.po to Italian
-# SPDX-FileCopyrightText: 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023 Paolo Zamponi <feus73@gmail.com>
+# SPDX-FileCopyrightText: 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Paolo Zamponi <feus73@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2010, 2011.
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 02:24+0000\n"
-"PO-Revision-Date: 2023-11-01 09:27+0100\n"
+"PO-Revision-Date: 2024-01-18 15:31+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -596,7 +596,7 @@ msgstr "Blocca la composizione"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Livello"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -769,38 +769,37 @@ msgstr "Estrema"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Sotto"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Sopra"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Posizione"
+msgstr "Notifica"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Finestra a comparsa"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Notifica critica"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Sovrapponi"
 
 #: rulesmodel.cpp:951
 #, kde-format
