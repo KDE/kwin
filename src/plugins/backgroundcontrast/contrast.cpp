@@ -421,8 +421,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
             for (QRect r : shape) {
                 const QRectF t = QRectF(r).translated(data.xTranslation(), data.yTranslation());
                 const QPoint topLeft(std::ceil(t.x()), std::ceil(t.y()));
-                const QPoint bottomRight(std::floor(t.x() + t.width() - 1), std::floor(t.y() + t.height() - 1));
-                translated |= QRect(topLeft, bottomRight);
+                translated |= QRect(topLeft, r.size());
             }
             shape = translated & region;
         }
