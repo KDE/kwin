@@ -332,10 +332,6 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
         auto _this = static_cast<ScreenCastStream *>(data);
         _this->onStreamParamChanged(id, param);
     };
-
-    connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        recordFrame(m_pendingDamages);
-    });
 }
 
 ScreenCastStream::~ScreenCastStream()
@@ -459,19 +455,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    if (m_videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
-        auto frameInterval = (1000. * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
-        auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
-        if (lastSentAgo < frameInterval) {
-            m_pendingDamages += damagedRegion;
-            if (!m_pendingFrame.isActive()) {
-                m_pendingFrame.start(frameInterval - lastSentAgo);
-            }
-            return;
-        }
-    }
-
-    m_pendingDamages = {};
     if (m_pendingBuffer) {
         return;
     }
@@ -729,10 +712,6 @@ void ScreenCastStream::enqueue()
         return;
     }
     pw_stream_queue_buffer(m_pwStream, m_pendingBuffer);
-
-    if (m_pendingBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
-        m_lastSent = QDateTime::currentDateTimeUtc();
-    }
 
     m_pendingBuffer = nullptr;
 }
