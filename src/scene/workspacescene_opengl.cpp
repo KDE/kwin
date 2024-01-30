@@ -17,6 +17,7 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_opengl.h"
 #include "shadow.h"
@@ -343,25 +344,25 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     const qreal devicePixelRatio = effectiveDevicePixelRatio();
-    const int topHeight = std::round(top.height() * devicePixelRatio);
-    const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
-    const int leftWidth = std::round(left.width() * devicePixelRatio);
+    const qreal topHeight = std::round(top.height() * devicePixelRatio);
+    const qreal bottomHeight = std::round(bottom.height() * devicePixelRatio);
+    const qreal leftWidth = std::round(left.width() * devicePixelRatio);
 
-    const QPoint topPosition(0, 0);
-    const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * TexturePad));
-    const QPoint leftPosition(0, bottomPosition.y() + bottomHeight + (2 * TexturePad));
-    const QPoint rightPosition(0, leftPosition.y() + leftWidth + (2 * TexturePad));
+    const QPointF topPosition = snapToPixelGridF(QPoint(0, 0));
+    const QPointF bottomPosition = snapToPixelGridF(QPoint(0, topPosition.y() + topHeight + (2 * TexturePad)));
+    const QPointF leftPosition = snapToPixelGridF(QPoint(0, bottomPosition.y() + bottomHeight + (2 * TexturePad)));
+    const QPointF rightPosition = snapToPixelGridF(QPoint(0, leftPosition.y() + leftWidth + (2 * TexturePad)));
 
-    const QRect dirtyRect = region.boundingRect();
+    const QRectF dirtyRect = region.boundingRect();
 
-    renderPart(top.toRect().intersected(dirtyRect), top.toRect(), topPosition, devicePixelRatio);
-    renderPart(bottom.toRect().intersected(dirtyRect), bottom.toRect(), bottomPosition, devicePixelRatio);
-    renderPart(left.toRect().intersected(dirtyRect), left.toRect(), leftPosition, devicePixelRatio, true);
-    renderPart(right.toRect().intersected(dirtyRect), right.toRect(), rightPosition, devicePixelRatio, true);
+    renderPart(top.intersected(dirtyRect), top, topPosition, devicePixelRatio);
+    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition, devicePixelRatio);
+    renderPart(left.intersected(dirtyRect), left, leftPosition, devicePixelRatio, true);
+    renderPart(right.intersected(dirtyRect), right, rightPosition, devicePixelRatio, true);
 }
 
-void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &partRect,
-                                               const QPoint &textureOffset,
+void SceneOpenGLDecorationRenderer::renderPart(const QRectF &rect, const QRectF &partRect,
+                                               const QPointF &textureOffset,
                                                qreal devicePixelRatio, bool rotated)
 {
     if (!rect.isValid() || !m_texture) {
@@ -371,54 +372,54 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     // dirty region is completely contained inside the decoration part, i.e.
     // the dirty region doesn't touch any of the decoration's edges. In that
     // case, we should **not** pad the dirty region.
-    const QMargins padding = texturePadForPart(rect, partRect);
-    int verticalPadding = padding.top() + padding.bottom();
-    int horizontalPadding = padding.left() + padding.right();
+    const QMarginsF padding = texturePadForPart(rect, partRect);
+    qreal verticalPadding = padding.top() + padding.bottom();
+    qreal horizontalPadding = padding.left() + padding.right();
 
-    QSize imageSize(toNativeSize(rect.width()), toNativeSize(rect.height()));
+    QSizeF imageSize(toNativeSize(rect.width()), toNativeSize(rect.height()));
     if (rotated) {
-        imageSize = QSize(imageSize.height(), imageSize.width());
+        imageSize = QSizeF(imageSize.height(), imageSize.width());
     }
-    QSize paddedImageSize = imageSize;
+    QSizeF paddedImageSize = imageSize;
     paddedImageSize.rheight() += verticalPadding;
     paddedImageSize.rwidth() += horizontalPadding;
-    QImage image(paddedImageSize, QImage::Format_ARGB32_Premultiplied);
+    QImage image(paddedImageSize.toSize(), QImage::Format_ARGB32_Premultiplied);
     image.setDevicePixelRatio(devicePixelRatio);
     image.fill(Qt::transparent);
 
-    QRect padClip = QRect(padding.left(), padding.top(), imageSize.width(), imageSize.height());
+    QRectF padClip = QRectF(padding.left(), padding.top(), imageSize.width(), imageSize.height());
     QPainter painter(&image);
     const qreal inverseScale = 1.0 / devicePixelRatio;
     painter.scale(inverseScale, inverseScale);
     painter.setRenderHint(QPainter::Antialiasing);
     painter.setClipRect(padClip);
-    painter.translate(padding.left(), padding.top());
+    painter.translate(snapToPixelGridF(QPointF(padding.left(), padding.top())));
     if (rotated) {
         painter.translate(0, imageSize.height());
         painter.rotate(-90);
     }
     painter.scale(devicePixelRatio, devicePixelRatio);
-    painter.translate(-rect.topLeft());
+    painter.translate(snapToPixelGridF(-rect.topLeft()));
     renderToPainter(&painter, rect);
     painter.end();
 
     // fill padding pixels by copying from the neighbour row
-    clamp(image, padClip);
+    clamp(image, padClip.toAlignedRect());
 
-    QPoint dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio;
+    QPointF dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio;
     if (padding.top() == 0) {
         dirtyOffset.ry() += TexturePad;
     }
     if (padding.left() == 0) {
         dirtyOffset.rx() += TexturePad;
     }
-    m_texture->update(image, textureOffset + dirtyOffset);
+    m_texture->update(image, snapToPixelGrid(textureOffset.toPoint() + dirtyOffset.toPoint()));
 }
 
-const QMargins SceneOpenGLDecorationRenderer::texturePadForPart(
-    const QRect &rect, const QRect &partRect)
+const QMarginsF SceneOpenGLDecorationRenderer::texturePadForPart(
+    const QRectF &rect, const QRectF &partRect)
 {
-    QMargins result = QMargins(0, 0, 0, 0);
+    QMarginsF result = QMarginsF(0, 0, 0, 0);
     if (rect.top() == partRect.top()) {
         result.setTop(TexturePad);
     }

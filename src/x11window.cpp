@@ -1259,11 +1259,11 @@ void X11Window::updateInputWindow()
     QRegion region;
 
     if (decoration()) {
-        const QMargins &r = decoration()->resizeOnlyBorders();
-        const int left = r.left();
-        const int top = r.top();
-        const int right = r.right();
-        const int bottom = r.bottom();
+        const QMarginsF &r = decoration()->resizeOnlyBorders();
+        const qreal left = r.left();
+        const qreal top = r.top();
+        const qreal right = r.right();
+        const qreal bottom = r.bottom();
         if (left != 0 || top != 0 || right != 0 || bottom != 0) {
             region = QRegion(-left,
                              -top,

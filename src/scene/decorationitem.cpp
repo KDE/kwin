@@ -8,10 +8,10 @@
 #include "scene/decorationitem.h"
 #include "compositor.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "decorations/decoratedclient.h"
 #include "scene/workspacescene.h"
 #include "window.h"
-
 #include <cmath>
 
 #include <KDecoration2/DecoratedClient>
@@ -83,7 +83,7 @@ void DecorationRenderer::setDevicePixelRatio(qreal dpr)
     }
 }
 
-void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
+void DecorationRenderer::renderToPainter(QPainter *painter, const QRectF &rect)
 {
     client()->decoration()->paint(painter, rect);
 }
@@ -185,7 +185,7 @@ Window *DecorationItem::window() const
     return m_window;
 }
 
-WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
+WindowQuad buildQuad(const QRectF &partRect, const QPointF &textureOffset,
                      const qreal devicePixelRatio, bool rotated)
 {
     const QRectF &r = partRect;
@@ -200,20 +200,20 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
 
     WindowQuad quad;
     if (rotated) {
-        const int u0 = textureOffset.y() + p;
-        const int v0 = textureOffset.x() + p;
-        const int u1 = textureOffset.y() + p + std::round(r.width() * devicePixelRatio);
-        const int v1 = textureOffset.x() + p + std::round(r.height() * devicePixelRatio);
+        const qreal u0 = textureOffset.y() + p;
+        const qreal v0 = textureOffset.x() + p;
+        const qreal u1 = textureOffset.y() + p + std::round(r.width() * devicePixelRatio);
+        const qreal v1 = textureOffset.x() + p + std::round(r.height() * devicePixelRatio);
 
         quad[0] = WindowVertex(x0, y0, v0, u1); // Top-left
         quad[1] = WindowVertex(x1, y0, v0, u0); // Top-right
         quad[2] = WindowVertex(x1, y1, v1, u0); // Bottom-right
         quad[3] = WindowVertex(x0, y1, v1, u1); // Bottom-left
     } else {
-        const int u0 = textureOffset.x() + p;
-        const int v0 = textureOffset.y() + p;
-        const int u1 = textureOffset.x() + p + std::round(r.width() * devicePixelRatio);
-        const int v1 = textureOffset.y() + p + std::round(r.height() * devicePixelRatio);
+        const qreal u0 = textureOffset.x() + p;
+        const qreal v0 = textureOffset.y() + p;
+        const qreal u1 = textureOffset.x() + p + std::round(r.width() * devicePixelRatio);
+        const qreal v1 = textureOffset.y() + p + std::round(r.height() * devicePixelRatio);
 
         quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
         quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
@@ -235,14 +235,14 @@ WindowQuadList DecorationItem::buildQuads() const
 
     m_window->layoutDecorationRects(left, top, right, bottom);
 
-    const int topHeight = std::round(top.height() * devicePixelRatio);
-    const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
-    const int leftWidth = std::round(left.width() * devicePixelRatio);
+    const qreal topHeight = std::round(top.height() * devicePixelRatio);
+    const qreal bottomHeight = std::round(bottom.height() * devicePixelRatio);
+    const qreal leftWidth = std::round(left.width() * devicePixelRatio);
 
-    const QPoint topPosition(0, 0);
-    const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * texturePad));
-    const QPoint leftPosition(0, bottomPosition.y() + bottomHeight + (2 * texturePad));
-    const QPoint rightPosition(0, leftPosition.y() + leftWidth + (2 * texturePad));
+    const QPointF topPosition = snapToPixelGridF(QPointF(0, 0));
+    const QPointF bottomPosition = snapToPixelGridF(QPointF(0, topPosition.y() + topHeight + (2 * texturePad)));
+    const QPointF leftPosition = snapToPixelGridF(QPointF(0, bottomPosition.y() + bottomHeight + (2 * texturePad)));
+    const QPointF rightPosition = snapToPixelGridF(QPointF(0, leftPosition.y() + leftWidth + (2 * texturePad)));
 
     WindowQuadList list;
     if (left.isValid()) {

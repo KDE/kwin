@@ -8,6 +8,7 @@
 */
 #include "decoratedclient.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "cursor.h"
 #include "decorationbridge.h"
 #include "decorationpalette.h"

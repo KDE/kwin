@@ -206,28 +206,28 @@ Borders::~Borders()
 {
 }
 
-void Borders::setLeft(int left)
+void Borders::setLeft(qreal left)
 {
     if (m_left != left) {
         m_left = left;
         Q_EMIT leftChanged();
     }
 }
-void Borders::setRight(int right)
+void Borders::setRight(qreal right)
 {
     if (m_right != right) {
         m_right = right;
         Q_EMIT rightChanged();
     }
 }
-void Borders::setTop(int top)
+void Borders::setTop(qreal top)
 {
     if (m_top != top) {
         m_top = top;
         Q_EMIT topChanged();
     }
 }
-void Borders::setBottom(int bottom)
+void Borders::setBottom(qreal bottom)
 {
     if (m_bottom != bottom) {
         m_bottom = bottom;
@@ -258,9 +258,9 @@ void Borders::setTitle(int value)
     setTop(value);
 }
 
-Borders::operator QMargins() const
+Borders::operator QMarginsF() const
 {
-    return QMargins(m_left, m_top, m_right, m_bottom);
+    return QMarginsF(m_left, m_top, m_right, m_bottom);
 }
 
 } // namespace

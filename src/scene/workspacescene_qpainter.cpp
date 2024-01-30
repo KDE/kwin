@@ -8,6 +8,7 @@
 */
 #include "workspacescene_qpainter.h"
 // KWin
+#include "core/pixelgrid.h"
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_qpainter.h"
 #include "window.h"
@@ -95,7 +96,7 @@ void SceneQPainterDecorationRenderer::render(const QRegion &region)
         }
         QPainter painter(&m_images[index]);
         painter.setRenderHint(QPainter::Antialiasing);
-        painter.setWindow(QRect(partRect.topLeft(), partRect.size() * effectiveDevicePixelRatio()));
+        painter.setWindow(QRect(snapToPixelGrid(QPoint(partRect.topLeft())), partRect.size() * effectiveDevicePixelRatio()));
         painter.setClipRect(rect);
         painter.save();
         // clear existing part

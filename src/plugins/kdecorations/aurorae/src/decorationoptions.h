@@ -255,24 +255,24 @@ private:
 class Borders : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int left READ left WRITE setLeft NOTIFY leftChanged)
-    Q_PROPERTY(int right READ right WRITE setRight NOTIFY rightChanged)
-    Q_PROPERTY(int top READ top WRITE setTop NOTIFY topChanged)
-    Q_PROPERTY(int bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
+    Q_PROPERTY(qreal left READ left WRITE setLeft NOTIFY leftChanged)
+    Q_PROPERTY(qreal right READ right WRITE setRight NOTIFY rightChanged)
+    Q_PROPERTY(qreal top READ top WRITE setTop NOTIFY topChanged)
+    Q_PROPERTY(qreal bottom READ bottom WRITE setBottom NOTIFY bottomChanged)
 public:
     Borders(QObject *parent = nullptr);
     ~Borders() override;
-    int left() const;
-    int right() const;
-    int top() const;
-    int bottom() const;
+    qreal left() const;
+    qreal right() const;
+    qreal top() const;
+    qreal bottom() const;
 
-    void setLeft(int left);
-    void setRight(int right);
-    void setTop(int top);
-    void setBottom(int bottom);
+    void setLeft(qreal left);
+    void setRight(qreal right);
+    void setTop(qreal top);
+    void setBottom(qreal bottom);
 
-    operator QMargins() const;
+    operator QMarginsF() const;
 
 public Q_SLOTS:
     /**
@@ -300,16 +300,16 @@ Q_SIGNALS:
     void bottomChanged();
 
 private:
-    int m_left;
-    int m_right;
-    int m_top;
-    int m_bottom;
+    qreal m_left;
+    qreal m_right;
+    qreal m_top;
+    qreal m_bottom;
 };
 
-#define GETTER(name)                 \
-    inline int Borders::name() const \
-    {                                \
-        return m_##name;             \
+#define GETTER(name)                   \
+    inline qreal Borders::name() const \
+    {                                  \
+        return m_##name;               \
     }
 
 GETTER(left)

@@ -29,6 +29,7 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
+#include "core/pixelgrid.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -37,7 +38,6 @@
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "workspace.h"
-
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
 #include <KDesktopFile>
@@ -414,9 +414,9 @@ bool Window::isLocalhost() const
     return m_clientMachine->isLocal();
 }
 
-QMargins Window::frameMargins() const
+QMarginsF Window::frameMargins() const
 {
-    return QMargins(borderLeft(), borderTop(), borderRight(), borderBottom());
+    return QMarginsF(borderLeft(), borderTop(), borderRight(), borderBottom());
 }
 
 void Window::updateMouseGrab()
@@ -2353,22 +2353,22 @@ bool Window::isActiveFullScreen() const
     return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
 }
 
-int Window::borderBottom() const
+qreal Window::borderBottom() const
 {
     return isDecorated() ? decoration()->borderBottom() : 0;
 }
 
-int Window::borderLeft() const
+qreal Window::borderLeft() const
 {
     return isDecorated() ? decoration()->borderLeft() : 0;
 }
 
-int Window::borderRight() const
+qreal Window::borderRight() const
 {
     return isDecorated() ? decoration()->borderRight() : 0;
 }
 
-int Window::borderTop() const
+qreal Window::borderTop() const
 {
     return isDecorated() ? decoration()->borderTop() : 0;
 }
@@ -2668,8 +2668,8 @@ void Window::updateDecorationInputShape()
         return;
     }
 
-    const QMargins borders = decoration()->borders();
-    const QMargins resizeBorders = decoration()->resizeOnlyBorders();
+    const QMarginsF borders = decoration()->borders();
+    const QMarginsF resizeBorders = decoration()->resizeOnlyBorders();
 
     const QRectF innerRect = QRectF(QPointF(borderLeft(), borderTop()), decoratedClient()->size());
     const QRectF outerRect = innerRect + borders + resizeBorders;
@@ -2700,13 +2700,24 @@ void Window::layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRe
     }
     QRectF r = decoration()->rect();
 
-    top = QRectF(r.x(), r.y(), r.width(), borderTop());
-    bottom = QRectF(r.x(), r.y() + r.height() - borderBottom(),
-                    r.width(), borderBottom());
-    left = QRectF(r.x(), r.y() + top.height(),
-                  borderLeft(), r.height() - top.height() - bottom.height());
-    right = QRectF(r.x() + r.width() - borderRight(), r.y() + top.height(),
-                   borderRight(), r.height() - top.height() - bottom.height());
+    auto topPoint = snapToPixelGridF(QPointF(r.x(), r.y()));
+    auto topSize = QSizeF(r.width(), borderTop());
+
+    top = QRectF(topPoint, topSize);
+
+    auto btmPoint = snapToPixelGridF(QPointF(r.x(), r.y() + r.height() - borderBottom()));
+    auto btmSize = QSizeF(r.width(), borderBottom());
+
+    bottom = QRectF(btmPoint, btmSize);
+
+    auto leftPoint = snapToPixelGridF(QPointF(r.x(), r.y() + top.height()));
+    auto leftSize = QSizeF(borderLeft(), r.height() - top.height() - bottom.height());
+
+    left = QRectF(leftPoint, leftSize);
+
+    auto rightPoint = snapToPixelGridF(QPointF(r.x() + r.width() - borderRight(), r.y() + top.height()));
+    auto rightSize = QSizeF(borderRight(), r.height() - top.height() - bottom.height());
+    right = QRectF(rightPoint, rightSize);
 }
 
 void Window::processDecorationMove(const QPointF &localPos, const QPointF &globalPos)

@@ -346,7 +346,7 @@ bool Decoration::init()
         // create a dummy shadow for the configuration interface
         if (m_padding) {
             auto s = std::make_shared<KDecoration2::DecorationShadow>();
-            s->setPadding(QMargins(*m_padding));
+            s->setPadding(QMarginsF(*m_padding));
             s->setInnerShadowRect(QRect(m_padding->left(), m_padding->top(), 1, 1));
             setShadow(s);
         }
@@ -382,7 +382,7 @@ void Decoration::updateBorders()
     updateExtendedBorders();
 }
 
-void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     if (!m_view) {
         return;
@@ -409,7 +409,7 @@ void Decoration::updateShadow()
             updateShadow = true;
         } else {
             // compare padding
-            if (oldShadow->padding() != QMargins(*m_padding)) {
+            if (oldShadow->padding() != QMarginsF(*m_padding)) {
                 updateShadow = true;
             }
         }
@@ -438,7 +438,7 @@ void Decoration::updateShadow()
         if (updateShadow) {
             auto s = std::make_shared<KDecoration2::DecorationShadow>();
             s->setShadow(img);
-            s->setPadding(QMargins(*m_padding));
+            s->setPadding(QMarginsF(*m_padding));
             s->setInnerShadowRect(QRect(m_padding->left(),
                                         m_padding->top(),
                                         imageSize.width() - m_padding->left() - m_padding->right(),
@@ -524,10 +524,10 @@ void Decoration::installTitleItem(QQuickItem *item)
 void Decoration::updateExtendedBorders()
 {
     // extended sizes
-    const int extSize = settings()->largeSpacing();
-    int extLeft = m_extendedBorders->left();
-    int extRight = m_extendedBorders->right();
-    int extBottom = m_extendedBorders->bottom();
+    const qreal extSize = settings()->largeSpacing();
+    qreal extLeft = m_extendedBorders->left();
+    qreal extRight = m_extendedBorders->right();
+    qreal extBottom = m_extendedBorders->bottom();
 
     if (settings()->borderSize() == KDecoration2::BorderSize::None) {
         if (!client()->isMaximizedHorizontally()) {
