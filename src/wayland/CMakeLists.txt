@@ -100,8 +100,8 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME idle-inhibit-unstable-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/appmenu.xml
-    BASENAME appmenu
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dbus-annotation/xdg-dbus-annotation-v1.xml
+    BASENAME xdg-dbus-annotation-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml

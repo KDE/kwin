@@ -398,7 +398,7 @@ bool WaylandServer::init(InitializationFlags flags)
         }
     });
     m_appMenuManager = new AppMenuManagerInterface(m_display, m_display);
-    connect(m_appMenuManager, &AppMenuManagerInterface::appMenuCreated, this, [this](AppMenuInterface *appMenu) {
+    connect(m_appMenuManager, &AppMenuManagerInterface::surfaceAppMenuCreated, this, [this](SurfaceAppMenuInterface *appMenu) {
         if (XdgToplevelWindow *window = findXdgToplevelWindow(appMenu->surface())) {
             window->installAppMenu(appMenu);
         }

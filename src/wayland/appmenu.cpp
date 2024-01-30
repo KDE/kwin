@@ -10,13 +10,15 @@
 #include <QPointer>
 #include <QtGlobal>
 
-#include "qwayland-server-appmenu.h"
+#include "qwayland-server-xdg-dbus-annotation-v1.h"
+#include "wayland_server.h"
 
 namespace KWin
 {
 static const quint32 s_version = 1;
+static const QString s_menuDbusInterface = QStringLiteral("com.canonical.dbusmenu");
 
-class AppMenuManagerInterfacePrivate : public QtWaylandServer::org_kde_kwin_appmenu_manager
+class AppMenuManagerInterfacePrivate : public QtWaylandServer::xdg_dbus_annotation_manager_v1
 {
 public:
     AppMenuManagerInterfacePrivate(AppMenuManagerInterface *q, Display *d);
@@ -25,64 +27,84 @@ public:
     AppMenuManagerInterface *q;
 
 protected:
-    void org_kde_kwin_appmenu_manager_create(Resource *resource, uint32_t id, wl_resource *surface) override;
+    void xdg_dbus_annotation_manager_v1_create_client(Resource *resource, const QString &interface, uint32_t id) override;
+    void xdg_dbus_annotation_manager_v1_create_surface(Resource *resource, const QString &interface, uint32_t id, struct ::wl_resource *toplevel) override;
 };
 
-void AppMenuManagerInterfacePrivate::org_kde_kwin_appmenu_manager_create(Resource *resource, uint32_t id, wl_resource *surface)
+void AppMenuManagerInterfacePrivate::xdg_dbus_annotation_manager_v1_create_surface(
+    Resource *resource, const QString &interface, uint32_t id, struct ::wl_resource *surface)
 {
     SurfaceInterface *s = SurfaceInterface::get(surface);
     if (!s) {
-        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
+        wl_resource_post_error(resource->handle, 0, "Invalid surface");
         return;
     }
-    wl_resource *appmenu_resource = wl_resource_create(resource->client(), &org_kde_kwin_appmenu_interface, resource->version(), id);
+    wl_resource *appmenu_resource = wl_resource_create(resource->client(), QtWaylandServer::xdg_dbus_annotation_v1::interface(), resource->version(), id);
     if (!appmenu_resource) {
         wl_client_post_no_memory(resource->client());
         return;
     }
-    auto appmenu = new AppMenuInterface(s, appmenu_resource);
+    auto appmenu = new SurfaceAppMenuInterface(s, appmenu_resource);
 
     appmenus.append(appmenu);
     QObject::connect(appmenu, &QObject::destroyed, q, [=, this]() {
         appmenus.removeOne(appmenu);
     });
     Q_EMIT q->appMenuCreated(appmenu);
+    Q_EMIT q->surfaceAppMenuCreated(appmenu);
+}
+
+void AppMenuManagerInterfacePrivate::xdg_dbus_annotation_manager_v1_create_client(
+    Resource *resource, const QString &interface, uint32_t id)
+{
+    auto connection = waylandServer()->display()->getConnection(resource->client());
+    wl_resource *appmenu_resource = wl_resource_create(resource->client(), QtWaylandServer::xdg_dbus_annotation_v1::interface(), resource->version(), id);
+    if (!appmenu_resource) {
+        wl_client_post_no_memory(resource->client());
+        return;
+    }
+    auto appmenu = new ClientAppMenuInterface(connection, appmenu_resource);
+
+    appmenus.append(appmenu);
+    QObject::connect(appmenu, &QObject::destroyed, q, [=, this]() {
+        appmenus.removeOne(appmenu);
+    });
+    Q_EMIT q->appMenuCreated(appmenu);
+    Q_EMIT q->clientAppMenuCreated(appmenu);
 }
 
 AppMenuManagerInterfacePrivate::AppMenuManagerInterfacePrivate(AppMenuManagerInterface *_q, Display *d)
-    : QtWaylandServer::org_kde_kwin_appmenu_manager(*d, s_version)
+    : QtWaylandServer::xdg_dbus_annotation_manager_v1(*d, s_version)
     , q(_q)
 {
 }
 
-class AppMenuInterfacePrivate : public QtWaylandServer::org_kde_kwin_appmenu
+class AppMenuInterfacePrivate : public QtWaylandServer::xdg_dbus_annotation_v1
 {
 public:
-    AppMenuInterfacePrivate(AppMenuInterface *q, SurfaceInterface *surface, wl_resource *resource);
+    AppMenuInterfacePrivate(AppMenuInterface *q, wl_resource *resource);
 
     AppMenuInterface *q;
-    QPointer<SurfaceInterface> surface;
     AppMenuInterface::InterfaceAddress address;
 
 protected:
-    void org_kde_kwin_appmenu_destroy_resource(Resource *resource) override;
-    void org_kde_kwin_appmenu_set_address(Resource *resource, const QString &service_name, const QString &object_path) override;
-    void org_kde_kwin_appmenu_release(Resource *resource) override;
+    void xdg_dbus_annotation_v1_destroy_resource(Resource *resource) override;
+    void xdg_dbus_annotation_v1_destroy(Resource *resource) override;
+    void xdg_dbus_annotation_v1_set_address(Resource *resource, const QString &service_name, const QString &object_path) override;
 };
 
-AppMenuInterfacePrivate::AppMenuInterfacePrivate(AppMenuInterface *_q, SurfaceInterface *s, wl_resource *resource)
-    : QtWaylandServer::org_kde_kwin_appmenu(resource)
+AppMenuInterfacePrivate::AppMenuInterfacePrivate(AppMenuInterface *_q, wl_resource *resource)
+    : QtWaylandServer::xdg_dbus_annotation_v1(resource)
     , q(_q)
-    , surface(s)
 {
 }
 
-void AppMenuInterfacePrivate::org_kde_kwin_appmenu_destroy_resource(QtWaylandServer::org_kde_kwin_appmenu::Resource *resource)
+void AppMenuInterfacePrivate::xdg_dbus_annotation_v1_destroy_resource(QtWaylandServer::xdg_dbus_annotation_v1::Resource *resource)
 {
     delete q;
 }
 
-void AppMenuInterfacePrivate::org_kde_kwin_appmenu_set_address(Resource *resource, const QString &service_name, const QString &object_path)
+void AppMenuInterfacePrivate::xdg_dbus_annotation_v1_set_address(Resource *resource, const QString &service_name, const QString &object_path)
 {
     if (address.serviceName == service_name && address.objectPath == object_path) {
         return;
@@ -93,7 +115,7 @@ void AppMenuInterfacePrivate::org_kde_kwin_appmenu_set_address(Resource *resourc
     Q_EMIT q->addressChanged(address);
 }
 
-void AppMenuInterfacePrivate::org_kde_kwin_appmenu_release(QtWaylandServer::org_kde_kwin_appmenu::Resource *resource)
+void AppMenuInterfacePrivate::xdg_dbus_annotation_v1_destroy(QtWaylandServer::xdg_dbus_annotation_v1::Resource *resource)
 {
     wl_resource_destroy(resource->handle);
 }
@@ -108,19 +130,20 @@ AppMenuManagerInterface::~AppMenuManagerInterface()
 {
 }
 
-AppMenuInterface *AppMenuManagerInterface::appMenuForSurface(SurfaceInterface *surface)
+SurfaceAppMenuInterface *AppMenuManagerInterface::appMenuForSurface(SurfaceInterface *surface)
 {
     for (AppMenuInterface *menu : d->appmenus) {
-        if (menu->surface() == surface) {
-            return menu;
+        auto it = qobject_cast<SurfaceAppMenuInterface *>(menu);
+        if (it && it->surface() == surface) {
+            return it;
         }
     }
     return nullptr;
 }
 
-AppMenuInterface::AppMenuInterface(SurfaceInterface *surface, wl_resource *resource)
+AppMenuInterface::AppMenuInterface(wl_resource *resource)
     : QObject()
-    , d(new AppMenuInterfacePrivate(this, surface, resource))
+    , d(new AppMenuInterfacePrivate(this, resource))
 {
 }
 
@@ -133,9 +156,34 @@ AppMenuInterface::InterfaceAddress AppMenuInterface::address() const
     return d->address;
 }
 
-SurfaceInterface *AppMenuInterface::surface() const
+SurfaceAppMenuInterface::SurfaceAppMenuInterface(SurfaceInterface *surface, wl_resource *resource)
+    : AppMenuInterface(resource)
+    , m_surface(surface)
 {
-    return d->surface.data();
+}
+
+SurfaceAppMenuInterface::~SurfaceAppMenuInterface()
+{
+}
+
+SurfaceInterface *SurfaceAppMenuInterface::surface() const
+{
+    return m_surface;
+}
+
+ClientAppMenuInterface::ClientAppMenuInterface(ClientConnection *client, wl_resource *resource)
+    : AppMenuInterface(resource)
+    , m_client(client)
+{
+}
+
+ClientAppMenuInterface::~ClientAppMenuInterface()
+{
+}
+
+ClientConnection *ClientAppMenuInterface::client() const
+{
+    return m_client;
 }
 
 } // namespace

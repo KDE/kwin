@@ -16,10 +16,13 @@ namespace KWin
 {
 class Display;
 class SurfaceInterface;
+class ClientConnection;
 class AppMenuInterface;
 
 class AppMenuManagerInterfacePrivate;
 class AppMenuInterfacePrivate;
+class ClientAppMenuInterface;
+class SurfaceAppMenuInterface;
 
 /**
  * Provides the DBus service name and object path to a AppMenu DBus interface.
@@ -38,13 +41,23 @@ public:
      * Returns any existing appMenu for a given surface
      * This returns a null pointer if no AppMenuInterface exists.
      */
-    AppMenuInterface *appMenuForSurface(SurfaceInterface *);
+    SurfaceAppMenuInterface *appMenuForSurface(SurfaceInterface *);
 
 Q_SIGNALS:
     /**
-     * Emitted whenever a new AppmenuInterface is created.
+     * Emitted whenever a new AppMenuInterface is created.
      */
     void appMenuCreated(KWin::AppMenuInterface *);
+
+    /**
+     * Emitted whenever a new ClientAppMenuInterface is created.
+     */
+    void clientAppMenuCreated(KWin::ClientAppMenuInterface *);
+
+    /**
+     * Emitted whenever a new SurfaceAppMenuInterface is created.
+     */
+    void surfaceAppMenuCreated(KWin::SurfaceAppMenuInterface *);
 
 private:
     std::unique_ptr<AppMenuManagerInterfacePrivate> d;
@@ -52,7 +65,7 @@ private:
 
 /**
  * Provides the DBus service name and object path to a AppMenu DBus interface.
- * This interface is attached to a wl_surface and provides access to where
+ * This interface is attached to a wl_surface or client and provides access to where
  * the AppMenu DBus interface is registered.
  */
 class KWIN_EXPORT AppMenuInterface : public QObject
@@ -69,17 +82,12 @@ public:
         /** Object path of the AppMenu interface*/
         QString objectPath;
     };
-    ~AppMenuInterface() override;
+    virtual ~AppMenuInterface() override;
 
     /**
      * @returns the service name and object path or empty strings if unset
      */
     InterfaceAddress address() const;
-
-    /**
-     * @returns The SurfaceInterface this AppmenuInterface references.
-     */
-    SurfaceInterface *surface() const;
 
 Q_SIGNALS:
     /**
@@ -87,11 +95,60 @@ Q_SIGNALS:
      */
     void addressChanged(KWin::AppMenuInterface::InterfaceAddress);
 
+protected:
+    // marker function to enforce constructing a subclass
+    virtual void _marker() = 0;
+
 private:
-    explicit AppMenuInterface(SurfaceInterface *s, wl_resource *resource);
+    explicit AppMenuInterface(wl_resource *resource);
     friend class AppMenuManagerInterfacePrivate;
+    friend class ClientAppMenuInterface;
+    friend class SurfaceAppMenuInterface;
 
     std::unique_ptr<AppMenuInterfacePrivate> d;
 };
 
+class KWIN_EXPORT ClientAppMenuInterface final : public AppMenuInterface
+{
+    Q_OBJECT
+public:
+    /**
+     * @returns The ClientConnection this ClientAppMenuInterface references.
+     */
+    ClientConnection *client() const;
+    ~ClientAppMenuInterface() override;
+
+protected:
+    void _marker() override
+    {
+    }
+
+private:
+    explicit ClientAppMenuInterface(ClientConnection *client, wl_resource *resource);
+    friend class AppMenuManagerInterfacePrivate;
+
+    ClientConnection *m_client;
+};
+
+class KWIN_EXPORT SurfaceAppMenuInterface final : public AppMenuInterface
+{
+    Q_OBJECT
+public:
+    /**
+     * @returns The SurfaceInterface this SurfaceAppMenuInterface references.
+     */
+    SurfaceInterface *surface() const;
+    ~SurfaceAppMenuInterface() override;
+
+protected:
+    void _marker() override
+    {
+    }
+
+private:
+    explicit SurfaceAppMenuInterface(SurfaceInterface *surface, wl_resource *resource);
+    friend class AppMenuManagerInterfacePrivate;
+
+    SurfaceInterface *m_surface;
+};
 }
