@@ -141,7 +141,7 @@ VirtualDesktopGrid::VirtualDesktopGrid()
 
 VirtualDesktopGrid::~VirtualDesktopGrid() = default;
 
-void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, const QList<VirtualDesktop *> &desktops)
+void VirtualDesktopGrid::update(const QSize &size, const QList<VirtualDesktop *> &desktops)
 {
     // Set private variables
     m_size = size;
@@ -151,26 +151,13 @@ void VirtualDesktopGrid::update(const QSize &size, Qt::Orientation orientation, 
     m_grid.clear();
     auto it = desktops.begin();
     auto end = desktops.end();
-    if (orientation == Qt::Horizontal) {
-        for (uint y = 0; y < height; ++y) {
-            QList<VirtualDesktop *> row;
-            for (uint x = 0; x < width && it != end; ++x) {
-                row << *it;
-                it++;
-            }
-            m_grid << row;
+    for (uint y = 0; y < height; ++y) {
+        QList<VirtualDesktop *> row;
+        for (uint x = 0; x < width && it != end; ++x) {
+            row << *it;
+            it++;
         }
-    } else {
-        for (uint y = 0; y < height; ++y) {
-            m_grid << QList<VirtualDesktop *>();
-        }
-        for (uint x = 0; x < width; ++x) {
-            for (uint y = 0; y < height && it != end; ++y) {
-                auto &row = m_grid[y];
-                row << *it;
-                it++;
-            }
-        }
+        m_grid << row;
     }
 }
 
@@ -650,30 +637,17 @@ void VirtualDesktopManager::updateRootInfo()
 void VirtualDesktopManager::updateLayout()
 {
     m_rows = std::min(m_rows, count());
+
     int columns = count() / m_rows;
-    Qt::Orientation orientation = Qt::Horizontal;
-    if (m_rootInfo) {
-        // TODO: Is there a sane way to avoid overriding the existing grid?
-        columns = m_rootInfo->desktopLayoutColumnsRows().width();
-        m_rows = std::max(1, m_rootInfo->desktopLayoutColumnsRows().height());
-        orientation = m_rootInfo->desktopLayoutOrientation() == NET::OrientationHorizontal ? Qt::Horizontal : Qt::Vertical;
+    if (count() % m_rows > 0) {
+        columns++;
     }
 
-    if (columns == 0) {
-        // Not given, set default layout
-        m_rows = count() == 1u ? 1 : 2;
-        columns = count() / m_rows;
-    }
+    m_grid.update(QSize(columns, m_rows), m_desktops);
+    // TODO: why is there no call to m_rootInfo->setDesktopLayout?
 
-    // Patch to make desktop grid size equal 1 when 1 desktop for desktop switching animations
-    if (m_desktops.size() == 1) {
-        m_rows = 1;
-        columns = 1;
-    }
-
-    setNETDesktopLayout(orientation,
-                        columns, m_rows, 0 // rootInfo->desktopLayoutCorner() // Not really worth implementing right now.
-    );
+    Q_EMIT layoutChanged(columns, m_rows);
+    Q_EMIT rowsChanged(m_rows);
 }
 
 void VirtualDesktopManager::load()
@@ -760,35 +734,6 @@ void VirtualDesktopManager::save()
 QString VirtualDesktopManager::defaultName(int desktop) const
 {
     return i18n("Desktop %1", desktop);
-}
-
-void VirtualDesktopManager::setNETDesktopLayout(Qt::Orientation orientation, uint width, uint height, int startingCorner)
-{
-    // startingCorner is not really worth implementing right now.
-
-    const uint count = m_desktops.count();
-
-    // Calculate valid grid size
-    Q_ASSERT(width > 0 || height > 0);
-    if ((width <= 0) && (height > 0)) {
-        width = (count + height - 1) / height;
-    } else if ((height <= 0) && (width > 0)) {
-        height = (count + width - 1) / width;
-    }
-    while (width * height < count) {
-        if (orientation == Qt::Horizontal) {
-            ++width;
-        } else {
-            ++height;
-        }
-    }
-
-    m_rows = std::max(1u, height);
-
-    m_grid.update(QSize(width, height), orientation, m_desktops);
-    // TODO: why is there no call to m_rootInfo->setDesktopLayout?
-    Q_EMIT layoutChanged(width, height);
-    Q_EMIT rowsChanged(height);
 }
 
 void VirtualDesktopManager::initShortcuts()

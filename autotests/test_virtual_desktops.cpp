@@ -419,47 +419,32 @@ void TestVirtualDesktops::updateGrid_data()
 {
     QTest::addColumn<uint>("initCount");
     QTest::addColumn<QSize>("size");
-    QTest::addColumn<Qt::Orientation>("orientation");
     QTest::addColumn<QPoint>("coords");
     QTest::addColumn<uint>("desktop");
-    const Qt::Orientation h = Qt::Horizontal;
-    const Qt::Orientation v = Qt::Vertical;
 
-    QTest::newRow("one desktop, h") << (uint)1 << QSize(1, 1) << h << QPoint(0, 0) << (uint)1;
-    QTest::newRow("one desktop, v") << (uint)1 << QSize(1, 1) << v << QPoint(0, 0) << (uint)1;
-    QTest::newRow("one desktop, h, 0") << (uint)1 << QSize(1, 1) << h << QPoint(1, 0) << (uint)0;
-    QTest::newRow("one desktop, v, 0") << (uint)1 << QSize(1, 1) << v << QPoint(0, 1) << (uint)0;
+    QTest::newRow("one desktop, h") << (uint)1 << QSize(1, 1) << QPoint(0, 0) << (uint)1;
+    QTest::newRow("one desktop, h, 0") << (uint)1 << QSize(1, 1) << QPoint(1, 0) << (uint)0;
 
-    QTest::newRow("two desktops, h, 1") << (uint)2 << QSize(2, 1) << h << QPoint(0, 0) << (uint)1;
-    QTest::newRow("two desktops, h, 2") << (uint)2 << QSize(2, 1) << h << QPoint(1, 0) << (uint)2;
-    QTest::newRow("two desktops, h, 3") << (uint)2 << QSize(2, 1) << h << QPoint(0, 1) << (uint)0;
-    QTest::newRow("two desktops, h, 4") << (uint)2 << QSize(2, 1) << h << QPoint(2, 0) << (uint)0;
+    QTest::newRow("two desktops, h, 1") << (uint)2 << QSize(2, 1) << QPoint(0, 0) << (uint)1;
+    QTest::newRow("two desktops, h, 2") << (uint)2 << QSize(2, 1) << QPoint(1, 0) << (uint)2;
+    QTest::newRow("two desktops, h, 3") << (uint)2 << QSize(2, 1) << QPoint(0, 1) << (uint)0;
+    QTest::newRow("two desktops, h, 4") << (uint)2 << QSize(2, 1) << QPoint(2, 0) << (uint)0;
 
-    QTest::newRow("two desktops, v, 1") << (uint)2 << QSize(2, 1) << v << QPoint(0, 0) << (uint)1;
-    QTest::newRow("two desktops, v, 2") << (uint)2 << QSize(2, 1) << v << QPoint(1, 0) << (uint)2;
-    QTest::newRow("two desktops, v, 3") << (uint)2 << QSize(2, 1) << v << QPoint(0, 1) << (uint)0;
-    QTest::newRow("two desktops, v, 4") << (uint)2 << QSize(2, 1) << v << QPoint(2, 0) << (uint)0;
+    QTest::newRow("four desktops, h, one row, 1") << (uint)4 << QSize(4, 1) << QPoint(0, 0) << (uint)1;
+    QTest::newRow("four desktops, h, one row, 2") << (uint)4 << QSize(4, 1) << QPoint(1, 0) << (uint)2;
+    QTest::newRow("four desktops, h, one row, 3") << (uint)4 << QSize(4, 1) << QPoint(2, 0) << (uint)3;
+    QTest::newRow("four desktops, h, one row, 4") << (uint)4 << QSize(4, 1) << QPoint(3, 0) << (uint)4;
 
-    QTest::newRow("four desktops, h, one row, 1") << (uint)4 << QSize(4, 1) << h << QPoint(0, 0) << (uint)1;
-    QTest::newRow("four desktops, h, one row, 2") << (uint)4 << QSize(4, 1) << h << QPoint(1, 0) << (uint)2;
-    QTest::newRow("four desktops, h, one row, 3") << (uint)4 << QSize(4, 1) << h << QPoint(2, 0) << (uint)3;
-    QTest::newRow("four desktops, h, one row, 4") << (uint)4 << QSize(4, 1) << h << QPoint(3, 0) << (uint)4;
+    QTest::newRow("four desktops, h, grid, 1") << (uint)4 << QSize(2, 2) << QPoint(0, 0) << (uint)1;
+    QTest::newRow("four desktops, h, grid, 2") << (uint)4 << QSize(2, 2) << QPoint(1, 0) << (uint)2;
+    QTest::newRow("four desktops, h, grid, 3") << (uint)4 << QSize(2, 2) << QPoint(0, 1) << (uint)3;
+    QTest::newRow("four desktops, h, grid, 4") << (uint)4 << QSize(2, 2) << QPoint(1, 1) << (uint)4;
+    QTest::newRow("four desktops, h, grid, 0/3") << (uint)4 << QSize(2, 2) << QPoint(0, 3) << (uint)0;
 
-    QTest::newRow("four desktops, v, one column, 1") << (uint)4 << QSize(1, 4) << v << QPoint(0, 0) << (uint)1;
-    QTest::newRow("four desktops, v, one column, 2") << (uint)4 << QSize(1, 4) << v << QPoint(0, 1) << (uint)2;
-    QTest::newRow("four desktops, v, one column, 3") << (uint)4 << QSize(1, 4) << v << QPoint(0, 2) << (uint)3;
-    QTest::newRow("four desktops, v, one column, 4") << (uint)4 << QSize(1, 4) << v << QPoint(0, 3) << (uint)4;
-
-    QTest::newRow("four desktops, h, grid, 1") << (uint)4 << QSize(2, 2) << h << QPoint(0, 0) << (uint)1;
-    QTest::newRow("four desktops, h, grid, 2") << (uint)4 << QSize(2, 2) << h << QPoint(1, 0) << (uint)2;
-    QTest::newRow("four desktops, h, grid, 3") << (uint)4 << QSize(2, 2) << h << QPoint(0, 1) << (uint)3;
-    QTest::newRow("four desktops, h, grid, 4") << (uint)4 << QSize(2, 2) << h << QPoint(1, 1) << (uint)4;
-    QTest::newRow("four desktops, h, grid, 0/3") << (uint)4 << QSize(2, 2) << h << QPoint(0, 3) << (uint)0;
-
-    QTest::newRow("three desktops, h, grid, 1") << (uint)3 << QSize(2, 2) << h << QPoint(0, 0) << (uint)1;
-    QTest::newRow("three desktops, h, grid, 2") << (uint)3 << QSize(2, 2) << h << QPoint(1, 0) << (uint)2;
-    QTest::newRow("three desktops, h, grid, 3") << (uint)3 << QSize(2, 2) << h << QPoint(0, 1) << (uint)3;
-    QTest::newRow("three desktops, h, grid, 4") << (uint)3 << QSize(2, 2) << h << QPoint(1, 1) << (uint)0;
+    QTest::newRow("three desktops, h, grid, 1") << (uint)3 << QSize(2, 2) << QPoint(0, 0) << (uint)1;
+    QTest::newRow("three desktops, h, grid, 2") << (uint)3 << QSize(2, 2) << QPoint(1, 0) << (uint)2;
+    QTest::newRow("three desktops, h, grid, 3") << (uint)3 << QSize(2, 2) << QPoint(0, 1) << (uint)3;
+    QTest::newRow("three desktops, h, grid, 4") << (uint)3 << QSize(2, 2) << QPoint(1, 1) << (uint)0;
 }
 
 void TestVirtualDesktops::updateGrid()
@@ -470,9 +455,8 @@ void TestVirtualDesktops::updateGrid()
     VirtualDesktopGrid grid;
 
     QFETCH(QSize, size);
-    QFETCH(Qt::Orientation, orientation);
     QCOMPARE(vds->desktops().count(), int(initCount));
-    grid.update(size, orientation, vds->desktops());
+    grid.update(size, vds->desktops());
     QCOMPARE(grid.size(), size);
     QCOMPARE(grid.width(), size.width());
     QCOMPARE(grid.height(), size.height());
