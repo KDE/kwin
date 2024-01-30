@@ -314,9 +314,11 @@ void Workspace::initializeX11()
 #ifndef QT_NO_SESSIONMANAGER
     sessionRestored = qApp->isSessionRestored();
 #endif
-    if (!sessionRestored) {
-        m_initialDesktop = client_info.currentDesktop();
-        vds->setCurrent(m_initialDesktop);
+    if (!waylandServer()) {
+        if (!sessionRestored) {
+            m_initialDesktop = client_info.currentDesktop();
+            vds->setCurrent(m_initialDesktop);
+        }
     }
 
     // TODO: better value
