@@ -71,7 +71,10 @@ public:
      */
     QMatrix4x4 getUniformMatrix4x4(const char *name);
 
-    enum MatrixUniform {
+    enum class Mat3Uniform {
+    };
+
+    enum class Mat4Uniform {
         TextureMatrix = 0,
         ProjectionMatrix,
         ModelViewMatrix,
@@ -82,7 +85,7 @@ public:
         MatrixCount
     };
 
-    enum Vec2Uniform {
+    enum class Vec2Uniform {
         Offset,
         Vec2UniformCount
     };
@@ -91,19 +94,19 @@ public:
         PrimaryBrightness = 0
     };
 
-    enum Vec4Uniform {
+    enum class Vec4Uniform {
         ModulationConstant,
         Vec4UniformCount
     };
 
-    enum FloatUniform {
+    enum class FloatUniform {
         Saturation,
         MaxHdrBrightness,
         SdrBrightness,
         FloatUniformCount
     };
 
-    enum IntUniform {
+    enum class IntUniform {
         AlphaToOne, ///< @deprecated no longer used
         TextureWidth,
         TextureHeight,
@@ -114,13 +117,13 @@ public:
         IntUniformCount
     };
 
-    enum ColorUniform {
+    enum class ColorUniform {
         Color,
         ColorUniformCount
     };
 
-    bool setUniform(MatrixUniform uniform, const QMatrix3x3 &value);
-    bool setUniform(MatrixUniform uniform, const QMatrix4x4 &matrix);
+    bool setUniform(Mat3Uniform uniform, const QMatrix3x3 &value);
+    bool setUniform(Mat4Uniform uniform, const QMatrix4x4 &matrix);
     bool setUniform(Vec2Uniform uniform, const QVector2D &value);
     bool setUniform(Vec3Uniform uniform, const QVector3D &value);
     bool setUniform(Vec4Uniform uniform, const QVector4D &value);
@@ -148,13 +151,14 @@ private:
     bool m_valid : 1;
     bool m_locationsResolved : 1;
     bool m_explicitLinking : 1;
-    int m_matrixLocation[MatrixCount];
-    int m_vec2Location[Vec2UniformCount];
+    QHash<Mat3Uniform, int> m_matrix3Locations;
+    QHash<Mat4Uniform, int> m_matrix4Locations;
+    QHash<Vec2Uniform, int> m_vec2Locations;
     QHash<Vec3Uniform, int> m_vec3Locations;
-    int m_vec4Location[Vec4UniformCount];
-    int m_floatLocation[FloatUniformCount];
-    int m_intLocation[IntUniformCount];
-    int m_colorLocation[ColorUniformCount];
+    QHash<Vec4Uniform, int> m_vec4Locations;
+    QHash<FloatUniform, int> m_floatLocations;
+    QHash<IntUniform, int> m_intLocations;
+    QHash<ColorUniform, int> m_colorLocations;
 
     friend class ShaderManager;
 };

@@ -119,7 +119,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         vbo->reset();
         const auto scale = viewport.scale();
         ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
-        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
         binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
         binder.shader()->setUniform(GLShader::ColorUniform::Color, color);
         QList<QVector2D> verts;

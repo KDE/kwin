@@ -198,7 +198,7 @@ void ShakeCursorEffect::paintScreen(const RenderTarget &renderTarget, const Rend
         shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
         QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(m_cursorGeometry.x() * viewport.scale(), m_cursorGeometry.y() * viewport.scale());
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
         texture->render(clipRegion, m_cursorGeometry.size() * viewport.scale(), clipping);
         ShaderManager::instance()->popShader();
         glDisable(GL_BLEND);

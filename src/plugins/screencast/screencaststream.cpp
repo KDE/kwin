@@ -577,7 +577,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 mvp.scale(1, -1);
                 mvp.ortho(QRectF(QPointF(0, 0), size));
                 mvp.translate(cursorRect.x(), cursorRect.y());
-                shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+                shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
 
                 glEnable(GL_BLEND);
                 glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

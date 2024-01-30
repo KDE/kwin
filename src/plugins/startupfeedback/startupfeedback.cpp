@@ -225,14 +225,14 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
             const QColor &blinkingColor = BLINKING_COLORS[FRAME_TO_BLINKING_COLOR[m_frame]];
             ShaderManager::instance()->pushShader(m_blinkingShader.get());
             shader = m_blinkingShader.get();
-            m_blinkingShader->setUniform(GLShader::Color, blinkingColor);
+            m_blinkingShader->setUniform(GLShader::ColorUniform::Color, blinkingColor);
         } else {
             shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         }
         const QRectF pixelGeometry = snapToPixelGridF(scaledRect(m_currentGeometry, viewport.scale()));
         QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(pixelGeometry.x(), pixelGeometry.y());
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
         shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
         texture->render(pixelGeometry.size());
         ShaderManager::instance()->popShader();

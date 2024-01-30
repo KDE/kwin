@@ -208,32 +208,32 @@ void GLShader::resolveLocations()
         return;
     }
 
-    m_matrixLocation[TextureMatrix] = uniformLocation("textureMatrix");
-    m_matrixLocation[ProjectionMatrix] = uniformLocation("projection");
-    m_matrixLocation[ModelViewMatrix] = uniformLocation("modelview");
-    m_matrixLocation[ModelViewProjectionMatrix] = uniformLocation("modelViewProjectionMatrix");
-    m_matrixLocation[WindowTransformation] = uniformLocation("windowTransformation");
-    m_matrixLocation[ScreenTransformation] = uniformLocation("screenTransformation");
-    m_matrixLocation[ColorimetryTransformation] = uniformLocation("colorimetryTransform");
+    m_matrix4Locations[Mat4Uniform::TextureMatrix] = uniformLocation("textureMatrix");
+    m_matrix4Locations[Mat4Uniform::ProjectionMatrix] = uniformLocation("projection");
+    m_matrix4Locations[Mat4Uniform::ModelViewMatrix] = uniformLocation("modelview");
+    m_matrix4Locations[Mat4Uniform::ModelViewProjectionMatrix] = uniformLocation("modelViewProjectionMatrix");
+    m_matrix4Locations[Mat4Uniform::WindowTransformation] = uniformLocation("windowTransformation");
+    m_matrix4Locations[Mat4Uniform::ScreenTransformation] = uniformLocation("screenTransformation");
+    m_matrix4Locations[Mat4Uniform::ColorimetryTransformation] = uniformLocation("colorimetryTransform");
 
-    m_vec2Location[Offset] = uniformLocation("offset");
+    m_vec2Locations[Vec2Uniform::Offset] = uniformLocation("offset");
 
     m_vec3Locations[Vec3Uniform::PrimaryBrightness] = uniformLocation("primaryBrightness");
 
-    m_vec4Location[ModulationConstant] = uniformLocation("modulation");
+    m_vec4Locations[Vec4Uniform::ModulationConstant] = uniformLocation("modulation");
 
-    m_floatLocation[Saturation] = uniformLocation("saturation");
-    m_floatLocation[MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
-    m_floatLocation[SdrBrightness] = uniformLocation("sdrBrightness");
+    m_floatLocations[FloatUniform::Saturation] = uniformLocation("saturation");
+    m_floatLocations[FloatUniform::MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
+    m_floatLocations[FloatUniform::SdrBrightness] = uniformLocation("sdrBrightness");
 
-    m_colorLocation[Color] = uniformLocation("geometryColor");
+    m_colorLocations[ColorUniform::Color] = uniformLocation("geometryColor");
 
-    m_intLocation[TextureWidth] = uniformLocation("textureWidth");
-    m_intLocation[TextureHeight] = uniformLocation("textureHeight");
-    m_intLocation[Sampler] = uniformLocation("sampler");
-    m_intLocation[Sampler1] = uniformLocation("sampler1");
-    m_intLocation[SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
-    m_intLocation[DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
+    m_intLocations[IntUniform::TextureWidth] = uniformLocation("textureWidth");
+    m_intLocations[IntUniform::TextureHeight] = uniformLocation("textureHeight");
+    m_intLocations[IntUniform::Sampler] = uniformLocation("sampler");
+    m_intLocations[IntUniform::Sampler1] = uniformLocation("sampler1");
+    m_intLocations[IntUniform::SourceNamedTransferFunction] = uniformLocation("sourceNamedTransferFunction");
+    m_intLocations[IntUniform::DestinationNamedTransferFunction] = uniformLocation("destinationNamedTransferFunction");
 
     m_locationsResolved = true;
 }
@@ -244,22 +244,22 @@ int GLShader::uniformLocation(const char *name)
     return location;
 }
 
-bool GLShader::setUniform(MatrixUniform uniform, const QMatrix3x3 &value)
+bool GLShader::setUniform(Mat3Uniform uniform, const QMatrix3x3 &value)
 {
     resolveLocations();
-    return setUniform(m_matrixLocation[uniform], value);
+    return setUniform(m_matrix3Locations[uniform], value);
 }
 
-bool GLShader::setUniform(GLShader::MatrixUniform uniform, const QMatrix4x4 &matrix)
+bool GLShader::setUniform(Mat4Uniform uniform, const QMatrix4x4 &matrix)
 {
     resolveLocations();
-    return setUniform(m_matrixLocation[uniform], matrix);
+    return setUniform(m_matrix4Locations[uniform], matrix);
 }
 
-bool GLShader::setUniform(GLShader::Vec2Uniform uniform, const QVector2D &value)
+bool GLShader::setUniform(Vec2Uniform uniform, const QVector2D &value)
 {
     resolveLocations();
-    return setUniform(m_vec2Location[uniform], value);
+    return setUniform(m_vec2Locations[uniform], value);
 }
 
 bool GLShader::setUniform(Vec3Uniform uniform, const QVector3D &value)
@@ -268,34 +268,34 @@ bool GLShader::setUniform(Vec3Uniform uniform, const QVector3D &value)
     return setUniform(m_vec3Locations[uniform], value);
 }
 
-bool GLShader::setUniform(GLShader::Vec4Uniform uniform, const QVector4D &value)
+bool GLShader::setUniform(Vec4Uniform uniform, const QVector4D &value)
 {
     resolveLocations();
-    return setUniform(m_vec4Location[uniform], value);
+    return setUniform(m_vec4Locations[uniform], value);
 }
 
-bool GLShader::setUniform(GLShader::FloatUniform uniform, float value)
+bool GLShader::setUniform(FloatUniform uniform, float value)
 {
     resolveLocations();
-    return setUniform(m_floatLocation[uniform], value);
+    return setUniform(m_floatLocations[uniform], value);
 }
 
-bool GLShader::setUniform(GLShader::IntUniform uniform, int value)
+bool GLShader::setUniform(IntUniform uniform, int value)
 {
     resolveLocations();
-    return setUniform(m_intLocation[uniform], value);
+    return setUniform(m_intLocations[uniform], value);
 }
 
-bool GLShader::setUniform(GLShader::ColorUniform uniform, const QVector4D &value)
+bool GLShader::setUniform(ColorUniform uniform, const QVector4D &value)
 {
     resolveLocations();
-    return setUniform(m_colorLocation[uniform], value);
+    return setUniform(m_colorLocations[uniform], value);
 }
 
-bool GLShader::setUniform(GLShader::ColorUniform uniform, const QColor &value)
+bool GLShader::setUniform(ColorUniform uniform, const QColor &value)
 {
     resolveLocations();
-    return setUniform(m_colorLocation[uniform], value);
+    return setUniform(m_colorLocations[uniform], value);
 }
 
 bool GLShader::setUniform(const char *name, float value)
@@ -447,7 +447,7 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
 bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst)
 {
     const auto &srcColorimetry = src.colorimetry() == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.colorimetry();
-    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, srcColorimetry.toOther(dst.colorimetry()))
+    return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.colorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
         && setUniform(FloatUniform::SdrBrightness, dst.sdrBrightness())
@@ -461,7 +461,7 @@ bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
 
 bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
 {
-    return setUniform(GLShader::MatrixUniform::ColorimetryTransformation, src.colorimetry().toOther(src.sdrColorimetry()))
+    return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, src.colorimetry().toOther(src.sdrColorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::gamma22))
         && setUniform(FloatUniform::SdrBrightness, src.sdrBrightness())

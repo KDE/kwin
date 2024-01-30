@@ -392,7 +392,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
             projectionMatrix *= renderTarget.transform().toMatrix();
             projectionMatrix.scale(1, -1);
             projectionMatrix.ortho(QRect(QPoint(), nativeSize));
-            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+            binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
             renderTarget.texture()->render(viewport.mapToRenderTargetTexture(geometry), infiniteRegion(), nativeSize);
         } else {
             target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));

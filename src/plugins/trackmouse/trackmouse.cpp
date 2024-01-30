@@ -123,7 +123,7 @@ void TrackMouseEffect::paintScreen(const RenderTarget &renderTarget, const Rende
             matrix.translate(-x * scale, -y * scale, 0.0);
             QMatrix4x4 mvp(matrix);
             mvp.translate(m_lastRect[i].x() * scale, m_lastRect[i].y() * scale);
-            shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+            shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
             m_texture[i]->render(m_lastRect[i].size() * scale);
         }
         glDisable(GL_BLEND);

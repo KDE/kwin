@@ -379,7 +379,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         matrix.scale(zoom, zoom);
         matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
+        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
 
         offscreen.texture->render(offscreen.viewport.size() * scale);
     }
@@ -406,7 +406,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             s->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(p.x() * scale, p.y() * scale);
-            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+            s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
             cursorTexture->render(cursorSize * scale);
             ShaderManager::instance()->popShader();
             glDisable(GL_BLEND);

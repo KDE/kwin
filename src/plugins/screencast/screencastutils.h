@@ -98,7 +98,7 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
         QMatrix4x4 projectionMatrix;
         projectionMatrix.ortho(QRect(QPoint(), size));
-        shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
 
         GLFramebuffer::pushFramebuffer(&fbo);
         texture->render(size);
