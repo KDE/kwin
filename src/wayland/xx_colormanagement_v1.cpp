@@ -157,7 +157,7 @@ void XXColorParametricCreatorV1::xx_image_description_creator_params_v1_create(R
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
-    new XXImageDescriptionV1(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, 100, 0, m_maxFrameAverageBrightness.value_or(100), m_maxPeakBrightness.value_or(100), 0));
+    new XXImageDescriptionV1(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, 100, 0, m_maxFrameAverageBrightness.value_or(100), m_maxPeakBrightness.value_or(100)));
 }
 
 void XXColorParametricCreatorV1::xx_image_description_creator_params_v1_set_tf_named(Resource *resource, uint32_t tf)

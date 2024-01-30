@@ -57,8 +57,8 @@ void TestColorspaces::roundtripConversion()
     QFETCH(NamedTransferFunction, dstTransferFunction);
     QFETCH(double, requiredAccuracy);
 
-    const auto src = ColorDescription(srcColorimetry, srcTransferFunction, 100, 0, 100, 100, 0);
-    const auto dst = ColorDescription(dstColorimetry, dstTransferFunction, 100, 0, 100, 100, 0);
+    const auto src = ColorDescription(srcColorimetry, srcTransferFunction, 100, 0, 100, 100);
+    const auto dst = ColorDescription(dstColorimetry, dstTransferFunction, 100, 0, 100, 100);
 
     const QVector3D red(1, 0, 0);
     const QVector3D green(0, 1, 0);
