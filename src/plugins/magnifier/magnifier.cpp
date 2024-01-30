@@ -133,7 +133,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(area.x() * scale, area.y() * scale);
-            s->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+            s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
             m_texture->render(area.size() * scale);
             ShaderManager::instance()->popShader();
 
@@ -175,7 +175,7 @@ void MagnifierEffect::paintScreen(const RenderTarget &renderTarget, const Render
             vbo->setVertices(verts);
 
             ShaderBinder binder(ShaderTrait::UniformColor);
-            binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, viewport.projectionMatrix());
+            binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
             binder.shader()->setUniform(GLShader::ColorUniform::Color, QColor(0, 0, 0));
             vbo->render(GL_TRIANGLES);
         }

@@ -306,7 +306,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
         mat.translate(destination.x(), destination.y());
 
         ShaderBinder binder(ShaderTrait::MapTexture);
-        binder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, mat);
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
         texture->render(sourceViewport.mapToRenderTargetTexture(source), infiniteRegion(), destination.size(), 1);
 

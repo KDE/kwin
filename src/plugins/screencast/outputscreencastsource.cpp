@@ -65,7 +65,7 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
     projectionMatrix.ortho(QRect(QPoint(), textureSize()));
-    shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+    shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
     shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
 
     GLFramebuffer::pushFramebuffer(target);

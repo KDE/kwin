@@ -1506,10 +1506,10 @@ void EffectsHandler::renderOffscreenQuickView(const RenderTarget &renderTarget, 
 
         QMatrix4x4 mvp(viewport.projectionMatrix());
         mvp.translate(rect.x(), rect.y());
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp);
+        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
 
         if (a != 1.0) {
-            shader->setUniform(GLShader::ModulationConstant, QVector4D(a, a, a, a));
+            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(a, a, a, a));
         }
         shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 

@@ -159,7 +159,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
             ctm(0, 0) = m_surface->channelFactors.x();
             ctm(1, 1) = m_surface->channelFactors.y();
             ctm(2, 2) = m_surface->channelFactors.z();
-            binder.shader()->setUniform(GLShader::MatrixUniform::ColorimetryTransformation, ctm);
+            binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
             binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
             binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));
             binder.shader()->setUniform(GLShader::FloatUniform::SdrBrightness, m_surface->intermediaryColorDescription.sdrBrightness());
@@ -170,7 +170,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         mat *= fbo->colorAttachment()->contentTransform().toMatrix();
         mat.scale(1, -1);
         mat.ortho(QRectF(QPointF(), fbo->size()));
-        binder.shader()->setUniform(GLShader::MatrixUniform::ModelViewProjectionMatrix, mat);
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
         m_surface->shadowTexture->render(m_surface->gbmSwapchain->size());
         GLFramebuffer::popFramebuffer();
@@ -553,7 +553,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     QMatrix4x4 mat;
     mat.scale(1, -1);
     mat.ortho(QRect(QPoint(), fbo->size()));
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mat);
+    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
     sourceTexture->bind();
     sourceTexture->render(fbo->size());

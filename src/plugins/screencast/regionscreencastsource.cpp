@@ -62,7 +62,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
         projectionMatrix.ortho(m_region);
         projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
 
-        shaderBinder.shader()->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
         shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
 
         outputTexture->render(outputGeometry.size());
@@ -105,7 +105,7 @@ void RegionScreenCastSource::render(GLFramebuffer *target)
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
     projectionMatrix.ortho(QRect(QPoint(), target->size()));
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, projectionMatrix);
+    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
 
     m_renderedTexture->render(target->size());
 

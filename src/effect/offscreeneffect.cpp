@@ -189,12 +189,12 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     mvp.translate(window->x() * scale, window->y() * scale);
 
     const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
-    shader->setUniform(GLShader::ModelViewProjectionMatrix, mvp * data.toMatrix(scale));
-    shader->setUniform(GLShader::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
-    shader->setUniform(GLShader::Saturation, data.saturation());
+    shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp * data.toMatrix(scale));
+    shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
+    shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-    shader->setUniform(GLShader::TextureWidth, m_texture->width());
-    shader->setUniform(GLShader::TextureHeight, m_texture->height());
+    shader->setUniform(GLShader::IntUniform::TextureWidth, m_texture->width());
+    shader->setUniform(GLShader::IntUniform::TextureHeight, m_texture->height());
     shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
 
     const bool clipping = region != infiniteRegion();

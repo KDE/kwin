@@ -362,18 +362,18 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader = ShaderManager::instance()->pushShader(traits);
             if (traits & ShaderTrait::AdjustSaturation) {
                 const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
-                shader->setUniform(GLShader::Saturation, data.saturation());
+                shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
                 shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
             }
 
             if (traits & ShaderTrait::MapTexture) {
-                shader->setUniform(GLShader::Sampler, 0);
-                shader->setUniform(GLShader::Sampler1, 1);
+                shader->setUniform(GLShader::IntUniform::Sampler, 0);
+                shader->setUniform(GLShader::IntUniform::Sampler1, 1);
             }
         }
-        shader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
+        shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
         if (traits & ShaderTrait::Modulate) {
-            shader->setUniform(GLShader::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
+            shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
         }
         if (traits & ShaderTrait::TransformColorspace) {
             shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
@@ -464,7 +464,7 @@ void ItemRendererOpenGL::visualizeFractional(const RenderViewport &viewport, con
         }
 
         m_debug.fractionalShader->setUniform("geometrySize", size);
-        m_debug.fractionalShader->setUniform(GLShader::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
+        m_debug.fractionalShader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);
 
         vbo->draw(region, GL_TRIANGLES, renderNode.firstVertex,
                   renderNode.vertexCount, renderContext.hardwareClipping);
