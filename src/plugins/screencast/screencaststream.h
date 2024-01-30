@@ -74,6 +74,7 @@ public:
 public Q_SLOTS:
     void invalidateCursor();
     void recordCursor();
+    bool includesCursor(Cursor *cursor) const;
 
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
