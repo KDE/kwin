@@ -417,14 +417,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
 
             // Only translated, not scaled
         } else if (translated) {
-            QRegion translated;
-            for (QRect r : shape) {
-                const QRectF t = QRectF(r).translated(data.xTranslation(), data.yTranslation());
-                const QPoint topLeft(std::ceil(t.x()), std::ceil(t.y()));
-                const QPoint bottomRight(std::floor(t.x() + t.width() - 1), std::floor(t.y() + t.height() - 1));
-                translated += QRect(topLeft, bottomRight);
-            }
-            shape = translated & region;
+            shape.translate(std::round(data.xTranslation()), std::round(data.yTranslation()));
         }
 
         if (!shape.isEmpty()) {
