@@ -70,13 +70,14 @@ private Q_SLOTS:
     void updateStackingOrder();
     void addSurfaceItemDamageConnects(Item *item);
 
-private:
+protected:
     bool computeVisibility() const;
     void updateVisibility();
     void markDamaged();
     void freeze();
 
     Window *m_window;
+    std::unique_ptr<Item> m_containerItem;
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;

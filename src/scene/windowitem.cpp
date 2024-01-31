@@ -26,6 +26,7 @@ namespace KWin
 WindowItem::WindowItem(Window *window, Scene *scene, Item *parent)
     : Item(scene, parent)
     , m_window(window)
+    , m_containerItem(std::make_unique<Item>(scene, this))
 {
     connect(window, &Window::decorationChanged, this, &WindowItem::updateDecorationItem);
     updateDecorationItem();
@@ -229,7 +230,7 @@ void WindowItem::updateSurfacePosition()
     const QRectF bufferGeometry = m_window->bufferGeometry();
     const QRectF frameGeometry = m_window->frameGeometry();
 
-    m_surfaceItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
+    m_containerItem->setPosition(bufferGeometry.topLeft() - frameGeometry.topLeft());
 }
 
 void WindowItem::updateSurfaceVisibility()
@@ -244,10 +245,8 @@ void WindowItem::updateShadowItem()
         if (!m_shadowItem || m_shadowItem->shadow() != shadow) {
             m_shadowItem = std::make_unique<ShadowItem>(shadow, m_window, scene(), this);
         }
-        if (m_decorationItem) {
-            m_shadowItem->stackBefore(m_decorationItem.get());
-        } else if (m_surfaceItem) {
-            m_shadowItem->stackBefore(m_surfaceItem.get());
+        if (m_containerItem) {
+            m_shadowItem->stackBefore(m_containerItem.get());
         }
         markDamaged();
     } else {
@@ -261,10 +260,8 @@ void WindowItem::updateDecorationItem()
         return;
     }
     if (m_window->decoration()) {
-        m_decorationItem = std::make_unique<DecorationItem>(m_window->decoration(), m_window, scene(), this);
-        if (m_shadowItem) {
-            m_decorationItem->stackAfter(m_shadowItem.get());
-        } else if (m_surfaceItem) {
+        m_decorationItem = std::make_unique<DecorationItem>(m_window->decoration(), m_window, scene(), m_containerItem.get());
+        if (m_surfaceItem) {
             m_decorationItem->stackBefore(m_surfaceItem.get());
         }
         connect(m_window->decoration(), &KDecoration2::Decoration::damaged, this, &WindowItem::markDamaged);
@@ -313,13 +310,13 @@ void WindowItemX11::initialize()
 {
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
-        updateSurfaceItem(std::make_unique<SurfaceItemX11>(static_cast<X11Window *>(window()), scene(), this));
+        updateSurfaceItem(std::make_unique<SurfaceItemX11>(static_cast<X11Window *>(window()), scene(), m_containerItem.get()));
         break;
     case Application::OperationModeXwayland:
         if (!window()->surface()) {
             updateSurfaceItem(nullptr);
         } else {
-            updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), scene(), this));
+            updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), scene(), m_containerItem.get()));
         }
         break;
     case Application::OperationModeWaylandOnly:
@@ -330,13 +327,13 @@ void WindowItemX11::initialize()
 WindowItemWayland::WindowItemWayland(Window *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
-    updateSurfaceItem(std::make_unique<SurfaceItemWayland>(window->surface(), scene, this));
+    updateSurfaceItem(std::make_unique<SurfaceItemWayland>(window->surface(), scene, m_containerItem.get()));
 }
 
 WindowItemInternal::WindowItemInternal(InternalWindow *window, Scene *scene, Item *parent)
     : WindowItem(window, scene, parent)
 {
-    updateSurfaceItem(std::make_unique<SurfaceItemInternal>(window, scene, this));
+    updateSurfaceItem(std::make_unique<SurfaceItemInternal>(window, scene, m_containerItem.get()));
 }
 
 } // namespace KWin

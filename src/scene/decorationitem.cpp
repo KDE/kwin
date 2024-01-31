@@ -216,11 +216,20 @@ WindowQuadList DecorationItem::buildQuads() const
         return WindowQuadList();
     }
 
+    const QRectF bufferGeometry = m_window->bufferGeometry();
+    const QRectF frameGeometry = m_window->frameGeometry();
+    const QPointF offset = bufferGeometry.topLeft() - frameGeometry.topLeft();
+
     QRectF left, top, right, bottom;
     const qreal devicePixelRatio = m_renderer->effectiveDevicePixelRatio();
     const int texturePad = DecorationRenderer::TexturePad;
 
     m_window->layoutDecorationRects(left, top, right, bottom);
+
+    left.translate(-offset);
+    top.translate(-offset);
+    right.translate(-offset);
+    bottom.translate(-offset);
 
     const int topHeight = std::round(top.height() * devicePixelRatio);
     const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
