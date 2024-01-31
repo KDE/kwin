@@ -314,6 +314,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, QObject *parent)
     pwStreamEvents.state_changed = &ScreenCastStream::onStreamStateChanged;
     pwStreamEvents.param_changed = &ScreenCastStream::onStreamParamChanged;
 
+    m_pendingFrame.setSingleShot(true);
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
         recordFrame(m_pendingDamages);
     });
