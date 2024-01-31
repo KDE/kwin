@@ -333,6 +333,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
         _this->onStreamParamChanged(id, param);
     };
 
+    m_pendingFrame.setSingleShot(true);
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
         recordFrame(m_pendingDamages);
     });
