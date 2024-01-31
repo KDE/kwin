@@ -140,9 +140,8 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
     const QList<Item *> sortedChildItems = item->sortedChildItems();
 
     QMatrix4x4 matrix;
-    const auto logicalPosition = QVector2D(item->position().x(), item->position().y());
-    const auto scale = context->renderTargetScale;
-    matrix.translate(roundVector(logicalPosition * scale).toVector3D());
+    matrix.translate(std::round(item->position().x() * context->renderTargetScale) + std::round(item->origin().x() * context->renderTargetScale),
+                     std::round(item->position().y() * context->renderTargetScale) + std::round(item->origin().y() * context->renderTargetScale));
     matrix *= item->transform();
     context->transformStack.push(context->transformStack.top() * matrix);
 
@@ -171,7 +170,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
-                .scale = scale,
                 .colorDescription = item->colorDescription(),
             });
         }
@@ -185,7 +183,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
-                .scale = scale,
                 .colorDescription = item->colorDescription(),
             });
         }
@@ -200,7 +197,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = NormalizedCoordinates,
-                    .scale = scale,
                     .colorDescription = item->colorDescription(),
                 });
             }
@@ -214,7 +210,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = imageItem->image().hasAlphaChannel(),
                 .coordinateType = NormalizedCoordinates,
-                .scale = scale,
                 .colorDescription = item->colorDescription(),
             });
         }

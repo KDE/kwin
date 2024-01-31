@@ -60,6 +60,9 @@ public:
     virtual QList<QRectF> shape() const;
     virtual QRegion opaque() const;
 
+    QPointF origin() const;
+    void setOrigin(const QPointF &origin);
+
     /**
      * Returns the visual parent of the item. Note that the visual parent differs from
      * the QObject parent.
@@ -155,6 +158,7 @@ private:
     QList<Item *> m_childItems;
     QMatrix4x4 m_transform;
     QRectF m_boundingRect;
+    QPointF m_origin;
     QPointF m_position;
     QSizeF m_size = QSize(0, 0);
     qreal m_opacity = 1;

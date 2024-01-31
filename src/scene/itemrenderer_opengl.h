@@ -26,7 +26,6 @@ public:
         qreal opacity = 1;
         bool hasAlpha = false;
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
-        qreal scale = 1.0;
         ColorDescription colorDescription;
     };
 

@@ -107,6 +107,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
             this, qOverload<const QRegion &>(&Item::scheduleRepaint));
 
     setSize(decoration->size());
+    setOrigin(QPointF(decoration->borderLeft(), decoration->borderTop()));
     handleOutputChanged();
 }
 
@@ -172,6 +173,7 @@ void DecorationItem::handleOutputScaleChanged()
 void DecorationItem::handleDecorationGeometryChanged()
 {
     setSize(m_decoration->size());
+    setOrigin(QPointF(m_decoration->borderLeft(), m_decoration->borderTop()));
     discardQuads();
 }
 
@@ -232,6 +234,11 @@ WindowQuadList DecorationItem::buildQuads() const
     const int texturePad = DecorationRenderer::TexturePad;
 
     m_window->layoutDecorationRects(left, top, right, bottom);
+
+    left.translate(-origin());
+    right.translate(-origin());
+    top.translate(-origin());
+    bottom.translate(-origin());
 
     const int topHeight = std::round(top.height() * devicePixelRatio);
     const int bottomHeight = std::round(bottom.height() * devicePixelRatio);

@@ -114,6 +114,16 @@ QList<Item *> Item::childItems() const
     return m_childItems;
 }
 
+QPointF Item::origin() const
+{
+    return m_origin;
+}
+
+void Item::setOrigin(const QPointF &origin)
+{
+    m_origin = origin;
+}
+
 QPointF Item::position() const
 {
     return m_position;
