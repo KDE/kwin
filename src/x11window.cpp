@@ -1687,6 +1687,11 @@ bool X11Window::isMinimizable() const
 
 void X11Window::doMinimize()
 {
+    if (m_managed) {
+        if (isMinimized()) {
+            workspace()->activateNextWindow(this);
+        }
+    }
     if (isShade()) {
         // NETWM restriction - KWindowInfo::isMinimized() == Hidden && !Shaded
         info->setState(isMinimized() ? NET::States() : NET::Shaded, NET::Shaded);
