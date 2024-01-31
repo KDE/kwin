@@ -8,14 +8,14 @@
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Mikko Piippo <piippo@cc.helsinki.fi>, 2007.
 # Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2023-07-24 21:32+0300\n"
+"PO-Revision-Date: 2024-01-29 21:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1359,7 +1359,7 @@ msgstr "xauthority-tiedoston nimi"
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
-"Lopettaa tämän instanssin, jotta kwin_wayland_wrapper voi käynnistää sen "
+"Lopettaa tämän ilmentymän, jotta kwin_wayland_wrapper voi käynnistää sen "
 "uudelleen."
 
 #: main_wayland.cpp:363
@@ -2827,11 +2827,13 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWin-tukitiedot:\n"
-"Tehtäessä tukipyyntö https://forum.kde.org/-sivustolla tulisi antaa "
-"seuraavat tiedot.\n"
-"Ne sisältävät nykyisen instanssin asetukset, käytössä olevat valinnat,\n"
-"tiedon OpenGL-ajurin sekä käytössä olevista tehosteista.\n"
-"Liitä alla olevat tiedot mieluummin pastebin-palveluun, esim.\n"
+"Tukipyyntöä esimerkiksi https://forum.kde.org/-sivustolle tehtäessä tulisi "
+"mukaan\n"
+"liittää seuraavat tiedot. Ne sisältävät tietoa nykyisestä ilmentymästä, "
+"käytössä\n"
+"olevista asetuksista ja tehosteista sekä OpenGL-ajurista.\n"
+"Liitä tämän ohjetekstin alla olevat tiedot mieluummin pastebin-palveluun, "
+"esim.\n"
 "https://paste.kde.org/, kuin suoraan tukipalstalle.\n"
 
 #~ msgid "&No Border"
