@@ -125,6 +125,7 @@ private:
         unsigned int bezierCount;
 
         WindowStatus status;
+        bool wobblying = false;
 
         // for resizing. Only sides that have moved will wobble
         bool can_wobble_top, can_wobble_left, can_wobble_right, can_wobble_bottom;

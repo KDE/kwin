@@ -130,8 +130,6 @@ WobblyWindowsEffect::WobblyWindowsEffect()
     for (EffectWindow *window : windows) {
         slotWindowAdded(window);
     }
-
-    setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
 }
 
 WobblyWindowsEffect::~WobblyWindowsEffect()
@@ -232,13 +230,6 @@ void WobblyWindowsEffect::setDrag(qreal drag)
 
 void WobblyWindowsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    // We need to mark the screen windows as transformed. Otherwise the whole
-    // screen won't be repainted, resulting in artefacts.
-    // Could we just set a subset of the screen to be repainted ?
-    if (windows.count() != 0) {
-        m_updateRegion = QRegion();
-    }
-
     effects->prePaintScreen(data, presentTime);
 }
 
@@ -266,9 +257,11 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
 void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
     if (!(mask & PAINT_SCREEN_TRANSFORMED) && windows.contains(w)) {
-        quads = quads.makeRegularGrid(m_xTesselation, m_yTesselation);
-
         WindowWobblyInfos &wwi = windows[w];
+        if (!wwi.wobblying) {
+            return;
+        }
+
         int tx = w->frameGeometry().x();
         int ty = w->frameGeometry().y();
         int width = w->frameGeometry().width();
@@ -277,6 +270,8 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
         double top = 0.0;
         double right = w->width();
         double bottom = w->height();
+
+        quads = quads.makeRegularGrid(m_xTesselation, m_yTesselation);
         for (int i = 0; i < quads.count(); ++i) {
             for (int j = 0; j < 4; ++j) {
                 WindowVertex &v = quads[i][j];
@@ -302,8 +297,9 @@ void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data
 
 void WobblyWindowsEffect::postPaintScreen()
 {
-    if (!windows.isEmpty()) {
+    if (!m_updateRegion.isEmpty()) {
         effects->addRepaint(m_updateRegion);
+        m_updateRegion = QRegion();
     }
 
     // Call the next effect.
@@ -346,6 +342,7 @@ void WobblyWindowsEffect::slotWindowStepUserMovedResized(EffectWindow *w, const 
         if (rect.bottom() != wwi.resize_original_rect.bottom()) {
             wwi.can_wobble_bottom = true;
         }
+        setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
     }
 }
 
@@ -944,13 +941,16 @@ bool WobblyWindowsEffect::updateWindowWobblyDatas(EffectWindow *w, qreal time)
     qCDebug(KWIN_WOBBLYWINDOWS) << "sum_acc : " << acc_sum << "  ***  sum_vel :" << vel_sum;
 #endif
 
-    if (wwi.status != Moving && acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity) {
+    wwi.wobblying = !(acc_sum < m_stopAcceleration && vel_sum < m_stopVelocity);
+    if (wwi.status != Moving && !wwi.wobblying) {
         windows.remove(w);
         unredirect(w);
         if (windows.isEmpty()) {
             effects->addRepaintFull();
         }
         return false;
+    } else if (!wwi.wobblying) {
+        setVertexSnappingMode(RenderGeometry::VertexSnappingMode::Round);
     }
 
     return true;
