@@ -29,8 +29,8 @@ void EffectsFilterProxyModel::setQuery(const QString &query)
 {
     if (m_query != query) {
         m_query = query;
+        invalidate();
         Q_EMIT queryChanged();
-        invalidateFilter();
     }
 }
 
@@ -43,8 +43,8 @@ void EffectsFilterProxyModel::setExcludeInternal(bool exclude)
 {
     if (m_excludeInternal != exclude) {
         m_excludeInternal = exclude;
+        invalidate();
         Q_EMIT excludeInternalChanged();
-        invalidateFilter();
     }
 }
 
@@ -57,8 +57,8 @@ void EffectsFilterProxyModel::setExcludeUnsupported(bool exclude)
 {
     if (m_excludeUnsupported != exclude) {
         m_excludeUnsupported = exclude;
+        invalidate();
         Q_EMIT excludeUnsupportedChanged();
-        invalidateFilter();
     }
 }
 
