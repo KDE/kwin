@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-26 02:28+0000\n"
+"POT-Creation-Date: 2024-01-31 02:38+0000\n"
 "PO-Revision-Date: 2011-07-17 16:09+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@base.be>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -4271,42 +4271,42 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
+#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
 #, kde-format
 msgid "Desktop %1"
 msgstr "Sicribanne %1"
 
-#: virtualdesktops.cpp:798
+#: virtualdesktops.cpp:743
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Potchî sol sicribanne shuvant"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:744
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Potchî sol sicribanne di dvant"
 
-#: virtualdesktops.cpp:802
+#: virtualdesktops.cpp:747
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Potchî sol sicribanne al droete"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:748
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Potchî sol sicribanne al hintche"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:749
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Potchî sol sicribanne do dzeur"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:750
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Potchî sol sicribanne do dzo"
 
-#: virtualdesktops.cpp:893
+#: virtualdesktops.cpp:838
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Switch to Desktop %1"

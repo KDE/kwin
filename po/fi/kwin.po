@@ -8,14 +8,14 @@
 # Ilpo Kantonen <ilpo@iki.fi>, 2005.
 # Mikko Piippo <piippo@cc.helsinki.fi>, 2007.
 # Teemu Rytilahti <teemu.rytilahti@d5k.net>, 2008.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2010, 2011, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-26 02:28+0000\n"
-"PO-Revision-Date: 2023-10-23 15:16+0300\n"
+"POT-Creation-Date: 2024-01-31 02:38+0000\n"
+"PO-Revision-Date: 2024-01-29 21:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -52,12 +52,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Kaappaa osoitin painamalla oikeaa Ctrl-näppäintä"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE:n Wayland-koostin"
+msgstr "KDE:n Wayland-koostin %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1175,6 +1174,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> ei vastaa. Haluatko lopettaa tämän "
+"sovelluksen?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1183,57 +1184,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>Sovelluksen <application>%2</application> ikkuna ”%1” ei vastaa. "
+"Haluatko lopettaa tämän sovelluksen.</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Haluatko lopettaa sovelluksen?</para><para><warning>Sovelluksen "
-"lopettaminen sulkee kaikki sen ikkunat. Kaikki tallentamattomat tiedot "
-"menetetään.</warning></para>"
+"<para><emphasis strong='true'>Sovelluksen lopettaminen sulkee sen kaikki "
+"ikkunat. Tallentamattomat tiedot menetetään.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Lopeta"
+msgstr "&Lopeta %1"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Odota pidempään"
+msgstr "&Odota pidempään"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Ei vastaa)"
+msgstr "Ei vastaa"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Prosessitunniste: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "konenimi"
+msgstr "Konenimi: %1"
 
 # *** TARKISTA: Onko ”tablet” tabletti vai esim. piirtopöytä tms.? Onko ”output” ulostulo?
 #: input.cpp:2010
@@ -1433,7 +1425,7 @@ msgstr "xauthority-tiedoston nimi"
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr ""
-"Lopettaa tämän instanssin, jotta kwin_wayland_wrapper voi käynnistää sen "
+"Lopettaa tämän ilmentymän, jotta kwin_wayland_wrapper voi käynnistää sen "
 "uudelleen."
 
 #: main_wayland.cpp:340
@@ -1543,46 +1535,46 @@ msgstr "Kohinan voimakkuus:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Punainen"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Vihreä"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Sininen"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Purppura"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:70
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Tila:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:75
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Punasokeus"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Vihersokeus"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Sinisokeus (sininen–keltainen)"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -2227,24 +2219,19 @@ msgid "Arrow draw modifier keys:"
 msgstr "Nuolipiirron muuntonäppäimet:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Yöväri ei käytössä"
 
 #: plugins/nightcolor/nightcolormanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Yöväri käytössä"
 
 #: plugins/nightcolor/nightcolormanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
 msgstr "Käännä yöväriasetus"
 
@@ -2263,28 +2250,26 @@ msgstr "Tuntematon"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Vaihda yleiskuvan ja ruudukkonäkymien välillä"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:48
 #: plugins/overview/overvieweffect.cpp:134
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Vaihda ruudukkonäkymän ja yleiskuvan välillä"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:55
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Näytä tai piilota yleiskuva"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:62
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Näytä tai piilota yleiskuva"
+msgstr "Näytä tai piilota ruudukkonäkymä"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2317,33 +2302,31 @@ msgstr "Sivuuta pienennetyt ikkunat:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:57
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Järjestä ikkunat ruudukkonäkymään:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Hakutulokset sisältävät suodatetut ikkunat:"
 
 #: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Vaihda yleiskuvan ja ruudukkonäkymien välillä"
 
 #: plugins/overview/overvieweffect.cpp:142
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Näytä tai piilota yleiskuva"
 
 #: plugins/overview/overvieweffect.cpp:150
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Näytä tai piilota yleiskuva"
+msgstr "Näytä tai piilota ruudukkonäkymä"
 
 #: plugins/overview/qml/DesktopBar.qml:172
 #, kde-format
@@ -2356,29 +2339,25 @@ msgid "Add Virtual Desktop"
 msgstr "Lisää virtuaalityöpöytä"
 
 #: plugins/overview/qml/main.qml:381
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Poista virtuaalityöpöytä"
+msgstr "Ei muita virtuaalityöpöytiä"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Lisää virtuaalityöpöytä"
 
 #: plugins/overview/qml/main.qml:394
-#, fuzzy, kde-format
-#| msgid "Configure virtual keyboards..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Näyttönäppäimistöasetukset…"
+msgstr "Virtuaalityöpöytäasetukset…"
 
 #: plugins/overview/qml/main.qml:723
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Ei täsmääviä ikkunoita"
@@ -3563,18 +3542,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Seuraavat sovellukset eivät sulkeutuneet:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Peru uloskirjautuminen"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Kirjaudu silti ulos"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -4161,43 +4142,43 @@ msgstr ""
 msgid "unknown"
 msgstr "tuntematon"
 
-#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
+#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
 #, kde-format
 msgid "Desktop %1"
 msgstr "Työpöytä %1"
 
-#: virtualdesktops.cpp:798
+#: virtualdesktops.cpp:743
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Vaihda seuraavalle työpöydälle"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:744
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Vaihda edelliselle työpöydälle"
 
 # Näissä neljässä Switch one desktop to the X -käännöksessä on yritetty kääntää niin, että jonot tulevat aakkostettuna peräkkäin; erikseen kirjoitetut ”alas päin” jne. ovat kielitoimiston uudemman suosituksen mukaisia
-#: virtualdesktops.cpp:802
+#: virtualdesktops.cpp:747
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Vaihda työpöytää oikealle päin"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:748
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Vaihda työpöytää vasemmalle päin"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:749
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Vaihda työpöytää ylös päin"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:750
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Vaihda työpöytää alas päin"
 
-#: virtualdesktops.cpp:893
+#: virtualdesktops.cpp:838
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
@@ -4223,11 +4204,12 @@ msgid ""
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
 "KWin-tukitiedot:\n"
-"Tukipyyntöä tehtäessä esim. https://discuss.kde.org/-sivustolle mukaan "
-"tulisi liittää seuraavat tiedot.\n"
-"Ne sisältävät tietoa nykyisestä instanssista, mitä asetuksia on käytössä,\n"
-"mikä on OpenGL-ajuri sekä mitä tehosteita käytetään.\n"
-"Liitä tämän opasteen alla olevat tiedot mieluummin pastebin-palveluun, "
+"Tukipyyntöä esimerkiksi https://forum.kde.org/-sivustolle tehtäessä tulisi "
+"mukaan\n"
+"liittää seuraavat tiedot. Ne sisältävät tietoa nykyisestä ilmentymästä, "
+"käytössä\n"
+"olevista asetuksista ja tehosteista sekä OpenGL-ajurista.\n"
+"Liitä tämän ohjetekstin alla olevat tiedot mieluummin pastebin-palveluun, "
 "esim.\n"
 "https://paste.kde.org/, kuin suoraan tukipalstalle.\n"
 

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-26 02:28+0000\n"
+"POT-Creation-Date: 2024-01-31 02:38+0000\n"
 "PO-Revision-Date: 2023-07-06 10:33+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -4122,42 +4122,42 @@ msgstr ""
 msgid "unknown"
 msgstr "مجهول"
 
-#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
+#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
 #, kde-format
 msgid "Desktop %1"
 msgstr "سطح المكتب %1"
 
-#: virtualdesktops.cpp:798
+#: virtualdesktops.cpp:743
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "بدّل إلى سطح المكتب التّالي"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:744
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "بدّل إلى سطح المكتب السّابق"
 
-#: virtualdesktops.cpp:802
+#: virtualdesktops.cpp:747
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "بدّل إلى سطح المكتب الأيمن"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:748
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "بدّل إلى سطح المكتب الأيسر"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:749
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "بدّل إلى سطح المكتب الأعلى"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:750
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "بدّل إلى سطح المكتب الأسفل"
 
-#: virtualdesktops.cpp:893
+#: virtualdesktops.cpp:838
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "بدّل إلى سطح المكتب %1"

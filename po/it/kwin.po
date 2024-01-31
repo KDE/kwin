@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-26 02:28+0000\n"
+"POT-Creation-Date: 2024-01-31 02:38+0000\n"
 "PO-Revision-Date: 2024-01-19 03:44+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -4150,42 +4150,42 @@ msgstr ""
 msgid "unknown"
 msgstr "sconosciuto"
 
-#: virtualdesktops.cpp:691 virtualdesktops.cpp:762
+#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
 #, kde-format
 msgid "Desktop %1"
 msgstr "Desktop %1"
 
-#: virtualdesktops.cpp:798
+#: virtualdesktops.cpp:743
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Vai al desktop successivo"
 
-#: virtualdesktops.cpp:799
+#: virtualdesktops.cpp:744
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Vai al desktop precedente"
 
-#: virtualdesktops.cpp:802
+#: virtualdesktops.cpp:747
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Vai un desktop a destra"
 
-#: virtualdesktops.cpp:803
+#: virtualdesktops.cpp:748
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Vai un desktop a sinistra"
 
-#: virtualdesktops.cpp:804
+#: virtualdesktops.cpp:749
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Vai al desktop superiore"
 
-#: virtualdesktops.cpp:805
+#: virtualdesktops.cpp:750
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Vai al desktop inferiore"
 
-#: virtualdesktops.cpp:893
+#: virtualdesktops.cpp:838
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Vai al desktop %1"
