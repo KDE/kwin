@@ -430,6 +430,7 @@ private:
     QWindow *findInternalWindow() const;
     void checkOutput();
     void associate();
+    void handleXwaylandScaleChanged();
 
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
