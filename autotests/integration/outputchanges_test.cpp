@@ -597,7 +597,6 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
 
 void OutputChangesTest::testLaptopLidClosed()
 {
-    QSKIP("Laptop lid handling is disabled until config writing is moved into KWin");
     Test::setOutputConfig({
         Test::OutputInfo{
             .geometry = QRect(0, 0, 1280, 1024),
