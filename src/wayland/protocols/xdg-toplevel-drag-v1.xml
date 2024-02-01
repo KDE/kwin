@@ -2,7 +2,7 @@
 <protocol name="xdg_toplevel_drag_v1">
 
   <copyright>
-    Copyright 2023 David Redondo  &lt;kde@david-redondo.de&gt;
+    Copyright 2023 David Redondo
 
     Permission is hereby granted, free of charge, to any person obtaining a
     copy of this software and associated documentation files (the "Software"),
@@ -37,8 +37,8 @@
       wl_data_device.start_drag. Once the client determines that the detachable
       window contents should be detached from the originating window, it creates
       a new xdg_toplevel with these contents and issues a
-      xdg_toplevel_drag_v1.attach request. From now on the new window is moved
-      by the compositor during the drag as if the client called
+      xdg_toplevel_drag_v1.attach request before mapping it. From now on the new
+      window is moved by the compositor during the drag as if the client called
       xdg_toplevel.move.
 
       Dragging an existing window is similar. The client creates a
@@ -49,16 +49,30 @@
       can be docked or undocked. If the client wants to snap a window into a
       parent window it should delete or unmap the dragged top-level. If the
       contents should be detached again it attaches a new toplevel as described
-      above. If a drag operation is cancelled, clients should revert to the
-      previous state, deleting any newly created windows as appropriate.
-      When a drag operation ends the dragged toplevel window's final position is
-      determined as if a xdg_toplevel_move operation ended.
+      above. If a drag operation is cancelled without being dropped, clients
+      should revert to the previous state, deleting any newly created windows
+      as appropriate. When a drag operation ends as indicated by
+      wl_data_source.dnd_drop_performed the dragged toplevel window's final
+      position is determined as if a xdg_toplevel_move operation ended.
 
       Warning! The protocol described in this file is currently in the testing
       phase. Backward compatible changes may be added together with the
       corresponding interface version bump. Backward incompatible changes can
       only be done by creating a new major version of the extension.
     </description>
+
+    <enum name="error">
+      <entry name="invalid_source" value="0"
+             summary="data_source already used for toplevel drag"/>
+    </enum>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy the xdg_toplevel_drag_manager_v1 object">
+        Destroy this xdg_toplevel_drag_manager_v1 object. Other objects,
+        including xdg_toplevel_drag_v1 objects created by this factory, are not
+        affected by this request.
+      </description>
+    </request>
 
     <request name="get_xdg_toplevel_drag">
       <description summary="get an xdg_toplevel_drag for a wl_data_source">
@@ -77,32 +91,36 @@
       <arg name="id" type="new_id" interface="xdg_toplevel_drag_v1"/>
       <arg name="data_source" type="object" interface="wl_data_source"/>
     </request>
-
-    <request name="destroy" type="destructor">
-      <description summary="destroy the xdg_toplevel_drag_manager_v1 object">
-        Destroy this xdg_toplevel_drag_manager_v1 object. Other objects,
-        including xdg_toplevel_drag_v1 objects created by this factory, are not
-        affected by this request.
-      </description>
-    </request>
-
-    <enum name="error">
-      <entry name="invalid_source" value="0"
-             summary="data_source already used for toplevel drag"/>
-    </enum>
   </interface>
 
   <interface name="xdg_toplevel_drag_v1" version="1">
     <description summary="Object representing a toplevel move during a drag">
     </description>
 
+    <enum name="error">
+      <entry name="toplevel_attached" value="0"
+             summary="valid toplevel already attached"/>
+      <entry name="ongoing_drag" value="1"
+             summary="drag has not ended" />
+    </enum>
+
+    <request name="destroy" type="destructor">
+      <description summary="destroy an xdg_toplevel_drag_v1 object">
+        Destroy this xdg_toplevel_drag_v1 object. This request must only be
+        called after the underlying wl_data_source drag has ended, as indicated
+        by the dnd_drop_performed or cancelled events. In any other case an
+        ongoing_drag error is raised.
+      </description>
+    </request>
+
     <request name="attach">
       <description summary="Move a toplevel with the drag operation">
         Request that the window will be moved with the cursor during the drag
-        operation. The offset describes how the toplevel will be positioned
-        relative to the cursor hotspot in surface local coordinates. The
-        attached window does not participate in the selection of the drag
-        target.
+        operation. The offset is a hint to the compositor how the toplevel
+        should be positioned relative to the cursor hotspot in surface local
+        coordinates. For example it might only be used when an unmapped window
+        is attached. The attached window does not participate in the selection
+        of the drag target.
 
         If the toplevel is unmapped while it is attached, it is automatically
         detached from the drag. In this case this request has to be called again
@@ -118,22 +136,5 @@
       <arg name="y_offset" type="int" summary="dragged surface y offset"/>
     </request>
 
-    <request name="destroy" type="destructor">
-      <description summary="destroy an xdg_toplevel_drag_v1 object">
-        Destroy this xdg_toplevel_drag_v1 object. This request must only be
-        called after the underlying wl_data_source drag has ended, as indicated
-        by the dnd_drop_performed or cancelled events. In any other case an
-        ongoing_drag error is raised.
-      </description>
-    </request>
-
-    <enum name="error">
-      <entry name="toplevel_attached" value="0"
-             summary="valid toplevel already attached"/>
-      <entry name="ongoing_drag" value="1"
-             summary="drag has not ended" />
-    </enum>
-
   </interface>
 </protocol>
-
