@@ -229,20 +229,20 @@ EffectTogglableTouchBorder::EffectTogglableTouchBorder(EffectTogglableState *sta
 EffectTogglableTouchBorder::~EffectTogglableTouchBorder()
 {
     for (const ElectricBorder &border : std::as_const(m_touchBorderActivate)) {
-        effects->unregisterTouchBorder(border, m_state->toggleAction());
+        effects->unregisterTouchBorder(border, m_state->activateAction());
     }
 }
 
 void EffectTogglableTouchBorder::setBorders(const QList<int> &touchActivateBorders)
 {
     for (const ElectricBorder &border : std::as_const(m_touchBorderActivate)) {
-        effects->unregisterTouchBorder(border, m_state->toggleAction());
+        effects->unregisterTouchBorder(border, m_state->activateAction());
     }
     m_touchBorderActivate.clear();
 
     for (const int &border : touchActivateBorders) {
         m_touchBorderActivate.append(ElectricBorder(border));
-        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_state->toggleAction(), [this](ElectricBorder border, const QPointF &deltaProgress, const Output *screen) {
+        effects->registerRealtimeTouchBorder(ElectricBorder(border), m_state->activateAction(), [this](ElectricBorder border, const QPointF &deltaProgress, const Output *screen) {
             if (m_state->status() == EffectTogglableState::Status::Active) {
                 return;
             }
