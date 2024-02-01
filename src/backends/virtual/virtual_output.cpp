@@ -12,7 +12,7 @@
 #include "compositor.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
-#include "core/renderloop_p.h"
+#include "core/renderloop.h"
 #include "utils/softwarevsyncmonitor.h"
 
 namespace KWin
@@ -74,8 +74,9 @@ void VirtualOutput::updateEnabled(bool enabled)
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
-    RenderLoopPrivate *renderLoopPrivate = RenderLoopPrivate::get(m_renderLoop.get());
-    renderLoopPrivate->notifyFrameCompleted(timestamp, Compositor::self()->backend()->primaryLayer(this)->queryRenderTime());
+    const auto primaryLayer = Compositor::self()->backend()->primaryLayer(this);
+    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, primaryLayer->queryRenderTime(), PresentationMode::VSync);
+    m_frame.reset();
 }
 
 }
