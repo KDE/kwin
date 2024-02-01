@@ -305,15 +305,22 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
         }
     }
 
-    int sym = -1;
-    if (!KKeyServer::keyQtToSymX(keys[0], &sym)) {
+    const QList<int> syms(KKeyServer::keyQtToSymXs(keys[0]));
+    if (syms.empty()) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "to keysym";
         return false;
     }
     // KKeyServer returns upper case syms, lower it to not confuse modifiers handling
-    auto keyCode = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+    std::optional<int> keyCode;
+    for (int sym : syms) {
+        auto code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        if (code) {
+            keyCode = code;
+            break;
+        }
+    }
     if (!keyCode) {
-        qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "sym: " << sym << "to keycode";
+        qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "syms: " << syms << "to keycode";
         return false;
     }
 

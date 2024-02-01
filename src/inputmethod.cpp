@@ -60,12 +60,19 @@ static std::vector<quint32> textToKey(const QString &text)
         return {};
     }
 
-    int sym;
-    if (!KKeyServer::keyQtToSymX(sequence[0], &sym)) {
+    const QList<int> syms(KKeyServer::keyQtToSymXs(sequence[0]));
+    if (syms.empty()) {
         return {};
     }
 
-    auto keyCode = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+    std::optional<int> keyCode;
+    for (int sym : syms) {
+        auto code = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        if (code) {
+            keyCode = code;
+            break;
+        }
+    }
     if (!keyCode) {
         return {};
     }
