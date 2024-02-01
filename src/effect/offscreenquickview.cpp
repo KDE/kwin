@@ -273,6 +273,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
         QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
+        cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
 
@@ -297,6 +298,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         const QPointF widgetPos = d->m_view->mapFromGlobal(he->pos());
         const QPointF oldWidgetPos = d->m_view->mapFromGlobal(he->oldPos());
         QHoverEvent cloneEvent(he->type(), widgetPos, oldWidgetPos, he->modifiers());
+        cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
         return;
@@ -306,6 +308,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         const QPointF widgetPos = d->m_view->mapFromGlobal(we->position().toPoint());
         QWheelEvent cloneEvent(widgetPos, we->globalPosition(), we->pixelDelta(), we->angleDelta(), we->buttons(),
                                we->modifiers(), we->phase(), we->inverted());
+        cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
         return;
@@ -329,6 +332,7 @@ bool OffscreenQuickView::forwardTouchDown(qint32 id, const QPointF &pos, std::ch
 
     QTouchEvent event(QEvent::TouchBegin, d->touchDevice, Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+    event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
@@ -340,6 +344,7 @@ bool OffscreenQuickView::forwardTouchMotion(qint32 id, const QPointF &pos, std::
 
     QTouchEvent event(QEvent::TouchUpdate, d->touchDevice, Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+    event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
@@ -351,6 +356,7 @@ bool OffscreenQuickView::forwardTouchUp(qint32 id, std::chrono::microseconds tim
 
     QTouchEvent event(QEvent::TouchEnd, d->touchDevice, Qt::NoModifier, d->touchPoints);
     event.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
+    event.setAccepted(false);
     QCoreApplication::sendEvent(d->m_view.get(), &event);
 
     return event.isAccepted();
