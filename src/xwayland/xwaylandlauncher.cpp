@@ -189,7 +189,7 @@ bool XwaylandLauncher::start()
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
-    if (qEnvironmentVariableIsSet("KWIN_XWAYLAND_DEBUG")) {
+    if (qEnvironmentVariableIntValue("KWIN_XWAYLAND_DEBUG") == 1) {
         env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
     }
     m_xwaylandProcess->setProcessEnvironment(env);
