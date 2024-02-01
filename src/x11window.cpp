@@ -1181,6 +1181,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         } else {
             connect(this, &Window::surfaceChanged, this, &X11Window::associate);
         }
+        connect(kwinApp(), &Application::xwaylandScaleChanged, this, &X11Window::handleXwaylandScaleChanged);
         break;
     case Application::OperationModeX11:
         break;
@@ -3895,6 +3896,13 @@ void X11Window::sendSyntheticConfigureNotify()
     u.event.override_redirect = 0;
     xcb_send_event(kwinApp()->x11Connection(), true, c.event, XCB_EVENT_MASK_STRUCTURE_NOTIFY, reinterpret_cast<const char *>(&u));
     xcb_flush(kwinApp()->x11Connection());
+}
+
+void X11Window::handleXwaylandScaleChanged()
+{
+    // while KWin implicitly considers the window already resized when the scale changes,
+    // this is needed to make Xwayland actually resize it as well
+    resize(moveResizeGeometry().size());
 }
 
 QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
