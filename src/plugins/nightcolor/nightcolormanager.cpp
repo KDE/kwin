@@ -447,6 +447,7 @@ void NightColorManager::slowUpdate(int targetTemp)
 
 void NightColorManager::preview(uint previewTemp)
 {
+    previewTemp = std::clamp<uint>(previewTemp, MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
     resetQuickAdjustTimer((int)previewTemp);
     if (m_previewTimer) {
         m_previewTimer.reset();
