@@ -38,17 +38,6 @@
 namespace KWin
 {
 
-static PlatformCursorImage loadReferenceThemeCursor_helper(const KXcursorTheme &theme,
-                                                           const QByteArray &name)
-{
-    const QList<KXcursorSprite> sprites = theme.shape(name);
-    if (sprites.isEmpty()) {
-        return PlatformCursorImage();
-    }
-
-    return PlatformCursorImage(sprites.constFirst().data(), sprites.constFirst().hotspot());
-}
-
 static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
     const Cursor *pointerCursor = Cursors::self()->mouse();
@@ -58,20 +47,11 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
         return PlatformCursorImage();
     }
 
-    PlatformCursorImage platformCursorImage = loadReferenceThemeCursor_helper(theme, name);
-    if (!platformCursorImage.isNull()) {
-        return platformCursorImage;
-    }
+    ShapeCursorSource source;
+    source.setShape(name);
+    source.setTheme(theme);
 
-    const QList<QByteArray> alternativeNames = Cursor::cursorAlternativeNames(name);
-    for (const QByteArray &alternativeName : alternativeNames) {
-        platformCursorImage = loadReferenceThemeCursor_helper(theme, alternativeName);
-        if (!platformCursorImage.isNull()) {
-            break;
-        }
-    }
-
-    return platformCursorImage;
+    return PlatformCursorImage(source.image(), source.hotspot());
 }
 
 static PlatformCursorImage loadReferenceThemeCursor(const CursorShape &shape)
