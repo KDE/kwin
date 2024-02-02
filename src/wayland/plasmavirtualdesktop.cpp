@@ -5,6 +5,7 @@
 */
 #include "plasmavirtualdesktop.h"
 #include "display.h"
+#include "wayland/quirks.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -240,7 +241,7 @@ void PlasmaVirtualDesktopInterfacePrivate::org_kde_plasma_virtual_desktop_bind_r
     send_desktop_id(resource->handle, id);
 
     if (!name.isEmpty()) {
-        send_name(resource->handle, name);
+        send_name(resource->handle, truncate(name));
     }
 
     if (active) {
@@ -272,7 +273,7 @@ void PlasmaVirtualDesktopInterface::setName(const QString &name)
 
     const auto clientResources = d->resourceMap();
     for (auto resource : clientResources) {
-        d->send_name(resource->handle, name);
+        d->send_name(resource->handle, truncate(name));
     }
 }
 

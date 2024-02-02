@@ -359,6 +359,7 @@ install(FILES
     primaryselectiondevicemanager_v1.h
     primaryselectionoffer_v1.h
     primaryselectionsource_v1.h
+    quirks.h
     relativepointer_v1.h
     screencast_v1.h
     screenedge_v1.h
