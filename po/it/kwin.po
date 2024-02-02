@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-31 00:38+0000\n"
+"POT-Creation-Date: 2024-02-02 00:39+0000\n"
 "PO-Revision-Date: 2024-01-19 03:44+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2427,7 +2427,7 @@ msgstr "Regione non valida"
 msgid "Region outside the workspace"
 msgstr "Regione al di fuori dell'area di lavoro"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:361
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossibile creare il flusso PipeWire"

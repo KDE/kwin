@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-31 00:38+0000\n"
+"POT-Creation-Date: 2024-02-02 00:39+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -2460,7 +2460,7 @@ msgstr ""
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:361
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

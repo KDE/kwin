@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-31 00:38+0000\n"
+"POT-Creation-Date: 2024-02-02 00:39+0000\n"
 "PO-Revision-Date: 2024-01-27 13:08+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2443,7 +2443,7 @@ msgstr "Недопустимая область"
 msgid "Region outside the workspace"
 msgstr "Область расположена вне рабочего пространства"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:361
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не удалось создать поток PipeWire"
