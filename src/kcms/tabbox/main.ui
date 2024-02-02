@@ -38,7 +38,7 @@
         <item row="1" column="0" rowspan="2" colspan="3">
          <widget class="QCheckBox" name="showDesktop">
           <property name="text">
-           <string>Include &quot;Show Desktop&quot; icon</string>
+           <string>Include &quot;Show Desktop&quot; entry</string>
           </property>
          </widget>
         </item>
