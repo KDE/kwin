@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-31 02:38+0000\n"
+"POT-Creation-Date: 2024-02-02 02:23+0000\n"
 "PO-Revision-Date: 2023-11-30 11:31+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -2228,7 +2228,7 @@ msgstr "Нічні кольори увімкнено"
 msgid "Toggle Night Light"
 msgstr "Перемкнути нічні кольори"
 
-#: plugins/nightcolor/nightcolormanager.cpp:466
+#: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Перегляд температури кольорів"
@@ -2414,7 +2414,7 @@ msgstr "Некоректна область"
 msgid "Region outside the workspace"
 msgstr "Область поза межами робочого простору"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:361
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не вдалося створити потік даних PipeWire"
