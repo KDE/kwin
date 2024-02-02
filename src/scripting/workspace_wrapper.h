@@ -121,7 +121,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted when the current virtual desktop changes.
      */
-    void currentDesktopChanged();
+    void currentDesktopChanged(KWin::VirtualDesktop *previous);
     /**
      * This signal is emitted when the cursor position changes.
      * @see cursorPos()

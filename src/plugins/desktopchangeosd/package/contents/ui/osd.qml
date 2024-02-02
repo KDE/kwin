@@ -30,34 +30,6 @@ PlasmaCore.Dialog {
             }
         }
 
-        function show() {
-            if (Workspace.isEffectActive("overview")) {
-                return;
-            }
-            const index = Workspace.desktops.indexOf(Workspace.currentDesktop);
-            if (dialogItem.currentIndex === index) {
-                return;
-            }
-            dialogItem.previousIndex = dialogItem.currentIndex;
-            timer.stop();
-            dialogItem.currentIndex = index;
-            // screen geometry might have changed
-            var screen = Workspace.clientArea(KWin.FullScreenArea, Workspace.activeScreen, Workspace.currentDesktop);
-            dialogItem.screenWidth = screen.width;
-            dialogItem.screenHeight = screen.height;
-            if (dialogItem.showGrid) {
-                // non dependable properties might have changed
-                view.columns = Workspace.desktopGridWidth;
-                view.rows = Workspace.desktopGridHeight;
-            }
-            dialog.visible = true;
-            // position might have changed
-            dialog.x = screen.x + screen.width/2 - dialogItem.width/2;
-            dialog.y = screen.y + screen.height/2 - dialogItem.height/2;
-            // start the hide timer
-            timer.start();
-        }
-
         id: dialogItem
         property int screenWidth: 0
         property int screenHeight: 0
@@ -276,12 +248,6 @@ PlasmaCore.Dialog {
         }
 
         Connections {
-            target: Workspace
-            function onCurrentDesktopChanged() {
-                dialogItem.show()
-            }
-        }
-        Connections {
             target: Options
             function onConfigChanged() {
                 dialogItem.loadConfig()
@@ -291,7 +257,29 @@ PlasmaCore.Dialog {
             view.columns = Workspace.desktopGridWidth;
             view.rows = Workspace.desktopGridHeight;
             dialogItem.loadConfig();
-            dialogItem.show();
         }
+    }
+
+    function show(previous) {
+        if (Workspace.isEffectActive("overview")) {
+            return;
+        }
+        dialogItem.previousIndex = Workspace.desktops.indexOf(previous);
+        dialogItem.currentIndex = Workspace.desktops.indexOf(Workspace.currentDesktop);
+        // screen geometry might have changed
+        var screen = Workspace.clientArea(KWin.FullScreenArea, Workspace.activeScreen, Workspace.currentDesktop);
+        dialogItem.screenWidth = screen.width;
+        dialogItem.screenHeight = screen.height;
+        if (dialogItem.showGrid) {
+            // non dependable properties might have changed
+            view.columns = Workspace.desktopGridWidth;
+            view.rows = Workspace.desktopGridHeight;
+        }
+        dialog.visible = true;
+        // position might have changed
+        dialog.x = screen.x + screen.width/2 - dialogItem.width/2;
+        dialog.y = screen.y + screen.height/2 - dialogItem.height/2;
+        // start the hide timer
+        timer.restart();
     }
 }
