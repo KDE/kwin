@@ -350,6 +350,12 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
+            QByteArrayLiteral("default"),
+            {
+                QByteArrayLiteral("left_ptr"),
+            },
+        },
+        {
             QByteArrayLiteral("up_arrow"),
             {
                 QByteArrayLiteral("center_ptr"),
