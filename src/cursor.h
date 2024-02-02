@@ -71,6 +71,11 @@ public:
      */
     QByteArray name() const;
 
+    /**
+     * Returns the list of alternative shape names for a shape with the specified @a name.
+     */
+    static QList<QByteArray> alternatives(const QByteArray &name);
+
 private:
     int m_shape = Qt::ArrowCursor;
 };
@@ -136,10 +141,6 @@ public:
      * @return int
      */
     int themeSize() const;
-    /**
-     * @return list of alternative names for the cursor with @p name
-     */
-    static QList<QByteArray> cursorAlternativeNames(const QByteArray &name);
     /**
      * Returns the default Xcursor theme name.
      */

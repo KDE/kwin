@@ -76,7 +76,7 @@ void ShapeCursorSource::refresh()
 
     m_sprites = m_theme.shape(m_shape);
     if (m_sprites.isEmpty()) {
-        const auto alternativeNames = Cursor::cursorAlternativeNames(m_shape);
+        const auto alternativeNames = CursorShape::alternatives(m_shape);
         for (const QByteArray &alternativeName : alternativeNames) {
             m_sprites = m_theme.shape(alternativeName);
             if (!m_sprites.isEmpty()) {

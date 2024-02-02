@@ -246,7 +246,7 @@ xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
 
     xcb_cursor_t cursor = xcb_cursor_load_cursor(ctx, name.constData());
     if (cursor == XCB_CURSOR_NONE) {
-        const auto &names = Cursor::cursorAlternativeNames(name);
+        const auto &names = CursorShape::alternatives(name);
         for (const QByteArray &cursorName : names) {
             cursor = xcb_cursor_load_cursor(ctx, cursorName.constData());
             if (cursor != XCB_CURSOR_NONE) {
@@ -330,7 +330,17 @@ void Cursor::doStopCursorTracking()
 {
 }
 
-QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
+QString Cursor::defaultThemeName()
+{
+    return QStringLiteral("default");
+}
+
+int Cursor::defaultThemeSize()
+{
+    return 24;
+}
+
+QList<QByteArray> CursorShape::alternatives(const QByteArray &name)
 {
     static const QHash<QByteArray, QList<QByteArray>> alternatives = {
         {
@@ -617,16 +627,6 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
         return it.value();
     }
     return QList<QByteArray>();
-}
-
-QString Cursor::defaultThemeName()
-{
-    return QStringLiteral("default");
-}
-
-int Cursor::defaultThemeSize()
-{
-    return 24;
 }
 
 QByteArray CursorShape::name() const
