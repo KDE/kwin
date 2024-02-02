@@ -351,10 +351,11 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("up_arrow"),
+            QByteArrayLiteral("up-arrow"),
             {
-                QByteArrayLiteral("center_ptr"),
+                QByteArrayLiteral("up_arrow"),
                 QByteArrayLiteral("sb_up_arrow"),
+                QByteArrayLiteral("center_ptr"),
                 QByteArrayLiteral("centre_ptr"),
             },
         },
@@ -634,7 +635,7 @@ QByteArray CursorShape::name() const
     case Qt::ArrowCursor:
         return QByteArrayLiteral("default");
     case Qt::UpArrowCursor:
-        return QByteArrayLiteral("up_arrow");
+        return QByteArrayLiteral("up-arrow");
     case Qt::CrossCursor:
         return QByteArrayLiteral("crosshair");
     case Qt::WaitCursor:
