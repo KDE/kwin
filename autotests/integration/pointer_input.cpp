@@ -1170,7 +1170,7 @@ void PointerInputTest::testCursorShapeV1()
 
     // move cursor somewhere the new window won't open
     input()->pointer()->warp(QPointF(800, 800));
-    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("default"));
 
     // create a window
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
@@ -1191,10 +1191,10 @@ void PointerInputTest::testCursorShapeV1()
 
     // cursor shape won't be changed if the window has no pointer focus
     input()->pointer()->warp(QPointF(800, 800));
-    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("default"));
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_grab);
     QVERIFY(Test::waylandSync());
-    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("default"));
 }
 
 class HelperEffect : public Effect
@@ -1245,19 +1245,19 @@ void PointerInputTest::testEffectOverrideCursorImage()
     // now create an effect and set an override cursor
     std::unique_ptr<HelperEffect> effect(new HelperEffect);
     effects->startMouseInterception(effect.get(), Qt::SizeAllCursor);
-    QCOMPARE(currentCursorShape(), QByteArray("size_all"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("all-scroll"));
 
     // let's change to arrow cursor, this should be our fallback
     effects->defineCursor(Qt::ArrowCursor);
-    QCOMPARE(currentCursorShape(), QByteArray("left_ptr"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("default"));
 
     // back to size all
     effects->defineCursor(Qt::SizeAllCursor);
-    QCOMPARE(currentCursorShape(), QByteArray("size_all"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("all-scroll"));
 
     // move cursor outside the window area
     input()->pointer()->warp(QPointF(800, 800));
-    QCOMPARE(currentCursorShape(), QByteArray("size_all"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("all-scroll"));
 
     // move cursor to area of window
     input()->pointer()->warp(window->frameGeometry().center());
@@ -1270,7 +1270,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QVERIFY(enteredSpy.wait());
     cursorShapeDevice->set_shape(enteredSpy.last().at(0).value<quint32>(), Test::CursorShapeDeviceV1::shape_crosshair);
     QVERIFY(cursorChanged.wait());
-    QCOMPARE(currentCursorShape(), QByteArray("cross"));
+    QCOMPARE(currentCursorShape(), QByteArrayLiteral("crosshair"));
 }
 
 void PointerInputTest::testPopup()

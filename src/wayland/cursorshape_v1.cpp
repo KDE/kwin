@@ -116,35 +116,35 @@ static QByteArray shapeName(uint32_t shape)
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_context_menu:
         return QByteArrayLiteral("context-menu");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_help:
-        return QByteArrayLiteral("whats_this");
+        return QByteArrayLiteral("help");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_pointer:
-        return QByteArrayLiteral("pointing_hand");
+        return QByteArrayLiteral("pointer");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_progress:
-        return QByteArrayLiteral("left_ptr_watch");
+        return QByteArrayLiteral("progress");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_wait:
         return QByteArrayLiteral("wait");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_cell:
         return QByteArrayLiteral("cell");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_crosshair:
-        return QByteArrayLiteral("cross");
+        return QByteArrayLiteral("crosshair");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_text:
         return QByteArrayLiteral("text");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_vertical_text:
         return QByteArrayLiteral("vertical-text");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_alias:
-        return QByteArrayLiteral("dnd-link");
+        return QByteArrayLiteral("alias");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_copy:
-        return QByteArrayLiteral("dnd-copy");
+        return QByteArrayLiteral("copy");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_move:
-        return QByteArrayLiteral("dnd-move");
+        return QByteArrayLiteral("move");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_no_drop:
         return QByteArrayLiteral("no-drop");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_not_allowed:
         return QByteArrayLiteral("not-allowed");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_grab:
-        return QByteArrayLiteral("openhand");
+        return QByteArrayLiteral("grab");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_grabbing:
-        return QByteArrayLiteral("closedhand");
+        return QByteArrayLiteral("grabbing");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_e_resize:
         return QByteArrayLiteral("e-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_n_resize:
@@ -162,13 +162,13 @@ static QByteArray shapeName(uint32_t shape)
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_w_resize:
         return QByteArrayLiteral("w-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_ew_resize:
-        return QByteArrayLiteral("size_hor");
+        return QByteArrayLiteral("ew-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_ns_resize:
-        return QByteArrayLiteral("size_ver");
+        return QByteArrayLiteral("ns-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_nesw_resize:
-        return QByteArrayLiteral("size_bdiag");
+        return QByteArrayLiteral("nesw-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_nwse_resize:
-        return QByteArrayLiteral("size_fdiag");
+        return QByteArrayLiteral("nwse-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_col_resize:
         return QByteArrayLiteral("col-resize");
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_row_resize:
@@ -180,7 +180,7 @@ static QByteArray shapeName(uint32_t shape)
     case QtWaylandServer::wp_cursor_shape_device_v1::shape_zoom_out:
         return QByteArrayLiteral("zoom-out");
     default:
-        return QByteArrayLiteral("left_ptr");
+        return QByteArrayLiteral("default");
     }
 }
 

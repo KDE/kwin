@@ -334,17 +334,9 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
 {
     static const QHash<QByteArray, QList<QByteArray>> alternatives = {
         {
-            QByteArrayLiteral("left_ptr"),
+            QByteArrayLiteral("crosshair"),
             {
-                QByteArrayLiteral("arrow"),
-                QByteArrayLiteral("dnd-none"),
-                QByteArrayLiteral("op_left_arrow"),
-            },
-        },
-        {
-            QByteArrayLiteral("cross"),
-            {
-                QByteArrayLiteral("crosshair"),
+                QByteArrayLiteral("cross"),
                 QByteArrayLiteral("diamond-cross"),
                 QByteArrayLiteral("cross-reverse"),
             },
@@ -353,6 +345,9 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             QByteArrayLiteral("default"),
             {
                 QByteArrayLiteral("left_ptr"),
+                QByteArrayLiteral("arrow"),
+                QByteArrayLiteral("dnd-none"),
+                QByteArrayLiteral("op_left_arrow"),
             },
         },
         {
@@ -371,32 +366,34 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("ibeam"),
+            QByteArrayLiteral("text"),
             {
+                QByteArrayLiteral("ibeam"),
                 QByteArrayLiteral("xterm"),
-                QByteArrayLiteral("text"),
             },
         },
         {
-            QByteArrayLiteral("size_all"),
+            QByteArrayLiteral("all-scroll"),
             {
+                QByteArrayLiteral("size_all"),
                 QByteArrayLiteral("fleur"),
             },
         },
         {
-            QByteArrayLiteral("pointing_hand"),
+            QByteArrayLiteral("pointer"),
             {
+                QByteArrayLiteral("pointing_hand"),
                 QByteArrayLiteral("hand2"),
                 QByteArrayLiteral("hand"),
                 QByteArrayLiteral("hand1"),
-                QByteArrayLiteral("pointer"),
                 QByteArrayLiteral("e29285e634086352946a0e7090d73106"),
                 QByteArrayLiteral("9d800788f1b08800ae810202380a0822"),
             },
         },
         {
-            QByteArrayLiteral("size_ver"),
+            QByteArrayLiteral("ns-resize"),
             {
+                QByteArrayLiteral("size_ver"),
                 QByteArrayLiteral("00008160000006810000408080010102"),
                 QByteArrayLiteral("sb_v_double_arrow"),
                 QByteArrayLiteral("v_double_arrow"),
@@ -412,8 +409,9 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("size_hor"),
+            QByteArrayLiteral("ew-resize"),
             {
+                QByteArrayLiteral("size_hor"),
                 QByteArrayLiteral("028006030e0e7ebffc7f7070c0600140"),
                 QByteArrayLiteral("sb_h_double_arrow"),
                 QByteArrayLiteral("h_double_arrow"),
@@ -425,8 +423,9 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("size_bdiag"),
+            QByteArrayLiteral("nesw-resize"),
             {
+                QByteArrayLiteral("size_bdiag"),
                 QByteArrayLiteral("fcf1c3c7cd4491d801f1e1c78f100000"),
                 QByteArrayLiteral("fd_double_arrow"),
                 QByteArrayLiteral("bottom_left_corner"),
@@ -434,8 +433,9 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("size_fdiag"),
+            QByteArrayLiteral("nwse-resize"),
             {
+                QByteArrayLiteral("size_fdiag"),
                 QByteArrayLiteral("c7088f0f3e6c8088236ef8e1e3e70000"),
                 QByteArrayLiteral("bd_double_arrow"),
                 QByteArrayLiteral("bottom_right_corner"),
@@ -443,58 +443,63 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("whats_this"),
+            QByteArrayLiteral("help"),
             {
+                QByteArrayLiteral("whats_this"),
                 QByteArrayLiteral("d9ce0ab605698f320427677b458ad60b"),
                 QByteArrayLiteral("left_ptr_help"),
-                QByteArrayLiteral("help"),
                 QByteArrayLiteral("question_arrow"),
                 QByteArrayLiteral("dnd-ask"),
                 QByteArrayLiteral("5c6cd98b3f3ebcb1f9c7f1c204630408"),
             },
         },
         {
-            QByteArrayLiteral("split_h"),
+            QByteArrayLiteral("col-resize"),
             {
+                QByteArrayLiteral("split_h"),
                 QByteArrayLiteral("14fef782d02440884392942c11205230"),
                 QByteArrayLiteral("size_hor"),
             },
         },
         {
-            QByteArrayLiteral("split_v"),
+            QByteArrayLiteral("row-resize"),
             {
+                QByteArrayLiteral("split_v"),
                 QByteArrayLiteral("2870a09082c103050810ffdffffe0204"),
                 QByteArrayLiteral("size_ver"),
             },
         },
         {
-            QByteArrayLiteral("forbidden"),
+            QByteArrayLiteral("not-allowed"),
             {
+                QByteArrayLiteral("forbidden"),
                 QByteArrayLiteral("03b6e0fcb3499374a867c041f52298f0"),
                 QByteArrayLiteral("circle"),
                 QByteArrayLiteral("dnd-no-drop"),
-                QByteArrayLiteral("not-allowed"),
             },
         },
         {
-            QByteArrayLiteral("left_ptr_watch"),
+            QByteArrayLiteral("progress"),
             {
+                QByteArrayLiteral("left_ptr_watch"),
                 QByteArrayLiteral("3ecb610c1bf2410f44200f48c40d3599"),
                 QByteArrayLiteral("00000000000000020006000e7e9ffc3f"),
                 QByteArrayLiteral("08e8e1c95fe2fc01f976f1e063a24ccd"),
             },
         },
         {
-            QByteArrayLiteral("openhand"),
+            QByteArrayLiteral("grab"),
             {
+                QByteArrayLiteral("openhand"),
                 QByteArrayLiteral("9141b49c8149039304290b508d208c40"),
                 QByteArrayLiteral("all_scroll"),
                 QByteArrayLiteral("all-scroll"),
             },
         },
         {
-            QByteArrayLiteral("closedhand"),
+            QByteArrayLiteral("grabbing"),
             {
+                QByteArrayLiteral("closedhand"),
                 QByteArrayLiteral("05e88622050804100c20044008402080"),
                 QByteArrayLiteral("4498f0e0c1937ffe01fd06f973665830"),
                 QByteArrayLiteral("9081237383d90e509aa00f00170e968f"),
@@ -502,28 +507,28 @@ QList<QByteArray> Cursor::cursorAlternativeNames(const QByteArray &name)
             },
         },
         {
-            QByteArrayLiteral("dnd-link"),
+            QByteArrayLiteral("alias"),
             {
                 QByteArrayLiteral("link"),
-                QByteArrayLiteral("alias"),
+                QByteArrayLiteral("dnd-link"),
                 QByteArrayLiteral("3085a0e285430894940527032f8b26df"),
                 QByteArrayLiteral("640fb0e74195791501fd1ed57b41487f"),
                 QByteArrayLiteral("a2a266d0498c3104214a47bd64ab0fc8"),
             },
         },
         {
-            QByteArrayLiteral("dnd-copy"),
+            QByteArrayLiteral("copy"),
             {
-                QByteArrayLiteral("copy"),
+                QByteArrayLiteral("dnd-copy"),
                 QByteArrayLiteral("1081e37283d90000800003c07f3ef6bf"),
                 QByteArrayLiteral("6407b0e94181790501fd1e167b474872"),
                 QByteArrayLiteral("b66166c04f8c3109214a4fbd64a50fc8"),
             },
         },
         {
-            QByteArrayLiteral("dnd-move"),
+            QByteArrayLiteral("move"),
             {
-                QByteArrayLiteral("move"),
+                QByteArrayLiteral("dnd-move"),
             },
         },
         {
@@ -627,47 +632,47 @@ QByteArray CursorShape::name() const
 {
     switch (m_shape) {
     case Qt::ArrowCursor:
-        return QByteArrayLiteral("left_ptr");
+        return QByteArrayLiteral("default");
     case Qt::UpArrowCursor:
         return QByteArrayLiteral("up_arrow");
     case Qt::CrossCursor:
-        return QByteArrayLiteral("cross");
+        return QByteArrayLiteral("crosshair");
     case Qt::WaitCursor:
         return QByteArrayLiteral("wait");
     case Qt::IBeamCursor:
-        return QByteArrayLiteral("ibeam");
+        return QByteArrayLiteral("text");
     case Qt::SizeVerCursor:
-        return QByteArrayLiteral("size_ver");
+        return QByteArrayLiteral("ns-resize");
     case Qt::SizeHorCursor:
-        return QByteArrayLiteral("size_hor");
+        return QByteArrayLiteral("ew-resize");
     case Qt::SizeBDiagCursor:
-        return QByteArrayLiteral("size_bdiag");
+        return QByteArrayLiteral("nesw-resize");
     case Qt::SizeFDiagCursor:
-        return QByteArrayLiteral("size_fdiag");
+        return QByteArrayLiteral("nwse-resize");
     case Qt::SizeAllCursor:
-        return QByteArrayLiteral("size_all");
+        return QByteArrayLiteral("all-scroll");
     case Qt::SplitVCursor:
-        return QByteArrayLiteral("split_v");
+        return QByteArrayLiteral("row-resize");
     case Qt::SplitHCursor:
-        return QByteArrayLiteral("split_h");
+        return QByteArrayLiteral("col-resize");
     case Qt::PointingHandCursor:
-        return QByteArrayLiteral("pointing_hand");
+        return QByteArrayLiteral("pointer");
     case Qt::ForbiddenCursor:
-        return QByteArrayLiteral("forbidden");
+        return QByteArrayLiteral("not-allowed");
     case Qt::OpenHandCursor:
-        return QByteArrayLiteral("openhand");
+        return QByteArrayLiteral("grab");
     case Qt::ClosedHandCursor:
-        return QByteArrayLiteral("closedhand");
+        return QByteArrayLiteral("grabbing");
     case Qt::WhatsThisCursor:
-        return QByteArrayLiteral("whats_this");
+        return QByteArrayLiteral("help");
     case Qt::BusyCursor:
-        return QByteArrayLiteral("left_ptr_watch");
+        return QByteArrayLiteral("progress");
     case Qt::DragMoveCursor:
-        return QByteArrayLiteral("dnd-move");
+        return QByteArrayLiteral("move");
     case Qt::DragCopyCursor:
-        return QByteArrayLiteral("dnd-copy");
+        return QByteArrayLiteral("copy");
     case Qt::DragLinkCursor:
-        return QByteArrayLiteral("dnd-link");
+        return QByteArrayLiteral("alias");
     case KWin::ExtendedCursor::SizeNorthEast:
         return QByteArrayLiteral("ne-resize");
     case KWin::ExtendedCursor::SizeNorth:
