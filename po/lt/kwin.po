@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-02 00:39+0000\n"
-"PO-Revision-Date: 2024-01-26 17:32+0200\n"
+"POT-Creation-Date: 2024-02-03 00:39+0000\n"
+"PO-Revision-Date: 2024-02-02 23:40+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -1336,7 +1336,7 @@ msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Wayland lizdo, kurio klausytis, pavadinimas. Jei nenustatyta, bus naudojamas "
-"\"wayland-0\"."
+"„wayland-0“."
 
 #: main_wayland.cpp:296
 #, kde-format
@@ -2226,7 +2226,7 @@ msgstr "Naktinė šviesa įjungta"
 msgid "Toggle Night Light"
 msgstr "Perjungti naktinę šviesą"
 
-#: plugins/nightcolor/nightcolormanager.cpp:466
+#: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Spalvos temperatūros peržiūra"
@@ -4171,7 +4171,7 @@ msgstr "Perjungti į darbalaukį %1"
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
-msgstr "(Neatsako)"
+msgstr "(Nereaguoja)"
 
 #: workspace.cpp:1624
 #, kde-format

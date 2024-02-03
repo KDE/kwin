@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin-gu\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-02 00:39+0000\n"
+"POT-Creation-Date: 2024-02-03 00:39+0000\n"
 "PO-Revision-Date: 2009-01-04 13:06+0530\n"
 "Last-Translator: Kartik Mistry <kartik.mistry@gmail.com>\n"
 "Language-Team: Gujarati <kde-i18n-doc@kde.org>\n"
@@ -2257,7 +2257,7 @@ msgstr ""
 msgid "Toggle Night Light"
 msgstr "ડેસ્કટોપ પર બરફ ચાલુ/બંધ કરો"
 
-#: plugins/nightcolor/nightcolormanager.cpp:466
+#: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""

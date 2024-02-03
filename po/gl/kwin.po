@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-02 00:39+0000\n"
+"POT-Creation-Date: 2024-02-03 00:39+0000\n"
 "PO-Revision-Date: 2024-01-22 18:45+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -2233,7 +2233,7 @@ msgstr "Luz nocturna activada"
 msgid "Toggle Night Light"
 msgstr "Conmutar a luz nocturna"
 
-#: plugins/nightcolor/nightcolormanager.cpp:466
+#: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Vista previa da temperatura da cor"

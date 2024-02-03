@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-02 01:40+0000\n"
-"PO-Revision-Date: 2024-01-25 00:39+0200\n"
+"PO-Revision-Date: 2024-02-02 23:44+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -1165,7 +1165,7 @@ msgid ""
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
 "Čia galite nustatyti ekrano kraštų pritraukimo zoną, t.y. magnetinio lauko, "
-"kuris pritraukia langą prie rėmelio tempiant šalia jo, \"stiprumą\"."
+"kuris pritraukia langą prie rėmelio tempiant šalia jo, „stiprumą“."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
@@ -1190,8 +1190,7 @@ msgid ""
 "moved near another window."
 msgstr ""
 "Čia galima nustatyti langų pritraukimo zoną, t.y. magnetinio lauko, kuris "
-"pritraukia langus vieną prie kito tempiant juos šalia kito lango, \"stiprumą"
-"\"."
+"pritraukia langus vieną prie kito tempiant juos šalia kito lango, „stiprumą“."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1208,7 +1207,7 @@ msgid ""
 "when moved near it."
 msgstr ""
 "Čia galima nustatyti ekrano centro pritraukimo zoną, t.y. magnetinio lauko, "
-"kuris pritraukia langus prie ekrano centro tempiant šalia jo, \"stiprumą\"."
+"kuris pritraukia langus prie ekrano centro tempiant šalia jo, „stiprumą“."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
@@ -1298,7 +1297,7 @@ msgid ""
 msgstr ""
 "<em>Fokusavimas po pele:</em> Fokusavimas visą laiką išlieka ant po pele "
 "esančio lango.<br/><strong>Įspėjimas:</strong> <em>Fokusavimo vogimo "
-"prevencija</em> ir <em>langų perjungiklis (\"Alt+Tab\")</em> prieštarauja "
+"prevencija</em> ir <em>langų perjungiklis („Alt+Tab“)</em> prieštarauja "
 "aktyvavimo politikai ir todėl jie neveiks. Vietoj to, greičiausiai, "
 "norėtumėte naudoti <em>Fokusavimas seka paskui pelę (pelės pirmenybė)</em>!"
 
@@ -1316,8 +1315,8 @@ msgstr ""
 "pele esančiam langui (abejotinais atvejais, nėra fokusuojama), labai panašu "
 "į fokusavimo elgseną netvarkomoje liekamojoje X11 aplinkoje.<br/"
 "><strong>Įspėjimas:</strong> <em>Fokusavimo vogimo prevencija</em> ir "
-"<em>langų perjungiklis (\"Alt+Tab\")</em> prieštarauja aktyvavimo politikai "
-"ir todėl jie neveiks. Vietoj to, greičiausiai, norėtumėte naudoti "
+"<em>langų perjungiklis („Alt+Tab“)</em> prieštarauja aktyvavimo politikai ir "
+"todėl jie neveiks. Vietoj to, greičiausiai, norėtumėte naudoti "
 "<em>Fokusavimas seka paskui pelę (pelės pirmenybė)</em>!"
 
 #~ msgctxt "NAME OF TRANSLATORS"

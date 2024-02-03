@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-02 00:39+0000\n"
+"POT-Creation-Date: 2024-02-03 00:39+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2268,7 +2268,7 @@ msgstr "ਰਾਤ ਦੇ ਰੰਗ ਚਾਲੂ"
 msgid "Toggle Night Light"
 msgstr "ਰਾਤ ਦੇ ਰੰਗ ਨੂੰ ਬਦਲੋ"
 
-#: plugins/nightcolor/nightcolormanager.cpp:466
+#: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "ਰੰਗ ਤਾਪਮਾਨ ਝਲਕ"
