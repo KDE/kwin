@@ -50,6 +50,7 @@ public:
     XdgImporter()
         : QWaylandClientExtensionTemplate(1)
     {
+        initialize();
     }
     ~XdgImporter() override
     {
@@ -223,20 +224,13 @@ int main(int argc, char *argv[])
 
     dialog->show();
 
-    auto setTransientParent = [&xdgImporter, &importedParent, dialog, windowHandle] {
-        if (xdgImporter->isActive()) {
-            if (auto *waylandWindow = dialog->windowHandle()->nativeInterface<QNativeInterface::Private::QWaylandWindow>()) {
-                importedParent.reset(xdgImporter->import(windowHandle));
-                if (auto *surface = waylandWindow->surface()) {
-                    importedParent->set_parent_of(surface);
-                }
+    if (xdgImporter) {
+        if (auto *waylandWindow = dialog->windowHandle()->nativeInterface<QNativeInterface::Private::QWaylandWindow>()) {
+            importedParent.reset(xdgImporter->import(windowHandle));
+            if (auto *surface = waylandWindow->surface()) {
+                importedParent->set_parent_of(surface);
             }
         }
-    };
-
-    if (xdgImporter) {
-        QObject::connect(xdgImporter.get(), &XdgImporter::activeChanged, dialog, setTransientParent);
-        setTransientParent();
     }
 
     dialog->windowHandle()->requestActivate();
