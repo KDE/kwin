@@ -124,29 +124,3 @@ msgstr "Винаги"
 #, kde-format
 msgid "Re-enable OpenGL detection"
 msgstr "Повторно активиране на откриване на OpenGL"
-
-#~ msgid "Latency:"
-#~ msgstr "Забавяне:"
-
-#~ msgid "Force lowest latency (may cause dropped frames)"
-#~ msgstr ""
-#~ "Принудително задаване на най-малко забавяне (може да доведе до отпадане "
-#~ "на кадри)"
-
-#~ msgid "Prefer lower latency"
-#~ msgstr "Предпочитане на малко забавяне"
-
-#~ msgid "Balance of latency and smoothness"
-#~ msgstr "Баланс между забавяне и плавност"
-
-#~ msgid "Prefer smoother animations"
-#~ msgstr "Предпочитане на плавни анимации"
-
-#~ msgid "Force smoothest animations"
-#~ msgstr "Принудително задаване на възможно най-плавни анимации"
-
-#~ msgid ""
-#~ "Reduce latency by allowing screen tearing artifacts in fullscreen windows"
-#~ msgstr ""
-#~ "Намаляване на латентността чрез допускане на артефакти на разкъсване на "
-#~ "екрана в пълноекранни прозорци"
