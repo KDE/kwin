@@ -355,11 +355,6 @@ if (KWIN_BUILD_TABBOX)
     add_subdirectory(tabbox/switchers)
 endif()
 
-if(TARGET PkgConfig::libsystemd)
-    target_sources(kwin PRIVATE watchdog.cpp)
-    target_link_libraries(kwin PRIVATE PkgConfig::libsystemd)
-endif()
-
 qt_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
 qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xml OPTIONS -A)
 

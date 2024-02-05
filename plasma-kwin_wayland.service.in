@@ -3,10 +3,6 @@ Description=KDE Window Manager
 PartOf=graphical-session.target
 
 [Service]
-Type=notify-reload
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland_wrapper --xwayland
 BusName=org.kde.KWinWrapper
 Slice=session.slice
-WatchdogSec=5s
-NotifyAccess=all
-WatchdogSignal=SIGHUP

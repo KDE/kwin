@@ -355,9 +355,6 @@ set_package_properties(QAccessibilityClient6 PROPERTIES
 )
 set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 
-pkg_check_modules(libsystemd IMPORTED_TARGET libsystemd)
-add_feature_info(libsystemd libsystemd_FOUND "Required for setting up the service watchdog")
-
 option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 if(KWIN_BUILD_GLOBALSHORTCUTS)
     find_package(KGlobalAccelD REQUIRED)
