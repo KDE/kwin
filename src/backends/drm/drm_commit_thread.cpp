@@ -17,8 +17,16 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-DrmCommitThread::DrmCommitThread(const QString &name)
+/**
+ * This should always be longer than any real pageflip can take, even with PSR and modesets
+ */
+static constexpr auto s_pageflipTimeout = 5s;
+
+DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
 {
+    if (!gpu->atomicModeSetting()) {
+        return;
+    }
     m_thread.reset(QThread::create([this]() {
         const auto thread = QThread::currentThread();
         gainRealTime();
@@ -27,11 +35,23 @@ DrmCommitThread::DrmCommitThread(const QString &name)
                 return;
             }
             std::unique_lock lock(m_mutex);
-            if (m_commits.empty() || m_committed) {
+            bool timeout = false;
+            if (m_committed) {
+                timeout = m_commitPending.wait_for(lock, s_pageflipTimeout) == std::cv_status::timeout;
+            } else if (m_commits.empty()) {
                 m_commitPending.wait(lock);
             }
             if (m_committed) {
                 // the commit would fail with EBUSY, wait until the pageflip is done
+                if (timeout) {
+                    qCCritical(KWIN_DRM, "Pageflip timed out! This is a kernel bug");
+                    std::unique_ptr<DrmAtomicCommit> committed(static_cast<DrmAtomicCommit *>(m_committed.release()));
+                    const bool cursorOnly = committed->isCursorOnly();
+                    m_droppedCommits.push_back(std::move(committed));
+                    if (!cursorOnly) {
+                        QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
+                    }
+                }
                 continue;
             }
             if (!m_commits.empty()) {
@@ -187,9 +207,11 @@ void DrmCommitThread::optimizeCommits()
 
 DrmCommitThread::~DrmCommitThread()
 {
-    m_thread->requestInterruption();
-    m_commitPending.notify_all();
-    m_thread->wait();
+    if (m_thread) {
+        m_thread->requestInterruption();
+        m_commitPending.notify_all();
+        m_thread->wait();
+    }
 }
 
 void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)

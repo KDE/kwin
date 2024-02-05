@@ -40,7 +40,7 @@ static const QMap<uint32_t, QList<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_
 
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
-    , m_commitThread(std::make_unique<DrmCommitThread>(conn->connectorName()))
+    , m_commitThread(std::make_unique<DrmCommitThread>(conn->gpu(), conn->connectorName()))
 {
     QObject::connect(m_commitThread.get(), &DrmCommitThread::commitFailed, [this]() {
         if (m_output) {

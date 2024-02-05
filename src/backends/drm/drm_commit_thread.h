@@ -28,7 +28,7 @@ class DrmCommitThread : public QObject
 {
     Q_OBJECT
 public:
-    explicit DrmCommitThread(const QString &name);
+    explicit DrmCommitThread(DrmGpu *gpu, const QString &name);
     ~DrmCommitThread();
 
     void addCommit(std::unique_ptr<DrmAtomicCommit> &&commit);
