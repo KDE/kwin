@@ -221,18 +221,12 @@ const EffectWindowGroup *EffectWindow::group() const
 
 void EffectWindow::refWindow()
 {
-    if (d->m_window->isDeleted()) {
-        return d->m_window->ref();
-    }
-    Q_UNREACHABLE(); // TODO
+    d->m_window->ref();
 }
 
 void EffectWindow::unrefWindow()
 {
-    if (d->m_window->isDeleted()) {
-        return d->m_window->unref();
-    }
-    Q_UNREACHABLE(); // TODO
+    d->m_window->unref();
 }
 
 Output *EffectWindow::screen() const
