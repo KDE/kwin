@@ -19,6 +19,7 @@
 #include "drm_plane.h"
 #include "opengl/gltexture.h"
 #include "utils/damagejournal.h"
+#include "utils/filedescriptor.h"
 
 struct gbm_bo;
 
@@ -120,8 +121,8 @@ private:
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, bool forceLinear) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source) const;
-    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer) const;
+    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, const FileDescriptor &readFence) const;
+    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, const FileDescriptor &readFence) const;
     std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source) const;
 
     std::unique_ptr<Surface> m_surface;

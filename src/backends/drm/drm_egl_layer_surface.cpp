@@ -179,12 +179,13 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
     m_surface->gbmSwapchain->release(m_surface->currentSlot);
     m_surface->timeQuery->end();
     glFlush();
-    if (m_eglBackend->contextObject()->isSoftwareRenderer() || m_eglBackend->gpu()->isNVidia()) {
+    EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
+    if (!sourceFence.isValid()) {
         // llvmpipe doesn't do synchronization properly: https://gitlab.freedesktop.org/mesa/mesa/-/issues/9375
         // and NVidia doesn't support implicit sync
         glFinish();
     }
-    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get());
+    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.fileDescriptor());
     m_surface->renderEnd = std::chrono::steady_clock::now();
     if (buffer) {
         m_surface->currentFramebuffer = buffer;
@@ -486,7 +487,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     if (!slot) {
         return nullptr;
     }
-    if (const auto ret = importBuffer(surface, slot.get())) {
+    if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{})) {
         surface->currentSlot = slot;
         surface->currentFramebuffer = ret;
         return ret;
@@ -495,14 +496,14 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, const FileDescriptor &readFence) const
 {
     if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot);
     } else if (surface->importMode == MultiGpuImportMode::Egl) {
-        return importWithEgl(surface, slot->buffer());
+        return importWithEgl(surface, slot->buffer(), readFence);
     } else {
-        const auto ret = m_gpu->importBuffer(slot->buffer());
+        const auto ret = m_gpu->importBuffer(slot->buffer(), readFence.duplicate());
         if (!ret) {
             qCWarning(KWIN_DRM, "Failed to create framebuffer: %s", strerror(errno));
         }
@@ -510,24 +511,23 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, const FileDescriptor &readFence) const
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
-    EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
-
     const auto display = m_eglBackend->displayForGpu(m_gpu);
-    // the NVidia proprietary driver supports neither implicit sync nor EGL_ANDROID_native_fence_sync
-    if (!sourceFence.isValid() || !display->supportsNativeFence()) {
+    // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
+    if (!readFence.isValid() || !display->supportsNativeFence()) {
         glFinish();
     }
+
     if (!surface->importContext->makeCurrent()) {
         return nullptr;
     }
     surface->importTimeQuery->begin();
 
-    if (sourceFence.isValid()) {
-        const auto destinationFence = EGLNativeFence::importFence(surface->importContext->displayObject(), sourceFence.fileDescriptor().duplicate());
+    if (readFence.isValid()) {
+        const auto destinationFence = EGLNativeFence::importFence(surface->importContext->displayObject(), readFence.duplicate());
         destinationFence.waitSync();
     }
 
@@ -563,8 +563,8 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 
     surface->importContext->shaderManager()->popShader();
     glFlush();
-    if (m_gpu->isNVidia()) {
-        // the proprietary NVidia driver desn't support implicit sync
+    EGLNativeFence endFence(display);
+    if (!endFence.isValid()) {
         glFinish();
     }
     surface->importGbmSwapchain->release(slot);
@@ -572,7 +572,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 
     // restore the old context
     m_eglBackend->makeCurrent();
-    return m_gpu->importBuffer(slot->buffer());
+    return m_gpu->importBuffer(slot->buffer(), endFence.fileDescriptor().duplicate());
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surface, EglSwapchainSlot *source) const
@@ -601,7 +601,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surfa
     }
     GLFramebuffer::popFramebuffer();
 
-    const auto ret = m_gpu->importBuffer(slot->buffer());
+    const auto ret = m_gpu->importBuffer(slot->buffer(), FileDescriptor{});
     if (!ret) {
         qCWarning(KWIN_DRM, "Failed to create a framebuffer: %s", strerror(errno));
     }

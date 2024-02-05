@@ -836,7 +836,7 @@ GraphicsBufferAllocator *DrmGpu::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)
+std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, FileDescriptor &&readFence)
 {
     const DmaBufAttributes *attributes = buffer->dmabufAttributes();
     if (Q_UNLIKELY(!attributes)) {
@@ -911,7 +911,7 @@ std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer)
         return nullptr;
     }
 
-    return std::make_shared<DrmFramebuffer>(this, framebufferId, buffer);
+    return std::make_shared<DrmFramebuffer>(this, framebufferId, buffer, std::move(readFence));
 }
 
 DrmLease::DrmLease(DrmGpu *gpu, FileDescriptor &&fd, uint32_t lesseeId, const QList<DrmOutput *> &outputs)
