@@ -139,7 +139,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!formats[dmabufAttributes->format].contains(dmabufAttributes->modifier)) {
         return false;
     }
-    m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer);
+    m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
         m_dmabufFeedback.scanoutSuccessful(surface);
         m_currentDamage = surfaceItem->mapFromBuffer(surfaceItem->damage());

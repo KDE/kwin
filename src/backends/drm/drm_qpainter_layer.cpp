@@ -49,7 +49,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
-    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
+    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
     m_damageJournal.add(damagedRegion);
     m_swapchain->release(m_currentBuffer);
     if (!m_currentFramebuffer) {
@@ -64,7 +64,7 @@ bool DrmQPainterLayer::checkTestBuffer()
         m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
         m_currentBuffer = m_swapchain->acquire();
         if (m_currentBuffer) {
-            m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
+            m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
             m_swapchain->release(m_currentBuffer);
             if (!m_currentFramebuffer) {
                 qCWarning(KWIN_DRM, "Failed to create dumb framebuffer: %s", strerror(errno));
@@ -125,7 +125,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
 bool DrmCursorQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
-    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer());
+    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
     m_swapchain->release(m_currentBuffer);
     if (!m_currentFramebuffer) {
         qCWarning(KWIN_DRM, "Failed to create dumb framebuffer for the cursor: %s", strerror(errno));

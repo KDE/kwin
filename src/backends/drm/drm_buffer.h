@@ -23,7 +23,7 @@ class DrmFramebuffer;
 class DrmFramebuffer
 {
 public:
-    DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer);
+    DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer, FileDescriptor &&readFence);
     ~DrmFramebuffer();
 
     uint32_t framebufferId() const;

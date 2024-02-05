@@ -38,7 +38,7 @@ namespace KWin
 static bool s_envIsSet = false;
 static bool s_disableBufferWait = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_BUFFER_READABILITY_CHECKS", &s_envIsSet) && s_envIsSet;
 
-DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer)
+DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffer, FileDescriptor &&readFence)
     : m_framebufferId(fbId)
     , m_gpu(gpu)
     , m_bufferRef(buffer)
@@ -48,13 +48,16 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
         // See https://gitlab.freedesktop.org/drm/intel/-/issues/9415
         m_readable = true;
     }
+    m_syncFd = std::move(readFence);
 #ifdef DMA_BUF_IOCTL_EXPORT_SYNC_FILE
-    dma_buf_export_sync_file req{
-        .flags = DMA_BUF_SYNC_READ,
-        .fd = -1,
-    };
-    if (drmIoctl(buffer->dmabufAttributes()->fd[0].get(), DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &req) == 0) {
-        m_syncFd = FileDescriptor{req.fd};
+    if (!m_syncFd.isValid()) {
+        dma_buf_export_sync_file req{
+            .flags = DMA_BUF_SYNC_READ,
+            .fd = -1,
+        };
+        if (drmIoctl(buffer->dmabufAttributes()->fd[0].get(), DMA_BUF_IOCTL_EXPORT_SYNC_FILE, &req) == 0) {
+            m_syncFd = FileDescriptor{req.fd};
+        }
     }
 #endif
 }

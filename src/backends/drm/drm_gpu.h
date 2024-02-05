@@ -106,7 +106,7 @@ public:
     bool maybeModeset();
 
     GraphicsBufferAllocator *graphicsBufferAllocator() const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer);
+    std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
     void releaseBuffers();
     void recreateSurfaces();
 
