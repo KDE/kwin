@@ -74,7 +74,6 @@ void KFocusConfig::initialize(KWinOptionsSettings *settings)
 void KFocusConfig::updateMultiScreen()
 {
     m_ui->multiscreenBehaviorLabel->setVisible(QApplication::screens().count() > 1);
-    m_ui->kcfg_ActiveMouseScreen->setVisible(QApplication::screens().count() > 1);
     m_ui->kcfg_SeparateScreenFocus->setVisible(QApplication::screens().count() > 1);
 }
 
