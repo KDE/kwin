@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 02:24+0000\n"
-"PO-Revision-Date: 2023-06-03 14:21+0100\n"
+"PO-Revision-Date: 2024-01-20 15:45+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -584,7 +584,7 @@ msgstr "Bloko-komponado"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Tavolo"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -757,38 +757,37 @@ msgstr "Ekstrema"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Sub"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Super"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Pozicio"
+msgstr "Sciigo"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Ŝprucfenestro"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Gravega Sciigo"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Surmeto"
 
 #: rulesmodel.cpp:951
 #, kde-format
@@ -986,6 +985,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Set window type"
-#~ msgstr "Meti fenestrotipon"
