@@ -3,6 +3,10 @@
 
 Version=6
 
+# Reset ActiveMouseScreen config option.
+Id=kwin-6.0-reset-active-mouse-screen
+Script=kwin-6.0-reset-active-mouse-screen
+
 # Delete old desktop switching shortcuts.
 Id=kwin-6.0-delete-desktop-switching-shortcuts
 Script=kwin-6.0-delete-desktop-switching-shortcuts
