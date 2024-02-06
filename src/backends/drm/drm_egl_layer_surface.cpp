@@ -440,15 +440,14 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     ret->context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
-    ret->forceLinear = importMode == MultiGpuImportMode::DumbBuffer || importMode == MultiGpuImportMode::LinearDmabuf || bufferTarget != BufferTarget::Normal;
-    ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, renderModifiers, ret->forceLinear);
+    ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, renderModifiers, importMode, bufferTarget);
     if (!ret->gbmSwapchain) {
         return nullptr;
     }
     if (cpuCopy) {
         ret->importDumbSwapchain = std::make_unique<QPainterSwapchain>(m_gpu->graphicsBufferAllocator(), size, format);
     } else if (importMode == MultiGpuImportMode::Egl) {
-        ret->importGbmSwapchain = createGbmSwapchain(m_gpu, ret->importContext.get(), size, format, modifiers, false);
+        ret->importGbmSwapchain = createGbmSwapchain(m_gpu, ret->importContext.get(), size, format, modifiers, MultiGpuImportMode::None, BufferTarget::Normal);
         if (!ret->importGbmSwapchain) {
             return nullptr;
         }
@@ -461,16 +460,17 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     return ret;
 }
 
-std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, bool preferLinear) const
+std::shared_ptr<EglSwapchain> EglGbmLayerSurface::createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const
 {
     static bool modifiersEnvSet = false;
     static const bool modifiersEnv = qEnvironmentVariableIntValue("KWIN_DRM_USE_MODIFIERS", &modifiersEnvSet) != 0;
-    bool allowModifiers = gpu->addFB2ModifiersSupported() && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv)) && modifiers != implicitModifier;
+    bool allowModifiers = (m_gpu->addFB2ModifiersSupported() || importMode == MultiGpuImportMode::Egl || importMode == MultiGpuImportMode::DumbBuffer) && (!modifiersEnvSet || (modifiersEnvSet && modifiersEnv)) && modifiers != implicitModifier;
 #if !HAVE_GBM_BO_GET_FD_FOR_PLANE
     allowModifiers &= m_gpu == gpu;
 #endif
     const bool linearSupported = modifiers.contains(DRM_FORMAT_MOD_LINEAR);
-    const bool forceLinear = m_gpu != gpu && !allowModifiers;
+    const bool preferLinear = importMode == MultiGpuImportMode::DumbBuffer || bufferTarget == BufferTarget::Linear;
+    const bool forceLinear = importMode == MultiGpuImportMode::LinearDmabuf || (importMode != MultiGpuImportMode::None && importMode != MultiGpuImportMode::DumbBuffer && !allowModifiers);
     if (forceLinear && !linearSupported) {
         return nullptr;
     }
