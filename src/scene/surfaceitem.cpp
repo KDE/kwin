@@ -104,13 +104,12 @@ static QRegion expandRegion(const QRegion &region, const QMargins &padding)
 void SurfaceItem::addDamage(const QRegion &region)
 {
     if (m_lastDamage) {
-        const auto diff = std::max(std::chrono::steady_clock::now() - *m_lastDamage, 10'000ns);
+        const auto diff = std::chrono::steady_clock::now() - *m_lastDamage;
         m_lastDamageTimeDiffs.push_back(diff);
         if (m_lastDamageTimeDiffs.size() > 100) {
             m_lastDamageTimeDiffs.pop_front();
         }
-        const auto average = std::accumulate(m_lastDamageTimeDiffs.begin(), m_lastDamageTimeDiffs.end(), 0ns) / m_lastDamageTimeDiffs.size();
-        m_refreshRate = 1'000'000'000ns / average;
+        m_frameTimeEstimation = std::accumulate(m_lastDamageTimeDiffs.begin(), m_lastDamageTimeDiffs.end(), 0ns) / m_lastDamageTimeDiffs.size();
     }
     m_lastDamage = std::chrono::steady_clock::now();
     m_damage += region;
@@ -261,14 +260,13 @@ void SurfaceItem::freeze()
 {
 }
 
-double SurfaceItem::refreshRateEstimation() const
+std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
 {
     if (m_lastDamage) {
         const auto diff = std::chrono::steady_clock::now() - *m_lastDamage;
-        const double refreshRate = std::chrono::nanoseconds(1'000'000'000) / diff;
-        return std::min(m_refreshRate, refreshRate);
+        return std::max(m_frameTimeEstimation, diff);
     } else {
-        return m_refreshRate;
+        return m_frameTimeEstimation;
     }
 }
 
