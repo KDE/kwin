@@ -113,7 +113,7 @@ void ScreenCastStream::newStreamParams()
     qCDebug(KWIN_SCREENCAST) << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
     uint8_t paramsBuffer[1024];
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
-    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) | (1 << SPA_DATA_MemFd) : (1 << SPA_DATA_MemFd);
+    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
     const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
@@ -171,38 +171,41 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
         // Remove duplicates
         std::sort(receivedModifiers.begin(), receivedModifiers.end());
         receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
-    }
-    if (modifierProperty && (!m_dmabufParams || !receivedModifiers.contains(m_dmabufParams->modifier))) {
-        if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
-            // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
-            // item on the list
-            if (receivedModifiers.count() > 1) {
-                receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
-            }
-            m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
-        } else {
-            m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
-        }
 
-        // In case we fail to use any modifier from the list of offered ones, remove these
-        // from our all future offerings, otherwise there will be no indication that it cannot
-        // be used and clients can go for it over and over
-        if (!m_dmabufParams.has_value()) {
-            for (uint64_t modifier : receivedModifiers) {
-                m_modifiers.removeAll(modifier);
+        if (!m_dmabufParams || !receivedModifiers.contains(m_dmabufParams->modifier)) {
+            if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
+                // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
+                // item on the list
+                if (receivedModifiers.count() > 1) {
+                    receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
+                }
+                m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
+            } else {
+                m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
             }
-        // Also in case DRM_FORMAT_MOD_INVALID was used and didn't fail, we still need to
-        // set it as our modifier, otherwise it would be set to default value (0) which is
-        // also a valid modifier, but not the one we want to actually use
-        } else if (receivedModifiers.count() == 1 && receivedModifiers.constFirst() == DRM_FORMAT_MOD_INVALID) {
-            m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
-        }
 
-        qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
-        char buffer[2048];
-        auto params = buildFormats(m_dmabufParams.has_value(), buffer);
-        pw_stream_update_params(m_pwStream, params.data(), params.count());
-        return;
+            // In case we fail to use any modifier from the list of offered ones, remove these
+            // from our all future offerings, otherwise there will be no indication that it cannot
+            // be used and clients can go for it over and over
+            if (!m_dmabufParams.has_value()) {
+                for (uint64_t modifier : receivedModifiers) {
+                    m_modifiers.removeAll(modifier);
+                }
+            // Also in case DRM_FORMAT_MOD_INVALID was used and didn't fail, we still need to
+            // set it as our modifier, otherwise it would be set to default value (0) which is
+            // also a valid modifier, but not the one we want to actually use
+            } else if (receivedModifiers.count() == 1 && receivedModifiers.constFirst() == DRM_FORMAT_MOD_INVALID) {
+                m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
+            }
+
+            qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
+            char buffer[2048];
+            auto params = buildFormats(m_dmabufParams.has_value(), buffer);
+            pw_stream_update_params(m_pwStream, params.data(), params.count());
+            return;
+        }
+    } else {
+      m_dmabufParams.reset();
     }
 
     qCDebug(KWIN_SCREENCAST) << "Stream format found, defining buffers";
