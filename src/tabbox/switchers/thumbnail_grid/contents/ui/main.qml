@@ -201,6 +201,14 @@ KWin.TabBoxSwitcher {
                     onCurrentIndexChanged: tabBox.currentIndex = thumbnailGridView.currentIndex;
                 } // GridView
 
+                Kirigami.PlaceholderMessage {
+                    anchors.centerIn: parent
+                    width: parent.width - Kirigami.Units.largeSpacing * 2
+                    icon.source: "edit-none"
+                    text: i18ndc("kwin", "@info:placeholder no entries in the task switcher", "No open windows")
+                    visible: thumbnailGridView.count === 0
+                }
+
                 Keys.onPressed: {
                     if (event.key == Qt.Key_Left) {
                         thumbnailGridView.moveCurrentIndexLeft();
