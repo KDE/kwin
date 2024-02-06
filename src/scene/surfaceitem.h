@@ -58,7 +58,7 @@ public:
 
     virtual void freeze();
 
-    double refreshRateEstimation() const;
+    std::chrono::nanoseconds frameTimeEstimation() const;
 
 Q_SIGNALS:
     void damaged();
@@ -81,7 +81,7 @@ protected:
     int m_referencePixmapCounter = 0;
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
-    double m_refreshRate = 0;
+    std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
 };
 
 class KWIN_EXPORT SurfaceTexture
