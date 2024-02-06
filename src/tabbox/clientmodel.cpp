@@ -223,7 +223,8 @@ void ClientModel::createClientList(bool partialReset)
         });
     }
 
-    if (tabBox->config().clientApplicationsMode() != TabBoxConfig::AllWindowsCurrentApplication
+    if (!m_mutableClientList.isEmpty()
+        && tabBox->config().clientApplicationsMode() != TabBoxConfig::AllWindowsCurrentApplication
         && tabBox->config().showDesktopMode() == TabBoxConfig::ShowDesktopClient) {
         Window *desktopClient = tabBox->desktopClient();
         if (desktopClient) {
