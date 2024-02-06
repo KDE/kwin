@@ -318,7 +318,7 @@ QString EffectWindow::windowClass() const
 
 QRectF EffectWindow::contentsRect() const
 {
-    return QRectF(d->m_window->clientPos(), d->m_window->clientSize());
+    return d->m_window->clientGeometry().translated(-d->m_window->bufferGeometry().topLeft());
 }
 
 NET::WindowType EffectWindow::windowType() const
