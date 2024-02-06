@@ -2832,8 +2832,9 @@ QSizeF X11Window::frameSizeToClientSize(const QSizeF &size) const
     qreal height = size.height();
 
     if (isDecorated()) {
-        width -= borderLeft() + borderRight();
-        height -= borderTop() + borderBottom();
+        // this isn't really correct, the border size isn't (necessarily) in X coordinates
+        width = Xcb::fromXNative(Xcb::toXNative(width) - (Xcb::toXNative(borderLeft()) + Xcb::toXNative(borderRight())));
+        height = Xcb::fromXNative(Xcb::toXNative(height) - (Xcb::toXNative(borderTop()) + Xcb::toXNative(borderBottom())));
     } else {
         width += m_clientFrameExtents.left() + m_clientFrameExtents.right();
         height += m_clientFrameExtents.top() + m_clientFrameExtents.bottom();
@@ -2848,8 +2849,9 @@ QSizeF X11Window::clientSizeToFrameSize(const QSizeF &size) const
     qreal height = size.height();
 
     if (isDecorated()) {
-        width += borderLeft() + borderRight();
-        height += borderTop() + borderBottom();
+        // this isn't really correct, the border size isn't (necessarily) in X coordinates
+        width = Xcb::fromXNative(Xcb::toXNative(width) + Xcb::toXNative(borderLeft()) + Xcb::toXNative(borderRight()));
+        height = Xcb::fromXNative(Xcb::toXNative(height) + Xcb::toXNative(borderTop()) + Xcb::toXNative(borderBottom()));
     } else {
         width -= m_clientFrameExtents.left() + m_clientFrameExtents.right();
         height -= m_clientFrameExtents.top() + m_clientFrameExtents.bottom();
