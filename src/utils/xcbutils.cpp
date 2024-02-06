@@ -629,6 +629,11 @@ QRect toXNative(const QRectF &r)
     return QRect(toXNative(r.x()), toXNative(r.y()), toXNative(r.width()), toXNative(r.height()));
 }
 
+QSize toXNative(const QSizeF &value)
+{
+    return QSize(toXNative(value.width()), toXNative(value.height()));
+}
+
 qreal fromXNative(int value)
 {
     return value / kwinApp()->xwaylandScale();

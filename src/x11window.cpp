@@ -3648,8 +3648,8 @@ void X11Window::checkActiveModal()
 
 QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
 {
-    qreal w = size.width();
-    qreal h = size.height();
+    int w = Xcb::toXNative(size.width());
+    int h = Xcb::toXNative(size.height());
 
     if (w < 1) {
         w = 1;
@@ -3660,11 +3660,13 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
 
     // basesize, minsize, maxsize, paspect and resizeinc have all values defined,
     // even if they're not set in flags - see getWmNormalHints()
-    QSizeF min_size = minSize();
-    QSizeF max_size = maxSize();
+    QSize min_size = Xcb::toXNative(minSize());
+    QSize max_size = QSize(maxSize().width() == INT_MAX ? INT_MAX : Xcb::toXNative(maxSize().width()),
+                           maxSize().height() == INT_MAX ? INT_MAX : Xcb::toXNative(maxSize().height()));
     if (isDecorated()) {
-        QSizeF decominsize(0, 0);
-        QSizeF border_size(borderLeft() + borderRight(), borderTop() + borderBottom());
+        QSize decominsize(0, 0);
+        QSize border_size(Xcb::toXNative(borderLeft()) + Xcb::toXNative(borderRight()),
+                          Xcb::toXNative(borderTop()) + Xcb::toXNative(borderBottom()));
         if (border_size.width() > decominsize.width()) { // just in case
             decominsize.setWidth(border_size.width());
         }
@@ -3685,16 +3687,16 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
 
     if (!rules()->checkStrictGeometry(!isFullScreen())) {
         // Disobey increments and aspect by explicit rule.
-        return QSizeF(w, h);
+        return Xcb::fromXNative(QSize(w, h));
     }
 
-    qreal width_inc = m_geometryHints.resizeIncrements().width();
-    qreal height_inc = m_geometryHints.resizeIncrements().height();
-    qreal basew_inc = m_geometryHints.baseSize().width();
-    qreal baseh_inc = m_geometryHints.baseSize().height();
+    int width_inc = Xcb::toXNative(m_geometryHints.resizeIncrements().width());
+    int height_inc = Xcb::toXNative(m_geometryHints.resizeIncrements().height());
+    int basew_inc = Xcb::toXNative(m_geometryHints.baseSize().width());
+    int baseh_inc = Xcb::toXNative(m_geometryHints.baseSize().height());
     if (!m_geometryHints.hasBaseSize()) {
-        basew_inc = m_geometryHints.minSize().width();
-        baseh_inc = m_geometryHints.minSize().height();
+        basew_inc = Xcb::toXNative(m_geometryHints.minSize().width());
+        baseh_inc = Xcb::toXNative(m_geometryHints.minSize().height());
     }
 
     w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
@@ -3723,13 +3725,13 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         // According to ICCCM 4.1.2.3 PMinSize should be a fallback for PBaseSize for size increments,
         // but not for aspect ratio. Since this code comes from FVWM, handles both at the same time,
         // and I have no idea how it works, let's hope nobody relies on that.
-        const QSizeF baseSize = m_geometryHints.baseSize();
+        const QSize baseSize = Xcb::toXNative(m_geometryHints.baseSize());
         w -= baseSize.width();
         h -= baseSize.height();
-        qreal max_width = max_size.width() - baseSize.width();
-        qreal min_width = min_size.width() - baseSize.width();
-        qreal max_height = max_size.height() - baseSize.height();
-        qreal min_height = min_size.height() - baseSize.height();
+        int max_width = max_size.width() - baseSize.width();
+        int min_width = min_size.width() - baseSize.width();
+        int max_height = max_size.height() - baseSize.height();
+        int min_height = min_size.height() - baseSize.height();
 #define ASPECT_CHECK_GROW_W                                                           \
     if (min_aspect_w * h > min_aspect_h * w) {                                        \
         int delta = int(min_aspect_w * h / min_aspect_h - w) / width_inc * width_inc; \
@@ -3808,7 +3810,7 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         h += baseSize.height();
     }
 
-    return QSizeF(w, h);
+    return Xcb::fromXNative(QSize(w, h));
 }
 
 void X11Window::getResourceClass()

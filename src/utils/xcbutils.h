@@ -36,6 +36,7 @@ typedef xcb_window_t WindowId;
 
 uint32_t KWIN_EXPORT toXNative(qreal value);
 QRect KWIN_EXPORT toXNative(const QRectF &value);
+QSize KWIN_EXPORT toXNative(const QSizeF &value);
 qreal KWIN_EXPORT fromXNative(int value);
 QRectF KWIN_EXPORT fromXNative(const QRect &value);
 QSizeF KWIN_EXPORT fromXNative(const QSize &value);
