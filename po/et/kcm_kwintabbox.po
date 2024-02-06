@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2019-10-30 14:30+0200\n"
 "Last-Translator: Marek Laane <qiilaq69@gmail.com>\n"
 "Language-Team: Estonian <kde-et@lists.linux.ee>\n"
@@ -58,8 +58,9 @@ msgstr "Sisu"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" icon"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Kaasa arvatud \"Näita töölauda\" ikoon"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

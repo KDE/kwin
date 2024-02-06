@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-02-09 22:30+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -60,8 +60,9 @@ msgstr "Enhavo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" icon"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Enmeti piktogramon \"Montri labortablon\"."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

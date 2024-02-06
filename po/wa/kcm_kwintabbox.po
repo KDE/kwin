@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2010-10-22 18:28+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@gmail.com>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -63,7 +63,7 @@ msgstr ""
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include desktop"
-msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Mete sicribanne didins"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

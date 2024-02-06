@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2022-10-18 00:03+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -914,26 +914,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Birdən çox ekranla davranış:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Bu seçim aktiv edildikdə, aktiv ekran (məsələn yeni pəncərələrin göründüyü "
-"yer) siçan kursorundan ibarət ekrandır. Söndürüldükdə isə aktiv kranın "
-"fokuslanmış pəncərələrindən ibarət ekrandır."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Aktiv ekran &kursoru izləyir"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -943,13 +925,13 @@ msgstr ""
 "məhdudlaşır"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "Ekran üçün ayrıca foku&s"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Pəncərənin aktivləşdirilməsi qaydalarının təfərrüatları"
@@ -1259,7 +1241,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Yalnız üst-üstə gəldikdə yapışdırmaq"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1269,7 +1251,7 @@ msgstr ""
 "aktivləşir. Siz ola bilsin ki, bununla başqa əməliyyat sistemlərindən "
 "tanışsını."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1284,7 +1266,7 @@ msgstr ""
 "olsa da <em>Fokus üçün klik</em> rejiminə alternativ variant kimi qəbul "
 "olunur."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1297,7 +1279,7 @@ msgstr ""
 "ki, <em>Fokusun dəyişməsin qarşısının alınması</em> adi qaydada işləyir. Bu "
 "variant <em>Fokus üçün klik</em>oxşayır, ancaq xüsusi klik tələb olunmur."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1310,7 +1292,7 @@ msgstr ""
 "altındakı pəncərəyə verilir. Üstündə saxlayarkən fokuslamaq üçün bu rejimi "
 "seçin."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1325,7 +1307,7 @@ msgstr ""
 "işlıməz.Bunun əvəzinə siz <em>Fokus siçanı izləyir</em>variantını işlətmək "
 "istəyə bilərsiniz."
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1341,6 +1323,18 @@ msgstr ""
 "qarşısının alınması</em>və <em>başlıq qutusu ('Alt+Tab')</em> davranışına "
 "ziddir və işləməz. Bunun əvəzinə siz <em>Fokus siçanı izləyir (siçanın "
 "üstünlüyü)</em>variantını işlətmək istəyə bilərsiniz."
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Bu seçim aktiv edildikdə, aktiv ekran (məsələn yeni pəncərələrin "
+#~ "göründüyü yer) siçan kursorundan ibarət ekrandır. Söndürüldükdə isə aktiv "
+#~ "kranın fokuslanmış pəncərələrindən ibarət ekrandır."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Aktiv ekran &kursoru izləyir"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

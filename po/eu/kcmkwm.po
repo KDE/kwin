@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2022-12-03 15:48+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -890,26 +890,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Pantaila-aniztun jokabidea:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Aukera hau gaituta dagoenean, pantaila aktiboa (Leiho berriak agertzen diren "
-"pantaila, adibidez) saguaren erakuslea duen pantaila da. Ezgaituta "
-"dagoenean, pantaila aktiboa arreta duen leihoa duena da."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Pantaila aktiboak &sagua jarraitzen du"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -919,13 +901,13 @@ msgstr ""
 "dira"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Bereizi pantailen fokua"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Leihoak aktibatzeko gidalerroen azalpena"
@@ -1231,7 +1213,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Soilik gainezartzen direnean"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1241,7 +1223,7 @@ msgstr ""
 "zaionean. Jokabide hau arrunta da beste sistema eragile batzuetan eta segur "
 "aski zuk nahi duzuna da."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1256,7 +1238,7 @@ msgstr ""
 "hobetsia. Ezohikoa, baino <em>Klik egin fokuratzeko</em>ren aldaera posible "
 "bat da."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1269,7 +1251,7 @@ msgstr ""
 "fokua bereganatuko. <em>Foku-lapurtze prebentzioa</em> ohi bezala arituko "
 "da. <em>Klik egin fokuratzeko</em> bezalakoa, baino klik egin beharrik gabe."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1284,7 +1266,7 @@ msgstr ""
 
 # xalba 2018-07-01: berrikusteko
 # «tabbox» terminoa ez det itzuli, gainontzeko hizkuntzetan ez dute oraindik itzuli eta testuingurua behar det.
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1301,7 +1283,7 @@ msgstr ""
 
 # xalba 2018-07-01: berrikusteko
 # - in doubt nowhere -: beste hizkuntzetan ez da mezu hau itzuli oraindik. Neure interpretazioa zuzena dela egiaztatu.
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1317,6 +1299,18 @@ msgstr ""
 "prebentzioa</em> eta <em>fitxa-kutxa ('Alt+Tab')</em> gidalerroarekin "
 "kontraesankorrak dira eta ez dira ibiliko. Ziur aski, <em>Fokuak saguari "
 "jarraitzen dio (Saguak lehentasuna)</em> erabili nahiko duzu honen ordez!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Aukera hau gaituta dagoenean, pantaila aktiboa (Leiho berriak agertzen "
+#~ "diren pantaila, adibidez) saguaren erakuslea duen pantaila da. Ezgaituta "
+#~ "dagoenean, pantaila aktiboa arreta duen leihoa duena da."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Pantaila aktiboak &sagua jarraitzen du"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

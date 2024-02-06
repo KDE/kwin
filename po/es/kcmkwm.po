@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2022-12-03 12:06+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -905,27 +905,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Comportamiento multipantalla:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Si esta opción está habilitada, la pantalla activa (en la que aparecerán las "
-"nuevas ventanas, por ejemplo) es la pantalla con el puntero del ratón. Si "
-"está deshabilitada, la pantalla activa es la pantalla en la que esté la "
-"ventana que tenga el foco."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "La ve&ntana activa sigue al ratón"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -935,13 +916,13 @@ msgstr ""
 "solamente a la pantalla activa"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "Foco ind&ependiente en cada pantalla"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Descripción de la política de activación de ventanas"
@@ -1252,7 +1233,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Solo cuando se solapen"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1262,7 +1243,7 @@ msgstr ""
 "clic sobre ellas. Este comportamiento es común a otros sistemas operativos y "
 "seguramente es el que desea."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1277,7 +1258,7 @@ msgstr ""
 "la ventana que queda bajo el puntero del ratón es la candidata preferente. "
 "Es una variante inusual, pero posible de <em>Pulsar para enfocar</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1291,7 +1272,7 @@ msgstr ""
 "em> tiene lugar como siempre. Considérelo como <em>Pulsar para enfocar</em>, "
 "pero si tener que hacer clic."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1305,7 +1286,7 @@ msgstr ""
 "ventana que queda bajo el puntero del ratón es la candidata preferente. "
 "Elija esta opción si quiere controlar el foco por donde pase el ratón."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1321,7 +1302,7 @@ msgstr ""
 "probable que prefiera usar <em>El foco sigue al ratón (el ratón tiene "
 "prioridad</em> en su lugar."
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1338,6 +1319,19 @@ msgstr ""
 "robo del foco</em> y la <em>acción de alternar entre ventanas («Alt+Tab»)</"
 "em> contradicen esta política y no funcionarán. Es muy probable que prefiera "
 "usar <em>El foco sigue al ratón (el ratón tiene prioridad)</em> en su lugar."
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Si esta opción está habilitada, la pantalla activa (en la que aparecerán "
+#~ "las nuevas ventanas, por ejemplo) es la pantalla con el puntero del "
+#~ "ratón. Si está deshabilitada, la pantalla activa es la pantalla en la que "
+#~ "esté la ventana que tenga el foco."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "La ve&ntana activa sigue al ratón"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

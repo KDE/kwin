@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-06-29 12:52+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -889,27 +889,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Comportamente de schermo multiple:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Quando iste option es habilitate, le schermo active (ubi nove fenestras "
-"appare, pro exemplo) es le schermo continente le punctator de mus. Quando il "
-"es dishabilitate, le schermo active es le  schermo continente le fenestra "
-"focalisate."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Schermo active seque &mus"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -919,13 +900,13 @@ msgstr ""
 "le schermo active"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Separar foco de schermo"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Description del politica de activation de fenestra"
@@ -1234,7 +1215,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Solmente quando on es superponente"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1244,7 +1225,7 @@ msgstr ""
 "ille. Iste comportamento es commun con altere systemas operative (systemas "
 "operational) e probabilemente illo es lo que tu vole."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1260,7 +1241,7 @@ msgstr ""
 "canditato preferite. Variante inusual, ma possibile de <em>Pulsa pro "
 "focalisar </em>"
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1275,7 +1256,7 @@ msgstr ""
 "Pensa como <em>Pulsa pro focalisar</em> solmente sin haber lo pulsate in "
 "realitate."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1289,7 +1270,7 @@ msgstr ""
 "preferite. Selige isto, si tu vole un foco controllate per le flottar supra "
 "del mus."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1304,7 +1285,7 @@ msgstr ""
 "em> contradice le politica e non functionara.Probabilemente tu volerea usar "
 "in su loco<em>Foco seque mus - Precedentia de mus</em>!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1321,6 +1302,19 @@ msgstr ""
 "de foco</em> e le <em>tabbox (\"Alt+Tab\")</em>contradice le politica e non "
 "functionara.Probabilmente tu volerea usar in su loco <em>Foco seque mus - "
 "Precedentia de mus</em>!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Quando iste option es habilitate, le schermo active (ubi nove fenestras "
+#~ "appare, pro exemplo) es le schermo continente le punctator de mus. Quando "
+#~ "il es dishabilitate, le schermo active es le  schermo continente le "
+#~ "fenestra focalisate."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Schermo active seque &mus"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

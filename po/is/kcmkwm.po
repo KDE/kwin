@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-09-12 12:29+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -889,26 +889,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Hegðun í fjölskjáauppsetningu:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Þegar þessi valkostur er virkur er virki skjárinn (þar sem nýir gluggar "
-"birtast) sá skjár sem inniheldur músarbendilinn. Þegar þetta er óvirkt er "
-"virki skjárinn skjárinn sem inniheldur gluggann sem er með fókus."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Virkur skjár fylgir &mús"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -917,13 +899,13 @@ msgstr ""
 "Þegar þetta er valið takmarkast fókusaðgerðir einungis við virka skjáinn"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "Aðs&kilja skjáfókus"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Lýsing á gluggavirkjunarreglu"
@@ -1232,7 +1214,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Aðeins þegar skarast"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1241,7 +1223,7 @@ msgstr ""
 "<em>Smella til að fá fókus:</em> Gluggi verður virkur þegar þú smellir á "
 "hann. Þessi hegðun er algeng í stýrikerfum og líklega það sem þú vilt."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1256,7 +1238,7 @@ msgstr ""
 "músarbendlinum. Óvenjulegt en mögulegt tilbrigði við <em>Smella til að fá "
 "fókus</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1270,7 +1252,7 @@ msgstr ""
 "líta á þetta sem <em>Smella til að fá fókus</em> nema án þess að þurfa að "
 "smella."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1283,7 +1265,7 @@ msgstr ""
 "undir músinni valinn. Veldu þetta ef þú vilt stjórna fókusnum með því að "
 "sveima með músinni."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1297,7 +1279,7 @@ msgstr ""
 "+Tab</em> stangast á við þessa virknireglu og eru því óvirk. Þú vilt mjög "
 "líklega nota <em>Fókus fylgir mús (mús í forgangi)</em> í staðinn!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1313,6 +1295,18 @@ msgstr ""
 "fókusstuldi</em> og <em>Alt+Tab</em> stangast á við þessa virknireglu og eru "
 "því óvirk. Þú vilt mjög líklega nota <em>Fókus fylgir mús (mús í forgangi)</"
 "em> í staðinn!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Þegar þessi valkostur er virkur er virki skjárinn (þar sem nýir gluggar "
+#~ "birtast) sá skjár sem inniheldur músarbendilinn. Þegar þetta er óvirkt er "
+#~ "virki skjárinn skjárinn sem inniheldur gluggann sem er með fókus."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Virkur skjár fylgir &mús"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

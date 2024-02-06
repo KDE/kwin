@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-02-07 20:29+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -63,8 +63,9 @@ msgstr "Edukia"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" icon"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Sartu \"Erakutsi mahaigaina\" ikonoa"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-01-08 17:48+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -887,26 +887,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Ứng xử đa màn hình"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Khi lựa chọn này được bật, màn hình hoạt động (chẳng hạn, khi các cửa sổ mới "
-"xuất hiện) là màn hình đang chứa con trỏ chuột. Khi tắt, màn hình hoạt động "
-"là màn hình chứa cửa sổ đang được nhắm vào."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Màn hình hoạt động chuyển theo &chuột"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -916,13 +898,13 @@ msgstr ""
 "hình hoạt động"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Giới hạn nhắm trong màn hình"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Mô tả chính sách kích hoạt cửa sổ"
@@ -1229,7 +1211,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Chỉ khi chồng nhau"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1239,7 +1221,7 @@ msgstr ""
 "ứng xử này phổ biến ở các hệ điều hành khác và nhiều khả năng là cái bạn "
 "muốn."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1253,7 +1235,7 @@ msgstr ""
 "hiện tại bị đóng) thì cửa sổ ở dưới chuột là lựa chọn được ưu tiên. Là một "
 "biến thể ít dùng, nhưng có thể, của <em>Bấm để nhắm</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1266,7 +1248,7 @@ msgstr ""
 "<em>Ngăn chặn lấy nhắm</em> diễn ra như bình thường. Nghĩ về nó như là "
 "<em>Bấm để nhắm</em>, chỉ là không cần phải thật sự bấm."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1279,7 +1261,7 @@ msgstr ""
 "dưới chuột là lựa chọn được ưu tiên. Chọn cái này nếu bạn muốn nhắm được "
 "điều khiển bằng đảo chuột."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1294,7 +1276,7 @@ msgstr ""
 "hoạt động. Rất nhiều khả năng là bạn muốn dùng <em>Nhắm đi theo chuột (ưu "
 "tiên chuột)</em> chứ không phải cái này!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1311,6 +1293,18 @@ msgstr ""
 "thuẫn với chính sách kích hoạt này và sẽ không hoạt động. Rất nhiều khả năng "
 "là bạn muốn dùng <em>Nhắm đi theo chuột (ưu tiên chuột)</em> chứ không phải "
 "cái này!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Khi lựa chọn này được bật, màn hình hoạt động (chẳng hạn, khi các cửa sổ "
+#~ "mới xuất hiện) là màn hình đang chứa con trỏ chuột. Khi tắt, màn hình "
+#~ "hoạt động là màn hình chứa cửa sổ đang được nhắm vào."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Màn hình hoạt động chuyển theo &chuột"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-08-09 00:20+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -862,26 +862,8 @@ msgstr "마우스 포인터가 올라온 이후 창을 올리기까지 지연 �
 msgid "Multiscreen behavior:"
 msgstr "다중 화면 동작:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"이 옵션을 사용하면 현재 활성화된 화면(예를 들어 새 창이 나타나는 화면)은 마우"
-"스 포인터가 있는 화면이 됩니다. 이 옵션을 사용하지 않으면 현재 활성화된 화면"
-"은 포커스가 맞춰진 창이 있는 화면이 됩니다."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "활성 화면이 마우스를 따라감(&M)"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -890,13 +872,13 @@ msgstr ""
 "이 옵션을 사용하면 현재 활성화된 화면에 대해서만 포커스 동작이 작동합니다"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "화면별 포커스 분리(&S)"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "창 활성화 정책 설명"
@@ -1201,7 +1183,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "겹치는 경우에만"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1210,7 +1192,7 @@ msgstr ""
 "<em>클릭해서 포커스 맞춤:</em> 창을 클릭하면 포커스를 맞춥니다. 이 행동은 다"
 "른 운영체제에서 취하는 방식이며 대부분 경우 원하는 방식입니다."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1224,7 +1206,7 @@ msgstr ""
 "하여야 하면 현재 마우스 포인터 아래의 창을 선택합니다. <em>클릭해서 포커스 맞"
 "춤</em> 설정의 파생형입니다."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1237,7 +1219,7 @@ msgstr ""
 "훔치기 방지는 평소대로 작동합니다. 실제로 클릭하지 않아도 되는 <em>클릭해서 "
 "포커스 맞춤</em>으로 생각하십시오."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1249,7 +1231,7 @@ msgstr ""
 "이 닫히는 등 시스템에서 활성 창을 선택하여야 하면 현재 마우스 포인터 아래의 "
 "창을 선택합니다. 호버로 제어하는 포커스를 원하면 선택하십시오."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1264,7 +1246,7 @@ msgstr ""
 "용해야 한다면 <em>마우스가 포커스를 따라감(마우스 우선)</em> 설정을 사용하십"
 "시오!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1280,6 +1262,18 @@ msgstr ""
 "스 훔치기 방지</em> 및 <em>탭 상자(\"Alt+Tab\")</em>는 이 정책에 모순되며 작"
 "동하지 않습니다. 만약 위 설정을 사용해야 한다면 <em>마우스가 포커스를 따라감"
 "(마우스 우선)</em> 설정을 사용하십시오!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "이 옵션을 사용하면 현재 활성화된 화면(예를 들어 새 창이 나타나는 화면)은 "
+#~ "마우스 포인터가 있는 화면이 됩니다. 이 옵션을 사용하지 않으면 현재 활성화"
+#~ "된 화면은 포커스가 맞춰진 창이 있는 화면이 됩니다."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "활성 화면이 마우스를 따라감(&M)"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

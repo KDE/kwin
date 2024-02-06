@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2024-01-12 11:50+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -892,26 +892,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Több képernyős működés:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Ha ez be van jelölve, akkor az lesz az aktív képernyő (ahol az új ablakok is "
-"megjelennek), ahol az egérmutató van. Ha nincs bejelölve, az az aktív "
-"képernyő, ahol a fókuszált ablak van."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Az aktív képe&rnyő az legyen, ahol az egérmutató van"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -920,13 +902,13 @@ msgstr ""
 "Ha be van jelölve, a fókuszálási műveletek az aktív képernyőre korlátozódnak."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "Fókuszálás csak az &aktív képernyőn"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Ablakaktiválási szabály leírása"
@@ -1236,7 +1218,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Csak átfedéskor"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1246,7 +1228,7 @@ msgstr ""
 "rákattint. Ez a működés általános más operációs rendszereken, és "
 "valószínűleg ezt szeretné."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1261,7 +1243,7 @@ msgstr ""
 "az egér alatti ablak az előnyben részesített jelölt. Szokatlan, de "
 "lehetséges változata a <em>Kattintás fókuszálásra</em> működésének."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1274,7 +1256,7 @@ msgstr ""
 "a fókuszt. A <em>Fókuszlopás megakadályozása</em> ugyanúgy működik, mint "
 "máskor. Olyan, mint a <em>Kattintás fókuszálásra</em>, csak kattintás nélkül."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1287,7 +1269,7 @@ msgstr ""
 "miatt), az egér alatti ablak az előnyben részesített jelölt. Válassza ezt, "
 "ha rámutatással szeretné irányítani a fókuszálást."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1302,7 +1284,7 @@ msgstr ""
 "Valószínűleg inkább a <em>Fókuszálás egérkövetéssel - Egérprecedencia</em> "
 "az Önnek való!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1318,6 +1300,18 @@ msgstr ""
 "megakadályozása</em> és a <em>tabdoboz („Alt+Tab”)</em> sérti a szabályokat, "
 "és nem fog működni. Valószínűleg inkább a <em>Fókuszálás egérkövetéssel - "
 "Egérprecedencia</em> az Önnek való!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Ha ez be van jelölve, akkor az lesz az aktív képernyő (ahol az új ablakok "
+#~ "is megjelennek), ahol az egérmutató van. Ha nincs bejelölve, az az aktív "
+#~ "képernyő, ahol a fókuszált ablak van."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Az aktív képe&rnyő az legyen, ahol az egérmutató van"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

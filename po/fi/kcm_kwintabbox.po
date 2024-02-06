@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-03-06 13:27+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -66,8 +66,9 @@ msgstr "Sisältö"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" icon"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Näytä ”Näytä työpöytä\" -kuvake"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

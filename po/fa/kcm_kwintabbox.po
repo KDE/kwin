@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2013-01-11 02:43+0330\n"
 "Last-Translator: Mohammad Reza Mirdamadi <mohi@linuxshop.ir>\n"
 "Language-Team: Farsi (Persian) <kde-i18n-fa@kde.org>\n"
@@ -58,7 +58,7 @@ msgstr "محتوا"
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
 #, kde-format
-msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

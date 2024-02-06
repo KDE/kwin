@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-03 00:39+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2024-01-18 12:08+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1083,82 +1083,82 @@ msgstr "Porta-retalls"
 msgid "Primary Selection"
 msgstr "Selecció primària"
 
-#: helpers/killer/killer.cpp:73
+#: helpers/killer/killer.cpp:74
 #, kde-format
 msgid "Window Manager"
 msgstr "Gestor de finestres"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "El PID de l'aplicació a finalitzar"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "pid"
 msgstr "PID"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Nom de la màquina on s'executa l'aplicació"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "hostname"
 msgstr "nom de la màquina"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Llegenda de la finestra que es finalitzarà"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "caption"
 msgstr "llegenda"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Nom de l'aplicació que es finalitzarà"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "name"
 msgstr "nom"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "ID del recurs que pertany a l'aplicació"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "id"
 msgstr "ID"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Hora de l'acció de l'usuari que ha provocat l'acabament"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "time"
 msgstr "hora"
 
-#: helpers/killer/killer.cpp:90
+#: helpers/killer/killer.cpp:91
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Utilitat d'ajuda del KWin"
 
-#: helpers/killer/killer.cpp:126
+#: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Aquesta utilitat d'ajuda no està pensada per a cridar-se directament."
 
-#: helpers/killer/killer.cpp:148
+#: helpers/killer/killer.cpp:149
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1168,7 +1168,7 @@ msgstr ""
 "<para><application>%1</application> no respon. Voleu finalitzar aquesta "
 "aplicació?</para>"
 
-#: helpers/killer/killer.cpp:150
+#: helpers/killer/killer.cpp:151
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1178,7 +1178,7 @@ msgstr ""
 "<para>«%1» de <application>%2</application> no respon. Voleu finalitzar "
 "aquesta aplicació?</para>"
 
-#: helpers/killer/killer.cpp:153
+#: helpers/killer/killer.cpp:154
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1189,31 +1189,31 @@ msgstr ""
 "totes les seves finestres. Qualsevol dada no desada es perdrà.</emphasis></"
 "para>"
 
-#: helpers/killer/killer.cpp:155
+#: helpers/killer/killer.cpp:156
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "Finali&tza %1"
 
-#: helpers/killer/killer.cpp:156
+#: helpers/killer/killer.cpp:157
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Espera més &llarga"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:165
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "No respon"
 
-#: helpers/killer/killer.cpp:180
+#: helpers/killer/killer.cpp:181
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "ID del procés: %1"
 
-#: helpers/killer/killer.cpp:182
+#: helpers/killer/killer.cpp:183
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -4138,53 +4138,53 @@ msgstr ""
 msgid "unknown"
 msgstr "desconegut"
 
-#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
+#: virtualdesktops.cpp:648 virtualdesktops.cpp:719
 #, kde-format
 msgid "Desktop %1"
 msgstr "Escriptori %1"
 
-#: virtualdesktops.cpp:743
+#: virtualdesktops.cpp:726
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Canvia a l'escriptori següent"
 
-#: virtualdesktops.cpp:744
+#: virtualdesktops.cpp:727
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Canvia a l'escriptori anterior"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:730
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Canvia un escriptori a la dreta"
 
-#: virtualdesktops.cpp:748
+#: virtualdesktops.cpp:731
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Canvia un escriptori a l'esquerra"
 
-#: virtualdesktops.cpp:749
+#: virtualdesktops.cpp:732
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Canvia un escriptori amunt"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:733
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Canvia un escriptori avall"
 
-#: virtualdesktops.cpp:838
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3096
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(No respon)"
 
-#: workspace.cpp:1624
+#: workspace.cpp:1627
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2010-01-15 13:41+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -64,7 +64,7 @@ msgstr ""
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Current Desktop"
-msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "ಪ್ರಸ್ತುತ ಗಣಕತೆರೆ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

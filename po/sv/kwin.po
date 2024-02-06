@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-03 00:39+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2022-09-24 16:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -1086,82 +1086,82 @@ msgstr "Klippbord"
 msgid "Primary Selection"
 msgstr "Primär markering"
 
-#: helpers/killer/killer.cpp:73
+#: helpers/killer/killer.cpp:74
 #, kde-format
 msgid "Window Manager"
 msgstr "Fönsterhanterare"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "Process-id för programmet att avsluta"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Värddator som programmet kör på"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "hostname"
 msgstr "värddatornamn"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Rubrik för fönstret som ska avslutas"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "caption"
 msgstr "rubrik"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Namn på programmet som ska avslutas"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "name"
 msgstr "namn"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Identifierare för resursen som hör till programmet"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Tid för användaråtgärden som orsakade terminering"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "time"
 msgstr "tid"
 
-#: helpers/killer/killer.cpp:90
+#: helpers/killer/killer.cpp:91
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Kwin-hjälpverktyg"
 
-#: helpers/killer/killer.cpp:126
+#: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Det är inte meningen att det här hjälpverktyget ska anropas direkt."
 
-#: helpers/killer/killer.cpp:148
+#: helpers/killer/killer.cpp:149
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1169,7 +1169,7 @@ msgid ""
 "terminate this application?</para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:150
+#: helpers/killer/killer.cpp:151
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1177,7 +1177,7 @@ msgid ""
 "to terminate this application?</para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:153
+#: helpers/killer/killer.cpp:154
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1193,21 +1193,21 @@ msgstr ""
 "programmet stänger alla dess underliggande fönster. All osparad data kommer "
 "att gå förlorad.</warning></para>"
 
-#: helpers/killer/killer.cpp:155
+#: helpers/killer/killer.cpp:156
 #, fuzzy, kde-format
 #| msgid "&Terminate Application %1"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "Avbryt &programmet %1"
 
-#: helpers/killer/killer.cpp:156
+#: helpers/killer/killer.cpp:157
 #, fuzzy, kde-format
 #| msgid "Wait Longer"
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Vänta längre"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:165
 #, fuzzy, kde-format
 #| msgctxt "Application is not responding, appended to window title"
 #| msgid "(Not Responding)"
@@ -1215,13 +1215,13 @@ msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "(svarar inte)"
 
-#: helpers/killer/killer.cpp:180
+#: helpers/killer/killer.cpp:181
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:182
+#: helpers/killer/killer.cpp:183
 #, fuzzy, kde-format
 #| msgid "hostname"
 msgctxt "@info"
@@ -4272,53 +4272,53 @@ msgstr ""
 msgid "unknown"
 msgstr "okänd"
 
-#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
+#: virtualdesktops.cpp:648 virtualdesktops.cpp:719
 #, kde-format
 msgid "Desktop %1"
 msgstr "Skrivbord %1"
 
-#: virtualdesktops.cpp:743
+#: virtualdesktops.cpp:726
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "Byt till nästa skrivbord"
 
-#: virtualdesktops.cpp:744
+#: virtualdesktops.cpp:727
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "Byt till föregående skrivbord"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:730
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "Byt till skrivbordet närmast höger"
 
-#: virtualdesktops.cpp:748
+#: virtualdesktops.cpp:731
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "Byt till skrivbordet närmast vänster"
 
-#: virtualdesktops.cpp:749
+#: virtualdesktops.cpp:732
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "Byt till ett skrivbord upp"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:733
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "Byt till ett skrivbord ned"
 
-#: virtualdesktops.cpp:838
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "Byt till skrivbord %1"
 
-#: window.cpp:3096
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar inte)"
 
-#: workspace.cpp:1624
+#: workspace.cpp:1627
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

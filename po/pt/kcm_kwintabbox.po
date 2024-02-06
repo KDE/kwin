@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2022-06-15 19:25+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -55,8 +55,9 @@ msgstr "Conteúdo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" icon"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Incluir o ícone \"Mostrar o Ecrã\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

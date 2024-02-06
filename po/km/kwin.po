@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-03 00:39+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -1082,83 +1082,83 @@ msgstr ""
 msgid "Primary Selection"
 msgstr ""
 
-#: helpers/killer/killer.cpp:73
+#: helpers/killer/killer.cpp:74
 #, fuzzy, kde-format
 #| msgid "KDE window manager"
 msgid "Window Manager"
 msgstr "កម្មវិធី​គ្រប់គ្រង​បង្អួច KDE"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "PID នៃ​កម្មវិធី​ដែលត្រូវ​បញ្ឈប់"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "pid"
 msgstr ""
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "ឈ្មោះ​ម៉ាស៊ីន​ដែល​កម្មវិធី​រត់"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "hostname"
 msgstr ""
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "ចំណង​ជើង​បង្អួចត្រូវ​បាន​បញ្ចប់​​ដំណើរការ​"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "caption"
 msgstr ""
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "ឈ្មោះ​កម្មវិធី​ត្រូវ​បាន​បញ្ចប់ដំណើរការ​​"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "name"
 msgstr ""
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "លេខ​សម្គាល់​កម្មសិទ្ធ​ប្រភព​សម្រាប់​កម្មវិធី"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "id"
 msgstr ""
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "ពេលវេលា​នៃ​អំពើ​អ្នកប្រើ​ បណ្តាល​ឲ្យ​ស្លាប់"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "time"
 msgstr ""
 
-#: helpers/killer/killer.cpp:90
+#: helpers/killer/killer.cpp:91
 #, kde-format
 msgid "KWin helper utility"
 msgstr "ឧបករណ៍​ជំនួយ KWin"
 
-#: helpers/killer/killer.cpp:126
+#: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "ឧបករណ៍​ជំនួយ​នេះ​ទំនង​ជា​មិន​បាន​ហៅ​ដោយ​ផ្ទាល់ទេ ។"
 
-#: helpers/killer/killer.cpp:148
+#: helpers/killer/killer.cpp:149
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1166,7 +1166,7 @@ msgid ""
 "terminate this application?</para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:150
+#: helpers/killer/killer.cpp:151
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1174,7 +1174,7 @@ msgid ""
 "to terminate this application?</para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:153
+#: helpers/killer/killer.cpp:154
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1182,32 +1182,32 @@ msgid ""
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:155
+#: helpers/killer/killer.cpp:156
 #, fuzzy, kde-format
 #| msgid "&Terminate Application %1"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "បញ្ចប់​កម្មវិធី %1"
 
-#: helpers/killer/killer.cpp:156
+#: helpers/killer/killer.cpp:157
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr ""
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:165
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr ""
 
-#: helpers/killer/killer.cpp:180
+#: helpers/killer/killer.cpp:181
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:182
+#: helpers/killer/killer.cpp:183
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -4285,53 +4285,53 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
+#: virtualdesktops.cpp:648 virtualdesktops.cpp:719
 #, kde-format
 msgid "Desktop %1"
 msgstr "ផ្ទៃតុ %1"
 
-#: virtualdesktops.cpp:743
+#: virtualdesktops.cpp:726
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "ប្តូរ​ទៅ​ផ្ទៃតុ​បន្ទាប់"
 
-#: virtualdesktops.cpp:744
+#: virtualdesktops.cpp:727
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "ប្តូរ​ទៅ​ផ្ទៃតុ​មុន"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:730
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "ប្ដូរ​ទៅ​ស្ដាំ​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:748
+#: virtualdesktops.cpp:731
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "ប្ដូរ​ទៅ​ឆ្វេង​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:749
+#: virtualdesktops.cpp:732
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "ប្ដូរ​ឡើង​លើ​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:733
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "ប្ដូរ​ចុះ​ក្រោម​មួយ​ផ្ទៃតុ"
 
-#: virtualdesktops.cpp:838
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "ប្ដូរ​ទៅ​ផ្ទៃតុ %1"
 
-#: window.cpp:3096
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1624
+#: workspace.cpp:1627
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

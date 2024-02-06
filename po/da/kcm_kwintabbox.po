@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2019-05-07 13:22+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -61,8 +61,9 @@ msgstr "Indhold"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, kde-format
-msgid "Include \"Show Desktop\" icon"
+#, fuzzy, kde-format
+#| msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "Inkludér \"Vis skrivebordet\"-ikon"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

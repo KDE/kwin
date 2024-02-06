@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-03 00:39+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2024-01-21 01:59+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1081,82 +1081,82 @@ msgstr "剪貼簿"
 msgid "Primary Selection"
 msgstr "主要選擇 (Primary Selection)"
 
-#: helpers/killer/killer.cpp:73
+#: helpers/killer/killer.cpp:74
 #, kde-format
 msgid "Window Manager"
 msgstr "視窗管理員"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "要結束的應用程式的行程代碼（PID）。"
 
-#: helpers/killer/killer.cpp:78
+#: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "pid"
 msgstr "行程代碼"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "應用程式執行主機的主機名稱。"
 
-#: helpers/killer/killer.cpp:80
+#: helpers/killer/killer.cpp:81
 #, kde-format
 msgid "hostname"
 msgstr "主機名稱"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "要結束的視窗標題。"
 
-#: helpers/killer/killer.cpp:82
+#: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "caption"
 msgstr "標題"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "要結束的應用程式名稱。"
 
-#: helpers/killer/killer.cpp:84
+#: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "name"
 msgstr "名稱"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "此應用程式所屬資源代碼。"
 
-#: helpers/killer/killer.cpp:86
+#: helpers/killer/killer.cpp:87
 #, kde-format
 msgid "id"
 msgstr "代碼"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "造成結束的使用者動作的時間。"
 
-#: helpers/killer/killer.cpp:88
+#: helpers/killer/killer.cpp:89
 #, kde-format
 msgid "time"
 msgstr "時間"
 
-#: helpers/killer/killer.cpp:90
+#: helpers/killer/killer.cpp:91
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin 協助工具程式"
 
-#: helpers/killer/killer.cpp:126
+#: helpers/killer/killer.cpp:127
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "此協助公用程式不支援直接呼叫。"
 
-#: helpers/killer/killer.cpp:148
+#: helpers/killer/killer.cpp:149
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1166,7 +1166,7 @@ msgstr ""
 "<para><application>%1</application>沒有回應。您是否要終止這個應用程式？</"
 "para>"
 
-#: helpers/killer/killer.cpp:150
+#: helpers/killer/killer.cpp:151
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1176,7 +1176,7 @@ msgstr ""
 "<para><application>%2</application> 的「%1」沒有回應。您是否要終止這個應用程"
 "式？</para>"
 
-#: helpers/killer/killer.cpp:153
+#: helpers/killer/killer.cpp:154
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1186,31 +1186,31 @@ msgstr ""
 "<para><emphasis strong='true'>終止此應用程式將會關閉它的所有視窗。所有未儲存"
 "的資料將會遺失。</emphasis></para>"
 
-#: helpers/killer/killer.cpp:155
+#: helpers/killer/killer.cpp:156
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "終止 %1(&T)"
 
-#: helpers/killer/killer.cpp:156
+#: helpers/killer/killer.cpp:157
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "等久一點(&W)"
 
-#: helpers/killer/killer.cpp:164
+#: helpers/killer/killer.cpp:165
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "沒有回應"
 
-#: helpers/killer/killer.cpp:180
+#: helpers/killer/killer.cpp:181
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "行程 ID：%1"
 
-#: helpers/killer/killer.cpp:182
+#: helpers/killer/killer.cpp:183
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
@@ -4101,53 +4101,53 @@ msgstr ""
 msgid "unknown"
 msgstr "未知"
 
-#: virtualdesktops.cpp:665 virtualdesktops.cpp:736
+#: virtualdesktops.cpp:648 virtualdesktops.cpp:719
 #, kde-format
 msgid "Desktop %1"
 msgstr "桌面 %1"
 
-#: virtualdesktops.cpp:743
+#: virtualdesktops.cpp:726
 #, kde-format
 msgid "Switch to Next Desktop"
 msgstr "切換到下一個桌面"
 
-#: virtualdesktops.cpp:744
+#: virtualdesktops.cpp:727
 #, kde-format
 msgid "Switch to Previous Desktop"
 msgstr "切換到上一個桌面"
 
-#: virtualdesktops.cpp:747
+#: virtualdesktops.cpp:730
 #, kde-format
 msgid "Switch One Desktop to the Right"
 msgstr "切換到右方的桌面"
 
-#: virtualdesktops.cpp:748
+#: virtualdesktops.cpp:731
 #, kde-format
 msgid "Switch One Desktop to the Left"
 msgstr "切換到左方的桌面"
 
-#: virtualdesktops.cpp:749
+#: virtualdesktops.cpp:732
 #, kde-format
 msgid "Switch One Desktop Up"
 msgstr "切換到上面的桌面"
 
-#: virtualdesktops.cpp:750
+#: virtualdesktops.cpp:733
 #, kde-format
 msgid "Switch One Desktop Down"
 msgstr "切換到下面的桌面"
 
-#: virtualdesktops.cpp:838
+#: virtualdesktops.cpp:821
 #, kde-format
 msgid "Switch to Desktop %1"
 msgstr "切換到桌面 %1"
 
-#: window.cpp:3096
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "（沒有回應）"
 
-#: workspace.cpp:1624
+#: workspace.cpp:1627
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

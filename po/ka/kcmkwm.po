@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-08-27 00:56+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -882,26 +882,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "ქცევა ერთზე მეტი ეკრანის ქონისას:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"როცა ეს პარამეტრი ჩართულია, აქტიური ეკრანი (სადაც ახალი ფანჯრები ჩნდებიან) "
-"არის ეკრანი, რომელიც თაგუნას კურსორს შეიცავს. თუ ჩართულია, აქტიური ეკრანი "
-"ფოკუსის მქონე ფანჯრის შემცველი ეკრანია."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "აქტიური ეკრანი &თაგუნას დასდევს"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -909,13 +891,13 @@ msgid ""
 msgstr "თუ ეს პარამეტრი ჩართულია, ფოკუსის ოპერაცები აქტიური ეკრანით შეიზღუდება"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&თითოეული ეკრანის ცალცალკე ფოკუსი"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "ფანჯრის აქტივაციის პოლიტიკის აღწერა"
@@ -1222,7 +1204,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "მხოლოდ გადაფარვისას"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1232,7 +1214,7 @@ msgstr ""
 "დააწკაპუნეთ. ეს ქცევა საერთოა ოპერაციულ სისტემებს შორის და როგორც წესი ისაა, "
 "რაც თქვენ გჭირდებათ."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1247,7 +1229,7 @@ msgstr ""
 "ქვეშაა, სასურველი კანდიდატი ხდება. <em>წკაპი ფოკუსისთვის</em>-ის უცნაური, "
 "მაგრამ შესაძლო ვარიანტი."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1261,7 +1243,7 @@ msgstr ""
 "em> ხდება. იფიქრეთ ამაზ, როგორც <em>დააწკაპუნეთ კურსორისთვის</em>-ზე, "
 "დაწკაპუნების საჭიროების გარეშე."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1274,7 +1256,7 @@ msgstr ""
 "რომელიც თაგუნა კურსორის ქვეშ იმყოფება, ფოკუსის მისაღებად სასურველი კანდიდატი "
 "გახდება. აირჩიეთ, თუ გადატარებით მართვადი ფოკუსი გჭირდებათ."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1289,7 +1271,7 @@ msgstr ""
 "აქტივაციის ამ პოლიტიკას და არ იმუშავებენ. ალბათ, სჯობს, <em>ფოკუსი დასდევს "
 "თაგუნას (თაგუნას უპირატესობა)</em> აირჩიოთ!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1305,6 +1287,18 @@ msgstr ""
 "აცილება</em> და <em>ამოცანების გადართვა ('Alt+Tab')</em> ხელს უშლიან "
 "აქტივაციის პოლიტიკას და არ იმუშავებენ. ალბათ <em>ფოკუსი თაგუნას დაყვება</em> "
 "პოლიტიკა გირჩევნიათ!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "როცა ეს პარამეტრი ჩართულია, აქტიური ეკრანი (სადაც ახალი ფანჯრები "
+#~ "ჩნდებიან) არის ეკრანი, რომელიც თაგუნას კურსორს შეიცავს. თუ ჩართულია, "
+#~ "აქტიური ეკრანი ფოკუსის მქონე ფანჯრის შემცველი ეკრანია."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "აქტიური ეკრანი &თაგუნას დასდევს"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

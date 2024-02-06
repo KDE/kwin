@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2015-02-08 11:48+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -978,35 +978,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Συμπεριφορά πολλαπλών οθονών"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Όταν αυτή η επιλογή είναι ενεργοποιημένη, ενεργή οθόνη Xinerama (όπου για "
-"παράδειγμα εμφανίζονται τα νέα παράθυρα) είναι εκείνη στην οποία βρίσκεται "
-"το ποντίκι. Όταν απενεργοποιηθεί, ενεργή οθόνη είναι εκείνη στην οποία "
-"βρίσκεται το παράθυρο που έχει την εστίαση. Αυτή η επιλογή είναι εξ ορισμού "
-"απενεργοποιημένη στην πολιτική εστίασης 'Κλικ για εστίαση' και "
-"ενεργοποιημένη στις υπόλοιπες."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Η ενεργή οθόνη ακολουθεί το &ποντίκι"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -1019,14 +992,14 @@ msgstr ""
 "περιορίζονται μόνο στην ενεργή οθόνη Xinerama"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "Δια&χωρισμός εστίασης οθόνης"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr ""
@@ -1355,7 +1328,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Αρπαγή των παραθύρων &μόνο κατά την επικάλυψη"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1371,7 +1344,7 @@ msgstr ""
 "Αυτή η συμπεριφορά είναι κοινή σε άλλα λειτουργικά συστήματα και<br>\n"
 "πιθανόν αυτή που επιθυμείτε."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1395,7 +1368,7 @@ msgstr ""
 "το παράθυρο κάτω από το ποντίκι είναι το προτιμώμενο.<br><br>\n"
 "Ασυνήθιστη, αλλά πιθανή παραλλαγή της <i>Κλικ για εστίαση</i>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1418,7 +1391,7 @@ msgstr ""
 "Σκεφτείτε τη όπως η πολιτική <i>Κλικ για εστίαση</i> χωρίς όμως να "
 "χρειάζονται πραγματικά κλικ."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1441,7 +1414,7 @@ msgstr ""
 "το παράθυρο κάτω από το ποντίκι είναι το προτιμώμενο.<br><br>\n"
 "Επιλέξτε αυτή, εάν θέλετε εστίαση που ελέγχεται με την αιώρηση."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1470,7 +1443,7 @@ msgstr ""
 "Αντί αυτής ίσως να θέλετε να χρησιμοποιήσετε την πολιτική<br>\n"
 "<i>Η εστίαση ακολουθεί το ποντίκι - Το ποντίκι έχει προτεραιότητα</i>!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"
@@ -1505,6 +1478,28 @@ msgstr ""
 "<br><br>\n"
 "Αντί αυτής ίσως να θέλετε να χρησιμοποιήσετε την πολιτική<br>\n"
 "<i>Η εστίαση ακολουθεί το ποντίκι - Το ποντίκι έχει προτεραιότητα</i>!"
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Όταν αυτή η επιλογή είναι ενεργοποιημένη, ενεργή οθόνη Xinerama (όπου για "
+#~ "παράδειγμα εμφανίζονται τα νέα παράθυρα) είναι εκείνη στην οποία "
+#~ "βρίσκεται το ποντίκι. Όταν απενεργοποιηθεί, ενεργή οθόνη είναι εκείνη "
+#~ "στην οποία βρίσκεται το παράθυρο που έχει την εστίαση. Αυτή η επιλογή "
+#~ "είναι εξ ορισμού απενεργοποιημένη στην πολιτική εστίασης 'Κλικ για "
+#~ "εστίαση' και ενεργοποιημένη στις υπόλοιπες."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Η ενεργή οθόνη ακολουθεί το &ποντίκι"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

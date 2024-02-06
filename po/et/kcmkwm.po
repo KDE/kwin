@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2020-10-27 21:33+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -909,34 +909,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Käitumine mitme ekraani korral:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Sisselülitamisel on aktiivseks Xinerama ekraaniks (kus näiteks avatakse uued "
-"aknad) see ekraan, millel töötab hiirekursor. Kui see pole sisse lülitatud, "
-"on aktiivseks Xinerama ekraaniks fookuses aknaga ekraan. Vaikimisi ei ole "
-"see sisse lülitatud 'klõps fokuseerimiseks' korral, küll aga kõigi teiste "
-"fookusereeglite puhul."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Aktiivne ekraan &järgib hiirt"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -949,13 +923,13 @@ msgstr ""
 "ekraaniga"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Eraldi ekraani fookus"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Akna aktiveerimise reegli kirjeldus"
@@ -1264,7 +1238,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Ainult kattuvuse korral"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1274,7 +1248,7 @@ msgstr ""
 "on teisteski operatsioonisüsteemides levinud käitumine ja arvatavasti just "
 "see, mida vajad."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1289,7 +1263,7 @@ msgstr ""
 "all. See on ebatavaline, aga siiski võimalik <em>fookus klõpsuga</em> "
 "variant."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1302,7 +1276,7 @@ msgstr ""
 "tavapärane <em>fookuse röövimise vältimine</em>. Seda võib pidada <em>fookus "
 "klõpsuga</em> variandiks, kus klõpsama ei peagi."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1315,7 +1289,7 @@ msgstr ""
 "eelistatakse akent, mille kohal asub hiir. Selle valimisel saab fookust "
 "määrata hiirega."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1330,7 +1304,7 @@ msgstr ""
 "Pigem on usutav, et soovid kasutada hoopis valikut <em>fookus järgib hiirt "
 "(eelistus hiirel)</em>!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1346,6 +1320,27 @@ msgstr ""
 "<em>Fookuse röövimise vältimine</em> ja <em>aknavahetaja (\"Alt+Tab\")</em> "
 "on sellega vastuolus ning ei tööta. Pigem on usutav, et soovid kasutada "
 "hoopis valikut <em>fookus järgib hiirt (eelistus hiirel)</em>!"
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Sisselülitamisel on aktiivseks Xinerama ekraaniks (kus näiteks avatakse "
+#~ "uued aknad) see ekraan, millel töötab hiirekursor. Kui see pole sisse "
+#~ "lülitatud, on aktiivseks Xinerama ekraaniks fookuses aknaga ekraan. "
+#~ "Vaikimisi ei ole see sisse lülitatud 'klõps fokuseerimiseks' korral, küll "
+#~ "aga kõigi teiste fookusereeglite puhul."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Aktiivne ekraan &järgib hiirt"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2010-03-27 23:18+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -62,7 +62,7 @@ msgstr ""
 #: main.ui:41
 #, fuzzy, kde-format
 #| msgid "Include desktop"
-msgid "Include \"Show Desktop\" icon"
+msgid "Include \"Show Desktop\" entry"
 msgstr "รวมพื้นที่ทำงานด้วย"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)

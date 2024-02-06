@@ -1,7 +1,7 @@
 # translation of kcmkwm.po to Slovenian
 # Translation of kcmkwm.po to Slovenian
 # KDEBASE translation to Slovenian language.
-# $Id: kcmkwm.po 1663862 2023-11-02 02:03:02Z scripty $
+# $Id: kcmkwm.po 1672439 2024-02-06 01:07:19Z scripty $
 # $Source$
 #
 # Copyright (C) 2001, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2022-12-05 06:51+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -893,26 +893,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Obnašanje ob več zaslonih:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Če je omogočena ta možnost, je dejavni zaslon (na katerem se, na primer, "
-"pojavijo nova okna) tisti, na katerem se nahaja kazalka miške. Kadar je "
-"onemogočena je aktivni zaslon tisti, na katerem se nahaja osredotočeno okno."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Aktivni zaslon sledi &miški"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -922,13 +904,13 @@ msgstr ""
 "aktivni zaslon"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "Ločena osredotočenost zaslona"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Opis politike aktiviranja oken"
@@ -1235,7 +1217,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Samo, če se prekrivajo"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1245,7 +1227,7 @@ msgstr ""
 "Okno postane aktivno, ko kliknete vanj. To obnašanje je pogosto pri drugih "
 "operacijskih sistemih in je najbrž to, kar želite."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1260,7 +1242,7 @@ msgstr ""
 "miško. Neobičajna, vendar mogoča različica <em>Kliknite za osredotočenost</"
 "em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1274,7 +1256,7 @@ msgstr ""
 "običajno. Mislite si <em>Kliknite za osredotočenost</em> samo, da ni treba "
 "zares klikniti."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1287,7 +1269,7 @@ msgstr ""
 "prednost okno, ki je pod miško. Izberite to, če hočete imeti nadzor nad "
 "osredotočenostjo oken pod kazalko."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1302,7 +1284,7 @@ msgstr ""
 "politiki aktiviranja in ne bodo delovali. Zelo verjetno bi želeli "
 "uporabljati <em>Osredotočenost sledi miški (prednost miške)</em>!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1318,6 +1300,19 @@ msgstr ""
 "kraje osredotočnosti</em> in <em>tabbox ('Alt+Tab') </em>nasprotujejo "
 "politiki aktiviranja in ne bodo delovali. Zelo verjetno bi želeli "
 "uporabljati <em>Osredotočenost sledi miški (prednost miške)</em>!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Če je omogočena ta možnost, je dejavni zaslon (na katerem se, na primer, "
+#~ "pojavijo nova okna) tisti, na katerem se nahaja kazalka miške. Kadar je "
+#~ "onemogočena je aktivni zaslon tisti, na katerem se nahaja osredotočeno "
+#~ "okno."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Aktivni zaslon sledi &miški"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

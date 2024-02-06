@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 00:39+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -892,26 +892,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Паводзіны пры некалькіх экранах:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Калі гэты параметр уключаны, актыўны экран (напрыклад, дзе з'яўляюцца новыя "
-"вокны) - экран, які змяшчае паказальнік мышы. Калі гэты параметр адключаны, "
-"актыўны экран - экран, які змяшчае акно ў фокусе."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Актыўны экран пільнуецца &мышы"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -921,13 +903,13 @@ msgstr ""
 "актыўным экранам"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Асобнае факусаванне экранаў"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Апісанне палітыкі актывацыі акон"
@@ -1240,7 +1222,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Толькі пры накладанні"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1250,7 +1232,7 @@ msgstr ""
 "пстрыкаеце па ім. Такія паводзіны часта сустракаюцца ў іншых аперацыйных "
 "сістэмах. Хутчэй за ўсё, гэта тое, што вам патрэбна."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1265,7 +1247,7 @@ msgstr ""
 "акно пад мышшу - пераважны кандыдат. Незвычайны, але магчымы варыянт "
 "<em>Факусавацца пры пстрыканні</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1279,7 +1261,7 @@ msgstr ""
 "функцыянуе звычайным чынам. Падобна на <em>Факусавацца пры пстрыканні</em>, "
 "але няма патрэбы пстрыкаць."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1292,7 +1274,7 @@ msgstr ""
 "было закрыта), акно пад мышшу - пераважны кандыдат. Абярыце гэта, калі "
 "хочаце кантраляваць факусаванне пры навядзенні."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1306,7 +1288,7 @@ msgstr ""
 "<em>Alt+Tab</em> супярэчаць правілам актывацыі і не будуць працаваць. "
 "Напэўна, вам патрэбна <em>Факусавацца ўслед за мышшу (прыярытэт мышы)</em>!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1322,6 +1304,18 @@ msgstr ""
 "перахоплівання фокуса</em> і <em>Alt+Tab</em> супярэчаць правілам актывацыі "
 "і не будуць працаваць. Напэўна, вам патрэбна <em>Факусавацца ўслед за мышшу "
 "(прыярытэт мышы)</em>!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Калі гэты параметр уключаны, актыўны экран (напрыклад, дзе з'яўляюцца "
+#~ "новыя вокны) - экран, які змяшчае паказальнік мышы. Калі гэты параметр "
+#~ "адключаны, актыўны экран - экран, які змяшчае акно ў фокусе."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Актыўны экран пільнуецца &мышы"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
