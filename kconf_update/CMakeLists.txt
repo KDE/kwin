@@ -13,5 +13,3 @@ install(TARGETS kwin-6.0-reset-active-mouse-screen DESTINATION ${KDE_INSTALL_LIB
 
 install(FILES kwin.upd
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
-install(PROGRAMS kwin-6.0-overview-activities-shortcuts.py
-        DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
