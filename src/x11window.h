@@ -94,6 +94,7 @@ public:
     QSizeF frameSizeToClientSize(const QSizeF &size) const override;
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const;
+    QPointF wrapperPos() const;
     QSizeF implicitSize() const;
 
     xcb_visualid_t visual() const;

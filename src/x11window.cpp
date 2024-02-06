@@ -1551,8 +1551,8 @@ void X11Window::updateShape()
                               XCB_SHAPE_SK_BOUNDING,
                               XCB_SHAPE_SK_BOUNDING,
                               frameId(),
-                              Xcb::toXNative(clientPos().x()),
-                              Xcb::toXNative(clientPos().y()),
+                              Xcb::toXNative(wrapperPos().x()),
+                              Xcb::toXNative(wrapperPos().y()),
                               window());
         }
     } else if (app_noborder) {
@@ -1605,16 +1605,16 @@ void X11Window::updateInputShape()
                           XCB_SHAPE_SK_INPUT,
                           XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window,
-                          Xcb::toXNative(clientPos().x()),
-                          Xcb::toXNative(clientPos().y()),
+                          Xcb::toXNative(wrapperPos().x()),
+                          Xcb::toXNative(wrapperPos().y()),
                           window());
         xcb_shape_combine(c,
                           XCB_SHAPE_SO_UNION,
                           XCB_SHAPE_SK_INPUT,
                           XCB_SHAPE_SK_INPUT,
                           shape_helper_window,
-                          Xcb::toXNative(clientPos().x()),
-                          Xcb::toXNative(clientPos().y()),
+                          Xcb::toXNative(wrapperPos().x()),
+                          Xcb::toXNative(wrapperPos().y()),
                           window());
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
                           frameId(), 0, 0, shape_helper_window);
@@ -2864,6 +2864,15 @@ QRectF X11Window::frameRectToBufferRect(const QRectF &rect) const
         return rect;
     }
     return frameRectToClientRect(rect);
+}
+
+/**
+ * Returns the position of the wrapper window relative to the frame window. On X11, it
+ * is the same as QPoint(borderLeft(), borderTop()). On Wayland, it's QPoint(0, 0).
+ */
+QPointF X11Window::wrapperPos() const
+{
+    return m_clientGeometry.topLeft() - m_bufferGeometry.topLeft();
 }
 
 /**
@@ -4848,7 +4857,7 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     // to resize the frame window in order to forcefully reallocate offscreen storage. If we don't do
     // this, then we might render partially updated client window. I know, it sucks.
     m_frame.setGeometry(moveResizeBufferGeometry);
-    m_wrapper.setGeometry(QRectF(clientPos(), moveResizeClientGeometry.size()));
+    m_wrapper.setGeometry(moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft()));
     m_client.setGeometry(QRectF(QPointF(0, 0), moveResizeClientGeometry.size()));
 }
 
