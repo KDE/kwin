@@ -118,22 +118,20 @@ OverviewEffect::OverviewEffect()
     m_shutdownTimer->setSingleShot(true);
     connect(m_shutdownTimer, &QTimer::timeout, this, &OverviewEffect::realDeactivate);
 
-    const QKeySequence defaultCycleShortcut = Qt::META | Qt::Key_Tab;
     auto cycleAction = new QAction(this);
     connect(cycleAction, &QAction::triggered, this, &OverviewEffect::cycle);
     cycleAction->setObjectName(QStringLiteral("Cycle Overview"));
     cycleAction->setText(i18nc("@action Grid View and Overview are the name of KWin effects", "Cycle through Overview and Grid View"));
-    KGlobalAccel::self()->setDefaultShortcut(cycleAction, {defaultCycleShortcut});
-    KGlobalAccel::self()->setShortcut(cycleAction, {defaultCycleShortcut});
+    KGlobalAccel::self()->setDefaultShortcut(cycleAction, {});
+    KGlobalAccel::self()->setShortcut(cycleAction, {});
     m_cycleShortcut = KGlobalAccel::self()->shortcut(cycleAction);
 
-    const QKeySequence defaultUncycleShortcut = Qt::META | Qt::SHIFT | Qt::Key_Tab;
     auto reverseCycleAction = new QAction(this);
     connect(reverseCycleAction, &QAction::triggered, this, &OverviewEffect::reverseCycle);
     reverseCycleAction->setObjectName(QStringLiteral("Cycle Overview Opposite"));
     reverseCycleAction->setText(i18nc("@action Grid View and Overview are the name of KWin effects", "Cycle through Grid View and Overview"));
-    KGlobalAccel::self()->setDefaultShortcut(reverseCycleAction, {defaultUncycleShortcut});
-    KGlobalAccel::self()->setShortcut(reverseCycleAction, {defaultUncycleShortcut});
+    KGlobalAccel::self()->setDefaultShortcut(reverseCycleAction, {});
+    KGlobalAccel::self()->setShortcut(reverseCycleAction, {});
     m_reverseCycleShortcut = KGlobalAccel::self()->shortcut(reverseCycleAction);
 
     const QKeySequence defaultOverviewShortcut = Qt::META | Qt::Key_W;
