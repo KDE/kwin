@@ -284,14 +284,24 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QL
 
 bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
 {
-    if (!surface) {
+    if (!surface || !surface->gbmSwapchain || surface->gbmSwapchain->size() != size) {
         return false;
     }
-    const auto &swapchain = surface->gbmSwapchain;
-    return swapchain
-        && swapchain->size() == size
-        && formats.contains(swapchain->format())
-        && (surface->forceLinear || swapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[swapchain->format()].contains(swapchain->modifier()));
+    switch (surface->importMode) {
+    case MultiGpuImportMode::None:
+    case MultiGpuImportMode::Dmabuf:
+    case MultiGpuImportMode::LinearDmabuf: {
+        const auto format = surface->gbmSwapchain->format();
+        return formats.contains(format) && (surface->gbmSwapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[format].contains(surface->gbmSwapchain->modifier()));
+    }
+    case MultiGpuImportMode::DumbBuffer:
+        return formats.contains(surface->importDumbSwapchain->format());
+    case MultiGpuImportMode::Egl: {
+        const auto format = surface->importGbmSwapchain->format();
+        return formats.contains(format) && (surface->importGbmSwapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[format].contains(surface->importGbmSwapchain->modifier()));
+    }
+    }
+    Q_UNREACHABLE();
 }
 
 std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
