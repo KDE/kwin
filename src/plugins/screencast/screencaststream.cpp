@@ -120,13 +120,13 @@ void ScreenCastStream::newStreamParams()
     struct spa_pod_frame f;
     spa_pod_builder_push_object(&pod_builder, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
     spa_pod_builder_add(&pod_builder,
-                        SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
                         SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(16, 2, 16),
-                        SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                         SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
     if (!m_dmabufParams) {
         spa_pod_builder_add(&pod_builder,
                             SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
+                            SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
+                            SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                             SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
     } else {
         spa_pod_builder_add(&pod_builder,
