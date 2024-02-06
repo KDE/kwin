@@ -1090,14 +1090,16 @@ void TabBox::close(bool abort)
 void TabBox::accept(bool closeTabBox)
 {
     Window *c = currentClient();
+    const QList<Window *> entries = currentClientList();
+
     if (closeTabBox) {
         close();
     }
     if (c) {
-        Workspace::self()->activateWindow(c);
+        workspace()->activateWindow(c);
         shadeActivate(c);
-        if (c->isDesktop()) {
-            Workspace::self()->setShowingDesktop(!Workspace::self()->showingDesktop(), !m_defaultConfig.isHighlightWindows());
+        if (c->isDesktop() && (workspace()->showingDesktop() || entries.size() > 1)) {
+            workspace()->setShowingDesktop(!workspace()->showingDesktop(), !m_defaultConfig.isHighlightWindows());
         }
     }
 }
