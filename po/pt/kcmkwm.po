@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2022-12-04 02:30+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -900,26 +900,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Comportamento multi-ecrã:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Quando esta opção estiver activa, o ecrã activo (onde aparecem, por exemplo, "
-"as janelas novas) é o ecrã com o cursor do rato. Quando estiver desactivada, "
-"o ecrã activo é o ecrã com a janela em primeiro plano."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "O ecrã &activo segue o rato"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -929,13 +911,13 @@ msgstr ""
 "limitam-se apenas ao ecrã activo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "S&eparar o foco de cada ecrã"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Descrição da política de activação da janela"
@@ -1247,7 +1229,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Só quando sobrepostas"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1257,7 +1239,7 @@ msgstr ""
 "nela. Este comportamento é comum nos outros sistemas operativos e será "
 "provavelmente o que pretende."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1272,7 +1254,7 @@ msgstr ""
 "momento foi fechada) a janela sob o rato será a candidata preferida. É uma "
 "variante pouco usual, mas possível do <em>Carregar para Obter o Foco</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1286,7 +1268,7 @@ msgstr ""
 "de costume. Pense nisto como um <em>Carregar para Obter o Foco</em>, mas sem "
 "ter de carregar de facto."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1299,7 +1281,7 @@ msgstr ""
 "momento foi fechada) a janela sob o rato será a candidata preferida. Escolha "
 "esta opção, se quiser um foco controlado à passagem."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1314,7 +1296,7 @@ msgstr ""
 "irão funcionar. Provavelmente irá querer usar a opção <em>O foco segue o "
 "rato (precedência do rato)</em> em alternativa!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1331,6 +1313,18 @@ msgstr ""
 "o <em>selector de janelas (\"Alt+Tab\")</em> contrariam a política e não "
 "irão funcionar. Provavelmente irá querer usar a opção <em>O Foco Segue o "
 "Rato - Precedência do Rato</em> em alternativa!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Quando esta opção estiver activa, o ecrã activo (onde aparecem, por "
+#~ "exemplo, as janelas novas) é o ecrã com o cursor do rato. Quando estiver "
+#~ "desactivada, o ecrã activo é o ecrã com a janela em primeiro plano."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "O ecrã &activo segue o rato"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

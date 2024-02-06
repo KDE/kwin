@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2014-02-18 00:50+0100\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-doc@kde.org>\n"
@@ -957,33 +957,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Mehrschirm-Bedregen"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Is dit anmaakt, is de aktive Xinerama-Schirm (op den a.B. niege Finstern "
-"opdukt) de Schirm mit den Muuswieser dor op. Is dit utmaakt, is dat de "
-"Schirm mit dat opstunns aktive Finster. Disse Optschoon is bi de Fokusregel "
-"\"Fokus op Klick\" standardwies ut- un bi anner Fokusregeln anmaakt."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "&Muus treckt anmaakt Schirm na"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -996,14 +971,14 @@ msgstr ""
 "Schirm af."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "Fokus na Schirm scheden"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr ""
@@ -1331,7 +1306,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Bloots bi Ö&verdecken andocken"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1347,7 +1322,7 @@ msgstr ""
 "Dit Bedregen is normaal op anner Bedriefsystemen un<b>\n"
 "wohrschienlich dat, wat Du wullt."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1370,7 +1345,7 @@ msgstr ""
 "warrt dat Finster ünner den Muuswieser vörtrocken.<br><br>\n"
 "Nich normaal, man en möögliche Variante vun <i>Fokus op Klick</i>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1392,7 +1367,7 @@ msgstr ""
 "Fokusverleer-Schuul löppt normaal.<br><br>\n"
 "Kann een sik as <i>Fokus op Klick</i> ahn Klicken vörstellen."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1414,7 +1389,7 @@ msgstr ""
 "warrt dat Finster ünner den Muuswieser vörtrocken.<br><br>\n"
 "Bruuk dit, wenn Du den Fokus mit de sweven Muus kuntrulleren wullt."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1441,7 +1416,7 @@ msgstr ""
 "Hööchstwohrschienlich wullt Du ansteed<br>\n"
 "<i>Fokus folgt Muus - Muus geiht vör</i> bruken!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"
@@ -1473,6 +1448,27 @@ msgstr ""
 "gaht dor nich mit tosamen un <b>funkscheneert nich</b>.<br><br>\n"
 "Hööchstwohrschienlich wullt Du ansteed<br>\n"
 "<i>Fokus folgt Muus - Muus geiht vör</i> bruken!"
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Is dit anmaakt, is de aktive Xinerama-Schirm (op den a.B. niege Finstern "
+#~ "opdukt) de Schirm mit den Muuswieser dor op. Is dit utmaakt, is dat de "
+#~ "Schirm mit dat opstunns aktive Finster. Disse Optschoon is bi de "
+#~ "Fokusregel \"Fokus op Klick\" standardwies ut- un bi anner Fokusregeln "
+#~ "anmaakt."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "&Muus treckt anmaakt Schirm na"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

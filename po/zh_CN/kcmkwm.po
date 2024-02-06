@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2024-01-06 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -847,25 +847,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "多显示器行为："
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"启用此项时，活动屏幕 (显示新窗口的屏幕) 将是鼠标光标所在的屏幕。禁用此项时，"
-"活动屏幕将是焦点窗口所在的屏幕。"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "活动屏幕跟随鼠标(&M)"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -873,13 +856,13 @@ msgid ""
 msgstr "启用此项时，聚焦操作将只在活动屏幕中发生"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "分隔屏幕焦点(&S)"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "窗口激活策略描述"
@@ -1180,7 +1163,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "仅在重叠时吸附"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1189,7 +1172,7 @@ msgstr ""
 "<em>点击聚焦：</em>窗口在您点击它时被激活。此模式普遍被其他操作系统采用，可能"
 "是您想要的行为。"
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1202,7 +1185,7 @@ msgstr ""
 "由系统选择时 (例如，由于当前活动窗口被关闭时)，位于鼠标下方的窗口将是优先候"
 "选。可以将此视作 <em>点击聚焦</em> 模式的一种不常见，但可能存在的变种版本。"
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1214,7 +1197,7 @@ msgstr ""
 "方的窗口将不会获得焦点。<em>阻止焦点抢占</em>机制将正常生效。可以将此模式视作"
 "无需点击的 <em>点击聚焦</em> 的变种版本。"
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1226,7 +1209,7 @@ msgstr ""
 "前活动窗口被关闭时)，位于鼠标下方的窗口将是优先候选。如果您想通过鼠标悬停控制"
 "焦点，请选择此项。"
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1240,7 +1223,7 @@ msgstr ""
 "冲突，它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 (鼠标"
 "优先)</em> 模式。"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1255,3 +1238,14 @@ msgstr ""
 "strong><em>阻止焦点抢占</em> 和 <em>任务切换器 (Alt+Tab)</em> 与本策略冲突，"
 "它们将不会生效。您很可能并不需要使用此模式，而是 <em>焦点跟随鼠标 (鼠标优"
 "先)</em> 模式。"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "启用此项时，活动屏幕 (显示新窗口的屏幕) 将是鼠标光标所在的屏幕。禁用此项"
+#~ "时，活动屏幕将是焦点窗口所在的屏幕。"
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "活动屏幕跟随鼠标(&M)"

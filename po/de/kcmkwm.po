@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2023-04-16 14:03+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -896,28 +896,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Verhalten bei mehreren Bildschirmen:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Wenn diese Einstellung aktiviert ist, wird der aktive Bildschirm (auf dem "
-"beispielsweise neue Fenster erscheinen) durch den Mauszeiger bestimmt. Es "
-"ist immer der Bildschirm aktiv, auf dem sich der Mauszeiger befindet. Wenn "
-"diese Einstellung deaktiviert ist, ist der aktive Bildschirm der, auf dem "
-"sich das jeweils aktive Fenster befindet."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Aktiver Bildschirm folgt der &Maus"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -927,13 +907,13 @@ msgstr ""
 "den jeweils aktiven Bildschirm bezogen."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Aktivierungsaktionen nur für aktiven Bildschirm anwenden"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Beschreibung der Aktivierungsregel"
@@ -1248,7 +1228,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Nur wenn sie sich überlappen"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1258,7 +1238,7 @@ msgstr ""
 "Maus hinein klicken. Dieses Verhalten ist in vielen Betriebssystemen "
 "gebräuchlich und wahrscheinlich die gewünschte Einstellung."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1273,7 +1253,7 @@ msgstr ""
 "wurde, dann ist das Fenster unter dem Mauszeiger der bevorzugte Kandidat. "
 "Ungewöhnliche aber mögliche Variante von <em>Aktivierung nach Klick</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1287,7 +1267,7 @@ msgstr ""
 "unerwünschter Aktivierung</em> funktioniert normal.Dies ist wie "
 "<em>Aktivierung nach Klick</em> nur ohne tatsächlich klicken zu müssen."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1302,7 +1282,7 @@ msgstr ""
 "gesteuerte Aktivierung."
 
 # Hier brauche ich eine zweite Meinung bzgl. "tabbox". Die bisherige Übersetzung sagt "Zwischen Arbeitsflächen umschalten", was eigentlich keinen Sinn ergibt.
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1318,7 +1298,7 @@ msgstr ""
 "sollten stattdessen besser <em>Aktivierung bei Mauskontakt – Vorrang für "
 "Maus</em> verwenden."
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1335,6 +1315,20 @@ msgstr ""
 "em> und der <em>Anwendungsumschalter („Alt+Tab“)</em> widersprechen dieser "
 "Regelung und werden nicht funktionieren.Sie sollten stattdessen besser "
 "<em>Aktivierung bei Mauskontakt – Vorrang für Maus</em> verwenden."
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, wird der aktive Bildschirm (auf dem "
+#~ "beispielsweise neue Fenster erscheinen) durch den Mauszeiger bestimmt. Es "
+#~ "ist immer der Bildschirm aktiv, auf dem sich der Mauszeiger befindet. "
+#~ "Wenn diese Einstellung deaktiviert ist, ist der aktive Bildschirm der, "
+#~ "auf dem sich das jeweils aktive Fenster befindet."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Aktiver Bildschirm folgt der &Maus"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

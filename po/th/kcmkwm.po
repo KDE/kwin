@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2010-12-17 20:58+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -929,33 +929,8 @@ msgstr "นี่เป็นค่าหน่วงเวลาก่อนท
 msgid "Multiscreen behavior:"
 msgstr ""
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the  screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"เมื่อเปิดตัวเลือกนี้ หน้าจอ Xinerama ที่ทำงานอยู่ (ตัวอย่างเช่น เมื่อหน้าต่างใหม่ปรากฏขึ้น) "
-"จะเป็นหน้าจอที่มีตัวชี้ของเมาส์อยู่ เมื่อปิดตัวเลือกนี้ หน้าจอ Xinerama ที่ทำงานอยู่ "
-"จะเป็นหน้าจอที่มีหน้าต่างที่กำลังถูกโฟกัสอยู่ ตามปกติแล้วตัวเลือกนี้จะถูกปิดการใช้งาน "
-"เพื่อให้สามารถคลิกแล้วสลับการโฟกัสได้ และเพื่อเปิดใช้งานกฏการได้รับโฟกัสอื่น ๆ ด้วย"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "เรียกใช้หน้าจอตามตัวชี้ของเ&มาส์"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -966,14 +941,14 @@ msgid ""
 msgstr "หากเปิดตัวเลือกนี้ ปฏิบัติการโฟกัสจะถูกจำกัดอยู่แต่หน้าจอ Xinerama ที่ทำงานอยู่เท่านั้น"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "แ&ยกโฟกัสของหน้าจอ"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr ""
@@ -1304,14 +1279,14 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "ให้กรอบหน้าต่างแนบกัน เมื่อมีการซ้อนทับกันเท่านั้น"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1321,7 +1296,7 @@ msgid ""
 "em>."
 msgstr ""
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1330,7 +1305,7 @@ msgid ""
 "to focus</em> just without having to actually click."
 msgstr ""
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1339,7 +1314,7 @@ msgid ""
 "if you want a hover controlled focus."
 msgstr ""
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1349,7 +1324,7 @@ msgid ""
 "precedence)</em> instead!"
 msgstr ""
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1359,6 +1334,26 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the  screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "เมื่อเปิดตัวเลือกนี้ หน้าจอ Xinerama ที่ทำงานอยู่ (ตัวอย่างเช่น เมื่อหน้าต่างใหม่ปรากฏขึ้น) "
+#~ "จะเป็นหน้าจอที่มีตัวชี้ของเมาส์อยู่ เมื่อปิดตัวเลือกนี้ หน้าจอ Xinerama ที่ทำงานอยู่ "
+#~ "จะเป็นหน้าจอที่มีหน้าต่างที่กำลังถูกโฟกัสอยู่ ตามปกติแล้วตัวเลือกนี้จะถูกปิดการใช้งาน "
+#~ "เพื่อให้สามารถคลิกแล้วสลับการโฟกัสได้ และเพื่อเปิดใช้งานกฏการได้รับโฟกัสอื่น ๆ ด้วย"
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "เรียกใช้หน้าจอตามตัวชี้ของเ&มาส์"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

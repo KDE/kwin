@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2020-02-08 15:20+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -919,34 +919,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Opførsel ved flere skærme:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Når denne indstilling er aktiveret, er den aktive Xinerama-skærm (f.eks. der "
-"hvor nye vinduer dukker op), den skærm hvor musemarkøren er. Når deaktiveret "
-"er den aktive Xinerama-skærm den skærm med et fokuseret vindue. Som standard "
-"er denne indstilling deaktiveret for \"Klik for at fokusere\" og aktiveret "
-"for andre fokuspolitikker."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Aktiv skærm følger &mus"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -959,13 +933,13 @@ msgstr ""
 "den aktive Xinerama-skærm"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Separat skærmfokus"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, fuzzy, kde-format
 #| msgid "Window &activation policy:"
 msgid "Window activation policy description"
@@ -1275,7 +1249,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Kun ved overlap"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1291,7 +1265,7 @@ msgstr ""
 "Denne opførsel er almindelig på andre styresystemer og er<br>\n"
 "sandsynligvis det du ønsker."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1314,7 +1288,7 @@ msgstr ""
 "er vinduet under musen den foretrukne kandidat.<br><br>\n"
 "Usædvanlig, men mulig variant af <i>Klik for fokus</i>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1336,7 +1310,7 @@ msgstr ""
 "Forhindring af at fokus stjæles, finder sted som normalt.<br><br>\n"
 "Tænk <i>Klik for fokus</i> blot uden at du faktisk behøver klikke."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1358,7 +1332,7 @@ msgstr ""
 "er vinduet under musen den foretrukne kandidat.<br><br>\n"
 "Vælg dette hvis du vil have fokus kontrolleret af hvad musen er over."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1386,7 +1360,7 @@ msgstr ""
 "Du vil sikkert hellere bruge<br>\n"
 "<i>Fokus følger musen - musen har forrang</i> i stedet for!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"
@@ -1419,6 +1393,27 @@ msgstr ""
 "er i modstrid med politikken og <b>vil ikke virke</b>.<br><br>\n"
 "Du vil sikkert hellere bruge<br>\n"
 "<i>Fokus følger musen - musen har forrang</i> i stedet for!"
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Når denne indstilling er aktiveret, er den aktive Xinerama-skærm (f.eks. "
+#~ "der hvor nye vinduer dukker op), den skærm hvor musemarkøren er. Når "
+#~ "deaktiveret er den aktive Xinerama-skærm den skærm med et fokuseret "
+#~ "vindue. Som standard er denne indstilling deaktiveret for \"Klik for at "
+#~ "fokusere\" og aktiveret for andre fokuspolitikker."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Aktiv skærm følger &mus"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

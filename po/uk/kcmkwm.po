@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2022-12-03 15:15+0200\n"
 "Last-Translator: Fracture dept <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -892,26 +892,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Поведінка у середовищі з декількома моніторами:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Якщо буде позначено цей пункт, активний екран (де, наприклад, з’являються "
-"нові вікна) буде екраном, на якому перебуває мишки. Якщо пункт позначено не "
-"буде, активний екран визначатиметься за вікном у фокусі."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Активний екран прямує за &мишкою"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -921,13 +903,13 @@ msgstr ""
 "активному екрані"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Розділити фокус екрана"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Опис правил активації вікон"
@@ -1237,7 +1219,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "Лише при перекритті"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1247,7 +1229,7 @@ msgstr ""
 "нього вказівник миші і клацнете лівою кнопкою. Така поведінка є типовою у "
 "інших операційних системах і, ймовірно, є бажаною для вас."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1262,7 +1244,7 @@ msgstr ""
 "перевага надаватиметься вікну під вказівником миші. Незвичний, але можливий "
 "варіант <em>Клацніть для фокусування</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1276,7 +1258,7 @@ msgstr ""
 "звичному режимі. Те саме, що і <em>Клацніть для фокусування</em>, але без "
 "потреби у клацанні."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1289,7 +1271,7 @@ msgstr ""
 "поточного активного вікна), перевага надаватиметься вікну під вказівником "
 "миші. Виберіть, якщо хочете керувати фокусуванням наведенням вказівника."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1304,7 +1286,7 @@ msgstr ""
 "цьому правилу і не працюватиме. Варто використовувати <em>Фокус під мишкою — "
 "пріоритет мишки</em>!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1321,6 +1303,18 @@ msgstr ""
 "<em>перемикання вікон («Alt+Tab»)</em> суперечить цьому правилу і не "
 "працюватиме. Варто використовувати <em>Фокус під мишкою — пріоритет мишки</"
 "em>!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Якщо буде позначено цей пункт, активний екран (де, наприклад, з’являються "
+#~ "нові вікна) буде екраном, на якому перебуває мишки. Якщо пункт позначено "
+#~ "не буде, активний екран визначатиметься за вікном у фокусі."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Активний екран прямує за &мишкою"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

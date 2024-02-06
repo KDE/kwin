@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2008-12-25 15:33+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <en@li.org>\n"
@@ -939,34 +939,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr ""
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the  screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದಾಗ, ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ(Xinerma) ತೆರೆಯು (ಉದಾ, ಎಲ್ಲಿ ಹೊಸ "
-"ವಿಂಡೋಗಳು ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆಯೋ ಅಲ್ಲಿ) ಮೌಸ್‌ ಸೂಚಕವನ್ನು ಹೊಂದಿರುವ ತೆರಯಾಗಿರುತ್ತದೆ. "
-"ಅಶಕ್ತಗೊಂಡಾಗ, ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ ತೆರೆಯು ಗಮನ ಇರಿಸಲ್ಪಟ್ಟ ವಿಂಡೋವನ್ನು ಹೊಂದಿರುವ ವಿಂಡೋ "
-"ಆಗಿರುತ್ತದೆ. ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ ಈ ಆಯ್ಕೆಯು 'ಗಮನಿಸಲು ಕ್ಕಿಕ್ ಮಾಡು'ವುದಕ್ಕೆ "
-"ಅಶಕ್ತಗೊಂಡಿರುತ್ತದೆ ಹಾಗು ಇತರೆ ಗಮನ ನೀತಿಗಳಿಗೆ ಶಕ್ತಗೊಂಡಿರುತ್ತದೆ."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "ಸಕ್ರಿಯ ತೆರೆಯು ಮೌಸ್‌ ಅನ್ನು ಅನುಸರಿಸುತ್ತದೆ(&m)"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -979,14 +953,14 @@ msgstr ""
 "ಮಾತ್ರ ಸೀಮಿತವಾಗಿರುತ್ತದೆ"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "ಪ್ರತ್ಯೇಕ ತೆರೆ ಗಮನ(&e)"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr ""
@@ -1320,14 +1294,14 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "ವಿಂಡೋಗಳು ಒಂದರ ಮೇಲೆ ಇನ್ನೊಂದು ಹೇರಿದಾಗ ಮಾತ್ರ ಸೆಳೆಯಲ್ಪಡುವಂತೆ ಮಾಡು(&y)"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1337,7 +1311,7 @@ msgid ""
 "em>."
 msgstr ""
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1346,7 +1320,7 @@ msgid ""
 "to focus</em> just without having to actually click."
 msgstr ""
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1355,7 +1329,7 @@ msgid ""
 "if you want a hover controlled focus."
 msgstr ""
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1365,7 +1339,7 @@ msgid ""
 "precedence)</em> instead!"
 msgstr ""
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1375,6 +1349,27 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the  screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "ಈ ಆಯ್ಕೆಯನ್ನು ಶಕ್ತಗೊಳಿಸಿದಾಗ, ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ(Xinerma) ತೆರೆಯು (ಉದಾ, ಎಲ್ಲಿ ಹೊಸ "
+#~ "ವಿಂಡೋಗಳು ಕಾಣಿಸಿಕೊಳ್ಳುತ್ತವೆಯೋ ಅಲ್ಲಿ) ಮೌಸ್‌ ಸೂಚಕವನ್ನು ಹೊಂದಿರುವ ತೆರಯಾಗಿರುತ್ತದೆ. "
+#~ "ಅಶಕ್ತಗೊಂಡಾಗ, ಸಕ್ರಿಯ ಕ್ಷೈನರ್ಮಾ ತೆರೆಯು ಗಮನ ಇರಿಸಲ್ಪಟ್ಟ ವಿಂಡೋವನ್ನು ಹೊಂದಿರುವ ವಿಂಡೋ "
+#~ "ಆಗಿರುತ್ತದೆ. ಪೂರ್ವನಿಯೋಜಿತವಾಗಿ ಈ ಆಯ್ಕೆಯು 'ಗಮನಿಸಲು ಕ್ಕಿಕ್ ಮಾಡು'ವುದಕ್ಕೆ "
+#~ "ಅಶಕ್ತಗೊಂಡಿರುತ್ತದೆ ಹಾಗು ಇತರೆ ಗಮನ ನೀತಿಗಳಿಗೆ ಶಕ್ತಗೊಂಡಿರುತ್ತದೆ."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "ಸಕ್ರಿಯ ತೆರೆಯು ಮೌಸ್‌ ಅನ್ನು ಅನುಸರಿಸುತ್ತದೆ(&m)"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

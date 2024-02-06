@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2019-09-29 12:19-0700\n"
 "Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -917,36 +917,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr ""
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the  screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"このオプションを有効にすると、アクティブな Xinerama スクリーン (例えば新しい"
-"ウィンドウが現れるスクリーン) は、マウスポインタのあるスクリーンになります。"
-"無効にすると、フォーカスされているウィンドウのあるスクリーンがアクティブな "
-"Xinerama スクリーンになります。このオプションは標準設定では<interface>クリッ"
-"クしてフォーカス</interface>の場合は無効、その他のフォーカスポリシーの場合は"
-"有効になっています。"
-
-# ACCELERATOR changed by translator
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "アクティブなスクリーンはマウスに従う(&C)"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -960,14 +932,14 @@ msgstr ""
 
 # ACCELERATOR changed by translator
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "スクリーンフォーカスを分離する(&O)"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, fuzzy, kde-format
 #| msgid "Window &activation policy:"
 msgid "Window activation policy description"
@@ -1284,7 +1256,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "重なり合ったときのみウィンドウをくっつける(&Y)"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus:"
@@ -1299,7 +1271,7 @@ msgstr ""
 "カス:</span> クリックしたウィンドウがアクティブになります。この挙動は他の OS "
 "と共通であり、あなたの想定と同じように動作します。</p></body></html>"
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus "
@@ -1324,7 +1296,7 @@ msgstr ""
 "style=\" font-style:italic;\">クリックしてフォーカス</span>の変化形です。</"
 "p></body></html>"
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Focus follows "
@@ -1346,7 +1318,7 @@ msgstr ""
 "リックする必要のない<span style=\" font-style:italic;\">クリックしてフォーカ"
 "ス</span> だと思ってください</p></body></html>"
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p>This is mostly the same as <span style=\" font-"
@@ -1366,7 +1338,7 @@ msgstr ""
 "れているウィンドウが優先的な候補となります。フォーカスをホバーで操作したい場"
 "合はこちらを選択してください。</p></body></html>"
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "
@@ -1392,7 +1364,7 @@ msgstr ""
 "に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
 "span>を使用するべきでしょう。</p></body></html>"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, fuzzy, kde-format
 #| msgid ""
 #| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "
@@ -1418,3 +1390,26 @@ msgstr ""
 "ス ('Alt+Tab') </span>はアクティブ化ポリシーに反するため機能しません。代わり"
 "に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
 "span>を使用するべきでしょう。</p></body></html>"
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the  screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "このオプションを有効にすると、アクティブな Xinerama スクリーン (例えば新し"
+#~ "いウィンドウが現れるスクリーン) は、マウスポインタのあるスクリーンになりま"
+#~ "す。無効にすると、フォーカスされているウィンドウのあるスクリーンがアクティ"
+#~ "ブな Xinerama スクリーンになります。このオプションは標準設定では"
+#~ "<interface>クリックしてフォーカス</interface>の場合は無効、その他のフォー"
+#~ "カスポリシーの場合は有効になっています。"
+
+# ACCELERATOR changed by translator
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "アクティブなスクリーンはマウスに従う(&C)"

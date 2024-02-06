@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2023-10-19 10:10+0300\n"
 "Last-Translator: Elkana Bardugo <ttv200@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -872,26 +872,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "התנהגות בריבוי מסכים:"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, kde-format
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"כשאפשרות זו פעילה, המסך הפעיל (בו מופיעים חלונות חדשים למשל) הוא המסך בו "
-"מופיע סמן העכבר. כשהאפשרות כבויה, החלון הפעיל הוא החלון שמכיל את החלון שעליו "
-"המיקוד."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "המסך הפעיל עוקב אחרי ה&עכבר"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -899,13 +881,13 @@ msgid ""
 msgstr "כשאפשרות זו פעילה, פעולות מיקוד מוגבלות רק למסך הפעיל"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "ה&פרדת מיקוד מסך"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr "תיאור מדיניות הפעלת חלונות"
@@ -1209,7 +1191,7 @@ msgstr ""
 msgid "Only when overlapping"
 msgstr "רק כשהם חופפים"
 
-#: windows.cpp:93
+#: windows.cpp:92
 #, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
@@ -1218,7 +1200,7 @@ msgstr ""
 "<em>לחיצה למיקוד:</em> חלון יהפוך להיות פעיל בלחיצה עליו. התנהגות זו נפוצה "
 "במערכות הפעלה אחרות וכנראה שזה מה שיהיה לך הכי מוכר."
 
-#: windows.cpp:96
+#: windows.cpp:95
 #, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
@@ -1231,7 +1213,7 @@ msgstr ""
 "חובה על המערכת לבחור בחלון פעיל (למשל: כיוון שהחלון הנוכחי נסגר) החלון שמתחת "
 "לעכבר הוא המועמד המועדף. חריג, אבל חידוד אפשרי של <em>לחיצה למיקוד</em>."
 
-#: windows.cpp:99
+#: windows.cpp:98
 #, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
@@ -1243,7 +1225,7 @@ msgstr ""
 "מיקוד</em> מתרחשת כרגיל. אפשר לחשוב על זה כעל <em>לחיצה למיקוד</em> רק בלי "
 "שצריך ללחוץ בפועל."
 
-#: windows.cpp:102
+#: windows.cpp:101
 #, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
@@ -1255,7 +1237,7 @@ msgstr ""
 "(למשל: כיוון שהחלון הנוכחי נסגר) החלון שמתחת לעכבר הוא המועמד המועדף. כדי "
 "לעבוד עם מיקוד שנשלט בריחוף, יש לבחור בזה."
 
-#: windows.cpp:105
+#: windows.cpp:104
 #, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
@@ -1269,7 +1251,7 @@ msgstr ""
 "+Tab’)</em> סותרות את מדיניות ההפעלה ולא תעבודנה. סביר מאוד להניח שעדיף לך "
 "להשתמש ב<em>מיקוד עוקב עכבר (עדיפות לעכבר)</em> במקום!"
 
-#: windows.cpp:108
+#: windows.cpp:107
 #, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
@@ -1284,6 +1266,18 @@ msgstr ""
 "><strong>אזהרה:</strong> <em>מניעת גניבת מיקוד</em> ו<em>תיבת טאב (‚Alt"
 "+Tab’)</em> סותרות את מדיניות ההפעלה ולא תעבודנה. סביר מאוד להניח שעדיף לך "
 "להשתמש ב<em>מיקוד עוקב עכבר (עדיפות לעכבר)</em> במקום!"
+
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "כשאפשרות זו פעילה, המסך הפעיל (בו מופיעים חלונות חדשים למשל) הוא המסך בו "
+#~ "מופיע סמן העכבר. כשהאפשרות כבויה, החלון הפעיל הוא החלון שמכיל את החלון "
+#~ "שעליו המיקוד."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "המסך הפעיל עוקב אחרי ה&עכבר"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"

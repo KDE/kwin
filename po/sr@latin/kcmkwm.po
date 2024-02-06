@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-02 01:40+0000\n"
+"POT-Creation-Date: 2024-02-06 03:08+0000\n"
 "PO-Revision-Date: 2017-09-28 17:58+0200\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -943,33 +943,8 @@ msgstr ""
 msgid "Multiscreen behavior:"
 msgstr "Ponašanje više ekrana"
 
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, the active Xinerama screen (where new "
-#| "windows appear, for example) is the screen containing the mouse pointer. "
-#| "When disabled, the active Xinerama screen is the screen containing the "
-#| "focused window. By default this option is disabled for Click to focus and "
-#| "enabled for other focus policies."
-msgid ""
-"When this option is enabled, the active screen (where new windows appear, "
-"for example) is the screen containing the mouse pointer. When disabled, the "
-"active screen is the screen containing the focused window."
-msgstr ""
-"Ovim se zadaje da aktivan Xineramin ekran (gde se npr. pojavljuju novi "
-"prozori) bude ona na kome je pokazivač miša. Kada je isključeno, aktivan "
-"ekran je onaj sa fokusiranim prozorom. Ova je opcija podrazumevano "
-"isključena za fokus klikom, a uključena za ostale smernice fokusiranja."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_ActiveMouseScreen)
-#: focus.ui:206
-#, kde-format
-msgid "Active screen follows &mouse"
-msgstr "Aktivni ekran prati &miš"
-
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:213
+#: focus.ui:203
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -980,14 +955,14 @@ msgid ""
 msgstr "Ovim se radnje sa fokusom ograničavaju na aktivan Xineramin ekran."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:216
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "&Razdvoji fokus po ekranu"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:229
+#: focus.ui:219
 #, kde-format
 msgid "Window activation policy description"
 msgstr ""
@@ -1314,7 +1289,7 @@ msgid "Only when overlapping"
 msgstr "Uklapanje &samo u slučaju preklapanja"
 
 # >> @label
-#: windows.cpp:93
+#: windows.cpp:92
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus</b><br>\n"
@@ -1330,7 +1305,7 @@ msgstr ""
 "verovatno ono što želite."
 
 # >> @label
-#: windows.cpp:96
+#: windows.cpp:95
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Click To Focus - Mouse Precedence</b><br>\n"
@@ -1352,7 +1327,7 @@ msgstr ""
 "<br /><br />Neobična, ali moguća varijanta fokusa klikom."
 
 # >> @label
-#: windows.cpp:99
+#: windows.cpp:98
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse</b><br>\n"
@@ -1373,7 +1348,7 @@ msgstr ""
 "nalik fokusu klikom, samo bez klika."
 
 # >> @label
-#: windows.cpp:102
+#: windows.cpp:101
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
@@ -1394,7 +1369,7 @@ msgstr ""
 "mišem ima prednost.<br /><br />Na ovaj način, fokus određujete lebdenjem."
 
 # >> @label
-#: windows.cpp:105
+#: windows.cpp:104
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Under Mouse</b><br>\n"
@@ -1419,7 +1394,7 @@ msgstr ""
 
 # rewrite-msgid: /legacy//
 # >> @label
-#: windows.cpp:108
+#: windows.cpp:107
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>Focus Strictly Under Mouse</b><br>\n"
@@ -1447,6 +1422,26 @@ msgstr ""
 "+Tab<br />sukobljeni su ovoj opciji, te <b>neće raditi</b>.<br /><br />Od "
 "ovoga će vam vrlo verovatno više odgovarati da<br />fokus prati miš, uz "
 "prednost mišu."
+
+#, fuzzy
+#~| msgid ""
+#~| "When this option is enabled, the active Xinerama screen (where new "
+#~| "windows appear, for example) is the screen containing the mouse pointer. "
+#~| "When disabled, the active Xinerama screen is the screen containing the "
+#~| "focused window. By default this option is disabled for Click to focus "
+#~| "and enabled for other focus policies."
+#~ msgid ""
+#~ "When this option is enabled, the active screen (where new windows appear, "
+#~ "for example) is the screen containing the mouse pointer. When disabled, "
+#~ "the active screen is the screen containing the focused window."
+#~ msgstr ""
+#~ "Ovim se zadaje da aktivan Xineramin ekran (gde se npr. pojavljuju novi "
+#~ "prozori) bude ona na kome je pokazivač miša. Kada je isključeno, aktivan "
+#~ "ekran je onaj sa fokusiranim prozorom. Ova je opcija podrazumevano "
+#~ "isključena za fokus klikom, a uključena za ostale smernice fokusiranja."
+
+#~ msgid "Active screen follows &mouse"
+#~ msgstr "Aktivni ekran prati &miš"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
