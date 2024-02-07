@@ -474,13 +474,13 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     // to texture coordinates.
     const QRectF boundingRect = actualShape.boundingRect();
     QMatrix4x4 textureMatrix;
+    textureMatrix.scale(1, -1);
+    textureMatrix.translate(0, -1);
     // apply texture->buffer transformation
     textureMatrix.translate(0.5, 0.5);
     textureMatrix *= renderTarget.transform().toMatrix();
     textureMatrix.translate(-0.5, -0.5);
     // scaled logical to texture coordinates
-    textureMatrix.scale(1, -1);
-    textureMatrix.translate(0, -1);
     textureMatrix.scale(1.0 / boundingRect.width(), 1.0 / boundingRect.height(), 1);
     textureMatrix.translate(-boundingRect.x(), -boundingRect.y(), 0);
     textureMatrix.scale(1.0 / viewport.scale(), 1.0 / viewport.scale());
