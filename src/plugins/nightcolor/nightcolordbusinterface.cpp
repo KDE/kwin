@@ -8,8 +8,8 @@
 */
 
 #include "nightcolordbusinterface.h"
-#include "colorcorrectadaptor.h"
 #include "nightcolormanager.h"
+#include "nightlightadaptor.h"
 
 #include <QDBusMessage>
 
@@ -31,12 +31,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("inhibited"), m_manager->isInhibited());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -49,12 +49,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("enabled"), m_manager->isEnabled());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -67,12 +67,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("running"), m_manager->isRunning());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -85,12 +85,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("currentTemperature"), m_manager->currentTemperature());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -103,12 +103,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("targetTemperature"), m_manager->targetTemperature());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -121,12 +121,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("mode"), uint(m_manager->mode()));
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -139,12 +139,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("daylight"), uint(m_manager->daylight()));
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -158,12 +158,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("previousTransitionDuration"), previousTransitionDuration());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -177,12 +177,12 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         changedProperties.insert(QStringLiteral("scheduledTransitionDuration"), scheduledTransitionDuration());
 
         QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/ColorCorrect"),
+            QStringLiteral("/org/kde/KWin/NightLight"),
             QStringLiteral("org.freedesktop.DBus.Properties"),
             QStringLiteral("PropertiesChanged"));
 
         message.setArguments({
-            QStringLiteral("org.kde.kwin.ColorCorrect"),
+            QStringLiteral("org.kde.KWin.NightLight"),
             changedProperties,
             QStringList(), // invalidated_properties
         });
@@ -190,14 +190,14 @@ NightColorDBusInterface::NightColorDBusInterface(NightColorManager *parent)
         QDBusConnection::sessionBus().send(message);
     });
 
-    new ColorCorrectAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/ColorCorrect"), this);
-    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.NightColor"));
+    new NightLightAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/NightLight"), this);
+    QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.KWin.NightLight"));
 }
 
 NightColorDBusInterface::~NightColorDBusInterface()
 {
-    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.NightColor"));
+    QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.KWin.NightLight"));
 }
 
 bool NightColorDBusInterface::isInhibited() const
@@ -268,7 +268,7 @@ quint32 NightColorDBusInterface::scheduledTransitionDuration() const
     return quint32(m_manager->scheduledTransitionDuration());
 }
 
-void NightColorDBusInterface::nightColorAutoLocationUpdate(double latitude, double longitude)
+void NightColorDBusInterface::setLocation(double latitude, double longitude)
 {
     m_manager->autoLocationUpdate(latitude, longitude);
 }
