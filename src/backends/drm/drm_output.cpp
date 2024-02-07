@@ -195,6 +195,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         if (active) {
             m_renderLoop->uninhibit();
             m_renderLoop->scheduleRepaint();
+            doSetChannelFactors(m_channelFactors);
         } else {
             m_renderLoop->inhibit();
         }
