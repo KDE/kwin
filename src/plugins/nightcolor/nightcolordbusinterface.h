@@ -21,7 +21,7 @@ class NightColorManager;
 class NightColorDBusInterface : public QObject, public QDBusContext
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.ColorCorrect")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.NightLight")
     Q_PROPERTY(bool inhibited READ isInhibited)
     Q_PROPERTY(bool enabled READ isEnabled)
     Q_PROPERTY(bool running READ isRunning)
@@ -58,7 +58,7 @@ public Q_SLOTS:
      * @return void
      * @since 5.12
      */
-    void nightColorAutoLocationUpdate(double latitude, double longitude);
+    void setLocation(double latitude, double longitude);
 
     /**
      * @brief Temporarily blocks Night Color.

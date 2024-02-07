@@ -18,7 +18,7 @@ ecm_qt_declare_logging_category(nightcolor
 kconfig_add_kcfg_files(nightcolor nightcolorsettings.kcfgc)
 
 set(nightcolor_xml_SOURCES)
-qt_add_dbus_adaptor(nightcolor_xml_SOURCES org.kde.kwin.ColorCorrect.xml nightcolordbusinterface.h KWin::NightColorDBusInterface)
+qt_add_dbus_adaptor(nightcolor_xml_SOURCES org.kde.KWin.NightLight.xml nightcolordbusinterface.h KWin::NightColorDBusInterface)
 target_sources(nightcolor PRIVATE ${nightcolor_xml_SOURCES})
 
 if (CMAKE_SYSTEM_NAME MATCHES "Linux")
@@ -28,4 +28,4 @@ endif()
 target_link_libraries(nightcolor kwin KF6::ConfigGui KF6::GlobalAccel KF6::I18n)
 
 install(FILES nightcolorsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
-install(FILES org.kde.kwin.ColorCorrect.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
+install(FILES org.kde.KWin.NightLight.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
