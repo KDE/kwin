@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-07 00:38+0000\n"
 "PO-Revision-Date: 2024-02-05 11:37\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -3520,6 +3520,13 @@ msgstr "仍要注销"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "显示桌面"
+
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#, fuzzy, kde-format
+#| msgid "No Windows"
+msgctxt "@info:placeholder no entries in the task switcher"
+msgid "No open windows"
+msgstr "无窗口"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

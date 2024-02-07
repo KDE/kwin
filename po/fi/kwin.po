@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-07 00:38+0000\n"
 "PO-Revision-Date: 2024-01-29 21:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -3562,6 +3562,13 @@ msgstr "Kirjaudu silti ulos"
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "Näytä työpöytä"
+
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#, fuzzy, kde-format
+#| msgid "No Windows"
+msgctxt "@info:placeholder no entries in the task switcher"
+msgid "No open windows"
+msgstr "Ei ikkunoita"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

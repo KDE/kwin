@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-07 00:38+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -3661,6 +3661,13 @@ msgstr ""
 msgctxt "Special entry in alt+tab list for minimizing all windows"
 msgid "Show Desktop"
 msgstr "වැඩතලය පෙන්වන්න"
+
+#: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
+#, fuzzy, kde-format
+#| msgid "Windows"
+msgctxt "@info:placeholder no entries in the task switcher"
+msgid "No open windows"
+msgstr "කවුළු"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
