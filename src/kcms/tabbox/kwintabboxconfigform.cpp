@@ -60,8 +60,8 @@ KWinTabBoxConfigForm::KWinTabBoxConfigForm(TabboxType type, TabBoxSettings *conf
     connect(ui->orderMinimized, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onOrderMinimizedMode);
     connect(ui->showDesktop, &QAbstractButton::clicked, this, &KWinTabBoxConfigForm::onShowDesktopMode);
 
-    connect(ui->switchingModeCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onSwitchingMode);
-    connect(ui->effectCombo, qOverload<int>(&QComboBox::currentIndexChanged), this, &KWinTabBoxConfigForm::onEffectCombo);
+    connect(ui->switchingModeCombo, &QComboBox::activated, this, &KWinTabBoxConfigForm::onSwitchingMode);
+    connect(ui->effectCombo, &QComboBox::activated, this, &KWinTabBoxConfigForm::onEffectCombo);
 
     auto initShortcutWidget = [this](KKeySequenceWidget *widget, const char *name) {
         widget->setCheckActionCollections({m_shortcuts->actionCollection()});
