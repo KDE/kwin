@@ -92,9 +92,6 @@ void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopMana
     m_virtualDesktopManagement->setRows(rows());
     m_virtualDesktopManagement->sendDone();
 
-    // Now we are sure all ids are there
-    save();
-
     connect(this, &VirtualDesktopManager::currentChanged, m_virtualDesktopManagement, [this]() {
         const QList<PlasmaVirtualDesktopInterface *> deskIfaces = m_virtualDesktopManagement->desktops();
         for (auto *deskInt : deskIfaces) {
