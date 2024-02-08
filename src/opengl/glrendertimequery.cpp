@@ -56,6 +56,9 @@ std::chrono::nanoseconds GLRenderTimeQuery::result()
     if (m_query) {
         uint64_t nanos = 0;
         glGetQueryObjectui64v(m_query, GL_QUERY_RESULT, &nanos);
+        if (nanos == 0) {
+            return std::chrono::nanoseconds::zero();
+        }
         return std::chrono::nanoseconds(nanos) - m_cpuStart;
     } else {
         return m_cpuEnd - m_cpuStart;
