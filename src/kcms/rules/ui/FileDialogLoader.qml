@@ -22,7 +22,7 @@ Loader {
         id: fileDialog
 
         title: root.title
-        fileMode: root.isSaveDialog ? FileDialog.SaveFile : FileDialog.OpenFile
+        fileMode: root.isSaveDialog ? QtDialogs.FileDialog.SaveFile : QtDialogs.FileDialog.OpenFile
         currentFolder: root.lastFolder || StandardPaths.standardLocations(StandardPaths.HomeLocation)[0]
         nameFilters: [ i18n("KWin Rules (*.kwinrule)") ]
         defaultSuffix: "*.kwinrule"
