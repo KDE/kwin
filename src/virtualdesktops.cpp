@@ -87,11 +87,6 @@ void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopMana
         removeVirtualDesktop(id);
     });
 
-    std::for_each(m_desktops.constBegin(), m_desktops.constEnd(), createPlasmaVirtualDesktop);
-
-    m_virtualDesktopManagement->setRows(rows());
-    m_virtualDesktopManagement->sendDone();
-
     connect(this, &VirtualDesktopManager::currentChanged, m_virtualDesktopManagement, [this]() {
         const QList<PlasmaVirtualDesktopInterface *> deskIfaces = m_virtualDesktopManagement->desktops();
         for (auto *deskInt : deskIfaces) {
@@ -102,6 +97,11 @@ void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopMana
             }
         }
     });
+
+    std::for_each(m_desktops.constBegin(), m_desktops.constEnd(), createPlasmaVirtualDesktop);
+
+    m_virtualDesktopManagement->setRows(rows());
+    m_virtualDesktopManagement->sendDone();
 }
 
 void VirtualDesktop::setId(const QString &id)
