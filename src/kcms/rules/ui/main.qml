@@ -241,7 +241,7 @@ KCM.ScrollViewKCM {
         onLastFolderChanged: {
             exportDialog.lastFolder = lastFolder;
         }
-        onFileSelected: {
+        onFileSelected: path => {
             kcm.importFromFile(path);
         }
     }
@@ -253,7 +253,7 @@ KCM.ScrollViewKCM {
         onLastFolderChanged: {
             importDialog.lastFolder = lastFolder;
         }
-        onFileSelected: {
+        onFileSelected: path => {
             selectedIndexes.sort();
             kcm.exportToFile(path, selectedIndexes);
             exportInfo.visible = false;
