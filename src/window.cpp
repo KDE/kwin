@@ -2635,15 +2635,9 @@ void Window::setDecoration(std::shared_ptr<KDecoration2::Decoration> decoration)
             }
         });
         connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
-            if (isDeleted()) {
-                return;
+            if (!isDeleted()) {
+                updateDecorationInputShape();
             }
-            GeometryUpdatesBlocker blocker(this);
-            const QRectF oldGeometry = moveResizeGeometry();
-            if (!isShade()) {
-                checkWorkspacePosition(oldGeometry);
-            }
-            updateDecorationInputShape();
         });
         connect(decoration.get(), &KDecoration2::Decoration::resizeOnlyBordersChanged, this, [this]() {
             if (!isDeleted()) {
