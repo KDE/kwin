@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-02 02:23+0000\n"
+"POT-Creation-Date: 2024-02-08 02:29+0000\n"
 "PO-Revision-Date: 2024-01-21 18:56+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2416,7 +2416,7 @@ msgstr "Eskualde baliogabea"
 msgid "Region outside the workspace"
 msgstr "Langunetik kanpoko eskualdea"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "«PipeWire» korrontea sortzea huts egin du"

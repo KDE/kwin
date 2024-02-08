@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the kde-workspace package.
 # Ilpo Kantonen <ilpo@iki.fi>, 2004, 2005.
 # Teemu Rytilahti <teemu.rytilahti@kde-fi.org>, 2008.
-# Tommi Nieminen <translator@legisign.org>, 2009, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2009, 2011, 2012, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
 # Lasse Liehu <lliehu@kolumbus.fi>, 2011, 2012, 2013, 2014, 2015, 2016.
 #
@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 02:24+0000\n"
-"PO-Revision-Date: 2023-07-04 21:32+0300\n"
+"PO-Revision-Date: 2024-02-02 13:02+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -586,7 +586,7 @@ msgstr "Estä koostaminen"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Taso"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -758,38 +758,37 @@ msgstr "Äärimmäinen"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Alla"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Yllä"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Sijainti"
+msgstr "Ilmoitus"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Ponnahdusikkuna"
 
 #: rulesmodel.cpp:924
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Vakava ilmoitus"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "Ruutunäyttö"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Kerrostus"
 
 #: rulesmodel.cpp:951
 #, kde-format

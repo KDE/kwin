@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1671887 $
+# Version: $Revision: 1672653 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-02 02:23+0000\n"
+"POT-Creation-Date: 2024-02-08 02:29+0000\n"
 "PO-Revision-Date: 2024-01-27 11:03+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2426,7 +2426,7 @@ msgstr "Nieprawidłowy obszar"
 msgid "Region outside the workspace"
 msgstr "Obszar poza przestrzenią pracy"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
