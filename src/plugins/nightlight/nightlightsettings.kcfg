@@ -9,13 +9,13 @@
             <default>false</default>
         </entry>
         <entry name="Mode" type="Enum">
-            <choices name="KWin::NightColorMode">
+            <choices name="KWin::NightLightMode">
                 <choice name="Automatic"/>
                 <choice name="Location"/>
                 <choice name="Times"/>
                 <choice name="Constant"/>
             </choices>
-            <default>NightColorMode::Automatic</default>
+            <default>NightLightMode::Automatic</default>
         </entry>
         <entry name="DayTemperature" type="Int">
             <default>6500</default>
