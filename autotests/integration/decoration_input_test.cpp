@@ -52,10 +52,8 @@ private Q_SLOTS:
     void cleanup();
     void testAxis_data();
     void testAxis();
-    void testDoubleClickOnAllDesktops_data();
     void testDoubleClickOnAllDesktops();
     void testDoubleClickClose();
-    void testDoubleTap_data();
     void testDoubleTap();
     void testHover();
     void testPressToMove_data();
@@ -211,16 +209,6 @@ void DecorationInputTest::testAxis()
     QVERIFY(!window->keepAbove());
 }
 
-void DecorationInputTest::testDoubleClickOnAllDesktops_data()
-{
-    QTest::addColumn<QPoint>("decoPoint");
-    QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
-
-    QTest::newRow("topLeft") << QPoint(0, 0) << Qt::TopLeftSection;
-    QTest::newRow("top") << QPoint(250, 0) << Qt::TopSection;
-    QTest::newRow("topRight") << QPoint(499, 0) << Qt::TopRightSection;
-}
-
 void KWin::DecorationInputTest::testDoubleClickOnAllDesktops()
 {
     KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
@@ -249,21 +237,6 @@ void KWin::DecorationInputTest::testDoubleClickOnAllDesktops()
     PRESS;
     RELEASE;
     QVERIFY(!window->isOnAllDesktops());
-
-    // test top most deco pixel, BUG: 362860
-    window->move(QPoint(0, 0));
-    QFETCH(QPoint, decoPoint);
-    MOTION(decoPoint);
-    QVERIFY(input()->pointer()->decoration());
-    QCOMPARE(input()->pointer()->decoration()->window(), window);
-    QTEST(input()->pointer()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
-    // double click
-    PRESS;
-    RELEASE;
-    QVERIFY(!window->isOnAllDesktops());
-    PRESS;
-    RELEASE;
-    QVERIFY(window->isOnAllDesktops());
 }
 
 void DecorationInputTest::testDoubleClickClose()
@@ -297,16 +270,6 @@ void DecorationInputTest::testDoubleClickClose()
     window->unref();
 }
 
-void DecorationInputTest::testDoubleTap_data()
-{
-    QTest::addColumn<QPoint>("decoPoint");
-    QTest::addColumn<Qt::WindowFrameSection>("expectedSection");
-
-    QTest::newRow("topLeft") << QPoint(10, 10) << Qt::TopLeftSection;
-    QTest::newRow("top") << QPoint(260, 10) << Qt::TopSection;
-    QTest::newRow("topRight") << QPoint(509, 10) << Qt::TopRightSection;
-}
-
 void KWin::DecorationInputTest::testDoubleTap()
 {
     KConfigGroup group = kwinApp()->config()->group(QStringLiteral("Windows"));
@@ -335,23 +298,6 @@ void KWin::DecorationInputTest::testDoubleTap()
     Test::touchDown(0, tapPoint, timestamp++);
     Test::touchUp(0, timestamp++);
     QVERIFY(!window->isOnAllDesktops());
-
-    // test top most deco pixel, BUG: 362860
-    //
-    // Not directly at (0, 0), otherwise ScreenEdgeInputFilter catches
-    // event before DecorationEventFilter.
-    window->move(QPoint(10, 10));
-    QFETCH(QPoint, decoPoint);
-    // double click
-    Test::touchDown(0, decoPoint, timestamp++);
-    QVERIFY(input()->touch()->decoration());
-    QCOMPARE(input()->touch()->decoration()->window(), window);
-    QTEST(input()->touch()->decoration()->decoration()->sectionUnderMouse(), "expectedSection");
-    Test::touchUp(0, timestamp++);
-    QVERIFY(!window->isOnAllDesktops());
-    Test::touchDown(0, decoPoint, timestamp++);
-    Test::touchUp(0, timestamp++);
-    QVERIFY(window->isOnAllDesktops());
 }
 
 void DecorationInputTest::testHover()

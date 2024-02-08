@@ -2759,14 +2759,37 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
     }
 
     // check whether it is a double click
-    if (event->button() == Qt::LeftButton && titlebarPositionUnderMouse()) {
+    if (event->button() == Qt::LeftButton) {
         if (m_decoration.doubleClickTimer.isValid()) {
             const qint64 interval = m_decoration.doubleClickTimer.elapsed();
             m_decoration.doubleClickTimer.invalidate();
             if (interval > QGuiApplication::styleHints()->mouseDoubleClickInterval()) {
                 m_decoration.doubleClickTimer.start(); // expired -> new first click and pot. init
             } else {
-                Workspace::self()->performWindowOperation(this, options->operationTitlebarDblClick());
+                Options::WindowOperation operation;
+                switch (decoration()->sectionUnderMouse()) {
+                case Qt::TitleBarArea:
+                    operation = options->operationTitlebarDblClick();
+                    break;
+                case Qt::LeftSection:
+                case Qt::RightSection:
+                    operation = Options::HMaximizeOp;
+                    break;
+                case Qt::TopSection:
+                case Qt::BottomSection:
+                    operation = Options::VMaximizeOp;
+                    break;
+                case Qt::TopLeftSection:
+                case Qt::TopRightSection:
+                case Qt::BottomLeftSection:
+                case Qt::BottomRightSection:
+                    operation = Options::MaximizeOp;
+                    break;
+                default:
+                    operation = Options::NoOp;
+                    break;
+                }
+                workspace()->performWindowOperation(this, operation);
                 dontInteractiveMoveResize();
                 return false;
             }
@@ -2805,10 +2828,8 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
 
 void Window::processDecorationButtonRelease(QMouseEvent *event)
 {
-    if (isDecorated()) {
-        if (event->isAccepted() || !titlebarPositionUnderMouse()) {
-            invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
-        }
+    if (event->isAccepted()) {
+        invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
     }
 
     if (event->buttons() == Qt::NoButton) {
