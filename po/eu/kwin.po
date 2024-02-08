@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-07 00:38+0000\n"
-"PO-Revision-Date: 2024-01-19 19:34+0100\n"
+"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"PO-Revision-Date: 2024-02-07 21:16+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -2416,7 +2416,7 @@ msgstr "Eskualde baliogabea"
 msgid "Region outside the workspace"
 msgstr "Langunetik kanpoko eskualdea"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "«PipeWire» korrontea sortzea huts egin du"
@@ -3560,11 +3560,10 @@ msgid "Show Desktop"
 msgstr "Erakutsi mahaigaina"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Leihorik ez"
+msgstr "Ez dago irekitako leihorik"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

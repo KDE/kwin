@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-07 00:38+0000\n"
-"PO-Revision-Date: 2024-01-18 12:08+0100\n"
+"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"PO-Revision-Date: 2024-02-07 12:20+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -2423,7 +2423,7 @@ msgstr "Regió no vàlida"
 msgid "Region outside the workspace"
 msgstr "Regió situada fora de l'espai de treball"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat en crear el flux del PipeWire"
@@ -3565,11 +3565,10 @@ msgid "Show Desktop"
 msgstr "Mostra l'escriptori"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Sense finestres"
+msgstr "Sense cap finestra oberta"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-07 00:38+0000\n"
-"PO-Revision-Date: 2024-01-18 11:28+0300\n"
+"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"PO-Revision-Date: 2024-02-07 16:08+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.01.90\n"
+"X-Generator: Lokalize 24.01.95\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2408,7 +2408,7 @@ msgstr "Geçersiz bölge"
 msgid "Region outside the workspace"
 msgstr "Bölge, çalışma alanının dışında"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire akışı oluşturulamadı"
@@ -3551,11 +3551,10 @@ msgid "Show Desktop"
 msgstr "Masaüstünü Göster"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Pencere Yok"
+msgstr "Açık pencere yok"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

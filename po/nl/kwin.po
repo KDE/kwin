@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-07 00:38+0000\n"
-"PO-Revision-Date: 2024-01-18 09:58+0100\n"
+"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"PO-Revision-Date: 2024-02-07 14:51+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -2423,7 +2423,7 @@ msgstr "Ongeldig gebied"
 msgid "Region outside the workspace"
 msgstr "Gebied buiten de werkruimte"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Aanmaken van PipeWire-stream is mislukt"
@@ -3564,11 +3564,10 @@ msgid "Show Desktop"
 msgstr "Bureaublad tonen"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Geen vensters"
+msgstr "Geen open vensters"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

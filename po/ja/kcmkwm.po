@@ -1,4 +1,5 @@
 # Translation of kcmkwm into Japanese.
+# SPDX-FileCopyrightText: 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # This file is distributed under the same license as the kdebase package.
 # Seiji Hoshiba <hoshiyan@mint.ocn.ne.jp>, 2004.
 # Kenshi Muto <kmuto@debian.org>, 2004.
@@ -13,8 +14,8 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 00:39+0000\n"
-"PO-Revision-Date: 2019-09-29 12:19-0700\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
+"PO-Revision-Date: 2024-02-06 23:51+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 19.08.1\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -147,15 +148,13 @@ msgstr "スクロールする"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:168
-#, fuzzy, kde-format
-#| msgid "Activate & Scroll"
+#, kde-format
 msgid "Activate and scroll"
 msgstr "アクティブにしてスクロールする"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:173
-#, fuzzy, kde-format
-#| msgid "Activate, Raise & Scroll"
+#, kde-format
 msgid "Activate, raise and scroll"
 msgstr "アクティブにして前面に、そしてスクロールする"
 
@@ -195,7 +194,7 @@ msgstr "Alt"
 #: actions.ui:236
 #, kde-format
 msgid "  + "
-msgstr ""
+msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -241,8 +240,7 @@ msgstr "アクティブ化、前面にして移動"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:275 actions.ui:345 actions.ui:415 mouse.ui:246 mouse.ui:308
 #: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
-#, fuzzy, kde-format
-#| msgid "Toggle Raise & Lower"
+#, kde-format
 msgid "Toggle raise and lower"
 msgstr "前面/背面に移動"
 
@@ -307,19 +305,17 @@ msgstr "最小化"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:300 actions.ui:370 actions.ui:440
-#, fuzzy, kde-format
-#| msgid "Change Opacity"
+#, kde-format
 msgid "Decrease opacity"
-msgstr "不透明度を変更"
+msgstr "不透明度を下げる"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:305 actions.ui:375 actions.ui:445
-#, fuzzy, kde-format
-#| msgid "Change Opacity"
+#, kde-format
 msgid "Increase opacity"
-msgstr "不透明度を変更"
+msgstr "不透明度を上げる"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -441,18 +437,15 @@ msgstr "ウィンドウのシェード解除(&U):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
-#| "when the mouse pointer has been over the title bar for some time."
+#, kde-format
 msgid ""
 "<html><head/><body><p>If this option is enabled, a shaded window will "
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
-"このオプションを有効にすると、タイトルバーだけに縮小されたウィンドウのタイト"
-"ルバーの上にマウスポインタを一定の時間止めておくと、自動的にそのウィンドウが"
-"復元されます。"
+"<html><head/><body><p>このオプションを有効にすると、タイトルバーのみに縮小さ"
+"れたウィンドウの上にマウスポインタを一定の時間止めておくと、自動的にそのウィ"
+"ンドウが復元されます。</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
@@ -467,7 +460,7 @@ msgid ""
 "Sets the time in milliseconds before the window unshades when the mouse "
 "pointer goes over the shaded window."
 msgstr ""
-"タイトルだけに縮小されたウィンドウの上にマウスポインタを置いてからウィンドウ"
+"タイトルのみに縮小されたウィンドウの上にマウスポインタを置いてからウィンドウ"
 "が復元されるまでの時間をミリ秒単位で指定します。"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
@@ -480,10 +473,9 @@ msgstr " ミリ秒"
 
 #. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
 #: advanced.ui:66
-#, fuzzy, kde-format
-#| msgid "&Placement:"
+#, kde-format
 msgid "Window &placement:"
-msgstr "配置(&P):"
+msgstr "ウィンドウの配置(&P):"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
@@ -556,15 +548,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
-#, fuzzy, kde-format
-#| msgid "Snap windows onl&y when overlapping"
+#, kde-format
 msgid "Minimal Overlapping"
-msgstr "重なり合ったときのみウィンドウをくっつける(&Y)"
+msgstr "最小限の重なり"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:85
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximized"
 msgstr "最大化"
 
@@ -584,14 +574,13 @@ msgstr "中央に"
 #: advanced.ui:100
 #, kde-format
 msgid "In Top-Left Corner"
-msgstr ""
+msgstr "左上隅"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:105
-#, fuzzy, kde-format
-#| msgid "Focus Under Mouse"
+#, kde-format
 msgid "Under mouse"
-msgstr "マウスの下をフォーカス"
+msgstr "マウスの下"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:113
@@ -601,6 +590,8 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"オンの場合、自らのウィンドウの位置を記憶できるアプリケーションがそれを行うこ"
+"とが許可されます。これは上で設定されたウィンドウ配置モードを上書きします。"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
@@ -608,13 +599,14 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
+"アプリケーションにウィンドウの位置を記憶することを許可 (アプリケーションがサ"
+"ポートする場合)"
 
 #. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
 #: advanced.ui:123
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "&Special windows:"
-msgstr "ウィンドウ"
+msgstr "特別なウィンドウ(&S):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
 #: advanced.ui:133
@@ -642,13 +634,13 @@ msgstr "アクティブでないアプリケーションのユーティリティ
 #: advanced.ui:143
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "仮想デスクトップの挙動:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "別の仮想デスクトップでウィンドウをアクティブ化したとき:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -667,13 +659,13 @@ msgstr ""
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "その仮想デスクトップに切り替え"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "現在の仮想デスクトップにウィンドウを移動"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -686,6 +678,7 @@ msgstr "ウィンドウのアクティブ化ポリシー(&A):"
 #, kde-format
 msgid "With this option you can specify how and when windows will be focused."
 msgstr ""
+"このオプションでウィンドウがいつどのようにフォーカスされるかを指定できます。"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, windowFocusPolicy)
 #: focus.ui:36
@@ -722,7 +715,7 @@ msgstr "マウスの下をフォーカス"
 #: focus.ui:61
 #, kde-format
 msgid "Focus strictly under mouse"
-msgstr ""
+msgstr "厳密にマウスの下をフォーカス"
 
 #. i18n: ectx: property (text), widget (QLabel, delayFocusOnLabel)
 #: focus.ui:69
@@ -915,35 +908,29 @@ msgstr ""
 #: focus.ui:196
 #, kde-format
 msgid "Multiscreen behavior:"
-msgstr ""
+msgstr "マルチスクリーンの挙動:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, focus operations are limited only to the "
-#| "active Xinerama screen"
+#, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
-"このオプションを有効にすると、フォーカス操作はアクティブな Xinerama スクリー"
-"ンに限定されます。"
+"このオプションを有効にすると、フォーカス操作はアクティブなスクリーンに限定さ"
+"れます。"
 
-# ACCELERATOR changed by translator
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:206
-#, fuzzy, kde-format
-#| msgid "S&eparate screen focus"
+#, kde-format
 msgid "&Separate screen focus"
-msgstr "スクリーンフォーカスを分離する(&O)"
+msgstr "スクリーンフォーカスを分離する(&S)"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:219
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgid "Window activation policy description"
-msgstr "ウィンドウのアクティブ化ポリシー(&A):"
+msgstr "ウィンドウのアクティブ化ポリシーについての説明がここに表示されます。"
 
 #: main.cpp:79
 #, kde-format
@@ -1016,7 +1003,7 @@ msgstr "最大化"
 #: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
 #, kde-format
 msgid "Vertically maximize"
-msgstr ""
+msgstr "縦に最大化"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1026,7 +1013,7 @@ msgstr ""
 #: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
 #, kde-format
 msgid "Horizontally maximize"
-msgstr ""
+msgstr "横に最大化"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1065,10 +1052,9 @@ msgstr "すべてのデスクトップに表示"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
 #: mouse.ui:98
-#, fuzzy, kde-format
-#| msgid "Behavior on <em>double</em> click into the titlebar."
+#, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
-msgstr "タイトルバーをダブルクリックしたときの挙動を選択します。"
+msgstr "タイトルバーの上でスクロールしたときの挙動を選択します。"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: mouse.ui:143
@@ -1128,8 +1114,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: mouse.ui:288 mouse.ui:403 mouse.ui:518
-#, fuzzy, kde-format
-#| msgid "Activate & Lower"
+#, kde-format
 msgid "Activate and lower"
 msgstr "アクティブにして背面に"
 
@@ -1174,25 +1159,19 @@ msgstr "スクリーンエッジのスナップゾーン(&E):"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_BorderSnapZone)
 #: moving.ui:30
-#, fuzzy, kde-format
-#| msgid ""
-#| "Here you can set the snap zone for screen borders, i.e. the 'strength' of "
-#| "the magnetic field which will make windows snap to the border when moved "
-#| "near it."
+#, kde-format
 msgid ""
 "Here you can set the snap zone for screen edges, i.e. the 'strength' of the "
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
-"スクリーンの端のスナップゾーン (ウィンドウを近づけると磁石に吸い寄せられるよ"
-"うにウィンドウがスクリーンの端にくっついてしまう距離) を設定します。"
+"スクリーンの端のスナップゾーン (近づけられたウィンドウが磁石に吸い寄せられる"
+"ようにウィンドウがスクリーンの端にくっつく距離) を設定します。"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:36 moving.ui:68 moving.ui:100
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " px"
 msgstr " ピクセル"
 
@@ -1232,11 +1211,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
-#, fuzzy, kde-format
-#| msgctxt "Window Raising Policy"
-#| msgid "Raise/Lower all floating windows"
+#, kde-format
 msgid "&Snap windows:"
-msgstr "すべての浮遊ウィンドウを前後させる"
+msgstr "ウィンドウをスナップ(&S):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1251,36 +1228,22 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:126
-#, fuzzy, kde-format
-#| msgid "Snap windows onl&y when overlapping"
+#, kde-format
 msgid "Only when overlapping"
-msgstr "重なり合ったときのみウィンドウをくっつける(&Y)"
+msgstr "重なり合ったときのみ"
 
 #: windows.cpp:92
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus:"
-#| "</span> A window becomes active when you click into it. This behavior is "
-#| "common on other operating systems and likely what you want.</p></body></"
-#| "html>"
+#, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">クリックしてフォー"
-"カス:</span> クリックしたウィンドウがアクティブになります。この挙動は他の OS "
-"と共通であり、あなたの想定と同じように動作します。</p></body></html>"
+"<strong>クリックしてフォーカス:</strong> クリックしたウィンドウがアクティブに"
+"なります。この挙動は他の OS と共通であり、あなたの想定した動作と同じように動"
+"作します。"
 
 #: windows.cpp:95
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Click to focus "
-#| "(mouse precedence):</span> Mostly the same as <span style=\" font-style:"
-#| "italic;\">Click to focus</span>. If an active window has to be chosen by "
-#| "the system (eg. because the currently active one was closed) the window "
-#| "under the mouse is the preferred candidate. Unusual, but possible variant "
-#| "of <span style=\" font-style:italic;\">Click to focus</span>.</p></body></"
-#| "html>"
+#, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
 "focus</em>. If an active window has to be chosen by the system (eg. because "
@@ -1288,67 +1251,41 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">クリックしてフォー"
-"カス (マウス優先):</span> これは<span style=\" font-style:italic;\">クリック"
-"してフォーカス</span>とほぼ同じです。システムによってアクティブウィンドウが選"
-"択されるとき (例: 現在のアクティブウィンドウが閉じられた場合) マウスがホバー"
-"されているウィンドウが優先的な候補となります。一般的ではありませんが、<span "
-"style=\" font-style:italic;\">クリックしてフォーカス</span>の変化形です。</"
-"p></body></html>"
+"<strong>クリックしてフォーカス (マウス優先):</strong> これは<strong>クリック"
+"してフォーカス</strong>とほぼ同じです。システムによってアクティブウィンドウが"
+"選択されるとき (例: 現在のアクティブウィンドウが閉じられた場合) マウスがホ"
+"バーされているウィンドウが優先的な候補となります。一般的ではありませんが、"
+"<strong>クリックしてフォーカス</strong>の変化形です。"
 
 #: windows.cpp:98
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Focus follows "
-#| "mouse:</span> Moving the mouse onto a window will activate it. Eg. "
-#| "windows randomly appearing under the mouse will not gain the focus. <span "
-#| "style=\" font-style:italic;\">Focus stealing prevention</span> takes "
-#| "place as usual. Think as <span style=\" font-style:italic;\">Click to "
-#| "focus</span> just without having to actually click.</p></body></html>"
+#, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
 "it. Eg. windows randomly appearing under the mouse will not gain the focus. "
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">マウスに従って"
-"フォーカス:</span> マウスが移動した先のウィンドウがアクティブになります。例: "
-"マウスの下に現れたウィンドウがアクティブになることはありません。<span style="
-"\" font-style:italic;\">フォーカス移動防止</span>は通常どおり実行されます。ク"
-"リックする必要のない<span style=\" font-style:italic;\">クリックしてフォーカ"
-"ス</span> だと思ってください</p></body></html>"
+"<strong>マウスに従ってフォーカス:</strong> マウスが移動した先のウィンドウがア"
+"クティブになります。例: マウスの下に現れたウィンドウがアクティブになることは"
+"ありません。<strong>フォーカス移動防止</strong>は通常どおり実行されます。ク"
+"リックする必要のない<strong>クリックしてフォーカス</strong>だと思ってくださ"
+"い。"
 
 #: windows.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p>This is mostly the same as <span style=\" font-"
-#| "style:italic;\">Focus follows mouse</span>. If an active window has to be "
-#| "chosen by the system (eg. because the currently active one was closed) "
-#| "the window under the mouse is the preferred candidate. Choose this, if "
-#| "you want a hover controlled focus.</p></body></html>"
+#, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
 "has to be chosen by the system (eg. because the currently active one was "
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"<html><head/><body><p>これは<span style=\" font-style:italic;\">マウスに従っ"
-"てフォーカス</span>とほぼ同じです。システムによってアクティブウィンドウが選択"
-"されるとき (例: 現在のアクティブウィンドウが閉じられた場合) マウスがホバーさ"
-"れているウィンドウが優先的な候補となります。フォーカスをホバーで操作したい場"
-"合はこちらを選択してください。</p></body></html>"
+"これは<strong>マウスに従ってフォーカス</strong>とほぼ同じです。システムによっ"
+"てアクティブウィンドウが選択されるとき (例: 現在のアクティブウィンドウが閉じ"
+"られた場合) マウスがホバーされているウィンドウが優先的な候補となります。"
+"フォーカスをホバーで操作したい場合はこちらを選択してください。"
 
 #: windows.cpp:104
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "
-#| "mouse:</span> The focus always remains on the window under the mouse.<br/"
-#| "><span style=\" font-weight:600;\">Warning: </span><span style=\" font-"
-#| "style:italic;\">Focus stealing prevention</span> and the <span style=\" "
-#| "font-style:italic;\">tabbox ('Alt+Tab') </span>contradict the activation "
-#| "policy and will not work. You very likely want to use <span style=\" font-"
-#| "style:italic;\">Focus follows mouse (mouse precedence)</span> instead!</"
-#| "p></body></html>"
+#, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
 "mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
@@ -1356,25 +1293,14 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">マウスの下をフォー"
-"カス:</span> 常にマウスの下のウィンドウがフォーカスされます。<br/><span "
-"style=\" font-weight:600;\">警告: </span><span style=\" font-style:italic;\">"
-"フォーカス移動防止防止</span>や<span style=\" font-style:italic;\">タブボック"
-"ス ('Alt+Tab') </span>はアクティブ化ポリシーに反するため機能しません。代わり"
-"に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
-"span>を使用するべきでしょう。</p></body></html>"
+"<strong>マウスの下をフォーカス:</strong> 常にマウスの下のウィンドウがフォーカ"
+"スされます。<br/>警告: <strong>フォーカス移動防止</strong>や<strong>タブボッ"
+"クス ('Alt+Tab')</strong> はアクティブ化ポリシーに反するため機能しません。代"
+"わりに<strong>マウスに従ってフォーカス (マウス優先)</strong> を使用するべきで"
+"しょう。"
 
 #: windows.cpp:107
-#, fuzzy, kde-format
-#| msgid ""
-#| "<html><head/><body><p><span style=\" font-style:italic;\">Focus under "
-#| "mouse:</span> The focus always remains on the window under the mouse.<br/"
-#| "><span style=\" font-weight:600;\">Warning: </span><span style=\" font-"
-#| "style:italic;\">Focus stealing prevention</span> and the <span style=\" "
-#| "font-style:italic;\">tabbox ('Alt+Tab') </span>contradict the activation "
-#| "policy and will not work. You very likely want to use <span style=\" font-"
-#| "style:italic;\">Focus follows mouse (mouse precedence)</span> instead!</"
-#| "p></body></html>"
+#, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
 "the mouse (in doubt nowhere) very much like the focus behavior in an "
@@ -1383,33 +1309,8 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<html><head/><body><p><span style=\" font-style:italic;\">マウスの下をフォー"
-"カス:</span> 常にマウスの下のウィンドウがフォーカスされます。<br/><span "
-"style=\" font-weight:600;\">警告: </span><span style=\" font-style:italic;\">"
-"フォーカス移動防止防止</span>や<span style=\" font-style:italic;\">タブボック"
-"ス ('Alt+Tab') </span>はアクティブ化ポリシーに反するため機能しません。代わり"
-"に<span style=\" font-style:italic;\">マウスに従ってフォーカス (マウス優先)</"
-"span>を使用するべきでしょう。</p></body></html>"
-
-#, fuzzy
-#~| msgid ""
-#~| "When this option is enabled, the active Xinerama screen (where new "
-#~| "windows appear, for example) is the screen containing the mouse pointer. "
-#~| "When disabled, the active Xinerama screen is the  screen containing the "
-#~| "focused window. By default this option is disabled for Click to focus "
-#~| "and enabled for other focus policies."
-#~ msgid ""
-#~ "When this option is enabled, the active screen (where new windows appear, "
-#~ "for example) is the screen containing the mouse pointer. When disabled, "
-#~ "the active screen is the screen containing the focused window."
-#~ msgstr ""
-#~ "このオプションを有効にすると、アクティブな Xinerama スクリーン (例えば新し"
-#~ "いウィンドウが現れるスクリーン) は、マウスポインタのあるスクリーンになりま"
-#~ "す。無効にすると、フォーカスされているウィンドウのあるスクリーンがアクティ"
-#~ "ブな Xinerama スクリーンになります。このオプションは標準設定では"
-#~ "<interface>クリックしてフォーカス</interface>の場合は無効、その他のフォー"
-#~ "カスポリシーの場合は有効になっています。"
-
-# ACCELERATOR changed by translator
-#~ msgid "Active screen follows &mouse"
-#~ msgstr "アクティブなスクリーンはマウスに従う(&C)"
+"<strong>厳密にマウスの下をフォーカス:</strong> 常にマウスの下のウィンドウが"
+"フォーカスされます。これはレガシーな管理されていない X11 環境でのフォーカスの"
+"挙動と似た設定です。<br/>警告: フォーカス移動防止やタブボックス ('Alt+Tab') "
+"はアクティブ化ポリシーに反するため機能しません。代わりに<strong>マウスに従っ"
+"てフォーカス (マウス優先)</strong> を使用するべきでしょう。"

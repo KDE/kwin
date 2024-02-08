@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-07 00:38+0000\n"
-"PO-Revision-Date: 2024-01-19 08:36+0200\n"
+"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"PO-Revision-Date: 2024-02-07 08:14+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -2404,7 +2404,7 @@ msgstr "אזור שגוי"
 msgid "Region outside the workspace"
 msgstr "אזור מחוץ למרחב העבודה"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "יצירת תזרים PipeWire נכשלה"
@@ -3544,11 +3544,10 @@ msgid "Show Desktop"
 msgstr "הצגת שולחן העבודה"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "אין חלונות"
+msgstr "אין חלונות פתוחים"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

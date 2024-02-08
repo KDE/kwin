@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-07 00:38+0000\n"
-"PO-Revision-Date: 2024-01-27 13:08+0300\n"
+"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"PO-Revision-Date: 2024-02-07 10:13+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -1895,13 +1895,13 @@ msgstr "развернуть из заголовка"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Поддерживать поверх других"
+msgstr "поддерживать поверх других"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:68
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Поддерживать на заднем плане"
+msgstr "поддерживать на заднем плане"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
 #, kde-format
@@ -2443,7 +2443,7 @@ msgstr "Недопустимая область"
 msgid "Region outside the workspace"
 msgstr "Область расположена вне рабочего пространства"
 
-#: plugins/screencast/screencaststream.cpp:361
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не удалось создать поток PipeWire"
@@ -3589,11 +3589,10 @@ msgid "Show Desktop"
 msgstr "Показать рабочий стол"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Окон нет"
+msgstr "Не открыто ни одно окно"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
