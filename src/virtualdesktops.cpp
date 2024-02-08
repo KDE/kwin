@@ -89,6 +89,9 @@ void VirtualDesktopManager::setVirtualDesktopManagement(PlasmaVirtualDesktopMana
 
     std::for_each(m_desktops.constBegin(), m_desktops.constEnd(), createPlasmaVirtualDesktop);
 
+    m_virtualDesktopManagement->setRows(rows());
+    m_virtualDesktopManagement->sendDone();
+
     // Now we are sure all ids are there
     save();
 
