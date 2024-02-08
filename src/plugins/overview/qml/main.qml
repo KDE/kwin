@@ -492,14 +492,6 @@ FocusScope {
                         x: column * (width / columns) * gridVal
                         y: row * (height / rows) * gridVal
                     },
-                    // Scales down the preview slighly when in Overview mode
-                    Scale {
-                        origin.x: width / 2
-                        origin.y: height / 2
-                        property real scale: Math.min(maxWidth / width, maxHeight / height)
-                        xScale: 1 + (scale - 1) * overviewVal
-                        yScale:1 + (scale - 1) * overviewVal
-                    },
                     // Initially places transition desktops in a grid around the current one,
                     // and moves them slighly to avoid overlapping the UI
                     Translate {
@@ -508,97 +500,105 @@ FocusScope {
                     }
                 ]
 
-                KWinComponents.DesktopBackground {
-                    id: desktopElement
-                    anchors.fill: parent
-                    anchors.margins: gridVal !== 0 ? Math.round(mainBackground.current * gridVal * (1.5 / gridScale.xScale)) : 0
-                    activity: KWinComponents.Workspace.currentActivity
-                    desktop: KWinComponents.Workspace.currentDesktop
-                    outputName: targetScreen.name
-                    visible: false
-                }
-
-                Kirigami.ShadowedTexture {
-                    anchors.fill: parent
-
-                    color: Kirigami.Theme.highlightColor
-                    source: desktopElement
-
-                    radius: Kirigami.Units.largeSpacing * 2 * (overviewVal + gridVal * 2)
-
-                    shadow {
-                        size: Kirigami.Units.gridUnit * 2
-                        color: Qt.rgba(0, 0, 0, 0.3)
-                        yOffset: 3
+                Item {
+                    id: backgroundArea
+                    property real sizeAdjust: Math.min(maxWidth / parent.width, maxHeight / parent.height)
+                    width: parent.width * (1 + (sizeAdjust - 1) * overviewVal)
+                    height: parent.height * (1 + (sizeAdjust - 1) * overviewVal)
+                    x: parent.width / 2 - width / 2
+                    y: parent.height / 2 - height / 2
+                    KWinComponents.DesktopBackground {
+                        id: desktopElement
+                        anchors.fill: parent
+                        anchors.margins: gridVal !== 0 ? Math.round(mainBackground.current * gridVal * (1.5 / gridScale.xScale)) : 0
+                        activity: KWinComponents.Workspace.currentActivity
+                        desktop: KWinComponents.Workspace.currentDesktop
+                        outputName: targetScreen.name
+                        visible: false
                     }
-                }
 
-                DropArea {
-                    anchors.fill: parent
-                    onEntered: (drag) => {
-                        drag.accepted = true;
+                    Kirigami.ShadowedTexture {
+                        anchors.fill: parent
+
+                        color: Kirigami.Theme.highlightColor
+                        source: desktopElement
+
+                        radius: Kirigami.Units.largeSpacing * 2 * (overviewVal + gridVal * 2)
+
+                        shadow {
+                            size: Kirigami.Units.gridUnit * 2
+                            color: Qt.rgba(0, 0, 0, 0.3)
+                            yOffset: 3
+                        }
                     }
-                    onDropped: (drop) => {
-                        drop.accepted = true;
-                        if (drop.keys.includes("kwin-desktop")) {
-                            // dragging a desktop as a whole
-                            if (drag.source === mainBackground) {
-                                drop.action = Qt.IgnoreAction;
+
+                    DropArea {
+                        anchors.fill: parent
+                        onEntered: (drag) => {
+                            drag.accepted = true;
+                        }
+                        onDropped: (drop) => {
+                            drop.accepted = true;
+                            if (drop.keys.includes("kwin-desktop")) {
+                                // dragging a desktop as a whole
+                                if (drag.source === mainBackground) {
+                                    drop.action = Qt.IgnoreAction;
+                                    return;
+                                }
+                                effect.swapDesktops(drag.source.desktop, desktop);
+                            } else {
+                                // dragging a KWin::Window
+                                if (drag.source.desktops.length === 0 || drag.source.desktops.indexOf(mainBackground.desktop) !== -1) {
+                                    drop.action = Qt.IgnoreAction;
+                                    return;
+                                }
+                                drag.source.desktops = [mainBackground.desktop];
+                            }
+                        }
+                    }
+                    Connections {
+                        target: effect
+                        function onItemDroppedOutOfScreen(globalPos, item, screen) {
+                            if (screen !== targetScreen) {
                                 return;
                             }
-                            effect.swapDesktops(drag.source.desktop, desktop);
-                        } else {
-                            // dragging a KWin::Window
-                            if (drag.source.desktops.length === 0 || drag.source.desktops.indexOf(mainBackground.desktop) !== -1) {
-                                drop.action = Qt.IgnoreAction;
+                            const pos = screen.mapFromGlobal(globalPos);
+                            if (!mainBackground.contains(mainBackground.mapFromItem(null, pos.x, pos.y))) {
                                 return;
                             }
-                            drag.source.desktops = [mainBackground.desktop];
+                            item.client.desktops = [mainBackground.desktop];
                         }
                     }
-                }
-                Connections {
-                    target: effect
-                    function onItemDroppedOutOfScreen(globalPos, item, screen) {
-                        if (screen !== targetScreen) {
-                            return;
-                        }
-                        const pos = screen.mapFromGlobal(globalPos);
-                        if (!mainBackground.contains(mainBackground.mapFromItem(null, pos.x, pos.y))) {
-                            return;
-                        }
-                        item.client.desktops = [mainBackground.desktop];
-                    }
-                }
-                DragHandler {
-                    id: dragHandler
-                    target: heap
-                    enabled: gridVal !== 0
-                    grabPermissions: PointerHandler.ApprovesTakeOverByHandlersOfSameType
-                    onActiveChanged: {
-                        if (!active) {
-                            heap.Drag.drop();
-                            Qt.callLater(heap.resetPosition)
+                    DragHandler {
+                        id: dragHandler
+                        target: heap
+                        enabled: gridVal !== 0
+                        grabPermissions: PointerHandler.ApprovesTakeOverByHandlersOfSameType
+                        onActiveChanged: {
+                            if (!active) {
+                                heap.Drag.drop();
+                                Qt.callLater(heap.resetPosition)
+                            }
                         }
                     }
-                }
 
-                MouseArea {
-                    anchors.fill: heap
-                    acceptedButtons: Qt.NoButton
-                    cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+                    MouseArea {
+                        anchors.fill: heap
+                        acceptedButtons: Qt.NoButton
+                        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+                    }
                 }
 
                 WindowHeap {
                     id: heap
-                    width: parent.width
-                    height: parent.height
-                    x: 0
-                    y: 0
+                    width: parent.width * (1 + (backgroundArea.sizeAdjust - 1))
+                    height: parent.height * (1 + (backgroundArea.sizeAdjust - 1))
+                    x: parent.width / 2 - width / 2
+                    y: parent.height / 2 - height / 2
 
                     function resetPosition() {
-                        x = 0;
-                        y = 0;
+                        x = parent.width / 2 - width / 2;
+                        y = parent.height / 2 - height / 2;
                     }
                     z: 9999
                     Drag.active: dragHandler.active
@@ -683,6 +683,7 @@ FocusScope {
                         container.effect.deactivate();
                     }
                 }
+
                 onCurrentChanged: {
                     if (current) {
                         allDesktopHeaps.currentHeap = heap;
