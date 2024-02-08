@@ -1346,6 +1346,16 @@ void X11Window::createDecoration()
                 updateFrameExtents();
             }
         });
+        connect(decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            if (isDeleted()) {
+                return;
+            }
+            GeometryUpdatesBlocker blocker(this);
+            const QRectF oldGeometry = moveResizeGeometry();
+            if (!isShade()) {
+                checkWorkspacePosition(oldGeometry);
+            }
+        });
         connect(decoratedClient()->decoratedClient(), &KDecoration2::DecoratedClient::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();

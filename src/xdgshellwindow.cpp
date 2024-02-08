@@ -695,6 +695,12 @@ void XdgToplevelWindow::handleRolePrecommit()
 {
     auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
     if (configureEvent && decoration() != configureEvent->decoration.get()) {
+        connect(configureEvent->decoration.get(), &KDecoration2::Decoration::bordersChanged, this, [this]() {
+            if (!isDeleted()) {
+                scheduleConfigure();
+            }
+        });
+
         setDecoration(configureEvent->decoration);
         updateShadow();
     }
