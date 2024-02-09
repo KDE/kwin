@@ -99,11 +99,6 @@ bool X11WindowedInputDevice::isKeyboard() const
     return m_keyboard;
 }
 
-bool X11WindowedInputDevice::isAlphaNumericKeyboard() const
-{
-    return m_keyboard;
-}
-
 bool X11WindowedInputDevice::isPointer() const
 {
     return m_pointer;

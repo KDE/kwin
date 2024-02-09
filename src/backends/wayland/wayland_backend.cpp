@@ -238,11 +238,6 @@ bool WaylandInputDevice::isKeyboard() const
     return m_keyboard != nullptr;
 }
 
-bool WaylandInputDevice::isAlphaNumericKeyboard() const
-{
-    return m_keyboard != nullptr;
-}
-
 bool WaylandInputDevice::isPointer() const
 {
     return m_pointer || m_relativePointer;

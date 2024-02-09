@@ -3080,14 +3080,6 @@ void InputRedirection::updateAvailableInputDevices()
         Q_EMIT hasKeyboardChanged(hasKeyboard);
     }
 
-    const bool hasAlphaNumericKeyboard = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
-        return device->isAlphaNumericKeyboard();
-    });
-    if (m_hasAlphaNumericKeyboard != hasAlphaNumericKeyboard) {
-        m_hasAlphaNumericKeyboard = hasAlphaNumericKeyboard;
-        Q_EMIT hasAlphaNumericKeyboardChanged(hasAlphaNumericKeyboard);
-    }
-
     const bool hasPointer = std::any_of(m_inputDevices.constBegin(), m_inputDevices.constEnd(), [](InputDevice *device) {
         return device->isPointer();
     });
@@ -3200,11 +3192,6 @@ void InputRedirection::setupTouchpadShortcuts()
     connect(touchpadToggleAction, &QAction::triggered, this, &InputRedirection::toggleTouchpads);
     connect(touchpadOnAction, &QAction::triggered, this, &InputRedirection::enableTouchpads);
     connect(touchpadOffAction, &QAction::triggered, this, &InputRedirection::disableTouchpads);
-}
-
-bool InputRedirection::hasAlphaNumericKeyboard()
-{
-    return m_hasAlphaNumericKeyboard;
 }
 
 bool InputRedirection::hasPointer() const

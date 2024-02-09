@@ -152,7 +152,10 @@ public:
     {
         return m_keyboard;
     }
-    bool isAlphaNumericKeyboard() const override
+    /**
+     * Note that this has a lot of false positives
+     */
+    bool isAlphaNumericKeyboard() const
     {
         return m_alphaNumericKeyboard;
     }

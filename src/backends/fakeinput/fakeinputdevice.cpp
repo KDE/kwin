@@ -59,11 +59,6 @@ bool FakeInputDevice::isKeyboard() const
     return true;
 }
 
-bool FakeInputDevice::isAlphaNumericKeyboard() const
-{
-    return true;
-}
-
 bool FakeInputDevice::isPointer() const
 {
     return true;

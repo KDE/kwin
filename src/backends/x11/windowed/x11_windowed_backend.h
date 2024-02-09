@@ -54,7 +54,6 @@ public:
     void setLeds(LEDs leds) override;
 
     bool isKeyboard() const override;
-    bool isAlphaNumericKeyboard() const override;
     bool isPointer() const override;
     bool isTouchpad() const override;
     bool isTouch() const override;

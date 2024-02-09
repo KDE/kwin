@@ -35,7 +35,6 @@ public:
     virtual void setLeds(LEDs leds) = 0;
 
     virtual bool isKeyboard() const = 0;
-    virtual bool isAlphaNumericKeyboard() const = 0;
     virtual bool isPointer() const = 0;
     virtual bool isTouchpad() const = 0;
     virtual bool isTouch() const = 0;

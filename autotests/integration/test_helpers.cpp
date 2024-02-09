@@ -1562,11 +1562,6 @@ bool VirtualInputDevice::isKeyboard() const
     return m_keyboard;
 }
 
-bool VirtualInputDevice::isAlphaNumericKeyboard() const
-{
-    return m_keyboard;
-}
-
 bool VirtualInputDevice::isPointer() const
 {
     return m_pointer;

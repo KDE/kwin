@@ -79,11 +79,6 @@ bool InputDevice::isEnabled() const
     return true;
 }
 
-bool InputDevice::isAlphaNumericKeyboard() const
-{
-    return true;
-}
-
 bool InputDevice::isKeyboard() const
 {
     return true;

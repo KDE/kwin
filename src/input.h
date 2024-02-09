@@ -358,7 +358,6 @@ private:
 
     LEDs m_leds;
     bool m_hasKeyboard = false;
-    bool m_hasAlphaNumericKeyboard = false;
     bool m_hasPointer = false;
     bool m_hasTouch = false;
     bool m_hasTabletModeSwitch = false;

@@ -120,10 +120,7 @@ void KeyboardInputRedirection::init()
     m_xkb->setNumLockConfig(kwinApp()->inputConfig());
     m_xkb->setConfig(config);
 
-    // Workaround for QTBUG-54371: if there is no real keyboard Qt doesn't request virtual keyboard
     waylandServer()->seat()->setHasKeyboard(true);
-    // connect(m_input, &InputRedirection::hasAlphaNumericKeyboardChanged,
-    //         waylandServer()->seat(), &KWin::SeatInterface::setHasKeyboard);
 
     m_input->installInputEventSpy(new KeyStateChangedSpy(m_input));
     m_modifiersChangedSpy = new ModifiersChangedSpy(m_input);

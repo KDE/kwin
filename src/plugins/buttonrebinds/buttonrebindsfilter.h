@@ -30,7 +30,6 @@ class InputDevice : public KWin::InputDevice
     KWin::LEDs leds() const override;
 
     bool isKeyboard() const override;
-    bool isAlphaNumericKeyboard() const override;
     bool isPointer() const override;
     bool isTouchpad() const override;
     bool isTouch() const override;
