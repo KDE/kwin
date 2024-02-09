@@ -433,6 +433,8 @@ void QuickSceneEffect::addScreen(Output *screen)
             connect(view.get(), &QuickSceneView::renderRequested, view.get(), &QuickSceneView::scheduleRepaint);
             connect(view.get(), &QuickSceneView::sceneChanged, view.get(), &QuickSceneView::scheduleRepaint);
             view->scheduleRepaint();
+            // view is returned via invokables elsewhere
+            QJSEngine::setObjectOwnership(view.get(), QJSEngine::CppOwnership);
             d->views[screen] = std::move(view);
         } else if (incubator->isError()) {
             qCWarning(LIBKWINEFFECTS) << "Could not create a view for QML file" << d->delegate->url();
