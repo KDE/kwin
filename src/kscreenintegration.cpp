@@ -224,6 +224,7 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(
             }
             if (const QJsonValue rotation = globalInfo["rotation"]; !rotation.isUndefined()) {
                 props->transform = KScreenIntegration::toKWinTransform(rotation.toInt());
+                props->manualTransform = props->transform;
             }
             if (const QJsonValue overscan = globalInfo["overscan"]; !overscan.isUndefined()) {
                 props->overscan = globalInfo["overscan"].toInt();
