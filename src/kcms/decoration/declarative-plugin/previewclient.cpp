@@ -390,6 +390,10 @@ void PreviewClient::requestToggleShade()
     setShaded(!isShaded());
 }
 
+void PreviewClient::requestShowMaximizeBubble(const QRectF &rect)
+{
+}
+
 #define SETTER(type, name, variable)            \
     void PreviewClient::name(type variable)     \
     {                                           \

@@ -94,6 +94,7 @@ public:
     void requestShowWindowMenu(const QRect &rect) override;
     void requestShowApplicationMenu(const QRect &rect, int actionId) override;
     void requestToggleOnAllDesktops() override;
+    void requestShowMaximizeBubble(const QRectF &rect) override;
 
     void showApplicationMenu(int actionId) override;
 

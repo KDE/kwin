@@ -16,8 +16,11 @@
 
 #include <KDecoration2/DecoratedClient>
 #include <KDecoration2/Decoration>
+#include <KGlobalAccel>
+#include <KLocalizedString>
 
 #include <QDebug>
+#include <QMenu>
 #include <QStyle>
 #include <QToolTip>
 
@@ -90,6 +93,8 @@ DecoratedClientImpl::~DecoratedClientImpl()
     if (m_toolTipShowing) {
         requestHideToolTip();
     }
+    delete m_maximizeBubble;
+    m_maximizeBubble = nullptr;
 }
 
 void DecoratedClientImpl::signalShadeChange()
@@ -259,6 +264,53 @@ void DecoratedClientImpl::requestToggleMaximization(Qt::MouseButtons buttons)
             delayedRequestToggleMaximization(operation);
         },
         Qt::QueuedConnection);
+}
+
+void DecoratedClientImpl::requestShowMaximizeBubble(const QRectF &rect)
+{
+    if (m_window->isDeleted()) {
+        return;
+    }
+
+    if (m_maximizeBubble) {
+        return;
+    }
+
+    m_maximizeBubble = new QMenu();
+    m_maximizeBubble->setAttribute(Qt::WA_DeleteOnClose);
+
+    QAction *maximizeAction = m_maximizeBubble->addAction(i18n("Toggle maximized"));
+    connect(maximizeAction, &QAction::triggered, this, [this]() {
+        if (!m_window->isDeleted()) {
+            workspace()->performWindowOperation(m_window, Options::MaximizeOp);
+        }
+    });
+    if (const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(QStringLiteral("Window Maximize"))); !shortcuts.isEmpty()) {
+        maximizeAction->setShortcut(shortcuts.first());
+    }
+
+    QAction *maximizeVerticallyAction = m_maximizeBubble->addAction(QIcon::fromTheme(QStringLiteral("transform-move-vertical")), i18n("Toggle maximized vertically"));
+    connect(maximizeVerticallyAction, &QAction::triggered, this, [this]() {
+        if (!m_window->isDeleted()) {
+            workspace()->performWindowOperation(m_window, Options::VMaximizeOp);
+        }
+    });
+    if (const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(QStringLiteral("Window Maximize Vertically"))); !shortcuts.isEmpty()) {
+        maximizeVerticallyAction->setShortcut(shortcuts.first());
+    }
+
+    QAction *maximizeHorizontallyAction = m_maximizeBubble->addAction(QIcon::fromTheme(QStringLiteral("transform-move-horizontal")), i18n("Toggle maximized horizontally"));
+    connect(maximizeHorizontallyAction, &QAction::triggered, this, [this]() {
+        if (!m_window->isDeleted()) {
+            workspace()->performWindowOperation(m_window, Options::HMaximizeOp);
+        }
+    });
+    if (const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(QStringLiteral("Window Maximize Horizontally"))); !shortcuts.isEmpty()) {
+        maximizeHorizontallyAction->setShortcut(shortcuts.first());
+    }
+
+    const QPoint position(m_window->x() + rect.x(), m_window->y() + rect.y() + rect.height());
+    m_maximizeBubble->popup(position);
 }
 
 void DecoratedClientImpl::delayedRequestToggleMaximization(Options::WindowOperation operation)

@@ -13,7 +13,10 @@
 
 #include <QDeadlineTimer>
 #include <QObject>
+#include <QPointer>
 #include <QTimer>
+
+class QMenu;
 
 namespace KWin
 {
@@ -73,6 +76,7 @@ public:
     void requestToggleKeepBelow() override;
     void requestToggleOnAllDesktops() override;
     void requestToggleShade() override;
+    void requestShowMaximizeBubble(const QRectF &rect) override;
 
     void showApplicationMenu(int actionId) override;
 
@@ -94,6 +98,7 @@ private:
     Window *m_window;
     QSize m_clientSize;
 
+    QPointer<QMenu> m_maximizeBubble;
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;
     QDeadlineTimer m_toolTipFallAsleep;
