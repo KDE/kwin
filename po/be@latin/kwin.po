@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-08 00:39+0000\n"
+"POT-Creation-Date: 2024-02-09 00:39+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -2255,27 +2255,27 @@ msgctxt "@label"
 msgid "Unknown"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:41
+#: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:48
-#: plugins/overview/overvieweffect.cpp:134
+#: plugins/overview/kcm/overvieweffectkcm.cpp:46
+#: plugins/overview/overvieweffect.cpp:132
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
+#: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Invertavańnie"
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:62
+#: plugins/overview/kcm/overvieweffectkcm.cpp:60
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Grid View is the name of a KWin effect"
@@ -2323,20 +2323,20 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:142
+#: plugins/overview/overvieweffect.cpp:140
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Invertavańnie"
 
-#: plugins/overview/overvieweffect.cpp:150
+#: plugins/overview/overvieweffect.cpp:148
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
 msgctxt "@action Grid view is the name of a Kwin effect"
@@ -2376,7 +2376,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "&Naładź pavodziny akna..."
 
-#: plugins/overview/qml/main.qml:723
+#: plugins/overview/qml/main.qml:724
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgctxt "@info:placeholder"
@@ -4307,7 +4307,7 @@ msgstr "Uklučy nižejšy stoł"
 msgid "Switch to Desktop %1"
 msgstr "Uklučy stoł „1”"
 
-#: window.cpp:3088
+#: window.cpp:3082
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
