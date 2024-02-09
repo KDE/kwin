@@ -11,7 +11,6 @@
 #include <QImage>
 #include <QObject>
 #include <QPoint>
-#include <QPointer>
 #include <QTimer>
 
 namespace KWin
@@ -89,8 +88,9 @@ public Q_SLOTS:
 
 private:
     void refresh();
+    void reset();
 
-    QPointer<SurfaceInterface> m_surface;
+    SurfaceInterface *m_surface = nullptr;
 };
 
 } // namespace KWin

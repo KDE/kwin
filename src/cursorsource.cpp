@@ -128,6 +128,14 @@ void SurfaceCursorSource::refresh()
     Q_EMIT changed();
 }
 
+void SurfaceCursorSource::reset()
+{
+    m_size = QSizeF(0, 0);
+    m_hotspot = QPointF(0, 0);
+    m_surface = nullptr;
+    Q_EMIT changed();
+}
+
 void SurfaceCursorSource::update(SurfaceInterface *surface, const QPointF &hotspot)
 {
     bool dirty = false;
@@ -142,6 +150,7 @@ void SurfaceCursorSource::update(SurfaceInterface *surface, const QPointF &hotsp
 
         if (m_surface) {
             disconnect(m_surface, &SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
+            disconnect(m_surface, &SurfaceInterface::destroyed, this, &SurfaceCursorSource::reset);
         }
 
         m_surface = surface;
@@ -150,6 +159,7 @@ void SurfaceCursorSource::update(SurfaceInterface *surface, const QPointF &hotsp
             m_size = surface->size();
 
             connect(m_surface, &SurfaceInterface::committed, this, &SurfaceCursorSource::refresh);
+            connect(m_surface, &SurfaceInterface::destroyed, this, &SurfaceCursorSource::reset);
         } else {
             m_size = QSizeF(0, 0);
         }
