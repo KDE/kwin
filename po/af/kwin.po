@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-08 02:29+0000\n"
+"POT-Creation-Date: 2024-02-09 02:34+0000\n"
 "PO-Revision-Date: 2005-11-28 12:28+0200\n"
 "Last-Translator: Kobus Venter <kabousv@therugby.co.za>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -2242,26 +2242,26 @@ msgctxt "@label"
 msgid "Unknown"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:41
+#: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:48
-#: plugins/overview/overvieweffect.cpp:134
+#: plugins/overview/kcm/overvieweffectkcm.cpp:46
+#: plugins/overview/overvieweffect.cpp:132
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:55
+#: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr ""
 
-#: plugins/overview/kcm/overvieweffectkcm.cpp:62
+#: plugins/overview/kcm/overvieweffectkcm.cpp:60
 #, fuzzy, kde-format
 #| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid View is the name of a KWin effect"
@@ -2308,19 +2308,19 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:124
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:142
+#: plugins/overview/overvieweffect.cpp:140
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:150
+#: plugins/overview/overvieweffect.cpp:148
 #, fuzzy, kde-format
 #| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid view is the name of a Kwin effect"
@@ -2360,7 +2360,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Konfigureer Venster Gedrag..."
 
-#: plugins/overview/qml/main.qml:723
+#: plugins/overview/qml/main.qml:724
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgctxt "@info:placeholder"
@@ -4283,7 +4283,7 @@ msgstr "Wissel Een Werkskerm Ondertoe"
 msgid "Switch to Desktop %1"
 msgstr "Wissel na Werkskerm 1"
 
-#: window.cpp:3096
+#: window.cpp:3090
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

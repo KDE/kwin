@@ -514,7 +514,7 @@ msgstr "Zablokovat kompozici"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Vrstva"
 
 #: rulesmodel.cpp:772
 #, kde-format
@@ -683,23 +683,22 @@ msgstr "Extrémní"
 #: rulesmodel.cpp:918
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Dole"
 
 #: rulesmodel.cpp:920
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Nad"
 
 #: rulesmodel.cpp:921
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Pozice"
+msgstr "Upozornění"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Rozbalovací"
 
 #: rulesmodel.cpp:924
 #, kde-format
@@ -709,12 +708,12 @@ msgstr ""
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Přesah"
 
 #: rulesmodel.cpp:951
 #, kde-format
@@ -910,6 +909,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Set window type"
-#~ msgstr "Nastavit typ okna na"
