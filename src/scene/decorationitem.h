@@ -86,7 +86,7 @@ public:
     QRegion opaque() const override final;
 
 private Q_SLOTS:
-    void handleFrameGeometryChanged();
+    void handleDecorationGeometryChanged();
     void handleOutputChanged();
     void handleOutputScaleChanged();
 

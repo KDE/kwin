@@ -91,22 +91,22 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
 DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Scene *scene, Item *parent)
     : Item(scene, parent)
     , m_window(window)
+    , m_decoration(decoration)
 {
     m_renderer = Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient());
 
-    connect(window, &Window::frameGeometryChanged,
-            this, &DecorationItem::handleFrameGeometryChanged);
     connect(window, &Window::outputChanged,
             this, &DecorationItem::handleOutputChanged);
 
+    connect(decoration->client(), &KDecoration2::DecoratedClient::sizeChanged,
+            this, &DecorationItem::handleDecorationGeometryChanged);
     connect(decoration, &KDecoration2::Decoration::bordersChanged,
-            this, &DecorationItem::discardQuads);
+            this, &DecorationItem::handleDecorationGeometryChanged);
 
     connect(renderer(), &DecorationRenderer::damaged,
             this, qOverload<const QRegion &>(&Item::scheduleRepaint));
 
-    // this toSize is to match that DecoratedWindow also rounds
-    setSize(window->size().toSize());
+    setSize(decoration->size());
     handleOutputChanged();
 }
 
@@ -159,9 +159,10 @@ void DecorationItem::handleOutputScaleChanged()
     }
 }
 
-void DecorationItem::handleFrameGeometryChanged()
+void DecorationItem::handleDecorationGeometryChanged()
 {
-    setSize(m_window->size().toSize());
+    setSize(m_decoration->size());
+    discardQuads();
 }
 
 DecorationRenderer *DecorationItem::renderer() const
