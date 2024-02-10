@@ -224,6 +224,16 @@
             <default>false</default>
         </entry>
     </group>
+    <group name="EdgeBarrier">
+        <entry name="CornerBarrier" type="Bool">
+            <default>true</default>
+        </entry>
+        <entry name="EdgeBarrier" type="Int">
+            <default>100</default>
+            <min>0</min>
+            <max>1000</max>
+        </entry>
+    </group>
     <group name="ScreenEdges">
         <entry name="RemainActiveOnFullscreen" type="Bool">
             <default>false</default>

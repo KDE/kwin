@@ -21,6 +21,7 @@
 #include "input_event_spy.h"
 #include "mousebuttons.h"
 #include "osd.h"
+#include "screenedge.h"
 #include "wayland/display.h"
 #include "wayland/pointer.h"
 #include "wayland/pointerconstraints_v1.h"
@@ -240,7 +241,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     }
 
     PositionUpdateBlocker blocker(this);
-    updatePosition(pos);
+    updatePosition(pos, time);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      input()->keyboardModifiers(), time,
                      delta, deltaNonAccelerated, device);
@@ -736,8 +737,87 @@ QPointF PointerInputRedirection::applyPointerConfinement(const QPointF &pos) con
     return m_pos;
 }
 
-void PointerInputRedirection::updatePosition(const QPointF &pos)
+PointerInputRedirection::EdgeBarrierType PointerInputRedirection::edgeBarrierType(const QPointF &pos, const QRectF &lastOutputGeometry) const
 {
+    constexpr qreal cornerThreshold = 15;
+    const auto moveResizeWindow = workspace()->moveResizeWindow();
+    const bool onCorner = (pos - lastOutputGeometry.topLeft()).manhattanLength() <= cornerThreshold
+        || (pos - lastOutputGeometry.bottomLeft()).manhattanLength() <= cornerThreshold
+        || (pos - lastOutputGeometry.topRight()).manhattanLength() <= cornerThreshold
+        || (pos - lastOutputGeometry.bottomRight()).manhattanLength() <= cornerThreshold;
+    if (moveResizeWindow && moveResizeWindow->isInteractiveMove()) {
+        return EdgeBarrierType::WindowMoveBarrier;
+    } else if (moveResizeWindow && moveResizeWindow->isInteractiveResize()) {
+        return EdgeBarrierType::WindowResizeBarrier;
+    } else if (options->cornerBarrier() && onCorner) {
+        return EdgeBarrierType::CornerBarrier;
+    } else if (workspace()->screenEdges()->inApproachGeometry(pos.toPoint())) {
+        return EdgeBarrierType::EdgeElementBarrier;
+    } else {
+        return EdgeBarrierType::NormalBarrier;
+    }
+}
+
+qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
+{
+    const auto barrierWidth = options->edgeBarrier();
+    switch (type) {
+    case EdgeBarrierType::WindowMoveBarrier:
+    case EdgeBarrierType::WindowResizeBarrier:
+        return 1.5 * barrierWidth;
+    case EdgeBarrierType::EdgeElementBarrier:
+        return 2 * barrierWidth;
+    case EdgeBarrierType::CornerBarrier:
+        return 2000;
+    case EdgeBarrierType::NormalBarrier:
+        return barrierWidth;
+    default:
+        Q_UNREACHABLE();
+        return 0;
+    }
+}
+
+QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Output *currentOutput, std::chrono::microseconds time)
+{
+    auto softThreshold = [](qreal value, qreal threshold) {
+        return std::abs(value) < threshold ? 0 : value - (value > 0 ? threshold : -threshold);
+    };
+
+    // optimization to avoid looping over all outputs
+    if (exclusiveContains(currentOutput->geometry(), m_pos)) {
+        m_movementInEdgeBarrier = QPointF();
+        return pos;
+    }
+    const Output *lastOutput = workspace()->outputAt(m_pos);
+    QPointF newPos = confineToBoundingBox(pos, lastOutput->geometry());
+    const auto type = edgeBarrierType(newPos, lastOutput->geometry());
+    if (m_lastEdgeBarrierType != type) {
+        m_movementInEdgeBarrier = QPointF();
+    }
+    m_lastEdgeBarrierType = type;
+    const auto barrierWidth = edgeBarrier(type);
+    const qreal returnSpeed = barrierWidth / 10.0 /* px/s */ / 1000'000.0; // px/us
+    std::chrono::microseconds timeDiff(time - m_lastMoveTime);
+    qreal returnDistance = returnSpeed * timeDiff.count();
+
+    m_movementInEdgeBarrier += (pos - newPos);
+    m_movementInEdgeBarrier.setX(softThreshold(m_movementInEdgeBarrier.x(), returnDistance));
+    m_movementInEdgeBarrier.setY(softThreshold(m_movementInEdgeBarrier.y(), returnDistance));
+
+    if (std::abs(m_movementInEdgeBarrier.x()) > barrierWidth) {
+        newPos.rx() += softThreshold(m_movementInEdgeBarrier.x(), barrierWidth);
+        m_movementInEdgeBarrier.setX(0);
+    }
+    if (std::abs(m_movementInEdgeBarrier.y()) > barrierWidth) {
+        newPos.ry() += softThreshold(m_movementInEdgeBarrier.y(), barrierWidth);
+        m_movementInEdgeBarrier.setY(0);
+    }
+    return newPos;
+}
+
+void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::microseconds time)
+{
+    m_lastMoveTime = time;
     if (m_locked) {
         // locked pointer should not move
         return;
@@ -745,6 +825,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos)
     // verify that at least one screen contains the pointer position
     const Output *currentOutput = workspace()->outputAt(pos);
     QPointF p = confineToBoundingBox(pos, currentOutput->geometry());
+    p = applyEdgeBarrier(p, currentOutput, time);
     p = applyPointerConfinement(p);
     if (p == m_pos) {
         // didn't change due to confinement

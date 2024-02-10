@@ -254,6 +254,10 @@ public:
      */
     void check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack = false);
     /**
+     * Check, if @p pos is in the approach geometry of any edge.
+     */
+    bool inApproachGeometry(const QPoint &pos) const;
+    /**
      * The (dpi dependent) length, reserved for the active corners of each edge - 1/3"
      */
     int cornerOffset() const;

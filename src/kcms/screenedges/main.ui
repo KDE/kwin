@@ -264,6 +264,61 @@
        </property>
       </widget>
      </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="CornerBarrierLabel">
+       <property name="text">
+        <string>&amp;Corner barrier:</string>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_CornerBarrier</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="1">
+      <widget class="QCheckBox" name="kcfg_CornerBarrier">
+       <property name="whatsThis">
+        <string>Here you can enable or disable the virtual corner barrier between screens. The barrier prevents the cursor from moving to another screen when it is already touching a screen corner. This makes it easier to trigger user interface elements like maximized windows' close buttons when using multiple screens.</string>
+       </property>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Prevents cursors from crossing at screen corners.</string>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="0">
+      <widget class="QLabel" name="EdgeBarrierLabel">
+       <property name="text">
+        <string>&amp;Edge barrier:</string>
+       </property>
+       <property name="buddy">
+        <cstring>kcfg_EdgeBarrier</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="9" column="1">
+      <widget class="QSpinBox" name="kcfg_EdgeBarrier">
+       <property name="whatsThis">
+        <string>Here you can set size of the edge barrier between different screens. The barrier adds additional distance you have to move your pointer before it crosses the edge onto the other screen. This makes it easier to access user interface elements like Plasma Panels that are located on an edge between screens.</string>
+       </property>
+       <property name="toolTip">
+        <string comment="@info:tooltip">Additional distance cursor needs to travel to cross screen edges.</string>
+       </property>
+       <property name="specialValueText">
+        <string>None</string>
+       </property>
+       <property name="suffix">
+        <string> px</string>
+       </property>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>1000</number>
+       </property>
+       <property name="value">
+        <number>100</number>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>

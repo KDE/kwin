@@ -133,6 +133,10 @@ void ScreensTest::testCurrentWithFollowsMouse()
     auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
     group.writeEntry("ActiveMouseScreen", true);
     group.sync();
+    auto edgeBarrierGroup = kwinApp()->config()->group(QStringLiteral("EdgeBarrier"));
+    edgeBarrierGroup.writeEntry("EdgeBarrier", 0);
+    edgeBarrierGroup.writeEntry("CornerBarrier", false);
+    edgeBarrierGroup.sync();
     workspace()->slotReconfigure();
 
     QFETCH(QList<QRect>, geometries);

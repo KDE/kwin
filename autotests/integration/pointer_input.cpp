@@ -94,6 +94,8 @@ private Q_SLOTS:
     void testWindowUnderCursorWhileButtonPressed();
     void testConfineToScreenGeometry_data();
     void testConfineToScreenGeometry();
+    void testEdgeBarrier_data();
+    void testEdgeBarrier();
     void testResizeCursor_data();
     void testResizeCursor();
     void testMoveCursor();
@@ -145,6 +147,11 @@ void PointerInputTest::init()
     m_compositor = Test::waylandCompositor();
     m_seat = Test::waylandSeat();
 
+    auto group = kwinApp()->config()->group(QStringLiteral("EdgeBarrier"));
+    group.writeEntry("EdgeBarrier", 0);
+    group.writeEntry("CornerBarrier", false);
+    group.sync();
+    Workspace::self()->slotReconfigure();
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
 }
@@ -1540,6 +1547,88 @@ void PointerInputTest::testConfineToScreenGeometry()
 
     QFETCH(QPoint, expectedPos);
     QCOMPARE(Cursors::self()->mouse()->pos(), expectedPos);
+}
+
+void PointerInputTest::testEdgeBarrier_data()
+{
+    QTest::addColumn<QPoint>("startPos");
+    QTest::addColumn<QList<QPoint>>("movements");
+    QTest::addColumn<int>("targetOutputId");
+    QTest::addColumn<bool>("cornerBarrier");
+
+    // screen layout:
+    //
+    // +----------+----------+---------+
+    // |   left   |    top   |  right  |
+    // +----------+----------+---------+
+    //            |  bottom  |
+    //            +----------+
+    //
+    QTest::newRow("move right - barred") << QPoint(1270, 512) << QList<QPoint>{QPoint(20, 0)} << 0 << false;
+    QTest::newRow("move left - barred") << QPoint(1290, 512) << QList<QPoint>{QPoint(-20, 0)} << 1 << false;
+    QTest::newRow("move down - barred") << QPoint(1920, 1014) << QList<QPoint>{QPoint(0, 20)} << 1 << false;
+    QTest::newRow("move up - barred") << QPoint(1920, 1034) << QList<QPoint>{QPoint(0, -20)} << 3 << false;
+    QTest::newRow("move top-right - barred") << QPoint(2550, 1034) << QList<QPoint>{QPoint(20, -20)} << 3 << false;
+    QTest::newRow("move top-left - barred") << QPoint(1290, 1034) << QList<QPoint>{QPoint(-20, -20)} << 3 << false;
+    QTest::newRow("move bottom-right - barred") << QPoint(1270, 1014) << QList<QPoint>{QPoint(20, 20)} << 0 << false;
+    QTest::newRow("move bottom-left - barred") << QPoint(2570, 1014) << QList<QPoint>{QPoint(-20, 20)} << 2 << false;
+
+    QTest::newRow("move right - not barred") << QPoint(1270, 512) << QList<QPoint>{QPoint(100, 0)} << 1 << false;
+    QTest::newRow("move left - not barred") << QPoint(1290, 512) << QList<QPoint>{QPoint(-100, 0)} << 0 << false;
+    QTest::newRow("move down - not barred") << QPoint(1920, 1014) << QList<QPoint>{QPoint(0, 100)} << 3 << false;
+    QTest::newRow("move up - not barred") << QPoint(1920, 1034) << QList<QPoint>{QPoint(0, -100)} << 1 << false;
+    QTest::newRow("move top-right - not barred") << QPoint(2550, 1034) << QList<QPoint>{QPoint(100, -100)} << 2 << false;
+    QTest::newRow("move top-left - not barred") << QPoint(1290, 1034) << QList<QPoint>{QPoint(-100, -100)} << 0 << false;
+    QTest::newRow("move bottom-right - not barred") << QPoint(1270, 1014) << QList<QPoint>{QPoint(100, 100)} << 3 << false;
+    QTest::newRow("move bottom-left - not barred") << QPoint(2570, 1014) << QList<QPoint>{QPoint(-100, 100)} << 3 << false;
+
+    QTest::newRow("move cumulative") << QPoint(1279, 512) << QList<QPoint>{QPoint(24, 0), QPoint(24, 0)} << 1 << false;
+    QTest::newRow("move then idle") << QPoint(1279, 512) << QList<QPoint>{QPoint(24, 0), QPoint(0, 0), QPoint(0, 0), QPoint(3, 0)} << 0 << false;
+
+    QTest::newRow("move top-right - corner barrier") << QPoint(2550, 1034) << QList<QPoint>{QPoint(100, -100)} << 3 << true;
+    QTest::newRow("move top-left - corner barrier") << QPoint(1290, 1034) << QList<QPoint>{QPoint(-100, -100)} << 3 << true;
+    QTest::newRow("move bottom-right - corner barrier") << QPoint(1270, 1014) << QList<QPoint>{QPoint(100, 100)} << 0 << true;
+    QTest::newRow("move bottom-left - corner barrier") << QPoint(2570, 1014) << QList<QPoint>{QPoint(-100, 100)} << 2 << true;
+}
+
+void PointerInputTest::testEdgeBarrier()
+{
+    // setup screen layout
+    const QList<QRect> geometries{
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+        QRect(2560, 0, 1280, 1024),
+        QRect(1280, 1024, 1280, 1024)};
+    Test::setOutputConfig(geometries);
+
+    const auto outputs = workspace()->outputs();
+    QCOMPARE(outputs.count(), geometries.count());
+    QCOMPARE(outputs[0]->geometry(), geometries.at(0));
+    QCOMPARE(outputs[1]->geometry(), geometries.at(1));
+    QCOMPARE(outputs[2]->geometry(), geometries.at(2));
+    QCOMPARE(outputs[3]->geometry(), geometries.at(3));
+
+    QFETCH(QPoint, startPos);
+    input()->pointer()->warp(startPos);
+    quint32 timestamp = waylandServer()->seat()->timestamp().count() + 5000;
+    Test::pointerMotionRelative(QPoint(0, 0), timestamp);
+    timestamp += 1000;
+    QCOMPARE(Cursors::self()->mouse()->pos(), startPos);
+
+    auto group = kwinApp()->config()->group(QStringLiteral("EdgeBarrier"));
+    group.writeEntry("EdgeBarrier", 25);
+    QFETCH(bool, cornerBarrier);
+    group.writeEntry("CornerBarrier", cornerBarrier);
+    group.sync();
+    workspace()->slotReconfigure();
+
+    QFETCH(QList<QPoint>, movements);
+    for (const auto &movement : movements) {
+        Test::pointerMotionRelative(movement, timestamp);
+        timestamp += 1000;
+    }
+    QFETCH(int, targetOutputId);
+    QCOMPARE(workspace()->outputAt(Cursors::self()->mouse()->pos()), workspace()->outputs().at(targetOutputId));
 }
 
 void PointerInputTest::testResizeCursor_data()

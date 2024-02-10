@@ -82,6 +82,10 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     KConfigGroup windowsGroup = config->group(QStringLiteral("Windows"));
     windowsGroup.writeEntry("Placement", Placement::policyToString(PlacementSmart));
     windowsGroup.sync();
+    KConfigGroup edgeBarrierGroup = config->group(QStringLiteral("EdgeBarrier"));
+    edgeBarrierGroup.writeEntry("EdgeBarrier", 0);
+    edgeBarrierGroup.writeEntry("CornerBarrier", false);
+    edgeBarrierGroup.sync();
     setConfig(config);
 
     const auto ownPath = libraryPaths().last();

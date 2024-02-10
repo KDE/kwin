@@ -1424,6 +1424,16 @@ void ScreenEdges::check(const QPoint &pos, const QDateTime &now, bool forceNoPus
     }
 }
 
+bool ScreenEdges::inApproachGeometry(const QPoint &pos) const
+{
+    for (const auto &edge : m_edges) {
+        if (edge->approachGeometry().contains(pos)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool ScreenEdges::isEntered(QMouseEvent *event)
 {
     if (event->type() != QEvent::MouseMove) {

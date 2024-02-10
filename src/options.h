@@ -128,6 +128,14 @@ class KWIN_EXPORT Options : public QObject
      */
     Q_PROPERTY(bool snapOnlyWhenOverlapping READ isSnapOnlyWhenOverlapping WRITE setSnapOnlyWhenOverlapping NOTIFY snapOnlyWhenOverlappingChanged)
     /**
+     * The size of the virtual barrier at edges between screens.
+     */
+    Q_PROPERTY(int edgeBarrier READ edgeBarrier WRITE setEdgeBarrier NOTIFY edgeBarrierChanged)
+    /**
+     * Whether to enable a cursor barrier at the corners of the screen.
+     */
+    Q_PROPERTY(int cornerBarrier READ cornerBarrier WRITE setCornerBarrier NOTIFY cornerBarrierChanged)
+    /**
      * Whether or not we roll over to the other edge when switching desktops past the edge.
      */
     Q_PROPERTY(bool rollOverDesktops READ isRollOverDesktops WRITE setRollOverDesktops NOTIFY rollOverDesktopsChanged)
@@ -381,6 +389,22 @@ public:
     bool isSnapOnlyWhenOverlapping() const
     {
         return m_snapOnlyWhenOverlapping;
+    }
+
+    /**
+     * The size of the virtual barrier at edges between screens.
+     */
+    int edgeBarrier() const
+    {
+        return m_edgeBarrier;
+    }
+
+    /**
+     * Whether to enable a cursor barrier at the corners of the screen.
+     */
+    int cornerBarrier() const
+    {
+        return m_cornerBarrier;
     }
 
     /**
@@ -712,6 +736,8 @@ public:
     void setWindowSnapZone(int windowSnapZone);
     void setCenterSnapZone(int centerSnapZone);
     void setSnapOnlyWhenOverlapping(bool snapOnlyWhenOverlapping);
+    void setEdgeBarrier(int edgeBarrier);
+    void setCornerBarrier(bool cornerBarrier);
     void setRollOverDesktops(bool rollOverDesktops);
     void setFocusStealingPreventionLevel(int focusStealingPreventionLevel);
     void setOperationTitlebarDblClick(WindowOperation operationTitlebarDblClick);
@@ -913,6 +939,8 @@ Q_SIGNALS:
     void windowSnapZoneChanged();
     void centerSnapZoneChanged();
     void snapOnlyWhenOverlappingChanged();
+    void edgeBarrierChanged();
+    void cornerBarrierChanged();
     void rollOverDesktopsChanged(bool enabled);
     void focusStealingPreventionLevelChanged();
     void operationTitlebarDblClickChanged();
@@ -975,6 +1003,8 @@ private:
     int m_windowSnapZone;
     int m_centerSnapZone;
     bool m_snapOnlyWhenOverlapping;
+    int m_edgeBarrier;
+    bool m_cornerBarrier;
     bool m_rollOverDesktops;
     int m_focusStealingPreventionLevel;
     int m_killPingTimeout;

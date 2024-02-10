@@ -48,6 +48,8 @@ Options::Options(QObject *parent)
     , m_windowSnapZone(0)
     , m_centerSnapZone(0)
     , m_snapOnlyWhenOverlapping(false)
+    , m_edgeBarrier(0)
+    , m_cornerBarrier(0)
     , m_rollOverDesktops(false)
     , m_focusStealingPreventionLevel(0)
     , m_killPingTimeout(0)
@@ -307,6 +309,24 @@ void Options::setSnapOnlyWhenOverlapping(bool snapOnlyWhenOverlapping)
     }
     m_snapOnlyWhenOverlapping = snapOnlyWhenOverlapping;
     Q_EMIT snapOnlyWhenOverlappingChanged();
+}
+
+void Options::setEdgeBarrier(int edgeBarrier)
+{
+    if (m_edgeBarrier == edgeBarrier) {
+        return;
+    }
+    m_edgeBarrier = edgeBarrier;
+    Q_EMIT edgeBarrierChanged();
+}
+
+void Options::setCornerBarrier(bool cornerBarrier)
+{
+    if (m_cornerBarrier == cornerBarrier) {
+        return;
+    }
+    m_cornerBarrier = cornerBarrier;
+    Q_EMIT cornerBarrierChanged();
 }
 
 void Options::setRollOverDesktops(bool rollOverDesktops)
@@ -848,6 +868,8 @@ void Options::syncFromKcfgc()
     setBorderSnapZone(m_settings->borderSnapZone());
     setWindowSnapZone(m_settings->windowSnapZone());
     setCenterSnapZone(m_settings->centerSnapZone());
+    setEdgeBarrier(m_settings->edgeBarrier());
+    setCornerBarrier(m_settings->cornerBarrier());
     setSnapOnlyWhenOverlapping(m_settings->snapOnlyWhenOverlapping());
     setKillPingTimeout(m_settings->killPingTimeout());
     setHideUtilityWindowsForInactive(m_settings->hideUtilityWindowsForInactive());

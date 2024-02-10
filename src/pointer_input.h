@@ -144,6 +144,14 @@ public:
     void processFrame(KWin::InputDevice *device = nullptr);
 
 private:
+    enum class EdgeBarrierType {
+        NormalBarrier,
+        WindowMoveBarrier,
+        // WindowResize is separate from WindowMove since there is edge snapping during resize, so a different resistance might be desirable
+        WindowResizeBarrier,
+        EdgeElementBarrier,
+        CornerBarrier,
+    };
     void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
@@ -153,8 +161,11 @@ private:
 
     void updateOnStartMoveResize();
     void updateToReset();
-    void updatePosition(const QPointF &pos);
+    void updatePosition(const QPointF &pos, std::chrono::microseconds time);
     void updateButton(uint32_t button, InputRedirection::PointerButtonState state);
+    QPointF applyEdgeBarrier(const QPointF &pos, const Output *currentOutput, std::chrono::microseconds time);
+    EdgeBarrierType edgeBarrierType(const QPointF &pos, const QRectF &lastOutputGeometry) const;
+    qreal edgeBarrier(EdgeBarrierType type) const;
     QPointF applyPointerConfinement(const QPointF &pos) const;
     void disconnectConfinedPointerRegionConnection();
     void disconnectLockedPointerAboutToBeUnboundConnection();
@@ -176,7 +187,10 @@ private:
     bool m_locked = false;
     bool m_enableConstraints = true;
     bool m_lastOutputWasPlaceholder = true;
+    QPointF m_movementInEdgeBarrier;
+    std::chrono::microseconds m_lastMoveTime = std::chrono::microseconds::zero();
     friend class PositionUpdateBlocker;
+    EdgeBarrierType m_lastEdgeBarrierType = EdgeBarrierType::NormalBarrier;
 };
 
 class WaylandCursorImage : public QObject
