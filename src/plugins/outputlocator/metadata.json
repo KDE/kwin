@@ -2,6 +2,8 @@
     "KPlugin": {
         "License": "GPL",
         "Category": "Appearance",
+        "Description": "Show screen names",
+        "Name": "Output Locator",
         "EnabledByDefault": true,
         "Authors": [
             {
