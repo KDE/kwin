@@ -44,14 +44,6 @@ QQC2.ItemDelegate {
                 _toggled = true;
             }
 
-            onClicked: {
-                // Uncheck the radio button if it's clicked.
-                if (checked && !_toggled) {
-                    model.StatusRole = Qt.Unchecked;
-                }
-                _toggled = false;
-            }
-
             KCM.SettingHighlighter {
                 highlight: model.EnabledByDefaultFunctionRole ? parent.checkState !== Qt.PartiallyChecked : parent.checked !== model.EnabledByDefaultRole
             }
@@ -86,6 +78,7 @@ QQC2.ItemDelegate {
 
                 text: model.DescriptionRole
                 opacity: listItem.hovered ? 0.8 : 0.6
+                visible: model.DescriptionRole !== ""
                 wrapMode: Text.Wrap
             }
 
@@ -96,7 +89,7 @@ QQC2.ItemDelegate {
 
                 text: i18n("Author: %1\nLicense: %2", model.AuthorNameRole, model.LicenseRole)
                 opacity: listItem.hovered ? 0.8 : 0.6
-                visible: listItem.ListView.isCurrentItem
+                visible: listItem.ListView.isCurrentItem && (model.AuthorNameRole !== "" || model.LicenseRole !== "")
                 wrapMode: Text.Wrap
             }
 

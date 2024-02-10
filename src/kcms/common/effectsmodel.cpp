@@ -34,7 +34,9 @@ static QString translatedCategory(const QString &category)
 {
     static const QList<QString> knownCategories = {
         QStringLiteral("Accessibility"),
+        QStringLiteral("Accessibility - Magnification"),
         QStringLiteral("Appearance"),
+        QStringLiteral("Appearance - Minimize"),
         QStringLiteral("Focus"),
         QStringLiteral("Show Desktop Animation"),
         QStringLiteral("Tools"),
@@ -44,7 +46,9 @@ static QString translatedCategory(const QString &category)
 
     static const QList<QString> translatedCategories = {
         i18nc("Category of Desktop Effects, used as section header", "Accessibility"),
+        i18nc("Category of Desktop Effects, used as section header", "Accessibility - Magnification"),
         i18nc("Category of Desktop Effects, used as section header", "Appearance"),
+        i18nc("Category of Desktop Effects, used as section header", "Appearance - Minimize"),
         i18nc("Category of Desktop Effects, used as section header", "Focus"),
         i18nc("Category of Desktop Effects, used as section header", "Peek at Desktop Animation"),
         i18nc("Category of Desktop Effects, used as section header", "Tools"),
@@ -68,6 +72,10 @@ static EffectsModel::Status effectStatus(bool enabled)
 
 EffectsModel::EffectsModel(QObject *parent)
     : QAbstractItemModel(parent)
+{
+}
+
+EffectsModel::~EffectsModel()
 {
 }
 
@@ -412,6 +420,8 @@ void EffectsModel::load(LoadOptions options)
             }
         }
 
+        loadEffectsPostProcessing(m_pendingEffects);
+
         beginResetModel();
         m_effects = m_pendingEffects;
         m_pendingEffects.clear();
@@ -488,6 +498,10 @@ void EffectsModel::save()
     QList<EffectData> dirtyEffects;
 
     for (EffectData &effect : m_effects) {
+        if (effect.fake) {
+            continue;
+        }
+
         if (!effect.changed) {
             continue;
         }
@@ -605,6 +619,9 @@ bool EffectsModel::shouldStore(const EffectData &data) const
     return true;
 }
 
+void EffectsModel::loadEffectsPostProcessing(QList<EffectData> &effects)
+{
+}
 }
 
 #include "moc_effectsmodel.cpp"

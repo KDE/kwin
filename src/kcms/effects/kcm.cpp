@@ -7,7 +7,7 @@
 #include "kcm.h"
 #include "desktopeffectsdata.h"
 #include "effectsfilterproxymodel.h"
-#include "effectsmodel.h"
+#include "effectskcmmodel.h"
 
 #include <KLocalizedString>
 #include <KPluginFactory>
@@ -25,7 +25,7 @@ namespace KWin
 
 DesktopEffectsKCM::DesktopEffectsKCM(QObject *parent, const KPluginMetaData &metaData)
     : KQuickConfigModule(parent, metaData)
-    , m_model(new EffectsModel(this))
+    , m_model(new EffectsKcmModel(this))
 {
     qmlRegisterType<EffectsFilterProxyModel>("org.kde.private.kcms.kwin.effects", 1, 0, "EffectsFilterProxyModel");
 

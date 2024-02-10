@@ -132,6 +132,7 @@ public:
     };
 
     explicit EffectsModel(QObject *parent = nullptr);
+    virtual ~EffectsModel();
 
     // Reimplemented from QAbstractItemModel.
     QHash<int, QByteArray> roleNames() const override;
@@ -237,6 +238,7 @@ protected:
         bool changed = false;
         QString configModule;
         QVariantList configArgs;
+        bool fake = false;
     };
 
     /**
@@ -246,6 +248,8 @@ protected:
      * @returns @c true if the effect should be stored, otherwise @c false.
      */
     virtual bool shouldStore(const EffectData &data) const;
+
+    virtual void loadEffectsPostProcessing(QList<EffectData> &effects);
 
 private:
     void loadBuiltInEffects(const KConfigGroup &kwinConfig);

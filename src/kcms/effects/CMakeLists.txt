@@ -6,6 +6,7 @@ add_definitions(-DTRANSLATION_DOMAIN=\"kcm_kwin_effects\")
 set(kcm_kwin_effects_PART_SRCS
     kcm.cpp
     effectsfilterproxymodel.cpp
+    effectskcmmodel.cpp
     desktopeffectsdata.cpp
 )
 
