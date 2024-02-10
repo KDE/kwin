@@ -107,7 +107,7 @@
 <para
 ><guilabel
 >Seçili pencereyi göster</guilabel
-> onay kutusu, kullanıcının hangi pencerenin etkinleştirileceğini ne kadar net göreceğini belirler. Bu kutu işaretlenirse Görev Değiştiricisi'nde o anda vurgulanan pencere dışındaki tüm pencereler gizlenecektir.</para>
+> onay kutusu, kullanıcının hangi pencerenin etkinleştirileceğini ne kadar net göreceğini belirler. Bu kutu işaretlenirse Görev Değiştiricisi’nde o anda vurgulanan pencere dışındaki tüm pencereler gizlenecektir.</para>
 
 <note
 ><para
@@ -153,7 +153,7 @@
 
 <note
 ><para
->Görev Değiştiricisi'ni çağırmak için tanımlanmış klavye kısayollarından herhangi biri kullanılabilir. Görev Değiştiricisi'ni klavyeyi kullanmadan çalıştırmak için <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+>Görev Değiştiricisi’ni çağırmak için tanımlanmış klavye kısayollarından herhangi biri kullanılabilir. Görev Değiştiricisi’ni klavyeyi kullanmadan çalıştırmak için <ulink url="help:/kcontrol/kwinscreenedges/index.html"
 ><guilabel
 >Ekran Kenarları</guilabel
 ></ulink
@@ -202,7 +202,7 @@
 <title
 >Pencereleri süzme ölçütü</title>
 <para
->Bu bölüm, Görev Değiştiricisi'nin pencere listesini ek olarak süzmek için seçenekler içerir.</para>
+>Bu bölüm, Görev Değiştiricisi’nin pencere listesini ek olarak süzmek için seçenekler içerir.</para>
 
 <para
 ><guilabel
@@ -247,11 +247,11 @@
 <para
 >Bu bölümdeki bir seçeneğin işaretini kaldırırsanız o seçenek için herhangi bir süzgeç uygulanmaz. Örneğin, Ekranlar seçeneğini işaretler ve diğer üç seçeneği temizlerseniz Görev Değiştiricisi pencere listesi yalnızca geçerli ekranda hangi pencerelerin bulunduğuna göre süzülür.</para>
 <para
->Yukarıdaki bölümlerde açıklanan seçeneklerin tümü, Görev Değiştiricisi'nin davranışı ve görünüşü üzerinde çok ayrıntılı denetim sağlamak için birlikte çalışır. Örneğin, bir döngüde açık pencereleri göstermek için <keycombo
+>Yukarıdaki bölümlerde açıklanan seçeneklerin tümü, Görev Değiştiricisi’nin davranışı ve görünüşü üzerinde çok ayrıntılı denetim sağlamak için birlikte çalışır. Örneğin, bir döngüde açık pencereleri göstermek için <keycombo
 >&Alt;&Tab;</keycombo
 > düğme kombinasyonu ile çağrılacak <guilabel
 >Ana</guilabel
-> ayarlar koleksiyonunu yalnızca bir pencere gösterecek şekilde, uygulama başına ve yalnızca geçerli masaüstünde ve o anda etkin olan ekranda bulunan pencereleri listelemek için tanımlayabilirsiniz. Bu, hem 'iş' hem de 'ev' sanal masaüstleriniz varsa bağlama duyarlı çok hızlı pencere geçişi sağlayabilir ve ardından iş ve ev için tüm elektronik tablolarınızı aynı monitörde tutar.</para>
+> ayarlar koleksiyonunu yalnızca bir pencere gösterecek şekilde, uygulama başına ve yalnızca geçerli masaüstünde ve o anda etkin olan ekranda bulunan pencereleri listelemek için tanımlayabilirsiniz. Bu, hem ’iş’ hem de ’ev’ sanal masaüstleriniz varsa bağlama duyarlı çok hızlı pencere geçişi sağlayabilir ve ardından iş ve ev için tüm elektronik tablolarınızı aynı monitörde tutar.</para>
 
 <para
 ><guilabel

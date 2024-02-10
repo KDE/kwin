@@ -261,7 +261,7 @@
 >Odak çalma koruması</title>
 
 <para
->Bu seçenek, KWin'in yeni pencerelerin beklenmedik şekilde etkinleştirilmesinden kaynaklanan istenmeyen odak çalmayı ne kadar engellemeye çalışacağını belirtir. </para
+>Bu seçenek, KWin’in yeni pencerelerin beklenmedik şekilde etkinleştirilmesinden kaynaklanan istenmeyen odak çalmayı ne kadar engellemeye çalışacağını belirtir. </para
 > 
 
 <variablelist>
@@ -350,7 +350,7 @@
 
 <tip>
 <para
->Gecikmeyi çok kısa ayarlamak pencerelerin hızlı bir şekilde değiştirilmesine neden olur ve bu oldukça dikkat dağıtıcı olabilir. Çoğu insan 100-300 ms'lik bir gecikmeyi sevecektir. Bu duyarlıdır, ancak hedefinize giderken o pencereyi öne getirmeden pencerenin köşelerinden kaydırmanıza izin verir. </para>
+>Gecikmeyi çok kısa ayarlamak pencerelerin hızlı bir şekilde değiştirilmesine neden olur ve bu oldukça dikkat dağıtıcı olabilir. Çoğu insan 100-300 ms’lik bir gecikmeyi sevecektir. Bu duyarlıdır, ancak hedefinize giderken o pencereyi öne getirmeden pencerenin köşelerinden kaydırmanıza izin verir. </para>
 </tip>
 
 </sect3>
@@ -488,7 +488,7 @@
 ></term>
 <listitem>
 <para
->Pencereyi tüm Sanal Masaüstleri'nde görünür yapar. </para>
+>Pencereyi tüm Sanal Masaüstleri’nde görünür yapar. </para>
 </listitem>
 </varlistentry>
 
@@ -571,9 +571,9 @@
 ></term>
 <listitem>
 <para
->Yukarı sarmak, pencereyi önceki Sanal Masaüstü'ne taşır. </para>
+>Yukarı sarmak, pencereyi önceki Sanal Masaüstü’ne taşır. </para>
 <para
->Aşağı sarmak, pencereyi bir sonraki Sanal Masaüstü'ne taşır. </para>
+>Aşağı sarmak, pencereyi bir sonraki Sanal Masaüstü’ne taşır. </para>
 </listitem>
 </varlistentry>
 
@@ -1094,9 +1094,9 @@
 ></term>
 <listitem>
 <para
->Yukarı sarmak, pencereyi önceki Sanal Masaüstü'ne taşır. </para>
+>Yukarı sarmak, pencereyi önceki Sanal Masaüstü’ne taşır. </para>
 <para
->Aşağı sarmak, pencereyi bir sonraki Sanal Masaüstü'ne taşır. </para>
+>Aşağı sarmak, pencereyi bir sonraki Sanal Masaüstü’ne taşır. </para>
 </listitem>
 </varlistentry>
 
@@ -1312,7 +1312,7 @@
 <para id="advanced-remember-positions"
 >Pencereleri yukarıda seçili yerleştirme yöntemi yerine daha önce bulundukları yerde açmak için <guilabel
 >Destekliyorlarsa uygulamaların pencere konumlarını anımsamalarına izin ver</guilabel
-> ögesini işaretleyin. Anımsanan bu konumun ekran atamasını içerdiğine dikkat edin, bu nedenle pencereler, en son bulundukları yer burasıysa etkin ekrandan farklı bir ekranda açılabilir. Ayrıca, bu seçeneğin yalnızca X11'de var olduğunu, Wayland'da bulunmadığını ve yalnızca bazı KDE uygulamaları tarafından desteklendiğini unutmayın. </para>
+> ögesini işaretleyin. Anımsanan bu konumun ekran atamasını içerdiğine dikkat edin, bu nedenle pencereler, en son bulundukları yer burasıysa etkin ekrandan farklı bir ekranda açılabilir. Ayrıca, bu seçeneğin yalnızca X11’de var olduğunu, Wayland’da bulunmadığını ve yalnızca bazı KDE uygulamaları tarafından desteklendiğini unutmayın. </para>
 
 <tip>
 <para
@@ -1356,33 +1356,33 @@
 >Sanal Masaüstü davranışı</title>
 
 <para
->Bazen bir uygulamayı çağırmak, yeni bir pencere açmak yerine var olan bir pencereyi etkinleştirir. Bu ayar, etkinleştirilen pencere geçerli olandan farklı bir Sanal Masaüstü'nde bulunuyorsa ne olacağını denetler. </para>
+>Bazen bir uygulamayı çağırmak, yeni bir pencere açmak yerine var olan bir pencereyi etkinleştirir. Bu ayar, etkinleştirilen pencere geçerli olandan farklı bir Sanal Masaüstü’nde bulunuyorsa ne olacağını denetler. </para>
 
 <variablelist>
 
 <varlistentry>
 <term
 ><guilabel
->Söz konusu Sanal Masaüstü'ne geç</guilabel
+>Söz konusu Sanal Masaüstü’ne geç</guilabel
 ></term>
 <listitem>
 <para
->Pencerenin şu anda bulunduğu Sanal Masaüstü'ne geçer. </para>
+>Pencerenin şu anda bulunduğu Sanal Masaüstü’ne geçer. </para>
 <para
->Etkin Sanal Masaüstü'nün, atanmış Sanal Masaüstü'ne giden pencereleri kendiliğinden izlemesini istiyorsanız bu seçeneği seçin. </para>
+>Etkin Sanal Masaüstü’nün, atanmış Sanal Masaüstü’ne giden pencereleri kendiliğinden izlemesini istiyorsanız bu seçeneği seçin. </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term
 ><guilabel
->Pencereyi geçerli Sanal Masaüstü'ne getir</guilabel
+>Pencereyi geçerli Sanal Masaüstü’ne getir</guilabel
 ></term>
 <listitem>
 <para
->Pencerenin etkin Sanal Masaüstü'ne atlamasına neden olur. </para>
+>Pencerenin etkin Sanal Masaüstü’ne atlamasına neden olur. </para>
 <para
->Pencerelerin her zaman geçerli Sanal Masaüstü'nde açılmasını ve etkin Sanal Masaüstü'nün yalnızca oraya elle gidildiğinde geçiş yapmasını istiyorsanız bu seçeneği seçin. </para>
+>Pencerelerin her zaman geçerli Sanal Masaüstü’nde açılmasını ve etkin Sanal Masaüstü’nün yalnızca oraya elle gidildiğinde geçiş yapmasını istiyorsanız bu seçeneği seçin. </para>
 </listitem>
 </varlistentry>
 

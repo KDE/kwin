@@ -143,7 +143,7 @@
 > 
 <sect1 id="invoking-the-kwin-rule-editor"
 ><title
->KWin Kural Düzenleyicisi'ni Çağırmak</title
+>KWin Kural Düzenleyicisi’ni Çağırmak</title
 > 
 <para>
 <screenshot>
@@ -450,7 +450,7 @@
 ><para
 ><guilabel
 >Düzenli İfade</guilabel
-> - Qt'nin düzenli ifadeleri uygulanır - bkz. <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+> - Qt’nin düzenli ifadeleri uygulanır - bkz. <ulink url="https://doc.qt.io/qt-5/qregexp.html"
 >düzenli ifadeler kullanarak model eşleştirme</ulink
 >.</para
 ></listitem>
@@ -884,11 +884,11 @@
     <para
 >Pencerenin istenen en boy oranına mı yoksa <emphasis
 >temel artışa</emphasis
-> mı bağlı kalacağınızı açın/kapatın. Bu özniteliği anlamak için biraz arka plan gereklidir. Kısaca, pencereler, Pencere Yöneticisi'nden bir temel artış talep etmelidir: Yeniden boyutlandırma isteği başına en az <emphasis
+> mı bağlı kalacağınızı açın/kapatın. Bu özniteliği anlamak için biraz arka plan gereklidir. Kısaca, pencereler, Pencere Yöneticisi’nden bir temel artış talep etmelidir: Yeniden boyutlandırma isteği başına en az <emphasis
 >yükseklik</emphasis
 > X <emphasis
 >genişlik</emphasis
-> piksel sayısı olmalıdır. Genellikle 1 × 1'dir. Diğer pencereler, örneğin uçbirim öykünücüleri veya düzenleyicileri, eş aralıklı yazıtiplerini kullanır ve bir karakterin boyutuna göre taban artışlarını ister.</para>
+> piksel sayısı olmalıdır. Genellikle 1 × 1’dir. Diğer pencereler, örneğin uçbirim öykünücüleri veya düzenleyicileri, eş aralıklı yazıtiplerini kullanır ve bir karakterin boyutuna göre taban artışlarını ister.</para>
      </listitem>
   </varlistentry>
 </variablelist>
