@@ -2,7 +2,7 @@
 # Copyright (C) 2001-2004, 2007-2008 Free Software Foundation, Inc.
 # Sae-keun Kim <segni@susekorea.net>, 2001.
 # Yeo SunHwa <sunwt@mizi.com>, 2001.
-# Shinjo Park <kde@peremen.name>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Shinjo Park <kde@peremen.name>
 #
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-09 02:34+0000\n"
-"PO-Revision-Date: 2023-10-08 23:38+0200\n"
+"PO-Revision-Date: 2024-02-10 00:16+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -41,12 +41,11 @@ msgid "Press right control key to grab pointer"
 msgstr "오른쪽 Ctrl 키를 누르면 포인터를 잡음"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland 컴포지터"
+msgstr "KDE Wayland 컴포지터 %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1147,7 +1146,7 @@ msgstr "KWin 도우미"
 #: helpers/killer/killer.cpp:126
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
-msgstr "이 도우미 프로그램은 직접 호출되지 않습니다."
+msgstr "이 도우미 유틸리티는 직접 호출되지 않습니다."
 
 #: helpers/killer/killer.cpp:148
 #, kde-kuit-format
@@ -1156,6 +1155,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application>이(가) 응답하지 않습니다. 이 앱을 강제 종"
+"료하시겠습니까?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1164,56 +1165,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para><application>%2</application>의 \"%1\" 창이 응답하지 않습니다. 앱을 강"
+"제 종료하시겠습니까?</para>"
 
 #: helpers/killer/killer.cpp:153
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>이 앱을 강제로 종료하시겠습니까?</para><para><warning>앱을 종료하면 자"
-"식 창도 종료됩니다. 저장하지 않은 데이터는 손실됩니다.</warning></para>"
+"<para><emphasis strong='true'>앱을 종료하면 자식 모든 창이 닫힙니다. 저장하"
+"지 않은 데이터는 손실됩니다.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
-#, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "%1 앱 끝내기(&T)"
+msgstr "%1 강제 종료(&T)"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "더 기다리기"
+msgstr "더 기다리기(&W)"
 
 #: helpers/killer/killer.cpp:164
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(응답 없음)"
+msgstr "응답 없음"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "프로세스 ID: %1"
 
 #: helpers/killer/killer.cpp:182
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "호스트 이름"
+msgstr "호스트 이름: %1"
 
 #: input.cpp:2010
 #, kde-format
@@ -2198,26 +2191,21 @@ msgid "Arrow draw modifier keys:"
 msgstr "화살표 그리기 수정자 키:"
 
 #: plugins/nightcolor/nightcolormanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
+#, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "야간 색상 꺼짐"
+msgstr "야간 조명 꺼짐"
 
 #: plugins/nightcolor/nightcolormanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "야간 색상 켜짐"
+msgstr "야간 조명 켜짐"
 
 #: plugins/nightcolor/nightcolormanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
+#, kde-format
 msgid "Toggle Night Light"
-msgstr "야간 색상 전환"
+msgstr "야간 조명 전환"
 
 #: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format
@@ -2292,7 +2280,7 @@ msgstr "모눈 보기에서 창 정렬:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:71
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "검색 결과에 필터된 창 포함됨:"
 
 #: plugins/overview/overvieweffect.cpp:124
 #, kde-format
@@ -3497,14 +3485,13 @@ msgstr "데스크톱 파일 이름 규칙 종류"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "레이어"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "말아 올려짐 규칙 종류"
+msgstr "레이어 규칙 종류"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3524,18 +3511,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"다음 앱이 종료되지 않았습니다:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "로그아웃 취소"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "그래도 로그아웃"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
