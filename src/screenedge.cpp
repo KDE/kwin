@@ -1345,7 +1345,7 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
     const QRect screen = output->geometry();
     switch (border) {
     case ElectricTop:
-        if (!isTopScreen(screen, fullArea)) {
+        if (!waylandServer() && !isTopScreen(screen, fullArea)) {
             return false;
         }
         y = screen.y();
@@ -1354,7 +1354,7 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
         width = geo.width();
         break;
     case ElectricBottom:
-        if (!isBottomScreen(screen, fullArea)) {
+        if (!waylandServer() && !isBottomScreen(screen, fullArea)) {
             return false;
         }
         y = screen.y() + screen.height() - 1;
@@ -1363,7 +1363,7 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
         width = geo.width();
         break;
     case ElectricLeft:
-        if (!isLeftScreen(screen, fullArea)) {
+        if (!waylandServer() && !isLeftScreen(screen, fullArea)) {
             return false;
         }
         x = screen.x();
@@ -1372,7 +1372,7 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
         height = geo.height();
         break;
     case ElectricRight:
-        if (!isRightScreen(screen, fullArea)) {
+        if (!waylandServer() && !isRightScreen(screen, fullArea)) {
             return false;
         }
         x = screen.x() + screen.width() - 1;
