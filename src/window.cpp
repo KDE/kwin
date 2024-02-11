@@ -3954,6 +3954,11 @@ void Window::setFullScreen(bool set)
     qCWarning(KWIN_CORE, "%s doesn't support setting fullscreen state", metaObject()->className());
 }
 
+bool Window::wantsAdaptiveSync() const
+{
+    return rules()->checkAdaptiveSync(isFullScreen());
+}
+
 /**
  * Returns @c true if the Window can be minimized; otherwise @c false.
  *

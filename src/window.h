@@ -1000,6 +1000,8 @@ public:
     virtual bool isRequestedFullScreen() const;
     virtual void setFullScreen(bool set);
 
+    bool wantsAdaptiveSync() const;
+
     QRectF geometryRestore() const;
     virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;

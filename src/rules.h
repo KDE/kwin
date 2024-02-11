@@ -77,6 +77,7 @@ public:
     bool checkDisableGlobalShortcuts(bool disable) const;
     QString checkDesktopFile(QString desktopFile, bool init = false) const;
     Layer checkLayer(Layer layer) const;
+    bool checkAdaptiveSync(bool adaptivesync) const;
 
 private:
     MaximizeMode checkMaximizeVert(MaximizeMode mode, bool init) const;
@@ -185,6 +186,7 @@ public:
     bool applyDisableGlobalShortcuts(bool &disable) const;
     bool applyDesktopFile(QString &desktopFile, bool init) const;
     bool applyLayer(enum Layer &layer) const;
+    bool applyAdaptiveSync(bool &adaptivesync) const;
 
 private:
 #endif
@@ -288,6 +290,8 @@ private:
     ForceRule disableglobalshortcutsrule;
     QString desktopfile;
     SetRule desktopfilerule;
+    bool adaptivesync;
+    ForceRule adaptivesyncrule;
     friend QDebug &operator<<(QDebug &stream, const Rules *);
 };
 

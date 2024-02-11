@@ -719,6 +719,11 @@ void RulesModel::populateRuleList()
                                       i18n("Layer"), i18n("Appearance & Fixes"),
                                       QIcon::fromTheme("view-sort")));
     layer->setOptionsData(layerModelData());
+
+    addRule(new RuleItem(QLatin1String("adaptivesync"),
+                         RulePolicy::ForceRule, RuleItem::Boolean,
+                         i18n("Adaptive Sync"), i18n("Appearance & Fixes"),
+                         QIcon::fromTheme("monitor-symbolic")));
 }
 
 const QHash<QString, QString> RulesModel::x11PropertyHash()

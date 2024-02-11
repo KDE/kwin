@@ -441,5 +441,14 @@
       <label>Layer rule type</label>
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
+
+    <entry name="adaptivesync" type="Bool">
+      <label>AdaptiveSync</label>
+      <default>true</default>
+    </entry>
+    <entry name="adaptivesyncrule" type="Int">
+      <label>AdaptiveSync rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
   </group>
 </kcfg>
