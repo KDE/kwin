@@ -10,6 +10,7 @@
 // KConfigSkeleton
 #include "blurconfig.h"
 
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -559,8 +560,29 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         blurShape = translated;
     }
 
+    const QRect backgroundRect = blurShape.boundingRect();
+    const QRect deviceBackgroundRect = snapToPixelGrid(scaledRect(backgroundRect, viewport.scale()));
+    const auto opacity = w->opacity() * data.opacity();
+
     // Get the effective shape that will be actually blurred. It's possible that all of it will be clipped.
-    const QRegion effectiveShape = blurShape & region;
+    QList<QRectF> effectiveShape;
+    effectiveShape.reserve(blurShape.rectCount());
+    if (region != infiniteRegion()) {
+        for (const QRect &clipRect : region) {
+            const QRectF deviceClipRect = snapToPixelGridF(scaledRect(clipRect, viewport.scale()))
+                                              .translated(-deviceBackgroundRect.topLeft());
+            for (const QRect &shapeRect : blurShape) {
+                const QRectF deviceShapeRect = snapToPixelGridF(scaledRect(shapeRect.translated(-backgroundRect.topLeft()), viewport.scale()));
+                if (const QRectF intersected = deviceClipRect.intersected(deviceShapeRect); !intersected.isEmpty()) {
+                    effectiveShape.append(intersected);
+                }
+            }
+        }
+    } else {
+        for (const QRect &rect : blurShape) {
+            effectiveShape.append(snapToPixelGridF(scaledRect(rect.translated(-backgroundRect.topLeft()), viewport.scale())));
+        }
+    }
     if (effectiveShape.isEmpty()) {
         return;
     }
@@ -571,10 +593,6 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     if (renderTarget.texture()) {
         textureFormat = renderTarget.texture()->internalFormat();
     }
-
-    const QRect backgroundRect = blurShape.boundingRect();
-    const QRect deviceBackgroundRect = scaledRect(backgroundRect, viewport.scale()).toRect();
-    const auto opacity = w->opacity() * data.opacity();
 
     if (renderInfo.framebuffers.size() != (m_iterationCount + 1) || renderInfo.textures[0]->size() != backgroundRect.size() || renderInfo.textures[0]->internalFormat() != textureFormat) {
         renderInfo.framebuffers.clear();
@@ -611,7 +629,7 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     vbo->reset();
     vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
 
-    const int vertexCount = effectiveShape.rectCount() * 6;
+    const int vertexCount = effectiveShape.size() * 6;
     if (auto result = vbo->map<GLVertex2D>(6 + vertexCount)) {
         auto map = *result;
 
@@ -661,13 +679,11 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
         }
 
         // The geometry that will be painted on screen, in device pixels.
-        for (const QRect &rect : effectiveShape) {
-            const QRectF localRect = scaledRect(rect, viewport.scale()).translated(-deviceBackgroundRect.topLeft());
-
-            const float x0 = std::round(localRect.left());
-            const float y0 = std::round(localRect.top());
-            const float x1 = std::round(localRect.right());
-            const float y1 = std::round(localRect.bottom());
+        for (const QRectF &rect : effectiveShape) {
+            const float x0 = rect.left();
+            const float y0 = rect.top();
+            const float x1 = rect.right();
+            const float y1 = rect.bottom();
 
             const float u0 = x0 / deviceBackgroundRect.width();
             const float v0 = 1.0f - y0 / deviceBackgroundRect.height();
