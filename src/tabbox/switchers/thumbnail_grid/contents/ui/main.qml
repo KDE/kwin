@@ -123,7 +123,7 @@ KWin.TabBoxSwitcher {
                         Accessible.role: Accessible.ListItem
 
                         onClicked: {
-                            tabBox.currentIndex = index;
+                            tabBox.model.activate(index);
                         }
 
                         ColumnLayout {
