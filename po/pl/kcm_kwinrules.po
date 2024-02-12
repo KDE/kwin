@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-18 00:38+0000\n"
-"PO-Revision-Date: 2024-01-21 08:31+0100\n"
+"PO-Revision-Date: 2024-02-11 13:06+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -819,7 +819,7 @@ msgstr "Nie określono jeszcze żadnych zasad dla poszczególnych okien"
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "Aby dodać, naciśnij <interface>Dodaj nowy...</interface>"
+msgstr "Aby dodać, naciśnij przycisk <interface>Dodaj nową...</interface>"
 
 #: ui/main.qml:71
 #, kde-format
@@ -844,7 +844,7 @@ msgstr "Zapisz zasady"
 #: ui/main.qml:100
 #, kde-format
 msgid "Add New…"
-msgstr "Dodaj nowy…"
+msgstr "Dodaj nową…"
 
 #: ui/main.qml:111
 #, kde-format
