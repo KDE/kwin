@@ -382,6 +382,12 @@ Item {
                 thumb.activeDragHandler = this;
                 thumb.substate = "drag";
             } else {
+                // Hide the thumbnail on drop (before any event that could change the state and reset thumb position):
+                // after a drop we might move the window to a different desktop, which will cause thumbnail destruction
+                // and a creation of a new one in the new desktop. The instantiator for thumbnails is set to async.
+                // So the thumbnail will live for a while before destruction and must not be shown resetting in the
+                // wrong position BUG:478777
+                visible = false;
                 thumbSource.saveDND();
 
                 var action = thumbSource.Drag.drop();
@@ -392,9 +398,11 @@ Item {
                         // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
                         thumbSource.deleteDND();
                         thumb.substate = "normal";
+                        visible = true;
                     }
                     return;
                 }
+                visible = true;
 
                 var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
                 effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
