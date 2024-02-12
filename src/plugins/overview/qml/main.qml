@@ -581,12 +581,6 @@ FocusScope {
                             }
                         }
                     }
-
-                    MouseArea {
-                        anchors.fill: heap
-                        acceptedButtons: Qt.NoButton
-                        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
-                    }
                 }
 
                 WindowHeap {
@@ -674,6 +668,14 @@ FocusScope {
                             }
                         }
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        z: -1
+                        acceptedButtons: Qt.NoButton
+                        cursorShape: dragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+                    }
+
                     onActivated: effect.deactivate()
                 }
                 TapHandler {
