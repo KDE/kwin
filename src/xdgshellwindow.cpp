@@ -799,6 +799,8 @@ static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
 
 void XdgToplevelWindow::doSetQuickTileMode()
 {
+    return; // gtk apps are broken, see https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/6742
+
     const Qt::Edges anchors = anchorsForQuickTileMode(quickTileMode());
 
     if (anchors & Qt::LeftEdge) {
