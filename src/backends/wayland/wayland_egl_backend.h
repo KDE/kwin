@@ -15,6 +15,8 @@
 
 #include <memory>
 
+struct wl_buffer;
+
 namespace KWin
 {
 class EglSwapchainSlot;
@@ -42,6 +44,7 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    bool scanout(SurfaceItem *surfaceItem) override;
 
 private:
     WaylandOutput *m_waylandOutput;
@@ -50,6 +53,7 @@ private:
     std::shared_ptr<EglSwapchainSlot> m_buffer;
     std::unique_ptr<GLRenderTimeQuery> m_query;
     WaylandEglBackend *const m_backend;
+    wl_buffer *m_presentationBuffer = nullptr;
 
     friend class WaylandEglBackend;
 };

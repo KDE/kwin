@@ -14,6 +14,8 @@
 #include "opengl/glrendertimequery.h"
 #include "opengl/glutils.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
+#include "scene/surfaceitem_wayland.h"
+#include "wayland/surface.h"
 #include "wayland_backend.h"
 #include "wayland_display.h"
 #include "wayland_logging.h"
@@ -109,17 +111,34 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
     return true;
 }
 
+bool WaylandEglPrimaryLayer::scanout(SurfaceItem *surfaceItem)
+{
+    Q_ASSERT(!m_presentationBuffer);
+    if (surfaceItem->size() != m_waylandOutput->modeSize()) {
+        return false;
+    }
+    SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
+    if (!item || !item->surface() || item->surface()->bufferTransform() != OutputTransform::Kind::Normal) {
+        return false;
+    }
+    m_presentationBuffer = m_backend->backend()->importBuffer(item->surface()->buffer());
+    return m_presentationBuffer;
+}
+
 void WaylandEglPrimaryLayer::present()
 {
-    wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->buffer());
-    Q_ASSERT(buffer);
+    if (!m_presentationBuffer) {
+        m_presentationBuffer = m_backend->backend()->importBuffer(m_buffer->buffer());
+        Q_ASSERT(m_presentationBuffer);
+    }
 
     KWayland::Client::Surface *surface = m_waylandOutput->surface();
-    surface->attachBuffer(buffer);
+    surface->attachBuffer(m_presentationBuffer);
     surface->damage(m_damageJournal.lastDamage());
     surface->setScale(std::ceil(m_waylandOutput->scale()));
     surface->commit();
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
+    m_presentationBuffer = nullptr;
 
     m_swapchain->release(m_buffer);
 }
