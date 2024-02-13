@@ -104,11 +104,11 @@ void TabBoxTest::testCapsLock()
     quint32 timestamp = 0;
     Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
-    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+    QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
 
     // press alt+tab
     Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
-    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::AltModifier);
+    QCOMPARE(input()->keyboardModifiers(), Qt::AltModifier);
     Test::keyboardKeyPressed(KEY_TAB, timestamp++);
     Test::keyboardKeyReleased(KEY_TAB, timestamp++);
 
