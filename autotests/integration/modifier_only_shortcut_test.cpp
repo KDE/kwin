@@ -266,14 +266,14 @@ void ModifierOnlyShortcutTest::testCapsLock()
     // now capslock
     Test::keyboardKeyPressed(KEY_CAPSLOCK, timestamp++);
     Test::keyboardKeyReleased(KEY_CAPSLOCK, timestamp++);
-    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+    QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(triggeredSpy.count(), 1);
 
     // currently caps lock is on
     // shift still triggers
     Test::keyboardKeyPressed(modifier, timestamp++);
     Test::keyboardKeyReleased(modifier, timestamp++);
-    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier);
+    QCOMPARE(input()->keyboardModifiers(), Qt::NoModifier);
     QCOMPARE(triggeredSpy.count(), 2);
 
     // meta should also trigger
@@ -284,7 +284,7 @@ void ModifierOnlyShortcutTest::testCapsLock()
     group.sync();
     workspace()->slotReconfigure();
     Test::keyboardKeyPressed(KEY_LEFTMETA, timestamp++);
-    QCOMPARE(input()->keyboardModifiers(), Qt::ShiftModifier | Qt::MetaModifier);
+    QCOMPARE(input()->keyboardModifiers(), Qt::MetaModifier);
     QCOMPARE(input()->keyboard()->xkb()->modifiersRelevantForGlobalShortcuts(), Qt::MetaModifier);
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
     QCOMPARE(triggeredSpy.count(), 3);
