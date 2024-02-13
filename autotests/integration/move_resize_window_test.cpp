@@ -576,7 +576,7 @@ void MoveResizeWindowTest::testNetMove()
 
     // use NETRootInfo to trigger a move request
     NETRootInfo root(c.get(), NET::Properties());
-    root.moveResizeRequest(windowId, origGeo.center().x(), origGeo.center().y(), NET::Move);
+    root.moveResizeRequest(windowId, origGeo.center().x(), origGeo.center().y(), NET::Move, XCB_BUTTON_INDEX_1);
     xcb_flush(c.get());
 
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
@@ -591,7 +591,7 @@ void MoveResizeWindowTest::testNetMove()
     QCOMPARE(interactiveMoveResizeSteppedSpy.first().last(), origGeo.translated(10, 10));
 
     // let's cancel the move resize again through the net API
-    root.moveResizeRequest(windowId, window->frameGeometry().center().x(), window->frameGeometry().center().y(), NET::MoveResizeCancel);
+    root.moveResizeRequest(windowId, window->frameGeometry().center().x(), window->frameGeometry().center().y(), NET::MoveResizeCancel, XCB_BUTTON_INDEX_1);
     xcb_flush(c.get());
     QVERIFY(interactiveMoveResizeFinishedSpy.wait());
 

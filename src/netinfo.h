@@ -41,7 +41,7 @@ protected:
     void changeCurrentDesktop(int d) override;
     void changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window) override;
     void closeWindow(xcb_window_t w) override;
-    void moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction) override;
+    void moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction, xcb_button_t button, RequestSource source) override;
     void moveResizeWindow(xcb_window_t w, int flags, int x, int y, int width, int height) override;
     void showWindowMenu(xcb_window_t w, int device_id, int x_root, int y_root) override;
     void gotPing(xcb_window_t w, xcb_timestamp_t timestamp) override;

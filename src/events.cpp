@@ -1270,7 +1270,7 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
 }
 
 // performs _NET_WM_MOVERESIZE
-void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction)
+void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction, xcb_button_t button)
 {
     if (direction == NET::Move) {
         // move cursor to the provided position to prevent the window jumping there on first movement
