@@ -221,7 +221,7 @@ public:
     QPointF gravityAdjustment(xcb_gravity_t gravity) const;
     const QPointF calculateGravitation(bool invert) const;
 
-    void NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction);
+    void NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction, xcb_button_t button);
     void NETMoveResizeWindow(int flags, qreal x, qreal y, qreal width, qreal height);
     void GTKShowWindowMenu(qreal x_root, qreal y_root);
     void restackWindow(xcb_window_t above, int detail, NET::RequestSource source, xcb_timestamp_t timestamp,

@@ -198,12 +198,12 @@ void RootInfo::closeWindow(xcb_window_t w)
     }
 }
 
-void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction)
+void RootInfo::moveResize(xcb_window_t w, int x_root, int y_root, unsigned long direction, xcb_button_t button, RequestSource source)
 {
     X11Window *c = Workspace::self()->findClient(Predicate::WindowMatch, w);
     if (c) {
         kwinApp()->updateXTime(); // otherwise grabbing may have old timestamp - this message should include timestamp
-        c->NETMoveResize(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root), (Direction)direction);
+        c->NETMoveResize(Xcb::fromXNative(x_root), Xcb::fromXNative(y_root), (Direction)direction, button);
     }
 }
 
