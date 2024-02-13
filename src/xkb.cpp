@@ -425,7 +425,7 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
 void Xkb::updateModifiers()
 {
     Qt::KeyboardModifiers mods = Qt::NoModifier;
-    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1 || xkb_state_mod_index_is_active(m_state, m_capsModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
+    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
         mods |= Qt::ShiftModifier;
     }
     if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
