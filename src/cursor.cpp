@@ -709,7 +709,9 @@ void Cursor::setSource(CursorSource *source)
         disconnect(m_source, &CursorSource::changed, this, &Cursor::cursorChanged);
     }
     m_source = source;
-    connect(m_source, &CursorSource::changed, this, &Cursor::cursorChanged);
+    if (m_source) {
+        connect(m_source, &CursorSource::changed, this, &Cursor::cursorChanged);
+    }
     Q_EMIT cursorChanged();
 }
 
