@@ -1286,7 +1286,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricBorderMode());
         setElectricBorderMaximizing(false);
-    } else if (wasMove && (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier)) {
+    } else if (wasMove && (input()->keyboardModifiers() & Qt::ShiftModifier)) {
         setQuickTileMode(QuickTileFlag::Custom);
     }
     setElectricBorderMode(QuickTileMode(QuickTileFlag::None));
@@ -1397,7 +1397,7 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
             handleInteractiveMoveResize(local.x(), local.y(), global.x(), global.y()); // fix position
         }
 
-        if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) {
+        if (input()->keyboardModifiers() & Qt::ShiftModifier) {
             resetQuickTilingMaximizationZones();
             const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
             if (r.isEmpty()) {
