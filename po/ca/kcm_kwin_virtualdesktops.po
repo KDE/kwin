@@ -129,10 +129,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostra els indicadors de la disposició dels escriptoris"
-
-#~ msgid ""
-#~ "This module lets you configure the navigation, number and layout of "
-#~ "virtual desktops."
-#~ msgstr ""
-#~ "Aquest mòdul permet configurar la navegació, el nombre i la disposició "
-#~ "dels escriptoris virtuals."
