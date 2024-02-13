@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2023-02-08 13:45\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -281,7 +281,7 @@ msgstr "Пакоі"
 msgid "Screen"
 msgstr "Экран"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:922
+#: rulesmodel.cpp:513 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr "На ўвесь экран"
@@ -419,6 +419,7 @@ msgstr "Без панэлі загалоўка і рамкі"
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
+#: rulesmodel.cpp:725
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Выгляд і фіксацыя"
@@ -541,12 +542,17 @@ msgstr "Блакаванне кампазітынгу"
 msgid "Layer"
 msgstr ""
 
-#: rulesmodel.cpp:772
+#: rulesmodel.cpp:725
+#, kde-format
+msgid "Adaptive Sync"
+msgstr ""
+
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Window class not available"
 msgstr "Клас акна недаступны"
 
-#: rulesmodel.cpp:773
+#: rulesmodel.cpp:778
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -561,196 +567,196 @@ msgstr ""
 "загаловак акна.<nl/><nl/>Калі ласка, паведаміце пра гэтую хібу "
 "распрацоўнікам праграмы."
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "All Window Types"
 msgstr "Усе тыпы акон"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Normal Window"
 msgstr "Звычайнае акно"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dialog Window"
 msgstr "Дыялогавае акно"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Utility Window"
 msgstr "Акно ўтыліты"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Док (панэль)"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Toolbar"
 msgstr "Панэль інструментаў"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Адчэпленае меню"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Splash Screen"
 msgstr "Застаўка"
 
-#: rulesmodel.cpp:815 rulesmodel.cpp:917
+#: rulesmodel.cpp:820 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr "Працоўны стол"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Асобная панэль меню"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "On Screen Display"
 msgstr "На экране"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "All Desktops"
 msgstr "Усе працоўныя сталы"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:835
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Паказваць акно на ўсіх працоўных сталах"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "All Activities"
 msgstr "Усе пакоі"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:856
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Паказваць акно ва ўсіх пакоях"
 
-#: rulesmodel.cpp:872
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Default"
 msgstr "Прадвызначана"
 
-#: rulesmodel.cpp:873
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "No Placement"
 msgstr "Без размяшчэння"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Мінімальнае перакрыцце"
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Maximized"
 msgstr "Разгорнута"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Centered"
 msgstr "Па цэнтры"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Random"
 msgstr "Выпадкова"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "У левым верхнім куце"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Under Mouse"
 msgstr "Пад мышшу"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "On Main Window"
 msgstr "На галоўным акне"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:892
 #, kde-format
 msgid "None"
 msgstr "Няма"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "Low"
 msgstr "Нізкі ўзровень"
 
-#: rulesmodel.cpp:889 rulesmodel.cpp:919
+#: rulesmodel.cpp:894 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr "Звычайны ўзровень"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "High"
 msgstr "Высокі ўзровень"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "Extreme"
 msgstr "Экстрымальны ўзровень"
 
-#: rulesmodel.cpp:918
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:920
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:926
 #, fuzzy, kde-format
 #| msgid "Position"
 msgid "Notification"
 msgstr "Пазіцыя"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
 msgstr ""
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
 msgstr ""
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:951
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Акно без кіравання"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Не ўдалося выявіць уласцівасці акна. Акно не кіруецца KWin."

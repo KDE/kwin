@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:39+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2024-02-07 10:13+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -77,17 +77,17 @@ msgstr "- вывод отключён"
 msgid "- Output dimmed"
 msgstr "- вывод затемнён"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Чтобы освободить ввод нажмите правую клавишу Ctrl"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Чтобы захватить ввод нажмите правую клавишу Ctrl"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Графический сервер Wayland для KDE"
@@ -1256,7 +1256,7 @@ msgstr "Планшет переключен на %1"
 msgid "Tablets switched outputs"
 msgstr "Переключённые выводы планшета"
 
-#: input.cpp:3183
+#: input.cpp:3175
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорная панель"
@@ -2378,7 +2378,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Настроить рабочие столы..."
 
-#: plugins/overview/qml/main.qml:724
+#: plugins/overview/qml/main.qml:726
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -3547,6 +3547,19 @@ msgstr "Слой"
 #, kde-format
 msgid "Layer rule type"
 msgstr "Тип правила назначения слоя"
+
+#. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:446
+#, kde-format
+msgid "AdaptiveSync"
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:450
+#, fuzzy, kde-format
+#| msgid "Activity rule type"
+msgid "AdaptiveSync rule type"
+msgstr "Тип правила комнаты"
 
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2023-12-03 13:43+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -283,7 +283,7 @@ msgstr "アクティビティ"
 msgid "Screen"
 msgstr "スクリーン"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:922
+#: rulesmodel.cpp:513 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr "フルスクリーン"
@@ -421,6 +421,7 @@ msgstr "タイトルバーとフレームなし"
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
+#: rulesmodel.cpp:725
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "外観と改善"
@@ -543,12 +544,17 @@ msgstr "コンポジットをブロック"
 msgid "Layer"
 msgstr ""
 
-#: rulesmodel.cpp:772
+#: rulesmodel.cpp:725
+#, kde-format
+msgid "Adaptive Sync"
+msgstr ""
+
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Window class not available"
 msgstr "ウィンドウクラスが利用できません"
 
-#: rulesmodel.cpp:773
+#: rulesmodel.cpp:778
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -562,196 +568,196 @@ msgstr ""
 "ルのような、他のプロパティを利用してルールの適用を試みてください。<nl/><nl/>"
 "アプリケーションの開発者にこのバグを報告することも検討してください。"
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "All Window Types"
 msgstr "すべてのウィンドウタイプ"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Normal Window"
 msgstr "標準ウィンドウ"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dialog Window"
 msgstr "ダイアログウィンドウ"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Utility Window"
 msgstr "ユーティリティウィンドウ"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Dock (panel)"
 msgstr "ドック (パネル)"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Toolbar"
 msgstr "ツールバー"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "分離されたメニュー"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Splash Screen"
 msgstr "スプラッシュスクリーン"
 
-#: rulesmodel.cpp:815 rulesmodel.cpp:917
+#: rulesmodel.cpp:820 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr "デスクトップ"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "単独メニューバー"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "On Screen Display"
 msgstr "オンスクリーンディスプレイ"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "All Desktops"
 msgstr "すべてのデスクトップ"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:835
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "すべてのデスクトップでウィンドウを利用可能にする"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "All Activities"
 msgstr "すべてのアクティビティ"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:856
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "すべてのアクティビティでウィンドウを利用可能にする"
 
-#: rulesmodel.cpp:872
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Default"
 msgstr "デフォルト"
 
-#: rulesmodel.cpp:873
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "No Placement"
 msgstr "配置なし"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "最小限の重なり"
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Maximized"
 msgstr "最大化"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Centered"
 msgstr "中央に配置"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Random"
 msgstr "ランダム"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "左上隅"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Under Mouse"
 msgstr "マウスの下"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "On Main Window"
 msgstr "メインウィンドウの上"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:892
 #, kde-format
 msgid "None"
 msgstr "なし"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "Low"
 msgstr "低"
 
-#: rulesmodel.cpp:889 rulesmodel.cpp:919
+#: rulesmodel.cpp:894 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr "中"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "High"
 msgstr "高"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "Extreme"
 msgstr "最高"
 
-#: rulesmodel.cpp:918
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:920
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:926
 #, fuzzy, kde-format
 #| msgid "Position"
 msgid "Notification"
 msgstr "位置"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
 msgstr ""
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
 msgstr ""
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:951
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr "管理されていないウィンドウ"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

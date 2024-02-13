@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2024-01-28 17:58-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -255,7 +255,7 @@ msgstr "ਸਰਗਰਮੀਆਂ"
 msgid "Screen"
 msgstr "ਸਕਰੀਨ"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:922
+#: rulesmodel.cpp:513 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr "ਪੂਰੀ ਸਕਰੀਨ"
@@ -383,6 +383,7 @@ msgstr "ਕੋਈ ਟਾਈਟਲ-ਪੱਟੀ ਅਤੇ ਫਰੇਮ ਨਹੀ�
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
+#: rulesmodel.cpp:725
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "ਦਿੱਖ ਅਤੇ ਸੁਧਾਰ"
@@ -505,12 +506,17 @@ msgstr ""
 msgid "Layer"
 msgstr "ਲੇਅਰ"
 
-#: rulesmodel.cpp:772
+#: rulesmodel.cpp:725
+#, kde-format
+msgid "Adaptive Sync"
+msgstr ""
+
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Window class not available"
 msgstr "ਵਿੰਡੋ ਕਲਾਸ ਮੌਜੂਦ ਨਹੀਂ ਹੈ"
 
-#: rulesmodel.cpp:773
+#: rulesmodel.cpp:778
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -520,195 +526,195 @@ msgid ""
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "All Window Types"
 msgstr "ਸਭ ਵਿੰਡੋ ਕਿਸਮਾਂ"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Normal Window"
 msgstr "ਸਧਾਰਨ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dialog Window"
 msgstr "ਡਾਈਲਾਗ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Utility Window"
 msgstr "ਸਹੂਲਤ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Dock (panel)"
 msgstr "ਡੋਕ (ਪੈਨਲ)"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Toolbar"
 msgstr "ਟੂਲਬਾਰ"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "ਮੇਨੂ ਬੰਦ"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Splash Screen"
 msgstr "ਸਪਲੇਸ ਸਕਰੀਨ"
 
-#: rulesmodel.cpp:815 rulesmodel.cpp:917
+#: rulesmodel.cpp:820 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr "ਡੈਸਕਟਾਪ"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "ਇੱਕਲੀ ਮੇਨੂ-ਪੱਟੀ"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "On Screen Display"
 msgstr "ਆਨ ਸਕਰੀਨ ਡਿਸਪਲੇਅ"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "All Desktops"
 msgstr "ਸਭ ਡੈਸਕਟਾਪ"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:835
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਸਭ ਡੈਸਕਟਾਪ ਵਿੱਚ ਉਪਲੱਬਧ ਕਰਵਾਓ"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "All Activities"
 msgstr "ਸਭ ਸਰਗਰਮੀਆਂ"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:856
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "ਵਿੰਡੋ ਨੂੰ ਸਭ ਸਰਗਰਮੀਆਂ ਵਿੱਚ ਉਪਲੱਬਧ ਕਰਵਾਓ"
 
-#: rulesmodel.cpp:872
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Default"
 msgstr "ਡਿਫਾਲਟ"
 
-#: rulesmodel.cpp:873
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "No Placement"
 msgstr "ਕੋਈ ਥਾਂ ਨਹੀਂ"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr ""
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Maximized"
 msgstr "ਵੱਧ ਤੋਂ ਵੱਧ ਕੀਤੇ"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Centered"
 msgstr "ਸੈਂਟਰਡ"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Random"
 msgstr "ਰਲਵਾਂ"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "ਉੱਤੇ-ਖੱਬੇ ਕੋਨੇ ਵਿੱਚ"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Under Mouse"
 msgstr "ਮਾਊਸ ਹੇਠਾਂ"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "On Main Window"
 msgstr "ਮੁੱਖ ਵਿੰਡੋ ਉੱਤੇ"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:892
 #, kde-format
 msgid "None"
 msgstr "ਕੋਈ ਨਹੀਂ"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "Low"
 msgstr "ਘੱਟ"
 
-#: rulesmodel.cpp:889 rulesmodel.cpp:919
+#: rulesmodel.cpp:894 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr "ਸਧਾਰਨ"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "High"
 msgstr "ਜ਼ਿਆਦਾ"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "Extreme"
 msgstr "ਬਹੁਤ ਅਧਿਕ"
 
-#: rulesmodel.cpp:918
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr "ਹੇਠਾਂ"
 
-#: rulesmodel.cpp:920
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr "ਉੱਤੇ"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Notification"
 msgstr "ਨੋਟੀਫਿਕੇਸ਼ਨ"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr "ਪੌਪਅੱਪ"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
 msgstr "ਨਾਜ਼ੁਕ ਨੋਟੀਫਿਕੇਸ਼ਨ"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
 msgstr "OSD"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr "ਓਵਰ-ਲੇਅ"
 
-#: rulesmodel.cpp:951
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr "ਨਾ-ਪਰਬੰਧ ਅਧੀਨ ਵਿੰਡੋ"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

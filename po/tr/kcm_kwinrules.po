@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-18 00:38+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2024-01-18 11:29+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -279,7 +279,7 @@ msgstr "Etkinlikler"
 msgid "Screen"
 msgstr "Ekran"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:922
+#: rulesmodel.cpp:513 rulesmodel.cpp:927
 #, kde-format
 msgid "Fullscreen"
 msgstr "Tam ekran"
@@ -423,6 +423,7 @@ msgstr "Başlık çubuğu ve çerçeve yok"
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
+#: rulesmodel.cpp:725
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Görünüş ve Düzeltmeler"
@@ -583,12 +584,17 @@ msgstr "Bileşikleştirmeyi engelle"
 msgid "Layer"
 msgstr "Katman"
 
-#: rulesmodel.cpp:772
+#: rulesmodel.cpp:725
+#, kde-format
+msgid "Adaptive Sync"
+msgstr ""
+
+#: rulesmodel.cpp:777
 #, kde-format
 msgid "Window class not available"
 msgstr "Pencere sınıfı kullanılabilir değil"
 
-#: rulesmodel.cpp:773
+#: rulesmodel.cpp:778
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -603,195 +609,195 @@ msgstr ""
 "özellikleri eşleştirmeyi deneyin.<nl/><nl/>Lütfen bu hatayı uygulamanın "
 "geliştiricilerine bildirmeyi düşünün."
 
-#: rulesmodel.cpp:807
+#: rulesmodel.cpp:812
 #, kde-format
 msgid "All Window Types"
 msgstr "Tüm Pencere Türleri"
 
-#: rulesmodel.cpp:808
+#: rulesmodel.cpp:813
 #, kde-format
 msgid "Normal Window"
 msgstr "Normal Pencere"
 
-#: rulesmodel.cpp:809
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dialog Window"
 msgstr "İletişim Kutusu"
 
-#: rulesmodel.cpp:810
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Utility Window"
 msgstr "İzlence Penceresi"
 
-#: rulesmodel.cpp:811
+#: rulesmodel.cpp:816
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Panel"
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "Toolbar"
 msgstr "Araç Çubuğu"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Ayrılmış Menü"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Splash Screen"
 msgstr "Açılış Ekranı"
 
-#: rulesmodel.cpp:815 rulesmodel.cpp:917
+#: rulesmodel.cpp:820 rulesmodel.cpp:922
 #, kde-format
 msgid "Desktop"
 msgstr "Masaüstü"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Bağımsız Menü Çubuğu"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "On Screen Display"
 msgstr "Ekran Üzeri Görüntü"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:833
 #, kde-format
 msgid "All Desktops"
 msgstr "Tüm Masaüstleri"
 
-#: rulesmodel.cpp:830
+#: rulesmodel.cpp:835
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Pencereyi tüm masaüstlerinde kullanılabilir yap"
 
-#: rulesmodel.cpp:849
+#: rulesmodel.cpp:854
 #, kde-format
 msgid "All Activities"
 msgstr "Tüm Etkinlikler"
 
-#: rulesmodel.cpp:851
+#: rulesmodel.cpp:856
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Pencereyi tüm etkinliklerde kullanılabilir yap"
 
-#: rulesmodel.cpp:872
+#: rulesmodel.cpp:877
 #, kde-format
 msgid "Default"
 msgstr "Öntanımlı"
 
-#: rulesmodel.cpp:873
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "No Placement"
 msgstr "Yerleştirme yok"
 
-#: rulesmodel.cpp:874
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "En az çakışan"
 
-#: rulesmodel.cpp:875
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Maximized"
 msgstr "Ekranı kaplamış"
 
-#: rulesmodel.cpp:876
+#: rulesmodel.cpp:881
 #, kde-format
 msgid "Centered"
 msgstr "Ortalanmış"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Random"
 msgstr "Rastgele"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Sol üst köşede"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Under Mouse"
 msgstr "Farenin altında"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "On Main Window"
 msgstr "Ana pencerede"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:892
 #, kde-format
 msgid "None"
 msgstr "Yok"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "Low"
 msgstr "Düşük"
 
-#: rulesmodel.cpp:889 rulesmodel.cpp:919
+#: rulesmodel.cpp:894 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:895
 #, kde-format
 msgid "High"
 msgstr "Yüksek"
 
-#: rulesmodel.cpp:891
+#: rulesmodel.cpp:896
 #, kde-format
 msgid "Extreme"
 msgstr "Çok Yüksek"
 
-#: rulesmodel.cpp:918
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
 msgstr "Altında"
 
-#: rulesmodel.cpp:920
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
 msgstr "Üstünde"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Notification"
 msgstr "Bildirim"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
 msgstr "Açılır Pencere"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
 msgstr "Kritik Bildirim"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
 msgstr "Ekran Üzeri Görüntü"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
 msgstr "Kaplama"
 
-#: rulesmodel.cpp:951
+#: rulesmodel.cpp:956
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Yönetilmeyen pencere"
 
-#: rulesmodel.cpp:952
+#: rulesmodel.cpp:957
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

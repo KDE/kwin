@@ -75,7 +75,7 @@ msgstr "Ponechat nad jinými okny"
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
 msgid "Spacer"
-msgstr ""
+msgstr "Mezera"
 
 #: kcm.cpp:177
 #, kde-format

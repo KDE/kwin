@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:39+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2010-08-23 19:35+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -56,17 +56,17 @@ msgstr ""
 msgid "- Output dimmed"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr ""
@@ -1223,7 +1223,7 @@ msgstr ""
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3183
+#: input.cpp:3175
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -2364,7 +2364,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "S&elaraskan Kelakuan Tetingkap..."
 
-#: plugins/overview/qml/main.qml:724
+#: plugins/overview/qml/main.qml:726
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgctxt "@info:placeholder"
@@ -3569,6 +3569,19 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "Layer rule type"
+msgstr "Kekal atas lain"
+
+#. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:446
+#, kde-format
+msgid "AdaptiveSync"
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:450
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "AdaptiveSync rule type"
 msgstr "Kekal atas lain"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)

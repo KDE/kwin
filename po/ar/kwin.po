@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:39+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2024-02-10 17:53+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -53,17 +53,17 @@ msgstr "- الخرج معطّل"
 msgid "- Output dimmed"
 msgstr "- الخرج معتم"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "اضغط على مفتاح التحكم الأيمن لترك الإدخال"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "اضغط على مفتاح التحكم الأيمن للحصول على الإدخال"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "مراكب ويلاند كيدي"
@@ -1219,7 +1219,7 @@ msgstr "انتقل اللوحي إلى %1"
 msgid "Tablets switched outputs"
 msgstr "بدلت اللوحيات المخرجات"
 
-#: input.cpp:3183
+#: input.cpp:3175
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"
@@ -2328,7 +2328,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "اضبط أسطح المكتب الافتراضية..."
 
-#: plugins/overview/qml/main.qml:724
+#: plugins/overview/qml/main.qml:726
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -3492,6 +3492,19 @@ msgstr "الطبقة"
 #, kde-format
 msgid "Layer rule type"
 msgstr "نوع القاعدة الطبقة"
+
+#. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:446
+#, kde-format
+msgid "AdaptiveSync"
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:450
+#, fuzzy, kde-format
+#| msgid "Activity rule type"
+msgid "AdaptiveSync rule type"
+msgstr "نوع القاعدة للنشاط"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

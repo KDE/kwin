@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-09 00:39+0000\n"
+"POT-Creation-Date: 2024-02-13 00:39+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -59,17 +59,17 @@ msgstr ""
 msgid "- Output dimmed"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:515
+#: backends/x11/windowed/x11_windowed_backend.cpp:510
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:516
+#: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr ""
@@ -1349,7 +1349,7 @@ msgid "Tablets switched outputs"
 msgstr ""
 
 # >> @item
-#: input.cpp:3183
+#: input.cpp:3175
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -2590,7 +2590,7 @@ msgid "Configure Virtual Desktops…"
 msgstr "Премести на &површ"
 
 # >> @item
-#: plugins/overview/qml/main.qml:724
+#: plugins/overview/qml/main.qml:726
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
@@ -3863,6 +3863,19 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Keep &Above Others"
 msgid "Layer rule type"
+msgstr "Држи из&над осталих"
+
+#. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:446
+#, kde-format
+msgid "AdaptiveSync"
+msgstr ""
+
+#. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:450
+#, fuzzy, kde-format
+#| msgid "Keep &Above Others"
+msgid "AdaptiveSync rule type"
 msgstr "Држи из&над осталих"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
