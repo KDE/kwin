@@ -150,22 +150,11 @@ public:
         m_modifiersRelevantForShortcuts = mods;
     }
 
-    Qt::KeyboardModifiers modifiersRelevantForTabBox() const
-    {
-        return m_modifiersRelevantForTabBox;
-    }
-
-    void setModifiersRelevantForTabBox(const Qt::KeyboardModifiers &mods)
-    {
-        m_modifiersRelevantForTabBox = mods;
-    }
-
     std::chrono::microseconds timestamp() const;
 
 private:
     InputDevice *m_device;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
-    Qt::KeyboardModifiers m_modifiersRelevantForTabBox = Qt::KeyboardModifiers();
     const std::chrono::microseconds m_timestamp;
 };
 

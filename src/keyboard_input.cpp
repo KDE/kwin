@@ -256,7 +256,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    time,
                    device);
     event.setModifiersRelevantForGlobalShortcuts(globalShortcutsModifiers);
-    event.setModifiersRelevantForTabBox(m_xkb->modifiersRelevantForTabBox());
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
     if (!m_inited) {
