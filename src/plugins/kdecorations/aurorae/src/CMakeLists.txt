@@ -47,7 +47,7 @@ target_compile_definitions(decorationplugin PRIVATE
 )
 target_link_libraries(decorationplugin
     KDecoration2::KDecoration
-    KF6::ConfigWidgets
+    KF6::ColorScheme
     Qt::Quick
 )
 install(TARGETS decorationplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/decoration)

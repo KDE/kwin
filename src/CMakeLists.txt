@@ -248,8 +248,9 @@ target_link_libraries(kwin
         Qt::Sensors
         Qt::GuiPrivate
 
+        KF6::ColorScheme
+        KF6::ConfigGui
         KF6::ConfigQml
-        KF6::ConfigWidgets
         KF6::Crash
         KF6::GlobalAccel
         KF6::I18n
