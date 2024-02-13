@@ -136,6 +136,12 @@ FocusScope {
                 windowHeap: heap
             }
 
+            onObjectRemoved: (index, object) => {
+                // undo explicitly set parent in objectAdded so it can be
+                // removed from the scene immediately
+                object.parent = null
+            }
+
             onObjectAdded: (index, object) => {
                 object.parent = expoLayout
                 var key = object.window.internalId;
