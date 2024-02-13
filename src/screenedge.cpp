@@ -559,22 +559,14 @@ void Edge::setGeometry(const QRect &geometry)
         height = offset;
     } else {
         if (isLeft()) {
-            y += offset;
             width = offset;
-            height = height - offset * 2;
         } else if (isRight()) {
             x = x + width - offset;
-            y += offset;
             width = offset;
-            height = height - offset * 2;
         } else if (isTop()) {
-            x += offset;
-            width = width - offset * 2;
             height = offset;
         } else if (isBottom()) {
-            x += offset;
             y = y + height - offset;
-            width = width - offset * 2;
             height = offset;
         }
     }
