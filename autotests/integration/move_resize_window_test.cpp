@@ -565,16 +565,15 @@ void MoveResizeWindowTest::testNetMove()
     QCOMPARE(window->window(), windowId);
     const QRectF origGeo = window->frameGeometry();
 
-    // let's move the cursor outside the window
-    input()->pointer()->warp(workspace()->activeOutput()->geometry().center());
-    QVERIFY(!exclusiveContains(origGeo, Cursors::self()->mouse()->pos()));
-
     QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
     QVERIFY(!workspace()->moveResizeWindow());
 
     // use NETRootInfo to trigger a move request
+    quint32 timestamp = 0;
+    Test::pointerMotion(window->frameGeometry().center(), timestamp++);
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     NETRootInfo root(c.get(), NET::Properties());
     root.moveResizeRequest(windowId, origGeo.center().x(), origGeo.center().y(), NET::Move, XCB_BUTTON_INDEX_1);
     xcb_flush(c.get());
@@ -586,7 +585,7 @@ void MoveResizeWindowTest::testNetMove()
     QCOMPARE(Cursors::self()->mouse()->pos(), origGeo.center());
 
     // let's move a step
-    input()->pointer()->warp(Cursors::self()->mouse()->pos() + QPoint(10, 10));
+    Test::pointerMotionRelative(QPoint(10, 10), timestamp++);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(interactiveMoveResizeSteppedSpy.first().last(), origGeo.translated(10, 10));
 
@@ -603,6 +602,8 @@ void MoveResizeWindowTest::testNetMove()
 
     QSignalSpy windowClosedSpy(window, &X11Window::closed);
     QVERIFY(windowClosedSpy.wait());
+
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
 }
 
 void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenX11Panel_data()

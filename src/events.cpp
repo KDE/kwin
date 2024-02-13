@@ -19,6 +19,7 @@
 #include "effect/effecthandler.h"
 #include "focuschain.h"
 #include "group.h"
+#include "input.h"
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"
@@ -1272,41 +1273,65 @@ void X11Window::focusOutEvent(xcb_focus_out_event_t *e)
 // performs _NET_WM_MOVERESIZE
 void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction direction, xcb_button_t button)
 {
-    if (direction == NET::Move) {
-        // move cursor to the provided position to prevent the window jumping there on first movement
-        // the expectation is that the cursor is already at the provided position,
-        // thus it's more a safety measurement
-        Cursors::self()->mouse()->setPos(QPointF(x_root, y_root));
-        performMouseCommand(Options::MouseMove, QPointF(x_root, y_root));
-    } else if (isInteractiveMoveResize() && direction == NET::MoveResizeCancel) {
+    if (isInteractiveMoveResize() && direction == NET::MoveResizeCancel) {
         finishInteractiveMoveResize(true);
         setInteractiveMoveResizePointerButtonDown(false);
         updateCursor();
-    } else if (direction >= NET::TopLeft && direction <= NET::Left) {
-        static const Gravity convert[] = {
-            Gravity::TopLeft,
-            Gravity::Top,
-            Gravity::TopRight,
-            Gravity::Right,
-            Gravity::BottomRight,
-            Gravity::Bottom,
-            Gravity::BottomLeft,
-            Gravity::Left};
-        if (!isResizable() || isShade()) {
-            return;
+    } else if (direction == NET::Move || (direction >= NET::TopLeft && direction <= NET::Left)) {
+        if (waylandServer()) {
+            if (!button) {
+                if (!input()->qtButtonStates()) {
+                    return;
+                }
+            } else {
+                if (!(input()->qtButtonStates() & x11ToQtMouseButton(button))) {
+                    return;
+                }
+            }
+        } else {
+            if (button) {
+                Xcb::Pointer pointer(window());
+                if (!pointer) {
+                    return;
+                }
+                if (!(x11ToQtMouseButtons(pointer->mask) & x11ToQtMouseButton(button))) {
+                    return;
+                }
+            }
         }
-        if (isInteractiveMoveResize()) {
-            finishInteractiveMoveResize(false);
+
+        if (direction == NET::Move) {
+            // move cursor to the provided position to prevent the window jumping there on first movement
+            // the expectation is that the cursor is already at the provided position,
+            // thus it's more a safety measurement
+            Cursors::self()->mouse()->setPos(QPointF(x_root, y_root));
+            performMouseCommand(Options::MouseMove, QPointF(x_root, y_root));
+        } else {
+            static const Gravity convert[] = {
+                Gravity::TopLeft,
+                Gravity::Top,
+                Gravity::TopRight,
+                Gravity::Right,
+                Gravity::BottomRight,
+                Gravity::Bottom,
+                Gravity::BottomLeft,
+                Gravity::Left};
+            if (!isResizable() || isShade()) {
+                return;
+            }
+            if (isInteractiveMoveResize()) {
+                finishInteractiveMoveResize(false);
+            }
+            setInteractiveMoveResizePointerButtonDown(true);
+            setInteractiveMoveOffset(QPointF(x_root - x(), y_root - y())); // map from global
+            setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+            setUnrestrictedInteractiveMoveResize(false);
+            setInteractiveMoveResizeGravity(convert[direction]);
+            if (!startInteractiveMoveResize()) {
+                setInteractiveMoveResizePointerButtonDown(false);
+            }
+            updateCursor();
         }
-        setInteractiveMoveResizePointerButtonDown(true);
-        setInteractiveMoveOffset(QPointF(x_root - x(), y_root - y())); // map from global
-        setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
-        setUnrestrictedInteractiveMoveResize(false);
-        setInteractiveMoveResizeGravity(convert[direction]);
-        if (!startInteractiveMoveResize()) {
-            setInteractiveMoveResizePointerButtonDown(false);
-        }
-        updateCursor();
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
         Cursors::self()->mouse()->setPos(frameGeometry().center());
