@@ -1616,7 +1616,7 @@ public:
         passToWaylandServer(event);
 
         if (event->type() == QEvent::KeyPress) {
-            workspace()->tabbox()->keyPress(event->modifiersRelevantForTabBox() | event->key());
+            workspace()->tabbox()->keyPress(event->modifiers() | event->key());
         } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
             // update keyboard facus if the tabbox no longer grabs keys

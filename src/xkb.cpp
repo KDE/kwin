@@ -552,27 +552,6 @@ Qt::KeyboardModifiers Xkb::modifiersRelevantForGlobalShortcuts(uint32_t scanCode
     return mods & ~consumedMods;
 }
 
-Qt::KeyboardModifiers Xkb::modifiersRelevantForTabBox() const
-{
-    if (!m_state) {
-        return Qt::NoModifier;
-    }
-    Qt::KeyboardModifiers mods = Qt::NoModifier;
-    if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::ShiftModifier;
-    }
-    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::AltModifier;
-    }
-    if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::ControlModifier;
-    }
-    if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_EFFECTIVE) == 1) {
-        mods |= Qt::MetaModifier;
-    }
-    return mods;
-}
-
 xkb_keysym_t Xkb::toKeysym(uint32_t key)
 {
     if (!m_state) {
