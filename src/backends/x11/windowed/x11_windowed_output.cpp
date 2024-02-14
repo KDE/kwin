@@ -7,11 +7,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_output.h"
+#include "config-kwin.h"
+
 #include "../common/kwinxrenderutils.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
-
-#include <config-kwin.h>
 
 #include "compositor.h"
 #include "core/graphicsbuffer.h"

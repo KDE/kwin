@@ -10,7 +10,7 @@
 */
 #include "main_x11.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "backends/x11/standalone/x11_standalone_backend.h"
 #include "compositor_x11.h"

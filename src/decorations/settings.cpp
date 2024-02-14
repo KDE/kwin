@@ -6,7 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "appmenu.h"
 #include "compositor.h"

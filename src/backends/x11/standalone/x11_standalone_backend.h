@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "core/outputbackend.h"
 #include <kwin_export.h>

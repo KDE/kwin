@@ -18,7 +18,7 @@
 
 #include "screenedge.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "core/output.h"
 #include "cursor.h"

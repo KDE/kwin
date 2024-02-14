@@ -8,7 +8,7 @@
 */
 #include "inputmethod.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "input.h"
 #include "inputpanelv1window.h"

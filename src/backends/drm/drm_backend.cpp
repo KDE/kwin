@@ -8,7 +8,7 @@
 */
 #include "drm_backend.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "backends/libinput/libinputbackend.h"
 #include "core/outputconfiguration.h"

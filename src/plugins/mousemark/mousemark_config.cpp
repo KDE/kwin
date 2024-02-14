@@ -9,7 +9,7 @@
 */
 #include "mousemark_config.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 // KConfigSkeleton
 #include "mousemarkconfig.h"

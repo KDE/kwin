@@ -6,7 +6,7 @@
 */
 #include "kcm.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "declarative-plugin/buttonsmodel.h"
 #include "decorationmodel.h"

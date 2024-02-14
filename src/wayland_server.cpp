@@ -8,7 +8,7 @@
 */
 #include "wayland_server.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "backends/drm/drm_backend.h"
 #include "core/output.h"

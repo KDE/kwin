@@ -9,7 +9,7 @@
 */
 #include "effectsmodel.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include <kwin_effects_interface.h>
 

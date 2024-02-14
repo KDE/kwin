@@ -10,7 +10,7 @@
 #include "x11_windowed_backend.h"
 #include "../common/kwinxrenderutils.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "utils/xcbutils.h"
 #include "x11_windowed_egl_backend.h"

@@ -9,7 +9,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "effect/globals.h"
 #include <QObject>
@@ -20,7 +20,6 @@
 #include <KSharedConfig>
 #include <QSet>
 
-#include "config-kwin.h"
 #include <functional>
 
 class KGlobalAccelInterface;

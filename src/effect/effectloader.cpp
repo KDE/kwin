@@ -9,7 +9,7 @@
 // own
 #include "effect/effectloader.h"
 // config
-#include <config-kwin.h>
+#include "config-kwin.h"
 // KWin
 #include "effect/effect.h"
 #include "effect/effecthandler.h"

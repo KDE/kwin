@@ -7,10 +7,11 @@
 
 #pragma once
 
+#include "config-kwin.h"
+
 #include "effect/globals.h"
 #include <KConfigWatcher>
 #include <QObject>
-#include <config-kwin.h>
 #include <kwin_export.h>
 
 namespace KWin

@@ -8,7 +8,7 @@
 */
 #include "decorationbridge.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "decoratedclient.h"
 #include "decorations_logging.h"

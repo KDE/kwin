@@ -9,6 +9,7 @@
 #include "drm_egl_layer_surface.h"
 
 #include "config-kwin.h"
+
 #include "core/colortransformation.h"
 #include "core/graphicsbufferview.h"
 #include "core/iccprofile.h"

@@ -8,7 +8,7 @@
 */
 #include "drm_gpu.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "core/gbmgraphicsbufferallocator.h"
 #include "core/session.h"

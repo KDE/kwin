@@ -10,7 +10,7 @@
 */
 #include "xwaylandlauncher.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "xwayland_logging.h"
 #include "xwaylandsocket.h"

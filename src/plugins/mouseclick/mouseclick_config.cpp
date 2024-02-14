@@ -8,7 +8,7 @@
 */
 #include "mouseclick_config.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 // KConfigSkeleton
 #include "mouseclickconfig.h"

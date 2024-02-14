@@ -5,7 +5,7 @@
 */
 #include "overvieweffectkcm.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "overviewconfig.h"
 

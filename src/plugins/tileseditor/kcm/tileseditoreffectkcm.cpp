@@ -5,7 +5,7 @@
 */
 #include "tileseditoreffectkcm.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include <kwineffects_interface.h>
 

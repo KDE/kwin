@@ -9,7 +9,7 @@
 */
 #include "main.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "atoms.h"
 #include "colors/colormanager.h"

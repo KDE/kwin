@@ -10,7 +10,7 @@
 #pragma once
 
 // cmake stuff
-#include <config-kwin.h>
+#include "config-kwin.h"
 // kwin
 #include "effect/globals.h"
 // Qt

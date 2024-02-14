@@ -9,7 +9,7 @@
 */
 #include "touch_input.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "decorations/decoratedclient.h"
 #include "input_event_spy.h"

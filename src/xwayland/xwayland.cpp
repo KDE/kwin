@@ -10,7 +10,7 @@
 */
 #include "xwayland.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "databridge.h"
 #include "dnd.h"

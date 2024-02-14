@@ -9,7 +9,7 @@
 // own
 #include "globalshortcuts.h"
 // config
-#include <config-kwin.h>
+#include "config-kwin.h"
 // kwin
 #include "effect/globals.h"
 #include "gestures.h"

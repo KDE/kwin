@@ -8,7 +8,7 @@
 */
 #include "tabboxhandler.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 // own
 #include "clientmodel.h"

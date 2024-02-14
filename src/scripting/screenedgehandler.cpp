@@ -8,7 +8,7 @@
 */
 #include "screenedgehandler.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "screenedge.h"
 #include "workspace.h"

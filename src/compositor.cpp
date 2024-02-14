@@ -8,7 +8,7 @@
 */
 #include "compositor.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "core/output.h"
 #include "core/outputlayer.h"

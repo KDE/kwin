@@ -8,7 +8,7 @@
 */
 #include "modifier_only_shortcuts.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "input_event.h"
 #include "options.h"

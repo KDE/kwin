@@ -9,9 +9,10 @@
 */
 #include "edid.h"
 
+#include "config-kwin.h"
+
 #include "c_ptr.h"
 #include "common.h"
-#include "config-kwin.h"
 
 #include <QFile>
 #include <QStandardPaths>

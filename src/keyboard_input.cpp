@@ -8,7 +8,7 @@
 */
 #include "keyboard_input.h"
 
-#include <config-kwin.h>
+#include "config-kwin.h"
 
 #include "input_event.h"
 #include "input_event_spy.h"
