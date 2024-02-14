@@ -29,10 +29,10 @@ KCM.SimpleKCM {
 
         Repeater {
             model: [
-                { name: i18n("Red"), colors: ["Red", "Orange", "Yellow"] },
-                { name: i18n("Green"), colors: ["Green", "LimeGreen", "Lime"] },
-                { name: i18n("Blue"), colors: ["Blue", "DeepSkyBlue", "Aqua"] },
-                { name: i18n("Purple"), colors: ["Purple", "Fuchsia", "Violet"] },
+                { name: i18nd("kwin", "Red"), colors: ["Red", "Orange", "Yellow"] },
+                { name: i18nd("kwin", "Green"), colors: ["Green", "LimeGreen", "Lime"] },
+                { name: i18nd("kwin", "Blue"), colors: ["Blue", "DeepSkyBlue", "Aqua"] },
+                { name: i18nd("kwin", "Purple"), colors: ["Purple", "Fuchsia", "Violet"] },
             ]
 
             delegate: Column {
@@ -67,14 +67,14 @@ KCM.SimpleKCM {
         }
 
         QQC.ComboBox {
-            Kirigami.FormData.label: i18nc("@label", "Mode:")
+            Kirigami.FormData.label: i18ndc("kwin", "@label", "Mode:")
             currentIndex: kcm.settings.mode
             textRole: "text"
             valueRole: "value"
             model: [
-                { value: 0, text: i18nc("@option", "Protanopia (red weak)") },
-                { value: 1, text: i18nc("@option", "Deuteranopia (green weak)") },
-                { value: 2, text: i18nc("@option", "Tritanopia (blue-yellow)") },
+                { value: 0, text: i18ndc("kwin", "@option", "Protanopia (red weak)") },
+                { value: 1, text: i18ndc("kwin", "@option", "Deuteranopia (green weak)") },
+                { value: 2, text: i18ndc("kwin", "@option", "Tritanopia (blue-yellow)") },
             ]
 
             onActivated: kcm.settings.mode = currentValue
