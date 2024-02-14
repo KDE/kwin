@@ -110,7 +110,7 @@ public:
     }
     void zwp_input_method_context_v1_modifiers_map(Resource *, wl_array *map) override
     {
-        const auto mods = QByteArray::fromRawData(static_cast<const char *>(map->data), map->size);
+        const auto mods = QByteArray(static_cast<const char *>(map->data), map->size);
 
         Q_EMIT q->modifiersMap(mods);
     }
