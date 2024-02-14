@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "When partially obscured by the screen edge, rotate the cursor so it is always fully visible.",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Force Cursor Visibility Near Screen Edges"
+    }
+}
