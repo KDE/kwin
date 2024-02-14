@@ -41,6 +41,7 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QProcess>
+#include <QProxyStyle>
 #include <QWindow>
 #include <QtPlugin>
 #include <qplatformdefs.h>
@@ -95,6 +96,23 @@ void disableDrKonqi()
 {
     KCrash::setDrKonqiEnabled(false);
 }
+
+/**
+ * SloppyMenus rely on QGuiApplicationPrivate::lastCursorPosition
+ * which does not work with our custom QPA due to our internal event dispatching
+ */
+class MenuWorkAround : public QProxyStyle
+{
+public:
+    int styleHint(StyleHint stylehint, const QStyleOption *opt, const QWidget *widget, QStyleHintReturn *returnData) const
+    {
+        if (stylehint == SH_Menu_SubMenuSloppyCloseTimeout) {
+            return -1;
+        }
+        return QProxyStyle::styleHint(stylehint, opt, widget, returnData);
+    }
+};
+
 // run immediately, before Q_CORE_STARTUP functions
 // that would enable drkonqi
 Q_CONSTRUCTOR_FUNCTION(disableDrKonqi)
@@ -106,6 +124,7 @@ Q_CONSTRUCTOR_FUNCTION(disableDrKonqi)
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
     : Application(OperationModeWaylandOnly, argc, argv)
 {
+    setStyle(new MenuWorkAround()); // ownership transfers to QApplication
 }
 
 ApplicationWayland::~ApplicationWayland()
