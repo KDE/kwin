@@ -1188,12 +1188,14 @@ class InternalWindowEventFilter : public InputEventFilter
             // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
             return false;
         }
-        QMouseEvent mouseEvent(event->type(),
-                               event->pos() - internal->position(),
-                               event->globalPosition(),
-                               event->button(), event->buttons(), event->modifiers());
-        QCoreApplication::sendEvent(internal, &mouseEvent);
-        return mouseEvent.isAccepted();
+        const bool isAccepted = QWindowSystemInterface::handleMouseEvent<QWindowSystemInterface::SynchronousDelivery>(internal,
+                                                                                                                      event->position() - internal->position(),
+                                                                                                                      event->globalPosition(),
+                                                                                                                      event->buttons(),
+                                                                                                                      event->button(),
+                                                                                                                      event->type(),
+                                                                                                                      event->modifiers());
+        return isAccepted;
     }
     bool wheelEvent(WheelEvent *event) override
     {
