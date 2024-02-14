@@ -195,78 +195,12 @@ void UserActionsMenu::init()
     connect(m_menu, &QMenu::aboutToHide, this, &UserActionsMenu::menuAboutToHide, Qt::QueuedConnection);
     connect(m_menu, &QMenu::triggered, this, &UserActionsMenu::slotWindowOperation);
 
-    QMenu *advancedMenu = new QMenu(m_menu);
-    connect(advancedMenu, &QMenu::aboutToShow, this, [this, advancedMenu]() {
-        if (m_window) {
-            advancedMenu->setPalette(m_window->palette());
-        }
-    });
-
     auto setShortcut = [](QAction *action, const QString &actionName) {
         const auto shortcuts = KGlobalAccel::self()->shortcut(Workspace::self()->findChild<QAction *>(actionName));
         if (!shortcuts.isEmpty()) {
             action->setShortcut(shortcuts.first());
         }
     };
-
-    m_moveOperation = advancedMenu->addAction(i18n("&Move"));
-    m_moveOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-move")));
-    setShortcut(m_moveOperation, QStringLiteral("Window Move"));
-    m_moveOperation->setData(Options::UnrestrictedMoveOp);
-
-    m_resizeOperation = advancedMenu->addAction(i18n("&Resize"));
-    m_resizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-scale")));
-    setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
-    m_resizeOperation->setData(Options::ResizeOp);
-
-    m_keepAboveOperation = advancedMenu->addAction(i18n("Keep &Above Others"));
-    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-above")));
-    setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
-    m_keepAboveOperation->setCheckable(true);
-    m_keepAboveOperation->setData(Options::KeepAboveOp);
-
-    m_keepBelowOperation = advancedMenu->addAction(i18n("Keep &Below Others"));
-    m_keepBelowOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-below")));
-    setShortcut(m_keepBelowOperation, QStringLiteral("Window Below Other Windows"));
-    m_keepBelowOperation->setCheckable(true);
-    m_keepBelowOperation->setData(Options::KeepBelowOp);
-
-    m_fullScreenOperation = advancedMenu->addAction(i18n("&Fullscreen"));
-    m_fullScreenOperation->setIcon(QIcon::fromTheme(QStringLiteral("view-fullscreen")));
-    setShortcut(m_fullScreenOperation, QStringLiteral("Window Fullscreen"));
-    m_fullScreenOperation->setCheckable(true);
-    m_fullScreenOperation->setData(Options::FullScreenOp);
-
-    m_shadeOperation = advancedMenu->addAction(i18n("&Shade"));
-    m_shadeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-shade")));
-    setShortcut(m_shadeOperation, QStringLiteral("Window Shade"));
-    m_shadeOperation->setCheckable(true);
-    m_shadeOperation->setData(Options::ShadeOp);
-
-    m_noBorderOperation = advancedMenu->addAction(i18n("&No Titlebar and Frame"));
-    m_noBorderOperation->setIcon(QIcon::fromTheme(QStringLiteral("edit-none-border")));
-    setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
-    m_noBorderOperation->setCheckable(true);
-    m_noBorderOperation->setData(Options::NoBorderOp);
-
-    advancedMenu->addSeparator();
-
-    m_shortcutOperation = advancedMenu->addAction(i18n("Set Window Short&cut…"));
-    m_shortcutOperation->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
-    setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
-    m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
-
-#if KWIN_BUILD_KCMS
-    QAction *action = advancedMenu->addAction(i18n("Configure Special &Window Settings…"));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
-    action->setData(Options::WindowRulesOp);
-    m_rulesOperation = action;
-
-    action = advancedMenu->addAction(i18n("Configure S&pecial Application Settings…"));
-    action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
-    action->setData(Options::ApplicationRulesOp);
-    m_applicationRulesOperation = action;
-#endif
 
     m_maximizeOperation = m_menu->addAction(i18n("Ma&ximize"));
     m_maximizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-maximize")));
@@ -279,9 +213,64 @@ void UserActionsMenu::init()
     setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
     m_minimizeOperation->setData(Options::MinimizeOp);
 
-    QAction *overflowAction = m_menu->addMenu(advancedMenu);
-    overflowAction->setText(i18n("&More Actions"));
-    overflowAction->setIcon(QIcon::fromTheme(QStringLiteral("overflow-menu")));
+    m_moveOperation = m_menu->addAction(i18n("&Move"));
+    m_moveOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-move")));
+    setShortcut(m_moveOperation, QStringLiteral("Window Move"));
+    m_moveOperation->setData(Options::UnrestrictedMoveOp);
+
+    m_resizeOperation = m_menu->addAction(i18n("&Resize"));
+    m_resizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-scale")));
+    setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
+    m_resizeOperation->setData(Options::ResizeOp);
+
+    m_keepAboveOperation = m_menu->addAction(i18n("Keep &Above Others"));
+    m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-above")));
+    setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
+    m_keepAboveOperation->setCheckable(true);
+    m_keepAboveOperation->setData(Options::KeepAboveOp);
+
+    m_keepBelowOperation = m_menu->addAction(i18n("Keep &Below Others"));
+    m_keepBelowOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-below")));
+    setShortcut(m_keepBelowOperation, QStringLiteral("Window Below Other Windows"));
+    m_keepBelowOperation->setCheckable(true);
+    m_keepBelowOperation->setData(Options::KeepBelowOp);
+
+    m_fullScreenOperation = m_menu->addAction(i18n("&Fullscreen"));
+    m_fullScreenOperation->setIcon(QIcon::fromTheme(QStringLiteral("view-fullscreen")));
+    setShortcut(m_fullScreenOperation, QStringLiteral("Window Fullscreen"));
+    m_fullScreenOperation->setCheckable(true);
+    m_fullScreenOperation->setData(Options::FullScreenOp);
+
+    m_shadeOperation = m_menu->addAction(i18n("&Shade"));
+    m_shadeOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-shade")));
+    setShortcut(m_shadeOperation, QStringLiteral("Window Shade"));
+    m_shadeOperation->setCheckable(true);
+    m_shadeOperation->setData(Options::ShadeOp);
+
+    m_noBorderOperation = m_menu->addAction(i18n("&No Titlebar and Frame"));
+    m_noBorderOperation->setIcon(QIcon::fromTheme(QStringLiteral("edit-none-border")));
+    setShortcut(m_noBorderOperation, QStringLiteral("Window No Border"));
+    m_noBorderOperation->setCheckable(true);
+    m_noBorderOperation->setData(Options::NoBorderOp);
+
+    m_menu->addSeparator();
+
+    m_shortcutOperation = m_menu->addAction(i18n("Set Window Short&cut…"));
+    m_shortcutOperation->setIcon(QIcon::fromTheme(QStringLiteral("configure-shortcuts")));
+    setShortcut(m_shortcutOperation, QStringLiteral("Setup Window Shortcut"));
+    m_shortcutOperation->setData(Options::SetupWindowShortcutOp);
+
+#if KWIN_BUILD_KCMS
+    QAction *action = m_menu->addAction(i18n("Configure Special &Window Settings…"));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
+    action->setData(Options::WindowRulesOp);
+    m_rulesOperation = action;
+
+    action = m_menu->addAction(i18n("Configure S&pecial Application Settings…"));
+    action->setIcon(QIcon::fromTheme(QStringLiteral("preferences-system-windows-actions")));
+    action->setData(Options::ApplicationRulesOp);
+    m_applicationRulesOperation = action;
+#endif
 
     m_menu->addSeparator();
 
