@@ -7,10 +7,14 @@
 
 #include "idleinhibit_v1.h"
 
+#include <QPointer>
 #include <qwayland-server-idle-inhibit-unstable-v1.h>
 
 namespace KWin
 {
+
+class SurfaceInterface;
+
 class IdleInhibitManagerV1InterfacePrivate : public QtWaylandServer::zwp_idle_inhibit_manager_v1
 {
 public:
@@ -23,16 +27,16 @@ protected:
     void zwp_idle_inhibit_manager_v1_create_inhibitor(Resource *resource, uint32_t id, wl_resource *surface) override;
 };
 
-class IdleInhibitorV1Interface : public QObject, QtWaylandServer::zwp_idle_inhibitor_v1
+class IdleInhibitorV1Interface : QtWaylandServer::zwp_idle_inhibitor_v1
 {
-    Q_OBJECT
 public:
-    explicit IdleInhibitorV1Interface(wl_resource *resource);
+    explicit IdleInhibitorV1Interface(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface);
     ~IdleInhibitorV1Interface() override;
 
 protected:
     void zwp_idle_inhibitor_v1_destroy_resource(Resource *resource) override;
     void zwp_idle_inhibitor_v1_destroy(Resource *resource) override;
-};
 
+    const QPointer<SurfaceInterface> m_surface;
+};
 }

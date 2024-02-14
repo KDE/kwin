@@ -257,13 +257,15 @@ void SurfaceInterfacePrivate::installPointerConstraint(ConfinedPointerV1Interfac
 void SurfaceInterfacePrivate::installIdleInhibitor(IdleInhibitorV1Interface *inhibitor)
 {
     idleInhibitors << inhibitor;
-    QObject::connect(inhibitor, &IdleInhibitorV1Interface::destroyed, q, [this, inhibitor] {
-        idleInhibitors.removeOne(inhibitor);
-        if (idleInhibitors.isEmpty()) {
-            Q_EMIT q->inhibitsIdleChanged();
-        }
-    });
     if (idleInhibitors.count() == 1) {
+        Q_EMIT q->inhibitsIdleChanged();
+    }
+}
+
+void SurfaceInterfacePrivate::removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor)
+{
+    idleInhibitors.removeOne(inhibitor);
+    if (idleInhibitors.isEmpty()) {
         Q_EMIT q->inhibitsIdleChanged();
     }
 }

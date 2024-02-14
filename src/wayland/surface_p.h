@@ -114,6 +114,7 @@ public:
     void installPointerConstraint(LockedPointerV1Interface *lock);
     void installPointerConstraint(ConfinedPointerV1Interface *confinement);
     void installIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
+    void removeIdleInhibitor(IdleInhibitorV1Interface *inhibitor);
 
     QRectF computeBufferSourceBox() const;
     void applyState(SurfaceState *next);

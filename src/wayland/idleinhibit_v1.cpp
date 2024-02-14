@@ -22,23 +22,11 @@ void IdleInhibitManagerV1InterfacePrivate::zwp_idle_inhibit_manager_v1_destroy(R
     wl_resource_destroy(resource->handle);
 }
 
-void IdleInhibitManagerV1InterfacePrivate::zwp_idle_inhibit_manager_v1_create_inhibitor(Resource *resource, uint32_t id, wl_resource *surface)
+void IdleInhibitManagerV1InterfacePrivate::zwp_idle_inhibit_manager_v1_create_inhibitor(Resource *resource, uint32_t id, wl_resource *wlsurface)
 {
-    auto s = SurfaceInterface::get(surface);
-    if (!s) {
-        wl_resource_post_error(resource->handle, 0, "Invalid  surface");
-        return;
-    }
-
-    wl_resource *inhibitorResource = wl_resource_create(resource->client(), &zwp_idle_inhibitor_v1_interface, resource->version(), id);
-    if (!inhibitorResource) {
-        wl_client_post_no_memory(resource->client());
-        return;
-    }
-    auto inhibitor = new IdleInhibitorV1Interface(inhibitorResource);
-
-    SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(s);
-    surfacePrivate->installIdleInhibitor(inhibitor);
+    const auto surface = SurfaceInterface::get(wlsurface);
+    const auto inhibitor = new IdleInhibitorV1Interface(resource->client(), id, resource->version(), surface);
+    SurfaceInterfacePrivate::get(surface)->installIdleInhibitor(inhibitor);
 }
 
 IdleInhibitManagerV1Interface::IdleInhibitManagerV1Interface(Display *display, QObject *parent)
@@ -49,13 +37,18 @@ IdleInhibitManagerV1Interface::IdleInhibitManagerV1Interface(Display *display, Q
 
 IdleInhibitManagerV1Interface::~IdleInhibitManagerV1Interface() = default;
 
-IdleInhibitorV1Interface::IdleInhibitorV1Interface(wl_resource *resource)
-    : QObject(nullptr)
-    , QtWaylandServer::zwp_idle_inhibitor_v1(resource)
+IdleInhibitorV1Interface::IdleInhibitorV1Interface(wl_client *client, uint32_t id, uint32_t version, SurfaceInterface *surface)
+    : QtWaylandServer::zwp_idle_inhibitor_v1(client, id, version)
+    , m_surface(surface)
 {
 }
 
-IdleInhibitorV1Interface::~IdleInhibitorV1Interface() = default;
+IdleInhibitorV1Interface::~IdleInhibitorV1Interface()
+{
+    if (m_surface) {
+        SurfaceInterfacePrivate::get(m_surface)->removeIdleInhibitor(this);
+    }
+}
 
 void IdleInhibitorV1Interface::zwp_idle_inhibitor_v1_destroy(Resource *resource)
 {
