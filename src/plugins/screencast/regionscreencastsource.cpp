@@ -59,6 +59,7 @@ void RegionScreenCastSource::updateOutput(Output *output)
 
         ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         QMatrix4x4 projectionMatrix;
+        projectionMatrix.scale(1, -1);
         projectionMatrix.ortho(m_region);
         projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
 
@@ -82,6 +83,7 @@ void RegionScreenCastSource::ensureTexture()
         if (!m_renderedTexture) {
             return;
         }
+        m_renderedTexture->setContentTransform(OutputTransform::FlipY);
         m_renderedTexture->setFilter(GL_LINEAR);
         m_renderedTexture->setWrapMode(GL_CLAMP_TO_EDGE);
 
