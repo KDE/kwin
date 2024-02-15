@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
+"POT-Creation-Date: 2024-02-15 00:38+0000\n"
 "PO-Revision-Date: 2024-02-05 11:37\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1518,29 +1518,35 @@ msgstr "蓝"
 msgid "Purple"
 msgstr "紫"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:70
+#: plugins/colorblindnesscorrection/ui/main.qml:71
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
 msgstr "模式："
 
-#: plugins/colorblindnesscorrection/ui/main.qml:75
+#: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
 msgstr "甲型色盲 (红色盲)"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:76
+#: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
 msgstr "乙型色盲 (绿色盲)"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:77
+#: plugins/colorblindnesscorrection/ui/main.qml:78
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
 msgstr "丙型色盲 (蓝黄色盲)"
+
+#: plugins/colorblindnesscorrection/ui/main.qml:85
+#, kde-format
+msgctxt "@label"
+msgid "Intensity:"
+msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format

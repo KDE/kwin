@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
-"PO-Revision-Date: 2024-02-07 12:20+0100\n"
+"POT-Creation-Date: 2024-02-15 00:38+0000\n"
+"PO-Revision-Date: 2024-02-13 12:01+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1553,29 +1553,35 @@ msgstr "Blau"
 msgid "Purple"
 msgstr "Porpra"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:70
+#: plugins/colorblindnesscorrection/ui/main.qml:71
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
 msgstr "Mode:"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:75
+#: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
 msgstr "Protanopia (roig dèbil)"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:76
+#: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
 msgstr "Deuteranopia (verd dèbil)"
 
-#: plugins/colorblindnesscorrection/ui/main.qml:77
+#: plugins/colorblindnesscorrection/ui/main.qml:78
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
 msgstr "Tritanopia (blau-groc)"
+
+#: plugins/colorblindnesscorrection/ui/main.qml:85
+#, kde-format
+msgctxt "@label"
+msgid "Intensity:"
+msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -3531,14 +3537,13 @@ msgstr "Tipus de regla de capa"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "Sincronització adaptativa"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Tipus de regla d'activitat"
+msgstr "Tipus de regla de sincronització adaptativa"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

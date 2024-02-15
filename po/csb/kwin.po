@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
+"POT-Creation-Date: 2024-02-15 00:38+0000\n"
 "PO-Revision-Date: 2009-12-15 22:22+0100\n"
 "Last-Translator: Mark Kwidzińśczi <mark@linuxcsb.org>\n"
 "Language-Team: Kaszëbsczi <i18n-csb@linuxcsb.org>\n"
@@ -1534,28 +1534,34 @@ msgstr ""
 msgid "Purple"
 msgstr ""
 
-#: plugins/colorblindnesscorrection/ui/main.qml:70
+#: plugins/colorblindnesscorrection/ui/main.qml:71
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
 msgstr ""
 
-#: plugins/colorblindnesscorrection/ui/main.qml:75
+#: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
 msgstr ""
 
-#: plugins/colorblindnesscorrection/ui/main.qml:76
+#: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
 msgstr ""
 
-#: plugins/colorblindnesscorrection/ui/main.qml:77
+#: plugins/colorblindnesscorrection/ui/main.qml:78
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
+msgstr ""
+
+#: plugins/colorblindnesscorrection/ui/main.qml:85
+#, kde-format
+msgctxt "@label"
+msgid "Intensity:"
 msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:104
