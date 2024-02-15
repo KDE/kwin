@@ -54,6 +54,7 @@ public:
     std::unique_ptr<GLVertexBuffer> m_vbo;
     QSizeF m_cachedSize;
     QRectF m_cachedSource;
+    OutputTransform m_cachedContentTransform;
 
     static void initStatic();
 
