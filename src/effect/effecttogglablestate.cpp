@@ -111,7 +111,7 @@ void EffectTogglableState::partialDeactivate(qreal factor)
 
 void EffectTogglableState::toggle()
 {
-    if (m_status == Status::Inactive) {
+    if (m_status != Status::Active) {
         activate();
         Q_EMIT activated();
     } else {
