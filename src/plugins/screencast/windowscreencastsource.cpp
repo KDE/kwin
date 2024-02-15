@@ -52,24 +52,21 @@ void WindowScreenCastSource::render(spa_data *spa, spa_video_format format)
     if (!offscreenTexture) {
         return;
     }
-    GLFramebuffer offscreenTarget(offscreenTexture.get());
+    offscreenTexture->setContentTransform(OutputTransform::FlipY);
 
+    GLFramebuffer offscreenTarget(offscreenTexture.get());
     render(&offscreenTarget);
     grabTexture(offscreenTexture.get(), spa, format);
 }
 
 void WindowScreenCastSource::render(GLFramebuffer *target)
 {
-    const QRectF geometry = m_window->clientGeometry();
-    QMatrix4x4 projectionMatrix;
-    projectionMatrix.scale(1, -1);
-    projectionMatrix.ortho(geometry);
+    RenderTarget renderTarget(target);
+    RenderViewport viewport(m_window->clientGeometry(), 1, renderTarget);
 
     WindowPaintData data;
-    data.setProjectionMatrix(projectionMatrix);
+    data.setProjectionMatrix(viewport.projectionMatrix());
 
-    RenderTarget renderTarget(target);
-    RenderViewport viewport(geometry, 1, renderTarget);
     GLFramebuffer::pushFramebuffer(target);
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
