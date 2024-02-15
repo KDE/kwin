@@ -103,7 +103,9 @@ FocusScope {
                     otherScreenThumbnail.cloneOf = item
                     otherScreenThumbnail.x = heapRelativePos.x;
                     otherScreenThumbnail.y = heapRelativePos.y;
-                    otherScreenThumbnail.visible = true;
+                    if (item.Drag.active) {
+                        otherScreenThumbnail.visible = true;
+                    }
                 }
             }
 
