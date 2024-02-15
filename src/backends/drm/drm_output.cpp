@@ -35,6 +35,8 @@
 namespace KWin
 {
 
+static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_INTEL_COLORSPACE") == 1;
+
 DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     : DrmAbstractOutput(conn->gpu())
     , m_pipeline(conn->pipeline())
@@ -64,7 +66,9 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
         capabilities |= Capability::HighDynamicRange;
     }
     if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) && m_connector->edid()->supportsBT2020()) {
-        capabilities |= Capability::WideColorGamut;
+        if (!m_gpu->isI915() || s_allowColorspaceIntel) {
+            capabilities |= Capability::WideColorGamut;
+        }
     }
     if (conn->isInternal()) {
         // TODO only set this if an orientation sensor is available?
