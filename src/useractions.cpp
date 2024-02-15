@@ -73,8 +73,6 @@ UserActionsMenu::UserActionsMenu(QObject *parent)
     , m_screenMenu(nullptr)
     , m_activityMenu(nullptr)
     , m_scriptsMenu(nullptr)
-    , m_resizeOperation(nullptr)
-    , m_moveOperation(nullptr)
     , m_maximizeOperation(nullptr)
     , m_keepAboveOperation(nullptr)
     , m_keepBelowOperation(nullptr)
@@ -212,16 +210,6 @@ void UserActionsMenu::init()
     setShortcut(m_minimizeOperation, QStringLiteral("Window Minimize"));
     m_minimizeOperation->setData(Options::MinimizeOp);
 
-    m_moveOperation = m_menu->addAction(i18n("&Move"));
-    m_moveOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-move")));
-    setShortcut(m_moveOperation, QStringLiteral("Window Move"));
-    m_moveOperation->setData(Options::UnrestrictedMoveOp);
-
-    m_resizeOperation = m_menu->addAction(i18n("&Resize"));
-    m_resizeOperation->setIcon(QIcon::fromTheme(QStringLiteral("transform-scale")));
-    setShortcut(m_resizeOperation, QStringLiteral("Window Resize"));
-    m_resizeOperation->setData(Options::ResizeOp);
-
     m_keepAboveOperation = m_menu->addAction(i18n("Keep &Above Others"));
     m_keepAboveOperation->setIcon(QIcon::fromTheme(QStringLiteral("window-keep-above")));
     setShortcut(m_keepAboveOperation, QStringLiteral("Window Above Other Windows"));
@@ -308,8 +296,6 @@ void UserActionsMenu::menuAboutToShow()
     }
 
     m_menu->setPalette(m_window->palette());
-    m_resizeOperation->setEnabled(m_window->isResizable());
-    m_moveOperation->setEnabled(m_window->isMovableAcrossScreens());
     m_maximizeOperation->setEnabled(m_window->isMaximizable());
     m_maximizeOperation->setChecked(m_window->maximizeMode() == MaximizeFull);
     m_keepAboveOperation->setChecked(m_window->keepAbove());

@@ -191,8 +191,6 @@ private:
      * Menu for further entries added by scripts.
      */
     QMenu *m_scriptsMenu;
-    QAction *m_resizeOperation;
-    QAction *m_moveOperation;
     QAction *m_maximizeOperation;
     QAction *m_keepAboveOperation;
     QAction *m_keepBelowOperation;
