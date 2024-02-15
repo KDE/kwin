@@ -83,23 +83,24 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
 
 static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format format)
 {
-    // transform to correct orientation with the GPU first
-    const QSize size = texture->contentTransform().map(texture->size());
-    if (texture->contentTransform() == OutputTransform::FlipY) {
+    const OutputTransform contentTransform = texture->contentTransform();
+    if (contentTransform == OutputTransform::Normal || contentTransform == OutputTransform::FlipY) {
         doGrabTexture(texture, spa, format);
     } else {
-        // need to transform the texture to a usable transformation first
+        const QSize size = contentTransform.map(texture->size());
         const auto backingTexture = GLTexture::allocate(GL_RGBA8, size);
         if (!backingTexture) {
             return;
         }
-        GLFramebuffer fbo(backingTexture.get());
+        backingTexture->setContentTransform(OutputTransform::FlipY);
 
         ShaderBinder shaderBinder(ShaderTrait::MapTexture);
         QMatrix4x4 projectionMatrix;
+        projectionMatrix.scale(1, -1);
         projectionMatrix.ortho(QRect(QPoint(), size));
         shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
 
+        GLFramebuffer fbo(backingTexture.get());
         GLFramebuffer::pushFramebuffer(&fbo);
         texture->render(size);
         GLFramebuffer::popFramebuffer();
