@@ -190,6 +190,7 @@ KCM.ScrollViewKCM {
                 property: "section"
                 delegate: Kirigami.ListSectionHeader {
                     label: section
+                    width: ListView.view.width
                     height: implicitHeight
                 }
             }

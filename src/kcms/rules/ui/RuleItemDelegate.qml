@@ -35,6 +35,7 @@ QQC2.ItemDelegate {
 
         RowLayout {
             Layout.preferredWidth: 10 * Kirigami.Units.gridUnit
+            Layout.preferredHeight: Kirigami.Units.iconSizes.medium
             spacing: Kirigami.Units.smallSpacing
 
             QQC2.Label {
@@ -56,7 +57,6 @@ QQC2.ItemDelegate {
             }
 
             KCM.ContextualHelpButton {
-                Layout.preferredHeight: Kirigami.Units.gridUnit * 2
                 Layout.alignment: Qt.AlignVCenter
                 visible: model.description.length > 0
                 toolTipText: model.description
