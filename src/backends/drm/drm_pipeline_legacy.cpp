@@ -108,6 +108,17 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
             m_connector->scalingMode.setEnumLegacy(DrmConnector::ScalingMode::None);
         }
+        if (m_connector->hdrMetadata.isValid()) {
+            const auto blob = createHdrMetadata(m_pending.colorDescription.transferFunction());
+            m_connector->hdrMetadata.setPropertyLegacy(blob ? blob->blobId() : 0);
+        }
+        if (m_connector->colorspace.isValid()) {
+            if (m_pending.colorDescription.colorimetry() == NamedColorimetry::BT2020) {
+                m_connector->colorspace.setEnumLegacy(DrmConnector::Colorspace::BT2020_RGB);
+            } else {
+                m_connector->colorspace.setEnumLegacy(DrmConnector::Colorspace::Default);
+            }
+        }
         const auto currentModeContent = m_pending.crtc->queryCurrentMode();
         if (m_pending.crtc != m_next.crtc || *m_pending.mode != currentModeContent) {
             qCDebug(KWIN_DRM) << "Using legacy path to set mode" << m_pending.mode->nativeMode()->name;
