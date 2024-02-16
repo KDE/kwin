@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:38+0000\n"
-"PO-Revision-Date: 2024-02-13 12:01+0100\n"
+"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"PO-Revision-Date: 2024-02-15 12:37+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -1219,22 +1219,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom de la màquina: %1"
 
-#: input.cpp:2010
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mou la tauleta a la sortida següent"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "La tauleta s'ha mogut a %1"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Les tauletes han intercanviat les sortides"
 
-#: input.cpp:3175
+#: input.cpp:3177
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -1579,7 +1579,7 @@ msgstr "Tritanopia (blau-groc)"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensitat:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format

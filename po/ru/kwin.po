@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:38+0000\n"
+"POT-Creation-Date: 2024-02-16 00:39+0000\n"
 "PO-Revision-Date: 2024-02-07 10:13+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1241,22 +1241,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Имя хоста: %1"
 
-#: input.cpp:2010
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Переключить планшет к следующему выходу"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Планшет переключен на %1"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Переключённые выводы планшета"
 
-#: input.cpp:3175
+#: input.cpp:3177
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорная панель"

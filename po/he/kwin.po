@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:38+0000\n"
-"PO-Revision-Date: 2024-02-13 08:20+0200\n"
+"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"PO-Revision-Date: 2024-02-15 22:36+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -1215,22 +1215,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "שם מארח: %1"
 
-#: input.cpp:2010
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "העברת מחשב הלוח לפלט הבא"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "מחשב הלוח הועבר אל %1"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "מחשבי הלוח החליפו אמצעי פלט"
 
-#: input.cpp:3175
+#: input.cpp:3177
 #, kde-format
 msgid "Touchpad"
 msgstr "משטח מגע"
@@ -1561,7 +1561,7 @@ msgstr "טריטנופיה (כחול-צהוב)"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "חוזק:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format

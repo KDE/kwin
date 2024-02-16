@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:38+0000\n"
-"PO-Revision-Date: 2024-02-08 09:14+0100\n"
+"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"PO-Revision-Date: 2024-02-14 08:52+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -1238,22 +1238,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom d'hôte : %1"
 
-#: input.cpp:2010
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Déplacer la tablette vers la prochaine sortie"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablette déplacée vers %1"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Sorties commutées des tablettes"
 
-#: input.cpp:3175
+#: input.cpp:3177
 #, kde-format
 msgid "Touchpad"
 msgstr "Pavé tactile"
@@ -3565,14 +3565,13 @@ msgstr "Type de règle concernant les calques"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Type de règle sur l'activité"
+msgstr "Type de règle pour AdaptiveSync"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

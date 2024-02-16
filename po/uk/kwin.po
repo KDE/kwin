@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-15 00:38+0000\n"
-"PO-Revision-Date: 2024-02-13 22:50+0200\n"
+"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"PO-Revision-Date: 2024-02-15 16:59+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -1215,22 +1215,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Назва вузла: %1"
 
-#: input.cpp:2010
+#: input.cpp:2012
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Пересунути планшет на наступне виведення"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Виконано перемикання планшета на %1"
 
-#: input.cpp:2089
+#: input.cpp:2091
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Виконано перемикання виведення планшетів"
 
-#: input.cpp:3175
+#: input.cpp:3177
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорна панель"
@@ -1570,7 +1570,7 @@ msgstr "Тритаопія (нечутливість до синього-жов�
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Інтенсивність:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
