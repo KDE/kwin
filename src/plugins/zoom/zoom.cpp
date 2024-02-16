@@ -356,10 +356,10 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             yMove = (y + threshold - screenBottom) / zoom;
         }
         if (xMove) {
-            prevPoint.setX(std::max(0, std::min(screenSize.width(), prevPoint.x() + xMove)));
+            prevPoint.setX(prevPoint.x() + xMove);
         }
         if (yMove) {
-            prevPoint.setY(std::max(0, std::min(screenSize.height(), prevPoint.y() + yMove)));
+            prevPoint.setY(prevPoint.y() + yMove);
         }
         xTranslation = -int(prevPoint.x() * (zoom - 1.0));
         yTranslation = -int(prevPoint.y() * (zoom - 1.0));
