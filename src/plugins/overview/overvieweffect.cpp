@@ -283,7 +283,7 @@ int OverviewEffect::requestedEffectChainPosition() const
 bool OverviewEffect::borderActivated(ElectricBorder border)
 {
     if (m_borderActivate.contains(border)) {
-        cycle();
+        m_overviewState->toggle();
         return true;
     }
     return false;
