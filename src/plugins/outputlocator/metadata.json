@@ -67,6 +67,7 @@
         "Description[tr]": "Ekran adlarını göster",
         "Description[uk]": "Показувати назви екранів",
         "Description[x-test]": "xxShow screen namesxx",
+        "Description[zh_TW]": "顯示螢幕名稱",
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "Output Locator",
@@ -85,7 +86,8 @@
         "Name[sl]": "Lokator izhoda",
         "Name[tr]": "Çıktı Bulucusu",
         "Name[uk]": "Локатор виведення",
-        "Name[x-test]": "xxOutput Locatorxx"
+        "Name[x-test]": "xxOutput Locatorxx",
+        "Name[zh_TW]": "輸出位置檢測器"
     },
     "org.kde.kwin.effect": {
         "internal": true
