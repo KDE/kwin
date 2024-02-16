@@ -3693,7 +3693,7 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     w = std::max(min_size.width(), w);
     h = std::max(min_size.height(), h);
 
-    if (!rules()->checkStrictGeometry(!isFullScreen())) {
+    if (!rules()->checkStrictGeometry(!isFullScreen() && !waylandServer())) {
         // Disobey increments and aspect by explicit rule.
         return QSizeF(w, h);
     }
@@ -4002,7 +4002,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
     qCDebug(KWIN_CORE) << this << bool(value_mask & configureGeometryMask) << bool(maximizeMode() & MaximizeVertical) << bool(maximizeMode() & MaximizeHorizontal);
 
     // we want to (partially) ignore the request when the window is somehow maximized or quicktiled
-    bool ignore = !app_noborder && (quickTileMode() != QuickTileMode(QuickTileFlag::None) || maximizeMode() != MaximizeRestore);
+    bool ignore = !app_noborder && (quickTileMode() != QuickTileMode(QuickTileFlag::None) || maximizeMode() != MaximizeRestore) || waylandServer();
     // however, the user shall be able to force obedience despite and also disobedience in general
     ignore = rules()->checkIgnoreGeometry(ignore);
     if (!ignore) { // either we're not max'd / q'tiled or the user allowed the client to break that - so break it.
@@ -4015,7 +4015,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         // so we've to ask the user again - to know whether we just ignored for the partial maximization.
         // the problem here is, that the user can explicitly permit configure requests - even for maximized windows!
         // we cannot distinguish that from passing "false" for partially maximized windows.
-        ignore = rules()->checkIgnoreGeometry(false);
+        ignore = rules()->checkIgnoreGeometry(waylandServer());
         if (!ignore) { // the user is not interested, so we fix up dimensions
             if (maximizeMode() == MaximizeVertical) {
                 value_mask &= ~(XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_HEIGHT);
