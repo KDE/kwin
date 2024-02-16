@@ -326,19 +326,34 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         break;
     case MouseTrackingPush: {
         // touching an edge of the screen moves the zoom-area in that direction.
-        int x = cursorPoint.x() * zoom - prevPoint.x() * (zoom - 1.0);
-        int y = cursorPoint.y() * zoom - prevPoint.y() * (zoom - 1.0);
-        int threshold = 4;
+        const int x = cursorPoint.x() * zoom - prevPoint.x() * (zoom - 1.0);
+        const int y = cursorPoint.y() * zoom - prevPoint.y() * (zoom - 1.0);
+        const int threshold = 4;
+        const QRectF currScreen = effects->screenAt(QPoint(x, y))->geometry();
+
+        // bounds of the screen the cursor's on
+        const int screenTop = currScreen.top();
+        const int screenLeft = currScreen.left();
+        const int screenRight = currScreen.right();
+        const int screenBottom = currScreen.bottom();
+
+        // figure out whether we have adjacent displays in all 4 directions
+        // We pan within the screen in directions where there are no adjacent screens.
+        const bool adjacentLeft = screenExistsAt(QPoint(screenLeft - 1, y));
+        const bool adjacentRight = screenExistsAt(QPoint(screenRight + 1, y));
+        const bool adjacentTop = screenExistsAt(QPoint(x, screenTop - 1));
+        const bool adjacentBottom = screenExistsAt(QPoint(x, screenBottom + 1));
+
         xMove = yMove = 0;
-        if (x < threshold) {
-            xMove = (x - threshold) / zoom;
-        } else if (x + threshold > screenSize.width()) {
-            xMove = (x + threshold - screenSize.width()) / zoom;
+        if (x < screenLeft + threshold && !adjacentLeft) {
+            xMove = (x - threshold - screenLeft) / zoom;
+        } else if (x > screenRight - threshold && !adjacentRight) {
+            xMove = (x + threshold - screenRight) / zoom;
         }
-        if (y < threshold) {
-            yMove = (y - threshold) / zoom;
-        } else if (y + threshold > screenSize.height()) {
-            yMove = (y + threshold - screenSize.height()) / zoom;
+        if (y < screenTop + threshold && !adjacentTop) {
+            yMove = (y - threshold - screenTop) / zoom;
+        } else if (y > screenBottom - threshold && !adjacentBottom) {
+            yMove = (y + threshold - screenBottom) / zoom;
         }
         if (xMove) {
             prevPoint.setX(std::max(0, std::min(screenSize.width(), prevPoint.x() + xMove)));
@@ -622,6 +637,12 @@ qreal ZoomEffect::configuredMoveFactor() const
 qreal ZoomEffect::targetZoom() const
 {
     return target_zoom;
+}
+
+bool ZoomEffect::screenExistsAt(const QPoint &point) const
+{
+    const Output *output = effects->screenAt(point);
+    return output && output->geometry().contains(point);
 }
 
 } // namespace
