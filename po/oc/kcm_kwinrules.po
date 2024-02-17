@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
+"POT-Creation-Date: 2024-02-17 00:39+0000\n"
 "PO-Revision-Date: 2008-08-05 22:26+0200\n"
 "Last-Translator: Yannig Marchegay (Kokoyaya) <yannig@marchegay.org>\n"
 "Language-Team: Occitan (lengadocian) <ubuntu-l10n-oci@lists.ubuntu.com>\n"
@@ -878,29 +878,29 @@ msgstr[1] ""
 msgid "Add property to the rule"
 msgstr ""
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr ""
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:60
 #, fuzzy, kde-format
 #| msgid "None"
 msgid "No"
 msgstr "Pas cap"
 
-#: ui/RulesEditor.qml:280 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:281 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:283
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: ui/RulesEditor.qml:284
+#: ui/RulesEditor.qml:285
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

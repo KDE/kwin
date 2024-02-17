@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
+"POT-Creation-Date: 2024-02-17 00:39+0000\n"
 "PO-Revision-Date: 2024-01-24 16:15+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
@@ -965,28 +965,28 @@ msgstr[3] "Po %1 sekundės"
 msgid "Add property to the rule"
 msgstr "Pridėti savybę į taisyklę"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Taip"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Ne"
 
-#: ui/RulesEditor.qml:280 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:281 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:283
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:284
+#: ui/RulesEditor.qml:285
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

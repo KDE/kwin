@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
+"POT-Creation-Date: 2024-02-17 00:39+0000\n"
 "PO-Revision-Date: 2023-11-07 21:27+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: \n"
@@ -866,28 +866,28 @@ msgstr[1] ""
 msgid "Add property to the rule"
 msgstr ""
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Sí"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr ""
 
-#: ui/RulesEditor.qml:280 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:281 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:283
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: ui/RulesEditor.qml:284
+#: ui/RulesEditor.qml:285
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

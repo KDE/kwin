@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-13 00:39+0000\n"
+"POT-Creation-Date: 2024-02-17 00:39+0000\n"
 "PO-Revision-Date: 2024-02-14 15:22+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -958,28 +958,28 @@ msgstr[1] "Tras %1 segundos"
 msgid "Add property to the rule"
 msgstr "Engadir a propiedade á regra"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Si"
 
-#: ui/RulesEditor.qml:278 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Non"
 
-#: ui/RulesEditor.qml:280 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:281 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1%"
 
-#: ui/RulesEditor.qml:282
+#: ui/RulesEditor.qml:283
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:284
+#: ui/RulesEditor.qml:285
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"

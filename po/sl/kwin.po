@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1673301 2024-02-16 01:08:35Z scripty $
+# $Id: kwin.po 1673377 2024-02-17 01:08:37Z scripty $
 # $Source$
 #
 #
@@ -17,15 +17,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-16 00:39+0000\n"
-"PO-Revision-Date: 2024-02-13 06:39+0100\n"
+"PO-Revision-Date: 2024-02-16 18:08+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
-"%100==4 ? 3 : 0);\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100>=3 && n"
+"%100<=4 ? 2 : 3);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
 "X-Generator: Poedit 3.4.2\n"
 
@@ -1577,7 +1577,7 @@ msgstr "Tritanopia (modra-rumena)"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Intenzivnost:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
