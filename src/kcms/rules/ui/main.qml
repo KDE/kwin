@@ -84,8 +84,9 @@ KCM.ScrollViewKCM {
             visible: ruleBookView.count === 0
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
-                        text: i18n("No rules for specific windows are currently set");
-            explanation: xi18nc("@info", "Click the <interface>Add New…</interface> button below to add some")
+            icon.name: "preferences-system-windows-actions"
+            text: i18n("No rules for specific windows are currently set");
+            explanation: xi18nc("@info", "Click <interface>Add New…</interface> to add some")
         }
     }
 
