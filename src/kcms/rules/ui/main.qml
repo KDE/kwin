@@ -23,6 +23,31 @@ KCM.ScrollViewKCM {
 
     property var selectedIndexes: []
 
+    actions: [
+        Kirigami.Action {
+            enabled: !exportInfo.visible
+            text: i18n("Add New…")
+            icon.name: "list-add-symbolic"
+            onTriggered: kcm.createRule();
+        },
+        Kirigami.Action {
+            enabled: !exportInfo.visible
+            text: i18n("Import…")
+            icon.name: "document-import-symbolic"
+            onTriggered: importDialog.active = true;
+        },
+        Kirigami.Action {
+            text: checked ? i18n("Cancel Export") : i18n("Export…")
+            icon.name: exportInfo.visible ? "dialog-cancel-symbolic" : "document-export-symbolic"
+            checkable: true
+            checked: exportInfo.visible
+            onToggled: {
+                selectedIndexes = [];
+                exportInfo.visible = checked;
+            }
+        }
+    ]
+
     // Manage KCM pages
     Connections {
         target: kcm
@@ -59,7 +84,7 @@ KCM.ScrollViewKCM {
             visible: ruleBookView.count === 0
             anchors.centerIn: parent
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
-            text: i18n("No rules for specific windows are currently set");
+                        text: i18n("No rules for specific windows are currently set");
             explanation: xi18nc("@info", "Click the <interface>Add New…</interface> button below to add some")
         }
     }
@@ -93,39 +118,6 @@ KCM.ScrollViewKCM {
                 }
             }
         ]
-    }
-
-    footer: RowLayout {
-        QQC2.Button {
-            text: i18n("Add New…")
-            icon.name: "list-add"
-            enabled: !exportInfo.visible
-            onClicked: {
-                kcm.createRule();
-            }
-        }
-        Item {
-            Layout.fillWidth: true
-        }
-        QQC2.Button {
-            text: i18n("Import…")
-            icon.name: "document-import"
-            enabled: !exportInfo.visible
-            onClicked: {
-                importDialog.active = true;
-            }
-        }
-        QQC2.Button {
-            text: checked ? i18n("Cancel Export") : i18n("Export…")
-            icon.name: exportInfo.visible ? "dialog-cancel" : "document-export"
-            enabled: ruleBookView.count > 0
-            checkable: true
-            checked: exportInfo.visible
-            onToggled: {
-                selectedIndexes = [];
-                exportInfo.visible = checked;
-            }
-        }
     }
 
     component RuleBookDelegate : Item {
