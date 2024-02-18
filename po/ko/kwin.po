@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-16 00:39+0000\n"
-"PO-Revision-Date: 2024-02-10 00:16+0100\n"
+"PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -1553,7 +1553,7 @@ msgstr "청색약"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "강도:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -3503,14 +3503,13 @@ msgstr "레이어 규칙 종류"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "적응형 동기화"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "활동 규칙 종류"
+msgstr "적응형 동기화 규칙 형식"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3552,11 +3551,10 @@ msgid "Show Desktop"
 msgstr "바탕 화면 표시"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "창 없음"
+msgstr "열린 창 없음"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"
