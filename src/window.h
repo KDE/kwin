@@ -1433,6 +1433,8 @@ Q_SIGNALS:
     void hiddenByShowDesktopChanged();
     void lockScreenOverlayChanged();
     void readyForPaintingChanged();
+    void maximizeGeometryRestoreChanged();
+    void fullscreenGeometryRestoreChanged();
 
 protected:
     Window();

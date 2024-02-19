@@ -55,6 +55,8 @@ private:
     void saveMaximize(Window *window);
     void saveQuickTile(Window *window);
     void saveFullscreen(Window *window);
+    void saveMaximizeGeometryRestore(Window *window);
+    void saveFullscreenGeometryRestore(Window *window);
     WindowData dataForWindow(Window *window) const;
 
     QList<Window *> m_savedWindows;
