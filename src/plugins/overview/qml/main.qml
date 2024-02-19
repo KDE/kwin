@@ -413,6 +413,8 @@ FocusScope {
                 id: mainBackground
 
                 visible: gridVal > 0 || nearCurrent
+                enabled: gridVal > 0 || current
+
                 anchors.fill: parent
                 property bool shouldBeVisibleInOverview: !(effect.searchText.length > 0 && current) || (heap.count !== 0 && effect.filterWindows)
                 opacity: 1 - overviewVal * (shouldBeVisibleInOverview ? 0 : 1)
