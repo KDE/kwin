@@ -55,6 +55,8 @@ private:
     void saveMaximize(KWin::Window *window, MaximizeMode mode);
     void saveQuickTile();
     void saveFullscreen();
+    void saveMaximizeGeometryRestore(Window *window);
+    void saveFullscreenGeometryRestore(Window *window);
     WindowData dataForWindow(Window *window) const;
 
     QVector<Window *> m_savedWindows;

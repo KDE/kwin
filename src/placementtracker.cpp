@@ -43,6 +43,12 @@ void PlacementTracker::add(Window *window)
     connect(window, &Window::quickTileModeChanged, this, &PlacementTracker::saveQuickTile);
     connect(window, &Window::fullScreenChanged, this, &PlacementTracker::saveFullscreen);
     connect(window, &Window::clientFinishUserMovedResized, this, &PlacementTracker::saveInteractionCounter);
+    connect(window, &Window::maximizeGeometryRestoreChanged, this, [this, window]() {
+        saveMaximizeGeometryRestore(window);
+    });
+    connect(window, &Window::fullscreenGeometryRestoreChanged, this, [this, window]() {
+        saveFullscreenGeometryRestore(window);
+    });
     WindowData data = dataForWindow(window);
     m_data[m_currentKey][window] = data;
     m_savedWindows.push_back(window);
@@ -155,7 +161,6 @@ void PlacementTracker::saveMaximize(Window *window, MaximizeMode mode)
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
         data.maximize = mode;
-        data.geometryRestore = window->geometryRestore();
     }
 }
 
@@ -166,7 +171,6 @@ void PlacementTracker::saveQuickTile()
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
         data.quickTile = window->quickTileMode();
-        data.geometryRestore = window->geometryRestore();
     }
 }
 
@@ -177,6 +181,21 @@ void PlacementTracker::saveFullscreen()
     if (m_inhibitCount == 0) {
         auto &data = m_data[m_currentKey][window];
         data.fullscreen = window->isFullScreen();
+    }
+}
+
+void PlacementTracker::saveMaximizeGeometryRestore(Window *window)
+{
+    if (m_inhibitCount == 0) {
+        auto &data = m_data[m_currentKey][window];
+        data.geometryRestore = window->geometryRestore();
+    }
+}
+
+void PlacementTracker::saveFullscreenGeometryRestore(Window *window)
+{
+    if (m_inhibitCount == 0) {
+        auto &data = m_data[m_currentKey][window];
         data.fullscreenGeometryRestore = window->fullscreenGeometryRestore();
     }
 }

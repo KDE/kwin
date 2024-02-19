@@ -4039,8 +4039,8 @@ void Window::sendToOutput(Output *newOutput)
     moveResize(newGeom);
 
     // move geometry restores to the new output as well
-    m_fullscreenGeometryRestore = moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea);
-    m_maximizeGeometryRestore = moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea);
+    setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
+    setGeometryRestore(moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea));
 
     auto tso = workspace()->ensureStackingOrder(transients());
     for (auto it = tso.constBegin(), end = tso.constEnd(); it != end; ++it) {
@@ -4090,8 +4090,8 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
 
     if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
         moveResize(ensureSpecialStateGeometry(newGeom));
-        m_fullscreenGeometryRestore = moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea);
-        m_maximizeGeometryRestore = moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea);
+        setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
+        setGeometryRestore(moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea));
         return;
     }
 
@@ -4291,6 +4291,19 @@ QSizeF Window::constrainFrameSize(const QSizeF &size, SizeMode mode) const
     return clientSizeToFrameSize(constrainedClientSize);
 }
 
+QRectF Window::fullscreenGeometryRestore() const
+{
+    return m_fullscreenGeometryRestore;
+}
+
+void Window::setFullscreenGeometryRestore(const QRectF &geom)
+{
+    if (m_fullscreenGeometryRestore != geom) {
+        m_fullscreenGeometryRestore = geom;
+        Q_EMIT fullscreenGeometryRestoreChanged();
+    }
+}
+
 /**
  * Returns @c true if the Window can be shown in full screen mode; otherwise @c false.
  *
@@ -4396,7 +4409,10 @@ QRectF Window::geometryRestore() const
  */
 void Window::setGeometryRestore(const QRectF &rect)
 {
-    m_maximizeGeometryRestore = rect;
+    if (m_maximizeGeometryRestore != rect) {
+        m_maximizeGeometryRestore = rect;
+        Q_EMIT maximizeGeometryRestoreChanged();
+    }
 }
 
 void Window::invalidateDecoration()
@@ -4426,16 +4442,6 @@ void Window::showOnScreenEdge()
 bool Window::isPlaceable() const
 {
     return true;
-}
-
-QRectF Window::fullscreenGeometryRestore() const
-{
-    return m_fullscreenGeometryRestore;
-}
-
-void Window::setFullscreenGeometryRestore(const QRectF &geom)
-{
-    m_fullscreenGeometryRestore = geom;
 }
 
 void Window::cleanTabBox()

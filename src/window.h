@@ -1411,6 +1411,7 @@ public:
     }
 
     QRectF fullscreenGeometryRestore() const;
+    void setFullscreenGeometryRestore(const QRectF &geom);
 
     /**
      * Helper function to compute the icon out of an application id defined by @p fileName
@@ -1567,6 +1568,8 @@ Q_SIGNALS:
     void decorationChanged();
     void hiddenChanged();
     void lockScreenOverlayChanged();
+    void maximizeGeometryRestoreChanged();
+    void fullscreenGeometryRestoreChanged();
 
 protected:
     void setWindowHandles(xcb_window_t client);
@@ -1902,8 +1905,6 @@ protected:
     void setKeyboardGeometryRestore(const QRectF &geom);
 
     QRectF m_virtualKeyboardGeometry;
-
-    void setFullscreenGeometryRestore(const QRectF &geom);
 
     void cleanTabBox();
 
