@@ -542,20 +542,7 @@ void PointerInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
     seat->notifyPointerEnter(focusNow->surface(), m_pos, focusNow->inputTransformation());
 
     m_focusGeometryConnection = connect(focusNow, &Window::inputTransformationChanged, this, [this]() {
-        // TODO: why no assert possible?
-        if (!focus()) {
-            return;
-        }
-        // TODO: can we check on the window instead?
-        if (workspace()->moveResizeWindow()) {
-            // don't update while moving
-            return;
-        }
-        auto seat = waylandServer()->seat();
-        if (focus()->surface() != seat->focusedPointerSurface()) {
-            return;
-        }
-        seat->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
+        waylandServer()->seat()->setFocusedPointerSurfaceTransformation(focus()->inputTransformation());
     });
 
     m_constraintsConnection = connect(focusNow->surface(), &SurfaceInterface::pointerConstraintsChanged,
