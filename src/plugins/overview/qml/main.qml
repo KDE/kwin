@@ -412,7 +412,9 @@ FocusScope {
             Item {
                 id: mainBackground
 
+                // visible when in the overview 'grid' mode, but also keep neighbouring items visible as they can appear during gestures
                 visible: gridVal > 0 || nearCurrent
+                // Avoid handling drops for offscreen visible items
                 enabled: gridVal > 0 || current
 
                 anchors.fill: parent
@@ -568,6 +570,7 @@ FocusScope {
                             if (!mainBackground.contains(mainBackground.mapFromItem(null, pos.x, pos.y))) {
                                 return;
                             }
+                            // moving the window to the client screen is handled by WindowHeap's similiarly named function that is also run
                             item.client.desktops = [mainBackground.desktop];
                         }
                     }
