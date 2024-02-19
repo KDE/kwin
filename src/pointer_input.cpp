@@ -469,6 +469,10 @@ bool PointerInputRedirection::focusUpdatesBlocked()
     if (areButtonsPressed()) {
         return true;
     }
+    if (workspace()->moveResizeWindow()) {
+        // ignore during move/resize
+        return true;
+    }
     return false;
 }
 
