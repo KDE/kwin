@@ -237,12 +237,14 @@ msgid "Show selected window"
 msgstr "Arată fereastra aleasă"
 
 #: shortcutsettings.cpp:132
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows"
 msgid "Walk Through Windows"
 msgstr "Comută printre ferestre"
 
 #: shortcutsettings.cpp:133
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows (Reverse)"
 msgstr "Comută printre ferestre (invers)"
 
@@ -259,12 +261,14 @@ msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Comută printre ferestre alternativ (invers)"
 
 #: shortcutsettings.cpp:137
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative"
 msgid "Walk Through Windows Alternative"
 msgstr "Comută printre ferestre alternativ"
 
 #: shortcutsettings.cpp:138
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Walk Through Windows Alternative (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Comută printre ferestre alternativ (invers)"
 
@@ -304,14 +308,6 @@ msgstr "Comută printre ferestre alternativ (invers)"
 
 #~ msgid "Configure Layout"
 #~ msgstr "Configurează aranjament"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Sergiu Bivol"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "sergiu@ase.md"
 
 #~ msgid "These settings are used by the \"Walk Through Windows\" actions."
 #~ msgstr "Aceste setări sunt folosite de acțiunile „Comută printre ferestre”."
