@@ -25,6 +25,7 @@ int main(int argc, char **argv)
         QAction action;
         action.setObjectName(actionName);
         action.setProperty("componentName", QStringLiteral("kwin"));
+        action.setProperty("componentDisplayName", QStringLiteral("KWin"));
         KGlobalAccel::self()->setShortcut(&action, {QKeySequence()}, KGlobalAccel::NoAutoloading);
         KGlobalAccel::self()->removeAllShortcuts(&action);
     }
