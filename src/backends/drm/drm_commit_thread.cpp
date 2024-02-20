@@ -22,6 +22,10 @@ namespace KWin
  */
 static constexpr auto s_pageflipTimeout = 5s;
 
+// amdgpu doesn't handle this correctly, so it's off by default
+// https://gitlab.freedesktop.org/drm/amd/-/issues/2186
+static const bool s_delayVrrCursorUpdates = qEnvironmentVariableIntValue("KWIN_DRM_DELAY_VRR_CURSOR_UPDATES") == 1;
+
 DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
 {
     if (!gpu->atomicModeSetting()) {
@@ -72,6 +76,30 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                     m_targetPageflipTime += m_minVblankInterval;
                 }
                 continue;
+            }
+            if (m_commits.front()->isCursorOnly() && m_vrr && s_delayVrrCursorUpdates) {
+                // wait for a primary plane commit to be in, while still enforcing
+                // a minimum cursor refresh rate of 30Hz
+                const auto cursorTarget = m_lastPageflip + std::chrono::duration_cast<std::chrono::nanoseconds>(1s) / 30;
+                const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
+                    return commit->isCursorOnly();
+                });
+                if (cursorOnly) {
+                    // no primary plane commit, just wait until a new one gets added or the cursorTarget time is reached
+                    if (m_commitPending.wait_until(lock, cursorTarget) == std::cv_status::no_timeout) {
+                        continue;
+                    }
+                } else {
+                    bool timeout = true;
+                    while (std::chrono::steady_clock::now() < cursorTarget && timeout && m_commits.front()->isCursorOnly()) {
+                        timeout = m_commitPending.wait_for(lock, 50us) == std::cv_status::timeout;
+                        optimizeCommits();
+                    }
+                    if (!timeout) {
+                        // some new commit was added, process that
+                        continue;
+                    }
+                }
             }
             submit();
         }
