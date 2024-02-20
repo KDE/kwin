@@ -8,6 +8,7 @@
 #include "scene/decorationitem.h"
 #include "compositor.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "decorations/decoratedclient.h"
 #include "scene/workspacescene.h"
 #include "window.h"
@@ -200,8 +201,8 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
     if (rotated) {
         const int u0 = textureOffset.y() + p;
         const int v0 = textureOffset.x() + p;
-        const int u1 = textureOffset.y() + p + std::round(r.width() * devicePixelRatio);
-        const int v1 = textureOffset.x() + p + std::round(r.height() * devicePixelRatio);
+        const int u1 = textureOffset.y() + p + snapToPixelGrid(r.width() * devicePixelRatio);
+        const int v1 = textureOffset.x() + p + snapToPixelGrid(r.height() * devicePixelRatio);
 
         quad[0] = WindowVertex(x0, y0, v0, u1); // Top-left
         quad[1] = WindowVertex(x1, y0, v0, u0); // Top-right
@@ -210,8 +211,8 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
     } else {
         const int u0 = textureOffset.x() + p;
         const int v0 = textureOffset.y() + p;
-        const int u1 = textureOffset.x() + p + std::round(r.width() * devicePixelRatio);
-        const int v1 = textureOffset.y() + p + std::round(r.height() * devicePixelRatio);
+        const int u1 = textureOffset.x() + p + snapToPixelGrid(r.width() * devicePixelRatio);
+        const int v1 = textureOffset.y() + p + snapToPixelGrid(r.height() * devicePixelRatio);
 
         quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
         quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right
@@ -233,9 +234,9 @@ WindowQuadList DecorationItem::buildQuads() const
 
     m_window->layoutDecorationRects(left, top, right, bottom);
 
-    const int topHeight = std::round(top.height() * devicePixelRatio);
-    const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
-    const int leftWidth = std::round(left.width() * devicePixelRatio);
+    const int topHeight = snapToPixelGrid(top.height() * devicePixelRatio);
+    const int bottomHeight = snapToPixelGrid(bottom.height() * devicePixelRatio);
+    const int leftWidth = snapToPixelGrid(left.width() * devicePixelRatio);
 
     const QPoint topPosition(0, 0);
     const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * texturePad));

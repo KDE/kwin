@@ -246,14 +246,6 @@ KWIN_EXPORT inline QRectF scaledRect(const QRectF &rect, qreal scale)
 }
 
 /**
- * Round a vector to nearest integer.
- */
-KWIN_EXPORT inline QVector2D roundVector(const QVector2D &input)
-{
-    return QVector2D(std::round(input.x()), std::round(input.y()));
-}
-
-/**
  * Convert a QPointF to a QPoint by flooring instead of rounding.
  *
  * By default, QPointF::toPoint() rounds which can cause problems in certain

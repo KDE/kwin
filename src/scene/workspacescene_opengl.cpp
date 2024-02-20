@@ -17,6 +17,7 @@
 
 #include "compositor.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "decorations/decoratedclient.h"
 #include "scene/itemrenderer_opengl.h"
 #include "shadow.h"
@@ -343,9 +344,9 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
     client()->window()->layoutDecorationRects(left, top, right, bottom);
 
     const qreal devicePixelRatio = effectiveDevicePixelRatio();
-    const int topHeight = std::round(top.height() * devicePixelRatio);
-    const int bottomHeight = std::round(bottom.height() * devicePixelRatio);
-    const int leftWidth = std::round(left.width() * devicePixelRatio);
+    const int topHeight = snapToPixelGrid(top.height() * devicePixelRatio);
+    const int bottomHeight = snapToPixelGrid(bottom.height() * devicePixelRatio);
+    const int leftWidth = snapToPixelGrid(left.width() * devicePixelRatio);
 
     const QPoint topPosition(0, 0);
     const QPoint bottomPosition(0, topPosition.y() + topHeight + (2 * TexturePad));
@@ -473,7 +474,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
 
 int SceneOpenGLDecorationRenderer::toNativeSize(int size) const
 {
-    return std::round(size * effectiveDevicePixelRatio());
+    return snapToPixelGrid(size * effectiveDevicePixelRatio());
 }
 
 } // namespace

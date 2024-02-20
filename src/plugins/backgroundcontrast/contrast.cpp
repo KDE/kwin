@@ -10,6 +10,7 @@
 #include "contrastshader.h"
 // KConfigSkeleton
 
+#include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -321,10 +322,10 @@ void ContrastEffect::uploadRegion(std::span<QVector2D> map, const QRegion &regio
     size_t index = 0;
     for (const QRect &r : region) {
         const auto deviceRect = scaledRect(r, scale);
-        const QVector2D topLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y()));
-        const QVector2D topRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
-        const QVector2D bottomLeft = roundVector(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
-        const QVector2D bottomRight = roundVector(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
+        const QVector2D topLeft = snapToPixelGrid(QVector2D(deviceRect.x(), deviceRect.y()));
+        const QVector2D topRight = snapToPixelGrid(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y()));
+        const QVector2D bottomLeft = snapToPixelGrid(QVector2D(deviceRect.x(), deviceRect.y() + deviceRect.height()));
+        const QVector2D bottomRight = snapToPixelGrid(QVector2D(deviceRect.x() + deviceRect.width(), deviceRect.y() + deviceRect.height()));
 
         // First triangle
         map[index++] = topRight;

@@ -6,7 +6,7 @@
 */
 
 #include "scene/itemgeometry.h"
-#include "effect/globals.h"
+#include "core/pixelgrid.h"
 
 #include <QMatrix4x4>
 
@@ -228,7 +228,7 @@ void RenderGeometry::appendWindowVertex(const WindowVertex &windowVertex, qreal 
         glVertex.position = QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale;
         break;
     case VertexSnappingMode::Round:
-        glVertex.position = roundVector(QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale);
+        glVertex.position = snapToPixelGrid(QVector2D(windowVertex.x(), windowVertex.y()) * deviceScale);
         break;
     }
     glVertex.texcoord = QVector2D(windowVertex.u(), windowVertex.v());
@@ -257,8 +257,8 @@ void RenderGeometry::appendSubQuad(const WindowQuad &quad, const QRectF &subquad
     vertices[2].position = QVector2D(subquad.bottomRight());
     vertices[3].position = QVector2D(subquad.bottomLeft());
 
-    const auto deviceQuad = QRectF{QPointF(std::round(quad.left() * deviceScale), std::round(quad.top() * deviceScale)),
-                                   QPointF(std::round(quad.right() * deviceScale), std::round(quad.bottom() * deviceScale))};
+    const auto deviceQuad = QRectF{QPointF(snapToPixelGrid(quad.left() * deviceScale), snapToPixelGrid(quad.top() * deviceScale)),
+                                   QPointF(snapToPixelGrid(quad.right() * deviceScale), snapToPixelGrid(quad.bottom() * deviceScale))};
 
     const QPointF origin = deviceQuad.topLeft();
     const QSizeF size = deviceQuad.size();
