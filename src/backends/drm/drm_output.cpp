@@ -95,7 +95,10 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     m_turnOffTimer.setSingleShot(true);
     m_turnOffTimer.setInterval(dimAnimationTime());
     connect(&m_turnOffTimer, &QTimer::timeout, this, [this] {
-        setDrmDpmsMode(DpmsMode::Off);
+        if (!setDrmDpmsMode(DpmsMode::Off)) {
+            // in case of failure, undo aboutToTurnOff() from setDpmsMode()
+            Q_EMIT wakeUp();
+        }
     });
 }
 
