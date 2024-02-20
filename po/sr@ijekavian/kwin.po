@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"POT-Creation-Date: 2024-02-20 00:39+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2499,43 +2499,21 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Ефекат извртања"
 
-#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, kde-format
-msgid "Layout mode:"
-msgstr "Распоред:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
-msgid "Closest"
-msgstr "&Затвори"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "природан"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:43
+#: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, fuzzy, kde-format
 #| msgid "Minimize Window"
 msgid "Ignore minimized windows:"
 msgstr "Минимизуј прозор"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:71
+#: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
 msgstr ""
@@ -2596,7 +2574,7 @@ msgid "Configure Virtual Desktops…"
 msgstr "Премести на &површ"
 
 # >> @item
-#: plugins/overview/qml/main.qml:726
+#: plugins/overview/qml/main.qml:730
 #, fuzzy, kde-format
 #| msgid "X11 Unmanaged Windows"
 msgctxt "@info:placeholder"
@@ -3049,7 +3027,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Присутни прозори (текућа површ)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:56
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
 #, fuzzy, kde-format
 #| msgid "Minimize Window"
 msgid "Ignore &minimized windows"
@@ -4622,6 +4600,17 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Layout mode:"
+#~ msgstr "Распоред:"
+
+#, fuzzy
+#~| msgid "&Close"
+#~ msgid "Closest"
+#~ msgstr "&Затвори"
+
+#~ msgid "Natural"
+#~ msgstr "природан"
 
 #, fuzzy
 #~| msgid "Setup Window Shortcut"

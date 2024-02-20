@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"POT-Creation-Date: 2024-02-20 00:39+0000\n"
 "PO-Revision-Date: 2024-02-18 17:44+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2254,41 +2254,20 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "கிரிடை காட்டு/மறை"
 
-#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, kde-format
-msgid "Layout mode:"
-msgstr "தளவமைக்கும் முறை:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, kde-format
-msgid "Closest"
-msgstr "பக்கத்து பக்கத்தில்"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "இயல்பானது"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:43
+#: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
 msgstr "கிரிட் பார்வையில் சாளரங்களை சீரமைப்பது"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:71
+#: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
 msgstr "தேடல் வடிகட்டப்பட்ட சாளரங்களையும் உட்படுத்துமா:"
@@ -2339,7 +2318,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "மெய்நிகர் பணிமேடைகளை அமை…"
 
-#: plugins/overview/qml/main.qml:726
+#: plugins/overview/qml/main.qml:730
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2743,7 +2722,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "சாளர முன்வைப்பை காட்டு/மறை (தற்போதைய பணிமேடையில் தற்போதைய சாளரவகை)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:56
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "&ஒதுக்கப்பட்ட சாளரங்களை பொருட்படுத்தாதே"
@@ -4213,6 +4192,15 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgid "Layout mode:"
+#~ msgstr "தளவமைக்கும் முறை:"
+
+#~ msgid "Closest"
+#~ msgstr "பக்கத்து பக்கத்தில்"
+
+#~ msgid "Natural"
+#~ msgstr "இயல்பானது"
 
 #~ msgid "Set window type to"
 #~ msgstr "சாளர வகையை இதுவாக அமை"

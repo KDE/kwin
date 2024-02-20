@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"POT-Creation-Date: 2024-02-20 00:39+0000\n"
 "PO-Revision-Date: 2024-02-15 12:37+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2281,41 +2281,20 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Canvia la vista de quadrícula"
 
-#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, kde-format
-msgid "Layout mode:"
-msgstr "Mode de disposició:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, kde-format
-msgid "Closest"
-msgstr "El més proper"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "Natural"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:43
+#: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "Ignora les finestres minimitzades:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
 msgstr "Organitza les finestres en la vista de quadrícula:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:71
+#: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
 msgstr "El resultat de la busca inclou les finestres filtrades:"
@@ -2366,7 +2345,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configura els escriptoris virtuals…"
 
-#: plugins/overview/qml/main.qml:726
+#: plugins/overview/qml/main.qml:730
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2770,7 +2749,7 @@ msgstr ""
 "Canvia les finestres presents (classe de finestres en l'escriptori actual)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:56
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "Ignora les finestres &minimitzades"
@@ -4238,3 +4217,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
+
+#~ msgid "Layout mode:"
+#~ msgstr "Mode de disposició:"
+
+#~ msgid "Closest"
+#~ msgstr "El més proper"
+
+#~ msgid "Natural"
+#~ msgstr "Natural"

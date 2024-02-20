@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"POT-Creation-Date: 2024-02-20 00:39+0000\n"
 "PO-Revision-Date: 2021-08-21 16:25+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: kde-hindi\n"
@@ -2325,43 +2325,21 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "इनवर्ट प्रभाव टॉगल करें"
 
-#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, kde-format
-msgid "Layout mode:"
-msgstr "खाका मोड:"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, fuzzy, kde-format
-#| msgid "&Close"
-msgid "Closest"
-msgstr "बंद करें (&C)"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "प्राकृतिक"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:43
+#: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgid "Ignore minimized windows:"
 msgstr "विंडो नया-आकार दें"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:71
+#: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
 msgstr ""
@@ -2419,7 +2397,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "विंडो बर्ताव कॉन्फ़िगर करें... (&e)"
 
-#: plugins/overview/qml/main.qml:726
+#: plugins/overview/qml/main.qml:730
 #, fuzzy, kde-format
 #| msgid "Moved or resized windows:"
 msgctxt "@info:placeholder"
@@ -2843,7 +2821,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "वर्तमान डेस्कटॉप में विंडोज के लिए:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:56
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
 #, fuzzy, kde-format
 #| msgid "Minimize Window"
 msgid "Ignore &minimized windows"
@@ -4398,6 +4376,17 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid "Layout mode:"
+#~ msgstr "खाका मोड:"
+
+#, fuzzy
+#~| msgid "&Close"
+#~ msgid "Closest"
+#~ msgstr "बंद करें (&C)"
+
+#~ msgid "Natural"
+#~ msgstr "प्राकृतिक"
 
 #, fuzzy
 #~| msgid "Setup Window Shortcut"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-16 00:39+0000\n"
+"POT-Creation-Date: 2024-02-20 00:39+0000\n"
 "PO-Revision-Date: 2024-02-15 16:59+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2250,41 +2250,20 @@ msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "切換格線檢視"
 
-#. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:22
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, kde-format
-msgid "Layout mode:"
-msgstr "佈局模式："
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:30
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:30
-#, kde-format
-msgid "Closest"
-msgstr "最接近的"
-
-#. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
-#: plugins/overview/kcm/overvieweffectkcm.ui:35
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:35
-#, kde-format
-msgid "Natural"
-msgstr "自然"
-
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:43
+#: plugins/overview/kcm/overvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore minimized windows:"
 msgstr "忽略最小化視窗"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
-#: plugins/overview/kcm/overvieweffectkcm.ui:57
+#: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
 msgstr "在格線檢視中管理視窗："
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
-#: plugins/overview/kcm/overvieweffectkcm.ui:71
+#: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
 msgstr "搜尋結果包含被過濾的視窗："
@@ -2335,7 +2314,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "設定虛擬桌面…"
 
-#: plugins/overview/qml/main.qml:726
+#: plugins/overview/qml/main.qml:730
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -2737,7 +2716,7 @@ msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "切換展示視窗（目前桌面上同視窗類別）"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
-#: plugins/windowview/kcm/windowvieweffectkcm.ui:56
+#: plugins/windowview/kcm/windowvieweffectkcm.ui:22
 #, kde-format
 msgid "Ignore &minimized windows"
 msgstr "忽略最小化視窗(&M)"
@@ -4197,6 +4176,15 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩潰"
+
+#~ msgid "Layout mode:"
+#~ msgstr "佈局模式："
+
+#~ msgid "Closest"
+#~ msgstr "最接近的"
+
+#~ msgid "Natural"
+#~ msgstr "自然"
 
 #~ msgid "Set window type to"
 #~ msgstr "設定視窗類型至"
