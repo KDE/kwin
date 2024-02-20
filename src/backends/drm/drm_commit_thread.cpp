@@ -54,63 +54,70 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 }
                 continue;
             }
-            if (!m_commits.empty()) {
-                const auto now = std::chrono::steady_clock::now();
-                if (m_targetPageflipTime > now + m_safetyMargin) {
-                    lock.unlock();
-                    std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
-                    lock.lock();
-                }
-                optimizeCommits();
-                auto &commit = m_commits.front();
-                if (!commit->areBuffersReadable()) {
-                    // no commit is ready yet, reschedule
-                    if (m_vrr) {
-                        m_targetPageflipTime += 50us;
-                    } else {
-                        m_targetPageflipTime += m_minVblankInterval;
-                    }
-                    continue;
-                }
-                const auto vrr = commit->isVrr();
-                const bool success = commit->commit();
-                if (success) {
-                    m_vrr = vrr.value_or(m_vrr);
-                    m_committed = std::move(commit);
-                    m_commits.erase(m_commits.begin());
-                } else {
-                    if (m_commits.size() > 1) {
-                        // the failure may have been because of the reordering of commits
-                        // -> collapse all commits into one and try again with an already tested state
-                        while (m_commits.size() > 1) {
-                            auto toMerge = std::move(m_commits[1]);
-                            m_commits.erase(m_commits.begin() + 1);
-                            m_commits.front()->merge(toMerge.get());
-                            m_droppedCommits.push_back(std::move(toMerge));
-                        }
-                        if (commit->test()) {
-                            // presentation didn't fail after all
-                            continue;
-                        }
-                    }
-                    const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
-                        return commit->isCursorOnly();
-                    });
-                    for (auto &commit : m_commits) {
-                        m_droppedCommits.push_back(std::move(commit));
-                    }
-                    m_commits.clear();
-                    qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
-                    if (!cursorOnly) {
-                        QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
-                    }
-                }
-                QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
+            if (m_commits.empty()) {
+                continue;
             }
+            const auto now = std::chrono::steady_clock::now();
+            if (m_targetPageflipTime > now + m_safetyMargin) {
+                lock.unlock();
+                std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
+                lock.lock();
+            }
+            optimizeCommits();
+            if (!m_commits.front()->areBuffersReadable()) {
+                // no commit is ready yet, reschedule
+                if (m_vrr) {
+                    m_targetPageflipTime += 50us;
+                } else {
+                    m_targetPageflipTime += m_minVblankInterval;
+                }
+                continue;
+            }
+            submit();
         }
     }));
     m_thread->setObjectName(name);
     m_thread->start();
+}
+
+void DrmCommitThread::submit()
+{
+    auto &commit = m_commits.front();
+    const auto vrr = commit->isVrr();
+    const bool success = commit->commit();
+    if (success) {
+        m_vrr = vrr.value_or(m_vrr);
+        m_committed = std::move(commit);
+        m_commits.erase(m_commits.begin());
+    } else {
+        if (m_commits.size() > 1) {
+            // the failure may have been because of the reordering of commits
+            // -> collapse all commits into one and try again with an already tested state
+            while (m_commits.size() > 1) {
+                auto toMerge = std::move(m_commits[1]);
+                m_commits.erase(m_commits.begin() + 1);
+                m_commits.front()->merge(toMerge.get());
+                m_droppedCommits.push_back(std::move(toMerge));
+            }
+            if (commit->test()) {
+                // presentation didn't fail after all, try again
+                submit();
+                return;
+            }
+        }
+        const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
+            return commit->isCursorOnly();
+        });
+        for (auto &commit : m_commits) {
+            m_droppedCommits.push_back(std::move(commit));
+        }
+        m_commits.clear();
+        qCWarning(KWIN_DRM) << "atomic commit failed:" << strerror(errno);
+        if (!cursorOnly) {
+            QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
+        }
+    }
+    QMetaObject::invokeMethod(this, &DrmCommitThread::clearDroppedCommits, Qt::ConnectionType::QueuedConnection);
 }
 
 void DrmCommitThread::optimizeCommits()

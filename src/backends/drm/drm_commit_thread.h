@@ -50,6 +50,7 @@ private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;
     void optimizeCommits();
+    void submit();
 
     std::unique_ptr<DrmCommit> m_committed;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commits;
