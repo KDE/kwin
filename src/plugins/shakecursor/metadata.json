@@ -35,7 +35,7 @@
         "Description[x-test]": "xxMakes the cursor larger when the pointer is quickly moved back and forthxx",
         "Description[zh_CN]": "快速往返移动指针后加大显示光标",
         "Description[zh_TW]": "快速來回移動游標時讓游標變大",
-        "EnabledByDefault": false,
+        "EnabledByDefault": true,
         "License": "GPL",
         "Name": "Shake Cursor",
         "Name[ar]": "اهتزاز المؤشر",
