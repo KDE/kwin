@@ -494,17 +494,9 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     m_desktopMenu->addSeparator();
 
-    const uint BASE = 10;
-
     const auto desktops = vds->desktops();
     for (VirtualDesktop *desktop : desktops) {
-        const uint legacyId = desktop->x11DesktopNumber();
-
-        QString basic_name(QStringLiteral("%1  %2"));
-        if (legacyId < BASE) {
-            basic_name.prepend(QLatin1Char('&'));
-        }
-        action = m_desktopMenu->addAction(basic_name.arg(legacyId).arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
+        action = m_desktopMenu->addAction(QStringLiteral("%1").arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 workspace()->sendWindowToDesktops(m_window, {desktop}, false);
