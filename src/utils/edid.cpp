@@ -173,12 +173,12 @@ Edid::Edid(QByteArrayView data)
         + QByteArray::number(productInfo->manufacture_week) + " " + QByteArray::number(productInfo->manufacture_year) + " " + QByteArray::number(productInfo->model_year);
 
     // colorimetry and HDR metadata
-    const auto chromaticity = di_edid_get_chromaticity_coords(edid);
-    if (chromaticity) {
-        const xy red{chromaticity->red_x, chromaticity->red_y};
-        const xy green{chromaticity->green_x, chromaticity->green_y};
-        const xy blue{chromaticity->blue_x, chromaticity->blue_y};
-        const xy white{chromaticity->white_x, chromaticity->white_y};
+    const auto chromaticity = di_info_get_default_color_primaries(info);
+    if (chromaticity->has_primaries && chromaticity->has_default_white_point) {
+        const xy red{chromaticity->primary[0].x, chromaticity->primary[0].y};
+        const xy green{chromaticity->primary[1].x, chromaticity->primary[1].y};
+        const xy blue{chromaticity->primary[2].x, chromaticity->primary[2].y};
+        const xy white{chromaticity->default_white.x, chromaticity->default_white.y};
         if (Colorimetry::isReal(red, green, blue, white)) {
             m_colorimetry = Colorimetry{
                 red,
@@ -187,43 +187,27 @@ Edid::Edid(QByteArrayView data)
                 white,
             };
         } else {
-            qCWarning(KWIN_CORE) << "EDID colorimetry" << red << green << blue << white << "is is invalid";
+            qCWarning(KWIN_CORE) << "EDID colorimetry" << red << green << blue << white << "is invalid";
         }
     } else {
         m_colorimetry.reset();
     }
 
-    const di_edid_cta *cta = nullptr;
+    const auto metadata = di_info_get_hdr_static_metadata(info);
+    const auto colorimetry = di_info_get_supported_signal_colorimetry(info);
+    m_hdrMetadata = HDRMetadata{
+        .desiredContentMinLuminance = metadata->desired_content_min_luminance,
+        .desiredContentMaxLuminance = metadata->desired_content_max_luminance > 0 ? std::make_optional(metadata->desired_content_max_luminance) : std::nullopt,
+        .desiredMaxFrameAverageLuminance = metadata->desired_content_max_frame_avg_luminance > 0 ? std::make_optional(metadata->desired_content_max_frame_avg_luminance) : std::nullopt,
+        .supportsPQ = metadata->pq,
+        .supportsBT2020 = colorimetry->bt2020_rgb || colorimetry->bt2020_ycc || colorimetry->bt2020_cycc,
+    };
+
     const di_displayid *displayid = nullptr;
     const di_edid_ext *const *exts = di_edid_get_extensions(edid);
-    const di_cta_hdr_static_metadata_block *hdr_static_metadata = nullptr;
-    const di_cta_colorimetry_block *colorimetry = nullptr;
     for (; *exts != nullptr; exts++) {
-        if (!cta && (cta = di_edid_ext_get_cta(*exts))) {
-            continue;
-        }
         if (!displayid && (displayid = di_edid_ext_get_displayid(*exts))) {
             continue;
-        }
-    }
-    if (cta) {
-        const di_cta_data_block *const *blocks = di_edid_cta_get_data_blocks(cta);
-        for (; *blocks != nullptr; blocks++) {
-            if (!hdr_static_metadata && (hdr_static_metadata = di_cta_data_block_get_hdr_static_metadata(*blocks))) {
-                continue;
-            }
-            if (!colorimetry && (colorimetry = di_cta_data_block_get_colorimetry(*blocks))) {
-                continue;
-            }
-        }
-        if (hdr_static_metadata) {
-            m_hdrMetadata = HDRMetadata{
-                .desiredContentMinLuminance = hdr_static_metadata->desired_content_min_luminance,
-                .desiredContentMaxLuminance = hdr_static_metadata->desired_content_max_luminance > 0 ? std::make_optional(hdr_static_metadata->desired_content_max_luminance) : std::nullopt,
-                .desiredMaxFrameAverageLuminance = hdr_static_metadata->desired_content_max_frame_avg_luminance > 0 ? std::make_optional(hdr_static_metadata->desired_content_max_frame_avg_luminance) : std::nullopt,
-                .supportsPQ = hdr_static_metadata->eotfs->pq,
-                .supportsBT2020 = colorimetry && colorimetry->bt2020_rgb,
-            };
         }
     }
     if (displayid) {
