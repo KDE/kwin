@@ -244,6 +244,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
 
 void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    data.mask |= PAINT_SCREEN_TRANSFORMED;
     if (zoom != target_zoom) {
         int time = 0;
         if (lastPresentTime.count()) {
