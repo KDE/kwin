@@ -28,7 +28,7 @@ public:
     LayerSurfaceV1Interface *shellSurface() const;
     Output *desiredOutput() const;
 
-    NET::WindowType windowType() const override;
+    WindowType windowType() const override;
     bool isPlaceable() const override;
     bool isCloseable() const override;
     bool isMovable() const override;
@@ -68,7 +68,7 @@ private:
     LayerSurfaceV1Interface *m_shellSurface;
     QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
     bool m_screenEdgeActive = false;
-    NET::WindowType m_windowType;
+    WindowType m_windowType;
 };
 
 } // namespace KWin

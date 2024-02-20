@@ -159,7 +159,7 @@ QVariantMap clientToVariantMap(const Window *c)
             {QStringLiteral("caption"), c->captionNormal()},
             {QStringLiteral("clientMachine"), c->wmClientMachine(true)},
             {QStringLiteral("localhost"), c->isLocalhost()},
-            {QStringLiteral("type"), c->windowType()},
+            {QStringLiteral("type"), int(c->windowType())},
             {QStringLiteral("x"), c->x()},
             {QStringLiteral("y"), c->y()},
             {QStringLiteral("width"), c->width()},

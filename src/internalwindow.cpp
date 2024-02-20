@@ -145,9 +145,9 @@ QSizeF InternalWindow::maxSize() const
     return m_handle->maximumSize();
 }
 
-NET::WindowType InternalWindow::windowType() const
+WindowType InternalWindow::windowType() const
 {
-    return NET::Normal;
+    return WindowType::Normal;
 }
 
 void InternalWindow::killWindow()

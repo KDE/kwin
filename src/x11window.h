@@ -21,6 +21,7 @@
 #include <QPointer>
 #include <QWindow>
 // X
+#include <NETWM>
 #include <xcb/sync.h>
 
 // TODO: Cleanup the order of things in this .h file
@@ -132,7 +133,7 @@ public:
     } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
-    NET::WindowType windowType() const override;
+    WindowType windowType() const override;
 
     bool track(xcb_window_t w);
     bool manage(xcb_window_t w, bool isMapped);

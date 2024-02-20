@@ -11,7 +11,7 @@
 
 #include "kwin_export.h"
 
-#include <NETWM>
+#include "globals.h"
 
 #include <QObject>
 
@@ -146,7 +146,7 @@ class KWIN_EXPORT EffectWindow : public QObject
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(int windowType READ windowType)
+    Q_PROPERTY(int windowType READ windowTypeInt)
     /**
      * Whether this EffectWindow is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).
@@ -540,7 +540,11 @@ public:
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    NET::WindowType windowType() const;
+    WindowType windowType() const;
+    int windowTypeInt() const
+    {
+        return int(windowType());
+    }
     /**
      * Returns whether the window is managed by KWin (it has control over its placement and other
      * aspects, as opposed to override-redirect windows that are entirely handled by the application).

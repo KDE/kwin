@@ -36,7 +36,7 @@ public:
     QString captionSuffix() const override;
     QSizeF minSize() const override;
     QSizeF maxSize() const override;
-    NET::WindowType windowType() const override;
+    WindowType windowType() const override;
     void killWindow() override;
     bool isClient() const override;
     bool isPopupWindow() const override;

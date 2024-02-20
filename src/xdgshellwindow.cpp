@@ -90,7 +90,7 @@ XdgSurfaceWindow::~XdgSurfaceWindow()
 {
 }
 
-NET::WindowType XdgSurfaceWindow::windowType() const
+WindowType XdgSurfaceWindow::windowType() const
 {
     return m_windowType;
 }
@@ -325,32 +325,32 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         connect(this, &Window::windowShown, this, moveUnderCursor, Qt::SingleShotConnection);
     };
     auto updateRole = [this, shellSurface] {
-        NET::WindowType type = NET::Unknown;
+        WindowType type = WindowType::Unknown;
         switch (shellSurface->role()) {
         case PlasmaShellSurfaceInterface::Role::Desktop:
-            type = NET::Desktop;
+            type = WindowType::Desktop;
             break;
         case PlasmaShellSurfaceInterface::Role::Panel:
-            type = NET::Dock;
+            type = WindowType::Dock;
             break;
         case PlasmaShellSurfaceInterface::Role::OnScreenDisplay:
-            type = NET::OnScreenDisplay;
+            type = WindowType::OnScreenDisplay;
             break;
         case PlasmaShellSurfaceInterface::Role::Notification:
-            type = NET::Notification;
+            type = WindowType::Notification;
             break;
         case PlasmaShellSurfaceInterface::Role::ToolTip:
-            type = NET::Tooltip;
+            type = WindowType::Tooltip;
             break;
         case PlasmaShellSurfaceInterface::Role::CriticalNotification:
-            type = NET::CriticalNotification;
+            type = WindowType::CriticalNotification;
             break;
         case PlasmaShellSurfaceInterface::Role::AppletPopup:
-            type = NET::AppletPopup;
+            type = WindowType::AppletPopup;
             break;
         case PlasmaShellSurfaceInterface::Role::Normal:
         default:
-            type = NET::Normal;
+            type = WindowType::Normal;
             break;
         }
         if (m_windowType == type) {
@@ -358,13 +358,13 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
         }
         m_windowType = type;
         switch (m_windowType) {
-        case NET::Desktop:
-        case NET::Dock:
-        case NET::OnScreenDisplay:
-        case NET::Notification:
-        case NET::CriticalNotification:
-        case NET::Tooltip:
-        case NET::AppletPopup:
+        case WindowType::Desktop:
+        case WindowType::Dock:
+        case WindowType::OnScreenDisplay:
+        case WindowType::Notification:
+        case WindowType::CriticalNotification:
+        case WindowType::Tooltip:
+        case WindowType::AppletPopup:
             setOnAllDesktops(true);
 #if KWIN_BUILD_ACTIVITIES
             setOnAllActivities(true);
@@ -1584,7 +1584,7 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
     : XdgSurfaceWindow(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
-    m_windowType = NET::Unknown;
+    m_windowType = WindowType::Unknown;
 
     connect(shellSurface, &XdgPopupInterface::grabRequested,
             this, &XdgPopupWindow::handleGrabRequested);

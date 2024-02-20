@@ -312,7 +312,7 @@ QModelIndex KCMKWinRules::findRuleWithProperties(const QVariantMap &info, bool w
     const QString wmclass_class = info.value("resourceClass").toString();
     const QString wmclass_name = info.value("resourceName").toString();
     const QString role = info.value("role").toString();
-    const NET::WindowType type = static_cast<NET::WindowType>(info.value("type").toInt());
+    const WindowType type = static_cast<WindowType>(info.value("type").toInt());
     const QString title = info.value("caption").toString();
     const QString machine = info.value("clientMachine").toString();
     const bool isLocalHost = info.value("localhost").toBool();

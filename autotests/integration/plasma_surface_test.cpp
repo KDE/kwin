@@ -185,7 +185,7 @@ void PlasmaSurfaceTest::testOSDPlacement()
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     QVERIFY(window);
-    QCOMPARE(window->windowType(), NET::OnScreenDisplay);
+    QCOMPARE(window->windowType(), WindowType::OnScreenDisplay);
     QVERIFY(window->isOnScreenDisplay());
     QCOMPARE(window->frameGeometry(), QRect(1280 / 2 - 100 / 2, 2 * 1024 / 3 - 50 / 2, 100, 50));
 
@@ -224,7 +224,7 @@ void PlasmaSurfaceTest::testOSDPlacementManualPosition()
 
     QVERIFY(window);
     QVERIFY(!window->isPlaceable());
-    QCOMPARE(window->windowType(), NET::OnScreenDisplay);
+    QCOMPARE(window->windowType(), WindowType::OnScreenDisplay);
     QVERIFY(window->isOnScreenDisplay());
     QCOMPARE(window->frameGeometry(), QRect(50, 70, 100, 50));
 }
@@ -253,7 +253,7 @@ void PlasmaSurfaceTest::testPanelActivate()
     auto panel = Test::renderAndWaitForShown(surface.get(), QSize(100, 200), Qt::blue);
 
     QVERIFY(panel);
-    QCOMPARE(panel->windowType(), NET::Dock);
+    QCOMPARE(panel->windowType(), WindowType::Dock);
     QVERIFY(panel->isDock());
     QFETCH(bool, active);
     QCOMPARE(panel->dockWantsInput(), active);

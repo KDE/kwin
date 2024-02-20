@@ -17,6 +17,8 @@
 #include "options.h"
 #include "sm.h"
 #include "utils/common.h"
+// KF
+#include <netwm_def.h>
 // Qt
 #include <QList>
 #include <QStringList>

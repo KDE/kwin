@@ -56,7 +56,7 @@ public:
     explicit XdgSurfaceWindow(XdgSurfaceInterface *shellSurface);
     ~XdgSurfaceWindow() override;
 
-    NET::WindowType windowType() const override;
+    WindowType windowType() const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const override;
     void destroyWindow() override;
 
@@ -76,7 +76,7 @@ protected:
 
     QPointer<PlasmaShellSurfaceInterface> m_plasmaShellSurface;
 
-    NET::WindowType m_windowType = NET::Normal;
+    WindowType m_windowType = WindowType::Normal;
     Gravity m_nextGravity = Gravity::None;
 
 private:

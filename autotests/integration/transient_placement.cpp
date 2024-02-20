@@ -480,7 +480,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(dockConfigureRequestedSpy.wait());
     auto dock = Test::renderAndWaitForShown(dockSurface.get(), dockConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
     QVERIFY(dock);
-    QCOMPARE(dock->windowType(), NET::Dock);
+    QCOMPARE(dock->windowType(), WindowType::Dock);
     QVERIFY(dock->isDock());
     QCOMPARE(dock->frameGeometry(), QRect(0, output->geometry().height() - 50, 1280, 50));
     QCOMPARE(dock->hasStrut(), true);

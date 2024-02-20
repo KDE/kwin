@@ -1403,32 +1403,32 @@ void X11Window::detectNoBorder()
         return;
     }
     switch (windowType()) {
-    case NET::Desktop:
-    case NET::Dock:
-    case NET::TopMenu:
-    case NET::Splash:
-    case NET::Notification:
-    case NET::OnScreenDisplay:
-    case NET::CriticalNotification:
-    case NET::AppletPopup:
+    case WindowType::Desktop:
+    case WindowType::Dock:
+    case WindowType::TopMenu:
+    case WindowType::Splash:
+    case WindowType::Notification:
+    case WindowType::OnScreenDisplay:
+    case WindowType::CriticalNotification:
+    case WindowType::AppletPopup:
         noborder = true;
         app_noborder = true;
         break;
-    case NET::Unknown:
-    case NET::Normal:
-    case NET::Toolbar:
-    case NET::Menu:
-    case NET::Dialog:
-    case NET::Utility:
+    case WindowType::Unknown:
+    case WindowType::Normal:
+    case WindowType::Toolbar:
+    case WindowType::Menu:
+    case WindowType::Dialog:
+    case WindowType::Utility:
         noborder = false;
         break;
     default:
         Q_UNREACHABLE();
     }
-    // NET::Override is some strange beast without clear definition, usually
+    // WindowType::Override is some strange beast without clear definition, usually
     // just meaning "noborder", so let's treat it only as such flag, and ignore it as
     // a window type otherwise (SUPPORTED_WINDOW_TYPES_MASK doesn't include it)
-    if (info->windowType(NET::OverrideMask) == NET::Override) {
+    if (WindowType(info->windowType(NET::OverrideMask)) == WindowType::Override) {
         noborder = true;
         app_noborder = true;
     }
@@ -2768,16 +2768,16 @@ bool X11Window::isOutline() const
     return m_outline;
 }
 
-NET::WindowType X11Window::windowType() const
+WindowType X11Window::windowType() const
 {
     if (m_unmanaged) {
-        return info->windowType(SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK);
+        return WindowType(info->windowType(SUPPORTED_UNMANAGED_WINDOW_TYPES_MASK));
     }
 
-    NET::WindowType wt = info->windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK);
+    WindowType wt = WindowType(info->windowType(SUPPORTED_MANAGED_WINDOW_TYPES_MASK));
     // hacks here
-    if (wt == NET::Unknown) { // this is more or less suggested in NETWM spec
-        wt = isTransient() ? NET::Dialog : NET::Normal;
+    if (wt == WindowType::Unknown) { // this is more or less suggested in NETWM spec
+        wt = isTransient() ? WindowType::Dialog : WindowType::Normal;
     }
     return wt;
 }

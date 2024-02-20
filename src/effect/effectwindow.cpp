@@ -321,7 +321,7 @@ QRectF EffectWindow::contentsRect() const
     return d->m_window->clientGeometry().translated(-d->m_window->bufferGeometry().topLeft());
 }
 
-NET::WindowType EffectWindow::windowType() const
+WindowType EffectWindow::windowType() const
 {
     return d->m_window->windowType();
 }

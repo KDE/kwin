@@ -10,14 +10,13 @@
 #pragma once
 
 #include "cursor.h"
+#include "effect/globals.h"
 #include "options.h"
 #include "rules.h"
 #include "utils/common.h"
 
 #include <functional>
 #include <memory>
-
-#include <NETWM>
 
 #include <QElapsedTimer>
 #include <QIcon>
@@ -221,7 +220,7 @@ class KWIN_EXPORT Window : public QObject
      * Returns the NETWM window type
      * See https://standards.freedesktop.org/wm-spec/wm-spec-latest.html .
      */
-    Q_PROPERTY(int windowType READ windowType CONSTANT)
+    Q_PROPERTY(WindowType windowType READ windowType CONSTANT)
 
     /**
      * Whether this Window is managed by KWin (it has control over its placement and other
@@ -689,7 +688,7 @@ public:
     QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
 
     // prefer isXXX() instead
-    virtual NET::WindowType windowType() const = 0;
+    virtual WindowType windowType() const = 0;
     bool hasNETSupport() const;
     bool isDesktop() const;
     bool isDock() const;
@@ -1923,87 +1922,87 @@ inline bool Window::readyForPainting() const
 
 inline bool Window::isDesktop() const
 {
-    return windowType() == NET::Desktop;
+    return windowType() == WindowType::Desktop;
 }
 
 inline bool Window::isDock() const
 {
-    return windowType() == NET::Dock;
+    return windowType() == WindowType::Dock;
 }
 
 inline bool Window::isMenu() const
 {
-    return windowType() == NET::Menu;
+    return windowType() == WindowType::Menu;
 }
 
 inline bool Window::isToolbar() const
 {
-    return windowType() == NET::Toolbar;
+    return windowType() == WindowType::Toolbar;
 }
 
 inline bool Window::isSplash() const
 {
-    return windowType() == NET::Splash;
+    return windowType() == WindowType::Splash;
 }
 
 inline bool Window::isUtility() const
 {
-    return windowType() == NET::Utility;
+    return windowType() == WindowType::Utility;
 }
 
 inline bool Window::isDialog() const
 {
-    return windowType() == NET::Dialog;
+    return windowType() == WindowType::Dialog;
 }
 
 inline bool Window::isNormalWindow() const
 {
-    return windowType() == NET::Normal;
+    return windowType() == WindowType::Normal;
 }
 
 inline bool Window::isDropdownMenu() const
 {
-    return windowType() == NET::DropdownMenu;
+    return windowType() == WindowType::DropdownMenu;
 }
 
 inline bool Window::isPopupMenu() const
 {
-    return windowType() == NET::PopupMenu;
+    return windowType() == WindowType::PopupMenu;
 }
 
 inline bool Window::isTooltip() const
 {
-    return windowType() == NET::Tooltip;
+    return windowType() == WindowType::Tooltip;
 }
 
 inline bool Window::isNotification() const
 {
-    return windowType() == NET::Notification;
+    return windowType() == WindowType::Notification;
 }
 
 inline bool Window::isCriticalNotification() const
 {
-    return windowType() == NET::CriticalNotification;
+    return windowType() == WindowType::CriticalNotification;
 }
 
 inline bool Window::isAppletPopup() const
 {
-    return windowType() == NET::AppletPopup;
+    return windowType() == WindowType::AppletPopup;
 }
 
 inline bool Window::isOnScreenDisplay() const
 {
-    return windowType() == NET::OnScreenDisplay;
+    return windowType() == WindowType::OnScreenDisplay;
 }
 
 inline bool Window::isComboBox() const
 {
-    return windowType() == NET::ComboBox;
+    return windowType() == WindowType::ComboBox;
 }
 
 inline bool Window::isDNDIcon() const
 {
-    return windowType() == NET::DNDIcon;
+    return windowType() == WindowType::DNDIcon;
 }
 
 inline bool Window::isLockScreen() const
@@ -2076,10 +2075,10 @@ inline T *Window::findInList(const QList<T *> &list, std::function<bool(const U 
 inline bool Window::isPopupWindow() const
 {
     switch (windowType()) {
-    case NET::ComboBox:
-    case NET::DropdownMenu:
-    case NET::PopupMenu:
-    case NET::Tooltip:
+    case WindowType::ComboBox:
+    case WindowType::DropdownMenu:
+    case WindowType::PopupMenu:
+    case WindowType::Tooltip:
         return true;
 
     default:

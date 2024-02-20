@@ -27,9 +27,9 @@
 #include <QLoggingCategory>
 #include <QStack>
 
-#include <netwm.h>
-
 #include <functional>
+
+#include <xcb/xcb.h>
 
 class KConfigGroup;
 class QFont;

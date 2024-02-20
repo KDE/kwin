@@ -11,7 +11,6 @@
 
 #include <QList>
 #include <QRectF>
-#include <netwm_def.h>
 
 #include "options.h"
 #include "utils/common.h"
@@ -190,7 +189,7 @@ public:
 
 private:
 #endif
-    bool matchType(NET::WindowType match_type) const;
+    bool matchType(WindowType match_type) const;
     bool matchWMClass(const QString &match_class, const QString &match_name) const;
     bool matchRole(const QString &match_role) const;
     bool matchTitle(const QString &match_title) const;
@@ -219,7 +218,7 @@ private:
     StringMatch titlematch;
     QString clientmachine;
     StringMatch clientmachinematch;
-    NET::WindowTypes types; // types for matching
+    WindowTypes types; // types for matching
     PlacementPolicy placement;
     ForceRule placementrule;
     QPoint position;

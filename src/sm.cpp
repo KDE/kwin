@@ -59,28 +59,26 @@ static const char *const window_type_names[] = {
     "Override", "TopMenu", "Utility", "Splash"};
 // change also the two functions below when adding new entries
 
-static const char *windowTypeToTxt(NET::WindowType type)
+static const char *windowTypeToTxt(WindowType type)
 {
-    if (type >= NET::Unknown && type <= NET::Splash) {
-        return window_type_names[type + 1]; // +1 (unknown==-1)
+    if (type >= WindowType::Unknown && type <= WindowType::Splash) {
+        return window_type_names[int(type) + 1]; // +1 (unknown==-1)
     }
-    if (type == -2) { // undefined (not really part of NET::WindowType)
+    if (type == WindowType::Undefined) { // undefined (not really part of WindowType)
         return "Undefined";
     }
     qFatal("Unknown Window Type");
     return nullptr;
 }
 
-static NET::WindowType txtToWindowType(const char *txt)
+static WindowType txtToWindowType(const char *txt)
 {
-    for (int i = NET::Unknown;
-         i <= NET::Splash;
-         ++i) {
+    for (int i = int(WindowType::Unknown); i <= int(WindowType::Splash); ++i) {
         if (qstrcmp(txt, window_type_names[i + 1]) == 0) { // +1
-            return static_cast<NET::WindowType>(i);
+            return static_cast<WindowType>(i);
         }
     }
-    return static_cast<NET::WindowType>(-2); // undefined
+    return WindowType::Undefined;
 }
 
 /**
@@ -103,7 +101,7 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
         if (!c || c->isUnmanaged()) {
             continue;
         }
-        if (c->windowType() > NET::Splash) {
+        if (c->windowType() > WindowType::Splash) {
             // window types outside this are not tooltips/menus/OSDs
             // typically these will be unmanaged and not in this list anyway, but that is not enforced
             continue;
@@ -192,7 +190,7 @@ void SessionManager::storeSubSession(const QString &name, QSet<QByteArray> sessi
         if (!c || c->isUnmanaged()) {
             continue;
         }
-        if (c->windowType() > NET::Splash) {
+        if (c->windowType() > WindowType::Splash) {
             continue;
         }
         QByteArray sessionId = c->sessionId();
@@ -279,7 +277,7 @@ void SessionManager::loadSubSessionInfo(const QString &name)
 
 static bool sessionInfoWindowTypeMatch(X11Window *c, SessionInfo *info)
 {
-    if (info->windowType == -2) {
+    if (int(info->windowType) == -2) {
         // undefined (not really part of NET::WindowType)
         return !c->isSpecialWindow();
     }

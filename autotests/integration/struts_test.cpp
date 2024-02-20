@@ -367,7 +367,7 @@ void StrutsTest::testX11Struts()
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
     QVERIFY(!window->isDecorated());
-    QCOMPARE(window->windowType(), NET::Dock);
+    QCOMPARE(window->windowType(), WindowType::Dock);
     QCOMPARE(window->frameGeometry(), windowGeometry);
 
     // this should have affected the client area
@@ -479,7 +479,7 @@ void StrutsTest::test363804()
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
     QVERIFY(!window->isDecorated());
-    QCOMPARE(window->windowType(), NET::Dock);
+    QCOMPARE(window->windowType(), WindowType::Dock);
     QCOMPARE(window->frameGeometry(), windowGeometry);
 
     // now verify the actual updated client areas
@@ -557,7 +557,7 @@ void StrutsTest::testLeftScreenSmallerBottomAligned()
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
     QVERIFY(!window->isDecorated());
-    QCOMPARE(window->windowType(), NET::Dock);
+    QCOMPARE(window->windowType(), WindowType::Dock);
     QCOMPARE(window->frameGeometry(), windowGeometry);
 
     // now verify the actual updated client areas
@@ -638,7 +638,7 @@ void StrutsTest::testWindowMoveWithPanelBetweenScreens()
     QVERIFY(window);
     QCOMPARE(window->window(), windowId);
     QVERIFY(!window->isDecorated());
-    QCOMPARE(window->windowType(), NET::Dock);
+    QCOMPARE(window->windowType(), WindowType::Dock);
     QCOMPARE(window->frameGeometry(), windowGeometry);
 
     // now verify the actual updated client areas

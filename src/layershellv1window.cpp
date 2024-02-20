@@ -18,20 +18,20 @@
 namespace KWin
 {
 
-static NET::WindowType scopeToType(const QString &scope)
+static WindowType scopeToType(const QString &scope)
 {
-    static const QHash<QString, NET::WindowType> scopeToType{
-        {QStringLiteral("desktop"), NET::Desktop},
-        {QStringLiteral("dock"), NET::Dock},
-        {QStringLiteral("crititical-notification"), NET::CriticalNotification},
-        {QStringLiteral("notification"), NET::Notification},
-        {QStringLiteral("tooltip"), NET::Tooltip},
-        {QStringLiteral("on-screen-display"), NET::OnScreenDisplay},
-        {QStringLiteral("dialog"), NET::Dialog},
-        {QStringLiteral("splash"), NET::Splash},
-        {QStringLiteral("utility"), NET::Utility},
+    static const QHash<QString, WindowType> scopeToType{
+        {QStringLiteral("desktop"), WindowType::Desktop},
+        {QStringLiteral("dock"), WindowType::Dock},
+        {QStringLiteral("crititical-notification"), WindowType::CriticalNotification},
+        {QStringLiteral("notification"), WindowType::Notification},
+        {QStringLiteral("tooltip"), WindowType::Tooltip},
+        {QStringLiteral("on-screen-display"), WindowType::OnScreenDisplay},
+        {QStringLiteral("dialog"), WindowType::Dialog},
+        {QStringLiteral("splash"), WindowType::Splash},
+        {QStringLiteral("utility"), WindowType::Utility},
     };
-    return scopeToType.value(scope.toLower(), NET::Normal);
+    return scopeToType.value(scope.toLower(), WindowType::Normal);
 }
 
 LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
@@ -93,7 +93,7 @@ void LayerShellV1Window::scheduleRearrange()
     m_integration->scheduleRearrange();
 }
 
-NET::WindowType LayerShellV1Window::windowType() const
+WindowType LayerShellV1Window::windowType() const
 {
     return m_windowType;
 }

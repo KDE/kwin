@@ -302,6 +302,130 @@ enum class PresentationModeHint {
 };
 Q_ENUM_NS(PresentationModeHint);
 
+// For now, keep in sync with NETWM::WindowType from KWindowSystem
+enum class WindowType {
+    /**
+     * intermediate value, do not use
+     */
+    Undefined = -2,
+    /**
+     * indicates that the window did not define a window type.
+     */
+    Unknown = -1,
+    /**
+     * indicates that this is a normal, top-level window
+     */
+    Normal = 0,
+    /**
+     * indicates a desktop feature. This can include a single window
+     * containing desktop icons with the same dimensions as the screen, allowing
+     * the desktop environment to have full control of the desktop, without the
+     * need for proxying root window clicks.
+     */
+    Desktop = 1,
+    /**
+     * indicates a dock or panel feature
+     */
+    Dock = 2,
+    /**
+     * indicates a toolbar window
+     */
+    Toolbar = 3,
+    /**
+     * indicates a pinnable (torn-off) menu window
+     */
+    Menu = 4,
+    /**
+     * indicates that this is a dialog window
+     */
+    Dialog = 5,
+    // cannot deprecate to compiler: used both by clients & manager, later needs to keep supporting it for now
+    // KF6: remove
+    /**
+     * @deprecated has unclear meaning and is KDE-only
+     */
+    Override = 6, // NON STANDARD
+    /**
+     * indicates a toplevel menu (AKA macmenu). This is a KDE extension to the
+     * _NET_WM_WINDOW_TYPE mechanism.
+     */
+    TopMenu = 7, // NON STANDARD
+    /**
+     * indicates a utility window
+     */
+    Utility = 8,
+    /**
+     * indicates that this window is a splash screen window.
+     */
+    Splash = 9,
+    /**
+     * indicates a dropdown menu (from a menubar typically)
+     */
+    DropdownMenu = 10,
+    /**
+     * indicates a popup menu (a context menu typically)
+     */
+    PopupMenu = 11,
+    /**
+     * indicates a tooltip window
+     */
+    Tooltip = 12,
+    /**
+     * indicates a notification window
+     */
+    Notification = 13,
+    /**
+     * indicates that the window is a list for a combobox
+     */
+    ComboBox = 14,
+    /**
+     * indicates a window that represents the dragged object during DND operation
+     */
+    DNDIcon = 15,
+    /**
+     * indicates an On Screen Display window (such as volume feedback)
+     */
+    OnScreenDisplay = 16, // NON STANDARD
+    /**
+     * indicates a critical notification (such as battery is running out)
+     */
+    CriticalNotification = 17, // NON STANDARD
+    /**
+     * indicates that this window is an applet.
+     */
+    AppletPopup = 18, // NON STANDARD
+};
+Q_ENUM_NS(WindowType);
+
+/**
+ * Values for WindowType when they should be OR'ed together, e.g.
+ * for the properties argument of the NETRootInfo constructor.
+ * @see WindowTypes
+ */
+enum WindowTypeMask {
+    NormalMask = 1u << 0, ///< @see Normal
+    DesktopMask = 1u << 1, ///< @see Desktop
+    DockMask = 1u << 2, ///< @see Dock
+    ToolbarMask = 1u << 3, ///< @see Toolbar
+    MenuMask = 1u << 4, ///< @see Menu
+    DialogMask = 1u << 5, ///< @see Dialog
+    OverrideMask = 1u << 6, ///< @see Override
+    TopMenuMask = 1u << 7, ///< @see TopMenu
+    UtilityMask = 1u << 8, ///< @see Utility
+    SplashMask = 1u << 9, ///< @see Splash
+    DropdownMenuMask = 1u << 10, ///< @see DropdownMenu
+    PopupMenuMask = 1u << 11, ///< @see PopupMenu
+    TooltipMask = 1u << 12, ///< @see Tooltip
+    NotificationMask = 1u << 13, ///< @see Notification
+    ComboBoxMask = 1u << 14, ///< @see ComboBox
+    DNDIconMask = 1u << 15, ///< @see DNDIcon
+    OnScreenDisplayMask = 1u << 16, ///< NON STANDARD @see OnScreenDisplay @since 5.6
+    CriticalNotificationMask = 1u << 17, ///< NON STANDARD @see CriticalNotification @since 5.58
+    AppletPopupMask = 1u << 18, ///< NON STANDARD @see AppletPopup
+    AllTypesMask = 0U - 1, ///< All window types.
+};
+Q_DECLARE_FLAGS(WindowTypes, WindowTypeMask)
+
 } // namespace
 
 Q_DECLARE_METATYPE(std::chrono::nanoseconds)

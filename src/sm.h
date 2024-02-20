@@ -19,7 +19,6 @@
 #include <KConfigGroup>
 
 #include "effect/globals.h"
-#include <netwm_def.h>
 
 namespace KWin
 {
@@ -106,7 +105,7 @@ struct SessionInfo
     bool skipPager;
     bool skipSwitcher;
     bool noBorder;
-    NET::WindowType windowType;
+    WindowType windowType;
     QString shortcut;
     bool active; // means 'was active in the saved session'
     int stackingOrder;

@@ -107,7 +107,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_MATCH_STRING(windowrole, );
     READ_MATCH_STRING(title, );
     READ_MATCH_STRING(clientmachine, .toLower());
-    types = NET::WindowTypeMask(settings->types());
+    types = WindowTypes(settings->types());
     READ_FORCE_RULE(placement, );
     READ_SET_RULE(position);
     READ_SET_RULE(size);
@@ -304,13 +304,49 @@ QString Rules::getDecoColor(const QString &themeName)
                                   QLatin1String("color-schemes/") + themeName + QLatin1String(".colors"));
 }
 
-bool Rules::matchType(NET::WindowType match_type) const
+bool typeMatchesMask(WindowType type, WindowTypes mask)
 {
-    if (types != NET::AllTypesMask) {
-        if (match_type == NET::Unknown) {
-            match_type = NET::Normal; // NET::Unknown->NET::Normal is only here for matching
+    switch (type) {
+        // clang-format off
+#define CHECK_TYPE_MASK( type ) \
+case WindowType:: type: \
+    if( int(mask) & int(type##Mask) ) \
+        return true; \
+    break;
+        // clang-format on
+        CHECK_TYPE_MASK(Normal)
+        CHECK_TYPE_MASK(Desktop)
+        CHECK_TYPE_MASK(Dock)
+        CHECK_TYPE_MASK(Toolbar)
+        CHECK_TYPE_MASK(Menu)
+        CHECK_TYPE_MASK(Dialog)
+        CHECK_TYPE_MASK(Override)
+        CHECK_TYPE_MASK(TopMenu)
+        CHECK_TYPE_MASK(Utility)
+        CHECK_TYPE_MASK(Splash)
+        CHECK_TYPE_MASK(DropdownMenu)
+        CHECK_TYPE_MASK(PopupMenu)
+        CHECK_TYPE_MASK(Tooltip)
+        CHECK_TYPE_MASK(Notification)
+        CHECK_TYPE_MASK(ComboBox)
+        CHECK_TYPE_MASK(DNDIcon)
+        CHECK_TYPE_MASK(OnScreenDisplay)
+        CHECK_TYPE_MASK(CriticalNotification)
+        CHECK_TYPE_MASK(AppletPopup)
+#undef CHECK_TYPE_MASK
+    default:
+        break;
+    }
+    return false;
+}
+
+bool Rules::matchType(WindowType match_type) const
+{
+    if (types != AllTypesMask) {
+        if (match_type == WindowType::Unknown) {
+            match_type = WindowType::Normal; // WindowType::Unknown->WindowType::Normal is only here for matching
         }
-        if (!NET::typeMatchesMask(match_type, types)) {
+        if (!typeMatchesMask(match_type, types)) {
             return false;
         }
     }

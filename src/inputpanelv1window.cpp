@@ -171,9 +171,9 @@ void InputPanelV1Window::destroyWindow()
     unref();
 }
 
-NET::WindowType InputPanelV1Window::windowType() const
+WindowType InputPanelV1Window::windowType() const
 {
-    return NET::Utility;
+    return WindowType::Utility;
 }
 
 QRectF InputPanelV1Window::frameRectToBufferRect(const QRectF &rect) const
