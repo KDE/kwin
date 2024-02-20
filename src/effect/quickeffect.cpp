@@ -366,6 +366,8 @@ void QuickSceneEffect::activateView(QuickSceneView *view)
 // Screen views are repainted just before kwin performs its compositing cycle to avoid stalling for vblank
 void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
+    data.mask |= PAINT_SCREEN_TRANSFORMED;
+
     if (effects->waylandDisplay()) {
         const auto it = d->views.find(data.screen);
         if (it != d->views.end() && it->second->isDirty()) {
