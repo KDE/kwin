@@ -191,10 +191,10 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
     const QRectF &r = partRect;
     const int p = DecorationRenderer::TexturePad;
 
-    const int x0 = r.x();
-    const int y0 = r.y();
-    const int x1 = r.x() + r.width();
-    const int y1 = r.y() + r.height();
+    const qreal x0 = r.x();
+    const qreal y0 = r.y();
+    const qreal x1 = r.x() + r.width();
+    const qreal y1 = r.y() + r.height();
 
     WindowQuad quad;
     if (rotated) {
@@ -221,6 +221,17 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
     return quad;
 }
 
+static QPointF snapCorner(const QPointF &point, const QPointF &origin, qreal scale)
+{
+    const int x0 = std::round(origin.x() * scale);
+    const int y0 = std::round(origin.y() * scale);
+
+    const int x1 = std::round((point.x() - origin.x()) * scale);
+    const int y1 = std::round((point.y() - origin.y()) * scale);
+
+    return QPointF((x0 + x1) / scale, (y0 + y1) / scale);
+}
+
 WindowQuadList DecorationItem::buildQuads() const
 {
     if (m_window->frameMargins().isNull()) {
@@ -244,16 +255,24 @@ WindowQuadList DecorationItem::buildQuads() const
 
     WindowQuadList list;
     if (left.isValid()) {
-        list.append(buildQuad(left, leftPosition, devicePixelRatio, true));
+        const QRectF rect(snapCorner(left.topLeft(), QPointF(0, m_decoration->borderTop()), devicePixelRatio),
+                          snapCorner(left.bottomRight(), QPointF(0, m_decoration->borderTop()), devicePixelRatio));
+        list.append(buildQuad(rect, leftPosition, devicePixelRatio, true));
     }
     if (top.isValid()) {
-        list.append(buildQuad(top, topPosition, devicePixelRatio, false));
+        const QRectF rect(snapCorner(top.topLeft(), QPointF(0, 0), devicePixelRatio),
+                          snapCorner(top.bottomRight(), QPointF(0, 0), devicePixelRatio));
+        list.append(buildQuad(rect, topPosition, devicePixelRatio, false));
     }
     if (right.isValid()) {
-        list.append(buildQuad(right, rightPosition, devicePixelRatio, true));
+        const QRectF rect(snapCorner(right.topLeft(), QPointF(m_decoration->borderLeft(), m_decoration->borderTop()), devicePixelRatio),
+                          snapCorner(right.bottomRight(), QPointF(0, 0), devicePixelRatio));
+        list.append(buildQuad(rect, rightPosition, devicePixelRatio, true));
     }
     if (bottom.isValid()) {
-        list.append(buildQuad(bottom, bottomPosition, devicePixelRatio, false));
+        const QRectF rect(snapCorner(bottom.topLeft(), QPointF(0, m_decoration->borderTop()), devicePixelRatio),
+                          snapCorner(bottom.bottomRight(), QPointF(0, 0), devicePixelRatio));
+        list.append(buildQuad(rect, bottomPosition, devicePixelRatio, false));
     }
     return list;
 }
