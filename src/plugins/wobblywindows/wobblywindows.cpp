@@ -256,7 +256,7 @@ void WobblyWindowsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
 
 void WobblyWindowsEffect::apply(EffectWindow *w, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
-    if (!(mask & PAINT_SCREEN_TRANSFORMED) && windows.contains(w)) {
+    if (windows.contains(w)) {
         WindowWobblyInfos &wwi = windows[w];
         if (!wwi.wobblying) {
             return;
