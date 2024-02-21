@@ -66,6 +66,10 @@ EglContext::~EglContext()
 
 bool EglContext::makeCurrent(EGLSurface surface) const
 {
+    if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
+        // Workaround to tell Qt that no QOpenGLContext is current
+        context->doneCurrent();
+    }
     return eglMakeCurrent(m_display->handle(), surface, surface, m_handle) == EGL_TRUE;
 }
 
