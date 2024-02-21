@@ -732,7 +732,9 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
                 // not our drag button - ignore
                 return;
             }
-            d->pointer->sendButton(button, state, serial);
+            if (!d->dragInhibitsPointer(d->pointer->focusedSurface())) {
+                d->pointer->sendButton(button, state, serial);
+            }
             d->endDrag();
             return;
         }
