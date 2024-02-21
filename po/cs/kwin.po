@@ -3,22 +3,22 @@
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2011, 2012.
 # SPDX-FileCopyrightText: 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2023 Vít Pelčák <vit@pelcak.org>
 # Tomáš Chvátal <tomas.chvatal@gmail.com>, 2012.
-# Vit Pelcak <vit@pelcak.org>, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2021, 2022, 2023, 2024 Vit Pelcak <vit@pelcak.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-20 02:28+0000\n"
-"PO-Revision-Date: 2023-11-14 13:11+0100\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2024-02-16 10:11+0100\n"
+"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 "X-Language: cs_CZ\n"
 "X-Source-Language: en_US\n"
 
@@ -1173,36 +1173,38 @@ msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
+"<para><emphasis strong='true'>Ukončení této aplikace uzavře všechny její "
+"okna. Veškerá neuložená data budou ztracena.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr ""
+msgstr "Ukonči&t %1"
 
 #: helpers/killer/killer.cpp:156
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr ""
+msgstr "Čekat delší do&bu"
 
 #: helpers/killer/killer.cpp:164
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr ""
+msgstr "Neodpovídá"
 
 #: helpers/killer/killer.cpp:180
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "ID procesu: %1"
 
 #: helpers/killer/killer.cpp:182
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr ""
+msgstr "Název hostitele: %1"
 
 #: input.cpp:2012
 #, kde-format
@@ -3474,7 +3476,7 @@ msgstr "Vrstva"
 #: rulesettings.kcfg:441
 #, kde-format
 msgid "Layer rule type"
-msgstr ""
+msgstr "Typ pravidla vrstvy"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3494,18 +3496,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Následující aplikace nebyly zavřeny:\n"
+"%1"
 
 #: sm.cpp:470
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Zrušit odhlášení"
 
 #: sm.cpp:471
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Přesto odhlásit"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
