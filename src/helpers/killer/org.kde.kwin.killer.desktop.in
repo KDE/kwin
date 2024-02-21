@@ -33,6 +33,7 @@ Comment=Prompts whether to kill an unresponsive window
 Comment[bg]=Запитва дали да прекрати принудително прозорец, който не реагира
 Comment[ca]=Demana si cal matar una finestra que no respon
 Comment[ca@valencia]=Demana si cal matar una finestra que no respon
+Comment[cs]=Vybídne k zabití nereagujícího okna
 Comment[eo]=Pridemandas ĉu ĉesigi nerespondantan fenestron
 Comment[es]=Pregunta si se debe matar una ventana que no responde
 Comment[eu]=Erantzuten ez duen leiho bat akabatzeko aukera ematen du
