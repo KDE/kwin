@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1673669 $
+# Version: $Revision: 1673776 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 00:39+0000\n"
+"POT-Creation-Date: 2024-02-21 00:38+0000\n"
 "PO-Revision-Date: 2024-02-11 11:25+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -3540,7 +3540,7 @@ msgstr "Okno dialogowe"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:469
+#: sm.cpp:467
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3549,13 +3549,13 @@ msgstr ""
 "Następująca aplikacja nie zamknęła się:\n"
 "%1"
 
-#: sm.cpp:470
+#: sm.cpp:468
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Nie wychodź"
 
-#: sm.cpp:471
+#: sm.cpp:469
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

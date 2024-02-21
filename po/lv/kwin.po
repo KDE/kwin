@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 00:39+0000\n"
+"POT-Creation-Date: 2024-02-21 00:38+0000\n"
 "PO-Revision-Date: 2024-01-23 17:16+0200\n"
 "Last-Translator: Māris Nartišs <maris.kde@gmail.com>\n"
 "Language-Team: \n"
@@ -3518,7 +3518,7 @@ msgstr "Dialoglodziņš"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:469
+#: sm.cpp:467
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3527,13 +3527,13 @@ msgstr ""
 "Šīs programmas neaizvērās:\n"
 "%1"
 
-#: sm.cpp:470
+#: sm.cpp:468
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Atcelt izrakstīšanos"
 
-#: sm.cpp:471
+#: sm.cpp:469
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

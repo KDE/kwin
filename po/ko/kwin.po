@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 00:39+0000\n"
+"POT-Creation-Date: 2024-02-21 00:38+0000\n"
 "PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -3502,7 +3502,7 @@ msgstr "대화 상자"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:469
+#: sm.cpp:467
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3511,13 +3511,13 @@ msgstr ""
 "다음 앱이 종료되지 않았습니다:\n"
 "%1"
 
-#: sm.cpp:470
+#: sm.cpp:468
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "로그아웃 취소"
 
-#: sm.cpp:471
+#: sm.cpp:469
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

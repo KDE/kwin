@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 00:39+0000\n"
-"PO-Revision-Date: 2024-01-24 16:29+0200\n"
+"PO-Revision-Date: 2024-02-20 15:49+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -64,10 +64,9 @@ msgstr "Turinys"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Show Desktop\" entry"
-msgstr "Įtraukti „Rodyti darbalaukį“ piktogramą"
+msgstr "Įtraukti įrašą „Rodyti darbalaukį“"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55

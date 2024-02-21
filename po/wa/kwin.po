@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 00:39+0000\n"
+"POT-Creation-Date: 2024-02-21 00:38+0000\n"
 "PO-Revision-Date: 2011-07-17 16:09+0200\n"
 "Last-Translator: Jean Cayron <jean.cayron@base.be>\n"
 "Language-Team: Walloon <linux@walon.org>\n"
@@ -3629,20 +3629,20 @@ msgstr "Divizes:"
 msgid "..."
 msgstr ""
 
-#: sm.cpp:469
+#: sm.cpp:467
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
 
-#: sm.cpp:470
+#: sm.cpp:468
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr ""
 
-#: sm.cpp:471
+#: sm.cpp:469
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

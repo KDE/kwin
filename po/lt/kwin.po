@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 00:39+0000\n"
-"PO-Revision-Date: 2024-02-14 01:49+0200\n"
+"POT-Creation-Date: 2024-02-21 00:38+0000\n"
+"PO-Revision-Date: 2024-02-20 15:52+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -1564,7 +1564,7 @@ msgstr "Tritanopija (aklumas mėlynai spalvai)"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensyvumas:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -3506,13 +3506,13 @@ msgstr "Sluoksnio taisyklės tipas"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr "AdaptiveSync"
+msgstr "„AdaptiveSync“"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
 #, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "AdaptiveSync taisyklės tipas"
+msgstr "„AdaptiveSync“ taisyklės tipas"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3526,7 +3526,7 @@ msgstr "Dialogas"
 msgid "..."
 msgstr "..."
 
-#: sm.cpp:469
+#: sm.cpp:467
 #, kde-format
 msgid ""
 "The following applications did not close:\n"
@@ -3535,13 +3535,13 @@ msgstr ""
 "Šios programos neužsivėrė:\n"
 "%1"
 
-#: sm.cpp:470
+#: sm.cpp:468
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
 msgstr "Atsisakyti atsijungimo"
 
-#: sm.cpp:471
+#: sm.cpp:469
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"

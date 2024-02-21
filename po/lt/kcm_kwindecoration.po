@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-10 00:40+0000\n"
-"PO-Revision-Date: 2024-01-24 15:04+0200\n"
+"PO-Revision-Date: 2024-02-20 15:50+0200\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -74,7 +74,7 @@ msgstr "Laikyti aukščiau kitų langų"
 #: declarative-plugin/buttonsmodel.cpp:76
 #, kde-format
 msgid "Spacer"
-msgstr ""
+msgstr "Tarpiklis"
 
 #: kcm.cpp:177
 #, kde-format
