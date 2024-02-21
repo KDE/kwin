@@ -496,7 +496,7 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     const auto desktops = vds->desktops();
     for (VirtualDesktop *desktop : desktops) {
-        action = m_desktopMenu->addAction(QStringLiteral("%1").arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
+        action = m_desktopMenu->addAction(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 workspace()->sendWindowToDesktops(m_window, {desktop}, false);
@@ -552,18 +552,9 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
 
     m_multipleDesktopsMenu->addSeparator();
 
-    const uint BASE = 10;
-
     const auto desktops = vds->desktops();
     for (VirtualDesktop *desktop : desktops) {
-        const uint legacyId = desktop->x11DesktopNumber();
-
-        QString basic_name(QStringLiteral("%1  %2"));
-        if (legacyId < BASE) {
-            basic_name.prepend(QLatin1Char('&'));
-        }
-
-        QAction *action = m_multipleDesktopsMenu->addAction(basic_name.arg(legacyId).arg(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"))));
+        QAction *action = m_multipleDesktopsMenu->addAction(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 if (m_window->desktops().contains(desktop)) {
