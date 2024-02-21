@@ -573,8 +573,7 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
     m_multipleDesktopsMenu->addSeparator();
 
     for (VirtualDesktop *desktop : desktops) {
-        const uint legacyId = desktop->x11DesktopNumber();
-        QString name = i18n("Move to %1 %2", legacyId, desktop->name());
+        QString name = i18n("Move to %1", desktop->name());
         QAction *action = m_multipleDesktopsMenu->addAction(name);
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
