@@ -621,7 +621,7 @@ uint32_t toXNative(qreal value)
     if (!qFuzzyIsNull(std::fmod(kwinApp()->xwaylandScale() * value, 1))) {
         qCDebug(KWIN_CORE) << "precision lost! floating value sent to X" << kwinApp()->xwaylandScale() * value;
     }
-    return std::round(kwinApp()->xwaylandScale() * value);
+    return static_cast<int32_t>(std::round(kwinApp()->xwaylandScale() * value));
 }
 
 QRect toXNative(const QRectF &r)
