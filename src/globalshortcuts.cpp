@@ -236,11 +236,27 @@ bool match(QList<GlobalShortcut> &shortcuts, Args... args)
 // TODO(C++20): use ranges for a nicer way of filtering by shortcut type
 bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Qt::MouseButtons pointerButtons)
 {
+    // currently only used to better support modifier only shortcuts
+    // modifier-only shortcuts are not triggered if a pointer button is pressed
+    if (m_kglobalAccelInterface) {
+        QMetaObject::invokeMethod(m_kglobalAccelInterface,
+                                  "checkPointerPressed",
+                                  Qt::DirectConnection,
+                                  Q_ARG(Qt::MouseButtons, pointerButtons));
+    }
     return match<PointerButtonShortcut>(m_shortcuts, mods, pointerButtons);
 }
 
 bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxisDirection axis)
 {
+    // currently only used to better support modifier only shortcuts
+    // modifier-only shortcuts are not triggered if a pointer axis is used
+    if (m_kglobalAccelInterface) {
+        QMetaObject::invokeMethod(m_kglobalAccelInterface,
+                                  "checkAxisTriggered",
+                                  Qt::DirectConnection,
+                                  Q_ARG(int, axis));
+    }
     return match<PointerAxisShortcut>(m_shortcuts, mods, axis);
 }
 

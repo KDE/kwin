@@ -28,6 +28,8 @@ public:
 public Q_SLOTS:
     bool checkKeyPressed(int keyQt);
     bool checkKeyReleased(int keyQt);
+    bool checkPointerPressed(Qt::MouseButtons buttons);
+    bool checkAxisTriggered(int axis);
 
 private:
     bool m_shuttingDown = false;

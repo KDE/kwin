@@ -52,4 +52,14 @@ bool KGlobalAccelImpl::checkKeyReleased(int keyQt)
     return keyReleased(keyQt);
 }
 
+bool KGlobalAccelImpl::checkPointerPressed(Qt::MouseButtons buttons)
+{
+    return pointerPressed(buttons);
+}
+
+bool KGlobalAccelImpl::checkAxisTriggered(int axis)
+{
+    return axisTriggered(axis);
+}
+
 #include "moc_kglobalaccel_plugin.cpp"
