@@ -79,6 +79,7 @@ public:
     bool asyncPageflipSupported() const;
     bool isI915() const;
     bool isNVidia() const;
+    bool isAmdgpu() const;
     gbm_device *gbmDevice() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
@@ -138,6 +139,7 @@ private:
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
     bool m_isI915;
+    bool m_isAmdgpu;
     bool m_isVirtualMachine;
     bool m_supportsCursorPlaneHotspot = false;
     bool m_asyncPageflipSupported = false;
