@@ -44,7 +44,6 @@ public:
     void registerDataControlDevice(DataControlDeviceV1Interface *dataDevice);
     void endDrag();
     void cancelDrag();
-    bool dragInhibitsPointer(SurfaceInterface *surface) const;
 
     SeatInterface *q;
     QPointer<Display> display;
