@@ -98,9 +98,10 @@ bool DrmFramebuffer::isReadable()
         return m_readable = m_syncFd.isReadable();
     } else {
         const auto &fds = m_bufferRef->dmabufAttributes()->fd;
-        return m_readable = std::all_of(fds.begin(), fds.end(), [](const auto &fd) {
-                   return !fd.isValid() || fd.isReadable();
-               });
+        m_readable = std::ranges::all_of(fds, [](const auto &fd) {
+            return !fd.isValid() || fd.isReadable();
+        });
+        return m_readable;
     }
 }
 

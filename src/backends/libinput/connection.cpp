@@ -287,7 +287,7 @@ void Connection::processEvents()
             break;
         }
         case LIBINPUT_EVENT_DEVICE_REMOVED: {
-            auto it = std::find_if(m_devices.begin(), m_devices.end(), [&event](Device *d) {
+            auto it = std::ranges::find_if(m_devices, [&event](Device *d) {
                 return event->device() == d;
             });
             if (it == m_devices.end()) {

@@ -128,7 +128,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
     if (mode == CommitMode::Test) {
         // if there's a modeset pending, the tests on top of that state
         // also have to allow modesets or they'll always fail
-        const bool wantsModeset = std::any_of(pipelines.begin(), pipelines.end(), [](DrmPipeline *pipeline) {
+        const bool wantsModeset = std::ranges::any_of(pipelines, [](DrmPipeline *pipeline) {
             return pipeline->needsModeset();
         });
         if (wantsModeset) {
@@ -149,7 +149,7 @@ DrmPipeline::Error DrmPipeline::commitPipelinesAtomic(const QList<DrmPipeline *>
             qCDebug(KWIN_DRM) << "Atomic modeset test failed!" << strerror(errno);
             return errnoToError();
         }
-        const bool withoutModeset = std::all_of(pipelines.begin(), pipelines.end(), [](DrmPipeline *pipeline) {
+        const bool withoutModeset = std::ranges::all_of(pipelines, [](DrmPipeline *pipeline) {
             auto commit = std::make_unique<DrmAtomicCommit>(QVector<DrmPipeline *>{pipeline});
             return pipeline->prepareAtomicCommit(commit.get(), CommitMode::TestAllowModeset) == Error::None && commit->test();
         });

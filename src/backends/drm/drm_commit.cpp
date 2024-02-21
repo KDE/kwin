@@ -150,7 +150,7 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp) const
 
 bool DrmAtomicCommit::areBuffersReadable() const
 {
-    return std::all_of(m_buffers.begin(), m_buffers.end(), [](const auto &pair) {
+    return std::ranges::all_of(m_buffers, [](const auto &pair) {
         const auto &[plane, buffer] = pair;
         return !buffer || buffer->isReadable();
     });

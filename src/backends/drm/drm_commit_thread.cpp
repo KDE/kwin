@@ -84,7 +84,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 // wait for a primary plane commit to be in, while still enforcing
                 // a minimum cursor refresh rate of 30Hz
                 const auto cursorTarget = m_lastPageflip + std::chrono::duration_cast<std::chrono::nanoseconds>(1s) / 30;
-                const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
+                const bool cursorOnly = std::ranges::all_of(m_commits, [](const auto &commit) {
                     return commit->isCursorOnly();
                 });
                 if (cursorOnly) {
@@ -136,7 +136,7 @@ void DrmCommitThread::submit()
                 return;
             }
         }
-        const bool cursorOnly = std::all_of(m_commits.begin(), m_commits.end(), [](const auto &commit) {
+        const bool cursorOnly = std::ranges::all_of(m_commits, [](const auto &commit) {
             return commit->isCursorOnly();
         });
         for (auto &commit : m_commits) {
@@ -190,7 +190,7 @@ void DrmCommitThread::optimizeCommits()
         // commits that target the same plane(s) need to stay in the same order
         const auto &planes = commit->modifiedPlanes();
         const bool skipping = std::any_of(m_commits.begin(), it, [&planes](const auto &other) {
-            return std::any_of(planes.begin(), planes.end(), [&other](DrmPlane *plane) {
+            return std::ranges::any_of(planes, [&other](DrmPlane *plane) {
                 return other->modifiedPlanes().contains(plane);
             });
         });

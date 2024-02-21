@@ -29,6 +29,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <ranges>
 #include <unistd.h>
 // drm
 #include <drm_fourcc.h>
@@ -207,14 +208,14 @@ void DrmGpu::initDrmResources()
         }
         const auto findBestPlane = [crtcId](const QList<DrmPlane *> &list) {
             // if the plane is already used with this crtc, prefer it
-            const auto connected = std::find_if(list.begin(), list.end(), [crtcId](DrmPlane *plane) {
+            const auto connected = std::ranges::find_if(list, [crtcId](DrmPlane *plane) {
                 return plane->crtcId.value() == crtcId;
             });
             if (connected != list.end()) {
                 return *connected;
             }
             // don't take away planes from other crtcs. The kernel currently rejects such commits
-            const auto notconnected = std::find_if(list.begin(), list.end(), [](DrmPlane *plane) {
+            const auto notconnected = std::ranges::find_if(list, [](DrmPlane *plane) {
                 return plane->crtcId.value() == 0;
             });
             if (notconnected != list.end()) {
@@ -254,13 +255,9 @@ bool DrmGpu::updateOutputs()
     DrmUniquePtr<drmModeLesseeListRes> lessees{drmModeListLessees(m_fd)};
     for (const auto &output : std::as_const(m_drmOutputs)) {
         if (output->lease()) {
-            bool leaseActive = false;
-            for (uint i = 0; i < lessees->count; i++) {
-                if (lessees->lessees[i] == output->lease()->lesseeId()) {
-                    leaseActive = true;
-                    break;
-                }
-            }
+            const bool leaseActive = std::ranges::any_of(std::span(lessees->lessees, lessees->count), [output](uint32_t id) {
+                return output->lease()->lesseeId() == id;
+            });
             if (!leaseActive) {
                 Q_EMIT output->lease()->revokeRequested();
             }
@@ -272,7 +269,7 @@ bool DrmGpu::updateOutputs()
     QList<DrmOutput *> addedOutputs;
     for (int i = 0; i < resources->count_connectors; ++i) {
         const uint32_t currentConnector = resources->connectors[i];
-        const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [currentConnector](const auto &connector) {
+        const auto it = std::ranges::find_if(m_connectors, [currentConnector](const auto &connector) {
             return connector->id() == currentConnector;
         });
         if (it == m_connectors.end()) {
@@ -339,7 +336,7 @@ bool DrmGpu::updateOutputs()
         }
         for (const auto &output : std::as_const(addedOutputs)) {
             removeOutput(output);
-            const auto it = std::find_if(m_connectors.begin(), m_connectors.end(), [output](const auto &conn) {
+            const auto it = std::ranges::find_if(m_connectors, [output](const auto &conn) {
                 return conn.get() == output->connector();
             });
             Q_ASSERT(it != m_connectors.end());
@@ -397,7 +394,7 @@ DrmPipeline::Error DrmGpu::checkCrtcAssignment(QList<DrmConnector *> connectors,
     if (m_atomicModeSetting) {
         // try the crtc that this connector is already connected to first
         const uint32_t id = connector->crtcId.value();
-        auto it = std::find_if(crtcs.begin(), crtcs.end(), [id](const auto &crtc) {
+        auto it = std::ranges::find_if(crtcs, [id](const auto &crtc) {
             return id == crtc->id();
         });
         if (it != crtcs.end()) {
@@ -435,7 +432,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
     QList<DrmCrtc *> crtcs;
     // only change resources that aren't currently leased away
     for (const auto &conn : m_connectors) {
-        bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&conn](const auto output) {
+        const bool isLeased = std::ranges::any_of(m_drmOutputs, [&conn](const auto output) {
             return output->lease() && output->pipeline()->connector() == conn.get();
         });
         if (!isLeased) {
@@ -443,7 +440,7 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         }
     }
     for (const auto &crtc : m_crtcs) {
-        bool isLeased = std::any_of(m_drmOutputs.cbegin(), m_drmOutputs.cend(), [&crtc](const auto output) {
+        const bool isLeased = std::ranges::any_of(m_drmOutputs, [&crtc](const auto output) {
             return output->lease() && output->pipeline()->crtc() == crtc.get();
         });
         if (!isLeased) {
@@ -482,7 +479,7 @@ DrmPipeline::Error DrmGpu::testPipelines()
 
 DrmOutput *DrmGpu::findOutput(quint32 connector)
 {
-    auto it = std::find_if(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [connector](DrmOutput *o) {
+    auto it = std::ranges::find_if(m_drmOutputs, [connector](DrmOutput *o) {
         return o->connector()->id() == connector;
     });
     if (it != m_drmOutputs.constEnd()) {
@@ -495,7 +492,7 @@ void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
     while (true) {
-        const bool idle = std::all_of(m_drmOutputs.constBegin(), m_drmOutputs.constEnd(), [](DrmOutput *output) {
+        const bool idle = std::ranges::all_of(m_drmOutputs, [](DrmOutput *output) {
             return !output->pipeline()->pageflipsPending();
         });
         if (idle) {
@@ -748,7 +745,7 @@ bool DrmGpu::isActive() const
 
 bool DrmGpu::needsModeset() const
 {
-    return m_forceModeset || std::any_of(m_pipelines.constBegin(), m_pipelines.constEnd(), [](const auto &pipeline) {
+    return m_forceModeset || std::ranges::any_of(m_pipelines, [](const auto &pipeline) {
                return pipeline->needsModeset();
            });
 }
@@ -761,7 +758,7 @@ bool DrmGpu::maybeModeset()
             pipelines.removeOne(output->pipeline());
         }
     }
-    bool presentPendingForAll = std::all_of(pipelines.constBegin(), pipelines.constEnd(), [](const auto &pipeline) {
+    const bool presentPendingForAll = std::ranges::all_of(pipelines, [](const auto &pipeline) {
         return pipeline->modesetPresentPending() || !pipeline->activePending();
     });
     if (!presentPendingForAll) {

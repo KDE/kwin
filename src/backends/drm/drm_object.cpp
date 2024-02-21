@@ -85,7 +85,7 @@ void DrmPropertyList::addProperty(DrmUniquePtr<drmModePropertyRes> &&prop, uint6
 
 std::optional<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> DrmPropertyList::takeProperty(const QByteArray &name)
 {
-    const auto it = std::find_if(m_properties.begin(), m_properties.end(), [&name](const auto &pair) {
+    const auto it = std::ranges::find_if(m_properties, [&name](const auto &pair) {
         return pair.first->name == name;
     });
     if (it != m_properties.end()) {

@@ -33,6 +33,7 @@
 // system
 #include <algorithm>
 #include <cerrno>
+#include <ranges>
 #include <sys/stat.h>
 #include <unistd.h>
 // drm
@@ -136,7 +137,7 @@ void DrmBackend::handleUdevEvent()
         // Ignore the device seat if the KWIN_DRM_DEVICES envvar is set.
         if (!m_explicitGpus.isEmpty()) {
             const auto canonicalPath = QFileInfo(device->devNode()).canonicalPath();
-            const bool foundMatch = std::any_of(m_explicitGpus.begin(), m_explicitGpus.end(), [&canonicalPath](const QString &explicitPath) {
+            const bool foundMatch = std::ranges::any_of(m_explicitGpus, [&canonicalPath](const QString &explicitPath) {
                 return QFileInfo(explicitPath).canonicalPath() == canonicalPath;
             });
             if (!foundMatch) {
@@ -214,7 +215,7 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
 
 void DrmBackend::addOutput(DrmAbstractOutput *o)
 {
-    const bool allOff = std::all_of(m_outputs.begin(), m_outputs.end(), [](Output *output) {
+    const bool allOff = std::ranges::all_of(m_outputs, [](Output *output) {
         return output->dpmsMode() != Output::DpmsMode::On;
     });
     if (allOff && m_recentlyUnpluggedDpmsOffOutputs.contains(o->uuid())) {
@@ -341,7 +342,7 @@ DrmGpu *DrmBackend::primaryGpu() const
 
 DrmGpu *DrmBackend::findGpu(dev_t deviceId) const
 {
-    auto it = std::find_if(m_gpus.begin(), m_gpus.end(), [deviceId](const auto &gpu) {
+    auto it = std::ranges::find_if(m_gpus, [deviceId](const auto &gpu) {
         return gpu->deviceId() == deviceId;
     });
     return it == m_gpus.end() ? nullptr : it->get();
@@ -356,7 +357,7 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
 {
     QList<DrmOutput *> toBeEnabled;
     QList<DrmOutput *> toBeDisabled;
-    for (const auto &gpu : std::as_const(m_gpus)) {
+    for (const auto &gpu : m_gpus) {
         const auto &outputs = gpu->drmOutputs();
         for (const auto &output : outputs) {
             if (output->isNonDesktop()) {

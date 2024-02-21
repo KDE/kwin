@@ -210,7 +210,7 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::modes() const
 
 std::shared_ptr<DrmConnectorMode> DrmConnector::findMode(const drmModeModeInfo &modeInfo) const
 {
-    const auto it = std::find_if(m_modes.constBegin(), m_modes.constEnd(), [&modeInfo](const auto &mode) {
+    const auto it = std::ranges::find_if(m_modes, [&modeInfo](const auto &mode) {
         return checkIfEqual(mode->nativeMode(), &modeInfo);
     });
     return it == m_modes.constEnd() ? nullptr : *it;
@@ -399,9 +399,10 @@ QList<std::shared_ptr<DrmConnectorMode>> DrmConnector::generateCommonModes()
             continue;
         }
         const auto generatedMode = generateMode(size, 60);
-        if (std::any_of(m_driverModes.cbegin(), m_driverModes.cend(), [generatedMode](const auto &mode) {
-                return mode->size() == generatedMode->size() && mode->refreshRate() == generatedMode->refreshRate();
-            })) {
+        const bool alreadyExists = std::ranges::any_of(m_driverModes, [generatedMode](const auto &mode) {
+            return mode->size() == generatedMode->size() && mode->refreshRate() == generatedMode->refreshRate();
+        });
+        if (alreadyExists) {
             continue;
         }
         ret << generatedMode;

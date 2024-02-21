@@ -324,20 +324,18 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     if (m_gpu == m_eglBackend->gpu()) {
         const auto checkSurfaceNeedsLinear = [&formats](const FormatInfo &fmt) {
             const auto &mods = formats[fmt.drmFormat];
-            return std::all_of(mods.cbegin(), mods.cend(), [](const auto &mod) {
+            return std::ranges::all_of(mods, [](const auto &mod) {
                 return mod == DRM_FORMAT_MOD_LINEAR;
             });
         };
-        const bool needsLinear =
-            std::all_of(preferredFormats.cbegin(), preferredFormats.cend(), checkSurfaceNeedsLinear) && std::all_of(fallbackFormats.cbegin(), fallbackFormats.cend(), checkSurfaceNeedsLinear);
+        const bool needsLinear = std::ranges::all_of(preferredFormats, checkSurfaceNeedsLinear) && std::ranges::all_of(fallbackFormats, checkSurfaceNeedsLinear);
         if (needsLinear) {
             const auto renderFormats = m_eglBackend->eglDisplayObject()->allSupportedDrmFormats();
             const auto checkFormatSupportsLinearRender = [&renderFormats](const auto &formatInfo) {
                 const auto it = renderFormats.constFind(formatInfo.drmFormat);
                 return it != renderFormats.cend() && it->nonExternalOnlyModifiers.contains(DRM_FORMAT_MOD_LINEAR);
             };
-            const bool noLinearSupport =
-                std::none_of(preferredFormats.cbegin(), preferredFormats.cend(), checkFormatSupportsLinearRender) && std::none_of(fallbackFormats.cbegin(), fallbackFormats.cend(), checkFormatSupportsLinearRender);
+            const bool noLinearSupport = std::ranges::none_of(preferredFormats, checkFormatSupportsLinearRender) && std::ranges::none_of(fallbackFormats, checkFormatSupportsLinearRender);
             if (noLinearSupport) {
                 bufferTarget = BufferTarget::Dumb;
             }
