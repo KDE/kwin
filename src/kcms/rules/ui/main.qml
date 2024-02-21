@@ -121,6 +121,14 @@ KCM.ScrollViewKCM {
         ]
     }
 
+    Keys.onEscapePressed: event => {
+        if (exportInfo.visible) {
+            exportInfo.visible = false;
+            return;
+        }
+        event.accepted = false;
+    }
+
     component RuleBookDelegate : Item {
         // External item required to make Kirigami.ListItemDragHandle work
         width: ruleBookView.width
