@@ -348,7 +348,9 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 
 ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const
 {
-    if (props->highDynamicRange.value_or(m_state.highDynamicRange) && m_connector->edid()) {
+    const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
+    const bool driverSupportsHdr = m_connector->colorspace.isValid() && m_connector->hdrMetadata.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC));
+    if (props->highDynamicRange.value_or(m_state.highDynamicRange) && driverSupportsHdr && screenSupportsHdr) {
         const auto colorimetry = props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
         const auto nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
         const auto sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
