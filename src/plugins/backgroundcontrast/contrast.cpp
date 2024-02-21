@@ -398,7 +398,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
 {
     if (shouldContrast(w, mask, data)) {
         const QRect screen = viewport.renderRect().toRect();
-        QRegion shape = region & contrastRegion(w).translated(w->pos().toPoint()) & screen;
+        QRegion shape = contrastRegion(w).translated(w->pos().toPoint());
 
         // let's do the evil parts - someone wants to contrast behind a transformed window
         const bool translated = data.xTranslation() || data.yTranslation();
@@ -413,15 +413,16 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
                                          std::floor(topLeft.y() + r.height() * data.yScale()) - 1);
                 scaledShape += QRect(QPoint(std::floor(topLeft.x()), std::floor(topLeft.y())), bottomRight);
             }
-            shape = scaledShape & region;
+            shape = scaledShape;
 
             // Only translated, not scaled
         } else if (translated) {
             shape.translate(std::round(data.xTranslation()), std::round(data.yTranslation()));
         }
 
-        if (!shape.isEmpty()) {
-            doContrast(renderTarget, viewport, w, shape, screen, w->opacity() * data.opacity(), data.projectionMatrix());
+        const QRegion effectiveShape = shape & region & screen;
+        if (!effectiveShape.isEmpty()) {
+            doContrast(renderTarget, viewport, w, effectiveShape, w->opacity() * data.opacity(), data.projectionMatrix());
         }
     }
 
@@ -429,16 +430,15 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
     effects->drawWindow(renderTarget, viewport, w, mask, region, data);
 }
 
-void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, const QRegion &shape, const QRect &screen, const float opacity, const QMatrix4x4 &screenProjection)
+void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, const QRegion &shape, const float opacity, const QMatrix4x4 &screenProjection)
 {
     const qreal scale = viewport.scale();
-    const QRegion actualShape = shape & screen;
-    const QRectF r = viewport.mapToRenderTarget(actualShape.boundingRect());
+    const QRectF r = viewport.mapToRenderTarget(shape.boundingRect());
 
     // Upload geometry for the horizontal and vertical passes
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    if (!uploadGeometry(vbo, actualShape, scale)) {
+    if (!uploadGeometry(vbo, shape, scale)) {
         return;
     }
     vbo->bindArrays();
@@ -465,7 +465,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     m_shader->setOpacity(opacity);
     // Set up the texture matrix to transform from screen coordinates
     // to texture coordinates.
-    const QRectF boundingRect = actualShape.boundingRect();
+    const QRectF boundingRect = shape.boundingRect();
     QMatrix4x4 textureMatrix;
     textureMatrix.scale(1, -1);
     textureMatrix.translate(0, -1);
@@ -481,7 +481,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     m_shader->setTextureMatrix(textureMatrix);
     m_shader->setModelViewProjectionMatrix(screenProjection);
 
-    vbo->draw(GL_TRIANGLES, 0, actualShape.rectCount() * 6);
+    vbo->draw(GL_TRIANGLES, 0, shape.rectCount() * 6);
 
     contrastTexture->unbind();
 
