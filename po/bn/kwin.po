@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-21 00:38+0000\n"
+"POT-Creation-Date: 2024-02-22 00:38+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -3809,38 +3809,39 @@ msgstr ""
 msgid "Move &To Current Desktop"
 msgstr "ডেস্ক&টপে পাঠাও"
 
-#: useractions.cpp:483 useractions.cpp:550
+#: useractions.cpp:483 useractions.cpp:542
 #, kde-format
 msgid "&All Desktops"
 msgstr "স&মস্ত ডেস্কটপে"
 
-#: useractions.cpp:523
+#: useractions.cpp:515
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "ডেস্কটপ গ্রিড দেখাও"
 
-#: useractions.cpp:594
-#, kde-format
-msgid "Move to %1 %2"
-msgstr ""
+#: useractions.cpp:576 useractions.cpp:706
+#, fuzzy, kde-format
+#| msgid "To &Desktop"
+msgid "Move to %1"
+msgstr "ডেস্ক&টপে পাঠাও"
 
-#: useractions.cpp:607
+#: useractions.cpp:589
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "ডেস্কটপ গ্রিড দেখাও"
 
-#: useractions.cpp:619
+#: useractions.cpp:601
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "ডেস্ক&টপে পাঠাও"
 
-#: useractions.cpp:650
+#: useractions.cpp:632
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgctxt ""
@@ -3849,397 +3850,391 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "উইণ্ডো 1 নং স্ক্রীণে পাঠাও"
 
-#: useractions.cpp:676
+#: useractions.cpp:658
 #, kde-format
 msgid "&All Activities"
 msgstr ""
 
-#: useractions.cpp:724
-#, fuzzy, kde-format
-#| msgid "To &Desktop"
-msgid "Move to %1"
-msgstr "ডেস্ক&টপে পাঠাও"
-
-#: useractions.cpp:843
+#: useractions.cpp:825
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr ""
 
-#: useractions.cpp:845
+#: useractions.cpp:827
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr ""
 
-#: useractions.cpp:925
+#: useractions.cpp:907
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "উইণ্ডো পরিচালনা মেনু"
 
-#: useractions.cpp:927
+#: useractions.cpp:909
 #, kde-format
 msgid "Close Window"
 msgstr "উইণ্ডো বন্ধ করো"
 
-#: useractions.cpp:929
+#: useractions.cpp:911
 #, kde-format
 msgid "Maximize Window"
 msgstr "উইণ্ডো পুরো বড় কর"
 
-#: useractions.cpp:931
+#: useractions.cpp:913
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "উইণ্ডো লম্বালম্বি পুরো বড় কর"
 
-#: useractions.cpp:933
+#: useractions.cpp:915
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "উইণ্ডো আনুভুমিকভাবে পুরো বড় কর"
 
-#: useractions.cpp:935
+#: useractions.cpp:917
 #, kde-format
 msgid "Minimize Window"
 msgstr "উইণ্ডো ছোট কর"
 
-#: useractions.cpp:937
+#: useractions.cpp:919
 #, kde-format
 msgid "Shade Window"
 msgstr "উইণ্ডো ছায়াবৃত কর"
 
-#: useractions.cpp:939
+#: useractions.cpp:921
 #, kde-format
 msgid "Move Window"
 msgstr "উইণ্ডোটি সরাও"
 
-#: useractions.cpp:941
+#: useractions.cpp:923
 #, kde-format
 msgid "Resize Window"
 msgstr "উইণ্ডোর আকার বদলাও"
 
-#: useractions.cpp:943
+#: useractions.cpp:925
 #, kde-format
 msgid "Raise Window"
 msgstr "উইণ্ডো উঁচু করে তোল"
 
-#: useractions.cpp:945
+#: useractions.cpp:927
 #, kde-format
 msgid "Lower Window"
 msgstr "উইণ্ডো নামাও"
 
-#: useractions.cpp:947
+#: useractions.cpp:929
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "উইণ্ডো উঁচু/নিচু পরিবর্তন কর"
 
-#: useractions.cpp:949
+#: useractions.cpp:931
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "উইণ্ডো পুরো পর্দা জুড়ে কর"
 
-#: useractions.cpp:951
+#: useractions.cpp:933
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "উইণ্ডোর সীমানা লুকাও"
 
-#: useractions.cpp:953
+#: useractions.cpp:935
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "উইণ্ডোটিকে অন্যদের ওপরে রাখো"
 
-#: useractions.cpp:955
+#: useractions.cpp:937
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "উইণ্ডোটিকে অন্যদের নিচে রাখো"
 
-#: useractions.cpp:957
+#: useractions.cpp:939
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "যে উইণ্ডোটি মনোযোগ আকর্ষণ করছে তাকে কার্যকরী কর"
 
-#: useractions.cpp:959
+#: useractions.cpp:941
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "উইণ্ডো শর্টকাট ব্যবস্থাপনা করুন"
 
-#: useractions.cpp:961
+#: useractions.cpp:943
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window to the Center"
 msgstr "উইণ্ডোটি সরাও"
 
-#: useractions.cpp:963
+#: useractions.cpp:945
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "উইণ্ডোটি সরাও"
 
-#: useractions.cpp:965
+#: useractions.cpp:947
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "উইণ্ডোটি সরাও"
 
-#: useractions.cpp:967
+#: useractions.cpp:949
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "উইণ্ডোটি সরাও"
 
-#: useractions.cpp:969
+#: useractions.cpp:951
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "উইণ্ডোটি সরাও"
 
-#: useractions.cpp:971
+#: useractions.cpp:953
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "উইণ্ডো আনুভুমিকভাবে পুরো বড় কর"
 
-#: useractions.cpp:973
+#: useractions.cpp:955
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "উইণ্ডো লম্বালম্বি পুরো বড় কর"
 
-#: useractions.cpp:975
+#: useractions.cpp:957
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "উইণ্ডোগুচ্ছ লম্বালম্বি গোটাও"
 
-#: useractions.cpp:977
+#: useractions.cpp:959
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "উইণ্ডোগুচ্ছ আনুভুমিকভাবে গোটাও"
 
-#: useractions.cpp:979
+#: useractions.cpp:961
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Left"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:981
+#: useractions.cpp:963
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Right"
 msgstr "উইণ্ডোকে ডান দিকে গোছাও"
 
-#: useractions.cpp:983
+#: useractions.cpp:965
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:985
+#: useractions.cpp:967
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:987
+#: useractions.cpp:969
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Top Left"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:989
+#: useractions.cpp:971
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:991
+#: useractions.cpp:973
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Top Right"
 msgstr "উইণ্ডোকে ডান দিকে গোছাও"
 
-#: useractions.cpp:993
+#: useractions.cpp:975
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "উইণ্ডোকে ডান দিকে গোছাও"
 
-#: useractions.cpp:995
+#: useractions.cpp:977
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Window Above"
 msgstr "0 নং স্ক্রীণে যাও"
 
-#: useractions.cpp:997
+#: useractions.cpp:979
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Window Below"
 msgstr "পূর্ববর্তী ডেস্কটপে যাও"
 
-#: useractions.cpp:999
+#: useractions.cpp:981
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Window to the Right"
 msgstr "উইণ্ডোকে ডান দিকে গোছাও"
 
-#: useractions.cpp:1001
+#: useractions.cpp:983
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Window to the Left"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:1003
+#: useractions.cpp:985
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:1005
+#: useractions.cpp:987
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr ""
 
-#: useractions.cpp:1008
+#: useractions.cpp:990
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "উইণ্ডোটিকে সমস্ত ডেস্কটপে রাখো"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1001
 #, fuzzy, kde-format
 #| msgid "Window to Desktop 1"
 msgid "Window to Desktop %1"
 msgstr "উইণ্ডো ১ নং ডেস্কটপে পাঠাও"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1003
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "উইণ্ডো পরবর্তী ডেস্কটপে পাঠাও"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1004
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "উইণ্ডো পূর্ববর্তী ডেস্কটপে পাঠাও"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1005
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "উইণ্ডো ডানদিকের ডেস্কটপে"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1007
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "উইণ্ডো বাঁদিকের ডেস্কটপে"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1009
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "উইণ্ডো উপরের ডেস্কটপে"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1011
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "উইণ্ডো নিচের ডেস্কটপে"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1015
 #, fuzzy, kde-format
 #| msgid "Window to Screen 1"
 msgid "Move Window to Screen %1"
 msgstr "উইণ্ডো 1 নং স্ক্রীণে পাঠাও"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1022
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "উইণ্ডো পরবর্তী স্ক্রীণে পাঠাও"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1024
 #, fuzzy, kde-format
 #| msgid "Window to Previous Desktop"
 msgid "Move Window to Previous Screen"
 msgstr "উইণ্ডো পূর্ববর্তী ডেস্কটপে পাঠাও"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1026
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "উইণ্ডো ডানদিকের ডেস্কটপে"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1028
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "উইণ্ডো বাঁদিকের ডেস্কটপে"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1030
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "উইণ্ডো 2 নং স্ক্রীণে পাঠাও"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1032
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "উইণ্ডো নিচের ডেস্কটপে"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1036
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 1"
 msgid "Switch to Screen %1"
 msgstr "1  নং স্ক্রীণে যাও"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1043
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "পরবর্তী স্ক্রীণে যাও"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1044
 #, fuzzy, kde-format
 #| msgid "Switch to Previous Desktop"
 msgid "Switch to Previous Screen"
 msgstr "পূর্ববর্তী ডেস্কটপে যাও"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1045
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "উইণ্ডোকে ডান দিকে গোছাও"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1047
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "উইণ্ডোকে বাঁ দিকে গোছাও"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1049
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "0 নং স্ক্রীণে যাও"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1051
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "0 নং স্ক্রীণে যাও"
 
-#: useractions.cpp:1072
+#: useractions.cpp:1054
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Peek at Desktop"
 msgstr "ডেস্ক&টপে পাঠাও"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1057
 #, kde-format
 msgid "Kill Window"
 msgstr "উইণ্ডোটি নষ্ট কর"
 
-#: useractions.cpp:1141
+#: useractions.cpp:1123
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "উইণ্ডো সক্রিয় করো (%1)"
 
-#: useractions.cpp:1278
+#: useractions.cpp:1260
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "

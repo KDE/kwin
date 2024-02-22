@@ -1,15 +1,15 @@
 # Translation of kcmkwinscreenedges into Japanese.
+# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2009, 2010.
 # Jumpei Ogawa <phanective@gmail.com>, 2010.
 # Tomohiro Hyakutake <tomhioo@outlook.jp>, 2020.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2015, 2020.
-# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-19 00:38+0000\n"
-"PO-Revision-Date: 2023-05-16 18:27+0900\n"
+"PO-Revision-Date: 2024-02-17 14:39+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 23.04.0\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -29,7 +29,7 @@ msgstr "アクションなし"
 #: main.cpp:152 touch.cpp:119
 #, kde-format
 msgid "Peek at Desktop"
-msgstr "デスクトップを覗く"
+msgstr "ウィンドウを隠す"
 
 #: main.cpp:153 touch.cpp:120
 #, kde-format
@@ -74,7 +74,7 @@ msgstr "%1 - 現在のアプリケーション"
 #: main.cpp:165 touch.cpp:132
 #, kde-format
 msgid "Overview"
-msgstr ""
+msgstr "オーバービュー"
 
 #: main.cpp:167 touch.cpp:134
 #, kde-format
@@ -92,7 +92,7 @@ msgstr "ウィンドウスイッチャー (代替)"
 msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
-msgstr "マウスで該当する画面の端に触れることでアクションを実行できます。"
+msgstr "マウスカーソルを画面の端に押し当てることでアクションを起動できます。"
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -159,8 +159,7 @@ msgstr " "
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr ""
-"マウスカーソルがスクリーンエッジに当てられたときにデスクトップを切り替えます"
+msgstr "マウスカーソルが画面の端に当てられたときにデスクトップを切り替えます"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -230,4 +229,4 @@ msgstr "次の起動までの時間(&R):"
 msgid ""
 "You can trigger an action by swiping from the screen edge towards the center "
 "of the screen."
-msgstr "スクリーンエッジから中心までスワイプしてアクションを起動できます。"
+msgstr "画面の端から中心までスワイプすることでアクションを起動できます。"

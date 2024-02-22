@@ -1,17 +1,17 @@
 # Translation of kcmkwincompositing into Japanese.
+# SPDX-FileCopyrightText: 2023, 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # This file is distributed under the same license as the kdebase package.
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2007, 2008, 2009, 2010.
 # Fuminobu TAKEYAMA <ftake@geeko.jp>, 2015.
 # TAKANO Yuji <takachan@running-dog.net>, 2015.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2015.
-# Ryuichi Yamada <ryuichi_ya220@outlook.jp>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwincompositing\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-20 02:25+0000\n"
-"PO-Revision-Date: 2023-02-22 17:02+0900\n"
+"PO-Revision-Date: 2024-02-16 20:28+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,7 +55,7 @@ msgstr "フォーカス"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "デスクトップを覗くアニメーション"
+msgstr "ウィンドウを隠す際のアニメーション"
 
 #: effectsmodel.cpp:50
 #, kde-format
@@ -73,7 +73,7 @@ msgstr "仮想デスクトップ切り替えアニメーション"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Window Management"
-msgstr "ウィンドウマネージメント"
+msgstr "ウィンドウ管理"
 
 #: effectsmodel.cpp:53
 #, kde-format
@@ -90,16 +90,16 @@ msgstr "KWin 開発チーム"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "パッケージのメタデータが見つかりませんでした"
 
 #: genericscriptedconfig.cpp:77
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 は有効な matadata.json ファイルを含んでいません"
 
 #: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 は存在しません"
