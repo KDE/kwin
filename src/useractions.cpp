@@ -370,10 +370,10 @@ void UserActionsMenu::menuAboutToShow()
 
 void UserActionsMenu::menuAboutToHide()
 {
-    if (m_window) {
+    if (m_window && !m_window->isDeleted()) {
         m_window->blockActivityUpdates(false);
-        m_window.clear();
     }
+    m_window.clear();
 }
 
 void UserActionsMenu::showHideActivityMenu()
