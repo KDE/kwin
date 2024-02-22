@@ -21,7 +21,6 @@
 #include "effect/globals.h"
 #include "effect/xcb.h"
 #include "input.h"
-#include "modifier_only_shortcuts.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
 
@@ -280,9 +279,6 @@ void XInputIntegration::startListening()
     m_xiEventFilter->setDisplay(display());
     m_keyPressFilter = std::make_unique<XKeyPressReleaseEventFilter>(XCB_KEY_PRESS);
     m_keyReleaseFilter = std::make_unique<XKeyPressReleaseEventFilter>(XCB_KEY_RELEASE);
-
-    // install the input event spies also relevant for X11 platform
-    input()->installInputEventSpy(new ModifierOnlyShortcuts);
 }
 
 }

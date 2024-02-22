@@ -742,20 +742,6 @@ void Options::loadConfig()
     setCommandAll2(mouseCommand(config.readEntry("CommandAll2", "Toggle raise and lower"), false));
     setCommandAll3(mouseCommand(config.readEntry("CommandAll3", "Resize"), false));
 
-    // Modifier Only Shortcuts
-    config = KConfigGroup(m_settings->config(), QStringLiteral("ModifierOnlyShortcuts"));
-    m_modifierOnlyShortcuts.clear();
-    if (config.hasKey("Shift")) {
-        m_modifierOnlyShortcuts.insert(Qt::ShiftModifier, config.readEntry("Shift", QStringList()));
-    }
-    if (config.hasKey("Control")) {
-        m_modifierOnlyShortcuts.insert(Qt::ControlModifier, config.readEntry("Control", QStringList()));
-    }
-    if (config.hasKey("Alt")) {
-        m_modifierOnlyShortcuts.insert(Qt::AltModifier, config.readEntry("Alt", QStringList()));
-    }
-    m_modifierOnlyShortcuts.insert(Qt::MetaModifier, config.readEntry("Meta", QStringList{QStringLiteral("org.kde.plasmashell"), QStringLiteral("/PlasmaShell"), QStringLiteral("org.kde.PlasmaShell"), QStringLiteral("activateLauncherMenu")}));
-
     // Compositing
     config = KConfigGroup(m_settings->config(), QStringLiteral("Compositing"));
     bool useCompositing = false;
@@ -1048,11 +1034,6 @@ Options::WindowOperation Options::operationMaxButtonClick(Qt::MouseButtons butto
 {
     return button == Qt::RightButton ? opMaxButtonRightClick : button == Qt::MiddleButton ? opMaxButtonMiddleClick
                                                                                           : opMaxButtonLeftClick;
-}
-
-QStringList Options::modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const
-{
-    return m_modifierOnlyShortcuts.value(mod);
 }
 
 bool Options::isUseCompositing() const

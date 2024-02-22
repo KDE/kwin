@@ -712,7 +712,6 @@ public:
         return m_windowsBlockCompositing;
     }
 
-    QStringList modifierOnlyDBusShortcut(Qt::KeyboardModifier mod) const;
     bool allowTearing() const;
 
     // setters
@@ -1055,8 +1054,6 @@ private:
     bool condensed_title;
 
     bool m_allowTearing = true;
-
-    QHash<Qt::KeyboardModifier, QStringList> m_modifierOnlyShortcuts;
 
     MouseCommand wheelToMouseCommand(MouseWheelCommand com, int delta) const;
 };

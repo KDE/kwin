@@ -120,7 +120,6 @@ target_sources(kwin PRIVATE
     layershellv1window.cpp
     lidswitchtracker.cpp
     main.cpp
-    modifier_only_shortcuts.cpp
     mousebuttons.cpp
     onscreennotification.cpp
     opengl/abstract_opengl_context_attribute_builder.cpp

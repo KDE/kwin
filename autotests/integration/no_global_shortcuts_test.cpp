@@ -26,8 +26,6 @@
 using namespace KWin;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_no_global_shortcuts-0");
-static const QString s_serviceName = QStringLiteral("org.kde.KWin.Test.ModifierOnlyShortcut");
-static const QString s_path = QStringLiteral("/Test");
 
 Q_DECLARE_METATYPE(KWin::ElectricBorder)
 
@@ -42,8 +40,6 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testTrigger_data();
-    void testTrigger();
     void testKGlobalAccel();
     void testPointerShortcut();
     void testAxisShortcut_data();
@@ -54,7 +50,6 @@ private Q_SLOTS:
 class Target : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.KWin.Test.ModifierOnlyShortcut")
 
 public:
     Target();
@@ -70,14 +65,10 @@ Q_SIGNALS:
 Target::Target()
     : QObject()
 {
-    QDBusConnection::sessionBus().registerService(s_serviceName);
-    QDBusConnection::sessionBus().registerObject(s_path, s_serviceName, this, QDBusConnection::ExportScriptableSlots);
 }
 
 Target::~Target()
 {
-    QDBusConnection::sessionBus().unregisterObject(s_path);
-    QDBusConnection::sessionBus().unregisterService(s_serviceName);
 }
 
 void Target::shortcut()
@@ -111,62 +102,6 @@ void NoGlobalShortcutsTest::init()
 
 void NoGlobalShortcutsTest::cleanup()
 {
-}
-
-void NoGlobalShortcutsTest::testTrigger_data()
-{
-    QTest::addColumn<QStringList>("metaConfig");
-    QTest::addColumn<QStringList>("altConfig");
-    QTest::addColumn<QStringList>("controlConfig");
-    QTest::addColumn<QStringList>("shiftConfig");
-    QTest::addColumn<int>("modifier");
-    QTest::addColumn<QList<int>>("nonTriggeringMods");
-
-    const QStringList trigger = QStringList{s_serviceName, s_path, s_serviceName, QStringLiteral("shortcut")};
-    const QStringList e = QStringList();
-
-    QTest::newRow("leftMeta") << trigger << e << e << e << KEY_LEFTMETA << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("rightMeta") << trigger << e << e << e << KEY_RIGHTMETA << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("leftAlt") << e << trigger << e << e << KEY_LEFTALT << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("rightAlt") << e << trigger << e << e << KEY_RIGHTALT << QList<int>{KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("leftControl") << e << e << trigger << e << KEY_LEFTCTRL << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("rightControl") << e << e << trigger << e << KEY_RIGHTCTRL << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTMETA, KEY_RIGHTMETA, KEY_LEFTSHIFT, KEY_RIGHTSHIFT};
-    QTest::newRow("leftShift") << e << e << e << trigger << KEY_LEFTSHIFT << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
-    QTest::newRow("rightShift") << e << e << e << trigger << KEY_RIGHTSHIFT << QList<int>{KEY_LEFTALT, KEY_RIGHTALT, KEY_LEFTCTRL, KEY_RIGHTCTRL, KEY_LEFTMETA, KEY_RIGHTMETA};
-}
-
-void NoGlobalShortcutsTest::testTrigger()
-{
-    // test based on ModifierOnlyShortcutTest::testTrigger
-    Target target;
-    QSignalSpy triggeredSpy(&target, &Target::shortcutTriggered);
-
-    KConfigGroup group = kwinApp()->config()->group(QStringLiteral("ModifierOnlyShortcuts"));
-    QFETCH(QStringList, metaConfig);
-    QFETCH(QStringList, altConfig);
-    QFETCH(QStringList, shiftConfig);
-    QFETCH(QStringList, controlConfig);
-    group.writeEntry("Meta", metaConfig);
-    group.writeEntry("Alt", altConfig);
-    group.writeEntry("Shift", shiftConfig);
-    group.writeEntry("Control", controlConfig);
-    group.sync();
-    workspace()->slotReconfigure();
-
-    // configured shortcut should trigger
-    quint32 timestamp = 1;
-    QFETCH(int, modifier);
-    Test::keyboardKeyPressed(modifier, timestamp++);
-    Test::keyboardKeyReleased(modifier, timestamp++);
-    QCOMPARE(triggeredSpy.count(), 0);
-
-    // the other shortcuts should not trigger
-    QFETCH(QList<int>, nonTriggeringMods);
-    for (auto it = nonTriggeringMods.constBegin(), end = nonTriggeringMods.constEnd(); it != end; it++) {
-        Test::keyboardKeyPressed(*it, timestamp++);
-        Test::keyboardKeyReleased(*it, timestamp++);
-        QCOMPARE(triggeredSpy.count(), 0);
-    }
 }
 
 void NoGlobalShortcutsTest::testKGlobalAccel()

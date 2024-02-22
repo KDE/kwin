@@ -15,7 +15,6 @@
 #include "inputmethod.h"
 #include "keyboard_layout.h"
 #include "keyboard_repeat.h"
-#include "modifier_only_shortcuts.h"
 #include "wayland/datadevice.h"
 #include "wayland/keyboard.h"
 #include "wayland/seat.h"
@@ -128,10 +127,6 @@ void KeyboardInputRedirection::init()
     m_keyboardLayout = new KeyboardLayout(m_xkb.get(), config);
     m_keyboardLayout->init();
     m_input->installInputEventSpy(m_keyboardLayout);
-
-    if (waylandServer()->hasGlobalShortcutSupport()) {
-        m_input->installInputEventSpy(new ModifierOnlyShortcuts);
-    }
 
     KeyboardRepeat *keyRepeatSpy = new KeyboardRepeat(m_xkb.get());
     connect(keyRepeatSpy, &KeyboardRepeat::keyRepeat, this,
