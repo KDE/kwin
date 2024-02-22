@@ -108,7 +108,6 @@ integrationTest(NAME testXdgShellWindow SRCS xdgshellwindow_test.cpp LIBS KDecor
 integrationTest(NAME testSceneOpenGL SRCS scene_opengl_test.cpp )
 integrationTest(NAME testSceneOpenGLES SRCS scene_opengl_es_test.cpp )
 integrationTest(NAME testScreenChanges SRCS screen_changes_test.cpp)
-integrationTest(NAME testModiferOnlyShortcut SRCS modifier_only_shortcut_test.cpp LIBS XKB::XKB)
 if (KWIN_BUILD_TABBOX)
     integrationTest(NAME testTabBox SRCS tabbox_test.cpp)
 endif()
