@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 02:28+0000\n"
+"POT-Creation-Date: 2024-02-22 02:24+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -3979,12 +3979,12 @@ msgstr "&Δραστηριότητες"
 msgid "Move &To Current Desktop"
 msgstr "Στην επι&φάνεια εργασίας"
 
-#: useractions.cpp:483 useractions.cpp:550
+#: useractions.cpp:483 useractions.cpp:542
 #, kde-format
 msgid "&All Desktops"
 msgstr "Ό&λες τις επιφάνειες εργασίας"
 
-#: useractions.cpp:523
+#: useractions.cpp:515
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -3992,12 +3992,12 @@ msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Νέα επιφάνεια εργασίας"
 
-#: useractions.cpp:594
+#: useractions.cpp:577
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:607
+#: useractions.cpp:590
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -4005,14 +4005,14 @@ msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "&Νέα επιφάνεια εργασίας"
 
-#: useractions.cpp:619
+#: useractions.cpp:602
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Στην επι&φάνεια εργασίας"
 
-#: useractions.cpp:650
+#: useractions.cpp:633
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -4020,384 +4020,384 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Οθόνη &%1 (%2)"
 
-#: useractions.cpp:676
+#: useractions.cpp:659
 #, kde-format
 msgid "&All Activities"
 msgstr "&Όλες οι δραστηριότητες"
 
-#: useractions.cpp:724
+#: useractions.cpp:707
 #, fuzzy, kde-format
 #| msgid "Move To &Screen"
 msgid "Move to %1"
 msgstr "Μετακίνη&ση στην οθόνη"
 
-#: useractions.cpp:843
+#: useractions.cpp:826
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> χρησιμοποιείται ήδη"
 
-#: useractions.cpp:845
+#: useractions.cpp:828
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> χρησιμοποιείται από την ενέργεια %2 του %3"
 
-#: useractions.cpp:925
+#: useractions.cpp:908
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Μενού λειτουργιών παραθύρου"
 
-#: useractions.cpp:927
+#: useractions.cpp:910
 #, kde-format
 msgid "Close Window"
 msgstr "Κλείσιμο παραθύρου"
 
-#: useractions.cpp:929
+#: useractions.cpp:912
 #, kde-format
 msgid "Maximize Window"
 msgstr "Μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:931
+#: useractions.cpp:914
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Κατακόρυφη μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:933
+#: useractions.cpp:916
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Οριζόντια μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:935
+#: useractions.cpp:918
 #, kde-format
 msgid "Minimize Window"
 msgstr "Ελαχιστοποίηση παραθύρου"
 
-#: useractions.cpp:937
+#: useractions.cpp:920
 #, kde-format
 msgid "Shade Window"
 msgstr "Τύλιγμα παραθύρου"
 
-#: useractions.cpp:939
+#: useractions.cpp:922
 #, kde-format
 msgid "Move Window"
 msgstr "Μετακίνηση παραθύρου"
 
-#: useractions.cpp:941
+#: useractions.cpp:924
 #, kde-format
 msgid "Resize Window"
 msgstr "Αλλαγή μεγέθους παραθύρου"
 
-#: useractions.cpp:943
+#: useractions.cpp:926
 #, kde-format
 msgid "Raise Window"
 msgstr "Ανύψωση παραθύρου"
 
-#: useractions.cpp:945
+#: useractions.cpp:928
 #, kde-format
 msgid "Lower Window"
 msgstr "Χαμήλωμα παραθύρου"
 
-#: useractions.cpp:947
+#: useractions.cpp:930
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Ανύψωση/Χαμήλωμα παραθύρου"
 
-#: useractions.cpp:949
+#: useractions.cpp:932
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Κάνε το παράθυρο πλήρους οθόνης"
 
-#: useractions.cpp:951
+#: useractions.cpp:934
 #, fuzzy, kde-format
 #| msgid "Hide Window Border"
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Απόκρυψη περιγράμματος παραθύρου"
 
-#: useractions.cpp:953
+#: useractions.cpp:936
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Διατήρηση παραθύρου πάνω από τα άλλα"
 
-#: useractions.cpp:955
+#: useractions.cpp:938
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Διατήρηση παραθύρου κάτω από τα άλλα"
 
-#: useractions.cpp:957
+#: useractions.cpp:940
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Ενεργοποίηση παραθύρου που απαιτεί προσοχή"
 
-#: useractions.cpp:959
+#: useractions.cpp:942
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Ορισμός συντόμευσης παραθύρου"
 
-#: useractions.cpp:961
+#: useractions.cpp:944
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Window to the Center"
 msgstr "Μετακίνηση παραθύρου στην ομάδα"
 
-#: useractions.cpp:963
+#: useractions.cpp:946
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Μετακίνηση παραθύρου"
 
-#: useractions.cpp:965
+#: useractions.cpp:948
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Μετακίνηση παραθύρου"
 
-#: useractions.cpp:967
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Μετακίνηση παραθύρου"
 
-#: useractions.cpp:969
+#: useractions.cpp:952
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Μετακίνηση παραθύρου"
 
-#: useractions.cpp:971
+#: useractions.cpp:954
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Οριζόντια μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:973
+#: useractions.cpp:956
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Κατακόρυφη μεγιστοποίηση παραθύρου"
 
-#: useractions.cpp:975
+#: useractions.cpp:958
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Στοίβαξη και σμίκρυνση παραθύρου οριζόντια"
 
-#: useractions.cpp:977
+#: useractions.cpp:960
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Στοίβαξη και σμίκρυνση παραθύρου κατακόρυφα"
 
-#: useractions.cpp:979
+#: useractions.cpp:962
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου στα αριστερά"
 
-#: useractions.cpp:981
+#: useractions.cpp:964
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου στα δεξιά"
 
-#: useractions.cpp:983
+#: useractions.cpp:966
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Γρήγορη στοίβαξη παραθύρου στην κορυφή"
 
-#: useractions.cpp:985
+#: useractions.cpp:968
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω"
 
-#: useractions.cpp:987
+#: useractions.cpp:970
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου πάνω αριστερά"
 
-#: useractions.cpp:989
+#: useractions.cpp:972
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω αριστερά"
 
-#: useractions.cpp:991
+#: useractions.cpp:974
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου πάνω δεξιά"
 
-#: useractions.cpp:993
+#: useractions.cpp:976
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Γρήγορη στοίβαξη παραθύρου κάτω δεξιά"
 
-#: useractions.cpp:995
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Εναλλαγή στο πάνω παράθυρο"
 
-#: useractions.cpp:997
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Εναλλαγή στο κάτω παράθυρο"
 
-#: useractions.cpp:999
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Εναλλαγή στο παράθυρο δεξιά"
 
-#: useractions.cpp:1001
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
-#: useractions.cpp:1003
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Αύξηση της αδιαφάνειας του ενεργού παραθύρου κατά 5%"
 
-#: useractions.cpp:1005
+#: useractions.cpp:988
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Μείωση της αδιαφάνειας του ενεργού παραθύρου κατά 5%"
 
-#: useractions.cpp:1008
+#: useractions.cpp:991
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Διατήρηση παραθύρου σε όλες τις επιφάνειες εργασίας"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1002
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Παράθυρο στην Επιφάνεια εργασίας %1"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1004
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Παράθυρο στην επόμενη Επιφάνεια εργασίας"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1005
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Παράθυρο στην προηγούμενη Επιφάνεια εργασίας"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1006
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1008
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1010
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Μετάβαση μία επιφάνεια εργασίας πάνω"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1012
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1016
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Παράθυρο στην οθόνη %1"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1023
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Παράθυρο στην επόμενη οθόνη"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1025
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Παράθυρο στην προηγούμενη οθόνη"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1027
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Μετάβαση μία επιφάνεια εργασίας δεξιά"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1029
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Μετάβαση μία επιφάνεια εργασίας αριστερά"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1031
 #, fuzzy, kde-format
 #| msgid "Window to Screen 2"
 msgid "Move Window One Screen Up"
 msgstr "Παράθυρο στην οθόνη 2"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1033
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1037
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Εναλλαγή στην οθόνη %1"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1044
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Εναλλαγή στην επόμενη οθόνη"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1045
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Μετάβαση στην προηγούμενη οθόνη"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Εναλλαγή στο παράθυρο δεξιά"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Above"
 msgstr "Εναλλαγή στην οθόνη 0"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1052
 #, fuzzy, kde-format
 #| msgid "Switch to Screen 0"
 msgid "Switch to Screen Below"
 msgstr "Εναλλαγή στην οθόνη 0"
 
-#: useractions.cpp:1072
+#: useractions.cpp:1055
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Στην επι&φάνεια εργασίας"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1058
 #, kde-format
 msgid "Kill Window"
 msgstr "Σκότωμα παραθύρου"
 
-#: useractions.cpp:1141
+#: useractions.cpp:1124
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Ενεργοποίηση παραθύρου (%1)"
 
-#: useractions.cpp:1278
+#: useractions.cpp:1261
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "

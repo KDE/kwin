@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 02:28+0000\n"
+"POT-Creation-Date: 2024-02-22 02:24+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -3830,35 +3830,35 @@ msgstr "Hiện trong các &Hoạt động"
 msgid "Move &To Current Desktop"
 msgstr "Di chu&yển đến bàn làm việc hiện tại"
 
-#: useractions.cpp:483 useractions.cpp:550
+#: useractions.cpp:483 useractions.cpp:542
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Tất cả các bàn làm việc"
 
-#: useractions.cpp:523
+#: useractions.cpp:515
 #, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "Bàn làm việc &mới"
 
-#: useractions.cpp:594
+#: useractions.cpp:577
 #, kde-format
 msgid "Move to %1 %2"
 msgstr "Chuyển đến %1 %2"
 
-#: useractions.cpp:607
+#: useractions.cpp:590
 #, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "Thêm vào bàn làm việc &mới"
 
-#: useractions.cpp:619
+#: useractions.cpp:602
 #, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Chuyển đến bàn làm việc mới"
 
-#: useractions.cpp:650
+#: useractions.cpp:633
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -3866,359 +3866,359 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "Màn hình &%1 (%2)"
 
-#: useractions.cpp:676
+#: useractions.cpp:659
 #, kde-format
 msgid "&All Activities"
 msgstr "&Tất cả các Hoạt động"
 
-#: useractions.cpp:724
+#: useractions.cpp:707
 #, kde-format
 msgid "Move to %1"
 msgstr "Chuyển đến %1"
 
-#: useractions.cpp:843
+#: useractions.cpp:826
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> đang được dùng rồi"
 
-#: useractions.cpp:845
+#: useractions.cpp:828
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
 msgstr "<b>%1</b> được dùng bởi %2 trong %3"
 
-#: useractions.cpp:925
+#: useractions.cpp:908
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Trình đơn thao tác cửa sổ"
 
-#: useractions.cpp:927
+#: useractions.cpp:910
 #, kde-format
 msgid "Close Window"
 msgstr "Đóng cửa sổ"
 
-#: useractions.cpp:929
+#: useractions.cpp:912
 #, kde-format
 msgid "Maximize Window"
 msgstr "Phóng to cửa sổ"
 
-#: useractions.cpp:931
+#: useractions.cpp:914
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Phóng to cửa sổ theo chiều dọc"
 
-#: useractions.cpp:933
+#: useractions.cpp:916
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Phóng to cửa sổ theo chiều ngang"
 
-#: useractions.cpp:935
+#: useractions.cpp:918
 #, kde-format
 msgid "Minimize Window"
 msgstr "Thu nhỏ cửa sổ"
 
-#: useractions.cpp:937
+#: useractions.cpp:920
 #, kde-format
 msgid "Shade Window"
 msgstr "Che cửa sổ"
 
-#: useractions.cpp:939
+#: useractions.cpp:922
 #, kde-format
 msgid "Move Window"
 msgstr "Di chuyển cửa sổ"
 
-#: useractions.cpp:941
+#: useractions.cpp:924
 #, kde-format
 msgid "Resize Window"
 msgstr "Đổi cỡ cửa sổ"
 
-#: useractions.cpp:943
+#: useractions.cpp:926
 #, kde-format
 msgid "Raise Window"
 msgstr "Nâng cửa sổ lên"
 
-#: useractions.cpp:945
+#: useractions.cpp:928
 #, kde-format
 msgid "Lower Window"
 msgstr "Hạ cửa sổ xuống"
 
-#: useractions.cpp:947
+#: useractions.cpp:930
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Nâng/hạ cửa sổ lên/xuống"
 
-#: useractions.cpp:949
+#: useractions.cpp:932
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Làm cửa sổ toàn màn hình"
 
-#: useractions.cpp:951
+#: useractions.cpp:934
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr "Bật/tắt thanh tiêu đề và khung cửa sổ"
 
-#: useractions.cpp:953
+#: useractions.cpp:936
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Giữ cửa sổ trên các cửa sổ khác"
 
-#: useractions.cpp:955
+#: useractions.cpp:938
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Giữ cửa sổ dưới các cửa sổ khác"
 
-#: useractions.cpp:957
+#: useractions.cpp:940
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Kích hoạt cửa sổ đang yêu cầu sự chú ý"
 
-#: useractions.cpp:959
+#: useractions.cpp:942
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Cài đặt phím tắt cửa sổ"
 
-#: useractions.cpp:961
+#: useractions.cpp:944
 #, kde-format
 msgid "Move Window to the Center"
 msgstr "Di chuyển cửa sổ vào tâm"
 
-#: useractions.cpp:963
+#: useractions.cpp:946
 #, kde-format
 msgid "Move Window Right"
 msgstr "Di chuyển cửa sổ sang phải"
 
-#: useractions.cpp:965
+#: useractions.cpp:948
 #, kde-format
 msgid "Move Window Left"
 msgstr "Di chuyển cửa sổ sang trái"
 
-#: useractions.cpp:967
+#: useractions.cpp:950
 #, kde-format
 msgid "Move Window Up"
 msgstr "Di chuyển cửa sổ lên trên"
 
-#: useractions.cpp:969
+#: useractions.cpp:952
 #, kde-format
 msgid "Move Window Down"
 msgstr "Di chuyển cửa sổ xuống dưới"
 
-#: useractions.cpp:971
+#: useractions.cpp:954
 #, kde-format
 msgid "Expand Window Horizontally"
 msgstr "Mở rộng cửa sổ theo chiều ngang"
 
-#: useractions.cpp:973
+#: useractions.cpp:956
 #, kde-format
 msgid "Expand Window Vertically"
 msgstr "Mở rộng cửa sổ theo chiều dọc"
 
-#: useractions.cpp:975
+#: useractions.cpp:958
 #, kde-format
 msgid "Shrink Window Horizontally"
 msgstr "Thu gọn cửa sổ theo chiều ngang"
 
-#: useractions.cpp:977
+#: useractions.cpp:960
 #, kde-format
 msgid "Shrink Window Vertically"
 msgstr "Thu gọn cửa sổ theo chiều dọc"
 
-#: useractions.cpp:979
+#: useractions.cpp:962
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Lát nhanh cửa sổ sang trái"
 
-#: useractions.cpp:981
+#: useractions.cpp:964
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Lát nhanh cửa sổ sang phải"
 
-#: useractions.cpp:983
+#: useractions.cpp:966
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Lát nhanh cửa sổ lên trên"
 
-#: useractions.cpp:985
+#: useractions.cpp:968
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Lát nhanh cửa sổ xuống dưới"
 
-#: useractions.cpp:987
+#: useractions.cpp:970
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Lát nhanh cửa sổ vào góc trái trên"
 
-#: useractions.cpp:989
+#: useractions.cpp:972
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Lát nhanh cửa sổ vào góc trái dưới"
 
-#: useractions.cpp:991
+#: useractions.cpp:974
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Lát nhanh cửa sổ vào góc phải trên"
 
-#: useractions.cpp:993
+#: useractions.cpp:976
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Lát nhanh cửa sổ vào góc phải dưới"
 
-#: useractions.cpp:995
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Chuyển sang cửa sổ phía trên"
 
-#: useractions.cpp:997
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Chuyển sang cửa sổ phía dưới"
 
-#: useractions.cpp:999
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Chuyển sang cửa sổ bên phải"
 
-#: useractions.cpp:1001
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Chuyển sang cửa sổ bên trái"
 
-#: useractions.cpp:1003
+#: useractions.cpp:986
 #, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Tăng độ mờ đục của cửa sổ hoạt động thêm 5%"
 
-#: useractions.cpp:1005
+#: useractions.cpp:988
 #, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Giảm độ mờ đục của cửa sổ hoạt động bớt 5%"
 
-#: useractions.cpp:1008
+#: useractions.cpp:991
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Giữ cửa sổ ở tất cả các bàn làm việc"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1002
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Cửa sổ đến bàn làm việc %1"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1004
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Cửa sổ đến bàn làm việc sau"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1005
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Cửa sổ đến bàn làm việc trước"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1006
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Cửa sổ đến bàn làm việc bên phải"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1008
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Cửa sổ đến bàn làm việc bên trái"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1010
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Cửa sổ đến bàn làm việc phía trên"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1012
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Cửa sổ đến bàn làm việc phía dưới"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1016
 #, kde-format
 msgid "Move Window to Screen %1"
 msgstr "Di chuyển cửa sổ đến màn hình %1"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1023
 #, kde-format
 msgid "Move Window to Next Screen"
 msgstr "Di chuyển cửa sổ đến màn hình sau"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1025
 #, kde-format
 msgid "Move Window to Previous Screen"
 msgstr "Di chuyển cửa sổ đến màn hình trước"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1027
 #, kde-format
 msgid "Move Window One Screen to the Right"
 msgstr "Di chuyển cửa sổ đến màn hình bên phải"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1029
 #, kde-format
 msgid "Move Window One Screen to the Left"
 msgstr "Di chuyển cửa sổ đến màn hình bên trái"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1031
 #, kde-format
 msgid "Move Window One Screen Up"
 msgstr "Di chuyển cửa sổ đến màn hình phía trên"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1033
 #, kde-format
 msgid "Move Window One Screen Down"
 msgstr "Di chuyển cửa sổ đến màn hình phía dưới"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1037
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Chuyển sang màn hình %1"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1044
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Chuyển sang màn hình sau"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1045
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Chuyển sang màn hình trước"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1046
 #, kde-format
 msgid "Switch to Screen to the Right"
 msgstr "Chuyển sang màn hình bên phải"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1048
 #, kde-format
 msgid "Switch to Screen to the Left"
 msgstr "Chuyển sang màn hình bên trái"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1050
 #, kde-format
 msgid "Switch to Screen Above"
 msgstr "Chuyển sang màn hình phía trên"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1052
 #, kde-format
 msgid "Switch to Screen Below"
 msgstr "Chuyển sang màn hình phía dưới"
 
-#: useractions.cpp:1072
+#: useractions.cpp:1055
 #, kde-format
 msgid "Peek at Desktop"
 msgstr "Ngó qua bàn làm việc"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1058
 #, kde-format
 msgid "Kill Window"
 msgstr "Diệt cửa sổ"
 
-#: useractions.cpp:1141
+#: useractions.cpp:1124
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Kích hoạt cửa sổ (%1)"
 
-#: useractions.cpp:1278
+#: useractions.cpp:1261
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "

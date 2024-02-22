@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-20 02:28+0000\n"
+"POT-Creation-Date: 2024-02-22 02:24+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -4076,12 +4076,12 @@ msgstr "&Aktivnosti"
 msgid "Move &To Current Desktop"
 msgstr "Premesti na &površ"
 
-#: useractions.cpp:483 useractions.cpp:550
+#: useractions.cpp:483 useractions.cpp:542
 #, kde-format
 msgid "&All Desktops"
 msgstr "&Sve površi"
 
-#: useractions.cpp:523
+#: useractions.cpp:515
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -4089,12 +4089,12 @@ msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Nova površ"
 
-#: useractions.cpp:594
+#: useractions.cpp:577
 #, kde-format
 msgid "Move to %1 %2"
 msgstr ""
 
-#: useractions.cpp:607
+#: useractions.cpp:590
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -4102,14 +4102,14 @@ msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
 msgstr "&Nova površ"
 
-#: useractions.cpp:619
+#: useractions.cpp:602
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
 msgstr "Premesti na &površ"
 
-#: useractions.cpp:650
+#: useractions.cpp:633
 #, kde-format
 msgctxt ""
 "@item:inmenu List of all Screens to send a window to. First argument is a "
@@ -4117,24 +4117,24 @@ msgctxt ""
 msgid "Screen &%1 (%2)"
 msgstr "ekran &%1 (%2)"
 
-#: useractions.cpp:676
+#: useractions.cpp:659
 #, kde-format
 msgid "&All Activities"
 msgstr "S&ve aktivnosti"
 
-#: useractions.cpp:724
+#: useractions.cpp:707
 #, fuzzy, kde-format
 #| msgid "Move To &Screen"
 msgid "Move to %1"
 msgstr "Premesti na &ekran"
 
-#: useractions.cpp:843
+#: useractions.cpp:826
 #, kde-format
 msgctxt "'%1' is a keyboard shortcut like 'ctrl+w'"
 msgid "<b>%1</b> is already in use"
 msgstr "<b>%1</b> se već koristi"
 
-#: useractions.cpp:845
+#: useractions.cpp:828
 #, kde-format
 msgctxt "keyboard shortcut '%1' is used by action '%2' in application '%3'"
 msgid "<b>%1</b> is used by %2 in %3"
@@ -4142,360 +4142,360 @@ msgstr ""
 "<b>%1</b> se već koristi za „%2“ u %3|/|<b>%1</b> se već koristi za „%2“ u "
 "$[lok %3]"
 
-#: useractions.cpp:925
+#: useractions.cpp:908
 #, kde-format
 msgid "Window Operations Menu"
 msgstr "Meni sa operacijama nad prozorima"
 
-#: useractions.cpp:927
+#: useractions.cpp:910
 #, kde-format
 msgid "Close Window"
 msgstr "Zatvori prozor"
 
-#: useractions.cpp:929
+#: useractions.cpp:912
 #, kde-format
 msgid "Maximize Window"
 msgstr "Maksimizuj prozor"
 
-#: useractions.cpp:931
+#: useractions.cpp:914
 #, kde-format
 msgid "Maximize Window Vertically"
 msgstr "Uspravno maksimizuj prozor"
 
-#: useractions.cpp:933
+#: useractions.cpp:916
 #, kde-format
 msgid "Maximize Window Horizontally"
 msgstr "Vodoravno maksimizuj prozor"
 
-#: useractions.cpp:935
+#: useractions.cpp:918
 #, kde-format
 msgid "Minimize Window"
 msgstr "Minimizuj prozor"
 
-#: useractions.cpp:937
+#: useractions.cpp:920
 #, kde-format
 msgid "Shade Window"
 msgstr "Namotaj prozor"
 
-#: useractions.cpp:939
+#: useractions.cpp:922
 #, kde-format
 msgid "Move Window"
 msgstr "Pomeri prozor"
 
-#: useractions.cpp:941
+#: useractions.cpp:924
 #, kde-format
 msgid "Resize Window"
 msgstr "Promeni veličinu prozora"
 
-#: useractions.cpp:943
+#: useractions.cpp:926
 #, kde-format
 msgid "Raise Window"
 msgstr "Podigni prozor"
 
-#: useractions.cpp:945
+#: useractions.cpp:928
 #, kde-format
 msgid "Lower Window"
 msgstr "Spusti prozor"
 
-#: useractions.cpp:947
+#: useractions.cpp:930
 #, kde-format
 msgid "Toggle Window Raise/Lower"
 msgstr "Podigni/spusti prozor"
 
-#: useractions.cpp:949
+#: useractions.cpp:932
 #, kde-format
 msgid "Make Window Fullscreen"
 msgstr "Prozor preko celog ekrana"
 
-#: useractions.cpp:951
+#: useractions.cpp:934
 #, kde-format
 msgid "Toggle Window Titlebar and Frame"
 msgstr ""
 
-#: useractions.cpp:953
+#: useractions.cpp:936
 #, kde-format
 msgid "Keep Window Above Others"
 msgstr "Drži prozor iznad ostalih"
 
-#: useractions.cpp:955
+#: useractions.cpp:938
 #, kde-format
 msgid "Keep Window Below Others"
 msgstr "Drži prozor ispod ostalih"
 
-#: useractions.cpp:957
+#: useractions.cpp:940
 #, kde-format
 msgid "Activate Window Demanding Attention"
 msgstr "Aktiviraj prozor koji zahteva pažnju"
 
-#: useractions.cpp:959
+#: useractions.cpp:942
 #, kde-format
 msgid "Setup Window Shortcut"
 msgstr "Postavi prečicu prozora"
 
-#: useractions.cpp:961
+#: useractions.cpp:944
 #, fuzzy, kde-format
 #| msgid "Pack Window to the Left"
 msgid "Move Window to the Center"
 msgstr "Spakuj prozor ulevo"
 
-#: useractions.cpp:963
+#: useractions.cpp:946
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Right"
 msgstr "Pomeri prozor"
 
-#: useractions.cpp:965
+#: useractions.cpp:948
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Left"
 msgstr "Pomeri prozor"
 
-#: useractions.cpp:967
+#: useractions.cpp:950
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Up"
 msgstr "Pomeri prozor"
 
-#: useractions.cpp:969
+#: useractions.cpp:952
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Window Down"
 msgstr "Pomeri prozor"
 
-#: useractions.cpp:971
+#: useractions.cpp:954
 #, fuzzy, kde-format
 #| msgid "Maximize Window Horizontally"
 msgid "Expand Window Horizontally"
 msgstr "Vodoravno maksimizuj prozor"
 
-#: useractions.cpp:973
+#: useractions.cpp:956
 #, fuzzy, kde-format
 #| msgid "Maximize Window Vertically"
 msgid "Expand Window Vertically"
 msgstr "Uspravno maksimizuj prozor"
 
-#: useractions.cpp:975
+#: useractions.cpp:958
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Horizontally"
 msgid "Shrink Window Horizontally"
 msgstr "Spakuj i skupi prozor vodoravno"
 
-#: useractions.cpp:977
+#: useractions.cpp:960
 #, fuzzy, kde-format
 #| msgid "Pack Shrink Window Vertically"
 msgid "Shrink Window Vertically"
 msgstr "Spakuj i skupi prozor uspravno"
 
-#: useractions.cpp:979
+#: useractions.cpp:962
 #, kde-format
 msgid "Quick Tile Window to the Left"
 msgstr "Brzo popločaj prozor levo"
 
-#: useractions.cpp:981
+#: useractions.cpp:964
 #, kde-format
 msgid "Quick Tile Window to the Right"
 msgstr "Brzo popločaj prozor desno"
 
-#: useractions.cpp:983
+#: useractions.cpp:966
 #, kde-format
 msgid "Quick Tile Window to the Top"
 msgstr "Brzo popločaj prozor gore"
 
-#: useractions.cpp:985
+#: useractions.cpp:968
 #, kde-format
 msgid "Quick Tile Window to the Bottom"
 msgstr "Brzo popločaj prozor dole"
 
-#: useractions.cpp:987
+#: useractions.cpp:970
 #, kde-format
 msgid "Quick Tile Window to the Top Left"
 msgstr "Brzo popločaj prozor gore levo"
 
-#: useractions.cpp:989
+#: useractions.cpp:972
 #, kde-format
 msgid "Quick Tile Window to the Bottom Left"
 msgstr "Brzo popločaj prozor dole levo"
 
-#: useractions.cpp:991
+#: useractions.cpp:974
 #, kde-format
 msgid "Quick Tile Window to the Top Right"
 msgstr "Brzo popločaj prozor gore desno"
 
-#: useractions.cpp:993
+#: useractions.cpp:976
 #, kde-format
 msgid "Quick Tile Window to the Bottom Right"
 msgstr "Brzo popločaj prozor dole desno"
 
-#: useractions.cpp:995
+#: useractions.cpp:978
 #, kde-format
 msgid "Switch to Window Above"
 msgstr "Na prozor iznad"
 
-#: useractions.cpp:997
+#: useractions.cpp:980
 #, kde-format
 msgid "Switch to Window Below"
 msgstr "Na prozor ispod"
 
-#: useractions.cpp:999
+#: useractions.cpp:982
 #, kde-format
 msgid "Switch to Window to the Right"
 msgstr "Na prozor prozor desno"
 
-#: useractions.cpp:1001
+#: useractions.cpp:984
 #, kde-format
 msgid "Switch to Window to the Left"
 msgstr "Na prozor levo"
 
-#: useractions.cpp:1003
+#: useractions.cpp:986
 #, fuzzy, kde-format
 #| msgid "Increase Opacity of Active Window by 5 %"
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Uvećaj neprozirnost aktivnog prozora 5%"
 
-#: useractions.cpp:1005
+#: useractions.cpp:988
 #, fuzzy, kde-format
 #| msgid "Decrease Opacity of Active Window by 5 %"
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Smanji neprozirnost aktivnog prozora 5%"
 
-#: useractions.cpp:1008
+#: useractions.cpp:991
 #, kde-format
 msgid "Keep Window on All Desktops"
 msgstr "Drži prozor na svim površima"
 
-#: useractions.cpp:1019
+#: useractions.cpp:1002
 #, kde-format
 msgid "Window to Desktop %1"
 msgstr "Prozor na površ %1"
 
-#: useractions.cpp:1021
+#: useractions.cpp:1004
 #, kde-format
 msgid "Window to Next Desktop"
 msgstr "Prozor na narednu površ"
 
-#: useractions.cpp:1022
+#: useractions.cpp:1005
 #, kde-format
 msgid "Window to Previous Desktop"
 msgstr "Prozor na prethodnu površ"
 
-#: useractions.cpp:1023
+#: useractions.cpp:1006
 #, kde-format
 msgid "Window One Desktop to the Right"
 msgstr "Prozor jednu površ udesno"
 
-#: useractions.cpp:1025
+#: useractions.cpp:1008
 #, kde-format
 msgid "Window One Desktop to the Left"
 msgstr "Prozor jednu površ ulevo"
 
-#: useractions.cpp:1027
+#: useractions.cpp:1010
 #, kde-format
 msgid "Window One Desktop Up"
 msgstr "Prozor jednu površ nagore"
 
-#: useractions.cpp:1029
+#: useractions.cpp:1012
 #, kde-format
 msgid "Window One Desktop Down"
 msgstr "Prozor jednu površ nadole"
 
-#: useractions.cpp:1033
+#: useractions.cpp:1016
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window to Screen %1"
 msgstr "Prozor na ekran %1"
 
-#: useractions.cpp:1040
+#: useractions.cpp:1023
 #, fuzzy, kde-format
 #| msgid "Window to Next Screen"
 msgid "Move Window to Next Screen"
 msgstr "Prozor na naredni ekran"
 
-#: useractions.cpp:1042
+#: useractions.cpp:1025
 #, fuzzy, kde-format
 #| msgid "Window to Previous Screen"
 msgid "Move Window to Previous Screen"
 msgstr "Prozor na prethodni ekran"
 
-#: useractions.cpp:1044
+#: useractions.cpp:1027
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Window One Screen to the Right"
 msgstr "Prozor jednu površ udesno"
 
-#: useractions.cpp:1046
+#: useractions.cpp:1029
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Window One Screen to the Left"
 msgstr "Prozor jednu površ ulevo"
 
-#: useractions.cpp:1048
+#: useractions.cpp:1031
 #, fuzzy, kde-format
 #| msgid "Window to Screen %1"
 msgid "Move Window One Screen Up"
 msgstr "Prozor na ekran %1"
 
-#: useractions.cpp:1050
+#: useractions.cpp:1033
 #, fuzzy, kde-format
 #| msgid "Window One Desktop Down"
 msgid "Move Window One Screen Down"
 msgstr "Prozor jednu površ nadole"
 
-#: useractions.cpp:1054
+#: useractions.cpp:1037
 #, kde-format
 msgid "Switch to Screen %1"
 msgstr "Na ekran %1"
 
-#: useractions.cpp:1061
+#: useractions.cpp:1044
 #, kde-format
 msgid "Switch to Next Screen"
 msgstr "Na naredni ekran"
 
-#: useractions.cpp:1062
+#: useractions.cpp:1045
 #, kde-format
 msgid "Switch to Previous Screen"
 msgstr "Na prethodni ekran"
 
-#: useractions.cpp:1063
+#: useractions.cpp:1046
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Right"
 msgid "Switch to Screen to the Right"
 msgstr "Na prozor prozor desno"
 
-#: useractions.cpp:1065
+#: useractions.cpp:1048
 #, fuzzy, kde-format
 #| msgid "Switch to Window to the Left"
 msgid "Switch to Screen to the Left"
 msgstr "Na prozor levo"
 
-#: useractions.cpp:1067
+#: useractions.cpp:1050
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Above"
 msgstr "Na ekran %1"
 
-#: useractions.cpp:1069
+#: useractions.cpp:1052
 #, fuzzy, kde-format
 #| msgid "Switch to Screen %1"
 msgid "Switch to Screen Below"
 msgstr "Na ekran %1"
 
-#: useractions.cpp:1072
+#: useractions.cpp:1055
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Peek at Desktop"
 msgstr "Premesti na &površ"
 
-#: useractions.cpp:1075
+#: useractions.cpp:1058
 #, kde-format
 msgid "Kill Window"
 msgstr "Ubij prozor"
 
-#: useractions.cpp:1141
+#: useractions.cpp:1124
 #, kde-format
 msgid "Activate Window (%1)"
 msgstr "Aktiviraj prozor (%1)"
 
-#: useractions.cpp:1278
+#: useractions.cpp:1261
 #, kde-format
 msgid ""
 "The window manager is configured to consider the screen with the mouse on it "
