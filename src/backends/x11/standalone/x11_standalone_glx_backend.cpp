@@ -154,12 +154,15 @@ GlxBackend::~GlxBackend()
     if (isFailed()) {
         m_overlayWindow->destroy();
     }
-    // TODO: cleanup in error case
-    // do cleanup after initBuffer()
-    cleanupGL();
-    doneCurrent();
 
-    m_context.reset();
+    if (m_context) {
+        // TODO: cleanup in error case
+        // do cleanup after initBuffer()
+        cleanupGL();
+        doneCurrent();
+
+        m_context.reset();
+    }
 
     if (glxWindow) {
         glXDestroyWindow(display(), glxWindow);
