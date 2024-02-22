@@ -186,9 +186,16 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
             return std::nullopt;
         }
         m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->contextObject(), bufferSize, format, modifiers);
+        if (!m_swapchain) {
+            return std::nullopt;
+        }
     }
 
     m_buffer = m_swapchain->acquire();
+    if (!m_buffer) {
+        return std::nullopt;
+    }
+
     if (!m_query) {
         m_query = std::make_unique<GLRenderTimeQuery>();
     }
