@@ -146,24 +146,38 @@ StrutRect LayerShellV1Window::strutRect(StrutArea area) const
     switch (area) {
     case StrutAreaLeft:
         if (m_shellSurface->exclusiveEdge() == Qt::LeftEdge) {
-            return StrutRect(x(), y(), m_shellSurface->exclusiveZone(), height(), StrutAreaLeft);
+            return StrutRect(m_moveResizeGeometry.x(),
+                             m_moveResizeGeometry.y(),
+                             m_shellSurface->exclusiveZone(),
+                             m_moveResizeGeometry.height(),
+                             StrutAreaLeft);
         }
         return StrutRect();
     case StrutAreaRight:
         if (m_shellSurface->exclusiveEdge() == Qt::RightEdge) {
-            return StrutRect(x() + width() - m_shellSurface->exclusiveZone(), y(),
-                             m_shellSurface->exclusiveZone(), height(), StrutAreaRight);
+            return StrutRect(m_moveResizeGeometry.x() + m_moveResizeGeometry.width() - m_shellSurface->exclusiveZone(),
+                             m_moveResizeGeometry.y(),
+                             m_shellSurface->exclusiveZone(),
+                             m_moveResizeGeometry.height(),
+                             StrutAreaRight);
         }
         return StrutRect();
     case StrutAreaTop:
         if (m_shellSurface->exclusiveEdge() == Qt::TopEdge) {
-            return StrutRect(x(), y(), width(), m_shellSurface->exclusiveZone(), StrutAreaTop);
+            return StrutRect(m_moveResizeGeometry.x(),
+                             m_moveResizeGeometry.y(),
+                             m_moveResizeGeometry.width(),
+                             m_shellSurface->exclusiveZone(),
+                             StrutAreaTop);
         }
         return StrutRect();
     case StrutAreaBottom:
         if (m_shellSurface->exclusiveEdge() == Qt::BottomEdge) {
-            return StrutRect(x(), y() + height() - m_shellSurface->exclusiveZone(),
-                             width(), m_shellSurface->exclusiveZone(), StrutAreaBottom);
+            return StrutRect(m_moveResizeGeometry.x(),
+                             m_moveResizeGeometry.y() + m_moveResizeGeometry.height() - m_shellSurface->exclusiveZone(),
+                             m_moveResizeGeometry.width(),
+                             m_shellSurface->exclusiveZone(),
+                             StrutAreaBottom);
         }
         return StrutRect();
     default:
@@ -245,7 +259,6 @@ void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
 void LayerShellV1Window::handleSizeChanged()
 {
     updateGeometry(QRectF(pos(), clientSizeToFrameSize(surface()->size())));
-    scheduleRearrange();
 }
 
 void LayerShellV1Window::handleUnmapped()
