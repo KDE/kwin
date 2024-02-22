@@ -24,6 +24,7 @@
 #include "scene/workspacescene.h"
 #include "utils/common.h"
 #include "wayland/surface.h"
+#include "wayland/surfaceinvalidation_v1.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -140,6 +141,11 @@ void Compositor::composite(RenderLoop *renderLoop)
 #if KWIN_BUILD_NOTIFICATIONS
         KNotification::event(QStringLiteral("graphicsreset"), i18n("Desktop effects were restarted due to a graphics reset"));
 #endif
+        if (waylandServer()) {
+            if (auto invalidationManager = waylandServer()->surfaceInvalidationManager()) {
+                invalidationManager->invalidateSurfaces();
+            }
+        }
         reinitialize();
         return;
     }

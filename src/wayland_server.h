@@ -58,6 +58,7 @@ class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class PresentationTime;
 class XXColorManagerV2;
+class SurfaceInvalidationManagerV1Interface;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -126,6 +127,10 @@ public:
     XwaylandShellV1Interface *xwaylandShell() const
     {
         return m_xwaylandShell;
+    }
+    SurfaceInvalidationManagerV1Interface *surfaceInvalidationManager() const
+    {
+        return m_surfaceInvalidationManager;
     }
 
     bool isKeyboardShortcutsInhibited() const;
@@ -291,6 +296,7 @@ private:
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
     XXColorManagerV2 *m_xxColorManager = nullptr;
+    SurfaceInvalidationManagerV1Interface *m_surfaceInvalidationManager = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
