@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 Ryuichi Yamada <ryuichi_ya220@outlook.jp>
 # R.Suga <21r.suga@gmail.com>, 2022.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2022.
 msgid ""
@@ -5,8 +6,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-03-26 00:45+0000\n"
-"PO-Revision-Date: 2022-03-12 18:12-0800\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
+"PO-Revision-Date: 2024-02-15 19:13+0900\n"
+"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -15,22 +16,22 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "R.Suga"
+msgstr "R.Suga, Ryuichi Yamada"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "21r.suga@gmail.com"
+msgstr "21r.suga@gmail.com, ryuichi_ya220@outlook.jp"
 
 #: kcm.cpp:35
 #, kde-format
 msgid "Desktop Effects"
-msgstr "デスクトップエフェクト"
+msgstr "デスクトップ効果"
 
 #: kcm.cpp:39
 #, kde-format
@@ -61,7 +62,7 @@ msgstr "設定..."
 #: package/contents/ui/main.qml:20
 #, kde-format
 msgid "This module lets you configure desktop effects."
-msgstr "このモジュールでデスクトップエフェクトを設定できます。"
+msgstr "このモジュールでデスクトップ効果を設定できます。"
 
 #: package/contents/ui/main.qml:27
 #, kde-format
@@ -69,8 +70,8 @@ msgid ""
 "Hint: To find out or configure how to activate an effect, look at the "
 "effect's settings."
 msgstr ""
-"ヒント: エフェクトを有効化する方法を見つけたり設定するには、 エフェクト設定を"
-"確認してください。"
+"ヒント: デスクトップ効果を有効化する方法を理解したり変更したりするには、効果"
+"の設定を確認してください。"
 
 #: package/contents/ui/main.qml:47
 #, kde-format
@@ -80,14 +81,14 @@ msgstr "設定フィルタ"
 #: package/contents/ui/main.qml:59
 #, kde-format
 msgid "Exclude unsupported effects"
-msgstr "サポートされていないエフェクトを除外する"
+msgstr "サポートされていない効果を除外する"
 
 #: package/contents/ui/main.qml:67
 #, kde-format
 msgid "Exclude internal effects"
-msgstr "内部エフェクトを除外する"
+msgstr "内部効果を除外する"
 
 #: package/contents/ui/main.qml:125
 #, kde-format
 msgid "Get New Desktop Effects..."
-msgstr "新しいデスクトップエフェクトを取得..."
+msgstr "新しいデスクトップ効果を取得..."
