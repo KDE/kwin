@@ -516,9 +516,6 @@ void Connection::processEvents()
                     globalPos = workspace()->geometry().topLeft() + tte->transformedPosition(workspace()->geometry().size());
                 } else {
                     Output *output = tte->device()->output();
-                    if (!output && workspace()->activeWindow()) {
-                        output = workspace()->activeWindow()->output();
-                    }
                     if (!output) {
                         output = workspace()->activeOutput();
                     }
