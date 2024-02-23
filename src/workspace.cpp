@@ -762,16 +762,19 @@ void Workspace::removeUnmanaged(X11Window *window)
 
 void Workspace::addDeleted(Window *c)
 {
-    Q_ASSERT(!deleted.contains(c));
-    deleted.append(c);
+    // The window can be abscent in m_windows if it's uninitialized or unmapped (wayland only).
+    if (m_windows.contains(c)) {
+        deleted.append(c);
+    }
 }
 
 void Workspace::removeDeleted(Window *c)
 {
-    Q_ASSERT(deleted.contains(c));
-    Q_EMIT deletedRemoved(c);
-    deleted.removeAll(c);
-    removeFromStack(c);
+    if (deleted.contains(c)) {
+        Q_EMIT deletedRemoved(c);
+        deleted.removeAll(c);
+        removeFromStack(c);
+    }
 }
 
 void Workspace::addWaylandWindow(Window *window)
