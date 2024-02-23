@@ -318,6 +318,7 @@ target_sources(kwin PRIVATE
 install(FILES
     appmenu.h
     blur.h
+    clientconnection.h
     compositor.h
     contenttype_v1.h
     contrast.h
