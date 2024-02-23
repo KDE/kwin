@@ -1,13 +1,15 @@
 # SPDX-FileCopyrightText: None
 # SPDX-License-Identifier: CC0-1.0
 
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.20)
 project(quick-effect)
 
-find_package(ECM 5.240 REQUIRED NO_MODULE)
+set(KF6_MIN_VERSION "6.0.0")
+
+find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
-find_package(KF6 5.240 REQUIRED COMPONENTS
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     Package
 )
 
