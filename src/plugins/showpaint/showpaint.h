@@ -30,7 +30,7 @@ private Q_SLOTS:
     void toggle();
 
 private:
-    void paintGL(const QMatrix4x4 &projection, qreal scale);
+    void paintGL(const RenderTarget &renderTarget, const QMatrix4x4 &projection, qreal scale);
     void paintQPainter();
 
     bool m_active = false;

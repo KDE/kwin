@@ -11,6 +11,7 @@
 #include "showpaint.h"
 
 #include "core/pixelgrid.h"
+#include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
@@ -50,7 +51,7 @@ void ShowPaintEffect::paintScreen(const RenderTarget &renderTarget, const Render
     m_painted = QRegion();
     effects->paintScreen(renderTarget, viewport, mask, region, screen);
     if (effects->isOpenGLCompositing()) {
-        paintGL(viewport.projectionMatrix(), viewport.scale());
+        paintGL(renderTarget, viewport.projectionMatrix(), viewport.scale());
     } else if (effects->compositingType() == QPainterCompositing) {
         paintQPainter();
     }
@@ -65,12 +66,13 @@ void ShowPaintEffect::paintWindow(const RenderTarget &renderTarget, const Render
     effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
-void ShowPaintEffect::paintGL(const QMatrix4x4 &projection, qreal scale)
+void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const QMatrix4x4 &projection, qreal scale)
 {
     GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
     vbo->reset();
-    ShaderBinder binder(ShaderTrait::UniformColor);
+    ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
     binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projection);
+    binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     QColor color = s_colors[m_colorIndex];
