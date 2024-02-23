@@ -121,7 +121,10 @@ ApplicationWayland::~ApplicationWayland()
     if (effects) {
         effects->unloadAllEffects();
     }
+
     m_xwayland.reset();
+    waylandServer()->stop();
+
     destroyColorManager();
     destroyWorkspace();
 

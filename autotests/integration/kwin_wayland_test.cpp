@@ -100,6 +100,7 @@ WaylandTestApplication::~WaylandTestApplication()
         effects->unloadAllEffects();
     }
     m_xwayland.reset();
+    waylandServer()->stop();
     destroyVirtualInputDevices();
     destroyColorManager();
     destroyWorkspace();

@@ -74,6 +74,7 @@ public:
      * function returns @c true; otherwise @c false is returned.
      */
     bool start();
+    void stop();
     void dispatchEvents();
 
     /**

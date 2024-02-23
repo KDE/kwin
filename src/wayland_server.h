@@ -78,6 +78,7 @@ public:
     bool init(InitializationFlags flags = InitializationFlag::NoOptions);
 
     bool start();
+    void stop();
 
     Display *display() const
     {

@@ -113,6 +113,24 @@ bool Display::start()
     return true;
 }
 
+void Display::stop()
+{
+    if (!d->running) {
+        return;
+    }
+
+    wl_display_destroy_clients(d->display);
+
+    delete d->socketNotifier;
+    d->socketNotifier = nullptr;
+
+    QAbstractEventDispatcher *dispatcher = QCoreApplication::eventDispatcher();
+    disconnect(dispatcher, &QAbstractEventDispatcher::aboutToBlock, this, &Display::flush);
+
+    d->running = false;
+    Q_EMIT runningChanged(false);
+}
+
 void Display::dispatchEvents()
 {
     if (wl_event_loop_dispatch(d->loop, 0) != 0) {

@@ -298,6 +298,11 @@ bool WaylandServer::start()
     return m_display->start();
 }
 
+void WaylandServer::stop()
+{
+    m_display->stop();
+}
+
 bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
 {
     if (!m_display->addSocketName(socketName)) {
