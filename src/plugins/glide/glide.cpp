@@ -41,7 +41,11 @@ static const QSet<QString> s_blacklist{
 
 static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale, const QMatrix4x4 &renderTargetTransformation)
 {
-    QMatrix4x4 ret = renderTargetTransformation;
+    QMatrix4x4 ret;
+
+    ret.scale(1, -1);
+    ret *= renderTargetTransformation;
+    ret.scale(1, -1);
 
     const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
     const float aspect = 1.0f;
