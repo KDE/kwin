@@ -62,7 +62,7 @@ void ThumbnailAsideEffect::paintScreen(const RenderTarget &renderTarget, const R
 
     for (const Data &d : std::as_const(windows)) {
         if (painted.intersects(d.rect)) {
-            WindowPaintData data(viewport.projectionMatrix());
+            WindowPaintData data;
             data.multiplyOpacity(opacity);
             QRect region;
             setPositionTransformations(data, region, d.window, d.rect, Qt::KeepAspectRatio);

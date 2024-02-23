@@ -117,14 +117,8 @@ void OffscreenData::maybeRender(EffectWindow *window)
         glClearColor(0.0, 0.0, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        QMatrix4x4 projectionMatrix;
-        projectionMatrix.ortho(QRectF(0, 0, textureSize.width(), textureSize.height()));
-
         WindowPaintData data;
-        data.setXTranslation(-logicalGeometry.x());
-        data.setYTranslation(-logicalGeometry.y());
         data.setOpacity(1.0);
-        data.setProjectionMatrix(projectionMatrix);
 
         const int mask = Effect::PAINT_WINDOW_TRANSFORMED | Effect::PAINT_WINDOW_TRANSLUCENT;
         effects->drawWindow(renderTarget, viewport, window, mask, infiniteRegion(), data);
@@ -185,7 +179,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     const qreal rgb = data.brightness() * data.opacity();
     const qreal a = data.opacity();
 
-    QMatrix4x4 mvp = data.projectionMatrix();
+    QMatrix4x4 mvp = viewport.projectionMatrix();
     mvp.translate(std::round(window->x() * scale), std::round(window->y() * scale));
 
     const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();

@@ -435,7 +435,7 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
     if (m_dndIcon) {
         const QRegion repaint = region & m_dndIcon->mapToGlobal(m_dndIcon->boundingRect()).toRect();
         if (!repaint.isEmpty()) {
-            m_renderer->renderItem(renderTarget, viewport, m_dndIcon.get(), 0, repaint, WindowPaintData(viewport.projectionMatrix()));
+            m_renderer->renderItem(renderTarget, viewport, m_dndIcon.get(), 0, repaint, WindowPaintData{});
         }
     }
 }
@@ -462,7 +462,7 @@ void WorkspaceScene::paintWindow(const RenderTarget &renderTarget, const RenderV
         return;
     }
 
-    WindowPaintData data(viewport.projectionMatrix());
+    WindowPaintData data;
     effects->paintWindow(renderTarget, viewport, item->effectWindow(), mask, region, data);
 }
 

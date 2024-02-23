@@ -422,7 +422,7 @@ void ContrastEffect::drawWindow(const RenderTarget &renderTarget, const RenderVi
 
         const QRegion effectiveShape = shape & region & screen;
         if (!effectiveShape.isEmpty()) {
-            doContrast(renderTarget, viewport, w, effectiveShape, w->opacity() * data.opacity(), data.projectionMatrix());
+            doContrast(renderTarget, viewport, w, effectiveShape, w->opacity() * data.opacity(), viewport.projectionMatrix());
         }
     }
 

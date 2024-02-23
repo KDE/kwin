@@ -228,7 +228,6 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
 {
     EffectWindow *window = screenshot->window;
 
-    WindowPaintData d;
     QRectF geometry = window->expandedGeometry();
     qreal devicePixelRatio = 1;
 
@@ -258,9 +257,6 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         validTarget = target->valid();
     }
     if (validTarget) {
-        d.setXTranslation(-geometry.x());
-        d.setYTranslation(-geometry.y());
-
         // render window into offscreen texture
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         QImage img;
@@ -272,10 +268,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             glClear(GL_COLOR_BUFFER_BIT);
             glClearColor(0.0, 0.0, 0.0, 1.0);
 
-            QMatrix4x4 projection;
-            projection.ortho(QRect(0, 0, geometry.width() * devicePixelRatio, geometry.height() * devicePixelRatio));
-            d.setProjectionMatrix(projection);
-
+            WindowPaintData d;
             effects->drawWindow(renderTarget, viewport, window, mask, infiniteRegion(), d);
 
             // copy content from framebuffer into image

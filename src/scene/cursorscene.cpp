@@ -58,7 +58,7 @@ void CursorScene::paint(const RenderTarget &renderTarget, const QRegion &region)
     RenderViewport viewport(QRectF(QPointF(), QSizeF(renderTarget.size()) / m_paintedOutput->scale()), m_paintedOutput->scale(), renderTarget);
     m_renderer->beginFrame(renderTarget, viewport);
     m_renderer->renderBackground(renderTarget, viewport, region);
-    m_renderer->renderItem(renderTarget, viewport, m_rootItem.get(), 0, region, WindowPaintData(viewport.projectionMatrix()));
+    m_renderer->renderItem(renderTarget, viewport, m_rootItem.get(), 0, region, WindowPaintData{});
     m_renderer->endFrame();
 }
 

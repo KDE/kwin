@@ -300,7 +300,6 @@ class KWIN_EXPORT WindowPaintData : public PaintData
 {
 public:
     WindowPaintData();
-    explicit WindowPaintData(const QMatrix4x4 &projectionMatrix);
     WindowPaintData(const WindowPaintData &other);
     ~WindowPaintData() override;
     /**
@@ -436,23 +435,6 @@ public:
      * @see setCrossFadeProgress
      */
     qreal crossFadeProgress() const;
-
-    /**
-     * Sets the projection matrix that will be used when painting the window.
-     *
-     * The default projection matrix can be overridden by setting this matrix
-     */
-    void setProjectionMatrix(const QMatrix4x4 &matrix);
-
-    /**
-     * Returns the current projection matrix.
-     */
-    QMatrix4x4 projectionMatrix() const;
-
-    /**
-     * Returns a reference to the projection matrix.
-     */
-    QMatrix4x4 &rprojectionMatrix();
 
 private:
     const std::unique_ptr<WindowPaintDataPrivate> d;

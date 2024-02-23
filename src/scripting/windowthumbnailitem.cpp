@@ -117,6 +117,7 @@ void WindowThumbnailSource::update()
         if (!m_offscreenTexture) {
             return;
         }
+        m_offscreenTexture->setContentTransform(OutputTransform::FlipY);
         m_offscreenTexture->setFilter(GL_LINEAR);
         m_offscreenTexture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_offscreenTarget = std::make_unique<GLFramebuffer>(m_offscreenTexture.get());
@@ -128,18 +129,11 @@ void WindowThumbnailSource::update()
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    QMatrix4x4 projectionMatrix;
-    projectionMatrix.ortho(geometry.x() * devicePixelRatio, (geometry.x() + geometry.width()) * devicePixelRatio,
-                           geometry.y() * devicePixelRatio, (geometry.y() + geometry.height()) * devicePixelRatio, -1, 1);
-
-    WindowPaintData data;
-    data.setProjectionMatrix(projectionMatrix);
-
     // The thumbnail must be rendered using kwin's opengl context as VAOs are not
     // shared across contexts. Unfortunately, this also introduces a latency of 1
     // frame, which is not ideal, but it is acceptable for things such as thumbnails.
     const int mask = Scene::PAINT_WINDOW_TRANSFORMED;
-    Compositor::self()->scene()->renderer()->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, infiniteRegion(), data);
+    Compositor::self()->scene()->renderer()->renderItem(offscreenRenderTarget, offscreenViewport, m_handle->windowItem(), mask, infiniteRegion(), WindowPaintData{});
     GLFramebuffer::popFramebuffer();
 
     // The fence is needed to avoid the case where qtquick renderer starts using
