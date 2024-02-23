@@ -25,34 +25,6 @@
 namespace KWin
 {
 
-static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale)
-{
-    QMatrix4x4 ret;
-
-    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
-    const float aspect = 1.0f;
-    const float zNear = 0.1f;
-    const float zFar = 100.0f;
-
-    const float yMax = zNear * fovY;
-    const float yMin = -yMax;
-    const float xMin = yMin * aspect;
-    const float xMax = yMax * aspect;
-
-    ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
-
-    const auto deviceRect = scaledRect(rect, scale);
-
-    const float scaleFactor = 1.1 * fovY / yMax;
-    ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    ret.scale((xMax - xMin) * scaleFactor / deviceRect.width(),
-              -(yMax - yMin) * scaleFactor / deviceRect.height(),
-              0.001);
-    ret.translate(-deviceRect.x(), -deviceRect.y());
-
-    return ret;
-}
-
 SheetEffect::SheetEffect()
 {
     SheetConfig::instance(effects->config());
@@ -73,13 +45,6 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     m_duration = std::chrono::milliseconds(static_cast<int>(d));
 }
 
-void SheetEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-
-    effects->prePaintScreen(data, presentTime);
-}
-
 void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto animationIt = m_animations.find(w);
@@ -91,42 +56,51 @@ void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void SheetEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void SheetEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
-    auto animationIt = m_animations.constFind(w);
+    auto animationIt = m_animations.constFind(window);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
-    // Perspective projection distorts objects near edges of the viewport
-    // in undesired way. To fix this, the center of the window will be
-    // moved to the origin, after applying perspective projection, the
-    // center is moved back to its "original" projected position. Overall,
-    // this is how the window will be transformed:
-    //  [move to the origin] -> [scale] -> [rotate] -> [translate] ->
-    //    -> [perspective projection] -> [reverse "move to the origin"]
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale());
-    const QRectF windowGeo = w->frameGeometry();
-    const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
-    QMatrix4x4 invOffsetMatrix;
-    invOffsetMatrix.translate(invOffset.x(), invOffset.y());
-    data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
-
-    // Move the center of the window to the origin.
-    const QRectF screenGeo = effects->virtualScreenGeometry();
-    const QPointF offset = screenGeo.center() - windowGeo.center();
-    data.translate(offset.x(), offset.y());
-
     const qreal t = (*animationIt).timeLine.value();
-    data.setRotationAxis(Qt::XAxis);
-    data.setRotationAngle(interpolate(60.0, 0.0, t));
-    data *= QVector3D(1.0, t, t);
-    data.translate(0.0, -interpolate(w->y() - (*animationIt).parentY, 0.0, t));
+
+    const QRectF rect = window->expandedGeometry().translated(-window->pos());
+    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
+    const float aspect = rect.width() / rect.height();
+    const float zNear = 0.1f;
+    const float zFar = 100.0f;
+
+    const float yMax = zNear * fovY;
+    const float yMin = -yMax;
+    const float xMin = yMin * aspect;
+    const float xMax = yMax * aspect;
+
+    const float scaleFactor = 1.1 * fovY / yMax;
+
+    QMatrix4x4 matrix;
+    matrix.viewport(rect);
+    matrix.frustum(xMin, xMax, yMax, yMin, zNear, zFar);
+    matrix.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
+    matrix.scale((xMax - xMin) * scaleFactor / rect.width(), -(yMax - yMin) * scaleFactor / rect.height(), 0.001);
+    matrix.translate(-rect.x(), -rect.y());
+
+    matrix.scale(1.0, t, t);
+    matrix.translate(0.0, -interpolate(window->y() - (*animationIt).parentY, 0.0, t));
+
+    matrix.translate(window->width() / 2, 0);
+    matrix.rotate(interpolate(60.0, 0.0, t), 1, 0, 0);
+    matrix.translate(-window->width() / 2, 0);
+
+    for (WindowQuad &quad : quads) {
+        for (int i = 0; i < 4; ++i) {
+            const QPointF transformed = matrix.map(QPointF(quad[i].x(), quad[i].y()));
+            quad[i].setX(transformed.x());
+            quad[i].setY(transformed.y());
+        }
+    }
 
     data.multiplyOpacity(t);
-
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
 }
 
 void SheetEffect::postPaintWindow(EffectWindow *w)
@@ -136,6 +110,7 @@ void SheetEffect::postPaintWindow(EffectWindow *w)
         EffectWindow *w = animationIt.key();
         w->addRepaintFull();
         if ((*animationIt).timeLine.done()) {
+            unredirect(w);
             animationIt = m_animations.erase(animationIt);
         } else {
             ++animationIt;
@@ -188,6 +163,7 @@ void SheetEffect::slotWindowAdded(EffectWindow *w)
 
     w->setData(WindowAddedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
+    redirect(w);
     w->addRepaintFull();
 }
 
@@ -220,6 +196,7 @@ void SheetEffect::slotWindowClosed(EffectWindow *w)
 
     w->setData(WindowClosedGrabRole, QVariant::fromValue(static_cast<void *>(this)));
 
+    redirect(w);
     w->addRepaintFull();
 }
 

@@ -12,14 +12,14 @@
 #pragma once
 
 // kwineffects
-#include "effect/effect.h"
 #include "effect/effectwindow.h"
+#include "effect/offscreeneffect.h"
 #include "effect/timeline.h"
 
 namespace KWin
 {
 
-class SheetEffect : public Effect
+class SheetEffect : public OffscreenEffect
 {
     Q_OBJECT
     Q_PROPERTY(int duration READ duration)
@@ -29,9 +29,7 @@ public:
 
     void reconfigure(ReconfigureFlags flags) override;
 
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
     void postPaintWindow(EffectWindow *w) override;
 
     bool isActive() const override;
@@ -40,6 +38,9 @@ public:
     static bool supported();
 
     int duration() const;
+
+protected:
+    void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
