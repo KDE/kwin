@@ -4147,6 +4147,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgid "Move to %1 %2"
-#~ msgstr "Přesunout do %1 %2"
