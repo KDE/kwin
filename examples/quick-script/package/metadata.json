@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "KWin/Script",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "user@example.com",
+                "Name": "Your Name"
+            }
+        ],
+        "Description": "An example QtQuick script",
+        "EnabledByDefault": false,
+        "Icon": "preferences-system-windows-script-test",
+        "Id": "quick-script",
+        "License": "GPL",
+        "Name": "Quick Script"
+    },
+    "X-Plasma-API": "declarativescript"
+}
