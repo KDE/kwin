@@ -39,38 +39,6 @@ static const QSet<QString> s_blacklist{
     QStringLiteral("spectacle org.kde.spectacle"), // wayland
 };
 
-static QMatrix4x4 createPerspectiveMatrix(const QRectF &rect, const qreal scale, const QMatrix4x4 &renderTargetTransformation)
-{
-    QMatrix4x4 ret;
-
-    ret.scale(1, -1);
-    ret *= renderTargetTransformation;
-    ret.scale(1, -1);
-
-    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
-    const float aspect = 1.0f;
-    const float zNear = 0.1f;
-    const float zFar = 100.0f;
-
-    const float yMax = zNear * fovY;
-    const float yMin = -yMax;
-    const float xMin = yMin * aspect;
-    const float xMax = yMax * aspect;
-
-    ret.frustum(xMin, xMax, yMin, yMax, zNear, zFar);
-
-    const auto deviceRect = scaledRect(rect, scale);
-
-    const float scaleFactor = 1.1 * fovY / yMax;
-    ret.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
-    ret.scale((xMax - xMin) * scaleFactor / deviceRect.width(),
-              -(yMax - yMin) * scaleFactor / deviceRect.height(),
-              0.001);
-    ret.translate(-deviceRect.x(), -deviceRect.y());
-
-    return ret;
-}
-
 GlideEffect::GlideEffect()
 {
     GlideConfig::instance(effects->config());
@@ -105,13 +73,6 @@ void GlideEffect::reconfigure(ReconfigureFlags flags)
     m_outParams.opacity.to = GlideConfig::outOpacity();
 }
 
-void GlideEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
-{
-    data.mask |= PAINT_SCREEN_WITH_TRANSFORMED_WINDOWS;
-
-    effects->prePaintScreen(data, presentTime);
-}
-
 void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     auto animationIt = m_animations.find(w);
@@ -123,92 +84,90 @@ void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
     effects->prePaintWindow(w, data, presentTime);
 }
 
-void GlideEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
+void GlideEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
-    auto animationIt = m_animations.constFind(w);
+    auto animationIt = m_animations.constFind(window);
     if (animationIt == m_animations.constEnd()) {
-        effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
 
-    // Perspective projection distorts objects near edges
-    // of the viewport. This is critical because distortions
-    // near edges of the viewport are not desired with this effect.
-    // To fix this, the center of the window will be moved to the origin,
-    // after applying perspective projection, the center is moved back
-    // to its "original" projected position. Overall, this is how the window
-    // will be transformed:
-    //  [move to the origin] -> [rotate] -> [translate] ->
-    //    -> [perspective projection] -> [reverse "move to the origin"]
-
-    const QMatrix4x4 oldProjMatrix = createPerspectiveMatrix(viewport.renderRect(), viewport.scale(), renderTarget.transform().toMatrix());
-    const auto frame = w->frameGeometry();
-    const QRectF windowGeo = scaledRect(frame, viewport.scale());
-    const QVector3D invOffset = oldProjMatrix.map(QVector3D(windowGeo.center()));
-    QMatrix4x4 invOffsetMatrix;
-    invOffsetMatrix.translate(invOffset.x(), invOffset.y());
-
-    data.setProjectionMatrix(invOffsetMatrix * oldProjMatrix);
-
-    // Move the center of the window to the origin.
-    const QPointF offset = viewport.renderRect().center() - w->frameGeometry().center();
-    data.translate(offset.x(), offset.y());
-
-    const GlideParams params = w->isDeleted() ? m_outParams : m_inParams;
+    const GlideParams params = window->isDeleted() ? m_outParams : m_inParams;
     const qreal t = (*animationIt).timeLine.value();
 
-    switch (params.edge) {
-    case RotationEdge::Top:
-        data.setRotationAxis(Qt::XAxis);
-        data.setRotationOrigin(QVector3D(0, 0, 0));
-        data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
-        break;
+    const QRectF rect = window->expandedGeometry().translated(-window->pos());
+    const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
+    const float aspect = rect.width() / rect.height();
+    const float zNear = 0.1f;
+    const float zFar = 100.0f;
 
+    const float yMax = zNear * fovY;
+    const float yMin = -yMax;
+    const float xMin = yMin * aspect;
+    const float xMax = yMax * aspect;
+
+    const float scaleFactor = 1.1 * fovY / yMax;
+
+    QMatrix4x4 matrix;
+    matrix.viewport(rect);
+    matrix.frustum(xMin, xMax, yMax, yMin, zNear, zFar);
+    matrix.translate(xMin * scaleFactor, yMax * scaleFactor, -1.1);
+    matrix.scale((xMax - xMin) * scaleFactor / rect.width(), -(yMax - yMin) * scaleFactor / rect.height(), 0.001);
+    matrix.translate(-rect.x(), -rect.y());
+
+    const qreal angle = interpolate(params.angle.from, params.angle.to, t);
+    const qreal distance = interpolate(params.distance.from, params.distance.to, t);
+    switch (params.edge) {
     case RotationEdge::Right:
-        data.setRotationAxis(Qt::YAxis);
-        data.setRotationOrigin(QVector3D(w->width(), 0, 0));
-        data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
+        matrix.translate(window->width(), window->height() / 2, -distance);
+        matrix.rotate(-angle, 0, 1, 0);
+        matrix.translate(-window->width(), -window->height() / 2);
         break;
 
     case RotationEdge::Bottom:
-        data.setRotationAxis(Qt::XAxis);
-        data.setRotationOrigin(QVector3D(0, w->height(), 0));
-        data.setRotationAngle(interpolate(params.angle.from, params.angle.to, t));
+        matrix.translate(window->width() / 2, window->height(), -distance);
+        matrix.rotate(angle, 1, 0, 0);
+        matrix.translate(-window->width() / 2, -window->height());
         break;
 
     case RotationEdge::Left:
-        data.setRotationAxis(Qt::YAxis);
-        data.setRotationOrigin(QVector3D(0, 0, 0));
-        data.setRotationAngle(interpolate(params.angle.from, params.angle.to, t));
+        matrix.translate(0, window->height() / 2, -distance);
+        matrix.rotate(angle, 0, 1, 0);
+        matrix.translate(0, -window->height() / 2);
         break;
 
+    case RotationEdge::Top:
     default:
-        // Fallback to Top.
-        data.setRotationAxis(Qt::XAxis);
-        data.setRotationOrigin(QVector3D(0, 0, 0));
-        data.setRotationAngle(-interpolate(params.angle.from, params.angle.to, t));
+        matrix.translate(window->width() / 2, 0, -distance);
+        matrix.rotate(-angle, 1, 0, 0);
+        matrix.translate(-window->width() / 2, 0);
         break;
     }
 
-    data.setZTranslation(-interpolate(params.distance.from, params.distance.to, t));
-    data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
+    for (WindowQuad &quad : quads) {
+        for (int i = 0; i < 4; ++i) {
+            const QPointF transformed = matrix.map(QPointF(quad[i].x(), quad[i].y()));
+            quad[i].setX(transformed.x());
+            quad[i].setY(transformed.y());
+        }
+    }
 
-    effects->paintWindow(renderTarget, viewport, w, mask, region, data);
+    data.multiplyOpacity(interpolate(params.opacity.from, params.opacity.to, t));
 }
 
-void GlideEffect::postPaintScreen()
+void GlideEffect::postPaintWindow(EffectWindow *w)
 {
-    auto animationIt = m_animations.begin();
-    while (animationIt != m_animations.end()) {
+    if (auto animationIt = m_animations.find(w); animationIt != m_animations.end()) {
+        w->addRepaintFull();
+
         if ((*animationIt).timeLine.done()) {
+            unredirect(animationIt.key());
             animationIt = m_animations.erase(animationIt);
         } else {
             ++animationIt;
         }
     }
 
-    effects->addRepaintFull();
-    effects->postPaintScreen();
+    effects->postPaintWindow(w);
 }
 
 bool GlideEffect::isActive() const
@@ -249,6 +208,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
     animation.timeLine.setDuration(m_duration);
     animation.timeLine.setEasingCurve(QEasingCurve::InCurve);
 
+    redirect(w);
     effects->addRepaintFull();
 }
 
@@ -280,6 +240,7 @@ void GlideEffect::windowClosed(EffectWindow *w)
     animation.timeLine.setDuration(m_duration);
     animation.timeLine.setEasingCurve(QEasingCurve::OutCurve);
 
+    redirect(w);
     effects->addRepaintFull();
 }
 
@@ -295,6 +256,7 @@ void GlideEffect::windowDataChanged(EffectWindow *w, int role)
 
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
+        unredirect(animationIt.key());
         m_animations.erase(animationIt);
     }
 }

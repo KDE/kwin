@@ -13,8 +13,8 @@
 #pragma once
 
 // kwineffects
-#include "effect/effect.h"
 #include "effect/effectwindow.h"
+#include "effect/offscreeneffect.h"
 #include "effect/timeline.h"
 
 namespace KWin
@@ -26,7 +26,7 @@ struct GlideAnimation
     TimeLine timeLine;
 };
 
-class GlideEffect : public Effect
+class GlideEffect : public OffscreenEffect
 {
     Q_OBJECT
     Q_PROPERTY(int duration READ duration)
@@ -44,12 +44,8 @@ public:
     ~GlideEffect() override;
 
     void reconfigure(ReconfigureFlags flags) override;
-
-    void prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime) override;
     void prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime) override;
-    void paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data) override;
-    void postPaintScreen() override;
-
+    void postPaintWindow(EffectWindow *w) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
 
@@ -72,6 +68,9 @@ public:
     qreal outRotationAngle() const;
     qreal outDistance() const;
     qreal outOpacity() const;
+
+protected:
+    void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
 
 private Q_SLOTS:
     void windowAdded(EffectWindow *w);
