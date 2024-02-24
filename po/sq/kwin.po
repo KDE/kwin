@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-22 00:38+0000\n"
+"POT-Creation-Date: 2024-02-24 00:38+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -2453,7 +2453,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr ""
 
-#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, fuzzy, kde-format
 #| msgid "Show caps"
 msgid "Toggle Show Paint"
@@ -4221,7 +4221,7 @@ msgstr ""
 msgid "Switch to Desktop %1"
 msgstr "Ndrysho në Desktopin 1"
 
-#: window.cpp:3082
+#: window.cpp:3118
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

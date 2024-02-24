@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-22 00:38+0000\n"
+"POT-Creation-Date: 2024-02-24 00:38+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2536,7 +2536,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Бұл эффект бағалау сынағы емес"
 
-#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, fuzzy, kde-format
 #| msgid "Toggle Floating"
 msgid "Toggle Show Paint"
@@ -4353,7 +4353,7 @@ msgstr "Төмен жақтағы үстелге ауысу"
 msgid "Switch to Desktop %1"
 msgstr "%1-үстелге ауысу"
 
-#: window.cpp:3082
+#: window.cpp:3118
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

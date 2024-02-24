@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-22 00:38+0000\n"
+"POT-Creation-Date: 2024-02-24 00:38+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -2533,7 +2533,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Disse Effekt ist keen Leistentest"
 
-#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, fuzzy, kde-format
 #| msgid "Toggle Floating"
 msgid "Toggle Show Paint"
@@ -4355,7 +4355,7 @@ msgstr "Een Schriefdisch na nerrn wesseln"
 msgid "Switch to Desktop %1"
 msgstr "Na Schriefdisch %1 wesseln"
 
-#: window.cpp:3082
+#: window.cpp:3118
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
