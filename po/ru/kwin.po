@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-22 02:24+0000\n"
+"POT-Creation-Date: 2024-02-24 02:20+0000\n"
 "PO-Revision-Date: 2024-02-10 13:11+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2498,7 +2498,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Этот эффект — не тест производительности"
 
-#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Включение и отключение подсветки отрисовки"

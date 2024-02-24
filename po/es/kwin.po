@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-22 02:24+0000\n"
+"POT-Creation-Date: 2024-02-24 02:20+0000\n"
 "PO-Revision-Date: 2024-01-22 02:21+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -2482,7 +2482,7 @@ msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Este efecto no es una prueba de rendimiento"
 
-#: plugins/showpaint/showpaint.cpp:41 plugins/showpaint/showpaint_config.cpp:37
+#: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
 msgid "Toggle Show Paint"
 msgstr "Conmutar mostrar pintura"
