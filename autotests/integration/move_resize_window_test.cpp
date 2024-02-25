@@ -62,8 +62,16 @@ private Q_SLOTS:
     void testDestroyResizeClient();
     void testCancelInteractiveMoveResize_data();
     void testCancelInteractiveMoveResize();
+    void testRestrictedMove_data();
+    void testRestrictedMove();
+    void testRestrictedMoveMultiMonitor_data();
+    void testRestrictedMoveMultiMonitor();
+    void testRestrictedResizeUp();
+    void testRestrictedResizeRight();
 
 private:
+    std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> showWindow();
+    std::pair<std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::LayerSurfaceV1>> addPanel(const QRect &geometry, int anchor);
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
 };
@@ -82,7 +90,11 @@ void MoveResizeWindowTest::initTestCase()
 
 void MoveResizeWindowTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat));
+    Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::LayerShellV1 | Test::AdditionalWaylandInterface::Seat | Test::AdditionalWaylandInterface::XdgDecorationV1));
+    const auto outputs = workspace()->outputs();
+    QCOMPARE(outputs.count(), 1);
+    QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));
     QVERIFY(Test::waitForWaylandPointer());
     m_connection = Test::waylandConnection();
     m_compositor = Test::waylandCompositor();
@@ -862,6 +874,389 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     QCOMPARE(window->quickTileMode(), quickTileMode);
     QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
     QCOMPARE(window->geometryRestore(), geometryRestore);
+}
+
+std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> MoveResizeWindowTest::showWindow()
+{
+#define VERIFY(statement)                                                 \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
+        return {nullptr, nullptr, nullptr};
+#define COMPARE(actual, expected)                                                   \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
+        return {nullptr, nullptr, nullptr};
+
+    std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
+    VERIFY(surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
+    VERIFY(shellSurface.get());
+    std::unique_ptr<Test::XdgToplevelDecorationV1> decoration = Test::createXdgToplevelDecorationV1(shellSurface.get());
+    VERIFY(decoration.get());
+
+    QSignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
+    decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    VERIFY(surfaceConfigureRequestedSpy.wait());
+    COMPARE(decorationConfigureRequestedSpy.last().at(0).value<Test::XdgToplevelDecorationV1::mode>(), Test::XdgToplevelDecorationV1::mode_server_side);
+
+    // let's render
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 100), Qt::blue);
+    VERIFY(window);
+    COMPARE(workspace()->activeWindow(), window);
+
+#undef VERIFY
+#undef COMPARE
+
+    return {window, std::move(surface), std::move(shellSurface)};
+}
+
+std::pair<std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::LayerSurfaceV1>> MoveResizeWindowTest::addPanel(const QRect &geometry, int anchor)
+{
+#define VERIFY(statement)                                                 \
+    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
+        return {nullptr, nullptr};
+#define COMPARE(actual, expected)                                                   \
+    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
+        return {nullptr, nullptr};
+    // Create a layer shell surface.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("dock")));
+
+    // Set the initial state of the layer surface.
+    shellSurface->set_anchor(anchor);
+    shellSurface->set_size(geometry.width(), geometry.height());
+    shellSurface->set_exclusive_zone(std::min(geometry.width(), geometry.height()));
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // Wait for the compositor to position the surface.
+    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    VERIFY(configureRequestedSpy.wait());
+    const QSize requestedSize = configureRequestedSpy.last().at(1).toSize();
+    COMPARE(requestedSize, geometry.size());
+
+    // Map the layer surface.
+    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    Window *panel = Test::renderAndWaitForShown(surface.get(), requestedSize, Qt::red);
+    VERIFY(panel);
+    VERIFY(panel->isDock());
+    panel->move(geometry.topLeft());
+    // Verify that the panel is placed at expected location.
+    COMPARE(panel->frameGeometry(), geometry);
+
+#undef VERIFY
+#undef COMPARE
+
+    return {std::move(surface), std::move(shellSurface)};
+}
+
+#define MOTION(target) Test::pointerMotion(target, timestamp++)
+
+#define PRESS Test::pointerButtonPressed(BTN_LEFT, timestamp++)
+
+#define RELEASE Test::pointerButtonReleased(BTN_LEFT, timestamp++)
+
+void MoveResizeWindowTest::testRestrictedMove_data()
+{
+    QTest::addColumn<bool>("hasStruts");
+    QTest::addColumn<QPoint>("pointerMotion");
+    QTest::addColumn<QPoint>("expectedTopLeft");
+    QTest::addColumn<bool>("subtractTitlebar");
+    QTest::addColumn<bool>("subtractLRBorders");
+
+    // window is initially at (500, 500, 100 + left & right borders, 100 + titleThickness)
+    QTest::newRow("push down") << false << QPoint(0, -501) << QPoint(500, 0) << false << false;
+    QTest::newRow("push up") << false << QPoint(0, 530) << QPoint(500, 1024) << true << false;
+    QTest::newRow("push left") << false << QPoint(700, 0) << QPoint(1180, 500) << false << false;
+    QTest::newRow("push right") << false << QPoint(-520, 0) << QPoint(0, 500) << false << true;
+
+    // strut denoted by "*", border by "|" and "-"
+    // *----**********----*
+    // *                  *
+    // *                  *
+    // *----**********----*
+    QTest::newRow("push down with struts") << true << QPoint(0, -410) << QPoint(500, 100) << false << false;
+    QTest::newRow("push up with struts") << true << QPoint(200, 770) << QPoint(700, 924) << true << false;
+    QTest::newRow("push left with struts") << true << QPoint(600, 400) << QPoint(1080, 900) << false << false;
+    QTest::newRow("push right with struts") << true << QPoint(-410, 0) << QPoint(100, 500) << false << true;
+}
+
+void MoveResizeWindowTest::testRestrictedMove()
+{
+    QFETCH(bool, hasStruts);
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<std::unique_ptr<Test::LayerSurfaceV1>> shellSurfaces;
+    const auto add = [this, &surfaces, &shellSurfaces](const QRect &geometry, int anchor) {
+        auto [surface, shellSurface] = addPanel(geometry, anchor);
+        QVERIFY(surface);
+        QVERIFY(shellSurface);
+        surfaces.push_back(std::move(surface));
+        shellSurfaces.push_back(std::move(shellSurface));
+    };
+    if (hasStruts) {
+        add(QRect(320, 0, 640, 100), Test::LayerSurfaceV1::anchor_top);
+        add(QRect(320, 924, 640, 100), Test::LayerSurfaceV1::anchor_bottom);
+        add(QRect(0, 0, 100, 1024), Test::LayerSurfaceV1::anchor_left);
+        add(QRect(1180, 0, 100, 1024), Test::LayerSurfaceV1::anchor_right);
+    }
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->noBorder());
+    QCOMPARE(window->titlebarPosition(), Qt::TopEdge);
+    QVERIFY(surface);
+
+    QCOMPARE(workspace()->activeWindow(), window);
+    QRectF decorationLeft, decorationRight, decorationTop, decorationBottom;
+    window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
+    QVERIFY(!decorationTop.isEmpty());
+    const auto titleThickness = decorationTop.height();
+
+    // move to center
+    window->move(QPoint(500, 500));
+    QCOMPARE(window->frameGeometry().topLeft(), QPoint(500, 500));
+
+    // move to center of titlebar
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    quint32 timestamp = 1;
+    MOTION(QPoint(window->frameGeometry().center().x(), window->frameGeometry().y() + window->frameMargins().top() - 2));
+    PRESS;
+    QVERIFY(!window->isInteractiveMove());
+    QFETCH(QPoint, pointerMotion);
+    MOTION(Cursors::self()->mouse()->pos() + pointerMotion);
+    QVERIFY(window->isInteractiveMove());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    RELEASE;
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+    QFETCH(QPoint, expectedTopLeft);
+    QFETCH(bool, subtractTitlebar);
+    if (subtractTitlebar) {
+        expectedTopLeft.setY(expectedTopLeft.y() - titleThickness);
+    }
+    QFETCH(bool, subtractLRBorders);
+    if (subtractLRBorders) {
+        expectedTopLeft.setX(expectedTopLeft.x() - window->frameMargins().left() - window->frameMargins().right());
+    }
+    QCOMPARE(window->frameGeometry().topLeft(), expectedTopLeft);
+    // let's end
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void MoveResizeWindowTest::testRestrictedMoveMultiMonitor_data()
+{
+    QTest::addColumn<QPoint>("initialPoint");
+    QTest::addColumn<QPoint>("pointerMotion");
+    QTest::addColumn<QPoint>("expectedTopLeft");
+    QTest::addColumn<bool>("subtractTitlebar");
+    QTest::addColumn<bool>("subtractLRBorders");
+
+    // Outputs: (each char represents 200x1000 pixels)
+    //
+    //      |---|
+    //      |   |
+    // |---||   |
+    // |---||   |
+    //      |   |
+    //      |---|
+
+    QTest::newRow("push up") << QPoint(500, 1500) << QPoint(0, 510) << QPoint(500, 2000) << true << false;
+    QTest::newRow("push right") << QPoint(1500, 2500) << QPoint(-520, 0) << QPoint(1000, 2500) << false << true;
+    QTest::newRow("push down") << QPoint(500, 1500) << QPoint(0, -510) << QPoint(500, 1000) << false << false;
+}
+
+void MoveResizeWindowTest::testRestrictedMoveMultiMonitor()
+{
+    // Outputs: (each char represents 200x1000 pixels)
+    //
+    //      |---|
+    //      |   |
+    // |---||   |
+    // |---||   |
+    //      |   |
+    //      |---|
+
+    Test::setOutputConfig({QRect(0, 1000, 1000, 1000), QRect(1000, 0, 1000, 3000)});
+    const auto outputs = workspace()->outputs();
+    QCOMPARE(outputs.count(), 2);
+    QCOMPARE(outputs[0]->geometry(), QRect(0, 1000, 1000, 1000));
+    QCOMPARE(outputs[1]->geometry(), QRect(1000, 0, 1000, 3000));
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->noBorder());
+    QCOMPARE(window->titlebarPosition(), Qt::TopEdge);
+    QVERIFY(surface);
+
+    QCOMPARE(workspace()->activeWindow(), window);
+    QRectF decorationLeft, decorationRight, decorationTop, decorationBottom;
+    window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
+    QVERIFY(!decorationTop.isEmpty());
+    const auto titleThickness = decorationTop.height();
+
+    // move to center
+    QFETCH(QPoint, initialPoint);
+    window->move(initialPoint);
+    QCOMPARE(window->frameGeometry().topLeft(), initialPoint);
+
+    // move to center of titlebar
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    quint32 timestamp = 1;
+    MOTION(QPoint(window->frameGeometry().center().x(), window->frameGeometry().y() + window->frameMargins().top() - 2));
+    PRESS;
+    QVERIFY(!window->isInteractiveMove());
+    QFETCH(QPoint, pointerMotion);
+    MOTION(Cursors::self()->mouse()->pos() + pointerMotion);
+    QVERIFY(window->isInteractiveMove());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    RELEASE;
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+    QFETCH(QPoint, expectedTopLeft);
+    QFETCH(bool, subtractTitlebar);
+    if (subtractTitlebar) {
+        expectedTopLeft.setY(expectedTopLeft.y() - titleThickness);
+    }
+    QFETCH(bool, subtractLRBorders);
+    if (subtractLRBorders) {
+        expectedTopLeft.setX(expectedTopLeft.x() - window->frameMargins().left() - window->frameMargins().right());
+    }
+    QCOMPARE(window->frameGeometry().topLeft(), expectedTopLeft);
+    // let's end
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void MoveResizeWindowTest::testRestrictedResizeUp()
+{
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<std::unique_ptr<Test::LayerSurfaceV1>> shellSurfaces;
+    const auto add = [this, &surfaces, &shellSurfaces](const QRect &geometry, int anchor) {
+        auto [surface, shellSurface] = addPanel(geometry, anchor);
+        QVERIFY(surface);
+        QVERIFY(shellSurface);
+        surfaces.push_back(std::move(surface));
+        shellSurfaces.push_back(std::move(shellSurface));
+    };
+    add(QRect(320, 0, 640, 100), Test::LayerSurfaceV1::anchor_top);
+    add(QRect(320, 924, 640, 100), Test::LayerSurfaceV1::anchor_bottom);
+    add(QRect(0, 100, 100, 1024), Test::LayerSurfaceV1::anchor_left);
+    add(QRect(1180, 0, 100, 1024), Test::LayerSurfaceV1::anchor_right);
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->noBorder());
+    QCOMPARE(window->titlebarPosition(), Qt::TopEdge);
+    QVERIFY(surface);
+
+    QCOMPARE(workspace()->activeWindow(), window);
+    QRectF decorationLeft, decorationRight, decorationTop, decorationBottom;
+    window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
+    QVERIFY(!decorationTop.isEmpty());
+
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+
+    quint32 timestamp = 1;
+
+    // strut denoted by "*", border by "|" and "-"
+    // *----**********----*
+    // *                  *
+    // *                  *
+    // *----**********----*
+
+    // cannot resize up past strut
+    window->move(QPoint(320, 200));
+    MOTION(QPoint(window->frameGeometry().center().x(), window->frameGeometry().top()));
+    PRESS;
+    QVERIFY(!window->isInteractiveResize());
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QVERIFY(window->isInteractiveResize());
+    MOTION(QPoint(window->frameGeometry().center().x(), window->frameGeometry().top() - 150));
+    RELEASE;
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
+    QSize toplevelSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelSize, Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry().topLeft(), QPoint(320, 100));
+
+    // let's end
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void MoveResizeWindowTest::testRestrictedResizeRight()
+{
+    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<std::unique_ptr<Test::LayerSurfaceV1>> shellSurfaces;
+    const auto add = [this, &surfaces, &shellSurfaces](const QRect &geometry, int anchor) {
+        auto [surface, shellSurface] = addPanel(geometry, anchor);
+        QVERIFY(surface);
+        QVERIFY(shellSurface);
+        surfaces.push_back(std::move(surface));
+        shellSurfaces.push_back(std::move(shellSurface));
+    };
+    add(QRect(320, 0, 640, 100), Test::LayerSurfaceV1::anchor_top);
+    add(QRect(320, 924, 640, 100), Test::LayerSurfaceV1::anchor_bottom);
+    add(QRect(0, 100, 100, 1024), Test::LayerSurfaceV1::anchor_left);
+    add(QRect(1180, 0, 100, 1024), Test::LayerSurfaceV1::anchor_right);
+
+    auto [window, surface, shellSurface] = showWindow();
+    QVERIFY(window);
+    QVERIFY(window->isDecorated());
+    QVERIFY(!window->noBorder());
+    QCOMPARE(window->titlebarPosition(), Qt::TopEdge);
+    QVERIFY(surface);
+
+    QCOMPARE(workspace()->activeWindow(), window);
+    QRectF decorationLeft, decorationRight, decorationTop, decorationBottom;
+    window->layoutDecorationRects(decorationLeft, decorationTop, decorationRight, decorationBottom);
+    QVERIFY(!decorationTop.isEmpty());
+
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+
+    quint32 timestamp = 1;
+
+    // strut denoted by "*", border by "|" and "-"
+    // *----**********----*
+    // *                  *
+    // *                  *
+    // *----**********----*
+
+    // strut will push window to the right
+    window->move(QPoint(900, 100));
+    MOTION(QPoint(window->frameGeometry().right() - 1, window->frameGeometry().top()));
+    PRESS;
+    QVERIFY(!window->isInteractiveResize());
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QVERIFY(window->isInteractiveResize());
+    MOTION(QPoint(window->frameGeometry().right() + 40, window->frameGeometry().top() - 50));
+    RELEASE;
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
+    auto toplevelSize = toplevelConfigureRequestedSpy.last().at(0).toSize();
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelSize, Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry().topRight(), QPoint(1060, 50));
+
+    // let's end
+    surface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 }
 
