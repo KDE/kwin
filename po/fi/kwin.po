@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-24 00:38+0000\n"
-"PO-Revision-Date: 2024-02-08 10:45+0200\n"
+"PO-Revision-Date: 2024-02-14 18:54+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -3512,14 +3512,13 @@ msgstr "Tasosäännön tyyppi"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "Mukautuva synkronointi"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Aktiivisuussäännön tyyppi"
+msgstr "Mukautuvan synkronointisäännön tyyppi"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3561,11 +3560,10 @@ msgid "Show Desktop"
 msgstr "Näytä työpöytä"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Ei ikkunoita"
+msgstr "Ei avoimia ikkunoita"
 
 #: tabbox/tabbox.cpp:350
 msgid "Walk Through Windows"

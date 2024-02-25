@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-17 00:39+0000\n"
-"PO-Revision-Date: 2024-02-11 13:06+0100\n"
+"PO-Revision-Date: 2024-02-24 16:56+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -591,7 +591,7 @@ msgstr "Warstwa"
 #: rulesmodel.cpp:725
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Dostosowująca się synchronizacja"
 
 #: rulesmodel.cpp:777
 #, kde-format

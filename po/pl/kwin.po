@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1673995 $
+# Version: $Revision: 1674079 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-24 00:38+0000\n"
-"PO-Revision-Date: 2024-02-11 11:25+0100\n"
+"PO-Revision-Date: 2024-02-24 16:56+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -1581,7 +1581,7 @@ msgstr "Tritanopia (niebieski-żółty)"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Natężenie:"
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -3519,14 +3519,13 @@ msgstr "Rodzaj zasady warstwy"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "Dostosowująca się synchronizacja"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Rodzaj zasady aktywności"
+msgstr "Rodzaj zasady dostosowującej się synchronizacji"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

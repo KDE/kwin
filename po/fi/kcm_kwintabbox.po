@@ -2,7 +2,7 @@
 # Copyright © 2010, 2011 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kde-workspace package.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
-# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2013, 2014.
 #
 # KDE Finnish translation sprint participants:
@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 00:39+0000\n"
-"PO-Revision-Date: 2023-03-06 13:27+0200\n"
+"PO-Revision-Date: 2024-02-14 18:52+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -66,10 +66,9 @@ msgstr "Sisältö"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Show Desktop\" entry"
-msgstr "Näytä ”Näytä työpöytä\" -kuvake"
+msgstr "Lisää ”Näytä työpöytä\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55

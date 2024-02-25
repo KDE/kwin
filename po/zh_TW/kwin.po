@@ -17,14 +17,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-24 00:38+0000\n"
-"PO-Revision-Date: 2024-02-15 16:59+0900\n"
+"PO-Revision-Date: 2024-02-25 00:46+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.01.95\n"
+"X-Generator: Lokalize 23.11.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -462,7 +462,7 @@ msgstr "UTF-8"
 #, kde-format
 msgctxt "The currently active modifiers"
 msgid "Modifiers"
-msgstr "修飾元"
+msgstr "修飾鍵"
 
 #: debug_console.cpp:314
 #, kde-format
@@ -594,13 +594,13 @@ msgstr "滑動取消"
 #, kde-format
 msgctxt "A hardware switch (e.g. notebook lid) got toggled"
 msgid "Switch toggled"
-msgstr "切換"
+msgstr "開關切換"
 
 #: debug_console.cpp:467
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr "筆記本蓋"
+msgstr "筆記型電腦上蓋"
 
 #: debug_console.cpp:469
 #, kde-format
@@ -612,7 +612,7 @@ msgstr "繪圖板模式"
 #, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "切換"
+msgstr "開關"
 
 #: debug_console.cpp:475
 #, kde-format
@@ -624,7 +624,7 @@ msgstr "關閉"
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr "啟動"
+msgstr "開啟"
 
 #: debug_console.cpp:483
 #, kde-format
@@ -671,7 +671,7 @@ msgstr "按鈕"
 #: debug_console.cpp:507 debug_console.ui:356
 #, kde-format
 msgid "Modifiers"
-msgstr "修飾元"
+msgstr "修飾鍵"
 
 #: debug_console.cpp:516
 #, kde-format
@@ -1054,7 +1054,7 @@ msgstr "目前佈局："
 #: debug_console.ui:372
 #, kde-format
 msgid "Active Modifiers"
-msgstr "使用中修飾元"
+msgstr "作用中修飾鍵"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:388
@@ -1066,7 +1066,7 @@ msgstr "LED"
 #: debug_console.ui:404
 #, kde-format
 msgid "Active LEDs"
-msgstr "使用中 LED"
+msgstr "作用中 LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
@@ -2657,7 +2657,7 @@ msgstr "影像牆"
 #: plugins/videowall/package/contents/ui/config.ui:20
 #, kde-format
 msgid "Apply to"
-msgstr "回覆給"
+msgstr "套用到"
 
 #. i18n: ectx: property (text), widget (QLineEdit, kcfg_Whitelist)
 #: plugins/videowall/package/contents/ui/config.ui:32
@@ -2782,7 +2782,7 @@ msgstr "開啟進階模式(&A)"
 #: plugins/wobblywindows/wobblywindows_config.ui:192
 #, kde-format
 msgid "&Wobbliness"
-msgstr "擺動性(&W)"
+msgstr "搖擺程度(&W)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/wobblywindows/wobblywindows_config.ui:201
@@ -3087,49 +3087,49 @@ msgstr "視窗大小規則類型"
 #: rulesettings.kcfg:100
 #, kde-format
 msgid "Window minimum size"
-msgstr "視窗最小化大小"
+msgstr "視窗最小大小"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr "視窗最小化規則類型"
+msgstr "視窗最小大小規則類型"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:109
 #, kde-format
 msgid "Window maximum size"
-msgstr "視窗最大化大小"
+msgstr "視窗最大大小"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:113
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr "視窗最大化大小規則類型"
+msgstr "視窗最大大小規則類型"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
 #, kde-format
 msgid "Active opacity"
-msgstr "使用中不透明度"
+msgstr "作用中的不透明度"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:124
 #, kde-format
 msgid "Active opacity rule type"
-msgstr "使用中不透明度規則類型"
+msgstr "作用中的不透明度規則類型"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Inactive opacity"
-msgstr "非使用中不透明度"
+msgstr "非作用中的不透明度"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:135
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr "非使用中不透明度規則類型"
+msgstr "非作用中的不透明度規則類型"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:140
@@ -3231,13 +3231,13 @@ msgstr "收起規則類型"
 #: rulesettings.kcfg:227
 #, kde-format
 msgid "Skip taskbar"
-msgstr "跳過工作列"
+msgstr "略過工作列"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:231
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr "跳過工作列規則類型"
+msgstr "略過工作列規則類型"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:238
