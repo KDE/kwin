@@ -16,14 +16,14 @@
 # Julia Dronova <juliette.tux@gmail.com>, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
 # Olesya Gerasimenko <gammaray@basealt.ru>, 2018.
-# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2020, 2021, 2022, 2023.
+# Alexander Yavorsky <kekcuha@gmail.com>, 2019, 2020, 2021, 2022, 2023, 2024.
 # Мария Шикунова <translation-team@basealt.ru>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2023-02-21 14:02+0300\n"
+"PO-Revision-Date: 2024-02-20 17:06+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -1203,7 +1203,7 @@ msgstr "Планшет переключен на %1"
 #: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Переключённые выводы планшета"
 
 #: input.cpp:3098
 #, kde-format
@@ -1386,6 +1386,8 @@ msgstr "Отрисовка через DRM."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Сведения о региональных стандартах locale1 отличаются от заданных в "
+"параметрах пользователя"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -2691,28 +2693,24 @@ msgid "Window to Previous Screen"
 msgstr "Переместить окно на предыдущий экран"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Окно на один рабочий стол вправо"
+msgstr "Окно на один экран вправо"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Окно на один рабочий стол влево"
+msgstr "Окно на один экран влево"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Переместить окно на рабочий стол 2"
+msgstr "Окно на один экран вверх"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Окно на один рабочий стол вниз"
+msgstr "Окно на один экран вниз"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2826,7 +2824,6 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(не отвечает)"
 
-# BUGME: please proofread this translation, it's full of worms --aspotashev
 #: workspace.cpp:1644
 #, kde-format
 msgctxt "Introductory text shown in the support information."
@@ -2841,14 +2838,15 @@ msgid ""
 "paste bin service\n"
 "like https://paste.kde.org instead of pasting into support threads.\n"
 msgstr ""
-"Информационная поддержка KWin:\n"
-"Следующая информация должна быть предоставлена при запросе поддержки,"
-"например, на https://forum.kde.org.\n"
-"Она предоставляет сведения о текущем запущенном экземпляре программы, о том, "
-"какие параметры используются,\n"
-"какой OpenGL драйвер и эффекты запущены.\n"
-"Пожалуйста, размещайте информацию, приведённую ниже, в сервис Pastebin,\n"
-"например, на https://paste.kde.org вместо вставки напрямую в темы форума.\n"
+"Сведения о KWin для получения помощи:\n"
+"При запросе на получении помощи, например на на https://forum.kde.org, "
+"необходимо предоставлять дополнительные сведения, приведённые ниже.\n"
+"Данные сведения содержат информацию о текущем запущенном экземпляре "
+"программы и используемых параметрах;\n"
+"информацию об используемом драйвере OpenGL эффектах.\n"
+"Избегайте копирования сведений, приведённых ниже, непосредственно в темы "
+"форума, а вместо этого используйте ссылку, полученную после публикации "
+"текста на сервисах pastebin, таких как https://paste.kde.org.\n"
 
 #~ msgid "&No Border"
 #~ msgstr "Без &рамки"

@@ -2,7 +2,7 @@
 # Copyright © 2010, 2011 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kde-workspace package.
 # Jorma Karvonen <karvonen.jorma@gmail.com>, 2010.
-# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022, 2023.
+# Tommi Nieminen <translator@legisign.org>, 2010, 2011, 2018, 2022, 2023, 2024.
 # Lasse Liehu <lasse.liehu@gmail.com>, 2011, 2013, 2014.
 #
 # KDE Finnish translation sprint participants:
