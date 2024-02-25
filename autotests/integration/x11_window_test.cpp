@@ -1758,7 +1758,7 @@ void X11WindowTest::testNetWmButtonSize()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 300, 400));
 
     // Request interactive move.
     const QRectF originalGeometry = window->frameGeometry();
@@ -1797,7 +1797,7 @@ void X11WindowTest::testNetWmButtonSizeNotPressed()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 300, 400));
 
     // Request interactive move.
     {
@@ -1816,7 +1816,7 @@ void X11WindowTest::testNetWmButtonSizeCancel()
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
-    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 300, 400));
 
     // Request interactive resize.
     const QRectF originalGeometry = window->frameGeometry();
