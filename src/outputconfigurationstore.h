@@ -77,6 +77,7 @@ private:
         std::optional<bool> wideColorGamut;
         std::optional<Output::AutoRotationPolicy> autoRotation;
         std::optional<QString> iccProfilePath;
+        std::optional<Output::ColorProfileSource> colorProfileSource;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;

@@ -183,6 +183,11 @@ public:
         Always
     };
     Q_ENUM(AutoRotationPolicy);
+    enum class ColorProfileSource {
+        sRGB = 0,
+        ICC,
+        EDID,
+    };
 
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
@@ -351,6 +356,7 @@ public:
     std::optional<double> minBrightnessOverride() const;
 
     double sdrGamutWideness() const;
+    ColorProfileSource colorProfileSource() const;
 
     const ColorDescription &colorDescription() const;
 
@@ -416,6 +422,7 @@ Q_SIGNALS:
     void brightnessMetadataChanged();
     void sdrGamutWidenessChanged();
     void colorDescriptionChanged();
+    void colorProfileSourceChanged();
 
 protected:
     struct Information
@@ -458,6 +465,7 @@ protected:
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;
+        ColorProfileSource colorProfileSource = ColorProfileSource::sRGB;
         ColorDescription colorDescription = ColorDescription::sRGB;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;

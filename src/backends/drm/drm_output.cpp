@@ -337,7 +337,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     } else {
         m_pipeline->setIccProfile(props->iccProfile.value_or(m_state.iccProfile));
     }
-    if (bt2020 || hdr || m_pipeline->iccProfile()) {
+    if (bt2020 || hdr || m_pipeline->iccProfile() || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::sRGB) {
         // remove unused gamma ramp and ctm, if present
         m_pipeline->setGammaRamp(nullptr);
         m_pipeline->setCTM(QMatrix3x3{});
@@ -347,23 +347,29 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
 
 ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const
 {
+    const auto colorSource = props->colorProfileSource.value_or(colorProfileSource());
+    const bool hdr = props->highDynamicRange.value_or(m_state.highDynamicRange);
+    const bool wcg = props->wideColorGamut.value_or(m_state.wideColorGamut);
+    const auto iccProfile = props->iccProfile.value_or(m_state.iccProfile);
+    if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
+        const double brightness = iccProfile->brightness().value_or(200);
+        return ColorDescription(iccProfile->colorimetry(), NamedTransferFunction::gamma22, brightness, 0, brightness, brightness);
+    }
     const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
     const bool driverSupportsHdr = m_connector->colorspace.isValid() && m_connector->hdrMetadata.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC));
-    if (props->highDynamicRange.value_or(m_state.highDynamicRange) && driverSupportsHdr && screenSupportsHdr) {
-        const auto colorimetry = props->wideColorGamut.value_or(m_state.wideColorGamut) ? NamedColorimetry::BT2020 : NamedColorimetry::BT709;
-        const auto nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
-        const auto sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
-        return ColorDescription(colorimetry, NamedTransferFunction::PerceptualQuantizer, sdrBrightness,
-                                props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()),
-                                props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(sdrBrightness)),
-                                props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)),
-                                Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)));
-    } else if (const auto profile = props->iccProfile.value_or(m_state.iccProfile)) {
-        const double brightness = profile->brightness().value_or(200);
-        return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, brightness, 0, brightness, brightness);
-    } else {
-        return ColorDescription::sRGB;
-    }
+    const bool effectiveHdr = hdr && screenSupportsHdr && driverSupportsHdr;
+    const bool effectiveWcg = wcg && screenSupportsHdr && driverSupportsHdr;
+    const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
+
+    const Colorimetry colorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT2020) : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709));
+    const Colorimetry sdrColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)) : Colorimetry::fromName(NamedColorimetry::BT709);
+    // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
+    const NamedTransferFunction transferFunction = effectiveHdr ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::gamma22;
+    const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()) : 0;
+    const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.sdrBrightness)) : 200;
+    const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)) : 200;
+    const double sdrBrightness = effectiveHdr ? props->sdrBrightness.value_or(m_state.sdrBrightness) : maxPeakBrightness;
+    return ColorDescription(colorimetry, transferFunction, sdrBrightness, minBrightness, maxAverageBrightness, maxPeakBrightness, sdrColorimetry);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -395,6 +401,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
     next.colorDescription = m_pipeline->colorDescription();
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
+    next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     setState(next);
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
@@ -486,7 +493,7 @@ QVector3D DrmOutput::channelFactors() const
 bool DrmOutput::needsColormanagement() const
 {
     static bool forceColorManagement = qEnvironmentVariableIntValue("KWIN_DRM_FORCE_COLOR_MANAGEMENT") != 0;
-    return forceColorManagement || m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile || m_channelFactorsNeedShaderFallback;
+    return forceColorManagement || m_state.wideColorGamut || m_state.highDynamicRange || m_state.colorProfileSource != ColorProfileSource::sRGB || m_channelFactorsNeedShaderFallback;
 }
 }
 

@@ -77,6 +77,7 @@ private:
     void updateBrightnessMetadata();
     void updateBrightnessOverrides();
     void updateSdrGamutWideness();
+    void updateColorProfileSource();
 
     std::unique_ptr<OutputDeviceV2InterfacePrivate> d;
 };

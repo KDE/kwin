@@ -224,6 +224,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .wideColorGamut = changeSet->wideColorGamut.value_or(output->wideColorGamut()),
                 .autoRotation = changeSet->autoRotationPolicy.value_or(output->autoRotationPolicy()),
                 .iccProfilePath = changeSet->iccProfilePath.value_or(output->iccProfilePath()),
+                .colorProfileSource = changeSet->colorProfileSource.value_or(output->colorProfileSource()),
                 .maxPeakBrightnessOverride = changeSet->maxPeakBrightnessOverride.value_or(output->maxPeakBrightnessOverride()),
                 .maxAverageBrightnessOverride = changeSet->maxAverageBrightnessOverride.value_or(output->maxAverageBrightnessOverride()),
                 .minBrightnessOverride = changeSet->minBrightnessOverride.value_or(output->minBrightnessOverride()),
@@ -257,6 +258,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .wideColorGamut = output->wideColorGamut(),
                 .autoRotation = output->autoRotationPolicy(),
                 .iccProfilePath = output->iccProfilePath(),
+                .colorProfileSource = output->colorProfileSource(),
                 .maxPeakBrightnessOverride = output->maxPeakBrightnessOverride(),
                 .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
                 .minBrightnessOverride = output->minBrightnessOverride(),
@@ -308,6 +310,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .maxAverageBrightnessOverride = state.maxAverageBrightnessOverride,
             .minBrightnessOverride = state.minBrightnessOverride,
             .sdrGamutWideness = state.sdrGamutWideness,
+            .colorProfileSource = state.colorProfileSource,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -428,6 +431,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .sdrBrightness = existingData.sdrBrightness.value_or(200),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
+            .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -716,6 +720,23 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("sdrGamutWideness"); it != data.end() && it->isDouble()) {
             state.sdrGamutWideness = it->toDouble();
         }
+        if (const auto it = data.find("colorProfileSource"); it != data.end()) {
+            const auto str = it->toString();
+            if (str == "sRGB") {
+                state.colorProfileSource = Output::ColorProfileSource::sRGB;
+            } else if (str == "ICC") {
+                state.colorProfileSource = Output::ColorProfileSource::ICC;
+            } else if (str == "EDID") {
+                state.colorProfileSource = Output::ColorProfileSource::EDID;
+            }
+        } else {
+            const bool icc = state.iccProfilePath && !state.iccProfilePath->isEmpty() && !state.highDynamicRange.value_or(false) && !state.wideColorGamut.value_or(false);
+            if (icc) {
+                state.colorProfileSource = Output::ColorProfileSource::ICC;
+            } else {
+                state.colorProfileSource = Output::ColorProfileSource::sRGB;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -931,6 +952,19 @@ void OutputConfigurationStore::save()
         }
         if (output.sdrGamutWideness) {
             o["sdrGamutWideness"] = *output.sdrGamutWideness;
+        }
+        if (output.colorProfileSource) {
+            switch (*output.colorProfileSource) {
+            case Output::ColorProfileSource::sRGB:
+                o["colorProfileSource"] = "sRGB";
+                break;
+            case Output::ColorProfileSource::ICC:
+                o["colorProfileSource"] = "ICC";
+                break;
+            case Output::ColorProfileSource::EDID:
+                o["colorProfileSource"] = "EDID";
+                break;
+            }
         }
         outputsData.append(o);
     }
