@@ -23,6 +23,8 @@
         <entry name="BorderActivate" type="IntList">
             <default>ElectricTopLeft</default>
         </entry>
+        <entry name="GridBorderActivate" type="IntList" />
         <entry name="TouchBorderActivate" type="IntList" />
+        <entry name="GridTouchBorderActivate" type="IntList" />
     </group>
 </kcfg>

@@ -61,14 +61,12 @@
             <default>ElectricNone</default>
         </entry>
     </group>
-    <group name="Effect-DesktopGrid">
-        <entry name="BorderActivateDesktopGrid" key="BorderActivate" type="IntList">
-            <default>ElectricNone</default>
-        </entry>
-    </group>
     <group name="Effect-overview">
         <entry name="BorderActivateOverview" key="BorderActivate" type="IntList">
             <default>ElectricTopLeft</default>
+        </entry>
+        <entry name="BorderActivateGrid" key="GridBorderActivate" type="IntList">
+            <default>ElectricNone</default>
         </entry>
     </group>
     <group name="TabBox">

@@ -86,6 +86,7 @@ private:
     EffectTogglableState *const m_transitionState;
     EffectTogglableState *const m_gridState;
     EffectTogglableTouchBorder *const m_border;
+    EffectTogglableTouchBorder *const m_gridBorder;
 
     QTimer *m_shutdownTimer;
     QList<QKeySequence> m_cycleShortcut;
@@ -93,6 +94,7 @@ private:
     QList<QKeySequence> m_overviewShortcut;
     QList<QKeySequence> m_gridShortcut;
     QList<ElectricBorder> m_borderActivate;
+    QList<ElectricBorder> m_gridBorderActivate;
     QString m_searchText;
     QPointF m_desktopOffset;
     bool m_filterWindows = true;

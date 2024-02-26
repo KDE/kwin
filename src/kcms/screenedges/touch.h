@@ -51,6 +51,7 @@ private:
         PresentWindowsCurrent,
         PresentWindowsClass,
         Overview,
+        Grid,
         TabBox,
         TabBoxAlternative,
         EffectCount

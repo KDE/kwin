@@ -130,6 +130,7 @@ void KWinScreenEdgesConfig::monitorInit()
     m_form->monitorAddItem(i18n("%1 - Current Application", presentWindowsName));
 
     m_form->monitorAddItem(i18n("Overview"));
+    m_form->monitorAddItem(i18n("Grid"));
 
     m_form->monitorAddItem(i18n("Toggle window switching"));
     m_form->monitorAddItem(i18n("Toggle alternative window switching"));
@@ -188,6 +189,7 @@ void KWinScreenEdgesConfig::monitorLoadSettings()
 
     // Overview
     m_form->monitorChangeEdge(m_data->settings()->touchBorderActivateOverview(), Overview);
+    m_form->monitorChangeEdge(m_data->settings()->touchBorderActivateGrid(), Grid);
 
     // TabBox BorderActivate
     m_form->monitorChangeEdge(m_data->settings()->touchBorderActivateTabBox(), TabBox);
@@ -224,6 +226,7 @@ void KWinScreenEdgesConfig::monitorLoadDefaultSettings()
 
     // Overview
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultTouchBorderActivateOverviewValue(), Overview);
+    m_form->monitorChangeDefaultEdge(m_data->settings()->defaultTouchBorderActivateGridValue(), Grid);
 
     // TabBox BorderActivate
     m_form->monitorChangeDefaultEdge(m_data->settings()->defaultTouchBorderActivateTabBoxValue(), TabBox);
@@ -248,6 +251,7 @@ void KWinScreenEdgesConfig::monitorSaveSettings()
 
     // Overview
     m_data->settings()->setTouchBorderActivateOverview(m_form->monitorCheckEffectHasEdge(Overview));
+    m_data->settings()->setTouchBorderActivateGrid(m_form->monitorCheckEffectHasEdge(Grid));
 
     // TabBox
     m_data->settings()->setTouchBorderActivateTabBox(m_form->monitorCheckEffectHasEdge(TabBox));
@@ -278,7 +282,9 @@ void KWinScreenEdgesConfig::monitorShowEvent()
     m_form->monitorItemSetEnabled(PresentWindowsAll, enabled);
 
     // Overview
-    m_form->monitorItemSetEnabled(Overview, config.readEntry("overviewEnabled", true));
+    const bool overviewEnabled = config.readEntry("overviewEnabled", true);
+    m_form->monitorItemSetEnabled(Overview, overviewEnabled);
+    m_form->monitorItemSetEnabled(Grid, overviewEnabled);
 
     // tabbox, depends on reasonable focus policy.
     KConfigGroup config2(m_config, QStringLiteral("Windows"));

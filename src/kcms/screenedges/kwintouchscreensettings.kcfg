@@ -33,6 +33,9 @@
         <entry name="TouchBorderActivateOverview" key="TouchBorderActivate" type="IntList">
             <default>ElectricNone</default>
         </entry>
+        <entry name="TouchBorderActivateGrid" key="GridTouchBorderActivate" type="IntList">
+            <default>ElectricNone</default>
+        </entry>
     </group>
     <group name="TabBox">
         <entry name="TouchBorderActivateTabBox" key="TouchBorderActivate" type="IntList">
