@@ -79,8 +79,13 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_owning(owning)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")))
-    , m_importFormats(queryImportFormats())
 {
+    m_functions.createImageKHR = reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(eglGetProcAddress("eglCreateImageKHR"));
+    m_functions.destroyImageKHR = reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(eglGetProcAddress("eglDestroyImageKHR"));
+    m_functions.queryDmaBufFormatsEXT = reinterpret_cast<PFNEGLQUERYDMABUFFORMATSEXTPROC>(eglGetProcAddress("eglQueryDmaBufFormatsEXT"));
+    m_functions.queryDmaBufModifiersEXT = reinterpret_cast<PFNEGLQUERYDMABUFMODIFIERSEXTPROC>(eglGetProcAddress("eglQueryDmaBufModifiersEXT"));
+
+    m_importFormats = queryImportFormats();
 }
 
 EglDisplay::~EglDisplay()
@@ -212,7 +217,7 @@ EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf) cons
 
     attribs << EGL_NONE;
 
-    return eglCreateImageKHR(m_handle, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+    return createImage(EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
 }
 
 EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const
@@ -233,7 +238,7 @@ EGLImageKHR EglDisplay::importDmaBufAsImage(const DmaBufAttributes &dmabuf, int 
     }
     attribs << EGL_NONE;
 
-    return eglCreateImageKHR(m_handle, EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
+    return createImage(EGL_NO_CONTEXT, EGL_LINUX_DMA_BUF_EXT, nullptr, attribs.data());
 }
 
 QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::allSupportedDrmFormats() const
@@ -266,37 +271,31 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
         return {};
     }
 
-    typedef EGLBoolean (*eglQueryDmaBufFormatsEXT_func)(EGLDisplay dpy, EGLint max_formats, EGLint *formats, EGLint *num_formats);
-    typedef EGLBoolean (*eglQueryDmaBufModifiersEXT_func)(EGLDisplay dpy, EGLint format, EGLint max_modifiers, EGLuint64KHR *modifiers, EGLBoolean *external_only, EGLint *num_modifiers);
-    eglQueryDmaBufFormatsEXT_func eglQueryDmaBufFormatsEXT = nullptr;
-    eglQueryDmaBufModifiersEXT_func eglQueryDmaBufModifiersEXT = nullptr;
-    eglQueryDmaBufFormatsEXT = (eglQueryDmaBufFormatsEXT_func)eglGetProcAddress("eglQueryDmaBufFormatsEXT");
-    eglQueryDmaBufModifiersEXT = (eglQueryDmaBufModifiersEXT_func)eglGetProcAddress("eglQueryDmaBufModifiersEXT");
-    if (eglQueryDmaBufFormatsEXT == nullptr) {
+    if (m_functions.queryDmaBufFormatsEXT == nullptr) {
         return {};
     }
 
     EGLint count = 0;
-    EGLBoolean success = eglQueryDmaBufFormatsEXT(m_handle, 0, nullptr, &count);
+    EGLBoolean success = m_functions.queryDmaBufFormatsEXT(m_handle, 0, nullptr, &count);
     if (!success || count == 0) {
         qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT failed!" << getEglErrorString();
         return {};
     }
     QList<uint32_t> formats(count);
-    if (!eglQueryDmaBufFormatsEXT(m_handle, count, (EGLint *)formats.data(), &count)) {
+    if (!m_functions.queryDmaBufFormatsEXT(m_handle, count, (EGLint *)formats.data(), &count)) {
         qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed!" << getEglErrorString();
         return {};
     }
     QHash<uint32_t, DrmFormatInfo> ret;
     for (const auto format : std::as_const(formats)) {
-        if (eglQueryDmaBufModifiersEXT != nullptr) {
+        if (m_functions.queryDmaBufModifiersEXT != nullptr) {
             EGLint count = 0;
-            const EGLBoolean success = eglQueryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
+            const EGLBoolean success = m_functions.queryDmaBufModifiersEXT(m_handle, format, 0, nullptr, nullptr, &count);
             if (success && count > 0) {
                 DrmFormatInfo drmFormatInfo;
                 drmFormatInfo.allModifiers.resize(count);
                 QList<EGLBoolean> externalOnly(count);
-                if (eglQueryDmaBufModifiersEXT(m_handle, format, count, drmFormatInfo.allModifiers.data(), externalOnly.data(), &count)) {
+                if (m_functions.queryDmaBufModifiersEXT(m_handle, format, count, drmFormatInfo.allModifiers.data(), externalOnly.data(), &count)) {
                     drmFormatInfo.externalOnlyModifiers = drmFormatInfo.allModifiers;
                     drmFormatInfo.nonExternalOnlyModifiers = drmFormatInfo.allModifiers;
                     for (int i = drmFormatInfo.allModifiers.size() - 1; i >= 0; i--) {
@@ -325,4 +324,15 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
     return ret;
 }
 
+EGLImageKHR EglDisplay::createImage(EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list) const
+{
+    Q_ASSERT(m_functions.createImageKHR);
+    return m_functions.createImageKHR(m_handle, ctx, target, buffer, attrib_list);
+}
+
+void EglDisplay::destroyImage(EGLImageKHR image) const
+{
+    Q_ASSERT(m_functions.destroyImageKHR);
+    m_functions.destroyImageKHR(m_handle, image);
+}
 }

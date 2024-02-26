@@ -48,6 +48,9 @@ public:
     QHash<uint32_t, DrmFormatInfo> allSupportedDrmFormats() const;
     bool isExternalOnly(uint32_t format, uint64_t modifier) const;
 
+    EGLImageKHR createImage(EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list) const;
+    void destroyImage(EGLImageKHR image) const;
+
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const;
 
@@ -62,7 +65,16 @@ private:
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
-    const QHash<uint32_t, DrmFormatInfo> m_importFormats;
+    QHash<uint32_t, DrmFormatInfo> m_importFormats;
+
+    struct
+    {
+        PFNEGLCREATEIMAGEKHRPROC createImageKHR = nullptr;
+        PFNEGLDESTROYIMAGEKHRPROC destroyImageKHR = nullptr;
+
+        PFNEGLQUERYDMABUFFORMATSEXTPROC queryDmaBufFormatsEXT = nullptr;
+        PFNEGLQUERYDMABUFMODIFIERSEXTPROC queryDmaBufModifiersEXT = nullptr;
+    } m_functions;
 };
 
 }
