@@ -1246,7 +1246,7 @@ bool Window::startInteractiveMoveResize()
         }
     }
 
-    if (m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
+    if (isInteractiveResize() && m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
         setQuickTileMode(QuickTileFlag::None);
     }
 
