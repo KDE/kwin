@@ -58,10 +58,6 @@ private Q_SLOTS:
     void handleXwaylandFinished();
     void handleXwaylandReady();
 
-    void handleSelectionLostOwnership();
-    void handleSelectionFailedToClaimOwnership();
-    void handleSelectionClaimedOwnership();
-
 private:
     friend class XrandrEventFilter;
 
