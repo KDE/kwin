@@ -82,7 +82,7 @@ void AbstractEglBackend::teardown()
 void AbstractEglBackend::cleanup()
 {
     for (const EGLImageKHR &image : m_importedBuffers) {
-        eglDestroyImageKHR(m_display->handle(), image);
+        m_display->destroyImage(image);
     }
 
     cleanupSurfaces();
@@ -302,7 +302,7 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer, int 
     if (image != EGL_NO_IMAGE_KHR) {
         m_importedBuffers[key] = image;
         connect(buffer, &QObject::destroyed, this, [this, key]() {
-            eglDestroyImageKHR(m_display->handle(), m_importedBuffers.take(key));
+            m_display->destroyImage(m_importedBuffers.take(key));
         });
     } else {
         qCWarning(KWIN_OPENGL) << "failed to import dmabuf" << buffer;
@@ -324,7 +324,7 @@ EGLImageKHR AbstractEglBackend::importBufferAsImage(GraphicsBuffer *buffer)
     if (image != EGL_NO_IMAGE_KHR) {
         m_importedBuffers[key] = image;
         connect(buffer, &QObject::destroyed, this, [this, key]() {
-            eglDestroyImageKHR(m_display->handle(), m_importedBuffers.take(key));
+            m_display->destroyImage(m_importedBuffers.take(key));
         });
     } else {
         qCWarning(KWIN_OPENGL) << "failed to import dmabuf" << buffer;

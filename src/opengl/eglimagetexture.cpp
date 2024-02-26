@@ -26,7 +26,7 @@ EGLImageTexture::EGLImageTexture(EglDisplay *display, EGLImage image, uint textu
 
 EGLImageTexture::~EGLImageTexture()
 {
-    eglDestroyImageKHR(m_display->handle(), m_image);
+    m_display->destroyImage(m_image);
 }
 
 std::shared_ptr<EGLImageTexture> EGLImageTexture::create(EglDisplay *display, EGLImageKHR image, int internalFormat, const QSize &size, bool externalOnly)
