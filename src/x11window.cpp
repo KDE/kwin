@@ -1492,15 +1492,6 @@ bool X11Window::isFullScreenable() const
     if (!rules()->checkFullScreen(true)) {
         return false;
     }
-    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
-    if (rules()->checkStrictGeometry(isX11Mode)) {
-        // check geometry constraints (rule to obey is set)
-        const QRectF fullScreenArea = workspace()->clientArea(FullScreenArea, this);
-        const QSizeF constrainedClientSize = constrainClientSize(fullScreenArea.size());
-        if (rules()->checkSize(constrainedClientSize) != fullScreenArea.size()) {
-            return false; // the app wouldn't fit exactly fullscreen geometry due to its strict geometry requirements
-        }
-    }
     // don't check size constrains - some apps request fullscreen despite requesting fixed size
     return isNormalWindow() || isDialog(); // also better disallow only weird types to go fullscreen
 }
