@@ -70,6 +70,10 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
             if (tile) {
                 QRectF tileGeom = tile->relativeGeometry();
                 tileGeom.setRight(finalGeom.left());
+                if (tileGeom.width() <= tile->minimumSize().width()) {
+                    m_geometryLock = false;
+                    return;
+                }
                 tile->setRelativeGeometry(tileGeom);
                 // The other tile gometry may be not what we set due to size constraints
                 finalGeom.setLeft(tile->relativeGeometry().right());
@@ -83,6 +87,10 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
             if (tile) {
                 auto tileGeom = tile->relativeGeometry();
                 tileGeom.setBottom(finalGeom.top());
+                if (tileGeom.height() <= tile->minimumSize().height()) {
+                    m_geometryLock = false;
+                    return;
+                }
                 tile->setRelativeGeometry(tileGeom);
                 finalGeom.setTop(tile->relativeGeometry().bottom());
             } else {
@@ -95,6 +103,10 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
             if (tile) {
                 auto tileGeom = tile->relativeGeometry();
                 tileGeom.setLeft(finalGeom.right());
+                if (tileGeom.width() <= tile->minimumSize().width()) {
+                    m_geometryLock = false;
+                    return;
+                }
                 tile->setRelativeGeometry(tileGeom);
                 finalGeom.setRight(tile->relativeGeometry().left());
             } else {
@@ -107,6 +119,10 @@ void CustomTile::setRelativeGeometry(const QRectF &geom)
             if (tile) {
                 auto tileGeom = tile->relativeGeometry();
                 tileGeom.setTop(finalGeom.bottom());
+                if (tileGeom.height() <= tile->minimumSize().height()) {
+                    m_geometryLock = false;
+                    return;
+                }
                 tile->setRelativeGeometry(tileGeom);
                 finalGeom.setBottom(tile->relativeGeometry().top());
             } else {
