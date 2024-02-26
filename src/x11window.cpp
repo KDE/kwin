@@ -1490,7 +1490,8 @@ bool X11Window::isFullScreenable() const
     if (!rules()->checkFullScreen(true)) {
         return false;
     }
-    if (rules()->checkStrictGeometry(true)) {
+    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
+    if (rules()->checkStrictGeometry(isX11Mode)) {
         // check geometry constraints (rule to obey is set)
         const QRectF fullScreenArea = workspace()->clientArea(FullScreenArea, this);
         const QSizeF constrainedClientSize = constrainClientSize(fullScreenArea.size());
@@ -3693,7 +3694,8 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
     w = std::max(min_size.width(), w);
     h = std::max(min_size.height(), h);
 
-    if (!rules()->checkStrictGeometry(!isFullScreen())) {
+    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
+    if (!rules()->checkStrictGeometry(!isFullScreen() && isX11Mode)) {
         // Disobey increments and aspect by explicit rule.
         return QSizeF(w, h);
     }
@@ -3878,6 +3880,10 @@ QSizeF X11Window::maxSize() const
 
 QSizeF X11Window::basicUnit() const
 {
+    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
+    if (!isX11Mode) {
+        return QSize(1, 1);
+    }
     return m_geometryHints.resizeIncrements();
 }
 
@@ -4445,9 +4451,11 @@ void X11Window::maximize(MaximizeMode mode)
 
     // if the client insist on a fix aspect ratio, we check whether the maximizing will get us
     // out of screen bounds and take that as a "full maximization with aspect check" then
+    const bool isX11Mode = kwinApp()->operationMode() == Application::OperationModeX11;
+
     if (m_geometryHints.hasAspect() && // fixed aspect
         (mode == MaximizeVertical || mode == MaximizeHorizontal) && // ondimensional maximization
-        rules()->checkStrictGeometry(true)) { // obey aspect
+        rules()->checkStrictGeometry(isX11Mode)) { // obey aspect
         const QSize minAspect = m_geometryHints.minAspect();
         const QSize maxAspect = m_geometryHints.maxAspect();
         if (mode == MaximizeVertical || (old_mode & MaximizeVertical)) {
