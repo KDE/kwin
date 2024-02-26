@@ -33,8 +33,8 @@ public:
         std::unique_ptr<ColorTransformation> A;
     };
 
-    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt);
-    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt);
+    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> brightness);
+    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> brightness);
     ~IccProfile();
 
     /**
@@ -52,6 +52,10 @@ public:
      */
     std::shared_ptr<ColorTransformation> vcgt() const;
     const Colorimetry &colorimetry() const;
+    /**
+     * The brightness with a completely white output, in nits
+     */
+    std::optional<double> brightness() const;
 
     static std::unique_ptr<IccProfile> load(const QString &path);
 
@@ -61,6 +65,7 @@ private:
     const std::optional<BToATagData> m_bToATag;
     const std::shared_ptr<ColorTransformation> m_inverseEOTF;
     const std::shared_ptr<ColorTransformation> m_vcgt;
+    const std::optional<double> m_brightness;
 };
 
 }

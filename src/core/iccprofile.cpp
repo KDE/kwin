@@ -17,25 +17,32 @@
 namespace KWin
 {
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> brightness)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_bToATag(std::move(bToATag))
     , m_vcgt(vcgt)
+    , m_brightness(brightness)
 {
 }
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> brightness)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_inverseEOTF(inverseEOTF)
     , m_vcgt(vcgt)
+    , m_brightness(brightness)
 {
 }
 
 IccProfile::~IccProfile()
 {
     cmsCloseProfile(m_handle);
+}
+
+std::optional<double> IccProfile::brightness() const
+{
+    return m_brightness;
 }
 
 const Colorimetry &IccProfile::colorimetry() const
@@ -311,6 +318,13 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         return nullptr;
     }
 
+    std::optional<double> brightness;
+    if (cmsCIEXYZ *luminance = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigLuminanceTag))) {
+        // for some reason, lcms exposes the luminance as a XYZ triple...
+        // only Y is non-zero, and it's the brightness in nits
+        brightness = luminance->Y;
+    }
+
     BToATagData lutData;
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
         qCWarning(KWIN_CORE, "Profiles with only BToD tags aren't supported yet");
@@ -320,7 +334,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         // lut based profile, with relative colorimetric intent supported
         auto data = parseBToATag(handle, cmsSigBToA1Tag);
         if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt);
+            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, brightness);
         } else {
             qCWarning(KWIN_CORE, "Parsing BToA1 tag failed");
             return nullptr;
@@ -330,7 +344,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         // lut based profile, with perceptual intent. The ICC docs say to use this as a fallback
         auto data = parseBToATag(handle, cmsSigBToA0Tag);
         if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt);
+            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, brightness);
         } else {
             qCWarning(KWIN_CORE, "Parsing BToA0 tag failed");
             return nullptr;
@@ -353,7 +367,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
     stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves)));
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), inverseEOTF, vcgt);
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), inverseEOTF, vcgt, brightness);
 }
 
 }

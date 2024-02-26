@@ -360,7 +360,8 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
                                 props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)),
                                 Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)));
     } else if (const auto profile = props->iccProfile.value_or(m_state.iccProfile)) {
-        return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, 200, 0, 200, 200);
+        const double brightness = profile->brightness().value_or(200);
+        return ColorDescription(profile->colorimetry(), NamedTransferFunction::gamma22, brightness, 0, brightness, brightness);
     } else {
         return ColorDescription::sRGB;
     }
