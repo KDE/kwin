@@ -535,12 +535,6 @@ void Xwayland::handleXwaylandReady()
 
     // create selection owner for WM_S0 - magic X display number expected by XWayland
     m_windowManagerSelectionOwner = std::make_unique<KSelectionOwner>("WM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
-    connect(m_windowManagerSelectionOwner.get(), &KSelectionOwner::lostOwnership,
-            this, &Xwayland::handleSelectionLostOwnership);
-    connect(m_windowManagerSelectionOwner.get(), &KSelectionOwner::claimedOwnership,
-            this, &Xwayland::handleSelectionClaimedOwnership);
-    connect(m_windowManagerSelectionOwner.get(), &KSelectionOwner::failedToClaimOwnership,
-            this, &Xwayland::handleSelectionFailedToClaimOwnership);
     m_windowManagerSelectionOwner->claim(true);
 
     m_dataBridge = std::make_unique<DataBridge>();
@@ -548,13 +542,13 @@ void Xwayland::handleXwaylandReady()
     connect(workspace(), &Workspace::outputOrderChanged, this, &Xwayland::updatePrimary);
     updatePrimary();
 
-    Xcb::sync(); // Trigger possible errors, there's still a chance to abort
-
     delete m_xrandrEventsFilter;
     m_xrandrEventsFilter = new XrandrEventFilter(this);
 
     refreshEavesdropping();
     connect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
+
+    Q_EMIT started();
 }
 
 void Xwayland::refreshEavesdropping()
@@ -606,23 +600,6 @@ void Xwayland::updatePrimary()
             }
         }
     }
-}
-
-void Xwayland::handleSelectionLostOwnership()
-{
-    qCWarning(KWIN_XWL) << "Somebody else claimed ownership of WM_S0. This should never happen!";
-    m_launcher->stop();
-}
-
-void Xwayland::handleSelectionFailedToClaimOwnership()
-{
-    qCWarning(KWIN_XWL) << "Failed to claim ownership of WM_S0. This should never happen!";
-    m_launcher->stop();
-}
-
-void Xwayland::handleSelectionClaimedOwnership()
-{
-    Q_EMIT started();
 }
 
 bool Xwayland::createX11Connection()
