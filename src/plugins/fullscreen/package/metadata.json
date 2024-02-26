@@ -68,7 +68,7 @@
         "Description[ia]": "Animation per un fenestra va a e abandona modo de schermo plen",
         "Description[is]": "Hreyfiáhrif fyrir glugga þegar þeir fylla skjá eða hætta að fylla skjá",
         "Description[it]": "Animazione per una finestra che entra e esce dalla modalità a schermo intero",
-        "Description[ja]": "フルスクリーンモードに入るときもしくは出るときのアニメーション",
+        "Description[ja]": "フルスクリーンモード開始時/終了時のアニメーション",
         "Description[ka]": "ფანჯრის ანიმაცია სრულ ეკრანზე გასვლისას და სრული ეკრანიდან გამოსვლისას",
         "Description[ko]": "창이 전체 화면 모드로 진입하거나 벗어날 때 사용할 애니메이션",
         "Description[lt]": "Animacija, naudojama įjungiant langui viso ekrano veikseną ir ją išjungiant",
