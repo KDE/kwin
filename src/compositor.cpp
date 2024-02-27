@@ -162,7 +162,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         prePaintPass(superLayer, &surfaceDamage);
 
         Window *const activeWindow = workspace()->activeWindow();
-        SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() ? activeWindow->surfaceItem() : nullptr;
+        SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
         frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
 
         const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && activeFullscreenItem));
