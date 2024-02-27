@@ -20,6 +20,7 @@ public:
 private Q_SLOTS:
     void roundtripConversion_data();
     void roundtripConversion();
+    void nonNormalizedPrimaries();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -33,6 +34,8 @@ static bool compareVectors(const QVector3D &one, const QVector3D &two, float max
     return ret;
 }
 
+static const double s_resolution10bit = std::pow(1.0 / 2.0, 10);
+
 void TestColorspaces::roundtripConversion_data()
 {
     QTest::addColumn<NamedColorimetry>("srcColorimetry");
@@ -41,12 +44,11 @@ void TestColorspaces::roundtripConversion_data()
     QTest::addColumn<NamedTransferFunction>("dstTransferFunction");
     QTest::addColumn<double>("requiredAccuracy");
 
-    const double resolution10bit = std::pow(1.0 / 2.0, 10);
-    QTest::addRow("BT709 (sRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::sRGB << NamedColorimetry::BT2020 << NamedTransferFunction::linear << resolution10bit;
-    QTest::addRow("BT709 (gamma 2.2) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::gamma22 << NamedColorimetry::BT2020 << NamedTransferFunction::linear << resolution10bit;
-    QTest::addRow("BT709 (scRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::scRGB << NamedColorimetry::BT2020 << NamedTransferFunction::linear << resolution10bit;
-    QTest::addRow("BT709 (linear) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::linear << NamedColorimetry::BT2020 << NamedTransferFunction::linear << resolution10bit;
-    QTest::addRow("BT709 (PQ) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::PerceptualQuantizer << NamedColorimetry::BT2020 << NamedTransferFunction::linear << 3 * resolution10bit;
+    QTest::addRow("BT709 (sRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::sRGB << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (gamma 2.2) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::gamma22 << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (scRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::scRGB << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (linear) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::linear << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (PQ) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::PerceptualQuantizer << NamedColorimetry::BT2020 << NamedTransferFunction::linear << 3 * s_resolution10bit;
 }
 
 void TestColorspaces::roundtripConversion()
@@ -69,6 +71,18 @@ void TestColorspaces::roundtripConversion()
     QVERIFY(compareVectors(dst.mapTo(src.mapTo(green, dst), src), green, requiredAccuracy));
     QVERIFY(compareVectors(dst.mapTo(src.mapTo(blue, dst), src), blue, requiredAccuracy));
     QVERIFY(compareVectors(dst.mapTo(src.mapTo(white, dst), src), white, requiredAccuracy));
+}
+
+void TestColorspaces::nonNormalizedPrimaries()
+{
+    // this test ensures that non-normalized primaries don't mess up the transformations between color spaces
+    const auto from = Colorimetry::fromName(NamedColorimetry::BT709);
+    const auto to = Colorimetry(Colorimetry::xyToXYZ(from.red()) * 2, Colorimetry::xyToXYZ(from.green()) * 2, Colorimetry::xyToXYZ(from.blue()) * 2, Colorimetry::xyToXYZ(from.white()) * 2);
+
+    const auto convertedWhite = from.toOther(to) * QVector3D(1, 1, 1);
+    QCOMPARE_LE(std::abs(1 - convertedWhite.x()), s_resolution10bit);
+    QCOMPARE_LE(std::abs(1 - convertedWhite.y()), s_resolution10bit);
+    QCOMPARE_LE(std::abs(1 - convertedWhite.z()), s_resolution10bit);
 }
 
 QTEST_MAIN(TestColorspaces)
