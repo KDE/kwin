@@ -9,6 +9,8 @@
 #include "effect/effect.h"
 #include "input_event_spy.h"
 #include "plugins/shakecursor/shakedetector.h"
+#include "scene/imageitem.h"
+#include "utils/xcursortheme.h"
 
 #include <QTimer>
 #include <QVariantAnimation>
@@ -18,6 +20,21 @@ namespace KWin
 
 class Cursor;
 class CursorItem;
+class ShapeCursorSource;
+
+class ShakeCursorItem : public Item
+{
+    Q_OBJECT
+
+public:
+    ShakeCursorItem(const KXcursorTheme &theme, Item *parent);
+
+private:
+    void refresh();
+
+    std::unique_ptr<ImageItem> m_imageItem;
+    std::unique_ptr<ShapeCursorSource> m_source;
+};
 
 class ShakeCursorEffect : public Effect, public InputEventSpy
 {
@@ -44,7 +61,8 @@ private:
     ShakeDetector m_shakeDetector;
 
     Cursor *m_cursor;
-    std::unique_ptr<CursorItem> m_cursorItem;
+    std::unique_ptr<ShakeCursorItem> m_cursorItem;
+    std::optional<KXcursorTheme> m_cursorTheme;
     qreal m_targetMagnification = 1.0;
     qreal m_currentMagnification = 1.0;
 };

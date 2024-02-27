@@ -6,15 +6,37 @@
 
 #include "plugins/shakecursor/shakecursor.h"
 #include "cursor.h"
+#include "cursorsource.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
 #include "plugins/shakecursor/shakecursorconfig.h"
 #include "pointer_input.h"
-#include "scene/cursoritem.h"
+#include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
 
 namespace KWin
 {
+
+ShakeCursorItem::ShakeCursorItem(const KXcursorTheme &theme, Item *parent)
+    : Item(parent->scene(), parent)
+{
+    m_source = std::make_unique<ShapeCursorSource>();
+    m_source->setTheme(theme);
+    m_source->setShape(Qt::ArrowCursor);
+
+    refresh();
+    connect(m_source.get(), &CursorSource::changed, this, &ShakeCursorItem::refresh);
+}
+
+void ShakeCursorItem::refresh()
+{
+    if (!m_imageItem) {
+        m_imageItem = scene()->renderer()->createImageItem(scene(), this);
+    }
+    m_imageItem->setImage(m_source->image());
+    m_imageItem->setPosition(-m_source->hotspot());
+    m_imageItem->setSize(m_source->image().deviceIndependentSize());
+}
 
 ShakeCursorEffect::ShakeCursorEffect()
     : m_cursor(Cursors::self()->mouse())
@@ -115,8 +137,12 @@ void ShakeCursorEffect::magnify(qreal magnification)
         if (!m_cursorItem) {
             effects->hideCursor();
 
-            m_cursorItem = std::make_unique<CursorItem>(effects->scene());
-            m_cursorItem->setParentItem(effects->scene()->overlayItem());
+            const qreal maxScale = ShakeCursorConfig::magnification() + 4 * ShakeCursorConfig::overMagnification();
+            if (!m_cursorTheme || m_cursorTheme->name() != m_cursor->themeName() || m_cursorTheme->size() != m_cursor->themeSize() || m_cursorTheme->devicePixelRatio() != maxScale) {
+                m_cursorTheme = KXcursorTheme(m_cursor->themeName(), m_cursor->themeSize(), maxScale);
+            }
+
+            m_cursorItem = std::make_unique<ShakeCursorItem>(*m_cursorTheme, effects->scene()->overlayItem());
             m_cursorItem->setPosition(m_cursor->pos());
             connect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), [this]() {
                 m_cursorItem->setPosition(m_cursor->pos());

@@ -109,6 +109,10 @@ public:
     bool operator==(const KXcursorTheme &other);
     bool operator!=(const KXcursorTheme &other);
 
+    QString name() const;
+    int size() const;
+    qreal devicePixelRatio() const;
+
     /**
      * Returns @c true if the Xcursor theme is empty; otherwise returns @c false.
      */

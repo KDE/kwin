@@ -31,8 +31,15 @@ public:
 class KXcursorThemePrivate : public QSharedData
 {
 public:
+    KXcursorThemePrivate();
+    KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio);
+
     void load(const QString &themeName, int size, qreal devicePixelRatio);
     void loadCursors(const QString &packagePath, int size, qreal devicePixelRatio);
+
+    QString name;
+    int size = 0;
+    qreal devicePixelRatio = 0;
 
     QHash<QByteArray, QList<KXcursorSprite>> registry;
 };
@@ -79,6 +86,18 @@ QPoint KXcursorSprite::hotspot() const
 std::chrono::milliseconds KXcursorSprite::delay() const
 {
     return d->delay;
+}
+
+KXcursorThemePrivate::KXcursorThemePrivate()
+{
+}
+
+KXcursorThemePrivate::KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio)
+    : name(themeName)
+    , size(size)
+    , devicePixelRatio(devicePixelRatio)
+{
+    load(themeName, size, devicePixelRatio);
 }
 
 static QList<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
@@ -198,9 +217,8 @@ KXcursorTheme::KXcursorTheme()
 }
 
 KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio)
-    : d(new KXcursorThemePrivate)
+    : d(new KXcursorThemePrivate(themeName, size, devicePixelRatio))
 {
-    d->load(themeName, size, devicePixelRatio);
 }
 
 KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
@@ -226,6 +244,21 @@ bool KXcursorTheme::operator==(const KXcursorTheme &other)
 bool KXcursorTheme::operator!=(const KXcursorTheme &other)
 {
     return !(*this == other);
+}
+
+QString KXcursorTheme::name() const
+{
+    return d->name;
+}
+
+int KXcursorTheme::size() const
+{
+    return d->size;
+}
+
+qreal KXcursorTheme::devicePixelRatio() const
+{
+    return d->devicePixelRatio;
 }
 
 bool KXcursorTheme::isEmpty() const
