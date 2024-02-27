@@ -30,8 +30,9 @@ glGetnUniformfv_func glGetnUniformfv;
 
 void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
 {
-    const bool haveArbRobustness = hasGLExtension(QByteArrayLiteral("GL_ARB_robustness"));
-    const bool haveExtRobustness = hasGLExtension(QByteArrayLiteral("GL_EXT_robustness"));
+    const auto context = OpenGlContext::currentContext();
+    const bool haveArbRobustness = context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_robustness"));
+    const bool haveExtRobustness = context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_robustness"));
     bool robustContext = false;
     if (GLPlatform::instance()->isGLES()) {
         if (haveExtRobustness) {
@@ -41,7 +42,7 @@ void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resol
         }
     } else {
         if (haveArbRobustness) {
-            if (hasGLVersion(3, 0)) {
+            if (context->hasVersion(Version(3, 0))) {
                 GLint value = 0;
                 glGetIntegerv(GL_CONTEXT_FLAGS, &value);
                 if (value & GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT_ARB) {

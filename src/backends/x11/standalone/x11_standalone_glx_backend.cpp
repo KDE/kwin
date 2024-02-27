@@ -157,7 +157,7 @@ GlxBackend::~GlxBackend()
     if (m_context) {
         // TODO: cleanup in error case
         // do cleanup after initBuffer()
-        cleanupGL();
+        GLPlatform::cleanup();
         doneCurrent();
 
         m_context.reset();

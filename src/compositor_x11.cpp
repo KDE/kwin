@@ -220,7 +220,7 @@ bool X11Compositor::attemptOpenGLCompositing()
     }
 
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
-    if (!hasGLVersion(2, 0)) {
+    if (!backend->openglContext()->hasVersion(Version(2, 0))) {
         qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
         return false;
     }
@@ -348,7 +348,7 @@ void X11Compositor::start()
     // Sets also the 'effects' pointer.
     kwinApp()->createEffectsHandler(this, m_scene.get());
 
-    m_syncManager.reset(X11SyncManager::create());
+    m_syncManager.reset(X11SyncManager::create(m_backend.get()));
     if (m_releaseSelectionTimer.isActive()) {
         m_releaseSelectionTimer.stop();
     }

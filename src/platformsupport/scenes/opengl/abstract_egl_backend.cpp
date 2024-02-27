@@ -86,7 +86,7 @@ void AbstractEglBackend::cleanup()
     }
 
     cleanupSurfaces();
-    cleanupGL();
+    GLPlatform::cleanup();
     m_context.reset();
 }
 

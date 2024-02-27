@@ -15,6 +15,7 @@
 #include "utils/common.h"
 
 #include "opengl/glplatform.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 
 namespace KWin
 {
@@ -137,7 +138,7 @@ void X11SyncObject::finishResetting()
     m_state = Ready;
 }
 
-X11SyncManager *X11SyncManager::create()
+X11SyncManager *X11SyncManager::create(RenderBackend *backend)
 {
     if (kwinApp()->operationMode() != Application::OperationModeX11) {
         return nullptr;
@@ -147,12 +148,8 @@ X11SyncManager *X11SyncManager::create()
         return nullptr;
     }
 
-    GLPlatform *glPlatform = GLPlatform::instance();
-    const bool haveSyncObjects = glPlatform->isGLES()
-        ? hasGLVersion(3, 0)
-        : hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
-
-    if (hasGLExtension("GL_EXT_x11_sync_object") && haveSyncObjects) {
+    const auto context = static_cast<OpenGLBackend *>(backend)->openglContext();
+    if (context->hasOpenglExtension("GL_EXT_x11_sync_object") && context->haveSyncFences()) {
         const QString useExplicitSync = qEnvironmentVariable("KWIN_EXPLICIT_SYNC");
 
         if (useExplicitSync != QLatin1String("0")) {

@@ -18,11 +18,6 @@ Q_DECLARE_METATYPE(KWin::ChipClass)
 
 using namespace KWin;
 
-void KWin::cleanupGL()
-{
-    GLPlatform::cleanup();
-}
-
 class GLPlatformTest : public QObject
 {
     Q_OBJECT
@@ -40,7 +35,7 @@ private Q_SLOTS:
 
 void GLPlatformTest::cleanup()
 {
-    cleanupGL();
+    GLPlatform::cleanup();
     delete s_gl;
     s_gl = nullptr;
 }

@@ -14,6 +14,8 @@
 namespace KWin
 {
 
+class RenderBackend;
+
 /**
  * SyncObject represents a fence used to synchronize operations in the kwin command stream
  * with operations in the X command stream.
@@ -61,7 +63,7 @@ public:
         MaxFences = 4,
     };
 
-    static X11SyncManager *create();
+    static X11SyncManager *create(RenderBackend *backend);
     ~X11SyncManager();
 
     bool endFrame();

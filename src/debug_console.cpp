@@ -683,7 +683,7 @@ void DebugConsole::initGLTab()
 
     const OpenGLBackend *backend = static_cast<OpenGLBackend *>(Compositor::self()->backend());
     m_ui->platformExtensionsLabel->setText(extensionsString(backend->extensions()));
-    m_ui->openGLExtensionsLabel->setText(extensionsString(openGLExtensions()));
+    m_ui->openGLExtensionsLabel->setText(extensionsString(backend->openglContext()->openglExtensions()));
 }
 
 template<typename T>

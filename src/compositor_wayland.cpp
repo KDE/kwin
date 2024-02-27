@@ -80,7 +80,7 @@ bool WaylandCompositor::attemptOpenGLCompositing()
     }
 
     // We only support the OpenGL 2+ shader API, not GL_ARB_shader_objects
-    if (!hasGLVersion(2, 0)) {
+    if (!backend->openglContext()->hasVersion(Version(2, 0))) {
         qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
         return false;
     }

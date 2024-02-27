@@ -253,6 +253,11 @@ void OpenGlContext::setIndexBuffer(IndexBuffer *buffer)
     m_indexBuffer = buffer;
 }
 
+QSet<QByteArray> OpenGlContext::openglExtensions() const
+{
+    return m_extensions;
+}
+
 OpenGlContext *OpenGlContext::currentContext()
 {
     return s_currentContext;

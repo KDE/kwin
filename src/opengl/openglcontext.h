@@ -54,6 +54,7 @@ public:
     ShaderManager *shaderManager() const;
     GLVertexBuffer *streamingVbo() const;
     IndexBuffer *indexBuffer() const;
+    QSet<QByteArray> openglExtensions() const;
 
     /**
      * checks whether or not this context supports all the features that KWin requires

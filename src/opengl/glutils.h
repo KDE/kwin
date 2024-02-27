@@ -30,17 +30,9 @@ namespace KWin
 //  Note that GL context has to be created by the time this function is called
 typedef void (*resolveFuncPtr)();
 void KWIN_EXPORT initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
-// Cleans up all resources hold by the GL Context
-void KWIN_EXPORT cleanupGL();
-
-bool KWIN_EXPORT hasGLVersion(int major, int minor, int release = 0);
-// use for both OpenGL and GLX extensions
-bool KWIN_EXPORT hasGLExtension(const QByteArray &extension);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
 bool KWIN_EXPORT checkGLError(const char *txt);
-
-QList<QByteArray> KWIN_EXPORT openGLExtensions();
 
 } // namespace
 

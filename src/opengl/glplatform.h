@@ -368,10 +368,10 @@ public:
      */
     static QByteArray chipClassToString8(ChipClass chipClass);
 
+    static void cleanup();
+
 private:
     GLPlatform();
-    friend void KWin::cleanupGL();
-    static void cleanup();
 
 private:
     QByteArray m_glsl_version;

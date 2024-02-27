@@ -17,14 +17,13 @@
 namespace KWin
 {
 
-static QList<QByteArray> glExtensions;
-
 // Functions
 
 static void initDebugOutput()
 {
-    const bool have_KHR_debug = hasGLExtension(QByteArrayLiteral("GL_KHR_debug"));
-    const bool have_ARB_debug = hasGLExtension(QByteArrayLiteral("GL_ARB_debug_output"));
+    const auto context = OpenGlContext::currentContext();
+    const bool have_KHR_debug = context->hasOpenglExtension(QByteArrayLiteral("GL_KHR_debug"));
+    const bool have_ARB_debug = context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_debug_output"));
     if (!have_KHR_debug && !have_ARB_debug) {
         return;
     }
@@ -32,12 +31,12 @@ static void initDebugOutput()
     if (!have_ARB_debug) {
         // if we don't have ARB debug, but only KHR debug we need to verify whether the context is a debug context
         // it should work without as well, but empirical tests show: no it doesn't
-        if (GLPlatform::instance()->isGLES()) {
-            if (!hasGLVersion(3, 2)) {
+        if (context->isOpenglES()) {
+            if (!context->hasVersion(Version(3, 2))) {
                 // empirical data shows extension doesn't work
                 return;
             }
-        } else if (!hasGLVersion(3, 0)) {
+        } else if (!context->hasVersion(Version(3, 0))) {
             return;
         }
         // can only be queried with either OpenGL >= 3.0 or OpenGL ES of at least 3.1
@@ -96,45 +95,10 @@ static void initDebugOutput()
 
 void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
 {
-    // Get list of supported OpenGL extensions
-    if (hasGLVersion(3, 0)) {
-        int count;
-        glGetIntegerv(GL_NUM_EXTENSIONS, &count);
-
-        for (int i = 0; i < count; i++) {
-            const QByteArray name = (const char *)glGetStringi(GL_EXTENSIONS, i);
-            glExtensions << name;
-        }
-    } else {
-        glExtensions = QByteArray((const char *)glGetString(GL_EXTENSIONS)).split(' ');
-    }
-
     // handle OpenGL extensions functions
     glResolveFunctions(resolveFunction);
 
     initDebugOutput();
-}
-
-void cleanupGL()
-{
-    GLPlatform::cleanup();
-
-    glExtensions.clear();
-}
-
-bool hasGLVersion(int major, int minor, int release)
-{
-    return GLPlatform::instance()->glVersion() >= Version(major, minor, release);
-}
-
-bool hasGLExtension(const QByteArray &extension)
-{
-    return glExtensions.contains(extension);
-}
-
-QList<QByteArray> openGLExtensions()
-{
-    return glExtensions;
 }
 
 static QString formatGLError(GLenum err)

@@ -131,7 +131,7 @@ void EglBackend::init()
         setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;
     }
-    if (!hasGLExtension(QByteArrayLiteral("GL_OES_EGL_image"))) {
+    if (!m_context->hasOpenglExtension(QByteArrayLiteral("GL_OES_EGL_image"))) {
         setFailed(QStringLiteral("Required extension GL_OES_EGL_image not found, disabling compositing"));
         return;
     }

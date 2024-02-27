@@ -187,7 +187,8 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
-    if (!GLPlatform::instance()->isGLES() && (hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
+    const auto context = OpenGlContext::currentContext();
+    if (!context->isOpenglES() && (context->hasVersion(Version(3, 0)) || context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
         glBindFragDataLocation(m_program, index, name);
     }
 }
