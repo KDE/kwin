@@ -370,26 +370,27 @@ public:
 
         auto keyboard = waylandServer()->seat()->keyboard();
         auto surface = keyboard->focusedSurface();
-        if (!surface) {
+        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+
+        if (surface) {
+            ClientConnection *client = surface->client();
+            if (xwaylandClient && xwaylandClient == client) {
+                return;
+            }
+        }
+
+        KeyboardKeyState state{event->type() == QEvent::KeyPress};
+        if (!updateKey(event->nativeScanCode(), state)) {
             return;
         }
 
-        ClientConnection *client = surface->client();
-        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
-        if (xwaylandClient && xwaylandClient != client) {
-            KeyboardKeyState state{event->type() == QEvent::KeyPress};
-            if (!updateKey(event->nativeScanCode(), state)) {
-                return;
-            }
+        auto xkb = input()->keyboard()->xkb();
+        keyboard->sendModifiers(xkb->modifierState().depressed,
+                                xkb->modifierState().latched,
+                                xkb->modifierState().locked,
+                                xkb->currentLayout());
 
-            auto xkb = input()->keyboard()->xkb();
-            keyboard->sendModifiers(xkb->modifierState().depressed,
-                                    xkb->modifierState().latched,
-                                    xkb->modifierState().locked,
-                                    xkb->currentLayout());
-
-            waylandServer()->seat()->keyboard()->sendKey(event->nativeScanCode(), state, xwaylandClient);
-        }
+        keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient);
     }
 
     bool updateKey(quint32 key, KeyboardKeyState state)
