@@ -3,10 +3,10 @@
 # Darafei Praliaskouski <komzpa@licei2.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
+"Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-17 00:39+0000\n"
-"PO-Revision-Date: 2023-02-08 13:45\n"
+"PO-Revision-Date: 2024-02-23 13:34\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
-"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
-"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Project: fc57ad16a28d02dea100ceb1c60de14e\n"
+"X-Crowdin-Project-ID: 136\n"
 "X-Crowdin-Language: be\n"
-"X-Crowdin-File: /main/be/kwin/kcm_kwinrules.po\n"
-"X-Crowdin-File-ID: 8357\n"
+"X-Crowdin-File: /[antikruk.KDE] main/KDE6/be/messages/kwin/kcm_kwinrules.po\n"
+"X-Crowdin-File-ID: 10424\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -186,6 +186,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Пры вельмі нізкіх значэннях непразрыстасці можа пагоршыцца чытальнасць. Пры "
+"0% акно становіцца нябачным."
 
 #: rulesmodel.cpp:388
 #, kde-format
@@ -317,6 +319,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Некаторыя праграмы могуць выкарыстоўваць уласную геаметрыю, не зважаючы на "
+"налады кіраўніка акон. Налады гэтай уласцівасці перакрываюць іх запыты на "
+"размяшчэнне.<nl/><nl/>Гэта ўплывае на <interface>Памер</interface> і "
+"<interface>Пазіцыю</interface>, але не на станы<interface>Разгорнута</"
+"interface> або <interface>На ўвесь экран</interface>.<nl/><nl/>Звярніце "
+"ўвагу, што пазіцыю таксама можна выкарыстоўваць для супастаўлення з іншым "
+"<interface>Экранамі</interface>"
 
 #: rulesmodel.cpp:552
 #, kde-format
@@ -334,13 +343,7 @@ msgid "Obey geometry restrictions"
 msgstr "Пільнавацца геаметрычных абмежаванняў"
 
 #: rulesmodel.cpp:564
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -349,10 +352,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Напрыклад, тэрміналы або відэаплэеры могуць запытваць пэўныя суадносіны "
-"бакоў\n"
-"або змяняцца толькі на значэнні, большыя за адзінку.\n"
-"Гэта можа быць бессэнсоўным, а абмежаванне прадухіляе адвольныя памеры."
+"Некаторыя праграмы накшталт відэаплэераў або тэрміналаў могуць звяртацца да "
+"KWin, каб абмежаваць іх пэўнымі прапорцыямі або павялічваць на значэнні, "
+"большыя за памеры аднаго сімвала. Выкарыстоўвайце гэтую ўласцівасць, каб "
+"ігнараваць такія абмежаванні і дазваляць змяняць памер гэтых акон да "
+"адвольных памераў.<nl/><nl/>Гэта можа быць карысным для акон, якія не могуць "
+"умясціцца ў экран пры разгортванні."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -379,7 +384,7 @@ msgstr "Схаваць для панэлі задач"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Кіруе з'яўленнем акна ў кіраўніку задач."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -391,7 +396,7 @@ msgstr "Схаваць для пэйджара"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Кіруе з'яўленнем акна ў кіраўніку віртуальных працоўных сталоў."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -404,7 +409,7 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
-msgstr ""
+msgstr "Кіруе з'яўленнем акна ў спісе акон па <shortcut>Alt+Tab</shortcut>."
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -465,6 +470,24 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin спрабуе забараніць вокнам, якія былі адкрытыя без непасрэднага ўдзелу "
+"карыстальніка, падымацца і трапляць у фокус, пакуль вы ўзаемадзейнічаеце з "
+"іншым акном. Гэтую ўласцівасць можна выкарыстоўваць для змены ўзроўню "
+"прадухілення перахоплівання фокуса, які ўжываецца да асобных акон і праграм."
+"<nl/><nl/>Вось што адбудзецца з акном, адкрытым без вашага непасрэднага "
+"ўдзелу на кожным узроўні прадухілення перахоплівання фокуса:<nl/"
+"><list><item><emphasis strong='true'>Няма:</emphasis> акно будзе ўзнята і "
+"трапіць у фокус.</item><item><emphasis strong='true'>Нізкі:</emphasis> будзе "
+"выконвацца прадухіленне перахоплівання фокуса, але калі KWin палічыць "
+"сітуацыю неадназначнай, акно будзе ўзнята і трапіць у фокус.</"
+"item><item><emphasis strong='true'>Звычайны:</emphasis> будзе выконвацца "
+"прадухіленне перахоплівання фокуса, але калі KWin палічыць сітуацыю "
+"неадназначнай, акно <emphasis>не</emphasis> будзе ўзнімацца і не трапіць у "
+"фокус.</item><item><emphasis strong='true'>Высокі:</emphasis> акно будзе "
+"ўзнята і трапіць  у фокус толькі ў тым выпадку, калі яно належыць той жа "
+"праграме, што і акно, якое зараз у фокусе.</item><item><emphasis "
+"strong='true'>Экстрэмальны:</emphasis> акно ніколі не будзе  ўзнімацца і "
+"трапляць у фокус.</item></list>"
 
 #: rulesmodel.cpp:658
 #, kde-format
@@ -494,6 +517,24 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Гэта ўласцівасць кіруе ўзроўнем абароны фокуса актыўнага ў цяперашні час "
+"акна. Гэта выкарыстоўваецца для скасавання прадухілення перахоплівання "
+"фокуса і ўжываецца да новых акон, якія адкрываюцца без вашага непасрэднага "
+"ўдзелу.<nl/><nl/>Вось што адбываецца з новымі вокнамі, якія адкрываюцца без "
+"вашага непасрэднага ўдзелу, на кожным узроўні абароны фокуса, пакуль акно з "
+"ужытай да яго ўласцівасцю знаходзіцца ў фокусе:<nl/><list><item><emphasis "
+"strong='true'>Няма</emphasis>: вокны заўсёды ўзнімаюцца і трапляюць у фокус."
+"</item><item><emphasis strong='true'>Нізкі:</emphasis> будзе выконвацца "
+"прадухіленне перахоплівання фокуса, але калі KWin палічыць сітуацыю "
+"неадназначнай, акно будзе ўзнята і трапіць у фокус.</item><item><emphasis "
+"strong='true'>Звычайны:</emphasis> будзе выконвацца прадухіленне "
+"перахоплівання фокуса, але калі KWin палічыць сітуацыю неадназначнай, акно "
+"<emphasis>не </emphasis> будзе ўзнята і не трапіць у фокус.</"
+"item><item><emphasis strong='true'>Высокі:</emphasis> нядаўна адкрытыя вокны "
+"будуць узнімацца і трапляць у фокус толькі ў тым выпадку, калі яны належаць "
+"той жа праграме, што і цяперашняе акно ў фокусе.</item><item><emphasis "
+"strong='true'>Экстрэмальны:</emphasis> вокны ніколі самі не ўзнімаюцца і не "
+"трапляюць у фокус.</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -503,7 +544,7 @@ msgstr "Прыманне фокуса"
 #: rulesmodel.cpp:688
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Кіруе факусаваннем акна пры націсканні."
 
 #: rulesmodel.cpp:692
 #, kde-format
@@ -521,6 +562,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Выкарыстоўвайце гэтую ўласцівасць, каб прадухіліць працу глабальных "
+"спалучэнняў клавіш, калі акно знаходзіцца ў фокусе. Гэта можа быць карысным "
+"для такіх праграм, як эмулятары або віртуальныя машыны, якія самі "
+"апрацоўваюць пэўныя спалучэнні клавіш.<nl/><nl/>Звярніце ўвагу, што вы не "
+"зможаце выкарыстоўваць<shortcut>Alt+Tab</shortcut> або любыя іншыя "
+"глабальныя спалучэнні клавіш накшталт <shortcut>Alt+Space</shortcut>, каб "
+"актываваць KRunner."
 
 #: rulesmodel.cpp:704
 #, kde-format
@@ -540,12 +588,12 @@ msgstr "Блакаванне кампазітынгу"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Слой"
 
 #: rulesmodel.cpp:725
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Прыстасавальная сінхранізацыя"
 
 #: rulesmodel.cpp:777
 #, kde-format
@@ -718,38 +766,37 @@ msgstr "Экстрымальны ўзровень"
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Знізу"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Наверсе"
 
 #: rulesmodel.cpp:926
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Пазіцыя"
+msgstr "Апавяшчэнне"
 
 #: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Выплыўное акно"
 
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Крытычнае апавяшчэнне"
 
 #: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Пакрыццё"
 
 #: rulesmodel.cpp:956
 #, kde-format
@@ -777,9 +824,7 @@ msgid "No rules for specific windows are currently set"
 msgstr "На дадзены момант няма правіл для пэўных акон"
 
 #: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click the <interface>Add New…</interface> button below to add some"
 msgstr "Пстрыкніце па кнопцы <interface>Дадаць...</interface>, каб дадаць"
@@ -805,16 +850,14 @@ msgid "Save Rules"
 msgstr "Захаваць правілы"
 
 #: ui/main.qml:100
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Дадаць..."
+msgstr "Дадаць…"
 
 #: ui/main.qml:111
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Імпартаваць..."
+msgstr "Імпартаванне…"
 
 #: ui/main.qml:119
 #, kde-format
@@ -822,10 +865,9 @@ msgid "Cancel Export"
 msgstr "Скасаваць экспартаванне"
 
 #: ui/main.qml:119
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Экспартаваць..."
+msgstr "Экспартаванне…"
 
 #: ui/main.qml:195
 #, kde-format

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-19 00:38+0000\n"
+"POT-Creation-Date: 2024-02-27 00:38+0000\n"
 "PO-Revision-Date: 2023-12-13 16:14-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -75,12 +75,17 @@ msgstr "%1 - Aplicativo atual"
 msgid "Overview"
 msgstr "Visão geral"
 
-#: main.cpp:167 touch.cpp:134
+#: main.cpp:166 touch.cpp:133
+#, kde-format
+msgid "Grid"
+msgstr ""
+
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Alternar a mudança de janelas"
 
-#: main.cpp:168 touch.cpp:135
+#: main.cpp:169 touch.cpp:136
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Alternar a mudança alternativa de janelas"

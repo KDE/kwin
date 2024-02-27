@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-19 00:38+0000\n"
+"POT-Creation-Date: 2024-02-27 00:38+0000\n"
 "PO-Revision-Date: 2023-12-08 19:15+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -74,12 +74,17 @@ msgstr "%1 - Aktuala Apliko"
 msgid "Overview"
 msgstr "Superrigardo"
 
-#: main.cpp:167 touch.cpp:134
+#: main.cpp:166 touch.cpp:133
+#, kde-format
+msgid "Grid"
+msgstr ""
+
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Baskuligi fenestroŝanĝon"
 
-#: main.cpp:168 touch.cpp:135
+#: main.cpp:169 touch.cpp:136
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Baskuli alternativan fenestroŝalton"

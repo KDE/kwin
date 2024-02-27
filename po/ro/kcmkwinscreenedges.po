@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-19 00:38+0000\n"
+"POT-Creation-Date: 2024-02-27 00:38+0000\n"
 "PO-Revision-Date: 2022-12-28 21:12+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -76,12 +76,17 @@ msgstr "%1 - Aplicația actuală"
 msgid "Overview"
 msgstr "Comută sumarul"
 
-#: main.cpp:167 touch.cpp:134
+#: main.cpp:166 touch.cpp:133
+#, kde-format
+msgid "Grid"
+msgstr ""
+
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Comută schimbarea ferestrelor"
 
-#: main.cpp:168 touch.cpp:135
+#: main.cpp:169 touch.cpp:136
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Comută schimbarea alternativă a ferestrelor"

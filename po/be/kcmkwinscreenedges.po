@@ -1,10 +1,10 @@
 # Zmicier <zmicerturok@gmail.com>, 2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
+"Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-19 00:38+0000\n"
-"PO-Revision-Date: 2022-12-25 17:08\n"
+"POT-Creation-Date: 2024-02-27 00:38+0000\n"
+"PO-Revision-Date: 2024-02-22 13:35\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -15,11 +15,12 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
 "X-Generator: Lokalize 22.08.3\n"
-"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
-"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Project: fc57ad16a28d02dea100ceb1c60de14e\n"
+"X-Crowdin-Project-ID: 136\n"
 "X-Crowdin-Language: be\n"
-"X-Crowdin-File: /main/be/kwin/kcmkwinscreenedges.po\n"
-"X-Crowdin-File-ID: 8766\n"
+"X-Crowdin-File: /[antikruk.KDE] main/KDE6/be/messages/kwin/"
+"kcmkwinscreenedges.po\n"
+"X-Crowdin-File-ID: 10436\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -74,14 +75,19 @@ msgstr "%1 - бягучая праграма"
 #: main.cpp:165 touch.cpp:132
 #, kde-format
 msgid "Overview"
+msgstr "Агляд"
+
+#: main.cpp:166 touch.cpp:133
+#, kde-format
+msgid "Grid"
 msgstr ""
 
-#: main.cpp:167 touch.cpp:134
+#: main.cpp:168 touch.cpp:135
 #, kde-format
 msgid "Toggle window switching"
 msgstr "Змена рэжыму пераключэння акон"
 
-#: main.cpp:168 touch.cpp:135
+#: main.cpp:169 touch.cpp:136
 #, kde-format
 msgid "Toggle alternative window switching"
 msgstr "Змена рэжыму альтэрнатыўнага пераключэння акон"

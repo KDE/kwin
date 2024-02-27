@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-24 00:38+0000\n"
+"POT-Creation-Date: 2024-02-27 00:38+0000\n"
 "PO-Revision-Date: 2024-02-15 16:59+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -2252,7 +2252,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr "Циклічний перехід оглядом і таблицею"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:132
+#: plugins/overview/overvieweffect.cpp:133
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2288,19 +2288,19 @@ msgstr "Упорядкування вікон у таблиці:"
 msgid "Search results include filtered windows:"
 msgstr "Результати пошуку, включно з фільтрованими вікнами:"
 
-#: plugins/overview/overvieweffect.cpp:124
+#: plugins/overview/overvieweffect.cpp:125
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Циклічний перехід оглядом і таблицею"
 
-#: plugins/overview/overvieweffect.cpp:140
+#: plugins/overview/overvieweffect.cpp:141
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Увімкнути/Вимкнути огляд"
 
-#: plugins/overview/overvieweffect.cpp:148
+#: plugins/overview/overvieweffect.cpp:149
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"

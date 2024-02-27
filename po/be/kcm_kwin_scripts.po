@@ -1,10 +1,10 @@
 # Zmicier <zmicerturok@gmail.com>, 2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
+"Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
-"PO-Revision-Date: 2022-12-25 17:08\n"
+"PO-Revision-Date: 2024-02-11 18:54\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -15,11 +15,12 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
 "X-Generator: Lokalize 22.08.3\n"
-"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
-"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Project: fc57ad16a28d02dea100ceb1c60de14e\n"
+"X-Crowdin-Project-ID: 136\n"
 "X-Crowdin-Language: be\n"
-"X-Crowdin-File: /main/be/kwin/kcm_kwin_scripts.po\n"
-"X-Crowdin-File-ID: 8758\n"
+"X-Crowdin-File: /[antikruk.KDE] main/KDE6/be/messages/kwin/kcm_kwin_scripts."
+"po\n"
+"X-Crowdin-File-ID: 10418\n"
 
 #: module.cpp:49
 #, kde-format
@@ -53,25 +54,21 @@ msgid "Error when uninstalling KWin Script: %1"
 msgstr "Падчас выдалення скрыпта KWin адбылася памылка: %1"
 
 #: ui/main.qml:23
-#, fuzzy, kde-format
-#| msgid "Install from File..."
+#, kde-format
 msgid "Install from File…"
-msgstr "Усталяваць з файла..."
+msgstr "Усталяваць з файла…"
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Scripts..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Атрымаць новыя скрыпты..."
+msgstr "Атрымаць новыя…"
 
 #: ui/main.qml:65
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Delete..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr "Выдаліць..."
+msgstr "Выдаліць…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
