@@ -19,6 +19,7 @@ namespace KWin
 class Output;
 class OpenGLBackend;
 class GLTexture;
+class OpenGlContext;
 
 /**
  * @brief The OpenGLBackend creates and holds the OpenGL context and is responsible for Texture from Pixmap.
@@ -48,6 +49,7 @@ public:
 
     virtual bool makeCurrent() = 0;
     virtual void doneCurrent() = 0;
+    virtual OpenGlContext *openglContext() const = 0;
 
     /**
      * @brief Whether the creation of the Backend failed.

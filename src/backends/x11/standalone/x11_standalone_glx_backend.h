@@ -92,6 +92,7 @@ public:
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     bool makeCurrent() override;
     void doneCurrent() override;
+    OpenGlContext *openglContext() const override;
     OverlayWindow *overlayWindow() const override;
     void init() override;
     OutputLayer *primaryLayer(Output *output) override;

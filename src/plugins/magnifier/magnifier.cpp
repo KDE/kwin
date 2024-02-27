@@ -19,6 +19,7 @@
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
+#include "opengl/openglcontext.h"
 #include <KGlobalAccel>
 
 using namespace std::chrono_literals;
@@ -70,7 +71,7 @@ MagnifierEffect::~MagnifierEffect()
 
 bool MagnifierEffect::supported()
 {
-    return effects->isOpenGLCompositing() && GLFramebuffer::blitSupported();
+    return effects->openglContext() && effects->openglContext()->supportsBlits();
 }
 
 void MagnifierEffect::reconfigure(ReconfigureFlags)

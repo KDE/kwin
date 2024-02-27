@@ -44,6 +44,8 @@ public:
     bool supportsTextureUnpack() const;
     bool supportsRGTextures() const;
     bool supports16BitTextures() const;
+    bool supportsBlits() const;
+    bool supportsGLES24BitDepthBuffers() const;
     ShaderManager *shaderManager() const;
 
     /**
@@ -72,6 +74,9 @@ protected:
     const bool m_supportsTextureUnpack;
     const bool m_supportsRGTextures;
     const bool m_supports16BitTextures;
+    const bool m_supportsBlits;
+    const bool m_supportsPackedDepthStencil;
+    const bool m_supportsGLES24BitDepthBuffers;
     ShaderManager *m_shaderManager = nullptr;
 };
 

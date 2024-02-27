@@ -79,6 +79,7 @@ class WindowItem;
 class WindowPropertyNotifyX11Filter;
 class WorkspaceScene;
 class VirtualDesktop;
+class OpenGlContext;
 
 typedef QPair<QString, Effect *> EffectPair;
 
@@ -471,6 +472,7 @@ public:
      * @return bool @c true in case of OpenGL based Compositor, @c false otherwise
      */
     bool isOpenGLCompositing() const;
+    OpenGlContext *openglContext() const;
     /**
      * @brief Provides access to the QPainter which is rendering to the back buffer.
      *

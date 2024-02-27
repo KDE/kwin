@@ -33,6 +33,7 @@ public:
     bool makeOpenGLContextCurrent() override;
     void doneOpenGLContextCurrent() override;
     bool supportsNativeFence() const override;
+    OpenGlContext *openglContext() const override;
     std::unique_ptr<DecorationRenderer> createDecorationRenderer(Decoration::DecoratedClientImpl *impl) override;
     std::unique_ptr<ShadowTextureProvider> createShadowTextureProvider(Shadow *shadow) override;
     bool animationsSupported() const override;

@@ -366,7 +366,7 @@ EglDisplay *AbstractEglBackend::eglDisplayObject() const
     return m_display;
 }
 
-EglContext *AbstractEglBackend::contextObject()
+EglContext *AbstractEglBackend::openglContext() const
 {
     return m_context.get();
 }

@@ -80,7 +80,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         return std::nullopt;
     }
 
-    if (!m_eglBackend->contextObject()->makeCurrent()) {
+    if (!m_eglBackend->openglContext()->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -442,7 +442,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     ret->context = m_eglBackend->contextForGpu(m_eglBackend->gpu());
     ret->bufferTarget = bufferTarget;
     ret->importMode = importMode;
-    ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->contextObject(), size, format, renderModifiers, importMode, bufferTarget);
+    ret->gbmSwapchain = createGbmSwapchain(m_eglBackend->gpu(), m_eglBackend->openglContext(), size, format, renderModifiers, importMode, bufferTarget);
     if (!ret->gbmSwapchain) {
         return nullptr;
     }

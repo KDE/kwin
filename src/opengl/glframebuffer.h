@@ -81,8 +81,6 @@ public:
         return m_valid;
     }
 
-    static void initStatic();
-
     /**
      * Returns the last bound framebuffer, or @c null if no framebuffer is current.
      */
@@ -90,14 +88,6 @@ public:
 
     static void pushFramebuffer(GLFramebuffer *fbo);
     static GLFramebuffer *popFramebuffer();
-    /**
-     * Whether the GL_EXT_framebuffer_blit extension is supported.
-     * This functionality is not available in OpenGL ES 2.0.
-     *
-     * @returns whether framebuffer blitting is supported.
-     * @since 4.8
-     */
-    static bool blitSupported();
 
     /**
      * Blits from @a source rectangle in the current framebuffer to the @a destination rectangle in
@@ -132,11 +122,6 @@ protected:
 private:
     bool bind();
 
-    friend void KWin::cleanupGL();
-    static void cleanup();
-    inline static bool s_supportsPackedDepthStencil = false;
-    inline static bool s_supportsDepth24 = false;
-    inline static bool s_blitSupported = false;
     inline static QStack<GLFramebuffer *> s_fbos;
 
     GLuint m_handle = 0;

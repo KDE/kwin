@@ -501,6 +501,11 @@ bool WorkspaceScene::supportsNativeFence() const
     return false;
 }
 
+OpenGlContext *WorkspaceScene::openglContext() const
+{
+    return nullptr;
+}
+
 } // namespace
 
 #include "moc_workspacescene.cpp"

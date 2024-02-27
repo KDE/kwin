@@ -19,29 +19,6 @@
 namespace KWin
 {
 
-void GLFramebuffer::initStatic()
-{
-    if (GLPlatform::instance()->isGLES()) {
-        s_supportsPackedDepthStencil = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_packed_depth_stencil"));
-        s_supportsDepth24 = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_depth24"));
-        s_blitSupported = hasGLVersion(3, 0);
-    } else {
-        s_supportsPackedDepthStencil = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_packed_depth_stencil"));
-        s_blitSupported = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_blit"));
-    }
-}
-
-void GLFramebuffer::cleanup()
-{
-    Q_ASSERT(s_fbos.isEmpty());
-    s_blitSupported = false;
-}
-
-bool GLFramebuffer::blitSupported()
-{
-    return s_blitSupported;
-}
-
 GLFramebuffer *GLFramebuffer::currentFramebuffer()
 {
     return s_fbos.isEmpty() ? nullptr : s_fbos.top();
@@ -178,7 +155,7 @@ void GLFramebuffer::initDepthStencilAttachment()
     GLuint buffer = 0;
 
     // Try to attach a depth/stencil combined attachment.
-    if (s_supportsPackedDepthStencil) {
+    if (OpenGlContext::currentContext()->supportsBlits()) {
         glGenRenderbuffers(1, &buffer);
         glBindRenderbuffer(GL_RENDERBUFFER, buffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_size.width(), m_size.height());
@@ -197,7 +174,7 @@ void GLFramebuffer::initDepthStencilAttachment()
     // Try to attach a depth attachment separately.
     GLenum depthFormat;
     if (GLPlatform::instance()->isGLES()) {
-        if (s_supportsDepth24) {
+        if (OpenGlContext::currentContext()->supportsGLES24BitDepthBuffers()) {
             depthFormat = GL_DEPTH_COMPONENT24;
         } else {
             depthFormat = GL_DEPTH_COMPONENT16;
@@ -279,7 +256,7 @@ bool GLFramebuffer::blitFromRenderTarget(const RenderTarget &sourceRenderTarget,
     const bool normal = transform == OutputTransform::Normal;
     const bool mirrorX = transform == OutputTransform::FlipX;
     const bool mirrorY = transform == OutputTransform::FlipY;
-    if ((normal || mirrorX || mirrorY) && blitSupported()) {
+    if ((normal || mirrorX || mirrorY) && OpenGlContext::currentContext()->supportsBlits()) {
         // either no transformation or flipping only
         blitFromFramebuffer(sourceViewport.mapToRenderTarget(source), destination, GL_LINEAR, mirrorX, mirrorY);
         return true;

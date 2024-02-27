@@ -57,7 +57,7 @@ std::shared_ptr<GLTexture> WaylandEglPrimaryLayer::texture() const
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
 {
-    if (!m_backend->contextObject()->makeCurrent()) {
+    if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return std::nullopt;
     }
@@ -79,7 +79,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
             qCWarning(KWIN_WAYLAND_BACKEND) << "Could not find a suitable render format";
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->contextObject(), nativeSize, format, modifiers);
+        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->openglContext(), nativeSize, format, modifiers);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -157,12 +157,12 @@ WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBa
 
 WaylandEglCursorLayer::~WaylandEglCursorLayer()
 {
-    m_backend->contextObject()->makeCurrent();
+    m_backend->openglContext()->makeCurrent();
 }
 
 std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
 {
-    if (!m_backend->contextObject()->makeCurrent()) {
+    if (!m_backend->openglContext()->makeCurrent()) {
         qCCritical(KWIN_WAYLAND_BACKEND) << "Make Context Current failed";
         return std::nullopt;
     }
@@ -185,7 +185,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
             qCWarning(KWIN_WAYLAND_BACKEND) << "Could not find a suitable render format";
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->contextObject(), bufferSize, format, modifiers);
+        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->openglContext(), bufferSize, format, modifiers);
         if (!m_swapchain) {
             return std::nullopt;
         }

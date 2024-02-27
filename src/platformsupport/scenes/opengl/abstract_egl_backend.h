@@ -35,7 +35,7 @@ public:
     EGLSurface surface() const;
     EGLConfig config() const;
     EglDisplay *eglDisplayObject() const;
-    EglContext *contextObject();
+    EglContext *openglContext() const override;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;

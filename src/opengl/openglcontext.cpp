@@ -69,6 +69,9 @@ OpenGlContext::OpenGlContext()
     , m_supportsTextureUnpack(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_unpack_subimage")))
     , m_supportsRGTextures(hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_rg")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_rg")))
     , m_supports16BitTextures(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_norm16")))
+    , m_supportsBlits(!m_isOpenglES || hasVersion(Version(3, 0)))
+    , m_supportsPackedDepthStencil(hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_OES_packed_depth_stencil")) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_packed_depth_stencil")))
+    , m_supportsGLES24BitDepthBuffers(m_isOpenglES && (hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_OES_depth24"))))
 {
 }
 
@@ -161,6 +164,16 @@ bool OpenGlContext::supportsRGTextures() const
 bool OpenGlContext::supports16BitTextures() const
 {
     return m_supports16BitTextures;
+}
+
+bool OpenGlContext::supportsBlits() const
+{
+    return m_supportsBlits;
+}
+
+bool OpenGlContext::supportsGLES24BitDepthBuffers() const
+{
+    return m_supportsGLES24BitDepthBuffers;
 }
 
 ShaderManager *OpenGlContext::shaderManager() const

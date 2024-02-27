@@ -55,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
         }
     }
 
-    if (!m_eglBackend->contextObject()->makeCurrent()) {
+    if (!m_eglBackend->openglContext()->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -112,13 +112,13 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto modifiers = it.value();
 
             if (allowModifiers && !modifiers.isEmpty()) {
-                if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->contextObject(), size, format, modifiers)) {
+                if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->openglContext(), size, format, modifiers)) {
                     return swapchain;
                 }
             }
 
             static const QList<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->contextObject(), size, format, implicitModifier)) {
+            if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->openglContext(), size, format, implicitModifier)) {
                 return swapchain;
             }
         }
@@ -174,7 +174,7 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
 
 void VirtualEglGbmLayer::releaseBuffers()
 {
-    m_eglBackend->contextObject()->makeCurrent();
+    m_eglBackend->openglContext()->makeCurrent();
     m_gbmSwapchain.reset();
     m_oldGbmSwapchain.reset();
     m_currentSlot.reset();

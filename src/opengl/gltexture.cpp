@@ -378,6 +378,7 @@ void GLTexture::clear()
     glClearColor(0, 0, 0, 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d->m_texture, 0);
     glClear(GL_COLOR_BUFFER_BIT);
+    GLFramebuffer::popFramebuffer();
 }
 
 bool GLTexture::isDirty() const

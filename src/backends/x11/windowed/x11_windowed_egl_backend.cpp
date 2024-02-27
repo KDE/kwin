@@ -32,7 +32,7 @@ X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame()
 {
-    if (!m_backend->contextObject()->makeCurrent()) {
+    if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;
     }
 
@@ -43,7 +43,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
         if (!formatTable.contains(format)) {
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->contextObject(), bufferSize, format, formatTable[format]);
+        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->openglContext(), bufferSize, format, formatTable[format]);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -126,14 +126,14 @@ X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *back
 
 X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
 {
-    m_backend->contextObject()->makeCurrent();
+    m_backend->openglContext()->makeCurrent();
     m_framebuffer.reset();
     m_texture.reset();
 }
 
 std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
 {
-    if (!m_backend->contextObject()->makeCurrent()) {
+    if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;
     }
 

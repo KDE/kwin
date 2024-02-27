@@ -770,6 +770,11 @@ void GlxBackend::doneCurrent()
     m_context->doneCurrent();
 }
 
+OpenGlContext *GlxBackend::openglContext() const
+{
+    return m_context.get();
+}
+
 OverlayWindow *GlxBackend::overlayWindow() const
 {
     return m_overlayWindow.get();

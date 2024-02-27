@@ -270,6 +270,11 @@ bool EffectsHandler::isOpenGLCompositing() const
     return compositing_type & OpenGLCompositing;
 }
 
+OpenGlContext *EffectsHandler::openglContext() const
+{
+    return m_scene->openglContext();
+}
+
 void EffectsHandler::unloadAllEffects()
 {
     for (const EffectPair &pair : std::as_const(loaded_effects)) {
