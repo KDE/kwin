@@ -371,7 +371,7 @@ bool BlurEffect::enabledByDefault()
 
 bool BlurEffect::supported()
 {
-    return effects->isOpenGLCompositing() && GLFramebuffer::supported() && GLFramebuffer::blitSupported();
+    return effects->isOpenGLCompositing() && GLFramebuffer::blitSupported();
 }
 
 bool BlurEffect::decorationSupportsBlurBehind(const EffectWindow *w) const

@@ -112,8 +112,6 @@ public:
 
     void generateMipmaps();
 
-    static bool framebufferObjectSupported();
-
     /**
      * Returns true if texture swizzle is supported, and false otherwise
      *

@@ -85,7 +85,7 @@ static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform 
 
 bool ScreenShotEffect::supported()
 {
-    return effects->isOpenGLCompositing() && GLFramebuffer::supported();
+    return effects->isOpenGLCompositing();
 }
 
 ScreenShotEffect::ScreenShotEffect()

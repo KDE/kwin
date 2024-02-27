@@ -82,10 +82,6 @@ public:
     }
 
     static void initStatic();
-    static bool supported()
-    {
-        return s_supported;
-    }
 
     /**
      * Returns the last bound framebuffer, or @c null if no framebuffer is current.
@@ -138,7 +134,6 @@ private:
 
     friend void KWin::cleanupGL();
     static void cleanup();
-    inline static bool s_supported = false;
     inline static bool s_supportsPackedDepthStencil = false;
     inline static bool s_supportsDepth24 = false;
     inline static bool s_blitSupported = false;

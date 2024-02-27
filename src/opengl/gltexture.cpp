@@ -29,7 +29,6 @@ namespace KWin
 // GLTexture
 //****************************************
 
-bool GLTexturePrivate::s_supportsFramebufferObjects = false;
 bool GLTexturePrivate::s_supportsARGB32 = false;
 bool GLTexturePrivate::s_supportsUnpack = false;
 bool GLTexturePrivate::s_supportsTextureStorage = false;
@@ -144,7 +143,6 @@ GLTexturePrivate::~GLTexturePrivate()
 void GLTexturePrivate::initStatic()
 {
     if (!GLPlatform::instance()->isGLES()) {
-        s_supportsFramebufferObjects = hasGLVersion(3, 0) || hasGLExtension("GL_ARB_framebuffer_object") || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         s_supportsTextureStorage = hasGLVersion(4, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
         s_supportsTextureSwizzle = hasGLVersion(3, 3) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
         // see https://www.opengl.org/registry/specs/ARB/texture_rg.txt
@@ -153,7 +151,6 @@ void GLTexturePrivate::initStatic()
         s_supportsARGB32 = true;
         s_supportsUnpack = true;
     } else {
-        s_supportsFramebufferObjects = true;
         s_supportsTextureStorage = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
         s_supportsTextureSwizzle = hasGLVersion(3, 0);
         // see https://www.khronos.org/registry/gles/extensions/EXT/EXT_texture_rg.txt
@@ -170,7 +167,6 @@ void GLTexturePrivate::initStatic()
 
 void GLTexturePrivate::cleanup()
 {
-    s_supportsFramebufferObjects = false;
     s_supportsARGB32 = false;
     if (s_fbo) {
         glDeleteFramebuffers(1, &s_fbo);
@@ -321,7 +317,7 @@ void GLTexture::bind()
 
 void GLTexture::generateMipmaps()
 {
-    if (d->m_canUseMipmaps && d->s_supportsFramebufferObjects) {
+    if (d->m_canUseMipmaps) {
         glGenerateMipmap(d->m_target);
     }
 }
@@ -423,7 +419,7 @@ GLenum GLTexture::internalFormat() const
 void GLTexture::clear()
 {
     Q_ASSERT(d->m_owning);
-    if (!GLTexturePrivate::s_fbo && GLFramebuffer::supported() && GLPlatform::instance()->driver() != Driver_Catalyst) { // fail. -> bug #323065
+    if (!GLTexturePrivate::s_fbo && GLPlatform::instance()->driver() != Driver_Catalyst) { // fail. -> bug #323065
         glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
     }
 
@@ -551,11 +547,6 @@ int GLTexture::height() const
 QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 {
     return d->m_matrix[type];
-}
-
-bool GLTexture::framebufferObjectSupported()
-{
-    return GLTexturePrivate::s_supportsFramebufferObjects;
 }
 
 bool GLTexture::supportsSwizzle()

@@ -22,12 +22,10 @@ namespace KWin
 void GLFramebuffer::initStatic()
 {
     if (GLPlatform::instance()->isGLES()) {
-        s_supported = true;
         s_supportsPackedDepthStencil = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_packed_depth_stencil"));
         s_supportsDepth24 = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_OES_depth24"));
         s_blitSupported = hasGLVersion(3, 0);
     } else {
-        s_supported = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
         s_supportsPackedDepthStencil = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_packed_depth_stencil"));
         s_blitSupported = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasGLExtension(QByteArrayLiteral("GL_EXT_framebuffer_blit"));
     }
@@ -36,7 +34,6 @@ void GLFramebuffer::initStatic()
 void GLFramebuffer::cleanup()
 {
     Q_ASSERT(s_fbos.isEmpty());
-    s_supported = false;
     s_blitSupported = false;
 }
 
@@ -109,11 +106,6 @@ GLFramebuffer::GLFramebuffer(GLTexture *colorAttachment, Attachment attachment)
     : m_size(colorAttachment->size())
     , m_colorAttachment(colorAttachment)
 {
-    if (!s_supported) {
-        qCCritical(KWIN_OPENGL) << "Framebuffer objects aren't supported!";
-        return;
-    }
-
     GLuint prevFbo = 0;
     if (const GLFramebuffer *current = currentFramebuffer()) {
         prevFbo = current->handle();

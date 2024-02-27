@@ -58,7 +58,6 @@ public:
 
     static void initStatic();
 
-    static bool s_supportsFramebufferObjects;
     static bool s_supportsARGB32;
     static bool s_supportsUnpack;
     static bool s_supportsTextureStorage;
