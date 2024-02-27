@@ -46,6 +46,8 @@ private:
     const ::EGLContext m_handle;
     const EGLConfig m_config;
     std::unique_ptr<ShaderManager> m_shaderManager;
+    std::unique_ptr<GLVertexBuffer> m_streamingBuffer;
+    std::unique_ptr<IndexBuffer> m_indexBuffer;
     uint32_t m_vao = 0;
 };
 

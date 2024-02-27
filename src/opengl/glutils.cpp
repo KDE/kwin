@@ -113,13 +113,10 @@ void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
     glResolveFunctions(resolveFunction);
 
     initDebugOutput();
-
-    GLVertexBuffer::initStatic();
 }
 
 void cleanupGL()
 {
-    GLVertexBuffer::cleanup();
     GLPlatform::cleanup();
 
     glExtensions.clear();

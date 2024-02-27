@@ -14,6 +14,7 @@
 #include "glshader.h"
 #include "glshadermanager.h"
 #include "glutils.h"
+#include "glvertexbuffer_p.h"
 #include "utils/common.h"
 
 #include <QVector4D>
@@ -31,21 +32,6 @@ T align(T value, int bytes)
 {
     return (value + bytes - 1) & ~T(bytes - 1);
 }
-
-class IndexBuffer
-{
-public:
-    IndexBuffer();
-    ~IndexBuffer();
-
-    void accommodate(size_t count);
-    void bind();
-
-private:
-    GLuint m_buffer;
-    size_t m_count = 0;
-    std::vector<uint16_t> m_data;
-};
 
 IndexBuffer::IndexBuffer()
 {
@@ -205,11 +191,6 @@ public:
     GLuint buffer;
     GLenum usage;
     int vertexCount;
-    static std::unique_ptr<GLVertexBuffer> streamingBuffer;
-    static bool haveBufferStorage;
-    static bool haveSyncFences;
-    static bool hasMapBufferRange;
-    static bool supportsIndexedQuads;
     QByteArray dataStore;
     bool persistent;
     size_t bufferSize;
@@ -224,15 +205,7 @@ public:
     std::array<VertexAttrib, VertexAttributeCount> attrib;
     size_t attribStride = 0;
     std::bitset<32> enabledArrays;
-    static std::unique_ptr<IndexBuffer> s_indexBuffer;
 };
-
-bool GLVertexBufferPrivate::hasMapBufferRange = false;
-bool GLVertexBufferPrivate::supportsIndexedQuads = false;
-std::unique_ptr<GLVertexBuffer> GLVertexBufferPrivate::streamingBuffer;
-bool GLVertexBufferPrivate::haveBufferStorage = false;
-bool GLVertexBufferPrivate::haveSyncFences = false;
-std::unique_ptr<IndexBuffer> GLVertexBufferPrivate::s_indexBuffer;
 
 void GLVertexBufferPrivate::bindArrays()
 {
@@ -410,7 +383,7 @@ GLvoid *GLVertexBuffer::map(size_t size)
 
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
 
-    if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData) {
+    if (OpenGlContext::currentContext()->hasMapBufferRange() && !preferBufferSubData) {
         return (GLvoid *)d->mapNextFreeRange(size);
     }
 
@@ -435,7 +408,7 @@ void GLVertexBuffer::unmap()
 
     bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
 
-    if (GLVertexBufferPrivate::hasMapBufferRange && !preferBufferSubData) {
+    if (OpenGlContext::currentContext()->hasMapBufferRange() && !preferBufferSubData) {
         glUnmapBuffer(GL_ARRAY_BUFFER);
 
         d->baseAddress = d->nextOffset;
@@ -514,12 +487,8 @@ void GLVertexBuffer::draw(GLenum primitiveMode, int first, int count)
 void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first, int count, bool hardwareClipping)
 {
     if (primitiveMode == GL_QUADS) {
-        if (!GLVertexBufferPrivate::s_indexBuffer) {
-            GLVertexBufferPrivate::s_indexBuffer = std::make_unique<IndexBuffer>();
-        }
-
-        GLVertexBufferPrivate::s_indexBuffer->bind();
-        GLVertexBufferPrivate::s_indexBuffer->accommodate(count / 4);
+        OpenGlContext::currentContext()->indexBuffer()->bind();
+        OpenGlContext::currentContext()->indexBuffer()->accommodate(count / 4);
 
         count = count * 6 / 4;
 
@@ -546,11 +515,6 @@ void GLVertexBuffer::draw(const QRegion &region, GLenum primitiveMode, int first
             glDrawArrays(primitiveMode, first, count);
         }
     }
-}
-
-bool GLVertexBuffer::supportsIndexedQuads()
-{
-    return GLVertexBufferPrivate::supportsIndexedQuads;
 }
 
 void GLVertexBuffer::reset()
@@ -605,48 +569,14 @@ void GLVertexBuffer::beginFrame()
     }
 }
 
-void GLVertexBuffer::initStatic()
-{
-    if (GLPlatform::instance()->isGLES()) {
-        bool haveBaseVertex = hasGLExtension(QByteArrayLiteral("GL_OES_draw_elements_base_vertex"));
-        bool haveCopyBuffer = hasGLVersion(3, 0);
-        bool haveMapBufferRange = hasGLExtension(QByteArrayLiteral("GL_EXT_map_buffer_range"));
-
-        GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
-        GLVertexBufferPrivate::haveBufferStorage = hasGLExtension("GL_EXT_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 0);
-    } else {
-        bool haveBaseVertex = hasGLVersion(3, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
-        bool haveCopyBuffer = hasGLVersion(3, 1) || hasGLExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
-        bool haveMapBufferRange = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_map_buffer_range"));
-
-        GLVertexBufferPrivate::hasMapBufferRange = haveMapBufferRange;
-        GLVertexBufferPrivate::supportsIndexedQuads = haveBaseVertex && haveCopyBuffer && haveMapBufferRange;
-        GLVertexBufferPrivate::haveBufferStorage = hasGLVersion(4, 4) || hasGLExtension("GL_ARB_buffer_storage");
-        GLVertexBufferPrivate::haveSyncFences = hasGLVersion(3, 2) || hasGLExtension("GL_ARB_sync");
-    }
-    GLVertexBufferPrivate::s_indexBuffer.reset();
-    GLVertexBufferPrivate::streamingBuffer = std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream);
-
-    if (GLVertexBufferPrivate::haveBufferStorage && GLVertexBufferPrivate::haveSyncFences) {
-        if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
-            GLVertexBufferPrivate::streamingBuffer->d->persistent = true;
-        }
-    }
-}
-
-void GLVertexBuffer::cleanup()
-{
-    GLVertexBufferPrivate::s_indexBuffer.reset();
-    GLVertexBufferPrivate::hasMapBufferRange = false;
-    GLVertexBufferPrivate::supportsIndexedQuads = false;
-    GLVertexBufferPrivate::streamingBuffer.reset();
-}
-
 GLVertexBuffer *GLVertexBuffer::streamingBuffer()
 {
-    return GLVertexBufferPrivate::streamingBuffer.get();
+    return OpenGlContext::currentContext()->streamingVbo();
+}
+
+void GLVertexBuffer::setPersistent()
+{
+    d->persistent = true;
 }
 
 }

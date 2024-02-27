@@ -10,6 +10,7 @@
 #include "core/graphicsbuffer.h"
 #include "egldisplay.h"
 #include "eglimagetexture.h"
+#include "glvertexbuffer_p.h"
 #include "opengl/egl_context_attribute_builder.h"
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
@@ -45,8 +46,12 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     , m_handle(context)
     , m_config(config)
     , m_shaderManager(std::make_unique<ShaderManager>())
+    , m_streamingBuffer(std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream))
+    , m_indexBuffer(std::make_unique<IndexBuffer>())
 {
     setShaderManager(m_shaderManager.get());
+    setStreamingBuffer(m_streamingBuffer.get());
+    setIndexBuffer(m_indexBuffer.get());
     // It is not legal to not have a vertex array object bound in a core context
     // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
     if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
@@ -62,6 +67,8 @@ EglContext::~EglContext()
         glDeleteVertexArrays(1, &m_vao);
     }
     m_shaderManager.reset();
+    m_streamingBuffer.reset();
+    m_indexBuffer.reset();
     doneCurrent();
     eglDestroyContext(m_display->handle(), m_handle);
 }

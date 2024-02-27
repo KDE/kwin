@@ -241,20 +241,7 @@ public:
      */
     void beginFrame();
 
-    /**
-     * @internal
-     */
-    static void initStatic();
-
-    /**
-     * @internal
-     */
-    static void cleanup();
-
-    /**
-     * Returns true if indexed quad mode is supported, and false otherwise.
-     */
-    static bool supportsIndexedQuads();
+    void setPersistent();
 
     /**
      * @return A shared VBO for streaming data

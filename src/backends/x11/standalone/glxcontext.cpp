@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "glxcontext.h"
+#include "opengl/glvertexbuffer_p.h"
 #include "x11_standalone_glx_context_attribute_builder.h"
 #include "x11_standalone_logging.h"
 
@@ -21,8 +22,12 @@ GlxContext::GlxContext(::Display *display, GLXWindow window, GLXContext handle)
     , m_window(window)
     , m_handle(handle)
     , m_shaderManager(std::make_unique<ShaderManager>())
+    , m_streamingBuffer(std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream))
+    , m_indexBuffer(std::make_unique<IndexBuffer>())
 {
     setShaderManager(m_shaderManager.get());
+    setStreamingBuffer(m_streamingBuffer.get());
+    setIndexBuffer(m_indexBuffer.get());
     // It is not legal to not have a vertex array object bound in a core context
     // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
     if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
@@ -38,6 +43,8 @@ GlxContext::~GlxContext()
         glDeleteVertexArrays(1, &m_vao);
     }
     m_shaderManager.reset();
+    m_streamingBuffer.reset();
+    m_indexBuffer.reset();
     glXDestroyContext(m_display, m_handle);
 }
 

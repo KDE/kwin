@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "openglcontext.h"
+#include "glvertexbuffer.h"
 
 #include <QByteArray>
 #include <QList>
@@ -55,6 +56,19 @@ static bool checkTextureStorageSupport(OpenGlContext *context)
     }
 }
 
+static bool checkIndexedQuads(OpenGlContext *context)
+{
+    if (context->isOpenglES()) {
+        const bool haveBaseVertex = context->hasOpenglExtension(QByteArrayLiteral("GL_OES_draw_elements_base_vertex"));
+        const bool haveCopyBuffer = context->hasVersion(Version(3, 0));
+        return haveBaseVertex && haveCopyBuffer && context->hasMapBufferRange();
+    } else {
+        bool haveBaseVertex = context->hasVersion(Version(3, 2)) || context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_draw_elements_base_vertex"));
+        bool haveCopyBuffer = context->hasVersion(Version(3, 1)) || context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_copy_buffer"));
+        return haveBaseVertex && haveCopyBuffer && context->hasMapBufferRange();
+    }
+}
+
 OpenGlContext::OpenGlContext()
     : m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
@@ -72,6 +86,10 @@ OpenGlContext::OpenGlContext()
     , m_supportsBlits(!m_isOpenglES || hasVersion(Version(3, 0)))
     , m_supportsPackedDepthStencil(hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_OES_packed_depth_stencil")) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_framebuffer_object")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_packed_depth_stencil")))
     , m_supportsGLES24BitDepthBuffers(m_isOpenglES && (hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_OES_depth24"))))
+    , m_hasMapBufferRange((!m_isOpenglES && hasVersion(Version(3, 0))) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_map_buffer_range")) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_map_buffer_range")))
+    , m_haveBufferStorage((!m_isOpenglES || hasVersion(Version(4, 4))) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_buffer_storage")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_buffer_storage")))
+    , m_haveSyncFences((m_isOpenglES && hasVersion(Version(3, 0))) || (!m_isOpenglES && hasVersion(Version(3, 2))) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_sync")))
+    , m_supportsIndexedQuads(checkIndexedQuads(this))
 {
 }
 
@@ -176,9 +194,34 @@ bool OpenGlContext::supportsGLES24BitDepthBuffers() const
     return m_supportsGLES24BitDepthBuffers;
 }
 
+bool OpenGlContext::haveBufferStorage() const
+{
+    return m_haveBufferStorage;
+}
+
+bool OpenGlContext::hasMapBufferRange() const
+{
+    return m_hasMapBufferRange;
+}
+
+bool OpenGlContext::haveSyncFences() const
+{
+    return m_haveSyncFences;
+}
+
 ShaderManager *OpenGlContext::shaderManager() const
 {
     return m_shaderManager;
+}
+
+GLVertexBuffer *OpenGlContext::streamingVbo() const
+{
+    return m_streamingBuffer;
+}
+
+IndexBuffer *OpenGlContext::indexBuffer() const
+{
+    return m_indexBuffer;
 }
 
 bool OpenGlContext::checkSupported() const
@@ -193,6 +236,21 @@ bool OpenGlContext::checkSupported() const
 void OpenGlContext::setShaderManager(ShaderManager *manager)
 {
     m_shaderManager = manager;
+}
+
+void OpenGlContext::setStreamingBuffer(GLVertexBuffer *vbo)
+{
+    m_streamingBuffer = vbo;
+    if (haveBufferStorage() && haveSyncFences()) {
+        if (qgetenv("KWIN_PERSISTENT_VBO") != QByteArrayLiteral("0")) {
+            vbo->setPersistent();
+        }
+    }
+}
+
+void OpenGlContext::setIndexBuffer(IndexBuffer *buffer)
+{
+    m_indexBuffer = buffer;
 }
 
 OpenGlContext *OpenGlContext::currentContext()

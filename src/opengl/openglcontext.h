@@ -21,6 +21,8 @@ namespace KWin
 
 class ShaderManager;
 class GLFramebuffer;
+class GLVertexBuffer;
+class IndexBuffer;
 
 class KWIN_EXPORT OpenGlContext
 {
@@ -46,7 +48,12 @@ public:
     bool supports16BitTextures() const;
     bool supportsBlits() const;
     bool supportsGLES24BitDepthBuffers() const;
+    bool hasMapBufferRange() const;
+    bool haveBufferStorage() const;
+    bool haveSyncFences() const;
     ShaderManager *shaderManager() const;
+    GLVertexBuffer *streamingVbo() const;
+    IndexBuffer *indexBuffer() const;
 
     /**
      * checks whether or not this context supports all the features that KWin requires
@@ -58,6 +65,8 @@ public:
 protected:
     bool checkTimerQuerySupport() const;
     void setShaderManager(ShaderManager *manager);
+    void setStreamingBuffer(GLVertexBuffer *vbo);
+    void setIndexBuffer(IndexBuffer *buffer);
 
     static OpenGlContext *s_currentContext;
 
@@ -77,7 +86,13 @@ protected:
     const bool m_supportsBlits;
     const bool m_supportsPackedDepthStencil;
     const bool m_supportsGLES24BitDepthBuffers;
+    const bool m_hasMapBufferRange;
+    const bool m_haveBufferStorage;
+    const bool m_haveSyncFences;
+    const bool m_supportsIndexedQuads;
     ShaderManager *m_shaderManager = nullptr;
+    GLVertexBuffer *m_streamingBuffer = nullptr;
+    IndexBuffer *m_indexBuffer = nullptr;
 };
 
 }
