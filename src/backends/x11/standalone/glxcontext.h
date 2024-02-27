@@ -31,6 +31,7 @@ private:
     const GLXWindow m_window;
     const GLXContext m_handle;
     uint32_t m_vao = 0;
+    std::unique_ptr<ShaderManager> m_shaderManager;
 };
 
 }

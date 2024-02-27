@@ -20,7 +20,9 @@ GlxContext::GlxContext(::Display *display, GLXWindow window, GLXContext handle)
     : m_display(display)
     , m_window(window)
     , m_handle(handle)
+    , m_shaderManager(std::make_unique<ShaderManager>())
 {
+    setShaderManager(m_shaderManager.get());
     // It is not legal to not have a vertex array object bound in a core context
     // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
     if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
@@ -31,10 +33,11 @@ GlxContext::GlxContext(::Display *display, GLXWindow window, GLXContext handle)
 
 GlxContext::~GlxContext()
 {
+    makeCurrent();
     if (m_vao) {
-        makeCurrent();
         glDeleteVertexArrays(1, &m_vao);
     }
+    m_shaderManager.reset();
     glXDestroyContext(m_display, m_handle);
 }
 

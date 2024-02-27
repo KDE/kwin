@@ -36,7 +36,6 @@ public:
     ::EGLContext handle() const;
     EGLConfig config() const;
     bool isValid() const;
-    ShaderManager *shaderManager() const;
 
     static std::unique_ptr<EglContext> create(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext);
 

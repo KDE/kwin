@@ -107,11 +107,21 @@ bool OpenGlContext::supportsTimerQueries() const
     return m_supportsTimerQueries;
 }
 
+ShaderManager *OpenGlContext::shaderManager() const
+{
+    return m_shaderManager;
+}
+
 bool OpenGlContext::checkSupported() const
 {
     const bool supportsGLSL = m_isOpenglES || (hasOpenglExtension("GL_ARB_shader_objects") && hasOpenglExtension("GL_ARB_fragment_shader") && hasOpenglExtension("GL_ARB_vertex_shader"));
     const bool supportsNonPowerOfTwoTextures = m_isOpenglES || hasOpenglExtension("GL_ARB_texture_non_power_of_two");
     const bool supports3DTextures = !m_isOpenglES || hasVersion(Version(3, 0)) || hasOpenglExtension("GL_OES_texture_3D");
     return supportsGLSL && supportsNonPowerOfTwoTextures && supports3DTextures;
+}
+
+void OpenGlContext::setShaderManager(ShaderManager *manager)
+{
+    m_shaderManager = manager;
 }
 }

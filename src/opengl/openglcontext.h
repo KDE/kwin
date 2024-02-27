@@ -19,6 +19,8 @@
 namespace KWin
 {
 
+class ShaderManager;
+
 class KWIN_EXPORT OpenGlContext
 {
 public:
@@ -35,6 +37,7 @@ public:
     bool hasOpenglExtension(QByteArrayView name) const;
     bool isSoftwareRenderer() const;
     bool supportsTimerQueries() const;
+    ShaderManager *shaderManager() const;
 
     /**
      * checks whether or not this context supports all the features that KWin requires
@@ -43,6 +46,7 @@ public:
 
 protected:
     bool checkTimerQuerySupport() const;
+    void setShaderManager(ShaderManager *manager);
 
     const QByteArrayView m_versionString;
     const Version m_version;
@@ -51,6 +55,7 @@ protected:
     const bool m_isOpenglES;
     const QSet<QByteArray> m_extensions;
     const bool m_supportsTimerQueries;
+    ShaderManager *m_shaderManager = nullptr;
 };
 
 }

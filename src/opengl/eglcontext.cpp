@@ -45,6 +45,7 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     , m_config(config)
     , m_shaderManager(std::make_unique<ShaderManager>())
 {
+    setShaderManager(m_shaderManager.get());
     // It is not legal to not have a vertex array object bound in a core context
     // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
     if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
@@ -207,10 +208,5 @@ std::shared_ptr<GLTexture> EglContext::importDmaBufAsTexture(const DmaBufAttribu
         qCWarning(KWIN_OPENGL) << "Error creating EGLImageKHR: " << getEglErrorString();
         return nullptr;
     }
-}
-
-ShaderManager *EglContext::shaderManager() const
-{
-    return m_shaderManager.get();
 }
 }
