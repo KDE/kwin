@@ -165,7 +165,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() ? activeWindow->surfaceItem() : nullptr;
         frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);
 
-        const bool wantsAdaptiveSync = activeWindow && activeWindow->wantsAdaptiveSync();
+        const bool wantsAdaptiveSync = activeWindow && activeWindow->isOnOutput(output) && activeWindow->wantsAdaptiveSync();
         const bool vrr = (output->capabilities() & Output::Capability::Vrr) && (output->vrrPolicy() == VrrPolicy::Always || (output->vrrPolicy() == VrrPolicy::Automatic && wantsAdaptiveSync));
         const bool tearing = (output->capabilities() & Output::Capability::Tearing) && options->allowTearing() && activeFullscreenItem && activeFullscreenItem->presentationHint() == PresentationModeHint::Async;
         if (vrr) {
