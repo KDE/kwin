@@ -75,6 +75,11 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
     return inverseBradford * adaptation * bradford;
 }
 
+static QVector3D normalizeToY1(const QVector3D &vect)
+{
+    return vect.y() == 0 ? vect : QVector3D(vect.x() / vect.y(), 1, vect.z() / vect.y());
+}
+
 QMatrix4x4 Colorimetry::calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
 {
     const auto component_scale = (matrixFromColumns(red, green, blue)).inverted() * white;
@@ -106,7 +111,7 @@ Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector
     , m_green(xyzToXY(green))
     , m_blue(xyzToXY(blue))
     , m_white(xyzToXY(white))
-    , m_toXYZ(calculateToXYZMatrix(red, green, blue, white))
+    , m_toXYZ(calculateToXYZMatrix(normalizeToY1(red), normalizeToY1(green), normalizeToY1(blue), normalizeToY1(white)))
     , m_fromXYZ(m_toXYZ.inverted())
 {
 }
