@@ -574,6 +574,13 @@ FocusScope {
                             item.client.desktops = [mainBackground.desktop];
                         }
                     }
+                    TapHandler {
+                        acceptedButtons: Qt.LeftButton
+                        onTapped: {
+                            KWinComponents.Workspace.currentDesktop = mainBackground.desktop;
+                            container.effect.deactivate();
+                        }
+                    }
                     DragHandler {
                         id: dragHandler
                         target: heap
@@ -682,13 +689,6 @@ FocusScope {
                     }
 
                     onActivated: effect.deactivate()
-                }
-                TapHandler {
-                    acceptedButtons: Qt.LeftButton
-                    onTapped: {
-                        KWinComponents.Workspace.currentDesktop = mainBackground.desktop;
-                        container.effect.deactivate();
-                    }
                 }
 
                 onCurrentChanged: {
