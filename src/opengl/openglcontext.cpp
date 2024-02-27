@@ -37,6 +37,24 @@ static QSet<QByteArray> getExtensions(OpenGlContext *context)
     return ret;
 }
 
+static bool checkTextureSwizzleSupport(OpenGlContext *context)
+{
+    if (context->isOpenglES()) {
+        return context->hasVersion(Version(3, 0));
+    } else {
+        return context->hasVersion(Version(3, 3)) || context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
+    }
+}
+
+static bool checkTextureStorageSupport(OpenGlContext *context)
+{
+    if (context->isOpenglES()) {
+        return context->hasVersion(Version(3, 0)) || context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
+    } else {
+        return context->hasVersion(Version(4, 2)) || context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
+    }
+}
+
 OpenGlContext::OpenGlContext()
     : m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
@@ -45,6 +63,12 @@ OpenGlContext::OpenGlContext()
     , m_isOpenglES(m_versionString.startsWith("OpenGL ES"))
     , m_extensions(getExtensions(this))
     , m_supportsTimerQueries(checkTimerQuerySupport())
+    , m_supportsTextureStorage(checkTextureStorageSupport(this))
+    , m_supportsTextureSwizzle(checkTextureSwizzleSupport(this))
+    , m_supportsARGB32Textures(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
+    , m_supportsTextureUnpack(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_unpack_subimage")))
+    , m_supportsRGTextures(hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_rg")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_rg")))
+    , m_supports16BitTextures(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_norm16")))
 {
 }
 
@@ -107,6 +131,36 @@ bool OpenGlContext::isSoftwareRenderer() const
 bool OpenGlContext::supportsTimerQueries() const
 {
     return m_supportsTimerQueries;
+}
+
+bool OpenGlContext::supportsTextureStorage() const
+{
+    return m_supportsTextureStorage;
+}
+
+bool OpenGlContext::supportsTextureSwizzle() const
+{
+    return m_supportsTextureSwizzle;
+}
+
+bool OpenGlContext::supportsARGB32Textures() const
+{
+    return m_supportsARGB32Textures;
+}
+
+bool OpenGlContext::supportsTextureUnpack() const
+{
+    return m_supportsTextureUnpack;
+}
+
+bool OpenGlContext::supportsRGTextures() const
+{
+    return m_supportsRGTextures;
+}
+
+bool OpenGlContext::supports16BitTextures() const
+{
+    return m_supports16BitTextures;
 }
 
 ShaderManager *OpenGlContext::shaderManager() const

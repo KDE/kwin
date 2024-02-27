@@ -25,18 +25,6 @@
 namespace KWin
 {
 
-//****************************************
-// GLTexture
-//****************************************
-
-bool GLTexturePrivate::s_supportsARGB32 = false;
-bool GLTexturePrivate::s_supportsUnpack = false;
-bool GLTexturePrivate::s_supportsTextureStorage = false;
-bool GLTexturePrivate::s_supportsTextureSwizzle = false;
-bool GLTexturePrivate::s_supportsTextureFormatRG = false;
-bool GLTexturePrivate::s_supportsTexture16Bit = false;
-uint GLTexturePrivate::s_fbo = 0;
-
 // Table of GL formats/types associated with different values of QImage::Format.
 // Zero values indicate a direct upload is not feasible.
 //
@@ -140,40 +128,6 @@ GLTexturePrivate::~GLTexturePrivate()
     }
 }
 
-void GLTexturePrivate::initStatic()
-{
-    if (!GLPlatform::instance()->isGLES()) {
-        s_supportsTextureStorage = hasGLVersion(4, 2) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
-        s_supportsTextureSwizzle = hasGLVersion(3, 3) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
-        // see https://www.opengl.org/registry/specs/ARB/texture_rg.txt
-        s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_ARB_texture_rg"));
-        s_supportsTexture16Bit = true;
-        s_supportsARGB32 = true;
-        s_supportsUnpack = true;
-    } else {
-        s_supportsTextureStorage = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
-        s_supportsTextureSwizzle = hasGLVersion(3, 0);
-        // see https://www.khronos.org/registry/gles/extensions/EXT/EXT_texture_rg.txt
-        s_supportsTextureFormatRG = hasGLVersion(3, 0) || hasGLExtension(QByteArrayLiteral("GL_EXT_texture_rg"));
-        s_supportsTexture16Bit = hasGLExtension(QByteArrayLiteral("GL_EXT_texture_norm16"));
-
-        // QImage::Format_ARGB32_Premultiplied is a packed-pixel format, so it's only
-        // equivalent to GL_BGRA/GL_UNSIGNED_BYTE on little-endian systems.
-        s_supportsARGB32 = QSysInfo::ByteOrder == QSysInfo::LittleEndian && hasGLExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888"));
-
-        s_supportsUnpack = hasGLExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
-    }
-}
-
-void GLTexturePrivate::cleanup()
-{
-    s_supportsARGB32 = false;
-    if (s_fbo) {
-        glDeleteFramebuffers(1, &s_fbo);
-        s_fbo = 0;
-    }
-}
-
 bool GLTexture::isNull() const
 {
     return GL_NONE == d->m_texture;
@@ -208,7 +162,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         const QImage::Format index = image.format();
 
         if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !d->s_supportsTexture16Bit)) {
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !OpenGlContext::currentContext()->supports16BitTextures())) {
             glFormat = formatTable[index].format;
             type = formatTable[index].type;
             uploadFormat = index;
@@ -218,7 +172,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
             uploadFormat = QImage::Format_ARGB32_Premultiplied;
         }
     } else {
-        if (d->s_supportsARGB32) {
+        if (OpenGlContext::currentContext()->supportsARGB32Textures()) {
             glFormat = GL_BGRA_EXT;
             type = GL_UNSIGNED_BYTE;
             uploadFormat = QImage::Format_ARGB32_Premultiplied;
@@ -228,7 +182,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
             uploadFormat = QImage::Format_RGBA8888_Premultiplied;
         }
     }
-    bool useUnpack = d->s_supportsUnpack && image.format() == uploadFormat && !src.isNull();
+    bool useUnpack = OpenGlContext::currentContext()->supportsTextureUnpack() && image.format() == uploadFormat && !src.isNull();
 
     QImage im;
     if (useUnpack) {
@@ -419,38 +373,11 @@ GLenum GLTexture::internalFormat() const
 void GLTexture::clear()
 {
     Q_ASSERT(d->m_owning);
-    if (!GLTexturePrivate::s_fbo && GLPlatform::instance()->driver() != Driver_Catalyst) { // fail. -> bug #323065
-        glGenFramebuffers(1, &GLTexturePrivate::s_fbo);
-    }
-
-    if (GLTexturePrivate::s_fbo) {
-        // Clear the texture
-        GLuint previousFramebuffer = 0;
-        glGetIntegerv(GL_DRAW_FRAMEBUFFER_BINDING, reinterpret_cast<GLint *>(&previousFramebuffer));
-        if (GLTexturePrivate::s_fbo != previousFramebuffer) {
-            glBindFramebuffer(GL_FRAMEBUFFER, GLTexturePrivate::s_fbo);
-        }
-        glClearColor(0, 0, 0, 0);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d->m_texture, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
-        if (GLTexturePrivate::s_fbo != previousFramebuffer) {
-            glBindFramebuffer(GL_FRAMEBUFFER, previousFramebuffer);
-        }
-    } else {
-        if (const int size = width() * height()) {
-            std::vector<uint32_t> buffer(size, 0);
-            bind();
-            if (!GLPlatform::instance()->isGLES()) {
-                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
-                                GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, buffer.data());
-            } else {
-                const GLenum format = d->s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
-                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width(), height(),
-                                format, GL_UNSIGNED_BYTE, buffer.data());
-            }
-            unbind();
-        }
-    }
+    GLFramebuffer fbo(this);
+    GLFramebuffer::pushFramebuffer(&fbo);
+    glClearColor(0, 0, 0, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d->m_texture, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 bool GLTexture::isDirty() const
@@ -551,12 +478,12 @@ QMatrix4x4 GLTexture::matrix(TextureCoordinateType type) const
 
 bool GLTexture::supportsSwizzle()
 {
-    return GLTexturePrivate::s_supportsTextureSwizzle;
+    return OpenGlContext::currentContext()->supportsTextureSwizzle();
 }
 
 bool GLTexture::supportsFormatRG()
 {
-    return GLTexturePrivate::s_supportsTextureFormatRG;
+    return OpenGlContext::currentContext()->supportsRGTextures();
 }
 
 QImage GLTexture::toImage()
@@ -601,7 +528,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     glBindTexture(GL_TEXTURE_2D, texture);
 
     if (!GLPlatform::instance()->isGLES()) {
-        if (GLTexturePrivate::s_supportsTextureStorage) {
+        if (OpenGlContext::currentContext()->supportsTextureStorage()) {
             glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.width(), size.height());
         } else {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levels - 1);
@@ -612,7 +539,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
         // The format parameter in glTexSubImage() must match the internal format
         // of the texture, so it's important that we allocate the texture with
         // the format that will be used in update() and clear().
-        const GLenum format = GLTexturePrivate::s_supportsARGB32 ? GL_BGRA_EXT : GL_RGBA;
+        const GLenum format = OpenGlContext::currentContext()->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
         glTexImage2D(GL_TEXTURE_2D, 0, format, size.width(), size.height(), 0,
                      format, GL_UNSIGNED_BYTE, nullptr);
 
@@ -645,7 +572,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
         const QImage::Format index = image.format();
 
         if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !GLTexturePrivate::s_supportsTexture16Bit)) {
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !OpenGlContext::currentContext()->supports16BitTextures())) {
             internalFormat = formatTable[index].internalFormat;
             format = formatTable[index].format;
             type = formatTable[index].type;
@@ -657,7 +584,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
             type = GL_UNSIGNED_INT_8_8_8_8_REV;
         }
 
-        if (GLTexturePrivate::s_supportsTextureStorage) {
+        if (OpenGlContext::currentContext()->supportsARGB32Textures()) {
             glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, im.width(), im.height());
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, im.width(), im.height(),
                             format, type, im.constBits());
@@ -669,7 +596,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     } else {
         internalFormat = GL_RGBA8;
 
-        if (GLTexturePrivate::s_supportsARGB32) {
+        if (OpenGlContext::currentContext()->supportsARGB32Textures()) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA_EXT, im.width(), im.height(),
                          0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());

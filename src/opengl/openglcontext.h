@@ -20,6 +20,7 @@ namespace KWin
 {
 
 class ShaderManager;
+class GLFramebuffer;
 
 class KWIN_EXPORT OpenGlContext
 {
@@ -37,6 +38,12 @@ public:
     bool hasOpenglExtension(QByteArrayView name) const;
     bool isSoftwareRenderer() const;
     bool supportsTimerQueries() const;
+    bool supportsTextureSwizzle() const;
+    bool supportsTextureStorage() const;
+    bool supportsARGB32Textures() const;
+    bool supportsTextureUnpack() const;
+    bool supportsRGTextures() const;
+    bool supports16BitTextures() const;
     ShaderManager *shaderManager() const;
 
     /**
@@ -59,6 +66,12 @@ protected:
     const bool m_isOpenglES;
     const QSet<QByteArray> m_extensions;
     const bool m_supportsTimerQueries;
+    const bool m_supportsTextureStorage;
+    const bool m_supportsTextureSwizzle;
+    const bool m_supportsARGB32Textures;
+    const bool m_supportsTextureUnpack;
+    const bool m_supportsRGTextures;
+    const bool m_supports16BitTextures;
     ShaderManager *m_shaderManager = nullptr;
 };
 

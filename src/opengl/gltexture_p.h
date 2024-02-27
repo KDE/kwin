@@ -56,19 +56,6 @@ public:
     QRectF m_cachedSource;
     OutputTransform m_cachedContentTransform;
 
-    static void initStatic();
-
-    static bool s_supportsARGB32;
-    static bool s_supportsUnpack;
-    static bool s_supportsTextureStorage;
-    static bool s_supportsTextureSwizzle;
-    static bool s_supportsTextureFormatRG;
-    static bool s_supportsTexture16Bit;
-    static GLuint s_fbo;
-
-private:
-    friend void KWin::cleanupGL();
-    static void cleanup();
     Q_DISABLE_COPY(GLTexturePrivate)
 };
 

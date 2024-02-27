@@ -114,14 +114,12 @@ void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
 
     initDebugOutput();
 
-    GLTexturePrivate::initStatic();
     GLFramebuffer::initStatic();
     GLVertexBuffer::initStatic();
 }
 
 void cleanupGL()
 {
-    GLTexturePrivate::cleanup();
     GLFramebuffer::cleanup();
     GLVertexBuffer::cleanup();
     GLPlatform::cleanup();
