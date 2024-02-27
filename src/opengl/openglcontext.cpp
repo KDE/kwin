@@ -16,6 +16,8 @@
 namespace KWin
 {
 
+OpenGlContext *OpenGlContext::s_currentContext = nullptr;
+
 static QSet<QByteArray> getExtensions(OpenGlContext *context)
 {
     QSet<QByteArray> ret;
@@ -123,5 +125,10 @@ bool OpenGlContext::checkSupported() const
 void OpenGlContext::setShaderManager(ShaderManager *manager)
 {
     m_shaderManager = manager;
+}
+
+OpenGlContext *OpenGlContext::currentContext()
+{
+    return s_currentContext;
 }
 }

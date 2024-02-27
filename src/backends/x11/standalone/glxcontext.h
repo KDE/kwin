@@ -21,8 +21,8 @@ public:
     GlxContext(::Display *display, GLXWindow window, GLXContext handle);
     ~GlxContext() override;
 
-    bool makeCurrent() const;
-    bool doneCurrent() const;
+    bool makeCurrent();
+    void doneCurrent() const;
 
     static std::unique_ptr<GlxContext> create(GlxBackend *backend, GLXFBConfig fbconfig, GLXWindow glxWindow);
 

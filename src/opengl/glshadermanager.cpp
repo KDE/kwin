@@ -20,19 +20,9 @@
 namespace KWin
 {
 
-std::unique_ptr<ShaderManager> ShaderManager::s_shaderManager;
-
 ShaderManager *ShaderManager::instance()
 {
-    if (!s_shaderManager) {
-        s_shaderManager = std::make_unique<ShaderManager>();
-    }
-    return s_shaderManager.get();
-}
-
-void ShaderManager::cleanup()
-{
-    s_shaderManager.reset();
+    return OpenGlContext::currentContext()->shaderManager();
 }
 
 ShaderManager::ShaderManager()

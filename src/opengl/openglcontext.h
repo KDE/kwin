@@ -44,9 +44,13 @@ public:
      */
     bool checkSupported() const;
 
+    static OpenGlContext *currentContext();
+
 protected:
     bool checkTimerQuerySupport() const;
     void setShaderManager(ShaderManager *manager);
+
+    static OpenGlContext *s_currentContext;
 
     const QByteArrayView m_versionString;
     const Version m_version;

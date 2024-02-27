@@ -33,6 +33,7 @@ std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
         return nullptr;
     }
     auto ret = std::make_unique<EglContext>(display, config, handle);
+    s_currentContext = ret.get();
     if (!ret->checkSupported()) {
         return nullptr;
     }
@@ -65,18 +66,23 @@ EglContext::~EglContext()
     eglDestroyContext(m_display->handle(), m_handle);
 }
 
-bool EglContext::makeCurrent(EGLSurface surface) const
+bool EglContext::makeCurrent(EGLSurface surface)
 {
     if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    return eglMakeCurrent(m_display->handle(), surface, surface, m_handle) == EGL_TRUE;
+    const bool ret = eglMakeCurrent(m_display->handle(), surface, surface, m_handle) == EGL_TRUE;
+    if (ret) {
+        s_currentContext = this;
+    }
+    return ret;
 }
 
 void EglContext::doneCurrent() const
 {
     eglMakeCurrent(m_display->handle(), EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    s_currentContext = nullptr;
 }
 
 EglDisplay *EglContext::displayObject() const

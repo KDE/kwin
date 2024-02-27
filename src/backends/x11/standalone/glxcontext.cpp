@@ -41,18 +41,23 @@ GlxContext::~GlxContext()
     glXDestroyContext(m_display, m_handle);
 }
 
-bool GlxContext::makeCurrent() const
+bool GlxContext::makeCurrent()
 {
     if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    return glXMakeCurrent(m_display, m_window, m_handle);
+    const bool ret = glXMakeCurrent(m_display, m_window, m_handle);
+    if (ret) {
+        s_currentContext = this;
+    }
+    return ret;
 }
 
-bool GlxContext::doneCurrent() const
+void GlxContext::doneCurrent() const
 {
-    return glXMakeCurrent(m_display, None, nullptr);
+    glXMakeCurrent(m_display, None, nullptr);
+    s_currentContext = nullptr;
 }
 
 std::unique_ptr<GlxContext> GlxContext::create(GlxBackend *backend, GLXFBConfig fbconfig, GLXWindow glxWindow)
@@ -139,6 +144,7 @@ std::unique_ptr<GlxContext> GlxContext::create(GlxBackend *backend, GLXFBConfig 
         return nullptr;
     }
     auto ret = std::make_unique<GlxContext>(backend->display(), glxWindow, handle);
+    s_currentContext = ret.get();
     if (!ret->checkSupported()) {
         return nullptr;
     }

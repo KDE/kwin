@@ -143,11 +143,6 @@ public:
      */
     static ShaderManager *instance();
 
-    /**
-     * @internal
-     */
-    static void cleanup();
-
 private:
     void bindFragDataLocations(GLShader *shader);
     void bindAttributeLocations(GLShader *shader) const;
@@ -159,7 +154,6 @@ private:
 
     QStack<GLShader *> m_boundShaders;
     std::map<ShaderTraits, std::unique_ptr<GLShader>> m_shaderHash;
-    static std::unique_ptr<ShaderManager> s_shaderManager;
 };
 
 /**

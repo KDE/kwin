@@ -121,7 +121,6 @@ void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
 
 void cleanupGL()
 {
-    ShaderManager::cleanup();
     GLTexturePrivate::cleanup();
     GLFramebuffer::cleanup();
     GLVertexBuffer::cleanup();
