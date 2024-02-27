@@ -2,6 +2,7 @@
     "KPlugin": {
         "Description": "Window Decoration Theme Engine",
         "Description[ar]": "محرك سمات زخارف النوافذ",
+        "Description[be]": "Рухавік аздаблення акон",
         "Description[bg]": "Основна програма (енджин) на темата за декорации на прозорци",
         "Description[ca@valencia]": "Motor del tema de decoració de les finestres",
         "Description[ca]": "Motor de tema de decoració de les finestres",
@@ -36,6 +37,7 @@
         "Description[zh_TW]": "視窗裝飾主題引擎",
         "Name": "Aurorae",
         "Name[ar]": "أورورا",
+        "Name[be]": "Aurorae",
         "Name[bg]": "Aurorae",
         "Name[ca@valencia]": "Aurorae",
         "Name[ca]": "Aurorae",
