@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the kwin package.
-# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2011, 2012, 2013, 2020, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2011, 2012, 2013, 2020, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2013.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:08+0000\n"
-"PO-Revision-Date: 2022-12-28 21:03+0000\n"
+"PO-Revision-Date: 2024-02-27 21:29+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -177,7 +177,7 @@ msgstr "Ferestre ascunse"
 #: main.ui:396
 #, kde-format
 msgid "Shortcuts"
-msgstr "Acceleratori"
+msgstr "Scurtături"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -236,49 +236,41 @@ msgid "Show selected window"
 msgstr "Arată fereastra aleasă"
 
 #: shortcutsettings.cpp:132
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows"
+#, kde-format
 msgid "Walk Through Windows"
 msgstr "Comută printre ferestre"
 
 #: shortcutsettings.cpp:133
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows (Reverse)"
+#, kde-format
 msgid "Walk Through Windows (Reverse)"
 msgstr "Comută printre ferestre (invers)"
 
 #: shortcutsettings.cpp:134
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "Comută printre ferestre alternativ"
+msgstr "Comută printre ferestrele aplicației actuale"
 
 #: shortcutsettings.cpp:135
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Comută printre ferestre alternativ (invers)"
+msgstr "Comută printre ferestrele aplicației actuale (invers)"
 
 #: shortcutsettings.cpp:137
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows Alternative"
 msgstr "Comută printre ferestre alternativ"
 
 #: shortcutsettings.cpp:138
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Comută printre ferestre alternativ (invers)"
 
 #: shortcutsettings.cpp:139
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Comută printre ferestre alternativ"
+msgstr "Comută printre ferestrele aplicației actuale alternativ"
 
 #: shortcutsettings.cpp:140
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Comută printre ferestre alternativ (invers)"
+msgstr "Comută printre ferestrele aplicației actuale alternativ (invers)"

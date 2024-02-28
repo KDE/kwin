@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Sergiu Bivol <sergiu@cip.md>, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2022, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2022-12-28 21:11+0000\n"
+"PO-Revision-Date: 2024-02-27 21:24+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -47,14 +47,14 @@ msgstr "Niciodată"
 #: ui/main.qml:68
 #, kde-format
 msgid "Only non-character keys"
-msgstr ""
+msgstr "Doar taste ne-caracter"
 
 #: ui/main.qml:71
-#, fuzzy, kde-format
-#| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
-msgstr "Toate tastele, dar numai cât Meta, Ctrl, Alt, sau Shift sunt apăsate"
+msgstr ""
+"Ca mai sus, plus orice tastă apăsată cât Ctrl, Alt, sau Meta sunt apăsate"
 
 #: ui/main.qml:75
 #, kde-format

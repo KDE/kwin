@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2013, 2020, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2013, 2020, 2022, 2024.
 # Laurenţiu Buzdugan <lbuz@rolix.org>, 2009.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 #
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-19 02:29+0000\n"
-"PO-Revision-Date: 2022-12-28 21:12+0000\n"
+"PO-Revision-Date: 2024-02-27 21:23+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -71,10 +71,9 @@ msgid "%1 - Current Application"
 msgstr "%1 - Aplicația actuală"
 
 #: main.cpp:165 touch.cpp:132
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "Comută sumarul"
+msgstr "Privire generală"
 
 #: main.cpp:167 touch.cpp:134
 #, kde-format

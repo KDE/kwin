@@ -2,7 +2,7 @@
 # translation of kcmkwindecoration.po to Romanian
 # Copyright (C) 2003, 2004, 2005, 2008 Free Software Foundation, Inc.
 # Claudiu Costin <claudiuc@kde.org>, 2003, 2004, 2005.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011.
 #
 msgid ""
@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 03:08+0000\n"
-"PO-Revision-Date: 2022-05-05 12:48+0100\n"
+"PO-Revision-Date: 2024-02-27 21:32+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -166,9 +166,7 @@ msgid "Drag buttons between here and the titlebar"
 msgstr "Trageți butoane între aici și bara de titlu"
 
 #: ui/ConfigureTitlebar.qml:16
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgid "Titlebar Buttons"
 msgstr "Butoane pe bara de titlu"
 
@@ -197,18 +195,16 @@ msgid "Window border size:"
 msgstr "Dimensiunea conturului ferestrei:"
 
 #: ui/main.qml:48
-#, fuzzy, kde-format
-#| msgctxt "tab label"
-#| msgid "Titlebar Buttons"
+#, kde-format
 msgctxt "button text"
 msgid "Configure Titlebar Buttons…"
-msgstr "Butoane pe bara de titlu"
+msgstr "Configurează butoane pe bara de titlu…"
 
 #: ui/main.qml:54
 #, kde-format
 msgctxt "@action:button as in, \"Get New Window Decorations\""
 msgid "Get New…"
-msgstr ""
+msgstr "Obține noi…"
 
 #: ui/Themes.qml:93
 #, kde-format
@@ -216,62 +212,49 @@ msgid "Edit %1 Theme"
 msgstr "Modifică tematica %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Window Borders"
-msgstr "Fără contur lateral"
+msgstr "Fără contur ferestre"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "No Side Window Borders"
-msgstr "Fără contur lateral"
+msgstr "Fără contur lateral ferestre"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Tiny Window Borders"
-msgstr "Dimensiunea conturului ferestrei:"
+msgstr "Contur ferestre minuscul"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "No Side Borders"
+#, kde-format
 msgid "Normal Window Borders"
-msgstr "Fără contur lateral"
+msgstr "Contur ferestre normal"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Large Window Borders"
-msgstr "Dimensiunea conturului ferestrei:"
+msgstr "Contur ferestre mare"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr ""
+msgstr "Contur ferestre foarte mare"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Huge Window Borders"
-msgstr "Dimensiunea conturului ferestrei:"
+msgstr "Contur ferestre imens"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Dimensiunea conturului ferestrei:"
+msgstr "Contur ferestre foarte imens"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgctxt "Selector label"
-#| msgid "Window border size:"
+#, kde-format
 msgid "Oversized Window Borders"
-msgstr "Dimensiunea conturului ferestrei:"
+msgstr "Contur ferestre supradimensionat"
 
 #, fuzzy
 #~| msgctxt "button text"
