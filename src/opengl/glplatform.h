@@ -23,15 +23,6 @@ void cleanupGL();
 
 class Version;
 
-enum class GLFeature {
-    /**
-     * Set when a texture bound to a pixmap uses the same storage as the pixmap,
-     * and thus doesn't need to be rebound when the contents of the pixmap
-     * has changed.
-     */
-    LooseBinding,
-};
-
 enum Driver {
     Driver_R100, // Technically "Radeon"
     Driver_R200,
@@ -163,11 +154,6 @@ public:
      * Returns a pointer to the GLPlatform instance.
      */
     static GLPlatform *instance();
-
-    /**
-     * Returns true if the driver support the given feature, and false otherwise.
-     */
-    bool supports(GLFeature feature) const;
 
     /**
      * Returns the OpenGL version.

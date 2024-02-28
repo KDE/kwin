@@ -141,7 +141,7 @@ void GLPlatformTest::testPriorDetect()
 {
     auto *gl = GLPlatform::instance();
     QVERIFY(gl);
-    QCOMPARE(gl->supports(GLFeature::LooseBinding), false);
+    QCOMPARE(gl->isLooseBinding(), false);
 
     QCOMPARE(gl->glVersion(), Version());
     QCOMPARE(gl->glslVersion(), Version());
@@ -235,7 +235,7 @@ void GLPlatformTest::testDetect()
 
     const KConfigGroup settingsGroup = config.group(QStringLiteral("Settings"));
 
-    QCOMPARE(gl->supports(GLFeature::LooseBinding), settingsGroup.readEntry("LooseBinding", false));
+    QCOMPARE(gl->isLooseBinding(), settingsGroup.readEntry("LooseBinding", false));
 
     QCOMPARE(gl->glVersion(), readVersion(settingsGroup, "GLVersion"));
     QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));

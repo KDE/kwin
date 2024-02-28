@@ -230,7 +230,7 @@ bool X11Compositor::attemptOpenGLCompositing()
 
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
-        options->setGlStrictBinding(!GLPlatform::instance()->supports(GLFeature::LooseBinding));
+        options->setGlStrictBinding(!GLPlatform::instance()->isLooseBinding());
     }
 
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";

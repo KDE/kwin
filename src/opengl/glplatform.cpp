@@ -1054,15 +1054,6 @@ void GLPlatform::printResults() const
     print(QByteArrayLiteral("Timer query support:"), m_context->supportsTimerQueries() ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
 }
 
-bool GLPlatform::supports(GLFeature feature) const
-{
-    switch (feature) {
-    case GLFeature::LooseBinding:
-        return m_looseBinding;
-    }
-    return false;
-}
-
 Version GLPlatform::glVersion() const
 {
     return m_context ? m_context->openglVersion() : Version();
