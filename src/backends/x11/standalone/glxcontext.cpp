@@ -18,7 +18,8 @@ namespace KWin
 {
 
 GlxContext::GlxContext(::Display *display, GLXWindow window, GLXContext handle)
-    : m_display(display)
+    : OpenGlContext(false)
+    , m_display(display)
     , m_window(window)
     , m_handle(handle)
     , m_shaderManager(std::make_unique<ShaderManager>())

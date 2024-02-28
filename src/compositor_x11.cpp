@@ -213,7 +213,7 @@ bool X11Compositor::attemptOpenGLCompositing()
             return false;
         }
     } else {
-        if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
+        if (backend->openglContext()->glPlatform()->recommendedCompositor() < OpenGLCompositing) {
             qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
             return false;
         }
@@ -225,13 +225,13 @@ bool X11Compositor::attemptOpenGLCompositing()
         return false;
     }
 
-    m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
-    m_backend = std::move(backend);
-
     // set strict binding
     if (options->isGlStrictBindingFollowsDriver()) {
-        options->setGlStrictBinding(!GLPlatform::instance()->isLooseBinding());
+        options->setGlStrictBinding(!backend->openglContext()->glPlatform()->isLooseBinding());
     }
+
+    m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
+    m_backend = std::move(backend);
 
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
     return true;

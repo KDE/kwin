@@ -86,7 +86,6 @@ void AbstractEglBackend::cleanup()
     }
 
     cleanupSurfaces();
-    GLPlatform::cleanup();
     m_context.reset();
 }
 
@@ -113,9 +112,6 @@ static eglFuncPtr getProcAddress(const char *name)
 
 void AbstractEglBackend::initKWinGL()
 {
-    GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect(EglPlatformInterface);
-    glPlatform->printResults();
     initGL(&getProcAddress);
 }
 

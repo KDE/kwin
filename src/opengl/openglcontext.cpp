@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "openglcontext.h"
+#include "glplatform.h"
 #include "glvertexbuffer.h"
 
 #include <QByteArray>
@@ -69,7 +70,7 @@ static bool checkIndexedQuads(OpenGlContext *context)
     }
 }
 
-OpenGlContext::OpenGlContext()
+OpenGlContext::OpenGlContext(bool EGL)
     : m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
     , m_glslVersionString((const char *)glGetString(GL_SHADING_LANGUAGE_VERSION))
@@ -93,6 +94,11 @@ OpenGlContext::OpenGlContext()
     , m_haveSyncFences((m_isOpenglES && hasVersion(Version(3, 0))) || (!m_isOpenglES && hasVersion(Version(3, 2))) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_sync")))
     , m_supportsIndexedQuads(checkIndexedQuads(this))
     , m_supportsPackInvert(hasOpenglExtension(QByteArrayLiteral("GL_MESA_pack_invert")))
+    , m_glPlatform(std::make_unique<GLPlatform>(EGL ? EglPlatformInterface : GlxPlatformInterface, m_versionString, m_glslVersionString, m_renderer, m_vendor))
+{
+}
+
+OpenGlContext::~OpenGlContext()
 {
 }
 
@@ -240,6 +246,11 @@ GLVertexBuffer *OpenGlContext::streamingVbo() const
 IndexBuffer *OpenGlContext::indexBuffer() const
 {
     return m_indexBuffer;
+}
+
+GLPlatform *OpenGlContext::glPlatform() const
+{
+    return m_glPlatform.get();
 }
 
 bool OpenGlContext::checkSupported() const

@@ -6,7 +6,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "mock_gl.h"
 #include "opengl/glplatform.h"
 #include <QTest>
 
@@ -22,23 +21,13 @@ class GLPlatformTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void cleanup();
-
     void testDriverToString_data();
     void testDriverToString();
     void testChipClassToString_data();
     void testChipClassToString();
-    void testPriorDetect();
     void testDetect_data();
     void testDetect();
 };
-
-void GLPlatformTest::cleanup()
-{
-    GLPlatform::cleanup();
-    delete s_gl;
-    s_gl = nullptr;
-}
 
 void GLPlatformTest::testDriverToString_data()
 {
@@ -137,47 +126,6 @@ void GLPlatformTest::testChipClassToString()
     QTEST(GLPlatform::chipClassToString(chipClass), "expected");
 }
 
-void GLPlatformTest::testPriorDetect()
-{
-    auto *gl = GLPlatform::instance();
-    QVERIFY(gl);
-    QCOMPARE(gl->isLooseBinding(), false);
-
-    QCOMPARE(gl->glVersion(), Version());
-    QCOMPARE(gl->glslVersion(), Version());
-    QCOMPARE(gl->mesaVersion(), Version());
-    QCOMPARE(gl->driverVersion(), Version());
-
-    QCOMPARE(gl->driver(), Driver_Unknown);
-    QCOMPARE(gl->chipClass(), UnknownChipClass);
-
-    QCOMPARE(gl->isMesaDriver(), false);
-    QCOMPARE(gl->isRadeon(), false);
-    QCOMPARE(gl->isNvidia(), false);
-    QCOMPARE(gl->isIntel(), false);
-    QCOMPARE(gl->isPanfrost(), false);
-    QCOMPARE(gl->isLima(), false);
-    QCOMPARE(gl->isVideoCore4(), false);
-    QCOMPARE(gl->isVideoCore3D(), false);
-
-    QCOMPARE(gl->isVirtualBox(), false);
-    QCOMPARE(gl->isVMware(), false);
-
-    QCOMPARE(gl->isSoftwareEmulation(), false);
-    QCOMPARE(gl->isVirtualMachine(), false);
-
-    QCOMPARE(gl->glVersionString(), QByteArray());
-    QCOMPARE(gl->glRendererString(), QByteArray());
-    QCOMPARE(gl->glVendorString(), QByteArray());
-    QCOMPARE(gl->glShadingLanguageVersionString(), QByteArray());
-
-    QCOMPARE(gl->isLooseBinding(), false);
-    QCOMPARE(gl->isGLES(), false);
-    QCOMPARE(gl->recommendedCompositor(), QPainterCompositing);
-    QCOMPARE(gl->preferBufferSubData(), false);
-    QCOMPARE(gl->platformInterface(), NoOpenGLPlatformInterface);
-}
-
 void GLPlatformTest::testDetect_data()
 {
     QTest::addColumn<QString>("configFile");
@@ -217,60 +165,50 @@ void GLPlatformTest::testDetect()
     QFETCH(QString, configFile);
     KConfig config(configFile);
     const KConfigGroup driverGroup = config.group(QStringLiteral("Driver"));
-    s_gl = new MockGL;
-    s_gl->getString.vendor = driverGroup.readEntry("Vendor").toUtf8();
-    s_gl->getString.renderer = driverGroup.readEntry("Renderer").toUtf8();
-    s_gl->getString.version = driverGroup.readEntry("Version").toUtf8();
-    s_gl->getString.shadingLanguageVersion = driverGroup.readEntry("ShadingLanguageVersion").toUtf8();
-    s_gl->getString.extensions = QList<QByteArray>{QByteArrayLiteral("GL_ARB_shader_objects"),
-                                                   QByteArrayLiteral("GL_ARB_fragment_shader"),
-                                                   QByteArrayLiteral("GL_ARB_vertex_shader"),
-                                                   QByteArrayLiteral("GL_ARB_texture_non_power_of_two")};
-    s_gl->getString.extensionsString = QByteArray();
 
-    auto *gl = GLPlatform::instance();
-    QVERIFY(gl);
-    gl->detect(EglPlatformInterface);
-    QCOMPARE(gl->platformInterface(), EglPlatformInterface);
+    const auto version = driverGroup.readEntry("Version").toUtf8();
+    const auto glslVersion = driverGroup.readEntry("ShadingLanguageVersion").toUtf8();
+    const auto renderer = driverGroup.readEntry("Renderer").toUtf8();
+    const auto vendor = driverGroup.readEntry("Vendor").toUtf8();
+    GLPlatform gl(EglPlatformInterface, version, glslVersion, renderer, vendor);
+    QCOMPARE(gl.platformInterface(), EglPlatformInterface);
 
     const KConfigGroup settingsGroup = config.group(QStringLiteral("Settings"));
 
-    QCOMPARE(gl->isLooseBinding(), settingsGroup.readEntry("LooseBinding", false));
+    QCOMPARE(gl.isLooseBinding(), settingsGroup.readEntry("LooseBinding", false));
 
-    QCOMPARE(gl->glVersion(), readVersion(settingsGroup, "GLVersion"));
-    QCOMPARE(gl->glslVersion(), readVersion(settingsGroup, "GLSLVersion"));
-    QCOMPARE(gl->mesaVersion(), readVersion(settingsGroup, "MesaVersion"));
+    QCOMPARE(gl.glVersion(), readVersion(settingsGroup, "GLVersion"));
+    QCOMPARE(gl.glslVersion(), readVersion(settingsGroup, "GLSLVersion"));
+    QCOMPARE(gl.mesaVersion(), readVersion(settingsGroup, "MesaVersion"));
     QEXPECT_FAIL("amd-catalyst-radeonhd-7700M-3.1.13399", "Detects GL version instead of driver version", Continue);
-    QCOMPARE(gl->driverVersion(), readVersion(settingsGroup, "DriverVersion"));
+    QCOMPARE(gl.driverVersion(), readVersion(settingsGroup, "DriverVersion"));
 
-    QCOMPARE(gl->driver(), Driver(settingsGroup.readEntry("Driver", int(Driver_Unknown))));
-    QCOMPARE(gl->chipClass(), ChipClass(settingsGroup.readEntry("ChipClass", int(UnknownChipClass))));
+    QCOMPARE(gl.driver(), Driver(settingsGroup.readEntry("Driver", int(Driver_Unknown))));
+    QCOMPARE(gl.chipClass(), ChipClass(settingsGroup.readEntry("ChipClass", int(UnknownChipClass))));
 
-    QCOMPARE(gl->isMesaDriver(), settingsGroup.readEntry("Mesa", false));
-    QCOMPARE(gl->isRadeon(), settingsGroup.readEntry("Radeon", false));
-    QCOMPARE(gl->isNvidia(), settingsGroup.readEntry("Nvidia", false));
-    QCOMPARE(gl->isIntel(), settingsGroup.readEntry("Intel", false));
-    QCOMPARE(gl->isVirtualBox(), settingsGroup.readEntry("VirtualBox", false));
-    QCOMPARE(gl->isVMware(), settingsGroup.readEntry("VMware", false));
-    QCOMPARE(gl->isAdreno(), settingsGroup.readEntry("Adreno", false));
-    QCOMPARE(gl->isPanfrost(), settingsGroup.readEntry("Panfrost", false));
-    QCOMPARE(gl->isLima(), settingsGroup.readEntry("Lima", false));
-    QCOMPARE(gl->isVideoCore4(), settingsGroup.readEntry("VC4", false));
-    QCOMPARE(gl->isVideoCore3D(), settingsGroup.readEntry("V3D", false));
-    QCOMPARE(gl->isVirgl(), settingsGroup.readEntry("Virgl", false));
+    QCOMPARE(gl.isMesaDriver(), settingsGroup.readEntry("Mesa", false));
+    QCOMPARE(gl.isRadeon(), settingsGroup.readEntry("Radeon", false));
+    QCOMPARE(gl.isNvidia(), settingsGroup.readEntry("Nvidia", false));
+    QCOMPARE(gl.isIntel(), settingsGroup.readEntry("Intel", false));
+    QCOMPARE(gl.isVirtualBox(), settingsGroup.readEntry("VirtualBox", false));
+    QCOMPARE(gl.isVMware(), settingsGroup.readEntry("VMware", false));
+    QCOMPARE(gl.isAdreno(), settingsGroup.readEntry("Adreno", false));
+    QCOMPARE(gl.isPanfrost(), settingsGroup.readEntry("Panfrost", false));
+    QCOMPARE(gl.isLima(), settingsGroup.readEntry("Lima", false));
+    QCOMPARE(gl.isVideoCore4(), settingsGroup.readEntry("VC4", false));
+    QCOMPARE(gl.isVideoCore3D(), settingsGroup.readEntry("V3D", false));
+    QCOMPARE(gl.isVirgl(), settingsGroup.readEntry("Virgl", false));
 
-    QCOMPARE(gl->isSoftwareEmulation(), settingsGroup.readEntry("SoftwareEmulation", false));
-    QCOMPARE(gl->isVirtualMachine(), settingsGroup.readEntry("VirtualMachine", false));
+    QCOMPARE(gl.isVirtualMachine(), settingsGroup.readEntry("VirtualMachine", false));
 
-    QCOMPARE(gl->glVersionString(), s_gl->getString.version);
-    QCOMPARE(gl->glRendererString(), s_gl->getString.renderer);
-    QCOMPARE(gl->glVendorString(), s_gl->getString.vendor);
-    QCOMPARE(gl->glShadingLanguageVersionString(), s_gl->getString.shadingLanguageVersion);
+    QCOMPARE(gl.glVersionString(), version);
+    QCOMPARE(gl.glRendererString(), renderer);
+    QCOMPARE(gl.glVendorString(), vendor);
+    QCOMPARE(gl.glShadingLanguageVersionString(), glslVersion);
 
-    QCOMPARE(gl->isLooseBinding(), settingsGroup.readEntry("LooseBinding", false));
-    QCOMPARE(gl->isGLES(), settingsGroup.readEntry("GLES", false));
-    QCOMPARE(gl->recommendedCompositor(), CompositingType(settingsGroup.readEntry("Compositor", int(NoCompositing))));
-    QCOMPARE(gl->preferBufferSubData(), settingsGroup.readEntry("PreferBufferSubData", false));
+    QCOMPARE(gl.isLooseBinding(), settingsGroup.readEntry("LooseBinding", false));
+    QCOMPARE(gl.recommendedCompositor(), CompositingType(settingsGroup.readEntry("Compositor", int(NoCompositing))));
+    QCOMPARE(gl.preferBufferSubData(), settingsGroup.readEntry("PreferBufferSubData", false));
 }
 
 QTEST_GUILESS_MAIN(GLPlatformTest)

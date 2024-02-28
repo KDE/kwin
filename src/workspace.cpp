@@ -41,6 +41,7 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
+#include "compositor.h"
 #include "decorations/decorationbridge.h"
 #include "dpmsinputeventfilter.h"
 #include "lidswitchtracker.h"
@@ -49,6 +50,7 @@
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
+#include "scene/workspacescene.h"
 #include "tabletmodemanager.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
@@ -1820,8 +1822,9 @@ QString Workspace::supportInformation() const
         support.append(QStringLiteral("Compositing is active\n"));
         switch (effects->compositingType()) {
         case OpenGLCompositing: {
-            GLPlatform *platform = GLPlatform::instance();
-            if (platform->isGLES()) {
+            const auto context = Compositor::self()->scene()->openglContext();
+            GLPlatform *platform = context->glPlatform();
+            if (context->isOpenglES()) {
                 support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
             } else {
                 support.append(QStringLiteral("Compositing Type: OpenGL\n"));

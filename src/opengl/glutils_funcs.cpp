@@ -34,7 +34,7 @@ void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resol
     const bool haveArbRobustness = context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_robustness"));
     const bool haveExtRobustness = context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_robustness"));
     bool robustContext = false;
-    if (GLPlatform::instance()->isGLES()) {
+    if (context->isOpenglES()) {
         if (haveExtRobustness) {
             GLint value = 0;
             glGetIntegerv(GL_CONTEXT_ROBUST_ACCESS_EXT, &value);

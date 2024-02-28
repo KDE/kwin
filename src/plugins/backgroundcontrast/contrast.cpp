@@ -277,8 +277,11 @@ QMatrix4x4 ContrastEffect::colorMatrix(qreal contrast, qreal intensity, qreal sa
 
 bool ContrastEffect::enabledByDefault()
 {
-    GLPlatform *gl = GLPlatform::instance();
-
+    const auto context = effects->openglContext();
+    if (!context || context->isSoftwareRenderer()) {
+        return false;
+    }
+    const auto gl = context->glPlatform();
     if (gl->isIntel() && gl->chipClass() < SandyBridge) {
         return false;
     }
@@ -288,10 +291,6 @@ bool ContrastEffect::enabledByDefault()
     if (gl->isLima() || gl->isVideoCore4() || gl->isVideoCore3D()) {
         return false;
     }
-    if (gl->isSoftwareEmulation()) {
-        return false;
-    }
-
     return true;
 }
 

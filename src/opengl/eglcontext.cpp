@@ -42,7 +42,8 @@ std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
 }
 
 EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context)
-    : m_display(display)
+    : OpenGlContext(true)
+    , m_display(display)
     , m_handle(context)
     , m_config(config)
     , m_shaderManager(std::make_unique<ShaderManager>())

@@ -381,9 +381,9 @@ GLvoid *GLVertexBuffer::map(size_t size)
 
     glBindBuffer(GL_ARRAY_BUFFER, d->buffer);
 
-    bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
-
-    if (OpenGlContext::currentContext()->hasMapBufferRange() && !preferBufferSubData) {
+    const auto context = OpenGlContext::currentContext();
+    const bool preferBufferSubData = context->glPlatform()->preferBufferSubData();
+    if (context->hasMapBufferRange() && !preferBufferSubData) {
         return (GLvoid *)d->mapNextFreeRange(size);
     }
 
@@ -406,9 +406,10 @@ void GLVertexBuffer::unmap()
         return;
     }
 
-    bool preferBufferSubData = GLPlatform::instance()->preferBufferSubData();
+    const auto context = OpenGlContext::currentContext();
+    const bool preferBufferSubData = context->glPlatform()->preferBufferSubData();
 
-    if (OpenGlContext::currentContext()->hasMapBufferRange() && !preferBufferSubData) {
+    if (context->hasMapBufferRange() && !preferBufferSubData) {
         glUnmapBuffer(GL_ARRAY_BUFFER);
 
         d->baseAddress = d->nextOffset;

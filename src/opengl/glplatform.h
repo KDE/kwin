@@ -138,22 +138,8 @@ enum ChipClass {
 class KWIN_EXPORT GLPlatform
 {
 public:
+    explicit GLPlatform(OpenGLPlatformInterface platformInterface, QByteArrayView openglVersionString, QByteArrayView glslVersionString, QByteArrayView renderer, QByteArrayView vendor);
     ~GLPlatform();
-
-    /**
-     * Runs the detection code using the current OpenGL context.
-     */
-    void detect(OpenGLPlatformInterface platformInterface);
-
-    /**
-     * Prints the results of the detection code.
-     */
-    void printResults() const;
-
-    /**
-     * Returns a pointer to the GLPlatform instance.
-     */
-    static GLPlatform *instance();
 
     /**
      * Returns the OpenGL version.
@@ -218,12 +204,6 @@ public:
      * @since 4.10
      */
     bool isVMware() const;
-
-    /**
-     * @returns @c true if OpenGL is emulated in software.
-     * @since 4.7
-     */
-    bool isSoftwareEmulation() const;
 
     /**
      * @returns @c true if the driver is known to be from a virtual machine.
@@ -293,10 +273,6 @@ public:
      * @since 4.9
      */
     bool isLooseBinding() const;
-    /**
-     * @returns Whether OpenGL ES is used
-     */
-    bool isGLES() const;
 
     /**
      * @returns The CompositingType recommended by the driver.
@@ -344,34 +320,23 @@ public:
      */
     static QByteArray chipClassToString8(ChipClass chipClass);
 
-    static void cleanup();
-
 private:
-    GLPlatform();
-
-private:
-    QByteArray m_glsl_version;
-    QByteArrayView m_chipset;
-    Driver m_driver;
-    ChipClass m_chipClass;
-    CompositingType m_recommendedCompositor;
+    QByteArrayView m_openglVersionString;
+    QByteArrayView m_glslVersionString;
+    QByteArrayView m_chipset = QByteArrayLiteral("Unknown");
+    QByteArrayView m_rendererString;
+    QByteArrayView m_vendorString;
+    Driver m_driver = Driver_Unknown;
+    ChipClass m_chipClass = UnknownChipClass;
+    CompositingType m_recommendedCompositor = OpenGLCompositing;
+    Version m_openglVersion;
     Version m_glslVersion;
     Version m_mesaVersion;
     Version m_driverVersion;
-    bool m_looseBinding : 1;
-    bool m_virtualMachine : 1;
-    bool m_preferBufferSubData : 1;
+    bool m_looseBinding = false;
+    bool m_virtualMachine = false;
+    bool m_preferBufferSubData = false;
     OpenGLPlatformInterface m_platformInterface;
-    std::unique_ptr<OpenGlContext> m_context;
-    static std::unique_ptr<GLPlatform> s_platform;
 };
-
-inline GLPlatform *GLPlatform::instance()
-{
-    if (!s_platform) {
-        s_platform.reset(new GLPlatform());
-    }
-    return s_platform.get();
-}
 
 } // namespace KWin

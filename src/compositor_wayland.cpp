@@ -73,7 +73,7 @@ bool WaylandCompositor::attemptOpenGLCompositing()
             return false;
         }
     } else {
-        if (GLPlatform::instance()->recommendedCompositor() < OpenGLCompositing) {
+        if (backend->openglContext()->glPlatform()->recommendedCompositor() < OpenGLCompositing) {
             qCDebug(KWIN_CORE) << "Driver does not recommend OpenGL compositing";
             return false;
         }
@@ -276,7 +276,7 @@ void WaylandCompositor::addOutput(Output *output)
     // possibly a kernel driver bug. Remove the workaround when https://gitlab.freedesktop.org/drm/intel/-/issues/9571 is fixed.
     static bool forceSoftwareCursorIsSet;
     static const bool forceSoftwareCursor = qEnvironmentVariableIntValue("KWIN_FORCE_SW_CURSOR", &forceSoftwareCursorIsSet) == 1
-        || (!forceSoftwareCursorIsSet && GLPlatform::instance() && GLPlatform::instance()->isIntel());
+        || (!forceSoftwareCursorIsSet && scene()->openglContext() && scene()->openglContext()->glPlatform()->isIntel());
 
     auto updateCursorLayer = [this, output, cursorLayer]() {
         const Cursor *cursor = Cursors::self()->currentCursor();

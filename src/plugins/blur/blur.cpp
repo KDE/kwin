@@ -350,7 +350,11 @@ bool BlurEffect::eventFilter(QObject *watched, QEvent *event)
 
 bool BlurEffect::enabledByDefault()
 {
-    GLPlatform *gl = GLPlatform::instance();
+    const auto context = effects->openglContext();
+    if (!context || context->isSoftwareRenderer()) {
+        return false;
+    }
+    GLPlatform *gl = context->glPlatform();
 
     if (gl->isIntel() && gl->chipClass() < SandyBridge) {
         return false;
@@ -362,10 +366,6 @@ bool BlurEffect::enabledByDefault()
     if (gl->isLima() || gl->isVideoCore4() || gl->isVideoCore3D()) {
         return false;
     }
-    if (gl->isSoftwareEmulation()) {
-        return false;
-    }
-
     return true;
 }
 

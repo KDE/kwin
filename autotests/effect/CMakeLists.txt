@@ -14,10 +14,7 @@ kwineffects_unit_tests(
     timelinetest
 )
 
-
-if (KWIN_BUILD_X11 AND ARGS_LIBS MATCHES .*XCB.*)
-   add_executable(kwinglplatformtest kwinglplatformtest.cpp mock_gl.cpp ../../src/opengl/glplatform.cpp ../../src/opengl/openglcontext.cpp ../../src/utils/version.cpp)
-   add_test(NAME kwineffects-kwinglplatformtest COMMAND kwinglplatformtest)
-   target_link_libraries(kwinglplatformtest Qt::Test Qt::Gui KF6::ConfigCore XCB::XCB)
-   ecm_mark_as_test(kwinglplatformtest)
-endif()
+add_executable(kwinglplatformtest kwinglplatformtest.cpp ../../src/opengl/glplatform.cpp ../../src/utils/version.cpp)
+add_test(NAME kwineffects-kwinglplatformtest COMMAND kwinglplatformtest)
+target_link_libraries(kwinglplatformtest Qt::Test Qt::Gui KF6::ConfigCore)
+ecm_mark_as_test(kwinglplatformtest)

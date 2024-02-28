@@ -154,15 +154,7 @@ GlxBackend::~GlxBackend()
         m_overlayWindow->destroy();
     }
 
-    if (m_context) {
-        // TODO: cleanup in error case
-        // do cleanup after initBuffer()
-        GLPlatform::cleanup();
-        doneCurrent();
-
-        m_context.reset();
-    }
-
+    m_context.reset();
     if (glxWindow) {
         glXDestroyWindow(display(), glxWindow);
     }
@@ -221,23 +213,19 @@ void GlxBackend::init()
         return;
     }
 
-    // Initialize OpenGL
-    GLPlatform *glPlatform = GLPlatform::instance();
-    glPlatform->detect(GlxPlatformInterface);
-
+    const auto glPlatform = m_context->glPlatform();
     m_swapStrategy = options->glPreferBufferSwap();
     if (m_swapStrategy == Options::AutoSwapStrategy) {
         // buffer copying is very fast with the nvidia blob
         // but due to restrictions in DRI2 *incredibly* slow for all MESA drivers
         // see https://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
-        if (GLPlatform::instance()->driver() == Driver_NVidia) {
+        if (glPlatform->driver() == Driver_NVidia) {
             m_swapStrategy = Options::CopyFrontBuffer;
-        } else if (GLPlatform::instance()->driver() != Driver_Unknown) { // undetected, finally resolved when context is initialized
+        } else if (glPlatform->driver() != Driver_Unknown) { // undetected, finally resolved when context is initialized
             m_swapStrategy = Options::ExtendDamage;
         }
     }
 
-    glPlatform->printResults();
     initGL(&getProcAddress);
 
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());

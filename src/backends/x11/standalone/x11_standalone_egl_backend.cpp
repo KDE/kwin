@@ -177,9 +177,9 @@ void EglBackend::init()
         // buffer copying is very fast with the nvidia blob
         // but due to restrictions in DRI2 *incredibly* slow for all MESA drivers
         // see https://www.x.org/releases/X11R7.7/doc/dri2proto/dri2proto.txt, item 2.5
-        if (GLPlatform::instance()->driver() == Driver_NVidia) {
+        if (m_context->glPlatform()->driver() == Driver_NVidia) {
             m_swapStrategy = Options::CopyFrontBuffer;
-        } else if (GLPlatform::instance()->driver() != Driver_Unknown) { // undetected, finally resolved when context is initialized
+        } else if (m_context->glPlatform()->driver() != Driver_Unknown) { // undetected, finally resolved when context is initialized
             m_swapStrategy = Options::ExtendDamage;
         }
     }

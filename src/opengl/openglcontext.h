@@ -23,12 +23,13 @@ class ShaderManager;
 class GLFramebuffer;
 class GLVertexBuffer;
 class IndexBuffer;
+class GLPlatform;
 
 class KWIN_EXPORT OpenGlContext
 {
 public:
-    explicit OpenGlContext();
-    virtual ~OpenGlContext() = default;
+    explicit OpenGlContext(bool EGL);
+    virtual ~OpenGlContext();
 
     bool hasVersion(const Version &version) const;
 
@@ -57,6 +58,7 @@ public:
     ShaderManager *shaderManager() const;
     GLVertexBuffer *streamingVbo() const;
     IndexBuffer *indexBuffer() const;
+    GLPlatform *glPlatform() const;
     QSet<QByteArray> openglExtensions() const;
 
     /**
@@ -97,6 +99,7 @@ protected:
     const bool m_haveSyncFences;
     const bool m_supportsIndexedQuads;
     const bool m_supportsPackInvert;
+    const std::unique_ptr<GLPlatform> m_glPlatform;
     ShaderManager *m_shaderManager = nullptr;
     GLVertexBuffer *m_streamingBuffer = nullptr;
     IndexBuffer *m_indexBuffer = nullptr;

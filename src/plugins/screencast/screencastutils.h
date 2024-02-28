@@ -62,12 +62,12 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
     texture->bind();
     // BUG: The nvidia driver fails to glGetTexImage
     // Drop driver() == DriverNVidia some time after that's fixed
-    if (GLPlatform::instance()->isGLES() || GLPlatform::instance()->driver() == Driver_NVidia) {
+    if (context->isOpenglES() || context->glPlatform()->driver() == Driver_NVidia) {
         GLFramebuffer fbo(texture);
         GLFramebuffer::pushFramebuffer(&fbo);
         glReadPixels(0, 0, size.width(), size.height(), closestGLType(format), GL_UNSIGNED_BYTE, spa->data);
         GLFramebuffer::popFramebuffer();
-    } else if (GLPlatform::instance()->glVersion() >= Version(4, 5)) {
+    } else if (context->openglVersion() >= Version(4, 5)) {
         glGetTextureImage(texture->texture(), 0, closestGLType(format), GL_UNSIGNED_BYTE, spa->chunk->size, spa->data);
     } else {
         glGetTexImage(texture->target(), 0, closestGLType(format), GL_UNSIGNED_BYTE, spa->data);

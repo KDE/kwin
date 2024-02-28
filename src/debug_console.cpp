@@ -18,6 +18,7 @@
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
+#include "scene/workspacescene.h"
 #include "utils/filedescriptor.h"
 #include "utils/subsurfacemonitor.h"
 #include "wayland/abstract_data_source.h"
@@ -660,7 +661,7 @@ void DebugConsole::initGLTab()
         m_ui->glInfoScrollArea->setVisible(false);
         return;
     }
-    GLPlatform *gl = GLPlatform::instance();
+    const auto gl = Compositor::self()->scene()->openglContext()->glPlatform();
     m_ui->noOpenGLLabel->setVisible(false);
     m_ui->glInfoScrollArea->setVisible(true);
     m_ui->glVendorStringLabel->setText(QString::fromLocal8Bit(gl->glVendorString()));

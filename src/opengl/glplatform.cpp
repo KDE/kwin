@@ -31,8 +31,6 @@
 namespace KWin
 {
 
-std::unique_ptr<GLPlatform> GLPlatform::s_platform;
-
 // Extracts the portion of a string that matches a regular expression
 static QString extract(const QString &text, const QString &pattern)
 {
@@ -714,47 +712,36 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
 
 // -------
 
-GLPlatform::GLPlatform()
-    : m_driver(Driver_Unknown)
-    , m_chipClass(UnknownChipClass)
-    , m_recommendedCompositor(QPainterCompositing)
-    , m_looseBinding(false)
-    , m_virtualMachine(false)
-    , m_preferBufferSubData(false)
-    , m_platformInterface(NoOpenGLPlatformInterface)
+static void print(const QByteArray &label, QByteArrayView setting)
 {
+    qInfo("%-40s%s", label.data(), setting.data());
 }
 
-GLPlatform::~GLPlatform()
+GLPlatform::GLPlatform(OpenGLPlatformInterface platformInterface, QByteArrayView openglVersionString, QByteArrayView glslVersionString, QByteArrayView renderer, QByteArrayView vendor)
+    : m_openglVersionString(openglVersionString)
+    , m_glslVersionString(glslVersionString)
+    , m_rendererString(renderer)
+    , m_vendorString(vendor)
+    , m_openglVersion(Version::parseString(openglVersionString))
+    , m_glslVersion(Version::parseString(m_glslVersionString))
+    , m_platformInterface(platformInterface)
 {
-}
-
-void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
-{
-    m_platformInterface = platformInterface;
-
-    m_context = std::make_unique<OpenGlContext>();
-
     // Parse the Mesa version
-    const auto versionTokens = m_context->openglVersionString().toByteArray().split(' ');
+    const auto versionTokens = openglVersionString.toByteArray().split(' ');
     const int mesaIndex = versionTokens.indexOf("Mesa");
     if (mesaIndex != -1) {
         m_mesaVersion = Version::parseString(versionTokens.at(mesaIndex + 1));
     }
 
-    m_glsl_version = m_context->glslVersionString().toByteArray();
-    m_glslVersion = m_context->glslVersion();
-
-    m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
 
     // Mesa classic drivers
     // ====================================================
 
     // Radeon
-    if (m_context->renderer().startsWith("Mesa DRI R")) {
+    if (renderer.startsWith("Mesa DRI R")) {
         // Sample renderer string: Mesa DRI R600 (RV740 94B3) 20090101 x86/MMX/SSE2 TCL DRI2
-        const QList<QByteArray> tokens = m_context->renderer().toByteArray().split(' ');
+        const QList<QByteArray> tokens = renderer.toByteArray().split(' ');
         const QByteArray &chipClass = tokens.at(2);
         m_chipset = tokens.at(3).mid(1, -1); // Strip the leading '('
 
@@ -779,15 +766,15 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     }
 
     // Intel
-    else if (m_context->renderer().contains("Intel")) {
+    else if (renderer.contains("Intel")) {
         // Vendor: Tungsten Graphics, Inc.
         // Sample renderer string: Mesa DRI Mobile Intel® GM45 Express Chipset GEM 20100328 2010Q1
 
         QByteArrayView chipset;
-        if (m_context->renderer().startsWith("Intel(R) Integrated Graphics Device")) {
+        if (renderer.startsWith("Intel(R) Integrated Graphics Device")) {
             chipset = "IGD";
         } else {
-            chipset = m_context->renderer();
+            chipset = renderer;
         }
 
         m_driver = Driver_Intel;
@@ -796,8 +783,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     // Properietary drivers
     // ====================================================
-    else if (m_context->vendor() == "ATI Technologies Inc.") {
-        m_chipClass = detectRadeonClass(m_context->renderer());
+    else if (vendor == "ATI Technologies Inc.") {
+        m_chipClass = detectRadeonClass(renderer);
         m_driver = Driver_Catalyst;
 
         if (versionTokens.count() > 1 && versionTokens.at(2)[0] == '(') {
@@ -809,8 +796,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
     }
 
-    else if (m_context->vendor() == "NVIDIA Corporation") {
-        m_chipClass = detectNVidiaClass(m_context->renderer());
+    else if (vendor == "NVIDIA Corporation") {
+        m_chipClass = detectNVidiaClass(renderer);
         m_driver = Driver_NVidia;
 
         int index = versionTokens.indexOf("NVIDIA");
@@ -821,38 +808,38 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
     }
 
-    else if (m_context->vendor() == "Qualcomm") {
+    else if (vendor == "Qualcomm") {
         m_driver = Driver_Qualcomm;
-        m_chipClass = detectQualcommClass(m_context->renderer());
+        m_chipClass = detectQualcommClass(renderer);
     }
 
-    else if (m_context->renderer().contains("Panfrost")) {
+    else if (renderer.contains("Panfrost")) {
         m_driver = Driver_Panfrost;
-        m_chipClass = detectPanfrostClass(m_context->renderer());
+        m_chipClass = detectPanfrostClass(renderer);
     }
 
-    else if (m_context->renderer().contains("Mali")) {
+    else if (renderer.contains("Mali")) {
         m_driver = Driver_Lima;
-        m_chipClass = detectLimaClass(m_context->renderer());
+        m_chipClass = detectLimaClass(renderer);
     }
 
-    else if (m_context->renderer().startsWith("VC4 ")) {
+    else if (renderer.startsWith("VC4 ")) {
         m_driver = Driver_VC4;
-        m_chipClass = detectVC4Class(m_context->renderer());
+        m_chipClass = detectVC4Class(renderer);
     }
 
-    else if (m_context->renderer().startsWith("V3D ")) {
+    else if (renderer.startsWith("V3D ")) {
         m_driver = Driver_V3D;
-        m_chipClass = detectV3DClass(m_context->renderer());
+        m_chipClass = detectV3DClass(renderer);
     }
 
-    else if (m_context->renderer() == "Software Rasterizer") {
+    else if (renderer == "Software Rasterizer") {
         m_driver = Driver_Swrast;
     }
 
     // Virtual Hardware
     // ====================================================
-    else if (m_context->vendor() == "Humper" && m_context->renderer() == "Chromium") {
+    else if (vendor == "Humper" && renderer == "Chromium") {
         // Virtual Box
         m_driver = Driver_VirtualBox;
 
@@ -867,8 +854,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
     // Gallium drivers
     // ====================================================
     else {
-        const QList<QByteArray> tokens = m_context->renderer().toByteArray().split(' ');
-        if (m_context->renderer().contains("Gallium")) {
+        const QList<QByteArray> tokens = renderer.toByteArray().split(' ');
+        if (renderer.contains("Gallium")) {
             // Sample renderer string: Gallium 0.4 on AMD RV740
             m_chipset = (tokens.at(3) == "AMD" || tokens.at(3) == "ATI") ? tokens.at(4) : tokens.at(3);
         } else {
@@ -877,25 +864,25 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
 
         // R300G
-        if (m_context->vendor() == QByteArrayLiteral("X.Org R300 Project")) {
+        if (vendor == QByteArrayLiteral("X.Org R300 Project")) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R300G;
         }
 
         // R600G
-        else if (m_context->vendor() == "X.Org" && (m_context->renderer().contains("R6") || m_context->renderer().contains("R7") || m_context->renderer().contains("RV6") || m_context->renderer().contains("RV7") || m_context->renderer().contains("RS780") || m_context->renderer().contains("RS880") || m_context->renderer().contains("CEDAR") || m_context->renderer().contains("REDWOOD") || m_context->renderer().contains("JUNIPER") || m_context->renderer().contains("CYPRESS") || m_context->renderer().contains("HEMLOCK") || m_context->renderer().contains("PALM") || m_context->renderer().contains("EVERGREEN") || m_context->renderer().contains("SUMO") || m_context->renderer().contains("SUMO2") || m_context->renderer().contains("BARTS") || m_context->renderer().contains("TURKS") || m_context->renderer().contains("CAICOS") || m_context->renderer().contains("CAYMAN"))) {
+        else if (vendor == "X.Org" && (renderer.contains("R6") || renderer.contains("R7") || renderer.contains("RV6") || renderer.contains("RV7") || renderer.contains("RS780") || renderer.contains("RS880") || renderer.contains("CEDAR") || renderer.contains("REDWOOD") || renderer.contains("JUNIPER") || renderer.contains("CYPRESS") || renderer.contains("HEMLOCK") || renderer.contains("PALM") || renderer.contains("EVERGREEN") || renderer.contains("SUMO") || renderer.contains("SUMO2") || renderer.contains("BARTS") || renderer.contains("TURKS") || renderer.contains("CAICOS") || renderer.contains("CAYMAN"))) {
             m_chipClass = detectRadeonClass(m_chipset);
             m_driver = Driver_R600G;
         }
 
         // RadeonSI
-        else if ((m_context->vendor() == "X.Org" || m_context->vendor() == "AMD") && (m_context->renderer().contains("TAHITI") || m_context->renderer().contains("PITCAIRN") || m_context->renderer().contains("VERDE") || m_context->renderer().contains("OLAND") || m_context->renderer().contains("HAINAN") || m_context->renderer().contains("BONAIRE") || m_context->renderer().contains("KAVERI") || m_context->renderer().contains("KABINI") || m_context->renderer().contains("HAWAII") || m_context->renderer().contains("MULLINS") || m_context->renderer().contains("TOPAZ") || m_context->renderer().contains("TONGA") || m_context->renderer().contains("FIJI") || m_context->renderer().contains("CARRIZO") || m_context->renderer().contains("STONEY") || m_context->renderer().contains("POLARIS10") || m_context->renderer().contains("POLARIS11") || m_context->renderer().contains("POLARIS12") || m_context->renderer().contains("VEGAM") || m_context->renderer().contains("VEGA10") || m_context->renderer().contains("VEGA12") || m_context->renderer().contains("VEGA20") || m_context->renderer().contains("RAVEN") || m_context->renderer().contains("RAVEN2") || m_context->renderer().contains("RENOIR") || m_context->renderer().contains("ARCTURUS") || m_context->renderer().contains("NAVI10") || m_context->renderer().contains("NAVI12") || m_context->renderer().contains("NAVI14"))) {
-            m_chipClass = detectRadeonClass(m_context->renderer());
+        else if ((vendor == "X.Org" || vendor == "AMD") && (renderer.contains("TAHITI") || renderer.contains("PITCAIRN") || renderer.contains("VERDE") || renderer.contains("OLAND") || renderer.contains("HAINAN") || renderer.contains("BONAIRE") || renderer.contains("KAVERI") || renderer.contains("KABINI") || renderer.contains("HAWAII") || renderer.contains("MULLINS") || renderer.contains("TOPAZ") || renderer.contains("TONGA") || renderer.contains("FIJI") || renderer.contains("CARRIZO") || renderer.contains("STONEY") || renderer.contains("POLARIS10") || renderer.contains("POLARIS11") || renderer.contains("POLARIS12") || renderer.contains("VEGAM") || renderer.contains("VEGA10") || renderer.contains("VEGA12") || renderer.contains("VEGA20") || renderer.contains("RAVEN") || renderer.contains("RAVEN2") || renderer.contains("RENOIR") || renderer.contains("ARCTURUS") || renderer.contains("NAVI10") || renderer.contains("NAVI12") || renderer.contains("NAVI14"))) {
+            m_chipClass = detectRadeonClass(renderer);
             m_driver = Driver_RadeonSI;
         }
 
         // Nouveau
-        else if (m_context->vendor() == "nouveau") {
+        else if (vendor == "nouveau") {
             m_chipClass = detectNVidiaClass(m_chipset);
             m_driver = Driver_Nouveau;
         }
@@ -911,12 +898,12 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         }
 
         // SVGA3D
-        else if (m_context->vendor() == "VMware, Inc." && m_chipset.contains("SVGA3D")) {
+        else if (vendor == "VMware, Inc." && m_chipset.contains("SVGA3D")) {
             m_driver = Driver_VMware;
         }
 
         // virgl
-        else if (m_context->renderer() == "virgl") {
+        else if (renderer == "virgl") {
             m_driver = Driver_Virgl;
         }
     }
@@ -934,7 +921,7 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
             m_recommendedCompositor = OpenGLCompositing;
         }
 
-        if (driver() == Driver_R600G || (driver() == Driver_R600C && m_context->renderer().contains("DRI2"))) {
+        if (driver() == Driver_R600G || (driver() == Driver_R600C && renderer.contains("DRI2"))) {
             m_looseBinding = true;
         }
     }
@@ -988,16 +975,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_looseBinding = true;
     }
 
-    if (isSoftwareEmulation()) {
-        if (m_driver < Driver_Llvmpipe) {
-            // we recommend QPainter
-            m_recommendedCompositor = QPainterCompositing;
-        } else {
-            // llvmpipe does support GLSL
-            m_recommendedCompositor = OpenGLCompositing;
-        }
-    }
-
     if (m_driver == Driver_Qualcomm) {
         if (m_chipClass == Adreno1XX) {
             m_recommendedCompositor = NoCompositing;
@@ -1026,37 +1003,33 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_virtualMachine = true;
         m_recommendedCompositor = OpenGLCompositing;
     }
-}
 
-static void print(const QByteArray &label, QByteArrayView setting)
-{
-    qInfo("%-40s%s", label.data(), setting.data());
-}
-
-void GLPlatform::printResults() const
-{
-    print(QByteArrayLiteral("OpenGL vendor string:"), m_context->vendor());
-    print(QByteArrayLiteral("OpenGL renderer string:"), m_context->renderer());
-    print(QByteArrayLiteral("OpenGL version string:"), m_context->openglVersionString());
-    print(QByteArrayLiteral("OpenGL shading language version string:"), m_glsl_version);
+    // print the results
+    print(QByteArrayLiteral("OpenGL vendor string:"), m_vendorString);
+    print(QByteArrayLiteral("OpenGL renderer string:"), m_rendererString);
+    print(QByteArrayLiteral("OpenGL version string:"), m_openglVersionString);
+    print(QByteArrayLiteral("OpenGL shading language version string:"), m_glslVersionString);
     print(QByteArrayLiteral("Driver:"), driverToString8(m_driver));
     if (!isMesaDriver()) {
         print(QByteArrayLiteral("Driver version:"), m_driverVersion.toByteArray());
     }
     print(QByteArrayLiteral("GPU class:"), chipClassToString8(m_chipClass));
-    print(QByteArrayLiteral("OpenGL version:"), m_context->openglVersion().toByteArray());
+    print(QByteArrayLiteral("OpenGL version:"), m_openglVersion.toByteArray());
     print(QByteArrayLiteral("GLSL version:"), m_glslVersion.toByteArray());
     if (isMesaDriver()) {
         print(QByteArrayLiteral("Mesa version:"), mesaVersion().toByteArray());
     }
     print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("Virtual Machine:"), m_virtualMachine ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
-    print(QByteArrayLiteral("Timer query support:"), m_context->supportsTimerQueries() ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
+}
+
+GLPlatform::~GLPlatform()
+{
 }
 
 Version GLPlatform::glVersion() const
 {
-    return m_context ? m_context->openglVersion() : Version();
+    return m_openglVersion;
 }
 
 Version GLPlatform::glslVersion() const
@@ -1123,11 +1096,6 @@ bool GLPlatform::isVirgl() const
     return m_driver == Driver_Virgl;
 }
 
-bool GLPlatform::isSoftwareEmulation() const
-{
-    return m_context ? m_context->isSoftwareRenderer() : false;
-}
-
 bool GLPlatform::isAdreno() const
 {
     return m_chipClass >= Adreno1XX && m_chipClass <= UnknownAdreno;
@@ -1155,22 +1123,22 @@ bool GLPlatform::isVideoCore3D() const
 
 QByteArrayView GLPlatform::glRendererString() const
 {
-    return m_context ? m_context->renderer() : "";
+    return m_rendererString;
 }
 
 QByteArrayView GLPlatform::glVendorString() const
 {
-    return m_context ? m_context->vendor() : "";
+    return m_vendorString;
 }
 
 QByteArrayView GLPlatform::glVersionString() const
 {
-    return m_context ? m_context->openglVersionString() : "";
+    return m_openglVersionString;
 }
 
 QByteArrayView GLPlatform::glShadingLanguageVersionString() const
 {
-    return m_glsl_version;
+    return m_glslVersionString;
 }
 
 bool GLPlatform::isLooseBinding() const
@@ -1196,16 +1164,6 @@ bool GLPlatform::preferBufferSubData() const
 OpenGLPlatformInterface GLPlatform::platformInterface() const
 {
     return m_platformInterface;
-}
-
-bool GLPlatform::isGLES() const
-{
-    return m_context ? m_context->isOpenglES() : false;
-}
-
-void GLPlatform::cleanup()
-{
-    s_platform.reset();
 }
 
 } // namespace KWin
