@@ -719,7 +719,6 @@ GLPlatform::GLPlatform()
     , m_chipClass(UnknownChipClass)
     , m_recommendedCompositor(QPainterCompositing)
     , m_looseBinding(false)
-    , m_packInvert(false)
     , m_virtualMachine(false)
     , m_preferBufferSubData(false)
     , m_platformInterface(NoOpenGLPlatformInterface)
@@ -748,7 +747,6 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
 
     m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
-    m_packInvert = m_context->hasOpenglExtension("GL_MESA_pack_invert");
 
     // Mesa classic drivers
     // ====================================================
@@ -1061,8 +1059,6 @@ bool GLPlatform::supports(GLFeature feature) const
     switch (feature) {
     case GLFeature::LooseBinding:
         return m_looseBinding;
-    case GLFeature::PackInvert:
-        return m_packInvert;
     case GLFeature::TimerQuery:
         return m_context && m_context->supportsTimerQueries();
     }

@@ -90,6 +90,7 @@ OpenGlContext::OpenGlContext()
     , m_haveBufferStorage((!m_isOpenglES || hasVersion(Version(4, 4))) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_buffer_storage")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_buffer_storage")))
     , m_haveSyncFences((m_isOpenglES && hasVersion(Version(3, 0))) || (!m_isOpenglES && hasVersion(Version(3, 2))) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_sync")))
     , m_supportsIndexedQuads(checkIndexedQuads(this))
+    , m_supportsPackInvert(hasOpenglExtension(QByteArrayLiteral("GL_MESA_pack_invert")))
 {
 }
 
@@ -207,6 +208,11 @@ bool OpenGlContext::hasMapBufferRange() const
 bool OpenGlContext::haveSyncFences() const
 {
     return m_haveSyncFences;
+}
+
+bool OpenGlContext::supportsPackInvert() const
+{
+    return m_supportsPackInvert;
 }
 
 ShaderManager *OpenGlContext::shaderManager() const

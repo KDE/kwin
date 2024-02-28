@@ -51,6 +51,7 @@ public:
     bool hasMapBufferRange() const;
     bool haveBufferStorage() const;
     bool haveSyncFences() const;
+    bool supportsPackInvert() const;
     ShaderManager *shaderManager() const;
     GLVertexBuffer *streamingVbo() const;
     IndexBuffer *indexBuffer() const;
@@ -91,6 +92,7 @@ protected:
     const bool m_haveBufferStorage;
     const bool m_haveSyncFences;
     const bool m_supportsIndexedQuads;
+    const bool m_supportsPackInvert;
     ShaderManager *m_shaderManager = nullptr;
     GLVertexBuffer *m_streamingBuffer = nullptr;
     IndexBuffer *m_indexBuffer = nullptr;

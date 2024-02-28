@@ -49,9 +49,10 @@ static GLenum closestGLType(spa_video_format format)
 
 static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format format)
 {
+    const auto context = OpenGlContext::currentContext();
     const QSize size = texture->size();
-    const bool invertNeeded = GLPlatform::instance()->isGLES() ^ (texture->contentTransform() != OutputTransform::FlipY);
-    const bool invertNeededAndSupported = invertNeeded && GLPlatform::instance()->supports(GLFeature::PackInvert);
+    const bool invertNeeded = context->isOpenglES() ^ (texture->contentTransform() != OutputTransform::FlipY);
+    const bool invertNeededAndSupported = invertNeeded && context->supportsPackInvert();
     GLboolean prev;
     if (invertNeededAndSupported) {
         glGetBooleanv(GL_PACK_INVERT_MESA, &prev);

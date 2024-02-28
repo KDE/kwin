@@ -32,11 +32,6 @@ enum class GLFeature {
     LooseBinding,
 
     /**
-     * Set if the extension GL_MESA_pack_invert is present
-     */
-    PackInvert,
-
-    /**
      * Set if the driver supports GL_ARB_timer_query extension or OpenGL 3.3.
      */
     TimerQuery,
@@ -383,7 +378,6 @@ private:
     Version m_mesaVersion;
     Version m_driverVersion;
     bool m_looseBinding : 1;
-    bool m_packInvert : 1;
     bool m_virtualMachine : 1;
     bool m_preferBufferSubData : 1;
     OpenGLPlatformInterface m_platformInterface;
