@@ -158,7 +158,7 @@ FocusScope {
             }
             PlasmaComponents.Button {
                 icon.name: "document-open"
-                text: i18nd("kwin","Load Layout...")
+                text: i18nd("kwin","Load Layout…")
                 onClicked: loadLayoutDialog.open()
                 // This mouse area is for fitts law
                 MouseArea {
