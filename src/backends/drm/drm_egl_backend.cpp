@@ -95,7 +95,6 @@ void EglGbmBackend::init()
         setFailed("Could not initialize rendering context");
         return;
     }
-    initKWinGL();
     initWayland();
 }
 

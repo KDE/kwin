@@ -55,7 +55,6 @@ protected:
     void cleanup();
     virtual void cleanupSurfaces();
     void setEglDisplay(EglDisplay *display);
-    void initKWinGL();
     void initClientExtensions();
     void initWayland();
     bool hasClientExtension(const QByteArray &ext) const;

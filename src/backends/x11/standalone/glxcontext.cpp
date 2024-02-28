@@ -13,9 +13,27 @@
 
 #include <QDebug>
 #include <QOpenGLContext>
+#include <dlfcn.h>
 
 namespace KWin
 {
+
+typedef void (*glXFuncPtr)();
+
+static glXFuncPtr getProcAddress(const char *name)
+{
+    glXFuncPtr ret = nullptr;
+#if HAVE_GLX
+    ret = glXGetProcAddress((const GLubyte *)name);
+#endif
+#if HAVE_DL_LIBRARY
+    if (ret == nullptr) {
+        ret = (glXFuncPtr)dlsym(RTLD_DEFAULT, name);
+    }
+#endif
+    return ret;
+}
+glXSwapIntervalMESA_func glXSwapIntervalMESA;
 
 GlxContext::GlxContext(::Display *display, GLXWindow window, GLXContext handle)
     : OpenGlContext(false)
@@ -25,7 +43,10 @@ GlxContext::GlxContext(::Display *display, GLXWindow window, GLXContext handle)
     , m_shaderManager(std::make_unique<ShaderManager>())
     , m_streamingBuffer(std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream))
     , m_indexBuffer(std::make_unique<IndexBuffer>())
+    , m_glXSwapIntervalMESA((glXSwapIntervalMESA_func)getProcAddress("glXSwapIntervalMESA"))
 {
+    glResolveFunctions(&getProcAddress);
+    initDebugOutput();
     setShaderManager(m_shaderManager.get());
     setStreamingBuffer(m_streamingBuffer.get());
     setIndexBuffer(m_indexBuffer.get());
@@ -66,6 +87,13 @@ void GlxContext::doneCurrent() const
 {
     glXMakeCurrent(m_display, None, nullptr);
     s_currentContext = nullptr;
+}
+
+void GlxContext::glXSwapIntervalMESA(unsigned int interval)
+{
+    if (m_glXSwapIntervalMESA) {
+        m_glXSwapIntervalMESA(interval);
+    }
 }
 
 std::unique_ptr<GlxContext> GlxContext::create(GlxBackend *backend, GLXFBConfig fbconfig, GLXWindow glxWindow)

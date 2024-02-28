@@ -8,7 +8,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-
 #include "opengl/glutils.h"
 #include "glplatform.h"
 #include "gltexture_p.h"
@@ -16,90 +15,6 @@
 
 namespace KWin
 {
-
-// Functions
-
-static void initDebugOutput()
-{
-    const auto context = OpenGlContext::currentContext();
-    const bool have_KHR_debug = context->hasOpenglExtension(QByteArrayLiteral("GL_KHR_debug"));
-    const bool have_ARB_debug = context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_debug_output"));
-    if (!have_KHR_debug && !have_ARB_debug) {
-        return;
-    }
-
-    if (!have_ARB_debug) {
-        // if we don't have ARB debug, but only KHR debug we need to verify whether the context is a debug context
-        // it should work without as well, but empirical tests show: no it doesn't
-        if (context->isOpenglES()) {
-            if (!context->hasVersion(Version(3, 2))) {
-                // empirical data shows extension doesn't work
-                return;
-            }
-        } else if (!context->hasVersion(Version(3, 0))) {
-            return;
-        }
-        // can only be queried with either OpenGL >= 3.0 or OpenGL ES of at least 3.1
-        GLint value = 0;
-        glGetIntegerv(GL_CONTEXT_FLAGS, &value);
-        if (!(value & GL_CONTEXT_FLAG_DEBUG_BIT)) {
-            return;
-        }
-    }
-
-    // Set the callback function
-    auto callback = [](GLenum source, GLenum type, GLuint id,
-                       GLenum severity, GLsizei length,
-                       const GLchar *message,
-                       const GLvoid *userParam) {
-        while (length && std::isspace(message[length - 1])) {
-            --length;
-        }
-
-        switch (type) {
-        case GL_DEBUG_TYPE_ERROR:
-        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-            qCWarning(KWIN_OPENGL, "%#x: %.*s", id, length, message);
-            break;
-
-        case GL_DEBUG_TYPE_OTHER:
-        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-        case GL_DEBUG_TYPE_PORTABILITY:
-        case GL_DEBUG_TYPE_PERFORMANCE:
-        default:
-            qCDebug(KWIN_OPENGL, "%#x: %.*s", id, length, message);
-            break;
-        }
-    };
-
-    glDebugMessageCallback(callback, nullptr);
-
-    // This state exists only in GL_KHR_debug
-    if (have_KHR_debug) {
-        glEnable(GL_DEBUG_OUTPUT);
-    }
-
-    if (qEnvironmentVariableIntValue("KWIN_GL_DEBUG")) {
-        // Enable all debug messages
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-        // Insert a test message
-        const QByteArray message = QByteArrayLiteral("OpenGL debug output initialized");
-        glDebugMessageInsert(GL_DEBUG_SOURCE_APPLICATION, GL_DEBUG_TYPE_OTHER, 0,
-                             GL_DEBUG_SEVERITY_LOW, message.length(), message.constData());
-    } else {
-        // Only enable error messages
-        glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_ERROR, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-        glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR, GL_DONT_CARE, 0, nullptr, GL_TRUE);
-    }
-}
-
-void initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction)
-{
-    // handle OpenGL extensions functions
-    glResolveFunctions(resolveFunction);
-
-    initDebugOutput();
-}
 
 static QString formatGLError(GLenum err)
 {

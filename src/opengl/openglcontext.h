@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 #include "utils/version.h"
 
+#include <epoxy/gl.h>
 #include <stdint.h>
 #include <string_view>
 
@@ -24,6 +25,12 @@ class GLFramebuffer;
 class GLVertexBuffer;
 class IndexBuffer;
 class GLPlatform;
+
+// GL_ARB_robustness / GL_EXT_robustness
+using glGetGraphicsResetStatus_func = GLenum (*)();
+using glReadnPixels_func = void (*)(GLint x, GLint y, GLsizei width, GLsizei height,
+                                    GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
+using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
 class KWIN_EXPORT OpenGlContext
 {
@@ -66,6 +73,10 @@ public:
      */
     bool checkSupported() const;
 
+    GLenum checkGraphicsResetStatus();
+    void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
+    void glGetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
+
     static OpenGlContext *currentContext();
 
 protected:
@@ -73,6 +84,9 @@ protected:
     void setShaderManager(ShaderManager *manager);
     void setStreamingBuffer(GLVertexBuffer *vbo);
     void setIndexBuffer(IndexBuffer *buffer);
+    typedef void (*resolveFuncPtr)();
+    void glResolveFunctions(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
+    void initDebugOutput();
 
     static OpenGlContext *s_currentContext;
 
@@ -100,6 +114,9 @@ protected:
     const bool m_supportsIndexedQuads;
     const bool m_supportsPackInvert;
     const std::unique_ptr<GLPlatform> m_glPlatform;
+    glGetGraphicsResetStatus_func m_glGetGraphicsResetStatus = nullptr;
+    glReadnPixels_func m_glReadnPixels = nullptr;
+    glGetnUniformfv_func m_glGetnUniformfv = nullptr;
     ShaderManager *m_shaderManager = nullptr;
     GLVertexBuffer *m_streamingBuffer = nullptr;
     IndexBuffer *m_indexBuffer = nullptr;

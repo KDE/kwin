@@ -242,7 +242,6 @@ void X11WindowedEglBackend::init()
         return;
     }
 
-    initKWinGL();
     initWayland();
 
     const auto &outputs = m_backend->outputs();

@@ -260,7 +260,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         // render window into offscreen texture
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         QImage img;
-        if (effects->isOpenGLCompositing()) {
+        if (const auto context = effects->openglContext()) {
             RenderTarget renderTarget(target.get());
             RenderViewport viewport(geometry, devicePixelRatio, renderTarget);
             GLFramebuffer::pushFramebuffer(target.get());
@@ -274,8 +274,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
             // copy content from framebuffer into image
             img = QImage(offscreenTexture->size(), QImage::Format_ARGB32);
             img.setDevicePixelRatio(devicePixelRatio);
-            glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(),
-                          static_cast<GLvoid *>(img.bits()));
+            context->glReadnPixels(0, 0, img.width(), img.height(), GL_RGBA, GL_UNSIGNED_BYTE, img.sizeInBytes(), static_cast<GLvoid *>(img.bits()));
             GLFramebuffer::popFramebuffer();
             convertFromGLImage(img, img.width(), img.height(), renderTarget.transform());
         }

@@ -13,7 +13,6 @@
 #include "opengl/glframebuffer.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
-#include "opengl/glutils_funcs.h"
 #include "utils/common.h"
 
 #include <QImage>

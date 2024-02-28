@@ -136,7 +136,6 @@ void VirtualEglBackend::init()
         return;
     }
 
-    initKWinGL();
     if (checkGLError("Init")) {
         setFailed("Error during init of EglGbmBackend");
         return;

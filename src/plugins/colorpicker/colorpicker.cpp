@@ -10,11 +10,11 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
-#include "opengl/glutils.h"
-#include "opengl/glutils_funcs.h"
 #include <KLocalizedString>
 #include <QDBusConnection>
 #include <QDBusMetaType>
+
+#include <epoxy/gl.h>
 
 Q_DECLARE_METATYPE(QColor)
 

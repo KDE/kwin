@@ -138,7 +138,6 @@ target_sources(kwin PRIVATE
     opengl/glshadermanager.cpp
     opengl/gltexture.cpp
     opengl/glutils.cpp
-    opengl/glutils_funcs.cpp
     opengl/glvertexbuffer.cpp
     opengl/openglcontext.cpp
     options.cpp
@@ -633,7 +632,6 @@ install(FILES
     opengl/glshadermanager.h
     opengl/gltexture.h
     opengl/gltexture_p.h
-    opengl/glutils_funcs.h
     opengl/glutils.h
     opengl/glvertexbuffer.h
     opengl/openglcontext.h

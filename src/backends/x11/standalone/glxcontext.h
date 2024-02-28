@@ -15,6 +15,10 @@
 namespace KWin
 {
 
+// GLX_MESA_swap_interval
+using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
+extern glXSwapIntervalMESA_func glXSwapIntervalMESA;
+
 class GlxContext : public OpenGlContext
 {
 public:
@@ -23,6 +27,8 @@ public:
 
     bool makeCurrent();
     void doneCurrent() const;
+
+    void glXSwapIntervalMESA(unsigned int interval);
 
     static std::unique_ptr<GlxContext> create(GlxBackend *backend, GLXFBConfig fbconfig, GLXWindow glxWindow);
 
@@ -34,6 +40,7 @@ private:
     std::unique_ptr<ShaderManager> m_shaderManager;
     std::unique_ptr<GLVertexBuffer> m_streamingBuffer;
     std::unique_ptr<IndexBuffer> m_indexBuffer;
+    glXSwapIntervalMESA_func m_glXSwapIntervalMESA = nullptr;
 };
 
 }

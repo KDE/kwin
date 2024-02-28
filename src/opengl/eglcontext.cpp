@@ -41,6 +41,12 @@ std::unique_ptr<EglContext> EglContext::create(EglDisplay *display, EGLConfig co
     return ret;
 }
 
+typedef void (*eglFuncPtr)();
+static eglFuncPtr getProcAddress(const char *name)
+{
+    return eglGetProcAddress(name);
+}
+
 EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context)
     : OpenGlContext(true)
     , m_display(display)
@@ -50,6 +56,8 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     , m_streamingBuffer(std::make_unique<GLVertexBuffer>(GLVertexBuffer::Stream))
     , m_indexBuffer(std::make_unique<IndexBuffer>())
 {
+    glResolveFunctions(&getProcAddress);
+    initDebugOutput();
     setShaderManager(m_shaderManager.get());
     setStreamingBuffer(m_streamingBuffer.get());
     setIndexBuffer(m_indexBuffer.get());

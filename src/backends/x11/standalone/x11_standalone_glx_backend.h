@@ -34,10 +34,6 @@ class GlxBackend;
 class GLRenderTimeQuery;
 class GlxContext;
 
-// GLX_MESA_swap_interval
-using glXSwapIntervalMESA_func = int (*)(unsigned int interval);
-extern glXSwapIntervalMESA_func glXSwapIntervalMESA;
-
 class FBConfigInfo
 {
 public:

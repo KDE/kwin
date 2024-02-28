@@ -8,14 +8,7 @@
 */
 
 #include "opengl/glplatform.h"
-// include kwinglutils_funcs.h to avoid the redeclaration issues
-// between qopengl.h and epoxy/gl.h
-#include "opengl/glutils_funcs.h"
 #include <epoxy/gl.h>
-
-#if KWIN_BUILD_X11
-#include "effect/xcb.h"
-#endif
 
 #include <QDebug>
 #include <QOpenGLContext>

@@ -166,23 +166,6 @@ GlxBackend::~GlxBackend()
     m_overlayWindow->destroy();
 }
 
-typedef void (*glXFuncPtr)();
-
-static glXFuncPtr getProcAddress(const char *name)
-{
-    glXFuncPtr ret = nullptr;
-#if HAVE_GLX
-    ret = glXGetProcAddress((const GLubyte *)name);
-#endif
-#if HAVE_DL_LIBRARY
-    if (ret == nullptr) {
-        ret = (glXFuncPtr)dlsym(RTLD_DEFAULT, name);
-    }
-#endif
-    return ret;
-}
-glXSwapIntervalMESA_func glXSwapIntervalMESA;
-
 void GlxBackend::init()
 {
     // Require at least GLX 1.3
@@ -192,13 +175,6 @@ void GlxBackend::init()
     }
 
     initExtensions();
-
-    // resolve glXSwapIntervalMESA if available
-    if (hasExtension(QByteArrayLiteral("GLX_MESA_swap_control"))) {
-        glXSwapIntervalMESA = (glXSwapIntervalMESA_func)getProcAddress("glXSwapIntervalMESA");
-    } else {
-        glXSwapIntervalMESA = nullptr;
-    }
 
     initVisualDepthHashTable();
 
@@ -225,8 +201,6 @@ void GlxBackend::init()
             m_swapStrategy = Options::ExtendDamage;
         }
     }
-
-    initGL(&getProcAddress);
 
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
@@ -622,7 +596,7 @@ void GlxBackend::setSwapInterval(int interval)
     if (m_haveEXTSwapControl) {
         glXSwapIntervalEXT(display(), glxWindow, interval);
     } else if (m_haveMESASwapControl) {
-        glXSwapIntervalMESA(interval);
+        m_context->glXSwapIntervalMESA(interval);
     } else if (m_haveSGISwapControl) {
         glXSwapIntervalSGI(interval);
     }

@@ -15,7 +15,6 @@
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
 #include "opengl/gltexture.h"
-#include "opengl/glutils_funcs.h"
 #include "opengl/glvertexbuffer.h"
 
 #include <QByteArray>
@@ -24,12 +23,6 @@
 
 namespace KWin
 {
-
-// Initializes OpenGL stuff. This includes resolving function pointers as
-//  well as checking for GL version and extensions
-//  Note that GL context has to be created by the time this function is called
-typedef void (*resolveFuncPtr)();
-void KWIN_EXPORT initGL(const std::function<resolveFuncPtr(const char *)> &resolveFunction);
 
 // detect OpenGL error (add to various places in code to pinpoint the place)
 bool KWIN_EXPORT checkGLError(const char *txt);

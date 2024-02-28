@@ -303,7 +303,6 @@ void WaylandEglBackend::init()
         return;
     }
 
-    initKWinGL();
     initWayland();
 }
 

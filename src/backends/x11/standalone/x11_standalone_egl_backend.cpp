@@ -125,8 +125,6 @@ void EglBackend::init()
         return;
     }
 
-    initKWinGL();
-
     if (!hasExtension(QByteArrayLiteral("EGL_KHR_image")) && (!hasExtension(QByteArrayLiteral("EGL_KHR_image_base")) || !hasExtension(QByteArrayLiteral("EGL_KHR_image_pixmap")))) {
         setFailed(QStringLiteral("Required support for binding pixmaps to EGLImages not found, disabling compositing"));
         return;

@@ -104,17 +104,6 @@ void AbstractEglBackend::setEglDisplay(EglDisplay *display)
     setSupportsBufferAge(m_display->supportsBufferAge());
 }
 
-typedef void (*eglFuncPtr)();
-static eglFuncPtr getProcAddress(const char *name)
-{
-    return eglGetProcAddress(name);
-}
-
-void AbstractEglBackend::initKWinGL()
-{
-    initGL(&getProcAddress);
-}
-
 void AbstractEglBackend::initWayland()
 {
     if (!WaylandServer::self()) {
