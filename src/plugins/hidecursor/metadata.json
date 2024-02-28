@@ -1,0 +1,10 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Hide mouse cursor on inactivity or keyboard input",
+        "EnabledByDefault": false,
+        "License": "GPL",
+        "Name": "Hide Cursor"
+    },
+    "X-KDE-ConfigModule": "kwin_hidecursor_config"
+}
