@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "openglcontext.h"
+#include "glframebuffer.h"
 #include "glplatform.h"
 #include "glvertexbuffer.h"
 #include "utils/common.h"
@@ -428,5 +429,33 @@ void OpenGlContext::glGetnUniformfv(GLuint program, GLint location, GLsizei bufS
     } else {
         glGetUniformfv(program, location, params);
     }
+}
+
+void OpenGlContext::pushFramebuffer(GLFramebuffer *fbo)
+{
+    if (fbo != currentFramebuffer()) {
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
+        glViewport(0, 0, fbo->size().width(), fbo->size().height());
+    }
+    m_fbos.push(fbo);
+}
+
+GLFramebuffer *OpenGlContext::popFramebuffer()
+{
+    const auto ret = m_fbos.pop();
+    if (const auto fbo = currentFramebuffer(); fbo != ret) {
+        if (fbo) {
+            glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
+            glViewport(0, 0, fbo->size().width(), fbo->size().height());
+        } else {
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+    }
+    return ret;
+}
+
+GLFramebuffer *OpenGlContext::currentFramebuffer()
+{
+    return m_fbos.empty() ? nullptr : m_fbos.top();
 }
 }

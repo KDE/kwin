@@ -21,25 +21,17 @@ namespace KWin
 
 GLFramebuffer *GLFramebuffer::currentFramebuffer()
 {
-    return s_fbos.isEmpty() ? nullptr : s_fbos.top();
+    return OpenGlContext::currentContext()->currentFramebuffer();
 }
 
 void GLFramebuffer::pushFramebuffer(GLFramebuffer *fbo)
 {
-    fbo->bind();
-    s_fbos.push(fbo);
+    OpenGlContext::currentContext()->pushFramebuffer(fbo);
 }
 
 GLFramebuffer *GLFramebuffer::popFramebuffer()
 {
-    GLFramebuffer *ret = s_fbos.pop();
-    if (!s_fbos.isEmpty()) {
-        s_fbos.top()->bind();
-    } else {
-        glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
-
-    return ret;
+    return OpenGlContext::currentContext()->popFramebuffer();
 }
 
 GLFramebuffer::GLFramebuffer()

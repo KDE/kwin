@@ -118,11 +118,7 @@ public:
 protected:
     void initColorAttachment(GLTexture *colorAttachment);
     void initDepthStencilAttachment();
-
-private:
     bool bind();
-
-    inline static QStack<GLFramebuffer *> s_fbos;
 
     GLuint m_handle = 0;
     GLuint m_depthBuffer = 0;

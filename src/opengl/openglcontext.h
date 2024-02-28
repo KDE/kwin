@@ -16,6 +16,7 @@
 
 #include <QByteArray>
 #include <QSet>
+#include <QStack>
 
 namespace KWin
 {
@@ -77,6 +78,10 @@ public:
     void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
     void glGetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
+    void pushFramebuffer(GLFramebuffer *fbo);
+    GLFramebuffer *popFramebuffer();
+    GLFramebuffer *currentFramebuffer();
+
     static OpenGlContext *currentContext();
 
 protected:
@@ -120,6 +125,7 @@ protected:
     ShaderManager *m_shaderManager = nullptr;
     GLVertexBuffer *m_streamingBuffer = nullptr;
     IndexBuffer *m_indexBuffer = nullptr;
+    QStack<GLFramebuffer *> m_fbos;
 };
 
 }
