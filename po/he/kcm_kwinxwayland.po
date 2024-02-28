@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-11-29 14:10+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -31,33 +31,39 @@ msgstr ""
 "למטרות שימוש ביישומים כאלה, האפשרות נחוצה לך, אפשר לבחור את האיזון המועדף "
 "עליך בין אבטחה לבין שימושיות."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr "לאפשר ליישומי X11 מיושנים לקרוא את הקשות המקלדת בכל היישומים:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "אף פעם לא"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "רק מקשים בלי תווים"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "רק את מקשי מטא, Ctrl,‏ Alt ו־Shift"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "כמו לעיל, בתוספת המקשים שנלחצים יחד עם המקשים Ctrl,‏ Alt או מטא"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "תמיד"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -68,8 +74,8 @@ msgstr ""
 "הרשאה לתוכנות זדוניות לגנוב את הסיסמאות שלך ולרגל אחרי הטקסט המוקלד. נא "
 "לוודא שהכשלים האלו ברורים לך ומוסכמים עליך."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "רק את מקשי מטא, Ctrl,‏ Alt ו־Shift"
+#~ msgid "Only non-character keys"
+#~ msgstr "רק מקשים בלי תווים"
 
 #~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 #~ msgstr "כל המקשים אבל רק אם נלחצים יחד עם המקשים מטא, Ctrl,‏ Alt או Shift"

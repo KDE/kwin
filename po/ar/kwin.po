@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-27 00:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-02-15 17:21+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2196,24 +2196,24 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "المفاتيح المغيِّرة لرسم السهم:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:67
+#: plugins/nightlight/nightlightmanager.cpp:67
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "الإضاءة الليلية معطل"
 
-#: plugins/nightcolor/nightcolormanager.cpp:68
+#: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "الإضاءة الليلية مفعلة"
 
-#: plugins/nightcolor/nightcolormanager.cpp:89
+#: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgid "Toggle Night Light"
 msgstr "بدل حالة الإضاءة الليلية"
 
-#: plugins/nightcolor/nightcolormanager.cpp:467
+#: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "معاينة حرارة اللون"
@@ -2540,7 +2540,7 @@ msgstr "أضف مساحة عائمة"
 msgid "Delete"
 msgstr "احذف"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
@@ -2795,32 +2795,32 @@ msgstr "أقل"
 msgid "More"
 msgstr "أكثر"
 
-#: plugins/zoom/zoom.cpp:68
+#: plugins/zoom/zoom.cpp:70
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "حرك المنطقة المكبرة لليسار"
 
-#: plugins/zoom/zoom.cpp:75
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "حرك المنطقة المكبرة لليمين"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "حرك المنطقة المكبرة للأعلى"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "حرك المنطقة المكبرة للأسفل"
 
-#: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "حرك الفأرة للتركيز"
 
-#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "حرك الفأرة للوسط"
@@ -4139,7 +4139,7 @@ msgstr "بدّل إلى سطح المكتب الأسفل"
 msgid "Switch to Desktop %1"
 msgstr "بدّل إلى سطح المكتب %1"
 
-#: window.cpp:3118
+#: window.cpp:3136
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

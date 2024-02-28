@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-01-11 12:44+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 23.08.4\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -31,24 +31,24 @@ msgstr ""
 "Ha ilyen alkalmazásokat szeretne használni, itt kiválaszthatja a biztonság "
 "és a funkcionalitás kívánt egyensúlyát."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Más alkalmazásokban beírt billentyűleütések olvasásának engedélyezése "
 "örökölt X11 alkalmazásoknak:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Soha"
 
-#: ui/main.qml:68
+#: ui/main.qml:55
 #, kde-format
-msgid "Only non-character keys"
-msgstr "Csak nem karakter billentyűk"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr ""
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -56,12 +56,17 @@ msgstr ""
 "Mint fent, plusz bármely billentyű, amelyet a Control, Alt vagy Meta "
 "billentyűk lenyomva tartása közben gépeltek be"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Mindig"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -72,3 +77,6 @@ msgstr ""
 "biztonságát az X11 munkamenet szintjére azzal, hogy lehetővé teszi "
 "rosszindulatú szoftvereknek jelszavak ellopását vagy a begépelt szöveg utáni "
 "kémkedést. Győzödjön meg róla, hogy megértette és elfogadja ezt a kockázatot."
+
+#~ msgid "Only non-character keys"
+#~ msgstr "Csak nem karakter billentyűk"

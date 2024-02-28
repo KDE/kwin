@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-11-30 18:56+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: translate-po (https://github.com/zcribe/translate-po)\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -32,23 +32,23 @@ msgstr ""
 "programojn, vi povas elekti vian preferatan ekvilibron de sekureco kaj "
 "funkcieco ĉi tie."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Permesu al heredaj X11-aplikoj legi klavopremojn tajpitajn en ĉiuj aplikaĵoj:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Neniam"
 
-#: ui/main.qml:68
+#: ui/main.qml:55
 #, kde-format
-msgid "Only non-character keys"
-msgstr "Nur ne-signajn klavojn"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr ""
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -56,12 +56,17 @@ msgstr ""
 "Kiel supre, plus iu klavo tajpita dum kiam la Ctrl-, Alt- aŭ Meta-klavo "
 "estas premata"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Ĉiam"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -72,3 +77,6 @@ msgstr ""
 "seanco permesante malican programaron ŝteli pasvortojn kaj spioni la "
 "tekston, kiun vi tajpas. Certiĝu, ke vi komprenas kaj akceptas ĉi tiun "
 "riskon."
+
+#~ msgid "Only non-character keys"
+#~ msgstr "Nur ne-signajn klavojn"

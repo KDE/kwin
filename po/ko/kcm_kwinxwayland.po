@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-02-10 00:12+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Lokalize 23.08.1\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -30,33 +30,39 @@ msgstr ""
 "로 인하여 이 기능은 기본적으로 비활성화되어 있습니다. 이러한 앱을 사용해야 한"
 "다면 보안과 기능성 사이에서 선택할 수 있습니다."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr "레거시 X11 앱에서 모든 앱의 키보드 입력 읽기 허용:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "하지 않음"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "문자열이 아닌 키만"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "Meta, Ctrl, Alt, Shift 키만"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "위 키와 Ctrl, Alt, Meta 키를 누르고 있을 때 입력한 모든 키"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "항상"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -67,5 +73,5 @@ msgstr ""
 "어에서 입력하는 텍스트를 엿보거나 암호를 훔칠 수도 있습니다. 위험에 대해서 이"
 "해하는 경우에만 이 설정을 변경하십시오."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Meta, Ctrl, Alt, Shift 키만"
+#~ msgid "Only non-character keys"
+#~ msgstr "문자열이 아닌 키만"

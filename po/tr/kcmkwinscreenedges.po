@@ -4,13 +4,13 @@
 # Serdar Soytetir <tulliana@gmail.com>, 2009, 2012.
 # Ozan Çağlayan <ozan@pardus.org.tr>, 2010.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2014, 2015, 2017.
-# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-27 00:38+0000\n"
-"PO-Revision-Date: 2023-12-08 15:59+0300\n"
+"PO-Revision-Date: 2024-02-27 12:51+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.04.70\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -38,7 +38,7 @@ msgstr "Ekranı Kilitle"
 #: main.cpp:154 touch.cpp:121
 #, kde-format
 msgid "Show KRunner"
-msgstr "K Çalıştır'ı Göster"
+msgstr "K Çalıştır’ı Göster"
 
 #: main.cpp:155 touch.cpp:122
 #, kde-format
@@ -58,17 +58,17 @@ msgstr "Pencereleri Sun"
 #: main.cpp:161 touch.cpp:128
 #, kde-format
 msgid "%1 - All Desktops"
-msgstr "%1 - Tüm Masaüstleri"
+msgstr "%1 — Tüm Masaüstleri"
 
 #: main.cpp:162 touch.cpp:129
 #, kde-format
 msgid "%1 - Current Desktop"
-msgstr "%1 - Geçerli Masaüstü"
+msgstr "%1 — Geçerli Masaüstü"
 
 #: main.cpp:163 touch.cpp:130
 #, kde-format
 msgid "%1 - Current Application"
-msgstr "%1 - Geçerli Uygulama"
+msgstr "%1 — Geçerli Uygulama"
 
 #: main.cpp:165 touch.cpp:132
 #, kde-format
@@ -78,7 +78,7 @@ msgstr "Genel Görünüm"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Izgara"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format

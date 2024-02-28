@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-27 00:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2213,7 +2213,7 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Modifier keys:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:67
+#: plugins/nightlight/nightlightmanager.cpp:67
 #, fuzzy, kde-format
 #| msgctxt "Night Color was disabled"
 #| msgid "Night Color Off"
@@ -2221,7 +2221,7 @@ msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Night Colour Off"
 
-#: plugins/nightcolor/nightcolormanager.cpp:68
+#: plugins/nightlight/nightlightmanager.cpp:68
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
@@ -2229,13 +2229,13 @@ msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Night Colour On"
 
-#: plugins/nightcolor/nightcolormanager.cpp:89
+#: plugins/nightlight/nightlightmanager.cpp:89
 #, fuzzy, kde-format
 #| msgid "Toggle Night Color"
 msgid "Toggle Night Light"
 msgstr "Toggle Night Colour"
 
-#: plugins/nightcolor/nightcolormanager.cpp:467
+#: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Colour Temperature Preview"
@@ -2570,7 +2570,7 @@ msgstr "Add Floating Tile"
 msgid "Delete"
 msgstr "Delete"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
@@ -2825,32 +2825,32 @@ msgstr "Less"
 msgid "More"
 msgstr "More"
 
-#: plugins/zoom/zoom.cpp:68
+#: plugins/zoom/zoom.cpp:70
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Move Zoomed Area to Left"
 
-#: plugins/zoom/zoom.cpp:75
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Move Zoomed Area to Right"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Move Zoomed Area Upwards"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Move Zoomed Area Downwards"
 
-#: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Move Mouse to Focus"
 
-#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Move Mouse to Centre"
@@ -4175,7 +4175,7 @@ msgstr "Switch One Desktop Down"
 msgid "Switch to Desktop %1"
 msgstr "Switch to Desktop %1"
 
-#: window.cpp:3118
+#: window.cpp:3136
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

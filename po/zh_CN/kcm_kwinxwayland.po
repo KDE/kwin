@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-02-05 11:37\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -17,7 +17,7 @@ msgstr ""
 "X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwinxwayland.pot\n"
 "X-Crowdin-File-ID: 43323\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -29,33 +29,38 @@ msgstr ""
 "快捷键的功能。出于安全考虑，此功能默认是禁用的。如果您需要使用这种应用程序，"
 "您可以按需在安全和功能之间作出权衡。"
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr "允许旧式 X11 应用程序读取在所有应用程序中的键盘输入："
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "永不"
 
-#: ui/main.qml:68
+#: ui/main.qml:55
 #, kde-format
-msgid "Only non-character keys"
-msgstr "仅非字符按键"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr ""
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "和上面一样，加上按住 Ctrl、Alt、Meta 等修饰键时输入的任何按键"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "总是"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -64,3 +69,6 @@ msgid ""
 msgstr ""
 "请注意，使用这些设置将使得恶意软件能够盗取密码、监听您输入的内容，从而降低 "
 "X11 桌面进程的系统安全性。请确保您充分理解并接受随之而来的风险。"
+
+#~ msgid "Only non-character keys"
+#~ msgstr "仅非字符按键"

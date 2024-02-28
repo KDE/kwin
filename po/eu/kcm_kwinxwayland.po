@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-11-29 22:34+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 23.08.3\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -35,24 +35,25 @@ msgstr ""
 "baduzu, hemen, segurtasuna eta funtzionaltasunaren arteko oreka hobetsia "
 "aukeratu dezakezu."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Baimendu X11 ondare aplikazioek aplikazio guztietan tekleatutako tekla-"
 "sakatzeak irakurtzea:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Inoiz ez"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "Karaktere ez diren teklak bakarrik"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "Bakarrik Meta, Kontrol, Alt, eta Maius teklak"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -60,12 +61,17 @@ msgstr ""
 "Gorago bezala, gehi, Kontrol, Alt, edo Meta teklak sakatu bitartean "
 "tekleatutako edozein tekla"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Beti"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -77,8 +83,8 @@ msgstr ""
 "lapurtzen eta tekleatzen duzun testua zelatatzen utziz. Ziurtatu arrisku "
 "hori ulertu eta onartzen duzula."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Bakarrik Meta, Kontrol, Alt, eta Maius teklak"
+#~ msgid "Only non-character keys"
+#~ msgstr "Karaktere ez diren teklak bakarrik"
 
 #~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 #~ msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-11-29 16:27+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Lokalize 23.11.70\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -32,24 +32,25 @@ msgstr ""
 "gerekiyorsa işlevsellik ve güvenlik arasındaki dengeyi buradan "
 "ayarlayabilirsiniz."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Eski X11 uygulamalarının tüm uygulamalardaki düğme basımlarını okumasına "
 "izin ver:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Hiçbir zaman"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "Yalnızca karakter olmayan düğmeler"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "Yalnızca Meta, Kontrol, Seçenek ve Üst Karakter düğmeleri"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -57,12 +58,17 @@ msgstr ""
 "Yukarıdaki gibi; ek olarak Kontrol, Seçenek veya Meta düğmeleri basılıyken "
 "basılan herhangi bir düğme"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Her zaman"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -74,8 +80,8 @@ msgstr ""
 "güvenliğini azaltacağını not edin. Riski anladığınızdan ve bunu bilerek "
 "kabul ettiğinizden emin olun."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Yalnızca Meta, Kontrol, Seçenek ve Üst Karakter düğmeleri"
+#~ msgid "Only non-character keys"
+#~ msgstr "Yalnızca karakter olmayan düğmeler"
 
 #~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 #~ msgstr ""

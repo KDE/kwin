@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-01-20 19:13+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -18,7 +18,7 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Lokalize 23.08.1\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -31,22 +31,23 @@ msgstr ""
 "الخيار معطل افتراضيًا لأسباب أمنية. إذا كنت بحاجة إلى استخدام مثل هذه "
 "التطبيقات، فيمكنك اختيار توازن الأمان والوظائف المفضل لديك هنا."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr "اسمح لتطبيقات اكس11 القديمة بقراءة المفاتيح المضغوطة في كل التطبيقات:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "لا، مطلقاً"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "فقط المفاتيح غير حرفية"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "فقط مفاتيح Meta و Control و Alt و Shift"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -54,12 +55,17 @@ msgstr ""
 "كما هو مذكور أعلاه، بالإضافة إلى أي مفتاح يتم كتابته أثناء الضغط على مفاتيح "
 "Control أو Alt أو Meta"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "دائما"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -70,8 +76,8 @@ msgstr ""
 "السماح للبرامج الضارة بسرقة كلمات المرور والتجسس على النص الذي تكتبه. تأكد "
 "من فهمك وقبول هذا الخطر."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "فقط مفاتيح Meta و Control و Alt و Shift"
+#~ msgid "Only non-character keys"
+#~ msgstr "فقط المفاتيح غير حرفية"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-12-11 18:05+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.12.3\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -30,24 +30,25 @@ msgstr ""
 "sallita. Jos käytät tällaisia sovelluksia, voit tässä tasapainottaa "
 "tietoturvaa ja toiminnallisuutta haluamallasi tapaa."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Salli vanhojen X11-sovellusten lukea kaikkien sovellusten "
 "näppäinpainallukset:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Ei koskaan"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "Vain ei-merkkinäppäimet"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "Vain Meta-, Ctrl-, Alt- ja vaihtonäppäimet"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -55,12 +56,17 @@ msgstr ""
 "Kuten yllä sekä mikä tahansa näppäin, jos Ctrl-, Alt- tai Meta-näppäintä "
 "painetaan"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Aina"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -71,8 +77,8 @@ msgstr ""
 "istunnon tasolle, jolloin pahantahtoiset ohjelmat voivat varastaa salasanan "
 "ja nähdä kirjoitetun tekstin. Varmista, että ymmärrät ja hyväksyt riskin."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Vain Meta-, Ctrl-, Alt- ja vaihtonäppäimet"
+#~ msgid "Only non-character keys"
+#~ msgstr "Vain ei-merkkinäppäimet"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "

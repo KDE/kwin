@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-11-30 01:11+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 23.08.3\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -34,24 +34,25 @@ msgstr ""
 "aplicaciones, aquí puede escoger su equilibrio preferido de seguridad y "
 "funcionalidad."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Permitir que las aplicaciones X11 heredadas lean pulsaciones de teclas de "
 "todas las aplicaciones:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Nunca"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "Solo teclas que no sean caracteres"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "Solo las teclas Meta, Control, Alt y Mayúsculas"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -59,12 +60,17 @@ msgstr ""
 "Como más arriba, además de cualquier tecla pulsada en combinación con las "
 "teclas Control, Alt o Meta"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Siempre"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -76,8 +82,8 @@ msgstr ""
 "contraseñas y espíe el texto que escribe. Asegúrese de comprender y aceptar "
 "este riesgo."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Solo las teclas Meta, Control, Alt y Mayúsculas"
+#~ msgid "Only non-character keys"
+#~ msgstr "Solo teclas que no sean caracteres"
 
 #~ msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
 #~ msgstr ""

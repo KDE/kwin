@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-27 00:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-02-15 18:38+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2219,24 +2219,24 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Geziak marrazteko tekla aldarazleak:"
 
-#: plugins/nightcolor/nightcolormanager.cpp:67
+#: plugins/nightlight/nightlightmanager.cpp:67
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
 msgstr "Gaueko argia itzalita"
 
-#: plugins/nightcolor/nightcolormanager.cpp:68
+#: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
 msgstr "Gaueko argia piztuta"
 
-#: plugins/nightcolor/nightcolormanager.cpp:89
+#: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgid "Toggle Night Light"
 msgstr "Txandakatu gaueko argia"
 
-#: plugins/nightcolor/nightcolormanager.cpp:467
+#: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Kolore-tenperaturaren aurreikuspegia"
@@ -2564,7 +2564,7 @@ msgstr "Gehitu lauza higikorra"
 msgid "Delete"
 msgstr "Ezabatu"
 
-#: plugins/trackmouse/trackmouse.cpp:46
+#: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
 #, kde-format
 msgid "Track mouse"
@@ -2819,32 +2819,32 @@ msgstr "Gutxiago"
 msgid "More"
 msgstr "Gehiago"
 
-#: plugins/zoom/zoom.cpp:68
+#: plugins/zoom/zoom.cpp:70
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Mugitu zoom-eremua eskuinera"
 
-#: plugins/zoom/zoom.cpp:75
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Mugitu zoom-eremua eskuinera"
 
-#: plugins/zoom/zoom.cpp:82
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Mugitu zoom-eremua gorantz"
 
-#: plugins/zoom/zoom.cpp:89
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Mugitu zoom-eremua beherantz"
 
-#: plugins/zoom/zoom.cpp:97 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Eraman sagua fokurantz"
 
-#: plugins/zoom/zoom.cpp:104 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Mugitu sagua erdialdera"
@@ -4171,7 +4171,7 @@ msgstr "Aldatu beheko mahaigainera"
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"
 
-#: window.cpp:3118
+#: window.cpp:3136
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

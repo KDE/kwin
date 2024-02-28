@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-01-24 16:41+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -19,7 +19,7 @@ msgstr ""
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -34,24 +34,24 @@ msgstr ""
 "programomis, čia galite pasirinkti pageidaujamą saugumo ir funkcionalumo "
 "balansą."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Leisti pasenusioms X11 programoms skaityti visose programose paspaudžiamus "
 "klavišus:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Niekada"
 
-#: ui/main.qml:68
+#: ui/main.qml:55
 #, kde-format
-msgid "Only non-character keys"
-msgstr "Tik ne simbolių klavišus"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr ""
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -59,12 +59,17 @@ msgstr ""
 "Tas pats, kaip aukščiau ir dar papildomai bet kuriuos klavišus, kurie rašomi "
 "nuspaudus Vald, Alt ar Meta klavišus"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Visada"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -75,3 +80,6 @@ msgstr ""
 "X11 seanso lygio, nes kenkėjiškai programinei įrangai atsiras galimybė vogti "
 "jūsų slaptažodžius ir šnipinėti renkamą tekstą. Įsitikinkite, kad suvokiate "
 "šią riziką ir sutinkate ją prisiimti."
+
+#~ msgid "Only non-character keys"
+#~ msgstr "Tik ne simbolių klavišus"

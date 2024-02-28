@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2024-01-22 18:24+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "2);\n"
 "X-Generator: Lokalize 23.08.4\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -32,23 +32,23 @@ msgstr ""
 "Tomēr, ja jums ir nepieciešamas šādas programmas, varat izvēlēties sev "
 "vēlamo drošības un funkcionalitātes līdzsvaru."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Atļaut vecajām X11 programmām lasīt taustiņu spiedienus visās programmās:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Nekad"
 
-#: ui/main.qml:68
+#: ui/main.qml:55
 #, kde-format
-msgid "Only non-character keys"
-msgstr "Tikai taustiņus, kas nav rakstzīme"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr ""
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -56,12 +56,17 @@ msgstr ""
 "Kā iepriekš un vēl jebkuru taustiņu, kas ir nospiests arī „Control“, „Alt“ "
 "vai „Meta“ taustiņš"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Vienmēr"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -71,3 +76,6 @@ msgstr ""
 "Ievērojiet, ka šis iestatījums samazinās X11 sesijas drošumu, ļaunprātīgām "
 "programmām atļaujot zagt paroles un spiegot rakstīto tekstu. "
 "Pārliecinieties, ka apzināties un saprotat risku."
+
+#~ msgid "Only non-character keys"
+#~ msgstr "Tikai taustiņus, kas nav rakstzīme"

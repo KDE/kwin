@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-29 01:38+0000\n"
+"POT-Creation-Date: 2024-02-28 00:38+0000\n"
 "PO-Revision-Date: 2023-12-05 16:08+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Lokalize 23.08.3\n"
 
-#: ui/main.qml:47
+#: ui/main.qml:32
 #, kde-format
 msgid ""
 "Legacy X11 apps require the ability to read keystrokes typed in other apps "
@@ -33,35 +33,41 @@ msgstr ""
 "соображений безопасности. Данный модуль позволяет настроить баланс между "
 "безопасностью и функциональностью для таких приложений."
 
-#: ui/main.qml:64
+#: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
 "Разрешить передачу следующих событий ввода с клавиатуры для всех устаревших "
 "приложений X11:"
 
-#: ui/main.qml:65
+#: ui/main.qml:49
 #, kde-format
 msgid "Never"
 msgstr "Ничего"
 
-#: ui/main.qml:68
-#, kde-format
-msgid "Only non-character keys"
-msgstr "Только несимвольных клавиш"
+#: ui/main.qml:55
+#, fuzzy, kde-format
+#| msgid "Only Meta, Control, Alt, and Shift keys"
+msgid "Only Meta, Control, Alt and Shift keys"
+msgstr "Только нажатия клавиш Meta, Control, Alt и Shift"
 
-#: ui/main.qml:71
+#: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "Указанное выше, но только в сочетании с Meta, Ctrl, Alt или Shift"
 
-#: ui/main.qml:75
+#: ui/main.qml:68
 #, kde-format
 msgid "Always"
 msgstr "Нажатия всех клавиш без ограничений"
 
-#: ui/main.qml:82
+#: ui/main.qml:78
+#, kde-format
+msgid "Additionally include mouse buttons"
+msgstr ""
+
+#: ui/main.qml:89
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
@@ -73,8 +79,8 @@ msgstr ""
 "и отслеживать вводимый вами текст. Убедитесь, что вы понимаете и принимаете "
 "этот риск."
 
-#~ msgid "Only Meta, Control, Alt, and Shift keys"
-#~ msgstr "Только нажатия клавиш Meta, Control, Alt и Shift"
+#~ msgid "Only non-character keys"
+#~ msgstr "Только несимвольных клавиш"
 
 #~ msgid ""
 #~ "This module lets configure which keyboard events are forwarded to X11 "
