@@ -14,7 +14,7 @@ namespace KWin
 
 GLRenderTimeQuery::GLRenderTimeQuery()
 {
-    if (GLPlatform::instance()->supports(GLFeature::TimerQuery)) {
+    if (OpenGlContext::currentContext()->supportsTimerQueries()) {
         glGenQueries(1, &m_gpuProbe.query);
     }
 }

@@ -1051,7 +1051,7 @@ void GLPlatform::printResults() const
     }
     print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
     print(QByteArrayLiteral("Virtual Machine:"), m_virtualMachine ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
-    print(QByteArrayLiteral("Timer query support:"), supports(GLFeature::TimerQuery) ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
+    print(QByteArrayLiteral("Timer query support:"), m_context->supportsTimerQueries() ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
 }
 
 bool GLPlatform::supports(GLFeature feature) const
@@ -1059,8 +1059,6 @@ bool GLPlatform::supports(GLFeature feature) const
     switch (feature) {
     case GLFeature::LooseBinding:
         return m_looseBinding;
-    case GLFeature::TimerQuery:
-        return m_context && m_context->supportsTimerQueries();
     }
     return false;
 }

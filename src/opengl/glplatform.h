@@ -30,11 +30,6 @@ enum class GLFeature {
      * has changed.
      */
     LooseBinding,
-
-    /**
-     * Set if the driver supports GL_ARB_timer_query extension or OpenGL 3.3.
-     */
-    TimerQuery,
 };
 
 enum Driver {
