@@ -106,8 +106,8 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
     if (marks.isEmpty() && drawing.isEmpty()) {
         return;
     }
-    if (effects->isOpenGLCompositing()) {
-        if (!GLPlatform::instance()->isGLES()) {
+    if (const auto context = effects->openglContext()) {
+        if (!context->isOpenglES()) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -142,7 +142,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
             vbo->render(GL_LINE_STRIP);
         }
         glLineWidth(1.0);
-        if (!GLPlatform::instance()->isGLES()) {
+        if (!context->isOpenglES()) {
             glDisable(GL_LINE_SMOOTH);
             glDisable(GL_BLEND);
         }

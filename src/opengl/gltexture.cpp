@@ -155,14 +155,15 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
 
     Q_ASSERT(d->m_owning);
 
+    const auto context = OpenGlContext::currentContext();
     GLenum glFormat;
     GLenum type;
     QImage::Format uploadFormat;
-    if (!GLPlatform::instance()->isGLES()) {
+    if (!context->isOpenglES()) {
         const QImage::Format index = image.format();
 
         if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !OpenGlContext::currentContext()->supports16BitTextures())) {
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !context->supports16BitTextures())) {
             glFormat = formatTable[index].format;
             type = formatTable[index].type;
             uploadFormat = index;
@@ -172,7 +173,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
             uploadFormat = QImage::Format_ARGB32_Premultiplied;
         }
     } else {
-        if (OpenGlContext::currentContext()->supportsARGB32Textures()) {
+        if (context->supportsARGB32Textures()) {
             glFormat = GL_BGRA_EXT;
             type = GL_UNSIGNED_BYTE;
             uploadFormat = QImage::Format_ARGB32_Premultiplied;
@@ -182,7 +183,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
             uploadFormat = QImage::Format_RGBA8888_Premultiplied;
         }
     }
-    bool useUnpack = OpenGlContext::currentContext()->supportsTextureUnpack() && image.format() == uploadFormat && !src.isNull();
+    bool useUnpack = context->supportsTextureUnpack() && image.format() == uploadFormat && !src.isNull();
 
     QImage im;
     if (useUnpack) {
@@ -451,7 +452,7 @@ OutputTransform GLTexture::contentTransform() const
 
 void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
 {
-    if (!GLPlatform::instance()->isGLES()) {
+    if (!OpenGlContext::currentContext()->isOpenglES()) {
         const GLuint swizzle[] = {red, green, blue, alpha};
         glTexParameteriv(d->m_target, GL_TEXTURE_SWIZZLE_RGBA, (const GLint *)swizzle);
     } else {
@@ -494,7 +495,7 @@ QImage GLTexture::toImage()
     }
     QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
 
-    if (GLPlatform::instance()->isGLES()) {
+    if (OpenGlContext::currentContext()->isOpenglES()) {
         GLFramebuffer fbo(this);
         GLFramebuffer::pushFramebuffer(&fbo);
         glReadPixels(0, 0, width(), height(), GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
@@ -528,8 +529,9 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     }
     glBindTexture(GL_TEXTURE_2D, texture);
 
-    if (!GLPlatform::instance()->isGLES()) {
-        if (OpenGlContext::currentContext()->supportsTextureStorage()) {
+    const auto context = OpenGlContext::currentContext();
+    if (!context->isOpenglES()) {
+        if (context->supportsTextureStorage()) {
             glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.width(), size.height());
         } else {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, levels - 1);
@@ -540,7 +542,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
         // The format parameter in glTexSubImage() must match the internal format
         // of the texture, so it's important that we allocate the texture with
         // the format that will be used in update() and clear().
-        const GLenum format = OpenGlContext::currentContext()->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
+        const GLenum format = context->supportsARGB32Textures() ? GL_BGRA_EXT : GL_RGBA;
         glTexImage2D(GL_TEXTURE_2D, 0, format, size.width(), size.height(), 0,
                      format, GL_UNSIGNED_BYTE, nullptr);
 
@@ -564,8 +566,9 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     }
     glBindTexture(GL_TEXTURE_2D, texture);
 
+    const auto context = OpenGlContext::currentContext();
     GLenum internalFormat;
-    if (!GLPlatform::instance()->isGLES()) {
+    if (!context->isOpenglES()) {
         QImage im;
         GLenum format;
         GLenum type;
@@ -573,7 +576,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
         const QImage::Format index = image.format();
 
         if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !OpenGlContext::currentContext()->supports16BitTextures())) {
+            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !context->supports16BitTextures())) {
             internalFormat = formatTable[index].internalFormat;
             format = formatTable[index].format;
             type = formatTable[index].type;
@@ -585,7 +588,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
             type = GL_UNSIGNED_INT_8_8_8_8_REV;
         }
 
-        if (OpenGlContext::currentContext()->supportsARGB32Textures()) {
+        if (context->supportsARGB32Textures()) {
             glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, im.width(), im.height());
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, im.width(), im.height(),
                             format, type, im.constBits());
@@ -597,7 +600,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     } else {
         internalFormat = GL_RGBA8;
 
-        if (OpenGlContext::currentContext()->supportsARGB32Textures()) {
+        if (context->supportsARGB32Textures()) {
             const QImage im = image.convertToFormat(QImage::Format_ARGB32_Premultiplied);
             glTexImage2D(GL_TEXTURE_2D, 0, GL_BGRA_EXT, im.width(), im.height(),
                          0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, im.constBits());

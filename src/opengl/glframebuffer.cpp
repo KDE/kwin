@@ -153,9 +153,9 @@ void GLFramebuffer::initColorAttachment(GLTexture *colorAttachment)
 void GLFramebuffer::initDepthStencilAttachment()
 {
     GLuint buffer = 0;
-
+    const auto context = OpenGlContext::currentContext();
     // Try to attach a depth/stencil combined attachment.
-    if (OpenGlContext::currentContext()->supportsBlits()) {
+    if (context->supportsBlits()) {
         glGenRenderbuffers(1, &buffer);
         glBindRenderbuffer(GL_RENDERBUFFER, buffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_size.width(), m_size.height());
@@ -173,8 +173,8 @@ void GLFramebuffer::initDepthStencilAttachment()
 
     // Try to attach a depth attachment separately.
     GLenum depthFormat;
-    if (GLPlatform::instance()->isGLES()) {
-        if (OpenGlContext::currentContext()->supportsGLES24BitDepthBuffers()) {
+    if (context->isOpenglES()) {
+        if (context->supportsGLES24BitDepthBuffers()) {
             depthFormat = GL_DEPTH_COMPONENT24;
         } else {
             depthFormat = GL_DEPTH_COMPONENT16;
@@ -195,7 +195,7 @@ void GLFramebuffer::initDepthStencilAttachment()
 
     // Try to attach a stencil attachment separately.
     GLenum stencilFormat;
-    if (GLPlatform::instance()->isGLES()) {
+    if (context->isOpenglES()) {
         stencilFormat = GL_STENCIL_INDEX8;
     } else {
         stencilFormat = GL_STENCIL_INDEX;
