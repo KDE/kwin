@@ -1,6 +1,6 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the kwin package.
-# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2011, 2012, 2013, 2020, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2009, 2010, 2011, 2012, 2013, 2020, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2013.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-13 00:58+0000\n"
-"PO-Revision-Date: 2022-12-28 21:03+0000\n"
+"PO-Revision-Date: 2024-02-27 21:29+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -182,7 +182,7 @@ msgstr "Ferestre ascunse"
 #: main.ui:396
 #, kde-format
 msgid "Shortcuts"
-msgstr "Acceleratori"
+msgstr "Scurtături"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -239,179 +239,3 @@ msgstr ""
 #, kde-format
 msgid "Show selected window"
 msgstr "Arată fereastra aleasă"
-
-#~ msgid "Tabbox layout preview"
-#~ msgstr "Previzualizare aranjament cutie tab"
-
-#~ msgid "Outline selected window"
-#~ msgstr "Conturează fereastra aleasă"
-
-#~ msgid ""
-#~ "These settings are used by the \"Walk Through Windows Alternative\" "
-#~ "actions."
-#~ msgstr ""
-#~ "Aceste setări sunt folosite de acțiunile „Comută printre ferestre "
-#~ "alternativ”."
-
-#~ msgid "Walk Through Windows"
-#~ msgstr "Comută printre ferestre"
-
-#~ msgid "Walk Through Windows (Reverse)"
-#~ msgstr "Comută printre ferestre (invers)"
-
-#~ msgid "Walk Through Windows Alternative"
-#~ msgstr "Comută printre ferestre alternativ"
-
-#~ msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgstr "Comută printre ferestre alternativ (invers)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application"
-#~ msgstr "Comută printre ferestre alternativ"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application (Reverse)"
-#~ msgstr "Comută printre ferestre alternativ (invers)"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative"
-#~ msgid "Walk Through Windows of Current Application Alternative"
-#~ msgstr "Comută printre ferestre alternativ"
-
-#, fuzzy
-#~| msgid "Walk Through Windows Alternative (Reverse)"
-#~ msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-#~ msgstr "Comută printre ferestre alternativ (invers)"
-
-#~ msgctxt ""
-#~ "ComboBox item for window switcher based on layouts instead of a desktop "
-#~ "effect"
-#~ msgid "Layout based switcher"
-#~ msgstr "Comutator bazat pe aranjament"
-
-#~ msgid "Configure Layout"
-#~ msgstr "Configurează aranjament"
-
-#~ msgctxt "NAME OF TRANSLATORS"
-#~ msgid "Your names"
-#~ msgstr "Sergiu Bivol"
-
-#~ msgctxt "EMAIL OF TRANSLATORS"
-#~ msgid "Your emails"
-#~ msgstr "sergiu@ase.md"
-
-#~ msgid "These settings are used by the \"Walk Through Windows\" actions."
-#~ msgstr "Aceste setări sunt folosite de acțiunile „Comută printre ferestre”."
-
-#, fuzzy
-#~| msgid "All Desktops Grouped by Applications"
-#~ msgid "All windows from all applications"
-#~ msgstr "Toate birourile grupate după aplicații"
-
-#, fuzzy
-#~| msgid "Adds an entry to minimize all windows."
-#~ msgid "Exclude minimized windows"
-#~ msgstr "Adaugă o înregistrare pentru minimizarea tuturor ferestrelor."
-
-#, fuzzy
-#~| msgid "Adds an entry to minimize all windows."
-#~ msgid "Show desktop to minimize all windows"
-#~ msgstr "Adaugă o înregistrare pentru minimizarea tuturor ferestrelor."
-
-#~ msgid "Highlight selected window"
-#~ msgstr "Evidențiază fereastra aleasă"
-
-#~ msgid "Effect:"
-#~ msgstr "Efect:"
-
-#~ msgid "Display list while switching"
-#~ msgstr "Afișează lista la comutare"
-
-#~ msgctxt "Name for a window switcher layout showing live window thumbnails"
-#~ msgid "Thumbnails"
-#~ msgstr "Miniaturi"
-
-#~ msgctxt "Name for a window switcher layout showing icon, name and desktop"
-#~ msgid "Informative"
-#~ msgstr "Informativ"
-
-#~ msgctxt "Name for a window switcher layout showing only icon and name"
-#~ msgid "Compact"
-#~ msgstr "Compact"
-
-#~ msgctxt "Name for a window switcher layout showing only the name"
-#~ msgid "Text"
-#~ msgstr "Numai text"
-
-#~ msgctxt "Name for a window switcher layout showing large icons"
-#~ msgid "Large Icons"
-#~ msgstr "Pictograme mari"
-
-#~ msgctxt "Name for a window switcher layout showing small icons"
-#~ msgid "Small Icons"
-#~ msgstr "Pictograme mici"
-
-#~ msgid "No Effect"
-#~ msgstr "Fără efect"
-
-#~ msgid "Configure Layout..."
-#~ msgstr "Configurare aranjament..."
-
-#~ msgid "Item Layout"
-#~ msgstr "Aranjament elemente"
-
-#~ msgid "Item layout:"
-#~ msgstr "Aranjament elemente:"
-
-#~ msgid "Layout:"
-#~ msgstr "Aranjament:"
-
-#~ msgid "Vertical"
-#~ msgstr "Vertical"
-
-#~ msgid "Horizontal"
-#~ msgstr "Orizontal"
-
-#~ msgid "Tabular"
-#~ msgstr "Tabular"
-
-#~ msgid "Width:"
-#~ msgstr "Lățime:"
-
-#~ msgid "Minimum width, as a percentage of screen width."
-#~ msgstr "Lățimea minimă, ca procente din lățimea ecranului."
-
-#~ msgid " %"
-#~ msgstr " %"
-
-#~ msgid "Height:"
-#~ msgstr "Înălțime:"
-
-#~ msgid "Minimum height, as a percentage of screen height."
-#~ msgstr "Înălțimea minimă, ca procente din înălțimea ecranului."
-
-#~ msgid "Show Selected Item"
-#~ msgstr "Arată elementul ales"
-
-#~ msgid "Selected item view:"
-#~ msgstr "Vizualizare element ales:"
-
-#~ msgid "Top"
-#~ msgstr "Sus"
-
-#~ msgid "Bottom"
-#~ msgstr "Jos"
-
-#~ msgid "Left"
-#~ msgstr "Stânga"
-
-#~ msgid "Right"
-#~ msgstr "Dreapta"
-
-#~ msgid "Selected item layout:"
-#~ msgstr "Alegeți aranjare elemente:"
-
-#~ msgid "General"
-#~ msgstr "General"

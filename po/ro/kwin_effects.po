@@ -3,7 +3,7 @@
 # Copyright (C) 2008 This_file_is_part_of_KDE
 # This file is distributed under the same license as the kwin_effects package.
 # Laurenţiu Buzdugan <lbuz@rolix.org>, 2008, 2009".
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2012, 2013, 2020, 2021, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2012, 2013, 2020, 2021, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 # Cristian Buzduga <cristianbzdg@gmail.com>, 2011.
 #
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2022-12-28 21:13+0000\n"
+"PO-Revision-Date: 2024-02-27 21:35+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -183,10 +183,9 @@ msgstr "Arată butoane pentru alterarea numărului de birouri virtuale"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: desktopgrid/desktopgrid_config.ui:123
-#, fuzzy, kde-format
-#| msgid "&Layout mode:"
+#, kde-format
 msgid "&Grid layout mode:"
-msgstr "Mod aran&jament:"
+msgstr "Re&gim de aranjare în grilă:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:137 overview/kcm/overvieweffectkcm.ui:30
@@ -204,9 +203,9 @@ msgstr "Natural"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_LayoutMode)
 #: desktopgrid/desktopgrid_config.ui:147
-#, fuzzy, kde-format
+#, kde-format
 msgid "None"
-msgstr "Nimic"
+msgstr "Niciunul"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
@@ -324,10 +323,9 @@ msgid "Toggle Invert Effect on Window"
 msgstr "Comută efectul Inversare asupra ferestrei"
 
 #: invert/invert.cpp:56
-#, fuzzy, kde-format
-#| msgid "Invert cursor keys"
+#, kde-format
 msgid "Invert Screen Colors"
-msgstr "Inversează tastele cursor"
+msgstr "Inversează culorile ecranului"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: login/package/contents/ui/config.ui:17
@@ -549,7 +547,7 @@ msgstr "Desenează cu mausul ținând Shift+Meta și mișcând cursorul."
 #, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr ""
+msgstr "Necunoscut"
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
 #, kde-format
@@ -646,35 +644,31 @@ msgstr ""
 "Apăsați Escape sau clic drept pentru a anula."
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Ring Duration:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Durată inel:"
+msgstr "Durată vopsire"
 
 #: showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Număr inele:"
+msgstr "Cantitate vopsea"
 
 #: showfps/qml/main.qml:175
 #, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr ""
+msgstr "FPS actual"
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "&Lățimea maximă:"
+msgstr "FPS maxim"
 
 #: showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Acest efect nu e o contorizare"
@@ -755,40 +749,37 @@ msgstr ""
 #: tileseditor/qml/main.qml:150
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Umplutură:"
 
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr ""
+msgstr "Încarcă aranjament…"
 
 #: tileseditor/qml/main.qml:274
-#, fuzzy, kde-format
-#| msgid "Closest"
+#, kde-format
 msgid "Close"
-msgstr "Cel mai apropiat"
+msgstr "Închide"
 
 #: tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Horizontal:"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Orizontal:"
+msgstr "Desparte orizontal"
 
 #: tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Vertical:"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Vertical:"
+msgstr "Desparte vertical"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
 msgid "Add Floating Tile"
-msgstr ""
+msgstr "Adaugă dală flotantă"
 
 #: tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Șterge"
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
 #, kde-format
@@ -957,16 +948,15 @@ msgid "No Windows"
 msgstr "Nicio fereastră"
 
 #: windowview/qml/main.qml:123
-#, fuzzy, kde-format
-#| msgid "Fullscreen windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Ferestre pe tot ecranul"
+msgstr "Filtrează ferestrele…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
 #, kde-format
 msgid "Advanced"
-msgstr "Avansat"
+msgstr "Avansate"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: wobblywindows/wobblywindows_config.ui:26
