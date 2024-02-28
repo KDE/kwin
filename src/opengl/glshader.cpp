@@ -96,11 +96,11 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     // Prepare the source code
     QByteArray ba;
     const auto context = OpenGlContext::currentContext();
-    if (context->isOpenglES() && GLPlatform::instance()->glslVersion() < Version(3, 0)) {
+    if (context->isOpenglES() && context->glslVersion() < Version(3, 0)) {
         ba.append("precision highp float;\n");
     }
     ba.append(source);
-    if (context->isOpenglES() && GLPlatform::instance()->glslVersion() >= Version(3, 0)) {
+    if (context->isOpenglES() && context->glslVersion() >= Version(3, 0)) {
         ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
     }
 

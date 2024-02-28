@@ -34,6 +34,8 @@ public:
 
     QByteArrayView openglVersionString() const;
     Version openglVersion() const;
+    QByteArrayView glslVersionString() const;
+    Version glslVersion() const;
     QByteArrayView vendor() const;
     QByteArrayView renderer() const;
     bool isOpenglES() const;
@@ -74,6 +76,8 @@ protected:
 
     const QByteArrayView m_versionString;
     const Version m_version;
+    const QByteArrayView m_glslVersionString;
+    const Version m_glslVersion;
     const QByteArrayView m_vendor;
     const QByteArrayView m_renderer;
     const bool m_isOpenglES;

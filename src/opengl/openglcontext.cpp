@@ -72,6 +72,8 @@ static bool checkIndexedQuads(OpenGlContext *context)
 OpenGlContext::OpenGlContext()
     : m_versionString((const char *)glGetString(GL_VERSION))
     , m_version(Version::parseString(m_versionString))
+    , m_glslVersionString((const char *)glGetString(GL_SHADING_LANGUAGE_VERSION))
+    , m_glslVersion(Version::parseString(m_glslVersionString))
     , m_vendor((const char *)glGetString(GL_VENDOR))
     , m_renderer((const char *)glGetString(GL_RENDERER))
     , m_isOpenglES(m_versionString.startsWith("OpenGL ES"))
@@ -121,6 +123,16 @@ QByteArrayView OpenGlContext::openglVersionString() const
 Version OpenGlContext::openglVersion() const
 {
     return m_version;
+}
+
+QByteArrayView OpenGlContext::glslVersionString() const
+{
+    return m_glslVersionString;
+}
+
+Version OpenGlContext::glslVersion() const
+{
+    return m_glslVersion;
 }
 
 QByteArrayView OpenGlContext::vendor() const

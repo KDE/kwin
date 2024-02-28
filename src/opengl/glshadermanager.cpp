@@ -41,12 +41,11 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     QByteArray source;
     QTextStream stream(&source);
 
-    GLPlatform *const gl = GLPlatform::instance();
     const auto context = OpenGlContext::currentContext();
     QByteArray attribute, varying;
 
     if (!context->isOpenglES()) {
-        const bool glsl_140 = gl->glslVersion() >= Version(1, 40);
+        const bool glsl_140 = context->glslVersion() >= Version(1, 40);
 
         attribute = glsl_140 ? QByteArrayLiteral("in") : QByteArrayLiteral("attribute");
         varying = glsl_140 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
@@ -55,7 +54,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
             stream << "#version 140\n\n";
         }
     } else {
-        const bool glsl_es_300 = gl->glslVersion() >= Version(3, 0);
+        const bool glsl_es_300 = context->glslVersion() >= Version(3, 0);
 
         attribute = glsl_es_300 ? QByteArrayLiteral("in") : QByteArrayLiteral("attribute");
         varying = glsl_es_300 ? QByteArrayLiteral("out") : QByteArrayLiteral("varying");
@@ -92,12 +91,11 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     QByteArray source;
     QTextStream stream(&source);
 
-    GLPlatform *const gl = GLPlatform::instance();
     const auto context = OpenGlContext::currentContext();
     QByteArray varying, output, textureLookup;
 
     if (!context->isOpenglES()) {
-        const bool glsl_140 = gl->glslVersion() >= Version(1, 40);
+        const bool glsl_140 = context->glslVersion() >= Version(1, 40);
 
         if (glsl_140) {
             stream << "#version 140\n\n";
@@ -107,7 +105,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
         textureLookup = glsl_140 ? QByteArrayLiteral("texture") : QByteArrayLiteral("texture2D");
         output = glsl_140 ? QByteArrayLiteral("fragColor") : QByteArrayLiteral("gl_FragColor");
     } else {
-        const bool glsl_es_300 = GLPlatform::instance()->glslVersion() >= Version(3, 0);
+        const bool glsl_es_300 = context->glslVersion() >= Version(3, 0);
 
         if (glsl_es_300) {
             stream << "#version 300 es\n\n";
@@ -260,7 +258,7 @@ static QString resolveShaderFilePath(const QString &filePath)
 
     const auto context = OpenGlContext::currentContext();
     const Version coreVersionNumber = context->isOpenglES() ? Version(3, 0) : Version(1, 40);
-    if (GLPlatform::instance()->glslVersion() >= coreVersionNumber) {
+    if (context->glslVersion() >= coreVersionNumber) {
         suffix = QStringLiteral("_core");
     }
 

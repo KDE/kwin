@@ -742,8 +742,8 @@ void GLPlatform::detect(OpenGLPlatformInterface platformInterface)
         m_mesaVersion = Version::parseString(versionTokens.at(mesaIndex + 1));
     }
 
-    m_glsl_version = (const char *)glGetString(GL_SHADING_LANGUAGE_VERSION);
-    m_glslVersion = Version::parseString(m_glsl_version);
+    m_glsl_version = m_context->glslVersionString().toByteArray();
+    m_glslVersion = m_context->glslVersion();
 
     m_chipset = QByteArrayLiteral("Unknown");
     m_preferBufferSubData = false;
