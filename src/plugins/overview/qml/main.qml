@@ -32,7 +32,6 @@ FocusScope {
     property bool organized: false
 
     property bool verticalDesktopBar: KWinComponents.Workspace.desktopGridHeight >= bar.desktopCount && KWinComponents.Workspace.desktopGridHeight != 1
-    property bool anyDesktopBar: verticalDesktopBar || KWinComponents.Workspace.desktopGridHeight == 1
 
     // The values of overviewVal and gridVal might not be 0 on startup,
     // but we always want to animate from 0 to those values. So, we initially
@@ -272,7 +271,6 @@ FocusScope {
 
     Item {
         id: desktopBar
-        visible: container.anyDesktopBar
 
         // (overviewVal, gridVal) represents the state of the overview
         // in a 2D coordinate plane. Math.atan2 returns the angle between
@@ -308,7 +306,7 @@ FocusScope {
         opacity: desktopBar.opacity
         anchors.left: container.verticalDesktopBar ? desktopBar.right : parent.left
         anchors.right: parent.right
-        anchors.top: container.verticalDesktopBar || !container.anyDesktopBar ? parent.top : desktopBar.bottom
+        anchors.top: container.verticalDesktopBar ? parent.top : desktopBar.bottom
         anchors.topMargin: Kirigami.Units.largeSpacing
         height: searchField.height + 1 * Kirigami.Units.largeSpacing
 
@@ -340,7 +338,7 @@ FocusScope {
 
     // These are the minimum position of maximum size of the desktop preview in the overview
     property int minX: Kirigami.Units.largeSpacing + (container.verticalDesktopBar ? desktopBar.width : 0)
-    property int minY: Kirigami.Units.largeSpacing + topBar.height + (container.verticalDesktopBar || !container.anyDesktopBar ? 0 : desktopBar.height)
+    property int minY: Kirigami.Units.largeSpacing + topBar.height + (container.verticalDesktopBar ? 0 : desktopBar.height)
     property int maxWidth: currentGeometry.width - minX - Kirigami.Units.gridUnit * 2
     property int maxHeight: currentGeometry.height - minY - Kirigami.Units.gridUnit * 2
 
@@ -646,7 +644,6 @@ FocusScope {
                         partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
 
                         targetScale: {
-                            if (!container.anyDesktopBar) return targetScale;
                             if (overviewVal != 1) return targetScale;
                             let coordinate = container.verticalDesktopBar ? 'x' : 'y'
                             if (!activeDragHandler.active) {
