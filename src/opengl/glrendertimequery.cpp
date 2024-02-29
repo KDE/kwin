@@ -15,36 +15,33 @@ namespace KWin
 GLRenderTimeQuery::GLRenderTimeQuery()
 {
     if (GLPlatform::instance()->supports(GLFeature::TimerQuery)) {
-        glGenQueries(1, &m_query);
+        glGenQueries(1, &m_gpuProbe.query);
     }
 }
 
 GLRenderTimeQuery::~GLRenderTimeQuery()
 {
-    if (m_query) {
-        glDeleteQueries(1, &m_query);
+    if (m_gpuProbe.query) {
+        glDeleteQueries(1, &m_gpuProbe.query);
     }
 }
 
 void GLRenderTimeQuery::begin()
 {
-    if (m_query) {
-        GLint64 nanos = 0;
-        glGetInteger64v(GL_TIMESTAMP, &nanos);
-        m_cpuStart = std::chrono::nanoseconds(nanos);
-    } else {
-        m_cpuStart = std::chrono::steady_clock::now().time_since_epoch();
+    if (m_gpuProbe.query) {
+        glGetInteger64v(GL_TIMESTAMP, &m_gpuProbe.start);
     }
+    m_cpuProbe.start = std::chrono::steady_clock::now().time_since_epoch();
 }
 
 void GLRenderTimeQuery::end()
 {
-    if (m_query) {
-        glQueryCounter(m_query, GL_TIMESTAMP);
-    } else {
-        m_cpuEnd = std::chrono::steady_clock::now().time_since_epoch();
-    }
     m_hasResult = true;
+
+    if (m_gpuProbe.query) {
+        glQueryCounter(m_gpuProbe.query, GL_TIMESTAMP);
+    }
+    m_cpuProbe.end = std::chrono::steady_clock::now().time_since_epoch();
 }
 
 std::chrono::nanoseconds GLRenderTimeQuery::result()
@@ -53,16 +50,15 @@ std::chrono::nanoseconds GLRenderTimeQuery::result()
         return std::chrono::nanoseconds::zero();
     }
     m_hasResult = false;
-    if (m_query) {
-        uint64_t nanos = 0;
-        glGetQueryObjectui64v(m_query, GL_QUERY_RESULT, &nanos);
-        if (nanos == 0) {
-            return std::chrono::nanoseconds::zero();
-        }
-        return std::chrono::nanoseconds(nanos) - m_cpuStart;
-    } else {
-        return m_cpuEnd - m_cpuStart;
+
+    if (m_gpuProbe.query) {
+        glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &m_gpuProbe.end);
     }
+
+    const std::chrono::nanoseconds gpuTime(m_gpuProbe.end - m_gpuProbe.start);
+    const std::chrono::nanoseconds cpuTime = m_cpuProbe.end - m_cpuProbe.start;
+
+    return std::max(gpuTime, cpuTime);
 }
 
 }

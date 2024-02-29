@@ -31,10 +31,20 @@ public:
     std::chrono::nanoseconds result();
 
 private:
-    GLuint m_query = 0;
     bool m_hasResult = false;
-    std::chrono::nanoseconds m_cpuStart = std::chrono::nanoseconds::zero();
-    std::chrono::nanoseconds m_cpuEnd = std::chrono::nanoseconds::zero();
+
+    struct
+    {
+        std::chrono::nanoseconds start = std::chrono::nanoseconds::zero();
+        std::chrono::nanoseconds end = std::chrono::nanoseconds::zero();
+    } m_cpuProbe;
+
+    struct
+    {
+        GLuint query = 0;
+        GLint64 start = 0;
+        GLint64 end = 0;
+    } m_gpuProbe;
 };
 
 }
