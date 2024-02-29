@@ -472,7 +472,7 @@ void X11Compositor::composite(RenderLoop *renderLoop)
             const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
 
             paintPass(superLayer, renderTarget, bufferDamage);
-            primaryLayer->endFrame(bufferDamage, surfaceDamage);
+            primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
         }
 
         postPaintPass(superLayer);

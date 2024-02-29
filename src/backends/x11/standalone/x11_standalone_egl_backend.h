@@ -36,8 +36,7 @@ public:
     EglLayer(EglBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    std::chrono::nanoseconds queryRenderTime() const override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
@@ -56,12 +55,11 @@ public:
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *texture) override;
     OutputLayerBeginFrameInfo beginFrame();
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame);
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;
-    std::chrono::nanoseconds queryRenderTime();
-    EglDisplay *eglDisplayObject() const;
+    EglDisplay *eglDisplayObject() const override;
     OpenGlContext *openglContext() const override;
     bool makeCurrent() override;
     void doneCurrent() override;
@@ -91,7 +89,7 @@ private:
     std::shared_ptr<OutputFrame> m_frame;
 
     QList<QByteArray> m_clientExtensions;
-    std::unique_ptr<EglContext> m_context;
+    std::shared_ptr<EglContext> m_context;
     ::EGLSurface m_surface = EGL_NO_SURFACE;
 };
 

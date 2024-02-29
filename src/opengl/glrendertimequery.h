@@ -11,15 +11,18 @@
 #include <chrono>
 #include <epoxy/gl.h>
 
+#include "core/renderbackend.h"
 #include "kwin_export.h"
 
 namespace KWin
 {
 
-class KWIN_EXPORT GLRenderTimeQuery
+class OpenGlContext;
+
+class KWIN_EXPORT GLRenderTimeQuery : public RenderTimeQuery
 {
 public:
-    explicit GLRenderTimeQuery();
+    explicit GLRenderTimeQuery(const std::shared_ptr<OpenGlContext> &context);
     ~GLRenderTimeQuery();
 
     void begin();
@@ -28,9 +31,10 @@ public:
     /**
      * fetches the result of the query. If rendering is not done yet, this will block!
      */
-    std::chrono::nanoseconds result();
+    std::chrono::nanoseconds query() override;
 
 private:
+    const std::weak_ptr<OpenGlContext> m_context;
     bool m_hasResult = false;
 
     struct

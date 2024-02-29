@@ -35,11 +35,10 @@ public:
     ~VirtualEglGbmLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
 
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
-    std::chrono::nanoseconds queryRenderTime() const override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     const ColorDescription &colorDescription() const;

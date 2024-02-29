@@ -67,23 +67,19 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFra
         return std::nullopt;
     }
 
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_back->view()->image()),
         .repaint = accumulateDamage(m_back->age()),
     };
 }
 
-bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    m_renderTime->end();
+    frame->addRenderTimeQuery(std::move(m_renderTime));
     m_damageJournal.add(damagedRegion);
     return true;
-}
-
-std::chrono::nanoseconds WaylandQPainterPrimaryLayer::queryRenderTime() const
-{
-    return m_renderTime;
 }
 
 DrmDevice *WaylandQPainterPrimaryLayer::scanoutDevice() const
@@ -119,27 +115,24 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::doBeginFram
         return std::nullopt;
     }
 
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_back->view()->image()),
         .repaint = infiniteRegion(),
     };
 }
 
-bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    if (frame) {
+        frame->addRenderTimeQuery(std::move(m_renderTime));
+    }
     wl_buffer *buffer = static_cast<WaylandOutput *>(m_output)->backend()->importBuffer(m_back->buffer());
     Q_ASSERT(buffer);
 
     static_cast<WaylandOutput *>(m_output)->cursor()->update(buffer, scale(), hotspot().toPoint());
     m_swapchain->release(m_back);
     return true;
-}
-
-std::chrono::nanoseconds WaylandQPainterCursorLayer::queryRenderTime() const
-{
-    return m_renderTime;
 }
 
 DrmDevice *WaylandQPainterCursorLayer::scanoutDevice() const

@@ -35,6 +35,7 @@ public:
     EGLConfig config() const;
     EglDisplay *eglDisplayObject() const override;
     EglContext *openglContext() const override;
+    std::shared_ptr<EglContext> openglContextRef() const;
 
     bool testImportBuffer(GraphicsBuffer *buffer) override;
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;

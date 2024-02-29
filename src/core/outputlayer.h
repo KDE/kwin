@@ -21,6 +21,7 @@ namespace KWin
 class SurfaceItem;
 class DrmDevice;
 class GraphicsBuffer;
+class OutputFrame;
 
 struct OutputLayerBeginFrameInfo
 {
@@ -58,7 +59,7 @@ public:
     bool isEnabled() const;
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame();
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame);
 
     /**
      * Tries to import the newest buffer of the surface for direct scanout
@@ -70,11 +71,6 @@ public:
      * Notify that there's no scanout candidate this frame
      */
     void notifyNoScanoutCandidate();
-
-    /**
-     * queries the render time of the last frame. If rendering isn't complete yet, this may block until it is
-     */
-    virtual std::chrono::nanoseconds queryRenderTime() const = 0;
 
     virtual DrmDevice *scanoutDevice() const = 0;
     virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
@@ -101,7 +97,7 @@ public:
 protected:
     virtual bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color);
     virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
-    virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+    virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) = 0;
 
     QRegion m_repaints;
     QPointF m_hotspot;

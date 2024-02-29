@@ -62,7 +62,7 @@ private:
     void create(const QSurfaceFormat &format, ::EGLContext shareContext);
     void updateFormatFromContext();
 
-    EglDisplay *m_eglDisplay = nullptr;
+    EglDisplay *const m_eglDisplay;
     QSurfaceFormat m_format;
     EGLConfig m_config = EGL_NO_CONFIG_KHR;
     std::shared_ptr<EglContext> m_eglContext;

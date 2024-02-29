@@ -42,27 +42,23 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::doBeginFrame()
         return std::nullopt;
     }
 
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->view()->image()),
         .repaint = m_output->rect(),
     };
 }
 
-bool VirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    m_renderTime->end();
+    frame->addRenderTimeQuery(std::move(m_renderTime));
     return true;
 }
 
 QImage *VirtualQPainterLayer::image()
 {
     return m_current->view()->image();
-}
-
-std::chrono::nanoseconds VirtualQPainterLayer::queryRenderTime() const
-{
-    return m_renderTime;
 }
 
 DrmDevice *VirtualQPainterLayer::scanoutDevice() const

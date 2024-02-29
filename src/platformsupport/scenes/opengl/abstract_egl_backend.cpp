@@ -335,6 +335,11 @@ EglContext *AbstractEglBackend::openglContext() const
 {
     return m_context.get();
 }
+
+std::shared_ptr<EglContext> AbstractEglBackend::openglContextRef() const
+{
+    return m_context;
+}
 }
 
 #include "moc_abstract_egl_backend.cpp"

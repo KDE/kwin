@@ -10,9 +10,26 @@
 #include "syncobjtimeline.h"
 
 #include <drm_fourcc.h>
+#include <ranges>
 
 namespace KWin
 {
+
+CpuRenderTimeQuery::CpuRenderTimeQuery()
+    : m_start(std::chrono::steady_clock::now())
+{
+}
+
+void CpuRenderTimeQuery::end()
+{
+    m_end = std::chrono::steady_clock::now();
+}
+
+std::chrono::nanoseconds CpuRenderTimeQuery::query()
+{
+    Q_ASSERT(m_end);
+    return *m_end - m_start;
+}
 
 OutputFrame::OutputFrame(RenderLoop *loop)
     : m_loop(loop)
@@ -26,8 +43,12 @@ void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
     m_feedbacks.push_back(std::move(feedback));
 }
 
-void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode)
+void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
+    const auto view = m_renderTimeQueries | std::views::transform([](const auto &query) {
+        return query->query();
+    });
+    const auto renderTime = std::accumulate(view.begin(), view.end(), std::chrono::nanoseconds::zero());
     RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(refreshDuration, timestamp, mode);
@@ -67,6 +88,11 @@ void OutputFrame::setDamage(const QRegion &region)
 QRegion OutputFrame::damage() const
 {
     return m_damage;
+}
+
+void OutputFrame::addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query)
+{
+    m_renderTimeQueries.push_back(std::move(query));
 }
 
 RenderBackend::RenderBackend(QObject *parent)

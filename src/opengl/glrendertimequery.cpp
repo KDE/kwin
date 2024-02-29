@@ -12,18 +12,25 @@
 namespace KWin
 {
 
-GLRenderTimeQuery::GLRenderTimeQuery()
+GLRenderTimeQuery::GLRenderTimeQuery(const std::shared_ptr<OpenGlContext> &context)
+    : m_context(context)
 {
-    if (OpenGlContext::currentContext()->supportsTimerQueries()) {
+    if (context->supportsTimerQueries()) {
         glGenQueries(1, &m_gpuProbe.query);
     }
 }
 
 GLRenderTimeQuery::~GLRenderTimeQuery()
 {
-    if (m_gpuProbe.query) {
-        glDeleteQueries(1, &m_gpuProbe.query);
+    if (!m_gpuProbe.query) {
+        return;
     }
+    const auto context = m_context.lock();
+    if (!context) {
+        return;
+    }
+    context->makeCurrent();
+    glDeleteQueries(1, &m_gpuProbe.query);
 }
 
 void GLRenderTimeQuery::begin()
@@ -44,7 +51,7 @@ void GLRenderTimeQuery::end()
     m_cpuProbe.end = std::chrono::steady_clock::now().time_since_epoch();
 }
 
-std::chrono::nanoseconds GLRenderTimeQuery::result()
+std::chrono::nanoseconds GLRenderTimeQuery::query()
 {
     if (!m_hasResult) {
         return std::chrono::nanoseconds::zero();
@@ -52,6 +59,11 @@ std::chrono::nanoseconds GLRenderTimeQuery::result()
     m_hasResult = false;
 
     if (m_gpuProbe.query) {
+        const auto context = m_context.lock();
+        if (!context) {
+            return std::chrono::nanoseconds::zero();
+        }
+        context->makeCurrent();
         glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &m_gpuProbe.end);
     }
 

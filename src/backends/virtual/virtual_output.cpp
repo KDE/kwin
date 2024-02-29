@@ -75,11 +75,9 @@ void VirtualOutput::updateEnabled(bool enabled)
 
 void VirtualOutput::vblank(std::chrono::nanoseconds timestamp)
 {
-    const auto primaryLayer = Compositor::self()->backend()->primaryLayer(this);
-    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, primaryLayer->queryRenderTime(), PresentationMode::VSync);
+    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, PresentationMode::VSync);
     m_frame.reset();
 }
-
 }
 
 #include "moc_virtual_output.cpp"

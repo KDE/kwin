@@ -35,8 +35,7 @@ public:
     ~X11WindowedQPainterPrimaryLayer() override;
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    std::chrono::nanoseconds queryRenderTime() const override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
@@ -47,8 +46,7 @@ private:
     X11WindowedQPainterBackend *const m_backend;
     std::unique_ptr<QPainterSwapchain> m_swapchain;
     std::shared_ptr<QPainterSwapchainSlot> m_current;
-    std::chrono::steady_clock::time_point m_renderStart;
-    std::chrono::nanoseconds m_renderTime;
+    std::unique_ptr<CpuRenderTimeQuery> m_renderTime;
 };
 
 class X11WindowedQPainterCursorLayer : public OutputLayer
@@ -59,16 +57,14 @@ public:
     explicit X11WindowedQPainterCursorLayer(X11WindowedOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    std::chrono::nanoseconds queryRenderTime() const override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
     QImage m_buffer;
     X11WindowedOutput *m_output;
-    std::chrono::steady_clock::time_point m_renderStart;
-    std::chrono::nanoseconds m_renderTime;
+    std::unique_ptr<CpuRenderTimeQuery> m_renderTime;
 };
 
 class X11WindowedQPainterBackend : public QPainterBackend

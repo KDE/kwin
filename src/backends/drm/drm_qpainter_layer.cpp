@@ -38,7 +38,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
         return std::nullopt;
     }
 
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     const QRegion repaint = m_damageJournal.accumulate(m_currentBuffer->age(), infiniteRegion());
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
@@ -46,9 +46,12 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
     };
 }
 
-bool DrmQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    m_renderTime->end();
+    if (frame) {
+        frame->addRenderTimeQuery(std::move(m_renderTime));
+    }
     m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
     m_damageJournal.add(damagedRegion);
     m_swapchain->release(m_currentBuffer);
@@ -91,11 +94,6 @@ void DrmQPainterLayer::releaseBuffers()
     m_swapchain.reset();
 }
 
-std::chrono::nanoseconds DrmQPainterLayer::queryRenderTime() const
-{
-    return m_renderTime;
-}
-
 DrmDevice *DrmQPainterLayer::scanoutDevice() const
 {
     return m_pipeline->gpu()->drmDevice();
@@ -116,26 +114,22 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::doBeginFrame()
     if (m_image.isNull() || m_image.size() != m_output->modeSize()) {
         m_image = QImage(m_output->modeSize(), QImage::Format_RGB32);
     }
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_image),
         .repaint = QRegion(),
     };
 }
 
-bool DrmVirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmVirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    m_renderTime->end();
+    frame->addRenderTimeQuery(std::move(m_renderTime));
     return true;
 }
 
 void DrmVirtualQPainterLayer::releaseBuffers()
 {
-}
-
-std::chrono::nanoseconds DrmVirtualQPainterLayer::queryRenderTime() const
-{
-    return m_renderTime;
 }
 
 DrmDevice *DrmVirtualQPainterLayer::scanoutDevice() const

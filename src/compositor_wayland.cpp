@@ -335,7 +335,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
                 const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
 
                 paintPass(superLayer, renderTarget, bufferDamage);
-                primaryLayer->endFrame(bufferDamage, surfaceDamage);
+                primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
             }
         }
 
@@ -422,7 +422,7 @@ void WaylandCompositor::addOutput(Output *output)
                 renderLayer.delegate()->paint(renderTarget, infiniteRegion());
                 renderLayer.delegate()->postPaint();
 
-                if (!outputLayer->endFrame(infiniteRegion(), infiniteRegion())) {
+                if (!outputLayer->endFrame(infiniteRegion(), infiniteRegion(), nullptr)) {
                     return false;
                 }
             } else {

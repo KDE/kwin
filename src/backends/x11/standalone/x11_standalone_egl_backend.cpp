@@ -41,15 +41,10 @@ std::optional<OutputLayerBeginFrameInfo> EglLayer::doBeginFrame()
     return m_backend->beginFrame();
 }
 
-bool EglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_backend->endFrame(renderedRegion, damagedRegion);
+    m_backend->endFrame(renderedRegion, damagedRegion, frame);
     return true;
-}
-
-std::chrono::nanoseconds EglLayer::queryRenderTime() const
-{
-    return m_backend->queryRenderTime();
 }
 
 DrmDevice *EglLayer::scanoutDevice() const
@@ -221,7 +216,7 @@ bool EglBackend::hasClientExtension(const QByteArray &name)
 bool EglBackend::initRenderingContext()
 {
     initClientExtensions();
-    auto display = kwinApp()->outputBackend()->sceneEglDisplayObject();
+    auto display = m_backend->sceneEglDisplayObject();
 
     // Use eglGetPlatformDisplayEXT() to get the display pointer
     // if the implementation supports it.
@@ -372,9 +367,7 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     }
     eglWaitNative(EGL_CORE_NATIVE_ENGINE);
 
-    if (!m_query) {
-        m_query = std::make_unique<GLRenderTimeQuery>();
-    }
+    m_query = std::make_unique<GLRenderTimeQuery>(m_context);
     m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
@@ -382,9 +375,10 @@ OutputLayerBeginFrameInfo EglBackend::beginFrame()
     };
 }
 
-void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
     m_query->end();
+    frame->addRenderTimeQuery(std::move(m_query));
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
@@ -445,15 +439,9 @@ OutputLayer *EglBackend::primaryLayer(Output *output)
     return m_layer.get();
 }
 
-std::chrono::nanoseconds EglBackend::queryRenderTime()
-{
-    makeCurrent();
-    return m_query->result();
-}
-
 void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
+    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, PresentationMode::VSync);
     m_frame.reset();
 }
 

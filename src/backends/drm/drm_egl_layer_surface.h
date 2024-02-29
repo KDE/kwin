@@ -57,8 +57,7 @@ public:
     ~EglGbmLayerSurface();
 
     std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement);
-    bool endRendering(const QRegion &damagedRegion);
-    std::chrono::nanoseconds queryRenderTime() const;
+    bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
     bool doesSurfaceFit(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const;
     std::shared_ptr<GLTexture> texture() const;
@@ -105,11 +104,7 @@ private:
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
 
-        // for render timing
-        std::unique_ptr<GLRenderTimeQuery> timeQuery;
-        std::unique_ptr<GLRenderTimeQuery> importTimeQuery;
-        std::chrono::steady_clock::time_point renderStart;
-        std::chrono::steady_clock::time_point renderEnd;
+        std::unique_ptr<GLRenderTimeQuery> compositingTimeQuery;
     };
     bool checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats);
     bool doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const;
@@ -118,9 +113,9 @@ private:
     std::shared_ptr<EglSwapchain> createGbmSwapchain(DrmGpu *gpu, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers, MultiGpuImportMode importMode, BufferTarget bufferTarget) const;
 
     std::shared_ptr<DrmFramebuffer> doRenderTestBuffer(Surface *surface) const;
-    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence) const;
-    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence) const;
-    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source) const;
+    std::shared_ptr<DrmFramebuffer> importBuffer(Surface *surface, EglSwapchainSlot *source, FileDescriptor &&readFence, OutputFrame *frame) const;
+    std::shared_ptr<DrmFramebuffer> importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence, OutputFrame *frame) const;
+    std::shared_ptr<DrmFramebuffer> importWithCpu(Surface *surface, EglSwapchainSlot *source, OutputFrame *frame) const;
 
     std::unique_ptr<Surface> m_surface;
     std::unique_ptr<Surface> m_oldSurface;

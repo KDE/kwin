@@ -308,7 +308,7 @@ void X11WindowedOutput::resize(const QSize &pixelSize)
 void X11WindowedOutput::handlePresentCompleteNotify(xcb_present_complete_notify_event_t *event)
 {
     std::chrono::microseconds timestamp(event->ust);
-    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, Compositor::self()->backend()->primaryLayer(this)->queryRenderTime(), PresentationMode::VSync);
+    m_frame->presented(std::chrono::nanoseconds(1'000'000'000'000 / refreshRate()), timestamp, PresentationMode::VSync);
     m_frame.reset();
 }
 

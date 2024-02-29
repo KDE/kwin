@@ -64,8 +64,7 @@ public:
     GlxLayer(GlxBackend *backend);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    std::chrono::nanoseconds queryRenderTime() const override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
@@ -85,8 +84,7 @@ public:
     ~GlxBackend() override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     OutputLayerBeginFrameInfo doBeginFrame();
-    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
-    std::chrono::nanoseconds queryRenderTime();
+    void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame);
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     bool makeCurrent() override;
     void doneCurrent() override;
@@ -122,7 +120,7 @@ private:
     ::Window window;
     GLXFBConfig fbconfig;
     GLXWindow glxWindow;
-    std::unique_ptr<GlxContext> m_context;
+    std::shared_ptr<GlxContext> m_context;
     QHash<xcb_visualid_t, FBConfigInfo> m_fbconfigHash;
     QHash<xcb_visualid_t, int> m_visualDepthHash;
     std::unique_ptr<SwapEventFilter> m_swapEventFilter;

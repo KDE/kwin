@@ -51,9 +51,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
         return std::nullopt;
     }
 
-    if (!m_query) {
-        m_query = std::make_unique<GLRenderTimeQuery>();
-    }
+    m_query = std::make_unique<GLRenderTimeQuery>(m_backend->openglContextRef());
     m_query->begin();
 
     return OutputLayerBeginFrameInfo{
@@ -62,21 +60,12 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
     };
 }
 
-bool VirtualEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
     m_query->end();
+    frame->addRenderTimeQuery(std::move(m_query));
     glFlush(); // flush pending rendering commands.
     return true;
-}
-
-std::chrono::nanoseconds VirtualEglLayer::queryRenderTime() const
-{
-    if (m_query) {
-        m_backend->makeCurrent();
-        return m_query->result();
-    } else {
-        return std::chrono::nanoseconds::zero();
-    }
 }
 
 DrmDevice *VirtualEglLayer::scanoutDevice() const

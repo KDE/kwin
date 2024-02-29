@@ -109,15 +109,10 @@ std::optional<OutputLayerBeginFrameInfo> GlxLayer::doBeginFrame()
     return m_backend->doBeginFrame();
 }
 
-bool GlxLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool GlxLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_backend->endFrame(renderedRegion, damagedRegion);
+    m_backend->endFrame(renderedRegion, damagedRegion, frame);
     return true;
-}
-
-std::chrono::nanoseconds GlxLayer::queryRenderTime() const
-{
-    return m_backend->queryRenderTime();
 }
 
 DrmDevice *GlxLayer::scanoutDevice() const
@@ -665,9 +660,6 @@ OutputLayerBeginFrameInfo GlxBackend::doBeginFrame()
 {
     QRegion repaint;
     makeCurrent();
-    if (!m_query) {
-        m_query = std::make_unique<GLRenderTimeQuery>();
-    }
 
     if (supportsBufferAge()) {
         repaint = m_damageJournal.accumulate(m_bufferAge, infiniteRegion());
@@ -675,9 +667,7 @@ OutputLayerBeginFrameInfo GlxBackend::doBeginFrame()
 
     glXWaitX();
 
-    if (!m_query) {
-        m_query = std::make_unique<GLRenderTimeQuery>();
-    }
+    m_query = std::make_unique<GLRenderTimeQuery>(m_context);
     m_query->begin();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_fbo.get()),
@@ -685,20 +675,15 @@ OutputLayerBeginFrameInfo GlxBackend::doBeginFrame()
     };
 }
 
-void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+void GlxBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
     m_query->end();
+    frame->addRenderTimeQuery(std::move(m_query));
     // Save the damaged region to history
     if (supportsBufferAge()) {
         m_damageJournal.add(damagedRegion);
     }
     m_lastRenderedRegion = renderedRegion;
-}
-
-std::chrono::nanoseconds GlxBackend::queryRenderTime()
-{
-    makeCurrent();
-    return m_query->result();
 }
 
 void GlxBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
@@ -729,7 +714,7 @@ void GlxBackend::present(Output *output, const std::shared_ptr<OutputFrame> &fra
 
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
+    m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, PresentationMode::VSync);
     m_frame.reset();
 }
 

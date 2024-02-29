@@ -40,13 +40,37 @@ public:
     virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) = 0;
 };
 
+class KWIN_EXPORT RenderTimeQuery
+{
+public:
+    virtual ~RenderTimeQuery() = default;
+    virtual std::chrono::nanoseconds query() = 0;
+};
+
+class KWIN_EXPORT CpuRenderTimeQuery : public RenderTimeQuery
+{
+public:
+    /**
+     * marks the start of the query
+     */
+    explicit CpuRenderTimeQuery();
+
+    void end();
+
+    std::chrono::nanoseconds query() override;
+
+private:
+    const std::chrono::steady_clock::time_point m_start;
+    std::optional<std::chrono::steady_clock::time_point> m_end;
+};
+
 class KWIN_EXPORT OutputFrame
 {
 public:
     explicit OutputFrame(RenderLoop *loop);
     ~OutputFrame();
 
-    void presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode);
+    void presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, PresentationMode mode);
     void failed();
 
     void addFeedback(std::unique_ptr<PresentationFeedback> &&feedback);
@@ -59,6 +83,7 @@ public:
 
     void setDamage(const QRegion &region);
     QRegion damage() const;
+    void addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query);
 
 private:
     RenderLoop *const m_loop;
@@ -66,6 +91,7 @@ private:
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;
     QRegion m_damage;
+    std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
 };
 
 /**

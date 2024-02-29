@@ -48,16 +48,17 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::doBegi
     QRegion repaint = m_output->exposedArea() + m_output->rect();
     m_output->clearExposedArea();
 
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(m_current->view()->image()),
         .repaint = repaint,
     };
 }
 
-bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    m_renderTime->end();
+    frame->addRenderTimeQuery(std::move(m_renderTime));
     return true;
 }
 
@@ -91,11 +92,6 @@ void X11WindowedQPainterPrimaryLayer::present()
                        nullptr);
 }
 
-std::chrono::nanoseconds X11WindowedQPainterPrimaryLayer::queryRenderTime() const
-{
-    return m_renderTime;
-}
-
 DrmDevice *X11WindowedQPainterPrimaryLayer::scanoutDevice() const
 {
     return m_backend->drmDevice();
@@ -120,21 +116,19 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::doBegin
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
     }
 
-    m_renderStart = std::chrono::steady_clock::now();
+    m_renderTime = std::make_unique<CpuRenderTimeQuery>();
     return OutputLayerBeginFrameInfo{
         .renderTarget = RenderTarget(&m_buffer),
         .repaint = infiniteRegion(),
     };
 }
 
-std::chrono::nanoseconds X11WindowedQPainterCursorLayer::queryRenderTime() const
+bool X11WindowedQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
-    return m_renderTime;
-}
-
-bool X11WindowedQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
+    m_renderTime->end();
+    if (frame) {
+        frame->addRenderTimeQuery(std::move(m_renderTime));
+    }
     m_output->cursor()->update(m_buffer, hotspot());
     return true;
 }
