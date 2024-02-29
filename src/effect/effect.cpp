@@ -213,7 +213,6 @@ public:
     qreal opacity;
     qreal saturation;
     qreal brightness;
-    int screen;
     qreal crossFadeProgress;
 };
 
@@ -224,7 +223,6 @@ WindowPaintData::WindowPaintData()
     setOpacity(1.0);
     setSaturation(1.0);
     setBrightness(1.0);
-    setScreen(0);
     setCrossFadeProgress(0.0);
 }
 
@@ -242,7 +240,6 @@ WindowPaintData::WindowPaintData(const WindowPaintData &other)
     setOpacity(other.opacity());
     setSaturation(other.saturation());
     setBrightness(other.brightness());
-    setScreen(other.screen());
     setCrossFadeProgress(other.crossFadeProgress());
 }
 
@@ -263,11 +260,6 @@ qreal WindowPaintData::brightness() const
     return d->brightness;
 }
 
-int WindowPaintData::screen() const
-{
-    return d->screen;
-}
-
 void WindowPaintData::setOpacity(qreal opacity)
 {
     d->opacity = opacity;
@@ -281,11 +273,6 @@ void WindowPaintData::setSaturation(qreal saturation) const
 void WindowPaintData::setBrightness(qreal brightness)
 {
     d->brightness = brightness;
-}
-
-void WindowPaintData::setScreen(int screen) const
-{
-    d->screen = screen;
 }
 
 qreal WindowPaintData::crossFadeProgress() const

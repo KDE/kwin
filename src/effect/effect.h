@@ -409,18 +409,6 @@ public:
      */
     qreal multiplyBrightness(qreal factor);
     /**
-     * The screen number for which the painting should be done.
-     * This affects color correction (different screens may need different
-     * color correction lookup tables because they have different ICC profiles).
-     * @return screen for which painting should be done
-     */
-    int screen() const;
-    /**
-     * @param screen New screen number
-     * A value less than 0 will indicate that a default profile should be done.
-     */
-    void setScreen(int screen) const;
-    /**
      * @brief Sets the cross fading @p factor to fade over with previously sized window.
      * If @c 1.0 only the current window is used, if @c 0.0 only the previous window is used.
      *
