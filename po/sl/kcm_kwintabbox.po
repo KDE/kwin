@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-06 07:19+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -44,8 +44,9 @@ msgid "Alternative"
 msgstr "Drugotno"
 
 #: main.cpp:69
-#, kde-format
-msgid "Get New Task Switchers..."
+#, fuzzy, kde-format
+#| msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr "Dobi nove načine preklapljanja med okni..."
 
 #: main.cpp:83

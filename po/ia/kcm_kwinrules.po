@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-13 16:34+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -818,79 +818,81 @@ msgstr "Selige File"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "Regulas de KWin (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Nulle regulas per fenestras specific es currentemente assignate"
-
-#: ui/main.qml:63
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Clicca le button <interface>Adde Nove</interface>  a basso per adder alcun"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Selige le regulas de exportar"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "Annulla toto"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "Selige toto"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "Salveguarda regulas"
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
 msgstr "Adde Nove …"
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "Importa…"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Cancella exportation"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "Exporta…"
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Nulle regulas per fenestras specific es currentemente assignate"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New…</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr ""
+"Clicca le button <interface>Adde Nove</interface>  a basso per adder alcun"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Selige le regulas de exportar"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "Annulla toto"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "Selige toto"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "Salveguarda regulas"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Edita"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplica"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Dele"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Regulas de importation"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Regulas de exportation"

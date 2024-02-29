@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2023-11-07 21:27+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: \n"
@@ -40,7 +40,7 @@ msgstr ""
 
 #: main.cpp:69
 #, kde-format
-msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr ""
 
 #: main.cpp:83

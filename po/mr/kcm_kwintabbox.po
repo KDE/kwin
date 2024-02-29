@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2013-03-06 10:11+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -43,7 +43,7 @@ msgstr "वैकल्पिक"
 #: main.cpp:69
 #, fuzzy, kde-format
 #| msgid "Get New Window Switcher Layout"
-msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr "नवीन चौकट बदल रचना प्राप्त करा"
 
 #: main.cpp:83

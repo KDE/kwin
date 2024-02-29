@@ -79,7 +79,7 @@ msgstr "Přehled"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Mřížka"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format

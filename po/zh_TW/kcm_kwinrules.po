@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-15 16:59+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -787,78 +787,80 @@ msgstr "選擇檔案"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin 規則 (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "目前未設定特定視窗規則"
-
-#: ui/main.qml:63
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "點擊下方的<interface>新增…</interface>按鈕以新增一些"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "選取要匯出的規則"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "全部不選取"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "全部選取"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "儲存規則"
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
 msgstr "新增…"
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "匯入…"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "取消匯出"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "匯出…"
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "目前未設定特定視窗規則"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New…</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr "點擊下方的<interface>新增…</interface>按鈕以新增一些"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "選取要匯出的規則"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "全部不選取"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "全部選取"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "儲存規則"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "編輯"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "再製"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "刪除"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "匯入規則"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "匯出規則"

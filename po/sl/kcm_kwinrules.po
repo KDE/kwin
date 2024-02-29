@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-13 06:39+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -812,79 +812,81 @@ msgstr "Izberi datoteko"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "Pravila KWin (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Trenutno ni določenih pravil za določena okna"
-
-#: ui/main.qml:63
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Kliknite gumb <interface>Dodaj novo...</interface> spodaj, da bi dodali nekaj"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Izberite pravila za izvoz"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "Prekliči vse izbire"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "Izberi vse"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "Shrani pravila"
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
 msgstr "Dodaj novo…"
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "Uvozi…"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Prekliči izvoz"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "Izvoz…"
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Trenutno ni določenih pravil za določena okna"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New…</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr ""
+"Kliknite gumb <interface>Dodaj novo...</interface> spodaj, da bi dodali nekaj"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Izberite pravila za izvoz"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "Prekliči vse izbire"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "Izberi vse"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "Shrani pravila"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Uredi"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplikat"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Izbriši"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Uvoz pravil"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Izvozi pravila"

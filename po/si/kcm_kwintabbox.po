@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2011-07-26 23:05+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <info@hanthana.org>\n"
@@ -42,7 +42,7 @@ msgstr "විකල්ප"
 
 #: main.cpp:69
 #, kde-format
-msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr ""
 
 #: main.cpp:83

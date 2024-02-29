@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-28 00:38+0000\n"
-"PO-Revision-Date: 2023-11-29 05:33+0100\n"
+"PO-Revision-Date: 2024-02-28 05:11+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -46,10 +46,9 @@ msgid "Never"
 msgstr "არასდროს"
 
 #: ui/main.qml:55
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr "მხოლოდ მეტა, კონტროლი, ალტი და შიფტის ღილაკები"
+msgstr "მხოლოდ Meta, Control, Alt და Shift ღილაკები"
 
 #: ui/main.qml:61
 #, kde-format
@@ -67,7 +66,7 @@ msgstr "ყოველთვის"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "დამატებით თაგუნას ღილაკების ჩასმა"
 
 #: ui/main.qml:89
 #, kde-format

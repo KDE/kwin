@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2016-03-20 15:24+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -47,7 +47,7 @@ msgstr "Alternativno"
 #: main.cpp:69
 #, fuzzy, kde-format
 #| msgid "Get New Window Switcher Layout"
-msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr "Dobavi novi raspored menjača prozora"
 
 #: main.cpp:83

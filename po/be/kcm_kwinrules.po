@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-23 13:34\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -818,78 +818,80 @@ msgstr "Абраць файл"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "Правілы KWin (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "На дадзены момант няма правіл для пэўных акон"
-
-#: ui/main.qml:63
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr "Пстрыкніце па кнопцы <interface>Дадаць...</interface>, каб дадаць"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Абраць правілы для экспартавання"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "Адкінуць выбар"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "Абраць усё"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "Захаваць правілы"
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
 msgstr "Дадаць…"
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "Імпартаванне…"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Скасаваць экспартаванне"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "Экспартаванне…"
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "На дадзены момант няма правіл для пэўных акон"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New…</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr "Пстрыкніце па кнопцы <interface>Дадаць...</interface>, каб дадаць"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Абраць правілы для экспартавання"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "Адкінуць выбар"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "Абраць усё"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "Захаваць правілы"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Рэдагаваць"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "Дубляваць"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Выдаліць"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Імпартаваць правілы"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Экспартаваць правілы"

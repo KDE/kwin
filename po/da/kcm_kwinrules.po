@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2020-01-30 19:56+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -790,82 +790,82 @@ msgstr ""
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin-regler (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr ""
-
-#: ui/main.qml:63
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr ""
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr ""
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr ""
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr ""
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "&New..."
 msgid "Add New…"
 msgstr "&Ny..."
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, fuzzy, kde-format
 #| msgid "&Import"
 msgid "Import…"
 msgstr "&Importér"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, fuzzy, kde-format
 #| msgid "&Export"
 msgid "Cancel Export"
 msgstr "&Eksportér"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, fuzzy, kde-format
 #| msgid "&Export"
 msgid "Export…"
 msgstr "&Eksportér"
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr ""
+
+#: ui/main.qml:89
+#, kde-kuit-format
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr ""
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr ""
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr ""
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr ""
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr ""
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Redigér"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Slet"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Importér regler"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Eksportér regler"

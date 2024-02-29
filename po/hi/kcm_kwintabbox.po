@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2010-01-31 20:41+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Hindi <indlinux>\n"
@@ -44,7 +44,7 @@ msgstr "वैकल्पिक"
 
 #: main.cpp:69
 #, kde-format
-msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr ""
 
 #: main.cpp:83

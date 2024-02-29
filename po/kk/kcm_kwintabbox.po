@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2013-03-12 04:44+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -43,7 +43,7 @@ msgstr "Басқаша"
 #: main.cpp:69
 #, fuzzy, kde-format
 #| msgid "Get New Window Switcher Layout"
-msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr "Жаңа терезе ауыстырғышының қалыпын табу"
 
 #: main.cpp:83

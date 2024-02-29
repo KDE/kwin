@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-14 14:39+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -828,81 +828,83 @@ msgstr "Seleziona file"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "Regole di KWin (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Attualmente non sono state impostate regole per finestre specifiche"
-
-#: ui/main.qml:63
-#, kde-kuit-format
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Fai clic sul pulsante <interface>Aggiungi nuova…</interface> qui sotto per "
-"aggiungere"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Seleziona le regole da esportare"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "Deseleziona tutto"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "Seleziona tutto"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "Salva regole"
-
 # Femminile, si riferisce a «regola»
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
 msgstr "Aggiungi nuova…"
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, kde-format
 msgid "Import…"
 msgstr "Importa…"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Annulla esportazione"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Export…"
 msgstr "Esporta…"
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Attualmente non sono state impostate regole per finestre specifiche"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New…</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr ""
+"Fai clic sul pulsante <interface>Aggiungi nuova…</interface> qui sotto per "
+"aggiungere"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Seleziona le regole da esportare"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "Deseleziona tutto"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "Seleziona tutto"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "Salva regole"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Modifica"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "Duplica"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Elimina"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Importa regole"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Esporta regole"

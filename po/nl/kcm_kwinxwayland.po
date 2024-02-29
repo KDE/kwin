@@ -1,13 +1,13 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2022, 2023 Freek de Kruijf <freekdekruijf@kde.nl>
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-28 00:38+0000\n"
-"PO-Revision-Date: 2023-11-29 17:38+0100\n"
+"PO-Revision-Date: 2024-02-28 11:02+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: ui/main.qml:32
 #, kde-format
@@ -43,8 +43,7 @@ msgid "Never"
 msgstr "Nooit"
 
 #: ui/main.qml:55
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Alleen toetsen Meta, Ctrl, Alt en Shift"
 
@@ -64,7 +63,7 @@ msgstr "Altijd"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Neem ook muisknoppen mee"
 
 #: ui/main.qml:89
 #, kde-format

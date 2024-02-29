@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2023-01-02 23:31+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -766,85 +766,85 @@ msgstr "Faylı seçmək"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin qaydaları (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Hal-hazırda xüsusi pəncərələr üçün qaydalar təyin edilməyib"
-
-#: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Bəzilərini əlavə etmək üçün aşağıdakı <interface>Yenisini əlavə edin...</"
-"interface> düyməsinə vurun"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "İxrac etmək üçün qaydaları seçmək"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "Bütün seçimləri ləğv etmək"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "Hamısını seçmək"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "Qaydaları saxlamaq"
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Add New..."
 msgid "Add New…"
 msgstr "Yenisini əlavə etmək..."
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, fuzzy, kde-format
 #| msgid "Import..."
 msgid "Import…"
 msgstr "İdxal..."
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "İxracı dayandırmaq..."
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, fuzzy, kde-format
 #| msgid "Export..."
 msgid "Export…"
 msgstr "İxrac..."
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Hal-hazırda xüsusi pəncərələr üçün qaydalar təyin edilməyib"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr ""
+"Bəzilərini əlavə etmək üçün aşağıdakı <interface>Yenisini əlavə edin...</"
+"interface> düyməsinə vurun"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "İxrac etmək üçün qaydaları seçmək"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "Bütün seçimləri ləğv etmək"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "Hamısını seçmək"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "Qaydaları saxlamaq"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Düzəliş etmək"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "Təkrarı"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Silmək"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Qaydaları idxal etmək"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Qaydaları ixrac etmək"

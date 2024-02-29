@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-17 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2022-04-19 19:39+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -764,85 +764,85 @@ msgstr "Välj fil"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "Kwin-regler (*.kwinrule)"
 
-#: ui/main.qml:62
-#, kde-format
-msgid "No rules for specific windows are currently set"
-msgstr "Inga regler för specifika fönster är för närvarande inställda"
-
-#: ui/main.qml:63
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
-msgctxt "@info"
-msgid "Click the <interface>Add New…</interface> button below to add some"
-msgstr ""
-"Klicka på knappen <interface>Lägg till ny...</interface> nedan för att lägga "
-"till några"
-
-#: ui/main.qml:71
-#, kde-format
-msgid "Select the rules to export"
-msgstr "Markera reglerna att exportera"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Unselect All"
-msgstr "Avmarkera alla"
-
-#: ui/main.qml:75
-#, kde-format
-msgid "Select All"
-msgstr "Markera alla"
-
-#: ui/main.qml:89
-#, kde-format
-msgid "Save Rules"
-msgstr "Spara regler"
-
-#: ui/main.qml:100
+#: ui/main.qml:29
 #, fuzzy, kde-format
 #| msgid "Add New..."
 msgid "Add New…"
 msgstr "Lägg till ny..."
 
-#: ui/main.qml:111
+#: ui/main.qml:35
 #, fuzzy, kde-format
 #| msgid "Import..."
 msgid "Import…"
 msgstr "Importera..."
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, kde-format
 msgid "Cancel Export"
 msgstr "Avbryt export"
 
-#: ui/main.qml:119
+#: ui/main.qml:40
 #, fuzzy, kde-format
 #| msgid "Export..."
 msgid "Export…"
 msgstr "Exportera..."
 
-#: ui/main.qml:195
+#: ui/main.qml:88
+#, kde-format
+msgid "No rules for specific windows are currently set"
+msgstr "Inga regler för specifika fönster är för närvarande inställda"
+
+#: ui/main.qml:89
+#, fuzzy, kde-kuit-format
+#| msgctxt "@info"
+#| msgid "Click the <interface>Add New...</interface> button below to add some"
+msgctxt "@info"
+msgid "Click <interface>Add New…</interface> to add some"
+msgstr ""
+"Klicka på knappen <interface>Lägg till ny...</interface> nedan för att lägga "
+"till några"
+
+#: ui/main.qml:97
+#, kde-format
+msgid "Select the rules to export"
+msgstr "Markera reglerna att exportera"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Unselect All"
+msgstr "Avmarkera alla"
+
+#: ui/main.qml:101
+#, kde-format
+msgid "Select All"
+msgstr "Markera alla"
+
+#: ui/main.qml:115
+#, kde-format
+msgid "Save Rules"
+msgstr "Spara regler"
+
+#: ui/main.qml:188
 #, kde-format
 msgid "Edit"
 msgstr "Redigera"
 
-#: ui/main.qml:201
+#: ui/main.qml:194
 #, kde-format
 msgid "Duplicate"
 msgstr "Dubblett"
 
-#: ui/main.qml:207
+#: ui/main.qml:200
 #, kde-format
 msgid "Delete"
 msgstr "Ta bort"
 
-#: ui/main.qml:239
+#: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
 msgstr "Importera regler"
 
-#: ui/main.qml:251
+#: ui/main.qml:244
 #, kde-format
 msgid "Export Rules"
 msgstr "Exportera regler"

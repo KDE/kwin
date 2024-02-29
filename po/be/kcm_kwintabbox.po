@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-02-29 00:39+0000\n"
 "PO-Revision-Date: 2024-02-22 13:34\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -44,8 +44,9 @@ msgid "Alternative"
 msgstr "Альтэрнатыўны"
 
 #: main.cpp:69
-#, kde-format
-msgid "Get New Task Switchers..."
+#, fuzzy, kde-format
+#| msgid "Get New Task Switchers..."
+msgid "Get New Task Switchers…"
 msgstr "Атрымаць новыя сродкі пераключэння задач..."
 
 #: main.cpp:83

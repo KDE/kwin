@@ -1,15 +1,15 @@
 # Translation of kcm_kwinxwayland.po to Catalan
-# Copyright (C) 2022-2023 This_file_is_part_of_KDE
+# Copyright (C) 2022-2024 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2022, 2023.
+# Josep M. Ferrer <txemaq@gmail.com>, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-28 00:38+0000\n"
-"PO-Revision-Date: 2023-11-29 13:42+0100\n"
+"PO-Revision-Date: 2024-02-28 10:16+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -49,7 +49,7 @@ msgstr "Mai"
 #: ui/main.qml:55
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr ""
+msgstr "Només les tecles Meta, Control, Alt i Majúscules"
 
 #: ui/main.qml:61
 #, kde-format
@@ -67,7 +67,7 @@ msgstr "Sempre"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Inclou addicionalment els botons del ratolí"
 
 #: ui/main.qml:89
 #, kde-format
@@ -80,6 +80,3 @@ msgstr ""
 "sistema a la de la sessió X11 permetent que programari maliciós robi "
 "contrasenyes i espiï el text que escriviu. Assegureu-vos d'entendre i "
 "acceptar aquest risc."
-
-#~ msgid "Only non-character keys"
-#~ msgstr "Només tecles que no siguin caràcters"

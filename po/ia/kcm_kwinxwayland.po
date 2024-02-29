@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# giovanni <g.sora@tiscali.it>, 2022, 2023.
+# giovanni <g.sora@tiscali.it>, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-28 00:38+0000\n"
-"PO-Revision-Date: 2023-11-30 09:02+0100\n"
+"PO-Revision-Date: 2024-02-28 11:03+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -44,8 +44,7 @@ msgid "Never"
 msgstr "Jammais"
 
 #: ui/main.qml:55
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Solmente claves  Meta, Control, Alt, e Shift"
 
@@ -65,7 +64,7 @@ msgstr "Sempre"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Include additionalmente buttones de mus"
 
 #: ui/main.qml:89
 #, kde-format
