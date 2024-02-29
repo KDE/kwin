@@ -53,10 +53,11 @@ public:
 class SwapEventFilter : public X11EventFilter
 {
 public:
-    SwapEventFilter(xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable);
+    SwapEventFilter(GlxBackend *backend, xcb_drawable_t drawable, xcb_glx_drawable_t glxDrawable);
     bool event(xcb_generic_event_t *event) override;
 
 private:
+    GlxBackend *m_backend;
     xcb_drawable_t m_drawable;
     xcb_glx_drawable_t m_glxDrawable;
 };
@@ -100,8 +101,9 @@ public:
         return m_x11Display;
     }
 
-private:
     void vblank(std::chrono::nanoseconds timestamp);
+
+private:
     void present(const QRegion &damage);
     bool initBuffer();
     bool checkVersion();
