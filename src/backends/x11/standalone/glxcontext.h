@@ -25,8 +25,8 @@ public:
     GlxContext(::Display *display, GLXWindow window, GLXContext handle);
     ~GlxContext() override;
 
-    bool makeCurrent();
-    void doneCurrent() const;
+    bool makeCurrent() override;
+    void doneCurrent() const override;
 
     void glXSwapIntervalMESA(unsigned int interval);
 

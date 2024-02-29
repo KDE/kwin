@@ -39,6 +39,9 @@ public:
     explicit OpenGlContext(bool EGL);
     virtual ~OpenGlContext();
 
+    virtual bool makeCurrent() = 0;
+    virtual void doneCurrent() const = 0;
+
     bool hasVersion(const Version &version) const;
 
     QByteArrayView openglVersionString() const;

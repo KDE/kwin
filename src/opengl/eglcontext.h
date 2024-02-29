@@ -28,8 +28,9 @@ public:
     EglContext(EglDisplay *display, EGLConfig config, ::EGLContext context);
     ~EglContext() override;
 
-    bool makeCurrent(EGLSurface surface = EGL_NO_SURFACE);
-    void doneCurrent() const;
+    bool makeCurrent() override;
+    bool makeCurrent(EGLSurface surface);
+    void doneCurrent() const override;
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
 
     EglDisplay *displayObject() const;

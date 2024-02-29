@@ -82,6 +82,11 @@ EglContext::~EglContext()
     eglDestroyContext(m_display->handle(), m_handle);
 }
 
+bool EglContext::makeCurrent()
+{
+    return makeCurrent(EGL_NO_SURFACE);
+}
+
 bool EglContext::makeCurrent(EGLSurface surface)
 {
     if (QOpenGLContext *context = QOpenGLContext::currentContext()) {
