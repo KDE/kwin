@@ -10,3 +10,7 @@ Script=kwin-6.0-reset-active-mouse-screen
 # Delete old desktop switching shortcuts.
 Id=kwin-6.0-delete-desktop-switching-shortcuts
 Script=kwin-6.0-delete-desktop-switching-shortcuts
+
+# Delete old tabbox defaults
+Id=kwin-6.0-remove-breeze-tabbox-default
+Script=kwin-6.0-remove-breeze-tabbox-default
