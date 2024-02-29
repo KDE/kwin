@@ -11,5 +11,10 @@ target_sources(kwin-6.0-reset-active-mouse-screen PRIVATE kwin-6.0-reset-active-
 target_link_libraries(kwin-6.0-reset-active-mouse-screen PRIVATE KF6::ConfigCore)
 install(TARGETS kwin-6.0-reset-active-mouse-screen DESTINATION ${KDE_INSTALL_LIBDIR}/kconf_update_bin/)
 
+add_executable(kwin-6.0-remove-breeze-tabbox-default)
+target_sources(kwin-6.0-remove-breeze-tabbox-default PRIVATE kwin-6.0-remove-breeze-tabbox-default.cpp)
+target_link_libraries(kwin-6.0-remove-breeze-tabbox-default PRIVATE KF6::ConfigCore)
+install(TARGETS kwin-6.0-remove-breeze-tabbox-default DESTINATION ${KDE_INSTALL_LIBDIR}/kconf_update_bin/)
+
 install(FILES kwin.upd
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
