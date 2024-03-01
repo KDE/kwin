@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-13 16:22+0300\n"
+"PO-Revision-Date: 2024-02-29 16:55+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.01.95\n"
+"X-Generator: Lokalize 24.02.0\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -174,7 +174,7 @@ msgid ""
 msgstr ""
 "Bazı uygulamalar başlatıldıktan sonra kendi geometrilerini ayarlarlar ve "
 "boyut ve konum ayarlarınızı geçersiz kılarlar. Bu ayarları zorlamak için "
-"ayrıca \"%1\" özelliğini \"Evet\" olarak zorlayın."
+"ayrıca ‘%1’ özelliğini ‘Evet’ olarak zorlayın."
 
 #: rulesmodel.cpp:257
 #, kde-format
@@ -320,7 +320,7 @@ msgstr ""
 "isteklerini geçersiz kılar.<nl/><nl/>Bu, <interface>Boyut</interface> ve "
 "<interface>Konum</interface> özelliklerini etkiler; ancak <interface>Ekranı "
 "Kaplamış</interface> veya <interface>Tam Ekran</interface> durumlarını "
-"etkilemez.<nl/><nl/>Konumun, başka bir <interface>Ekran</interface>'ı "
+"etkilemez.<nl/><nl/>Konumun, başka bir <interface>Ekran</interface>’ı "
 "eşlemlemek için kullanılabileceğini aklınızda bulundurun."
 
 #: rulesmodel.cpp:552
@@ -348,8 +348,8 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Video oynatıcılar veya uçbirimler gibi bazı uygulamalar, KWin'den bunları "
-"belirli en boy oranlarıyla sınırlamasını veya yalnızca bir karakterin "
+"Video oynatıcılar veya uçbirimler gibi bazı uygulamalar, KWin’den bunları "
+"belirli en–boy oranlarıyla sınırlamasını veya yalnızca bir karakterin "
 "boyutlarından daha büyük değerlerle büyümesini isteyebilir. Bu tür "
 "kısıtlamaları yok saymak ve bu pencerelerin rastgele boyutlara getirilmesine "
 "izin vermek için bu özelliği kullanın.<nl/><nl/>Bu, ekranı kapladığında tam "
@@ -380,7 +380,7 @@ msgstr "Görev çubuğunu atla"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr "Pencerenin Görev Yöneticisi'nde görünüp görünmeyeceğini denetler."
+msgstr "Pencerenin Görev Yöneticisi’nde görünüp görünmeyeceğini denetler."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -477,10 +477,10 @@ msgstr ""
 "olmaksızın açılan pencerelere ne olacağını burada görebilirsiniz:<nl/"
 "><list><item><emphasis strong='true'>Yok:</emphasis> Pencere yükseltilir ve "
 "odaklanılır.</item><item><emphasis strong='true'>Düşük:</emphasis> Odak "
-"çalmayı önleme uygulanır; ancak KWin'in belirsiz addettiği durumlarda "
+"çalmayı önleme uygulanır; ancak KWin’in belirsiz addettiği durumlarda "
 "pencere yükseltilir ve odaklanılır.</item><item><emphasis "
 "strong='true'>Normal:</emphasis> Odak çalmayı önleme uygulanır; ancak "
-"KWin'in belirsiz addettiği durumlarda pencere <emphasis>yükseltilmez ve "
+"KWin’in belirsiz addettiği durumlarda pencere <emphasis>yükseltilmez ve "
 "odaklanılmaz</emphasis>.</item><item><emphasis strong='true'>Yüksek:</"
 "emphasis> Pencere yalnızca geçerli odaklı uygulamayla aynı uygulamaya aitse "
 "yükseltilir ve odaklanılır.</item><item><emphasis strong='true'>Çok Yüksek:</"
@@ -522,9 +522,9 @@ msgstr ""
 "strong='true'>Yok</emphasis>: Yeni açılan pencereler her zaman kendilerini "
 "yükseltirler ve odağı alırlar.</item><item><emphasis strong='true'>Düşük:</"
 "emphasis> Yeni açılan pencereye odak korumayı önleme uygulanır; ancak "
-"KWin'in belirsiz addettiği bir durumda pencere yükseltilir ve odaklanılır.</"
+"KWin’in belirsiz addettiği bir durumda pencere yükseltilir ve odaklanılır.</"
 "item><item><emphasis strong='true'>Normal:</emphasis> Odak çalmayı önleme "
-"yeni açılan pencereye uygulanır; ancak KWin'in belirsiz addettiği durumlarda "
+"yeni açılan pencereye uygulanır; ancak KWin’in belirsiz addettiği durumlarda "
 "pencere <emphasis>yükseltilmez ve odaklanılmaz</emphasis>.</"
 "item><item><emphasis strong='true'>Yüksek:</emphasis> Yeni açılan pencere "
 "yalnızca geçerli odaklı uygulamayla aynı uygulamaya aitse yükseltilir ve "
@@ -839,13 +839,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Şu anda belirli pencereler için hiçbir kural ayarlanmadı"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
-"Birkaç tane eklemek için aşağıdaki <interface>Yeni Ekle...</interface> "
+"Birkaç tane eklemek için aşağıdaki <interface>Yeni Ekle…</interface> "
 "düğmesine tıklayın"
 
 #: ui/main.qml:97
@@ -886,7 +884,7 @@ msgstr "Sil"
 #: ui/main.qml:232
 #, kde-format
 msgid "Import Rules"
-msgstr "Kuralları İçe Aktar"
+msgstr "Kurallar İçe Aktar"
 
 #: ui/main.qml:244
 #, kde-format
@@ -923,7 +921,7 @@ msgid ""
 "window properties that will be affected by the rule"
 msgstr ""
 "Kuraldan etkilenecek pencere özellikleri eklemek için aşağıda "
-"<interface>Özellik Ekle...</interface> düğmesine tıklayın"
+"<interface>Özellik Ekle…</interface> düğmesine tıklayın"
 
 #: ui/RulesEditor.qml:88
 #, kde-format
@@ -933,7 +931,7 @@ msgstr "Kapat"
 #: ui/RulesEditor.qml:88
 #, kde-format
 msgid "Add Property..."
-msgstr "Özellik Ekle..."
+msgstr "Özellik Ekle…"
 
 #: ui/RulesEditor.qml:101
 #, kde-format

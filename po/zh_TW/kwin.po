@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-29 02:42+0900\n"
+"PO-Revision-Date: 2024-03-01 06:22+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -1701,13 +1701,13 @@ msgstr "視窗關閉動畫"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "無動作時間（秒）："
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "打字時隱藏游標"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2523,8 +2523,7 @@ msgid "Padding:"
 msgstr "填充："
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
 msgstr "載入佈局…"
 

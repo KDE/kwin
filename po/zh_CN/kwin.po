@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-05 11:37\n"
+"PO-Revision-Date: 2024-02-29 12:52\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -1546,7 +1546,7 @@ msgstr "丙型色盲 (蓝黄色盲)"
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "强度："
 
 #: plugins/colorpicker/colorpicker.cpp:104
 #, kde-format
@@ -3484,14 +3484,13 @@ msgstr "图层规则类型"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "自适应同步"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "活动规则类型"
+msgstr "自适应同步规则类型"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3533,11 +3532,10 @@ msgid "Show Desktop"
 msgstr "显示桌面"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "无窗口"
+msgstr "没有打开的窗口"
 
 #: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows"
@@ -4174,15 +4172,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Move to %1 %2"
-#~ msgstr "移动到 %1 %2"
-
-#~ msgid "Layout mode:"
-#~ msgstr "排列模式："
-
-#~ msgid "Closest"
-#~ msgstr "紧凑"
-
-#~ msgid "Natural"
-#~ msgstr "自然"

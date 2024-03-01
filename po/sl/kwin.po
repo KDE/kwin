@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1674474 2024-02-29 01:07:28Z scripty $
+# $Id: kwin.po 1674568 2024-03-01 01:08:05Z scripty $
 # $Source$
 #
 #
@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-16 18:08+0100\n"
+"PO-Revision-Date: 2024-02-29 07:06+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -1721,13 +1721,13 @@ msgstr "Animacija zapiranja okna"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Trajanje nedejavnosti (sekunde):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Skrij kazalko pri tipkanju"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2549,10 +2549,9 @@ msgid "Padding:"
 msgstr "Oblazinjenje:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Naloži postavitev..."
+msgstr "Naloži postavitev…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format

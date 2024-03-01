@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-15 12:37+0100\n"
+"PO-Revision-Date: 2024-02-29 12:50+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1726,13 +1726,13 @@ msgstr "Animació de tancament de les finestres"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Duració de la inactivitat (segons):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Oculta el cursor en teclejar"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2555,10 +2555,9 @@ msgid "Padding:"
 msgstr "Farciment:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Carrega una disposició..."
+msgstr "Carrega una disposició…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -4225,15 +4224,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Move to %1 %2"
-#~ msgstr "Mou cap a %1 %2"
-
-#~ msgid "Layout mode:"
-#~ msgstr "Mode de disposició:"
-
-#~ msgid "Closest"
-#~ msgstr "El més proper"
-
-#~ msgid "Natural"
-#~ msgstr "Natural"

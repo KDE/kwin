@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-13 22:49+0200\n"
+"PO-Revision-Date: 2024-02-29 08:43+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -857,14 +857,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Для окремих вікон ще не визначено жодних правил"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
-"Натисніть розташовану нижче кнопку <interface>Додати новий…</interface>, щоб "
-"додати записи"
+msgstr "Натисніть <interface>Додати новий…</interface>, щоб додати запис"
 
 #: ui/main.qml:97
 #, kde-format

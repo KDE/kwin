@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-13 05:10+0100\n"
+"PO-Revision-Date: 2024-02-29 02:43+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -842,13 +842,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "ამჟამად მითითებული ფანჯრების წესები მითითებული არაა"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
-"დასამატებლად ქვემოთ <interface>ახლის დამატების...</interface> ღილაკს "
+"დასამატებლად ქვემოთ <interface>ახლის დამატების...</interface> ღილაკზე "
 "დააწკაპუნეთ"
 
 #: ui/main.qml:97

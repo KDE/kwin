@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-20 15:53+0200\n"
+"PO-Revision-Date: 2024-02-29 23:34+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -845,14 +845,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Šiuo metu jokiems konkretiems langams nėra nustatytų taisyklių"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
-"Norėdami jas pridėti, žemiau spustelėkite mygtuką <interface>Pridėti naują…</"
-"interface>"
+"Norėdami jas pridėti, spustelėkite <interface>Pridėti naują…</interface>"
 
 #: ui/main.qml:97
 #, kde-format
