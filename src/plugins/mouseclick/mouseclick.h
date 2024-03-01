@@ -24,10 +24,10 @@ namespace KWin
 
 class EffectFrame;
 
-class MouseEvent
+class MouseClickMouseEvent
 {
 public:
-    MouseEvent(int button, QPoint point, int time, std::unique_ptr<EffectFrame> &&frame, bool press)
+    MouseClickMouseEvent(int button, QPoint point, int time, std::unique_ptr<EffectFrame> &&frame, bool press)
         : m_button(button)
         , m_pos(point)
         , m_time(time)
@@ -131,8 +131,8 @@ private:
     inline bool isReleased(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
     inline bool isPressed(Qt::MouseButtons button, Qt::MouseButtons buttons, Qt::MouseButtons oldButtons);
 
-    inline float computeRadius(const MouseEvent *click, int ring);
-    inline float computeAlpha(const MouseEvent *click, int ring);
+    inline float computeRadius(const MouseClickMouseEvent *click, int ring);
+    inline float computeAlpha(const MouseClickMouseEvent *click, int ring);
 
     void repaint();
 
@@ -150,7 +150,7 @@ private:
     QFont m_font;
     std::chrono::milliseconds m_lastPresentTime = std::chrono::milliseconds::zero();
 
-    std::deque<std::unique_ptr<MouseEvent>> m_clicks;
+    std::deque<std::unique_ptr<MouseClickMouseEvent>> m_clicks;
     std::unique_ptr<MouseButton> m_buttons[BUTTON_COUNT];
     QHash<quint64, TabletToolEvent> m_tabletTools;
 
