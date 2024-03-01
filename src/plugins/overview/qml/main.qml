@@ -524,7 +524,7 @@ FocusScope {
                     Kirigami.ShadowedTexture {
                         anchors.fill: parent
 
-                        color: Kirigami.Theme.highlightColor
+                        color: "transparent"
                         source: desktopElement
 
                         radius: Kirigami.Units.largeSpacing * 2 * (overviewVal + gridVal * 2)
@@ -534,6 +534,11 @@ FocusScope {
                             color: Qt.rgba(0, 0, 0, 0.3)
                             yOffset: 3
                         }
+
+                        property var borderWidth: desktopHover.hovered ? Kirigami.Units.largeSpacing : (mainBackground.current ? Kirigami.Units.smallSpacing : 0);
+                        property var borderColor: desktopHover.hovered ? Kirigami.Theme.focusColor : (mainBackground.current ? Kirigami.Theme.highlightColor : "transparent")
+                        border.width: gridVal == 1 ? borderWidth : 0
+                        border.color: gridVal == 1 ? borderColor : "transparent"
                     }
 
                     DropArea {
@@ -592,6 +597,10 @@ FocusScope {
                                 Qt.callLater(heap.resetPosition)
                             }
                         }
+                    }
+
+                    HoverHandler {
+                        id: desktopHover
                     }
                 }
 
