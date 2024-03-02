@@ -1088,6 +1088,9 @@ const ColorDescription &SurfaceInterface::colorDescription() const
 
 void SurfaceInterface::setPreferredColorDescription(const ColorDescription &descr)
 {
+    if (d->preferredColorDescription == descr) {
+        return;
+    }
     d->preferredColorDescription = descr;
     if (d->frogColorManagement) {
         d->frogColorManagement->setPreferredColorDescription(descr);
