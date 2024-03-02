@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-29 00:39+0000\n"
+"POT-Creation-Date: 2024-03-02 00:38+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -2358,7 +2358,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Oynaning &xususiyatlari"
 
-#: plugins/overview/qml/main.qml:730
+#: plugins/overview/qml/main.qml:739
 #, fuzzy, kde-format
 #| msgid "Resize Window"
 msgctxt "@info:placeholder"

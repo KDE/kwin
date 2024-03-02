@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-13 08:20+0200\n"
+"PO-Revision-Date: 2024-03-01 11:07+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -818,13 +818,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "אין כללים שחלים על חלונות מסוימים כרגע"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
-"יש ללחוץ על הכפתור <interface>הוספת חדש…</interface> להלן כדי להוסיף כאלה"
+msgstr "יש ללחוץ על <interface>הוספת חדש…</interface> כדי להוסיף כאלה"
 
 #: ui/main.qml:97
 #, kde-format
