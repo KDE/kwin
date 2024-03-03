@@ -165,7 +165,7 @@ void GLFramebuffer::initDepthStencilAttachment()
 
     // Try to attach a depth attachment separately.
     GLenum depthFormat;
-    if (context->isOpenglES()) {
+    if (context->isOpenGLES()) {
         if (context->supportsGLES24BitDepthBuffers()) {
             depthFormat = GL_DEPTH_COMPONENT24;
         } else {
@@ -187,7 +187,7 @@ void GLFramebuffer::initDepthStencilAttachment()
 
     // Try to attach a stencil attachment separately.
     GLenum stencilFormat;
-    if (context->isOpenglES()) {
+    if (context->isOpenGLES()) {
         stencilFormat = GL_STENCIL_INDEX8;
     } else {
         stencilFormat = GL_STENCIL_INDEX;

@@ -158,7 +158,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
     GLenum glFormat;
     GLenum type;
     QImage::Format uploadFormat;
-    if (!context->isOpenglES()) {
+    if (!context->isOpenGLES()) {
         const QImage::Format index = image.format();
 
         if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
@@ -451,7 +451,7 @@ OutputTransform GLTexture::contentTransform() const
 
 void GLTexture::setSwizzle(GLenum red, GLenum green, GLenum blue, GLenum alpha)
 {
-    if (!OpenGlContext::currentContext()->isOpenglES()) {
+    if (!OpenGlContext::currentContext()->isOpenGLES()) {
         const GLuint swizzle[] = {red, green, blue, alpha};
         glTexParameteriv(d->m_target, GL_TEXTURE_SWIZZLE_RGBA, (const GLint *)swizzle);
     } else {
@@ -494,7 +494,7 @@ QImage GLTexture::toImage()
     }
     QImage ret(size(), QImage::Format_RGBA8888_Premultiplied);
 
-    if (OpenGlContext::currentContext()->isOpenglES()) {
+    if (OpenGlContext::currentContext()->isOpenGLES()) {
         GLFramebuffer fbo(this);
         GLFramebuffer::pushFramebuffer(&fbo);
         glReadPixels(0, 0, width(), height(), GL_RGBA, GL_UNSIGNED_INT_8_8_8_8_REV, ret.bits());
@@ -529,7 +529,7 @@ std::unique_ptr<GLTexture> GLTexture::allocate(GLenum internalFormat, const QSiz
     glBindTexture(GL_TEXTURE_2D, texture);
 
     const auto context = OpenGlContext::currentContext();
-    if (!context->isOpenglES()) {
+    if (!context->isOpenGLES()) {
         if (context->supportsTextureStorage()) {
             glTexStorage2D(GL_TEXTURE_2D, levels, internalFormat, size.width(), size.height());
         } else {
@@ -567,7 +567,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
 
     const auto context = OpenGlContext::currentContext();
     GLenum internalFormat;
-    if (!context->isOpenglES()) {
+    if (!context->isOpenGLES()) {
         QImage im;
         GLenum format;
         GLenum type;

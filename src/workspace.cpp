@@ -1824,7 +1824,7 @@ QString Workspace::supportInformation() const
         case OpenGLCompositing: {
             const auto context = Compositor::self()->scene()->openglContext();
             GLPlatform *platform = context->glPlatform();
-            if (context->isOpenglES()) {
+            if (context->isOpenGLES()) {
                 support.append(QStringLiteral("Compositing Type: OpenGL ES 2.0\n"));
             } else {
                 support.append(QStringLiteral("Compositing Type: OpenGL\n"));

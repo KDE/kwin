@@ -47,7 +47,7 @@ public:
     Version glslVersion() const;
     QByteArrayView vendor() const;
     QByteArrayView renderer() const;
-    bool isOpenglES() const;
+    bool isOpenGLES() const;
     bool hasOpenglExtension(QByteArrayView name) const;
     bool isSoftwareRenderer() const;
     bool supportsTimerQueries() const;

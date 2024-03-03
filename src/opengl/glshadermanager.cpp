@@ -44,7 +44,7 @@ QByteArray ShaderManager::generateVertexSource(ShaderTraits traits) const
     const auto context = OpenGlContext::currentContext();
     QByteArray attribute, varying;
 
-    if (!context->isOpenglES()) {
+    if (!context->isOpenGLES()) {
         const bool glsl_140 = context->glslVersion() >= Version(1, 40);
 
         attribute = glsl_140 ? QByteArrayLiteral("in") : QByteArrayLiteral("attribute");
@@ -94,7 +94,7 @@ QByteArray ShaderManager::generateFragmentSource(ShaderTraits traits) const
     const auto context = OpenGlContext::currentContext();
     QByteArray varying, output, textureLookup;
 
-    if (!context->isOpenglES()) {
+    if (!context->isOpenGLES()) {
         const bool glsl_140 = context->glslVersion() >= Version(1, 40);
 
         if (glsl_140) {
@@ -257,7 +257,7 @@ static QString resolveShaderFilePath(const QString &filePath)
     QString extension;
 
     const auto context = OpenGlContext::currentContext();
-    const Version coreVersionNumber = context->isOpenglES() ? Version(3, 0) : Version(1, 40);
+    const Version coreVersionNumber = context->isOpenGLES() ? Version(3, 0) : Version(1, 40);
     if (context->glslVersion() >= coreVersionNumber) {
         suffix = QStringLiteral("_core");
     }

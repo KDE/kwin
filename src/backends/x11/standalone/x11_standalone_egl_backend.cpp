@@ -364,7 +364,7 @@ void EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &fra
     m_vsyncMonitor->arm();
 
     QRegion effectiveRenderedRegion = m_lastRenderedRegion;
-    if (!m_context->isOpenglES()) {
+    if (!m_context->isOpenGLES()) {
         const QRect displayRect = workspace()->geometry();
         if (!supportsBufferAge() && m_swapStrategy == Options::CopyFrontBuffer && m_lastRenderedRegion != displayRect) {
             glReadBuffer(GL_FRONT);

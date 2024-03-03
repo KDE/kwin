@@ -96,11 +96,11 @@ const QByteArray GLShader::prepareSource(GLenum shaderType, const QByteArray &so
     // Prepare the source code
     QByteArray ba;
     const auto context = OpenGlContext::currentContext();
-    if (context->isOpenglES() && context->glslVersion() < Version(3, 0)) {
+    if (context->isOpenGLES() && context->glslVersion() < Version(3, 0)) {
         ba.append("precision highp float;\n");
     }
     ba.append(source);
-    if (context->isOpenglES() && context->glslVersion() >= Version(3, 0)) {
+    if (context->isOpenGLES() && context->glslVersion() >= Version(3, 0)) {
         ba.replace("#version 140", "#version 300 es\n\nprecision highp float;\n");
     }
 
@@ -189,7 +189,7 @@ void GLShader::bindAttributeLocation(const char *name, int index)
 void GLShader::bindFragDataLocation(const char *name, int index)
 {
     const auto context = OpenGlContext::currentContext();
-    if (!context->isOpenglES() && (context->hasVersion(Version(3, 0)) || context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
+    if (!context->isOpenGLES() && (context->hasVersion(Version(3, 0)) || context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_gpu_shader4")))) {
         glBindFragDataLocation(m_program, index, name);
     }
 }

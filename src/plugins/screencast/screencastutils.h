@@ -51,7 +51,7 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
 {
     const auto context = OpenGlContext::currentContext();
     const QSize size = texture->size();
-    const bool invertNeeded = context->isOpenglES() ^ (texture->contentTransform() != OutputTransform::FlipY);
+    const bool invertNeeded = context->isOpenGLES() ^ (texture->contentTransform() != OutputTransform::FlipY);
     const bool invertNeededAndSupported = invertNeeded && context->supportsPackInvert();
     GLboolean prev;
     if (invertNeededAndSupported) {
@@ -62,7 +62,7 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
     texture->bind();
     // BUG: The nvidia driver fails to glGetTexImage
     // Drop driver() == DriverNVidia some time after that's fixed
-    if (context->isOpenglES() || context->glPlatform()->driver() == Driver_NVidia) {
+    if (context->isOpenGLES() || context->glPlatform()->driver() == Driver_NVidia) {
         GLFramebuffer fbo(texture);
         GLFramebuffer::pushFramebuffer(&fbo);
         glReadPixels(0, 0, size.width(), size.height(), closestGLType(format), GL_UNSIGNED_BYTE, spa->data);

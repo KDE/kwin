@@ -25,7 +25,7 @@ OpenGlContext *OpenGlContext::s_currentContext = nullptr;
 static QSet<QByteArray> getExtensions(OpenGlContext *context)
 {
     QSet<QByteArray> ret;
-    if (!context->isOpenglES() && context->hasVersion(Version(3, 0))) {
+    if (!context->isOpenGLES() && context->hasVersion(Version(3, 0))) {
         int count;
         glGetIntegerv(GL_NUM_EXTENSIONS, &count);
 
@@ -43,7 +43,7 @@ static QSet<QByteArray> getExtensions(OpenGlContext *context)
 
 static bool checkTextureSwizzleSupport(OpenGlContext *context)
 {
-    if (context->isOpenglES()) {
+    if (context->isOpenGLES()) {
         return context->hasVersion(Version(3, 0));
     } else {
         return context->hasVersion(Version(3, 3)) || context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_swizzle"));
@@ -52,7 +52,7 @@ static bool checkTextureSwizzleSupport(OpenGlContext *context)
 
 static bool checkTextureStorageSupport(OpenGlContext *context)
 {
-    if (context->isOpenglES()) {
+    if (context->isOpenGLES()) {
         return context->hasVersion(Version(3, 0)) || context->hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_storage"));
     } else {
         return context->hasVersion(Version(4, 2)) || context->hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_storage"));
@@ -61,7 +61,7 @@ static bool checkTextureStorageSupport(OpenGlContext *context)
 
 static bool checkIndexedQuads(OpenGlContext *context)
 {
-    if (context->isOpenglES()) {
+    if (context->isOpenGLES()) {
         const bool haveBaseVertex = context->hasOpenglExtension(QByteArrayLiteral("GL_OES_draw_elements_base_vertex"));
         const bool haveCopyBuffer = context->hasVersion(Version(3, 0));
         return haveBaseVertex && haveCopyBuffer && context->hasMapBufferRange();
@@ -153,7 +153,7 @@ QByteArrayView OpenGlContext::renderer() const
     return m_renderer;
 }
 
-bool OpenGlContext::isOpenglES() const
+bool OpenGlContext::isOpenGLES() const
 {
     return m_isOpenglES;
 }
@@ -299,7 +299,7 @@ void OpenGlContext::glResolveFunctions(const std::function<resolveFuncPtr(const 
     const bool haveArbRobustness = hasOpenglExtension(QByteArrayLiteral("GL_ARB_robustness"));
     const bool haveExtRobustness = hasOpenglExtension(QByteArrayLiteral("GL_EXT_robustness"));
     bool robustContext = false;
-    if (isOpenglES()) {
+    if (isOpenGLES()) {
         if (haveExtRobustness) {
             GLint value = 0;
             glGetIntegerv(GL_CONTEXT_ROBUST_ACCESS_EXT, &value);
@@ -342,7 +342,7 @@ void OpenGlContext::initDebugOutput()
     if (!have_ARB_debug) {
         // if we don't have ARB debug, but only KHR debug we need to verify whether the context is a debug context
         // it should work without as well, but empirical tests show: no it doesn't
-        if (isOpenglES()) {
+        if (isOpenGLES()) {
             if (!hasVersion(Version(3, 2))) {
                 // empirical data shows extension doesn't work
                 return;

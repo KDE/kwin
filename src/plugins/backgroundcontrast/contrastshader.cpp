@@ -96,7 +96,7 @@ void ContrastShader::init()
     reset();
 
     const auto context = OpenGlContext::currentContext();
-    const bool gles = context->isOpenglES();
+    const bool gles = context->isOpenGLES();
     const bool glsl_140 = !gles && context->glslVersion() >= Version(1, 40);
     const bool core = glsl_140 || (gles && context->glslVersion() >= Version(3, 0));
 

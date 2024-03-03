@@ -235,7 +235,7 @@ void OpenGLShadowTextureProvider::update()
 
     // Check if the image is alpha-only in practice, and if so convert it to an 8-bpp format
     const auto context = OpenGlContext::currentContext();
-    if (!context->isOpenglES() && context->supportsTextureSwizzle() && context->supportsRGTextures()) {
+    if (!context->isOpenGLES() && context->supportsTextureSwizzle() && context->supportsRGTextures()) {
         QImage alphaImage(image.size(), QImage::Format_Alpha8);
         bool alphaOnly = true;
 

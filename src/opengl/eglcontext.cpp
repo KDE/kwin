@@ -63,7 +63,7 @@ EglContext::EglContext(EglDisplay *display, EGLConfig config, ::EGLContext conte
     setIndexBuffer(m_indexBuffer.get());
     // It is not legal to not have a vertex array object bound in a core context
     // to make code handling old and new OpenGL versions easier, bind a dummy vao that's used for everything
-    if (!isOpenglES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
+    if (!isOpenGLES() && hasOpenglExtension(QByteArrayLiteral("GL_ARB_vertex_array_object"))) {
         glGenVertexArrays(1, &m_vao);
         glBindVertexArray(m_vao);
     }
