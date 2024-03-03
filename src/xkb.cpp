@@ -395,24 +395,25 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
     if (!m_keymap || !m_state) {
         return;
     }
+    const auto sym = toKeysym(key);
     xkb_state_update_key(m_state, key + EVDEV_OFFSET, static_cast<xkb_key_direction>(state));
-    if (state == InputRedirection::KeyboardKeyPressed) {
-        const auto sym = toKeysym(key);
-        if (m_compose.state && xkb_compose_state_feed(m_compose.state, sym) == XKB_COMPOSE_FEED_ACCEPTED) {
-            switch (xkb_compose_state_get_status(m_compose.state)) {
-            case XKB_COMPOSE_NOTHING:
-                m_keysym = sym;
-                break;
-            case XKB_COMPOSE_COMPOSED:
-                m_keysym = xkb_compose_state_get_one_sym(m_compose.state);
-                break;
-            default:
-                m_keysym = XKB_KEY_NoSymbol;
-                break;
-            }
-        } else {
-            m_keysym = sym;
+    if (m_compose.state) {
+        if (state == InputRedirection::KeyboardKeyPressed) {
+            xkb_compose_state_feed(m_compose.state, sym);
         }
+        switch (xkb_compose_state_get_status(m_compose.state)) {
+        case XKB_COMPOSE_NOTHING:
+            m_keysym = sym;
+            break;
+        case XKB_COMPOSE_COMPOSED:
+            m_keysym = xkb_compose_state_get_one_sym(m_compose.state);
+            break;
+        default:
+            m_keysym = XKB_KEY_NoSymbol;
+            break;
+        }
+    } else {
+        m_keysym = sym;
     }
     updateModifiers();
     updateConsumedModifiers(key);
