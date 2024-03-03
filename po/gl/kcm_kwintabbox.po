@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-07 19:54+0100\n"
+"PO-Revision-Date: 2024-03-02 08:55+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: layoutpreview.cpp:127
 #, kde-format
@@ -41,8 +41,7 @@ msgid "Alternative"
 msgstr "Alternativo"
 
 #: main.cpp:69
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switchers…"
 msgstr "Obter novos selectores de tarefas…"
 

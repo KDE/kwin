@@ -21,7 +21,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-14 08:51+0100\n"
+"PO-Revision-Date: 2024-03-01 09:38+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Accelerator-Marker: &\n"
 "X-Environment: kde\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 23.08.5\n"
 "X-Text-Markup: kde4\n"
 
 #: kcmrules.cpp:228
@@ -874,14 +874,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Aucune règle pour les fenêtres spécifiques n'est actuellement définie."
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
-"Cliquez sur le bouton <interface>Ajouter un nouveau... </interface> ci-"
-"dessous pour en ajouter un peu"
+"Cliquez sur <interface>Ajouter un nouveau... </interface> pour en ajouter un"
 
 #: ui/main.qml:97
 #, kde-format

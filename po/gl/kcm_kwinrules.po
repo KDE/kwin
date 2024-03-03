@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-14 15:22+0100\n"
+"PO-Revision-Date: 2024-03-02 08:56+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -844,12 +844,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Actualmente non hai regras definidas para xanelas concretas"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr "Prema o botón <interface>Engadir…</interface> embaixo para engadilas."
+msgstr "Prema <interface>Engadir…</interface> para engadilas."
 
 #: ui/main.qml:97
 #, kde-format

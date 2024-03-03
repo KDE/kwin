@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-27 00:38+0000\n"
-"PO-Revision-Date: 2024-01-07 13:12+0100\n"
+"PO-Revision-Date: 2024-03-02 12:52+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -77,7 +77,7 @@ msgstr "Przegląd"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Siatka"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format

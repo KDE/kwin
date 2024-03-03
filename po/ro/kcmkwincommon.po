@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Sergiu Bivol <sergiu@cip.md>, 2020, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2020, 2022, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-20 02:25+0000\n"
-"PO-Revision-Date: 2022-04-04 17:06+0100\n"
+"PO-Revision-Date: 2024-02-27 21:27+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -47,12 +47,10 @@ msgid "Focus"
 msgstr "Focalizare"
 
 #: effectsmodel.cpp:49
-#, fuzzy, kde-format
-#| msgctxt "Category of Desktop Effects, used as section header"
-#| msgid "Show Desktop Animation"
+#, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Animație de arătare a biroului"
+msgstr "Animație de tras cu ochiul la birou"
 
 #: effectsmodel.cpp:50
 #, kde-format
@@ -87,16 +85,16 @@ msgstr "Echipa de dezvoltare KWin"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Metadatele pachetului nu au putut fi găsite"
 
 #: genericscriptedconfig.cpp:77
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 nu conține un fișier valid metadata.json"
 
 #: genericscriptedconfig.cpp:83 genericscriptedconfig.cpp:89
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 nu există"

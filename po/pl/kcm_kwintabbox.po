@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-11 13:04+0100\n"
+"PO-Revision-Date: 2024-03-02 12:52+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -43,10 +43,9 @@ msgid "Alternative"
 msgstr "Zamienny"
 
 #: main.cpp:69
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switchers…"
-msgstr "Pobierz nowe przełączniki zadań..."
+msgstr "Pobierz nowe przełączniki zadań…"
 
 #: main.cpp:83
 #, kde-format

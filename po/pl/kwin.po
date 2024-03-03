@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1674640 $
+# Version: $Revision: 1674725 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-02 00:38+0000\n"
-"PO-Revision-Date: 2024-02-24 16:56+0100\n"
+"PO-Revision-Date: 2024-03-02 12:49+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -1726,13 +1726,13 @@ msgstr "Animacja zamknięcia okna"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Czas bez żadnego ruchu (sekundy):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Ukryj wskaźnik myszy podczas pisania"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2557,10 +2557,9 @@ msgid "Padding:"
 msgstr "Wypełnianie:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Wczytaj układ..."
+msgstr "Wczytaj układ…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format

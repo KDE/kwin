@@ -1,7 +1,7 @@
 # Traducerea kcmkwinrules.po în Română
 # translation of kcmkwinrules.po to Romanian
 # Claudiu Costin <claudiuc@kde.org>, 2004, 2005.
-# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022.
+# Sergiu Bivol <sergiu@cip.md>, 2008, 2009, 2010, 2012, 2013, 2020, 2021, 2022, 2024.
 # Cristian Oneț <onet.cristian@gmail.com>, 2011, 2012.
 # Cristian Buzduga <cristianbzdg@gmail.com>, 2011.
 msgid ""
@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2022-05-05 12:47+0100\n"
+"PO-Revision-Date: 2024-02-27 21:36+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
 "Language: ro\n"
@@ -539,12 +539,12 @@ msgstr "Blochează compoziționarea"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Strat"
 
 #: rulesmodel.cpp:725
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Sincronizare adaptivă"
 
 #: rulesmodel.cpp:777
 #, fuzzy, kde-format
@@ -713,42 +713,40 @@ msgstr "Extrem"
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Sub"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Deasupra"
 
 #: rulesmodel.cpp:926
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Poziție"
+msgstr "Notificare"
 
 #: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Indiciu"
 
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Notificare critică"
 
 #: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Suprapunere"
 
 #: rulesmodel.cpp:956
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Fereastră neadministrată"
 
@@ -770,16 +768,14 @@ msgid "KWin Rules (*.kwinrule)"
 msgstr "Reguli KWin (*.kwinrule)"
 
 #: ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Adaugă noi..."
+msgstr "Adaugă noi…"
 
 #: ui/main.qml:35
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Import..."
+msgstr "Importă…"
 
 #: ui/main.qml:40
 #, kde-format
@@ -787,10 +783,9 @@ msgid "Cancel Export"
 msgstr "Anulează exportul"
 
 #: ui/main.qml:40
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
-msgstr "Export..."
+msgstr "Exportă…"
 
 #: ui/main.qml:88
 #, kde-format
