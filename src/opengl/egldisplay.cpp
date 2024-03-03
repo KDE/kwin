@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static bool isOpenGLES()
+static bool shouldUseOpenGLES()
 {
     if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
         return true;
@@ -51,7 +51,7 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, bool owning
         return nullptr;
     }
     qCDebug(KWIN_OPENGL) << "Egl Initialize succeeded";
-    if (eglBindAPI(isOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
+    if (eglBindAPI(shouldUseOpenGLES() ? EGL_OPENGL_ES_API : EGL_OPENGL_API) == EGL_FALSE) {
         qCCritical(KWIN_OPENGL) << "bind OpenGL API failed";
         return nullptr;
     }

@@ -121,6 +121,14 @@ bool EglContext::isValid() const
     return m_display != nullptr && m_handle != EGL_NO_CONTEXT;
 }
 
+static inline bool shouldUseOpenGLES()
+{
+    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+        return true;
+    }
+    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
+}
+
 ::EGLContext EglContext::createContext(EglDisplay *display, EGLConfig config, ::EGLContext sharedContext)
 {
     const bool haveRobustness = display->hasExtension(QByteArrayLiteral("EGL_EXT_create_context_robustness"));
@@ -129,7 +137,7 @@ bool EglContext::isValid() const
     const bool haveResetOnVideoMemoryPurge = display->hasExtension(QByteArrayLiteral("EGL_NV_robustness_video_memory_purge"));
 
     std::vector<std::unique_ptr<AbstractOpenGLContextAttributeBuilder>> candidates;
-    if (isOpenGLES()) {
+    if (shouldUseOpenGLES()) {
         if (haveCreateContext && haveRobustness && haveContextPriority && haveResetOnVideoMemoryPurge) {
             auto glesRobustPriority = std::make_unique<EglOpenGLESContextAttributeBuilder>();
             glesRobustPriority->setResetOnVideoMemoryPurge(true);
