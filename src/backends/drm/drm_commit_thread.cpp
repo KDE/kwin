@@ -52,12 +52,6 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 // the commit would fail with EBUSY, wait until the pageflip is done
                 if (timeout) {
                     qCCritical(KWIN_DRM, "Pageflip timed out! This is a kernel bug");
-                    std::unique_ptr<DrmAtomicCommit> committed(static_cast<DrmAtomicCommit *>(m_committed.release()));
-                    const bool cursorOnly = committed->isCursorOnly();
-                    m_droppedCommits.push_back(std::move(committed));
-                    if (!cursorOnly) {
-                        QMetaObject::invokeMethod(this, &DrmCommitThread::commitFailed, Qt::ConnectionType::QueuedConnection);
-                    }
                 }
                 continue;
             }
