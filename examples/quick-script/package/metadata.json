@@ -11,7 +11,7 @@
         "EnabledByDefault": false,
         "Icon": "preferences-system-windows-script-test",
         "Id": "quick-script",
-        "License": "GPL",
+        "License": "MIT",
         "Name": "Quick Script"
     },
     "X-Plasma-API": "declarativescript"

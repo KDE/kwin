@@ -11,7 +11,7 @@
         "Description": "Quick Effect",
         "EnabledByDefault": true,
         "Id": "quick-effect",
-        "License": "GPL",
+        "License": "MIT",
         "Name": "Quick Effect"
     },
     "X-KDE-ConfigModule": "kcm_kwin4_genericscripted",
