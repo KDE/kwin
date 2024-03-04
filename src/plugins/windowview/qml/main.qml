@@ -224,7 +224,7 @@ Item {
                 onDownGestureTriggered: window.closeWindow()
 
                 TapHandler {
-                    acceptedPointerTypes: PointerDevice.GenericPointer | PointerDevice.Pen
+                    acceptedPointerTypes: PointerDevice.Generic | PointerDevice.Pen
                     acceptedButtons: Qt.MiddleButton
                     onTapped: window.closeWindow();
                 }
