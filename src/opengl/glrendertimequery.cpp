@@ -57,8 +57,11 @@ std::chrono::nanoseconds GLRenderTimeQuery::result()
 
     const std::chrono::nanoseconds gpuTime(m_gpuProbe.end - m_gpuProbe.start);
     const std::chrono::nanoseconds cpuTime = m_cpuProbe.end - m_cpuProbe.start;
+    // timings are pretty unpredictable in the sub-millisecond range; this minimum
+    // ensures that when CPU or GPU power states change, we don't drop any frames
+    const std::chrono::nanoseconds minimumTime = std::chrono::milliseconds(2);
 
-    return std::max(gpuTime, cpuTime);
+    return std::max({gpuTime, cpuTime, minimumTime});
 }
 
 }
