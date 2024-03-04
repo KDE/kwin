@@ -241,6 +241,11 @@ void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_bind_resource(Resource *r
     send_done(resource->handle);
 }
 
+void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_destroy_resource(Resource *resource)
+{
+    m_pendingFds.removeOne(resource->handle);
+}
+
 void DrmLeaseDeviceV1Interface::wp_drm_lease_device_v1_destroy_global()
 {
     delete this;
