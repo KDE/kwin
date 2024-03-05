@@ -24,21 +24,21 @@ StickyKeysFilter::StickyKeysFilter()
     }
 }
 
-Qt::KeyboardModifier keyToModifier(Qt::Key key)
+KWin::Xkb::Modifier keyToModifier(Qt::Key key)
 {
     if (key == Qt::Key_Shift) {
-        return Qt::ShiftModifier;
+        return KWin::Xkb::Shift;
     } else if (key == Qt::Key_Alt) {
-        return Qt::AltModifier;
+        return KWin::Xkb::Mod1;
     } else if (key == Qt::Key_Control) {
-        return Qt::ControlModifier;
+        return KWin::Xkb::Control;
     } else if (key == Qt::Key_AltGr) {
-        return Qt::GroupSwitchModifier;
+        return KWin::Xkb::Mod5;
     } else if (key == Qt::Key_Meta) {
-        return Qt::MetaModifier;
+        return KWin::Xkb::Mod4;
     }
 
-    return Qt::NoModifier;
+    return KWin::Xkb::NoModifier;
 }
 
 void StickyKeysFilter::loadConfig(const KConfigGroup &group)

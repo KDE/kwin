@@ -658,6 +658,7 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_altModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_ALT);
     m_metaModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_LOGO);
     m_numModifier = xkb_keymap_mod_get_index(m_keymap, XKB_MOD_NAME_NUM);
+    m_mod5Modifier = xkb_keymap_mod_get_index(m_keymap, "Mod5");
 
     m_numLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_NUM);
     m_capsLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_CAPS);
@@ -1001,40 +1002,38 @@ bool Xkb::switchToLayout(xkb_layout_index_t layout)
     return true;
 }
 
-void Xkb::setModifierLatched(Qt::KeyboardModifier mod, bool latched)
+void Xkb::setModifierLatched(KWin::Xkb::Modifier mod, bool latched)
 {
     xkb_mod_index_t modifier = XKB_MOD_INVALID;
 
     switch (mod) {
-    case Qt::NoModifier: {
+    case NoModifier: {
         break;
     }
-    case Qt::ShiftModifier: {
+    case Shift: {
         modifier = m_shiftModifier;
         break;
     }
-    case Qt::AltModifier: {
+    case Mod1: {
         modifier = m_altModifier;
         break;
     }
-    case Qt::ControlModifier: {
+    case Control: {
         modifier = m_controlModifier;
         break;
     }
-    case Qt::MetaModifier: {
+    case Mod4: {
         modifier = m_metaModifier;
         break;
     }
-    case Qt::GroupSwitchModifier: {
-        // TODO
+    case Mod5: {
+        modifier = m_mod5Modifier;
         break;
     }
-    case Qt::KeypadModifier: {
+    case Mod2:
+    case Mod3:
+    case Lock:
         break;
-    }
-    case Qt::KeyboardModifierMask: {
-        break;
-    }
     }
 
     if (modifier != XKB_MOD_INVALID) {
@@ -1048,40 +1047,38 @@ void Xkb::setModifierLatched(Qt::KeyboardModifier mod, bool latched)
     }
 }
 
-void Xkb::setModifierLocked(Qt::KeyboardModifier mod, bool locked)
+void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
 {
     xkb_mod_index_t modifier = XKB_MOD_INVALID;
 
     switch (mod) {
-    case Qt::NoModifier: {
+    case NoModifier: {
         break;
     }
-    case Qt::ShiftModifier: {
+    case Shift: {
         modifier = m_shiftModifier;
         break;
     }
-    case Qt::AltModifier: {
+    case Mod1: {
         modifier = m_altModifier;
         break;
     }
-    case Qt::ControlModifier: {
+    case Control: {
         modifier = m_controlModifier;
         break;
     }
-    case Qt::MetaModifier: {
+    case Mod4: {
         modifier = m_metaModifier;
         break;
     }
-    case Qt::GroupSwitchModifier: {
-        // TODO
+    case Mod5: {
+        modifier = m_mod5Modifier;
         break;
     }
-    case Qt::KeypadModifier: {
+    case Mod2:
+    case Mod3:
+    case Lock:
         break;
-    }
-    case Qt::KeyboardModifierMask: {
-        break;
-    }
     }
 
     if (modifier != XKB_MOD_INVALID) {
