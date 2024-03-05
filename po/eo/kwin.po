@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-02 00:38+0000\n"
-"PO-Revision-Date: 2024-02-16 21:15+0100\n"
+"POT-Creation-Date: 2024-03-05 00:39+0000\n"
+"PO-Revision-Date: 2024-03-04 23:34+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -1710,13 +1710,13 @@ msgstr "Fenestroferma Animacio"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Daŭro de neaktiveco (sekundoj):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Kaŝi kursoron je tajpado"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2536,10 +2536,9 @@ msgid "Padding:"
 msgstr "Remburaĵo:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Ŝargi Aranĝon..."
+msgstr "Ŝargi Aranĝon…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -4168,7 +4167,7 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: window.cpp:3136
+#: window.cpp:3134
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4202,15 +4201,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgid "Move to %1 %2"
-#~ msgstr "Movu al %1 %2"
-
-#~ msgid "Layout mode:"
-#~ msgstr "Enpaĝiga reĝimo:"
-
-#~ msgid "Closest"
-#~ msgstr "Plej proksima"
-
-#~ msgid "Natural"
-#~ msgstr "Natura"

@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-13 20:43+0100\n"
+"PO-Revision-Date: 2024-03-04 23:34+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -843,14 +843,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Neniuj reguloj por specifaj fenestroj estas nuntempe fiksitaj"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
-"Alklaku la suban butonon <interface>Aldoni novan…</interface> por aldoni "
-"kelkajn"
+msgstr "Alklaku <interface>Aldoni Novan…</interface> por aldoni kelkajn"
 
 #: ui/main.qml:97
 #, kde-format
