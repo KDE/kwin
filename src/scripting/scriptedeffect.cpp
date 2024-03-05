@@ -683,7 +683,7 @@ int ScriptedEffect::displayHeight() const
 
 int ScriptedEffect::animationTime(int defaultTime) const
 {
-    return Effect::animationTime(defaultTime);
+    return Effect::animationTime(std::chrono::milliseconds(defaultTime));
 }
 
 bool ScriptedEffect::registerScreenEdge(int edge, const QJSValue &callback)

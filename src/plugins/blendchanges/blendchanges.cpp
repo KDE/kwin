@@ -14,6 +14,8 @@
 #include <QDBusConnection>
 #include <QTimer>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 BlendChanges::BlendChanges()
@@ -36,7 +38,7 @@ bool BlendChanges::supported()
 
 void KWin::BlendChanges::start(int delay)
 {
-    int animationDuration = animationTime(400);
+    int animationDuration = animationTime(400ms);
 
     if (!supported() || m_state != Off) {
         return;

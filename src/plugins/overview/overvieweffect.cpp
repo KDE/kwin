@@ -16,6 +16,8 @@
 #include <QQuickItem>
 #include <QTimer>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -173,7 +175,7 @@ OverviewEffect::~OverviewEffect()
 void OverviewEffect::reconfigure(ReconfigureFlags)
 {
     OverviewConfig::self()->read();
-    setAnimationDuration(animationTime(300));
+    setAnimationDuration(animationTime(300ms));
     setFilterWindows(OverviewConfig::filterWindows());
 
     for (const ElectricBorder &border : std::as_const(m_borderActivate)) {

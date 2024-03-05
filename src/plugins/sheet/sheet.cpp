@@ -22,6 +22,8 @@
 #include <QMatrix4x4>
 #include <qmath.h>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -39,10 +41,10 @@ void SheetEffect::reconfigure(ReconfigureFlags flags)
     SheetConfig::self()->read();
 
     // TODO: Rename AnimationTime config key to Duration.
-    const int d = animationTime(SheetConfig::animationTime() != 0
-                                    ? SheetConfig::animationTime()
-                                    : 300);
-    m_duration = std::chrono::milliseconds(static_cast<int>(d));
+    const double d = animationTime(SheetConfig::animationTime() != 0
+                                       ? std::chrono::milliseconds(SheetConfig::animationTime())
+                                       : 300ms);
+    m_duration = std::chrono::milliseconds(int(d));
 }
 
 void SheetEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)

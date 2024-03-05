@@ -444,16 +444,16 @@ QPointF Effect::cursorPos()
     return effects->cursorPos();
 }
 
-double Effect::animationTime(const KConfigGroup &cfg, const QString &key, int defaultTime)
+double Effect::animationTime(const KConfigGroup &cfg, const QString &key, std::chrono::milliseconds defaultTime)
 {
     int time = cfg.readEntry(key, 0);
-    return time != 0 ? time : std::max(defaultTime * effects->animationTimeFactor(), 1.);
+    return time != 0 ? time : std::max(defaultTime.count() * effects->animationTimeFactor(), 1.);
 }
 
-double Effect::animationTime(int defaultTime)
+double Effect::animationTime(std::chrono::milliseconds defaultTime)
 {
     // at least 1ms, otherwise 0ms times can break some things
-    return std::max(defaultTime * effects->animationTimeFactor(), 1.);
+    return std::max(defaultTime.count() * effects->animationTimeFactor(), 1.);
 }
 
 int Effect::requestedEffectChainPosition() const

@@ -14,6 +14,8 @@
 #include "kscreenconfig.h"
 #include <QDebug>
 
+using namespace std::chrono_literals;
+
 /**
  * How this effect works:
  *
@@ -79,7 +81,7 @@ void KscreenEffect::addScreen(Output *screen)
 {
     connect(screen, &Output::wakeUp, this, [this, screen] {
         auto &state = m_waylandStates[screen];
-        state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
+        state.m_timeLine.setDuration(std::chrono::milliseconds(animationTime<KscreenConfig>(250ms)));
         setState(state, StateFadingIn);
     });
     connect(screen, &Output::aboutToTurnOff, this, [this, screen](std::chrono::milliseconds dimmingIn) {
@@ -93,7 +95,7 @@ void KscreenEffect::reconfigure(ReconfigureFlags flags)
 {
     KscreenConfig::self()->read();
     m_xcbState.m_timeLine.setDuration(
-        std::chrono::milliseconds(animationTime<KscreenConfig>(250)));
+        std::chrono::milliseconds(animationTime<KscreenConfig>(250ms)));
 }
 
 void KscreenEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)

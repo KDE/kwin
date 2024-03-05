@@ -13,6 +13,8 @@
 
 #include <QDBusConnection>
 
+using namespace std::chrono_literals;
+
 Q_LOGGING_CATEGORY(KWIN_HIGHLIGHTWINDOW, "kwin_effect_highlightwindow", QtWarningMsg)
 
 namespace KWin
@@ -20,7 +22,7 @@ namespace KWin
 
 HighlightWindowEffect::HighlightWindowEffect()
     : m_easingCurve(QEasingCurve::Linear)
-    , m_fadeDuration(animationTime(150))
+    , m_fadeDuration(animationTime(150ms))
     , m_monitorWindow(nullptr)
 {
 #if KWIN_BUILD_X11

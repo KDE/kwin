@@ -16,6 +16,8 @@
 
 #include <cmath>
 
+using namespace std::chrono_literals;
+
 Q_LOGGING_CATEGORY(KWIN_FALLAPART, "kwin_effect_fallapart", QtWarningMsg)
 
 static const QSet<QString> s_blacklist{
@@ -64,7 +66,7 @@ void FallApartEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, 
         }
         animationIt->lastPresentTime = presentTime;
 
-        animationIt->progress += time / animationTime(1000.);
+        animationIt->progress += time / animationTime(1s);
         data.setTransformed();
     }
     effects->prePaintWindow(w, data, presentTime);

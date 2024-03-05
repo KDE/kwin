@@ -32,6 +32,8 @@
 #include "scene/cursoritem.h"
 #include "scene/workspacescene.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -234,9 +236,9 @@ void ZoomEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseco
 
         const float zoomDist = std::abs(target_zoom - source_zoom);
         if (target_zoom > zoom) {
-            zoom = std::min(zoom + ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
+            zoom = std::min(zoom + ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * zoomFactor)))), target_zoom);
         } else {
-            zoom = std::max(zoom - ((zoomDist * time) / animationTime(150 * zoomFactor)), target_zoom);
+            zoom = std::max(zoom - ((zoomDist * time) / animationTime(std::chrono::milliseconds(int(150 * zoomFactor)))), target_zoom);
         }
     }
 

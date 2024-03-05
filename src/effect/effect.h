@@ -860,18 +860,18 @@ public:
      * @param defaultTime default animation time in milliseconds
      */
     // return type is intentionally double so that one can divide using it without losing data
-    static double animationTime(const KConfigGroup &cfg, const QString &key, int defaultTime);
+    static double animationTime(const KConfigGroup &cfg, const QString &key, std::chrono::milliseconds defaultTime);
     /**
      * @overload Use this variant if the animation time is hardcoded and not configurable
      * in the effect itself.
      */
-    static double animationTime(int defaultTime);
+    static double animationTime(std::chrono::milliseconds defaultTime);
     /**
      * @overload Use this variant if animation time is provided through a KConfigXT generated class
      * having a property called "duration".
      */
     template<typename T>
-    int animationTime(int defaultDuration);
+    int animationTime(std::chrono::milliseconds defaultDuration);
     /**
      * Linearly interpolates between @p x and @p y.
      *
@@ -897,9 +897,9 @@ public Q_SLOTS:
 };
 
 template<typename T>
-int Effect::animationTime(int defaultDuration)
+int Effect::animationTime(std::chrono::milliseconds defaultDuration)
 {
-    return animationTime(T::duration() != 0 ? T::duration() : defaultDuration);
+    return animationTime(T::duration() != 0 ? std::chrono::milliseconds(T::duration()) : defaultDuration);
 }
 
 /**

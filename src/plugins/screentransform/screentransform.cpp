@@ -18,6 +18,8 @@
 
 #include <QDebug>
 
+using namespace std::chrono_literals;
+
 static void ensureResources()
 {
     // Must initialize resources manually because the effect is a static lib.
@@ -94,7 +96,7 @@ void ScreenTransformEffect::addScreen(Output *screen)
             auto &state = m_states[screen];
             state.m_oldTransform = screen->transform();
             state.m_oldGeometry = screen->geometry();
-            state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250))));
+            state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250ms))));
             state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
             state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
             state.m_prev.texture = std::move(texture);

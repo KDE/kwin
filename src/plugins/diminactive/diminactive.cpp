@@ -16,6 +16,8 @@
 // KConfigSkeleton
 #include "diminactiveconfig.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -79,7 +81,7 @@ void DimInactiveEffect::reconfigure(ReconfigureFlags flags)
         : nullptr;
 
     m_fullScreenTransition.timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250))));
+        std::chrono::milliseconds(static_cast<int>(animationTime(250ms))));
 
     effects->addRepaintFull();
 }
@@ -207,7 +209,7 @@ void DimInactiveEffect::scheduleInTransition(EffectWindow *w)
 {
     TimeLine &timeLine = m_transitions[w];
     timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(160))));
+        std::chrono::milliseconds(static_cast<int>(animationTime(160ms))));
     if (timeLine.done()) {
         // If the Out animation is still active, then we're trucating
         // duration of the timeline(from 250ms to 160ms). If the timeline
@@ -242,7 +244,7 @@ void DimInactiveEffect::scheduleOutTransition(EffectWindow *w)
 {
     TimeLine &timeLine = m_transitions[w];
     timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250))));
+        std::chrono::milliseconds(static_cast<int>(animationTime(250ms))));
     if (timeLine.done()) {
         timeLine.reset();
     }

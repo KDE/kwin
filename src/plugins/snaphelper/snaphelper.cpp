@@ -17,6 +17,8 @@
 
 #include <QPainter>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -82,7 +84,7 @@ SnapHelperEffect::~SnapHelperEffect()
 void SnapHelperEffect::reconfigure(ReconfigureFlags flags)
 {
     m_animation.timeLine.setDuration(
-        std::chrono::milliseconds(static_cast<int>(animationTime(250))));
+        std::chrono::milliseconds(static_cast<int>(animationTime(250ms))));
 }
 
 void SnapHelperEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)

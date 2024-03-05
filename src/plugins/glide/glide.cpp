@@ -27,6 +27,8 @@
 
 #include <cmath>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -54,7 +56,7 @@ GlideEffect::~GlideEffect() = default;
 void GlideEffect::reconfigure(ReconfigureFlags flags)
 {
     GlideConfig::self()->read();
-    m_duration = std::chrono::milliseconds(animationTime<GlideConfig>(160));
+    m_duration = std::chrono::milliseconds(animationTime<GlideConfig>(160ms));
 
     m_inParams.edge = static_cast<RotationEdge>(GlideConfig::inRotationEdge());
     m_inParams.angle.from = GlideConfig::inRotationAngle();

@@ -16,6 +16,8 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -146,7 +148,7 @@ int WindowViewEffect::requestedEffectChainPosition() const
 void WindowViewEffect::reconfigure(ReconfigureFlags)
 {
     WindowViewConfig::self()->read();
-    setAnimationDuration(animationTime(300));
+    setAnimationDuration(animationTime(300ms));
 
     for (ElectricBorder border : std::as_const(m_borderActivate)) {
         effects->unreserveElectricBorder(border, this);

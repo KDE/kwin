@@ -13,6 +13,8 @@
 #include "scene/cursoritem.h"
 #include "scene/workspacescene.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -77,7 +79,7 @@ void ShakeCursorEffect::animateTo(qreal magnification)
 
         m_scaleAnimation.setStartValue(m_currentMagnification);
         m_scaleAnimation.setEndValue(magnification);
-        m_scaleAnimation.setDuration(animationTime(200));
+        m_scaleAnimation.setDuration(animationTime(200ms));
         m_scaleAnimation.setEasingCurve(QEasingCurve::InOutCubic);
         m_scaleAnimation.start();
 
@@ -97,7 +99,7 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
 
     if (m_shakeDetector.update(event)) {
         inflate();
-        m_deflateTimer.start(animationTime(2000));
+        m_deflateTimer.start(animationTime(2000ms));
     }
 }
 

@@ -14,6 +14,8 @@
 // KConfigSkeleton
 #include "magiclampconfig.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -43,9 +45,9 @@ void MagicLampEffect::reconfigure(ReconfigureFlags)
 
     // TODO: Rename animationDuration to duration so we can use
     // animationTime<MagicLampConfig>(250).
-    const int d = MagicLampConfig::animationDuration() != 0
-        ? MagicLampConfig::animationDuration()
-        : 250;
+    const std::chrono::milliseconds d = MagicLampConfig::animationDuration() != 0
+        ? std::chrono::milliseconds(MagicLampConfig::animationDuration())
+        : 250ms;
     m_duration = std::chrono::milliseconds(static_cast<int>(animationTime(d)));
 }
 

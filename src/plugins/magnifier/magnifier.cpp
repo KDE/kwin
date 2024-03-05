@@ -21,6 +21,8 @@
 #include "opengl/glutils.h"
 #include <KGlobalAccel>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -90,7 +92,7 @@ void MagnifierEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mill
     const int time = m_lastPresentTime.count() ? (presentTime - m_lastPresentTime).count() : 0;
 
     if (m_zoom != m_targetZoom) {
-        double diff = time / animationTime(500.0);
+        double diff = time / animationTime(500ms);
         if (m_targetZoom > m_zoom) {
             m_zoom = std::min(m_zoom * std::max(1 + diff, 1.2), m_targetZoom);
         } else {

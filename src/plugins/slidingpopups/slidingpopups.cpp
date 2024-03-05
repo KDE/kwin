@@ -25,6 +25,8 @@
 
 Q_DECLARE_METATYPE(KWindowEffects::SlideFromLocation)
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -100,9 +102,9 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     SlidingPopupsConfig::self()->read();
     m_slideInDuration = std::chrono::milliseconds(
-        static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? SlidingPopupsConfig::slideInTime() : 150)));
+        static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideInTime()) : 150ms)));
     m_slideOutDuration = std::chrono::milliseconds(
-        static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? SlidingPopupsConfig::slideOutTime() : 250)));
+        static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideOutTime()) : 250ms)));
 
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {

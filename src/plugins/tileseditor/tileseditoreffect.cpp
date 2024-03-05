@@ -13,6 +13,8 @@
 #include <KGlobalAccel>
 #include <KLocalizedString>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -49,7 +51,7 @@ QVariantMap TilesEditorEffect::initialProperties(Output *screen)
 
 void TilesEditorEffect::reconfigure(ReconfigureFlags)
 {
-    setAnimationDuration(animationTime(200));
+    setAnimationDuration(animationTime(200ms));
 }
 
 void TilesEditorEffect::toggle()
