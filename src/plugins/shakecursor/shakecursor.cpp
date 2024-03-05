@@ -49,7 +49,7 @@ void ShakeCursorEffect::reconfigure(ReconfigureFlags flags)
 {
     ShakeCursorConfig::self()->read();
 
-    m_shakeDetector.setInterval(ShakeCursorConfig::timeInterval());
+    m_shakeDetector.setInterval(std::chrono::milliseconds(ShakeCursorConfig::timeInterval()));
     m_shakeDetector.setSensitivity(ShakeCursorConfig::sensitivity());
 }
 

@@ -6,9 +6,15 @@
 
 #pragma once
 
-#include <QMouseEvent>
+#include <QPointF>
 
+#include <chrono>
 #include <deque>
+
+namespace KWin
+{
+
+class MouseEvent;
 
 /**
  * The ShakeDetector type provides a way to detect pointer shake gestures.
@@ -22,10 +28,10 @@ class ShakeDetector
 public:
     ShakeDetector();
 
-    bool update(QMouseEvent *event);
+    bool update(MouseEvent *event);
 
-    quint64 interval() const;
-    void setInterval(quint64 interval);
+    std::chrono::microseconds interval() const;
+    void setInterval(std::chrono::microseconds interval);
 
     qreal sensitivity() const;
     void setSensitivity(qreal sensitivity);
@@ -34,10 +40,13 @@ private:
     struct HistoryItem
     {
         QPointF position;
-        quint64 timestamp;
+        QPointF delta;
+        std::chrono::microseconds timestamp;
     };
 
     std::deque<HistoryItem> m_history;
-    quint64 m_interval = 1000;
+    std::chrono::microseconds m_interval = std::chrono::seconds(1);
     qreal m_sensitivity = 4;
 };
+
+} // namespace KWin

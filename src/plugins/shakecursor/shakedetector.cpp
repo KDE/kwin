@@ -5,19 +5,23 @@
 */
 
 #include "shakedetector.h"
+#include "input_event.h"
 
 #include <cmath>
+
+namespace KWin
+{
 
 ShakeDetector::ShakeDetector()
 {
 }
 
-quint64 ShakeDetector::interval() const
+std::chrono::microseconds ShakeDetector::interval() const
 {
     return m_interval;
 }
 
-void ShakeDetector::setInterval(quint64 interval)
+void ShakeDetector::setInterval(std::chrono::microseconds interval)
 {
     m_interval = interval;
 }
@@ -32,7 +36,18 @@ void ShakeDetector::setSensitivity(qreal sensitivity)
     m_sensitivity = sensitivity;
 }
 
-bool ShakeDetector::update(QMouseEvent *event)
+static inline int sign(qreal value)
+{
+    if (value < 0) {
+        return -1;
+    } else if (value > 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+bool ShakeDetector::update(MouseEvent *event)
 {
     // Prune the old entries in the history.
     auto it = m_history.begin();
@@ -45,30 +60,24 @@ bool ShakeDetector::update(QMouseEvent *event)
         m_history.erase(m_history.begin(), it);
     }
 
-    HistoryItem w{
-        .position = event->localPos(),
-        .timestamp = event->timestamp(),
-    };
+    if (!m_history.empty()) {
+        HistoryItem &last = m_history.back();
 
-    if (m_history.size() >= 3) {
-        const HistoryItem &t = m_history[m_history.size() - 3];
-        const HistoryItem &u = m_history[m_history.size() - 2];
-        HistoryItem &v = m_history[m_history.size() - 1];
-
-        const bool x = (t.position.x() < u.position.x())
-            && (u.position.x() < v.position.x())
-            && (v.position.x() < w.position.x());
-        const bool y = (t.position.y() < u.position.y())
-            && (u.position.y() < v.position.y())
-            && (v.position.y() < w.position.y());
-        if (x && y) {
-            qDebug() << "replace";
-            v = w;
+        if (sign(last.delta.x()) == sign(event->delta().x()) && sign(last.delta.y()) == sign(event->delta().x())) {
+            last = HistoryItem{
+                .position = event->localPos(),
+                .delta = event->delta(),
+                .timestamp = event->timestamp(),
+            };
             return false;
         }
     }
 
-    m_history.emplace_back(w);
+    m_history.emplace_back(HistoryItem{
+        .position = event->localPos(),
+        .delta = event->delta(),
+        .timestamp = event->timestamp(),
+    });
 
     qreal left = m_history[0].position.x();
     qreal top = m_history[0].position.y();
@@ -76,17 +85,17 @@ bool ShakeDetector::update(QMouseEvent *event)
     qreal bottom = m_history[0].position.y();
     qreal distance = 0;
 
-    for (size_t i = 1; i < m_history.size(); ++i) {
+    for (const HistoryItem &item : m_history) {
         // Compute the length of the mouse path.
-        const qreal deltaX = m_history.at(i).position.x() - m_history.at(i - 1).position.x();
-        const qreal deltaY = m_history.at(i).position.y() - m_history.at(i - 1).position.y();
+        const qreal deltaX = item.delta.x();
+        const qreal deltaY = item.delta.y();
         distance += std::sqrt(deltaX * deltaX + deltaY * deltaY);
 
         // Compute the bounds of the mouse path.
-        left = std::min(left, m_history.at(i).position.x());
-        top = std::min(top, m_history.at(i).position.y());
-        right = std::max(right, m_history.at(i).position.x());
-        bottom = std::max(bottom, m_history.at(i).position.y());
+        left = std::min(left, item.position.x());
+        top = std::min(top, item.position.y());
+        right = std::max(right, item.position.x());
+        bottom = std::max(bottom, item.position.y());
     }
 
     const qreal boundsWidth = right - left;
@@ -104,3 +113,5 @@ bool ShakeDetector::update(QMouseEvent *event)
 
     return false;
 }
+
+} // namespace KWin
