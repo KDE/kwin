@@ -45,20 +45,30 @@ bool ShakeDetector::update(QMouseEvent *event)
         m_history.erase(m_history.begin(), it);
     }
 
-    m_history.emplace_back(HistoryItem{
+    HistoryItem w{
         .position = event->localPos(),
         .timestamp = event->timestamp(),
-    });
+    };
 
     if (m_history.size() >= 3) {
         const HistoryItem &t = m_history[m_history.size() - 3];
         const HistoryItem &u = m_history[m_history.size() - 2];
-        const HistoryItem &v = m_history[m_history.size() - 1];
-        if ((t.position.x() < u.position.x()) == (u.position.x() < v.position.x())
-            && (t.position.y() < u.position.y()) == (u.position.y() < v.position.y())) {
+        HistoryItem &v = m_history[m_history.size() - 1];
+
+        const bool x = (t.position.x() < u.position.x())
+            && (u.position.x() < v.position.x())
+            && (v.position.x() < w.position.x());
+        const bool y = (t.position.y() < u.position.y())
+            && (u.position.y() < v.position.y())
+            && (v.position.y() < w.position.y());
+        if (x && y) {
+            qDebug() << "replace";
+            v = w;
             return false;
         }
     }
+
+    m_history.emplace_back(w);
 
     qreal left = m_history[0].position.x();
     qreal top = m_history[0].position.y();
