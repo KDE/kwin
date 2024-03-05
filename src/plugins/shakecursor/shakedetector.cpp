@@ -58,15 +58,15 @@ bool ShakeDetector::update(QMouseEvent *event)
 
     for (size_t i = 1; i < m_history.size(); ++i) {
         // Compute the length of the mouse path.
-        const qreal deltaX = m_history.at(i).position.x() - m_history.at(i - 1).position.x();
-        const qreal deltaY = m_history.at(i).position.y() - m_history.at(i - 1).position.y();
+        const qreal deltaX = m_history[i].position.x() - m_history[i - 1].position.x();
+        const qreal deltaY = m_history[i].position.y() - m_history[i - 1].position.y();
         distance += std::sqrt(deltaX * deltaX + deltaY * deltaY);
 
         // Compute the bounds of the mouse path.
-        left = std::min(left, m_history.at(i).position.x());
-        top = std::min(top, m_history.at(i).position.y());
-        right = std::max(right, m_history.at(i).position.x());
-        bottom = std::max(bottom, m_history.at(i).position.y());
+        left = std::min(left, m_history[i].position.x());
+        top = std::min(top, m_history[i].position.y());
+        right = std::max(right, m_history[i].position.x());
+        bottom = std::max(bottom, m_history[i].position.y());
     }
 
     const qreal boundsWidth = right - left;
