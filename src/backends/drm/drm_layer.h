@@ -38,7 +38,6 @@ public:
 
     virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
-    virtual bool hasDirectScanoutBuffer() const;
 
 protected:
     DrmPipeline *const m_pipeline;

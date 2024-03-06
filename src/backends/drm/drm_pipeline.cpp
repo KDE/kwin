@@ -70,7 +70,11 @@ bool DrmPipeline::testScanout()
         }
         // no other way to test than to do it.
         // As we only have a maximum of one test per scanout cycle, this is fine
-        return presentLegacy() == Error::None;
+        const bool ret = presentLegacy() == Error::None;
+        if (ret) {
+            m_didLegacyScanoutHack = true;
+        }
+        return ret;
     }
 }
 
@@ -98,8 +102,9 @@ DrmPipeline::Error DrmPipeline::present()
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;
     } else {
-        if (m_primaryLayer->hasDirectScanoutBuffer()) {
+        if (m_didLegacyScanoutHack) {
             // already presented
+            m_didLegacyScanoutHack = false;
             return Error::None;
         }
         return presentLegacy();

@@ -33,7 +33,6 @@ public:
     bool scanout(SurfaceItem *surfaceItem) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    bool hasDirectScanoutBuffer() const override;
     QRegion currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
     ColorDescription colorDescription() const;

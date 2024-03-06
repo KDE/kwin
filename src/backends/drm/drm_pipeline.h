@@ -167,6 +167,7 @@ private:
     DrmConnector *m_connector = nullptr;
 
     bool m_modesetPresentPending = false;
+    bool m_didLegacyScanoutHack = false;
 
     struct State
     {

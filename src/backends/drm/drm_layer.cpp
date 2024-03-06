@@ -31,9 +31,4 @@ DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
     : m_pipeline(pipeline)
 {
 }
-
-bool DrmPipelineLayer::hasDirectScanoutBuffer() const
-{
-    return false;
-}
 }
