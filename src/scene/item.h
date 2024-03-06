@@ -31,7 +31,7 @@ class KWIN_EXPORT Item : public QObject
     Q_OBJECT
 
 public:
-    explicit Item(Scene *scene, Item *parent = nullptr);
+    explicit Item(Item *parent = nullptr);
     ~Item() override;
 
     Scene *scene() const;
@@ -135,6 +135,7 @@ protected:
     void discardQuads();
     void setColorDescription(const ColorDescription &description);
     void setPresentationHint(PresentationModeHint hint);
+    void setScene(Scene *scene);
 
 private:
     void addChild(Item *item);
@@ -149,7 +150,7 @@ private:
     void updateEffectiveVisibility();
     void removeRepaints(SceneDelegate *delegate);
 
-    Scene *m_scene;
+    Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;
     QList<Item *> m_childItems;
     QTransform m_transform;

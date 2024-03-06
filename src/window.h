@@ -44,7 +44,6 @@ class Output;
 class ClientMachine;
 class EffectWindow;
 class Tile;
-class Scene;
 class Shadow;
 class SurfaceItem;
 class VirtualDesktop;
@@ -1438,7 +1437,7 @@ Q_SIGNALS:
 protected:
     Window();
 
-    virtual std::unique_ptr<WindowItem> createItem(Scene *scene) = 0;
+    virtual std::unique_ptr<WindowItem> createItem(Item *parentItem) = 0;
 
     void setResourceClass(const QString &name, const QString &className = QString());
     void setIcon(const QIcon &icon);

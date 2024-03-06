@@ -12,21 +12,14 @@
 namespace KWin
 {
 
-Item::Item(Scene *scene, Item *parent)
-    : m_scene(scene)
+Item::Item(Item *parent)
 {
     setParentItem(parent);
-    connect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
 }
 
 Item::~Item()
 {
     setParentItem(nullptr);
-    for (const auto &dirty : std::as_const(m_repaints)) {
-        if (!dirty.isEmpty()) {
-            m_scene->addRepaint(dirty);
-        }
-    }
 }
 
 Scene *Item::scene() const
@@ -78,8 +71,9 @@ void Item::setParentItem(Item *item)
         m_parentItem->removeChild(this);
     }
     m_parentItem = item;
+    setScene(item ? item->scene() : nullptr);
+
     if (m_parentItem) {
-        Q_ASSERT(m_parentItem->m_scene == m_scene);
         m_parentItem->addChild(this);
     }
     updateItemToSceneTransform();
@@ -113,6 +107,31 @@ void Item::removeChild(Item *item)
 QList<Item *> Item::childItems() const
 {
     return m_childItems;
+}
+
+void Item::setScene(Scene *scene)
+{
+    if (m_scene == scene) {
+        return;
+    }
+    if (m_scene) {
+        for (const auto &dirty : std::as_const(m_repaints)) {
+            if (!dirty.isEmpty()) {
+                m_scene->addRepaint(dirty);
+            }
+        }
+        m_repaints.clear();
+        disconnect(m_scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
+    }
+    if (scene) {
+        connect(scene, &Scene::delegateRemoved, this, &Item::removeRepaints);
+    }
+
+    m_scene = scene;
+
+    for (Item *childItem : std::as_const(m_childItems)) {
+        childItem->setScene(scene);
+    }
 }
 
 QPointF Item::position() const
@@ -317,6 +336,9 @@ void Item::scheduleRepaint(SceneDelegate *delegate, const QRegion &region)
 
 void Item::scheduleRepaintInternal(const QRegion &region)
 {
+    if (Q_UNLIKELY(!m_scene)) {
+        return;
+    }
     const QRegion globalRegion = mapToScene(region);
     const QList<SceneDelegate *> delegates = m_scene->delegates();
     for (SceneDelegate *delegate : delegates) {
@@ -330,6 +352,9 @@ void Item::scheduleRepaintInternal(const QRegion &region)
 
 void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &region)
 {
+    if (Q_UNLIKELY(!m_scene)) {
+        return;
+    }
     const QRegion globalRegion = mapToScene(region);
     const QRegion dirtyRegion = globalRegion & delegate->viewport();
     if (!dirtyRegion.isEmpty()) {
@@ -341,6 +366,9 @@ void Item::scheduleRepaintInternal(SceneDelegate *delegate, const QRegion &regio
 void Item::scheduleFrame()
 {
     if (!isVisible()) {
+        return;
+    }
+    if (Q_UNLIKELY(!m_scene)) {
         return;
     }
     const QRect geometry = mapToScene(rect()).toRect();
@@ -426,7 +454,9 @@ void Item::updateEffectiveVisibility()
 
     m_effectiveVisible = effectiveVisible;
     if (!m_effectiveVisible) {
-        m_scene->addRepaint(mapToScene(boundingRect()).toAlignedRect());
+        if (m_scene) {
+            m_scene->addRepaint(mapToScene(boundingRect()).toAlignedRect());
+        }
     } else {
         scheduleRepaintInternal(boundingRect().toAlignedRect());
     }

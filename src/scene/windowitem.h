@@ -59,7 +59,7 @@ public:
     void deelevate();
 
 protected:
-    explicit WindowItem(Window *window, Scene *scene, Item *parent = nullptr);
+    explicit WindowItem(Window *window, Item *parent = nullptr);
     void updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem);
 
 private Q_SLOTS:
@@ -102,7 +102,7 @@ class KWIN_EXPORT WindowItemX11 : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemX11(X11Window *window, Scene *scene, Item *parent = nullptr);
+    explicit WindowItemX11(X11Window *window, Item *parent = nullptr);
 
 private Q_SLOTS:
     void initialize();
@@ -117,7 +117,7 @@ class KWIN_EXPORT WindowItemWayland : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemWayland(Window *window, Scene *scene, Item *parent = nullptr);
+    explicit WindowItemWayland(Window *window, Item *parent = nullptr);
 };
 
 /**
@@ -129,7 +129,7 @@ class KWIN_EXPORT WindowItemInternal : public WindowItem
     Q_OBJECT
 
 public:
-    explicit WindowItemInternal(InternalWindow *window, Scene *scene, Item *parent = nullptr);
+    explicit WindowItemInternal(InternalWindow *window, Item *parent = nullptr);
 };
 
 } // namespace KWin

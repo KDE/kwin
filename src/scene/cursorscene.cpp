@@ -11,6 +11,7 @@
 #include "effect/effect.h"
 #include "scene/cursoritem.h"
 #include "scene/itemrenderer.h"
+#include "scene/rootitem.h"
 
 namespace KWin
 {
@@ -18,7 +19,8 @@ namespace KWin
 CursorScene::CursorScene(std::unique_ptr<ItemRenderer> &&renderer)
     : Scene(std::move(renderer))
 {
-    m_rootItem = std::make_unique<CursorItem>(this);
+    m_rootItem = std::make_unique<RootItem>(this);
+    m_cursorItem = std::make_unique<CursorItem>(m_rootItem.get());
     setGeometry(m_rootItem->boundingRect().toRect());
     connect(m_rootItem.get(), &Item::boundingRectChanged, this, [this]() {
         setGeometry(m_rootItem->boundingRect().toRect());

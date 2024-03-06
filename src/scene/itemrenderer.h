@@ -37,7 +37,7 @@ public:
     virtual void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) = 0;
     virtual void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) = 0;
 
-    virtual std::unique_ptr<ImageItem> createImageItem(Scene *scene, Item *parent = nullptr) = 0;
+    virtual std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) = 0;
 };
 
 } // namespace KWin

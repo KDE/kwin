@@ -78,7 +78,7 @@ protected:
     void doInteractiveResizeSync(const QRectF &rect) override;
     void updateCaption() override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
-    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
 private:
     void requestGeometry(const QRectF &rect);

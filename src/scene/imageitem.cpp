@@ -11,8 +11,8 @@
 namespace KWin
 {
 
-ImageItem::ImageItem(Scene *scene, Item *parent)
-    : Item(scene, parent)
+ImageItem::ImageItem(Item *parent)
+    : Item(parent)
 {
 }
 
@@ -26,8 +26,8 @@ void ImageItem::setImage(const QImage &image)
     m_image = image;
 }
 
-ImageItemOpenGL::ImageItemOpenGL(Scene *scene, Item *parent)
-    : ImageItem(scene, parent)
+ImageItemOpenGL::ImageItemOpenGL(Item *parent)
+    : ImageItem(parent)
 {
 }
 

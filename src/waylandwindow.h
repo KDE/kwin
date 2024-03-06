@@ -39,7 +39,7 @@ protected:
     void doSetActive() override;
     void updateCaption() override;
     void updateClientOutputs();
-    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
     void cleanGrouping();
     void updateGeometry(const QRectF &rect);

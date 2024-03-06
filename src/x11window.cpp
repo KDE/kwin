@@ -364,9 +364,9 @@ X11Window::~X11Window()
     Q_ASSERT(!check_active_modal);
 }
 
-std::unique_ptr<WindowItem> X11Window::createItem(Scene *scene)
+std::unique_ptr<WindowItem> X11Window::createItem(Item *parentItem)
 {
-    return std::make_unique<WindowItemX11>(this, scene);
+    return std::make_unique<WindowItemX11>(this, parentItem);
 }
 
 // Use destroyWindow() or releaseWindow(), Client instances cannot be deleted directly

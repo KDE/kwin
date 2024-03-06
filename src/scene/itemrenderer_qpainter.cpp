@@ -26,9 +26,9 @@ ItemRendererQPainter::~ItemRendererQPainter()
 {
 }
 
-std::unique_ptr<ImageItem> ItemRendererQPainter::createImageItem(Scene *scene, Item *parent)
+std::unique_ptr<ImageItem> ItemRendererQPainter::createImageItem(Item *parent)
 {
-    return std::make_unique<ImageItem>(scene, parent);
+    return std::make_unique<ImageItem>(parent);
 }
 
 QPainter *ItemRendererQPainter::painter() const

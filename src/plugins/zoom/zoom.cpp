@@ -181,8 +181,7 @@ void ZoomEffect::hideCursor()
 
         if (mousePointer == MousePointerKeep || mousePointer == MousePointerScale) {
             Cursor *cursor = Cursors::self()->mouse();
-            m_cursorItem = std::make_unique<CursorItem>(effects->scene());
-            m_cursorItem->setParentItem(effects->scene()->overlayItem());
+            m_cursorItem = std::make_unique<CursorItem>(effects->scene()->overlayItem());
             m_cursorItem->setPosition(cursor->pos());
             connect(cursor, &Cursor::posChanged, m_cursorItem.get(), [this, cursor]() {
                 m_cursorItem->setPosition(cursor->pos());

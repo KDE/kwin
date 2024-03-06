@@ -24,7 +24,7 @@ class KWIN_EXPORT SurfaceItemX11 : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemX11(X11Window *window, Scene *scene, Item *parent = nullptr);
+    explicit SurfaceItemX11(X11Window *window, Item *parent = nullptr);
     ~SurfaceItemX11() override;
 
     X11Window *window() const;

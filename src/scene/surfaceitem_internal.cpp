@@ -12,8 +12,8 @@
 namespace KWin
 {
 
-SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Scene *scene, Item *parent)
-    : SurfaceItem(scene, parent)
+SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
+    : SurfaceItem(parent)
     , m_window(window)
 {
     connect(window, &Window::bufferGeometryChanged,

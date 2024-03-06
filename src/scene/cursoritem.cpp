@@ -16,8 +16,8 @@
 namespace KWin
 {
 
-CursorItem::CursorItem(Scene *scene, Item *parent)
-    : Item(scene, parent)
+CursorItem::CursorItem(Item *parent)
+    : Item(parent)
 {
     refresh();
     connect(Cursors::self(), &Cursors::currentCursorChanged, this, &CursorItem::refresh);
@@ -43,7 +43,7 @@ void CursorItem::setSurface(SurfaceInterface *surface, const QPointF &hotspot)
 
     if (!m_surfaceItem || m_surfaceItem->surface() != surface) {
         if (surface) {
-            m_surfaceItem = std::make_unique<SurfaceItemWayland>(surface, scene(), this);
+            m_surfaceItem = std::make_unique<SurfaceItemWayland>(surface, this);
         } else {
             m_surfaceItem.reset();
         }
@@ -58,7 +58,7 @@ void CursorItem::setImage(const QImage &image, const QPointF &hotspot)
     m_surfaceItem.reset();
 
     if (!m_imageItem) {
-        m_imageItem = scene()->renderer()->createImageItem(scene(), this);
+        m_imageItem = scene()->renderer()->createImageItem(this);
     }
     m_imageItem->setImage(image);
     m_imageItem->setPosition(-hotspot);

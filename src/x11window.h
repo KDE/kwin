@@ -349,7 +349,7 @@ protected:
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
-    std::unique_ptr<WindowItem> createItem(Scene *scene) override;
+    std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
 Q_SIGNALS:
     void shapeChanged();

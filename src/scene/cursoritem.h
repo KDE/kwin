@@ -20,7 +20,7 @@ class KWIN_EXPORT CursorItem : public Item
     Q_OBJECT
 
 public:
-    explicit CursorItem(Scene *scene, Item *parent = nullptr);
+    explicit CursorItem(Item *parent = nullptr);
     ~CursorItem() override;
 
 private:

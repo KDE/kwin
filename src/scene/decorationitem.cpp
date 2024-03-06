@@ -88,8 +88,8 @@ void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
     client()->decoration()->paint(painter, rect);
 }
 
-DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Scene *scene, Item *parent)
-    : Item(scene, parent)
+DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *window, Item *parent)
+    : Item(parent)
     , m_window(window)
     , m_decoration(decoration)
 {

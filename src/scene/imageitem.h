@@ -20,7 +20,7 @@ class KWIN_EXPORT ImageItem : public Item
     Q_OBJECT
 
 public:
-    explicit ImageItem(Scene *scene, Item *parent = nullptr);
+    explicit ImageItem(Item *parent = nullptr);
 
     QImage image() const;
     void setImage(const QImage &image);
@@ -34,7 +34,7 @@ class ImageItemOpenGL : public ImageItem
     Q_OBJECT
 
 public:
-    explicit ImageItemOpenGL(Scene *scene, Item *parent = nullptr);
+    explicit ImageItemOpenGL(Item *parent = nullptr);
     ~ImageItemOpenGL() override;
 
     GLTexture *texture() const;

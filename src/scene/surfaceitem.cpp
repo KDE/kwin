@@ -13,8 +13,8 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-SurfaceItem::SurfaceItem(Scene *scene, Item *parent)
-    : Item(scene, parent)
+SurfaceItem::SurfaceItem(Item *parent)
+    : Item(parent)
 {
 }
 

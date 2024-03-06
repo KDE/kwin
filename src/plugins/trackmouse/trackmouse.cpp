@@ -26,7 +26,7 @@ namespace KWin
 {
 
 RotatingArcsItem::RotatingArcsItem(Item *parentItem)
-    : Item(parentItem->scene(), parentItem)
+    : Item(parentItem)
 {
     const QString f[2] = {QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_outer.png")),
                           QStandardPaths::locate(QStandardPaths::AppDataLocation, QStringLiteral("tm_inner.png"))};
@@ -35,13 +35,13 @@ RotatingArcsItem::RotatingArcsItem(Item *parentItem)
     }
 
     const QImage outerImage(f[0]);
-    m_outerArcItem = scene()->renderer()->createImageItem(scene(), this);
+    m_outerArcItem = scene()->renderer()->createImageItem(this);
     m_outerArcItem->setImage(outerImage);
     m_outerArcItem->setSize(outerImage.size());
     m_outerArcItem->setPosition(QPointF(-outerImage.width() / 2, -outerImage.height() / 2));
 
     const QImage innerImage(f[1]);
-    m_innerArcItem = scene()->renderer()->createImageItem(scene(), this);
+    m_innerArcItem = scene()->renderer()->createImageItem(this);
     m_innerArcItem->setImage(innerImage);
     m_innerArcItem->setSize(innerImage.size());
     m_innerArcItem->setPosition(QPointF(-innerImage.width() / 2, -innerImage.height() / 2));
