@@ -72,5 +72,8 @@
         "Name[x-test]": "xxShake Cursorxx",
         "Name[zh_CN]": "抖动后放大光标",
         "Name[zh_TW]": "甩動游標"
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
     }
 }
