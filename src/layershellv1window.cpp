@@ -52,8 +52,6 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
     connect(shellSurface->surface(), &SurfaceInterface::aboutToBeDestroyed,
             this, &LayerShellV1Window::destroyWindow);
 
-    connect(output, &Output::geometryChanged,
-            this, &LayerShellV1Window::scheduleRearrange);
     connect(output, &Output::enabledChanged,
             this, &LayerShellV1Window::handleOutputEnabledChanged);
 
@@ -90,7 +88,7 @@ Output *LayerShellV1Window::desiredOutput() const
 
 void LayerShellV1Window::scheduleRearrange()
 {
-    m_integration->scheduleRearrange();
+    workspace()->scheduleUpdateClientArea();
 }
 
 NET::WindowType LayerShellV1Window::windowType() const

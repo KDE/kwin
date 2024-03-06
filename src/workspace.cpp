@@ -202,9 +202,11 @@ void Workspace::init()
     vds->setCurrent(m_initialDesktop);
 
     reconfigureTimer.setSingleShot(true);
+    m_updateClientAreaTimer.setSingleShot(true);
     updateToolWindowsTimer.setSingleShot(true);
 
     connect(&reconfigureTimer, &QTimer::timeout, this, &Workspace::slotReconfigure);
+    connect(&m_updateClientAreaTimer, &QTimer::timeout, this, &Workspace::updateClientArea);
     connect(&updateToolWindowsTimer, &QTimer::timeout, this, &Workspace::slotUpdateToolWindows);
 
     // TODO: do we really need to reconfigure everything when fonts change?
@@ -2293,6 +2295,11 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     return adjustedArea;
 }
 
+void Workspace::scheduleUpdateClientArea()
+{
+    m_updateClientAreaTimer.start(0);
+}
+
 /**
  * Updates the current client areas according to the current windows.
  *
@@ -2304,6 +2311,9 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
  */
 void Workspace::updateClientArea()
 {
+    Q_EMIT aboutToUpdateClientArea();
+    m_updateClientAreaTimer.stop();
+
     const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
 
     QHash<const VirtualDesktop *, QRectF> workAreas;
