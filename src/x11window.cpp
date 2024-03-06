@@ -4090,10 +4090,9 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
 
         // this is part of the kicker-xinerama-hack... it should be
         // safe to remove when kicker gets proper ExtendedStrut support;
-        // see Workspace::updateClientArea() and
-        // X11Window::adjustedClientArea()
+        // see Workspace::rearrange() and X11Window::adjustedClientArea()
         if (hasStrut()) {
-            workspace()->updateClientArea();
+            workspace()->rearrange();
         }
     }
 

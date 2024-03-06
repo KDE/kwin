@@ -202,11 +202,11 @@ void Workspace::init()
     vds->setCurrent(m_initialDesktop);
 
     reconfigureTimer.setSingleShot(true);
-    m_updateClientAreaTimer.setSingleShot(true);
+    m_rearrangeTimer.setSingleShot(true);
     updateToolWindowsTimer.setSingleShot(true);
 
     connect(&reconfigureTimer, &QTimer::timeout, this, &Workspace::slotReconfigure);
-    connect(&m_updateClientAreaTimer, &QTimer::timeout, this, &Workspace::updateClientArea);
+    connect(&m_rearrangeTimer, &QTimer::timeout, this, &Workspace::rearrange);
     connect(&updateToolWindowsTimer, &QTimer::timeout, this, &Workspace::slotUpdateToolWindows);
 
     // TODO: do we really need to reconfigure everything when fonts change?
@@ -371,7 +371,7 @@ void Workspace::initializeX11()
         // Propagate windows, will really happen at the end of the updates blocker block
         updateStackingOrder(true);
 
-        updateClientArea();
+        rearrange();
 
         // NETWM spec says we have to set it to (0,0) if we don't support it
         NETPoint *viewports = new NETPoint[VirtualDesktopManager::self()->count()];
@@ -709,7 +709,7 @@ void Workspace::addX11Window(X11Window *window)
     m_windows.append(window);
     addToStack(window);
     if (window->hasStrut()) {
-        updateClientArea(); // This cannot be in manage(), because the window got added only now
+        rearrange(); // This cannot be in manage(), because the window got added only now
     }
     window->updateLayer();
     if (window->isDesktop()) {
@@ -804,7 +804,7 @@ void Workspace::addWaylandWindow(Window *window)
 
     updateStackingOrder(true);
     if (window->hasStrut()) {
-        updateClientArea();
+        rearrange();
     }
     if (window->wantsInput() && !window->isMinimized()) {
         // Never activate a window on its own in "Extreme" mode.
@@ -847,7 +847,7 @@ void Workspace::removeWindow(Window *window)
         setupWindowShortcutDone(false);
     }
     if (window->hasStrut()) {
-        updateClientArea();
+        rearrange();
     }
 
     Q_EMIT windowRemoved(window);
@@ -1429,7 +1429,7 @@ void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 {
     m_focusChain->addDesktop(desktop);
     m_placement->reinitCascading();
-    updateClientArea();
+    rearrange();
 }
 
 void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
@@ -1452,7 +1452,7 @@ void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
         }
     }
 
-    updateClientArea();
+    rearrange();
     m_placement->reinitCascading();
     m_focusChain->removeDesktop(desktop);
 }
@@ -1507,7 +1507,7 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
     for (auto it = transients_stacking_order.constBegin(); it != transients_stacking_order.constEnd(); ++it) {
         sendWindowToDesktops(*it, window->desktops(), dont_activate);
     }
-    updateClientArea();
+    rearrange();
 }
 
 void Workspace::sendWindowToOutput(Window *window, Output *output)
@@ -2171,7 +2171,7 @@ void Workspace::desktopResized()
         rootInfo()->setDesktopGeometry(desktop_geometry);
     }
 
-    updateClientArea();
+    rearrange();
 
     const auto stack = stackingOrder();
     for (Window *window : stack) {
@@ -2194,7 +2194,7 @@ void Workspace::desktopResized()
         }
     }
 
-    saveOldScreenSizes(); // after updateClientArea(), so that one still uses the previous one
+    saveOldScreenSizes(); // after rearrange(), so that one still uses the previous one
 
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
     m_screenEdges->recreateEdges();
@@ -2295,24 +2295,15 @@ QRectF Workspace::adjustClientArea(Window *window, const QRectF &area) const
     return adjustedArea;
 }
 
-void Workspace::scheduleUpdateClientArea()
+void Workspace::scheduleRearrange()
 {
-    m_updateClientAreaTimer.start(0);
+    m_rearrangeTimer.start(0);
 }
 
-/**
- * Updates the current client areas according to the current windows.
- *
- * The client area is the area that is available for windows (that
- * which is not taken by windows like panels, the top-of-screen menu
- * etc).
- *
- * @see clientArea()
- */
-void Workspace::updateClientArea()
+void Workspace::rearrange()
 {
-    Q_EMIT aboutToUpdateClientArea();
-    m_updateClientAreaTimer.stop();
+    Q_EMIT aboutToRearrange();
+    m_rearrangeTimer.stop();
 
     const QList<VirtualDesktop *> desktops = VirtualDesktopManager::self()->desktops();
 
@@ -2387,7 +2378,7 @@ void Workspace::updateClientArea()
         m_workAreas = workAreas;
         m_screenAreas = screenAreas;
 
-        m_inUpdateClientArea = true;
+        m_inRearrange = true;
         m_oldRestrictedAreas = m_restrictedAreas;
         m_restrictedAreas = restrictedAreas;
 
@@ -2406,7 +2397,7 @@ void Workspace::updateClientArea()
         }
 
         m_oldRestrictedAreas.clear(); // reset, no longer valid or needed
-        m_inUpdateClientArea = false;
+        m_inRearrange = false;
     }
 }
 
@@ -2483,9 +2474,9 @@ StrutRects Workspace::restrictedMoveArea(const VirtualDesktop *desktop, StrutAre
     return ret;
 }
 
-bool Workspace::inUpdateClientArea() const
+bool Workspace::inRearrange() const
 {
-    return m_inUpdateClientArea;
+    return m_inRearrange;
 }
 
 StrutRects Workspace::previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas) const

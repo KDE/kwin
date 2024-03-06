@@ -88,7 +88,7 @@ Output *LayerShellV1Window::desiredOutput() const
 
 void LayerShellV1Window::scheduleRearrange()
 {
-    workspace()->scheduleUpdateClientArea();
+    workspace()->scheduleRearrange();
 }
 
 NET::WindowType LayerShellV1Window::windowType() const

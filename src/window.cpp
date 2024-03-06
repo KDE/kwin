@@ -3692,7 +3692,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     // edge will move when a new strut is placed on the edge.
     QRect oldScreenArea;
     QRect screenArea;
-    if (workspace()->inUpdateClientArea()) {
+    if (workspace()->inRearrange()) {
         // check if the window is on an about to be destroyed output
         Output *newOutput = moveResizeOutput();
         if (!workspace()->outputs().contains(newOutput)) {
@@ -3733,7 +3733,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     // the bottom struts bounded by the window's left and right sides).
 
     // These 4 compute old bounds ...
-    auto moveAreaFunc = workspace()->inUpdateClientArea() ? &Workspace::previousRestrictedMoveArea : //... the restricted areas changed
+    auto moveAreaFunc = workspace()->inRearrange() ? &Workspace::previousRestrictedMoveArea : //... the restricted areas changed
         &Workspace::restrictedMoveArea; //... when e.g. active desktop or screen changes
 
     for (const QRect &r : (workspace()->*moveAreaFunc)(oldDesktop, StrutAreaTop)) {

@@ -26,7 +26,7 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
     connect(shell, &LayerShellV1Interface::surfaceCreated,
             this, &LayerShellV1Integration::createWindow);
 
-    connect(workspace(), &Workspace::aboutToUpdateClientArea, this, &LayerShellV1Integration::rearrange);
+    connect(workspace(), &Workspace::aboutToRearrange, this, &LayerShellV1Integration::rearrange);
 }
 
 void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface)
