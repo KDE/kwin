@@ -608,11 +608,6 @@ DrmPipelineLayer *DrmPipeline::cursorLayer() const
     return m_cursorLayer.get();
 }
 
-DrmPlane::Transformations DrmPipeline::renderOrientation() const
-{
-    return m_pending.renderOrientation;
-}
-
 PresentationMode DrmPipeline::presentationMode() const
 {
     return m_pending.presentationMode;
@@ -675,11 +670,6 @@ void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLaye
 {
     m_primaryLayer = primaryLayer;
     m_cursorLayer = cursorLayer;
-}
-
-void DrmPipeline::setRenderOrientation(DrmPlane::Transformations orientation)
-{
-    m_pending.renderOrientation = orientation;
 }
 
 void DrmPipeline::setPresentationMode(PresentationMode mode)

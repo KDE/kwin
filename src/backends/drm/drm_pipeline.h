@@ -112,7 +112,6 @@ public:
     bool active() const;
     bool activePending() const;
     bool enabled() const;
-    DrmPlane::Transformations renderOrientation() const;
     PresentationMode presentationMode() const;
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
@@ -124,7 +123,6 @@ public:
     void setMode(const std::shared_ptr<DrmConnectorMode> &mode);
     void setActive(bool active);
     void setEnable(bool enable);
-    void setRenderOrientation(DrmPlane::Transformations orientation);
     void setPresentationMode(PresentationMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
@@ -195,9 +193,6 @@ private:
 
         std::shared_ptr<IccProfile> iccProfile;
         ColorDescription colorDescription = ColorDescription::sRGB;
-
-        // the transformation that buffers submitted to the pipeline should have
-        DrmPlane::Transformations renderOrientation = DrmPlane::Transformation::Rotate0;
     };
     // the state that is to be tested next
     State m_pending;

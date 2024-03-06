@@ -19,27 +19,6 @@
 namespace KWin
 {
 
-static OutputTransform drmToOutputTransform(DrmPipeline *pipeline)
-{
-    auto angle = DrmPlane::transformationToDegrees(pipeline->renderOrientation());
-    if (angle < 0) {
-        angle += 360;
-    }
-    OutputTransform flip = (pipeline->renderOrientation() & DrmPlane::Transformation::ReflectX) ? OutputTransform::FlipX : OutputTransform();
-    switch (angle % 360) {
-    case 0:
-        return flip;
-    case 90:
-        return flip.combine(OutputTransform::Rotate90);
-    case 180:
-        return flip.combine(OutputTransform::Rotate180);
-    case 270:
-        return flip.combine(OutputTransform::Rotate270);
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
 EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
     , m_surface(pipeline->gpu(), eglBackend, pipeline->gpu()->atomicModeSetting() ? EglGbmLayerSurface::BufferTarget::Linear : EglGbmLayerSurface::BufferTarget::Dumb, EglGbmLayerSurface::FormatOption::RequireAlpha)
@@ -54,7 +33,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
     // note that this allows blending to happen in sRGB or PQ encoding.
     // That's technically incorrect, but it looks okay and is intentionally allowed
     // as the hardware cursor is more important than an incorrectly blended cursor edge
-    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), drmToOutputTransform(m_pipeline).combine(OutputTransform::FlipY), m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
+    return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)

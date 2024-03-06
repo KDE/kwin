@@ -26,27 +26,6 @@
 namespace KWin
 {
 
-static OutputTransform drmToOutputTransform(DrmPipeline *pipeline)
-{
-    auto angle = DrmPlane::transformationToDegrees(pipeline->renderOrientation());
-    if (angle < 0) {
-        angle += 360;
-    }
-    OutputTransform flip = (pipeline->renderOrientation() & DrmPlane::Transformation::ReflectX) ? OutputTransform::FlipX : OutputTransform();
-    switch (angle % 360) {
-    case 0:
-        return flip;
-    case 90:
-        return flip.combine(OutputTransform::Rotate90);
-    case 180:
-        return flip.combine(OutputTransform::Rotate180);
-    case 270:
-        return flip.combine(OutputTransform::Rotate270);
-    default:
-        Q_UNREACHABLE();
-    }
-}
-
 EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
     , m_surface(pipeline->gpu(), eglBackend)
@@ -59,7 +38,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
     m_scanoutBuffer.reset();
     m_dmabufFeedback.renderingSurface();
 
-    return m_surface.startRendering(m_pipeline->mode()->size(), drmToOutputTransform(m_pipeline).combine(OutputTransform::FlipY), m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
+    return m_surface.startRendering(m_pipeline->mode()->size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -85,7 +64,7 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
-        ret->setContentTransform(drmToOutputTransform(m_pipeline).combine(OutputTransform::FlipY));
+        ret->setContentTransform(m_pipeline->output()->transform().combine(OutputTransform::FlipY));
         return ret;
     } else {
         return m_surface.texture();

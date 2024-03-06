@@ -92,8 +92,6 @@ public:
     DrmProperty vmHotspotY;
     DrmProperty inFenceFd;
 
-    static int32_t transformationToDegrees(Transformations transformation);
-
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
 
