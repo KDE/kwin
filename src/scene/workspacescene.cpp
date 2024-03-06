@@ -64,6 +64,7 @@
 #include "scene/decorationitem.h"
 #include "scene/dndiconitem.h"
 #include "scene/itemrenderer.h"
+#include "scene/rootitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
@@ -89,8 +90,8 @@ namespace KWin
 
 WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
     : Scene(std::move(renderer))
-    , m_containerItem(std::make_unique<Item>(this))
-    , m_overlayItem(std::make_unique<Item>(this))
+    , m_containerItem(std::make_unique<RootItem>(this))
+    , m_overlayItem(std::make_unique<RootItem>(this))
 {
     setGeometry(workspace()->geometry());
     connect(workspace(), &Workspace::geometryChanged, this, [this]() {
@@ -113,7 +114,7 @@ void WorkspaceScene::createDndIconItem()
     if (!dragIcon) {
         return;
     }
-    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, this, m_overlayItem.get());
+    m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, m_overlayItem.get());
     if (waylandServer()->seat()->isDragPointer()) {
         auto updatePosition = [this]() {
             const auto pointerPos = waylandServer()->seat()->pointerPos();

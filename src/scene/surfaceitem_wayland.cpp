@@ -19,8 +19,8 @@
 namespace KWin
 {
 
-SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Scene *scene, Item *parent)
-    : SurfaceItem(scene, parent)
+SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
+    : SurfaceItem(parent)
     , m_surface(surface)
 {
     connect(surface, &SurfaceInterface::sizeChanged,
@@ -114,8 +114,7 @@ SurfaceItemWayland *SurfaceItemWayland::getOrCreateSubSurfaceItem(SubSurfaceInte
 {
     auto &item = m_subsurfaces[child];
     if (!item) {
-        item = std::make_unique<SurfaceItemWayland>(child->surface(), scene());
-        item->setParentItem(this);
+        item = std::make_unique<SurfaceItemWayland>(child->surface(), this);
     }
     return item.get();
 }
@@ -212,8 +211,8 @@ bool SurfacePixmapWayland::isValid() const
 }
 
 #if KWIN_BUILD_X11
-SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Scene *scene, Item *parent)
-    : SurfaceItemWayland(window->surface(), scene, parent)
+SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
+    : SurfaceItemWayland(window->surface(), parent)
     , m_window(window)
 {
     connect(window, &X11Window::shapeChanged, this, &SurfaceItemXwayland::discardQuads);

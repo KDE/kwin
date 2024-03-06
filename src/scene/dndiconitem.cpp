@@ -12,10 +12,10 @@
 namespace KWin
 {
 
-DragAndDropIconItem::DragAndDropIconItem(DragAndDropIcon *icon, Scene *scene, Item *parent)
-    : Item(scene, parent)
+DragAndDropIconItem::DragAndDropIconItem(DragAndDropIcon *icon, Item *parent)
+    : Item(parent)
 {
-    m_surfaceItem = std::make_unique<SurfaceItemWayland>(icon->surface(), scene, this);
+    m_surfaceItem = std::make_unique<SurfaceItemWayland>(icon->surface(), this);
     m_surfaceItem->setPosition(icon->position());
 
     connect(icon, &DragAndDropIcon::destroyed, this, [this]() {

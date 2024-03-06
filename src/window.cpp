@@ -208,8 +208,7 @@ bool Window::setupCompositing()
         return false;
     }
 
-    m_windowItem = createItem(scene);
-    m_windowItem->setParentItem(scene->containerItem());
+    m_windowItem = createItem(scene->containerItem());
 
     connect(windowItem(), &WindowItem::positionChanged, this, &Window::visibleGeometryChanged);
     connect(windowItem(), &WindowItem::boundingRectChanged, this, &Window::visibleGeometryChanged);

@@ -23,7 +23,7 @@ class DragAndDropIconItem : public Item
     Q_OBJECT
 
 public:
-    explicit DragAndDropIconItem(DragAndDropIcon *icon, Scene *scene, Item *parent = nullptr);
+    explicit DragAndDropIconItem(DragAndDropIcon *icon, Item *parent = nullptr);
     ~DragAndDropIconItem() override;
 
     SurfaceInterface *surface() const;

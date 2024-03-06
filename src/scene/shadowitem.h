@@ -36,7 +36,7 @@ class KWIN_EXPORT ShadowItem : public Item
     Q_OBJECT
 
 public:
-    explicit ShadowItem(Shadow *shadow, Window *window, Scene *scene, Item *parent = nullptr);
+    explicit ShadowItem(Shadow *shadow, Window *window, Item *parent = nullptr);
     ~ShadowItem() override;
 
     Shadow *shadow() const;

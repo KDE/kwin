@@ -13,6 +13,7 @@ namespace KWin
 
 class CursorItem;
 class Output;
+class RootItem;
 
 class KWIN_EXPORT CursorScene : public Scene
 {
@@ -27,7 +28,8 @@ public:
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 
 private:
-    std::unique_ptr<CursorItem> m_rootItem;
+    std::unique_ptr<RootItem> m_rootItem;
+    std::unique_ptr<CursorItem> m_cursorItem;
     Output *m_paintedOutput = nullptr;
 };
 

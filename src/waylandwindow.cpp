@@ -48,9 +48,9 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
     updateIcon();
 }
 
-std::unique_ptr<WindowItem> WaylandWindow::createItem(Scene *scene)
+std::unique_ptr<WindowItem> WaylandWindow::createItem(Item *parentItem)
 {
-    return std::make_unique<WindowItemWayland>(this, scene);
+    return std::make_unique<WindowItemWayland>(this, parentItem);
 }
 
 QString WaylandWindow::captionNormal() const

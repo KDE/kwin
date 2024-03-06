@@ -50,7 +50,7 @@ public:
     void renderBackground(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRegion &region) override;
     void renderItem(const RenderTarget &renderTarget, const RenderViewport &viewport, Item *item, int mask, const QRegion &region, const WindowPaintData &data) override;
 
-    std::unique_ptr<ImageItem> createImageItem(Scene *scene, Item *parent = nullptr) override;
+    std::unique_ptr<ImageItem> createImageItem(Item *parent = nullptr) override;
 
 private:
     QVector4D modulate(float opacity, float brightness) const;

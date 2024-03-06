@@ -106,7 +106,7 @@ std::unique_ptr<ImageItem> ScreenEdgeEffect::createGlowItem(ElectricBorder borde
 
     WorkspaceScene *scene = effects->scene();
 
-    std::unique_ptr<ImageItem> imageItem = scene->renderer()->createImageItem(scene, scene->overlayItem());
+    std::unique_ptr<ImageItem> imageItem = scene->renderer()->createImageItem(scene->overlayItem());
     imageItem->setImage(image);
     imageItem->setPosition(geometry.topLeft());
     imageItem->setSize(geometry.size());

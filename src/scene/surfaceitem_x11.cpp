@@ -13,8 +13,8 @@
 namespace KWin
 {
 
-SurfaceItemX11::SurfaceItemX11(X11Window *window, Scene *scene, Item *parent)
-    : SurfaceItem(scene, parent)
+SurfaceItemX11::SurfaceItemX11(X11Window *window, Item *parent)
+    : SurfaceItem(parent)
     , m_window(window)
 {
     connect(window, &Window::bufferGeometryChanged,

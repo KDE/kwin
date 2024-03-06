@@ -58,9 +58,9 @@ InternalWindow::~InternalWindow()
 {
 }
 
-std::unique_ptr<WindowItem> InternalWindow::createItem(Scene *scene)
+std::unique_ptr<WindowItem> InternalWindow::createItem(Item *parentItem)
 {
-    return std::make_unique<WindowItemInternal>(this, scene);
+    return std::make_unique<WindowItemInternal>(this, parentItem);
 }
 
 bool InternalWindow::isClient() const

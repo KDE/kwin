@@ -22,8 +22,8 @@ ShadowTextureProvider::~ShadowTextureProvider()
 {
 }
 
-ShadowItem::ShadowItem(Shadow *shadow, Window *window, Scene *scene, Item *parent)
-    : Item(scene, parent)
+ShadowItem::ShadowItem(Shadow *shadow, Window *window, Item *parent)
+    : Item(parent)
     , m_window(window)
     , m_shadow(shadow)
     , m_textureProvider(Compositor::self()->scene()->createShadowTextureProvider(shadow))

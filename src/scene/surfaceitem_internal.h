@@ -21,7 +21,7 @@ class KWIN_EXPORT SurfaceItemInternal : public SurfaceItem
     Q_OBJECT
 
 public:
-    explicit SurfaceItemInternal(InternalWindow *window, Scene *scene, Item *parent = nullptr);
+    explicit SurfaceItemInternal(InternalWindow *window, Item *parent = nullptr);
 
     InternalWindow *window() const;
 
