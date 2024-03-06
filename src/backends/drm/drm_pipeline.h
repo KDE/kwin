@@ -167,6 +167,7 @@ private:
     DrmConnector *m_connector = nullptr;
 
     bool m_modesetPresentPending = false;
+    std::shared_ptr<DrmGammaRamp> m_currentLegacyGamma;
 
     struct State
     {
