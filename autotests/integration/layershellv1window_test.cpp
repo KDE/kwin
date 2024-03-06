@@ -7,6 +7,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "core/outputconfiguration.h"
 #include "main.h"
 #include "pointer_input.h"
 #include "screenedge.h"
@@ -44,6 +45,7 @@ private Q_SLOTS:
     void testChangeLayer();
     void testPlacementArea_data();
     void testPlacementArea();
+    void testPlacementAreaAfterOutputLayoutChange();
     void testFill_data();
     void testFill();
     void testStack();
@@ -425,6 +427,54 @@ void LayerShellV1WindowTest::testPlacementArea()
 
     // Verify that the work area has been adjusted.
     QTEST(workspace()->clientArea(PlacementArea, window), "placementArea");
+
+    // Destroy the window.
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void LayerShellV1WindowTest::testPlacementAreaAfterOutputLayoutChange()
+{
+    // This test verifies that layer shell windows correctly react to output layout changes.
+
+    // The output where the layer surface should be placed.
+    Output *output = workspace()->activeOutput();
+
+    // Create a layer surface with an exclusive zone.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::LayerSurfaceV1> shellSurface(Test::createLayerSurfaceV1(surface.get(), QStringLiteral("dock"), Test::waylandOutput(output->name())));
+    shellSurface->set_layer(Test::LayerShellV1::layer_top);
+    shellSurface->set_anchor(Test::LayerSurfaceV1::anchor_bottom);
+    shellSurface->set_size(100, 50);
+    shellSurface->set_exclusive_edge(Test::LayerSurfaceV1::anchor_bottom);
+    shellSurface->set_exclusive_zone(50);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+
+    // Wait for the compositor to position the layer surface.
+    QSignalSpy configureRequestedSpy(shellSurface.get(), &Test::LayerSurfaceV1::configureRequested);
+    QVERIFY(configureRequestedSpy.wait());
+    shellSurface->ack_configure(configureRequestedSpy.last().at(0).toUInt());
+    Window *window = Test::renderAndWaitForShown(surface.get(), configureRequestedSpy.last().at(1).toSize(), Qt::red);
+    QVERIFY(window);
+    QCOMPARE(workspace()->clientArea(PlacementArea, window), output->geometry().adjusted(0, 0, 0, -50));
+
+    // Move the output 100px down.
+    OutputConfiguration config1;
+    {
+        auto changeSet = config1.changeSet(output);
+        changeSet->pos = output->geometry().topLeft() + QPoint(0, 100);
+    }
+    workspace()->applyOutputConfiguration(config1);
+    QCOMPARE(workspace()->clientArea(PlacementArea, window), output->geometry().adjusted(0, 0, 0, -50));
+
+    // Move the output back to its original position.
+    OutputConfiguration config2;
+    {
+        auto changeSet = config2.changeSet(output);
+        changeSet->pos = output->geometry().topLeft() - QPoint(0, 100);
+    }
+    workspace()->applyOutputConfiguration(config2);
+    QCOMPARE(workspace()->clientArea(PlacementArea, window), output->geometry().adjusted(0, 0, 0, -50));
 
     // Destroy the window.
     shellSurface.reset();

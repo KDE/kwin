@@ -13,8 +13,6 @@
 #include "wayland_server.h"
 #include "workspace.h"
 
-#include <QTimer>
-
 namespace KWin
 {
 
@@ -28,9 +26,7 @@ LayerShellV1Integration::LayerShellV1Integration(QObject *parent)
     connect(shell, &LayerShellV1Interface::surfaceCreated,
             this, &LayerShellV1Integration::createWindow);
 
-    m_rearrangeTimer = new QTimer(this);
-    m_rearrangeTimer->setSingleShot(true);
-    connect(m_rearrangeTimer, &QTimer::timeout, this, &LayerShellV1Integration::rearrange);
+    connect(workspace(), &Workspace::aboutToUpdateClientArea, this, &LayerShellV1Integration::rearrange);
 }
 
 void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface)
@@ -198,21 +194,10 @@ static void rearrangeOutput(Output *output)
 
 void LayerShellV1Integration::rearrange()
 {
-    m_rearrangeTimer->stop();
-
     const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
         rearrangeOutput(output);
     }
-
-    if (workspace()) {
-        workspace()->updateClientArea();
-    }
-}
-
-void LayerShellV1Integration::scheduleRearrange()
-{
-    m_rearrangeTimer->start();
 }
 
 } // namespace KWin

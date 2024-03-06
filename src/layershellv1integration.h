@@ -21,14 +21,10 @@ public:
     explicit LayerShellV1Integration(QObject *parent = nullptr);
 
     void rearrange();
-    void scheduleRearrange();
 
     void createWindow(LayerSurfaceV1Interface *shellSurface);
     void recreateWindow(LayerSurfaceV1Interface *shellSurface);
     void destroyWindow(LayerSurfaceV1Interface *shellSurface);
-
-private:
-    QTimer *m_rearrangeTimer;
 };
 
 } // namespace KWin

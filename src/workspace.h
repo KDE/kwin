@@ -530,6 +530,7 @@ public Q_SLOTS:
     void setupWindowShortcutDone(bool);
 
     void updateClientArea();
+    void scheduleUpdateClientArea();
 
 private Q_SLOTS:
     void desktopResized();
@@ -580,6 +581,7 @@ Q_SIGNALS:
      * or lowered
      */
     void stackingOrderChanged();
+    void aboutToUpdateClientArea();
 
 private:
     void init();
@@ -706,6 +708,7 @@ private:
 
     // Timer to collect requests for 'reconfigure'
     QTimer reconfigureTimer;
+    QTimer m_updateClientAreaTimer;
 
     QTimer updateToolWindowsTimer;
 
