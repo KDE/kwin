@@ -484,7 +484,7 @@ QMap<uint32_t, QList<uint64_t>> DrmPipeline::cursorFormats() const
 
 bool DrmPipeline::hasCTM() const
 {
-    return m_pending.crtc && m_pending.crtc->ctm.isValid();
+    return gpu()->atomicModeSetting() && m_pending.crtc && m_pending.crtc->ctm.isValid();
 }
 
 bool DrmPipeline::hasGammaRamp() const
