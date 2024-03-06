@@ -151,6 +151,7 @@ private:
     // legacy only
     Error presentLegacy();
     Error legacyModeset();
+    Error setLegacyGamma();
     Error applyPendingChangesLegacy();
     bool setCursorLegacy();
     static Error commitPipelinesLegacy(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
