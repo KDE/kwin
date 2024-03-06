@@ -168,6 +168,7 @@ private:
 
     bool m_modesetPresentPending = false;
     bool m_didLegacyScanoutHack = false;
+    std::shared_ptr<DrmGammaRamp> m_currentLegacyGamma;
 
     struct State
     {
