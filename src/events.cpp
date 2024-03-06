@@ -396,7 +396,7 @@ bool X11Window::windowEvent(xcb_generic_event_t *e)
         }
         if ((dirtyProperties & NET::WMStrut) != 0
             || (dirtyProperties2 & NET::WM2ExtendedStrut) != 0) {
-            workspace()->updateClientArea();
+            workspace()->rearrange();
         }
         if ((dirtyProperties & NET::WMIcon) != 0) {
             getIcons();

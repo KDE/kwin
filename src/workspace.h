@@ -277,11 +277,29 @@ private:
     // Unsorted
 
 public:
-    // True when performing Workspace::updateClientArea().
-    // The calls below are valid only in that case.
-    bool inUpdateClientArea() const;
     StrutRects previousRestrictedMoveArea(const VirtualDesktop *desktop, StrutAreas areas = StrutAreaAll) const;
     QHash<const Output *, QRect> previousScreenSizes() const;
+
+    /**
+     * Returns @c true if the workspace is currently being rearranged; otherwise returns @c false.
+     */
+    bool inRearrange() const;
+
+    /**
+     * Re-arranges the workspace, it includes computing restricted areas, moving windows out of the
+     * restricted areas, and so on.
+     *
+     * The client area is the area that is available for windows (that which is not taken by windows
+     * like panels, the top-of-screen menu etc).
+     *
+     * @see clientArea()
+     */
+    void rearrange();
+
+    /**
+     * Schedules the workspace to be re-arranged at the next available opportunity.
+     */
+    void scheduleRearrange();
 
     /**
      * Returns the list of windows sorted in stacking order, with topmost window
@@ -529,9 +547,6 @@ public Q_SLOTS:
     void slotSetupWindowShortcut();
     void setupWindowShortcutDone(bool);
 
-    void updateClientArea();
-    void scheduleUpdateClientArea();
-
 private Q_SLOTS:
     void desktopResized();
 #if KWIN_BUILD_X11
@@ -581,7 +596,7 @@ Q_SIGNALS:
      * or lowered
      */
     void stackingOrderChanged();
-    void aboutToUpdateClientArea();
+    void aboutToRearrange();
 
 private:
     void init();
@@ -708,7 +723,6 @@ private:
 
     // Timer to collect requests for 'reconfigure'
     QTimer reconfigureTimer;
-    QTimer m_updateClientAreaTimer;
 
     QTimer updateToolWindowsTimer;
 
@@ -723,7 +737,8 @@ private:
 
     QHash<const Output *, QRect> m_oldScreenGeometries;
     QHash<const VirtualDesktop *, StrutRects> m_oldRestrictedAreas;
-    bool m_inUpdateClientArea = false;
+    QTimer m_rearrangeTimer;
+    bool m_inRearrange = false;
 
     int m_setActiveWindowRecursion = 0;
     int m_blockStackingUpdates = 0; // When > 0, stacking updates are temporarily disabled

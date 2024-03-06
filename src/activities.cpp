@@ -122,7 +122,7 @@ void Activities::toggleWindowOnActivity(Window *window, const QString &activity,
         }
         toggleWindowOnActivity(window, activity, dont_activate);
     }
-    ws->updateClientArea();
+    ws->rearrange();
 }
 
 bool Activities::start(const QString &id)
