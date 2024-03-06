@@ -42,6 +42,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
 void DrmPipeline::forceLegacyModeset()
 {
     legacyModeset();
+    setLegacyGamma();
 }
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
@@ -132,12 +133,10 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
                 return err;
             }
         }
-        if (m_pending.gamma && m_currentLegacyGamma != m_pending.gamma) {
-            if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.gamma->lut().size(), m_pending.gamma->lut().red(), m_pending.gamma->lut().green(), m_pending.gamma->lut().blue()) != 0) {
-                qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
-                return errnoToError();
+        if (m_pending.gamma != m_currentLegacyGamma) {
+            if (Error err = setLegacyGamma(); err != Error::None) {
+                return err;
             }
-            m_currentLegacyGamma = m_pending.gamma;
         }
         if (m_connector->contentType.isValid()) {
             m_connector->contentType.setEnumLegacy(m_pending.contentType);
@@ -149,6 +148,18 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         return errnoToError();
     }
     return Error::None;
+}
+
+DrmPipeline::Error DrmPipeline::setLegacyGamma()
+{
+    if (m_pending.gamma) {
+        if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.gamma->lut().size(), m_pending.gamma->lut().red(), m_pending.gamma->lut().green(), m_pending.gamma->lut().blue()) != 0) {
+            qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
+            return errnoToError();
+        }
+        m_currentLegacyGamma = m_pending.gamma;
+    }
+    return DrmPipeline::Error::None;
 }
 
 bool DrmPipeline::setCursorLegacy()
