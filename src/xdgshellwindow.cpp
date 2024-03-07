@@ -1519,15 +1519,14 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         setGeometryRestore(savedGeometry);
     }
 
-    const MaximizeMode delta = m_requestedMaximizeMode ^ oldMode;
     QRectF geometry = oldGeometry;
 
-    if (delta & MaximizeHorizontal) {
-        if (m_requestedMaximizeMode & MaximizeHorizontal) {
-            // Stretch the window vertically to fit the size of the maximize area.
-            geometry.setX(clientArea.x());
-            geometry.setWidth(clientArea.width());
-        } else if (geometryRestore().isValid()) {
+    if (m_requestedMaximizeMode & MaximizeHorizontal) {
+        // Stretch the window vertically to fit the size of the maximize area.
+        geometry.setX(clientArea.x());
+        geometry.setWidth(clientArea.width());
+    } else if (oldMode & MaximizeHorizontal) {
+        if (geometryRestore().isValid()) {
             // The window is no longer maximized horizontally and the saved geometry is valid.
             geometry.setX(geometryRestore().x());
             geometry.setWidth(geometryRestore().width());
@@ -1540,12 +1539,12 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         }
     }
 
-    if (delta & MaximizeVertical) {
-        if (m_requestedMaximizeMode & MaximizeVertical) {
-            // Stretch the window horizontally to fit the size of the maximize area.
-            geometry.setY(clientArea.y());
-            geometry.setHeight(clientArea.height());
-        } else if (geometryRestore().isValid()) {
+    if (m_requestedMaximizeMode & MaximizeVertical) {
+        // Stretch the window horizontally to fit the size of the maximize area.
+        geometry.setY(clientArea.y());
+        geometry.setHeight(clientArea.height());
+    } else if (oldMode & MaximizeVertical) {
+        if (geometryRestore().isValid()) {
             // The window is no longer maximized vertically and the saved geometry is valid.
             geometry.setY(geometryRestore().y());
             geometry.setHeight(geometryRestore().height());
