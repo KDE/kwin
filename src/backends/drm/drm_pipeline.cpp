@@ -256,7 +256,17 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         return Error::InvalidArguments;
     }
     const auto primary = m_pending.crtc->primaryPlane();
-    primary->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(fb->buffer()->size(), m_pending.mode->size()));
+    const auto transform = m_primaryLayer->hardwareTransform();
+    const auto planeTransform = DrmPlane::outputTransformToPlaneTransform(transform);
+    if (primary->rotation.isValid()) {
+        if (!primary->rotation.hasEnum(planeTransform)) {
+            return Error::InvalidArguments;
+        }
+        commit->addEnum(primary->rotation, planeTransform);
+    } else if (planeTransform != DrmPlane::Transformation::Rotate0) {
+        return Error::InvalidArguments;
+    }
+    primary->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(transform.map(fb->buffer()->size()), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
     if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {

@@ -9,6 +9,7 @@
 */
 #pragma once
 
+#include "core/output.h"
 #include "drm_object.h"
 
 #include <QMap>
@@ -34,6 +35,7 @@ public:
 
     bool isCrtcSupported(int pipeIndex) const;
     QMap<uint32_t, QList<uint64_t>> formats() const;
+    bool supportsTransformation(OutputTransform transform) const;
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
     void setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b);
@@ -56,6 +58,7 @@ public:
     };
     Q_ENUM(Transformation)
     Q_DECLARE_FLAGS(Transformations, Transformation)
+    static Transformations outputTransformToPlaneTransform(OutputTransform transform);
     enum class PixelBlendMode : uint64_t {
         None,
         PreMultiplied,

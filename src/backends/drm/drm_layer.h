@@ -38,6 +38,7 @@ public:
 
     virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
+    virtual OutputTransform hardwareTransform() const;
 
 protected:
     DrmPipeline *const m_pipeline;

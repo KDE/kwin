@@ -172,6 +172,35 @@ void DrmPlane::releaseCurrentBuffer()
         m_current->releaseBuffer();
     }
 }
+
+DrmPlane::Transformations DrmPlane::outputTransformToPlaneTransform(OutputTransform transform)
+{
+    // note that drm transformations are counter clockwise
+    switch (transform.kind()) {
+    case OutputTransform::Kind::Normal:
+        return Transformation::Rotate0;
+    case OutputTransform::Kind::Rotate90:
+        return Transformation::Rotate270;
+    case OutputTransform::Kind::Rotate180:
+        return Transformation::Rotate180;
+    case OutputTransform::Kind::Rotate270:
+        return Transformation::Rotate90;
+    case OutputTransform::Kind::FlipY:
+        return Transformation::Rotate0 | Transformation::ReflectY;
+    case OutputTransform::Kind::FlipY90:
+        return Transformation::Rotate270 | Transformation::ReflectY;
+    case OutputTransform::Kind::FlipY180:
+        return Transformation::Rotate180 | Transformation::ReflectY;
+    case OutputTransform::Kind::FlipY270:
+        return Transformation::Rotate90 | Transformation::ReflectY;
+    }
+    Q_UNREACHABLE();
+}
+
+bool DrmPlane::supportsTransformation(OutputTransform transform) const
+{
+    return rotation.isValid() && rotation.hasEnum(outputTransformToPlaneTransform(transform));
+}
 }
 
 #include "moc_drm_plane.cpp"

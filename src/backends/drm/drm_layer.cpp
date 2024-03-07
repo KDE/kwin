@@ -31,4 +31,9 @@ DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
     : m_pipeline(pipeline)
 {
 }
+
+OutputTransform DrmPipelineLayer::hardwareTransform() const
+{
+    return OutputTransform::Kind::Normal;
+}
 }

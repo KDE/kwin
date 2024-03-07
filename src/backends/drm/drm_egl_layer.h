@@ -38,9 +38,14 @@ public:
     ColorDescription colorDescription() const;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    OutputTransform hardwareTransform() const override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
+    // the transform the drm plane will apply to the buffer
+    OutputTransform m_scanoutTransform = OutputTransform::Kind::Normal;
+    // the output transform the buffer is made for
+    OutputTransform m_scanoutBufferTransform = OutputTransform::Kind::Normal;
     QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;

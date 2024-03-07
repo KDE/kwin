@@ -10,6 +10,7 @@
 #include "core/iccprofile.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_crtc.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
 #include "drm_output.h"
@@ -64,7 +65,7 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
-        ret->setContentTransform(m_pipeline->output()->transform().combine(OutputTransform::FlipY));
+        ret->setContentTransform(m_scanoutBufferTransform.combine(OutputTransform::FlipY));
         return ret;
     } else {
         return m_surface.texture();
@@ -93,7 +94,9 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto surface = item->surface();
-    if (surface->bufferTransform() != m_pipeline->output()->transform()) {
+    const auto neededTransform = surface->bufferTransform().combine(m_pipeline->output()->transform().inverted());
+    const auto plane = m_pipeline->crtc()->primaryPlane();
+    if (neededTransform != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(neededTransform))) {
         return false;
     }
     const auto buffer = surface->buffer();
@@ -118,6 +121,8 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!formats[dmabufAttributes->format].contains(dmabufAttributes->modifier)) {
         return false;
     }
+    m_scanoutTransform = neededTransform;
+    m_scanoutBufferTransform = surface->bufferTransform();
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
         m_dmabufFeedback.scanoutSuccessful(surface);
@@ -148,5 +153,10 @@ void EglGbmLayer::releaseBuffers()
 std::chrono::nanoseconds EglGbmLayer::queryRenderTime() const
 {
     return m_surface.queryRenderTime();
+}
+
+OutputTransform EglGbmLayer::hardwareTransform() const
+{
+    return m_scanoutBuffer ? m_scanoutTransform : OutputTransform::Normal;
 }
 }
