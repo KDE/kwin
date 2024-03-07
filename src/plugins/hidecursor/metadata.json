@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Hide mouse cursor on inactivity or keyboard input",
+        "Description[bg]": "Скриване показалеца на мишката при бездействие или при въвеждане от клавиатурата",
         "Description[ca@valencia]": "Oculta el cursor del ratolí per inactivitat o per entrada de teclat",
         "Description[ca]": "Oculta el cursor del ratolí per inactivitat o per entrada de teclat",
         "Description[eo]": "Kaŝi muskursoron je neaktiveco aŭ klavara enigo",
@@ -24,6 +25,7 @@
         "EnabledByDefault": false,
         "License": "GPL",
         "Name": "Hide Cursor",
+        "Name[bg]": "Скриване показалеца на мишката",
         "Name[ca@valencia]": "Oculta el cursor",
         "Name[ca]": "Oculta el cursor",
         "Name[eo]": "Kaŝi Kursoron",
