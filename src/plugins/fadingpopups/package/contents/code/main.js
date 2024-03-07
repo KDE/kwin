@@ -56,7 +56,7 @@ function isPopupWindow(window) {
     // this one. In addition to popups, this effect also animates some
     // special windows(e.g. notifications) because the monolithic version
     // was doing that.
-    if (window.dock || window.splash || window.toolbar
+    if (window.splash || window.toolbar
             || window.notification || window.onScreenDisplay
             || window.criticalNotification
             || window.appletPopup) {
