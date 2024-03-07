@@ -3086,8 +3086,8 @@ void Workspace::fixPositionAfterCrash(xcb_window_t w, const xcb_get_geometry_rep
 
     if (frame.left != 0 || frame.top != 0) {
         // left and top needed due to narrowing conversations restrictions in C++11
-        const uint32_t left = frame.left;
-        const uint32_t top = frame.top;
+        const int32_t left = frame.left;
+        const int32_t top = frame.top;
         const uint32_t values[] = {Xcb::toXNative(geometry->x - left), Xcb::toXNative(geometry->y - top)};
         xcb_configure_window(kwinApp()->x11Connection(), w, XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y, values);
     }

@@ -56,7 +56,7 @@ QRectF KWIN_EXPORT nativeFloor(const QRectF &value);
 static void defineCursor(xcb_window_t window, xcb_cursor_t cursor);
 static void setInputFocus(xcb_window_t window, uint8_t revertTo = XCB_INPUT_FOCUS_POINTER_ROOT, xcb_timestamp_t time = xTime());
 static void moveWindow(xcb_window_t window, const QPoint &pos);
-static void moveWindow(xcb_window_t window, uint32_t x, uint32_t y);
+static void moveWindow(xcb_window_t window, int32_t x, int32_t y);
 static void lowerWindow(xcb_window_t window);
 static void selectInput(xcb_window_t window, uint32_t events);
 
@@ -1653,7 +1653,7 @@ public:
     void changeProperty(xcb_atom_t property, xcb_atom_t type, uint8_t format, uint32_t length,
                         const void *data, uint8_t mode = XCB_PROP_MODE_REPLACE);
     void deleteProperty(xcb_atom_t property);
-    void setBorderWidth(uint32_t width);
+    void setBorderWidth(int32_t width);
     void grabButton(uint8_t pointerMode, uint8_t keyboardmode,
                     uint16_t modifiers = XCB_MOD_MASK_ANY,
                     uint8_t button = XCB_BUTTON_INDEX_ANY,
@@ -1848,7 +1848,7 @@ inline void Window::deleteProperty(xcb_atom_t property)
     xcb_delete_property(connection(), m_window, property);
 }
 
-inline void Window::setBorderWidth(uint32_t width)
+inline void Window::setBorderWidth(int32_t width)
 {
     if (!isValid()) {
         return;
@@ -1927,7 +1927,7 @@ static inline void moveWindow(xcb_window_t window, const QPoint &pos)
     moveWindow(window, pos.x(), pos.y());
 }
 
-static inline void moveWindow(xcb_window_t window, uint32_t x, uint32_t y)
+static inline void moveWindow(xcb_window_t window, int32_t x, int32_t y)
 {
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
     const uint32_t values[] = {Xcb::toXNative(x), Xcb::toXNative(y)};
