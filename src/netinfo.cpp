@@ -260,7 +260,9 @@ WinInfo::WinInfo(X11Window *c, xcb_window_t window,
 
 void WinInfo::changeDesktop(int desktopId)
 {
-    if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId)) {
+    if (desktopId == NET::OnAllDesktops) {
+        Workspace::self()->sendWindowToDesktops(m_client, {}, true);
+    } else if (VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId)) {
         Workspace::self()->sendWindowToDesktops(m_client, {desktop}, true);
     }
 }
