@@ -12,6 +12,8 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <fstream>
+
 namespace KWin
 {
 
@@ -95,6 +97,14 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
+
+    static std::fstream fs;
+    if (!fs.is_open()) {
+        fs.open("/home/vlad/log.csv", std::ios::out);
+    }
+
+    fs << (renderTime.count() / 1000000.0) << std::endl;
+    fs.flush();
 
     notifyVblank(timestamp);
 
