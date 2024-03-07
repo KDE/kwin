@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-05 00:39+0000\n"
+"POT-Creation-Date: 2024-03-07 00:38+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2355,7 +2355,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2394,20 +2394,20 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:143
 #, fuzzy, kde-format
 #| msgid "Toggle Overview"
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Jungkit Lihat Keseluruhan"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:151
 #, fuzzy, kde-format
 #| msgid "Toggle Overview"
 msgctxt "@action Grid view is the name of a Kwin effect"
@@ -2669,7 +2669,7 @@ msgid " %"
 msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:30
+#: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr ""
@@ -2892,28 +2892,28 @@ msgid "None"
 msgstr "Nihil"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:48
 #, fuzzy, kde-format
 #| msgid "Toggle Present Windows (Current desktop)"
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Jungkit Present Windows (Desktop saat ini)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:55
+#: plugins/windowview/windowvieweffect.cpp:57
 #, fuzzy, kde-format
 #| msgid "Keep Window on All Desktops"
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Jaga Jendela di Semua Desktop"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:64
+#: plugins/windowview/windowvieweffect.cpp:66
 #, fuzzy, kde-format
 #| msgid "Toggle Present Windows (Window class)"
 msgid "Toggle Present Windows (Window class)"
 msgstr "Jungkit Present Windows (Kelas jendela)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:73
+#: plugins/windowview/windowvieweffect.cpp:75
 #, fuzzy, kde-format
 #| msgid "Toggle Present Windows (Window class on current desktop)"
 msgid "Toggle Present Windows (Window class on current desktop)"
@@ -3014,37 +3014,37 @@ msgstr "Kurang"
 msgid "More"
 msgstr "Lebih"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:72
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Jendela Satu Desktop ke Kiri"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:79
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Jendela Satu Desktop ke Kanan"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:86
 #, fuzzy, kde-format
 #| msgid "Move Zoomed Area Upwards"
 msgid "Move Zoomed Area Upwards"
 msgstr "Pindah Area Zoom ke Atas"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:93
 #, fuzzy, kde-format
 #| msgid "Move Zoomed Area Downwards"
 msgid "Move Zoomed Area Downwards"
 msgstr "Pindah Area Zoom ke Bawah"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Tidak ada Tombol Mouse"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"

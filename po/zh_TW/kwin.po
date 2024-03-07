@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-05 00:39+0000\n"
+"POT-Creation-Date: 2024-03-07 00:38+0000\n"
 "PO-Revision-Date: 2024-03-01 06:22+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2244,7 +2244,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr "循環切換總覽及格線檢視"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2280,19 +2280,19 @@ msgstr "在格線檢視中管理視窗："
 msgid "Search results include filtered windows:"
 msgstr "搜尋結果包含被過濾的視窗："
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "循環切換總覽及格線檢視"
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:143
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "切換總覽"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:151
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2512,7 +2512,7 @@ msgid " %"
 msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:30
+#: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "切換方塊編輯器"
@@ -2704,25 +2704,25 @@ msgid "None"
 msgstr "無"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "切換展示視窗（目前的桌面）"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:55
+#: plugins/windowview/windowvieweffect.cpp:57
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "切換展示視窗（所有桌面）"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:64
+#: plugins/windowview/windowvieweffect.cpp:66
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "切換展示視窗（視窗類別）"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:73
+#: plugins/windowview/windowvieweffect.cpp:75
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "切換展示視窗（目前桌面上同視窗類別）"
@@ -2808,32 +2808,32 @@ msgstr "較少"
 msgid "More"
 msgstr "較多"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "將放大區域向左移動"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "將放大區域向右移動"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "將縮放區域移到上方"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:93
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "將縮放區域移到下方"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "將滑鼠移至焦點"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "將滑鼠移至中央"

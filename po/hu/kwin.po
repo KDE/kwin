@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-05 00:39+0000\n"
+"POT-Creation-Date: 2024-03-07 00:38+0000\n"
 "PO-Revision-Date: 2024-01-23 12:28+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2256,7 +2256,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr "Áttekintés és Rácsnézet ciklikusan"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2292,19 +2292,19 @@ msgstr "Ablakok rendezése a Rácsnézetben:"
 msgid "Search results include filtered windows:"
 msgstr "Keresési eredmények tartalmazzák a szűrt ablakokat is:"
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr "Áttekintés és Rácsnézet ciklikusan"
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:143
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Áttekintés ki-be"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:151
 #, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
@@ -2524,7 +2524,7 @@ msgid " %"
 msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:30
+#: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Mozaikszerkesztő ki-be"
@@ -2717,25 +2717,25 @@ msgid "None"
 msgstr "Egyik sem"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "A jelenlegi ablakok átváltása (ezen az asztalon)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:55
+#: plugins/windowview/windowvieweffect.cpp:57
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "A jelenlegi ablakok átváltása (az összes asztalon)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:64
+#: plugins/windowview/windowvieweffect.cpp:66
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "A jelenlegi ablakok átváltása (ablakosztály)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:73
+#: plugins/windowview/windowvieweffect.cpp:75
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "A jelenlegi ablakok átváltása (ablakosztály ezen az asztalon)"
@@ -2821,32 +2821,32 @@ msgstr "Kisebb"
 msgid "More"
 msgstr "Nagyobb"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Nagyított terület mozgatása balra"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Nagyított terület mozgatása jobbra"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Nagyított terület mozgatása felfelé"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:93
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Nagyított terület mozgatása lefelé"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Egér mozgatása a fókuszra"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Egér mozgatása középre"

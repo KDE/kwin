@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-05 00:39+0000\n"
+"POT-Creation-Date: 2024-03-07 00:38+0000\n"
 "PO-Revision-Date: 2023-07-28 20:53+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -2272,7 +2272,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2310,20 +2310,20 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:143
 #, fuzzy, kde-format
 #| msgid "Toggle Overview"
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Slå på/av oversikt"
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:151
 #, fuzzy, kde-format
 #| msgid "Toggle Overview"
 msgctxt "@action Grid view is the name of a Kwin effect"
@@ -2548,7 +2548,7 @@ msgid " %"
 msgstr " %"
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:30
+#: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
 msgstr "Start/avslutt flisredigering"
@@ -2741,25 +2741,25 @@ msgid "None"
 msgstr "Ingen"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:48
 #, kde-format
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Vis/gøym vindauge (på det gjeldande skrivebordet)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:55
+#: plugins/windowview/windowvieweffect.cpp:57
 #, kde-format
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Vis/gøym vindauge (på alle skriveborda)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:64
+#: plugins/windowview/windowvieweffect.cpp:66
 #, kde-format
 msgid "Toggle Present Windows (Window class)"
 msgstr "Vis/gøym vindauge (i vindaugsklassen)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:73
+#: plugins/windowview/windowvieweffect.cpp:75
 #, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
 msgstr "Vis/gøym vindauge (vindaugsklasse på gjeldande skrivebord)"
@@ -2845,32 +2845,32 @@ msgstr "Lågare"
 msgid "More"
 msgstr "Høgare"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:72
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Flytt forstørra område til venstre"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:79
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Flytt forstørra område til høgre"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Flytt forstørra område oppover"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:93
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Flytt forstørra område nedover"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Flytt peikar til fokus"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Flytt peikar til midten"

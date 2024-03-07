@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-05 00:39+0000\n"
+"POT-Creation-Date: 2024-03-07 00:38+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -2268,7 +2268,7 @@ msgid "Cycle through Overview and Grid View"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
-#: plugins/overview/overvieweffect.cpp:133
+#: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
@@ -2306,19 +2306,19 @@ msgstr ""
 msgid "Search results include filtered windows:"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:125
+#: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:141
+#: plugins/overview/overvieweffect.cpp:143
 #, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr ""
 
-#: plugins/overview/overvieweffect.cpp:149
+#: plugins/overview/overvieweffect.cpp:151
 #, fuzzy, kde-format
 #| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid view is the name of a Kwin effect"
@@ -2547,7 +2547,7 @@ msgid " %"
 msgstr ""
 
 #: plugins/tileseditor/kcm/tileseditoreffectkcm.cpp:37
-#: plugins/tileseditor/tileseditoreffect.cpp:30
+#: plugins/tileseditor/tileseditoreffect.cpp:32
 #, fuzzy, kde-format
 #| msgid "Toggle Window Raise/Lower"
 msgid "Toggle Tiles Editor"
@@ -2746,28 +2746,28 @@ msgid "None"
 msgstr ""
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:42
-#: plugins/windowview/windowvieweffect.cpp:46
+#: plugins/windowview/windowvieweffect.cpp:48
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgid "Toggle Present Windows (Current desktop)"
 msgstr "Oynani keyingi ish stoliga"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
-#: plugins/windowview/windowvieweffect.cpp:55
+#: plugins/windowview/windowvieweffect.cpp:57
 #, fuzzy, kde-format
 #| msgid "Keep Window on All Desktops"
 msgid "Toggle Present Windows (All desktops)"
 msgstr "Oyna hamma ish stollariga"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
-#: plugins/windowview/windowvieweffect.cpp:64
+#: plugins/windowview/windowvieweffect.cpp:66
 #, fuzzy, kde-format
 #| msgid "Keep Window on All Desktops"
 msgid "Toggle Present Windows (Window class)"
 msgstr "Oyna hamma ish stollariga"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
-#: plugins/windowview/windowvieweffect.cpp:73
+#: plugins/windowview/windowvieweffect.cpp:75
 #, fuzzy, kde-format
 #| msgid "Window to Next Desktop"
 msgid "Toggle Present Windows (Window class on current desktop)"
@@ -2859,35 +2859,35 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:72
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Oyna chapdagi ish stoliga"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:79
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Oyna oʻngdagi ish stoliga"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:86
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:93
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "Sichqoncha emulyasiyasi"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window"
 msgid "Move Mouse to Center"

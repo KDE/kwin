@@ -1,13 +1,13 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2023 Mincho Kondarev <mkondarev@yahoo.de>
+# SPDX-FileCopyrightText: 2023, 2024 Mincho Kondarev <mkondarev@yahoo.de>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-28 00:38+0000\n"
-"PO-Revision-Date: 2023-12-11 11:50+0100\n"
+"PO-Revision-Date: 2024-03-06 10:52+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: ui/main.qml:32
 #, kde-format
@@ -47,7 +47,7 @@ msgstr "Никога"
 #: ui/main.qml:55
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr ""
+msgstr "Само клавиши Meta, Control, Alt и Shift"
 
 #: ui/main.qml:61
 #, kde-format
@@ -65,7 +65,7 @@ msgstr "Винаги"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Допълнително включване на бутоните на мишката"
 
 #: ui/main.qml:89
 #, kde-format
