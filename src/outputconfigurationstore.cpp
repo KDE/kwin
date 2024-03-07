@@ -519,7 +519,7 @@ double OutputConfigurationStore::targetDpi(Output *output) const
             return 125;
         } else {
             // phone screens: even closer than laptops
-            return 136;
+            return 150;
         }
     } else {
         // "normal" 1x scale desktop monitor dpi
