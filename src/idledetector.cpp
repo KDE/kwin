@@ -7,6 +7,8 @@
 #include "idledetector.h"
 #include "input.h"
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -14,6 +16,7 @@ IdleDetector::IdleDetector(std::chrono::milliseconds timeout, QObject *parent)
     : QObject(parent)
     , m_timer(new QTimer(this))
 {
+    Q_ASSERT(timeout >= 0ms);
     m_timer->setSingleShot(true);
     m_timer->setInterval(timeout);
     connect(m_timer, &QTimer::timeout, this, &IdleDetector::markAsIdle);
