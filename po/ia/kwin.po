@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-02 02:26+0000\n"
+"POT-Creation-Date: 2024-03-08 02:21+0000\n"
 "PO-Revision-Date: 2024-02-01 11:59+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -4170,7 +4170,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(non respondente)"
 
-#: workspace.cpp:1624
+#: workspace.cpp:1626
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
