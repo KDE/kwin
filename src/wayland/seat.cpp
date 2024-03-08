@@ -729,7 +729,11 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
                 // not our drag button - ignore
                 return;
             }
-            d->pointer->sendButton(button, state, serial);
+
+            SurfaceInterface *focusedSurface = focusedPointerSurface();
+            if (focusedSurface && !d->dragInhibitsPointer(focusedSurface)) {
+                d->pointer->sendButton(button, state, serial);
+            }
             d->endDrag();
             return;
         }
@@ -741,6 +745,10 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
 void SeatInterface::notifyPointerFrame()
 {
     if (!d->pointer) {
+        return;
+    }
+    SurfaceInterface *focusedSurface = focusedPointerSurface();
+    if (focusedSurface && d->dragInhibitsPointer(focusedSurface)) {
         return;
     }
     d->pointer->sendFrame();
