@@ -14,13 +14,10 @@ namespace KWin
 
 IdleDetector::IdleDetector(std::chrono::milliseconds timeout, QObject *parent)
     : QObject(parent)
-    , m_timer(new QTimer(this))
+    , m_timeout(timeout)
 {
     Q_ASSERT(timeout >= 0ms);
-    m_timer->setSingleShot(true);
-    m_timer->setInterval(timeout);
-    connect(m_timer, &QTimer::timeout, this, &IdleDetector::markAsIdle);
-    m_timer->start();
+    m_timer.start(timeout, this);
 
     input()->addIdleDetector(this);
 }
@@ -29,6 +26,14 @@ IdleDetector::~IdleDetector()
 {
     if (input()) {
         input()->removeIdleDetector(this);
+    }
+}
+
+void IdleDetector::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == m_timer.timerId()) {
+        m_timer.stop();
+        markAsIdle();
     }
 }
 
@@ -44,16 +49,16 @@ void IdleDetector::setInhibited(bool inhibited)
     }
     m_isInhibited = inhibited;
     if (inhibited) {
-        m_timer->stop();
+        m_timer.stop();
     } else {
-        m_timer->start();
+        m_timer.start(m_timeout, this);
     }
 }
 
 void IdleDetector::activity()
 {
     if (!m_isInhibited) {
-        m_timer->start();
+        m_timer.start(m_timeout, this);
         markAsResumed();
     }
 }

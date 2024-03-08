@@ -8,7 +8,8 @@
 
 #include <kwin_export.h>
 
-#include <QTimer>
+#include <QBasicTimer>
+#include <QObject>
 
 namespace KWin
 {
@@ -30,11 +31,15 @@ Q_SIGNALS:
     void idle();
     void resumed();
 
+protected:
+    void timerEvent(QTimerEvent *event) override;
+
 private:
     void markAsIdle();
     void markAsResumed();
 
-    QTimer *m_timer;
+    QBasicTimer m_timer;
+    std::chrono::milliseconds m_timeout;
     bool m_isIdle = false;
     bool m_isInhibited = false;
 };
