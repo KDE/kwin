@@ -388,12 +388,11 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QVERIFY(buttonPressSpy.wait());
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
 
-    QSignalSpy pointerLeftSpy(m_pointer, &KWayland::Client::Pointer::left);
-
     // add some signal spies for client side
     QSignalSpy dragEnteredSpy(m_dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dragMotionSpy(m_dataDevice, &KWayland::Client::DataDevice::dragMotion);
     QSignalSpy pointerMotionSpy(m_pointer, &KWayland::Client::Pointer::motion);
+    QSignalSpy pointerLeftSpy(m_pointer, &KWayland::Client::Pointer::left);
     QSignalSpy dragLeftSpy(m_dataDevice, &KWayland::Client::DataDevice::dragLeft);
 
     // now we can start the drag and drop
@@ -406,7 +405,6 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
     QVERIFY(!m_seatInterface->dragIcon());
     QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
-    QVERIFY(pointerLeftSpy.wait());
     QVERIFY(dragEnteredSpy.count() || dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
@@ -529,12 +527,12 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(cancelledSpy.wait());
+    QVERIFY(pointerLeftSpy.count() || pointerLeftSpy.wait());
 
     // all the changes should have been ignored
     QCOMPARE(axisSpy.count(), 1);
     QCOMPARE(pointerMotionSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 1);
-    QCOMPARE(pointerLeftSpy.count(), 1);
 }
 
 QTEST_GUILESS_MAIN(TestDragAndDrop)
