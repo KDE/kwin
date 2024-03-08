@@ -288,6 +288,9 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     if (!surface || !surface->gbmSwapchain || surface->gbmSwapchain->size() != size) {
         return false;
     }
+    if (surface->bufferTarget == BufferTarget::Dumb) {
+        return formats.contains(surface->importDumbSwapchain->format());
+    }
     switch (surface->importMode) {
     case MultiGpuImportMode::None:
     case MultiGpuImportMode::Dmabuf:
