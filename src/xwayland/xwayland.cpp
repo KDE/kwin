@@ -542,6 +542,7 @@ void Xwayland::handleXwaylandFinished()
 
     m_inputSpy.reset();
     disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
+    disconnect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
 
     destroyX11Connection();
 }
