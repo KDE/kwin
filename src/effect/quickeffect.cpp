@@ -363,18 +363,12 @@ void QuickSceneEffect::activateView(QuickSceneView *view)
     Q_EMIT activeViewChanged(view);
 }
 
-// Screen views are repainted just before kwin performs its compositing cycle to avoid stalling for vblank
 void QuickSceneEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::milliseconds presentTime)
 {
     data.mask |= PAINT_SCREEN_TRANSFORMED;
-
-    if (effects->waylandDisplay()) {
-        const auto it = d->views.find(data.screen);
-        if (it != d->views.end() && it->second->isDirty()) {
-            it->second->resetDirty();
-            it->second->update();
-        }
-    } else {
+    if (!effects->waylandDisplay()) {
+        // this has to be done before paintScreen, to avoid changing the OpenGL context
+        // which breaks rendering on X11
         for (const auto &[screen, screenView] : d->views) {
             if (screenView->isDirty()) {
                 screenView->resetDirty();
@@ -389,7 +383,12 @@ void QuickSceneEffect::paintScreen(const RenderTarget &renderTarget, const Rende
     if (effects->waylandDisplay()) {
         const auto it = d->views.find(screen);
         if (it != d->views.end()) {
-            effects->renderOffscreenQuickView(renderTarget, viewport, it->second.get());
+            const auto &screenView = it->second;
+            if (screenView->isDirty()) {
+                screenView->resetDirty();
+                screenView->update();
+            }
+            effects->renderOffscreenQuickView(renderTarget, viewport, screenView.get());
         }
     } else {
         for (const auto &[screen, screenView] : d->views) {

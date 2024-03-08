@@ -12,6 +12,7 @@
 
 #include "logging_p.h"
 #include "opengl/glutils.h"
+#include "opengl/openglcontext.h"
 
 #include <QGuiApplication>
 #include <QQmlComponent>
@@ -206,6 +207,7 @@ void OffscreenQuickView::update()
     }
 
     bool usingGl = d->m_glcontext != nullptr;
+    OpenGlContext *previousContext = OpenGlContext::currentContext();
 
     if (usingGl) {
         if (!d->m_glcontext->makeCurrent(d->m_offscreenSurface.get())) {
@@ -257,6 +259,9 @@ void OffscreenQuickView::update()
     if (usingGl) {
         QOpenGLFramebufferObject::bindDefault();
         d->m_glcontext->doneCurrent();
+        if (previousContext) {
+            previousContext->makeCurrent();
+        }
     }
     Q_EMIT repaintNeeded();
 }
