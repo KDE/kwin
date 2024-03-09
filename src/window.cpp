@@ -1463,10 +1463,8 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
                 nextMoveResizeGeom = nextMoveGeometry(); // fix position
             }
 
-            if (!isWaitingForInteractiveMoveResizeSync()) {
-                move(nextMoveResizeGeom.topLeft());
-                Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
-            }
+            move(nextMoveResizeGeom.topLeft());
+            Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
 
         if (!isRequestedFullScreen()) {
