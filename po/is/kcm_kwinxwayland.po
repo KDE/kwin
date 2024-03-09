@@ -1,13 +1,13 @@
 # Copyright (C) 2023 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# SPDX-FileCopyrightText: 2023 Guðmundur Erlingsson <gudmundure@gmail.com>
+# SPDX-FileCopyrightText: 2023, 2024 Guðmundur Erlingsson <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-28 00:38+0000\n"
-"PO-Revision-Date: 2023-12-10 22:16+0000\n"
+"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"PO-Revision-Date: 2024-03-06 13:56+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
@@ -18,12 +18,20 @@ msgstr ""
 "X-Generator: Lokalize 23.08.3\n"
 
 #: ui/main.qml:32
-#, kde-format
+#, fuzzy, kde-format
+#| msgid ""
+#| "Legacy X11 apps require the ability to read keystrokes typed in other "
+#| "apps for features that are activated using global keyboard shortcuts. "
+#| "This is disabled by default for security reasons. If you need to use such "
+#| "apps, you can choose your preferred balance of security and functionality "
+#| "here."
 msgid ""
-"Legacy X11 apps require the ability to read keystrokes typed in other apps "
-"for features that are activated using global keyboard shortcuts. This is "
-"disabled by default for security reasons. If you need to use such apps, you "
-"can choose your preferred balance of security and functionality here."
+"Some legacy X11 apps require the ability to read keystrokes typed in other "
+"apps for certain features, such as handling global keyboard shortcuts. This "
+"is allowed by default. However other features may require the ability to "
+"read all keys, and this is disabled by default for security reasons. If you "
+"need to use such apps, you can choose your preferred balance of security and "
+"functionality here."
 msgstr ""
 "Eldri X11-forrit þurfa að geta greint lyklainnslátt sem gerður er í öðrum "
 "forritum fyrir eiginleika sem eru virkjaðir með altækum flýtilyklum. Þetta "
@@ -44,7 +52,7 @@ msgstr "Aldrei"
 #: ui/main.qml:55
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr ""
+msgstr "Aðeins Meta, Ctrl, Alt og Shift-lykla"
 
 #: ui/main.qml:61
 #, kde-format
@@ -62,7 +70,7 @@ msgstr "Alltaf"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Hafa auk þess músarhnappa með"
 
 #: ui/main.qml:89
 #, kde-format

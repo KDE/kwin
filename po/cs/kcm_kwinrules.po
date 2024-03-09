@@ -767,12 +767,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Žádná pravidla pro konkrétní okna nejsou momentálně nastavena"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr "Klikněte na tlačítko <interface>Přidat nové...</interface> pro přidání"
+msgstr ""
 
 #: ui/main.qml:97
 #, kde-format

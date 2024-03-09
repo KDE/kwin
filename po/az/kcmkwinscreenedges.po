@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-27 00:38+0000\n"
+"POT-Creation-Date: 2024-03-09 00:39+0000\n"
 "PO-Revision-Date: 2022-07-19 10:54+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -228,6 +228,66 @@ msgstr ""
 #, kde-format
 msgid "&Reactivation delay:"
 msgstr "Tək&rar fəaliyyətlər arasıdakı vaxt müddəti:"
+
+#. i18n: ectx: property (text), widget (QLabel, CornerBarrierLabel)
+#: main.ui:270
+#, kde-format
+msgid "&Corner barrier:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
+#: main.ui:280
+#, kde-format
+msgid ""
+"Here you can enable or disable the virtual corner barrier between screens. "
+"The barrier prevents the cursor from moving to another screen when it is "
+"already touching a screen corner. This makes it easier to trigger user "
+"interface elements like maximized windows' close buttons when using multiple "
+"screens."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
+#: main.ui:283
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Prevents cursors from crossing at screen corners."
+msgstr ""
+
+#. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
+#: main.ui:290
+#, kde-format
+msgid "&Edge barrier:"
+msgstr ""
+
+#. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
+#: main.ui:300
+#, kde-format
+msgid ""
+"Here you can set size of the edge barrier between different screens. The "
+"barrier adds additional distance you have to move your pointer before it "
+"crosses the edge onto the other screen. This makes it easier to access user "
+"interface elements like Plasma Panels that are located on an edge between "
+"screens."
+msgstr ""
+
+#. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
+#: main.ui:303
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Additional distance cursor needs to travel to cross screen edges."
+msgstr ""
+
+#. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
+#: main.ui:306
+#, kde-format
+msgid "None"
+msgstr ""
+
+#. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
+#: main.ui:309
+#, kde-format
+msgid " px"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
