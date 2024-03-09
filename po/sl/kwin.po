@@ -1,13 +1,13 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1675096 2024-03-08 02:44:52Z scripty $
+# $Id: kwin.po 1675162 2024-03-09 02:52:15Z scripty $
 # $Source$
 #
 #
 # Roman Maurer <roman.maurer@hermes.si>, 2000.
 # Gregor Rakar <gregor.rakar@kiss.si>, 2003, 2004, 2005.
-# Jure Repinc <jlp@holodeck1.com>, 2005, 2007, 2008, 2009, 2010, 2011, 2012.
+# SPDX-FileCopyrightText: 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2024 Jure Repinc <jlp@holodeck1.com>
 # Andrej Vernekar <andrej.vernekar@moj.net>, 2007, 2012.
 # Andrej Mernik <andrejm@ubuntu.si>, 2013, 2014, 2015, 2016, 2017, 2018.
 # SPDX-FileCopyrightText: 2020, 2021, 2022, 2023, 2024 Matjaž Jeran <matjaz.jeran@amis.net>
@@ -17,8 +17,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-08 02:21+0000\n"
-"PO-Revision-Date: 2024-01-23 15:00+0100\n"
-"Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
+"PO-Revision-Date: 2024-03-08 17:52+0100\n"
+"Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.04.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1171,8 +1171,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
-"<para><application>%1</application> se ne odziva. Ali želite prekiniti to "
-"aplikacijo?</para>"
+"<para><application>%1</application> se ne odziva. Ali želite končati ta "
+"program?</para>"
 
 #: helpers/killer/killer.cpp:150
 #, kde-kuit-format
@@ -1181,8 +1181,8 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
-"<para>\"%1\" od <application>%2</application> se ne odziva. Ali želite "
-"prekiniti to aplikacijo?</para>"
+"<para>»%1« od <application>%2</application> se ne odziva. Ali želite končati "
+"ta program?</para>"
 
 #: helpers/killer/killer.cpp:153
 #, kde-kuit-format
@@ -1191,8 +1191,8 @@ msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para><emphasis strong='true'>Če pokončate to aplikacijo, se bodo zaprla vsa "
-"njena okna. Vsi neshranjeni podatki bodo izgubljeni.</emphasis></para>"
+"<para><emphasis strong='true'>Če končate ta program, se bodo zaprla vsa "
+"njegova okna. Vsi neshranjeni podatki bodo izgubljeni.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
 #, kde-format
@@ -1349,7 +1349,7 @@ msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr ""
 "Ime vtiča Wayland za poslušanje. Če ni nastavljeno, bo uporabljeno "
-"\"wayland-0\"."
+"»wayland-0«."
 
 #: main_wayland.cpp:296
 #, kde-format
@@ -1434,7 +1434,7 @@ msgstr "Izriši preko vozlišča drm."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
-"Izvleci lokalne informacije iz locale1 namesto iz uporabnikove konfiguracije"
+"Izvleci jezikovne informacije iz locale1 namesto iz uporabnikove nastavitve"
 
 #: main_wayland.cpp:363
 #, kde-format
@@ -1777,7 +1777,7 @@ msgstr "Velikost gumba:"
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
 #, kde-format
 msgid "Config Dialog"
-msgstr "Konfiguracija dialoga"
+msgstr "Pogovorno okno nastavitev"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1900,7 +1900,7 @@ msgstr "ime"
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr "ime aplikacije"
+msgstr "imeprograma"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
@@ -2353,7 +2353,7 @@ msgstr "Dodaj navidezno namizje"
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Konfiguriraj navidezna namizja…"
+msgstr "Nastavi navidezna namizja …"
 
 #: plugins/overview/qml/main.qml:740
 #, kde-format
@@ -2775,7 +2775,7 @@ msgstr "Ni oken"
 #: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
-msgstr "Filtriraj okna…"
+msgstr "Filtriraj okna …"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -2909,7 +2909,7 @@ msgid ""
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
 "Omogoči sledenje osredotočene lokacije. Za to je potrebno omogočiti "
-"QAccessible po aplikaciji (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+"QAccessible za vsak program (»export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1«)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:69
@@ -2925,7 +2925,7 @@ msgid ""
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
 "Omogoči sledenje besedilne kazalke. Za to je potrebno omogočiti QAccessible "
-"po aplikaciji (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+"za vsak program (»export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1«)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
@@ -3033,7 +3033,7 @@ msgstr "Izbriši to pravilo (za uporabo pri uvozih)"
 #: rulesettings.kcfg:20
 #, kde-format
 msgid "Window class (application)"
-msgstr "Razred okna (aplikacija)"
+msgstr "Razred okna (program)"
 
 #. i18n: ectx: label, entry (wmclassmatch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:23
@@ -3539,7 +3539,7 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
-"Naslednje aplikacije se niso zaprle:\n"
+"Naslednji programi se niso zaprli:\n"
 "%1"
 
 #: sm.cpp:470
@@ -3664,17 +3664,17 @@ msgstr "Brez &naslovne letvice in okvirja"
 #: useractions.cpp:254
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Nastavi bližnjico okna…"
+msgstr "Nastavi &bližnjico okna …"
 
 #: useractions.cpp:260
 #, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Konfiguriraj posebne okenske nastavitve…"
+msgstr "Posebne nastavitve &oken …"
 
 #: useractions.cpp:265
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Konfiguriraj posebne nastavitve aplikacij…"
+msgstr "Posebne nastavitve &programov …"
 
 #: useractions.cpp:271
 #, kde-format
@@ -4193,9 +4193,9 @@ msgstr ""
 "Podrobnosti o podpori za KWin:\n"
 "Naslednje podatke uporabite pri iskanju pomoči, npr: https://discuss.kde."
 "org.\n"
-"Podatki vsebujejo podrobnosti o trenutno zagnanem pojavku, uporabljenih\n"
+"Podatki vsebujejo podrobnosti o trenutno zagnanem primerku, uporabljenih\n"
 "možnostih, gonilniku za grafično kartico in dejavnih namiznih učinkih.\n"
-"Podatke pod tem uvodnim besedilom objavite na storitev paste bin service\n"
+"Podatke pod tem uvodnim besedilom objavite na storitev prilepkov\n"
 "kot https://paste.kde.org namesto neposredno v teme na forumu.\n"
 
 #: xwayland/xwaylandlauncher.cpp:271
