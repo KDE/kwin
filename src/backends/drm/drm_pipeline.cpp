@@ -406,6 +406,9 @@ bool DrmPipeline::updateCursor()
     if (needsModeset() || !m_pending.crtc || !m_pending.active) {
         return false;
     }
+    if (amdgpuVrrWorkaroundActive() && m_cursorLayer->isEnabled()) {
+        return false;
+    }
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         // test the full state, to take pending commits into account
@@ -426,6 +429,12 @@ bool DrmPipeline::updateCursor()
     } else {
         return setCursorLegacy();
     }
+}
+
+bool DrmPipeline::amdgpuVrrWorkaroundActive() const
+{
+    static const bool s_env = qEnvironmentVariableIntValue("KWIN_DRM_DONT_FORCE_AMD_SW_CURSOR") == 1;
+    return !s_env && gpu()->isAmdgpu() && (m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
 }
 
 void DrmPipeline::applyPendingChanges()

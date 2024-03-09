@@ -134,6 +134,11 @@ public:
     void setColorDescription(const ColorDescription &description);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
 
+    /**
+     * amdgpu drops cursor updates with adaptive sync: https://gitlab.freedesktop.org/drm/amd/-/issues/2186
+     */
+    bool amdgpuVrrWorkaroundActive() const;
+
     enum class CommitMode {
         Test,
         TestAllowModeset,

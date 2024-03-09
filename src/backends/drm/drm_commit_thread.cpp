@@ -28,13 +28,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
         return;
     }
 
-    static bool delayVrrCursorUpdatesEnvSet = false;
-    static const bool delayVrrCursorUpdatesEnv = qEnvironmentVariableIntValue("KWIN_DRM_DELAY_VRR_CURSOR_UPDATES", &delayVrrCursorUpdatesEnvSet) == 1;
-    // amdgpu doesn't handle this correctly, so it's off by default for amd gpus
-    // See https://gitlab.freedesktop.org/drm/amd/-/issues/2186 for more details
-    const bool delayVrrCursorUpdates = (!delayVrrCursorUpdatesEnvSet && !gpu->isAmdgpu()) || delayVrrCursorUpdatesEnv;
-
-    m_thread.reset(QThread::create([this, delayVrrCursorUpdates]() {
+    m_thread.reset(QThread::create([this]() {
         const auto thread = QThread::currentThread();
         gainRealTime();
         while (true) {
@@ -74,7 +68,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 }
                 continue;
             }
-            if (m_commits.front()->isCursorOnly() && m_vrr && delayVrrCursorUpdates) {
+            if (m_commits.front()->isCursorOnly() && m_vrr) {
                 // wait for a primary plane commit to be in, while still enforcing
                 // a minimum cursor refresh rate of 30Hz
                 const auto cursorTarget = m_lastPageflip + std::chrono::duration_cast<std::chrono::nanoseconds>(1s) / 30;
