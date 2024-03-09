@@ -42,23 +42,27 @@ class WorkspaceWrapper : public QObject
     Q_PROPERTY(QList<KWin::Output *> screens READ screens NOTIFY screensChanged)
     Q_PROPERTY(QString currentActivity READ currentActivity WRITE setCurrentActivity NOTIFY currentActivityChanged)
     Q_PROPERTY(QStringList activities READ activityList NOTIFY activitiesChanged)
+
     /**
      * The bounding size of all screens combined. Overlapping areas
      * are not counted multiple times.
      * @see virtualScreenGeometry
      */
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
+
     /**
      * The bounding geometry of all screens combined. Always starts at (0,0) and has
      * virtualScreenSize as it's size.
      * @see virtualScreenSize
      */
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
+
     /**
      * List of Clients currently managed by KWin, orderd by
      * their visibility (later ones cover earlier ones).
      */
     Q_PROPERTY(QList<KWin::Window *> stackingOrder READ stackingOrder)
+
     /**
      * The current position of the cursor.
      */
@@ -71,57 +75,68 @@ Q_SIGNALS:
     void windowAdded(KWin::Window *window);
     void windowRemoved(KWin::Window *window);
     void windowActivated(KWin::Window *window);
+
     /**
      * This signal is emitted when a virtual desktop is added or removed.
      */
     void desktopsChanged();
+
     /**
      * Signal emitted whenever the layout of virtual desktops changed.
      * That is desktopGrid(Size/Width/Height) will have new values.
      * @since 4.11
      */
     void desktopLayoutChanged();
+
     /**
      * Emitted when the output list changes, e.g. an output is connected or removed.
      */
     void screensChanged();
+
     /**
      * Signal emitted whenever the current activity changed.
      * @param id id of the new activity
      */
     void currentActivityChanged(const QString &id);
+
     /**
      * Signal emitted whenever the list of activities changed.
      * @param id id of the new activity
      */
     void activitiesChanged(const QString &id);
+
     /**
      * This signal is emitted when a new activity is added
      * @param id id of the new activity
      */
     void activityAdded(const QString &id);
+
     /**
      * This signal is emitted when the activity
      * is removed
      * @param id id of the removed activity
      */
     void activityRemoved(const QString &id);
+
     /**
      * Emitted whenever the virtualScreenSize changes.
      * @see virtualScreenSize()
      * @since 5.0
      */
     void virtualScreenSizeChanged();
+
     /**
      * Emitted whenever the virtualScreenGeometry changes.
      * @see virtualScreenGeometry()
      * @since 5.0
      */
     void virtualScreenGeometryChanged();
+
     /**
      * This signal is emitted when the current virtual desktop changes.
      */
     void currentDesktopChanged(KWin::VirtualDesktop *previous);
+
     /**
      * This signal is emitted when the cursor position changes.
      * @see cursorPos()
@@ -208,6 +223,7 @@ public:
      * @returns The specified screen geometry
      */
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Output *output, KWin::VirtualDesktop *desktop) const;
+
     /**
      * Overloaded method for convenience.
      * @param client The Client for which the area should be retrieved
@@ -215,16 +231,19 @@ public:
      */
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, KWin::Window *client) const;
     Q_SCRIPTABLE QRectF clientArea(ClientAreaOption option, const KWin::Window *client) const;
+
     /**
      * Create a new virtual desktop at the requested position.
      * @param position The position of the desktop. It should be in range [0, count].
      * @param name The name for the new desktop, if empty the default name will be used.
      */
     Q_SCRIPTABLE void createDesktop(int position, const QString &name) const;
+
     /**
      * Removes the specified virtual desktop.
      */
     Q_SCRIPTABLE void removeDesktop(KWin::VirtualDesktop *desktop) const;
+
     /**
      * Provides support information about the currently running KWin instance.
      */
@@ -235,11 +254,13 @@ public:
      * their visibility (later ones cover earlier ones).
      */
     QList<KWin::Window *> stackingOrder() const;
+
     /**
      * Raises a Window  above all others on the screen.
      * @param window The Window to raise
      */
     Q_INVOKABLE void raiseWindow(KWin::Window *window);
+
 #if KWIN_BUILD_X11
     /**
      * Finds the Client with the given @p windowId.
@@ -248,6 +269,7 @@ public:
      */
     Q_SCRIPTABLE KWin::Window *getClient(qulonglong windowId);
 #endif
+
     /**
      * Finds up to count windows at a particular location,
      * prioritizing the topmost one first.  A negative count
@@ -353,10 +375,12 @@ public Q_SLOTS:
      * Use hideOutline to remove the outline again.
      */
     void showOutline(const QRect &geometry);
+
     /**
      * Overloaded method for convenience.
      */
     void showOutline(int x, int y, int width, int height);
+
     /**
      * Hides the outline previously shown by showOutline.
      */
