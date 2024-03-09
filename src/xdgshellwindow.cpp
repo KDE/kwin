@@ -217,6 +217,16 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         // Both the compositor and the client can change the window geometry. If the client
         // sets a new window geometry, the compositor's move-resize geometry will be invalid.
         maybeUpdateMoveResizeGeometry(frameGeometry);
+    } else if (isInteractiveMove()) {
+        bool fullscreen = isFullScreen();
+        if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
+            fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+        }
+        if (!fullscreen) {
+            const QPointF pos = input()->pointer()->pos(); // FIXME: pick the right device type
+            frameGeometry.moveTopLeft(QPointF(pos.x() - interactiveMoveOffset().x() * frameGeometry.width(),
+                                              pos.y() - interactiveMoveOffset().y() * frameGeometry.height()));
+        }
     }
 
     updateGeometry(frameGeometry);
@@ -959,8 +969,7 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     } else {
         cursorPos = input()->tablet()->position();
     }
-    setInteractiveMoveOffset(cursorPos - pos()); // map from global
-    setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+    setInteractiveMoveOffset(QPointF((cursorPos.x() - x()) / width(), (cursorPos.y() - y()) / height())); // map from global
     setUnrestrictedInteractiveMoveResize(false);
     Gravity gravity;
     switch (anchor) {

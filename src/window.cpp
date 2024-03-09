@@ -1389,7 +1389,8 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
     }
 
     if (!isInteractiveMoveResize()) {
-        QPointF p(local - interactiveMoveOffset());
+        const QPointF offset(interactiveMoveOffset().x() * width(), interactiveMoveOffset().y() * height());
+        const QPointF p(local - offset);
         if (p.manhattanLength() >= QApplication::startDragDistance()) {
             if (!startInteractiveMoveResize()) {
                 setInteractiveMoveResizePointerButtonDown(false);
@@ -1451,16 +1452,14 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
         if (nextMoveResizeGeom != currentMoveResizeGeom) {
             GeometryUpdatesBlocker blocker(this);
 
-            if (!isRequestedFullScreen() && quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-                setQuickTileMode(QuickTileFlag::None);
-
-                const QRectF &geom_restore = geometryRestore();
-                setInteractiveMoveOffset(QPointF(double(interactiveMoveOffset().x()) / double(currentMoveResizeGeom.width()) * double(geom_restore.width()),
-                                                 double(interactiveMoveOffset().y()) / double(currentMoveResizeGeom.height()) * double(geom_restore.height())));
-                if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore) {
-                    setMoveResizeGeometry(geom_restore);
+            if (!isRequestedFullScreen()) {
+                if (maximizeMode() != MaximizeRestore || requestedMaximizeMode() != MaximizeRestore) {
+                    maximize(MaximizeRestore);
+                    return;
+                } else if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+                    setQuickTileMode(QuickTileFlag::None);
+                    return;
                 }
-                nextMoveResizeGeom = nextMoveGeometry(); // fix position
             }
 
             move(nextMoveResizeGeom.topLeft());
@@ -1532,12 +1531,12 @@ QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
 
     // these two points limit the geometry rectangle, i.e. if bottomleft resizing is done,
     // the bottomleft corner should be at is at (topleft.x(), bottomright().y())
-    QPointF topleft = global - interactiveMoveOffset();
-    QPointF bottomright = global + invertedInteractiveMoveOffset();
+    QRectF orig = initialInteractiveMoveResizeGeometry();
+    QPointF topleft = global - QPointF(interactiveMoveOffset().x() * orig.width(), interactiveMoveOffset().y() * orig.height());
+    QPointF bottomright = global + QPointF((1.0 - interactiveMoveOffset().x()) * orig.width(), (1.0 - interactiveMoveOffset().y()) * orig.height());
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
-    QRectF orig = initialInteractiveMoveResizeGeometry();
     SizeMode sizeMode = SizeModeAny;
     auto calculateMoveResizeGeom = [&topleft, &bottomright, &orig, &nextMoveResizeGeom, &sizeMode, &gravity]() {
         switch (gravity) {
@@ -1698,20 +1697,18 @@ QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
 
 QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
 {
-    const QRectF currentMoveResizeGeom = moveResizeGeometry();
-    QRectF nextMoveResizeGeom = moveResizeGeometry();
-
     if (!isMovable()) {
-        return nextMoveResizeGeom;
+        return frameGeometry();
     }
 
-    QPointF topleft = global - interactiveMoveOffset();
+    const QPointF topleft = global - QPointF(interactiveMoveOffset().x() * width(), interactiveMoveOffset().y() * height());
+
     // first move, then snap, then check bounds
-    QRectF geometry = nextMoveResizeGeom;
-    geometry.moveTopLeft(topleft);
-    geometry.moveTopLeft(workspace()->adjustWindowPosition(this, geometry.topLeft(),
-                                                           isUnrestrictedInteractiveMoveResize()));
-    nextMoveResizeGeom = geometry;
+    const QRectF currentMoveResizeGeom = frameGeometry();
+    QRectF nextMoveResizeGeom = frameGeometry();
+    nextMoveResizeGeom.moveTopLeft(topleft);
+    nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft(),
+                                                                     isUnrestrictedInteractiveMoveResize()));
 
     if (!isUnrestrictedInteractiveMoveResize()) {
         const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
@@ -2179,8 +2176,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         }
         setInteractiveMoveResizeGravity(Gravity::None);
         setInteractiveMoveResizePointerButtonDown(true);
-        setInteractiveMoveOffset(QPointF(globalPos.x() - x(), globalPos.y() - y())); // map from global
-        setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+        setInteractiveMoveOffset(QPointF((globalPos.x() - x()) / width(), (globalPos.y() - y()) / height())); // map from global
         setUnrestrictedInteractiveMoveResize((cmd == Options::MouseActivateRaiseAndUnrestrictedMove
                                               || cmd == Options::MouseUnrestrictedMove));
         if (!startInteractiveMoveResize()) {
@@ -2199,7 +2195,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         }
         setInteractiveMoveResizePointerButtonDown(true);
         const QPointF moveOffset = QPointF(globalPos.x() - x(), globalPos.y() - y()); // map from global
-        setInteractiveMoveOffset(moveOffset);
+        setInteractiveMoveOffset(QPointF(moveOffset.x() / width(), moveOffset.y() / height()));
         int x = moveOffset.x(), y = moveOffset.y();
         bool left = x < width() / 3;
         bool right = x >= 2 * width() / 3;
@@ -2214,7 +2210,6 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
             gravity = (x < width() / 2) ? Gravity::Left : Gravity::Right;
         }
         setInteractiveMoveResizeGravity(gravity);
-        setInvertedInteractiveMoveOffset(rect().bottomRight() - moveOffset);
         setUnrestrictedInteractiveMoveResize((cmd == Options::MouseUnrestrictedResize));
         if (!startInteractiveMoveResize()) {
             setInteractiveMoveResizePointerButtonDown(false);
@@ -2806,8 +2801,7 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
     {
         setInteractiveMoveResizeGravity(mouseGravity());
         setInteractiveMoveResizePointerButtonDown(true);
-        setInteractiveMoveOffset(event->pos());
-        setInvertedInteractiveMoveOffset(rect().bottomRight() - interactiveMoveOffset());
+        setInteractiveMoveOffset(QPointF(event->pos().x() / width(), event->pos().y() / height()));
         setUnrestrictedInteractiveMoveResize(false);
         startDelayedInteractiveMoveResize();
         updateCursor();

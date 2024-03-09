@@ -4583,6 +4583,13 @@ void X11Window::maximize(MaximizeMode mode)
         }
 
         restore.setSize(constrainFrameSize(restore.size(), SizeModeAny));
+        if (isInteractiveMove()) {
+            if (!isFullScreen()) {
+                const QPointF cursorPos = Cursors::self()->mouse()->pos();
+                restore.moveTopLeft(QPointF(cursorPos.x() - interactiveMoveOffset().x() * restore.width(),
+                                            cursorPos.y() - interactiveMoveOffset().y() * restore.height()));
+            }
+        }
         moveResize(restore);
 
         info->setState(NET::States(), NET::Max);

@@ -1598,14 +1598,6 @@ protected:
     {
         m_interactiveMoveResize.offset = offset;
     }
-    QPointF invertedInteractiveMoveOffset() const
-    {
-        return m_interactiveMoveResize.invertedOffset;
-    }
-    void setInvertedInteractiveMoveOffset(const QPointF &offset)
-    {
-        m_interactiveMoveResize.invertedOffset = offset;
-    }
     QRectF initialInteractiveMoveResizeGeometry() const
     {
         return m_interactiveMoveResize.initialGeometry;
@@ -1802,7 +1794,6 @@ protected:
         bool enabled = false;
         bool unrestricted = false;
         QPointF offset;
-        QPointF invertedOffset;
         QRectF initialGeometry;
         QRectF initialGeometryRestore;
         Gravity gravity = Gravity::None;
