@@ -257,17 +257,6 @@ double ColorDescription::maxHdrHighlightBrightness() const
     return m_maxHdrHighlightBrightness;
 }
 
-bool ColorDescription::operator==(const ColorDescription &other) const
-{
-    return m_colorimetry == other.m_colorimetry
-        && m_transferFunction == other.m_transferFunction
-        && m_sdrGamutWideness == other.m_sdrGamutWideness
-        && m_sdrBrightness == other.m_sdrBrightness
-        && m_minHdrBrightness == other.m_minHdrBrightness
-        && m_maxFrameAverageBrightness == other.m_maxFrameAverageBrightness
-        && m_maxHdrHighlightBrightness == other.m_maxHdrHighlightBrightness;
-}
-
 static float srgbToLinear(float sRGB)
 {
     if (sRGB < 0.04045) {

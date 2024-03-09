@@ -122,7 +122,7 @@ public:
     double maxFrameAverageBrightness() const;
     double maxHdrHighlightBrightness() const;
 
-    bool operator==(const ColorDescription &other) const;
+    bool operator==(const ColorDescription &other) const = default;
 
     QVector3D mapTo(QVector3D rgb, const ColorDescription &other) const;
 
@@ -137,7 +137,6 @@ private:
     Colorimetry m_colorimetry;
     NamedTransferFunction m_transferFunction;
     Colorimetry m_sdrColorimetry;
-    double m_sdrGamutWideness;
     double m_sdrBrightness;
     double m_minHdrBrightness;
     double m_maxFrameAverageBrightness;
