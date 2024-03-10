@@ -682,10 +682,10 @@ std::unique_ptr<KWayland::Client::Surface> createSurface();
 KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
                                                KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
 
-LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface,
-                                     const QString &scope,
-                                     KWayland::Client::Output *output = nullptr,
-                                     LayerShellV1::layer layer = LayerShellV1::layer_top);
+std::unique_ptr<LayerSurfaceV1> createLayerSurfaceV1(KWayland::Client::Surface *surface,
+                                                     const QString &scope,
+                                                     KWayland::Client::Output *output = nullptr,
+                                                     LayerShellV1::layer layer = LayerShellV1::layer_top);
 
 TextInputManagerV3 *waylandTextInputManagerV3();
 

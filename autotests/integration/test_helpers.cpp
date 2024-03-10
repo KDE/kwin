@@ -918,7 +918,7 @@ KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surfac
     return s;
 }
 
-LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const QString &scope, KWayland::Client::Output *output, LayerShellV1::layer layer)
+std::unique_ptr<LayerSurfaceV1> createLayerSurfaceV1(KWayland::Client::Surface *surface, const QString &scope, KWayland::Client::Output *output, LayerShellV1::layer layer)
 {
     LayerShellV1 *shell = s_waylandConnection.layerShellV1;
     if (!shell) {
@@ -931,7 +931,7 @@ LayerSurfaceV1 *createLayerSurfaceV1(KWayland::Client::Surface *surface, const Q
         nativeOutput = *output;
     }
 
-    LayerSurfaceV1 *shellSurface = new LayerSurfaceV1();
+    auto shellSurface = std::make_unique<LayerSurfaceV1>();
     shellSurface->init(shell->get_layer_surface(*surface, nativeOutput, layer, scope));
 
     return shellSurface;
