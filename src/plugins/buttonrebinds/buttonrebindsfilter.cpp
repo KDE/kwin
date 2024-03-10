@@ -301,7 +301,16 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     }
 
     QKeyEvent ev(QEvent::KeyPress, keys[0] & ~Qt::KeyboardModifierMask, Qt::NoModifier);
-    const QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
+    QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
+    // Use keysyms from the keypad if and only if KeypadModifier is set
+    syms.erase(std::remove_if(syms.begin(), syms.end(), [keys](int sym) {
+        bool onKeyPad = sym >= XKB_KEY_KP_Space && sym <= XKB_KEY_KP_Equal;
+        if (keys[0] & Qt::KeypadModifier) {
+            return !onKeyPad;
+        } else {
+            return onKeyPad;
+        }
+    }), syms.end());
     if (syms.empty()) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "to keysym";
         return false;
