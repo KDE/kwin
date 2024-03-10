@@ -300,7 +300,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
         }
     }
 
-    QKeyEvent ev(QEvent::KeyPress, keys[0], Qt::NoModifier);
+    QKeyEvent ev(QEvent::KeyPress, keys[0] & ~Qt::KeyboardModifierMask, Qt::NoModifier);
     const QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
     if (syms.empty()) {
         qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << keys << "to keysym";
