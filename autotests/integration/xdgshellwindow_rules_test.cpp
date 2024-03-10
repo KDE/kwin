@@ -175,6 +175,7 @@ private:
     Window *m_window;
     std::unique_ptr<KWayland::Client::Surface> m_surface;
     std::unique_ptr<Test::XdgToplevel> m_shellSurface;
+    std::unique_ptr<Test::XdgToplevelDecorationV1> m_decoration;
 
     std::unique_ptr<QSignalSpy> m_toplevelConfigureRequestedSpy;
     std::unique_ptr<QSignalSpy> m_surfaceConfigureRequestedSpy;
@@ -238,14 +239,14 @@ void TestXdgShellWindowRules::createTestWindow(ClientFlags flags)
     // Create an xdg surface.
     m_surface = Test::createSurface();
     m_shellSurface = Test::createXdgToplevelSurface(m_surface.get(), Test::CreationSetup::CreateOnly);
-    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.get(), m_shellSurface.get());
+    m_decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.get());
 
     // Add signal watchers
     m_toplevelConfigureRequestedSpy = std::make_unique<QSignalSpy>(m_shellSurface.get(), &Test::XdgToplevel::configureRequested);
     m_surfaceConfigureRequestedSpy = std::make_unique<QSignalSpy>(m_shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     m_shellSurface->set_app_id(QStringLiteral("org.kde.foo"));
-    decoration->set_mode(decorationMode);
+    m_decoration->set_mode(decorationMode);
 
     // Wait for the initial configure event
     m_surface->commit(KWayland::Client::Surface::CommitFlag::None);
@@ -277,6 +278,7 @@ void TestXdgShellWindowRules::destroyTestWindow()
 {
     m_surfaceConfigureRequestedSpy.reset();
     m_toplevelConfigureRequestedSpy.reset();
+    m_decoration.reset();
     m_shellSurface.reset();
     m_surface.reset();
     QVERIFY(Test::waitForWindowClosed(m_window));

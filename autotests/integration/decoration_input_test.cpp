@@ -70,7 +70,7 @@ private Q_SLOTS:
     void testTooltipDoesntEatKeyEvents();
 
 private:
-    std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> showWindow();
+    std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>, std::unique_ptr<Test::XdgToplevelDecorationV1>> showWindow();
 };
 
 #define MOTION(target) Test::pointerMotion(target, timestamp++)
@@ -79,23 +79,23 @@ private:
 
 #define RELEASE Test::pointerButtonReleased(BTN_LEFT, timestamp++)
 
-std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> DecorationInputTest::showWindow()
+std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>, std::unique_ptr<Test::XdgToplevelDecorationV1>> DecorationInputTest::showWindow()
 {
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
-        return {nullptr, nullptr, nullptr};
+        return {nullptr, nullptr, nullptr, nullptr};
 #define COMPARE(actual, expected)                                                   \
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) \
-        return {nullptr, nullptr, nullptr};
+        return {nullptr, nullptr, nullptr, nullptr};
 
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     VERIFY(surface.get());
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
     VERIFY(shellSurface.get());
-    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface.get(), shellSurface.get());
-    VERIFY(decoration);
+    std::unique_ptr<Test::XdgToplevelDecorationV1> decoration = Test::createXdgToplevelDecorationV1(shellSurface.get());
+    VERIFY(decoration.get());
 
-    QSignalSpy decorationConfigureRequestedSpy(decoration, &Test::XdgToplevelDecorationV1::configureRequested);
+    QSignalSpy decorationConfigureRequestedSpy(decoration.get(), &Test::XdgToplevelDecorationV1::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
 
     decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
@@ -112,7 +112,7 @@ std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr
 #undef VERIFY
 #undef COMPARE
 
-    return {window, std::move(surface), std::move(shellSurface)};
+    return {window, std::move(surface), std::move(shellSurface), std::move(decoration)};
 }
 
 void DecorationInputTest::initTestCase()
@@ -172,7 +172,7 @@ void DecorationInputTest::testAxis()
 {
     static constexpr double oneTick = 15;
 
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -216,7 +216,7 @@ void KWin::DecorationInputTest::testDoubleClickOnAllDesktops()
     group.sync();
     workspace()->slotReconfigure();
 
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -247,7 +247,7 @@ void DecorationInputTest::testDoubleClickClose()
     group.sync();
     workspace()->slotReconfigure();
 
-    auto [window, surface, shellSurface] = showWindow();
+    auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     quint32 timestamp = 1;
@@ -277,7 +277,7 @@ void KWin::DecorationInputTest::testDoubleTap()
     group.sync();
     workspace()->slotReconfigure();
 
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -302,7 +302,7 @@ void KWin::DecorationInputTest::testDoubleTap()
 
 void DecorationInputTest::testHover()
 {
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -361,7 +361,7 @@ void DecorationInputTest::testPressToMove_data()
 
 void DecorationInputTest::testPressToMove()
 {
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -418,7 +418,7 @@ void DecorationInputTest::testTapToMove_data()
 
 void DecorationInputTest::testTapToMove()
 {
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -482,7 +482,7 @@ void DecorationInputTest::testResizeOutsideWindow()
     workspace()->slotReconfigure();
 
     // now create window
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -576,7 +576,7 @@ void DecorationInputTest::testModifierClickUnrestrictedMove()
     QCOMPARE(options->commandAll3(), Options::MouseUnrestrictedMove);
 
     // create a window
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -638,7 +638,7 @@ void DecorationInputTest::testModifierScrollOpacity()
     group.sync();
     workspace()->slotReconfigure();
 
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -696,7 +696,7 @@ void DecorationInputTest::testTouchEvents()
 {
     // this test verifies that the decoration gets a hover leave event on touch release
     // see BUG 386231
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());
@@ -742,7 +742,7 @@ void DecorationInputTest::testTooltipDoesntEatKeyEvents()
     QVERIFY(keyboard);
     QSignalSpy enteredSpy(keyboard, &KWayland::Client::Keyboard::entered);
 
-    const auto [window, surface, shellSurface] = showWindow();
+    const auto [window, surface, shellSurface, decoration] = showWindow();
     QVERIFY(window);
     QVERIFY(window->isDecorated());
     QVERIFY(!window->noBorder());

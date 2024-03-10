@@ -1035,7 +1035,7 @@ std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surfa
     return xdgPopup;
 }
 
-XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent)
+std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplevel *toplevel)
 {
     XdgDecorationManagerV1 *manager = s_waylandConnection.xdgDecorationManagerV1;
 
@@ -1044,7 +1044,7 @@ XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QO
         return nullptr;
     }
 
-    return new XdgToplevelDecorationV1(manager, toplevel, parent);
+    return std::make_unique<XdgToplevelDecorationV1>(manager, toplevel);
 }
 
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
