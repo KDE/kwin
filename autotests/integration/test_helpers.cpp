@@ -1004,6 +1004,24 @@ std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface 
     return xdgToplevel;
 }
 
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, std::function<void(XdgToplevel *toplevel)> setup)
+{
+    XdgShell *shell = s_waylandConnection.xdgShell;
+
+    if (!shell) {
+        qWarning() << "Could not create an xdg_toplevel surface because xdg_wm_base global is not bound";
+        return nullptr;
+    }
+
+    XdgSurface *xdgSurface = new XdgSurface(shell, surface);
+    std::unique_ptr<XdgToplevel> xdgToplevel = std::make_unique<XdgToplevel>(xdgSurface);
+
+    setup(xdgToplevel.get());
+    waitForConfigured(xdgSurface);
+
+    return xdgToplevel;
+}
+
 std::unique_ptr<XdgPositioner> createXdgPositioner()
 {
     XdgShell *shell = s_waylandConnection.xdgShell;

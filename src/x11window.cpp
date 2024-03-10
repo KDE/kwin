@@ -4583,6 +4583,15 @@ void X11Window::maximize(MaximizeMode mode)
         }
 
         restore.setSize(constrainFrameSize(restore.size(), SizeModeAny));
+        if (isInteractiveMove()) {
+            if (!isFullScreen()) {
+                const QPointF anchor = interactiveMoveResizeAnchor();
+                const QPointF offset = interactiveMoveOffset();
+                restore.moveTopLeft(QPointF(anchor.x() - offset.x() * restore.width(),
+                                            anchor.y() - offset.y() * restore.height()));
+            }
+        }
+
         moveResize(restore);
 
         info->setState(NET::States(), NET::Max);

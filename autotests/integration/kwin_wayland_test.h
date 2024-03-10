@@ -702,6 +702,7 @@ std::unique_ptr<FractionalScaleV1> createFractionalScaleV1(KWayland::Client::Sur
 
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface);
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode);
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, std::function<void(XdgToplevel *toplevel)> setup);
 
 std::unique_ptr<XdgPositioner> createXdgPositioner();
 
