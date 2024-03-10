@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-27 22:08+0200\n"
+"PO-Revision-Date: 2024-03-09 18:03+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -229,7 +229,7 @@ msgstr "השהיית הפעלה &מחדש:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&גבול פינה:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -241,19 +241,22 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"כאן אפשר להפעיל או להשבית את גבול הפינות בין מסכים. הגבול מונע מהסמן לעבור "
+"למסך אחר כשהוא כבר נוגע בפינת המסך. מקל על הזנקת רכיבי פעולות ממשק משתמש "
+"כגון כפתורי סגירה מוגדלים בחלונות בעת שימוש במגוון מסכים."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "מונע מסמנים לחצות בפינות המסך."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "גובל &קצה:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -265,25 +268,28 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"כאן אפשר להגדיר את גודל הגבול בין המסכים השונים. הגבול מוסיף מרחק נוסף שצריך "
+"להעכביר את הסמן לפני שהוא חוצה את הקצה למסך השני. מקל על גישה לרכיבי ממשק "
+"משתמש כגון הלוחות של פלזמה שמוצבים על גבול בין מסכים."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "סמן מרחק נוסף צריך לטייל כדי לחצות את קצוות המסך."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "ללא"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " פיקסלים"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

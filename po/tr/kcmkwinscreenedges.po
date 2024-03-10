@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-27 12:51+0300\n"
+"PO-Revision-Date: 2024-03-09 10:27+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 24.02.0\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -235,7 +235,7 @@ msgstr "&Yeniden etkinleştirme gecikmesi:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Köşe bariyeri:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -247,19 +247,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Burada ekranlar arasındaki sanal köşe bariyerini etkinleştirebilir veya "
+"devre dışı bırakabilirsiniz. Bariyer, imleç halihazırda ekranın bir köşesine "
+"dokunuyorken onun başka bir ekrana geçmesini önler. Bu, birden çok ekran "
+"kullanıldığında büyütülmüş pencerelerin kapatma düğmeleri gibi kullanıcı "
+"arayüzü ögelerinin tetiklenmesini kolaylaştırır."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "İmleçlerin ekran köşelerinden geçmesini engeller."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "K&enar bariyeri:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -271,25 +276,30 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Burada farklı ekranlar arasındaki kenar bariyerinin boyutunu "
+"ayarlayabilirsiniz. Bariyer, işaretçinizi diğer ekranın kenarına geçmeden "
+"önce hareket ettirmeniz gereken ek bir uzaklık ekler. Bu, ekranlar "
+"arasındaki kenarda bulunan Plasma panelleri gibi kullanıcı arayüzü ögelerine "
+"erişimi kolaylaştırır."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "İmlecin ekran kenarlarını geçmek için kat etmesi gereken ek uzaklık."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Yok"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " pks"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-27 04:52+0100\n"
+"PO-Revision-Date: 2024-03-09 06:32+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -231,7 +231,7 @@ msgstr "&რეაქტივაციის დაყოვნება:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&კუთხის ბარიერი:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -243,19 +243,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"აქ შეგიძლიათ გამორთოთ ან ჩართოთ ვირტუალური კუთხის ბარიერი ეკრანებს შორის. "
+"ბარიერი ხელს უშლის კურსორს, სხვა ეკრანზე გადავიდეს, თუ ის უკვე ეხება ეკრანის "
+"კუთხეს. ეს აადვილებს ისეთი მომხმარებლის ინტერფეისის ელემენტების "
+"გააქტიურებას, როგორიცაა მთელ ეკრანზე გაშლილი ფანჯრების დახურვის ეკრანზე "
+"დაწკაპუნება ერთზე მეტი ეკრანის ქონისას."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "კურსორისტვის ეკრანის კუთხეების გადაკვეთის აკრძალვა."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&წიბოს ბარიერი:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -267,6 +272,10 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"აქ შეგიძლიათ დააყენოთ წიბოს ბარიერის ზომა ეკრანებს შორის. ბარიერი ამატებს "
+"დამატებით მანძილს, რომელზეც კურსორი უნდა გადაიტანოთ, სანამ ის სხვა ეკრანზე "
+"გადავა. ეს გააადვილებს წვდომას ისეთ ფუნქციებთან, როგორიცაა, მაგალითად, "
+"Plasma-ის პანელები, რომლებიც ეკრანებს შუა, წიბოზეა მოთავსებული."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -274,18 +283,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"დამატებითი მანძილი, რომელიც კურორმა უნდა გაიაროს, რომ ეკრანის წიბოები "
+"გადაკვეთოს."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "არაფერი"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " პქს"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
