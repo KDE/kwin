@@ -959,6 +959,7 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
     } else {
         cursorPos = input()->tablet()->position();
     }
+    setInteractiveMoveResizeAnchor(cursorPos);
     setInteractiveMoveOffset(QPointF((cursorPos.x() - x()) / width(), (cursorPos.y() - y()) / height())); // map from global
     setUnrestrictedInteractiveMoveResize(false);
     Gravity gravity;

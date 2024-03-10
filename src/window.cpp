@@ -1378,6 +1378,8 @@ void Window::updateInteractiveMoveResize(const QPointF &currentGlobalCursor)
 
 void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &global)
 {
+    setInteractiveMoveResizeAnchor(global);
+
     const Gravity gravity = interactiveMoveResizeGravity();
     if ((gravity == Gravity::None && !isMovableAcrossScreens())
         || (gravity != Gravity::None && (isShade() || !isResizable()))) {
@@ -2171,6 +2173,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         }
         setInteractiveMoveResizeGravity(Gravity::None);
         setInteractiveMoveResizePointerButtonDown(true);
+        setInteractiveMoveResizeAnchor(globalPos);
         setInteractiveMoveOffset(QPointF(qreal(globalPos.x() - x()) / width(), qreal(globalPos.y() - y()) / height())); // map from global
         setUnrestrictedInteractiveMoveResize((cmd == Options::MouseActivateRaiseAndUnrestrictedMove
                                               || cmd == Options::MouseUnrestrictedMove));
@@ -2189,6 +2192,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
             finishInteractiveMoveResize(false);
         }
         setInteractiveMoveResizePointerButtonDown(true);
+        setInteractiveMoveResizeAnchor(globalPos);
         const QPointF moveOffset = QPointF(globalPos.x() - x(), globalPos.y() - y()); // map from global
         setInteractiveMoveOffset(QPointF(moveOffset.x() / width(), moveOffset.y() / height()));
         int x = moveOffset.x(), y = moveOffset.y();
@@ -2796,6 +2800,7 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
     {
         setInteractiveMoveResizeGravity(mouseGravity());
         setInteractiveMoveResizePointerButtonDown(true);
+        setInteractiveMoveResizeAnchor(event->globalPosition());
         setInteractiveMoveOffset(QPointF(qreal(event->pos().x()) / width(), qreal(event->pos().y()) / height()));
         setUnrestrictedInteractiveMoveResize(false);
         startDelayedInteractiveMoveResize();
