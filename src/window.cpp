@@ -1450,16 +1450,24 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
 
         nextMoveResizeGeom = nextMoveGeometry();
         if (nextMoveResizeGeom != currentMoveResizeGeom) {
-            GeometryUpdatesBlocker blocker(this);
-
-            if (!isRequestedFullScreen() && quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-                setQuickTileMode(QuickTileFlag::None);
-
-                const QRectF &geom_restore = geometryRestore();
-                if (rules()->checkMaximize(MaximizeRestore) == MaximizeRestore) {
-                    setMoveResizeGeometry(geom_restore);
+            if (!isRequestedFullScreen()) {
+                if (maximizeMode() != MaximizeRestore) {
+                    if (maximizeMode() & MaximizeHorizontal) {
+                        if (nextMoveResizeGeom.x() != currentMoveResizeGeom.x() || nextMoveResizeGeom.width() != currentMoveResizeGeom.width()) {
+                            maximize(MaximizeRestore);
+                            return;
+                        }
+                    }
+                    if (maximizeMode() & MaximizeVertical) {
+                        if (nextMoveResizeGeom.y() != currentMoveResizeGeom.y() || nextMoveResizeGeom.height() != currentMoveResizeGeom.height()) {
+                            maximize(MaximizeRestore);
+                            return;
+                        }
+                    }
+                } else if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
+                    setQuickTileMode(QuickTileFlag::None);
+                    return;
                 }
-                nextMoveResizeGeom = nextMoveGeometry(); // fix position
             }
 
             move(nextMoveResizeGeom.topLeft());
@@ -3562,11 +3570,18 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (mode == QuickTileMode(QuickTileFlag::None)) {
         setTile(nullptr);
         m_quickTileMode = int(QuickTileFlag::None);
-        // Untiling, so just restore geometry, and we're done.
-        if (geometryRestore().isValid()) { // invalid if we started maximized and wait for placement
-            moveResize(geometryRestore());
+
+        QRectF geometry = moveResizeGeometry();
+        if (geometryRestore().isValid()) {
+            geometry = geometryRestore();
         }
-        checkWorkspacePosition(); // Just in case it's a different screen
+        if (isInteractiveMove()) {
+            const QPointF anchor = interactiveMoveResizeAnchor();
+            const QPointF offset = interactiveMoveOffset();
+            geometry.moveTopLeft(QPointF(anchor.x() - geometry.width() * offset.x(),
+                                         anchor.y() - geometry.height() * offset.y()));
+        }
+        moveResize(geometry);
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
         Tile *tile = nullptr;
         if (keyboard) {
