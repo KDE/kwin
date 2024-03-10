@@ -357,8 +357,7 @@ void MockInputMethod::zwp_input_method_v1_deactivate(struct ::zwp_input_method_c
         m_inputSurface->release();
         m_inputSurface->destroy();
         m_inputSurface.reset();
-        delete m_inputMethodSurface;
-        m_inputMethodSurface = nullptr;
+        m_inputMethodSurface.reset();
     }
 }
 
@@ -936,16 +935,14 @@ std::unique_ptr<LayerSurfaceV1> createLayerSurfaceV1(KWayland::Client::Surface *
     return shellSurface;
 }
 
-QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output, MockInputMethod::Mode mode)
+std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1(KWayland::Client::Surface *surface, KWayland::Client::Output *output, MockInputMethod::Mode mode)
 {
     if (!s_waylandConnection.inputPanelV1) {
         qWarning() << "Unable to create the input panel surface. The interface input_panel global is not bound";
         return nullptr;
     }
-    QtWayland::zwp_input_panel_surface_v1 *s = new QtWayland::zwp_input_panel_surface_v1(s_waylandConnection.inputPanelV1->get_input_panel_surface(*surface));
-
+    auto s = std::make_unique<QtWayland::zwp_input_panel_surface_v1>(s_waylandConnection.inputPanelV1->get_input_panel_surface(*surface));
     if (!s->isInitialized()) {
-        delete s;
         return nullptr;
     }
 

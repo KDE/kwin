@@ -479,7 +479,7 @@ protected:
 
 private:
     std::unique_ptr<KWayland::Client::Surface> m_inputSurface;
-    QtWayland::zwp_input_panel_surface_v1 *m_inputMethodSurface = nullptr;
+    std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> m_inputMethodSurface;
     struct ::zwp_input_method_context_v1 *m_context = nullptr;
     Mode m_mode = Mode::TopLevel;
 };
@@ -694,9 +694,9 @@ enum class CreationSetup {
     CreateAndConfigure, /// commit and wait for the configure event, making this surface ready to commit buffers
 };
 
-QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
-                                                                 KWayland::Client::Output *output,
-                                                                 MockInputMethod::Mode mode);
+std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1(KWayland::Client::Surface *surface,
+                                                                                 KWayland::Client::Output *output,
+                                                                                 MockInputMethod::Mode mode);
 
 FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface);
 
