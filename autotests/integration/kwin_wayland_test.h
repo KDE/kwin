@@ -679,8 +679,8 @@ void flushWaylandConnection();
 bool waylandSync();
 
 std::unique_ptr<KWayland::Client::Surface> createSurface();
-KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface,
-                                               KWayland::Client::Surface *parentSurface, QObject *parent = nullptr);
+std::unique_ptr<KWayland::Client::SubSurface> createSubSurface(KWayland::Client::Surface *surface,
+                                                               KWayland::Client::Surface *parentSurface);
 
 std::unique_ptr<LayerSurfaceV1> createLayerSurfaceV1(KWayland::Client::Surface *surface,
                                                      const QString &scope,

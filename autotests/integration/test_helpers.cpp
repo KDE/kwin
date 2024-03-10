@@ -905,14 +905,13 @@ std::unique_ptr<KWayland::Client::Surface> createSurface()
     return s->isValid() ? std::move(s) : nullptr;
 }
 
-KWayland::Client::SubSurface *createSubSurface(KWayland::Client::Surface *surface, KWayland::Client::Surface *parentSurface, QObject *parent)
+std::unique_ptr<KWayland::Client::SubSurface> createSubSurface(KWayland::Client::Surface *surface, KWayland::Client::Surface *parentSurface)
 {
     if (!s_waylandConnection.subCompositor) {
         return nullptr;
     }
-    auto s = s_waylandConnection.subCompositor->createSubSurface(surface, parentSurface, parent);
+    std::unique_ptr<KWayland::Client::SubSurface> s(s_waylandConnection.subCompositor->createSubSurface(surface, parentSurface));
     if (!s->isValid()) {
-        delete s;
         return nullptr;
     }
     return s;
