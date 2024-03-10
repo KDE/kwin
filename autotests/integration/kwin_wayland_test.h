@@ -698,7 +698,7 @@ std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1
                                                                                  KWayland::Client::Output *output,
                                                                                  MockInputMethod::Mode mode);
 
-FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface);
+std::unique_ptr<FractionalScaleV1> createFractionalScaleV1(KWayland::Client::Surface *surface);
 
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface);
 std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode);

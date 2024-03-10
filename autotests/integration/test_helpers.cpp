@@ -958,13 +958,13 @@ std::unique_ptr<QtWayland::zwp_input_panel_surface_v1> createInputPanelSurfaceV1
     return s;
 }
 
-FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface)
+std::unique_ptr<FractionalScaleV1> createFractionalScaleV1(KWayland::Client::Surface *surface)
 {
     if (!s_waylandConnection.fractionalScaleManagerV1) {
         qWarning() << "Unable to create fractional scale surface. The global is not bound";
         return nullptr;
     }
-    auto scale = new FractionalScaleV1();
+    auto scale = std::make_unique<FractionalScaleV1>();
     scale->init(s_waylandConnection.fractionalScaleManagerV1->get_fractional_scale(*surface));
 
     return scale;
