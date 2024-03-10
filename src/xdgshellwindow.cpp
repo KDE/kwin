@@ -217,6 +217,17 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         // Both the compositor and the client can change the window geometry. If the client
         // sets a new window geometry, the compositor's move-resize geometry will be invalid.
         maybeUpdateMoveResizeGeometry(frameGeometry);
+    } else if (isInteractiveMove()) {
+        bool fullscreen = isFullScreen();
+        if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
+            fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
+        }
+        if (!fullscreen) {
+            const QPointF anchor = interactiveMoveResizeAnchor();
+            const QPointF offset = interactiveMoveOffset();
+            frameGeometry.moveTopLeft(QPointF(anchor.x() - offset.x() * frameGeometry.width(),
+                                              anchor.y() - offset.y() * frameGeometry.height()));
+        }
     }
 
     updateGeometry(frameGeometry);

@@ -68,6 +68,10 @@ private Q_SLOTS:
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
     void testSendMaximizedWindowToAnotherOutput();
+    void testInteractiveMoveUnmaximizeFull();
+    void testInteractiveMoveUnmaximizeInitiallyFull();
+    void testInteractiveMoveUnmaximizeHorizontal();
+    void testInteractiveMoveUnmaximizeVertical();
     void testFullscreenMultipleOutputs();
     void testHidden();
     void testDesktopFileName();
@@ -1793,6 +1797,314 @@ void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()
     QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
     QCOMPARE(window->geometryRestore(), QRectF(1280 + 10, 20, 100, 50));
     QCOMPARE(window->output(), outputs[1]);
+}
+
+void TestXdgShellWindow::testInteractiveMoveUnmaximizeFull()
+{
+    // This test verifies that a maximized xdg-toplevel is going to be properly unmaximized when it's dragged.
+
+    // Create the window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->maximize(MaximizeFull);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.25;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Move the window to unmaximize it.
+    const QRectF maximizedGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
+
+    // Move the window a tiny bit more.
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
+
+    // Render the window at the new size.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void TestXdgShellWindow::testInteractiveMoveUnmaximizeInitiallyFull()
+{
+    // This test verifies that an initially maximized xdg-toplevel will be properly unmaximized when it's dragged.
+
+    // Create the window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get(), [](Test::XdgToplevel *toplevel) {
+        toplevel->set_maximized();
+    }));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.25;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Move the window to unmaximize it.
+    const QRectF maximizedGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
+
+    // Move the window a tiny bit more.
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
+
+    // Render the window at the new size.
+    const QSize restoredSize(100, 50);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(0, 0));
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), restoredSize, Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void TestXdgShellWindow::testInteractiveMoveUnmaximizeHorizontal()
+{
+    // This test verifies that a maximized horizontally xdg-toplevel is going to be properly unmaximized when it's dragged horizontally.
+
+    // Create the window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->maximize(MaximizeHorizontal);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.25;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+
+    // Move the window vertically, it's not going to be unmaximized.
+    const QRectF maximizedGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry.translated(0, 100));
+
+    // Move the window horizontally.
+    Test::pointerMotionRelative(QPointF(100, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry.translated(0, 100));
+
+    // Move the window to the right a bit more.
+    Test::pointerMotionRelative(QPointF(10, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry.translated(0, 100));
+
+    // Render the window at the new size.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(10, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(10, 0));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void TestXdgShellWindow::testInteractiveMoveUnmaximizeVertical()
+{
+    // This test verifies that a maximized vertically xdg-toplevel is going to be properly unmaximized when it's dragged vertically.
+
+    // Create the window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->maximize(MaximizeVertical);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.25;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+
+    // Move the window to the right, it's not going to be unmaximized.
+    const QRectF maximizedGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(100, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry.translated(100, 0));
+
+    // Move the window vertically.
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry.translated(100, 0));
+
+    // Move the window down a bit more.
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), maximizedGeometry.translated(100, 0));
+
+    // Render the window at the new size.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::red);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
 }
 
 void TestXdgShellWindow::testMaximizeAndChangeDecorationModeAfterInitialCommit()
