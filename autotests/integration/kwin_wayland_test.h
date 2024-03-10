@@ -712,7 +712,7 @@ std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surfa
 std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplevel *toplevel);
 std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface);
 std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
-CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
+std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
 
 /**
  * Creates a shared memory buffer of @p size in @p color and attaches it to the @p surface.

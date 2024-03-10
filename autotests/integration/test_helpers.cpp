@@ -1069,7 +1069,7 @@ std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Clien
     return std::make_unique<AutoHideScreenEdgeV1>(manager, surface, border);
 }
 
-CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
+std::unique_ptr<CursorShapeDeviceV1> createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
 {
     CursorShapeManagerV1 *manager = s_waylandConnection.cursorShapeManagerV1;
     if (!manager) {
@@ -1077,7 +1077,7 @@ CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointe
         return nullptr;
     }
 
-    return new CursorShapeDeviceV1(manager, pointer);
+    return std::make_unique<CursorShapeDeviceV1>(manager, pointer);
 }
 
 bool waitForWindowClosed(Window *window)
