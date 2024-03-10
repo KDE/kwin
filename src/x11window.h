@@ -344,7 +344,7 @@ protected:
     void doSetHiddenByShowDesktop() override;
     bool belongsToDesktop() const override;
     bool doStartInteractiveMoveResize() override;
-    bool isWaitingForInteractiveMoveResizeSync() const override;
+    bool isWaitingForInteractiveResizeSync() const override;
     void doInteractiveResizeSync(const QRectF &rect) override;
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;

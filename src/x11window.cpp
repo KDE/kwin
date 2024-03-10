@@ -4753,7 +4753,7 @@ void X11Window::leaveInteractiveMoveResize()
     Window::leaveInteractiveMoveResize();
 }
 
-bool X11Window::isWaitingForInteractiveMoveResizeSync() const
+bool X11Window::isWaitingForInteractiveResizeSync() const
 {
     return m_syncRequest.isPending && m_syncRequest.interactiveResize;
 }

@@ -1667,7 +1667,7 @@ protected:
      * Whether a sync request is still pending.
      * Default implementation returns @c false.
      */
-    virtual bool isWaitingForInteractiveMoveResizeSync() const;
+    virtual bool isWaitingForInteractiveResizeSync() const;
     /**
      * Called during handling a resize. Implementing subclasses can use this
      * method to perform windowing system specific syncing.

@@ -1378,10 +1378,6 @@ void Window::updateInteractiveMoveResize(const QPointF &currentGlobalCursor)
 
 void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &global)
 {
-    if (isWaitingForInteractiveMoveResizeSync()) {
-        return; // we're still waiting for the client or the timeout
-    }
-
     const Gravity gravity = interactiveMoveResizeGravity();
     if ((gravity == Gravity::None && !isMovableAcrossScreens())
         || (gravity != Gravity::None && (isShade() || !isResizable()))) {
@@ -1407,17 +1403,19 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
         setShade(ShadeNone);
     }
 
-    if (isInteractiveResize()) {
-        if (m_tile && m_tile->supportsResizeGravity(gravity)) {
-            m_tile->resizeFromGravity(gravity, global.x(), global.y());
-            return;
-        }
-    }
-
     const QRectF currentMoveResizeGeom = moveResizeGeometry();
     QRectF nextMoveResizeGeom = currentMoveResizeGeom;
 
     if (isInteractiveResize()) {
+        if (isWaitingForInteractiveResizeSync()) {
+            return; // we're still waiting for the client or the timeout
+        }
+
+        if (m_tile && m_tile->supportsResizeGravity(gravity)) {
+            m_tile->resizeFromGravity(gravity, global.x(), global.y());
+            return;
+        }
+
         nextMoveResizeGeom = nextInteractiveResizeGeometry(global);
         if (nextMoveResizeGeom != currentMoveResizeGeom) {
             doInteractiveResizeSync(nextMoveResizeGeom);
@@ -2470,7 +2468,7 @@ void Window::doFinishInteractiveMoveResize()
 {
 }
 
-bool Window::isWaitingForInteractiveMoveResizeSync() const
+bool Window::isWaitingForInteractiveResizeSync() const
 {
     return false;
 }
