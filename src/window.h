@@ -1115,6 +1115,10 @@ public:
     {
         return isInteractiveMoveResize() && interactiveMoveResizeGravity() != Gravity::None;
     }
+    QPointF interactiveMoveResizeAnchor() const
+    {
+        return m_interactiveMoveResize.anchor;
+    }
     /**
      * Cursor shape for move/resize mode.
      */
@@ -1576,6 +1580,10 @@ protected:
     {
         m_interactiveMoveResize.enabled = enabled;
     }
+    void setInteractiveMoveResizeAnchor(const QPointF &anchor)
+    {
+        m_interactiveMoveResize.anchor = anchor;
+    }
     /**
      * @returns whether the move resize mode is unrestricted.
      */
@@ -1800,6 +1808,7 @@ protected:
     {
         bool enabled = false;
         bool unrestricted = false;
+        QPointF anchor;
         QPointF offset;
         QRectF initialGeometry;
         QRectF initialGeometryRestore;
