@@ -1184,9 +1184,23 @@ bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
         y = this->y();
     }
 
-    handleInteractiveMoveResize(QPoint(x, y), QPoint(x_root, y_root));
-    if (isInteractiveMove()) {
-        workspace()->screenEdges()->check(QPoint(x_root, y_root), QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
+    if (!isInteractiveMoveResize()) {
+        const QPointF offset(interactiveMoveOffset().x() * width(), interactiveMoveOffset().y() * height());
+        const QPointF delta(QPointF(x, y) - offset);
+        if (delta.manhattanLength() >= QApplication::startDragDistance()) {
+            if (startInteractiveMoveResize()) {
+                updateInteractiveMoveResize(QPointF(x_root, y_root));
+            } else {
+                setInteractiveMoveResizePointerButtonDown(false);
+            }
+            updateCursor();
+        }
+    } else {
+        updateInteractiveMoveResize(QPointF(x_root, y_root));
+
+        if (isInteractiveMove()) {
+            workspace()->screenEdges()->check(QPoint(x_root, y_root), QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
+        }
     }
 
     return true;

@@ -1128,7 +1128,7 @@ public:
     }
     uint32_t interactiveMoveResizeCount() const;
 
-    void updateInteractiveMoveResize(const QPointF &currentGlobalCursor);
+    void updateInteractiveMoveResize(const QPointF &global);
     /**
      * Ends move resize when all pointer buttons are up again.
      */
@@ -1682,7 +1682,6 @@ protected:
      * Default implementation does nothing.
      */
     virtual void doInteractiveResizeSync(const QRectF &rect);
-    void handleInteractiveMoveResize(const QPointF &local, const QPointF &global);
     QRectF titleBarRect(const QRectF &rect, bool &transposed, int &requiredPixels) const;
     QRectF nextInteractiveMoveGeometry(const QPointF &global) const;
     QRectF nextInteractiveResizeGeometry(const QPointF &global) const;

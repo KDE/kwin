@@ -1190,6 +1190,10 @@ bool Window::startInteractiveMoveResize()
     if (isRequestedFullScreen() && (workspace()->outputs().count() < 2 || !isMovableAcrossScreens())) {
         return false;
     }
+    if ((interactiveMoveResizeGravity() == Gravity::None && !isMovableAcrossScreens())
+        || (interactiveMoveResizeGravity() != Gravity::None && (isShade() || !isResizable()))) {
+        return false;
+    }
     if (!doStartInteractiveMoveResize()) {
         return false;
     }
@@ -1371,37 +1375,12 @@ void Window::stopDelayedInteractiveMoveResize()
     m_interactiveMoveResize.delayedTimer = nullptr;
 }
 
-void Window::updateInteractiveMoveResize(const QPointF &currentGlobalCursor)
-{
-    handleInteractiveMoveResize(pos(), currentGlobalCursor);
-}
-
-void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &global)
+void Window::updateInteractiveMoveResize(const QPointF &global)
 {
     setInteractiveMoveResizeAnchor(global);
 
-    const Gravity gravity = interactiveMoveResizeGravity();
-    if ((gravity == Gravity::None && !isMovableAcrossScreens())
-        || (gravity != Gravity::None && (isShade() || !isResizable()))) {
-        return;
-    }
-
-    if (!isInteractiveMoveResize()) {
-        const QPointF offset(interactiveMoveOffset().x() * width(), interactiveMoveOffset().y() * height());
-        const QPointF p(local - offset);
-        if (p.manhattanLength() >= QApplication::startDragDistance()) {
-            if (!startInteractiveMoveResize()) {
-                setInteractiveMoveResizePointerButtonDown(false);
-                updateCursor();
-                return;
-            }
-            updateCursor();
-        } else {
-            return;
-        }
-    }
-
     // ShadeHover or ShadeActive, ShadeNormal was already avoided above
+    const Gravity gravity = interactiveMoveResizeGravity();
     if (gravity != Gravity::None && shadeMode() != ShadeNone) {
         setShade(ShadeNone);
     }
@@ -2730,9 +2709,21 @@ void Window::layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRe
 void Window::processDecorationMove(const QPointF &localPos, const QPointF &globalPos)
 {
     if (isInteractiveMoveResizePointerButtonDown()) {
-        handleInteractiveMoveResize(localPos, globalPos);
+        if (!isInteractiveMoveResize()) {
+            const QPointF offset(interactiveMoveOffset().x() * width(), interactiveMoveOffset().y() * height());
+            const QPointF delta(localPos - offset);
+            if (delta.manhattanLength() >= QApplication::startDragDistance()) {
+                if (startInteractiveMoveResize()) {
+                    updateInteractiveMoveResize(globalPos);
+                } else {
+                    setInteractiveMoveResizePointerButtonDown(false);
+                }
+                updateCursor();
+            }
+        }
         return;
     }
+
     // TODO: handle modifiers
     Gravity newGravity = mouseGravity();
     if (newGravity != interactiveMoveResizeGravity()) {
