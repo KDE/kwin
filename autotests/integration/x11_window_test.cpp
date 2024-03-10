@@ -33,15 +33,34 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
+    void testMaximizedFull();
+    void testInitiallyMaximizedFull();
+    void testRequestMaximizedFull();
+    void testMaximizedVertical();
+    void testInitiallyMaximizedVertical();
+    void testRequestMaximizedVertical();
+    void testMaximizedHorizontal();
+    void testInitiallyMaximizedHorizontal();
+    void testRequestMaximizedHorizontal();
+    void testFullScreen();
+    void testInitiallyFullScreen();
+    void testRequestFullScreen();
+    void testFullscreenLayerWithActiveWaylandWindow();
+    void testFullscreenWindowGroups();
+    void testKeepBelow();
+    void testInitiallyKeepBelow();
+    void testKeepAbove();
+    void testInitiallyKeepAbove();
+    void testMinimized();
+    void testInitiallyMinimized();
+    void testRequestMinimized();
     void testMinimumSize();
     void testMaximumSize();
     void testTrimCaption_data();
     void testTrimCaption();
-    void testFullscreenLayerWithActiveWaylandWindow();
     void testFocusInWithWaylandLastActiveWindow();
     void testCaptionChanges();
     void testCaptionWmName();
-    void testFullscreenWindowGroups();
     void testActivateFocusedWindow();
     void testReentrantMoveResize();
 };
@@ -74,6 +93,610 @@ void X11WindowTest::init()
 void X11WindowTest::cleanup()
 {
     Test::destroyWaylandConnection();
+}
+
+static X11Window *createWindow(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+{
+    xcb_window_t windowId = xcb_generate_id(connection);
+    xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      geometry.x(),
+                      geometry.y(),
+                      geometry.width(),
+                      geometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, geometry.x(), geometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, geometry.width(), geometry.height());
+    xcb_icccm_set_wm_normal_hints(connection, windowId, &hints);
+
+    if (setup) {
+        setup(windowId);
+    }
+
+    xcb_map_window(connection, windowId);
+    xcb_flush(connection);
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    if (!windowCreatedSpy.wait()) {
+        return nullptr;
+    }
+    return windowCreatedSpy.last().first().value<X11Window *>();
+}
+
+void X11WindowTest::testMaximizedFull()
+{
+    // This test verifies that toggling maximized mode works as expected and state changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    const QRectF workArea = workspace()->clientArea(MaximizeArea, window);
+    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    window->maximize(MaximizeFull);
+    QCOMPARE(maximizedChangedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->frameGeometry(), workArea);
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY((winInfo.state() & NET::Max) == NET::Max);
+    }
+
+    // Restore the window.
+    window->maximize(MaximizeRestore);
+    QCOMPARE(maximizedChangedSpy.count(), 2);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::Max));
+    }
+}
+
+void X11WindowTest::testInitiallyMaximizedFull()
+{
+    // This test verifies that a window can be shown already in the maximized state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Max, NET::Max);
+    });
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+}
+
+void X11WindowTest::testRequestMaximizedFull()
+{
+    // This test verifies that the client can toggle the maximized state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set maximized state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Max, NET::Max);
+        xcb_flush(c.get());
+    }
+    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    QVERIFY(maximizedChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Unset maximized state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::Max);
+        xcb_flush(c.get());
+    }
+    QVERIFY(maximizedChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+}
+
+void X11WindowTest::testMaximizedVertical()
+{
+    // This test verifies that toggling maximized vertically mode works as expected and state changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    const QRectF workArea = workspace()->clientArea(MaximizeArea, window);
+    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    window->maximize(MaximizeVertical);
+    QCOMPARE(maximizedChangedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+    QCOMPARE(window->frameGeometry(), QRectF(originalGeometry.x(), workArea.y(), originalGeometry.width(), workArea.height()));
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY((winInfo.state() & NET::Max) == NET::MaxVert);
+    }
+
+    // Restore the window.
+    window->maximize(MaximizeRestore);
+    QCOMPARE(maximizedChangedSpy.count(), 2);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::Max));
+    }
+}
+
+void X11WindowTest::testInitiallyMaximizedVertical()
+{
+    // This test verifies that a window can be shown already in the maximized vertically state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::MaxVert, NET::MaxVert);
+    });
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+}
+
+void X11WindowTest::testRequestMaximizedVertical()
+{
+    // This test verifies that the client can toggle the maximized vertically state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set maximized state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::MaxVert, NET::MaxVert);
+        xcb_flush(c.get());
+    }
+    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    QVERIFY(maximizedChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+
+    // Unset maximized state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::MaxVert);
+        xcb_flush(c.get());
+    }
+    QVERIFY(maximizedChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+}
+
+void X11WindowTest::testMaximizedHorizontal()
+{
+    // This test verifies that toggling maximized horizontally mode works as expected and state changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    const QRectF workArea = workspace()->clientArea(MaximizeArea, window);
+    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    window->maximize(MaximizeHorizontal);
+    QCOMPARE(maximizedChangedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->frameGeometry(), QRectF(workArea.x(), originalGeometry.y(), workArea.width(), originalGeometry.height()));
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY((winInfo.state() & NET::Max) == NET::MaxHoriz);
+    }
+
+    // Restore the window.
+    window->maximize(MaximizeRestore);
+    QCOMPARE(maximizedChangedSpy.count(), 2);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::Max));
+    }
+}
+
+void X11WindowTest::testInitiallyMaximizedHorizontal()
+{
+    // This test verifies that a window can be shown already in the maximized horizontally state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::MaxHoriz, NET::MaxHoriz);
+    });
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+}
+
+void X11WindowTest::testRequestMaximizedHorizontal()
+{
+    // This test verifies that the client can toggle the maximized horizontally state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set maximized state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::MaxHoriz, NET::MaxHoriz);
+        xcb_flush(c.get());
+    }
+    QSignalSpy maximizedChangedSpy(window, &Window::maximizedChanged);
+    QVERIFY(maximizedChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+
+    // Unset maximized state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::MaxHoriz);
+        xcb_flush(c.get());
+    }
+    QVERIFY(maximizedChangedSpy.wait());
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+}
+
+void X11WindowTest::testFullScreen()
+{
+    // This test verifies that the fullscreen mode can be toggled and state changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    const QRectF screenArea = workspace()->clientArea(ScreenArea, window);
+    QSignalSpy fullScreenChangedSpy(window, &Window::fullScreenChanged);
+    window->setFullScreen(true);
+    QCOMPARE(fullScreenChangedSpy.count(), 1);
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+    QCOMPARE(window->frameGeometry(), screenArea);
+    QCOMPARE(window->fullscreenGeometryRestore(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::FullScreen);
+    }
+
+    // Restore the window.
+    window->setFullScreen(false);
+    QCOMPARE(fullScreenChangedSpy.count(), 2);
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::FullScreen));
+    }
+}
+
+void X11WindowTest::testInitiallyFullScreen()
+{
+    // This test verifies that a window can be shown already in the fullscreen state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::FullScreen, NET::FullScreen);
+    });
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+}
+
+void X11WindowTest::testRequestFullScreen()
+{
+    // This test verifies that the client can toggle the fullscreen state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set fullscreen state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::FullScreen, NET::FullScreen);
+        xcb_flush(c.get());
+    }
+    QSignalSpy fullScreenChangedSpy(window, &Window::fullScreenChanged);
+    QVERIFY(fullScreenChangedSpy.wait());
+    QCOMPARE(window->isFullScreen(), true);
+    QCOMPARE(window->isRequestedFullScreen(), true);
+
+    // Unset fullscreen state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::FullScreen);
+        xcb_flush(c.get());
+    }
+    QVERIFY(fullScreenChangedSpy.wait());
+    QCOMPARE(window->isFullScreen(), false);
+    QCOMPARE(window->isRequestedFullScreen(), false);
+}
+
+void X11WindowTest::testKeepBelow()
+{
+    // This test verifies that keep below state can be toggled and its changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set keep below.
+    QSignalSpy keepBelowChangedSpy(window, &Window::keepBelowChanged);
+    window->setKeepBelow(true);
+    QCOMPARE(keepBelowChangedSpy.count(), 1);
+    QVERIFY(window->keepBelow());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::KeepBelow);
+    }
+
+    // Unset keep below.
+    window->setKeepBelow(false);
+    QCOMPARE(keepBelowChangedSpy.count(), 2);
+    QVERIFY(!window->keepBelow());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::KeepBelow));
+    }
+}
+
+void X11WindowTest::testInitiallyKeepBelow()
+{
+    // This test verifies that a window can be shown already with the keep below state set.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::KeepBelow, NET::KeepBelow);
+    });
+    QVERIFY(window->keepBelow());
+}
+
+void X11WindowTest::testKeepAbove()
+{
+    // This test verifies that keep above state can be toggled and its changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set keep above.
+    QSignalSpy keepAboveChangedSpy(window, &Window::keepAboveChanged);
+    window->setKeepAbove(true);
+    QCOMPARE(keepAboveChangedSpy.count(), 1);
+    QVERIFY(window->keepAbove());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::KeepAbove);
+    }
+
+    // Unset keep above.
+    window->setKeepAbove(false);
+    QCOMPARE(keepAboveChangedSpy.count(), 2);
+    QVERIFY(!window->keepAbove());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::KeepAbove));
+    }
+}
+
+void X11WindowTest::testInitiallyKeepAbove()
+{
+    // This test verifies that a window can be shown already with the keep above state set.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::KeepAbove, NET::KeepAbove);
+    });
+    QVERIFY(window->keepAbove());
+}
+
+void X11WindowTest::testMinimized()
+{
+    // This test verifies that a window can be minimized/unminimized and its changes are propagated to the client.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Minimize.
+    QSignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
+    window->setMinimized(true);
+    QCOMPARE(minimizedChangedSpy.count(), 1);
+    QVERIFY(window->isMinimized());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::Hidden);
+    }
+
+    // Unminimize.
+    window->setMinimized(false);
+    QCOMPARE(minimizedChangedSpy.count(), 2);
+    QVERIFY(!window->isMinimized());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::Hidden));
+    }
+}
+
+void X11WindowTest::testInitiallyMinimized()
+{
+    // This test verifies that a window can be shown already in the minimized state.
+
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_icccm_wm_hints_t hints;
+        memset(&hints, 0, sizeof(hints));
+        xcb_icccm_wm_hints_set_iconic(&hints);
+        xcb_icccm_set_wm_hints(c.get(), windowId, &hints);
+    });
+    QVERIFY(window->isMinimized());
+
+    {
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::Hidden);
+    }
+}
+
+void X11WindowTest::testRequestMinimized()
+{
+    // This test verifies that the client can set the minimized state.
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set minimized state.
+    {
+        xcb_client_message_event_t event;
+        event.response_type = XCB_CLIENT_MESSAGE;
+        event.format = 32;
+        event.sequence = 0;
+        event.window = window->window();
+        event.type = atoms->wm_change_state;
+        event.data.data32[0] = XCB_ICCCM_WM_STATE_ICONIC;
+        event.data.data32[1] = 0;
+        event.data.data32[2] = 0;
+        event.data.data32[3] = 0;
+        event.data.data32[4] = 0;
+
+        xcb_send_event(c.get(), 0, kwinApp()->x11RootWindow(),
+                       XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT,
+                       reinterpret_cast<const char *>(&event));
+        xcb_flush(c.get());
+    }
+    QSignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
+    QVERIFY(minimizedChangedSpy.wait());
+    QVERIFY(window->isMinimized());
 }
 
 void X11WindowTest::testMinimumSize()
