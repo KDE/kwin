@@ -25,13 +25,6 @@ using namespace KWin;
 
 static const QString s_socketName = QStringLiteral("wayland_test_kwin_placement-0");
 
-struct PlaceWindowResult
-{
-    QSizeF initiallyConfiguredSize;
-    Test::XdgToplevel::States initiallyConfiguredStates;
-    QRectF finalGeometry;
-};
-
 class TestPlacement : public QObject
 {
     Q_OBJECT
@@ -56,12 +49,24 @@ private Q_SLOTS:
 
 private:
     void setPlacementPolicy(PlacementPolicy policy);
+    struct WindowHandle
+    {
+        Window *window;
+        std::unique_ptr<KWayland::Client::Surface> surface;
+        std::unique_ptr<Test::XdgToplevel> shellSurface;
+    };
+    struct PlaceWindowResult
+    {
+        QSizeF initiallyConfiguredSize;
+        Test::XdgToplevel::States initiallyConfiguredStates;
+        QRectF finalGeometry;
+    };
     /*
      * Create a window and return relevant results for testing
      * defaultSize is the buffer size to use if the compositor returns an empty size in the first configure
      * event.
      */
-    std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> createAndPlaceWindow(const QSize &defaultSize);
+    std::tuple<PlaceWindowResult, WindowHandle> createAndPlaceWindow(const QSize &defaultSize);
 };
 
 void TestPlacement::init()
@@ -105,15 +110,15 @@ void TestPlacement::setPlacementPolicy(PlacementPolicy policy)
     Workspace::self()->slotReconfigure();
 }
 
-std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> TestPlacement::createAndPlaceWindow(const QSize &defaultSize)
+std::tuple<TestPlacement::PlaceWindowResult, TestPlacement::WindowHandle> TestPlacement::createAndPlaceWindow(const QSize &defaultSize)
 {
     PlaceWindowResult rc;
 
     // create a new window
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
-    auto shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
 
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     surface->commit(KWayland::Client::Surface::CommitFlag::None);
     surfaceConfigureRequestedSpy.wait();
@@ -131,7 +136,11 @@ std::pair<PlaceWindowResult, std::unique_ptr<KWayland::Client::Surface>> TestPla
     auto window = Test::renderAndWaitForShown(surface.get(), size.toSize(), Qt::red);
 
     rc.finalGeometry = window->frameGeometry();
-    return {rc, std::move(surface)};
+    return {rc, WindowHandle{
+                    .window = window,
+                    .surface = std::move(surface),
+                    .shellSurface = std::move(shellSurface),
+                }};
 }
 
 void TestPlacement::testPlaceSmart()
@@ -150,11 +159,11 @@ void TestPlacement::testPlaceSmart()
 
     setPlacementPolicy(PlacementSmart);
 
-    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<WindowHandle> handles;
 
     for (const QRect &desiredGeometry : desiredGeometries) {
-        auto [windowPlacement, surface] = createAndPlaceWindow(QSize(600, 500));
-        surfaces.push_back(std::move(surface));
+        auto [windowPlacement, handle] = createAndPlaceWindow(QSize(600, 500));
+        handles.push_back(std::move(handle));
 
         // smart placement shouldn't define a size on windows
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(0, 0));
@@ -181,15 +190,15 @@ void TestPlacement::testPlaceMaximized()
     QVERIFY(panelConfigureRequestedSpy.wait());
     Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
-    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<WindowHandle> handles;
 
     // all windows should be initially maximized with an initial configure size sent
     for (int i = 0; i < 4; i++) {
-        auto [windowPlacement, surface] = createAndPlaceWindow(QSize(600, 500));
+        auto [windowPlacement, handle] = createAndPlaceWindow(QSize(600, 500));
         QVERIFY(windowPlacement.initiallyConfiguredStates & Test::XdgToplevel::State::Maximized);
         QCOMPARE(windowPlacement.initiallyConfiguredSize, QSize(1280, 1024 - 20));
         QCOMPARE(windowPlacement.finalGeometry, QRect(0, 20, 1280, 1024 - 20)); // under the panel
-        surfaces.push_back(std::move(surface));
+        handles.push_back(std::move(handle));
     }
 }
 
@@ -208,14 +217,14 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
     QVERIFY(panelConfigureRequestedSpy.wait());
     Test::renderAndWaitForShown(panelSurface.get(), panelConfigureRequestedSpy.last().at(1).toSize(), Qt::blue);
 
-    std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
+    std::vector<WindowHandle> handles;
 
     // all windows should be initially fullscreen with an initial configure size sent, despite the policy
     for (int i = 0; i < 4; i++) {
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
-        auto shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
+        auto shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
         shellSurface->set_fullscreen(nullptr);
-        QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
+        QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
         QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
         surface->commit(KWayland::Client::Surface::CommitFlag::None);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -230,7 +239,11 @@ void TestPlacement::testPlaceMaximizedLeavesFullscreen()
         QCOMPARE(initiallyConfiguredSize, QSize(1280, 1024));
         QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
 
-        surfaces.push_back(std::move(surface));
+        handles.emplace_back(WindowHandle{
+            .window = window,
+            .surface = std::move(surface),
+            .shellSurface = std::move(shellSurface),
+        });
     }
 }
 

@@ -237,7 +237,7 @@ void TestXdgShellWindowRules::createTestWindow(ClientFlags flags)
                                                                : Test::XdgToplevelDecorationV1::mode_client_side;
     // Create an xdg surface.
     m_surface = Test::createSurface();
-    m_shellSurface.reset(Test::createXdgToplevelSurface(m_surface.get(), Test::CreationSetup::CreateOnly, m_surface.get()));
+    m_shellSurface = Test::createXdgToplevelSurface(m_surface.get(), Test::CreationSetup::CreateOnly);
     Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(m_shellSurface.get(), m_shellSurface.get());
 
     // Add signal watchers

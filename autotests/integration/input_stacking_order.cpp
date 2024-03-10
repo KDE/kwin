@@ -101,7 +101,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1 = Test::createXdgToplevelSurface(surface1.get());
     QVERIFY(shellSurface1);
     render(surface1.get());
     QVERIFY(windowAddedSpy.wait());
@@ -110,7 +110,7 @@ void InputStackingOrderTest::testPointerFocusUpdatesOnStackingOrderChange()
 
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2 = Test::createXdgToplevelSurface(surface2.get());
     QVERIFY(shellSurface2);
     render(surface2.get());
     QVERIFY(windowAddedSpy.wait());

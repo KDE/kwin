@@ -70,7 +70,7 @@ private Q_SLOTS:
     void testTooltipDoesntEatKeyEvents();
 
 private:
-    std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, Test::XdgToplevel *> showWindow();
+    std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> showWindow();
 };
 
 #define MOTION(target) Test::pointerMotion(target, timestamp++)
@@ -79,7 +79,7 @@ private:
 
 #define RELEASE Test::pointerButtonReleased(BTN_LEFT, timestamp++)
 
-std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, Test::XdgToplevel *> DecorationInputTest::showWindow()
+std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, std::unique_ptr<Test::XdgToplevel>> DecorationInputTest::showWindow()
 {
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
@@ -90,9 +90,9 @@ std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, Test::XdgToplev
 
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     VERIFY(surface.get());
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
-    VERIFY(shellSurface);
-    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
+    VERIFY(shellSurface.get());
+    Test::XdgToplevelDecorationV1 *decoration = Test::createXdgToplevelDecorationV1(shellSurface.get(), shellSurface.get());
     VERIFY(decoration);
 
     QSignalSpy decorationConfigureRequestedSpy(decoration, &Test::XdgToplevelDecorationV1::configureRequested);
@@ -112,7 +112,7 @@ std::tuple<Window *, std::unique_ptr<KWayland::Client::Surface>, Test::XdgToplev
 #undef VERIFY
 #undef COMPARE
 
-    return {window, std::move(surface), shellSurface};
+    return {window, std::move(surface), std::move(shellSurface)};
 }
 
 void DecorationInputTest::initTestCase()
@@ -253,7 +253,7 @@ void DecorationInputTest::testDoubleClickClose()
     quint32 timestamp = 1;
     MOTION(QPoint(window->frameGeometry().center().x(), window->frameMargins().top() / 2.0));
 
-    connect(shellSurface, &Test::XdgToplevel::closeRequested, this, [&surface = surface]() {
+    connect(shellSurface.get(), &Test::XdgToplevel::closeRequested, this, [&surface = surface]() {
         surface.reset();
     });
 

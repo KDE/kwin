@@ -182,7 +182,7 @@ void PointerInputTest::testWarpingUpdatesFocus()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -227,7 +227,7 @@ void PointerInputTest::testWarpingGeneratesPointerMotion()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -305,7 +305,7 @@ void PointerInputTest::testUpdateFocusAfterScreenChange()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get(), QSize(1280, 1024));
     QVERIFY(windowAddedSpy.wait());
@@ -490,7 +490,7 @@ void PointerInputTest::testModifierClickUnrestrictedMove()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -555,10 +555,10 @@ void PointerInputTest::testModifierClickUnrestrictedFullscreenMove()
     // create a window
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     shellSurface->set_fullscreen(nullptr);
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface, &Test::XdgToplevel::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
@@ -610,7 +610,7 @@ void PointerInputTest::testModifierClickUnrestrictedMoveGlobalShortcutsDisabled(
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -681,7 +681,7 @@ void PointerInputTest::testModifierScrollOpacity()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -739,7 +739,7 @@ void PointerInputTest::testModifierScrollOpacityGlobalShortcutsDisabled()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -786,7 +786,7 @@ void PointerInputTest::testScrollAction()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1 = Test::createXdgToplevelSurface(surface1.get());
     QVERIFY(shellSurface1);
     render(surface1.get());
     QVERIFY(windowAddedSpy.wait());
@@ -794,7 +794,7 @@ void PointerInputTest::testScrollAction()
     QVERIFY(window1);
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2 = Test::createXdgToplevelSurface(surface2.get());
     QVERIFY(shellSurface2);
     render(surface2.get());
     QVERIFY(windowAddedSpy.wait());
@@ -841,7 +841,7 @@ void PointerInputTest::testFocusFollowsMouse()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1 = Test::createXdgToplevelSurface(surface1.get());
     QVERIFY(shellSurface1);
     render(surface1.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
@@ -849,7 +849,7 @@ void PointerInputTest::testFocusFollowsMouse()
     QVERIFY(window1);
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2 = Test::createXdgToplevelSurface(surface2.get());
     QVERIFY(shellSurface2);
     render(surface2.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
@@ -923,7 +923,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1 = Test::createXdgToplevelSurface(surface1.get());
     QVERIFY(shellSurface1);
     render(surface1.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
@@ -931,7 +931,7 @@ void PointerInputTest::testMouseActionInactiveWindow()
     QVERIFY(window1);
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2 = Test::createXdgToplevelSurface(surface2.get());
     QVERIFY(shellSurface2);
     render(surface2.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
@@ -1008,7 +1008,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface1 = Test::createSurface();
     QVERIFY(surface1);
-    Test::XdgToplevel *shellSurface1 = Test::createXdgToplevelSurface(surface1.get(), surface1.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface1 = Test::createXdgToplevelSurface(surface1.get());
     QVERIFY(shellSurface1);
     render(surface1.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
@@ -1017,7 +1017,7 @@ void PointerInputTest::testMouseActionActiveWindow()
     QSignalSpy window1DestroyedSpy(window1, &QObject::destroyed);
     std::unique_ptr<KWayland::Client::Surface> surface2 = Test::createSurface();
     QVERIFY(surface2);
-    Test::XdgToplevel *shellSurface2 = Test::createXdgToplevelSurface(surface2.get(), surface2.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2 = Test::createXdgToplevelSurface(surface2.get());
     QVERIFY(shellSurface2);
     render(surface2.get(), QSize(800, 800));
     QVERIFY(windowAddedSpy.wait());
@@ -1084,7 +1084,7 @@ void PointerInputTest::testCursorImage()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -1214,7 +1214,7 @@ void PointerInputTest::testEffectOverrideCursorImage()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -1279,7 +1279,7 @@ void PointerInputTest::testPopup()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -1304,9 +1304,9 @@ void PointerInputTest::testPopup()
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
     std::unique_ptr<KWayland::Client::Surface> popupSurface = Test::createSurface();
     QVERIFY(popupSurface);
-    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
+    std::unique_ptr<Test::XdgPopup> popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
     QVERIFY(popupShellSurface);
-    QSignalSpy doneReceivedSpy(popupShellSurface, &Test::XdgPopup::doneReceived);
+    QSignalSpy doneReceivedSpy(popupShellSurface.get(), &Test::XdgPopup::doneReceived);
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
     render(popupSurface.get(), QSize(100, 50));
     QVERIFY(windowAddedSpy.wait());
@@ -1385,9 +1385,9 @@ void PointerInputTest::testDecoCancelsPopup()
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
     std::unique_ptr<KWayland::Client::Surface> popupSurface = Test::createSurface();
     QVERIFY(popupSurface);
-    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
+    std::unique_ptr<Test::XdgPopup> popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
     QVERIFY(popupShellSurface);
-    QSignalSpy doneReceivedSpy(popupShellSurface, &Test::XdgPopup::doneReceived);
+    QSignalSpy doneReceivedSpy(popupShellSurface.get(), &Test::XdgPopup::doneReceived);
     popupShellSurface->grab(*Test::waylandSeat(), 0); // FIXME: Serial.
     auto popupWindow = Test::renderAndWaitForShown(popupSurface.get(), QSize(100, 50), Qt::red);
     QVERIFY(popupWindow);
@@ -1422,7 +1422,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     render(surface.get());
     QVERIFY(windowAddedSpy.wait());
@@ -1445,7 +1445,7 @@ void PointerInputTest::testWindowUnderCursorWhileButtonPressed()
     positioner->set_gravity(Test::XdgPositioner::gravity_bottom_right);
     std::unique_ptr<KWayland::Client::Surface> popupSurface = Test::createSurface();
     QVERIFY(popupSurface);
-    Test::XdgPopup *popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
+    std::unique_ptr<Test::XdgPopup> popupShellSurface = Test::createXdgPopupSurface(popupSurface.get(), shellSurface->xdgSurface(), positioner.get());
     QVERIFY(popupShellSurface);
     render(popupSurface.get(), QSize(99, 49));
     QVERIFY(windowAddedSpy.wait());

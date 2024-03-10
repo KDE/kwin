@@ -984,12 +984,12 @@ static void waitForConfigured(XdgSurface *shellSurface)
     shellSurface->ack_configure(surfaceConfigureRequestedSpy.last().first().toUInt());
 }
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent)
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface)
 {
-    return createXdgToplevelSurface(surface, CreationSetup::CreateAndConfigure, parent);
+    return createXdgToplevelSurface(surface, CreationSetup::CreateAndConfigure);
 }
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode, QObject *parent)
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
 
@@ -999,7 +999,7 @@ XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, Creati
     }
 
     XdgSurface *xdgSurface = new XdgSurface(shell, surface);
-    XdgToplevel *xdgToplevel = new XdgToplevel(xdgSurface, parent);
+    std::unique_ptr<XdgToplevel> xdgToplevel = std::make_unique<XdgToplevel>(xdgSurface);
 
     if (configureMode == CreationSetup::CreateAndConfigure) {
         waitForConfigured(xdgSurface);
@@ -1008,7 +1008,7 @@ XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, Creati
     return xdgToplevel;
 }
 
-XdgPositioner *createXdgPositioner()
+std::unique_ptr<XdgPositioner> createXdgPositioner()
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
 
@@ -1017,11 +1017,10 @@ XdgPositioner *createXdgPositioner()
         return nullptr;
     }
 
-    return new XdgPositioner(shell);
+    return std::make_unique<XdgPositioner>(shell);
 }
 
-XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner,
-                                CreationSetup configureMode, QObject *parent)
+std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface, XdgPositioner *positioner, CreationSetup configureMode)
 {
     XdgShell *shell = s_waylandConnection.xdgShell;
 
@@ -1031,7 +1030,7 @@ XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *
     }
 
     XdgSurface *xdgSurface = new XdgSurface(shell, surface);
-    XdgPopup *xdgPopup = new XdgPopup(xdgSurface, parentSurface, positioner, parent);
+    std::unique_ptr<XdgPopup> xdgPopup = std::make_unique<XdgPopup>(xdgSurface, parentSurface, positioner);
 
     if (configureMode == CreationSetup::CreateAndConfigure) {
         waitForConfigured(xdgSurface);

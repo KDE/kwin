@@ -423,7 +423,7 @@ void TransientPlacementTest::testXdgPopup()
 
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
-    auto parentShellSurface = Test::createXdgToplevelSurface(surface.get(), Test::waylandCompositor());
+    std::unique_ptr<Test::XdgToplevel> parentShellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(parentShellSurface);
     auto parent = Test::renderAndWaitForShown(surface.get(), parentSize, Qt::blue);
     QVERIFY(parent);
@@ -522,7 +522,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     QVERIFY(Test::waitForWindowClosed(transient));
 
     // now parent to fullscreen - on fullscreen the panel is ignored
-    QSignalSpy toplevelConfigureRequestedSpy(parentShellSurface, &Test::XdgToplevel::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(parentShellSurface.get(), &Test::XdgToplevel::configureRequested);
     QSignalSpy surfaceConfigureRequestedSpy(parentShellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     parent->setFullScreen(true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
@@ -542,7 +542,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
     positioner2->set_size(200, 200);
     positioner2->set_anchor_rect(anchorRect2.x(), anchorRect2.y(), anchorRect2.width(), anchorRect2.height());
     positioner2->set_constraint_adjustment(Test::XdgPositioner::constraint_adjustment_slide_x | Test::XdgPositioner::constraint_adjustment_slide_y);
-    transientShellSurface.reset(Test::createXdgPopupSurface(transientSurface.get(), parentShellSurface->xdgSurface(), positioner2.get()));
+    transientShellSurface = Test::createXdgPopupSurface(transientSurface.get(), parentShellSurface->xdgSurface(), positioner2.get());
     transient = Test::renderAndWaitForShown(transientSurface.get(), QSize(200, 200), Qt::red);
     QVERIFY(transient);
 

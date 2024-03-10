@@ -700,17 +700,14 @@ QtWayland::zwp_input_panel_surface_v1 *createInputPanelSurfaceV1(KWayland::Clien
 
 FractionalScaleV1 *createFractionalScaleV1(KWayland::Client::Surface *surface);
 
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface, QObject *parent = nullptr);
-XdgToplevel *createXdgToplevelSurface(KWayland::Client::Surface *surface,
-                                      CreationSetup configureMode,
-                                      QObject *parent = nullptr);
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface);
+std::unique_ptr<XdgToplevel> createXdgToplevelSurface(KWayland::Client::Surface *surface, CreationSetup configureMode);
 
-XdgPositioner *createXdgPositioner();
+std::unique_ptr<XdgPositioner> createXdgPositioner();
 
-XdgPopup *createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
-                                XdgPositioner *positioner,
-                                CreationSetup configureMode = CreationSetup::CreateAndConfigure,
-                                QObject *parent = nullptr);
+std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surface, XdgSurface *parentSurface,
+                                                XdgPositioner *positioner,
+                                                CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
 XdgToplevelDecorationV1 *createXdgToplevelDecorationV1(XdgToplevel *toplevel, QObject *parent = nullptr);
 IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);

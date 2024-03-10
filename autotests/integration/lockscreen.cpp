@@ -71,8 +71,14 @@ private Q_SLOTS:
     void testTouch();
 
 private:
+    struct WindowHandle
+    {
+        Window *window;
+        std::unique_ptr<KWayland::Client::Surface> surface;
+        std::unique_ptr<Test::XdgToplevel> shellSurface;
+    };
     void unlock();
-    std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> showWindow();
+    WindowHandle showWindow();
     KWayland::Client::ConnectionThread *m_connection = nullptr;
     KWayland::Client::Compositor *m_compositor = nullptr;
     KWayland::Client::Seat *m_seat = nullptr;
@@ -147,7 +153,7 @@ void LockScreenTest::unlock()
     }
 }
 
-std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> LockScreenTest::showWindow()
+LockScreenTest::WindowHandle LockScreenTest::showWindow()
 {
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
@@ -158,8 +164,8 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> LockScreenTest::
 
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     VERIFY(surface.get());
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
-    VERIFY(shellSurface);
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    VERIFY(shellSurface.get());
     // let's render
     auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
@@ -169,7 +175,7 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> LockScreenTest::
 #undef VERIFY
 #undef COMPARE
 
-    return {window, std::move(surface)};
+    return {window, std::move(surface), std::move(shellSurface)};
 }
 
 void LockScreenTest::initTestCase()
@@ -235,7 +241,7 @@ void LockScreenTest::testPointer()
     QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     QSignalSpy leftSpy(pointer.get(), &KWayland::Client::Pointer::left);
 
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
 
     // first move cursor into the center of the window
@@ -278,7 +284,7 @@ void LockScreenTest::testPointerButton()
     QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
     QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
 
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
 
     // first move cursor into the center of the window
@@ -317,7 +323,7 @@ void LockScreenTest::testPointerAxis()
     QSignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
     QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
 
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
 
     // first move cursor into the center of the window
@@ -356,7 +362,7 @@ void LockScreenTest::testKeyboard()
     QSignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
     QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
 
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QVERIFY(enteredSpy.wait());
     QTRY_COMPARE(enteredSpy.count(), 1);
@@ -553,7 +559,7 @@ void LockScreenTest::testEffectsKeyboardAutorepeat()
 
 void LockScreenTest::testMoveWindow()
 {
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
     quint32 timestamp = 1;
@@ -737,7 +743,7 @@ void LockScreenTest::testTouch()
     auto touch = m_seat->createTouch(m_seat);
     QVERIFY(touch);
     QVERIFY(touch->isValid());
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     QVERIFY(window);
     QSignalSpy sequenceStartedSpy(touch, &KWayland::Client::Touch::sequenceStarted);
     QSignalSpy cancelSpy(touch, &KWayland::Client::Touch::sequenceCanceled);

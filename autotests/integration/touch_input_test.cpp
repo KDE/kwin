@@ -46,7 +46,13 @@ private Q_SLOTS:
     void testGestureDetection();
 
 private:
-    std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> showWindow(bool decorated = false);
+    struct WindowHandle
+    {
+        Window *window;
+        std::unique_ptr<KWayland::Client::Surface> surface;
+        std::unique_ptr<Test::XdgToplevel> shellSurface;
+    };
+    WindowHandle showWindow(bool decorated = false);
     KWayland::Client::Touch *m_touch = nullptr;
 };
 
@@ -87,7 +93,7 @@ void TouchInputTest::cleanup()
     Test::destroyWaylandConnection();
 }
 
-std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> TouchInputTest::showWindow(bool decorated)
+TouchInputTest::WindowHandle TouchInputTest::showWindow(bool decorated)
 {
 #define VERIFY(statement)                                                 \
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) \
@@ -98,10 +104,10 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> TouchInputTest::
 
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     VERIFY(surface.get());
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly, surface.get());
-    VERIFY(shellSurface);
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get(), Test::CreationSetup::CreateOnly);
+    VERIFY(shellSurface.get());
     if (decorated) {
-        auto decoration = Test::createXdgToplevelDecorationV1(shellSurface, shellSurface);
+        auto decoration = Test::createXdgToplevelDecorationV1(shellSurface.get(), shellSurface.get());
         decoration->set_mode(Test::XdgToplevelDecorationV1::mode_server_side);
     }
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
@@ -117,7 +123,7 @@ std::pair<Window *, std::unique_ptr<KWayland::Client::Surface>> TouchInputTest::
 #undef VERIFY
 #undef COMPARE
 
-    return {window, std::move(surface)};
+    return {window, std::move(surface), std::move(shellSurface)};
 }
 
 void TouchInputTest::testTouchHidesCursor()
@@ -155,7 +161,7 @@ void TouchInputTest::testMultipleTouchPoints_data()
 void TouchInputTest::testMultipleTouchPoints()
 {
     QFETCH(bool, decorated);
-    auto [window, surface] = showWindow(decorated);
+    auto [window, surface, shellSurface] = showWindow(decorated);
     QCOMPARE(window->isDecorated(), decorated);
     window->move(QPoint(100, 100));
     QVERIFY(window);
@@ -210,7 +216,7 @@ void TouchInputTest::testMultipleTouchPoints()
 
 void TouchInputTest::testCancel()
 {
-    auto [window, surface] = showWindow();
+    auto [window, surface, shellSurface] = showWindow();
     window->move(QPoint(100, 100));
     QVERIFY(window);
     QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
@@ -233,9 +239,9 @@ void TouchInputTest::testTouchMouseAction()
     // this test verifies that a touch down on an inactive window will activate it
 
     // create two windows
-    auto [c1, surface] = showWindow();
+    auto [c1, surface, shellSurface] = showWindow();
     QVERIFY(c1);
-    auto [c2, surface2] = showWindow();
+    auto [c2, surface2, shellSurface2] = showWindow();
     QVERIFY(c2);
 
     QVERIFY(!c1->isActive());

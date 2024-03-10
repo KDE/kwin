@@ -87,7 +87,7 @@ void DontCrashCancelAnimationFromAnimationEndedTest::testScript()
     // create a window
     std::unique_ptr<KWayland::Client::Surface> surface{Test::createSurface()};
     QVERIFY(surface);
-    Test::XdgToplevel *shellSurface = Test::createXdgToplevelSurface(surface.get(), surface.get());
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
     // let's render
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);

@@ -361,7 +361,7 @@ void InputMethodTest::testSwitchFocusedSurfaces()
 
     QList<Window *> windows;
     std::vector<std::unique_ptr<KWayland::Client::Surface>> surfaces;
-    QList<Test::XdgToplevel *> toplevels;
+    std::vector<std::unique_ptr<Test::XdgToplevel>> toplevels;
     // We create 3 surfaces
     for (int i = 0; i < 3; ++i) {
         std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
@@ -369,7 +369,7 @@ void InputMethodTest::testSwitchFocusedSurfaces()
         windows += Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
         QCOMPARE(workspace()->activeWindow(), windows.constLast());
         surfaces.push_back(std::move(surface));
-        toplevels += shellSurface;
+        toplevels.push_back(std::move(shellSurface));
     }
     QCOMPARE(windowAddedSpy.count(), 3);
     waylandServer()->seat()->setFocusedTextInputSurface(windows.constFirst()->surface());
@@ -388,12 +388,6 @@ void InputMethodTest::testSwitchFocusedSurfaces()
     waylandServer()->seat()->setFocusedTextInputSurface(windows.first()->surface());
     QVERIFY(activateSpy.count() || activateSpy.wait());
     QVERIFY(!kwinApp()->inputMethod()->isActive());
-
-    // Destroy the test window.
-    for (int i = 0; i < windows.count(); ++i) {
-        delete toplevels[i];
-        QVERIFY(Test::waitForWindowClosed(windows[i]));
-    }
 }
 
 void InputMethodTest::testV2V3SameClient()
