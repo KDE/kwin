@@ -1047,7 +1047,7 @@ std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplev
     return std::make_unique<XdgToplevelDecorationV1>(manager, toplevel);
 }
 
-IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
+std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface)
 {
     IdleInhibitManagerV1 *manager = s_waylandConnection.idleInhibitManagerV1;
     if (!manager) {
@@ -1055,7 +1055,7 @@ IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface)
         return nullptr;
     }
 
-    return new IdleInhibitorV1(manager, surface);
+    return std::make_unique<IdleInhibitorV1>(manager, surface);
 }
 
 AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border)

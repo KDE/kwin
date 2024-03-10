@@ -710,7 +710,7 @@ std::unique_ptr<XdgPopup> createXdgPopupSurface(KWayland::Client::Surface *surfa
                                                 CreationSetup configureMode = CreationSetup::CreateAndConfigure);
 
 std::unique_ptr<XdgToplevelDecorationV1> createXdgToplevelDecorationV1(XdgToplevel *toplevel);
-IdleInhibitorV1 *createIdleInhibitorV1(KWayland::Client::Surface *surface);
+std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface *surface);
 AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border);
 CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer);
 
