@@ -1058,7 +1058,7 @@ std::unique_ptr<IdleInhibitorV1> createIdleInhibitorV1(KWayland::Client::Surface
     return std::make_unique<IdleInhibitorV1>(manager, surface);
 }
 
-AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border)
+std::unique_ptr<AutoHideScreenEdgeV1> createAutoHideScreenEdgeV1(KWayland::Client::Surface *surface, uint32_t border)
 {
     ScreenEdgeManagerV1 *manager = s_waylandConnection.screenEdgeManagerV1;
     if (!manager) {
@@ -1066,7 +1066,7 @@ AutoHideScreenEdgeV1 *createAutoHideScreenEdgeV1(KWayland::Client::Surface *surf
         return nullptr;
     }
 
-    return new AutoHideScreenEdgeV1(manager, surface, border);
+    return std::make_unique<AutoHideScreenEdgeV1>(manager, surface, border);
 }
 
 CursorShapeDeviceV1 *createCursorShapeDeviceV1(KWayland::Client::Pointer *pointer)
