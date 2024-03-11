@@ -157,11 +157,12 @@ QList<QRectF> SurfaceItemX11::shape() const
 {
     const QRectF clipRect = m_window->clientGeometry().translated(-m_window->bufferGeometry().topLeft());
     QList<QRectF> shape = m_window->shapeRegion();
+    QList<QRectF> shapeRegion;
     // bounded to clipRect
     for (QRectF &shapePart : shape) {
-        shapePart = shapePart.intersected(clipRect);
+        shapeRegion += shapePart.intersected(clipRect);
     }
-    return shape;
+    return shapeRegion;
 }
 
 QRegion SurfaceItemX11::opaque() const
