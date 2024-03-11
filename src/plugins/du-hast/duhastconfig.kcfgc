@@ -1,0 +1,4 @@
+File=duhastconfig.kcfg
+ClassName=DuHastConfig
+NameSpace=KWin
+Singleton=true

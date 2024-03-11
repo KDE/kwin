@@ -54,6 +54,7 @@ find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Core
     Core5Compat
     DBus
+    Multimedia
     Quick
     UiTools
     WaylandClient
