@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-19 02:29+0000\n"
-"PO-Revision-Date: 2024-03-08 21:12+0530\n"
+"PO-Revision-Date: 2024-03-10 11:05+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -68,10 +68,9 @@ msgid "%1 - Current Application"
 msgstr "%1 - தற்போதைய செயலி"
 
 #: main.cpp:165 touch.cpp:132
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "மேலோட்டத்தை காட்டு/மறை"
+msgstr "மேலோட்டம்"
 
 #: main.cpp:167 touch.cpp:134
 #, kde-format
