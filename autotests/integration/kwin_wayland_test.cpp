@@ -55,6 +55,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
     const QStringList configs{
         QStringLiteral("kaccessrc"),
         QStringLiteral("kglobalshortcutsrc"),
+        QStringLiteral("kcminputrc"),
     };
     for (const QString &config : configs) {
         if (const QString &fileName = QStandardPaths::locate(QStandardPaths::ConfigLocation, config); !fileName.isEmpty()) {
