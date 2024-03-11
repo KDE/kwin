@@ -274,8 +274,6 @@ void TestDragAndDrop::testPointerDragAndDrop()
 
     // verify that we did not get any further input events
     QVERIFY(pointerMotionSpy.isEmpty());
-    // the release event is sent primarily for xwayland
-    QCOMPARE(buttonPressSpy.count(), 2);
 }
 
 void TestDragAndDrop::testTouchDragAndDrop()
@@ -394,6 +392,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QSignalSpy dragEnteredSpy(m_dataDevice, &KWayland::Client::DataDevice::dragEntered);
     QSignalSpy dragMotionSpy(m_dataDevice, &KWayland::Client::DataDevice::dragMotion);
     QSignalSpy pointerMotionSpy(m_pointer, &KWayland::Client::Pointer::motion);
+    QSignalSpy pointerLeftSpy(m_pointer, &KWayland::Client::Pointer::left);
     QSignalSpy dragLeftSpy(m_dataDevice, &KWayland::Client::DataDevice::dragLeft);
 
     // now we can start the drag and drop
@@ -401,11 +400,12 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     m_dataSource->setDragAndDropActions(KWayland::Client::DataDeviceManager::DnDAction::Copy | KWayland::Client::DataDeviceManager::DnDAction::Move);
     m_dataDevice->startDrag(buttonPressSpy.first().first().value<quint32>(), m_dataSource, s.get());
     QVERIFY(dragStartedSpy.wait());
+
     QCOMPARE(m_seatInterface->dragSurface(), serverSurface);
     QCOMPARE(m_seatInterface->dragSurfaceTransformation(), QMatrix4x4());
     QVERIFY(!m_seatInterface->dragIcon());
     QCOMPARE(SeatInterfacePrivate::get(m_seatInterface)->drag.dragImplicitGrabSerial, buttonPressSpy.first().first().value<quint32>());
-    QVERIFY(dragEnteredSpy.wait());
+    QVERIFY(dragEnteredSpy.count() || dragEnteredSpy.wait());
     QCOMPARE(dragEnteredSpy.count(), 1);
     QCOMPARE(dragEnteredSpy.first().first().value<quint32>(), m_display->serial());
     QCOMPARE(dragEnteredSpy.first().last().toPointF(), QPointF(0, 0));
@@ -452,7 +452,6 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
 
     // verify that we did not get any further input events
     QVERIFY(pointerMotionSpy.isEmpty());
-    QCOMPARE(buttonPressSpy.count(), 2);
 }
 
 void TestDragAndDrop::testPointerEventsIgnored()
@@ -528,14 +527,12 @@ void TestDragAndDrop::testPointerEventsIgnored()
     m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(cancelledSpy.wait());
+    QVERIFY(pointerLeftSpy.count() || pointerLeftSpy.wait());
 
     // all the changes should have been ignored
     QCOMPARE(axisSpy.count(), 1);
     QCOMPARE(pointerMotionSpy.count(), 1);
     QCOMPARE(pointerEnteredSpy.count(), 1);
-    QVERIFY(pointerLeftSpy.isEmpty());
-    // the release event is sent primary for xwayland, see BUG 465444
-    QCOMPARE(buttonSpy.count(), 2);
 }
 
 QTEST_GUILESS_MAIN(TestDragAndDrop)

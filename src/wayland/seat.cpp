@@ -268,6 +268,15 @@ void SeatInterfacePrivate::cancelDrag()
     Q_EMIT q->dragEnded();
 }
 
+bool SeatInterfacePrivate::dragInhibitsPointer(SurfaceInterface *surface) const
+{
+    if (drag.mode != SeatInterfacePrivate::Drag::Mode::Pointer) {
+        return false;
+    }
+    const bool targetHasDataDevice = !dataDevicesForSurface(surface).isEmpty();
+    return targetHasDataDevice;
+}
+
 void SeatInterfacePrivate::endDrag()
 {
     QObject::disconnect(drag.dragSourceDestroyConnection);
@@ -445,11 +454,8 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
     if (!focusedSurface) {
         return;
     }
-    if (isDragPointer()) {
-        // data device will handle it directly
-        // for xwayland cases we still want to send pointer events
-        if (!d->dataDevicesForSurface(focusedSurface).isEmpty())
-            return;
+    if (d->dragInhibitsPointer(focusedSurface)) {
+        return;
     }
     if (focusedSurface->lockedPointer() && focusedSurface->lockedPointer()->isLocked()) {
         return;
@@ -558,7 +564,7 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
     if (!d->pointer) {
         return;
     }
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
+    if (d->dragInhibitsPointer(surface)) {
         // ignore
         return;
     }
@@ -595,10 +601,6 @@ void SeatInterface::notifyPointerEnter(SurfaceInterface *surface, const QPointF 
 void SeatInterface::notifyPointerLeave()
 {
     if (!d->pointer) {
-        return;
-    }
-    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        // ignore
         return;
     }
 
@@ -1352,6 +1354,7 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         // no implicit grab, abort drag
         return;
     }
+
     d->drag.dragImplicitGrabSerial = dragSerial;
 
     // set initial drag target to ourself
@@ -1369,7 +1372,7 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         d->drag.target = d->dataDevicesForSurface(originSurface)[0];
     }
     if (d->drag.target) {
-        d->drag.target->updateDragTarget(originSurface, dragSerial);
+        d->drag.target->updateDragTarget(originSurface, display()->nextSerial());
     }
     Q_EMIT dragStarted();
     Q_EMIT dragSurfaceChanged();
