@@ -156,6 +156,9 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
             stream->recordFrame(scaleRegion(damagedRegion, streamOutput->scale()));
         }
     };
+    connect(streamOutput, &Output::changed, stream, [streamOutput, stream, mode]() {
+        stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
+    });
     connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
         Compositor::self()->scene()->addRepaint(streamOutput->geometry());
         connect(streamOutput, &Output::outputChange, stream, bufferToStream);
