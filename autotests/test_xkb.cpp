@@ -457,6 +457,28 @@ static const TransKey g_rgQtToSymX[] = {
     {XKB_KEY_KP_7, Qt::Key_7, Qt::KeypadModifier},
     {XKB_KEY_KP_8, Qt::Key_8, Qt::KeypadModifier},
     {XKB_KEY_KP_9, Qt::Key_9, Qt::KeypadModifier},
+    {XKB_KEY_KP_Space, Qt::Key_Space, Qt::KeypadModifier},
+    {XKB_KEY_KP_Tab, Qt::Key_Tab, Qt::KeypadModifier},
+    {XKB_KEY_KP_Enter, Qt::Key_Enter, Qt::KeypadModifier},
+    {XKB_KEY_KP_Home, Qt::Key_Home, Qt::KeypadModifier},
+    {XKB_KEY_KP_Left, Qt::Key_Left, Qt::KeypadModifier},
+    {XKB_KEY_KP_Up, Qt::Key_Up, Qt::KeypadModifier},
+    {XKB_KEY_KP_Right, Qt::Key_Right, Qt::KeypadModifier},
+    {XKB_KEY_KP_Down, Qt::Key_Down, Qt::KeypadModifier},
+    {XKB_KEY_KP_Prior, Qt::Key_PageUp, Qt::KeypadModifier},
+    {XKB_KEY_KP_Next, Qt::Key_PageDown, Qt::KeypadModifier},
+    {XKB_KEY_KP_End, Qt::Key_End, Qt::KeypadModifier},
+    {XKB_KEY_KP_Begin, Qt::Key_Clear, Qt::KeypadModifier},
+    {XKB_KEY_KP_Insert, Qt::Key_Insert, Qt::KeypadModifier},
+    {XKB_KEY_KP_Delete, Qt::Key_Delete, Qt::KeypadModifier},
+    {XKB_KEY_KP_Equal, Qt::Key_Equal, Qt::KeypadModifier},
+    {XKB_KEY_KP_Multiply, Qt::Key_Asterisk, Qt::KeypadModifier},
+    {XKB_KEY_KP_Add, Qt::Key_Plus, Qt::KeypadModifier},
+    {XKB_KEY_KP_Separator, Qt::Key_Comma, Qt::KeypadModifier},
+    {XKB_KEY_KP_Subtract, Qt::Key_Minus, Qt::KeypadModifier},
+    {XKB_KEY_KP_Decimal, Qt::Key_Period, Qt::KeypadModifier},
+    {XKB_KEY_KP_Divide, Qt::Key_Slash, Qt::KeypadModifier},
+
 };
 
 void XkbTest::testToQtKey_data()
