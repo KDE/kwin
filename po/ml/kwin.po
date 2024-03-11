@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-10 00:38+0000\n"
+"POT-Creation-Date: 2024-03-11 00:39+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -2809,34 +2809,34 @@ msgstr "കുറവു്"
 msgid "More"
 msgstr "കൂടുതല്‍"
 
-#: plugins/zoom/zoom.cpp:72
+#: plugins/zoom/zoom.cpp:70
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "ഒരു പണിയിടം ഇടത്തേയ്ക്കു് മാറുക"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:77
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "ഒരു പണിയിടം വലത്തേയ്ക്കു് മാറുക"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 msgid "Move Mouse to Center"
 msgstr "ജാലകം നീക്കുക"
@@ -4170,7 +4170,7 @@ msgstr "ഒരു പണിയിടം താഴോട്ടു് മാറു
 msgid "Switch to Desktop %1"
 msgstr "പണിയിടം 1-ലേക്കു് മാറുക"
 
-#: window.cpp:3133
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

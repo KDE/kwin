@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-10 00:38+0000\n"
+"POT-Creation-Date: 2024-03-11 00:39+0000\n"
 "PO-Revision-Date: 2024-03-01 14:52+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -2822,32 +2822,32 @@ msgstr "Daha Az"
 msgid "More"
 msgstr "Daha Çok"
 
-#: plugins/zoom/zoom.cpp:72
+#: plugins/zoom/zoom.cpp:70
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Yakınlaştırılan Alanı Sola Taşı"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Yakınlaştırılan Alanı Sağa Taşı"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Yakınlaştırılan Alanı Yukarı Taşı"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Yakınlaştırılan Alanı Aşağı Taşı"
 
-#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Odaklamak için Fareyi Taşı"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Fareyi Merkeze Taşı"
@@ -4172,7 +4172,7 @@ msgstr "Bir Alt Masaüstüne Geç"
 msgid "Switch to Desktop %1"
 msgstr "%1. Masaüstüne Geç"
 
-#: window.cpp:3133
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

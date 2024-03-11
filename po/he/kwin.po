@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-10 00:38+0000\n"
+"POT-Creation-Date: 2024-03-11 00:39+0000\n"
 "PO-Revision-Date: 2024-03-01 11:08+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2818,32 +2818,32 @@ msgstr "פחות"
 msgid "More"
 msgstr "יותר"
 
-#: plugins/zoom/zoom.cpp:72
+#: plugins/zoom/zoom.cpp:70
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "העברת האזור עם התקריב לשמאל"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "העברת האזור עם התקריב לימין"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "העברת האזור בתקריב למעלה"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "העברת האזור בתקריב למטה"
 
-#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "העברת העכבר למיקוד"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "העברת העכבר למרכז"
@@ -4161,7 +4161,7 @@ msgstr "מעבר שולחן עבודה אחד למטה"
 msgid "Switch to Desktop %1"
 msgstr "מעבר לשולחן עבודה %1"
 
-#: window.cpp:3133
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

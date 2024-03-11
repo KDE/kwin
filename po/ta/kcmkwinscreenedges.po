@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-08 21:12+0530\n"
+"PO-Revision-Date: 2024-03-10 11:13+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -68,15 +68,14 @@ msgid "%1 - Current Application"
 msgstr "%1 - தற்போதைய செயலி"
 
 #: main.cpp:165 touch.cpp:132
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "மேலோட்டத்தை காட்டு/மறை"
+msgstr "மேலோட்டம்"
 
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "கிரிடு"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -230,7 +229,7 @@ msgstr "&மீள்தூண்டல் தாமதம்:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&மூலை தடுப்பு:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -242,19 +241,23 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"திரைகளுக்கிடையேயான மூலைகளிலுள்ள மெய்நிகர் தடுப்பை இங்கு நீங்கள் இயக்கலாம் அல்லது "
+"முடக்கலாம். சுட்டிக்குறி திரையில் ஓரத்தில் இருக்கும் பட்சத்தில், அது அடுத்த திரைக்கு "
+"செல்வதை இது தடுக்கும். திரையின் ஓரத்திலுள்ள பட்டன்களை (எ.கா. சாளரத்தை மூடும் பட்டன்) "
+"எளிதில் அணுக இது உதவும்."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "திரையின் மூலையை சுட்டிக்குறி தாண்டுவதைத் தடுக்கும்"
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&ஓரத் தடுப்பு:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -266,6 +269,10 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"திரைக‍ளுக்கிடையேயான ஓரங்களிலுள்ள மெய்நிகர் தடுப்பின் அளவை இங்கு நீங்கள் அமைக்கலாம். "
+"திரையின் ஓரத்தில் சுட்டிக்குறி இருந்தால், அதை அடுத்த திரைக்கு கொண்டுசெல்வதற்கு தேவையான "
+"நகர்வை இந்த தடுப்பு கூட்டும். திரைகளுக்கிடையேயான ஓரத்திலுள்ள பலகைகள் போன்றவற்றை எளிதில் "
+"அணுக இது உதவும்."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -273,12 +280,14 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"திரையின் ஓரத்தைத் தாண்டி அடுத்த திரைக்கு செல்ல சுட்டியை கூடுதல் இவ்வளவு தூரத்திற்கு "
+"நகர்த்த வேண்டும்."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "ஏதுமில்லை"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309

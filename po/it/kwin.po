@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-10 00:38+0000\n"
+"POT-Creation-Date: 2024-03-11 00:39+0000\n"
 "PO-Revision-Date: 2024-03-01 09:50+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2844,32 +2844,32 @@ msgstr "Di meno"
 msgid "More"
 msgstr "Di più"
 
-#: plugins/zoom/zoom.cpp:72
+#: plugins/zoom/zoom.cpp:70
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Sposta l'area ingrandita a sinistra"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:77
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Sposta l'area ingrandita a destra"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Sposta l'area ingrandita in alto"
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Sposta l'area ingrandita in basso"
 
-#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Sposta il mouse sul fuoco"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Sposta il mouse al centro"
@@ -4200,7 +4200,7 @@ msgstr "Vai al desktop inferiore"
 msgid "Switch to Desktop %1"
 msgstr "Vai al desktop %1"
 
-#: window.cpp:3133
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

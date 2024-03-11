@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-10 00:38+0000\n"
+"POT-Creation-Date: 2024-03-11 00:39+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -2925,35 +2925,35 @@ msgstr "น้อย"
 msgid "More"
 msgstr "มาก"
 
-#: plugins/zoom/zoom.cpp:72
+#: plugins/zoom/zoom.cpp:70
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านซ้ายหนึ่งระดับ"
 
-#: plugins/zoom/zoom.cpp:79
+#: plugins/zoom/zoom.cpp:77
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "ปรับหน้าต่างไปยังพื้นที่ทำงานด้านขวาหนึ่งระดับ"
 
-#: plugins/zoom/zoom.cpp:86
+#: plugins/zoom/zoom.cpp:84
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:93
+#: plugins/zoom/zoom.cpp:91
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:101 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "การจำลองเมาส์"
 
-#: plugins/zoom/zoom.cpp:108 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
@@ -4347,7 +4347,7 @@ msgstr "สลับไปด้านล่างหนึ่งพื้นท
 msgid "Switch to Desktop %1"
 msgstr "สลับไปยังพื้นที่ทำงาน 1"
 
-#: window.cpp:3133
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

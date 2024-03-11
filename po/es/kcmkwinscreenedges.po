@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-27 22:50+0100\n"
+"PO-Revision-Date: 2024-03-10 17:56+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -238,7 +238,7 @@ msgstr "&Retardo de reactivación:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Barrera de &esquinas:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -250,19 +250,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Aquí puede activar o desactivar la barrera de esquinas virtual entre "
+"pantallas. Esta barrera impide que el cursor se mueva a otra pantalla cuando "
+"está casi tocando la esquina de una pantalla. Esto facilita la activación de "
+"elementos de la interfaz de usuario, como el botón de cierre de las ventanas "
+"maximizadas, cuando se usan múltiples pantallas."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Impide que el cursor cruce en las esquinas de la pantalla."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Barrera de bordes:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -274,6 +279,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Aquí puede definir el tamaño de la barrera del borde entre distintas "
+"pantallas. La barrera añade la distancia que debe recorrer el puntero antes "
+"de cruzar el borde hasta la otra pantalla. Esto facilita el acceso a "
+"elementos de la interfaz de usuario, como los paneles de Plasma situados en "
+"un borde entre dos pantallas."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -281,18 +291,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Distancia adicional que debe recorrer el cursor para cruzar los bordes de la "
+"pantalla."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Ninguna"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
