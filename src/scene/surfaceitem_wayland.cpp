@@ -221,10 +221,11 @@ SurfaceItemXwayland::SurfaceItemXwayland(X11Window *window, Item *parent)
 QList<QRectF> SurfaceItemXwayland::shape() const
 {
     QList<QRectF> shape = m_window->shapeRegion();
+    QList<QRectF> shapeRegion;
     for (QRectF &shapePart : shape) {
-        shapePart = shapePart.intersected(rect());
+        shapeRegion += shapePart.intersected(rect());
     }
-    return shape;
+    return shapeRegion;
 }
 
 QRegion SurfaceItemXwayland::opaque() const
