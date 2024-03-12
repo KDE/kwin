@@ -187,7 +187,7 @@ public:
         if (s_counter == 0) {
             if (!s_scheduledPositions.isEmpty()) {
                 const auto pos = s_scheduledPositions.takeFirst();
-                m_pointer->processMotionInternal(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, nullptr);
+                m_pointer->processMotionInternal(pos.pos, pos.delta, pos.deltaNonAccelerated, pos.time, nullptr, pos.type);
             }
         }
     }
@@ -197,9 +197,9 @@ public:
         return s_counter > 0;
     }
 
-    static void schedulePosition(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time)
+    static void schedulePosition(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, PointerInputRedirection::MotionType type)
     {
-        s_scheduledPositions.append({pos, delta, deltaNonAccelerated, time});
+        s_scheduledPositions.append({pos, delta, deltaNonAccelerated, time, type});
     }
 
 private:
@@ -210,6 +210,7 @@ private:
         QPointF delta;
         QPointF deltaNonAccelerated;
         std::chrono::microseconds time;
+        PointerInputRedirection::MotionType type;
     };
     static QList<ScheduledPosition> s_scheduledPositions;
 
@@ -221,22 +222,27 @@ QList<PositionUpdateBlocker::ScheduledPosition> PositionUpdateBlocker::s_schedul
 
 void PointerInputRedirection::processMotionAbsolute(const QPointF &pos, std::chrono::microseconds time, InputDevice *device)
 {
-    processMotionInternal(pos, QPointF(), QPointF(), time, device);
+    processMotionInternal(pos, QPointF(), QPointF(), time, device, MotionType::Motion);
+}
+
+void PointerInputRedirection::processWarp(const QPointF &pos, std::chrono::microseconds time, InputDevice *device)
+{
+    processMotionInternal(pos, QPointF(), QPointF(), time, device, MotionType::Warp);
 }
 
 void PointerInputRedirection::processMotion(const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device)
 {
-    processMotionInternal(m_pos + delta, delta, deltaNonAccelerated, time, device);
+    processMotionInternal(m_pos + delta, delta, deltaNonAccelerated, time, device, MotionType::Motion);
 }
 
-void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device)
+void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device, MotionType type)
 {
     input()->setLastInputHandler(this);
     if (!inited()) {
         return;
     }
     if (PositionUpdateBlocker::isPositionBlocked()) {
-        PositionUpdateBlocker::schedulePosition(pos, delta, deltaNonAccelerated, time);
+        PositionUpdateBlocker::schedulePosition(pos, delta, deltaNonAccelerated, time, type);
         return;
     }
 
@@ -244,7 +250,7 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
     updatePosition(pos, time);
     MouseEvent event(QEvent::MouseMove, m_pos, Qt::NoButton, m_qtButtons,
                      input()->keyboardModifiers(), time,
-                     delta, deltaNonAccelerated, device);
+                     delta, deltaNonAccelerated, device, type == MotionType::Warp);
     event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
 
     update();
@@ -272,7 +278,7 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     updateButton(button, state);
 
     MouseEvent event(type, m_pos, buttonToQtMouseButton(button), m_qtButtons,
-                     input()->keyboardModifiers(), time, QPointF(), QPointF(), device);
+                     input()->keyboardModifiers(), time, QPointF(), QPointF(), device, false);
     event.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
     event.setNativeButton(button);
 
@@ -668,7 +674,7 @@ void PointerInputRedirection::updatePointerConstraints()
                 m_locked = false;
                 disconnectLockedPointerAboutToBeUnboundConnection();
                 if (!(hint.x() < 0 || hint.y() < 0) && focus()) {
-                    processMotionAbsolute(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
+                    processWarp(focus()->mapFromLocal(hint), waylandServer()->seat()->timestamp());
                 }
             }
             return;
@@ -688,7 +694,7 @@ void PointerInputRedirection::updatePointerConstraints()
 
                 // When the resource finally goes away, reposition the cursor according to the hint
                 connect(lock, &LockedPointerV1Interface::destroyed, this, [this, globalHint]() {
-                    processMotionAbsolute(globalHint, waylandServer()->seat()->timestamp());
+                    processWarp(globalHint, waylandServer()->seat()->timestamp());
                 });
             });
             // TODO: connect to region change - is it needed at all? If the pointer is locked it's always in the region
@@ -865,7 +871,7 @@ void PointerInputRedirection::updateButton(uint32_t button, InputRedirection::Po
 void PointerInputRedirection::warp(const QPointF &pos)
 {
     if (supportsWarping()) {
-        processMotionAbsolute(pos, waylandServer()->seat()->timestamp());
+        processWarp(pos, waylandServer()->seat()->timestamp());
     }
 }
 

@@ -23,7 +23,7 @@ class MouseEvent : public QMouseEvent
 public:
     explicit MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button, Qt::MouseButtons buttons,
                         Qt::KeyboardModifiers modifiers, std::chrono::microseconds timestamp,
-                        const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device);
+                        const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device, bool warp);
 
     QPointF delta() const
     {
@@ -65,6 +65,11 @@ public:
         m_nativeButton = button;
     }
 
+    bool isWarp() const
+    {
+        return m_warp;
+    }
+
 private:
     QPointF m_delta;
     QPointF m_deltaUnccelerated;
@@ -72,6 +77,7 @@ private:
     InputDevice *m_device;
     Qt::KeyboardModifiers m_modifiersRelevantForShortcuts = Qt::KeyboardModifiers();
     quint32 m_nativeButton = 0;
+    bool m_warp = false;
 };
 
 // TODO: Don't derive from QWheelEvent, this event is quite domain specific.

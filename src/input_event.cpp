@@ -14,12 +14,13 @@ namespace KWin
 
 MouseEvent::MouseEvent(QEvent::Type type, const QPointF &pos, Qt::MouseButton button,
                        Qt::MouseButtons buttons, Qt::KeyboardModifiers modifiers, std::chrono::microseconds timestamp,
-                       const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device)
+                       const QPointF &delta, const QPointF &deltaNonAccelerated, InputDevice *device, bool warp)
     : QMouseEvent(type, pos, pos, button, buttons, modifiers)
     , m_delta(delta)
     , m_deltaUnccelerated(deltaNonAccelerated)
     , m_timestamp(timestamp)
     , m_device(device)
+    , m_warp(warp)
 {
     setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count());
 }
