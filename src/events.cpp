@@ -1323,7 +1323,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
                 finishInteractiveMoveResize(false);
             }
             setInteractiveMoveResizePointerButtonDown(true);
-            setInteractiveMoveOffset(QPointF(qreal(x_root - x()) / width(), qreal(y_root - y())) / height()); // map from global
+            setInteractiveMoveOffset(QPointF(qreal(x_root - x()) / width(), qreal(y_root - y()) / height())); // map from global
             setUnrestrictedInteractiveMoveResize(false);
             setInteractiveMoveResizeGravity(convert[direction]);
             if (!startInteractiveMoveResize()) {
