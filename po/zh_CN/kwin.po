@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-08 02:21+0000\n"
+"POT-Creation-Date: 2024-03-12 02:21+0000\n"
 "PO-Revision-Date: 2024-01-06 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2372,12 +2372,12 @@ msgstr "无法找到窗口 ID %1"
 msgid "Could not find output"
 msgstr "无法找到输出"
 
-#: plugins/screencast/screencastmanager.cpp:174
+#: plugins/screencast/screencastmanager.cpp:177
 #, kde-format
 msgid "Invalid region"
 msgstr "无效区域"
 
-#: plugins/screencast/screencastmanager.cpp:205
+#: plugins/screencast/screencastmanager.cpp:208
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "区域在工作区外"

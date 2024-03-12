@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-08 02:21+0000\n"
+"POT-Creation-Date: 2024-03-12 02:21+0000\n"
 "PO-Revision-Date: 2024-02-18 17:44+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2388,12 +2388,12 @@ msgstr "%1 எனும் அடையாளமுள்ள சாளரத்�
 msgid "Could not find output"
 msgstr "திரையை கண்டுபிடிக்க முடியவில்லை"
 
-#: plugins/screencast/screencastmanager.cpp:174
+#: plugins/screencast/screencastmanager.cpp:177
 #, kde-format
 msgid "Invalid region"
 msgstr "செல்லுபடியாகாத பரப்பளவு"
 
-#: plugins/screencast/screencastmanager.cpp:205
+#: plugins/screencast/screencastmanager.cpp:208
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "பணிமேடைக்கு வெளியேயான பரப்பளவு"

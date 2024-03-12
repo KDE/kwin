@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-08 02:21+0000\n"
+"POT-Creation-Date: 2024-03-12 02:21+0000\n"
 "PO-Revision-Date: 2024-02-27 21:37+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2433,12 +2433,12 @@ msgstr "Не удалось найти окно с идентификаторо�
 msgid "Could not find output"
 msgstr "Не удалось найти поток вывода"
 
-#: plugins/screencast/screencastmanager.cpp:174
+#: plugins/screencast/screencastmanager.cpp:177
 #, kde-format
 msgid "Invalid region"
 msgstr "Недопустимая область"
 
-#: plugins/screencast/screencastmanager.cpp:205
+#: plugins/screencast/screencastmanager.cpp:208
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "Область расположена вне рабочего пространства"

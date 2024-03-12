@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# giovanni <g.sora@tiscali.it>, 2022, 2023.
+# giovanni <g.sora@tiscali.it>, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-29 01:38+0000\n"
-"PO-Revision-Date: 2023-11-30 09:02+0100\n"
+"PO-Revision-Date: 2024-03-11 12:50+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -25,18 +25,18 @@ msgid ""
 "disabled by default for security reasons. If you need to use such apps, you "
 "can choose your preferred balance of security and functionality here."
 msgstr ""
-"Apps de X11 Legacy (hereditage) require le habilitate de leger claves "
-"keystrokes typate in altere apps pe characteristicas que es activate usante "
+"Apps de X11 Legacy (hereditage) require le habilitate de leger battimentos "
+"de clave typate in altere apps per characteristicas que es activate usante "
 "vias breve de claviero global. Isto es dishabilitate per definition per "
-"rationse de securitate. Si tu necessita tal apps, tu pote seliger tu "
+"rationes de securitate. Si tu necessita tal apps, tu pote seliger tu "
 "balantiamento de securitate e functionalitate hic."
 
 #: ui/main.qml:64
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
-"Permitte a apps de X11 Legacy (hereditage) leger claves keystroke typate in "
-"omne apps:"
+"Permitte a apps de X11 Legacy (hereditage) leger battimentos de clave  "
+"typate in omne apps:"
 
 #: ui/main.qml:65
 #, kde-format
