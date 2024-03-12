@@ -285,15 +285,6 @@ This controls the behavior of window focus with multiple screens. Note that thes
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Active screen follows mouse</guilabel></term>
-<listitem>
-<para>
-When this option is enabled, the active screen (where new windows appear, for example) is the screen containing the mouse pointer. When disabled, the active screen is the screen containing the focused window.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Separate screen focus</guilabel></term>
 <listitem>
 <para>
