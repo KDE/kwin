@@ -144,7 +144,12 @@ public:
     void processFrame(KWin::InputDevice *device = nullptr);
 
 private:
-    void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device);
+    void processWarp(const QPointF &pos, std::chrono::microseconds time, InputDevice *device = nullptr);
+    enum class MotionType {
+        Motion,
+        Warp
+    };
+    void processMotionInternal(const QPointF &pos, const QPointF &delta, const QPointF &deltaNonAccelerated, std::chrono::microseconds time, InputDevice *device, MotionType type);
     void cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now) override;
 
     void focusUpdate(Window *focusOld, Window *focusNow) override;

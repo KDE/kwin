@@ -1786,7 +1786,11 @@ public:
         case QEvent::MouseMove: {
             seat->notifyPointerMotion(event->globalPosition());
             MouseEvent *e = static_cast<MouseEvent *>(event);
-            if (!e->delta().isNull()) {
+            // absolute motion events confuse games and Wayland doesn't have a warp event yet
+            // -> send a relative motion event with a zero delta to signal the warp instead
+            if (e->isWarp()) {
+                seat->relativePointerMotion(QPointF(0, 0), QPointF(0, 0), e->timestamp());
+            } else if (!e->delta().isNull()) {
                 seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestamp());
             }
             break;
