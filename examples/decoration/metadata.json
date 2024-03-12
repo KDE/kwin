@@ -1,0 +1,10 @@
+{
+    "KPlugin": {
+        "Description": "Basic window decoration theme",
+        "Name": "Basic"
+    },
+    "org.kde.kdecoration2": {
+        "blur": false,
+        "recommendedBorderSize": "None"
+    }
+}
