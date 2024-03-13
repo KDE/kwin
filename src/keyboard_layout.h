@@ -55,7 +55,6 @@ private Q_SLOTS:
     void reconfigure();
 
 private:
-    void initDBusInterface();
     void notifyLayoutChange();
     void switchToLayout(xkb_layout_index_t index);
     void loadShortcuts();

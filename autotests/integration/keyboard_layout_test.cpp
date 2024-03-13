@@ -58,7 +58,6 @@ private Q_SLOTS:
     void testReconfigure();
     void testChangeLayoutThroughDBus();
     void testPerLayoutShortcut();
-    void testDBusServiceExport();
     void testVirtualDesktopPolicy();
     void testWindowPolicy();
     void testApplicationPolicy();
@@ -305,36 +304,6 @@ void KeyboardLayoutTest::testPerLayoutShortcut()
     Test::keyboardKeyReleased(KEY_1, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
     Test::keyboardKeyReleased(KEY_LEFTCTRL, timestamp++);
-}
-
-void KeyboardLayoutTest::testDBusServiceExport()
-{
-    // verifies that the dbus service is only exported if there are at least two layouts
-
-    // first configure layouts, with just one layout
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
-    layoutGroup.sync();
-    reconfigureLayouts();
-    auto xkb = input()->keyboard()->xkb();
-    QCOMPARE(xkb->numberOfLayouts(), 1u);
-    // default layout is English
-    QCOMPARE(xkb->layoutName(), QStringLiteral("English (US)"));
-    // with one layout we should not have the dbus interface
-    QVERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
-
-    // reconfigure to two layouts
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us,de"));
-    layoutGroup.sync();
-    reconfigureLayouts();
-    QCOMPARE(xkb->numberOfLayouts(), 2u);
-    QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
-
-    // and back to one layout
-    layoutGroup.writeEntry("LayoutList", QStringLiteral("us"));
-    layoutGroup.sync();
-    reconfigureLayouts();
-    QCOMPARE(xkb->numberOfLayouts(), 1u);
-    QVERIFY(!QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.keyboard")).value());
 }
 
 void KeyboardLayoutTest::testVirtualDesktopPolicy()
