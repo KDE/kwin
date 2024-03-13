@@ -67,20 +67,7 @@ void KeyboardLayout::init()
                                           SLOT(reconfigure()));
 
     reconfigure();
-}
 
-void KeyboardLayout::initDBusInterface()
-{
-    if (m_xkb->numberOfLayouts() <= 1) {
-        if (m_dbusInterface) {
-            m_dbusInterface->deleteLater();
-            m_dbusInterface = nullptr;
-        }
-        return;
-    }
-    if (m_dbusInterface) {
-        return;
-    }
     m_dbusInterface = new KeyboardLayoutDBusInterface(m_xkb, m_configGroup, this);
     connect(this, &KeyboardLayout::layoutChanged,
             m_dbusInterface, &KeyboardLayoutDBusInterface::layoutChanged);
@@ -139,7 +126,6 @@ void KeyboardLayout::resetLayout()
     m_layout = m_xkb->currentLayout();
     loadShortcuts();
 
-    initDBusInterface();
     Q_EMIT layoutsReconfigured();
 }
 
