@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-09 04:45\n"
+"PO-Revision-Date: 2024-03-13 20:04\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -18,13 +18,7 @@ msgstr ""
 "X-Crowdin-File-ID: 43323\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -35,7 +29,12 @@ msgid ""
 msgstr ""
 "旧式 X11 应用程序需要通过读取其他应用程序中的键盘输入事件才能激活使用全局键盘"
 "快捷键的功能。出于安全考虑，此功能默认是禁用的。如果您需要使用这种应用程序，"
-"您可以按需在安全和功能之间作出权衡。"
+"您可以按需在安全和功能之间作出权衡。\n"
+"\n"
+"某些旧式的 X11 应用程序需要通过读取其他应用程序中的键盘输入事件才能调用某些功"
+"能，例如全局键盘快捷键等，系统默认允许此功能。还有某些功能需要读取全部按键，"
+"出于安全考虑，系统默认禁止此功能。如果您需要使用这些应用程序，请在权衡安全和"
+"功能性之后在此选择所需设置。"
 
 #: ui/main.qml:48
 #, kde-format
