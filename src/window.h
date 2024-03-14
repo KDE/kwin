@@ -1590,6 +1590,13 @@ protected:
     {
         m_interactiveMoveResize.unrestricted = set;
     }
+    /**
+     * Normalized position of the move resize anchor point relative to the top-left window
+     * corner when the move resize operation started.
+     *
+     * QPointF(0, 0) corresponds to the top left window corner, QPointF(1, 1) corresponds to
+     * the bottom right window corner.
+     */
     QPointF interactiveMoveOffset() const
     {
         return m_interactiveMoveResize.offset;
