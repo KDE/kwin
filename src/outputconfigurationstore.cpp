@@ -234,6 +234,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .minBrightnessOverride = changeSet->minBrightnessOverride.value_or(output->minBrightnessOverride()),
                 .sdrGamutWideness = changeSet->sdrGamutWideness.value_or(output->sdrGamutWideness()),
                 .brightness = changeSet->brightness.value_or(output->brightness()),
+                .audio = changeSet->audio.value_or(output->audio()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -276,6 +277,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .minBrightnessOverride = output->minBrightnessOverride(),
                 .sdrGamutWideness = output->sdrGamutWideness(),
                 .brightness = output->brightness(),
+                .audio = output->audio(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -331,6 +333,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .sdrGamutWideness = state.sdrGamutWideness,
             .colorProfileSource = state.colorProfileSource,
             .brightness = state.brightness,
+            .audio = state.audio,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -455,6 +458,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
             .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
             .brightness = existingData.brightness.value_or(1.0),
+            .audio = existingData.audio.value_or(Output::Audio::Auto),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -763,6 +767,18 @@ void OutputConfigurationStore::load()
         if (const auto it = data.find("brightness"); it != data.end() && it->isDouble()) {
             state.brightness = std::clamp(it->toDouble(), 0.0, 1.0);
         }
+        if (const auto it = data.find("audio"); it != data.end()) {
+            const auto str = it->toString();
+            if (str == "ForceDVI") {
+                state.audio = Output::Audio::ForceDVI;
+            } else if (str == "Off") {
+                state.audio = Output::Audio::Off;
+            } else if (str == "Auto") {
+                state.audio = Output::Audio::Auto;
+            } else if (str == "On") {
+                state.audio = Output::Audio::On;
+            }
+        }
         outputDatas.push_back(state);
     }
 
@@ -994,6 +1010,22 @@ void OutputConfigurationStore::save()
         }
         if (output.brightness) {
             o["brightness"] = *output.brightness;
+        }
+        if (output.audio) {
+            switch (*output.audio) {
+            case Output::Audio::ForceDVI:
+                o["audio"] = "ForceDVI";
+                break;
+            case Output::Audio::Off:
+                o["audio"] = "Off";
+                break;
+            case Output::Audio::Auto:
+                o["audio"] = "Auto";
+                break;
+            case Output::Audio::On:
+                o["audio"] = "On";
+                break;
+            }
         }
         outputsData.append(o);
     }

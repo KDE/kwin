@@ -147,6 +147,12 @@ DrmConnector::DrmConnector(DrmGpu *gpu, uint32_t connectorId)
                                                             QByteArrayLiteral("BT2020_YCC"),
                                                         })
     , path(this, QByteArrayLiteral("PATH"))
+    , audio(this, QByteArrayLiteral("audio"), {
+                                                  QByteArrayLiteral("force-dvi"),
+                                                  QByteArrayLiteral("off"),
+                                                  QByteArrayLiteral("auto"),
+                                                  QByteArrayLiteral("on"),
+                                              })
     , m_conn(drmModeGetConnector(gpu->fd(), connectorId))
     , m_pipeline(m_conn ? std::make_unique<DrmPipeline>(this) : nullptr)
 {
@@ -262,6 +268,7 @@ bool DrmConnector::updateProperties()
     scalingMode.update(props);
     colorspace.update(props);
     path.update(props);
+    audio.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
@@ -458,9 +465,8 @@ DrmConnector::DrmContentType DrmConnector::kwinToDrmContentType(ContentType type
         return DrmContentType::Cinema;
     case ContentType::Game:
         return DrmContentType::Game;
-    default:
-        Q_UNREACHABLE();
     }
+    Q_UNREACHABLE();
 }
 
 OutputTransform DrmConnector::toKWinTransform(PanelOrientation orientation)
@@ -474,9 +480,8 @@ OutputTransform DrmConnector::toKWinTransform(PanelOrientation orientation)
         return KWin::OutputTransform::Rotate90;
     case PanelOrientation::UpsideDown:
         return KWin::OutputTransform::Rotate180;
-    default:
-        Q_UNREACHABLE();
     }
+    Q_UNREACHABLE();
 }
 
 DrmConnector::BroadcastRgbOptions DrmConnector::rgbRangeToBroadcastRgb(Output::RgbRange rgbRange)
@@ -488,9 +493,8 @@ DrmConnector::BroadcastRgbOptions DrmConnector::rgbRangeToBroadcastRgb(Output::R
         return BroadcastRgbOptions::Full;
     case Output::RgbRange::Limited:
         return BroadcastRgbOptions::Limited;
-    default:
-        Q_UNREACHABLE();
     }
+    Q_UNREACHABLE();
 }
 
 Output::RgbRange DrmConnector::broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange)
@@ -502,8 +506,22 @@ Output::RgbRange DrmConnector::broadcastRgbToRgbRange(BroadcastRgbOptions rgbRan
         return Output::RgbRange::Full;
     case BroadcastRgbOptions::Limited:
         return Output::RgbRange::Limited;
-    default:
-        Q_UNREACHABLE();
     }
+    Q_UNREACHABLE();
+}
+
+DrmConnector::Audio DrmConnector::kwinToDrmAudio(Output::Audio audio)
+{
+    switch (audio) {
+    case Output::Audio::ForceDVI:
+        return DrmConnector::Audio::ForceDVI;
+    case Output::Audio::Off:
+        return DrmConnector::Audio::Off;
+    case Output::Audio::Auto:
+        return DrmConnector::Audio::Auto;
+    case Output::Audio::On:
+        return DrmConnector::Audio::On;
+    }
+    Q_UNREACHABLE();
 }
 }

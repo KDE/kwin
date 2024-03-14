@@ -191,6 +191,14 @@ public:
         EDID,
     };
 
+    enum class Audio {
+        ForceDVI,
+        Off,
+        Auto,
+        On,
+    };
+    Q_ENUM(Audio);
+
     explicit Output(QObject *parent = nullptr);
     ~Output() override;
 
@@ -367,6 +375,7 @@ public:
 
     BrightnessDevice *brightnessDevice() const;
     virtual void setBrightnessDevice(BrightnessDevice *device);
+    Audio audio() const;
 
 Q_SIGNALS:
     /**
@@ -432,6 +441,7 @@ Q_SIGNALS:
     void colorDescriptionChanged();
     void colorProfileSourceChanged();
     void brightnessChanged();
+    void audioChanged();
 
 protected:
     struct Information
@@ -484,6 +494,7 @@ protected:
         double sdrGamutWideness = 0;
         VrrPolicy vrrPolicy = VrrPolicy::Automatic;
         double brightness = 1.0;
+        Audio audio = Audio::Auto;
     };
 
     void setInformation(const Information &information);

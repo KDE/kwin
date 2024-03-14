@@ -633,6 +633,9 @@ void Output::setState(const State &state)
     if (oldState.brightness != state.brightness) {
         Q_EMIT brightnessChanged();
     }
+    if (oldState.audio != state.audio) {
+        Q_EMIT audioChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -802,6 +805,11 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
     if (device) {
         device->setOutput(this);
     }
+}
+
+Output::Audio Output::audio() const
+{
+    return m_state.audio;
 }
 } // namespace KWin
 

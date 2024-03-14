@@ -342,6 +342,9 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
             commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
         }
     }
+    if (m_connector->audio.isValid()) {
+        commit->addEnum(m_connector->audio, DrmConnector::kwinToDrmAudio(m_pending.audio));
+    }
 
     commit->addProperty(m_pending.crtc->active, 1);
     commit->addBlob(m_pending.crtc->modeId, m_pending.mode->blob());
@@ -683,6 +686,11 @@ void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
     if (m_pending.iccProfile != profile) {
         m_pending.iccProfile = profile;
     }
+}
+
+void DrmPipeline::setAudio(Output::Audio audio)
+{
+    m_pending.audio = audio;
 }
 
 std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction transferFunction) const

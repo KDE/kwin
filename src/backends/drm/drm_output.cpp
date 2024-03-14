@@ -348,6 +348,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
         // remove unused gamma ramp and ctm, if present
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
     }
+    m_pipeline->setAudio(props->audio.value_or(m_state.audio));
     return true;
 }
 
@@ -412,6 +413,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.brightness = props->brightness.value_or(m_state.brightness);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.audio = props->audio.value_or(m_state.audio);
     setState(next);
 
     if (m_brightnessDevice) {

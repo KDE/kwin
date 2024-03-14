@@ -110,6 +110,7 @@ public:
     void setContentType(DrmConnector::DrmContentType type);
     void setColorDescription(const ColorDescription &description);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
+    void setAudio(Output::Audio audio);
 
     /**
      * amdgpu drops cursor updates with adaptive sync: https://gitlab.freedesktop.org/drm/amd/-/issues/2186
@@ -167,6 +168,7 @@ private:
         PresentationMode presentationMode = PresentationMode::VSync;
         ColorPipeline crtcColorPipeline;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
+        Output::Audio audio = Output::Audio::Auto;
 
         std::shared_ptr<IccProfile> iccProfile;
         ColorDescription colorDescription = ColorDescription::sRGB;

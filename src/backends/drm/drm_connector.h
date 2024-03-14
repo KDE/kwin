@@ -116,6 +116,12 @@ public:
         BT2020_RGB,
         BT2020_YCC,
     };
+    enum class Audio : uint64_t {
+        ForceDVI = 0,
+        Off = 1,
+        Auto = 2,
+        On = 3,
+    };
 
     DrmProperty crtcId;
     DrmProperty nonDesktop;
@@ -135,11 +141,13 @@ public:
     DrmEnumProperty<ScalingMode> scalingMode;
     DrmEnumProperty<Colorspace> colorspace;
     DrmProperty path;
+    DrmEnumProperty<Audio> audio;
 
     static DrmContentType kwinToDrmContentType(ContentType type);
     static OutputTransform toKWinTransform(PanelOrientation orientation);
     static BroadcastRgbOptions rgbRangeToBroadcastRgb(Output::RgbRange rgbRange);
     static Output::RgbRange broadcastRgbToRgbRange(BroadcastRgbOptions rgbRange);
+    static Audio kwinToDrmAudio(Output::Audio audio);
 
 private:
     QList<std::shared_ptr<DrmConnectorMode>> generateCommonModes();
