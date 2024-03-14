@@ -47,6 +47,11 @@ bool ShakeCursorEffect::supported()
     return effects->isOpenGLCompositing();
 }
 
+bool ShakeCursorEffect::isActive() const
+{
+    return m_currentMagnification != 1.0;
+}
+
 void ShakeCursorEffect::reconfigure(ReconfigureFlags flags)
 {
     ShakeCursorConfig::self()->read();
