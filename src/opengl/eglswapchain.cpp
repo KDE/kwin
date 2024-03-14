@@ -54,6 +54,11 @@ int EglSwapchainSlot::age() const
     return m_age;
 }
 
+bool EglSwapchainSlot::isBusy() const
+{
+    return m_buffer->isReferenced() || (m_releaseFd.isValid() && !m_releaseFd.isReadable());
+}
+
 std::shared_ptr<EglSwapchainSlot> EglSwapchainSlot::create(EglContext *context, GraphicsBuffer *buffer)
 {
     auto texture = context->importDmaBufAsTexture(*buffer->dmabufAttributes());
@@ -100,10 +105,11 @@ uint64_t EglSwapchain::modifier() const
 
 std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
 {
-    for (const auto &slot : std::as_const(m_slots)) {
-        if (!slot->buffer()->isReferenced()) {
-            return slot;
-        }
+    const auto it = std::ranges::find_if(std::as_const(m_slots), [](const auto &slot) {
+        return !slot->isBusy();
+    });
+    if (it != m_slots.cend()) {
+        return *it;
     }
 
     GraphicsBuffer *buffer = m_allocator->allocate(GraphicsBufferOptions{
@@ -124,8 +130,9 @@ std::shared_ptr<EglSwapchainSlot> EglSwapchain::acquire()
     return slot;
 }
 
-void EglSwapchain::release(std::shared_ptr<EglSwapchainSlot> slot)
+void EglSwapchain::release(std::shared_ptr<EglSwapchainSlot> slot, FileDescriptor &&releaseFence)
 {
+    slot->m_releaseFd = std::move(releaseFence);
     for (qsizetype i = 0; i < m_slots.count(); ++i) {
         if (m_slots[i] == slot) {
             m_slots[i]->m_age = 1;

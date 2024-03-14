@@ -8,6 +8,7 @@
 */
 #include "x11_windowed_egl_backend.h"
 #include "core/gbmgraphicsbufferallocator.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "platformsupport/scenes/opengl/basiceglsurfacetexture_wayland.h"
@@ -104,7 +105,8 @@ void X11WindowedEglPrimaryLayer::present()
 
     Q_EMIT m_output->outputChange(infiniteRegion());
 
-    m_swapchain->release(m_buffer);
+    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
+    m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
 }
 
 std::shared_ptr<GLTexture> X11WindowedEglPrimaryLayer::texture() const

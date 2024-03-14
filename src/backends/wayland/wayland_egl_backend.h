@@ -10,6 +10,7 @@
 #pragma once
 
 #include "core/outputlayer.h"
+#include "opengl/eglnativefence.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "utils/damagejournal.h"
 

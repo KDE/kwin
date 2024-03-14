@@ -9,6 +9,7 @@
 #pragma once
 
 #include "kwin_export.h"
+#include "utils/filedescriptor.h"
 
 #include <QList>
 #include <QSize>
@@ -40,10 +41,13 @@ public:
     static std::shared_ptr<EglSwapchainSlot> create(EglContext *context, GraphicsBuffer *buffer);
 
 private:
+    bool isBusy() const;
+
     GraphicsBuffer *m_buffer;
     std::unique_ptr<GLFramebuffer> m_framebuffer;
     std::shared_ptr<GLTexture> m_texture;
     int m_age = 0;
+    FileDescriptor m_releaseFd;
     friend class EglSwapchain;
 };
 
@@ -58,7 +62,7 @@ public:
     uint64_t modifier() const;
 
     std::shared_ptr<EglSwapchainSlot> acquire();
-    void release(std::shared_ptr<EglSwapchainSlot> slot);
+    void release(std::shared_ptr<EglSwapchainSlot> slot, FileDescriptor &&releaseFence);
 
     static std::shared_ptr<EglSwapchain> create(GraphicsBufferAllocator *allocator, EglContext *context, const QSize &size, uint32_t format, const QList<uint64_t> &modifiers);
 

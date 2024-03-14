@@ -106,6 +106,10 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
     m_query->end();
     // Flush rendering commands to the dmabuf.
     glFlush();
+    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
+
+    m_presentationBuffer = m_backend->backend()->importBuffer(m_buffer->buffer());
+    m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
 
     m_damageJournal.add(damagedRegion);
     return true;
@@ -127,10 +131,6 @@ bool WaylandEglPrimaryLayer::scanout(SurfaceItem *surfaceItem)
 
 void WaylandEglPrimaryLayer::present()
 {
-    if (!m_presentationBuffer) {
-        m_presentationBuffer = m_backend->backend()->importBuffer(m_buffer->buffer());
-        Q_ASSERT(m_presentationBuffer);
-    }
 
     KWayland::Client::Surface *surface = m_waylandOutput->surface();
     surface->attachBuffer(m_presentationBuffer);
@@ -139,8 +139,6 @@ void WaylandEglPrimaryLayer::present()
     surface->commit();
     Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
     m_presentationBuffer = nullptr;
-
-    m_swapchain->release(m_buffer);
 }
 
 std::chrono::nanoseconds WaylandEglPrimaryLayer::queryRenderTime() const
@@ -217,7 +215,8 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
 
     m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
 
-    m_swapchain->release(m_buffer);
+    EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
+    m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
     return true;
 }
 

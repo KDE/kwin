@@ -177,7 +177,6 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         GLFramebuffer::popFramebuffer();
     }
     m_surface->damageJournal.add(damagedRegion);
-    m_surface->gbmSwapchain->release(m_surface->currentSlot);
     m_surface->timeQuery->end();
     glFlush();
     EGLNativeFence sourceFence(m_eglBackend->eglDisplayObject());
@@ -186,6 +185,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         // and NVidia doesn't support implicit sync
         glFinish();
     }
+    m_surface->gbmSwapchain->release(m_surface->currentSlot, sourceFence.fileDescriptor().duplicate());
     const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.fileDescriptor());
     m_surface->renderEnd = std::chrono::steady_clock::now();
     if (buffer) {
@@ -579,7 +579,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     if (!endFence.isValid()) {
         glFinish();
     }
-    surface->importGbmSwapchain->release(slot);
+    surface->importGbmSwapchain->release(slot, endFence.fileDescriptor().duplicate());
     surface->importTimeQuery->end();
 
     // restore the old context

@@ -11,6 +11,7 @@
 #include "drm_gpu.h"
 #include "drm_logging.h"
 #include "drm_virtual_output.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
 #include "scene/surfaceitem_wayland.h"
@@ -89,7 +90,9 @@ bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &
     glFlush();
     m_currentDamage = damagedRegion;
     m_damageJournal.add(damagedRegion);
-    m_gbmSwapchain->release(m_currentSlot);
+
+    EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
+    m_gbmSwapchain->release(m_currentSlot, releaseFence.fileDescriptor().duplicate());
     return true;
 }
 
