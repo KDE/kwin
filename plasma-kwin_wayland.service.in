@@ -3,6 +3,8 @@ Description=KDE Window Manager
 PartOf=graphical-session.target
 
 [Service]
-ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland_wrapper --xwayland
-BusName=org.kde.KWinWrapper
+ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland --xwayland
+Type=notify
+FileDescriptorStoreMax=200
 Slice=session.slice
+Restart=on-failure

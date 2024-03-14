@@ -12,8 +12,8 @@
 
 #include "config-kwin.h"
 
+#include "lib/xwaylandsocket.h"
 #include "xwayland_logging.h"
-#include "xwaylandsocket.h"
 
 #include "options.h"
 #include "wayland_server.h"
@@ -45,6 +45,12 @@ namespace Xwl
 XwaylandLauncher::XwaylandLauncher(QObject *parent)
     : QObject(parent)
 {
+    m_socket = std::make_unique<XwaylandSocket>(XwaylandSocket::OperationMode::CloseFdsOnExec);
+    if (!m_socket->isValid()) {
+        qFatal("Failed to establish X11 socket");
+    }
+    qDebug() << "socket created";
+
     m_resetCrashCountTimer = new QTimer(this);
     m_resetCrashCountTimer->setSingleShot(true);
     connect(m_resetCrashCountTimer, &QTimer::timeout, this, &XwaylandLauncher::resetCrashCount);
@@ -54,39 +60,20 @@ XwaylandLauncher::~XwaylandLauncher()
 {
 }
 
-void XwaylandLauncher::setListenFDs(const QList<int> &listenFds)
-{
-    m_listenFds = listenFds;
-}
-
-void XwaylandLauncher::setDisplayName(const QString &displayName)
-{
-    m_displayName = displayName;
-}
-
-void XwaylandLauncher::setXauthority(const QString &xauthority)
-{
-    m_xAuthority = xauthority;
-}
-
 void XwaylandLauncher::enable()
 {
     if (m_enabled) {
         return;
     }
+    m_enabled = true;
+    m_displayName = m_socket->name();
+    m_listenFds = m_socket->fileDescriptors();
 
-    if (!m_listenFds.isEmpty()) {
-        Q_ASSERT(!m_displayName.isEmpty());
-    } else {
-        auto socket = std::make_unique<XwaylandSocket>(XwaylandSocket::OperationMode::CloseFdsOnExec);
-        if (!socket->isValid()) {
-            qCWarning(KWIN_XWL) << "Failed to establish X11 socket";
-            return;
-        }
-        m_socket = std::move(socket);
-        m_displayName = m_socket->name();
-        m_listenFds = m_socket->fileDescriptors();
-    }
+    // xauth here
+
+    // store display name + listenFDs
+    // don't need to be member var for listenFd
+    // need to store lock file too
 
     for (int socket : std::as_const(m_listenFds)) {
         QSocketNotifier *notifier = new QSocketNotifier(socket, QSocketNotifier::Read, this);

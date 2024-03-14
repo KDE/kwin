@@ -651,14 +651,21 @@ bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *messag
 
 #endif
 
-QProcessEnvironment Application::processStartupEnvironment() const
+QProcessEnvironment Application::customStartupEnvironment() const
 {
-    return m_processEnvironment;
+    return m_customStartupEnvironment;
 }
 
-void Application::setProcessStartupEnvironment(const QProcessEnvironment &environment)
+void Application::appendCustomStartupEnvironment(const QProcessEnvironment &environment)
 {
-    m_processEnvironment = environment;
+    m_customStartupEnvironment.insert(environment);
+}
+
+QProcessEnvironment Application::processStartupEnvironment() const
+{
+    QProcessEnvironment launchEnv = QProcessEnvironment::systemEnvironment();
+    launchEnv.insert(m_customStartupEnvironment);
+    return launchEnv;
 }
 
 void Application::setOutputBackend(std::unique_ptr<OutputBackend> &&backend)

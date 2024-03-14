@@ -245,7 +245,8 @@ public:
 #endif
 
     QProcessEnvironment processStartupEnvironment() const;
-    void setProcessStartupEnvironment(const QProcessEnvironment &environment);
+    QProcessEnvironment customStartupEnvironment() const;
+    void appendCustomStartupEnvironment(const QProcessEnvironment &environment);
 
     OutputBackend *outputBackend() const
     {
@@ -415,7 +416,7 @@ private:
     std::unique_ptr<OutputBackend> m_outputBackend;
     bool m_terminating = false;
     qreal m_xwaylandScale = 1;
-    QProcessEnvironment m_processEnvironment;
+    QProcessEnvironment m_customStartupEnvironment;
     std::unique_ptr<PluginManager> m_pluginManager;
     std::unique_ptr<InputMethod> m_inputMethod;
     std::unique_ptr<ColorManager> m_colorManager;

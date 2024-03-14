@@ -28,19 +28,8 @@ public:
 #if KWIN_BUILD_X11
     void setStartXwayland(bool start)
     {
-        m_startXWayland = start;
-    }
-    void addXwaylandSocketFileDescriptor(int fd)
-    {
-        m_xwaylandListenFds << fd;
-    }
-    void setXwaylandDisplay(const QString &display)
-    {
-        m_xwaylandDisplay = display;
-    }
-    void setXwaylandXauthority(const QString &xauthority)
-    {
-        m_xwaylandXauthority = xauthority;
+        m_startXWayland = start; // this and the arg can now die
+        m_xwayland = std::make_unique<Xwl::Xwayland>(this);
     }
     XwaylandInterface *xwayland() const override;
 #endif
@@ -57,6 +46,8 @@ public:
         m_sessionArgument = session;
     }
 
+    std::unique_ptr<Xwl::Xwayland> m_xwayland;
+
 protected:
     void performStartup() override;
 
@@ -71,10 +62,6 @@ private:
 
 #if KWIN_BUILD_X11
     bool m_startXWayland = false;
-    std::unique_ptr<Xwl::Xwayland> m_xwayland;
-    QList<int> m_xwaylandListenFds;
-    QString m_xwaylandDisplay;
-    QString m_xwaylandXauthority;
 #endif
     KConfigWatcher::Ptr m_settingsWatcher;
 };

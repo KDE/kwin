@@ -10,6 +10,7 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QScopeGuard>
+#include <QVariant>
 
 #include <errno.h>
 #include <signal.h>
@@ -17,6 +18,8 @@
 #include <sys/stat.h>
 #include <sys/un.h>
 #include <unistd.h>
+
+#include "utils/systemservice.h"
 
 namespace KWin
 {
@@ -165,6 +168,17 @@ static bool checkSocketsDirectory()
 
 XwaylandSocket::XwaylandSocket(OperationMode mode)
 {
+    // Dave, lockfile now has the wrong pid :(
+    m_socketFilePath = KWinSystemService::FDStore::instance()->metaData("xwaylandSocketPath").toString();
+    m_lockFilePath = KWinSystemService::FDStore::instance()->metaData("xwaylandLockPath").toString();
+    m_display = KWinSystemService::FDStore::instance()->metaData("xwaylandDisplay").toInt();
+    if (!m_socketFilePath.isEmpty()) {
+        int fd1 = KWinSystemService::FDStore::instance()->storedFd("xwayland0");
+        int fd2 = KWinSystemService::FDStore::instance()->storedFd("xwayland1");
+        m_fileDescriptors << fd1 << fd2;
+        return;
+    }
+
     if (!checkSocketsDirectory()) {
         return;
     }
@@ -208,6 +222,15 @@ XwaylandSocket::XwaylandSocket(OperationMode mode)
         m_socketFilePath = socketFilePath;
         m_lockFilePath = lockFilePath;
         m_display = display;
+
+        KWinSystemService::FDStore::instance()->storeMetadata("xwaylandSocketPath", m_socketFilePath);
+        KWinSystemService::FDStore::instance()->storeMetadata("xwaylandLockPath", m_lockFilePath);
+        KWinSystemService::FDStore::instance()->storeMetadata("xwaylandDisplay", m_display);
+        if (m_fileDescriptors.size() == 2) {
+            KWinSystemService::FDStore::instance()->store("xwayland0", m_fileDescriptors[0]);
+            KWinSystemService::FDStore::instance()->store("xwayland1", m_fileDescriptors[1]);
+        }
+
         return;
     }
 

@@ -32,7 +32,8 @@
 #define LOCK_SUFFIX ".lock"
 #define LOCK_SUFFIXLEN 5
 
-struct wl_socket {
+struct wl_socket
+{
     int fd;
     int fd_lock;
     struct sockaddr_un addr;
@@ -155,7 +156,7 @@ struct wl_socket *wl_socket_create()
         s->fd = socket(PF_LOCAL, SOCK_STREAM, 0);
 
         int size = SUN_LEN(&s->addr);
-        int ret = bind(s->fd, (struct sockaddr*)&s->addr, size);
+        int ret = bind(s->fd, (struct sockaddr *)&s->addr, size);
         if (ret < 0) {
             goto fail;
         }

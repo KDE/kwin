@@ -11,7 +11,16 @@ target_sources(kwin PRIVATE
     subsurfacemonitor.cpp
     udev.cpp
     vsyncmonitor.cpp
+    systemservice.cpp
 )
+
+ecm_qt_declare_logging_category(kwin
+    HEADER watchdoglogging.h
+    IDENTIFIER KWIN_WATCHDOG
+    CATEGORY_NAME kwin_watchdog
+    DEFAULT_SEVERITY Info
+)
+
 if (KWIN_BUILD_X11)
     target_sources(kwin PRIVATE xcbutils.cpp)
 endif()

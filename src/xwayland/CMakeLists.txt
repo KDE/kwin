@@ -1,4 +1,5 @@
-add_subdirectory(lib)
+# add_subdirectory(lib)
+
 
 add_library(KWinXwaylandServerModule OBJECT
     clipboard.cpp
@@ -15,8 +16,22 @@ add_library(KWinXwaylandServerModule OBJECT
     xwayland.cpp
     xwldrophandler.cpp
     xwaylandlauncher.cpp
+    lib/xwaylandsocket.cpp
 )
-target_link_libraries(KWinXwaylandServerModule PUBLIC kwin Qt::Concurrent KF6::I18n KWinXwaylandCommon XCB::XCB XCB::RANDR XCB::XFIXES XCB::COMPOSITE XKB::XKB)
+
+ecm_qt_declare_logging_category(KWinXwaylandServerModule
+    HEADER
+        xwayland_logging.h
+    IDENTIFIER
+        KWIN_XWL
+    CATEGORY_NAME
+        kwin_xwl
+    DEFAULT_SEVERITY
+        Warning
+)
+
+
+target_link_libraries(KWinXwaylandServerModule PUBLIC kwin Qt::Concurrent KF6::I18n XCB::XCB XCB::RANDR XCB::XFIXES XCB::COMPOSITE XKB::XKB)
 if(TARGET KF6::Notifications)
     target_link_libraries(KWinXwaylandServerModule PUBLIC KF6::Notifications)
 endif()

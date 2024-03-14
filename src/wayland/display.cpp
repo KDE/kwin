@@ -14,6 +14,8 @@
 #include "output.h"
 #include "shmclientbuffer_p.h"
 #include "utils/common.h"
+#include "utils/systemservice.h"
+#include "utils/wl-socket.h"
 
 #include <poll.h>
 #include <string.h>
@@ -39,6 +41,7 @@ DisplayPrivate::DisplayPrivate(Display *q)
 void DisplayPrivate::registerSocketName(const QString &socketName)
 {
     socketNames.append(socketName);
+    KWinSystemService::FDStore::instance()->storeMetadata("waylandSocketNames", socketNames);
     Q_EMIT q->socketNamesChanged();
 }
 
@@ -58,6 +61,7 @@ Display::~Display()
 
 bool Display::addSocketFileDescriptor(int fileDescriptor, const QString &name)
 {
+    // Clean this up
     if (wl_display_add_socket_fd(d->display, fileDescriptor)) {
         qCWarning(KWIN_CORE, "Failed to add %d fd to display", fileDescriptor);
         return false;
@@ -70,19 +74,36 @@ bool Display::addSocketFileDescriptor(int fileDescriptor, const QString &name)
 
 bool Display::addSocketName(const QString &name)
 {
-    if (name.isEmpty()) {
-        const char *socket = wl_display_add_socket_auto(d->display);
-        if (!socket) {
-            qCWarning(KWIN_CORE, "Failed to find a free display socket");
-            return false;
-        }
-        d->registerSocketName(QString::fromUtf8(socket));
+    // Dave, this is now a crap method name
+    // we're also no longer using the socket name
+
+    int lastFd = KWinSystemService::FDStore::instance()->storedFd("waylandSocket");
+    if (lastFd >= 0) {
+        qDebug() << "restoring FD";
+        addSocketFileDescriptor(lastFd);
+
+        // Dave we're mixing up cardinality here
+        d->socketNames = KWinSystemService::FDStore::instance()->metaData("waylandSocketNames").toStringList();
+
+        // Dave how will we do kwin_wayland --replace?
+
+        // Dave, if we pushed env vars somewhere we could drop teh
+        // concept of socketNames entirely
     } else {
-        if (wl_display_add_socket(d->display, qPrintable(name))) {
-            qCWarning(KWIN_CORE, "Failed to add %s socket to display", qPrintable(name));
+        qDebug() << "making new socket";
+        // Dave this leaks, probably best to adjust that original code
+        // Also need to keep the fd-lock?
+        auto socket = wl_socket_create();
+        if (!socket) {
+            qCWarning(KWIN_CORE) << "Failed to create a new socket";
             return false;
         }
-        d->registerSocketName(name);
+        int fd = wl_socket_get_fd(socket);
+
+        qDebug() << "new socket " << wl_socket_get_display_name(socket);
+        KWinSystemService::FDStore::instance()->store("waylandSocket", fd);
+
+        addSocketFileDescriptor(fd, wl_socket_get_display_name(socket));
     }
     return true;
 }

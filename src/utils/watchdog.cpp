@@ -7,12 +7,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
+#include "systemservice.h"
 #include "watchdoglogging.h"
 #include <unistd.h>
 #include <sys/types.h>
 #include <QCoreApplication>
 #include <QTimer>
 #include <systemd/sd-daemon.h>
+
+namespace KWinSystemService
+{
 
 class Watchdog : public QObject
 {
@@ -36,7 +40,8 @@ public:
             return;
         }
         qunsetenv("WATCHDOG_USEC");
-        qunsetenv("WATCHDOG_PID");
+        // qunsetenv("WATCHDOG_PID"); //Dave, put this into my amazing new lib and share this
+        // or we can just use getpid now.
         auto t = new QTimer(this);
         t->setInterval(std::chrono::duration_cast<std::chrono::milliseconds>(watchdogIntervalInUs));
         t->setSingleShot(false);
@@ -65,12 +70,11 @@ public:
 private:
     pid_t m_onBehalf = 0;
 };
-
-static void setupWatchdog()
-{
-    new Watchdog(QCoreApplication::instance());
 }
 
-Q_COREAPP_STARTUP_FUNCTION(setupWatchdog)
+void KWinSystemService::setupWatchdog()
+{
+    new KWinSystemService::Watchdog(QCoreApplication::instance());
+}
 
 #include "watchdog.moc"

@@ -21,6 +21,7 @@
 #include "inputmethod.h"
 #include "tabletmodemanager.h"
 #include "utils/realtime.h"
+#include "utils/systemservice.h"
 #include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -28,7 +29,6 @@
 
 #if KWIN_BUILD_X11
 #include "xwayland/xwayland.h"
-#include "xwayland/xwaylandlauncher.h"
 #endif
 
 // KDE
@@ -37,6 +37,7 @@
 #include <KLocalizedString>
 #include <KShell>
 #include <KSignalHandler>
+#include <KUpdateLaunchEnvironmentJob>
 
 // Qt
 #include <QCommandLineParser>
@@ -165,10 +166,6 @@ void ApplicationWayland::continueStartupWithScene()
 
 #if KWIN_BUILD_X11
     if (operationMode() == OperationModeXwayland) {
-        m_xwayland = std::make_unique<Xwl::Xwayland>(this);
-        m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
-        m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
-        m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
         m_xwayland->init();
         connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::applyXwaylandScale);
     }
@@ -274,8 +271,6 @@ int main(int argc, char *argv[])
         pthread_atfork(nullptr, nullptr, KWin::restoreNofileLimit);
     }
 
-    QProcessEnvironment environment = QProcessEnvironment::systemEnvironment();
-
     // enforce our internal qpa plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 
@@ -334,21 +329,10 @@ int main(int argc, char *argv[])
                                          QStringLiteral("count"));
     outputCountOption.setDefaultValue(QString::number(1));
 
+    // Dave, hook this up, Aleix wants it
     QCommandLineOption waylandSocketFdOption(QStringLiteral("wayland-fd"),
                                              i18n("Wayland socket to use for incoming connections. This can be combined with --socket to name the socket"),
                                              QStringLiteral("wayland-fd"));
-
-    QCommandLineOption xwaylandListenFdOption(QStringLiteral("xwayland-fd"),
-                                              i18n("XWayland socket to use for Xwayland's incoming connections. This can be set multiple times"),
-                                              QStringLiteral("xwayland-fds"));
-
-    QCommandLineOption xwaylandDisplayOption(QStringLiteral("xwayland-display"),
-                                             i18n("Name of the xwayland display that has been pre-set up"),
-                                             "xwayland-display");
-
-    QCommandLineOption xwaylandXAuthorityOption(QStringLiteral("xwayland-xauthority"),
-                                                i18n("Name of the xauthority file "),
-                                                "xwayland-xauthority");
 
     QCommandLineOption replaceOption(QStringLiteral("replace"),
                                      i18n("Exits this instance so it can be restarted by kwin_wayland_wrapper."));
@@ -363,9 +347,6 @@ int main(int argc, char *argv[])
 #endif
     parser.addOption(waylandSocketOption);
     parser.addOption(waylandSocketFdOption);
-    parser.addOption(xwaylandListenFdOption);
-    parser.addOption(xwaylandDisplayOption);
-    parser.addOption(xwaylandXAuthorityOption);
     parser.addOption(replaceOption);
 #if KWIN_BUILD_X11
     parser.addOption(x11DisplayOption);
@@ -439,6 +420,7 @@ int main(int argc, char *argv[])
         Wayland,
         Virtual,
     };
+    qRegisterMetaType<BackendType>();
 
     BackendType backendType;
     QString pluginName;
@@ -447,7 +429,10 @@ int main(int argc, char *argv[])
     qreal outputScale = 1;
 
     // Decide what backend to use.
-    if (parser.isSet(drmOption)) {
+    QVariant restoredMetaData = KWinSystemService::FDStore::instance()->metaData("backendType");
+    if (restoredMetaData.canConvert<BackendType>()) {
+        backendType = restoredMetaData.value<BackendType>();
+    } else if (parser.isSet(drmOption)) {
         backendType = BackendType::Kms;
 #if KWIN_BUILD_X11
     } else if (parser.isSet(x11DisplayOption)) {
@@ -469,6 +454,7 @@ int main(int argc, char *argv[])
             backendType = BackendType::Kms;
         }
     }
+    KWinSystemService::FDStore::instance()->storeMetadata("backendType", QVariant::fromValue(backendType));
 
     if (parser.isSet(locale1Option)) {
         a.setFollowLocale1(true);
@@ -593,42 +579,38 @@ int main(int argc, char *argv[])
     }
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
+
     if (!server->socketName().isEmpty()) {
-        environment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
-        qputenv("WAYLAND_DISPLAY", server->socketName().toUtf8());
+        QProcessEnvironment customEnvironment;
+        customEnvironment.insert(QStringLiteral("WAYLAND_DISPLAY"), server->socketName());
+        a.appendCustomStartupEnvironment(customEnvironment);
     }
-    a.setProcessStartupEnvironment(environment);
 
 #if KWIN_BUILD_X11
     if (parser.isSet(xwaylandOption)) {
         a.setStartXwayland(true);
-
-        if (parser.isSet(xwaylandListenFdOption)) {
-            const QStringList fdStrings = parser.values(xwaylandListenFdOption);
-            for (const QString &fdString : fdStrings) {
-                bool ok;
-                int fd = fdString.toInt(&ok);
-                if (ok) {
-                    // make sure we don't leak this FD to children
-                    fcntl(fd, F_SETFD, FD_CLOEXEC);
-                    a.addXwaylandSocketFileDescriptor(fd);
-                }
-            }
-            if (parser.isSet(xwaylandDisplayOption)) {
-                a.setXwaylandDisplay(parser.value(xwaylandDisplayOption));
-            } else {
-                std::cerr << "Using xwayland-fd without xwayland-display is undefined" << std::endl;
-                return 1;
-            }
-            if (parser.isSet(xwaylandXAuthorityOption)) {
-                a.setXwaylandXauthority(parser.value(xwaylandXAuthorityOption));
-            }
-        }
     }
-#endif
 
+#endif
     a.setApplicationsToStart(parser.positionalArguments());
     a.setInputMethodServerToStart(parser.value(inputMethodOption));
+
+    QObject::connect(&a, &KWin::ApplicationWayland::started, &a, [&a]() {
+        // push to systemd then announce we're up when complete
+        const QProcessEnvironment customEnvironment = a.customStartupEnvironment();
+        auto envSyncJob = new KUpdateLaunchEnvironmentJob(customEnvironment);
+
+        QObject::connect(envSyncJob, &KUpdateLaunchEnvironmentJob::finished, &a, []() {
+            KWinSystemService::markReady();
+        });
+
+        // push to the local session
+        const QStringList keys = customEnvironment.keys();
+        for (const QString &key : keys) {
+            qputenv(key.toLocal8Bit(), customEnvironment.value(key).toUtf8());
+        }
+    });
+
     a.start();
 
     return a.exec();

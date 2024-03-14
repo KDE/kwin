@@ -35,27 +35,6 @@ public:
     explicit XwaylandLauncher(QObject *parent);
     ~XwaylandLauncher();
 
-    /**
-     * Set file descriptors that xwayland should use for listening
-     * This is to be used in conjuction with kwin_wayland_wrapper which creates a socket externally
-     * That external process is responsible for setting up the DISPLAY env with a valid value.
-     * Ownership of the file descriptor is not transferrred.
-     */
-    void setListenFDs(const QList<int> &listenFds);
-
-    /**
-     * Sets the display name used by XWayland (i.e ':0')
-     * This is to be used in conjuction with kwin_wayland_wrapper to provide the name of the socket
-     * created externally
-     */
-    void setDisplayName(const QString &displayName);
-
-    /**
-     * Sets the xauthority file to be used by XWayland
-     * This is to be used in conjuction with kwin_wayland_wrapper
-     */
-    void setXauthority(const QString &xauthority);
-
     void enable();
     void disable();
     bool start();
@@ -92,7 +71,6 @@ private Q_SLOTS:
 
 private:
     void maybeDestroyReadyNotifier();
-
 
     QProcess *m_xwaylandProcess = nullptr;
     QSocketNotifier *m_readyNotifier = nullptr;

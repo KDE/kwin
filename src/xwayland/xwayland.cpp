@@ -496,23 +496,16 @@ Xwayland::Xwayland(Application *app)
 Xwayland::~Xwayland()
 {
     m_launcher->stop();
+    m_launcher->disable();
 }
 
 void Xwayland::init()
 {
     m_launcher->enable();
-
-    auto env = m_app->processStartupEnvironment();
+    QProcessEnvironment env;
     env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
     env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
-    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
-    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
-    m_app->setProcessStartupEnvironment(env);
-}
-
-XwaylandLauncher *Xwayland::xwaylandLauncher() const
-{
-    return m_launcher;
+    m_app->appendCustomStartupEnvironment(env);
 }
 
 void Xwayland::dispatchEvents(DispatchEventsMode mode)

@@ -46,8 +46,6 @@ public:
 
     void init();
 
-    XwaylandLauncher *xwaylandLauncher() const;
-
 Q_SIGNALS:
     /**
      * This signal is emitted when the Xwayland server has been started successfully and it is
