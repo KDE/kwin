@@ -87,6 +87,9 @@ void X11WindowTest::initTestCase()
 
 void X11WindowTest::init()
 {
+    QFETCH_GLOBAL(qreal, scale);
+    kwinApp()->setXwaylandScale(scale);
+
     QVERIFY(Test::setupWaylandConnection());
 }
 
@@ -129,9 +132,6 @@ void X11WindowTest::testMaximizedFull()
 {
     // This test verifies that toggling maximized mode works as expected and state changes are propagated to the client.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
@@ -172,9 +172,6 @@ void X11WindowTest::testInitiallyMaximizedFull()
 {
     // This test verifies that a window can be shown already in the maximized state.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -188,9 +185,6 @@ void X11WindowTest::testInitiallyMaximizedFull()
 void X11WindowTest::testRequestMaximizedFull()
 {
     // This test verifies that the client can toggle the maximized state.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -222,9 +216,6 @@ void X11WindowTest::testRequestMaximizedFull()
 void X11WindowTest::testMaximizedVertical()
 {
     // This test verifies that toggling maximized vertically mode works as expected and state changes are propagated to the client.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -266,9 +257,6 @@ void X11WindowTest::testInitiallyMaximizedVertical()
 {
     // This test verifies that a window can be shown already in the maximized vertically state.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -282,9 +270,6 @@ void X11WindowTest::testInitiallyMaximizedVertical()
 void X11WindowTest::testRequestMaximizedVertical()
 {
     // This test verifies that the client can toggle the maximized vertically state.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -316,9 +301,6 @@ void X11WindowTest::testRequestMaximizedVertical()
 void X11WindowTest::testMaximizedHorizontal()
 {
     // This test verifies that toggling maximized horizontally mode works as expected and state changes are propagated to the client.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -360,9 +342,6 @@ void X11WindowTest::testInitiallyMaximizedHorizontal()
 {
     // This test verifies that a window can be shown already in the maximized horizontally state.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -376,9 +355,6 @@ void X11WindowTest::testInitiallyMaximizedHorizontal()
 void X11WindowTest::testRequestMaximizedHorizontal()
 {
     // This test verifies that the client can toggle the maximized horizontally state.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -410,9 +386,6 @@ void X11WindowTest::testRequestMaximizedHorizontal()
 void X11WindowTest::testFullScreen()
 {
     // This test verifies that the fullscreen mode can be toggled and state changes are propagated to the client.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -454,9 +427,6 @@ void X11WindowTest::testInitiallyFullScreen()
 {
     // This test verifies that a window can be shown already in the fullscreen state.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -470,9 +440,6 @@ void X11WindowTest::testInitiallyFullScreen()
 void X11WindowTest::testRequestFullScreen()
 {
     // This test verifies that the client can toggle the fullscreen state.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -504,9 +471,6 @@ void X11WindowTest::testRequestFullScreen()
 void X11WindowTest::testKeepBelow()
 {
     // This test verifies that keep below state can be toggled and its changes are propagated to the client.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -541,9 +505,6 @@ void X11WindowTest::testInitiallyKeepBelow()
 {
     // This test verifies that a window can be shown already with the keep below state set.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -556,9 +517,6 @@ void X11WindowTest::testInitiallyKeepBelow()
 void X11WindowTest::testKeepAbove()
 {
     // This test verifies that keep above state can be toggled and its changes are propagated to the client.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -593,9 +551,6 @@ void X11WindowTest::testInitiallyKeepAbove()
 {
     // This test verifies that a window can be shown already with the keep above state set.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -608,9 +563,6 @@ void X11WindowTest::testInitiallyKeepAbove()
 void X11WindowTest::testMinimized()
 {
     // This test verifies that a window can be minimized/unminimized and its changes are propagated to the client.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -645,9 +597,6 @@ void X11WindowTest::testInitiallyMinimized()
 {
     // This test verifies that a window can be shown already in the minimized state.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
     X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
@@ -667,8 +616,6 @@ void X11WindowTest::testInitiallyMinimized()
 void X11WindowTest::testRequestMinimized()
 {
     // This test verifies that the client can set the minimized state.
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -702,9 +649,6 @@ void X11WindowTest::testRequestMinimized()
 void X11WindowTest::testMinimumSize()
 {
     // This test verifies that the minimum size constraint is correctly applied.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -747,6 +691,7 @@ void X11WindowTest::testMinimumSize()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
 
+    const qreal scale = kwinApp()->xwaylandScale();
     window->keyPressEvent(Qt::Key_Left);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
@@ -809,8 +754,6 @@ void X11WindowTest::testMinimumSize()
 void X11WindowTest::testMaximumSize()
 {
     // This test verifies that the maximum size constraint is correctly applied.
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create an xcb window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -853,6 +796,7 @@ void X11WindowTest::testMaximumSize()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
 
+    const qreal scale = kwinApp()->xwaylandScale();
     window->keyPressEvent(Qt::Key_Right);
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
@@ -913,9 +857,6 @@ void X11WindowTest::testMaximumSize()
 
 void X11WindowTest::testTrimCaption_data()
 {
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     QTest::addColumn<QByteArray>("originalTitle");
     QTest::addColumn<QByteArray>("expectedTitle");
 
@@ -930,9 +871,6 @@ void X11WindowTest::testTrimCaption_data()
 
 void X11WindowTest::testTrimCaption()
 {
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     // this test verifies that caption is properly trimmed
 
     // create an xcb window
@@ -978,9 +916,6 @@ void X11WindowTest::testTrimCaption()
 
 void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 {
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     // this test verifies that an X11 fullscreen window does not stay in the active layer
     // when a Wayland window is active, see BUG: 375759
     QCOMPARE(workspace()->outputs().count(), 1);
@@ -1101,8 +1036,6 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
 void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 {
     // this test verifies that Workspace::allowWindowActivation does not crash if last client was a Wayland client
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // create an X11 window
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -1160,9 +1093,6 @@ void X11WindowTest::testFocusInWithWaylandLastActiveWindow()
 
 void X11WindowTest::testCaptionChanges()
 {
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     // verifies that caption is updated correctly when the X11 window updates it
     // BUG: 383444
     Test::XcbConnectionPtr c = Test::createX11Connection();
@@ -1210,9 +1140,6 @@ void X11WindowTest::testCaptionChanges()
 
 void X11WindowTest::testCaptionWmName()
 {
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     // this test verifies that a caption set through WM_NAME is read correctly
 
     // open glxgears as that one only uses WM_NAME
@@ -1238,9 +1165,6 @@ void X11WindowTest::testFullscreenWindowGroups()
     // this test creates an X11 window and puts it to full screen
     // then a second window is created which is in the same window group
     // BUG: 388310
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));
@@ -1315,9 +1239,6 @@ void X11WindowTest::testActivateFocusedWindow()
     // case no FocusIn event will be generated and the window won't be marked as active. This test
     // verifies that we handle that subtle case properly.
 
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
-
     Test::XcbConnectionPtr connection = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(connection.get()));
 
@@ -1381,9 +1302,6 @@ void X11WindowTest::testReentrantMoveResize()
 {
     // This test verifies that calling moveResize() from a slot connected directly
     // to the frameGeometryChanged() signal won't cause an infinite recursion.
-
-    QFETCH_GLOBAL(qreal, scale);
-    kwinApp()->setXwaylandScale(scale);
 
     // Create a test window.
     Test::XcbConnectionPtr c = Test::createX11Connection();
