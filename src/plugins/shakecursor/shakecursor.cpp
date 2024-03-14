@@ -94,11 +94,12 @@ void ShakeCursorEffect::animateTo(qreal magnification)
 
 void ShakeCursorEffect::pointerEvent(MouseEvent *event)
 {
-    if (event->type() != QEvent::MouseMove || event->buttons() != Qt::NoButton) {
+    if (event->buttons() != Qt::NoButton) {
+        m_shakeDetector.reset();
         return;
     }
 
-    if (input()->pointer()->isConstrained()) {
+    if (input()->pointer()->isConstrained() || event->type() != QEvent::MouseMove) {
         return;
     }
 

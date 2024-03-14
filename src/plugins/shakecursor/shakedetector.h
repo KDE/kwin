@@ -22,6 +22,7 @@ class ShakeDetector
 public:
     ShakeDetector();
 
+    void reset();
     bool update(QMouseEvent *event);
 
     quint64 interval() const;

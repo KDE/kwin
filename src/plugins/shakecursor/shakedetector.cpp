@@ -39,6 +39,11 @@ static inline bool sameSign(qreal a, qreal b)
     return (a >= -tolerance && b >= -tolerance) || (a <= tolerance && b <= tolerance);
 }
 
+void ShakeDetector::reset()
+{
+    m_history.clear();
+}
+
 bool ShakeDetector::update(QMouseEvent *event)
 {
     // Prune the old entries in the history.
