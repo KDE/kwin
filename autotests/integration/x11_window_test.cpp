@@ -54,6 +54,15 @@ private Q_SLOTS:
     void testMinimized();
     void testInitiallyMinimized();
     void testRequestMinimized();
+    void testSkipSwitcher();
+    void testInitiallySkipSwitcher();
+    void testRequestSkipSwitcher();
+    void testSkipPager();
+    void testInitiallySkipPager();
+    void testRequestSkipPager();
+    void testSkipTaskbar();
+    void testInitiallySkipTaskbar();
+    void testRequestSkipTaskbar();
     void testMinimumSize();
     void testMaximumSize();
     void testTrimCaption_data();
@@ -644,6 +653,231 @@ void X11WindowTest::testRequestMinimized()
     QSignalSpy minimizedChangedSpy(window, &Window::minimizedChanged);
     QVERIFY(minimizedChangedSpy.wait());
     QVERIFY(window->isMinimized());
+}
+
+void X11WindowTest::testSkipSwitcher()
+{
+    // This test verifies that skip switcher changes are propagated to the client.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set skip switcher.
+    QSignalSpy skipSwitcherChangedSpy(window, &Window::skipSwitcherChanged);
+    window->setSkipSwitcher(true);
+    QCOMPARE(skipSwitcherChangedSpy.count(), 1);
+    QVERIFY(window->skipSwitcher());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::SkipSwitcher);
+    }
+
+    // Unset skip switcher.
+    window->setSkipSwitcher(false);
+    QCOMPARE(skipSwitcherChangedSpy.count(), 2);
+    QVERIFY(!window->skipSwitcher());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::SkipSwitcher));
+    }
+}
+
+void X11WindowTest::testInitiallySkipSwitcher()
+{
+    // This test verifies that a window can be shown already with the skip switcher state set.
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::SkipSwitcher, NET::SkipSwitcher);
+    });
+    QVERIFY(window->skipSwitcher());
+}
+
+void X11WindowTest::testRequestSkipSwitcher()
+{
+    // This test verifies that the client can change the skip switcher state.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set the skip switcher state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::SkipSwitcher, NET::SkipSwitcher);
+        xcb_flush(c.get());
+    }
+    QSignalSpy skipSwitcherChangedSpy(window, &Window::skipSwitcherChanged);
+    QVERIFY(skipSwitcherChangedSpy.wait());
+    QVERIFY(window->skipSwitcher());
+
+    // Unset the skip switcher state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::SkipSwitcher);
+        xcb_flush(c.get());
+    }
+    QVERIFY(skipSwitcherChangedSpy.wait());
+    QVERIFY(!window->skipSwitcher());
+}
+
+void X11WindowTest::testSkipPager()
+{
+    // This test verifies that skip pager changes are propagated to the client.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set skip pager.
+    QSignalSpy skipPagerChangedSpy(window, &Window::skipPagerChanged);
+    window->setSkipPager(true);
+    QCOMPARE(skipPagerChangedSpy.count(), 1);
+    QVERIFY(window->skipPager());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::SkipPager);
+    }
+
+    // Unset skip pager.
+    window->setSkipPager(false);
+    QCOMPARE(skipPagerChangedSpy.count(), 2);
+    QVERIFY(!window->skipPager());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::SkipPager));
+    }
+}
+
+void X11WindowTest::testInitiallySkipPager()
+{
+    // This test verifies that a window can be shown already with the skip pager state set.
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::SkipPager, NET::SkipPager);
+    });
+    QVERIFY(window->skipPager());
+}
+
+void X11WindowTest::testRequestSkipPager()
+{
+    // This test verifies that the client can change the skip pager state.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set the skip pager state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::SkipPager, NET::SkipPager);
+        xcb_flush(c.get());
+    }
+    QSignalSpy skipPagerChangedSpy(window, &Window::skipPagerChanged);
+    QVERIFY(skipPagerChangedSpy.wait());
+    QVERIFY(window->skipPager());
+
+    // Unset the skip pager state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::SkipPager);
+        xcb_flush(c.get());
+    }
+    QVERIFY(skipPagerChangedSpy.wait());
+    QVERIFY(!window->skipPager());
+}
+
+void X11WindowTest::testSkipTaskbar()
+{
+    // This test verifies that skip taskbar changes are propagated to the client.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set skip taskbar.
+    QSignalSpy skipTaskbarChangedSpy(window, &Window::skipTaskbarChanged);
+    window->setSkipTaskbar(true);
+    QCOMPARE(skipTaskbarChangedSpy.count(), 1);
+    QVERIFY(window->skipTaskbar());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(winInfo.state() & NET::SkipTaskbar);
+    }
+
+    // Unset skip taskbar.
+    window->setSkipTaskbar(false);
+    QCOMPARE(skipTaskbarChangedSpy.count(), 2);
+    QVERIFY(!window->skipTaskbar());
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        QVERIFY(!(winInfo.state() & NET::SkipTaskbar));
+    }
+}
+
+void X11WindowTest::testInitiallySkipTaskbar()
+{
+    // This test verifies that a window can be shown already with the skip taskbar state set.
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::SkipTaskbar, NET::SkipTaskbar);
+    });
+    QVERIFY(window->skipTaskbar());
+}
+
+void X11WindowTest::testRequestSkipTaskbar()
+{
+    // This test verifies that the client can change the skip taskbar state.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set the skip taskbar state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::SkipTaskbar, NET::SkipTaskbar);
+        xcb_flush(c.get());
+    }
+    QSignalSpy skipTaskbarChangedSpy(window, &Window::skipTaskbarChanged);
+    QVERIFY(skipTaskbarChangedSpy.wait());
+    QVERIFY(window->skipTaskbar());
+
+    // Unset the skip taskbar state.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::SkipTaskbar);
+        xcb_flush(c.get());
+    }
+    QVERIFY(skipTaskbarChangedSpy.wait());
+    QVERIFY(!window->skipTaskbar());
 }
 
 void X11WindowTest::testMinimumSize()
