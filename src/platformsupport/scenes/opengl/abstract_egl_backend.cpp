@@ -154,7 +154,7 @@ void AbstractEglBackend::initWayland()
         QHash<uint32_t, QList<uint64_t>> set;
         for (auto it = formats.constBegin(); it != formats.constEnd(); it++) {
             const auto info = FormatInfo::get(it.key());
-            if (!info || (bpc && bpc != info->bitsPerColor)) {
+            if (bpc && (!info || bpc != info->bitsPerColor)) {
                 continue;
             }
 
