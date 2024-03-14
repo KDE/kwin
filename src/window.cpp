@@ -3468,7 +3468,6 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     GeometryUpdatesBlocker blocker(this);
 
     const QuickTileMode oldMode = quickTileMode();
-
     QPointF whichScreen = keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos();
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
