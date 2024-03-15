@@ -2529,7 +2529,7 @@ void Window::keyPressEvent(uint key_code)
     key_code = key_code & ~Qt::KeyboardModifierMask;
     int delta = is_control ? 1 : is_alt ? 32
                                         : 8;
-    QPointF pos = Cursors::self()->mouse()->pos();
+    QPointF pos = interactiveMoveResizeAnchor();
     switch (key_code) {
     case Qt::Key_Left:
         pos.rx() -= delta;
@@ -3368,7 +3368,7 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing) {
-        workspace()->outline()->show(quickTileGeometry(electricBorderMode(), Cursors::self()->mouse()->pos()).toRect(), moveResizeGeometry().toRect());
+        workspace()->outline()->show(quickTileGeometry(electricBorderMode(), interactiveMoveResizeAnchor()).toRect(), moveResizeGeometry().toRect());
     } else {
         workspace()->outline()->hide();
     }

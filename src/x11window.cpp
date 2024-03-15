@@ -4432,7 +4432,7 @@ void X11Window::maximize(MaximizeMode mode)
 
     QRectF clientArea;
     if (isElectricBorderMaximizing()) {
-        clientArea = workspace()->clientArea(MaximizeArea, this, Cursors::self()->mouse()->pos());
+        clientArea = workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor());
     } else {
         clientArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
     }
