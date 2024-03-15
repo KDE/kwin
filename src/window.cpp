@@ -1425,30 +1425,24 @@ void Window::handleInteractiveMoveResize(const QPointF &local, const QPointF &gl
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
     } else if (isInteractiveMove()) {
-        auto nextMoveGeometry = [this, &global]() {
-            if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
-                // Special moving of maximized windows on Xinerama screens
-                Output *output = workspace()->outputAt(global);
-                QRectF nextMoveResizeGeom;
-                if (isRequestedFullScreen()) {
-                    nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, output);
-                } else {
-                    nextMoveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
-                    const QSizeF adjSize = constrainFrameSize(nextMoveResizeGeom.size(), SizeModeMax);
-                    if (adjSize != nextMoveResizeGeom.size()) {
-                        QRectF r(nextMoveResizeGeom);
-                        nextMoveResizeGeom.setSize(adjSize);
-                        nextMoveResizeGeom.moveCenter(r.center());
-                    }
+        if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
+            // Special moving of maximized windows on Xinerama screens
+            Output *output = workspace()->outputAt(global);
+            if (isRequestedFullScreen()) {
+                nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, output);
+            } else {
+                nextMoveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
+                const QSizeF adjSize = constrainFrameSize(nextMoveResizeGeom.size(), SizeModeMax);
+                if (adjSize != nextMoveResizeGeom.size()) {
+                    QRectF r(nextMoveResizeGeom);
+                    nextMoveResizeGeom.setSize(adjSize);
+                    nextMoveResizeGeom.moveCenter(r.center());
                 }
-
-                return nextMoveResizeGeom;
             }
+        } else {
+            nextMoveResizeGeom = nextInteractiveMoveGeometry(global);
+        }
 
-            return nextInteractiveMoveGeometry(global);
-        };
-
-        nextMoveResizeGeom = nextMoveGeometry();
         if (nextMoveResizeGeom != currentMoveResizeGeom) {
             if (!isRequestedFullScreen()) {
                 if (maximizeMode() != MaximizeRestore) {
