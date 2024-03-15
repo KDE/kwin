@@ -1404,20 +1404,8 @@ void Window::updateInteractiveMoveResize(const QPointF &global)
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
     } else if (isInteractiveMove()) {
-        if (!isMovable()) { // isMovableAcrossScreens() must have been true to get here
-            // Special moving of maximized windows on Xinerama screens
-            Output *output = workspace()->outputAt(global);
-            if (isRequestedFullScreen()) {
-                nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, output);
-            } else {
-                nextMoveResizeGeom = workspace()->clientArea(MaximizeArea, this, output);
-                const QSizeF adjSize = constrainFrameSize(nextMoveResizeGeom.size(), SizeModeMax);
-                if (adjSize != nextMoveResizeGeom.size()) {
-                    QRectF r(nextMoveResizeGeom);
-                    nextMoveResizeGeom.setSize(adjSize);
-                    nextMoveResizeGeom.moveCenter(r.center());
-                }
-            }
+        if (isRequestedFullScreen()) {
+            nextMoveResizeGeom = workspace()->clientArea(FullScreenArea, this, global);
         } else {
             nextMoveResizeGeom = nextInteractiveMoveGeometry(global);
         }
