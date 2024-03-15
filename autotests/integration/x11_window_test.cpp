@@ -63,6 +63,7 @@ private Q_SLOTS:
     void testSkipTaskbar();
     void testInitiallySkipTaskbar();
     void testRequestSkipTaskbar();
+    void testOpacity();
     void testMinimumSize();
     void testMaximumSize();
     void testTrimCaption_data();
@@ -878,6 +879,30 @@ void X11WindowTest::testRequestSkipTaskbar()
     }
     QVERIFY(skipTaskbarChangedSpy.wait());
     QVERIFY(!window->skipTaskbar());
+}
+
+void X11WindowTest::testOpacity()
+{
+    // This test verifies that _NET_WM_WINDOW_OPACITY is properly sync'ed with Window::opacity().
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::WM2Opacity);
+        info.setOpacityF(0.5);
+    });
+    QCOMPARE(window->opacity(), 0.5);
+
+    // Change the opacity.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::Properties(), NET::WM2Opacity);
+        info.setOpacityF(0.8);
+        xcb_flush(c.get());
+    }
+    QSignalSpy opacityChangedSpy(window, &Window::opacityChanged);
+    QVERIFY(opacityChangedSpy.wait());
+    QCOMPARE(window->opacity(), 0.8);
 }
 
 void X11WindowTest::testMinimumSize()
