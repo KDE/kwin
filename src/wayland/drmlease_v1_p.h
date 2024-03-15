@@ -27,6 +27,7 @@ class DrmLeaseV1Interface;
 
 class DrmLeaseDeviceV1Interface : public QObject, public QtWaylandServer::wp_drm_lease_device_v1
 {
+    Q_OBJECT
 public:
     explicit DrmLeaseDeviceV1Interface(Display *display, DrmGpu *gpu);
     ~DrmLeaseDeviceV1Interface();
