@@ -11,7 +11,7 @@
 #include "atoms.h"
 #include "compositor.h"
 #include "cursor.h"
-#include "effect/effectloader.h"
+#include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
 #include "x11window.h"
@@ -64,6 +64,14 @@ private Q_SLOTS:
     void testInitiallySkipTaskbar();
     void testRequestSkipTaskbar();
     void testOpacity();
+    void testDesktop_data();
+    void testDesktop();
+    void testInitialDesktop_data();
+    void testInitialDesktop();
+    void testChangeDesktop();
+    void testOnAllDesktops();
+    void testInitialOnAllDesktops();
+    void testChangeOnAllDesktops();
     void testMinimumSize();
     void testMaximumSize();
     void testTrimCaption_data();
@@ -97,6 +105,8 @@ void X11WindowTest::initTestCase()
 
 void X11WindowTest::init()
 {
+    VirtualDesktopManager::self()->setCount(2);
+
     QFETCH_GLOBAL(qreal, scale);
     kwinApp()->setXwaylandScale(scale);
 
@@ -903,6 +913,161 @@ void X11WindowTest::testOpacity()
     QSignalSpy opacityChangedSpy(window, &Window::opacityChanged);
     QVERIFY(opacityChangedSpy.wait());
     QCOMPARE(window->opacity(), 0.8);
+}
+
+void X11WindowTest::testDesktop_data()
+{
+    QTest::addColumn<uint>("desktopId");
+
+    QTest::addRow("first") << uint(1);
+    QTest::addRow("second") << uint(2);
+}
+
+void X11WindowTest::testDesktop()
+{
+    // This test verifies that desktop changes are propagated to the client.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Send the window to the given desktop.
+    QFETCH(uint, desktopId);
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId);
+    window->setDesktops({desktop});
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        QCOMPARE(info.desktop(), desktopId);
+    }
+}
+
+void X11WindowTest::testInitialDesktop_data()
+{
+    QTest::addColumn<uint>("desktopId");
+
+    QTest::addRow("first") << uint(1);
+    QTest::addRow("second") << uint(2);
+}
+
+void X11WindowTest::testInitialDesktop()
+{
+    // This test verifies that a window can be shown initially on a particular virtual desktop.
+
+    QFETCH(uint, desktopId);
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForX11Id(desktopId);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &desktopId](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        info.setDesktop(desktopId);
+    });
+    QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{desktop}));
+}
+
+void X11WindowTest::testChangeDesktop()
+{
+    // This test verifies that the client can send its window to another virtual desktop.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        info.setDesktop(1);
+    });
+
+    // Send the window to another desktop.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        info.setDesktop(2);
+        xcb_flush(c.get());
+    }
+    QSignalSpy desktopsChangedSpy(window, &Window::desktopsChanged);
+    QVERIFY(desktopsChangedSpy.wait());
+    QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{VirtualDesktopManager::self()->desktopForX11Id(2)}));
+}
+
+void X11WindowTest::testOnAllDesktops()
+{
+    // This test verifies that desktop changes are propagated to the client.
+
+    VirtualDesktop *activeDesktop = VirtualDesktopManager::self()->currentDesktop();
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        QCOMPARE(info.desktop(), activeDesktop->x11DesktopNumber());
+    }
+
+    // Set the window on all desktops.
+    window->setOnAllDesktops(true);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        QCOMPARE(info.desktop(), -1);
+    }
+
+    // Unset the window on all desktops.
+    window->setOnAllDesktops(false);
+
+    {
+        xcb_flush(kwinApp()->x11Connection());
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        QCOMPARE(info.desktop(), activeDesktop->x11DesktopNumber());
+    }
+}
+
+void X11WindowTest::testInitialOnAllDesktops()
+{
+    // This test verifies that a client can show a window, which is already on all desktops.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        info.setDesktop(-1);
+    });
+    QVERIFY(window->isOnAllDesktops());
+}
+
+void X11WindowTest::testChangeOnAllDesktops()
+{
+    // This test verifies that a client can set/unset its window on all desktops.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(0, 0, 100, 200));
+
+    // Set the window on all desktops.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        info.setDesktop(-1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy desktopsChangedSpy(window, &Window::desktopsChanged);
+    QVERIFY(desktopsChangedSpy.wait());
+    QVERIFY(window->isOnAllDesktops());
+
+    // Unset the window on all desktops.
+    {
+        NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
+        info.setDesktop(1);
+        xcb_flush(c.get());
+    }
+    QVERIFY(desktopsChangedSpy.wait());
+    QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{VirtualDesktopManager::self()->desktopForX11Id(1)}));
 }
 
 void X11WindowTest::testMinimumSize()
