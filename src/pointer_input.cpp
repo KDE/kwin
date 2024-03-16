@@ -779,10 +779,6 @@ qreal PointerInputRedirection::edgeBarrier(EdgeBarrierType type) const
 
 QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Output *currentOutput, std::chrono::microseconds time)
 {
-    auto softThreshold = [](qreal value, qreal threshold) {
-        return std::abs(value) < threshold ? 0 : value - (value > 0 ? threshold : -threshold);
-    };
-
     // optimization to avoid looping over all outputs
     if (exclusiveContains(currentOutput->geometry(), m_pos)) {
         m_movementInEdgeBarrier = QPointF();
@@ -800,17 +796,23 @@ QPointF PointerInputRedirection::applyEdgeBarrier(const QPointF &pos, const Outp
     std::chrono::microseconds timeDiff(time - m_lastMoveTime);
     qreal returnDistance = returnSpeed * timeDiff.count();
 
-    m_movementInEdgeBarrier += (pos - newPos);
-    m_movementInEdgeBarrier.setX(softThreshold(m_movementInEdgeBarrier.x(), returnDistance));
-    m_movementInEdgeBarrier.setY(softThreshold(m_movementInEdgeBarrier.y(), returnDistance));
+    const auto euclideanLength = [](const QPointF &point) {
+        return std::sqrt(point.x() * point.x() + point.y() * point.y());
+    };
+    const auto shorten = [euclideanLength](const QPointF &point, const qreal distance) {
+        const qreal length = euclideanLength(point);
+        if (length <= distance) {
+            return QPointF();
+        }
+        return point * (1 - distance / length);
+    };
 
-    if (std::abs(m_movementInEdgeBarrier.x()) > barrierWidth) {
-        newPos.rx() += softThreshold(m_movementInEdgeBarrier.x(), barrierWidth);
-        m_movementInEdgeBarrier.setX(0);
-    }
-    if (std::abs(m_movementInEdgeBarrier.y()) > barrierWidth) {
-        newPos.ry() += softThreshold(m_movementInEdgeBarrier.y(), barrierWidth);
-        m_movementInEdgeBarrier.setY(0);
+    m_movementInEdgeBarrier += (pos - newPos);
+    m_movementInEdgeBarrier = shorten(m_movementInEdgeBarrier, returnDistance);
+
+    if (euclideanLength(m_movementInEdgeBarrier) > barrierWidth) {
+        newPos += shorten(m_movementInEdgeBarrier, barrierWidth);
+        m_movementInEdgeBarrier = QPointF();
     }
     return newPos;
 }
