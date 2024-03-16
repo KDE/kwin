@@ -741,10 +741,35 @@ PointerInputRedirection::EdgeBarrierType PointerInputRedirection::edgeBarrierTyp
 {
     constexpr qreal cornerThreshold = 15;
     const auto moveResizeWindow = workspace()->moveResizeWindow();
-    const bool onCorner = (pos - lastOutputGeometry.topLeft()).manhattanLength() <= cornerThreshold
-        || (pos - lastOutputGeometry.bottomLeft()).manhattanLength() <= cornerThreshold
-        || (pos - lastOutputGeometry.topRight()).manhattanLength() <= cornerThreshold
-        || (pos - lastOutputGeometry.bottomRight()).manhattanLength() <= cornerThreshold;
+
+    const auto sign = [](qreal value) {
+        return value < 0 ? -1 : 1;
+    };
+    // Test if the corner has a neighboring screen
+    // by neighboring screen, we mean a screen whose corner is in the direction of the given corner
+    const auto cornerHasNeighboringScreen = [this, sign](const QPointF &corner,
+                                                         const QPointF &center) {
+        const QPointF pointOutsideCorner(
+            corner.x() + 2 * sign(corner.x() - center.x()),
+            corner.y() + 2 * sign(corner.y() - center.y()));
+        const auto adjacentOutput = workspace()->outputAt(pointOutsideCorner);
+        if (!adjacentOutput->geometry().contains(pointOutsideCorner.toPoint())) {
+            return false;
+        }
+        const auto adjacentCenter = adjacentOutput->geometry().center();
+        return sign(adjacentCenter.x() - corner.x()) == sign(corner.x() - center.x()) && sign(adjacentCenter.y() - corner.y()) == sign(corner.y() - center.y());
+    };
+    // We only use the CornerBarrier if the pointer is close to a corner and
+    // there is no neighboring screen in the direction of the corner
+    bool onCorner = false;
+    for (const auto &corner : {lastOutputGeometry.topLeft(), lastOutputGeometry.topRight(),
+                               lastOutputGeometry.bottomLeft(), lastOutputGeometry.bottomRight()}) {
+        if ((pos - corner).manhattanLength() <= cornerThreshold && !cornerHasNeighboringScreen(corner, lastOutputGeometry.center())) {
+            onCorner = true;
+            break;
+        }
+    }
+
     if (moveResizeWindow && moveResizeWindow->isInteractiveMove()) {
         return EdgeBarrierType::WindowMoveBarrier;
     } else if (moveResizeWindow && moveResizeWindow->isInteractiveResize()) {

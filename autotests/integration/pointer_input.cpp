@@ -1585,10 +1585,15 @@ void PointerInputTest::testEdgeBarrier_data()
     QTest::newRow("move cumulative") << QPoint(1279, 512) << QList<QPoint>{QPoint(24, 0), QPoint(24, 0)} << 1 << false;
     QTest::newRow("move then idle") << QPoint(1279, 512) << QList<QPoint>{QPoint(24, 0), QPoint(0, 0), QPoint(0, 0), QPoint(3, 0)} << 0 << false;
 
-    QTest::newRow("move top-right - corner barrier") << QPoint(2550, 1034) << QList<QPoint>{QPoint(100, -100)} << 3 << true;
-    QTest::newRow("move top-left - corner barrier") << QPoint(1290, 1034) << QList<QPoint>{QPoint(-100, -100)} << 3 << true;
-    QTest::newRow("move bottom-right - corner barrier") << QPoint(1270, 1014) << QList<QPoint>{QPoint(100, 100)} << 0 << true;
-    QTest::newRow("move bottom-left - corner barrier") << QPoint(2570, 1014) << QList<QPoint>{QPoint(-100, 100)} << 2 << true;
+    QTest::newRow("move top-right - corner barrier not barred") << QPoint(2550, 1034) << QList<QPoint>{QPoint(100, -100)} << 2 << true;
+    QTest::newRow("move top-left - corner barrier not barred") << QPoint(1290, 1034) << QList<QPoint>{QPoint(-100, -100)} << 0 << true;
+    QTest::newRow("move bottom-right - corner barrier not barred") << QPoint(1270, 1014) << QList<QPoint>{QPoint(100, 100)} << 3 << true;
+    QTest::newRow("move bottom-left - corner barrier not barred") << QPoint(2570, 1014) << QList<QPoint>{QPoint(-100, 100)} << 3 << true;
+
+    QTest::newRow("move top-right - corner barrier barred") << QPoint(1270, 10) << QList<QPoint>{QPoint(100, -100)} << 0 << true;
+    QTest::newRow("move top-left - corner barrier barred") << QPoint(2570, 10) << QList<QPoint>{QPoint(-100, -100)} << 2 << true;
+    QTest::newRow("move bottom-right - corner barrier barred") << QPoint(2550, 1014) << QList<QPoint>{QPoint(100, 100)} << 1 << true;
+    QTest::newRow("move bottom-left - corner barrier barred") << QPoint(1290, 1014) << QList<QPoint>{QPoint(-100, 100)} << 1 << true;
 }
 
 void PointerInputTest::testEdgeBarrier()
