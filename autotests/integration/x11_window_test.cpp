@@ -169,7 +169,7 @@ void X11WindowTest::testMaximizedFull()
     QCOMPARE(window->geometryRestore(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY((winInfo.state() & NET::Max) == NET::Max);
     }
@@ -182,7 +182,7 @@ void X11WindowTest::testMaximizedFull()
     QCOMPARE(window->frameGeometry(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::Max));
     }
@@ -254,7 +254,7 @@ void X11WindowTest::testMaximizedVertical()
     QCOMPARE(window->geometryRestore(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY((winInfo.state() & NET::Max) == NET::MaxVert);
     }
@@ -267,7 +267,7 @@ void X11WindowTest::testMaximizedVertical()
     QCOMPARE(window->frameGeometry(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::Max));
     }
@@ -339,7 +339,7 @@ void X11WindowTest::testMaximizedHorizontal()
     QCOMPARE(window->geometryRestore(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY((winInfo.state() & NET::Max) == NET::MaxHoriz);
     }
@@ -352,7 +352,7 @@ void X11WindowTest::testMaximizedHorizontal()
     QCOMPARE(window->frameGeometry(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::Max));
     }
@@ -424,7 +424,7 @@ void X11WindowTest::testFullScreen()
     QCOMPARE(window->fullscreenGeometryRestore(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::FullScreen);
     }
@@ -437,7 +437,7 @@ void X11WindowTest::testFullScreen()
     QCOMPARE(window->frameGeometry(), originalGeometry);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::FullScreen));
     }
@@ -504,7 +504,7 @@ void X11WindowTest::testKeepBelow()
     QVERIFY(window->keepBelow());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::KeepBelow);
     }
@@ -515,7 +515,7 @@ void X11WindowTest::testKeepBelow()
     QVERIFY(!window->keepBelow());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::KeepBelow));
     }
@@ -550,7 +550,7 @@ void X11WindowTest::testKeepAbove()
     QVERIFY(window->keepAbove());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::KeepAbove);
     }
@@ -561,7 +561,7 @@ void X11WindowTest::testKeepAbove()
     QVERIFY(!window->keepAbove());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::KeepAbove));
     }
@@ -596,7 +596,7 @@ void X11WindowTest::testMinimized()
     QVERIFY(window->isMinimized());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::Hidden);
     }
@@ -607,7 +607,7 @@ void X11WindowTest::testMinimized()
     QVERIFY(!window->isMinimized());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::Hidden));
     }
@@ -682,7 +682,7 @@ void X11WindowTest::testSkipSwitcher()
     QVERIFY(window->skipSwitcher());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::SkipSwitcher);
     }
@@ -693,7 +693,7 @@ void X11WindowTest::testSkipSwitcher()
     QVERIFY(!window->skipSwitcher());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::SkipSwitcher));
     }
@@ -757,7 +757,7 @@ void X11WindowTest::testSkipPager()
     QVERIFY(window->skipPager());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::SkipPager);
     }
@@ -768,7 +768,7 @@ void X11WindowTest::testSkipPager()
     QVERIFY(!window->skipPager());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::SkipPager));
     }
@@ -832,7 +832,7 @@ void X11WindowTest::testSkipTaskbar()
     QVERIFY(window->skipTaskbar());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(winInfo.state() & NET::SkipTaskbar);
     }
@@ -843,7 +843,7 @@ void X11WindowTest::testSkipTaskbar()
     QVERIFY(!window->skipTaskbar());
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo winInfo(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
         QVERIFY(!(winInfo.state() & NET::SkipTaskbar));
     }
@@ -938,7 +938,7 @@ void X11WindowTest::testDesktop()
     window->setDesktops({desktop});
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
         QCOMPARE(info.desktop(), desktopId);
     }
@@ -1012,7 +1012,7 @@ void X11WindowTest::testOnAllDesktops()
     window->setOnAllDesktops(true);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
         QCOMPARE(info.desktop(), -1);
     }
@@ -1021,7 +1021,7 @@ void X11WindowTest::testOnAllDesktops()
     window->setOnAllDesktops(false);
 
     {
-        xcb_flush(kwinApp()->x11Connection());
+        Xcb::sync();
         NETWinInfo info(c.get(), window->window(), kwinApp()->x11RootWindow(), NET::WMDesktop, NET::Properties2());
         QCOMPARE(info.desktop(), activeDesktop->x11DesktopNumber());
     }
