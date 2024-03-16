@@ -19,6 +19,7 @@
 
 #include <KWayland/Client/surface.h>
 
+#include <linux/input-event-codes.h>
 #include <netwm.h>
 #include <xcb/xcb_icccm.h>
 
@@ -79,6 +80,17 @@ private Q_SLOTS:
     void testOnAllDesktops();
     void testInitialOnAllDesktops();
     void testChangeOnAllDesktops();
+    void testNetWmKeyboardMove();
+    void testNetWmKeyboardMoveCancel();
+    void testNetWmKeyboardResize();
+    void testNetWmKeyboardResizeCancel();
+    void testNetWmButtonMove();
+    void testNetWmButtonMoveNotPressed();
+    void testNetWmButtonMoveCancel();
+    void testNetWmButtonSize_data();
+    void testNetWmButtonSize();
+    void testNetWmButtonSizeNotPressed();
+    void testNetWmButtonSizeCancel();
     void testMinimumSize();
     void testMaximumSize();
     void testTrimCaption_data();
@@ -1357,6 +1369,433 @@ void X11WindowTest::testChangeOnAllDesktops()
     }
     QVERIFY(desktopsChangedSpy.wait());
     QCOMPARE(window->desktops(), (QList<VirtualDesktop *>{VirtualDesktopManager::self()->desktopForX11Id(1)}));
+}
+
+void X11WindowTest::testNetWmKeyboardMove()
+{
+    // This test verifies that a client can initiate a keyboard interactive move operation.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::KeyboardMove, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveMove());
+
+    // Move the window to the right.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.translated(8, 0));
+
+    // Finish the interactive move.
+    Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
+    Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.translated(8, 0));
+}
+
+void X11WindowTest::testNetWmKeyboardMoveCancel()
+{
+    // This test verifies that a client can initiate a keyboard interactive move operation and then cancel it.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::KeyboardMove, XCB_BUTTON_INDEX_ANY);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveMove());
+
+    // Move the window to the right.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.translated(8, 0));
+
+    // Cancel the interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::MoveResizeCancel, XCB_BUTTON_INDEX_ANY);
+        xcb_flush(c.get());
+    }
+    QVERIFY(interactiveMoveResizeFinishedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void X11WindowTest::testNetWmKeyboardResize()
+{
+    // This test verifies that a client can initiate a keyboard interactive resize operation.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive resize.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width()), Xcb::toXNative(window->y() + window->height()), NET::KeyboardSize, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveResize());
+
+    // Move the window to the right, the frame geometry will be updated some time later.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(0, 0, 8, 0));
+
+    // Finish the interactive move.
+    Test::keyboardKeyPressed(KEY_ENTER, timestamp++);
+    Test::keyboardKeyReleased(KEY_ENTER, timestamp++);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(0, 0, 8, 0));
+}
+
+void X11WindowTest::testNetWmKeyboardResizeCancel()
+{
+    // This test verifies that a client can initiate a keyboard interactive resize operation and then cancel it.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive resize.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width()), Xcb::toXNative(window->y() + window->height()), NET::KeyboardSize, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveResize());
+
+    // Move the window to the right, the frame geometry will be updated some time later.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
+    Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(0, 0, 8, 0));
+
+    // Cancel the interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width()), Xcb::toXNative(window->y() + window->height()), NET::MoveResizeCancel, XCB_BUTTON_INDEX_ANY);
+        xcb_flush(c.get());
+    }
+    QVERIFY(interactiveMoveResizeFinishedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void X11WindowTest::testNetWmButtonMove()
+{
+    // This test verifies that a client can initiate an interactive move operation controlled by the pointer.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::Move, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveMove());
+
+    // Move the window to the right.
+    Test::pointerMotionRelative(QPointF(8, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.translated(8, 0));
+
+    // Finish the interactive move.
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.translated(8, 0));
+}
+
+void X11WindowTest::testNetWmButtonMoveNotPressed()
+{
+    // This test verifies that an interactive move operation won't be started if the specified button is not pressed.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::Move, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QVERIFY(!interactiveMoveResizeStartedSpy.wait(10));
+}
+
+void X11WindowTest::testNetWmButtonMoveCancel()
+{
+    // This test verifies that a client can initiate an interactive move operation controlled by the pointer and then cancel it.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    auto releaseButton = qScopeGuard([&timestamp]() {
+        Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    });
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::Move, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveMove());
+
+    // Move the window to the right.
+    Test::pointerMotionRelative(QPointF(8, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), originalGeometry.translated(8, 0));
+
+    // Cancel the interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x() + window->width() / 2), Xcb::toXNative(window->y() + window->height() / 2), NET::MoveResizeCancel, XCB_BUTTON_INDEX_ANY);
+        xcb_flush(c.get());
+    }
+    QVERIFY(interactiveMoveResizeFinishedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+void X11WindowTest::testNetWmButtonSize_data()
+{
+    QTest::addColumn<Gravity>("gravity");
+    QTest::addColumn<NET::Direction>("direction");
+
+    QTest::addRow("top-left") << Gravity::TopLeft << NET::Direction::TopLeft;
+    QTest::addRow("top") << Gravity::Top << NET::Direction::Top;
+    QTest::addRow("top-right") << Gravity::TopRight << NET::Direction::TopRight;
+    QTest::addRow("right") << Gravity::Right << NET::Direction::Right;
+    QTest::addRow("bottom-right") << Gravity::BottomRight << NET::Direction::BottomRight;
+    QTest::addRow("bottom") << Gravity::Bottom << NET::Direction::Bottom;
+    QTest::addRow("bottom-left") << Gravity::BottomLeft << NET::Direction::BottomLeft;
+    QTest::addRow("left") << Gravity::Left << NET::Direction::Left;
+}
+
+static QPointF directionToVector(NET::Direction direction, const QSizeF &size)
+{
+    switch (direction) {
+    case NET::Direction::TopLeft:
+        return QPointF(-size.width(), -size.height());
+    case NET::Direction::Top:
+        return QPointF(0, -size.height());
+    case NET::Direction::TopRight:
+        return QPointF(size.width(), -size.height());
+    case NET::Direction::Right:
+        return QPointF(size.width(), 0);
+    case NET::Direction::BottomRight:
+        return QPointF(size.width(), size.height());
+    case NET::Direction::Bottom:
+        return QPointF(0, size.height());
+    case NET::Direction::BottomLeft:
+        return QPointF(-size.width(), size.height());
+    case NET::Direction::Left:
+        return QPointF(-size.width(), 0);
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+static QRectF expandRect(const QRectF &rect, NET::Direction direction, const QSizeF &amount)
+{
+    switch (direction) {
+    case NET::Direction::TopLeft:
+        return rect.adjusted(-amount.width(), -amount.height(), 0, 0);
+    case NET::Direction::Top:
+        return rect.adjusted(0, -amount.height(), 0, 0);
+    case NET::Direction::TopRight:
+        return rect.adjusted(0, -amount.height(), amount.width(), 0);
+    case NET::Direction::Right:
+        return rect.adjusted(0, 0, amount.width(), 0);
+    case NET::Direction::BottomRight:
+        return rect.adjusted(0, 0, amount.width(), amount.height());
+    case NET::Direction::Bottom:
+        return rect.adjusted(0, 0, 0, amount.height());
+    case NET::Direction::BottomLeft:
+        return rect.adjusted(-amount.width(), 0, 0, amount.height());
+    case NET::Direction::Left:
+        return rect.adjusted(-amount.width(), 0, 0, 0);
+    default:
+        Q_UNREACHABLE();
+    }
+}
+
+void X11WindowTest::testNetWmButtonSize()
+{
+    // This test verifies that a client can initiate an interactive move operation controlled by the pointer.
+
+    QFETCH(NET::Direction, direction);
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    const QRectF originalGeometry = window->frameGeometry();
+    const QPointF initialPointer = window->frameGeometry().center() + directionToVector(direction, originalGeometry.size() * 0.5);
+    quint32 timestamp = 0;
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    Test::pointerMotion(initialPointer, timestamp++);
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(initialPointer.x()), Xcb::toXNative(initialPointer.y()), direction, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveResize());
+    QTEST(window->interactiveMoveResizeGravity(), "gravity");
+
+    // Resize the window a tiny bit.
+    Test::pointerMotionRelative(directionToVector(direction, QSizeF(8, 8)), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), expandRect(originalGeometry, direction, QSizeF(8, 8)));
+
+    // Finish the interactive move.
+    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), expandRect(originalGeometry, direction, QSizeF(8, 8)));
+}
+
+void X11WindowTest::testNetWmButtonSizeNotPressed()
+{
+    // This test verifies that an interactive siize operation won't be started if the specified button is not pressed.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive move.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x()), Xcb::toXNative(window->y()), NET::TopLeft, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QVERIFY(!interactiveMoveResizeStartedSpy.wait(10));
+}
+
+void X11WindowTest::testNetWmButtonSizeCancel()
+{
+    // This test verifies that a client can start an interactive resize and then cancel it.
+
+    // Create an xcb window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Request interactive resize.
+    const QRectF originalGeometry = window->frameGeometry();
+    quint32 timestamp = 0;
+    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
+    auto releaseButton = qScopeGuard([&timestamp]() {
+        Test::pointerButtonReleased(BTN_LEFT, timestamp++);
+    });
+    Test::pointerMotion(originalGeometry.topLeft(), timestamp++);
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x()), Xcb::toXNative(window->y()), NET::TopLeft, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
+    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
+    QVERIFY(interactiveMoveResizeStartedSpy.wait());
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QVERIFY(window->isInteractiveResize());
+
+    // Resize the window a tiny bit.
+    Test::pointerMotionRelative(QPointF(-8, -8), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(-8, -8, 0, 0));
+
+    // Cancel the interactive resize.
+    {
+        NETRootInfo root(c.get(), NET::Properties());
+        root.moveResizeRequest(window->window(), Xcb::toXNative(window->x()), Xcb::toXNative(window->y()), NET::MoveResizeCancel, XCB_BUTTON_INDEX_1);
+        xcb_flush(c.get());
+    }
+    QVERIFY(interactiveMoveResizeFinishedSpy.wait());
+    QCOMPARE(window->frameGeometry(), originalGeometry);
 }
 
 void X11WindowTest::testMinimumSize()

@@ -54,7 +54,6 @@ private Q_SLOTS:
     void testPointerMoveEnd_data();
     void testPointerMoveEnd();
     void testClientSideMove();
-    void testNetMove();
     void testAdjustClientGeometryOfHiddenX11Panel_data();
     void testAdjustClientGeometryOfHiddenX11Panel();
     void testAdjustClientGeometryOfHiddenWaylandPanel_data();
@@ -534,76 +533,6 @@ void MoveResizeWindowTest::testClientSideMove()
     QCOMPARE(window->isInteractiveMove(), false);
     QCOMPARE(window->frameGeometry(), startGeometry.translated(QPoint(dragDistance, dragDistance) + QPoint(6, 6)));
     QCOMPARE(pointerEnteredSpy.last().last().toPoint(), QPoint(50, 25));
-}
-
-void MoveResizeWindowTest::testNetMove()
-{
-    // this test verifies that a move request for an X11 window through NET API works
-    // create an xcb window
-    Test::XcbConnectionPtr c = Test::createX11Connection();
-    QVERIFY(!xcb_connection_has_error(c.get()));
-
-    xcb_window_t windowId = xcb_generate_id(c.get());
-    xcb_create_window(c.get(), XCB_COPY_FROM_PARENT, windowId, rootWindow(),
-                      0, 0, 100, 100,
-                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
-    xcb_size_hints_t hints;
-    memset(&hints, 0, sizeof(hints));
-    xcb_icccm_size_hints_set_position(&hints, 1, 0, 0);
-    xcb_icccm_size_hints_set_size(&hints, 1, 100, 100);
-    xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
-    // let's set a no-border
-    NETWinInfo winInfo(c.get(), windowId, rootWindow(), NET::WMWindowType, NET::Properties2());
-    winInfo.setWindowType(NET::Override);
-    xcb_map_window(c.get(), windowId);
-    xcb_flush(c.get());
-
-    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
-    QVERIFY(windowCreatedSpy.wait());
-    X11Window *window = windowCreatedSpy.first().first().value<X11Window *>();
-    QVERIFY(window);
-    QCOMPARE(window->window(), windowId);
-    const QRectF origGeo = window->frameGeometry();
-
-    QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
-    QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
-    QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
-    QVERIFY(!workspace()->moveResizeWindow());
-
-    // use NETRootInfo to trigger a move request
-    quint32 timestamp = 0;
-    Test::pointerMotion(window->frameGeometry().center(), timestamp++);
-    Test::pointerButtonPressed(BTN_LEFT, timestamp++);
-    NETRootInfo root(c.get(), NET::Properties());
-    root.moveResizeRequest(windowId, origGeo.center().x(), origGeo.center().y(), NET::Move, XCB_BUTTON_INDEX_1);
-    xcb_flush(c.get());
-
-    QVERIFY(interactiveMoveResizeStartedSpy.wait());
-    QCOMPARE(workspace()->moveResizeWindow(), window);
-    QVERIFY(window->isInteractiveMove());
-    QCOMPARE(window->geometryRestore(), origGeo);
-    QCOMPARE(Cursors::self()->mouse()->pos(), origGeo.center());
-
-    // let's move a step
-    Test::pointerMotionRelative(QPoint(10, 10), timestamp++);
-    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QCOMPARE(interactiveMoveResizeSteppedSpy.first().last(), origGeo.translated(10, 10));
-
-    // let's cancel the move resize again through the net API
-    root.moveResizeRequest(windowId, window->frameGeometry().center().x(), window->frameGeometry().center().y(), NET::MoveResizeCancel, XCB_BUTTON_INDEX_1);
-    xcb_flush(c.get());
-    QVERIFY(interactiveMoveResizeFinishedSpy.wait());
-
-    // and destroy the window again
-    xcb_unmap_window(c.get(), windowId);
-    xcb_destroy_window(c.get(), windowId);
-    xcb_flush(c.get());
-    c.reset();
-
-    QSignalSpy windowClosedSpy(window, &X11Window::closed);
-    QVERIFY(windowClosedSpy.wait());
-
-    Test::pointerButtonReleased(BTN_LEFT, timestamp++);
 }
 
 void MoveResizeWindowTest::testAdjustClientGeometryOfHiddenX11Panel_data()

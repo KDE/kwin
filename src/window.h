@@ -1115,6 +1115,10 @@ public:
     {
         return isInteractiveMoveResize() && interactiveMoveResizeGravity() != Gravity::None;
     }
+    Gravity interactiveMoveResizeGravity() const
+    {
+        return m_interactiveMoveResize.gravity;
+    }
     QPointF interactiveMoveResizeAnchor() const
     {
         return m_interactiveMoveResize.anchor;
@@ -1618,10 +1622,6 @@ protected:
         return m_interactiveMoveResize.initialGeometry;
     }
     void setMoveResizeGeometry(const QRectF &geo);
-    Gravity interactiveMoveResizeGravity() const
-    {
-        return m_interactiveMoveResize.gravity;
-    }
     void setInteractiveMoveResizeGravity(Gravity gravity)
     {
         m_interactiveMoveResize.gravity = gravity;
