@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-27 12:07+0100\n"
+"PO-Revision-Date: 2024-03-10 05:14+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.02.0\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -237,7 +237,7 @@ msgstr "Ritardo &riattivazione:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Barri&era degli angoli:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -249,19 +249,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Qui puoi abilitare o disabilitare la barriera virtuale degli angoli tra gli "
+"schermi. La barriera impedisce al puntatore di spostarsi su un altro schermo "
+"quando sta già toccando un angolo dello schermo. Ciò semplifica "
+"l'attivazione di elementi dell'interfaccia utente come i pulsanti di "
+"chiusura delle finestre ingrandite quando si utilizzano più schermi."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Impedisce al puntatore di attraversare ali angoli dello schermo."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Barri&era dei bordi:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -273,6 +278,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Qui puoi impostare la dimensione della barriera laterale tra i diversi "
+"schermi. La barriera aggiunge ulteriore distanza di cui devi spostare il "
+"puntatore prima che attraversi il bordo sull'altro schermo. Ciò semplifica "
+"l'accesso agli elementi dell'interfaccia utente come i pannelli di Plasma "
+"che si trovano sul bordo tra gli schermi."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -280,18 +290,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Distanza aggiuntiva che il puntatore deve percorrere per attraversare i "
+"bordi degli schermi."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

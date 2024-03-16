@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 00:38+0000\n"
-"PO-Revision-Date: 2024-03-14 19:26\n"
+"POT-Creation-Date: 2024-03-16 00:39+0000\n"
+"PO-Revision-Date: 2024-03-15 21:00\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -4139,7 +4139,7 @@ msgstr "切换到下方桌面"
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3120
+#: window.cpp:3118
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

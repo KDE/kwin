@@ -367,17 +367,6 @@
 <varlistentry>
 <term
 ><guilabel
->Etkin ekran fareyi izler</guilabel
-></term>
-<listitem>
-<para
->Bu seçenek etkinleştirildiğinde, etkin ekran (örneğin, yeni pencerelerin görüntülendiği yer) fare işaretçisini içeren ekrandır. Devre dışı bırakıldığında etkin ekran, odaklanılan pencereyi içeren ekrandır. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Ekran odağını ayır</guilabel
 ></term>
 <listitem>

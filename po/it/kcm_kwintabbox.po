@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-09 17:04+0100\n"
+"PO-Revision-Date: 2024-03-09 16:56+0100\n"
 "Last-Translator: Paolo Zamponi <feus73@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -41,10 +41,9 @@ msgid "Alternative"
 msgstr "Alternativo"
 
 #: main.cpp:69
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switchers…"
-msgstr "Recupera nuovi selettori delle attività..."
+msgstr "Recupera nuovi selettori delle attività…"
 
 #: main.cpp:83
 #, kde-format

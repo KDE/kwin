@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 00:38+0000\n"
+"POT-Creation-Date: 2024-03-16 00:39+0000\n"
 "PO-Revision-Date: 2024-03-01 09:50+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -4200,7 +4200,7 @@ msgstr "Vai al desktop inferiore"
 msgid "Switch to Desktop %1"
 msgstr "Vai al desktop %1"
 
-#: window.cpp:3120
+#: window.cpp:3118
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
