@@ -143,7 +143,7 @@ void AbstractEglBackend::initWayland()
                 continue;
             }
 
-            const bool externalOnlySupported = withExternalOnlyYUV && info->yuvConversion();
+            const bool externalOnlySupported = withExternalOnlyYUV && info && info->yuvConversion();
             QList<uint64_t> modifiers = externalOnlySupported ? it->allModifiers : it->nonExternalOnlyModifiers;
 
             if (externalOnlySupported && !modifiers.isEmpty()) {
