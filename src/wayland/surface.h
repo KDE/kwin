@@ -343,6 +343,8 @@ public:
 
     void setPreferredColorDescription(const ColorDescription &descr);
 
+    double alphaMultiplier() const;
+
     /**
      * Returns the current release point for the buffer on this surface. The buffer keeps the
      * release point referenced as long as it's referenced itself; for synchronization on the
@@ -436,6 +438,7 @@ Q_SIGNALS:
     void colorDescriptionChanged();
     void presentationModeHintChanged();
     void bufferReleasePointChanged();
+    void alphaMultiplierChanged();
 
     /**
      * Emitted when the Surface has been committed.

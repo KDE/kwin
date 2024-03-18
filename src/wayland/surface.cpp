@@ -589,6 +589,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->colorDescription = colorDescription;
         target->colorDescriptionIsSet = true;
     }
+    if (alphaMultiplierIsSet) {
+        target->alphaMultiplier = alphaMultiplier;
+        target->alphaMultiplierIsSet = true;
+    }
     target->presentationFeedback = std::move(presentationFeedback);
 
     *this = SurfaceState{};
@@ -611,6 +615,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool colorDescriptionChanged = next->colorDescriptionIsSet;
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
     const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
+    const bool alphaMultiplierChanged = next->alphaMultiplierIsSet;
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
@@ -705,6 +710,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (bufferReleasePointChanged) {
         Q_EMIT q->bufferReleasePointChanged();
+    }
+    if (alphaMultiplierChanged) {
+        Q_EMIT q->alphaMultiplierChanged();
     }
 
     if (bufferChanged) {
@@ -1203,6 +1211,11 @@ void SurfaceInterface::traverseTree(std::function<void(SurfaceInterface *surface
 std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
 {
     return d->current->releasePoint;
+}
+
+double SurfaceInterface::alphaMultiplier() const
+{
+    return d->current->alphaMultiplier;
 }
 
 } // namespace KWin

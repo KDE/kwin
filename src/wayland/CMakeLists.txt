@@ -252,10 +252,15 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
     BASENAME linux-drm-syncobj-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
+    BASENAME alpha-modifier-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
+    alphamodifier_v1.cpp
     appmenu.cpp
     blur.cpp
     clientconnection.cpp
@@ -339,6 +344,7 @@ target_sources(kwin PRIVATE
 )
 
 install(FILES
+    alphamodifier_v1.h
     appmenu.h
     blur.h
     clientconnection.h
@@ -418,10 +424,12 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v2.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v2-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

@@ -23,6 +23,7 @@
 #include "utils/kernel.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
+#include "wayland/alphamodifier_v1.h"
 #include "wayland/appmenu.h"
 #include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
@@ -510,7 +511,7 @@ bool WaylandServer::init(InitializationFlags flags)
             window->installXdgDialogV1(dialog);
         }
     });
-
+    m_alphaModifierManager = new AlphaModifierManagerV1(m_display, m_display);
     return true;
 }
 
