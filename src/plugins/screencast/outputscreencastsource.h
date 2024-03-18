@@ -29,7 +29,7 @@ public:
     quint32 drmFormat() const override;
 
     void render(GLFramebuffer *target) override;
-    void render(spa_data *spa, spa_video_format format) override;
+    void render(QImage *target) override;
     std::chrono::nanoseconds clock() const override;
 
     void resume() override;

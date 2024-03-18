@@ -9,8 +9,6 @@
 #include "opengl/glplatform.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
-#include <spa/buffer/buffer.h>
-#include <spa/param/video/raw.h>
 
 namespace KWin
 {
@@ -28,18 +26,12 @@ static void mirrorVertically(uchar *data, int height, int stride)
     }
 }
 
-static GLenum closestGLType(spa_video_format format)
+static GLenum closestGLType(QImage::Format format)
 {
     switch (format) {
-    case SPA_VIDEO_FORMAT_RGB:
-        return GL_RGB;
-    case SPA_VIDEO_FORMAT_BGR:
-        return GL_BGR;
-    case SPA_VIDEO_FORMAT_RGBx:
-    case SPA_VIDEO_FORMAT_RGBA:
-        return GL_RGBA;
-    case SPA_VIDEO_FORMAT_BGRA:
-    case SPA_VIDEO_FORMAT_BGRx:
+    case QImage::Format_ARGB32:
+    case QImage::Format_ARGB32_Premultiplied:
+    case QImage::Format_RGB32:
         return GL_BGRA;
     default:
         qDebug() << "unknown format" << format;
@@ -47,7 +39,7 @@ static GLenum closestGLType(spa_video_format format)
     }
 }
 
-static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format format)
+static void doGrabTexture(GLTexture *texture, QImage *target)
 {
     const auto context = OpenGlContext::currentContext();
     const QSize size = texture->size();
@@ -65,12 +57,12 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
     if (context->isOpenGLES() || context->glPlatform()->driver() == Driver_NVidia) {
         GLFramebuffer fbo(texture);
         GLFramebuffer::pushFramebuffer(&fbo);
-        glReadPixels(0, 0, size.width(), size.height(), closestGLType(format), GL_UNSIGNED_BYTE, spa->data);
+        glReadPixels(0, 0, size.width(), size.height(), closestGLType(target->format()), GL_UNSIGNED_BYTE, target->bits());
         GLFramebuffer::popFramebuffer();
     } else if (context->openglVersion() >= Version(4, 5)) {
-        glGetTextureImage(texture->texture(), 0, closestGLType(format), GL_UNSIGNED_BYTE, spa->chunk->size, spa->data);
+        glGetTextureImage(texture->texture(), 0, closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
     } else {
-        glGetTexImage(texture->target(), 0, closestGLType(format), GL_UNSIGNED_BYTE, spa->data);
+        glGetTexImage(texture->target(), 0, closestGLType(target->format()), GL_UNSIGNED_BYTE, target->bits());
     }
 
     if (invertNeededAndSupported) {
@@ -78,15 +70,15 @@ static void doGrabTexture(GLTexture *texture, spa_data *spa, spa_video_format fo
             glPixelStorei(GL_PACK_INVERT_MESA, prev);
         }
     } else if (invertNeeded) {
-        mirrorVertically(static_cast<uchar *>(spa->data), size.height(), spa->chunk->stride);
+        mirrorVertically(static_cast<uchar *>(target->bits()), size.height(), target->bytesPerLine());
     }
 }
 
-static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format format)
+static void grabTexture(GLTexture *texture, QImage *target)
 {
     const OutputTransform contentTransform = texture->contentTransform();
     if (contentTransform == OutputTransform::Normal || contentTransform == OutputTransform::FlipY) {
-        doGrabTexture(texture, spa, format);
+        doGrabTexture(texture, target);
     } else {
         const QSize size = contentTransform.map(texture->size());
         const auto backingTexture = GLTexture::allocate(GL_RGBA8, size);
@@ -105,7 +97,7 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
         GLFramebuffer::pushFramebuffer(&fbo);
         texture->render(size);
         GLFramebuffer::popFramebuffer();
-        doGrabTexture(backingTexture.get(), spa, format);
+        doGrabTexture(backingTexture.get(), target);
     }
 }
 

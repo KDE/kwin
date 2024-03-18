@@ -56,7 +56,7 @@ QSize WindowScreenCastSource::textureSize() const
     return m_window->clientGeometry().size().toSize();
 }
 
-void WindowScreenCastSource::render(spa_data *spa, spa_video_format format)
+void WindowScreenCastSource::render(QImage *target)
 {
     const auto offscreenTexture = GLTexture::allocate(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
     if (!offscreenTexture) {
@@ -66,7 +66,7 @@ void WindowScreenCastSource::render(spa_data *spa, spa_video_format format)
 
     GLFramebuffer offscreenTarget(offscreenTexture.get());
     render(&offscreenTarget);
-    grabTexture(offscreenTexture.get(), spa, format);
+    grabTexture(offscreenTexture.get(), target);
 }
 
 void WindowScreenCastSource::render(GLFramebuffer *target)
