@@ -4474,6 +4474,11 @@ void Window::maybeSendFrameCallback()
     }
 }
 
+double Window::targetScale() const
+{
+    return m_targetScale;
+}
+
 bool Window::isShown() const
 {
     return !isDeleted() && !isHidden() && !isHiddenByShowDesktop() && !isMinimized();
@@ -4555,6 +4560,14 @@ void Window::doSetPreferredBufferScale()
 void Window::updatePreferredBufferScale()
 {
     setPreferredBufferScale(m_moveResizeOutput->scale());
+}
+
+void Window::setTargetScale(double scale)
+{
+    if (m_targetScale != scale) {
+        m_targetScale = scale;
+        Q_EMIT targetScaleChanged();
+    }
 }
 
 OutputTransform Window::preferredBufferTransform() const
