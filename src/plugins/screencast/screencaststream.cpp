@@ -292,10 +292,6 @@ void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *buffer)
     if (spa_data && spa_data->type == SPA_DATA_MemFd) {
         munmap(spa_data->data, spa_data->maxsize);
         close(spa_data->fd);
-    } else if (spa_data && spa_data->type == SPA_DATA_DmaBuf) {
-        for (int i = 0, c = buffer->buffer->n_datas; i < c; ++i) {
-            close(buffer->buffer->datas[i].fd);
-        }
     }
 }
 
