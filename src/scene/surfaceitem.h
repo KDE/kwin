@@ -60,6 +60,8 @@ public:
 
     std::chrono::nanoseconds frameTimeEstimation() const;
 
+    double alphaMultiplier() const;
+
 Q_SIGNALS:
     void damaged();
 
@@ -82,6 +84,7 @@ protected:
     std::deque<std::chrono::nanoseconds> m_lastDamageTimeDiffs;
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
+    double m_alphaMultiplier = 1;
 };
 
 class KWIN_EXPORT SurfaceTexture

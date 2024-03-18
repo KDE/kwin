@@ -21,6 +21,7 @@
 #include "options.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
+#include "wayland/alphamodifier_v1.h"
 #include "wayland/appmenu.h"
 #include "wayland/clientconnection.h"
 #include "wayland/compositor.h"
@@ -498,6 +499,7 @@ bool WaylandServer::init(InitializationFlags flags)
     if (qEnvironmentVariableIntValue("KWIN_ENABLE_XX_COLOR_MANAGEMENT")) {
         m_xxColorManager = new XXColorManagerV2(m_display, m_display);
     }
+    m_alphaModifierManager = new AlphaModifierManagerV1(m_display, m_display);
     return true;
 }
 

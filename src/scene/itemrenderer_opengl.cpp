@@ -205,7 +205,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .texture = bindSurfaceTexture(surfaceItem),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
-                    .opacity = context->opacityStack.top(),
+                    .opacity = context->opacityStack.top() * surfaceItem->alphaMultiplier(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = NormalizedCoordinates,
                     .scale = scale,

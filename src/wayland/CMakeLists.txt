@@ -231,10 +231,15 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v2.xml
     BASENAME xx-color-management-v2
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/alpha-modifier-v1.xml
+    BASENAME alpha-modifier-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
+    alphamodifier_v1.cpp
     appmenu.cpp
     blur.cpp
     clientconnection.cpp
@@ -316,6 +321,7 @@ target_sources(kwin PRIVATE
 )
 
 install(FILES
+    alphamodifier_v1.h
     appmenu.h
     blur.h
     clientconnection.h
@@ -392,9 +398,11 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v2.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v2-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

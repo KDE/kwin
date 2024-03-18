@@ -44,6 +44,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handleColorDescriptionChanged);
     connect(surface, &SurfaceInterface::presentationModeHintChanged,
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
+    connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -63,6 +64,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setBufferSourceBox(surface->bufferSourceBox());
     setBufferSize(surface->bufferSize());
     setColorDescription(surface->colorDescription());
+    m_alphaMultiplier = surface->alphaMultiplier();
 }
 
 QList<QRectF> SurfaceItemWayland::shape() const
@@ -184,6 +186,11 @@ void SurfaceItemWayland::handleColorDescriptionChanged()
 void SurfaceItemWayland::handlePresentationModeHintChanged()
 {
     setPresentationHint(m_surface->presentationModeHint());
+}
+
+void SurfaceItemWayland::handleAlphaMultiplierChanged()
+{
+    m_alphaMultiplier = m_surface->alphaMultiplier();
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

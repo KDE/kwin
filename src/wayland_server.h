@@ -58,6 +58,7 @@ class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class PresentationTime;
 class XXColorManagerV2;
+class AlphaModifierManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -297,6 +298,7 @@ private:
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
     XXColorManagerV2 *m_xxColorManager = nullptr;
+    AlphaModifierManagerV1 *m_alphaModifierManager = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

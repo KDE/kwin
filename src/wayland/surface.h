@@ -342,6 +342,8 @@ public:
 
     void setPreferredColorDescription(const ColorDescription &descr);
 
+    double alphaMultiplier() const;
+
     /**
      * Traverses the surface sub-tree with this surface as the root.
      */
@@ -426,6 +428,7 @@ Q_SIGNALS:
 
     void colorDescriptionChanged();
     void presentationModeHintChanged();
+    void alphaMultiplierChanged();
 
     /**
      * Emitted when the Surface has been committed.
