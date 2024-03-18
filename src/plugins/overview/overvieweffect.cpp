@@ -155,7 +155,7 @@ OverviewEffect::OverviewEffect()
     OverviewConfig::instance(effects->config());
     reconfigure(ReconfigureAll);
 
-    auto delegate = new QQmlComponent(effects->qmlEngine());
+    auto delegate = new QQmlComponent(effects->qmlEngine(), this);
     connect(delegate, &QQmlComponent::statusChanged, this, [delegate]() {
         if (delegate->isError()) {
             qWarning() << "Failed to load overview:" << delegate->errorString();
