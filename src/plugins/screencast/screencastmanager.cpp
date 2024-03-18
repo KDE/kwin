@@ -58,6 +58,8 @@ static QRegion scaleRegion(const QRegion &_region, qreal scale)
 
 class WindowStream : public ScreenCastStream
 {
+    Q_OBJECT
+
 public:
     WindowStream(Window *window, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
         : ScreenCastStream(new WindowScreenCastSource(window), pwCore, parent)
@@ -229,4 +231,4 @@ void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStr
 
 } // namespace KWin
 
-#include "moc_screencastmanager.cpp"
+#include "screencastmanager.moc"
