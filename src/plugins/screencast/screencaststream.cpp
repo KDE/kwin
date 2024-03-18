@@ -215,13 +215,9 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
 void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 {
-    struct spa_data *spa_data = buffer->buffer->datas;
-
-    spa_data->mapoffset = 0;
-    spa_data->flags = SPA_DATA_FLAG_READWRITE;
-
     std::shared_ptr<ScreenCastDmaBufTexture> dmabuff;
 
+    struct spa_data *spa_data = buffer->buffer->datas;
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
         Q_ASSERT(m_dmabufParams);
         dmabuff = createDmaBufTexture(*m_dmabufParams);
@@ -229,32 +225,38 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 
     if (dmabuff) {
         const DmaBufAttributes *dmabufAttribs = dmabuff->buffer()->dmabufAttributes();
-        spa_data->maxsize = dmabufAttribs->pitch[0] * m_resolution.height();
-
         Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs->planeCount));
         for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
-            buffer->buffer->datas[i].type = SPA_DATA_DmaBuf;
-            buffer->buffer->datas[i].fd = dmabufAttribs->fd[i].get();
-            buffer->buffer->datas[i].data = nullptr;
+            spa_data[i].type = SPA_DATA_DmaBuf;
+            spa_data[i].flags = SPA_DATA_FLAG_READWRITE;
+            spa_data[i].mapoffset = 0;
+            spa_data[i].maxsize = i == 0 ? dmabufAttribs->pitch[i] * dmabufAttribs->height : 0; // TODO: dmabufs don't have a well defined size, it should be zero but some clients check the size to see if the buffer is valid
+            spa_data[i].fd = dmabufAttribs->fd[i].get();
+            spa_data[i].data = nullptr;
+            spa_data[i].chunk->offset = dmabufAttribs->offset[i];
+            spa_data[i].chunk->size = spa_data[i].maxsize;
+            spa_data[i].chunk->stride = dmabufAttribs->pitch[i];
+            spa_data[i].chunk->flags = SPA_CHUNK_FLAG_NONE;
         }
         m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
-        if (!(spa_data[0].type & (1 << SPA_DATA_MemFd))) {
+        if (!(spa_data->type & (1 << SPA_DATA_MemFd))) {
             qCCritical(KWIN_SCREENCAST) << "memfd: Client doesn't support memfd buffer data type";
             return;
         }
 
         const int bytesPerPixel = m_source->hasAlphaChannel() ? 4 : 3;
         const int stride = SPA_ROUND_UP_N(m_resolution.width() * bytesPerPixel, 4);
-        spa_data->maxsize = stride * m_resolution.height();
         spa_data->type = SPA_DATA_MemFd;
+        spa_data->flags = SPA_DATA_FLAG_READWRITE;
+        spa_data->mapoffset = 0;
+        spa_data->maxsize = stride * m_resolution.height();
         spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
         if (spa_data->fd == -1) {
             qCCritical(KWIN_SCREENCAST) << "memfd: Can't create memfd";
             return;
         }
-        spa_data->mapoffset = 0;
 
         if (ftruncate(spa_data->fd, spa_data->maxsize) < 0) {
             qCCritical(KWIN_SCREENCAST) << "memfd: Can't truncate to" << spa_data->maxsize;
@@ -277,6 +279,11 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
         } else {
             qCDebug(KWIN_SCREENCAST) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
         }
+
+        spa_data->chunk->offset = 0;
+        spa_data->chunk->size = spa_data->maxsize;
+        spa_data->chunk->stride = stride;
+        spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
 #endif
     }
 
@@ -515,7 +522,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    spa_data->chunk->offset = 0;
     spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
     static_cast<OpenGLBackend *>(Compositor::self()->backend())->makeCurrent();
     if (data || spa_data[0].type == SPA_DATA_MemFd) {
@@ -528,9 +534,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
         }
-
-        spa_data->chunk->stride = stride;
-        spa_data->chunk->size = stride * size.height();
 
         m_source->render(spa_data, m_videoFormat.format);
 
@@ -545,14 +548,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     } else {
         auto &buf = m_dmabufDataForPwBuffer[buffer];
         Q_ASSERT(buf);
-
-        const DmaBufAttributes *dmabufAttribs = buf->buffer()->dmabufAttributes();
-        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs->planeCount));
-        for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
-            buffer->buffer->datas[i].chunk->stride = dmabufAttribs->pitch[i];
-            buffer->buffer->datas[i].chunk->offset = dmabufAttribs->offset[i];
-        }
-        spa_data->chunk->size = spa_data->maxsize;
 
         m_source->render(buf->framebuffer());
 
@@ -682,7 +677,6 @@ void ScreenCastStream::recordCursor()
 
     // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
     spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
-    spa_buffer->datas[0].chunk->size = 0;
 
     sendCursorData(Cursors::self()->currentCursor(),
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
