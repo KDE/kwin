@@ -3613,12 +3613,12 @@ QuickTileMode Window::quickTileMode() const
 {
     if (m_tile) {
         return m_tile->quickTileMode();
-        /* } else if (requestedMaximizeMode() == MaximizeVertical) {
-             return QuickTileFlag::Vertical;
-         } else if (requestedMaximizeMode() == MaximizeHorizontal) {
-             return QuickTileFlag::Horizontal;
-         } else if (requestedMaximizeMode() == MaximizeFull) {
-             return QuickTileFlag::Horizontal | QuickTileFlag::Vertical;*/
+        /*} else if (requestedMaximizeMode() == MaximizeVertical) {
+            return QuickTileFlag::Vertical;
+        } else if (requestedMaximizeMode() == MaximizeHorizontal) {
+            return QuickTileFlag::Horizontal;*/
+    } else if (requestedMaximizeMode() == MaximizeFull) {
+        return QuickTileFlag::Horizontal | QuickTileFlag::Vertical;
     } else {
         return QuickTileFlag::None;
     }
