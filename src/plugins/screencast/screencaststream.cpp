@@ -507,7 +507,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     struct pw_buffer *buffer = pw_stream_dequeue_buffer(m_pwStream);
-
     if (!buffer) {
         return;
     }
@@ -518,6 +517,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     uint8_t *data = (uint8_t *)spa_data->data;
     if (!data && spa_buffer->datas->type != SPA_DATA_DmaBuf) {
         qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
+        spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
         pw_stream_queue_buffer(m_pwStream, buffer);
         return;
     }
@@ -531,6 +531,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         if ((stride * size.height()) > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
+            spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
         }
