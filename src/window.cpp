@@ -2266,6 +2266,7 @@ void Window::setModal(bool m)
         return;
     }
     m_modal = m;
+    doSetModal();
     Q_EMIT modalChanged();
     // Changing modality for a mapped window is weird (?)
     // _NET_WM_STATE_MODAL should possibly rather be _NET_WM_WINDOW_TYPE_MODAL_DIALOG
@@ -4318,6 +4319,10 @@ void Window::setSuspended(bool suspended)
 }
 
 void Window::doSetSuspended()
+{
+}
+
+void Window::doSetModal()
 {
 }
 

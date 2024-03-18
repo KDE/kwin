@@ -1520,6 +1520,7 @@ protected:
     virtual void doSetHidden();
     virtual void doSetHiddenByShowDesktop();
     virtual void doSetSuspended();
+    virtual void doSetModal();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();

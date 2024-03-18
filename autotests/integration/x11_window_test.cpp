@@ -100,6 +100,12 @@ private Q_SLOTS:
     void testCaptionWmName();
     void testActivateFocusedWindow();
     void testReentrantMoveResize();
+    void testModal();
+    void testGroupModal();
+    void testCloseModal();
+    void testCloseInactiveModal();
+    void testCloseGroupModal();
+    void testCloseInactiveGroupModal();
 };
 
 void X11WindowTest::initTestCase_data()
@@ -2496,6 +2502,283 @@ void X11WindowTest::testReentrantMoveResize()
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
     QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void X11WindowTest::testModal()
+{
+    // Create a parent and a child windows.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 100, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &parent](xcb_window_t windowId) {
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, parent->window());
+    });
+    QVERIFY(!child->isModal());
+    QCOMPARE(child->transientFor(), parent);
+
+    // Set modal state.
+    {
+        NETWinInfo info(c.get(), child->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(child->isModal());
+
+    // Unset modal state.
+    {
+        NETWinInfo info(c.get(), child->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::Modal);
+        xcb_flush(c.get());
+    }
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(!child->isModal());
+
+    // Set modal state and try to activate the parent window, it should not succeed.
+    {
+        NETWinInfo info(c.get(), child->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(child->isModal());
+    workspace()->activateWindow(parent);
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // It should be okay to activate an unrelated window.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+}
+
+void X11WindowTest::testGroupModal()
+{
+    // This test verifies that a dialog can be modal to the window group.
+
+    // Create the leader, a follower and a dialog window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *leader = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *follower = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *dialog = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, kwinApp()->x11RootWindow());
+    });
+    QVERIFY(dialog->isTransient());
+    QVERIFY(leader->hasTransient(dialog, true));
+    QVERIFY(follower->hasTransient(dialog, true));
+
+    // Set modal state.
+    {
+        NETWinInfo info(c.get(), dialog->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QSignalSpy modalChangedSpy(dialog, &Window::modalChanged);
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(dialog->isModal());
+
+    // Unset modal state.
+    {
+        NETWinInfo info(c.get(), dialog->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::State(), NET::Modal);
+        xcb_flush(c.get());
+    }
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(!dialog->isModal());
+
+    // Set modal state and try to activate other windows in the group, it should not succeed.
+    {
+        NETWinInfo info(c.get(), dialog->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(dialog->isModal());
+    workspace()->activateWindow(leader);
+    QCOMPARE(workspace()->activeWindow(), dialog);
+    workspace()->activateWindow(follower);
+    QCOMPARE(workspace()->activeWindow(), dialog);
+
+    // It should be okay to activate an unrelated window.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+}
+
+void X11WindowTest::testCloseModal()
+{
+    // This test verifies that the parent window will be activated when an active modal dialog is closed.
+
+    // Create a parent and a child windows.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 100, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &parent](xcb_window_t windowId) {
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, parent->window());
+    });
+    QVERIFY(!child->isModal());
+    QCOMPARE(child->transientFor(), parent);
+
+    // Set modal state.
+    {
+        NETWinInfo info(c.get(), child->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(child->isModal());
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    xcb_unmap_window(c.get(), child->window());
+    xcb_destroy_window(c.get(), child->window());
+    xcb_flush(c.get());
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), parent);
+}
+
+void X11WindowTest::testCloseInactiveModal()
+{
+    // This test verifies that the parent window will not be activated when an inactive modal dialog is closed.
+
+    // Create a parent and a child windows.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 100, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &parent](xcb_window_t windowId) {
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, parent->window());
+    });
+    QVERIFY(!child->isModal());
+    QCOMPARE(child->transientFor(), parent);
+
+    // Set modal state.
+    {
+        NETWinInfo info(c.get(), child->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QSignalSpy modalChangedSpy(child, &Window::modalChanged);
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(child->isModal());
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Show another window.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    xcb_unmap_window(c.get(), child->window());
+    xcb_destroy_window(c.get(), child->window());
+    xcb_flush(c.get());
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+}
+
+void X11WindowTest::testCloseGroupModal()
+{
+    // This test verifies that when an active modal group dialog is closed, the focus will be passed to one of its main windows.
+
+    // Create the leader, a follower and a dialog window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *leader = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *follower = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *dialog = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, kwinApp()->x11RootWindow());
+    });
+    QVERIFY(dialog->isTransient());
+    QVERIFY(leader->hasTransient(dialog, true));
+    QVERIFY(follower->hasTransient(dialog, true));
+
+    // Set modal state.
+    {
+        NETWinInfo info(c.get(), dialog->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QSignalSpy modalChangedSpy(dialog, &Window::modalChanged);
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(dialog->isModal());
+    QCOMPARE(workspace()->activeWindow(), dialog);
+
+    // Close the dialog.
+    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    xcb_unmap_window(c.get(), dialog->window());
+    xcb_destroy_window(c.get(), dialog->window());
+    xcb_flush(c.get());
+    QVERIFY(dialogClosedSpy.wait());
+    QVERIFY(workspace()->activeWindow() == leader || workspace()->activeWindow() == follower);
+}
+
+void X11WindowTest::testCloseInactiveGroupModal()
+{
+    // This test verifies that when an inactive modal group dialog is closed, the focus will not be passed to one of its main windows.
+
+    // Create the leader, a follower and a dialog window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *leader = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *follower = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *dialog = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, kwinApp()->x11RootWindow());
+    });
+    QVERIFY(dialog->isTransient());
+    QVERIFY(leader->hasTransient(dialog, true));
+    QVERIFY(follower->hasTransient(dialog, true));
+
+    // Set modal state.
+    {
+        NETWinInfo info(c.get(), dialog->window(), kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Modal, NET::Modal);
+        xcb_flush(c.get());
+    }
+    QSignalSpy modalChangedSpy(dialog, &Window::modalChanged);
+    QVERIFY(modalChangedSpy.wait());
+    QVERIFY(dialog->isModal());
+    QCOMPARE(workspace()->activeWindow(), dialog);
+
+    // Show another window.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+
+    // Close the dialog.
+    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    xcb_unmap_window(c.get(), dialog->window());
+    xcb_destroy_window(c.get(), dialog->window());
+    xcb_flush(c.get());
+    QVERIFY(dialogClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), unrelated);
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)

@@ -418,7 +418,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
         grabXServer();
         exportMappingState(XCB_ICCCM_WM_STATE_WITHDRAWN);
-        setModal(false); // Otherwise its mainwindow wouldn't get focus
         if (!on_shutdown) {
             workspace()->activateNextWindow(this);
         }
@@ -492,7 +491,6 @@ void X11Window::destroyWindow()
         }
         finishWindowRules();
         blockGeometryUpdates();
-        setModal(false);
         workspace()->activateNextWindow(this);
         cleanGrouping();
         workspace()->removeX11Window(this);
@@ -2187,6 +2185,11 @@ void X11Window::doSetHiddenByShowDesktop()
     updateVisibility();
 }
 
+void X11Window::doSetModal()
+{
+    info->setState(isModal() ? NET::Modal : NET::States(), NET::Modal);
+}
+
 void X11Window::doSetOnActivities(const QStringList &activityList)
 {
 #if KWIN_BUILD_ACTIVITIES
@@ -3475,6 +3478,9 @@ QList<Window *> X11Window::mainWindows() const
 
 Window *X11Window::findModal(bool allow_itself)
 {
+    if (isDeleted()) {
+        return nullptr;
+    }
     for (auto it = transients().constBegin(); it != transients().constEnd(); ++it) {
         if (Window *ret = (*it)->findModal(true)) {
             return ret;
