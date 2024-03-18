@@ -63,6 +63,7 @@ class PresentationTime;
 class XXColorManagerV4;
 class LinuxDrmSyncObjV1Interface;
 class RenderBackend;
+class AlphaModifierManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -291,6 +292,7 @@ private:
     XXColorManagerV4 *m_xxColorManager = nullptr;
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
     ExternalBrightnessV1 *m_externalBrightness = nullptr;
+    AlphaModifierManagerV1 *m_alphaModifierManager = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
