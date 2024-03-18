@@ -300,14 +300,6 @@ bool WaylandServer::start()
     return m_display->start();
 }
 
-bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
-{
-    if (!m_display->addSocketName(socketName)) {
-        return false;
-    }
-    return init(flags);
-}
-
 bool WaylandServer::init(InitializationFlags flags)
 {
     m_initFlags = flags;
