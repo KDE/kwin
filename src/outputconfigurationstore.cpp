@@ -22,6 +22,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QOrientationReading>
+#include <ranges>
 
 namespace KWin
 {
@@ -480,54 +481,68 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
 
 std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output) const
 {
-    const auto modes = output->modes();
+    const auto findBiggestFastest = [](const auto &left, const auto &right) {
+        const uint64_t leftPixels = left->size().width() * left->size().height();
+        const uint64_t rightPixels = right->size().width() * right->size().height();
+        if (leftPixels == rightPixels) {
+            return left->refreshRate() < right->refreshRate();
+        } else {
+            return leftPixels < rightPixels;
+        }
+    };
 
-    // some displays advertise bigger modes than their native resolution
-    // to avoid that, take the preferred mode into account, which is usually the native one
-    const auto preferred = std::find_if(modes.begin(), modes.end(), [](const auto &mode) {
-        return (mode->flags() & OutputMode::Flag::Preferred)
+    const auto modes = output->modes();
+    auto notPotentiallyBroken = modes | std::ranges::views::filter([](const auto &mode) {
+        // generated modes aren't guaranteed to work, so don't choose one as the default
+        return !(mode->flags() & OutputMode::Flag::Generated)
             && !(mode->flags() & OutputMode::Flag::Removed);
     });
-    if (preferred != modes.end()) {
+    if (notPotentiallyBroken.empty()) {
+        // there's nothing more we can do
+        return *std::ranges::max_element(modes, findBiggestFastest);
+    }
+
+    // 32:9 displays often advertise a lower resolution mode as preferred, special case them
+    auto only32by9 = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
+        const double aspectRatio = mode->size().width() / double(mode->size().height());
+        return aspectRatio > 31 / 9.0 && aspectRatio < 33 / 9.0;
+    });
+    const auto best32By9 = std::ranges::max_element(only32by9, findBiggestFastest);
+    if (best32By9 != only32by9.end()) {
+        return *best32By9;
+    }
+
+    // try to figure out the native resolution; the biggest preferred mode usually has that
+    auto preferredOnly = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
+        return (mode->flags() & OutputMode::Flag::Preferred);
+    });
+    const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastest);
+    if (nativeSize != preferredOnly.end()) {
+        auto correctSize = notPotentiallyBroken | std::ranges::views::filter([size = (*nativeSize)->size()](const auto &mode) {
+            return mode->size() == size;
+        });
         // some high refresh rate displays advertise a 60Hz mode as preferred for compatibility reasons
         // ignore that and choose the highest possible refresh rate by default instead
-        std::shared_ptr<OutputMode> highestRefresh = *preferred;
-        for (const auto &mode : modes) {
-            if (mode->size() == highestRefresh->size() && mode->refreshRate() > highestRefresh->refreshRate()) {
-                highestRefresh = mode;
-            }
-        }
+        const auto highestRefresh = std::ranges::max_element(correctSize, [](const auto &n, const auto &nPlus1) {
+            return n->refreshRate() < nPlus1->refreshRate();
+        });
         // if the preferred mode size has a refresh rate that's too low for PCs,
         // allow falling back to a mode with lower resolution and a more usable refresh rate
-        if (highestRefresh->refreshRate() >= 50000) {
-            return highestRefresh;
+        if ((*highestRefresh)->refreshRate() >= 50000) {
+            return *highestRefresh;
         }
     }
 
-    std::shared_ptr<OutputMode> ret;
-    for (auto mode : modes) {
-        if (mode->flags() & OutputMode::Flag::Generated) {
-            // generated modes aren't guaranteed to work, so don't choose one as the default
-            continue;
-        }
-        if (!ret) {
-            ret = mode;
-            continue;
-        }
-        const bool retUsableRefreshRate = ret->refreshRate() >= 50000;
-        const bool usableRefreshRate = mode->refreshRate() >= 50000;
-        if (retUsableRefreshRate && !usableRefreshRate) {
-            ret = mode;
-            continue;
-        }
-        if ((usableRefreshRate && !retUsableRefreshRate)
-            || mode->size().width() > ret->size().width()
-            || mode->size().height() > ret->size().height()
-            || (mode->size() == ret->size() && mode->refreshRate() > ret->refreshRate())) {
-            ret = mode;
-        }
+    // even if a higher resolution mode is available, try to pick a more usable refresh rate
+    auto usableRefreshRates = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
+        return mode->refreshRate() >= 50000;
+    });
+    const auto usable = std::ranges::max_element(usableRefreshRates, findBiggestFastest);
+    if (usable != usableRefreshRates.end()) {
+        return *usable;
+    } else {
+        return *std::ranges::max_element(notPotentiallyBroken, findBiggestFastest);
     }
-    return ret;
 }
 
 double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) const
