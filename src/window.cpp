@@ -1738,10 +1738,10 @@ QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
             nextMoveResizeGeom = currentTry;
 
             // sinces nextMoveResizeGeom is fractional, at best it is within 1 unit of currentMoveResizeGeom
-            if (std::abs(currentMoveResizeGeom.left() - nextMoveResizeGeom.left()) <= 1.0
-                && std::abs(currentMoveResizeGeom.right() - nextMoveResizeGeom.right()) <= 1.0
-                && std::abs(currentMoveResizeGeom.top() - nextMoveResizeGeom.top()) <= 1.0
-                && std::abs(currentMoveResizeGeom.bottom() - nextMoveResizeGeom.bottom()) <= 1.0) {
+            if (std::abs(currentMoveResizeGeom.left() - nextMoveResizeGeom.left()) < 1.0
+                && std::abs(currentMoveResizeGeom.right() - nextMoveResizeGeom.right()) < 1.0
+                && std::abs(currentMoveResizeGeom.top() - nextMoveResizeGeom.top()) < 1.0
+                && std::abs(currentMoveResizeGeom.bottom() - nextMoveResizeGeom.bottom()) < 1.0) {
                 break; // Prevent lockup
             }
         }
