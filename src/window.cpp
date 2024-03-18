@@ -1461,7 +1461,7 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
 
     // TODO move whole group when moving its leader or when the leader is not mapped?
 
-    auto titleBarRect = [this](const QRectF &rect, bool &transposed, int &requiredPixels) -> QRectF {
+    auto titleBarRect = [this](const QRectF &rect, bool &transposed) -> QRectF {
         QRectF titleRect = rect;
         titleRect.moveTopLeft(QPointF(0, 0));
         switch (titlebarPosition()) {
@@ -1481,10 +1481,6 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
             transposed = true;
             break;
         }
-        // When doing a restricted move we must always keep 100px of the titlebar
-        // visible to allow the user to be able to move it again.
-        requiredPixels = std::min(100 * (transposed ? titleRect.width() : titleRect.height()),
-                                  rect.width() * rect.height());
         return titleRect;
     };
 
@@ -1547,13 +1543,14 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
                 availableArea -= rect;
             }
             bool transposed = false;
-            int requiredPixels;
-            QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
+            QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed);
             int lastVisiblePixels = -1;
             QRectF lastTry = nextMoveResizeGeom;
             bool titleFailed = false;
             for (;;) {
                 const QRect titleRect = bTitleRect.translated(nextMoveResizeGeom.topLeft()).toRect();
+                const int requiredPixels = std::min(100 * (transposed ? titleRect.width() : titleRect.height()), titleRect.width() * titleRect.height());
+
                 int visiblePixels = 0;
                 int realVisiblePixels = 0;
                 for (const QRect &rect : availableArea) {
@@ -1680,11 +1677,12 @@ void Window::handleInteractiveMoveResize(qreal x, qreal y, qreal x_root, qreal y
                     availableArea -= rect; // Strut areas
                 }
                 bool transposed = false;
-                int requiredPixels;
-                QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed, requiredPixels);
+                QRectF bTitleRect = titleBarRect(nextMoveResizeGeom, transposed);
                 for (;;) {
                     QRectF currentTry = nextMoveResizeGeom;
                     const QRect titleRect = bTitleRect.translated(currentTry.topLeft()).toRect();
+                    const int requiredPixels = std::min(100 * (transposed ? titleRect.width() : titleRect.height()), titleRect.width() * titleRect.height());
+
                     int visiblePixels = 0;
                     for (const QRect &rect : availableArea) {
                         const QRect r = rect & titleRect;
