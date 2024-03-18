@@ -123,6 +123,7 @@ void XdgSurfaceWindow::sendConfigure()
 
     configureEvent->gravity = m_nextGravity;
     configureEvent->flags |= m_configureFlags;
+    configureEvent->scale = m_preferredBufferScale;
     m_configureFlags = {};
 
     m_configureEvents.append(configureEvent);
