@@ -548,6 +548,8 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool inputMethod READ isInputMethod)
 
+    Q_PROPERTY(double targetScale READ targetScale NOTIFY targetScaleChanged);
+
 public:
     ~Window() override;
 
@@ -1338,6 +1340,7 @@ public:
     void unrefOffscreenRendering();
     bool isOffscreenRendering() const;
 
+    double targetScale() const;
     qreal preferredBufferScale() const;
     void setPreferredBufferScale(qreal scale);
 
@@ -1463,6 +1466,7 @@ Q_SIGNALS:
     void maximizeGeometryRestoreChanged();
     void fullscreenGeometryRestoreChanged();
     void offscreenRenderingChanged();
+    void targetScaleChanged();
 
 protected:
     Window();
@@ -1751,6 +1755,7 @@ protected:
     void updatePreferredBufferScale();
     void updatePreferredBufferTransform();
     void updatePreferredColorDescription();
+    void setTargetScale(double scale);
 
     Output *m_output = nullptr;
     QRectF m_frameGeometry;
@@ -1870,6 +1875,7 @@ protected:
     bool m_lockScreenOverlay = false;
     uint32_t m_offscreenRenderCount = 0;
     QTimer m_offscreenFramecallbackTimer;
+    double m_targetScale = 1;
 };
 
 inline QRectF Window::bufferGeometry() const
