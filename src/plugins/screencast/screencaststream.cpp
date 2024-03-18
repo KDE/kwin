@@ -22,7 +22,7 @@
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/workspacescene.h"
-#include "screencastdmabuftexture.h"
+#include "screencastbuffer.h"
 #include "screencastsource.h"
 #include "utils/drm_format_helper.h"
 
@@ -31,13 +31,8 @@
 #include <QLoggingCategory>
 #include <QPainter>
 
-#include <spa/buffer/meta.h>
-
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
-
 #include <libdrm/drm_fourcc.h>
+#include <spa/buffer/meta.h>
 
 namespace KWin
 {
@@ -219,96 +214,44 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     m_streaming = true;
 }
 
-void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
+void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
 {
     if (m_closed) {
         return;
     }
 
-    std::shared_ptr<ScreenCastDmaBufTexture> dmabuff;
+    m_waitForNewBuffers = false;
 
-    struct spa_data *spa_data = buffer->buffer->datas;
+    struct spa_data *spa_data = pwBuffer->buffer->datas;
     if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
         Q_ASSERT(m_dmabufParams);
-        dmabuff = createDmaBufTexture(*m_dmabufParams);
+        if (auto dmabuf = DmaBufScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
+                                                                       .size = QSize(m_dmabufParams->width, m_dmabufParams->height),
+                                                                       .format = m_dmabufParams->format,
+                                                                       .modifiers = {m_dmabufParams->modifier},
+                                                                   })) {
+            pwBuffer->user_data = dmabuf;
+            return;
+        }
     }
 
-    if (dmabuff) {
-        const DmaBufAttributes *dmabufAttribs = dmabuff->buffer()->dmabufAttributes();
-        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs->planeCount));
-        for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
-            spa_data[i].type = SPA_DATA_DmaBuf;
-            spa_data[i].flags = SPA_DATA_FLAG_READWRITE;
-            spa_data[i].mapoffset = 0;
-            spa_data[i].maxsize = i == 0 ? dmabufAttribs->pitch[i] * dmabufAttribs->height : 0; // TODO: dmabufs don't have a well defined size, it should be zero but some clients check the size to see if the buffer is valid
-            spa_data[i].fd = dmabufAttribs->fd[i].get();
-            spa_data[i].data = nullptr;
-            spa_data[i].chunk->offset = dmabufAttribs->offset[i];
-            spa_data[i].chunk->size = spa_data[i].maxsize;
-            spa_data[i].chunk->stride = dmabufAttribs->pitch[i];
-            spa_data[i].chunk->flags = SPA_CHUNK_FLAG_NONE;
-        }
-        m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
-#ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
-    } else {
-        if (!(spa_data->type & (1 << SPA_DATA_MemFd))) {
-            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Client doesn't support memfd buffer data type";
+    if (spa_data->type & (1 << SPA_DATA_MemFd)) {
+        if (auto memfd = MemFdScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
+                                                                     .size = m_resolution,
+                                                                     .format = m_drmFormat,
+                                                                     .software = true,
+                                                                 })) {
+            pwBuffer->user_data = memfd;
             return;
         }
-
-        const int bytesPerPixel = m_source->hasAlphaChannel() ? 4 : 3;
-        const int stride = SPA_ROUND_UP_N(m_resolution.width() * bytesPerPixel, 4);
-        spa_data->type = SPA_DATA_MemFd;
-        spa_data->flags = SPA_DATA_FLAG_READWRITE;
-        spa_data->mapoffset = 0;
-        spa_data->maxsize = stride * m_resolution.height();
-        spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
-        if (spa_data->fd == -1) {
-            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Can't create memfd";
-            return;
-        }
-
-        if (ftruncate(spa_data->fd, spa_data->maxsize) < 0) {
-            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Can't truncate to" << spa_data->maxsize;
-            return;
-        }
-
-        unsigned int seals = F_SEAL_GROW | F_SEAL_SHRINK | F_SEAL_SEAL;
-        if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1) {
-            qCWarning(KWIN_SCREENCAST) << objectName() << "memfd: Failed to add seals";
-        }
-
-        spa_data->data = mmap(nullptr,
-                              spa_data->maxsize,
-                              PROT_READ | PROT_WRITE,
-                              MAP_SHARED,
-                              spa_data->fd,
-                              spa_data->mapoffset);
-        if (spa_data->data == MAP_FAILED) {
-            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Failed to mmap memory";
-        } else {
-            qCDebug(KWIN_SCREENCAST) << objectName() << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
-        }
-
-        spa_data->chunk->offset = 0;
-        spa_data->chunk->size = spa_data->maxsize;
-        spa_data->chunk->stride = stride;
-        spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
-#endif
     }
-
-    m_waitForNewBuffers = false;
 }
 
-void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *buffer)
+void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *pwBuffer)
 {
-    m_dmabufDataForPwBuffer.remove(buffer);
-
-    struct spa_buffer *spa_buffer = buffer->buffer;
-    struct spa_data *spa_data = spa_buffer->datas;
-    if (spa_data && spa_data->type == SPA_DATA_MemFd) {
-        ::munmap(spa_data->data, spa_data->maxsize);
-        ::close(spa_data->fd);
+    if (ScreenCastBuffer *buffer = static_cast<ScreenCastBuffer *>(pwBuffer->user_data)) {
+        delete buffer;
+        pwBuffer->user_data = nullptr;
     }
 }
 
@@ -534,58 +477,38 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    struct pw_buffer *buffer = pw_stream_dequeue_buffer(m_pwStream);
-    if (!buffer) {
+    struct pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
+    if (!pwBuffer) {
         return;
     }
 
-    struct spa_buffer *spa_buffer = buffer->buffer;
+    struct spa_buffer *spa_buffer = pwBuffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
+
+    ScreenCastBuffer *buffer = static_cast<ScreenCastBuffer *>(pwBuffer->user_data);
+    if (!buffer) {
+        qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: invalid buffer type";
+        corruptHeader(spa_buffer);
+        pw_stream_queue_buffer(m_pwStream, pwBuffer);
+        return;
+    }
 
     EglContext *context = static_cast<AbstractEglBackend *>(Compositor::self()->backend())->openglContext();
     context->makeCurrent();
 
     spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
-    if (spa_data[0].type == SPA_DATA_MemFd) {
-        uint8_t *data = static_cast<uint8_t *>(spa_data->data);
-        if (!data) {
-            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: invalid buffer data";
-            corruptHeader(spa_buffer);
-            pw_stream_queue_buffer(m_pwStream, buffer);
-            return;
-        }
-
-        const bool hasAlpha = m_source->hasAlphaChannel();
-        const int bpp = data && !hasAlpha ? 3 : 4;
-        const uint stride = SPA_ROUND_UP_N(size.width() * bpp, 4);
-
-        if ((stride * size.height()) > spa_data->maxsize) {
-            qCDebug(KWIN_SCREENCAST) << objectName() << "Failed to record frame: frame is too big";
-            corruptHeader(spa_buffer);
-            pw_stream_queue_buffer(m_pwStream, buffer);
-            return;
-        }
-
-        m_source->render(spa_data, m_videoFormat.format);
+    if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
+        m_source->render(memfd->view.image());
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == ScreencastV1Interface::Embedded && includesCursor(cursor)) {
-            QImage dest(data, size.width(), size.height(), stride, hasAlpha ? QImage::Format_RGBA8888_Premultiplied : QImage::Format_RGB888);
-            QPainter painter(&dest);
+            QPainter painter(memfd->view.image());
             const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
             const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
             painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
         }
-    } else if (spa_data[0].type == SPA_DATA_DmaBuf) {
-        auto dmabuf = m_dmabufDataForPwBuffer.constFind(buffer);
-        if (dmabuf == m_dmabufDataForPwBuffer.constEnd()) {
-            qCDebug(KWIN_SCREENCAST) << objectName() << "Failed to record frame: no dmabuf data";
-            corruptHeader(spa_buffer);
-            pw_stream_queue_buffer(m_pwStream, buffer);
-            return;
-        }
-
-        m_source->render((*dmabuf)->framebuffer());
+    } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
+        m_source->render(dmabuf->framebuffer.get());
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == ScreencastV1Interface::Embedded && includesCursor(cursor)) {
@@ -599,7 +522,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 }
             }
             if (m_cursor.texture) {
-                GLFramebuffer::pushFramebuffer((*dmabuf)->framebuffer());
+                GLFramebuffer::pushFramebuffer(dmabuf->framebuffer.get());
 
                 auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
@@ -632,11 +555,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         } else {
             glFlush();
         }
-    } else {
-        qCWarning(KWIN_SCREENCAST, "%s Failed to record frame: invalid buffer type: %d", objectName().toUtf8().constData(), spa_data[0].type);
-        corruptHeader(spa_buffer);
-        pw_stream_queue_buffer(m_pwStream, buffer);
-        return;
     }
 
     if (m_cursor.mode == ScreencastV1Interface::Metadata) {
@@ -646,7 +564,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
     addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
-    enqueue(buffer);
+    enqueue(pwBuffer);
 }
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
@@ -916,45 +834,6 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         .format = attrs->format,
         .modifier = attrs->modifier,
     };
-}
-
-std::shared_ptr<ScreenCastDmaBufTexture> ScreenCastStream::createDmaBufTexture(const ScreenCastDmaBufTextureParams &params)
-{
-    AbstractEglBackend *backend = dynamic_cast<AbstractEglBackend *>(Compositor::self()->backend());
-    if (!backend) {
-        return nullptr;
-    }
-
-    GraphicsBuffer *buffer = backend->drmDevice()->allocator()->allocate(GraphicsBufferOptions{
-        .size = QSize(params.width, params.height),
-        .format = params.format,
-        .modifiers = {params.modifier},
-    });
-    if (!buffer) {
-        return nullptr;
-    }
-
-    const DmaBufAttributes *attrs = buffer->dmabufAttributes();
-    if (!attrs) {
-        buffer->drop();
-        return nullptr;
-    }
-
-    backend->makeCurrent();
-
-    std::shared_ptr<GLTexture> texture = backend->importDmaBufAsTexture(*attrs);
-    if (!texture) {
-        buffer->drop();
-        return nullptr;
-    }
-
-    std::unique_ptr<GLFramebuffer> framebuffer = std::make_unique<GLFramebuffer>(texture.get());
-    if (!framebuffer->valid()) {
-        buffer->drop();
-        return nullptr;
-    }
-
-    return std::make_shared<ScreenCastDmaBufTexture>(std::move(texture), std::move(framebuffer), buffer);
 }
 
 } // namespace KWin

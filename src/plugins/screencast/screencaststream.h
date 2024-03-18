@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "config-kwin.h"
-
 #include "wayland/screencast_v1.h"
 
 #include <QDateTime>
@@ -30,7 +28,6 @@ namespace KWin
 {
 
 class Cursor;
-class ScreenCastDmaBufTexture;
 class GLTexture;
 class PipeWireCore;
 class ScreenCastSource;
@@ -100,7 +97,6 @@ private:
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
-    std::shared_ptr<ScreenCastDmaBufTexture> createDmaBufTexture(const ScreenCastDmaBufTextureParams &params);
 
     std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
@@ -133,8 +129,6 @@ private:
         QMetaObject::Connection changedConnection = QMetaObject::Connection();
         QMetaObject::Connection positionChangedConnection = QMetaObject::Connection();
     } m_cursor;
-
-    QHash<struct pw_buffer *, std::shared_ptr<ScreenCastDmaBufTexture>> m_dmabufDataForPwBuffer;
 
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;

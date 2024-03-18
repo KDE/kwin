@@ -51,11 +51,11 @@ QSize OutputScreenCastSource::textureSize() const
     return m_output->pixelSize();
 }
 
-void OutputScreenCastSource::render(spa_data *spa, spa_video_format format)
+void OutputScreenCastSource::render(QImage *target)
 {
     const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(m_output);
     if (outputTexture) {
-        grabTexture(outputTexture.get(), spa, format);
+        grabTexture(outputTexture.get(), target);
     }
 }
 
