@@ -547,10 +547,15 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
         }
     } else {
-        auto &buf = m_dmabufDataForPwBuffer[buffer];
-        Q_ASSERT(buf);
+        auto dmabuf = m_dmabufDataForPwBuffer.constFind(buffer);
+        if (dmabuf == m_dmabufDataForPwBuffer.constEnd()) {
+            qCDebug(KWIN_SCREENCAST) << "Failed to record frame: no dmabuf data";
+            spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+            pw_stream_queue_buffer(m_pwStream, buffer);
+            return;
+        }
 
-        m_source->render(buf->framebuffer());
+        m_source->render((*dmabuf)->framebuffer());
 
         auto cursor = Cursors::self()->currentCursor();
         if (m_cursor.mode == ScreencastV1Interface::Embedded && includesCursor(cursor)) {
@@ -564,7 +569,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 }
             }
             if (m_cursor.texture) {
-                GLFramebuffer::pushFramebuffer(buf->framebuffer());
+                GLFramebuffer::pushFramebuffer((*dmabuf)->framebuffer());
 
                 auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
 
