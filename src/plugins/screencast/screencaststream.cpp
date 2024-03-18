@@ -514,17 +514,17 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
 
-    uint8_t *data = (uint8_t *)spa_data->data;
-    if (!data && spa_buffer->datas->type != SPA_DATA_DmaBuf) {
-        qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
-        spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
-        pw_stream_queue_buffer(m_pwStream, buffer);
-        return;
-    }
-
     spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
     static_cast<OpenGLBackend *>(Compositor::self()->backend())->makeCurrent();
-    if (data || spa_data[0].type == SPA_DATA_MemFd) {
+    if (spa_data[0].type == SPA_DATA_MemFd) {
+        uint8_t *data = static_cast<uint8_t *>(spa_data->data);
+        if (!data) {
+            qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
+            spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+            pw_stream_queue_buffer(m_pwStream, buffer);
+            return;
+        }
+
         const bool hasAlpha = m_source->hasAlphaChannel();
         const int bpp = data && !hasAlpha ? 3 : 4;
         const uint stride = SPA_ROUND_UP_N(size.width() * bpp, 4);
@@ -546,7 +546,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
             painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
         }
-    } else {
+    } else if (spa_data[0].type == SPA_DATA_DmaBuf) {
         auto dmabuf = m_dmabufDataForPwBuffer.constFind(buffer);
         if (dmabuf == m_dmabufDataForPwBuffer.constEnd()) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: no dmabuf data";
@@ -595,6 +595,11 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 m_cursor.lastRect = {};
             }
         }
+    } else {
+        qCWarning(KWIN_SCREENCAST, "Failed to record frame: invalid buffer type: %d", spa_data[0].type);
+        spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+        pw_stream_queue_buffer(m_pwStream, buffer);
+        return;
     }
 
     if (m_cursor.mode == ScreencastV1Interface::Metadata) {
