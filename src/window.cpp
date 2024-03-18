@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "effect/globals.h"
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -3603,10 +3604,10 @@ QuickTileMode Window::quickTileMode() const
 {
     if (m_tile) {
         return m_tile->quickTileMode();
-        /*} else if (requestedMaximizeMode() == MaximizeVertical) {
-            return QuickTileFlag::Vertical;
-        } else if (requestedMaximizeMode() == MaximizeHorizontal) {
-            return QuickTileFlag::Horizontal;*/
+    } else if (requestedMaximizeMode() == MaximizeVertical) {
+        return QuickTileFlag::Vertical;
+    } else if (requestedMaximizeMode() == MaximizeHorizontal) {
+        return QuickTileFlag::Horizontal;
     } else if (requestedMaximizeMode() == MaximizeFull) {
         return QuickTileFlag::Horizontal | QuickTileFlag::Vertical;
     } else {
