@@ -11,6 +11,7 @@
 #include "atoms.h"
 #include "compositor.h"
 #include "cursor.h"
+#include "pointer_input.h"
 #include "virtualdesktops.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -42,6 +43,12 @@ private Q_SLOTS:
     void testMaximizedHorizontal();
     void testInitiallyMaximizedHorizontal();
     void testRequestMaximizedHorizontal();
+    void testInteractiveMoveUnmaximizeFull();
+    void testInteractiveMoveUnmaximizeInitiallyFull();
+    void testInteractiveMoveUnmaximizeHorizontal();
+    void testInteractiveMoveUnmaximizeInitiallyHorizontal();
+    void testInteractiveMoveUnmaximizeVertical();
+    void testInteractiveMoveUnmaximizeInitiallyVertical();
     void testFullScreen();
     void testInitiallyFullScreen();
     void testRequestFullScreen();
@@ -401,6 +408,288 @@ void X11WindowTest::testRequestMaximizedHorizontal()
     QVERIFY(maximizedChangedSpy.wait());
     QCOMPARE(window->maximizeMode(), MaximizeRestore);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+}
+
+void X11WindowTest::testInteractiveMoveUnmaximizeFull()
+{
+    // This test verifies that a maximized x11 window is going to be properly unmaximized when it's dragged.
+
+    // Create the window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    window->maximize(MaximizeFull);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.2;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Move the window to unmaximize it.
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyFull()
+{
+    // This test verifies that an initially maximized x11 window will be properly unmaximized when it's dragged.
+
+    // Create the window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::Max, NET::Max);
+    });
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.2;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+
+    // Move the window to unmaximize it.
+    const QSizeF restoredSize = window->geometryRestore().size();
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void X11WindowTest::testInteractiveMoveUnmaximizeHorizontal()
+{
+    // This test verifies that a maximized horizontally x11 window is going to be properly unmaximized when it's dragged.
+
+    // Create the window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    window->maximize(MaximizeHorizontal);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.2;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+
+    // Move the window to unmaximize it.
+    Test::pointerMotionRelative(QPointF(100, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(10, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(10, 0));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyHorizontal()
+{
+    // This test verifies that an initially maximized horizontally x11 window will be properly unmaximized when it's dragged.
+
+    // Create the window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::MaxHoriz, NET::MaxHoriz);
+    });
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.2;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
+
+    // Move the window to unmaximize it.
+    const QSizeF restoredSize = window->geometryRestore().size();
+    Test::pointerMotionRelative(QPointF(100, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(10, 0), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(10, 0));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void X11WindowTest::testInteractiveMoveUnmaximizeVertical()
+{
+    // This test verifies that a maximized vertically x11 window is going to be properly unmaximized when it's dragged.
+
+    // Create the window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200));
+
+    // Make the window maximized.
+    const QRectF originalGeometry = window->frameGeometry();
+    window->maximize(MaximizeVertical);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.2;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+
+    // Move the window to unmaximize it.
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(originalGeometry.width() * xOffset, originalGeometry.height() * yOffset), originalGeometry.size()));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
+}
+
+void X11WindowTest::testInteractiveMoveUnmaximizeInitiallyVertical()
+{
+    // This test verifies that an initially maximized vertically x11 window will be properly unmaximized when it's dragged.
+
+    // Create the window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createWindow(c.get(), QRect(100, 100, 100, 200), [&c](xcb_window_t windowId) {
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::WMState, NET::Properties2());
+        info.setState(NET::MaxVert, NET::MaxVert);
+    });
+
+    // Start interactive move.
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QSignalSpy interactiveMoveResizeSteppedSpy(window, &Window::interactiveMoveResizeStepped);
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    const qreal xOffset = 0.2;
+    const qreal yOffset = 0.5;
+    quint32 timestamp = 0;
+    Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
+    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeVertical);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
+
+    // Move the window to unmaximize it.
+    const QSizeF restoredSize = window->geometryRestore().size();
+    Test::pointerMotionRelative(QPointF(0, 100), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), QRectF(input()->pointer()->pos() - QPointF(restoredSize.width() * xOffset, restoredSize.height() * yOffset), restoredSize));
+
+    // Move the window again.
+    const QRectF normalGeometry = window->frameGeometry();
+    Test::pointerMotionRelative(QPointF(0, 10), timestamp++);
+    QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->frameGeometry(), normalGeometry.translated(0, 10));
+
+    // Finish interactive move.
+    window->keyPressEvent(Qt::Key_Enter);
+    QCOMPARE(interactiveMoveResizeFinishedSpy.count(), 1);
 }
 
 void X11WindowTest::testFullScreen()
