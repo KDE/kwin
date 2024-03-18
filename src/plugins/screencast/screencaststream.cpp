@@ -14,7 +14,7 @@
 #include "cursor.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
-#include "opengl/eglnativefence.h"
+#include "opengl/glplatform.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "pipewirecore.h"
@@ -76,9 +76,6 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
     qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
 
     m_streaming = false;
-    m_pendingBuffer = nullptr;
-    m_pendingNotifier.reset();
-    m_pendingFence.reset();
 
     switch (state) {
     case PW_STREAM_STATE_ERROR:
@@ -479,9 +476,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     m_pendingDamages = {};
-    if (m_pendingBuffer) {
-        return;
-    }
 
     if (m_waitForNewBuffers) {
         qCWarning(KWIN_SCREENCAST) << "Waiting for new buffers to be created";
@@ -514,8 +508,9 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
 
-    spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
     static_cast<OpenGLBackend *>(Compositor::self()->backend())->makeCurrent();
+
+    spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
     if (spa_data[0].type == SPA_DATA_MemFd) {
         uint8_t *data = static_cast<uint8_t *>(spa_data->data);
         if (!data) {
@@ -595,6 +590,13 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 m_cursor.lastRect = {};
             }
         }
+
+        // Implicit sync is broken on Nvidia.
+        if (GLPlatform::instance()->isNvidia()) {
+            glFinish();
+        } else {
+            glFlush();
+        }
     } else {
         qCWarning(KWIN_SCREENCAST, "Failed to record frame: invalid buffer type: %d", spa_data[0].type);
         spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
@@ -609,7 +611,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
     addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
-    tryEnqueue(buffer);
+    enqueue(buffer);
 }
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
@@ -662,10 +664,6 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    if (m_pendingBuffer) {
-        return;
-    }
-
     const char *error = "";
     auto state = pw_stream_get_state(m_pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
@@ -679,12 +677,12 @@ void ScreenCastStream::recordCursor()
         return;
     }
 
-    m_pendingBuffer = pw_stream_dequeue_buffer(m_pwStream);
-    if (!m_pendingBuffer) {
+    pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
+    if (!pwBuffer) {
         return;
     }
 
-    struct spa_buffer *spa_buffer = m_pendingBuffer->buffer;
+    struct spa_buffer *spa_buffer = pwBuffer->buffer;
 
     // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
     spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
@@ -693,53 +691,16 @@ void ScreenCastStream::recordCursor()
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     addHeader(spa_buffer);
     addDamage(spa_buffer, {});
-    enqueue();
+    enqueue(pwBuffer);
 }
 
-void ScreenCastStream::tryEnqueue(pw_buffer *buffer)
+void ScreenCastStream::enqueue(pw_buffer *pwBuffer)
 {
-    m_pendingBuffer = buffer;
+    pw_stream_queue_buffer(m_pwStream, pwBuffer);
 
-    // The GPU doesn't necessarily process draw commands as soon as they are issued. Thus,
-    // we need to insert a fence into the command stream and enqueue the pipewire buffer
-    // only after the fence is signaled; otherwise stream consumers will most likely see
-    // a corrupted buffer.
-    if (Compositor::self()->scene()->supportsNativeFence()) {
-        Q_ASSERT_X(eglGetCurrentContext(), "tryEnqueue", "no current context");
-        m_pendingFence = std::make_unique<EGLNativeFence>(kwinApp()->outputBackend()->sceneEglDisplayObject());
-        if (!m_pendingFence->isValid()) {
-            qCWarning(KWIN_SCREENCAST) << "Failed to create a native EGL fence";
-            glFinish();
-            enqueue();
-        } else {
-            m_pendingNotifier = std::make_unique<QSocketNotifier>(m_pendingFence->fileDescriptor().get(), QSocketNotifier::Read);
-            connect(m_pendingNotifier.get(), &QSocketNotifier::activated, this, &ScreenCastStream::enqueue);
-        }
-    } else {
-        // The compositing backend doesn't support native fences. We don't have any other choice
-        // but stall the graphics pipeline. Otherwise stream consumers may see an incomplete buffer.
-        glFinish();
-        enqueue();
-    }
-}
-
-void ScreenCastStream::enqueue()
-{
-    Q_ASSERT_X(m_pendingBuffer, "enqueue", "pending buffer must be valid");
-
-    m_pendingFence.reset();
-    m_pendingNotifier.reset();
-
-    if (!m_streaming) {
-        return;
-    }
-    pw_stream_queue_buffer(m_pwStream, m_pendingBuffer);
-
-    if (m_pendingBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
+    if (pwBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
         m_lastSent = QDateTime::currentDateTimeUtc();
     }
-
-    m_pendingBuffer = nullptr;
 }
 
 QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
