@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-02 12:52+0100\n"
+"PO-Revision-Date: 2024-03-17 11:32+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -231,7 +231,7 @@ msgstr "Opóźnienie &nowego wywołania:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Bariera w narożniku:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -243,19 +243,23 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Tutaj możesz włączyć lub wyłączyć wirtualną barierę w narożniku pomiędzy "
+"ekranami. Bariera zapobiega przedostawaniu się wskaźnika na inny ekran, gdy "
+"dotyka on już narożnika ekranu. Ułatwia to naciskanie na przykład na "
+"przyciski zamykające zmaksymalizowane okna, gdy używanych jest wiele ekranów."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Uniemożliwia wskaźnikowi przedostawanie się przez narożniki ekranu."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Bariera na krawędzi:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -267,6 +271,10 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Tutaj możesz ustawić rozmiar bariery na krawędzi pomiędzy pomiędzy ekranami. "
+"Bariera dodaje dodatkową odległość, którą wskaźnik musi przebyć zanim "
+"przedostanie się na inny ekran. Ułatwia to uzyskiwanie dostępu do Pasków "
+"Plazmy umieszczonych na krawędzi pomiędzy ekranami."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -274,18 +282,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Dodatkowo odległość, którą musi przebyć wskaźnik, aby przedostać się przez "
+"krawędź ekranu."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " piks."
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

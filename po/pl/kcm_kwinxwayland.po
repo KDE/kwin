@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-02 12:52+0100\n"
+"PO-Revision-Date: 2024-03-17 11:27+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -19,13 +19,7 @@ msgstr ""
 "X-Generator: Lokalize 23.08.4\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -36,9 +30,10 @@ msgid ""
 msgstr ""
 "Stare aplikacje X11 wymagają możliwości odczytywania naciśnięć klawiszy "
 "także w innych aplikacjach do celów związanych z globalnymi skrótami "
-"klawiszowymi. Zostało to domyślnie wyłączone ze względów bezpieczeństwa. "
-"Jeśli potrzebujesz używać takiej aplikacji, to możesz tutaj wybrać coś "
-"pomiędzy bezpieczeństwem i dawanymi możliwościami."
+"klawiszowymi. Jest to domyślnie włączone. Niestety inne funkcje mogą wymagać "
+"możliwości odczytu wszystkich klawiszy, a to jest domyślnie wyłączone ze "
+"względów bezpieczeństwa. Jeśli potrzebujesz używać takiej aplikacji, to "
+"możesz tutaj wybrać coś pomiędzy bezpieczeństwem i dawanymi możliwościami."
 
 #: ui/main.qml:48
 #, kde-format
