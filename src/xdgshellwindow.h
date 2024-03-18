@@ -47,6 +47,7 @@ public:
     Gravity gravity;
     qreal serial;
     ConfigureFlags flags;
+    double scale;
 };
 
 class XdgSurfaceWindow : public WaylandWindow
