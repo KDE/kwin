@@ -1573,30 +1573,23 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
             geometry.setHeight(0);
         }
     }
-    qWarning() << "AAAA" << m_quickTileMode << quickTileMode() << m_requestedMaximizeMode << tile();
+
     auto oldTile = tile();
-    const auto oldQuickTileMode = m_quickTileMode; // quickTileMode();
+    const auto oldQuickTileMode = currentQuickTileMode;
     if (m_requestedMaximizeMode == MaximizeFull) {
-        // updateQuickTileMode(QuickTileFlag::Maximize);
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
         setTile(nullptr);
-        /*} else if (m_requestedMaximizeMode == MaximizeHorizontal) {
-            updateQuickTileMode(QuickTileFlag::Horizontal);
-        } else if (m_requestedMaximizeMode == MaximizeVertical) {
-            updateQuickTileMode(QuickTileFlag::Vertical);*/
     } else {
         updateQuickTileMode(QuickTileFlag::None);
     }
 
     moveResize(geometry);
-    qWarning() << "BBBB" << tile() << (oldTile != tile());
     if (oldQuickTileMode != quickTileMode() || oldTile != tile()) {
         doSetQuickTileMode();
-        Q_EMIT quickTileModeChanged();
     }
 
     doSetMaximized();
