@@ -2277,6 +2277,22 @@ bool Window::isModal() const
     return m_modal;
 }
 
+Window *Window::findModal() const
+{
+    for (Window *transient : m_transients) {
+        if (transient->isDeleted()) {
+            continue;
+        }
+        if (transient->isModal()) {
+            return transient;
+        }
+        if (Window *modal = transient->findModal()) {
+            return modal;
+        }
+    }
+    return nullptr;
+}
+
 bool Window::isTransient() const
 {
     return false;

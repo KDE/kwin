@@ -117,7 +117,6 @@ public:
     QList<Window *> mainWindows() const override; // Call once before loop , is not indirect
     bool hasTransient(const Window *c, bool indirect) const override;
     void checkTransient(xcb_window_t w);
-    Window *findModal(bool allow_itself = false) override;
     const Group *group() const override;
     Group *group() override;
     void checkGroup(Group *gr = nullptr, bool force = false);

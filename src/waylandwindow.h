@@ -24,7 +24,6 @@ public:
     bool isClient() const override;
     bool isLockScreen() const override;
     bool isLocalhost() const override;
-    Window *findModal(bool allow_itself = false) override;
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
     void killWindow() override;
     QString windowRole() const override;

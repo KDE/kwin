@@ -938,8 +938,7 @@ public:
     void setHidden(bool hidden);
     bool isHiddenByShowDesktop() const;
     void setHiddenByShowDesktop(bool hidden);
-    // TODO: remove boolean trap
-    virtual Window *findModal(bool allow_itself = false) = 0;
+    Window *findModal() const;
     virtual bool isTransient() const;
     /**
      * @returns Whether there is a hint available to place the Window on it's parent, default @c false.

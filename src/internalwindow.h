@@ -54,7 +54,6 @@ public:
     bool isLockScreen() const override;
     bool isOutline() const override;
     QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &size) override;
-    Window *findModal(bool allow_itself = false) override;
     bool takeFocus() override;
     void setNoBorder(bool set) override;
     void invalidateDecoration() override;

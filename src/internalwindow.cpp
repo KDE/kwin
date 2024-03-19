@@ -260,11 +260,6 @@ void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     }
 }
 
-Window *InternalWindow::findModal(bool allow_itself)
-{
-    return nullptr;
-}
-
 bool InternalWindow::takeFocus()
 {
     return false;

@@ -83,11 +83,6 @@ bool WaylandWindow::isLocalhost() const
     return true;
 }
 
-Window *WaylandWindow::findModal(bool allow_itself)
-{
-    return nullptr;
-}
-
 QRectF WaylandWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &size)
 {
     const QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());

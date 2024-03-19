@@ -3476,22 +3476,6 @@ QList<Window *> X11Window::mainWindows() const
     return result;
 }
 
-Window *X11Window::findModal(bool allow_itself)
-{
-    if (isDeleted()) {
-        return nullptr;
-    }
-    for (auto it = transients().constBegin(); it != transients().constEnd(); ++it) {
-        if (Window *ret = (*it)->findModal(true)) {
-            return ret;
-        }
-    }
-    if (isModal() && allow_itself) {
-        return this;
-    }
-    return nullptr;
-}
-
 // X11Window::window_group only holds the contents of the hint,
 // but it should be used only to find the group, not for anything else
 // Argument is only when some specific group needs to be set.
