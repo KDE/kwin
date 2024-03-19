@@ -74,6 +74,8 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     connect(window, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration3::DecoratedWindow::hasApplicationMenuChanged);
     connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration3::DecoratedWindow::applicationMenuActiveChanged);
 
+    connect(window, &Window::targetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::scaleChanged);
+
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
         int fallAsleepDelay = QApplication::style()->styleHint(QStyle::SH_ToolTip_FallAsleepDelay);
@@ -325,7 +327,7 @@ QString DecoratedWindowImpl::windowClass() const
 
 qreal DecoratedWindowImpl::scale() const
 {
-    return 1;
+    return m_window->targetScale();
 }
 }
 }
