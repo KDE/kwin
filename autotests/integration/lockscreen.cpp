@@ -67,7 +67,8 @@ private Q_SLOTS:
     void testPointerShortcut();
     void testAxisShortcut_data();
     void testAxisShortcut();
-    void testKeyboardShortcut();
+    void testKeyboardLockShortcut();
+    void testKeyboardShortcutsDisabledWhenLocked();
     void testTouch();
 
 private:
@@ -691,7 +692,10 @@ void LockScreenTest::testAxisShortcut()
 #undef PERFORM
 }
 
-void LockScreenTest::testKeyboardShortcut()
+/**
+ * This test verifies that keyboard shortcuts are disabled when the screen is locked
+ */
+void LockScreenTest::testKeyboardShortcutsDisabledWhenLocked()
 {
 #if !KWIN_BUILD_GLOBALSHORTCUTS
     QSKIP("Can't test shortcuts without shortcuts");
@@ -736,6 +740,43 @@ void LockScreenTest::testKeyboardShortcut()
     KEYRELEASE(KEY_LEFTCTRL);
     KEYRELEASE(KEY_LEFTMETA);
     KEYRELEASE(KEY_LEFTALT);
+}
+
+/**
+ * This test verifies that the global keyboard shortcut to lock the screen works
+ */
+void LockScreenTest::testKeyboardLockShortcut()
+{
+#if !KWIN_BUILD_GLOBALSHORTCUTS
+    QSKIP("Can't test shortcuts without shortcuts");
+    return;
+#endif
+
+    QList<QKeySequence> shortcuts = KGlobalAccel::self()->globalShortcut("ksmserver", "Lock Session");
+    // Verify the shortcut is Meta + L, the default
+    QCOMPARE(shortcuts.first().toString(), QString("Meta+L"));
+
+    // Verify the screen is not locked
+    QVERIFY(!waylandServer()->isScreenLocked());
+
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+
+    // Trigger the shortcut
+    quint32 timestamp = 1;
+    KEYPRESS(KEY_LEFTMETA);
+    KEYPRESS(KEY_L);
+    KEYRELEASE(KEY_L);
+    KEYRELEASE(KEY_LEFTMETA);
+
+    // Verify the screen gets locked
+    QVERIFY(windowAddedSpy.wait());
+    Window *window = windowAddedSpy.first().first().value<Window *>();
+    QVERIFY(window);
+    QVERIFY(window->isLockScreen());
+    QTRY_COMPARE(ScreenLocker::KSldApp::self()->lockState(), ScreenLocker::KSldApp::Locked);
+    QVERIFY(waylandServer()->isScreenLocked());
+
+    UNLOCK;
 }
 
 void LockScreenTest::testTouch()
