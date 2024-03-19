@@ -1783,7 +1783,6 @@ protected:
     QRectF m_electricGeometryRestore;
     bool m_electricMaximizing = false;
     QTimer *m_electricMaximizingDelay = nullptr;
-    int m_quickTileMode = int(QuickTileFlag::None);
 
     // geometry
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
