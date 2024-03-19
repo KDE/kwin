@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-17 00:38+0000\n"
+"POT-Creation-Date: 2024-03-19 00:39+0000\n"
 "PO-Revision-Date: 2024-02-29 23:35+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2389,27 +2389,27 @@ msgstr "Nepavyko sukurti PipeWire konteksto"
 msgid "Failed to connect PipeWire context"
 msgstr "Nepavyko prisijungti prie PipeWire konteksto"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Nepavyko rasti lango id %1"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:149
 #, kde-format
 msgid "Could not find output"
 msgstr "Nepavyko rasti išvesties"
 
-#: plugins/screencast/screencastmanager.cpp:177
+#: plugins/screencast/screencastmanager.cpp:179
 #, kde-format
 msgid "Invalid region"
 msgstr "Neteisinga sritis"
 
-#: plugins/screencast/screencastmanager.cpp:208
+#: plugins/screencast/screencastmanager.cpp:210
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "Sritis už darbo srities ribų"
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nepavyko sukurti PipeWire srauto"
@@ -4177,7 +4177,7 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3106
+#: window.cpp:3104
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-17 00:38+0000\n"
+"POT-Creation-Date: 2024-03-19 00:39+0000\n"
 "PO-Revision-Date: 2024-02-29 12:50+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2400,27 +2400,27 @@ msgstr "Ha fallat en crear el context del PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "Ha fallat en connectar amb el context del PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "No s'ha pogut trobar la finestra amb ID %1"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:149
 #, kde-format
 msgid "Could not find output"
 msgstr "No s'ha pogut trobar la sortida"
 
-#: plugins/screencast/screencastmanager.cpp:177
+#: plugins/screencast/screencastmanager.cpp:179
 #, kde-format
 msgid "Invalid region"
 msgstr "Regió no vàlida"
 
-#: plugins/screencast/screencastmanager.cpp:208
+#: plugins/screencast/screencastmanager.cpp:210
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "Regió situada fora de l'espai de treball"
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Ha fallat en crear el flux del PipeWire"
@@ -4188,7 +4188,7 @@ msgstr "Canvia un escriptori avall"
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3106
+#: window.cpp:3104
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

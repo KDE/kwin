@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-03-06 13:54+0000\n"
+"PO-Revision-Date: 2024-03-16 18:31+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
@@ -130,13 +130,13 @@ msgstr "Athafnir"
 #: main.ui:228
 #, kde-format
 msgid "Current activity"
-msgstr "Núverandi athafnasvæði"
+msgstr "Núverandi athöfn"
 
 #. i18n: ectx: property (text), widget (QRadioButton, otherActivities)
 #: main.ui:235
 #, kde-format
 msgid "All other activities"
-msgstr "Öll önnur athafnasvæði"
+msgstr "Allar aðrar athafnir"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterScreens)
 #: main.ui:245

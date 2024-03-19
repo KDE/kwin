@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-06 13:56+0000\n"
+"PO-Revision-Date: 2024-03-12 10:41+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
@@ -237,7 +237,7 @@ msgstr "Töf á endu&rvirkjun:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Hornaþröskuldur:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -249,19 +249,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Hér getur þú virkjað eða slökkt á þröskuldi í hornum á milli skjáa. "
+"Þröskuldurinn kemur í veg fyrir að bendillinn fari yfir á annan skjá þegar "
+"hann snertir hornið á skjánum. Þannig er auðveldara að nota eiginleika í "
+"notandaumhverfinu eins og lokunarhnappa á fullstækkuðum gluggum þegar margir "
+"skjáir eru notaðir."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Kemur í veg fyrir að bendillinn fari á milli skjáa á hornum."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Brúnaþröskuldur:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -273,25 +278,29 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Hér geturðu stillt stærð þröskuldar á milli mismunandi skjáa. Þröskuldurinn "
+"bætir við viðbótarbili sem þarf að færa músarbendilinn áður en hann fer yfir "
+"á næsta skjá. Þannig er auðveldara að nota eiginleika í notandaumhverfinu "
+"eins og Plasma skjáborðsstikur sem eru staðsettar á skjábrún á milli skjáa."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "Viðbótarbil sem bendillinn þarf að fara yfir til að fara á næsta skjá."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Ekkert"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
