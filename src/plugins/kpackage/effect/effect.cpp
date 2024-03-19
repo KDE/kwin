@@ -18,14 +18,30 @@ public:
         package->addDirectoryDefinition("code", QStringLiteral("code"));
         package->setMimeTypes("code", QStringList{QStringLiteral("text/plain")});
 
-        package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
-        package->setRequired("mainscript", true);
+        package->addDirectoryDefinition("ui", QStringLiteral("ui"));
+        package->setMimeTypes("ui", QStringList{QStringLiteral("text/plain")});
 
         package->addFileDefinition("config", QStringLiteral("config/main.xml"));
         package->setMimeTypes("config", QStringList{QStringLiteral("text/xml")});
 
         package->addFileDefinition("configui", QStringLiteral("ui/config.ui"));
         package->setMimeTypes("configui", QStringList{QStringLiteral("text/xml")});
+    }
+
+    void pathChanged(KPackage::Package *package) override
+    {
+        if (!package->metadata().isValid()) {
+            return;
+        }
+
+        const QString api = package->metadata().value(QStringLiteral("X-Plasma-API"));
+        if (api == QStringLiteral("javascript")) {
+            package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
+            package->setRequired("mainscript", true);
+        } else if (api == QStringLiteral("declarativescript")) {
+            package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"));
+            package->setRequired("mainscript", true);
+        }
     }
 };
 
