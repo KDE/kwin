@@ -36,11 +36,6 @@ OutputScreenCastSource::~OutputScreenCastSource()
     pause();
 }
 
-bool OutputScreenCastSource::hasAlphaChannel() const
-{
-    return true;
-}
-
 quint32 OutputScreenCastSource::drmFormat() const
 {
     return DRM_FORMAT_ARGB8888;

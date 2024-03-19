@@ -24,7 +24,6 @@ public:
     ~OutputScreenCastSource() override;
 
     uint refreshRate() const override;
-    bool hasAlphaChannel() const override;
     QSize textureSize() const override;
     quint32 drmFormat() const override;
 
