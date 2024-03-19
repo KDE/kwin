@@ -100,6 +100,12 @@ private Q_SLOTS:
     void testCaptionWmName();
     void testActivateFocusedWindow();
     void testReentrantMoveResize();
+    void testTransient();
+    void testGroupTransient();
+    void testCloseTransient();
+    void testCloseInactiveTransient();
+    void testCloseGroupTransient();
+    void testCloseInactiveGroupTransient();
     void testModal();
     void testGroupModal();
     void testCloseModal();
@@ -2502,6 +2508,175 @@ void X11WindowTest::testReentrantMoveResize()
     xcb_destroy_window(c.get(), windowId);
     xcb_flush(c.get());
     QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void X11WindowTest::testTransient()
+{
+    // Create a parent and a child windows.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 100, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &parent](xcb_window_t windowId) {
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, parent->window());
+    });
+    QVERIFY(child->isTransient());
+    QCOMPARE(child->transientFor(), parent);
+    QVERIFY(parent->hasTransient(child, true));
+}
+
+void X11WindowTest::testGroupTransient()
+{
+    // Create the leader, a follower and a dialog window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *leader = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *follower = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *dialog = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, kwinApp()->x11RootWindow());
+    });
+    QVERIFY(dialog->isTransient());
+    QCOMPARE(dialog->transientFor(), nullptr);
+    QVERIFY(leader->hasTransient(dialog, true));
+    QVERIFY(follower->hasTransient(dialog, true));
+
+    // The group transient should not act as transient for unrelated windows.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QVERIFY(!unrelated->hasTransient(dialog, true));
+}
+
+void X11WindowTest::testCloseTransient()
+{
+    // This test verifies that the parent window will be activated when a transient is closed.
+
+    // Create a parent and a child windows.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 100, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &parent](xcb_window_t windowId) {
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, parent->window());
+    });
+    QCOMPARE(child->transientFor(), parent);
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    xcb_unmap_window(c.get(), child->window());
+    xcb_destroy_window(c.get(), child->window());
+    xcb_flush(c.get());
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), parent);
+}
+
+void X11WindowTest::testCloseInactiveTransient()
+{
+    // This test verifies that the parent window will not be activated when an inactive transient is closed.
+
+    // Create a parent and a child windows.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 100, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &parent](xcb_window_t windowId) {
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, parent->window());
+    });
+    QCOMPARE(child->transientFor(), parent);
+    QCOMPARE(workspace()->activeWindow(), child);
+
+    // Show another window.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+
+    // Close the child.
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    xcb_unmap_window(c.get(), child->window());
+    xcb_destroy_window(c.get(), child->window());
+    xcb_flush(c.get());
+    QVERIFY(childClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+}
+
+void X11WindowTest::testCloseGroupTransient()
+{
+    // This test verifies that when an active group transient is closed, the focus will be passed to one of its main windows.
+
+    // Create the leader, a follower and a dialog window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *leader = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *follower = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *dialog = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, kwinApp()->x11RootWindow());
+    });
+    QVERIFY(dialog->isTransient());
+    QCOMPARE(dialog->transientFor(), nullptr);
+    QVERIFY(leader->hasTransient(dialog, true));
+    QVERIFY(follower->hasTransient(dialog, true));
+    QCOMPARE(workspace()->activeWindow(), dialog);
+
+    // Close the dialog.
+    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    xcb_unmap_window(c.get(), dialog->window());
+    xcb_destroy_window(c.get(), dialog->window());
+    xcb_flush(c.get());
+    QVERIFY(dialogClosedSpy.wait());
+    QVERIFY(workspace()->activeWindow() == leader || workspace()->activeWindow() == follower);
+}
+
+void X11WindowTest::testCloseInactiveGroupTransient()
+{
+    // This test verifies that when an inactive group transient is closed, the focus will not be passed to one of its main windows.
+
+    // Create the leader, a follower and a dialog window.
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *leader = createWindow(c.get(), QRect(0, 0, 100, 200), [&c](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *follower = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *dialog = createWindow(c.get(), QRect(0, 0, 100, 200), [&c, &leader](xcb_window_t windowId) {
+        const xcb_window_t leaderId = leader->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+        xcb_icccm_set_wm_transient_for(c.get(), windowId, kwinApp()->x11RootWindow());
+    });
+    QVERIFY(dialog->isTransient());
+    QCOMPARE(dialog->transientFor(), nullptr);
+    QVERIFY(leader->hasTransient(dialog, true));
+    QVERIFY(follower->hasTransient(dialog, true));
+    QCOMPARE(workspace()->activeWindow(), dialog);
+
+    // Show another window.
+    Test::XcbConnectionPtr c1 = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *unrelated = createWindow(c1.get(), QRect(0, 0, 100, 200));
+    QCOMPARE(workspace()->activeWindow(), unrelated);
+
+    // Close the dialog.
+    QSignalSpy dialogClosedSpy(dialog, &Window::closed);
+    xcb_unmap_window(c.get(), dialog->window());
+    xcb_destroy_window(c.get(), dialog->window());
+    xcb_flush(c.get());
+    QVERIFY(dialogClosedSpy.wait());
+    QCOMPARE(workspace()->activeWindow(), unrelated);
 }
 
 void X11WindowTest::testModal()
