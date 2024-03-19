@@ -494,7 +494,6 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
         return false;
     }
     updateOutputs(outputOrder);
-
     m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, outputOrder);
     KConfig cfg(QStringLiteral("kdeglobals"));
     KConfigGroup kscreenGroup = cfg.group(QStringLiteral("KScreen"));
