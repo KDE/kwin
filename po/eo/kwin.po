@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 02:21+0000\n"
+"POT-Creation-Date: 2024-03-19 02:30+0000\n"
 "PO-Revision-Date: 2024-01-20 15:45+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -2387,27 +2387,27 @@ msgstr "Malsukcesis krei PipeWire-kuntekston"
 msgid "Failed to connect PipeWire context"
 msgstr "Malsukcesis konekti PipeWire-kuntekston"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Ne eblis trovi fenestroid %1"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:149
 #, kde-format
 msgid "Could not find output"
 msgstr "Ne eblis trovi eligon"
 
-#: plugins/screencast/screencastmanager.cpp:177
+#: plugins/screencast/screencastmanager.cpp:179
 #, kde-format
 msgid "Invalid region"
 msgstr "Nevalida regiono"
 
-#: plugins/screencast/screencastmanager.cpp:208
+#: plugins/screencast/screencastmanager.cpp:210
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "Regiono ekster la laborspaco"
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Malsukcesis krei PipeWire-rivereton"
@@ -4157,7 +4157,7 @@ msgstr "Iri al suba labortablo"
 msgid "Switch to Desktop %1"
 msgstr "Ŝanĝi al labortablo %1"
 
-#: window.cpp:3090
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 02:21+0000\n"
+"POT-Creation-Date: 2024-03-19 02:30+0000\n"
 "PO-Revision-Date: 2024-01-27 21:08+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2389,27 +2389,27 @@ msgstr "Неуспешно създаване на PipeWire контекст"
 msgid "Failed to connect PipeWire context"
 msgstr "Неуспешно свързване на PipeWire контекст"
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:109
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Неуспешно намиране на  идентификатор на прозорец %1"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:149
 #, kde-format
 msgid "Could not find output"
 msgstr "Не може да намери изход"
 
-#: plugins/screencast/screencastmanager.cpp:177
+#: plugins/screencast/screencastmanager.cpp:179
 #, kde-format
 msgid "Invalid region"
 msgstr "Невалиден регион"
 
-#: plugins/screencast/screencastmanager.cpp:208
+#: plugins/screencast/screencastmanager.cpp:210
 #, kde-format
 msgid "Region outside the workspace"
 msgstr "Регион извън работното пространство"
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Неуспешно създаване на PipeWire поток"
@@ -4166,7 +4166,7 @@ msgstr "Превключване един работен плот надолу"
 msgid "Switch to Desktop %1"
 msgstr "Превключване към работен плот %1"
 
-#: window.cpp:3090
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-12 02:21+0000\n"
+"POT-Creation-Date: 2024-03-19 02:30+0000\n"
 "PO-Revision-Date: 2023-02-24 16:25-0300\n"
 "Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
 "Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2478,28 +2478,28 @@ msgstr ""
 msgid "Failed to connect PipeWire context"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:107
+#: plugins/screencast/screencastmanager.cpp:109
 #, fuzzy, kde-format
 #| msgid "Close running window on %1"
 msgid "Could not find window id %1"
 msgstr "Fechar a janela em execução em %1"
 
-#: plugins/screencast/screencastmanager.cpp:147
+#: plugins/screencast/screencastmanager.cpp:149
 #, kde-format
 msgid "Could not find output"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:177
+#: plugins/screencast/screencastmanager.cpp:179
 #, kde-format
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencastmanager.cpp:208
+#: plugins/screencast/screencastmanager.cpp:210
 #, kde-format
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:360
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4308,7 +4308,7 @@ msgstr "Mudar para a área de trabalho abaixo"
 msgid "Switch to Desktop %1"
 msgstr "Mudar para a área de trabalho %1"
 
-#: window.cpp:3090
+#: window.cpp:3088
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
