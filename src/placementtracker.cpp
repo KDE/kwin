@@ -47,9 +47,6 @@ void PlacementTracker::add(Window *window)
     connect(window, &Window::quickTileModeChanged, this, [this, window]() {
         saveQuickTile(window);
     });
-    connect(window, &Window::tileChanged, this, [this, window]() {
-        saveQuickTile(window);
-    });
     connect(window, &Window::fullScreenChanged, this, [this, window]() {
         saveFullscreen(window);
     });
