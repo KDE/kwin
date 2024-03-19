@@ -109,7 +109,7 @@ MemFdScreenCastBuffer *MemFdScreenCastBuffer::create(pw_buffer *pwBuffer, const 
     spaData->mapoffset = 0;
     spaData->maxsize = attributes->stride * attributes->size.height();
     spaData->fd = attributes->fd.get();
-    spaData->data = view.image()->bits();
+    spaData->data = nullptr;
     spaData->chunk->offset = 0;
     spaData->chunk->size = spaData->maxsize;
     spaData->chunk->stride = attributes->stride;
