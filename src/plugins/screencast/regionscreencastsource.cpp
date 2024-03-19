@@ -60,11 +60,6 @@ QSize RegionScreenCastSource::textureSize() const
     return m_region.size() * m_scale;
 }
 
-bool RegionScreenCastSource::hasAlphaChannel() const
-{
-    return true;
-}
-
 quint32 RegionScreenCastSource::drmFormat() const
 {
     return DRM_FORMAT_ARGB8888;

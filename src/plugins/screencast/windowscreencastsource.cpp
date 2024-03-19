@@ -46,11 +46,6 @@ quint32 WindowScreenCastSource::drmFormat() const
     return DRM_FORMAT_ARGB8888;
 }
 
-bool WindowScreenCastSource::hasAlphaChannel() const
-{
-    return true;
-}
-
 QSize WindowScreenCastSource::textureSize() const
 {
     return m_window->clientGeometry().size().toSize();
@@ -58,7 +53,7 @@ QSize WindowScreenCastSource::textureSize() const
 
 void WindowScreenCastSource::render(QImage *target)
 {
-    const auto offscreenTexture = GLTexture::allocate(hasAlphaChannel() ? GL_RGBA8 : GL_RGB8, textureSize());
+    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize());
     if (!offscreenTexture) {
         return;
     }

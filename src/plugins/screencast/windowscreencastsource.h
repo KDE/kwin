@@ -24,7 +24,6 @@ public:
     ~WindowScreenCastSource() override;
 
     quint32 drmFormat() const override;
-    bool hasAlphaChannel() const override;
     QSize textureSize() const override;
     uint refreshRate() const override;
 
