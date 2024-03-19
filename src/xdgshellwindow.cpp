@@ -10,6 +10,7 @@
 */
 #include "xdgshellwindow.h"
 #include "core/output.h"
+#include "utils/common.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -1497,6 +1498,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         return;
     }
 
+    auto currentQuickTileMode = quickTileMode();
     Q_EMIT maximizedAboutToChange(mode);
     m_requestedMaximizeMode = mode;
 
@@ -1521,7 +1523,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
     }
 
     // Normal maximized windows are now quickTileMode() == QuickTileFlag::Maximize
-    if (quickTileMode() == QuickTileMode(QuickTileFlag::None) || quickTileMode() == QuickTileMode(QuickTileFlag::Maximize)) {
+    if (currentQuickTileMode == QuickTileMode(QuickTileFlag::None) || currentQuickTileMode == QuickTileMode(QuickTileFlag::Maximize)) {
         QRectF savedGeometry = geometryRestore();
         if (!(oldMode & MaximizeVertical)) {
             savedGeometry.setTop(oldGeometry.top());
@@ -1571,22 +1573,28 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
             geometry.setHeight(0);
         }
     }
-
-    const auto oldQuickTileMode = quickTileMode();
+    qWarning() << "AAAA" << m_quickTileMode << quickTileMode() << m_requestedMaximizeMode << tile();
+    auto oldTile = tile();
+    const auto oldQuickTileMode = m_quickTileMode; // quickTileMode();
     if (m_requestedMaximizeMode == MaximizeFull) {
+        // updateQuickTileMode(QuickTileFlag::Maximize);
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
         setTile(nullptr);
+        /*} else if (m_requestedMaximizeMode == MaximizeHorizontal) {
+            updateQuickTileMode(QuickTileFlag::Horizontal);
+        } else if (m_requestedMaximizeMode == MaximizeVertical) {
+            updateQuickTileMode(QuickTileFlag::Vertical);*/
     } else {
         updateQuickTileMode(QuickTileFlag::None);
     }
 
     moveResize(geometry);
-
-    if (oldQuickTileMode != quickTileMode()) {
+    qWarning() << "BBBB" << tile() << (oldTile != tile());
+    if (oldQuickTileMode != quickTileMode() || oldTile != tile()) {
         doSetQuickTileMode();
         Q_EMIT quickTileModeChanged();
     }
