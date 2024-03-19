@@ -55,6 +55,7 @@ public:
     double width() const override;
     QString windowClass() const override;
     WId windowId() const override;
+    double scale() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
 
