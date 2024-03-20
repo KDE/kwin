@@ -11,14 +11,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-28 00:25+0100\n"
+"PO-Revision-Date: 2024-03-20 00:37+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: main.cpp:151 touch.cpp:118
@@ -260,7 +260,7 @@ msgstr "&Berraktibatzeko atzerapena:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "Iz&kinetako langa:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -272,19 +272,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Pantailen arteko izkinetako alegiazko langa gaitu edo ezgaitu dezakezu "
+"hemen. Langak kurtsoreri, pantailako izkina bat ukitzen ari denean beste "
+"pantaila batera igarotzea eragozten dio. Leiho anizkoitzak erabiltzean, "
+"erabiltzaile-interfazeko elementuak eragitea errazten du horrek, "
+"maximotutako leihoak ixteko botoia esaterako."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Kurtsoreek pantailako izkinetatik gurutzatzea saihesten du."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Ertzetako langa:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -296,6 +301,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Pantaila ezberdinen arteko ertzeko langaren neurria ezar dezakezu hemen. "
+"Langak, beste pantailara igarotzeko distantzia gehigarria ipintzen dio "
+"kurtsorearen mugimenduari. Pantailen arteko ertzetan dauden erabiltzaile-"
+"interfazeko elementuetara, Plasmaren Panelak esaterako, sartzea errazten du "
+"horrek."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -303,18 +313,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Pantaila-ertzak zeharkatzeko kurtsoreak egin behar duen distantzia "
+"gehiegarria."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Bat ere ez"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

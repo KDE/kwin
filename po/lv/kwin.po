@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 00:39+0000\n"
+"POT-Creation-Date: 2024-03-20 00:39+0000\n"
 "PO-Revision-Date: 2024-01-23 17:16+0200\n"
 "Last-Translator: Māris Nartišs <maris.kde@gmail.com>\n"
 "Language-Team: \n"
@@ -1213,22 +1213,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Resursdatora nosaukums: %1"
 
-#: input.cpp:2014
+#: input.cpp:2018
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Pārvietojiet planšeti uz nākamo izvadi"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Planšete ir pārvietota uz %1"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Planšešu pārslēgšanas izvades"
 
-#: input.cpp:3180
+#: input.cpp:3184
 #, kde-format
 msgid "Touchpad"
 msgstr "Skārienpaliktnis"
@@ -2401,7 +2401,7 @@ msgstr "Nederīgs reģions"
 msgid "Region outside the workspace"
 msgstr "Reģions ārpus darbvietas"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Neizdevās izveidot „PipeWire“ straumi"
@@ -4171,7 +4171,7 @@ msgstr "Pārslēgties vienu darbvirsmu uz leju"
 msgid "Switch to Desktop %1"
 msgstr "Pārslēgties uz %1. darbvirsmu"
 
-#: window.cpp:3104
+#: window.cpp:3121
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

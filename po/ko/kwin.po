@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 00:39+0000\n"
+"POT-Creation-Date: 2024-03-20 00:39+0000\n"
 "PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1208,22 +1208,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "호스트 이름: %1"
 
-#: input.cpp:2014
+#: input.cpp:2018
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "다음 출력으로 태블릿 이동"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "%1(으)로 태블릿 이동됨"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "태블릿에서 출력 변경됨"
 
-#: input.cpp:3180
+#: input.cpp:3184
 #, kde-format
 msgid "Touchpad"
 msgstr "터치패드"
@@ -2390,7 +2390,7 @@ msgstr "잘못된 영역"
 msgid "Region outside the workspace"
 msgstr "작업 공간 밖에 영역이 있음"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire 스트림을 만들 수 없음"
@@ -4152,7 +4152,7 @@ msgstr "아래쪽 바탕 화면으로 전환"
 msgid "Switch to Desktop %1"
 msgstr "바탕 화면 %1(으)로 전환"
 
-#: window.cpp:3104
+#: window.cpp:3121
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

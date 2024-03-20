@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 00:39+0000\n"
+"POT-Creation-Date: 2024-03-20 00:39+0000\n"
 "PO-Revision-Date: 2024-02-29 02:45+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1206,22 +1206,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "ჰოსტის სახელი: %1"
 
-#: input.cpp:2014
+#: input.cpp:2018
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "ტაბლეტის შემდეგ გამოტანაზე გადატანა"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "ტაბლეტი გადატანილია %1-ზე"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "ტაბლეტებმა გამოტანები გადართეს"
 
-#: input.cpp:3180
+#: input.cpp:3184
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"
@@ -2394,7 +2394,7 @@ msgstr "არასწორი რეგიონი"
 msgid "Region outside the workspace"
 msgstr "რეგიონი სამუშაო სივრცის გარეთ"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
@@ -4159,7 +4159,7 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: window.cpp:3104
+#: window.cpp:3121
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

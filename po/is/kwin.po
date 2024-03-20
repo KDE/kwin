@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 00:39+0000\n"
+"POT-Creation-Date: 2024-03-20 00:39+0000\n"
 "PO-Revision-Date: 2024-03-06 14:03+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1216,22 +1216,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Vélarheiti: %1"
 
-#: input.cpp:2014
+#: input.cpp:2018
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Færðu teikniborðið í næsta úttak"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Teikniborð fært í %1"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Teikniborð skiptu um úttak"
 
-#: input.cpp:3180
+#: input.cpp:3184
 #, kde-format
 msgid "Touchpad"
 msgstr "Snertiplatti"
@@ -2406,7 +2406,7 @@ msgstr "Ógilt svæði"
 msgid "Region outside the workspace"
 msgstr "Svæði utan vinnusvæðisins"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Mistókst að útbúa PipeWire straum"
@@ -4170,7 +4170,7 @@ msgstr "Eitt skjáborð niður"
 msgid "Switch to Desktop %1"
 msgstr "Skipta á skjáborð %1"
 
-#: window.cpp:3104
+#: window.cpp:3121
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

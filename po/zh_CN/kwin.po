@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 00:39+0000\n"
+"POT-Creation-Date: 2024-03-20 00:39+0000\n"
 "PO-Revision-Date: 2024-03-17 20:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1205,22 +1205,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主机名：%1"
 
-#: input.cpp:2014
+#: input.cpp:2018
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "移动数位板到下一个输出设备"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "数位板已经移动到 %1"
 
-#: input.cpp:2093
+#: input.cpp:2097
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "数位板已切换输出设备"
 
-#: input.cpp:3180
+#: input.cpp:3184
 #, kde-format
 msgid "Touchpad"
 msgstr "触摸板"
@@ -2379,7 +2379,7 @@ msgstr "无效区域"
 msgid "Region outside the workspace"
 msgstr "区域在工作区外"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "创建 PipeWire 流失败"
@@ -4139,7 +4139,7 @@ msgstr "切换到下方桌面"
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3104
+#: window.cpp:3121
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
