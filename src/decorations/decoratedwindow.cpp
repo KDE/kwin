@@ -29,7 +29,7 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     : QObject()
     , DecoratedWindowPrivate(decoratedClient, decoration)
     , m_window(window)
-    , m_clientSize(window->clientSize().toSize())
+    , m_clientSize(window->clientSize())
 {
     window->setDecoratedWindow(this);
     connect(window, &Window::activeChanged, this, [decoratedClient, window]() {

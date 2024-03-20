@@ -35,4 +35,19 @@ KWIN_EXPORT inline QRectF snapToPixelGridF(const QRectF &rect)
     return QRectF(snapToPixelGridF(rect.topLeft()), snapToPixelGridF(rect.bottomRight()));
 }
 
+KWIN_EXPORT constexpr double snapToPixels(double logicalValue, double scale)
+{
+    return std::round(logicalValue * scale) / scale;
+}
+
+KWIN_EXPORT constexpr QSizeF snapToPixels(const QSizeF &logicalValue, double scale)
+{
+    return QSizeF(snapToPixels(logicalValue.width(), scale), snapToPixels(logicalValue.height(), scale));
+}
+
+KWIN_EXPORT constexpr QRectF snapToPixels(const QRectF &logicalValue, double scale)
+{
+    return QRectF(snapToPixels(logicalValue.x(), scale), snapToPixels(logicalValue.y(), scale), snapToPixels(logicalValue.width(), scale), snapToPixels(logicalValue.height(), scale));
+}
+
 } // namespace KWin

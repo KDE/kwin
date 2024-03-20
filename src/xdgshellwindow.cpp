@@ -15,6 +15,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "core/pixelgrid.h"
 #include "decorations/decorationbridge.h"
 #include "killprompt.h"
 #include "placement.h"
@@ -123,7 +124,7 @@ void XdgSurfaceWindow::sendConfigure()
 
     configureEvent->gravity = m_nextGravity;
     configureEvent->flags |= m_configureFlags;
-    configureEvent->scale = m_preferredBufferScale;
+    configureEvent->scale = m_nextTargetScale;
     m_configureFlags = {};
 
     m_configureEvents.append(configureEvent);
@@ -192,6 +193,9 @@ void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRectF &rect)
 
 void XdgSurfaceWindow::handleNextWindowGeometry()
 {
+    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+        setTargetScale(configureEvent->scale);
+    }
     const QRectF boundingGeometry = surface()->boundingRect();
 
     // The effective window geometry is defined as the intersection of the window geometry
@@ -209,6 +213,8 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
 
     if (m_windowGeometry.isEmpty()) {
         qCWarning(KWIN_CORE) << "Committed empty window geometry, dealing with a buggy client!";
+    } else {
+        m_windowGeometry = snapToPixels(m_windowGeometry, targetScale());
     }
 
     QRectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
@@ -277,7 +283,7 @@ QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
 {
     const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
     const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRectF(QPointF(left, top), surface()->size());
+    return QRectF(QPointF(left, top), snapToPixels(surface()->size(), m_targetScale));
 }
 
 void XdgSurfaceWindow::handleRoleDestroyed()
@@ -695,17 +701,18 @@ void XdgToplevelWindow::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 {
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
 
-    QSize framePadding(0, 0);
+    QSizeF framePadding(0, 0);
     if (m_nextDecoration) {
-        framePadding.setWidth(m_nextDecoration->borderLeft() + m_nextDecoration->borderRight());
-        framePadding.setHeight(m_nextDecoration->borderTop() + m_nextDecoration->borderBottom());
+        const auto borders = m_nextDecoration->bordersFor(nextTargetScale());
+        framePadding.setWidth(borders.left() + borders.right());
+        framePadding.setHeight(borders.top() + borders.bottom());
     }
 
-    QSizeF nextClientSize = moveResizeGeometry().size();
+    QSizeF nextClientSize = snapToPixels(moveResizeGeometry().size(), nextTargetScale());
     if (!nextClientSize.isEmpty()) {
         nextClientSize.setWidth(std::max(1.0, nextClientSize.width() - framePadding.width()));
         nextClientSize.setHeight(std::max(1.0, nextClientSize.height() - framePadding.height()));
@@ -1779,7 +1786,7 @@ bool XdgPopupWindow::acceptsFocus() const
 
 XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
 {
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
 
