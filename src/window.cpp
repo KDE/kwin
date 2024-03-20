@@ -9,6 +9,7 @@
 */
 #include "window.h"
 #include "effect/globals.h"
+#include "utils/common.h"
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -3506,9 +3507,8 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         Output *output = workspace()->outputAt(whichScreen);
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
-
-            setMaximize(false, false);
-
+            // FIXME: First quicktilemodechange happens
+            //  setMaximize(false, false);
             moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
             // Store the mode change
         } else {
@@ -3517,6 +3517,8 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
         if (mode != QuickTileMode(QuickTileFlag::Custom)) {
             Tile *tile = workspace()->tileManager(output)->quickTile(mode);
+            qWarning() << "GGGGGGGGGGGGGGGGGGGG" << tile << mode;
+            // FIXME: Second quicktilemodechange happens
             setTile(tile);
         }
 
@@ -3619,22 +3621,30 @@ QuickTileMode Window::quickTileMode() const
 
 void Window::setTile(Tile *tile)
 {
+    QuickTileMode oldTileMode = quickTileMode();
+
     if (m_tile == tile) {
         return;
-    } else if (m_tile) {
+    } else if (m_tile && !m_setTileRecursion) {
+        m_setTileRecursion = true;
         m_tile->removeWindow(this);
+        m_setTileRecursion = false;
     }
 
-    int oldTileMode = quickTileMode();
     m_tile = tile;
 
     if (m_tile) {
         m_tile->addWindow(this);
     }
+    qWarning() << "tilato" << tile << m_setTileRecursion << oldTileMode << quickTileMode();
+    if (m_setTileRecursion) {
+        return;
+    }
 
     Q_EMIT tileChanged(tile);
 
     if (oldTileMode != quickTileMode()) {
+        qWarning() << "SETTILE" << m_tile;
         Q_EMIT quickTileModeChanged();
     }
 }

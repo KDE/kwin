@@ -4428,6 +4428,9 @@ void X11Window::maximize(MaximizeMode mode)
         return;
     }
 
+    auto currentQuickTileMode = quickTileMode();
+    auto oldTile = tile();
+
     QRectF clientArea;
     if (isElectricBorderMaximizing()) {
         clientArea = workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor());
@@ -4615,7 +4618,10 @@ void X11Window::maximize(MaximizeMode mode)
     blockGeometryUpdates(false);
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
-    Q_EMIT quickTileModeChanged();
+    if (currentQuickTileMode != quickTileMode() && !oldTile && !tile()) {
+        qWarning() << "X11MAXIMIZE" << currentQuickTileMode << quickTileMode() << oldTile << tile();
+        Q_EMIT quickTileModeChanged();
+    }
 
     if (max_mode != old_mode) {
         Q_EMIT maximizedChanged();
