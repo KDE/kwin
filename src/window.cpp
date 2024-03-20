@@ -1180,6 +1180,10 @@ void Window::setMaximize(bool vertically, bool horizontally)
 
 bool Window::startInteractiveMoveResize()
 {
+    if (isDeleted()) {
+        return false;
+    }
+
     Q_ASSERT(!isInteractiveMoveResize());
     Q_ASSERT(QWidget::keyboardGrabber() == nullptr);
     Q_ASSERT(QWidget::mouseGrabber() == nullptr);
@@ -1355,6 +1359,9 @@ void Window::checkUnrestrictedInteractiveMoveResize()
 // activated only after moving by several pixels, but that looks bad.
 void Window::startDelayedInteractiveMoveResize()
 {
+    if (isDeleted()) {
+        return;
+    }
     Q_ASSERT(!m_interactiveMoveResize.delayedTimer);
     m_interactiveMoveResize.delayedTimer = new QTimer(this);
     m_interactiveMoveResize.delayedTimer->setSingleShot(true);
@@ -2381,6 +2388,9 @@ int Window::borderTop() const
 
 void Window::updateCursor()
 {
+    if (isDeleted()) {
+        return;
+    }
     Gravity gravity = interactiveMoveResizeGravity();
     if (!isResizable() || isShade()) {
         gravity = Gravity::None;

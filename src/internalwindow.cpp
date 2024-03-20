@@ -327,6 +327,7 @@ void InternalWindow::destroyWindow()
     m_handle->disconnect(this);
 
     markAsDeleted();
+    stopDelayedInteractiveMoveResize();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();

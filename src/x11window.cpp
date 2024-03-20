@@ -409,6 +409,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         }
         workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
         StackingUpdatesBlocker blocker(workspace());
+        stopDelayedInteractiveMoveResize();
         if (isInteractiveMoveResize()) {
             leaveInteractiveMoveResize();
         }
@@ -486,6 +487,7 @@ void X11Window::destroyWindow()
         }
         workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
         StackingUpdatesBlocker blocker(workspace());
+        stopDelayedInteractiveMoveResize();
         if (isInteractiveMoveResize()) {
             leaveInteractiveMoveResize();
         }

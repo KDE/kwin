@@ -295,6 +295,7 @@ void XdgSurfaceWindow::destroyWindow()
 {
     handleRoleDestroyed();
     markAsDeleted();
+    stopDelayedInteractiveMoveResize();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
