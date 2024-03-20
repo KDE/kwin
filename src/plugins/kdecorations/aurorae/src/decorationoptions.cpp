@@ -258,9 +258,9 @@ void Borders::setTitle(int value)
     setTop(value);
 }
 
-Borders::operator QMargins() const
+Borders::operator QMarginsF() const
 {
-    return QMargins(m_left, m_top, m_right, m_bottom);
+    return QMarginsF(m_left, m_top, m_right, m_bottom);
 }
 
 } // namespace
