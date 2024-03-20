@@ -1353,8 +1353,9 @@ public:
     void unrefOffscreenRendering();
     bool isOffscreenRendering() const;
 
-    qreal preferredBufferScale() const;
-    void setPreferredBufferScale(qreal scale);
+    qreal targetScale() const;
+    qreal nextTargetScale() const;
+    void setNextTargetScale(qreal scale);
 
     OutputTransform preferredBufferTransform() const;
     void setPreferredBufferTransform(OutputTransform transform);
@@ -1478,6 +1479,8 @@ Q_SIGNALS:
     void maximizeGeometryRestoreChanged();
     void fullscreenGeometryRestoreChanged();
     void offscreenRenderingChanged();
+    void targetScaleChanged();
+    void nextTargetScaleChanged();
 
 protected:
     Window();
@@ -1766,6 +1769,7 @@ protected:
     void updatePreferredBufferScale();
     void updatePreferredBufferTransform();
     void updatePreferredColorDescription();
+    void setTargetScale(qreal scale);
 
     Output *m_output = nullptr;
     QRectF m_frameGeometry;
@@ -1775,7 +1779,8 @@ protected:
     bool m_hidden = false;
     bool m_hiddenByShowDesktop = false;
 
-    qreal m_preferredBufferScale = 1;
+    qreal m_nextTargetScale = 1;
+    qreal m_targetScale = 1;
     OutputTransform m_preferredBufferTransform = OutputTransform::Normal;
     ColorDescription m_preferredColorDescription = ColorDescription::sRGB;
 

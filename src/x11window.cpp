@@ -377,6 +377,14 @@ std::unique_ptr<WindowItem> X11Window::createItem(Item *parentItem)
     return std::make_unique<WindowItemX11>(this, parentItem);
 }
 
+void X11Window::doSetPreferredBufferScale()
+{
+    // the decoration will target the screen's scale,
+    // which may not be the same as Xwayland scale
+    // but there isn't really any other good option here
+    setTargetScale(nextTargetScale());
+}
+
 // Use destroyWindow() or releaseWindow(), Client instances cannot be deleted directly
 void X11Window::deleteClient(X11Window *c)
 {
@@ -1371,11 +1379,6 @@ void X11Window::createDecoration()
             }
         });
         connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
-            if (!isDeleted()) {
-                updateFrameExtents();
-            }
-        });
-        connect(decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
             if (isDeleted()) {
                 return;
             }
@@ -1383,10 +1386,18 @@ void X11Window::createDecoration()
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);
             }
+            updateFrameExtents();
         });
         connect(decoratedWindow()->decoratedWindow(), &KDecoration3::DecoratedWindow::sizeChanged, this, [this]() {
             if (!isDeleted()) {
                 updateInputWindow();
+            }
+        });
+
+        decoration->apply(decoration->nextState()->clone());
+        connect(decoration.get(), &KDecoration3::Decoration::nextStateChanged, this, [this](auto state) {
+            if (!isDeleted()) {
+                m_decoration.decoration->apply(state->clone());
             }
         });
     }

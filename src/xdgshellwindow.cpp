@@ -15,6 +15,7 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "core/pixelgrid.h"
 #include "decorations/decorationbridge.h"
 #include "killprompt.h"
 #include "placement.h"
@@ -123,6 +124,7 @@ void XdgSurfaceWindow::sendConfigure()
 
     configureEvent->gravity = m_nextGravity;
     configureEvent->flags |= m_configureFlags;
+    configureEvent->scale = m_nextTargetScale;
     m_configureFlags = {};
 
     m_configureEvents.append(configureEvent);
@@ -191,6 +193,9 @@ void XdgSurfaceWindow::maybeUpdateMoveResizeGeometry(const QRectF &rect)
 
 void XdgSurfaceWindow::handleNextWindowGeometry()
 {
+    if (const XdgSurfaceConfigure *configureEvent = lastAcknowledgedConfigure()) {
+        setTargetScale(configureEvent->scale);
+    }
     const QRectF boundingGeometry = surface()->boundingRect();
 
     // The effective window geometry is defined as the intersection of the window geometry
@@ -208,6 +213,8 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
 
     if (m_windowGeometry.isEmpty()) {
         qCWarning(KWIN_CORE) << "Committed empty window geometry, dealing with a buggy client!";
+    } else {
+        m_windowGeometry = snapToPixels(m_windowGeometry, targetScale());
     }
 
     QRectF frameGeometry(pos(), clientSizeToFrameSize(m_windowGeometry.size()));
@@ -276,7 +283,7 @@ QRectF XdgSurfaceWindow::frameRectToBufferRect(const QRectF &rect) const
 {
     const qreal left = rect.left() + borderLeft() - m_windowGeometry.left();
     const qreal top = rect.top() + borderTop() - m_windowGeometry.top();
-    return QRectF(QPointF(left, top), surface()->size());
+    return QRectF(QPointF(left, top), snapToPixels(surface()->size(), m_targetScale));
 }
 
 void XdgSurfaceWindow::handleRoleDestroyed()
@@ -694,17 +701,18 @@ void XdgToplevelWindow::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 {
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
 
-    QSize framePadding(0, 0);
+    QSizeF framePadding(0, 0);
     if (m_nextDecoration) {
-        framePadding.setWidth(m_nextDecoration->borderLeft() + m_nextDecoration->borderRight());
-        framePadding.setHeight(m_nextDecoration->borderTop() + m_nextDecoration->borderBottom());
+        const auto borders = m_nextDecorationState->borders();
+        framePadding.setWidth(borders.left() + borders.right());
+        framePadding.setHeight(borders.top() + borders.bottom());
     }
 
-    QSizeF nextClientSize = moveResizeGeometry().size();
+    QSizeF nextClientSize = snapToPixels(moveResizeGeometry().size(), nextTargetScale());
     if (!nextClientSize.isEmpty()) {
         nextClientSize.setWidth(std::max(1.0, nextClientSize.width() - framePadding.width()));
         nextClientSize.setHeight(std::max(1.0, nextClientSize.height() - framePadding.height()));
@@ -723,6 +731,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
     configureEvent->bounds = moveResizeGeometry();
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
+    configureEvent->decorationState = m_nextDecorationState;
     configureEvent->serial = serial;
     configureEvent->tile = m_requestedTile;
 
@@ -731,18 +740,15 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 
 void XdgToplevelWindow::handleRolePrecommit()
 {
-    auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
-    if (configureEvent && decoration() != configureEvent->decoration.get()) {
+    if (auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
         if (configureEvent->decoration) {
-            connect(configureEvent->decoration.get(), &KDecoration3::Decoration::bordersChanged, this, [this]() {
-                if (!isDeleted()) {
-                    scheduleConfigure();
-                }
-            });
+            configureEvent->decoration->apply(configureEvent->decorationState);
         }
 
-        setDecoration(configureEvent->decoration);
-        updateShadow();
+        if (decoration() != configureEvent->decoration.get()) {
+            setDecoration(configureEvent->decoration);
+            updateShadow();
+        }
     }
 }
 
@@ -1394,7 +1400,12 @@ XdgToplevelWindow::DecorationMode XdgToplevelWindow::preferredDecorationMode() c
 
 void XdgToplevelWindow::clearDecoration()
 {
+    if (m_nextDecoration) {
+        disconnect(m_nextDecoration.get(), &KDecoration3::Decoration::nextStateChanged, this, &XdgToplevelWindow::processDecorationState);
+    }
+
     m_nextDecoration = nullptr;
+    m_nextDecorationState = nullptr;
 }
 
 void XdgToplevelWindow::configureDecoration()
@@ -1408,6 +1419,10 @@ void XdgToplevelWindow::configureDecoration()
     case DecorationMode::Server:
         if (!m_nextDecoration) {
             m_nextDecoration.reset(Workspace::self()->decorationBridge()->createDecoration(this));
+            if (m_nextDecoration) {
+                connect(m_nextDecoration.get(), &KDecoration3::Decoration::nextStateChanged, this, &XdgToplevelWindow::processDecorationState);
+                m_nextDecorationState = m_nextDecoration->nextState()->clone();
+            }
         }
         break;
     }
@@ -1417,6 +1432,18 @@ void XdgToplevelWindow::configureDecoration()
         configureXdgDecoration(decorationMode);
     } else if (m_serverDecoration) {
         configureServerDecoration(decorationMode);
+    }
+}
+
+void XdgToplevelWindow::processDecorationState(std::shared_ptr<KDecoration3::DecorationState> state)
+{
+    if (isDeleted()) {
+        return;
+    }
+
+    m_nextDecorationState = state->clone();
+    if (m_shellSurface->isConfigured()) {
+        scheduleConfigure();
     }
 }
 
@@ -1778,7 +1805,7 @@ bool XdgPopupWindow::acceptsFocus() const
 
 XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
 {
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
 

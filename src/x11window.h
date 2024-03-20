@@ -351,6 +351,7 @@ protected:
     void doSetQuickTileMode() override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
+    void doSetPreferredBufferScale() override;
 
 Q_SIGNALS:
     void shapeChanged();
