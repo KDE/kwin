@@ -9,6 +9,7 @@
 
 #include "inputpanelv1window.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "inputmethod.h"
 #include "wayland/output.h"
 #include "wayland/seat.h"
@@ -42,6 +43,10 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(panelSurface, &InputPanelSurfaceV1Interface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
 
     connect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
+
+    m_rescalingTimer.setSingleShot(true);
+    m_rescalingTimer.setInterval(0);
+    connect(&m_rescalingTimer, &QTimer::timeout, this, &InputPanelV1Window::reposition);
 
     kwinApp()->inputMethod()->setPanel(this);
 }
@@ -101,7 +106,7 @@ void InputPanelV1Window::resetPosition()
         geo.moveLeft(availableArea.left() + (availableArea.width() - geo.width()) / 2);
         geo.moveBottom(availableArea.bottom());
 
-        moveResize(geo);
+        moveResize(snapToPixels(geo, targetScale()));
     } break;
     case Mode::Overlay: {
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
@@ -153,7 +158,7 @@ void InputPanelV1Window::resetPosition()
                 popupRect.moveBottom(screen.bottom());
             }
 
-            moveResize(popupRect);
+            moveResize(snapToPixels(popupRect, targetScale()));
         }
     } break;
     }
@@ -203,7 +208,10 @@ void InputPanelV1Window::doSetPreferredBufferScale()
     if (isDeleted()) {
         return;
     }
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
+    setTargetScale(nextTargetScale());
+    // re-align the surface with the new target scale
+    m_rescalingTimer.start();
 }
 
 void InputPanelV1Window::doSetPreferredBufferTransform()
