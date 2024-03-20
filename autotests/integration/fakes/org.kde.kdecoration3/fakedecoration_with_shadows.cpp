@@ -29,6 +29,11 @@ public:
     {
     }
 
+    QMarginsF bordersFor(double scale) const override
+    {
+        return borders();
+    }
+
 public Q_SLOTS:
     bool init() override
     {

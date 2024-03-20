@@ -322,6 +322,11 @@ QString DecoratedWindowImpl::windowClass() const
 {
     return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
 }
+
+qreal DecoratedWindowImpl::scale() const
+{
+    return 1;
+}
 }
 }
 

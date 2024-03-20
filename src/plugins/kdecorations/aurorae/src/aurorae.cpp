@@ -382,6 +382,11 @@ void Decoration::updateBorders()
     updateExtendedBorders();
 }
 
+QMarginsF Decoration::bordersFor(double scale) const
+{
+    return borders();
+}
+
 void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     if (!m_view) {
@@ -580,7 +585,7 @@ void Decoration::updateBuffer()
     if (buffer.isNull()) {
         return;
     }
-    m_contentRect = QRectF(QPoint(0, 0), m_view->contentItem()->size());
+    m_contentRect = QRectF(QPointF(0, 0), m_view->contentItem()->size());
     if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !window()->isMaximized()) {
         m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
     }
