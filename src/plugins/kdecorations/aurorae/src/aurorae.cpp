@@ -328,11 +328,12 @@ bool Decoration::init()
     updateBorders();
     if (m_view) {
         auto resizeWindow = [this] {
-            QRect rect(QPoint(0, 0), size());
+            QRectF rect(QPoint(0, 0), size());
             if (m_padding && !client()->isMaximized()) {
                 rect = rect.adjusted(-m_padding->left(), -m_padding->top(), m_padding->right(), m_padding->bottom());
             }
-            m_view->setGeometry(rect);
+            // TODO what can we do about this?
+            m_view->setGeometry(rect.toAlignedRect());
             updateBlur();
         };
         connect(this, &Decoration::bordersChanged, this, resizeWindow);
@@ -382,7 +383,7 @@ void Decoration::updateBorders()
     updateExtendedBorders();
 }
 
-void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
+void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     if (!m_view) {
         return;
@@ -391,7 +392,7 @@ void Decoration::paint(QPainter *painter, const QRect &repaintRegion)
     const QImage image = m_view->bufferAsImage();
     const qreal dpr = image.devicePixelRatioF();
 
-    QRect nativeContentRect = QRect(m_contentRect.topLeft() * dpr, m_contentRect.size() * dpr);
+    QRect nativeContentRect = QRect((m_contentRect.topLeft() * dpr).toPoint(), (m_contentRect.size() * dpr).toSize());
 
     painter->fillRect(rect(), Qt::transparent);
     painter->drawImage(rect(), image, nativeContentRect);
@@ -580,7 +581,7 @@ void Decoration::updateBuffer()
     if (buffer.isNull()) {
         return;
     }
-    m_contentRect = QRect(QPoint(0, 0), m_view->contentItem()->size().toSize());
+    m_contentRect = QRectF(QPointF(0, 0), m_view->contentItem()->size());
     if (m_padding && (m_padding->left() > 0 || m_padding->top() > 0 || m_padding->right() > 0 || m_padding->bottom() > 0) && !client()->isMaximized()) {
         m_contentRect = m_contentRect.adjusted(m_padding->left(), m_padding->top(), -m_padding->right(), -m_padding->bottom());
     }
