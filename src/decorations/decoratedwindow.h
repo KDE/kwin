@@ -30,7 +30,7 @@ public:
     explicit DecoratedWindowImpl(Window *window, KDecoration3::DecoratedWindow *decoratedClient, KDecoration3::Decoration *decoration);
     ~DecoratedWindowImpl() override;
     QString caption() const override;
-    int height() const override;
+    qreal height() const override;
     QIcon icon() const override;
     bool isActive() const override;
     bool isCloseable() const override;
@@ -50,8 +50,8 @@ public:
     QPalette palette() const override;
     QColor color(KDecoration3::ColorGroup group, KDecoration3::ColorRole role) const override;
     bool providesContextHelp() const override;
-    QSize size() const override;
-    int width() const override;
+    QSizeF size() const override;
+    qreal width() const override;
     QString windowClass() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
@@ -90,7 +90,7 @@ private Q_SLOTS:
 
 private:
     Window *m_window;
-    QSize m_clientSize;
+    QSizeF m_clientSize;
 
     QString m_toolTipText;
     QTimer m_toolTipWakeUp;

@@ -272,7 +272,7 @@ public:
     void setTop(int top);
     void setBottom(int bottom);
 
-    operator QMargins() const;
+    operator QMarginsF() const;
 
 public Q_SLOTS:
     /**

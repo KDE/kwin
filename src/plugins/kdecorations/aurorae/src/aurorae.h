@@ -38,7 +38,7 @@ public:
     explicit Decoration(QObject *parent = nullptr, const QVariantList &args = QVariantList());
     ~Decoration() override;
 
-    void paint(QPainter *painter, const QRect &repaintRegion) override;
+    void paint(QPainter *painter, const QRectF &repaintRegion) override;
 
     Q_INVOKABLE QVariant readConfig(const QString &key, const QVariant &defaultValue = QVariant());
 
@@ -70,7 +70,7 @@ private:
 
     bool m_supportsMask{false};
 
-    QRect m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
+    QRectF m_contentRect; // the geometry of the part of the buffer that is not a shadow when buffer was created.
     std::unique_ptr<QQuickItem> m_item;
     std::unique_ptr<QQmlContext> m_qmlContext;
     KWin::Borders *m_borders;

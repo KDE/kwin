@@ -40,7 +40,7 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
             return;
         }
         const auto oldSize = m_clientSize;
-        m_clientSize = m_window->clientSize().toSize();
+        m_clientSize = m_window->clientSize();
         if (oldSize.width() != m_clientSize.width()) {
             Q_EMIT decoratedClient->widthChanged(m_clientSize.width());
         }
@@ -251,17 +251,17 @@ void DecoratedWindowImpl::delayedRequestToggleMaximization(Options::WindowOperat
     Workspace::self()->performWindowOperation(m_window, operation);
 }
 
-int DecoratedWindowImpl::width() const
+qreal DecoratedWindowImpl::width() const
 {
     return m_clientSize.width();
 }
 
-int DecoratedWindowImpl::height() const
+qreal DecoratedWindowImpl::height() const
 {
     return m_clientSize.height();
 }
 
-QSize DecoratedWindowImpl::size() const
+QSizeF DecoratedWindowImpl::size() const
 {
     return m_clientSize;
 }
@@ -322,7 +322,6 @@ QString DecoratedWindowImpl::windowClass() const
 {
     return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
 }
-
 }
 }
 

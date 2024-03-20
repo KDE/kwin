@@ -341,7 +341,7 @@ QImage Shadow::decorationShadowImage() const
     return m_decorationShadow->shadow();
 }
 
-QSize Shadow::elementSize(Shadow::ShadowElements element) const
+QSizeF Shadow::elementSize(Shadow::ShadowElements element) const
 {
     if (m_decorationShadow) {
         switch (element) {

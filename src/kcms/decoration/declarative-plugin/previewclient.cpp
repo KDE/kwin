@@ -102,17 +102,17 @@ void PreviewClient::setIcon(const QIcon &pixmap)
     Q_EMIT iconChanged(m_icon);
 }
 
-int PreviewClient::width() const
+qreal PreviewClient::width() const
 {
     return m_width;
 }
 
-int PreviewClient::height() const
+qreal PreviewClient::height() const
 {
     return m_height;
 }
 
-QSize PreviewClient::size() const
+QSizeF PreviewClient::size() const
 {
     return QSize(m_width, m_height);
 }
