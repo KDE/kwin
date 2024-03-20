@@ -40,6 +40,13 @@ qreal KWIN_EXPORT fromXNative(int value);
 QRectF KWIN_EXPORT fromXNative(const QRect &value);
 QSizeF KWIN_EXPORT fromXNative(const QSize &value);
 
+/**
+ * Rounds a given value using the scale as a base
+ *
+ * Equivalent to fromXNative(toXNative(value))
+ */
+qreal KWIN_EXPORT nativeRound(qreal value);
+
 /** Floors a given value to using the scale as a base
  *  Use when flooring to ints from Xwayland
  *  i.e floor(a/scale) * scale
