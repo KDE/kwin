@@ -644,6 +644,11 @@ QSizeF fromXNative(const QSize &s)
     return QSizeF(fromXNative(s.width()), fromXNative(s.height()));
 }
 
+qreal nativeRound(qreal value)
+{
+    return fromXNative(toXNative(value));
+}
+
 static qreal nativeFloor(qreal value)
 {
     return std::floor(value * kwinApp()->xwaylandScale()) / kwinApp()->xwaylandScale();

@@ -2807,8 +2807,8 @@ QPointF X11Window::framePosToClientPos(const QPointF &point) const
     qreal y = point.y();
 
     if (isDecorated()) {
-        x += borderLeft();
-        y += borderTop();
+        x += Xcb::nativeRound(borderLeft());
+        y += Xcb::nativeRound(borderTop());
     } else {
         x -= m_clientFrameExtents.left();
         y -= m_clientFrameExtents.top();
@@ -2823,8 +2823,8 @@ QPointF X11Window::clientPosToFramePos(const QPointF &point) const
     qreal y = point.y();
 
     if (isDecorated()) {
-        x -= borderLeft();
-        y -= borderTop();
+        x -= Xcb::nativeRound(borderLeft());
+        y -= Xcb::nativeRound(borderTop());
     } else {
         x += m_clientFrameExtents.left();
         y += m_clientFrameExtents.top();
@@ -2839,8 +2839,11 @@ QSizeF X11Window::frameSizeToClientSize(const QSizeF &size) const
     qreal height = size.height();
 
     if (isDecorated()) {
-        width -= borderLeft() + borderRight();
-        height -= borderTop() + borderBottom();
+        // Both frameSize and clientSize are rounded to integral XNative units
+        // So their difference must also be rounded to integral XNative units
+        // Otherwise we get cycles of rounding that can cause growing window sizes
+        width -= Xcb::nativeRound(borderLeft()) + Xcb::nativeRound(borderRight());
+        height -= Xcb::nativeRound(borderTop()) + Xcb::nativeRound(borderBottom());
     } else {
         width += m_clientFrameExtents.left() + m_clientFrameExtents.right();
         height += m_clientFrameExtents.top() + m_clientFrameExtents.bottom();
@@ -2855,8 +2858,11 @@ QSizeF X11Window::clientSizeToFrameSize(const QSizeF &size) const
     qreal height = size.height();
 
     if (isDecorated()) {
-        width += borderLeft() + borderRight();
-        height += borderTop() + borderBottom();
+        // Both frameSize and clientSize are rounded to integral XNative units
+        // So their difference must also be rounded to integral XNative units
+        // Otherwise we get cycles of rounding that can cause growing window sizes
+        width += Xcb::nativeRound(borderLeft()) + Xcb::nativeRound(borderRight());
+        height += Xcb::nativeRound(borderTop()) + Xcb::nativeRound(borderBottom());
     } else {
         width -= m_clientFrameExtents.left() + m_clientFrameExtents.right();
         height -= m_clientFrameExtents.top() + m_clientFrameExtents.bottom();
