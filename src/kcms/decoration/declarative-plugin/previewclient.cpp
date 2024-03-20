@@ -245,6 +245,16 @@ QString PreviewClient::windowClass() const
     return QString();
 }
 
+qreal PreviewClient::scale() const
+{
+    return 1;
+}
+
+qreal PreviewClient::nextScale() const
+{
+    return 1;
+}
+
 bool PreviewClient::hasApplicationMenu() const
 {
     return true;

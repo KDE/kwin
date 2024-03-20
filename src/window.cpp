@@ -3392,19 +3392,19 @@ void Window::setMoveResizeOutput(Output *output)
     }
 
     if (m_moveResizeOutput) {
-        disconnect(m_moveResizeOutput, &Output::scaleChanged, this, &Window::updatePreferredBufferScale);
+        disconnect(m_moveResizeOutput, &Output::scaleChanged, this, &Window::updateNextTargetScale);
         disconnect(m_moveResizeOutput, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
         disconnect(m_moveResizeOutput, &Output::colorDescriptionChanged, this, &Window::updatePreferredColorDescription);
     }
 
     m_moveResizeOutput = output;
     if (output) {
-        connect(output, &Output::scaleChanged, this, &Window::updatePreferredBufferScale);
+        connect(output, &Output::scaleChanged, this, &Window::updateNextTargetScale);
         connect(output, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
         connect(output, &Output::colorDescriptionChanged, this, &Window::updatePreferredColorDescription);
     }
 
-    updatePreferredBufferScale();
+    updateNextTargetScale();
     updatePreferredBufferTransform();
     updatePreferredColorDescription();
 }
@@ -4474,6 +4474,11 @@ void Window::maybeSendFrameCallback()
     }
 }
 
+qreal Window::targetScale() const
+{
+    return m_targetScale;
+}
+
 bool Window::isShown() const
 {
     return !isDeleted() && !isHidden() && !isHiddenByShowDesktop() && !isMinimized();
@@ -4535,26 +4540,35 @@ void Window::doSetModal()
 {
 }
 
-qreal Window::preferredBufferScale() const
+qreal Window::nextTargetScale() const
 {
-    return m_preferredBufferScale;
+    return m_nextTargetScale;
 }
 
-void Window::setPreferredBufferScale(qreal scale)
+void Window::setNextTargetScale(qreal scale)
 {
-    if (m_preferredBufferScale != scale) {
-        m_preferredBufferScale = scale;
-        doSetPreferredBufferScale();
+    if (m_nextTargetScale != scale) {
+        m_nextTargetScale = scale;
+        doSetNextTargetScale();
+        Q_EMIT nextTargetScaleChanged();
     }
 }
 
-void Window::doSetPreferredBufferScale()
+void Window::doSetNextTargetScale()
 {
 }
 
-void Window::updatePreferredBufferScale()
+void Window::updateNextTargetScale()
 {
-    setPreferredBufferScale(m_moveResizeOutput->scale());
+    setNextTargetScale(m_moveResizeOutput->scale());
+}
+
+void Window::setTargetScale(qreal scale)
+{
+    if (m_targetScale != scale) {
+        m_targetScale = scale;
+        Q_EMIT targetScaleChanged();
+    }
 }
 
 OutputTransform Window::preferredBufferTransform() const

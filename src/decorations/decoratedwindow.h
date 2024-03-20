@@ -53,6 +53,8 @@ public:
     QSizeF size() const override;
     qreal width() const override;
     QString windowClass() const override;
+    qreal scale() const override;
+    qreal nextScale() const override;
 
     Qt::Edges adjacentScreenEdges() const override;
 

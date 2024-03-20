@@ -29,7 +29,7 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
     : QObject()
     , DecoratedWindowPrivate(decoratedClient, decoration)
     , m_window(window)
-    , m_clientSize(window->clientSize().toSize())
+    , m_clientSize(window->clientSize())
 {
     window->setDecoratedWindow(this);
     connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
@@ -73,6 +73,9 @@ DecoratedWindowImpl::DecoratedWindowImpl(Window *window, KDecoration3::Decorated
 
     connect(window, &Window::hasApplicationMenuChanged, decoratedClient, &KDecoration3::DecoratedWindow::hasApplicationMenuChanged);
     connect(window, &Window::applicationMenuActiveChanged, decoratedClient, &KDecoration3::DecoratedWindow::applicationMenuActiveChanged);
+
+    connect(window, &Window::targetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::scaleChanged);
+    connect(window, &Window::nextTargetScaleChanged, decoratedClient, &KDecoration3::DecoratedWindow::nextScaleChanged);
 
     m_toolTipWakeUp.setSingleShot(true);
     connect(&m_toolTipWakeUp, &QTimer::timeout, this, [this]() {
@@ -321,6 +324,16 @@ bool DecoratedWindowImpl::isApplicationMenuActive() const
 QString DecoratedWindowImpl::windowClass() const
 {
     return m_window->resourceName() + QLatin1Char(' ') + m_window->resourceClass();
+}
+
+qreal DecoratedWindowImpl::scale() const
+{
+    return m_window->targetScale();
+}
+
+qreal DecoratedWindowImpl::nextScale() const
+{
+    return m_window->nextTargetScale();
 }
 }
 }

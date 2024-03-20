@@ -243,6 +243,7 @@ KDecoration3::Decoration *DecorationBridge::createDecoration(Window *window)
     }
     auto deco = m_factory->create<KDecoration3::Decoration>(window, QVariantList{args});
     deco->setSettings(m_settings);
+    deco->create();
     deco->init();
     return deco;
 }

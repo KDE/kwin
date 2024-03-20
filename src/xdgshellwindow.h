@@ -19,6 +19,11 @@
 
 #include <optional>
 
+namespace KDecoration3
+{
+class DecorationState;
+}
+
 namespace KWin
 {
 
@@ -48,6 +53,7 @@ public:
     Gravity gravity;
     qreal serial;
     ConfigureFlags flags;
+    double scale;
 };
 
 class XdgSurfaceWindow : public WaylandWindow
@@ -104,6 +110,7 @@ class XdgToplevelConfigure final : public XdgSurfaceConfigure
 {
 public:
     std::shared_ptr<KDecoration3::Decoration> decoration;
+    std::shared_ptr<KDecoration3::DecorationState> decorationState;
     XdgToplevelInterface::States states;
     QPointer<Tile> tile = nullptr;
 };
@@ -179,7 +186,7 @@ protected:
     bool acceptsFocus() const override;
     void doSetQuickTileMode() override;
     void doSetSuspended() override;
-    void doSetPreferredBufferScale() override;
+    void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;
     void doSetPreferredColorDescription() override;
 
@@ -214,6 +221,7 @@ private:
     void configureXdgDecoration(DecorationMode decorationMode);
     void configureServerDecoration(DecorationMode decorationMode);
     void clearDecoration();
+    void processDecorationState(std::shared_ptr<KDecoration3::DecorationState> state);
     void updateCapabilities();
     void updateIcon();
 
@@ -239,6 +247,7 @@ private:
     bool m_isTransient = false;
     QPointer<Output> m_fullScreenRequestedOutput;
     std::shared_ptr<KDecoration3::Decoration> m_nextDecoration;
+    std::shared_ptr<KDecoration3::DecorationState> m_nextDecorationState;
     std::unique_ptr<KillPrompt> m_killPrompt;
 };
 
@@ -268,7 +277,7 @@ protected:
     bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() const override;
     void handleRoleDestroyed() override;
-    void doSetPreferredBufferScale() override;
+    void doSetNextTargetScale() override;
     void doSetPreferredBufferTransform() override;
     void doSetPreferredColorDescription() override;
 

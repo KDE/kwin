@@ -9,6 +9,7 @@
 
 #include "inputpanelv1window.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "inputmethod.h"
 #include "wayland/output.h"
 #include "wayland/seat.h"
@@ -42,6 +43,13 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     connect(panelSurface, &InputPanelSurfaceV1Interface::aboutToBeDestroyed, this, &InputPanelV1Window::destroyWindow);
 
     connect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
+
+    m_rescalingTimer.setSingleShot(true);
+    m_rescalingTimer.setInterval(0);
+    connect(&m_rescalingTimer, &QTimer::timeout, this, [this]() {
+        setTargetScale(nextTargetScale());
+    });
+    connect(&m_rescalingTimer, &QTimer::timeout, this, &InputPanelV1Window::reposition);
 
     kwinApp()->inputMethod()->setPanel(this);
 }
@@ -109,7 +117,7 @@ void InputPanelV1Window::resetPosition()
 
         geo.moveBottom(availableArea.bottom());
 
-        moveResize(geo);
+        moveResize(snapToPixels(geo, targetScale()));
     } break;
     case Mode::Overlay: {
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
@@ -161,7 +169,7 @@ void InputPanelV1Window::resetPosition()
                 popupRect.moveBottom(screen.bottom());
             }
 
-            moveResize(popupRect);
+            moveResize(snapToPixels(popupRect, targetScale()));
         }
     } break;
     }
@@ -183,8 +191,9 @@ void InputPanelV1Window::destroyWindow()
     disconnect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
 
     markAsDeleted();
-
     Q_EMIT closed();
+
+    m_rescalingTimer.stop();
     StackingUpdatesBlocker blocker(workspace());
     waylandServer()->removeWindow(this);
 
@@ -206,12 +215,14 @@ void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
     updateGeometry(rect);
 }
 
-void InputPanelV1Window::doSetPreferredBufferScale()
+void InputPanelV1Window::doSetNextTargetScale()
 {
     if (isDeleted()) {
         return;
     }
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
+    // re-align the surface with the new target scale
+    m_rescalingTimer.start();
 }
 
 void InputPanelV1Window::doSetPreferredBufferTransform()
