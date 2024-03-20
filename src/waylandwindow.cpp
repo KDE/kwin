@@ -7,6 +7,7 @@
 */
 
 #include "waylandwindow.h"
+#include "core/pixelgrid.h"
 #include "scene/windowitem.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -213,7 +214,7 @@ void WaylandWindow::cleanGrouping()
 
 QRectF WaylandWindow::frameRectToBufferRect(const QRectF &rect) const
 {
-    return QRectF(rect.topLeft(), surface()->size());
+    return QRectF(rect.topLeft(), snapToPixels(surface()->size(), targetScale()));
 }
 
 void WaylandWindow::updateGeometry(const QRectF &rect)

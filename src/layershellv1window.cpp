@@ -6,6 +6,7 @@
 
 #include "layershellv1window.h"
 #include "core/output.h"
+#include "core/pixelgrid.h"
 #include "layershellv1integration.h"
 #include "screenedge.h"
 #include "wayland/layershell_v1.h"
@@ -78,6 +79,10 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Window::handleAcceptsFocusChanged);
     connect(shellSurface, &LayerSurfaceV1Interface::configureAcknowledged,
             this, &LayerShellV1Window::handleConfigureAcknowledged);
+
+    m_rescalingTimer.setSingleShot(true);
+    m_rescalingTimer.setInterval(0);
+    connect(&m_rescalingTimer, &QTimer::timeout, this, &LayerShellV1Window::handleTargetScaleChange);
 }
 
 LayerSurfaceV1Interface *LayerShellV1Window::shellSurface() const
@@ -268,7 +273,9 @@ void LayerShellV1Window::doSetPreferredBufferScale()
     if (isDeleted()) {
         return;
     }
-    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferScale(nextTargetScale());
+    setTargetScale(nextTargetScale());
+    m_rescalingTimer.start();
 }
 
 void LayerShellV1Window::doSetPreferredBufferTransform()
@@ -397,6 +404,11 @@ void LayerShellV1Window::deactivateScreenEdge()
 {
     m_screenEdgeActive = false;
     unreserveScreenEdge();
+}
+
+void LayerShellV1Window::handleTargetScaleChange()
+{
+    moveResize(snapToPixels(m_moveResizeGeometry, m_targetScale));
 }
 
 } // namespace KWin
