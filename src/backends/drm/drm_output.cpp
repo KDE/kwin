@@ -303,7 +303,7 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         return true;
     } else if (!needsModeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
-        m_frame->failed();
+        frameFailed();
     }
     return false;
 }

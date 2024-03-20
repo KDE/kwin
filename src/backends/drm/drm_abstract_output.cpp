@@ -27,9 +27,10 @@ RenderLoop *DrmAbstractOutput::renderLoop() const
     return m_renderLoop.get();
 }
 
-void DrmAbstractOutput::frameFailed() const
+void DrmAbstractOutput::frameFailed()
 {
     m_frame->failed();
+    m_frame.reset();
 }
 
 void DrmAbstractOutput::pageFlipped(std::chrono::nanoseconds timestamp, PresentationMode mode)
