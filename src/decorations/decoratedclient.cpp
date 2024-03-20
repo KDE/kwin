@@ -32,7 +32,7 @@ DecoratedClientImpl::DecoratedClientImpl(Window *window, KDecoration2::Decorated
     : QObject()
     , ApplicationMenuEnabledDecoratedClientPrivate(decoratedClient, decoration)
     , m_window(window)
-    , m_clientSize(window->clientSize().toSize())
+    , m_clientSize(window->clientSize())
 {
     window->setDecoratedClient(this);
     connect(window, &Window::activeChanged, this, [decoratedClient, window]() {
