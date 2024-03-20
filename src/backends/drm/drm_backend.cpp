@@ -204,11 +204,16 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         return nullptr;
     }
 
+    DrmGpu *gpu = new DrmGpu(this, fileName, fd, buf.st_rdev);
+    if (!gpu->graphicsBufferAllocator()) {
+        delete gpu;
+        return nullptr;
+    }
+
     qCDebug(KWIN_DRM, "adding GPU %s", qPrintable(fileName));
-    m_gpus.push_back(std::make_unique<DrmGpu>(this, fileName, fd, buf.st_rdev));
-    auto gpu = m_gpus.back().get();
     connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
     connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
+    m_gpus.emplace_back(gpu);
     Q_EMIT gpuAdded(gpu);
     return gpu;
 }

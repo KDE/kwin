@@ -87,7 +87,9 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
 
     // Reopen the drm node to create a new GEM handle namespace.
     m_gbmFd = FileDescriptor{open(devNode.toLocal8Bit(), O_RDWR | O_CLOEXEC)};
-    if (m_gbmFd.isValid()) {
+    if (!m_gbmFd.isValid()) {
+        qCCritical(KWIN_DRM) << "Failed to reopen" << devNode << "drm node, expect bad things to happen:" << strerror(errno);
+    } else {
         drm_magic_t magic;
         drmGetMagic(m_gbmFd.get(), &magic);
         drmAuthMagic(m_fd, magic);
