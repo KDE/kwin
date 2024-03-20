@@ -225,6 +225,10 @@ void Edge::unreserve(QObject *object)
 
 bool Edge::activatesForPointer() const
 {
+    if (input()->pointer()->isConstrained()) {
+        return false;
+    }
+
     bool isMovingWindow = false;
 
     // Most actions do not handle drag and drop properly yet
