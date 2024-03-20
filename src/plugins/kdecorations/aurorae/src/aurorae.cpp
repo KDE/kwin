@@ -383,6 +383,11 @@ void Decoration::updateBorders()
     updateExtendedBorders();
 }
 
+QMarginsF Decoration::bordersFor(double scale) const
+{
+    return borders();
+}
+
 void Decoration::paint(QPainter *painter, const QRectF &repaintRegion)
 {
     if (!m_view) {

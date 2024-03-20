@@ -3341,7 +3341,7 @@ void Window::move(const QPointF &point)
     const QRectF rect = QRectF(point, m_moveResizeGeometry.size());
 
     setMoveResizeGeometry(rect);
-    moveResizeInternal(rect, MoveResizeMode::Move);
+    moveResizeInternal(m_moveResizeGeometry, MoveResizeMode::Move);
 }
 
 void Window::resize(const QSizeF &size)
@@ -3349,13 +3349,13 @@ void Window::resize(const QSizeF &size)
     const QRectF rect = QRectF(m_moveResizeGeometry.topLeft(), size);
 
     setMoveResizeGeometry(rect);
-    moveResizeInternal(rect, MoveResizeMode::Resize);
+    moveResizeInternal(m_moveResizeGeometry, MoveResizeMode::Resize);
 }
 
 void Window::moveResize(const QRectF &rect)
 {
     setMoveResizeGeometry(rect);
-    moveResizeInternal(rect, MoveResizeMode::MoveResize);
+    moveResizeInternal(m_moveResizeGeometry, MoveResizeMode::MoveResize);
 }
 
 void Window::setElectricBorderMode(QuickTileMode mode)
@@ -4362,15 +4362,15 @@ void Window::doSetModal()
 {
 }
 
-qreal Window::preferredBufferScale() const
+double Window::nextTargetScale() const
 {
-    return m_preferredBufferScale;
+    return m_nextTargetScale;
 }
 
-void Window::setPreferredBufferScale(qreal scale)
+void Window::setNextTargetScale(double scale)
 {
-    if (m_preferredBufferScale != scale) {
-        m_preferredBufferScale = scale;
+    if (m_nextTargetScale != scale) {
+        m_nextTargetScale = scale;
         doSetPreferredBufferScale();
     }
 }
@@ -4381,7 +4381,7 @@ void Window::doSetPreferredBufferScale()
 
 void Window::updatePreferredBufferScale()
 {
-    setPreferredBufferScale(m_moveResizeOutput->scale());
+    setNextTargetScale(m_moveResizeOutput->scale());
 }
 
 void Window::setTargetScale(double scale)

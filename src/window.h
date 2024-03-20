@@ -1327,8 +1327,8 @@ public:
     bool isOffscreenRendering() const;
 
     double targetScale() const;
-    qreal preferredBufferScale() const;
-    void setPreferredBufferScale(qreal scale);
+    double nextTargetScale() const;
+    void setNextTargetScale(double scale);
 
     OutputTransform preferredBufferTransform() const;
     void setPreferredBufferTransform(OutputTransform transform);
@@ -1747,7 +1747,8 @@ protected:
     bool m_hidden = false;
     bool m_hiddenByShowDesktop = false;
 
-    qreal m_preferredBufferScale = 1;
+    double m_nextTargetScale = 1;
+    double m_targetScale = 1;
     OutputTransform m_preferredBufferTransform = OutputTransform::Normal;
     ColorDescription m_preferredColorDescription = ColorDescription::sRGB;
 
@@ -1856,7 +1857,6 @@ protected:
     bool m_lockScreenOverlay = false;
     uint32_t m_offscreenRenderCount = 0;
     QTimer m_offscreenFramecallbackTimer;
-    double m_targetScale = 1;
 };
 
 inline QRectF Window::bufferGeometry() const

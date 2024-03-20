@@ -65,6 +65,7 @@ private:
     void deactivateScreenEdge();
     void reserveScreenEdge();
     void unreserveScreenEdge();
+    void handleTargetScaleChange();
 
     Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
@@ -72,6 +73,7 @@ private:
     QPointer<AutoHideScreenEdgeV1Interface> m_screenEdge;
     bool m_screenEdgeActive = false;
     WindowType m_windowType;
+    QTimer m_rescalingTimer;
 };
 
 } // namespace KWin

@@ -99,6 +99,7 @@ private:
     bool m_allowed = false;
     bool m_virtualKeyboardShouldBeShown = false;
     const QPointer<InputPanelSurfaceV1Interface> m_panelSurface;
+    QTimer m_rescalingTimer;
 };
 
 }
