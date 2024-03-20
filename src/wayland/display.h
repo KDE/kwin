@@ -110,7 +110,6 @@ public:
      * @return The ClientConnection for the given native client
      */
     ClientConnection *getConnection(wl_client *client);
-    QList<ClientConnection *> connections() const;
 
     /**
      * Returns the graphics buffer for the given @a resource, or @c null if there's no buffer.
