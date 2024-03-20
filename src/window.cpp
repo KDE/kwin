@@ -2340,22 +2340,22 @@ bool Window::isActiveFullScreen() const
     return ac && (ac == this || !ac->isOnOutput(output()) || ac->allMainWindows().contains(const_cast<Window *>(this)));
 }
 
-int Window::borderBottom() const
+double Window::borderBottom() const
 {
     return isDecorated() ? decoration()->borderBottom() : 0;
 }
 
-int Window::borderLeft() const
+double Window::borderLeft() const
 {
     return isDecorated() ? decoration()->borderLeft() : 0;
 }
 
-int Window::borderRight() const
+double Window::borderRight() const
 {
     return isDecorated() ? decoration()->borderRight() : 0;
 }
 
-int Window::borderTop() const
+double Window::borderTop() const
 {
     return isDecorated() ? decoration()->borderTop() : 0;
 }
@@ -2651,8 +2651,8 @@ void Window::updateDecorationInputShape()
         return;
     }
 
-    const QMargins borders = decoration()->borders();
-    const QMargins resizeBorders = decoration()->resizeOnlyBorders();
+    const QMarginsF borders = decoration()->borders();
+    const QMarginsF resizeBorders = decoration()->resizeOnlyBorders();
 
     const QRectF innerRect = QRectF(QPointF(borderLeft(), borderTop()), decoratedClient()->size());
     const QRectF outerRect = innerRect + borders + resizeBorders;

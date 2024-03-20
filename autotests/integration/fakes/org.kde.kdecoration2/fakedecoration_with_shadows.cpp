@@ -25,8 +25,13 @@ public:
     {
     }
 
-    void paint(QPainter *painter, const QRect &repaintRegion) override
+    void paint(QPainter *painter, const QRectF &repaintRegion) override
     {
+    }
+
+    QMarginsF bordersFor(double scale) const override
+    {
+        return borders();
     }
 
 public Q_SLOTS:

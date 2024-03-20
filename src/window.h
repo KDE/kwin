@@ -1574,10 +1574,10 @@ protected:
 
     // geometry handling
     void checkOffscreenPosition(QRectF *geom, const QRectF &screenArea);
-    int borderLeft() const;
-    int borderRight() const;
-    int borderTop() const;
-    int borderBottom() const;
+    double borderLeft() const;
+    double borderRight() const;
+    double borderTop() const;
+    double borderBottom() const;
 
     enum class MoveResizeMode : uint {
         None,
