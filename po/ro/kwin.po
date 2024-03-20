@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 02:30+0000\n"
+"POT-Creation-Date: 2024-03-20 02:27+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1226,24 +1226,24 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "gazdă"
 
-#: input.cpp:2012
+#: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2091
+#: input.cpp:2095
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Regim tabletă"
 
-#: input.cpp:2091
+#: input.cpp:2095
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3185
+#: input.cpp:3189
 #, kde-format
 msgid "Touchpad"
 msgstr "Zonă tactilă"
@@ -2556,7 +2556,7 @@ msgstr ""
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:367
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

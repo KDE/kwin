@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-19 02:30+0000\n"
+"POT-Creation-Date: 2024-03-20 02:27+0000\n"
 "PO-Revision-Date: 2024-01-18 12:08+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1219,22 +1219,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom de l'amfitrió: %1"
 
-#: input.cpp:2012
+#: input.cpp:2016
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mou la tauleta cap a l'eixida següent"
 
-#: input.cpp:2091
+#: input.cpp:2095
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "La tauleta s'ha mogut cap a %1"
 
-#: input.cpp:2091
+#: input.cpp:2095
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Les tauletes han intercanviat les eixides"
 
-#: input.cpp:3185
+#: input.cpp:3189
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -2425,7 +2425,7 @@ msgstr "Regió no vàlida"
 msgid "Region outside the workspace"
 msgstr "Regió situada fora de l'espai de treball"
 
-#: plugins/screencast/screencaststream.cpp:360
+#: plugins/screencast/screencaststream.cpp:367
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "No s'ha pogut crear el flux de PipeWire"
