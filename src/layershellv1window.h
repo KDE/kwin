@@ -72,6 +72,7 @@ private:
     void deactivateScreenEdge();
     void reserveScreenEdge();
     void unreserveScreenEdge();
+    void handleTargetScaleChange();
 
     Output *m_desiredOutput;
     LayerShellV1Integration *m_integration;
@@ -80,6 +81,7 @@ private:
     bool m_screenEdgeActive = false;
     WindowType m_windowType;
     QList<LayerShellV1ConfigureEvent> m_configureEvents;
+    QTimer m_rescalingTimer;
 };
 
 } // namespace KWin
