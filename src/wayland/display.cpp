@@ -199,6 +199,7 @@ QList<SeatInterface *> Display::seats() const
 
 ClientConnection *Display::getConnection(wl_client *client)
 {
+    // TODO: Use wl_client_set_user_data() when we start requiring libwayland-server that has it, and remove client lists here and in ClientConnection.
     Q_ASSERT(client);
     auto it = std::find_if(d->clients.constBegin(), d->clients.constEnd(), [client](ClientConnection *c) {
         return c->client() == client;
@@ -210,19 +211,13 @@ ClientConnection *Display::getConnection(wl_client *client)
     auto c = new ClientConnection(client, this);
     d->clients << c;
     connect(c, &ClientConnection::disconnected, this, [this](ClientConnection *c) {
-        const int index = d->clients.indexOf(c);
-        Q_ASSERT(index != -1);
-        d->clients.remove(index);
-        Q_ASSERT(d->clients.indexOf(c) == -1);
         Q_EMIT clientDisconnected(c);
+    });
+    connect(c, &ClientConnection::destroyed, this, [this, c]() {
+        d->clients.removeOne(c);
     });
     Q_EMIT clientConnected(c);
     return c;
-}
-
-QList<ClientConnection *> Display::connections() const
-{
-    return d->clients;
 }
 
 ClientConnection *Display::createClient(int fd)
