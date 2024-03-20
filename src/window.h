@@ -1777,6 +1777,7 @@ protected:
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
     QPointer<Tile> m_tile;
+    bool m_setTileRecursion = false;
 
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileFlag::None;

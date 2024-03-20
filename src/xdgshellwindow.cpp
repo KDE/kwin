@@ -10,6 +10,7 @@
 */
 #include "xdgshellwindow.h"
 #include "core/output.h"
+#include "effect/globals.h"
 #include "utils/common.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -1572,7 +1573,6 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
     }
 
     auto oldTile = tile();
-    const auto oldQuickTileMode = currentQuickTileMode;
     if (m_requestedMaximizeMode == MaximizeFull) {
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
@@ -1585,11 +1585,11 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
     }
 
     moveResize(geometry);
-    if (oldQuickTileMode != quickTileMode() || oldTile != tile()) {
+    if (currentQuickTileMode != quickTileMode()) {
         doSetQuickTileMode();
-        if (oldTile == tile()) {
-            Q_EMIT quickTileModeChanged();
-        }
+    }
+    if (!oldTile && !tile()) {
+        Q_EMIT quickTileModeChanged();
     }
 
     doSetMaximized();
