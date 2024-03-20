@@ -72,7 +72,7 @@ void DmabufFeedback::scanoutFailed(SurfaceInterface *surface, const QMap<uint32_
                     }
                 }
                 if (!scanoutTranche.formatTable.isEmpty()) {
-                    scanoutTranche.device = m_gpu->deviceId();
+                    scanoutTranche.device = m_gpu->drmDevice()->deviceId();
                     scanoutTranche.flags = LinuxDmaBufV1Feedback::TrancheFlag::Scanout;
                     scanoutTranches << scanoutTranche;
                 }

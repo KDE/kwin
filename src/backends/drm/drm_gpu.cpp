@@ -45,12 +45,10 @@
 namespace KWin
 {
 
-DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId)
+DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     : m_fd(fd)
-    , m_deviceId(deviceId)
-    , m_devNode(devNode)
+    , m_drmDevice(std::move(device))
     , m_atomicModeSetting(false)
-    , m_gbmDevice(nullptr)
     , m_platform(backend)
 {
     uint64_t capability = 0;
@@ -75,7 +73,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     }
 
     m_addFB2ModifiersSupported = drmGetCap(fd, DRM_CAP_ADDFB2_MODIFIERS, &capability) == 0 && capability == 1;
-    qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << m_devNode;
+    qCDebug(KWIN_DRM) << "drmModeAddFB2WithModifiers is" << (m_addFB2ModifiersSupported ? "supported" : "not supported") << "on GPU" << this;
 
     // find out what driver this kms device is using
     DrmUniquePtr<drmVersion> version(drmGetVersion(fd));
@@ -84,22 +82,6 @@ DrmGpu::DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t device
     m_isAmdgpu = strstr(version->name, "amdgpu");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
-
-    // Reopen the drm node to create a new GEM handle namespace.
-    m_gbmFd = FileDescriptor{open(devNode.toLocal8Bit(), O_RDWR | O_CLOEXEC)};
-    if (!m_gbmFd.isValid()) {
-        qCCritical(KWIN_DRM) << "Failed to reopen" << devNode << "drm node, expect bad things to happen:" << strerror(errno);
-    } else {
-        drm_magic_t magic;
-        drmGetMagic(m_gbmFd.get(), &magic);
-        drmAuthMagic(m_fd, magic);
-        m_gbmDevice = gbm_create_device(m_gbmFd.get());
-        if (!m_gbmDevice) {
-            qCCritical(KWIN_DRM) << "gbm_create_device() failed";
-        } else {
-            m_allocator = std::make_unique<GbmGraphicsBufferAllocator>(m_gbmDevice);
-        }
-    }
 
     m_socketNotifier = std::make_unique<QSocketNotifier>(fd, QSocketNotifier::Read);
     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
@@ -120,11 +102,6 @@ DrmGpu::~DrmGpu()
     m_connectors.clear();
     m_planes.clear();
     m_socketNotifier.reset();
-    m_allocator.reset();
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
-    m_gbmFd = FileDescriptor{};
     m_platform->session()->closeRestricted(m_fd);
 }
 
@@ -157,16 +134,16 @@ void DrmGpu::initDrmResources()
     const bool supportsVmCursorHotspot = drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) == 0;
     const bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
     if (m_isVirtualMachine && !supportsVmCursorHotspot && !isEnvVarSet) {
-        qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
+        qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_drmDevice->path()));
     } else if (noAMS) {
-        qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << m_devNode;
+        qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << this;
     } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
-        qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
+        qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << this;
     } else {
         DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
         if (planeResources) {
-            qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
-            qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
+            qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << this;
+            qCDebug(KWIN_DRM) << "Number of planes on GPU" << this << ":" << planeResources->count_planes;
             // create the plane objects
             for (unsigned int i = 0; i < planeResources->count_planes; ++i) {
                 DrmUniquePtr<drmModePlane> kplane(drmModeGetPlane(m_fd, planeResources->planes[i]));
@@ -177,17 +154,17 @@ void DrmGpu::initDrmResources()
                 }
             }
             if (m_planes.empty()) {
-                qCWarning(KWIN_DRM) << "Failed to create any plane. Falling back to legacy mode on GPU " << m_devNode;
+                qCWarning(KWIN_DRM) << "Failed to create any plane. Falling back to legacy mode on GPU " << this;
             }
         } else {
-            qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << m_devNode;
+            qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << this;
         }
     }
     m_atomicModeSetting = !m_planes.empty();
 
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
-        qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << m_devNode;
+        qCCritical(KWIN_DRM) << "drmModeGetResources for getting CRTCs failed on GPU" << this;
         return;
     }
     QList<DrmPlane *> assignedPlanes;
@@ -296,7 +273,7 @@ bool DrmGpu::updateOutputs()
                 removeOutput(output);
             }
         } else if (!output) {
-            qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_devNode), qPrintable(conn->modelName()));
+            qCDebug(KWIN_DRM, "New %soutput on GPU %s: %s", conn->isNonDesktop() ? "non-desktop " : "", qPrintable(m_drmDevice->path()), qPrintable(conn->modelName()));
             const auto pipeline = conn->pipeline();
             m_pipelines << pipeline;
             auto output = new DrmOutput(*it);
@@ -511,7 +488,7 @@ void DrmGpu::waitIdle()
                 break;
             }
         } else if (ready == 0) {
-            qCWarning(KWIN_DRM) << "No drm events for gpu" << m_devNode << "within last 30 seconds";
+            qCWarning(KWIN_DRM) << "No drm events for gpu" << this << "within last 30 seconds";
             break;
         } else {
             dispatchEvents();
@@ -556,7 +533,7 @@ void DrmGpu::pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, un
                                                           {static_cast<time_t>(sec), static_cast<long>(usec * 1000)});
     if (timestamp == std::chrono::nanoseconds::zero()) {
         qCDebug(KWIN_DRM, "Got invalid timestamp (sec: %u, usec: %u) on gpu %s",
-                sec, usec, qPrintable(gpu->devNode()));
+                sec, usec, qPrintable(gpu->drmDevice()->path()));
         timestamp = std::chrono::steady_clock::now().time_since_epoch();
     }
     commit->pageFlipped(timestamp);
@@ -650,24 +627,14 @@ int DrmGpu::fd() const
     return m_fd;
 }
 
-dev_t DrmGpu::deviceId() const
+DrmDevice *DrmGpu::drmDevice() const
 {
-    return m_deviceId;
+    return m_drmDevice.get();
 }
 
 bool DrmGpu::atomicModeSetting() const
 {
     return m_atomicModeSetting;
-}
-
-QString DrmGpu::devNode() const
-{
-    return m_devNode;
-}
-
-gbm_device *DrmGpu::gbmDevice() const
-{
-    return m_gbmDevice;
 }
 
 EglDisplay *DrmGpu::eglDisplay() const
@@ -836,11 +803,6 @@ void DrmGpu::recreateSurfaces()
     }
 }
 
-GraphicsBufferAllocator *DrmGpu::graphicsBufferAllocator() const
-{
-    return m_allocator.get();
-}
-
 std::shared_ptr<DrmFramebuffer> DrmGpu::importBuffer(GraphicsBuffer *buffer, FileDescriptor &&readFence)
 {
     const DmaBufAttributes *attributes = buffer->dmabufAttributes();
@@ -948,6 +910,12 @@ uint32_t DrmLease::lesseeId() const
 {
     return m_lesseeId;
 }
+}
+
+QDebug &operator<<(QDebug &s, const KWin::DrmGpu *gpu)
+{
+    s << gpu->drmDevice()->path();
+    return s;
 }
 
 #include "moc_drm_gpu.cpp"

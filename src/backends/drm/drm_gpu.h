@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/drmdevice.h"
 #include "drm_pipeline.h"
 #include "utils/filedescriptor.h"
 
@@ -62,12 +63,11 @@ class DrmGpu : public QObject
 {
     Q_OBJECT
 public:
-    DrmGpu(DrmBackend *backend, const QString &devNode, int fd, dev_t deviceId);
+    DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device);
     ~DrmGpu();
 
     int fd() const;
-    dev_t deviceId() const;
-    QString devNode() const;
+    DrmDevice *drmDevice() const;
 
     bool isRemoved() const;
     void setRemoved();
@@ -80,7 +80,6 @@ public:
     bool isI915() const;
     bool isNVidia() const;
     bool isAmdgpu() const;
-    gbm_device *gbmDevice() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
@@ -106,7 +105,6 @@ public:
     bool needsModeset() const;
     bool maybeModeset();
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const;
     std::shared_ptr<DrmFramebuffer> importBuffer(GraphicsBuffer *buffer, FileDescriptor &&explicitFence);
     void releaseBuffers();
     void recreateSurfaces();
@@ -133,8 +131,7 @@ private:
     static void pageFlipHandler(int fd, unsigned int sequence, unsigned int sec, unsigned int usec, unsigned int crtc_id, void *user_data);
 
     const int m_fd;
-    const dev_t m_deviceId;
-    const QString m_devNode;
+    const std::unique_ptr<DrmDevice> m_drmDevice;
     bool m_atomicModeSetting;
     bool m_addFB2ModifiersSupported = false;
     bool m_isNVidia;
@@ -147,9 +144,6 @@ private:
     bool m_isActive = true;
     bool m_forceModeset = false;
     clockid_t m_presentationClock;
-    gbm_device *m_gbmDevice;
-    FileDescriptor m_gbmFd;
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     DrmBackend *const m_platform;
 
@@ -167,3 +161,5 @@ private:
 };
 
 }
+
+QDebug &operator<<(QDebug &s, const KWin::DrmGpu *gpu);

@@ -176,7 +176,7 @@ void DrmBackend::handleUdevEvent()
                 gpu = addGpu(device->devNode());
             }
             if (gpu && gpu->isActive()) {
-                qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->devNode();
+                qCDebug(KWIN_DRM) << "Received change event for monitored drm device" << gpu->drmDevice()->path();
                 updateOutputs();
             }
         }
@@ -197,23 +197,17 @@ DrmGpu *DrmBackend::addGpu(const QString &fileName)
         return nullptr;
     }
 
-    struct stat buf;
-    if (fstat(fd, &buf) == -1) {
-        qCDebug(KWIN_DRM, "Failed to fstat %s: %s", qPrintable(fileName), strerror(errno));
+    auto drmDevice = DrmDevice::openWithAuthentication(fileName, fd);
+    if (!drmDevice) {
         m_session->closeRestricted(fd);
         return nullptr;
     }
 
-    DrmGpu *gpu = new DrmGpu(this, fileName, fd, buf.st_rdev);
-    if (!gpu->graphicsBufferAllocator()) {
-        delete gpu;
-        return nullptr;
-    }
-
+    m_gpus.push_back(std::make_unique<DrmGpu>(this, fd, std::move(drmDevice)));
+    auto gpu = m_gpus.back().get();
     qCDebug(KWIN_DRM, "adding GPU %s", qPrintable(fileName));
     connect(gpu, &DrmGpu::outputAdded, this, &DrmBackend::addOutput);
     connect(gpu, &DrmGpu::outputRemoved, this, &DrmBackend::removeOutput);
-    m_gpus.emplace_back(gpu);
     Q_EMIT gpuAdded(gpu);
     return gpu;
 }
@@ -269,7 +263,7 @@ void DrmBackend::updateOutputs()
     for (auto it = m_gpus.begin(); it != m_gpus.end();) {
         DrmGpu *gpu = it->get();
         if (gpu->isRemoved() || (gpu != primaryGpu() && gpu->drmOutputs().isEmpty())) {
-            qCDebug(KWIN_DRM) << "Removing GPU" << (*it)->devNode();
+            qCDebug(KWIN_DRM) << "Removing GPU" << it->get();
             const std::unique_ptr<DrmGpu> keepAlive = std::move(*it);
             it = m_gpus.erase(it);
             Q_EMIT gpuRemoved(keepAlive.get());
@@ -348,7 +342,7 @@ DrmGpu *DrmBackend::primaryGpu() const
 DrmGpu *DrmBackend::findGpu(dev_t deviceId) const
 {
     auto it = std::ranges::find_if(m_gpus, [deviceId](const auto &gpu) {
-        return gpu->deviceId() == deviceId;
+        return gpu->drmDevice()->deviceId() == deviceId;
     });
     return it == m_gpus.end() ? nullptr : it->get();
 }

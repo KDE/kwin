@@ -115,13 +115,13 @@ std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
             const auto modifiers = it.value();
 
             if (allowModifiers && !modifiers.isEmpty()) {
-                if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->openglContext(), size, format, modifiers)) {
+                if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, modifiers)) {
                     return swapchain;
                 }
             }
 
             static const QList<uint64_t> implicitModifier{DRM_FORMAT_MOD_INVALID};
-            if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->graphicsBufferAllocator(), m_eglBackend->openglContext(), size, format, implicitModifier)) {
+            if (auto swapchain = EglSwapchain::create(m_eglBackend->gpu()->drmDevice()->allocator(), m_eglBackend->openglContext(), size, format, implicitModifier)) {
                 return swapchain;
             }
         }

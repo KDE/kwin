@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <gbm.h>
 #include <sys/stat.h>
+#include <xf86drm.h>
 
 namespace KWin
 {
@@ -58,7 +59,12 @@ int DrmDevice::fileDescriptor() const
 
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)
 {
-    FileDescriptor fd{::open(path.toLocal8Bit(), O_RDWR | O_CLOEXEC)};
+    return openWithAuthentication(path, -1);
+}
+
+std::unique_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path, int authenticatedFd)
+{
+    FileDescriptor fd(::open(path.toLocal8Bit(), O_RDWR | O_CLOEXEC));
     if (!fd.isValid()) {
         return nullptr;
     }
@@ -66,11 +72,15 @@ std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)
     if (fstat(fd.get(), &buf) == -1) {
         return nullptr;
     }
+    if (authenticatedFd != -1) {
+        drm_magic_t magic;
+        drmGetMagic(fd.get(), &magic);
+        drmAuthMagic(authenticatedFd, magic);
+    }
     gbm_device *device = gbm_create_device(fd.get());
     if (!device) {
         return nullptr;
     }
     return std::unique_ptr<DrmDevice>(new DrmDevice(path, buf.st_rdev, std::move(fd), device));
 }
-
 }

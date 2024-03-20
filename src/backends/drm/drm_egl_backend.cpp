@@ -27,7 +27,7 @@ namespace KWin
 {
 
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
-    : AbstractEglBackend(drmBackend->primaryGpu()->deviceId())
+    : AbstractEglBackend(drmBackend->primaryGpu()->drmDevice()->deviceId())
     , m_backend(drmBackend)
 {
     drmBackend->setRenderBackend(this);
@@ -69,10 +69,6 @@ bool EglGbmBackend::initializeEgl()
 
 EglDisplay *EglGbmBackend::createEglDisplay(DrmGpu *gpu) const
 {
-    if (!gpu->gbmDevice()) {
-        return nullptr;
-    }
-
     for (const QByteArray &extension : {QByteArrayLiteral("EGL_EXT_platform_base"), QByteArrayLiteral("EGL_KHR_platform_gbm")}) {
         if (!hasClientExtension(extension)) {
             qCWarning(KWIN_DRM) << extension << "client extension is not supported by the platform";
@@ -80,7 +76,7 @@ EglDisplay *EglGbmBackend::createEglDisplay(DrmGpu *gpu) const
         }
     }
 
-    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->gbmDevice(), nullptr)));
+    gpu->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, gpu->drmDevice()->gbmDevice(), nullptr)));
     return gpu->eglDisplay();
 }
 
@@ -143,7 +139,7 @@ std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(Surfa
 
 GraphicsBufferAllocator *EglGbmBackend::graphicsBufferAllocator() const
 {
-    return gpu()->graphicsBufferAllocator();
+    return gpu()->drmDevice()->allocator();
 }
 
 void EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

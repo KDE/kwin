@@ -29,7 +29,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
 std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
         m_damageJournal = DamageJournal();
     }
 
@@ -61,7 +61,7 @@ bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &da
 bool DrmQPainterLayer::checkTestBuffer()
 {
     if (!doesSwapchainFit()) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
         m_currentBuffer = m_swapchain->acquire();
         if (m_currentBuffer) {
             m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
@@ -109,7 +109,7 @@ DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
 std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
 {
     if (!m_swapchain) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->graphicsBufferAllocator(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
+        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
     }
     m_currentBuffer = m_swapchain->acquire();
     if (!m_currentBuffer) {

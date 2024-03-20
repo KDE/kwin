@@ -31,6 +31,7 @@ public:
     int fileDescriptor() const;
 
     static std::unique_ptr<DrmDevice> open(const QString &path);
+    static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
 
 private:
     explicit DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_device *gbmDevice);
