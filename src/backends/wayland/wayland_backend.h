@@ -46,6 +46,7 @@ class Touch;
 namespace KWin
 {
 class GraphicsBuffer;
+class DrmDevice;
 
 namespace Wayland
 {
@@ -241,10 +242,7 @@ public:
 
     wl_buffer *importBuffer(GraphicsBuffer *graphicsBuffer);
 
-    gbm_device *gbmDevice() const
-    {
-        return m_gbmDevice;
-    }
+    DrmDevice *drmDevice() const;
 
     void setEglBackend(WaylandEglBackend *eglBackend)
     {
@@ -267,8 +265,7 @@ private:
     WaylandEglBackend *m_eglBackend = nullptr;
     QList<WaylandOutput *> m_outputs;
     bool m_pointerLockRequested = false;
-    FileDescriptor m_drmFileDescriptor;
-    gbm_device *m_gbmDevice = nullptr;
+    std::unique_ptr<DrmDevice> m_drmDevice;
     std::unique_ptr<EglDisplay> m_eglDisplay;
     std::map<GraphicsBuffer *, std::unique_ptr<WaylandBuffer>> m_buffers;
 };

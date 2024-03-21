@@ -9,6 +9,7 @@
 */
 
 #include "wayland_egl_backend.h"
+#include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
@@ -229,7 +230,6 @@ std::chrono::nanoseconds WaylandEglCursorLayer::queryRenderTime() const
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
     connect(m_backend, &WaylandBackend::outputAdded, this, &WaylandEglBackend::createEglWaylandOutput);
     connect(m_backend, &WaylandBackend::outputRemoved, this, [this](Output *output) {
@@ -251,7 +251,7 @@ WaylandBackend *WaylandEglBackend::backend() const
 
 GraphicsBufferAllocator *WaylandEglBackend::graphicsBufferAllocator() const
 {
-    return m_allocator.get();
+    return m_backend->drmDevice()->allocator();
 }
 
 void WaylandEglBackend::cleanupSurfaces()
@@ -280,7 +280,7 @@ bool WaylandEglBackend::initializeEgl()
             }
         }
 
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->gbmDevice(), nullptr)));
+        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
     }
 
     auto display = m_backend->sceneEglDisplayObject();

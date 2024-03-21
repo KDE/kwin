@@ -123,7 +123,6 @@ private:
     };
 
     WaylandBackend *m_backend;
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
 };
 

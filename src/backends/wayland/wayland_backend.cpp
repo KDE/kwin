@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "wayland_backend.h"
+#include "core/drmdevice.h"
 #include "input.h"
 #include "wayland_display.h"
 #include "wayland_egl_backend.h"
@@ -425,10 +426,6 @@ WaylandBackend::~WaylandBackend()
 
     m_seat.reset();
     m_display.reset();
-
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
     qCDebug(KWIN_WAYLAND_BACKEND) << "Destroyed Wayland display";
 }
 
@@ -440,10 +437,8 @@ bool WaylandBackend::initialize()
     }
 
     if (WaylandLinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
-        m_drmFileDescriptor = FileDescriptor(open(dmabuf->mainDevice(), O_RDWR | O_CLOEXEC));
-        if (m_drmFileDescriptor.isValid()) {
-            m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
-        } else {
+        m_drmDevice = DrmDevice::open(dmabuf->mainDevice());
+        if (!m_drmDevice) {
             qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << dmabuf->mainDevice();
         }
     }
@@ -560,7 +555,7 @@ void WaylandBackend::togglePointerLock()
 QList<CompositingType> WaylandBackend::supportedCompositors() const
 {
     QList<CompositingType> ret;
-    if (m_display->linuxDmabuf() && m_gbmDevice) {
+    if (m_display->linuxDmabuf() && m_drmDevice) {
         ret.append(OpenGLCompositing);
     }
     ret.append(QPainterCompositing);
@@ -673,6 +668,11 @@ void WaylandBackend::setEglDisplay(std::unique_ptr<EglDisplay> &&display)
 EglDisplay *WaylandBackend::sceneEglDisplayObject() const
 {
     return m_eglDisplay.get();
+}
+
+DrmDevice *WaylandBackend::drmDevice() const
+{
+    return m_drmDevice.get();
 }
 
 WaylandBuffer::WaylandBuffer(wl_buffer *handle, GraphicsBuffer *graphicsBuffer)
