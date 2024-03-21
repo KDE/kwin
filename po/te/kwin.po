@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-20 00:39+0000\n"
+"POT-Creation-Date: 2024-03-21 00:39+0000\n"
 "PO-Revision-Date: 2009-01-16 22:16+0530\n"
 "Last-Translator: Krishna Babu K <kkrothap@redhat.com>\n"
 "Language-Team: Telugu <en@li.org>\n"
@@ -4217,7 +4217,7 @@ msgstr ""
 msgid "Switch to Desktop %1"
 msgstr "(&D) రంగస్థలానికి"
 
-#: window.cpp:3121
+#: window.cpp:3131
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
