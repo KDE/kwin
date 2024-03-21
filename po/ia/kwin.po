@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-20 02:27+0000\n"
+"POT-Creation-Date: 2024-03-21 02:28+0000\n"
 "PO-Revision-Date: 2024-02-01 11:59+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -4164,7 +4164,7 @@ msgstr "Commuta un Scriptorio a basso"
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"
 
-#: window.cpp:3088
+#: window.cpp:3098
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
