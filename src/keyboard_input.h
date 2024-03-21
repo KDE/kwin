@@ -57,6 +57,7 @@ public:
     Xkb *xkb() const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts() const;
+    KeyboardLayout *keyboardLayout() const;
 
 Q_SIGNALS:
     void ledsChanged(KWin::LEDs);

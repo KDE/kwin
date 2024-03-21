@@ -65,6 +65,11 @@ Qt::KeyboardModifiers KeyboardInputRedirection::modifiersRelevantForGlobalShortc
     return m_xkb->modifiersRelevantForGlobalShortcuts();
 }
 
+KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
+{
+    return m_keyboardLayout;
+}
+
 class KeyStateChangedSpy : public InputEventSpy
 {
 public:

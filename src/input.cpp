@@ -2665,6 +2665,7 @@ InputRedirection::InputRedirection(QObject *parent)
     qRegisterMetaType<InputRedirection::PointerButtonState>();
     qRegisterMetaType<InputRedirection::PointerAxis>();
     setupInputBackends();
+
     connect(kwinApp(), &Application::workspaceCreated, this, &InputRedirection::setupWorkspace);
 }
 

@@ -290,6 +290,9 @@ endif()
 find_package(Libinput 1.19)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 
+find_package(Libeis-1.0)
+set_package_properties(Libeis PROPERTIES TYPE OPTIONAL PURPOSE "Required for emulated input handling.")
+
 find_package(UDev)
 set_package_properties(UDev PROPERTIES
     URL "https://www.freedesktop.org/wiki/Software/systemd/"
@@ -395,6 +398,7 @@ ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 ########### configure tests ###############
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "PlasmaActivities_FOUND" OFF)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
+cmake_dependent_option(KWIN_BUILD_EIS "Enable building KWin with libeis support" ON "Libeis-1.0_FOUND" OFF)
 
 check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
 add_feature_info("SCHED_RESET_ON_FORK"
