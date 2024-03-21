@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_egl_backend.h"
+#include "core/drmdevice.h"
 #include "core/gbmgraphicsbufferallocator.h"
 #include "opengl/eglswapchain.h"
 #include "opengl/glrendertimequery.h"
@@ -82,7 +83,6 @@ std::chrono::nanoseconds VirtualEglLayer::queryRenderTime() const
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)
-    , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
 }
 
@@ -99,7 +99,7 @@ VirtualBackend *VirtualEglBackend::backend() const
 
 GraphicsBufferAllocator *VirtualEglBackend::graphicsBufferAllocator() const
 {
-    return m_allocator.get();
+    return m_backend->drmDevice()->allocator();
 }
 
 bool VirtualEglBackend::initializeEgl()
@@ -114,7 +114,7 @@ bool VirtualEglBackend::initializeEgl()
             }
         }
 
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->gbmDevice(), nullptr)));
+        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
     }
 
     auto display = m_backend->sceneEglDisplayObject();

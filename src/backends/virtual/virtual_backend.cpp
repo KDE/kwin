@@ -8,6 +8,7 @@
 */
 #include "virtual_backend.h"
 
+#include "core/drmdevice.h"
 #include "virtual_egl_backend.h"
 #include "virtual_output.h"
 #include "virtual_qpainter_backend.h"
@@ -19,16 +20,16 @@
 namespace KWin
 {
 
-static FileDescriptor findRenderDevice()
+static std::unique_ptr<DrmDevice> findRenderDevice()
 {
     const int deviceCount = drmGetDevices2(0, nullptr, 0);
     if (deviceCount <= 0) {
-        return FileDescriptor{};
+        return nullptr;
     }
 
     QList<drmDevice *> devices(deviceCount);
     if (drmGetDevices2(0, devices.data(), devices.size()) < 0) {
-        return FileDescriptor{};
+        return nullptr;
     }
     auto deviceCleanup = qScopeGuard([&devices]() {
         drmFreeDevices(devices.data(), devices.size());
@@ -45,30 +46,23 @@ static FileDescriptor findRenderDevice()
         }
 
         if (device->available_nodes & (1 << nodeType)) {
-            FileDescriptor fd{open(device->nodes[nodeType], O_RDWR | O_CLOEXEC)};
-            if (fd.isValid()) {
-                return fd;
+            if (auto ret = DrmDevice::open(device->nodes[nodeType])) {
+                return ret;
             }
         }
     }
 
-    return FileDescriptor{};
+    return nullptr;
 }
 
 VirtualBackend::VirtualBackend(QObject *parent)
     : OutputBackend(parent)
+    , m_drmDevice(findRenderDevice())
 {
-    m_drmFileDescriptor = findRenderDevice();
-    if (m_drmFileDescriptor.isValid()) {
-        m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
-    }
 }
 
 VirtualBackend::~VirtualBackend()
 {
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
 }
 
 bool VirtualBackend::initialize()
@@ -79,16 +73,16 @@ bool VirtualBackend::initialize()
 QList<CompositingType> VirtualBackend::supportedCompositors() const
 {
     QList<CompositingType> compositingTypes;
-    if (m_gbmDevice) {
+    if (m_drmDevice) {
         compositingTypes.append(OpenGLCompositing);
     }
     compositingTypes.append(QPainterCompositing);
     return compositingTypes;
 }
 
-gbm_device *VirtualBackend::gbmDevice() const
+DrmDevice *VirtualBackend::drmDevice() const
 {
-    return m_gbmDevice;
+    return m_drmDevice.get();
 }
 
 std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()

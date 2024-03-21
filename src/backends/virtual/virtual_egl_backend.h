@@ -71,7 +71,6 @@ private:
     void removeOutput(Output *output);
 
     VirtualBackend *m_backend;
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, std::unique_ptr<VirtualEglLayer>> m_outputs;
 };
 

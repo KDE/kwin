@@ -19,6 +19,7 @@ namespace KWin
 {
 class VirtualBackend;
 class VirtualOutput;
+class DrmDevice;
 
 class KWIN_EXPORT VirtualBackend : public OutputBackend
 {
@@ -49,7 +50,7 @@ public:
     void setEglDisplay(std::unique_ptr<EglDisplay> &&display);
     EglDisplay *sceneEglDisplayObject() const override;
 
-    gbm_device *gbmDevice() const;
+    DrmDevice *drmDevice() const;
 
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
@@ -58,9 +59,8 @@ private:
     VirtualOutput *createOutput(const OutputInfo &info);
 
     QList<VirtualOutput *> m_outputs;
+    std::unique_ptr<DrmDevice> m_drmDevice;
     std::unique_ptr<EglDisplay> m_display;
-    FileDescriptor m_drmFileDescriptor;
-    gbm_device *m_gbmDevice = nullptr;
 };
 
 } // namespace KWin
