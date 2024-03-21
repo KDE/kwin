@@ -61,7 +61,7 @@ public:
     void init() override;
 
     VirtualBackend *backend() const;
-    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+    DrmDevice *drmDevice() const override;
 
 private:
     bool initializeEgl();

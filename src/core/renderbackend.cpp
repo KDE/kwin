@@ -78,7 +78,7 @@ bool RenderBackend::checkGraphicsReset()
     return false;
 }
 
-GraphicsBufferAllocator *RenderBackend::graphicsBufferAllocator() const
+DrmDevice *RenderBackend::drmDevice() const
 {
     return nullptr;
 }

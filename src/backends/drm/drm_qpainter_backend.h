@@ -28,7 +28,7 @@ public:
     DrmQPainterBackend(DrmBackend *backend);
     ~DrmQPainterBackend();
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+    DrmDevice *drmDevice() const override;
 
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;

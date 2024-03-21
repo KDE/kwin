@@ -80,7 +80,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglPrimaryLayer::beginFrame()
             qCWarning(KWIN_WAYLAND_BACKEND) << "Could not find a suitable render format";
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->openglContext(), nativeSize, format, modifiers);
+        m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), nativeSize, format, modifiers);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -184,7 +184,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandEglCursorLayer::beginFrame()
             qCWarning(KWIN_WAYLAND_BACKEND) << "Could not find a suitable render format";
             return std::nullopt;
         }
-        m_swapchain = EglSwapchain::create(m_backend->graphicsBufferAllocator(), m_backend->openglContext(), bufferSize, format, modifiers);
+        m_swapchain = EglSwapchain::create(m_backend->drmDevice()->allocator(), m_backend->openglContext(), bufferSize, format, modifiers);
         if (!m_swapchain) {
             return std::nullopt;
         }
@@ -249,9 +249,9 @@ WaylandBackend *WaylandEglBackend::backend() const
     return m_backend;
 }
 
-GraphicsBufferAllocator *WaylandEglBackend::graphicsBufferAllocator() const
+DrmDevice *WaylandEglBackend::drmDevice() const
 {
-    return m_backend->drmDevice()->allocator();
+    return m_backend->drmDevice();
 }
 
 void WaylandEglBackend::cleanupSurfaces()

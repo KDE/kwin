@@ -99,7 +99,7 @@ public:
     ~WaylandEglBackend() override;
 
     WaylandBackend *backend() const;
-    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+    DrmDevice *drmDevice() const override;
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
 

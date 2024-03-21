@@ -32,9 +32,9 @@ DrmQPainterBackend::~DrmQPainterBackend()
     m_backend->setRenderBackend(nullptr);
 }
 
-GraphicsBufferAllocator *DrmQPainterBackend::graphicsBufferAllocator() const
+DrmDevice *DrmQPainterBackend::drmDevice() const
 {
-    return m_backend->primaryGpu()->drmDevice()->allocator();
+    return m_backend->primaryGpu()->drmDevice();
 }
 
 void DrmQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

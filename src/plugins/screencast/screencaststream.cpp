@@ -8,6 +8,7 @@
 
 #include "screencaststream.h"
 #include "compositor.h"
+#include "core/drmdevice.h"
 #include "core/graphicsbufferallocator.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
@@ -850,7 +851,7 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
 
-    GraphicsBuffer *buffer = backend->graphicsBufferAllocator()->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = backend->drmDevice()->allocator()->allocate(GraphicsBufferOptions{
         .size = size,
         .format = format,
         .modifiers = modifiers,
@@ -883,7 +884,7 @@ std::shared_ptr<ScreenCastDmaBufTexture> ScreenCastStream::createDmaBufTexture(c
         return nullptr;
     }
 
-    GraphicsBuffer *buffer = backend->graphicsBufferAllocator()->allocate(GraphicsBufferOptions{
+    GraphicsBuffer *buffer = backend->drmDevice()->allocator()->allocate(GraphicsBufferOptions{
         .size = QSize(params.width, params.height),
         .format = params.format,
         .modifiers = {params.modifier},

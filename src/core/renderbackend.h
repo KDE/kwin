@@ -17,7 +17,6 @@ namespace KWin
 {
 
 class GraphicsBuffer;
-class GraphicsBufferAllocator;
 class Output;
 class OverlayWindow;
 class OutputLayer;
@@ -26,6 +25,7 @@ class SurfacePixmapX11;
 class SurfaceTexture;
 class PresentationFeedback;
 class RenderLoop;
+class DrmDevice;
 
 class PresentationFeedback
 {
@@ -81,7 +81,7 @@ public:
     virtual OutputLayer *cursorLayer(Output *output);
     virtual void present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
 
-    virtual GraphicsBufferAllocator *graphicsBufferAllocator() const;
+    virtual DrmDevice *drmDevice() const;
 
     virtual bool testImportBuffer(GraphicsBuffer *buffer);
     virtual QHash<uint32_t, QList<uint64_t>> supportedFormats() const;

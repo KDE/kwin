@@ -113,7 +113,7 @@ void AbstractEglBackend::initWayland()
     if (m_deviceId) {
         QString renderNode = m_display->renderNode();
         if (renderNode.isEmpty()) {
-            drmDevice *device = nullptr;
+            ::drmDevice *device = nullptr;
             if (drmGetDeviceFromDevId(deviceId(), 0, &device) != 0) {
                 qCWarning(KWIN_OPENGL) << "drmGetDeviceFromDevId() failed:" << strerror(errno);
             } else {

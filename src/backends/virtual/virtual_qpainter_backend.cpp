@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "virtual_qpainter_backend.h"
+#include "core/drmdevice.h"
 #include "core/graphicsbufferview.h"
 #include "core/shmgraphicsbufferallocator.h"
 #include "platformsupport/scenes/qpainter/qpainterswapchain.h"

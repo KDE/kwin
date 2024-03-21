@@ -53,7 +53,7 @@ public:
     VirtualQPainterBackend(VirtualBackend *backend);
     ~VirtualQPainterBackend() override;
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     VirtualQPainterLayer *primaryLayer(Output *output) override;

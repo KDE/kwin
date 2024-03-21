@@ -44,7 +44,7 @@ public:
 
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+    DrmDevice *drmDevice() const override;
 
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;

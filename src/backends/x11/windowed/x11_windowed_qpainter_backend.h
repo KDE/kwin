@@ -74,7 +74,7 @@ public:
     X11WindowedQPainterBackend(X11WindowedBackend *backend);
     ~X11WindowedQPainterBackend() override;
 
-    GraphicsBufferAllocator *graphicsBufferAllocator() const override;
+    GraphicsBufferAllocator *graphicsBufferAllocator() const;
 
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;

@@ -137,9 +137,9 @@ std::unique_ptr<SurfaceTexture> EglGbmBackend::createSurfaceTextureWayland(Surfa
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-GraphicsBufferAllocator *EglGbmBackend::graphicsBufferAllocator() const
+DrmDevice *EglGbmBackend::drmDevice() const
 {
-    return gpu()->drmDevice()->allocator();
+    return gpu()->drmDevice();
 }
 
 void EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

@@ -12,6 +12,7 @@
 #include "utils/drm_format_helper.h"
 
 #include "compositor.h"
+#include "core/drmdevice.h"
 #include "core/renderbackend.h"
 #include "core/shmgraphicsbufferallocator.h"
 #include "internalwindow.h"
@@ -55,7 +56,7 @@ Swapchain *Window::swapchain(const QHash<uint32_t, QList<uint64_t>> &formats)
             static ShmGraphicsBufferAllocator shmAllocator;
             allocator = &shmAllocator;
         } else {
-            allocator = Compositor::self()->backend()->graphicsBufferAllocator();
+            allocator = Compositor::self()->backend()->drmDevice()->allocator();
         }
 
         for (auto it = formats.begin(); it != formats.end(); it++) {
