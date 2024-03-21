@@ -899,7 +899,7 @@ public:
     }
     static XwaylandEavesdropsMode defaultXwaylandEavesdrops()
     {
-        return None;
+        return XwaylandEavesdropsMode::AllKeysWithModifier;
     }
     static bool defaultXwaylandEavesdropsMouse()
     {
