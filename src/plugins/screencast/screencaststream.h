@@ -130,6 +130,8 @@ private:
         std::unique_ptr<GLTexture> texture;
         bool visible = false;
         bool invalid = true;
+        QMetaObject::Connection changedConnection = QMetaObject::Connection();
+        QMetaObject::Connection positionChangedConnection = QMetaObject::Connection();
     } m_cursor;
 
     QHash<struct pw_buffer *, std::shared_ptr<ScreenCastDmaBufTexture>> m_dmabufDataForPwBuffer;
