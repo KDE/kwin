@@ -4611,7 +4611,6 @@ void X11Window::maximize(MaximizeMode mode)
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
     if (currentQuickTileMode != quickTileMode() && !oldTile && !tile()) {
-        qWarning() << "X11MAXIMIZE" << currentQuickTileMode << quickTileMode() << oldTile << tile();
         Q_EMIT quickTileModeChanged();
     }
 
