@@ -320,7 +320,7 @@ void CustomTile::remove()
         }
     }
 
-    delete this;
+    deleteLater(); // not using "delete this" because QQmlEngine will crash
 }
 
 CustomTile *CustomTile::nextTileAt(Qt::Edge edge) const
