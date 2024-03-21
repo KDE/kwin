@@ -43,6 +43,8 @@
 #include <gbm.h>
 #include <linux/input.h>
 #include <ranges>
+#include <unistd.h>
+#include <xf86drm.h>
 
 namespace KWin
 {
@@ -165,10 +167,6 @@ X11WindowedBackend::~X11WindowedBackend()
     m_keyboardDevice.reset();
     m_touchDevice.reset();
     m_eglDisplay.reset();
-
-    if (m_gbmDevice) {
-        gbm_device_destroy(m_gbmDevice);
-    }
 
     if (m_connection) {
         if (m_keySymbols) {
@@ -309,9 +307,8 @@ void X11WindowedBackend::initDri3()
         UniqueCPtr<xcb_dri3_open_reply_t> reply(xcb_dri3_open_reply(m_connection, cookie, nullptr));
         if (reply && reply->nfd == 1) {
             int fd = xcb_dri3_open_reply_fds(m_connection, reply.get())[0];
-            fcntl(fd, F_SETFD, fcntl(fd, F_GETFD) | FD_CLOEXEC);
-            m_drmFileDescriptor = FileDescriptor{fd};
-            m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+            m_drmDevice = DrmDevice::open(QByteArray(drmGetDeviceNameFromFd2(fd)));
+            ::close(fd);
         }
     }
 
@@ -687,9 +684,9 @@ xcb_window_t X11WindowedBackend::rootWindow() const
     return m_screen->root;
 }
 
-gbm_device *X11WindowedBackend::gbmDevice() const
+DrmDevice *X11WindowedBackend::drmDevice() const
 {
-    return m_gbmDevice;
+    return m_drmDevice.get();
 }
 
 X11WindowedInputDevice *X11WindowedBackend::pointerDevice() const
@@ -777,7 +774,7 @@ int X11WindowedBackend::driMinorVersion() const
 QList<CompositingType> X11WindowedBackend::supportedCompositors() const
 {
     QList<CompositingType> ret;
-    if (m_gbmDevice) {
+    if (m_drmDevice) {
         ret.append(OpenGLCompositing);
     }
     if (m_hasShm) {

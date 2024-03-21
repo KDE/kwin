@@ -179,8 +179,7 @@ std::chrono::nanoseconds X11WindowedEglCursorLayer::queryRenderTime() const
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
-    : m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(backend->gbmDevice()))
-    , m_backend(backend)
+    : m_backend(backend)
 {
 }
 
@@ -196,7 +195,7 @@ X11WindowedBackend *X11WindowedEglBackend::backend() const
 
 GraphicsBufferAllocator *X11WindowedEglBackend::graphicsBufferAllocator() const
 {
-    return m_allocator.get();
+    return m_backend->drmDevice()->allocator();
 }
 
 bool X11WindowedEglBackend::initializeEgl()
@@ -211,7 +210,7 @@ bool X11WindowedEglBackend::initializeEgl()
             }
         }
 
-        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->gbmDevice(), nullptr)));
+        m_backend->setEglDisplay(EglDisplay::create(eglGetPlatformDisplayEXT(EGL_PLATFORM_GBM_KHR, m_backend->drmDevice()->gbmDevice(), nullptr)));
     }
 
     auto display = m_backend->sceneEglDisplayObject();

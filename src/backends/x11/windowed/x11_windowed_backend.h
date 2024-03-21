@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/drmdevice.h"
 #include "core/inputbackend.h"
 #include "core/inputdevice.h"
 #include "core/outputbackend.h"
@@ -103,7 +104,7 @@ public:
     xcb_screen_t *screen() const;
     int screenNumer() const;
     xcb_window_t rootWindow() const;
-    gbm_device *gbmDevice() const;
+    DrmDevice *drmDevice() const;
 
     bool hasXInput() const;
 
@@ -174,8 +175,7 @@ private:
     int m_driMinorVersion = 0;
     QHash<uint32_t, QList<uint64_t>> m_driFormats;
 
-    FileDescriptor m_drmFileDescriptor;
-    gbm_device *m_gbmDevice = nullptr;
+    std::unique_ptr<DrmDevice> m_drmDevice;
     std::unique_ptr<EglDisplay> m_eglDisplay;
 
     QList<X11WindowedOutput *> m_outputs;

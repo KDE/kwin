@@ -17,7 +17,6 @@ namespace KWin
 
 class EglSwapchainSlot;
 class EglSwapchain;
-class GraphicsBufferAllocator;
 class X11WindowedBackend;
 class X11WindowedOutput;
 class X11WindowedEglBackend;
@@ -99,7 +98,6 @@ private:
         std::unique_ptr<X11WindowedEglCursorLayer> cursorLayer;
     };
 
-    std::unique_ptr<GraphicsBufferAllocator> m_allocator;
     std::map<Output *, Layers> m_outputs;
     X11WindowedBackend *m_backend;
 };
