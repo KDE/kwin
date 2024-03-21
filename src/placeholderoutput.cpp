@@ -32,6 +32,9 @@ PlaceholderOutput::PlaceholderOutput(const QSize &size, qreal scale)
 
 PlaceholderOutput::~PlaceholderOutput()
 {
+    State state = m_state;
+    state.enabled = false;
+    setState(state);
 }
 
 RenderLoop *PlaceholderOutput::renderLoop() const
