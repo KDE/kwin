@@ -212,7 +212,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME cursor-shape-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL protocols/xdg-toplevel-drag-v1.xml
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-drag/xdg-toplevel-drag-v1.xml
     BASENAME xdg-toplevel-drag-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
