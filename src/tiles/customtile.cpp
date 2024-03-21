@@ -10,6 +10,7 @@
 #include "customtile.h"
 #include "core/output.h"
 #include "tilemanager.h"
+#include "window.h"
 
 namespace KWin
 {
@@ -273,6 +274,7 @@ void CustomTile::remove()
 
     manager()->model()->beginRemoveTile(this);
     parentT->removeChild(this);
+    m_parentTile = nullptr;
     manager()->model()->endRemoveTile();
     manager()->tileRemoved(this);
 
@@ -318,6 +320,11 @@ void CustomTile::remove()
         if (lastTile->childCount() == 0) {
             lastTile->remove();
         }
+    }
+
+    const auto windows = std::exchange(m_windows, {});
+    for (Window *window : windows) {
+        window->setTile(m_tiling->bestTileForPosition(window->moveResizeGeometry().center()));
     }
 
     deleteLater(); // not using "delete this" because QQmlEngine will crash
