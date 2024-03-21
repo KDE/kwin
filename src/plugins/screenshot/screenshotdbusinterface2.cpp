@@ -151,8 +151,6 @@ class ScreenShotSource2 : public QObject
 public:
     explicit ScreenShotSource2(const QFuture<QImage> &future);
 
-    bool isCancelled() const;
-    bool isCompleted() const;
     void marshal(ScreenShotSinkPipe2 *sink);
 
     virtual QVariantMap attributes() const;
@@ -219,19 +217,14 @@ ScreenShotSource2::ScreenShotSource2(const QFuture<QImage> &future)
     : m_future(future)
 {
     m_watcher = new QFutureWatcher<QImage>(this);
-    connect(m_watcher, &QFutureWatcher<QImage>::finished, this, &ScreenShotSource2::completed);
-    connect(m_watcher, &QFutureWatcher<QImage>::canceled, this, &ScreenShotSource2::cancelled);
+    connect(m_watcher, &QFutureWatcher<QImage>::finished, this, [this]() {
+        if (!m_future.isValid()) {
+            Q_EMIT cancelled();
+        } else {
+            Q_EMIT completed();
+        }
+    });
     m_watcher->setFuture(m_future);
-}
-
-bool ScreenShotSource2::isCancelled() const
-{
-    return m_future.isCanceled();
-}
-
-bool ScreenShotSource2::isCompleted() const
-{
-    return m_future.isFinished();
 }
 
 QVariantMap ScreenShotSource2::attributes() const
