@@ -23,7 +23,7 @@
 namespace KWin
 {
 
-static bool shouldUseOpenGLES()
+bool EglDisplay::shouldUseOpenGLES()
 {
     if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
         return true;

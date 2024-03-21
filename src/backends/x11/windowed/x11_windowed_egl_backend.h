@@ -85,9 +85,6 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 
-protected:
-    void cleanupSurfaces() override;
-
 private:
     bool initializeEgl();
     bool initRenderingContext();

@@ -24,6 +24,7 @@
 #endif
 #include "core/renderloop.h"
 #include "keyboard_input.h"
+#include "opengl/egldisplay.h"
 #include "options.h"
 #include "utils/c_ptr.h"
 #include "utils/edid.h"

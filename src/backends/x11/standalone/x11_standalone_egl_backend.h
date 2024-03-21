@@ -8,12 +8,14 @@
 
 #include "core/outputlayer.h"
 #include "options.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
+#include "platformsupport/scenes/opengl/openglbackend.h"
 #include "platformsupport/scenes/opengl/openglsurfacetexture_x11.h"
 #include "utils/damagejournal.h"
 
 #include "opengl/gltexture.h"
 #include "opengl/gltexture_p.h"
+
+#include <epoxy/egl.h>
 
 typedef struct _XDisplay Display;
 
@@ -25,6 +27,8 @@ class SoftwareVsyncMonitor;
 class X11StandaloneBackend;
 class EglBackend;
 class GLRenderTimeQuery;
+class EglDisplay;
+class EglContext;
 
 class EglLayer : public OutputLayer
 {
@@ -39,10 +43,9 @@ private:
     EglBackend *const m_backend;
 };
 
-class EglBackend : public AbstractEglBackend
+class EglBackend : public OpenGLBackend
 {
     Q_OBJECT
-
 public:
     EglBackend(::Display *display, X11StandaloneBackend *platform);
     ~EglBackend() override;
@@ -56,16 +59,20 @@ public:
     OverlayWindow *overlayWindow() const override;
     OutputLayer *primaryLayer(Output *output) override;
     std::chrono::nanoseconds queryRenderTime();
-
-protected:
-    EGLConfig chooseBufferConfig();
-    bool initRenderingContext();
+    EglDisplay *eglDisplayObject() const;
+    OpenGlContext *openglContext() const override;
+    bool makeCurrent() override;
+    void doneCurrent() override;
 
 private:
+    EGLConfig chooseBufferConfig();
+    bool initRenderingContext();
+    void initClientExtensions();
+    bool hasClientExtension(const QByteArray &name);
     void screenGeometryChanged();
-    void presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
+    void presentSurface(::EGLSurface surface, const QRegion &damage, const QRect &screenGeometry);
     void vblank(std::chrono::nanoseconds timestamp);
-    EGLSurface createSurface(xcb_window_t window);
+    ::EGLSurface createSurface(xcb_window_t window);
 
     X11StandaloneBackend *m_backend;
     std::unique_ptr<SoftwareVsyncMonitor> m_vsyncMonitor;
@@ -80,6 +87,10 @@ private:
     bool m_havePlatformBase = false;
     Options::GlSwapStrategy m_swapStrategy = Options::AutoSwapStrategy;
     std::shared_ptr<OutputFrame> m_frame;
+
+    QList<QByteArray> m_clientExtensions;
+    std::unique_ptr<EglContext> m_context;
+    ::EGLSurface m_surface = EGL_NO_SURFACE;
 };
 
 class EglPixmapTexture : public GLTexture

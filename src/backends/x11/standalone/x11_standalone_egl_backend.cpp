@@ -11,6 +11,8 @@
 #include "core/outputlayer.h"
 #include "core/overlaywindow.h"
 #include "core/renderloop_p.h"
+#include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
 #include "opengl/glplatform.h"
 #include "opengl/glrendertimequery.h"
 #include "options.h"
@@ -81,7 +83,10 @@ EglBackend::~EglBackend()
     if (isFailed() && m_overlayWindow) {
         m_overlayWindow->destroy();
     }
-    cleanup();
+    if (m_surface != EGL_NO_SURFACE) {
+        eglDestroySurface(eglDisplayObject()->handle(), m_surface);
+    }
+    m_context.reset();
 
     if (m_overlayWindow && m_overlayWindow->window()) {
         m_overlayWindow->destroy();
@@ -117,7 +122,7 @@ void EglBackend::init()
     m_fbo = std::make_unique<GLFramebuffer>(0, workspace()->geometry().size());
 
     m_backend->setEglDisplay(EglDisplay::create(shareDisplay, false));
-    kwinApp()->outputBackend()->setSceneEglGlobalShareContext(shareContext);
+    m_backend->setSceneEglGlobalShareContext(shareContext);
 
     qputenv("EGL_PLATFORM", "x11");
     if (!initRenderingContext()) {
@@ -136,7 +141,7 @@ void EglBackend::init()
 
     // check for EGL_NV_post_sub_buffer and whether it can be used on the surface
     if (hasExtension(QByteArrayLiteral("EGL_NV_post_sub_buffer"))) {
-        if (eglQuerySurface(eglDisplayObject()->handle(), surface(), EGL_POST_SUB_BUFFER_SUPPORTED_NV, &m_havePostSubBuffer) == EGL_FALSE) {
+        if (eglQuerySurface(eglDisplayObject()->handle(), m_surface, EGL_POST_SUB_BUFFER_SUPPORTED_NV, &m_havePostSubBuffer) == EGL_FALSE) {
             EGLint error = eglGetError();
             if (error != EGL_SUCCESS && error != EGL_BAD_ATTRIBUTE) {
                 setFailed(QStringLiteral("query surface failed"));
@@ -152,7 +157,7 @@ void EglBackend::init()
 
         // check if swap interval 1 is supported
         EGLint val;
-        eglGetConfigAttrib(eglDisplayObject()->handle(), config(), EGL_MAX_SWAP_INTERVAL, &val);
+        eglGetConfigAttrib(eglDisplayObject()->handle(), m_context->config(), EGL_MAX_SWAP_INTERVAL, &val);
         if (val >= 1) {
             if (eglSwapInterval(eglDisplayObject()->handle(), 1)) {
                 qCDebug(KWIN_CORE) << "Enabled v-sync";
@@ -167,7 +172,7 @@ void EglBackend::init()
          * eglSwapBuffers() for each frame. eglSwapBuffers() then does the copy (no page flip possible in this mode),
          * which means it is slow and not synced to the v-blank. */
         qCWarning(KWIN_CORE) << "eglPostSubBufferNV not supported, have to enable buffer preservation - which breaks v-sync and performance";
-        eglSurfaceAttrib(eglDisplayObject()->handle(), surface(), EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+        eglSurfaceAttrib(eglDisplayObject()->handle(), m_surface, EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
     }
 
     m_swapStrategy = options->glPreferBufferSwap();
@@ -181,6 +186,25 @@ void EglBackend::init()
             m_swapStrategy = Options::ExtendDamage;
         }
     }
+}
+
+void EglBackend::initClientExtensions()
+{
+    // Get the list of client extensions
+    const char *clientExtensionsCString = eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS);
+    const QByteArray clientExtensionsString = QByteArray::fromRawData(clientExtensionsCString, qstrlen(clientExtensionsCString));
+    if (clientExtensionsString.isEmpty()) {
+        // If eglQueryString() returned NULL, the implementation doesn't support
+        // EGL_EXT_client_extensions. Expect an EGL_BAD_DISPLAY error.
+        (void)eglGetError();
+    }
+
+    m_clientExtensions = clientExtensionsString.split(' ');
+}
+
+bool EglBackend::hasClientExtension(const QByteArray &name)
+{
+    return m_clientExtensions.contains(name);
 }
 
 bool EglBackend::initRenderingContext()
@@ -211,9 +235,11 @@ bool EglBackend::initRenderingContext()
         }
     }
 
-    setEglDisplay(display);
-
-    if (!createContext(chooseBufferConfig())) {
+    setSupportsBufferAge(display->supportsBufferAge());
+    setSupportsNativeFence(display->supportsNativeFence());
+    setExtensions(display->extensions());
+    m_context = EglContext::create(display, chooseBufferConfig(), m_backend->sceneEglGlobalShareContext());
+    if (!m_context) {
         qCCritical(KWIN_CORE) << "Create OpenGL context failed";
         return false;
     }
@@ -225,12 +251,11 @@ bool EglBackend::initRenderingContext()
         m_overlayWindow->setup(XCB_WINDOW_NONE);
     }
 
-    EGLSurface surface = createSurface(m_overlayWindow->window());
-    if (surface == EGL_NO_SURFACE) {
+    m_surface = createSurface(m_overlayWindow->window());
+    if (m_surface == EGL_NO_SURFACE) {
         qCCritical(KWIN_CORE) << "Creating egl surface failed";
         return false;
     }
-    setSurface(surface);
 
     if (!makeCurrent()) {
         qCCritical(KWIN_CORE) << "Make Context Current failed";
@@ -258,13 +283,13 @@ EGLSurface EglBackend::createSurface(xcb_window_t window)
     EGLSurface surface = EGL_NO_SURFACE;
     if (m_havePlatformBase) {
         // eglCreatePlatformWindowSurfaceEXT() expects a pointer to the Window.
-        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplayObject()->handle(), config(), (void *)&nativeWindow, nullptr);
+        surface = eglCreatePlatformWindowSurfaceEXT(eglDisplayObject()->handle(), m_context->config(), (void *)&nativeWindow, nullptr);
     } else {
         // eglCreateWindowSurface() expects a Window, not a pointer to the Window. Use
         // a c style cast as there are (buggy) platforms where the size of the Window
         // type is not the same as the size of EGLNativeWindowType, reinterpret_cast<>()
         // may not compile.
-        surface = eglCreateWindowSurface(eglDisplayObject()->handle(), config(), (EGLNativeWindowType)(uintptr_t)nativeWindow, nullptr);
+        surface = eglCreateWindowSurface(eglDisplayObject()->handle(), m_context->config(), (EGLNativeWindowType)(uintptr_t)nativeWindow, nullptr);
     }
 
     return surface;
@@ -284,7 +309,7 @@ EGLConfig EglBackend::chooseBufferConfig()
         EGL_ALPHA_SIZE,
         0,
         EGL_RENDERABLE_TYPE,
-        isOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
+        EglDisplay::shouldUseOpenGLES() ? EGL_OPENGL_ES2_BIT : EGL_OPENGL_BIT,
         EGL_CONFIG_CAVEAT,
         EGL_NONE,
         EGL_NONE,
@@ -374,7 +399,7 @@ void EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &fra
         }
     }
 
-    presentSurface(surface(), effectiveRenderedRegion, workspace()->geometry());
+    presentSurface(m_surface, effectiveRenderedRegion, workspace()->geometry());
 
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show(); // since that pass may take long
@@ -419,6 +444,26 @@ void EglBackend::vblank(std::chrono::nanoseconds timestamp)
 {
     m_frame->presented(std::chrono::nanoseconds::zero(), timestamp, queryRenderTime(), PresentationMode::VSync);
     m_frame.reset();
+}
+
+EglDisplay *EglBackend::eglDisplayObject() const
+{
+    return m_backend->sceneEglDisplayObject();
+}
+
+OpenGlContext *EglBackend::openglContext() const
+{
+    return m_context.get();
+}
+
+bool EglBackend::makeCurrent()
+{
+    return m_context->makeCurrent(m_surface);
+}
+
+void EglBackend::doneCurrent()
+{
+    m_context->doneCurrent();
 }
 
 EglSurfaceTextureX11::EglSurfaceTextureX11(EglBackend *backend, SurfacePixmapX11 *texture)

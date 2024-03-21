@@ -54,6 +54,7 @@ public:
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &dmabuf, int plane, int format, const QSize &size) const;
 
+    static bool shouldUseOpenGLES();
     static std::unique_ptr<EglDisplay> create(::EGLDisplay display, bool owning = true);
 
 private:

@@ -33,14 +33,6 @@ namespace KWin
 
 static std::unique_ptr<EglContext> s_globalShareContext;
 
-static bool isOpenGLES_helper()
-{
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
-        return true;
-    }
-    return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;
-}
-
 AbstractEglBackend::AbstractEglBackend(dev_t deviceId)
     : m_deviceId(deviceId)
 {
@@ -91,9 +83,6 @@ void AbstractEglBackend::cleanup()
 
 void AbstractEglBackend::cleanupSurfaces()
 {
-    if (m_surface != EGL_NO_SURFACE) {
-        eglDestroySurface(m_display->handle(), m_surface);
-    }
 }
 
 void AbstractEglBackend::setEglDisplay(EglDisplay *display)
@@ -230,7 +219,7 @@ bool AbstractEglBackend::makeCurrent()
         // Workaround to tell Qt that no QOpenGLContext is current
         context->doneCurrent();
     }
-    return m_context->makeCurrent(m_surface);
+    return m_context->makeCurrent();
 }
 
 void AbstractEglBackend::doneCurrent()
@@ -240,7 +229,7 @@ void AbstractEglBackend::doneCurrent()
 
 bool AbstractEglBackend::isOpenGLES() const
 {
-    return isOpenGLES_helper();
+    return EglDisplay::shouldUseOpenGLES();
 }
 
 bool AbstractEglBackend::createContext(EGLConfig config)
@@ -250,11 +239,6 @@ bool AbstractEglBackend::createContext(EGLConfig config)
     }
     m_context = EglContext::create(m_display, config, s_globalShareContext ? s_globalShareContext->handle() : EGL_NO_CONTEXT);
     return m_context != nullptr;
-}
-
-void AbstractEglBackend::setSurface(const EGLSurface &surface)
-{
-    m_surface = surface;
 }
 
 QList<LinuxDmaBufV1Feedback::Tranche> AbstractEglBackend::tranches() const
@@ -334,11 +318,6 @@ bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
 QHash<uint32_t, QList<uint64_t>> AbstractEglBackend::supportedFormats() const
 {
     return m_display->nonExternalOnlySupportedDrmFormats();
-}
-
-EGLSurface AbstractEglBackend::surface() const
-{
-    return m_surface;
 }
 
 EGLConfig AbstractEglBackend::config() const

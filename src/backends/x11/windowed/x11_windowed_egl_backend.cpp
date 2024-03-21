@@ -185,6 +185,7 @@ X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)
 
 X11WindowedEglBackend::~X11WindowedEglBackend()
 {
+    m_outputs.clear();
     cleanup();
 }
 
@@ -253,11 +254,6 @@ void X11WindowedEglBackend::init()
             .cursorLayer = std::make_unique<X11WindowedEglCursorLayer>(this, x11Output),
         };
     }
-}
-
-void X11WindowedEglBackend::cleanupSurfaces()
-{
-    m_outputs.clear();
 }
 
 void X11WindowedEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)

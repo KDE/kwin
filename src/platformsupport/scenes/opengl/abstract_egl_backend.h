@@ -32,7 +32,6 @@ public:
     bool makeCurrent() override;
     void doneCurrent() override;
 
-    EGLSurface surface() const;
     EGLConfig config() const;
     EglDisplay *eglDisplayObject() const;
     EglContext *openglContext() const override;
@@ -51,7 +50,6 @@ public:
 
 protected:
     AbstractEglBackend(dev_t deviceId = 0);
-    void setSurface(const EGLSurface &surface);
     void cleanup();
     virtual void cleanupSurfaces();
     void setEglDisplay(EglDisplay *display);
@@ -67,7 +65,6 @@ protected:
     void teardown();
 
     EglDisplay *m_display = nullptr;
-    EGLSurface m_surface = EGL_NO_SURFACE;
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
     const dev_t m_deviceId;
