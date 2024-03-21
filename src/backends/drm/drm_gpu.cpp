@@ -152,17 +152,20 @@ void DrmGpu::initDrmResources()
 {
     // try atomic mode setting
     bool isEnvVarSet = false;
-    const bool supportsVmCursorHotspot = drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) == 0;
-    const bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
-    if (m_isVirtualMachine && !supportsVmCursorHotspot && !isEnvVarSet) {
-        qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
-    } else if (noAMS) {
+    bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
+    if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << m_devNode;
-    } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
-        qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << m_devNode;
-    } else {
+    } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0) {
+        if (m_isVirtualMachine) {
+            // ATOMIC must be set before attemping CURSOR_PLANE_HOTSPOT
+            if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) != 0) {
+                qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_devNode));
+                drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 0);
+                noAMS = true;
+            }
+        }
         DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
-        if (planeResources) {
+        if (planeResources && !noAMS) {
             qCDebug(KWIN_DRM) << "Using Atomic Mode Setting on gpu" << m_devNode;
             qCDebug(KWIN_DRM) << "Number of planes on GPU" << m_devNode << ":" << planeResources->count_planes;
             // create the plane objects
@@ -180,7 +183,10 @@ void DrmGpu::initDrmResources()
         } else {
             qCWarning(KWIN_DRM) << "Failed to get plane resources. Falling back to legacy mode on GPU " << m_devNode;
         }
+    } else {
+        qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << this;
     }
+
     m_atomicModeSetting = !m_planes.empty();
 
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
