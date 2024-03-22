@@ -7,7 +7,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
-import org.kde.kirigami 2.10 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 
 QQC2.ItemDelegate {
@@ -56,7 +56,7 @@ QQC2.ItemDelegate {
                 QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
 
-            KCM.ContextualHelpButton {
+            Kirigami.ContextualHelpButton {
                 Layout.alignment: Qt.AlignVCenter
                 visible: model.description.length > 0
                 toolTipText: model.description

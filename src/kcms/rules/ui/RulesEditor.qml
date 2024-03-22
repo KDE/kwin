@@ -7,7 +7,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
-import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kcmutils as KCM
 import org.kde.kitemmodels
 import org.kde.kcms.kwinrules
@@ -229,7 +229,7 @@ KCM.ScrollViewKCM {
                         }
                     }
 
-                    KCM.ContextualHelpButton {
+                    Kirigami.ContextualHelpButton {
                         Layout.rightMargin: Kirigami.Units.largeSpacing
                         visible: model.description.length > 0
                         toolTipText: model.description
