@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 02:28+0000\n"
+"POT-Creation-Date: 2024-03-22 02:22+0000\n"
 "PO-Revision-Date: 2024-02-18 17:44+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2398,12 +2398,12 @@ msgstr "செல்லுபடியாகாத பரப்பளவு"
 msgid "Region outside the workspace"
 msgstr "பணிமேடைக்கு வெளியேயான பரப்பளவு"
 
-#: plugins/screencast/screencaststream.cpp:367
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2412,7 +2412,7 @@ msgstr ""
 "இடது கிளிக் அல்லது enter விசையை கொண்டு திரைப்பிடிப்புக்கான  சாளரத்தை தேர்ந்தெடுங்கள்.\n"
 "கைவிட, Escape விசையையோ வலது க்ளிக்கையோ பயன்படுத்துங்கள்."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 02:28+0000\n"
+"POT-Creation-Date: 2024-03-22 02:22+0000\n"
 "PO-Revision-Date: 2024-02-02 23:41+0200\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -2412,12 +2412,12 @@ msgstr "Neteisinga sritis"
 msgid "Region outside the workspace"
 msgstr "Sritis už darbo srities ribų"
 
-#: plugins/screencast/screencaststream.cpp:367
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nepavyko sukurti PipeWire srauto"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2428,7 +2428,7 @@ msgstr ""
 "Norėdami atsisakyti, paspauskite Grįžties (Escape) klavišą arba\n"
 "spustelėkite dešiniuoju pelės mygtuku."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

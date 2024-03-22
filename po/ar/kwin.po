@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 02:28+0000\n"
+"POT-Creation-Date: 2024-03-22 02:22+0000\n"
 "PO-Revision-Date: 2023-07-06 10:33+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -2415,12 +2415,12 @@ msgstr "منطقة غير صالحة"
 msgid "Region outside the workspace"
 msgstr "مساحة خارج مساحة العمل"
 
-#: plugins/screencast/screencaststream.cpp:367
+#: plugins/screencast/screencaststream.cpp:364
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "فشل في إنشاء دفق PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2429,7 +2429,7 @@ msgstr ""
 "حدد إطارًا للشاشة مع النقر الأيسر أو الضغط على زر الدخول. \n"
 "للإلغاء اضغط زر الهروب أو انقر بزر الفأرة الأيمن ."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
