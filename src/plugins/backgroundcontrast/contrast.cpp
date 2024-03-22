@@ -468,7 +468,7 @@ void ContrastEffect::doContrast(const RenderTarget &renderTarget, const RenderVi
     GLTexture *contrastTexture = windowData.texture.get();
     contrastTexture->bind();
 
-    windowData.fbo->blitFromFramebuffer(r.toRect(), QRect(QPoint(), contrastTexture->size()));
+    windowData.fbo->blitFromRenderTarget(renderTarget, viewport, shape.boundingRect(), QRect(QPoint(), contrastTexture->size()));
 
     m_shader->setColorMatrix(m_windowData[w].colorMatrix);
     m_shader->bind();
