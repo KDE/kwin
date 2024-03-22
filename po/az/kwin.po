@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 00:39+0000\n"
+"POT-Creation-Date: 2024-03-22 00:39+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2481,7 +2481,7 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2493,7 +2493,7 @@ msgstr ""
 "Enter və ya sol kliklə məcburi bağlamaq üçün pəncərəni seçmək.\n"
 "Ləğv etmək üçün Escape düyməsinə vurun və ya sağ düyməni klikləyin."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"

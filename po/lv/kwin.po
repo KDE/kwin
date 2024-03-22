@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 00:39+0000\n"
+"POT-Creation-Date: 2024-03-22 00:39+0000\n"
 "PO-Revision-Date: 2024-01-23 17:16+0200\n"
 "Last-Translator: Māris Nartišs <maris.kde@gmail.com>\n"
 "Language-Team: \n"
@@ -2406,7 +2406,7 @@ msgstr "Reģions ārpus darbvietas"
 msgid "Failed to create PipeWire stream"
 msgstr "Neizdevās izveidot „PipeWire“ straumi"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2416,7 +2416,7 @@ msgstr ""
 "ekrānattēlu.\n"
 "Lai atceltu darbību, spiediet „Escape“ vai peles labo pogu."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

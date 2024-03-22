@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 00:39+0000\n"
+"POT-Creation-Date: 2024-03-22 00:39+0000\n"
 "PO-Revision-Date: 2022-09-24 16:08+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -2494,7 +2494,7 @@ msgstr ""
 msgid "Failed to create PipeWire stream"
 msgstr ""
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2506,7 +2506,7 @@ msgstr ""
 "Välj fönster som ska tvingas att stängas med vänsterklick\n"
 "eller returtangenten. Esc eller högerklick för att avbryta."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"

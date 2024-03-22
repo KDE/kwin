@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 00:39+0000\n"
+"POT-Creation-Date: 2024-03-22 00:39+0000\n"
 "PO-Revision-Date: 2024-03-01 06:22+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2396,7 +2396,7 @@ msgstr "區域在工作空間外"
 msgid "Failed to create PipeWire stream"
 msgstr "無法建立 PipeWire 串流"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2405,7 +2405,7 @@ msgstr ""
 "用滑鼠左鍵或 Enter 來選取視窗進行螢幕截圖。\n"
 "按 Esc 或右鍵來取消。"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

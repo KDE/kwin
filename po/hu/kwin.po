@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 00:39+0000\n"
+"POT-Creation-Date: 2024-03-22 00:39+0000\n"
 "PO-Revision-Date: 2024-01-23 12:28+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2408,7 +2408,7 @@ msgstr "A terület kívül esik a munkaterületen"
 msgid "Failed to create PipeWire stream"
 msgstr "A PipeWire adatfolyam létrehozása sikertelen"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2417,7 +2417,7 @@ msgstr ""
 "Válassza ki a fotózandó ablakot bal egérgombbal vagy Enterrel.\n"
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"

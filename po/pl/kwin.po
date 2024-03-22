@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1676129 $
+# Version: $Revision: 1676193 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-21 00:39+0000\n"
+"POT-Creation-Date: 2024-03-22 00:39+0000\n"
 "PO-Revision-Date: 2024-03-02 12:49+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2428,7 +2428,7 @@ msgstr "Obszar poza przestrzenią pracy"
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:532
+#: plugins/screenshot/screenshotdbusinterface2.cpp:525
 #, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
@@ -2438,7 +2438,7 @@ msgstr ""
 "lub enter.\n"
 "Klawisz Escape lub kliknięcie prawym przyciskiem myszy zaniecha."
 
-#: plugins/screenshot/screenshotdbusinterface2.cpp:550
+#: plugins/screenshot/screenshotdbusinterface2.cpp:543
 #, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
