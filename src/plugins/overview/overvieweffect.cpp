@@ -151,7 +151,7 @@ OverviewEffect::OverviewEffect()
     gridAction->setText(i18nc("@action Grid view is the name of a Kwin effect", "Toggle Grid View"));
     KGlobalAccel::self()->setDefaultShortcut(gridAction, {defaultGridShortcut});
     KGlobalAccel::self()->setShortcut(gridAction, {defaultGridShortcut});
-    m_overviewShortcut = KGlobalAccel::self()->shortcut(gridAction);
+    m_gridShortcut = KGlobalAccel::self()->shortcut(gridAction);
 
     connect(effects, &EffectsHandler::screenAboutToLock, this, &OverviewEffect::realDeactivate);
 
@@ -353,13 +353,13 @@ void OverviewEffect::grabbedKeyboardEvent(QKeyEvent *keyEvent)
     }
     if (m_overviewShortcut.contains(keyEvent->key() | keyEvent->modifiers())) {
         if (keyEvent->type() == QEvent::KeyPress) {
-            m_overviewState->toggleAction();
+            m_overviewState->toggle();
         }
         return;
     }
     if (m_gridShortcut.contains(keyEvent->key() | keyEvent->modifiers())) {
         if (keyEvent->type() == QEvent::KeyPress) {
-            m_gridState->toggleAction();
+            m_gridState->toggle();
         }
         return;
     }
