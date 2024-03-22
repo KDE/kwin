@@ -17,6 +17,8 @@
 #include "drm_logging.h"
 #include "drm_pointer.h"
 
+#include "utils/drm_format_helper.h"
+
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -111,6 +113,20 @@ bool DrmPlane::updateProperties()
         drmModeFormatModifierIterator iterator{};
         while (drmModeFormatModifierBlobIterNext(inFormats.immutableBlob(), &iterator)) {
             m_supportedFormats[iterator.fmt].push_back(iterator.mod);
+        }
+
+        // Remove formats with alpha channel to work around DisplayLink driver bug:
+        // "ABGR8888 causes DisplayLink reconnection loop on Wayland sessions"
+        // https://github.com/DisplayLink/evdi/issues/459
+        if (gpu()->isDisplayLink() && type.enumValue() == TypeIndex::Primary) {
+            auto it = m_supportedFormats.begin();
+            while (it != m_supportedFormats.end()) {
+                if (const auto format = FormatInfo::get(it.key()); format->alphaBits > 0) {
+                    it = m_supportedFormats.erase(it);
+                } else {
+                    ++it;
+                }
+            }
         }
     } else {
         // if we don't have modifier support, assume the cursor needs a linear buffer
