@@ -42,7 +42,9 @@ PreviewItem::PreviewItem(QQuickItem *parent)
 
 PreviewItem::~PreviewItem()
 {
-    m_decoration->deleteLater();
+    if (m_decoration) {
+        m_decoration->deleteLater();
+    }
     if (m_bridge) {
         m_bridge->unregisterPreviewItem(this);
     }
@@ -272,6 +274,9 @@ void PreviewItem::paintShadow(QPainter *painter, int &paddingLeft, int &paddingR
 
 void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QMouseEvent e(event->type(),
@@ -287,6 +292,9 @@ void PreviewItem::mouseDoubleClickEvent(QMouseEvent *event)
 
 void PreviewItem::mousePressEvent(QMouseEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QMouseEvent e(event->type(),
@@ -302,6 +310,9 @@ void PreviewItem::mousePressEvent(QMouseEvent *event)
 
 void PreviewItem::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QMouseEvent e(event->type(),
@@ -317,6 +328,9 @@ void PreviewItem::mouseReleaseEvent(QMouseEvent *event)
 
 void PreviewItem::mouseMoveEvent(QMouseEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QMouseEvent e(event->type(),
@@ -332,6 +346,9 @@ void PreviewItem::mouseMoveEvent(QMouseEvent *event)
 
 void PreviewItem::hoverEnterEvent(QHoverEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QHoverEvent e(event->type(),
@@ -346,6 +363,9 @@ void PreviewItem::hoverEnterEvent(QHoverEvent *event)
 
 void PreviewItem::hoverLeaveEvent(QHoverEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QHoverEvent e(event->type(),
@@ -360,6 +380,9 @@ void PreviewItem::hoverLeaveEvent(QHoverEvent *event)
 
 void PreviewItem::hoverMoveEvent(QHoverEvent *event)
 {
+    if (!m_decoration) {
+        return;
+    }
     const auto &shadow = m_decoration->shadow();
     if (shadow) {
         QHoverEvent e(event->type(),
