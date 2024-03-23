@@ -10,6 +10,7 @@
 #include <KDecoration2/Private/DecoratedClientPrivate>
 #include <QObject>
 #include <QPalette>
+#include <QQmlEngine>
 
 class QAbstractItemModel;
 
@@ -20,6 +21,7 @@ namespace Preview
 class PreviewClient : public QObject, public ApplicationMenuEnabledDecoratedClientPrivate
 {
     Q_OBJECT
+    QML_ANONYMOUS
     Q_PROPERTY(KDecoration2::Decoration *decoration READ decoration CONSTANT)
     Q_PROPERTY(QString caption READ caption WRITE setCaption NOTIFY captionChanged)
     Q_PROPERTY(QIcon icon READ icon WRITE setIcon NOTIFY iconChanged)

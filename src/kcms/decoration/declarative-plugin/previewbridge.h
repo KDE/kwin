@@ -10,6 +10,7 @@
 
 #include <QList>
 #include <QPointer>
+#include <QQmlEngine>
 
 class QQuickItem;
 
@@ -24,9 +25,11 @@ class PreviewClient;
 class PreviewItem;
 class PreviewSettings;
 
-class PreviewBridge : public DecorationBridge
+class PreviewBridge : public KDecoration2::DecorationBridge
 {
     Q_OBJECT
+    QML_ANONYMOUS
+
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(QString kcmoduleName READ kcmoduleName WRITE setKcmoduleName NOTIFY kcmoduleNameChanged)
@@ -85,6 +88,7 @@ private:
 class BridgeItem : public QObject
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(Bridge)
     Q_PROPERTY(QString plugin READ plugin WRITE setPlugin NOTIFY pluginChanged)
     Q_PROPERTY(QString theme READ theme WRITE setTheme NOTIFY themeChanged)
     Q_PROPERTY(QString kcmoduleName READ kcmoduleName WRITE setKcmoduleName NOTIFY kcmoduleNameChanged)

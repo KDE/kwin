@@ -22,6 +22,7 @@ class Settings;
 class PreviewButtonItem : public QQuickPaintedItem
 {
     Q_OBJECT
+    QML_NAMED_ELEMENT(Button)
     Q_PROPERTY(KDecoration2::Preview::PreviewBridge *bridge READ bridge WRITE setBridge NOTIFY bridgeChanged)
     Q_PROPERTY(KDecoration2::Preview::Settings *settings READ settings WRITE setSettings NOTIFY settingsChanged)
     Q_PROPERTY(int type READ typeAsInt WRITE setType NOTIFY typeChanged)

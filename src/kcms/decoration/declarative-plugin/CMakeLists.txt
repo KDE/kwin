@@ -1,17 +1,18 @@
-set(plugin_SRCS
+ecm_add_qml_module(kdecorationprivatedeclarative URI org.kde.kwin.private.kdecoration DEPENDENCIES QtCore QtQuick GENERATE_PLUGIN_SOURCE)
+
+target_sources(kdecorationprivatedeclarative PRIVATE
     previewbutton.cpp
     previewbridge.cpp
     previewclient.cpp
     previewitem.cpp
     previewsettings.cpp
-    plugin.cpp
     buttonsmodel.cpp
     ../../../decorations/decorationpalette.cpp
     ../../../decorations/decorations_logging.cpp
+    types.h
 )
 
-add_library(kdecorationprivatedeclarative SHARED ${plugin_SRCS})
-target_link_libraries(kdecorationprivatedeclarative
+target_link_libraries(kdecorationprivatedeclarative PRIVATE
     KDecoration2::KDecoration
     KDecoration2::KDecoration2Private
     Qt::DBus
@@ -22,5 +23,4 @@ target_link_libraries(kdecorationprivatedeclarative
     KF6::Service
 )
 
-install(TARGETS kdecorationprivatedeclarative DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/private/kdecoration )
-install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kwin/private/kdecoration )
+ecm_finalize_qml_module(kdecorationprivatedeclarative)
