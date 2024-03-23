@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-22 00:39+0000\n"
+"POT-Creation-Date: 2024-03-23 00:38+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -64,17 +64,17 @@ msgstr ""
 msgid "- Output dimmed"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:510
+#: backends/x11/windowed/x11_windowed_backend.cpp:507
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:510
+#: backends/x11/windowed/x11_windowed_backend.cpp:507
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr ""
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:511
+#: backends/x11/windowed/x11_windowed_backend.cpp:508
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr ""
@@ -2560,7 +2560,7 @@ msgstr ""
 msgid "Region outside the workspace"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:365
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""

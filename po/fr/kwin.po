@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-22 00:39+0000\n"
+"POT-Creation-Date: 2024-03-23 00:38+0000\n"
 "PO-Revision-Date: 2024-03-01 09:40+0100\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: fr\n"
@@ -81,17 +81,17 @@ msgstr "- Sortie désactivée"
 msgid "- Output dimmed"
 msgstr "- Sortie ajustée"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:510
+#: backends/x11/windowed/x11_windowed_backend.cpp:507
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Appuyez sur la touche de contrôle droit pour libérer la saisie"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:510
+#: backends/x11/windowed/x11_windowed_backend.cpp:507
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Appuyez sur la touche de contrôle droite pour saisir l'entrée"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:511
+#: backends/x11/windowed/x11_windowed_backend.cpp:508
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Compositeur Wayland de KDE"
@@ -2447,7 +2447,7 @@ msgstr "Région non valable"
 msgid "Region outside the workspace"
 msgstr "Région en dehors de l'espace de travail"
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:365
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossible de créer un flux « PipeWire »"

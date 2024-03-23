@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-22 00:39+0000\n"
+"POT-Creation-Date: 2024-03-23 00:38+0000\n"
 "PO-Revision-Date: 2023-07-28 20:53+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -62,17 +62,17 @@ msgstr "– Utdata slått av"
 msgid "- Output dimmed"
 msgstr "– Utdata dempa"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:510
+#: backends/x11/windowed/x11_windowed_backend.cpp:507
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Trykk høgre «Ctrl» for å sleppa inndata"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:510
+#: backends/x11/windowed/x11_windowed_backend.cpp:507
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Trykk høgre «Ctrl» for å fanga inndata"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:511
+#: backends/x11/windowed/x11_windowed_backend.cpp:508
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland-samansetjar"
@@ -2427,7 +2427,7 @@ msgstr "Ugyldig område"
 msgid "Region outside the workspace"
 msgstr "Område utanfor arbeidsflata"
 
-#: plugins/screencast/screencaststream.cpp:364
+#: plugins/screencast/screencaststream.cpp:365
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikkje starta PipeWire-straum"
