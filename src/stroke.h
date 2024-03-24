@@ -17,7 +17,7 @@
 #ifndef __STROKE_H__
 #define __STROKE_H__
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -41,7 +41,7 @@ double stroke_compare(const stroke_t *a, const stroke_t *b, int *path_x, int *pa
 
 extern const double stroke_infinity;
 
-#ifdef  __cplusplus
+#ifdef __cplusplus
 }
 #endif
 #endif
