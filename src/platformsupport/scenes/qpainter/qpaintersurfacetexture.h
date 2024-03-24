@@ -25,9 +25,6 @@ public:
     QPainterBackend *backend() const;
     QImage image() const;
 
-    virtual bool create() = 0;
-    virtual void update(const QRegion &region) = 0;
-
 protected:
     QPainterBackend *m_backend;
     QImage m_image;

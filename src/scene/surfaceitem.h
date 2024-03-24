@@ -90,6 +90,9 @@ public:
     virtual ~SurfaceTexture();
 
     virtual bool isValid() const = 0;
+
+    virtual bool create() = 0;
+    virtual void update(const QRegion &region) = 0;
 };
 
 class KWIN_EXPORT SurfacePixmap : public QObject
