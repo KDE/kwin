@@ -83,6 +83,12 @@ static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform 
     img = img.transformed(matrix.toTransform());
 }
 
+static QRectF roundedRect(const QRect &rect, qreal scale)
+{
+    const QRect scaled = snapToPixelGrid(scaledRect(rect, scale));
+    return scaledRect(scaled, 1.0 / scale);
+}
+
 bool ScreenShotEffect::supported()
 {
     return effects->isOpenGLCompositing() && GLFramebuffer::supported();
@@ -321,13 +327,13 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
         }
 
         const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
-        const QRect nativeArea(screenshot->area.topLeft(),
-                               screenshot->area.size() * screenshot->result.devicePixelRatio());
+        const QSize nativeAreaSize = snapToPixelGrid(scaledRect(screenshot->area, screenshot->result.devicePixelRatio())).size();
+        const QRect nativeArea(screenshot->area.topLeft(), nativeAreaSize);
 
         QPainter painter(&screenshot->result);
         painter.setRenderHint(QPainter::SmoothPixmapTransform);
         painter.setWindow(nativeArea);
-        painter.drawImage(sourceRect, snapshot);
+        painter.drawImage(roundedRect(sourceRect, sourceDevicePixelRatio), snapshot);
         painter.end();
 
         if (screenshot->screens.isEmpty()) {
