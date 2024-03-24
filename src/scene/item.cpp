@@ -6,7 +6,9 @@
 
 #include "scene/item.h"
 #include "core/renderlayer.h"
+#include "scene/containernode.h"
 #include "scene/scene.h"
+#include "scene/transformnode.h"
 #include "utils/common.h"
 
 namespace KWin
@@ -53,6 +55,7 @@ void Item::setZ(int z)
     m_z = z;
     if (m_parentItem) {
         m_parentItem->markSortedChildItemsDirty();
+        m_parentItem->invalidateRenderNode();
     }
     scheduleRepaint(boundingRect());
 }
@@ -87,6 +90,7 @@ void Item::addChild(Item *item)
     m_childItems.append(item);
     markSortedChildItemsDirty();
 
+    item->invalidateRenderNode();
     updateBoundingRect();
     scheduleRepaint(item->transform().mapRect(item->boundingRect()).translated(item->position()));
 
@@ -100,6 +104,7 @@ void Item::removeChild(Item *item)
 
     m_childItems.removeOne(item);
     markSortedChildItemsDirty();
+    invalidateRenderNode();
 
     updateBoundingRect();
 }
@@ -144,6 +149,7 @@ void Item::setPosition(const QPointF &point)
     if (m_position != point) {
         scheduleRepaint(boundingRect());
         m_position = point;
+        invalidateRenderNode();
         updateItemToSceneTransform();
         if (m_parentItem) {
             m_parentItem->updateBoundingRect();
@@ -218,6 +224,7 @@ void Item::setTransform(const QTransform &transform)
     scheduleRepaint(boundingRect());
     m_transform = transform;
     updateItemToSceneTransform();
+    invalidateRenderNode();
     if (m_parentItem) {
         m_parentItem->updateBoundingRect();
     }
@@ -287,6 +294,7 @@ void Item::stackBefore(Item *sibling)
 
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex : siblingIndex - 1);
     markSortedChildItemsDirty();
+    m_parentItem->invalidateRenderNode();
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
@@ -315,6 +323,7 @@ void Item::stackAfter(Item *sibling)
 
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex + 1 : siblingIndex);
     markSortedChildItemsDirty();
+    m_parentItem->invalidateRenderNode();
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
@@ -453,6 +462,8 @@ void Item::updateEffectiveVisibility()
     }
 
     m_effectiveVisible = effectiveVisible;
+    invalidateRenderNode();
+
     if (!m_effectiveVisible) {
         if (m_scene) {
             m_scene->addRepaint(mapToScene(boundingRect()).toAlignedRect());
@@ -504,6 +515,69 @@ PresentationModeHint Item::presentationHint() const
 void Item::setPresentationHint(PresentationModeHint hint)
 {
     m_presentationHint = hint;
+}
+
+void Item::invalidateRenderNode()
+{
+    if (!m_renderNodeValid) {
+        return;
+    }
+
+    m_renderNodeValid = false;
+
+    if (m_parentItem) {
+        m_parentItem->invalidateRenderNode();
+    }
+}
+
+RenderNode *Item::updateContentNode()
+{
+    return nullptr;
+}
+
+RenderNode *Item::updateNode()
+{
+    if (!m_renderNodeValid) {
+        m_renderNodeValid = true;
+        m_renderNode = buildNode();
+    }
+    return m_renderNode;
+}
+
+RenderNode *Item::buildNode()
+{
+    if (!m_explicitVisible) {
+        return nullptr;
+    }
+
+    QList<RenderNode *> childNodes;
+    if (RenderNode *contentNode = updateContentNode()) {
+        childNodes.append(contentNode);
+    }
+
+    const QList<Item *> childItems = sortedChildItems();
+    for (Item *childItem : childItems) {
+        if (RenderNode *childNode = childItem->updateNode()) {
+            childNodes.append(childNode);
+        }
+    }
+
+    RenderNode *containerNode = nullptr;
+    if (!childNodes.isEmpty()) {
+        if (childNodes.size() == 1) {
+            containerNode = childNodes.first();
+        } else {
+            containerNode = new ContainerNode(childNodes);
+        }
+    } else {
+        return nullptr;
+    }
+
+    if (!m_position.isNull() || !m_transform.isIdentity()) {
+        return new TransformNode(containerNode, QTransform::fromTranslate(m_position.x(), m_position.y()) * m_transform);
+    }
+
+    return containerNode;
 }
 
 } // namespace KWin

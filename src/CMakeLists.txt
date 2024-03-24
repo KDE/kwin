@@ -155,6 +155,8 @@ target_sources(kwin PRIVATE
     resources.qrc
     rulebooksettings.cpp
     rules.cpp
+    scene/colornode.cpp
+    scene/containernode.cpp
     scene/cursordelegate_opengl.cpp
     scene/cursordelegate_qpainter.cpp
     scene/cursoritem.cpp
@@ -167,12 +169,15 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
+    scene/rendernode.cpp
     scene/rootitem.cpp
     scene/scene.cpp
     scene/shadowitem.cpp
     scene/surfaceitem.cpp
     scene/surfaceitem_internal.cpp
     scene/surfaceitem_wayland.cpp
+    scene/texturenode.cpp
+    scene/transformnode.cpp
     scene/windowitem.cpp
     scene/workspacescene.cpp
     scene/workspacescene_opengl.cpp

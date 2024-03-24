@@ -20,6 +20,7 @@
 namespace KWin
 {
 
+class RenderNode;
 class SceneDelegate;
 class Scene;
 
@@ -137,6 +138,9 @@ protected:
     void setPresentationHint(PresentationModeHint hint);
     void setScene(Scene *scene);
 
+    void invalidateRenderNode();
+    virtual RenderNode *updateContentNode();
+
 private:
     void addChild(Item *item);
     void removeChild(Item *item);
@@ -149,6 +153,9 @@ private:
     bool computeEffectiveVisibility() const;
     void updateEffectiveVisibility();
     void removeRepaints(SceneDelegate *delegate);
+
+    RenderNode *updateNode();
+    RenderNode *buildNode();
 
     Scene *m_scene = nullptr;
     QPointer<Item> m_parentItem;
@@ -163,6 +170,8 @@ private:
     int m_z = 0;
     bool m_explicitVisible = true;
     bool m_effectiveVisible = true;
+    bool m_renderNodeValid = true;
+    RenderNode *m_renderNode = nullptr;
     QMap<SceneDelegate *, QRegion> m_repaints;
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
