@@ -16,14 +16,7 @@
  */
 #include "gesture.h"
 
-#include <algorithm>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/serialization/export.hpp>
-#include <boost/serialization/vector.hpp>
-#include <math.h>
-
-BOOST_CLASS_EXPORT(Stroke)
+#include <cmath>
 
 Stroke::Stroke(const PreStroke &ps)
     : stroke(nullptr, stroke_deleter())
@@ -53,17 +46,3 @@ int Stroke::compare(const Stroke &a, const Stroke &b, double &score)
     score = std::max(1.0 - 2.5 * cost, 0.0);
     return score > 0.7;
 }
-
-/*
-Stroke Stroke::trefoil() {
-    PreStroke s;
-    const unsigned int n = 40;
-    s.reserve(n);
-    for (unsigned int i = 0; i<=n; i++) {
-        double phi = M_PI*(-4.0*i/n)-2.7;
-        double r = exp(1.0 + sin(6.0*M_PI*i/n)) + 2.0;
-        s.add(Point{(float)(r*cos(phi)), (float)(r*sin(phi))});
-    }
-    return Stroke(s);
-}
-*/
