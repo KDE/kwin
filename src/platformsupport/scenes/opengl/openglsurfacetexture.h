@@ -54,9 +54,6 @@ public:
     OpenGLBackend *backend() const;
     OpenGLSurfaceContents texture() const;
 
-    virtual bool create() = 0;
-    virtual void update(const QRegion &region) = 0;
-
 protected:
     OpenGLBackend *m_backend;
     OpenGLSurfaceContents m_texture;

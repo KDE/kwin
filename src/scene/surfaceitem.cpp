@@ -216,6 +216,21 @@ void SurfaceItem::destroyPixmap()
 void SurfaceItem::preprocess()
 {
     updatePixmap();
+
+    if (SurfacePixmap *surfacePixmap = pixmap(); surfacePixmap && !surfacePixmap->isDiscarded()) {
+        SurfaceTexture *surfaceTexture = surfacePixmap->texture();
+        if (surfaceTexture->isValid()) {
+            const QRegion region = damage();
+            if (!region.isEmpty()) {
+                surfaceTexture->update(region);
+                resetDamage();
+            }
+        } else if (surfacePixmap->isValid()) {
+            if (surfaceTexture->create()) {
+                resetDamage();
+            }
+        }
+    }
 }
 
 WindowQuadList SurfaceItem::buildQuads() const

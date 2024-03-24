@@ -132,12 +132,6 @@ void ItemRendererQPainter::renderSurfaceItem(QPainter *painter, SurfaceItem *sur
 
     QPainterSurfaceTexture *platformSurfaceTexture =
         static_cast<QPainterSurfaceTexture *>(surfaceTexture->texture());
-    if (!platformSurfaceTexture->isValid()) {
-        platformSurfaceTexture->create();
-    } else {
-        platformSurfaceTexture->update(surfaceItem->damage());
-    }
-    surfaceItem->resetDamage();
 
     const OutputTransform surfaceToBufferTransform = surfaceItem->bufferTransform();
     const QSizeF transformedSize = surfaceToBufferTransform.map(surfaceItem->destinationSize());

@@ -67,35 +67,6 @@ void ItemRendererOpenGL::setBlendEnabled(bool enabled)
     m_blendingEnabled = enabled;
 }
 
-static OpenGLSurfaceContents bindSurfaceTexture(SurfaceItem *surfaceItem)
-{
-    SurfacePixmap *surfacePixmap = surfaceItem->pixmap();
-    auto platformSurfaceTexture =
-        static_cast<OpenGLSurfaceTexture *>(surfacePixmap->texture());
-    if (surfacePixmap->isDiscarded()) {
-        return platformSurfaceTexture->texture();
-    }
-
-    if (platformSurfaceTexture->texture().isValid()) {
-        const QRegion region = surfaceItem->damage();
-        if (!region.isEmpty()) {
-            platformSurfaceTexture->update(region);
-            surfaceItem->resetDamage();
-        }
-    } else {
-        if (!surfacePixmap->isValid()) {
-            return {};
-        }
-        if (!platformSurfaceTexture->create()) {
-            qCDebug(KWIN_OPENGL) << "Failed to bind window";
-            return {};
-        }
-        surfaceItem->resetDamage();
-    }
-
-    return platformSurfaceTexture->texture();
-}
-
 static RenderGeometry clipQuads(const Item *item, const ItemRendererOpenGL::RenderContext *context)
 {
     const WindowQuadList quads = item->quads();
@@ -201,8 +172,9 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
         SurfacePixmap *pixmap = surfaceItem->pixmap();
         if (pixmap) {
             if (!geometry.isEmpty()) {
+                OpenGLSurfaceTexture *surfaceTexture = static_cast<OpenGLSurfaceTexture *>(pixmap->texture());
                 context->renderNodes.append(RenderNode{
-                    .texture = bindSurfaceTexture(surfaceItem),
+                    .texture = surfaceTexture->texture(),
                     .geometry = geometry,
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
