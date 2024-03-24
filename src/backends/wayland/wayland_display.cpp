@@ -231,7 +231,6 @@ private:
         WaylandLinuxDmabufFeedbackV1 *feedback = static_cast<WaylandLinuxDmabufFeedbackV1 *>(data);
 
         feedback->trancheDeviceId = 0;
-        feedback->formatTable = MemoryMap{};
     }
 
     static void tranche_target_device(void *data, zwp_linux_dmabuf_feedback_v1 *zwp_linux_dmabuf_feedback_v1, wl_array *deviceId)
