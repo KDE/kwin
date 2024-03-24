@@ -18,11 +18,7 @@
 #define __GESTURE_H__
 
 #include "stroke.h"
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/split_member.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/version.hpp>
-#include <boost/shared_ptr.hpp>
+
 #include <memory>
 #include <vector>
 
@@ -30,8 +26,6 @@
 
 class Stroke
 {
-    friend class boost::serialization::access;
-
 public:
     struct Point {
         double x;
@@ -51,81 +45,11 @@ public:
             Point product = {x * a, y * a};
             return product;
         }
-        template<class Archive>
-        void serialize(Archive &ar, const unsigned int version)
-        {
-            ar & x;
-            ar & y;
-            if (version == 0) {
-                double time;
-                ar & time;
-            }
-        }
     };
 
     using PreStroke = std::vector<Point>;
 
 private:
-    BOOST_SERIALIZATION_SPLIT_MEMBER()
-    template<class Archive>
-    void load(Archive &ar, const unsigned int version)
-    {
-        if (version >= 6) {
-            unsigned int n;
-            ar & n;
-            if (n) {
-                stroke_t *s = stroke_alloc(n);
-                for (unsigned int i = 0; i < n; i++) {
-                    double x, y;
-                    ar & x;
-                    ar & y;
-                    stroke_add_point(s, x, y);
-                }
-                stroke_finish(s);
-                stroke.reset(s);
-            }
-            return;
-        }
-
-        std::vector<Point> ps;
-        ar & ps;
-        if (ps.size()) {
-            stroke_t *s = stroke_alloc(ps.size());
-            for (std::vector<Point>::iterator i = ps.begin(); i != ps.end(); ++i)
-                stroke_add_point(s, i->x, i->y);
-            stroke_finish(s);
-            stroke.reset(s);
-        }
-        if (version == 0)
-            return;
-
-        int trigger;
-        int button;
-        unsigned int modifiers;
-        bool timeout;
-
-        ar & button;
-        if (version >= 2)
-            ar & trigger;
-        if (version < 3)
-            return;
-        ar & timeout;
-        if (version < 5)
-            return;
-        ar & modifiers;
-    }
-    template<class Archive>
-    void save(Archive &ar, __attribute__((unused)) unsigned int version) const
-    {
-        unsigned int n = size();
-        ar & n;
-        for (unsigned int i = 0; i < n; i++) {
-            Point p = points(i);
-            ar & p.x;
-            ar & p.y;
-        }
-    }
-
     struct stroke_deleter {
         void operator()(stroke_t *s) const
         {
@@ -149,7 +73,6 @@ public:
         return s;
     }
 
-    static Stroke trefoil();
     static int compare(const Stroke &, const Stroke &, double &);
 
     unsigned int size() const
@@ -171,7 +94,5 @@ public:
         return stroke_get_time(stroke.get(), n);
     }
 };
-BOOST_CLASS_VERSION(Stroke, 6)
-BOOST_CLASS_VERSION(Stroke::Point, 1)
 
 #endif
