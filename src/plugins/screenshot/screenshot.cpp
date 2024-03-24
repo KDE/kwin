@@ -244,11 +244,12 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         }
     }
 
+    const QRect scaledGeometry = snapToPixelGrid(scaledRect(geometry, devicePixelRatio));
     bool validTarget = true;
     std::unique_ptr<GLTexture> offscreenTexture;
     std::unique_ptr<GLFramebuffer> target;
     if (effects->isOpenGLCompositing()) {
-        offscreenTexture = GLTexture::allocate(GL_RGBA8, QSizeF(geometry.size() * devicePixelRatio).toSize());
+        offscreenTexture = GLTexture::allocate(GL_RGBA8, scaledGeometry.size());
         if (!offscreenTexture) {
             return;
         }
