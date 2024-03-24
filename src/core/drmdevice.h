@@ -9,6 +9,7 @@
 #pragma once
 
 #include <QString>
+#include <sys/types.h>
 
 #include "graphicsbufferallocator.h"
 #include "kwin_export.h"
