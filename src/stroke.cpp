@@ -15,9 +15,8 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#define _GNU_SOURCE
-
 #include "stroke.h"
+
 #include <assert.h>
 #include <math.h>
 #include <stdbool.h>
@@ -46,10 +45,10 @@ struct _stroke_t
 stroke_t *stroke_alloc(int n)
 {
     assert(n > 0);
-    stroke_t *s = malloc(sizeof(stroke_t));
+    stroke_t *s = reinterpret_cast<stroke_t *>(malloc(sizeof(stroke_t)));
     s->n = 0;
     s->capacity = n;
-    s->p = calloc(n, sizeof(struct point));
+    s->p = reinterpret_cast<point *>(calloc(n, sizeof(struct point)));
     return s;
 }
 
@@ -123,10 +122,10 @@ stroke_t *stroke_copy(const stroke_t *stroke)
 {
     if (!stroke)
         return NULL;
-    stroke_t *s = malloc(sizeof(stroke_t));
+    stroke_t *s = reinterpret_cast<stroke_t *>(malloc(sizeof(stroke_t)));
     if (!s)
         return NULL;
-    s->p = calloc(stroke->n, sizeof(struct point));
+    s->p = reinterpret_cast<point *>(calloc(stroke->n, sizeof(struct point)));
     if (!(s->p)) {
         free(s);
         return NULL;
@@ -237,9 +236,9 @@ double stroke_compare(const stroke_t *a, const stroke_t *b, int *path_x, int *pa
     const int m = M - 1;
     const int n = N - 1;
 
-    double *dist = malloc(M * N * sizeof(double));
-    int *prev_x = malloc(M * N * sizeof(int));
-    int *prev_y = malloc(M * N * sizeof(int));
+    double *dist = reinterpret_cast<double *>(malloc(M * N * sizeof(double)));
+    int *prev_x = reinterpret_cast<int *>(malloc(M * N * sizeof(int)));
+    int *prev_y = reinterpret_cast<int *>(malloc(M * N * sizeof(int)));
     for (int i = 0; i < m; i++)
         for (int j = 0; j < n; j++)
             dist[i * N + j] = stroke_infinity;
