@@ -90,6 +90,7 @@ target_sources(kwin PRIVATE
     effect/timeline.cpp
     focuschain.cpp
     ftrace.cpp
+    gesture.cpp
     gestures.cpp
     globalshortcuts.cpp
     hide_cursor_spy.cpp
@@ -191,6 +192,7 @@ target_sources(kwin PRIVATE
     scripting/workspace_wrapper.cpp
     shadow.cpp
     sm.cpp
+    stroke.cpp
     tablet_input.cpp
     tabletmodemanager.cpp
     tiles/customtile.cpp
