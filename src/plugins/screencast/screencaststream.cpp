@@ -307,6 +307,20 @@ void ScreenCastStream::onStreamRenegotiateFormat(uint64_t)
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
+void ScreenCastStream::onStreamProcess()
+{
+    if (m_frame.captureFrame) {
+        processFrame(m_frame.damage);
+    } else if (m_frame.captureCursor) {
+        processCursor();
+    }
+
+    m_frame.triggeredProcess = false;
+    m_frame.captureFrame = false;
+    m_frame.captureCursor = false;
+    m_frame.damage = QRegion();
+}
+
 ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
     : QObject(parent)
     , m_pwCore(pwCore)
@@ -335,10 +349,14 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
         auto _this = static_cast<ScreenCastStream *>(data);
         _this->onStreamParamChanged(id, param);
     };
+    m_pwStreamEvents.process = [](void *data) {
+        auto _this = static_cast<ScreenCastStream *>(data);
+        _this->onStreamProcess();
+    };
 
-    m_pendingFrame.setSingleShot(true);
-    connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        recordFrame(m_pendingDamages);
+    m_frame.throttleTimer.setSingleShot(true);
+    connect(&m_frame.throttleTimer, &QTimer::timeout, this, [this] {
+        scheduleFrame(QRegion());
     });
 }
 
@@ -432,11 +450,11 @@ bool ScreenCastStream::createStream()
     if (m_cursor.mode == ScreencastV1Interface::Embedded) {
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
-            recordFrame({});
+            scheduleFrame({});
         });
     } else if (m_cursor.mode == ScreencastV1Interface::Metadata) {
         connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
-        connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
+        connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::scheduleCursor);
     }
 
     return true;
@@ -453,30 +471,45 @@ void ScreenCastStream::stop()
     delete this;
 }
 
-void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
+void ScreenCastStream::scheduleFrame(const QRegion &damagedRegion)
 {
-    QRegion damagedRegion = _damagedRegion;
-    Q_ASSERT(!m_stopped);
-
+    m_frame.damage += damagedRegion;
     if (!m_streaming) {
-        m_pendingDamages += damagedRegion;
         return;
     }
 
-    if (m_videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
+    if (m_videoFormat.max_framerate.num != 0 && !m_frame.lastSent.isNull()) {
         auto frameInterval = (1000. * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
-        auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
+        auto lastSentAgo = m_frame.lastSent.msecsTo(QDateTime::currentDateTimeUtc());
         if (lastSentAgo < frameInterval) {
-            m_pendingDamages += damagedRegion;
-            if (!m_pendingFrame.isActive()) {
-                m_pendingFrame.start(frameInterval - lastSentAgo);
+            if (!m_frame.throttleTimer.isActive()) {
+                m_frame.throttleTimer.start(frameInterval - lastSentAgo);
             }
             return;
         }
     }
 
-    m_pendingDamages = {};
+    m_frame.captureFrame = true;
+    triggerProcess();
+}
 
+void ScreenCastStream::scheduleCursor()
+{
+    m_frame.captureCursor = true;
+    triggerProcess();
+}
+
+void ScreenCastStream::triggerProcess()
+{
+    if (!m_frame.triggeredProcess) {
+        m_frame.triggeredProcess = true;
+        pw_stream_trigger_process(m_pwStream);
+    }
+}
+
+void ScreenCastStream::processFrame(const QRegion &damage)
+{
+    QRegion effectiveDamage = damage;
     if (m_waitForNewBuffers) {
         qCWarning(KWIN_SCREENCAST) << "Waiting for new buffers to be created";
         return;
@@ -488,15 +521,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         m_waitForNewBuffers = true;
         m_dmabufParams = std::nullopt;
         pw_loop_signal_event(m_pwCore->pwMainLoop, m_pwRenegotiate);
-        return;
-    }
-
-    const char *error = "";
-    auto state = pw_stream_get_state(m_pwStream, &error);
-    if (state != PW_STREAM_STATE_STREAMING) {
-        if (error) {
-            qCWarning(KWIN_SCREENCAST) << "Failed to record frame: stream is not active" << error;
-        }
         return;
     }
 
@@ -584,10 +608,10 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 ShaderManager::instance()->popShader();
                 GLFramebuffer::popFramebuffer();
 
-                damagedRegion += QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
+                effectiveDamage += QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
                 m_cursor.lastRect = cursorRect;
             } else {
-                damagedRegion += m_cursor.lastRect.toAlignedRect();
+                effectiveDamage += m_cursor.lastRect.toAlignedRect();
                 m_cursor.lastRect = {};
             }
         }
@@ -610,9 +634,12 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                        (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     }
 
-    addDamage(spa_buffer, damagedRegion);
+    addDamage(spa_buffer, effectiveDamage);
     addHeader(spa_buffer);
-    enqueue(buffer);
+
+    pw_stream_queue_buffer(m_pwStream, buffer);
+
+    m_frame.lastSent = QDateTime::currentDateTimeUtc();
 }
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
@@ -658,7 +685,7 @@ void ScreenCastStream::invalidateCursor()
     m_cursor.invalid = true;
 }
 
-void ScreenCastStream::recordCursor()
+void ScreenCastStream::processCursor()
 {
     Q_ASSERT(!m_stopped);
     if (!m_streaming) {
@@ -692,16 +719,8 @@ void ScreenCastStream::recordCursor()
                    (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
     addHeader(spa_buffer);
     addDamage(spa_buffer, {});
-    enqueue(pwBuffer);
-}
 
-void ScreenCastStream::enqueue(pw_buffer *pwBuffer)
-{
     pw_stream_queue_buffer(m_pwStream, pwBuffer);
-
-    if (pwBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
-        m_lastSent = QDateTime::currentDateTimeUtc();
-    }
 }
 
 QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])

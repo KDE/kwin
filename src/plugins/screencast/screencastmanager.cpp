@@ -93,7 +93,7 @@ private:
 
     void bufferToStream()
     {
-        recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
+        scheduleFrame(QRegion(0, 0, m_window->width(), m_window->height()));
     }
 
     Window *m_window;
@@ -155,7 +155,7 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     auto bufferToStream = [stream, streamOutput](const QRegion &damagedRegion) {
         if (!damagedRegion.isEmpty()) {
-            stream->recordFrame(scaleRegion(damagedRegion, streamOutput->scale()));
+            stream->scheduleFrame(scaleRegion(damagedRegion, streamOutput->scale()));
         }
     };
     connect(streamOutput, &Output::changed, stream, [streamOutput, stream, mode]() {
@@ -200,7 +200,7 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
                     const QRect streamRegion = source->region();
                     const QRegion region = output->pixelSize() != output->modeSize() ? output->geometry() : damagedRegion;
                     source->updateOutput(output);
-                    stream->recordFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
+                    stream->scheduleFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
                 };
                 connect(output, &Output::outputChange, stream, bufferToStream);
                 found |= true;

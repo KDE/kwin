@@ -61,17 +61,13 @@ public:
 
     void stop();
 
-    /**
-     * Renders @p frame into the current framebuffer into the stream
-     * @p timestamp
-     */
-    void recordFrame(const QRegion &damagedRegion);
+    void scheduleFrame(const QRegion &damagedRegion);
+    void scheduleCursor();
 
     void setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
 public Q_SLOTS:
     void invalidateCursor();
-    void recordCursor();
     bool includesCursor(Cursor *cursor) const;
 
 Q_SIGNALS:
@@ -85,6 +81,7 @@ private:
     void onStreamAddBuffer(pw_buffer *buffer);
     void onStreamRemoveBuffer(pw_buffer *buffer);
     void onStreamRenegotiateFormat(uint64_t);
+    void onStreamProcess();
 
     bool createStream();
     QList<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
@@ -94,13 +91,16 @@ private:
     void addHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);
     void newStreamParams();
-    void enqueue(pw_buffer *buffer);
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
     std::shared_ptr<ScreenCastDmaBufTexture> createDmaBufTexture(const ScreenCastDmaBufTextureParams &params);
+
+    void processFrame(const QRegion &damagedRegion);
+    void processCursor();
+    void triggerProcess();
 
     std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
@@ -132,16 +132,22 @@ private:
         bool invalid = true;
     } m_cursor;
 
+    struct
+    {
+        QDateTime lastSent;
+        QRegion damage;
+        QTimer throttleTimer;
+        bool captureFrame = false;
+        bool captureCursor = false;
+        bool triggeredProcess = false;
+    } m_frame;
+
     QHash<struct pw_buffer *, std::shared_ptr<ScreenCastDmaBufTexture>> m_dmabufDataForPwBuffer;
 
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
     bool m_waitForNewBuffers = false;
     quint32 m_drmFormat = 0;
-
-    QDateTime m_lastSent;
-    QRegion m_pendingDamages;
-    QTimer m_pendingFrame;
 };
 
 } // namespace KWin
