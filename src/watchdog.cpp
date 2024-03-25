@@ -10,6 +10,8 @@
 #include "watchdoglogging.h"
 #include <QCoreApplication>
 #include <QTimer>
+#include <core/session.h>
+#include <main.h>
 #include <systemd/sd-daemon.h>
 
 class Watchdog : public QObject
@@ -57,6 +59,7 @@ public:
         };
         bark();
         connect(t, &QTimer::timeout, this, bark);
+        connect(KWin::kwinApp()->session(), &KWin::Session::awoke, this, bark);
         t->start();
     }
 
@@ -66,7 +69,9 @@ private:
 
 static void setupWatchdog()
 {
-    new Watchdog(QCoreApplication::instance());
+    QTimer::singleShot(0, QCoreApplication::instance(), [] {
+        new Watchdog(QCoreApplication::instance());
+    });
 }
 
 Q_COREAPP_STARTUP_FUNCTION(setupWatchdog)
