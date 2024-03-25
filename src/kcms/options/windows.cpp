@@ -250,6 +250,14 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::ZeroCornered, "ZeroCornered");
     m_ui->kcfg_Placement->setItemData(KWinOptionsSettings::PlacementChoices::UnderMouse, "UnderMouse");
 
+    // Only show the option to cascade new windows for placement policies where it makes sense.
+    m_ui->kcfg_CascadeNewWindows->setVisible(placementSupportsCascade());
+
+    // Connect the signal to update the visibility of the cascade new windows option
+    connect(m_ui->kcfg_Placement, qOverload<int>(&QComboBox::currentIndexChanged), this, [this]() {
+        m_ui->kcfg_CascadeNewWindows->setVisible(placementSupportsCascade());
+    });
+
     // Don't show the option to prevent apps from remembering their window
     // positions on Wayland because it doesn't work on Wayland and the feature
     // will eventually be implemented in a different way there.
@@ -259,6 +267,14 @@ void KAdvancedConfig::initialize(KWinOptionsSettings *settings, KWinOptionsKDEGl
 
     m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::SwitchToOtherDesktop, "SwitchToOtherDesktop");
     m_ui->kcfg_ActivationDesktopPolicy->setItemData(KWinOptionsSettings::ActivationDesktopPolicyChoices::BringToCurrentDesktop, "BringToCurrentDesktop");
+}
+
+bool KAdvancedConfig::placementSupportsCascade()
+{
+    const int selectedPlacement = m_ui->kcfg_Placement->currentIndex();
+    return selectedPlacement == KWinOptionsSettings::PlacementChoices::Centered
+        || selectedPlacement == KWinOptionsSettings::PlacementChoices::ZeroCornered
+        || selectedPlacement == KWinOptionsSettings::PlacementChoices::UnderMouse;
 }
 
 void KAdvancedConfig::save(void)

@@ -109,6 +109,10 @@ class KWIN_EXPORT Options : public QObject
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
     Q_PROPERTY(bool activeMouseScreen READ activeMouseScreen WRITE setActiveMouseScreen NOTIFY activeMouseScreenChanged)
     Q_PROPERTY(PlacementPolicy placement READ placement WRITE setPlacement NOTIFY placementChanged)
+    /**
+     * Whether new windows should be cascaded for window placement policies that support it.
+     */
+    Q_PROPERTY(bool cascadeNewWindows READ cascadeNewWindows WRITE setCascadeNewWindows NOTIFY cascadeNewWindowsChanged)
     Q_PROPERTY(ActivationDesktopPolicy activationDesktopPolicy READ activationDesktopPolicy WRITE setActivationDesktopPolicy NOTIFY activationDesktopPolicyChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
     /**
@@ -340,6 +344,11 @@ public:
     PlacementPolicy placement() const
     {
         return m_placement;
+    }
+
+    bool cascadeNewWindows() const
+    {
+        return m_cascadeNewWindows;
     }
 
     bool focusPolicyIsReasonable()
@@ -731,6 +740,7 @@ public:
     void setSeparateScreenFocus(bool separateScreenFocus);
     void setActiveMouseScreen(bool activeMouseScreen);
     void setPlacement(PlacementPolicy placement);
+    void setCascadeNewWindows(bool cascadeNewWindows);
     void setActivationDesktopPolicy(ActivationDesktopPolicy activationDesktopPolicy);
     void setBorderSnapZone(int borderSnapZone);
     void setWindowSnapZone(int windowSnapZone);
@@ -934,6 +944,7 @@ Q_SIGNALS:
     void separateScreenFocusChanged(bool);
     void activeMouseScreenChanged();
     void placementChanged();
+    void cascadeNewWindowsChanged();
     void activationDesktopPolicyChanged();
     void borderSnapZoneChanged();
     void windowSnapZoneChanged();
@@ -998,6 +1009,7 @@ private:
     bool m_separateScreenFocus;
     bool m_activeMouseScreen;
     PlacementPolicy m_placement;
+    bool m_cascadeNewWindows;
     ActivationDesktopPolicy m_activationDesktopPolicy;
     int m_borderSnapZone;
     int m_windowSnapZone;

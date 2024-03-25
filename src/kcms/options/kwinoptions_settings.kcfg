@@ -49,6 +49,10 @@
         <default>Centered</default>
     </entry>
 
+    <entry key="CascadeNewWindows" type="Bool">
+        <default>true</default>
+    </entry>
+
     <entry key="HideUtilityWindowsForInactive" type="Bool">
         <default>true</default>
     </entry>

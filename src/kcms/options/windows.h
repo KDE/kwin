@@ -109,6 +109,14 @@ public:
 protected:
     void initialize(KWinOptionsSettings *settings, KWinOptionsKDEGlobalsSettings *globalSettings);
 
+    /**
+     * Determines whether the current window placement policy supports the
+     * cascading option.
+     *
+     * @return true if the cascading option is supported, false otherwise.
+     */
+    bool placementSupportsCascade();
+
 private:
     bool standAlone;
     KWinAdvancedConfigForm *m_ui;

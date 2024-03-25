@@ -1118,6 +1118,12 @@ Check the <guilabel>Allow apps to remember the positions of
 their own windows</guilabel> item to open windows where they previously were rather than by the placement method chosen above. Note that this remembered position includes the screen assignment, so windows may open on a screen other than the active one if this is where they were last located. Note also that this option is only available on X11, not on Wayland, and is only supported by some KDE applications.
 </para>
 
+<para id="advanced-cascade-new-windows">
+If the <guilabel>Cascade new windows</guilabel> item is checked and a new 
+window would completely overlap an existing window, the new window will be 
+cascaded slightly down and to the right of the existing window.
+</para>
+
 <tip>
 <para>
 If you would like some windows to appear on specific positions, screens, or Virtual Desktops, you can set up <guilabel>Window Rules</guilabel> to configure special window or application settings. You can find this by right-clicking on the titlebar of a window and choosing <guimenu>More Actions</guimenu>, or in the <guilabel>Window Rules</guilabel> module in the <guilabel>Window Management</guilabel> section of system settings.

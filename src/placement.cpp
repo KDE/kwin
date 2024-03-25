@@ -588,6 +588,16 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
  */
 void Placement::cascadeIfCovering(Window *window, const QRectF &area)
 {
+    const int placementPolicy = options->placement();
+    const bool cascadeEnabled = options->cascadeNewWindows();
+
+    // If cascading is disabled for relevant placement policies, don't cascade.
+    if ((!cascadeEnabled && placementPolicy == PlacementCentered) || //
+        (!cascadeEnabled && placementPolicy == PlacementZeroCornered) || //
+        (!cascadeEnabled && placementPolicy == PlacementUnderMouse)) {
+        return;
+    }
+
     const QPoint offset = workspace()->cascadeOffset(window);
 
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();

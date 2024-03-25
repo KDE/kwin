@@ -43,6 +43,7 @@ Options::Options(QObject *parent)
     , m_separateScreenFocus(false)
     , m_activeMouseScreen(false)
     , m_placement(PlacementNone)
+    , m_cascadeNewWindows(true)
     , m_activationDesktopPolicy(Options::defaultActivationDesktopPolicy())
     , m_borderSnapZone(0)
     , m_windowSnapZone(0)
@@ -264,6 +265,15 @@ void Options::setPlacement(PlacementPolicy placement)
     }
     m_placement = placement;
     Q_EMIT placementChanged();
+}
+
+void Options::setCascadeNewWindows(bool cascadeNewWindows)
+{
+    if (m_cascadeNewWindows == cascadeNewWindows) {
+        return;
+    }
+    m_cascadeNewWindows = cascadeNewWindows;
+    Q_EMIT cascadeNewWindowsChanged();
 }
 
 void Options::setActivationDesktopPolicy(ActivationDesktopPolicy activationDesktopPolicy)
@@ -859,6 +869,7 @@ void Options::syncFromKcfgc()
     setXwaylandEavesdrops(XwaylandEavesdropsMode(m_settings->xwaylandEavesdrops()));
     setXwaylandEavesdropsMouse(m_settings->xwaylandEavesdropsMouse());
     setPlacement(m_settings->placement());
+    setCascadeNewWindows(m_settings->cascadeNewWindows());
     setAutoRaise(m_settings->autoRaise());
     setAutoRaiseInterval(m_settings->autoRaiseInterval());
     setDelayFocusInterval(m_settings->delayFocusInterval());

@@ -132,6 +132,9 @@
                 #endif
             }()</default>
         </entry>
+        <entry name="CascadeNewWindows" type="Bool">
+            <default>true</default>
+        </entry>
         <entry name="ActivationDesktopPolicy" type="Enum">
             <choices name="KWin::Options::ActivationDesktopPolicy">
                 <choice name="SwitchToOtherDesktop"/>
