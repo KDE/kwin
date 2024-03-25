@@ -24,6 +24,7 @@
 #include "scene/workspacescene.h"
 #include "screencastdmabuftexture.h"
 #include "screencastsource.h"
+#include "utils/drm_format_helper.h"
 
 #include <KLocalizedString>
 
@@ -159,6 +160,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     if (!format || id != SPA_PARAM_Format) {
+        qCDebug(KWIN_SCREENCAST) << "stream param request ignored, id:" << id << "and with format:"<< (format != nullptr);
         return;
     }
 
@@ -450,6 +452,7 @@ bool ScreenCastStream::createStream()
         m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
     }
 
+    qCDebug(KWIN_SCREENCAST) << "stream created, drm format:" << FormatInfo::drmFormatName(m_drmFormat) << "with DMA-BUF:" << m_hasDmaBuf;
     return true;
 }
 void ScreenCastStream::coreFailed(const QString &errorMessage)
