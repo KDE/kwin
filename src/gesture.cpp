@@ -24,7 +24,7 @@ Stroke::Stroke(const PreStroke &ps)
     if (ps.size() >= 2) {
         stroke_t *s = stroke_alloc(ps.size());
         for (const auto &t : ps)
-            stroke_add_point(s, t.x, t.y);
+            stroke_add_point(s, t.x(), t.y());
         stroke_finish(s);
         stroke.reset(s);
     }
