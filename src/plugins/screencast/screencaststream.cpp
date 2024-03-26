@@ -76,7 +76,7 @@ static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
 void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message)
 {
     qCDebug(KWIN_SCREENCAST) << objectName() << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
-    if (m_stopped) {
+    if (m_closed) {
         return;
     }
 
@@ -100,7 +100,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
     case PW_STREAM_STATE_CONNECTING:
         break;
     case PW_STREAM_STATE_UNCONNECTED:
-        stop();
+        close();
         break;
     }
 }
@@ -156,7 +156,7 @@ void ScreenCastStream::newStreamParams()
 
 void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *format)
 {
-    if (m_stopped) {
+    if (m_closed) {
         return;
     }
 
@@ -221,7 +221,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
 void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 {
-    if (m_stopped) {
+    if (m_closed) {
         return;
     }
 
@@ -307,14 +307,14 @@ void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *buffer)
     struct spa_buffer *spa_buffer = buffer->buffer;
     struct spa_data *spa_data = spa_buffer->datas;
     if (spa_data && spa_data->type == SPA_DATA_MemFd) {
-        munmap(spa_data->data, spa_data->maxsize);
-        close(spa_data->fd);
+        ::munmap(spa_data->data, spa_data->maxsize);
+        ::close(spa_data->fd);
     }
 }
 
 void ScreenCastStream::onStreamRenegotiateFormat(uint64_t)
 {
-    if (m_stopped) {
+    if (m_closed) {
         return;
     }
 
@@ -331,7 +331,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_resolution(source->textureSize())
 {
     connect(source, &ScreenCastSource::frame, this, &ScreenCastStream::recordFrame);
-    connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::stop);
+    connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::close);
 
     m_pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
     m_pwStreamEvents.add_buffer = [](void *data, struct pw_buffer *buffer) {
@@ -359,7 +359,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
 
 ScreenCastStream::~ScreenCastStream()
 {
-    m_stopped = true;
+    m_closed = true;
     if (m_pwStream) {
         pw_stream_destroy(m_pwStream);
     }
@@ -460,17 +460,17 @@ bool ScreenCastStream::createStream()
 void ScreenCastStream::coreFailed(const QString &errorMessage)
 {
     m_error = errorMessage;
-    stop();
+    close();
 }
 
-void ScreenCastStream::stop()
+void ScreenCastStream::close()
 {
-    if (m_stopped) {
+    if (m_closed) {
         return;
     }
 
     m_streaming = false;
-    m_stopped = true;
+    m_closed = true;
     m_pendingFrame.stop();
 
     disconnect(m_cursor.changedConnection);
@@ -480,13 +480,13 @@ void ScreenCastStream::stop()
 
     m_source->pause();
 
-    Q_EMIT stopStreaming();
+    Q_EMIT closed();
 }
 
 void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 {
     QRegion damagedRegion = _damagedRegion;
-    Q_ASSERT(!m_stopped);
+    Q_ASSERT(!m_closed);
 
     if (!m_streaming) {
         m_pendingDamages += damagedRegion;
@@ -690,7 +690,7 @@ void ScreenCastStream::invalidateCursor()
 
 void ScreenCastStream::recordCursor()
 {
-    Q_ASSERT(!m_stopped);
+    Q_ASSERT(!m_closed);
     if (!m_streaming) {
         return;
     }

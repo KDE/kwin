@@ -121,8 +121,8 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
 
 void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream)
 {
-    connect(waylandStream, &ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::stop);
-    connect(stream, &ScreenCastStream::stopStreaming, waylandStream, [stream, waylandStream] {
+    connect(waylandStream, &ScreencastStreamV1Interface::finished, stream, &ScreenCastStream::close);
+    connect(stream, &ScreenCastStream::closed, waylandStream, [stream, waylandStream] {
         waylandStream->sendClosed();
         stream->deleteLater();
     });
