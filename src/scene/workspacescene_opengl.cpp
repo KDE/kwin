@@ -361,13 +361,13 @@ void SceneOpenGLDecorationRenderer::render(const QRegion &region)
 
     const QRect dirtyRect = region.boundingRect();
 
-    renderPart(top.toRect().intersected(dirtyRect), top.toRect(), topPosition, devicePixelRatio);
-    renderPart(bottom.toRect().intersected(dirtyRect), bottom.toRect(), bottomPosition, devicePixelRatio);
-    renderPart(left.toRect().intersected(dirtyRect), left.toRect(), leftPosition, devicePixelRatio, true);
-    renderPart(right.toRect().intersected(dirtyRect), right.toRect(), rightPosition, devicePixelRatio, true);
+    renderPart(top.intersected(dirtyRect), top, topPosition, devicePixelRatio);
+    renderPart(bottom.intersected(dirtyRect), bottom, bottomPosition, devicePixelRatio);
+    renderPart(left.intersected(dirtyRect), left, leftPosition, devicePixelRatio, true);
+    renderPart(right.intersected(dirtyRect), right, rightPosition, devicePixelRatio, true);
 }
 
-void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &partRect,
+void SceneOpenGLDecorationRenderer::renderPart(const QRectF &rect, const QRectF &partRect,
                                                const QPoint &textureOffset,
                                                qreal devicePixelRatio, bool rotated)
 {
@@ -412,7 +412,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     // fill padding pixels by copying from the neighbour row
     clamp(image, padClip);
 
-    QPoint dirtyOffset = (rect.topLeft() - partRect.topLeft()) * devicePixelRatio;
+    QPoint dirtyOffset = ((rect.topLeft() - partRect.topLeft()) * devicePixelRatio).toPoint();
     if (padding.top() == 0) {
         dirtyOffset.ry() += TexturePad;
     }
@@ -423,7 +423,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
 }
 
 const QMargins SceneOpenGLDecorationRenderer::texturePadForPart(
-    const QRect &rect, const QRect &partRect)
+    const QRectF &rect, const QRectF &partRect)
 {
     QMargins result = QMargins(0, 0, 0, 0);
     if (rect.top() == partRect.top()) {
@@ -452,8 +452,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     client()->window()->layoutDecorationRects(left, top, right, bottom);
     QSize size;
 
-    size.rwidth() = toNativeSize(std::max(std::max(top.width(), bottom.width()),
-                                          std::max(left.height(), right.height())));
+    size.rwidth() = toNativeSize(std::max({top.width(), bottom.width(), left.height(), right.height()}));
     size.rheight() = toNativeSize(top.height()) + toNativeSize(bottom.height()) + toNativeSize(left.width()) + toNativeSize(right.width());
 
     size.rheight() += 4 * (2 * TexturePad);
@@ -478,7 +477,7 @@ void SceneOpenGLDecorationRenderer::resizeTexture()
     }
 }
 
-int SceneOpenGLDecorationRenderer::toNativeSize(int size) const
+int SceneOpenGLDecorationRenderer::toNativeSize(double size) const
 {
     return std::round(size * effectiveDevicePixelRatio());
 }
