@@ -83,7 +83,7 @@ void DecorationRenderer::setDevicePixelRatio(qreal dpr)
     }
 }
 
-void DecorationRenderer::renderToPainter(QPainter *painter, const QRect &rect)
+void DecorationRenderer::renderToPainter(QPainter *painter, const QRectF &rect)
 {
     client()->decoration()->paint(painter, rect);
 }
@@ -188,20 +188,19 @@ Window *DecorationItem::window() const
 WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
                      const qreal devicePixelRatio, bool rotated)
 {
-    const QRectF &r = partRect;
     const int p = DecorationRenderer::TexturePad;
 
-    const int x0 = r.x();
-    const int y0 = r.y();
-    const int x1 = r.x() + r.width();
-    const int y1 = r.y() + r.height();
+    const double x0 = partRect.x();
+    const double y0 = partRect.y();
+    const double x1 = partRect.x() + partRect.width();
+    const double y1 = partRect.y() + partRect.height();
 
     WindowQuad quad;
     if (rotated) {
         const int u0 = textureOffset.y() + p;
         const int v0 = textureOffset.x() + p;
-        const int u1 = textureOffset.y() + p + std::round(r.width() * devicePixelRatio);
-        const int v1 = textureOffset.x() + p + std::round(r.height() * devicePixelRatio);
+        const int u1 = textureOffset.y() + p + std::round(partRect.width() * devicePixelRatio);
+        const int v1 = textureOffset.x() + p + std::round(partRect.height() * devicePixelRatio);
 
         quad[0] = WindowVertex(x0, y0, v0, u1); // Top-left
         quad[1] = WindowVertex(x1, y0, v0, u0); // Top-right
@@ -210,8 +209,8 @@ WindowQuad buildQuad(const QRectF &partRect, const QPoint &textureOffset,
     } else {
         const int u0 = textureOffset.x() + p;
         const int v0 = textureOffset.y() + p;
-        const int u1 = textureOffset.x() + p + std::round(r.width() * devicePixelRatio);
-        const int v1 = textureOffset.y() + p + std::round(r.height() * devicePixelRatio);
+        const int u1 = textureOffset.x() + p + std::round(partRect.width() * devicePixelRatio);
+        const int v1 = textureOffset.y() + p + std::round(partRect.height() * devicePixelRatio);
 
         quad[0] = WindowVertex(x0, y0, u0, v0); // Top-left
         quad[1] = WindowVertex(x1, y0, u1, v0); // Top-right

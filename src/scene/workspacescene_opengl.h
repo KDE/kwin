@@ -99,10 +99,10 @@ public:
     }
 
 private:
-    void renderPart(const QRect &rect, const QRect &partRect, const QPoint &textureOffset, qreal devicePixelRatio, bool rotated = false);
-    static const QMargins texturePadForPart(const QRect &rect, const QRect &partRect);
+    void renderPart(const QRectF &rect, const QRectF &partRect, const QPoint &textureOffset, qreal devicePixelRatio, bool rotated = false);
+    static const QMargins texturePadForPart(const QRectF &rect, const QRectF &partRect);
     void resizeTexture();
-    int toNativeSize(int size) const;
+    int toNativeSize(double size) const;
     std::unique_ptr<GLTexture> m_texture;
 };
 
