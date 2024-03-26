@@ -4233,19 +4233,6 @@ void Window::maybeSendFrameCallback()
     }
 }
 
-WindowOffscreenRenderRef::WindowOffscreenRenderRef(Window *window)
-    : m_window(window)
-{
-    window->refOffscreenRendering();
-}
-
-WindowOffscreenRenderRef::~WindowOffscreenRenderRef()
-{
-    if (m_window) {
-        m_window->unrefOffscreenRendering();
-    }
-}
-
 bool Window::isShown() const
 {
     return !isDeleted() && !isHidden() && !isHiddenByShowDesktop() && !isMinimized();

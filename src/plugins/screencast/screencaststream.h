@@ -76,7 +76,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
-    void startStreaming();
     void stopStreaming();
 
 private:

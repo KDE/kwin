@@ -108,4 +108,21 @@ static void grabTexture(GLTexture *texture, spa_data *spa, spa_video_format form
     }
 }
 
+static inline QRegion scaleRegion(const QRegion &_region, qreal scale)
+{
+    if (scale == 1.) {
+        return _region;
+    }
+
+    QRegion region;
+    for (auto it = _region.begin(), itEnd = _region.end(); it != itEnd; ++it) {
+        region += QRect(std::floor(it->x() * scale),
+                        std::floor(it->y() * scale),
+                        std::ceil(it->width() * scale),
+                        std::ceil(it->height() * scale));
+    }
+
+    return region;
+}
+
 } // namespace KWin

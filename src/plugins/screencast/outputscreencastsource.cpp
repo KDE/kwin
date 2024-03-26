@@ -31,6 +31,11 @@ OutputScreenCastSource::OutputScreenCastSource(Output *output, QObject *parent)
     });
 }
 
+OutputScreenCastSource::~OutputScreenCastSource()
+{
+    pause();
+}
+
 bool OutputScreenCastSource::hasAlphaChannel() const
 {
     return true;
@@ -81,6 +86,38 @@ std::chrono::nanoseconds OutputScreenCastSource::clock() const
 uint OutputScreenCastSource::refreshRate() const
 {
     return m_output->refreshRate();
+}
+
+void OutputScreenCastSource::report(const QRegion &damage)
+{
+    if (!damage.isEmpty()) {
+        Q_EMIT frame(scaleRegion(damage.translated(-m_output->geometry().topLeft()), m_output->scale()));
+    }
+}
+
+void OutputScreenCastSource::resume()
+{
+    if (m_active) {
+        return;
+    }
+
+    connect(m_output, &Output::outputChange, this, &OutputScreenCastSource::report);
+    report(m_output->geometry());
+
+    m_active = true;
+}
+
+void OutputScreenCastSource::pause()
+{
+    if (!m_active) {
+        return;
+    }
+
+    if (m_output) {
+        disconnect(m_output, &Output::outputChange, this, &OutputScreenCastSource::report);
+    }
+
+    m_active = false;
 }
 
 } // namespace KWin

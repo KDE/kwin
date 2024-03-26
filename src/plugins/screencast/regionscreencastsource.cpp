@@ -20,6 +20,27 @@
 namespace KWin
 {
 
+RegionScreenCastScrapper::RegionScreenCastScrapper(RegionScreenCastSource *source, Output *output)
+    : m_source(source)
+    , m_output(output)
+{
+    connect(output, &Output::enabledChanged, this, [this]() {
+        if (!m_output->isEnabled()) {
+            m_source->close();
+        }
+    });
+
+    connect(output, &Output::geometryChanged, this, [this]() {
+        m_source->close();
+    });
+
+    connect(output, &Output::outputChange, this, [this](const QRegion &damage) {
+        if (!damage.isEmpty()) {
+            m_source->update(m_output, damage);
+        }
+    });
+}
+
 RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent)
     : ScreenCastSource(parent)
     , m_region(region)
@@ -27,6 +48,11 @@ RegionScreenCastSource::RegionScreenCastSource(const QRect &region, qreal scale,
 {
     Q_ASSERT(m_region.isValid());
     Q_ASSERT(m_scale > 0);
+}
+
+RegionScreenCastSource::~RegionScreenCastSource()
+{
+    pause();
 }
 
 QSize RegionScreenCastSource::textureSize() const
@@ -44,14 +70,30 @@ quint32 RegionScreenCastSource::drmFormat() const
     return DRM_FORMAT_ARGB8888;
 }
 
-void RegionScreenCastSource::updateOutput(Output *output)
+void RegionScreenCastSource::update(Output *output, const QRegion &damage)
+{
+    blit(output);
+
+    const QRegion effectiveDamage = (output->pixelSize() != output->modeSize() ? output->geometry() : damage)
+                                        .translated(-m_region.topLeft())
+                                        .intersected(m_region);
+    const QRegion nativeDamage = scaleRegion(effectiveDamage, m_scale);
+    Q_EMIT frame(nativeDamage);
+}
+
+std::chrono::nanoseconds RegionScreenCastSource::clock() const
+{
+    return m_last;
+}
+
+void RegionScreenCastSource::blit(Output *output)
 {
     m_last = output->renderLoop()->lastPresentationTimestamp();
 
     if (m_renderedTexture) {
         const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(output);
         const auto outputGeometry = output->geometry();
-        if (!outputTexture || !m_region.intersects(output->geometry())) {
+        if (!outputTexture) {
             return;
         }
 
@@ -71,11 +113,6 @@ void RegionScreenCastSource::updateOutput(Output *output)
     }
 }
 
-std::chrono::nanoseconds RegionScreenCastSource::clock() const
-{
-    return m_last;
-}
-
 void RegionScreenCastSource::ensureTexture()
 {
     if (!m_renderedTexture) {
@@ -91,7 +128,7 @@ void RegionScreenCastSource::ensureTexture()
         const auto allOutputs = workspace()->outputs();
         for (auto output : allOutputs) {
             if (output->geometry().intersects(m_region)) {
-                updateOutput(output);
+                blit(output);
             }
         }
     }
@@ -132,6 +169,48 @@ uint RegionScreenCastSource::refreshRate() const
     }
     return ret;
 }
+
+void RegionScreenCastSource::close()
+{
+    if (!m_closed) {
+        m_closed = true;
+        Q_EMIT closed();
+    }
 }
+
+void RegionScreenCastSource::pause()
+{
+    if (!m_active) {
+        return;
+    }
+
+    m_scrappers.clear();
+    m_active = false;
+}
+
+void RegionScreenCastSource::resume()
+{
+    if (m_active) {
+        return;
+    }
+
+    const QList<Output *> outputs = workspace()->outputs();
+    for (Output *output : outputs) {
+        if (output->geometry().intersects(m_region)) {
+            m_scrappers.emplace_back(std::make_unique<RegionScreenCastScrapper>(this, output));
+        }
+    }
+
+    if (m_scrappers.empty()) {
+        close();
+        return;
+    }
+
+    Compositor::self()->scene()->addRepaint(m_region);
+
+    m_active = true;
+}
+
+} // namespace KWin
 
 #include "moc_regionscreencastsource.cpp"

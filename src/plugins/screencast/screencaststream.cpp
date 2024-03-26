@@ -89,10 +89,11 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
             m_pwNodeId = pw_stream_get_node_id(m_pwStream);
             Q_EMIT streamReady(nodeId());
         }
+        m_source->pause();
         break;
     case PW_STREAM_STATE_STREAMING:
         m_streaming = true;
-        Q_EMIT startStreaming();
+        m_source->resume();
         break;
     case PW_STREAM_STATE_CONNECTING:
         break;
@@ -326,6 +327,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_source(source)
     , m_resolution(source->textureSize())
 {
+    connect(source, &ScreenCastSource::frame, this, &ScreenCastStream::recordFrame);
     connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::stop);
 
     m_pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
@@ -471,6 +473,8 @@ void ScreenCastStream::stop()
     m_cursor.changedConnection = {};
     disconnect(m_cursor.positionChangedConnection);
     m_cursor.positionChangedConnection = {};
+
+    m_source->pause();
 
     Q_EMIT stopStreaming();
 }

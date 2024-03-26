@@ -26,9 +26,19 @@ namespace KWin
 WindowScreenCastSource::WindowScreenCastSource(Window *window, QObject *parent)
     : ScreenCastSource(parent)
     , m_window(window)
-    , m_offscreenRef(window)
 {
+    m_timer.setInterval(0);
+    m_timer.setSingleShot(true);
+    connect(&m_timer, &QTimer::timeout, this, [this]() {
+        Q_EMIT frame(QRegion(0, 0, m_window->width(), m_window->height()));
+    });
+
     connect(m_window, &Window::closed, this, &ScreenCastSource::closed);
+}
+
+WindowScreenCastSource::~WindowScreenCastSource()
+{
+    pause();
 }
 
 quint32 WindowScreenCastSource::drmFormat() const
@@ -82,6 +92,38 @@ std::chrono::nanoseconds WindowScreenCastSource::clock() const
 uint WindowScreenCastSource::refreshRate() const
 {
     return m_window->output()->refreshRate();
+}
+
+void WindowScreenCastSource::report()
+{
+    m_timer.start();
+}
+
+void WindowScreenCastSource::pause()
+{
+    if (!m_active) {
+        return;
+    }
+
+    if (m_window) {
+        m_window->unrefOffscreenRendering();
+        disconnect(m_window, &Window::damaged, this, &WindowScreenCastSource::report);
+    }
+    m_timer.stop();
+    m_active = false;
+}
+
+void WindowScreenCastSource::resume()
+{
+    if (m_active) {
+        return;
+    }
+
+    m_window->refOffscreenRendering();
+    connect(m_window, &Window::damaged, this, &WindowScreenCastSource::report);
+    m_timer.start();
+
+    m_active = true;
 }
 
 } // namespace KWin

@@ -7,14 +7,11 @@
 */
 
 #include "screencastmanager.h"
-#include "compositor.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
-#include "opengl/gltexture.h"
 #include "outputscreencastsource.h"
 #include "pipewirecore.h"
 #include "regionscreencastsource.h"
-#include "scene/workspacescene.h"
 #include "screencaststream.h"
 #include "wayland/display.h"
 #include "wayland/output.h"
@@ -39,67 +36,6 @@ ScreencastManager::ScreencastManager()
     connect(m_screencast, &ScreencastV1Interface::regionScreencastRequested, this, &ScreencastManager::streamRegion);
 }
 
-static QRegion scaleRegion(const QRegion &_region, qreal scale)
-{
-    if (scale == 1.) {
-        return _region;
-    }
-
-    QRegion region;
-    for (auto it = _region.begin(), itEnd = _region.end(); it != itEnd; ++it) {
-        region += QRect(std::floor(it->x() * scale),
-                        std::floor(it->y() * scale),
-                        std::ceil(it->width() * scale),
-                        std::ceil(it->height() * scale));
-    }
-
-    return region;
-}
-
-class WindowStream : public ScreenCastStream
-{
-    Q_OBJECT
-
-public:
-    WindowStream(Window *window, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
-        : ScreenCastStream(new WindowScreenCastSource(window), pwCore, parent)
-        , m_window(window)
-    {
-        m_timer.setInterval(0);
-        m_timer.setSingleShot(true);
-        setObjectName(window->desktopFileName());
-        connect(&m_timer, &QTimer::timeout, this, &WindowStream::bufferToStream);
-        connect(this, &ScreenCastStream::startStreaming, this, &WindowStream::startFeeding);
-        connect(this, &ScreenCastStream::stopStreaming, this, &WindowStream::stopFeeding);
-    }
-
-private:
-    void startFeeding()
-    {
-        connect(m_window, &Window::damaged, this, &WindowStream::markDirty);
-        markDirty();
-    }
-
-    void stopFeeding()
-    {
-        disconnect(m_window, &Window::damaged, this, &WindowStream::markDirty);
-        m_timer.stop();
-    }
-
-    void markDirty()
-    {
-        m_timer.start();
-    }
-
-    void bufferToStream()
-    {
-        recordFrame(QRegion(0, 0, m_window->width(), m_window->height()));
-    }
-
-    Window *m_window;
-    QTimer m_timer;
-};
-
 void ScreencastManager::streamWindow(ScreencastStreamV1Interface *waylandStream,
                                      const QString &winid,
                                      ScreencastV1Interface::CursorMode mode)
@@ -110,8 +46,10 @@ void ScreencastManager::streamWindow(ScreencastStreamV1Interface *waylandStream,
         return;
     }
 
-    auto stream = new WindowStream(window, m_core, this);
+    auto stream = new ScreenCastStream(new WindowScreenCastSource(window), m_core, this);
+    stream->setObjectName(window->desktopFileName());
     stream->setCursorMode(mode, 1, window->clientGeometry());
+
     if (mode != ScreencastV1Interface::CursorMode::Hidden) {
         connect(window, &Window::clientGeometryChanged, stream, [window, stream, mode]() {
             stream->setCursorMode(mode, 1, window->clientGeometry().toRect());
@@ -153,18 +91,11 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
     auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), m_core, this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
-    auto bufferToStream = [stream, streamOutput](const QRegion &damagedRegion) {
-        if (!damagedRegion.isEmpty()) {
-            stream->recordFrame(scaleRegion(damagedRegion, streamOutput->scale()));
-        }
-    };
+
     connect(streamOutput, &Output::changed, stream, [streamOutput, stream, mode]() {
         stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
     });
-    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [streamOutput, stream, bufferToStream] {
-        Compositor::self()->scene()->addRepaint(streamOutput->geometry());
-        connect(streamOutput, &Output::outputChange, stream, bufferToStream);
-    });
+
     integrateStreams(waylandStream, stream);
 }
 
@@ -185,31 +116,6 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode, scale, geometry);
 
-    connect(stream, &ScreenCastStream::startStreaming, waylandStream, [geometry, stream, source, waylandStream] {
-        Compositor::self()->scene()->addRepaint(geometry);
-
-        bool found = false;
-        const auto allOutputs = workspace()->outputs();
-        for (auto output : allOutputs) {
-            if (output->geometry().intersects(geometry)) {
-                auto bufferToStream = [output, stream, source](const QRegion &damagedRegion) {
-                    if (damagedRegion.isEmpty()) {
-                        return;
-                    }
-
-                    const QRect streamRegion = source->region();
-                    const QRegion region = output->pixelSize() != output->modeSize() ? output->geometry() : damagedRegion;
-                    source->updateOutput(output);
-                    stream->recordFrame(scaleRegion(region.translated(-streamRegion.topLeft()).intersected(streamRegion), source->scale()));
-                };
-                connect(output, &Output::outputChange, stream, bufferToStream);
-                found |= true;
-            }
-        }
-        if (!found) {
-            waylandStream->sendFailed(i18n("Region outside the workspace"));
-        }
-    });
     integrateStreams(waylandStream, stream);
 }
 
@@ -231,4 +137,4 @@ void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStr
 
 } // namespace KWin
 
-#include "screencastmanager.moc"
+#include "moc_screencastmanager.cpp"
