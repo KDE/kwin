@@ -59,7 +59,7 @@ public:
         return m_error;
     }
 
-    void stop();
+    void close();
 
     /**
      * Renders @p frame into the current framebuffer into the stream
@@ -76,7 +76,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void streamReady(quint32 nodeId);
-    void stopStreaming();
+    void closed();
 
 private:
     void onStreamParamChanged(uint32_t id, const struct spa_pod *format);
@@ -111,7 +111,7 @@ private:
     uint32_t m_pwNodeId = 0;
 
     QSize m_resolution;
-    bool m_stopped = false;
+    bool m_closed = false;
     bool m_streaming = false;
 
     spa_video_info_raw m_videoFormat;
