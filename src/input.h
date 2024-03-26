@@ -250,6 +250,10 @@ public:
     void enableTouchpads();
     void disableTouchpads();
 
+    void addInputDevice(InputDevice *device);
+    void removeInputDevice(InputDevice *device);
+    void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
+
 Q_SIGNALS:
     void deviceAdded(InputDevice *device);
     void deviceRemoved(InputDevice *device);
@@ -297,10 +301,6 @@ Q_SIGNALS:
     void hasTouchChanged(bool set);
     void hasTabletModeSwitchChanged(bool set);
 
-public Q_SLOTS:
-    void addInputDevice(InputDevice *device);
-    void removeInputDevice(InputDevice *device);
-
 private Q_SLOTS:
     void handleInputConfigChanged(const KConfigGroup &group);
     void updateScreens();
@@ -313,7 +313,6 @@ private:
     void installInputEventFilter(InputEventFilter *filter);
     void updateLeds(LEDs leds);
     void updateAvailableInputDevices();
-    void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
     KeyboardInputRedirection *m_keyboard;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
