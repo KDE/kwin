@@ -126,7 +126,7 @@ void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStr
         waylandStream->sendClosed();
         stream->deleteLater();
     });
-    connect(stream, &ScreenCastStream::streamReady, stream, [waylandStream](uint nodeid) {
+    connect(stream, &ScreenCastStream::ready, stream, [waylandStream](uint nodeid) {
         waylandStream->sendCreated(nodeid);
     });
     if (!stream->init()) {

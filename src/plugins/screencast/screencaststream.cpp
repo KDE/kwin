@@ -89,7 +89,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
     case PW_STREAM_STATE_PAUSED:
         if (nodeId() == 0 && m_pwStream) {
             m_pwNodeId = pw_stream_get_node_id(m_pwStream);
-            Q_EMIT streamReady(nodeId());
+            Q_EMIT ready(nodeId());
         }
         m_source->pause();
         break;
