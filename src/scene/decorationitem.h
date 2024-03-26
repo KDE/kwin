@@ -60,7 +60,7 @@ protected:
     {
         m_imageSizesDirty = false;
     }
-    void renderToPainter(QPainter *painter, const QRect &rect);
+    void renderToPainter(QPainter *painter, const QRectF &rect);
 
 private:
     QPointer<Decoration::DecoratedClientImpl> m_client;
