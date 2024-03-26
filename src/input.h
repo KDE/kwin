@@ -301,6 +301,9 @@ public Q_SLOTS:
     void addInputDevice(InputDevice *device);
     void removeInputDevice(InputDevice *device);
 
+public:
+    void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
+
 private Q_SLOTS:
     void handleInputConfigChanged(const KConfigGroup &group);
     void updateScreens();
@@ -313,7 +316,6 @@ private:
     void installInputEventFilter(InputEventFilter *filter);
     void updateLeds(LEDs leds);
     void updateAvailableInputDevices();
-    void addInputBackend(std::unique_ptr<InputBackend> &&inputBackend);
     KeyboardInputRedirection *m_keyboard;
     PointerInputRedirection *m_pointer;
     TabletInputRedirection *m_tablet;
