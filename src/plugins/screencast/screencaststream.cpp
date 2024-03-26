@@ -75,7 +75,7 @@ static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
 
 void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message)
 {
-    qCDebug(KWIN_SCREENCAST) << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
+    qCDebug(KWIN_SCREENCAST) << objectName() << "state changed" << pw_stream_state_as_string(old) << " -> " << pw_stream_state_as_string(state) << error_message;
     if (m_stopped) {
         return;
     }
@@ -84,7 +84,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
 
     switch (state) {
     case PW_STREAM_STATE_ERROR:
-        qCWarning(KWIN_SCREENCAST) << "Stream error: " << error_message;
+        qCWarning(KWIN_SCREENCAST) << objectName() << "Stream error: " << error_message;
         break;
     case PW_STREAM_STATE_PAUSED:
         if (nodeId() == 0 && m_pwStream) {
@@ -110,7 +110,7 @@ static const int videoDamageRegionCount = 16;
 
 void ScreenCastStream::newStreamParams()
 {
-    qCDebug(KWIN_SCREENCAST) << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
+    qCDebug(KWIN_SCREENCAST) << objectName() << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
     uint8_t paramsBuffer[1024];
     spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
     const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
@@ -160,7 +160,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     if (!format || id != SPA_PARAM_Format) {
-        qCDebug(KWIN_SCREENCAST) << "stream param request ignored, id:" << id << "and with format:"<< (format != nullptr);
+        qCDebug(KWIN_SCREENCAST) << objectName() << "stream param request ignored, id:" << id << "and with format:"<< (format != nullptr);
         return;
     }
 
@@ -203,7 +203,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
                 m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
             }
 
-            qCDebug(KWIN_SCREENCAST) << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
+            qCDebug(KWIN_SCREENCAST) << objectName() << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
             char buffer[2048];
             auto params = buildFormats(m_dmabufParams.has_value(), buffer);
             pw_stream_update_params(m_pwStream, params.data(), params.count());
@@ -213,7 +213,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
       m_dmabufParams.reset();
     }
 
-    qCDebug(KWIN_SCREENCAST) << "Stream format found, defining buffers";
+    qCDebug(KWIN_SCREENCAST) << objectName() << "Stream format found, defining buffers";
     newStreamParams();
     m_streaming = true;
 }
@@ -251,7 +251,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
         if (!(spa_data->type & (1 << SPA_DATA_MemFd))) {
-            qCCritical(KWIN_SCREENCAST) << "memfd: Client doesn't support memfd buffer data type";
+            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Client doesn't support memfd buffer data type";
             return;
         }
 
@@ -263,18 +263,18 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
         spa_data->maxsize = stride * m_resolution.height();
         spa_data->fd = memfd_create("kwin-screencast-memfd", MFD_CLOEXEC | MFD_ALLOW_SEALING);
         if (spa_data->fd == -1) {
-            qCCritical(KWIN_SCREENCAST) << "memfd: Can't create memfd";
+            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Can't create memfd";
             return;
         }
 
         if (ftruncate(spa_data->fd, spa_data->maxsize) < 0) {
-            qCCritical(KWIN_SCREENCAST) << "memfd: Can't truncate to" << spa_data->maxsize;
+            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Can't truncate to" << spa_data->maxsize;
             return;
         }
 
         unsigned int seals = F_SEAL_GROW | F_SEAL_SHRINK | F_SEAL_SEAL;
         if (fcntl(spa_data->fd, F_ADD_SEALS, seals) == -1) {
-            qCWarning(KWIN_SCREENCAST) << "memfd: Failed to add seals";
+            qCWarning(KWIN_SCREENCAST) << objectName() << "memfd: Failed to add seals";
         }
 
         spa_data->data = mmap(nullptr,
@@ -284,9 +284,9 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
                               spa_data->fd,
                               spa_data->mapoffset);
         if (spa_data->data == MAP_FAILED) {
-            qCCritical(KWIN_SCREENCAST) << "memfd: Failed to mmap memory";
+            qCCritical(KWIN_SCREENCAST) << objectName() << "memfd: Failed to mmap memory";
         } else {
-            qCDebug(KWIN_SCREENCAST) << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
+            qCDebug(KWIN_SCREENCAST) << objectName() << "memfd: created successfully" << spa_data->data << spa_data->maxsize;
         }
 
         spa_data->chunk->offset = 0;
@@ -373,7 +373,7 @@ bool ScreenCastStream::init()
     connect(m_pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
-        qCWarning(KWIN_SCREENCAST) << "Failed to create PipeWire stream";
+        qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to create PipeWire stream";
         m_error = i18n("Failed to create PipeWire stream");
         return false;
     }
@@ -436,7 +436,7 @@ bool ScreenCastStream::createStream()
     auto flags = pw_stream_flags(PW_STREAM_FLAG_DRIVER | PW_STREAM_FLAG_ALLOC_BUFFERS);
 
     if (pw_stream_connect(m_pwStream, PW_DIRECTION_OUTPUT, SPA_ID_INVALID, flags, params.data(), params.count()) != 0) {
-        qCWarning(KWIN_SCREENCAST) << "Could not connect to stream";
+        qCWarning(KWIN_SCREENCAST) << objectName() << "Could not connect to stream";
         pw_stream_destroy(m_pwStream);
         m_pwStream = nullptr;
         return false;
@@ -452,7 +452,7 @@ bool ScreenCastStream::createStream()
         m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
     }
 
-    qCDebug(KWIN_SCREENCAST) << "stream created, drm format:" << FormatInfo::drmFormatName(m_drmFormat) << "with DMA-BUF:" << m_hasDmaBuf;
+    qCDebug(KWIN_SCREENCAST) << objectName() << "stream created, drm format:" << FormatInfo::drmFormatName(m_drmFormat) << "with DMA-BUF:" << m_hasDmaBuf;
     return true;
 }
 void ScreenCastStream::coreFailed(const QString &errorMessage)
@@ -504,7 +504,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     m_pendingDamages = {};
 
     if (m_waitForNewBuffers) {
-        qCWarning(KWIN_SCREENCAST) << "Waiting for new buffers to be created";
+        qCWarning(KWIN_SCREENCAST) << objectName() << "Waiting for new buffers to be created";
         return;
     }
 
@@ -521,7 +521,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     auto state = pw_stream_get_state(m_pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
         if (error) {
-            qCWarning(KWIN_SCREENCAST) << "Failed to record frame: stream is not active" << error;
+            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: stream is not active" << error;
         }
         return;
     }
@@ -541,7 +541,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     if (spa_data[0].type == SPA_DATA_MemFd) {
         uint8_t *data = static_cast<uint8_t *>(spa_data->data);
         if (!data) {
-            qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
+            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: invalid buffer data";
             spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
@@ -552,7 +552,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         const uint stride = SPA_ROUND_UP_N(size.width() * bpp, 4);
 
         if ((stride * size.height()) > spa_data->maxsize) {
-            qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
+            qCDebug(KWIN_SCREENCAST) << objectName() << "Failed to record frame: frame is too big";
             spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
@@ -571,7 +571,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     } else if (spa_data[0].type == SPA_DATA_DmaBuf) {
         auto dmabuf = m_dmabufDataForPwBuffer.constFind(buffer);
         if (dmabuf == m_dmabufDataForPwBuffer.constEnd()) {
-            qCDebug(KWIN_SCREENCAST) << "Failed to record frame: no dmabuf data";
+            qCDebug(KWIN_SCREENCAST) << objectName() << "Failed to record frame: no dmabuf data";
             spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
@@ -625,7 +625,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
             glFlush();
         }
     } else {
-        qCWarning(KWIN_SCREENCAST, "Failed to record frame: invalid buffer type: %d", spa_data[0].type);
+        qCWarning(KWIN_SCREENCAST, "%s Failed to record frame: invalid buffer type: %d", objectName().toUtf8().constData(), spa_data[0].type);
         spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
         pw_stream_queue_buffer(m_pwStream, buffer);
         return;
@@ -695,7 +695,7 @@ void ScreenCastStream::recordCursor()
     auto state = pw_stream_get_state(m_pwStream, &error);
     if (state != PW_STREAM_STATE_STREAMING) {
         if (error) {
-            qCWarning(KWIN_SCREENCAST) << "Failed to record cursor position: stream is not active" << error;
+            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record cursor position: stream is not active" << error;
         }
         return;
     }
