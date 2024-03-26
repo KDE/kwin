@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-23 00:38+0000\n"
-"PO-Revision-Date: 2024-03-24 18:59\n"
+"POT-Creation-Date: 2024-03-26 00:38+0000\n"
+"PO-Revision-Date: 2024-03-25 19:39\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -2379,7 +2379,7 @@ msgstr "无效区域"
 msgid "Region outside the workspace"
 msgstr "区域在工作区外"
 
-#: plugins/screencast/screencaststream.cpp:365
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "创建 PipeWire 流失败"
