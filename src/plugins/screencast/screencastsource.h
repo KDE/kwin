@@ -32,7 +32,11 @@ public:
     virtual void render(spa_data *spa, spa_video_format format) = 0;
     virtual std::chrono::nanoseconds clock() const = 0;
 
+    virtual void resume() = 0;
+    virtual void pause() = 0;
+
 Q_SIGNALS:
+    void frame(const QRegion &damage);
     void closed();
 };
 

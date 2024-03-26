@@ -2123,17 +2123,6 @@ inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);
 
-class KWIN_EXPORT WindowOffscreenRenderRef
-{
-public:
-    WindowOffscreenRenderRef(Window *window);
-    WindowOffscreenRenderRef() = default;
-    ~WindowOffscreenRenderRef();
-
-private:
-    QPointer<Window> m_window;
-};
-
 } // namespace KWin
 
 Q_DECLARE_METATYPE(KWin::Window *)
