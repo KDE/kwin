@@ -19,6 +19,8 @@
 
 #include "stroke.h"
 
+#include <QPointF>
+
 #include <memory>
 #include <vector>
 
@@ -27,27 +29,7 @@
 class Stroke
 {
 public:
-    struct Point {
-        double x;
-        double y;
-        Point operator+(const Point &p)
-        {
-            Point sum = {x + p.x, y + p.y};
-            return sum;
-        }
-        Point operator-(const Point &p)
-        {
-            Point sum = {x - p.x, y - p.y};
-            return sum;
-        }
-        Point operator*(const double a)
-        {
-            Point product = {x * a, y * a};
-            return product;
-        }
-    };
-
-    using PreStroke = std::vector<Point>;
+    using PreStroke = std::vector<QPointF>;
 
 private:
     struct stroke_deleter {
@@ -83,10 +65,10 @@ public:
     {
         return size() == 0;
     }
-    Point points(int n) const
+    QPointF pointAt(int n) const
     {
-        Point p;
-        stroke_get_point(stroke.get(), n, &p.x, &p.y);
+        QPointF p;
+        stroke_get_point(stroke.get(), n, &p.rx(), &p.ry());
         return p;
     }
     double time(int n) const
