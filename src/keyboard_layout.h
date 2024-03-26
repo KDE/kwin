@@ -31,7 +31,7 @@ namespace KeyboardLayoutSwitching
 class Policy;
 }
 
-class KeyboardLayout : public QObject, public InputEventSpy
+class KWIN_EXPORT KeyboardLayout : public QObject, public InputEventSpy
 {
     Q_OBJECT
 public:
