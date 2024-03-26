@@ -74,7 +74,7 @@ void RegionScreenCastSource::update(Output *output, const QRegion &damage)
 {
     blit(output);
 
-    const QRegion effectiveDamage = (output->pixelSize() != output->modeSize() ? output->geometry() : damage)
+    const QRegion effectiveDamage = damage
                                         .translated(-m_region.topLeft())
                                         .intersected(m_region);
     const QRegion nativeDamage = scaleRegion(effectiveDamage, m_scale);
