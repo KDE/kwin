@@ -53,6 +53,6 @@ struct KWIN_EXPORT FormatInfo
     }
 
     static std::optional<FormatInfo> get(uint32_t drmFormat);
-    static QString drmFormatName(const QString &prefix, uint32_t format);
+    static QString drmFormatName(uint32_t format);
 };
 }

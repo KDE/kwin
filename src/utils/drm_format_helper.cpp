@@ -111,10 +111,10 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
     }
 }
 
-QString FormatInfo::drmFormatName(const QString &prefix, uint32_t format)
+QString FormatInfo::drmFormatName(uint32_t format)
 {
     return QString::asprintf(
-        "%s%c%c%c%c %s-endian (0x%08x)", prefix.toUtf8().constData(),
+        "%c%c%c%c %s-endian (0x%08x)",
         QLatin1Char(format & 0xff).toLatin1(),
         QLatin1Char((format >> 8) & 0xff).toLatin1(),
         QLatin1Char((format >> 16) & 0xff).toLatin1(),
