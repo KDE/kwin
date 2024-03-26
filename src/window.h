@@ -1783,6 +1783,8 @@ protected:
     QuickTileMode m_electricMode = QuickTileFlag::None;
     QRectF m_electricGeometryRestore;
     bool m_electricMaximizing = false;
+    // The requested quick tile mode of this window.
+    QuickTileMode m_requestedQuickTileMode = QuickTileFlag::None;
     QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry

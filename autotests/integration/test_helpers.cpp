@@ -144,6 +144,18 @@ void XdgToplevel::xdg_toplevel_configure(int32_t width, int32_t height, wl_array
         case QtWayland::xdg_toplevel::state_activated:
             requestedStates |= State::Activated;
             break;
+        case QtWayland::xdg_toplevel::state_tiled_left:
+            requestedStates |= State::TiledLeft;
+            break;
+        case QtWayland::xdg_toplevel::state_tiled_top:
+            requestedStates |= State::TiledTop;
+            break;
+        case QtWayland::xdg_toplevel::state_tiled_right:
+            requestedStates |= State::TiledRight;
+            break;
+        case QtWayland::xdg_toplevel::state_tiled_bottom:
+            requestedStates |= State::TiledBottom;
+            break;
         }
     }
 

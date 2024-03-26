@@ -219,11 +219,24 @@ class XdgToplevel : public QObject, public QtWayland::xdg_toplevel
     Q_OBJECT
 
 public:
-    enum class State {
+    /*enum class State {
         Maximized = 1 << 0,
         Fullscreen = 1 << 1,
         Resizing = 1 << 2,
         Activated = 1 << 3
+    };*/
+    enum class State {
+        MaximizedHorizontal = 0x1,
+        MaximizedVertical = 0x2,
+        Fullscreen = 0x4,
+        Resizing = 0x8,
+        Activated = 0x10,
+        TiledLeft = 0x20,
+        TiledTop = 0x40,
+        TiledRight = 0x80,
+        TiledBottom = 0x100,
+        Suspended = 0x200,
+        Maximized = MaximizedHorizontal | MaximizedVertical,
     };
     Q_DECLARE_FLAGS(States, State)
 

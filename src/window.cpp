@@ -3422,8 +3422,10 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
 void Window::updateQuickTileMode(QuickTileMode newMode)
 {
-    Tile *tile = workspace()->tileManager(output())->quickTile(newMode);
-    setTile(tile);
+    // Tile *tile = workspace()->tileManager(output())->quickTile(newMode);
+    // setTile(tile);
+    m_requestedQuickTileMode = newMode;
+    doSetQuickTileMode();
 }
 
 void Window::updateElectricGeometryRestore()
@@ -3474,9 +3476,13 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
 
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
         if (requestedMaximizeMode() == MaximizeFull) {
+            qWarning() << "UNMAXIMIZING";
+            m_requestedQuickTileMode = QuickTileFlag::None;
             setMaximize(false, false);
         } else {
+            qWarning() << "MAXIMIZING";
             QRectF effectiveGeometryRestore = quickTileGeometryRestore();
+            m_requestedQuickTileMode = QuickTileFlag::Maximize;
             setMaximize(true, true);
             setGeometryRestore(effectiveGeometryRestore);
         }
@@ -3498,6 +3504,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         Tile *tile = workspace()->tileManager(output)->quickTile(mode);
 
         if (mode != QuickTileMode(QuickTileFlag::None)) {
+            m_requestedQuickTileMode = QuickTileFlag::None;
             if (!tile) {
                 // If there is a tile, it will change the maximize state accordingly.
                 // If we unconditionally set maximize here, there will be a double
@@ -3506,12 +3513,14 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             }
             moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
             // Store the mode change
+            m_requestedQuickTileMode = mode;
         } else {
+            m_requestedQuickTileMode = mode;
             setMaximize(false, false);
         }
 
         if (mode != QuickTileMode(QuickTileFlag::Custom)) {
-            setTile(tile);
+            //  setTile(tile);
         }
 
         doSetQuickTileMode();
@@ -3561,10 +3570,12 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
         }
+        m_requestedQuickTileMode = mode;
     }
 
     if (mode == QuickTileMode(QuickTileFlag::None)) {
-        setTile(nullptr);
+        // setTile(nullptr);
+        m_requestedQuickTileMode = QuickTileFlag::None;
 
         QRectF geometry = moveResizeGeometry();
         if (geometryRestore().isValid()) {
@@ -3585,12 +3596,12 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             Output *output = workspace()->outputAt(Cursors::self()->mouse()->pos());
             tile = workspace()->tileManager(output)->bestTileForPosition(Cursors::self()->mouse()->pos());
         }
-        setTile(tile);
+        //  setTile(tile);
     } else {
         // Use whichScreen to move to next screen when retiling to the same edge as the old behavior
         Output *output = workspace()->outputAt(whichScreen);
         Tile *tile = workspace()->tileManager(output)->quickTile(mode);
-        setTile(tile);
+        //  setTile(tile);
     }
 
     doSetQuickTileMode();
@@ -3600,12 +3611,12 @@ QuickTileMode Window::quickTileMode() const
 {
     if (m_tile) {
         return m_tile->quickTileMode();
-    } else if (requestedMaximizeMode() == MaximizeVertical) {
-        return QuickTileFlag::Vertical;
-    } else if (requestedMaximizeMode() == MaximizeHorizontal) {
-        return QuickTileFlag::Horizontal;
-    } else if (requestedMaximizeMode() == MaximizeFull) {
-        return QuickTileFlag::Horizontal | QuickTileFlag::Vertical;
+        /*} else if (maximizeMode() == MaximizeVertical) {
+            return QuickTileFlag::Vertical;
+        } else if (maximizeMode() == MaximizeHorizontal) {
+            return QuickTileFlag::Horizontal;
+        } else if (maximizeMode() == MaximizeFull) {
+            return QuickTileFlag::Horizontal | QuickTileFlag::Vertical;*/
     } else {
         return QuickTileFlag::None;
     }
@@ -3699,6 +3710,7 @@ QRectF Window::ensureSpecialStateGeometry(const QRectF &geometry)
 
 void Window::sendToOutput(Output *newOutput)
 {
+    QuickTileMode tileMode = quickTileMode();
     newOutput = rules()->checkOutput(newOutput);
     if (isActive()) {
         workspace()->setActiveOutput(newOutput);
@@ -3725,6 +3737,9 @@ void Window::sendToOutput(Output *newOutput)
     QRectF newGeom = moveToArea(oldGeom, oldScreenArea, screenArea);
     newGeom = ensureSpecialStateGeometry(newGeom);
     moveResize(newGeom);
+    qWarning() << "sendToOutput" << quickTileMode() << tileMode << workspace()->tileManager(moveResizeOutput())->quickTile(tileMode);
+
+    // setTile(workspace()->tileManager(moveResizeOutput())->quickTile(tileMode));
 
     // move geometry restores to the new output as well
     setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
