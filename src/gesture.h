@@ -29,7 +29,7 @@
 class Stroke
 {
 public:
-    using PreStroke = std::vector<QPointF>;
+    using Points = std::vector<QPointF>;
 
 private:
     struct stroke_deleter {
@@ -46,7 +46,7 @@ public:
         : stroke(nullptr, stroke_deleter())
     {
     }
-    Stroke(const PreStroke &s);
+    Stroke(const Points &s);
     Stroke clone() const
     {
         Stroke s;
@@ -55,7 +55,8 @@ public:
         return s;
     }
 
-    static int compare(const Stroke &, const Stroke &, double &);
+    static bool compare(const Stroke &, const Stroke &, double &score_out);
+    static double min_matching_score();
 
     unsigned int size() const
     {
