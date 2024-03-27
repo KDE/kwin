@@ -3623,6 +3623,11 @@ QuickTileMode Window::quickTileMode() const
     }
 }
 
+QuickTileMode Window::requestedQuickTileMode() const
+{
+    return m_requestedQuickTileMode;
+}
+
 void Window::setTile(Tile *tile)
 {
     QuickTileMode oldTileMode = quickTileMode();
@@ -3785,7 +3790,8 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
             newOutput = workspace()->outputAt(newGeom.center());
         }
         // we need to find the screen area as it was before the change
-        oldScreenArea = workspace()->previousScreenSizes().value(moveResizeOutput());
+        // FIXME: why?
+        oldScreenArea = workspace()->previousScreenSizes().value(output());
         if (oldScreenArea.isNull()) {
             oldScreenArea = newOutput->geometry();
         }
@@ -3799,6 +3805,8 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
         moveResize(ensureSpecialStateGeometry(newGeom));
         setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
+        qWarning() << "checkWorkspacePosition" << m_maximizeGeometryRestore << oldScreenArea << screenArea;
+        ;
         setGeometryRestore(moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea));
         return;
     }

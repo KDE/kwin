@@ -952,8 +952,8 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize_data()
     QTest::newRow("quicktile_top") << QuickTileMode(QuickTileFlag::Top) << MaximizeMode::MaximizeRestore;
     QTest::newRow("quicktile_left") << QuickTileMode(QuickTileFlag::Left) << MaximizeMode::MaximizeRestore;
     QTest::newRow("quicktile_right") << QuickTileMode(QuickTileFlag::Right) << MaximizeMode::MaximizeRestore;
-    QTest::newRow("maximize_vertical") << QuickTileMode(QuickTileFlag::Vertical) << MaximizeMode::MaximizeVertical;
-    QTest::newRow("maximize_horizontal") << QuickTileMode(QuickTileFlag::Horizontal) << MaximizeMode::MaximizeHorizontal;
+    QTest::newRow("maximize_vertical") << QuickTileMode(QuickTileFlag::None) << MaximizeMode::MaximizeVertical;
+    QTest::newRow("maximize_horizontal") << QuickTileMode(QuickTileFlag::None) << MaximizeMode::MaximizeHorizontal;
     QTest::newRow("maximize_full") << QuickTileMode(QuickTileFlag::Maximize) << MaximizeMode::MaximizeFull;
 }
 
@@ -967,8 +967,15 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     QVERIFY(surface != nullptr);
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
     QVERIFY(shellSurface != nullptr);
+
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+
     Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window);
+    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
 
     // tile / maximize window
     QFETCH(QuickTileMode, quickTileMode);
@@ -978,13 +985,19 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     } else {
         window->setQuickTileMode(quickTileMode, true);
     }
-    QCOMPARE(window->quickTileMode(), quickTileMode);
+
+    const bool quickTileModeWillChange = quickTileMode != window->quickTileMode();
+
+    QCOMPARE(window->requestedQuickTileMode(), quickTileMode);
     QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
 
-    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
+    if (quickTileModeWillChange) {
+        QVERIFY(quickTileChangedSpy.wait());
+    }
+    QCOMPARE(window->quickTileMode(), quickTileMode);
 
     const QRectF geometry = window->moveResizeGeometry();
     const QRectF geometryRestore = window->geometryRestore();
@@ -1003,11 +1016,27 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     QCOMPARE(window->isInteractiveResize(), true);
 
     Test::pointerMotionRelative(QPoint(1, 1), 1);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
+    if (quickTileModeWillChange) {
+        QVERIFY(quickTileChangedSpy.wait());
+    }
+
     QCOMPARE(window->quickTileMode(), QuickTileMode());
     QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
 
     // cancel moveresize, all state from before should be restored
     window->keyPressEvent(Qt::Key::Key_Escape);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().first().toSize(), Qt::blue);
+    if (quickTileModeWillChange) {
+        QVERIFY(quickTileChangedSpy.wait());
+    }
+
     QCOMPARE(window->moveResizeGeometry(), geometry);
     QCOMPARE(window->quickTileMode(), quickTileMode);
     QCOMPARE(window->requestedMaximizeMode(), maximizeMode);

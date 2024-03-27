@@ -1093,6 +1093,7 @@ public:
      */
     void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
     QuickTileMode quickTileMode() const;
+    QuickTileMode requestedQuickTileMode() const;
 
     Layer layer() const;
     void updateLayer();
