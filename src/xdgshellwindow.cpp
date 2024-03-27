@@ -213,11 +213,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         }
     }
 
-    if (!isInteractiveMoveResize()) {
-        // Both the compositor and the client can change the window geometry. If the client
-        // sets a new window geometry, the compositor's move-resize geometry will be invalid.
-        maybeUpdateMoveResizeGeometry(frameGeometry);
-    } else if (isInteractiveMove()) {
+    if (isInteractiveMove()) {
         bool fullscreen = isFullScreen();
         if (const auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure())) {
             fullscreen = configureEvent->states & XdgToplevelInterface::State::FullScreen;
@@ -230,6 +226,7 @@ void XdgSurfaceWindow::handleNextWindowGeometry()
         }
     }
 
+    maybeUpdateMoveResizeGeometry(frameGeometry);
     updateGeometry(frameGeometry);
 }
 
