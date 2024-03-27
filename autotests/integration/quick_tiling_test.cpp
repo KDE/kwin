@@ -174,14 +174,12 @@ void QuickTilingTest::testQuickTiling()
 
     QFETCH(QuickTileMode, mode);
     QFETCH(QRectF, expectedGeometry);
-    qWarning() << "BEFORE setQuickTileMode" << mode;
     window->setQuickTileMode(mode, true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
-    qWarning() << toplevelConfigureRequestedSpy << surfaceConfigureRequestedSpy << surfaceConfigureRequestedSpy.last().at(0);
     QVERIFY(quickTileChangedSpy.wait());
     QCOMPARE(quickTileChangedSpy.count(), 1);
     // at this point the geometry did not yet change
@@ -198,15 +196,12 @@ void QuickTilingTest::testQuickTiling()
     // attach a new image
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), expectedGeometry.size().toSize(), Qt::red);
-    qWarning() << "1111" << window->quickTileMode();
     //  QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(window->frameGeometry(), expectedGeometry);
-    qWarning() << "2222" << window->quickTileMode();
     // send window to other screen
     QList<Output *> outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
-    qWarning() << "SENDING TO OUTPUT" << mode << window->quickTileMode();
     window->sendToOutput(outputs[1]);
 
     QCOMPARE(window->output(), outputs[1]);
@@ -297,15 +292,12 @@ void QuickTilingTest::testQuickMaximizing()
 
     // go back to quick tile none
     QFETCH(QuickTileMode, mode);
-    qWarning() << "YYY" << mode << window->quickTileMode();
     window->setQuickTileMode(mode, true);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    qWarning() << toplevelConfigureRequestedSpy.last();
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
-    qWarning() << "XXXX" << mode << window->quickTileMode();
     QVERIFY(quickTileChangedSpy.wait());
     QCOMPARE(quickTileChangedSpy.count(), 2);
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
@@ -353,7 +345,6 @@ void QuickTilingTest::testQuickTilingKeyboardMove()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
     QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
-    qWarning() << "PERFORMING KEYBOARD OP";
     workspace()->performWindowOperation(window, Options::UnrestrictedMoveOp);
     QCOMPARE(window, workspace()->moveResizeWindow());
     QCOMPARE(Cursors::self()->mouse()->pos(), QPoint(50, 25));
