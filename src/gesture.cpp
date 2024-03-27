@@ -18,7 +18,7 @@
 
 #include <cmath>
 
-Stroke::Stroke(const PreStroke &ps)
+Stroke::Stroke(const Points &ps)
     : stroke(nullptr, stroke_deleter())
 {
     if (ps.size() >= 2) {
@@ -30,19 +30,24 @@ Stroke::Stroke(const PreStroke &ps)
     }
 }
 
-int Stroke::compare(const Stroke &a, const Stroke &b, double &score)
+bool Stroke::compare(const Stroke &a, const Stroke &b, double &score)
 {
     score = 0.0;
     if (!a.stroke || !b.stroke) {
         if (!a.stroke && !b.stroke) {
             score = 1.0;
-            return 1;
+            return true;
         }
-        return -1;
+        return false;
     }
     double cost = stroke_compare(a.stroke.get(), b.stroke.get(), nullptr, nullptr);
     if (cost >= stroke_infinity)
-        return -1;
+        return false;
     score = std::max(1.0 - 2.5 * cost, 0.0);
-    return score > 0.7;
+    return true;
+}
+
+double Stroke::min_matching_score()
+{
+    return 0.7;
 }
