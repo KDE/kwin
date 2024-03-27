@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1676560 $
+# Version: $Revision: 1676587 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 00:38+0000\n"
+"POT-Creation-Date: 2024-03-27 09:15+0000\n"
 "PO-Revision-Date: 2024-03-02 12:49+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2403,27 +2403,22 @@ msgstr "Nie udało się utworzyć kontekstu PipeWire"
 msgid "Failed to connect PipeWire context"
 msgstr "Nie udało się połączyć z kontekstem PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Nie można znaleźć id %1 okna"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "Nie można znaleźć wyjścia"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "Nieprawidłowy obszar"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "Obszar poza przestrzenią pracy"
-
-#: plugins/screencast/screencaststream.cpp:377
+#: plugins/screencast/screencaststream.cpp:379
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
@@ -4222,6 +4217,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland napotkał usterkę"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "Obszar poza przestrzenią pracy"
 
 #~ msgid "Move to %1 %2"
 #~ msgstr "Przenieś do %1 %2"

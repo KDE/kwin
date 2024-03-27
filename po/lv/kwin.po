@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 00:38+0000\n"
+"POT-Creation-Date: 2024-03-27 09:15+0000\n"
 "PO-Revision-Date: 2024-01-23 17:16+0200\n"
 "Last-Translator: Māris Nartišs <maris.kde@gmail.com>\n"
 "Language-Team: \n"
@@ -2381,27 +2381,22 @@ msgstr "Neizdevās palaist „PipeWire“ kontekstu"
 msgid "Failed to connect PipeWire context"
 msgstr "Neizdevās pievienot „PipeWire“ kontekstu"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Neizdevās atrast loga id %1"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "Neizdevās atrast izvadi"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "Nederīgs reģions"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "Reģions ārpus darbvietas"
-
-#: plugins/screencast/screencaststream.cpp:377
+#: plugins/screencast/screencaststream.cpp:379
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Neizdevās izveidot „PipeWire“ straumi"
@@ -4205,6 +4200,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "„Xwayland“ ir avarējis"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "Reģions ārpus darbvietas"
 
 #~ msgid "Move to %1 %2"
 #~ msgstr "Pārvietot uz %1 %2"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 00:38+0000\n"
+"POT-Creation-Date: 2024-03-27 09:15+0000\n"
 "PO-Revision-Date: 2024-01-23 12:28+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2383,27 +2383,22 @@ msgstr "A fő PipeWire környezet létrehozása sikertelen"
 msgid "Failed to connect PipeWire context"
 msgstr "Nem sikerült kapcsolódni a PipeWire környezethez"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "A(z) %1 ablakazonosító nem található"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "A kimenet nem található"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "Érvénytelen terület"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "A terület kívül esik a munkaterületen"
-
-#: plugins/screencast/screencaststream.cpp:377
+#: plugins/screencast/screencaststream.cpp:379
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "A PipeWire adatfolyam létrehozása sikertelen"
@@ -4208,6 +4203,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "A terület kívül esik a munkaterületen"
 
 #~ msgid "Move to %1 %2"
 #~ msgstr "Áthelyezés ide: %1 %2"

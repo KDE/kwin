@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 00:38+0000\n"
+"POT-Creation-Date: 2024-03-27 09:15+0000\n"
 "PO-Revision-Date: 2024-03-26 11:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -2400,27 +2400,22 @@ msgstr "Aanmaken van PipeWire-context is mislukt"
 msgid "Failed to connect PipeWire context"
 msgstr "Verbinden met context van PipeWire is mislukt"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Kon venster-id %1 niet vinden"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "Kon uitvoer niet vinden"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "Ongeldig gebied"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "Gebied buiten de werkruimte"
-
-#: plugins/screencast/screencaststream.cpp:377
+#: plugins/screencast/screencaststream.cpp:379
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Aanmaken van PipeWire-stream is mislukt"
@@ -4218,6 +4213,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland is gecrasht"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "Gebied buiten de werkruimte"
 
 #~ msgid "Move to %1 %2"
 #~ msgstr "Verplaatsen naar %1 %2"
