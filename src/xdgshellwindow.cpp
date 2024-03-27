@@ -123,7 +123,7 @@ void XdgSurfaceWindow::sendConfigure()
     configureEvent->gravity = m_nextGravity;
     configureEvent->flags |= m_configureFlags;
     m_configureFlags = {};
-    qWarning() << "SEND CONFIGURE";
+    qWarning() << "SEND CONFIGURE" << configureEvent;
     m_configureEvents.append(configureEvent);
 }
 
@@ -701,7 +701,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
     configureEvent->serial = serial;
-
+    qWarning() << "sendRoleConfigure" << m_nextStates;
     return configureEvent;
 }
 
@@ -837,10 +837,12 @@ void XdgToplevelWindow::doSetQuickTileMode()
         m_nextStates &= ~XdgToplevelInterface::State::TiledBottom;
     }
 
-    Tile *tile = workspace()->tileManager(output())->quickTile(m_requestedQuickTileMode);
-    if (tile) {
-        qWarning() << "RESIZING" << tile->absoluteGeometry() << frameGeometry();
-        moveResize(tile->absoluteGeometry());
+    Tile *newTile = workspace()->tileManager(output())->quickTile(m_requestedQuickTileMode);
+    if (newTile) {
+        qWarning() << "RESIZING" << newTile->absoluteGeometry() << frameGeometry();
+        moveResize(newTile->absoluteGeometry());
+    } else if (tile()) {
+        moveResize(quickTileGeometryRestore());
     }
     scheduleConfigure();
 }
@@ -1021,7 +1023,7 @@ void XdgToplevelWindow::handleResizeRequested(SeatInterface *seat, XdgToplevelIn
 void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::States &states)
 {
     const XdgToplevelInterface::States delta = m_acknowledgedStates ^ states;
-
+    qWarning() << "DELTA" << delta;
     if (delta & XdgToplevelInterface::State::Maximized) {
         MaximizeMode maximizeMode = MaximizeRestore;
         if (states & XdgToplevelInterface::State::MaximizedHorizontal) {

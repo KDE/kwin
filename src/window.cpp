@@ -3424,6 +3424,7 @@ void Window::updateQuickTileMode(QuickTileMode newMode)
 {
     // Tile *tile = workspace()->tileManager(output())->quickTile(newMode);
     // setTile(tile);
+    qWarning() << "updateQuickTileMode old" << quickTileMode() << "new" << newMode;
     m_requestedQuickTileMode = newMode;
     doSetQuickTileMode();
 }
