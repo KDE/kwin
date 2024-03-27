@@ -87,8 +87,7 @@ public:
 
 private Q_SLOTS:
     void handleDecorationGeometryChanged();
-    void handleOutputChanged();
-    void handleOutputScaleChanged();
+    void updateScale();
 
 protected:
     void preprocess() override;
