@@ -87,8 +87,7 @@ public:
 
 private Q_SLOTS:
     void handleDecorationGeometryChanged();
-    void handleOutputChanged();
-    void handleOutputScaleChanged();
+    void updateScale();
 
 protected:
     void preprocess() override;
@@ -96,7 +95,6 @@ protected:
 
 private:
     Window *m_window;
-    QPointer<Output> m_output;
     QPointer<KDecoration2::Decoration> m_decoration;
     std::unique_ptr<DecorationRenderer> m_renderer;
 };
