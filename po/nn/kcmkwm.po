@@ -1,7 +1,6 @@
 # Translation of kcmkwm to Norwegian Nynorsk
 #
 # Gaute Hvoslef Kvalnes <gaute@verdsveven.com>, 1999, 2000, 2002, 2004, 2005.
-# Karl Ove Hufthammer <karl@huftis.org>, 2004, 2007, 2008, 2010, 2011, 2015, 2016, 2018, 2019, 2020, 2022, 2023.
 # Eirik U. Birkeland <eirbir@gmail.com>, 2008, 2009, 2010.
 # Øystein Steffensen-Alværvik <oysteins.omsetting@protonmail.com>, 2018.
 msgid ""
@@ -9,14 +8,14 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-03 00:48+0000\n"
-"PO-Revision-Date: 2023-02-20 21:25+0100\n"
+"PO-Revision-Date: 2024-03-23 14:00+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 24.02.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Environment: kde\n"
 "X-Accelerator-Marker: &\n"
@@ -433,7 +432,7 @@ msgstr "Flytt til førre/neste skrivebord"
 #: actions.ui:500 mouse.ui:127
 #, kde-format
 msgid "Change opacity"
-msgstr "Endra gjennomsikt"
+msgstr "Endra gjennomsikta"
 
 #. i18n: ectx: property (text), widget (QLabel, shadeHoverLabel)
 #: advanced.ui:20
@@ -1284,7 +1283,7 @@ msgstr ""
 #: moving.ui:113
 #, kde-format
 msgid "&Snap windows:"
-msgstr "&Lås vindauge til soner:"
+msgstr "&Lås vindauga til soner:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SnapOnlyWhenOverlapping)
 #: moving.ui:123
@@ -1310,9 +1309,9 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<em>Trykk for fokus:</em> Eit vindauge vert aktivt når du trykkjer "
-"museknappen inn i det. Denne åtferda er vanleg i andre operativsystem og er "
-"truleg det du vil ha."
+"<em>Trykk for fokus:</em> Eit vindauge vert aktivt når du trykkjer på "
+"muse­knappen når muse­peikaren er over det. Denne åtferda er vanleg i andre "
+"operativ­system og er truleg det du vil ha."
 
 #: windows.cpp:101
 #, kde-format
@@ -1325,8 +1324,8 @@ msgid ""
 msgstr ""
 "<em>Trykk for fokus (musprioritet):</em> Dette er stort sett det same som "
 "<em>Trykk for fokus</em>. Viss systemet må velja eit nytt aktivt vindauge "
-"(for eksempel fordi det gjeldande vindauget vart lukka), så er vindauget "
-"under musepeikaren den føretrekte kandidaten. Uvanleg, men mogleg variant av "
+"(for eksempel fordi det gjeldande vart lukka), så er vindauget under "
+"muse­peikaren den føretrekte kandidaten. Uvanleg, men mogleg variant av "
 "<em>Trykk for fokus</em>."
 
 #: windows.cpp:106
@@ -1337,9 +1336,9 @@ msgid ""
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<em>Fokuset følgjer musa:</em> Eit vindauge vert aktivt når musepeikaren "
+"<em>Fokuset følgjer musa:</em> Eit vindauge vert aktivt når muse­peikaren "
 "vert flytta inn i det. Vindauge som tilfeldigvis dukkar opp under "
-"musepeikaren får ikkje fokus. Fokussteling vert førebygd på vanleg måte. "
+"muse­peikaren, får ikkje fokus. Fokus­steling vert førebygd på vanleg måte. "
 "Tenk på dette som <em>Trykk for fokus</em>, men utan at det er nødvendig å "
 "trykkja."
 
@@ -1351,10 +1350,11 @@ msgid ""
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"Dette er stort sett det same som <em>Fokus følgjer musa</em>. Viss systemet "
-"må velja eit nytt aktivt vindauge (for eksempel fordi det gjeldande vart "
-"lukka), så vert vindauget under musepeikaren den føretrekte kandidaten. Vel "
-"dette viss du ønskjer fokus styrt av plasseringa til musepeikaren."
+"<em>Fokuset følgjer musa (musprioritet):</em> Dette er stort sett det same "
+"som <em>Fokuset følgjer musa</em>. Viss systemet må velja eit nytt aktivt "
+"vindauge (for eksempel fordi det gjeldande vart lukka), så er vindauget "
+"under muse­peikaren den føretrekte kandidaten. Vel dette viss du ønskjer "
+"fokus styrt av plasseringa til musepeikaren."
 
 #: windows.cpp:115
 #, kde-format
@@ -1365,10 +1365,10 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<em>Fokus under musa:</em> Fokus er alltid på vindauget under musepeikaren."
-"<br/><strong>Merk:</strong> <em>Hindring av fokussteling</em> og "
+"<em>Fokus under musa:</em> Fokus er alltid på vindauget under muse­peikaren."
+"<br/><strong>Merk:</strong> <em>Hindring av fokus­steling</em> og "
 "<em>programbyte­vindauget («Alt+Tab»)</em> er mot denne praksisen og vil "
-"ikkje verka. Du vil truleg heller vilja bruka <em>Fokus følgjer musa – "
+"ikkje verka. Du vil truleg heller vilja bruka <em>Fokus følgjer musa – "
 "musprioritet</em> i staden."
 
 #: windows.cpp:119
@@ -1381,9 +1381,9 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<em>Fokus strengt under musa:</em> Fokus er alltid på vindauget under "
-"musepeikaren (viss tvil, ingen stadar), svært likt fokusåtferda i eit "
-"gammaldags X11-miljø utan vindaugshandsamar.<br/><strong>Merk:</strong> "
-"<em>Hindring av fokussteling</em> og <em>programbyte­vindauget («Alt+Tab»)</"
+"<em>Hald fokuset alltid under musa:</em> Fokus er alltid på vindauget under "
+"muse­peikaren (viss tvil, ingen stadar), svært likt fokus­åtferda i eit "
+"gammaldags X11-miljø utan vindaugs­handsamar.<br/><strong>Merk:</strong> "
+"<em>Hindring av fokus­steling</em> og <em>programbyte­vindauget («Alt+Tab»)</"
 "em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja "
-"bruka <em>Fokus følgjer musa – musprioritet</em> i staden."
+"bruka <em>Fokuset følgjer musa – musprioritet</em> i staden."
