@@ -95,8 +95,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
 {
     m_renderer = Compositor::self()->scene()->createDecorationRenderer(window->decoratedClient());
 
-    connect(window, &Window::outputChanged,
-            this, &DecorationItem::handleOutputChanged);
+    connect(window, &Window::targetScaleChanged, this, &DecorationItem::updateScale);
 
     connect(decoration->client(), &KDecoration2::DecoratedClient::sizeChanged,
             this, &DecorationItem::handleDecorationGeometryChanged);
@@ -107,7 +106,7 @@ DecorationItem::DecorationItem(KDecoration2::Decoration *decoration, Window *win
             this, qOverload<const QRegion &>(&Item::scheduleRepaint));
 
     setSize(decoration->size());
-    handleOutputChanged();
+    updateScale();
 }
 
 QList<QRectF> DecorationItem::shape() const
@@ -146,25 +145,11 @@ void DecorationItem::preprocess()
     }
 }
 
-void DecorationItem::handleOutputChanged()
+void DecorationItem::updateScale()
 {
-    if (m_output) {
-        disconnect(m_output, &Output::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
-    }
-
-    m_output = m_window->output();
-
-    if (m_output) {
-        handleOutputScaleChanged();
-        connect(m_output, &Output::scaleChanged, this, &DecorationItem::handleOutputScaleChanged);
-    }
-}
-
-void DecorationItem::handleOutputScaleChanged()
-{
-    const qreal dpr = m_output->scale();
-    if (m_renderer->devicePixelRatio() != dpr) {
-        m_renderer->setDevicePixelRatio(dpr);
+    const double scale = m_window->targetScale();
+    if (m_renderer->devicePixelRatio() != scale) {
+        m_renderer->setDevicePixelRatio(scale);
         discardQuads();
     }
 }
