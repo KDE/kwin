@@ -17,7 +17,7 @@ class GraphicsBuffer;
 class ScreenCastDmaBufTexture
 {
 public:
-    explicit ScreenCastDmaBufTexture(std::shared_ptr<GLTexture> texture, GraphicsBuffer *buffer);
+    explicit ScreenCastDmaBufTexture(std::shared_ptr<GLTexture> texture, std::unique_ptr<GLFramebuffer> &&framebuffer, GraphicsBuffer *buffer);
     virtual ~ScreenCastDmaBufTexture();
 
     GraphicsBuffer *buffer() const;
