@@ -929,7 +929,20 @@ std::shared_ptr<ScreenCastDmaBufTexture> ScreenCastStream::createDmaBufTexture(c
     }
 
     backend->makeCurrent();
-    return std::make_shared<ScreenCastDmaBufTexture>(backend->importDmaBufAsTexture(*attrs), buffer);
+
+    std::shared_ptr<GLTexture> texture = backend->importDmaBufAsTexture(*attrs);
+    if (!texture) {
+        buffer->drop();
+        return nullptr;
+    }
+
+    std::unique_ptr<GLFramebuffer> framebuffer = std::make_unique<GLFramebuffer>(texture.get());
+    if (!framebuffer->valid()) {
+        buffer->drop();
+        return nullptr;
+    }
+
+    return std::make_shared<ScreenCastDmaBufTexture>(std::move(texture), std::move(framebuffer), buffer);
 }
 
 } // namespace KWin

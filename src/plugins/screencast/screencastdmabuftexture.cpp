@@ -11,9 +11,9 @@
 namespace KWin
 {
 
-ScreenCastDmaBufTexture::ScreenCastDmaBufTexture(std::shared_ptr<GLTexture> texture, GraphicsBuffer *buffer)
-    : m_texture(texture)
-    , m_framebuffer(std::make_unique<GLFramebuffer>(texture.get()))
+ScreenCastDmaBufTexture::ScreenCastDmaBufTexture(std::shared_ptr<GLTexture> texture, std::unique_ptr<GLFramebuffer> &&framebuffer, GraphicsBuffer *buffer)
+    : m_texture(std::move(texture))
+    , m_framebuffer(std::move(framebuffer))
     , m_buffer(buffer)
 {
 }
