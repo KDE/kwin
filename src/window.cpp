@@ -3767,6 +3767,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         }
         // we need to find the screen area as it was before the change
         // FIXME: why?
+        qWarning() << "AAAAAA" << moveResizeOutput() << output();
         oldScreenArea = workspace()->previousScreenSizes().value(output());
         if (oldScreenArea.isNull()) {
             oldScreenArea = newOutput->geometry();

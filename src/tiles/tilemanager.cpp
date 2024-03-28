@@ -75,6 +75,12 @@ TileManager::TileManager(Output *parent)
 
 TileManager::~TileManager()
 {
+    m_tearingDown = true;
+}
+
+bool TileManager::tearingDown() const
+{
+    return m_tearingDown;
 }
 
 Output *TileManager::output() const
