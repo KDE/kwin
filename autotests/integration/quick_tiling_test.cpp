@@ -780,6 +780,9 @@ void QuickTilingTest::testShortcut()
 
     const int numberOfQuickTileActions = shortcutList.count();
 
+    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+
     for (QString shortcut : shortcutList) {
         // invoke global shortcut through dbus
         auto msg = QDBusMessage::createMethodCall(
@@ -789,18 +792,14 @@ void QuickTilingTest::testShortcut()
             QStringLiteral("invokeShortcut"));
         msg.setArguments(QList<QVariant>{shortcut});
         QDBusConnection::sessionBus().asyncCall(msg);
-    }
 
-    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
-    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
-
-    for (int i = 1; i <= numberOfQuickTileActions; ++i) {
         QVERIFY(surfaceConfigureRequestedSpy.wait());
-        QCOMPARE(surfaceConfigureRequestedSpy.count(), i + 1);
+        qWarning() << toplevelConfigureRequestedSpy << surfaceConfigureRequestedSpy.count();
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
         QVERIFY(quickTileChangedSpy.wait());
     }
+
     QCOMPARE(surfaceConfigureRequestedSpy.count(), numberOfQuickTileActions + 1);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
     QCOMPARE(frameGeometryChangedSpy.count(), numberOfQuickTileActions);

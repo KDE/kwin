@@ -2132,7 +2132,7 @@ void TestXdgShellWindow::testMaximizeAndChangeDecorationModeAfterInitialCommit()
     // The compositor will respond with a new configure event, which should contain maximized state.
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>(), Test::XdgToplevel::State::Maximized);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>(), (Test::XdgToplevel::States(Test::XdgToplevel::State::Maximized) | Test::XdgToplevel::States(Test::XdgToplevel::State::TiledMaximized)));
 }
 
 void TestXdgShellWindow::testFullScreenAndChangeDecorationModeAfterInitialCommit()
