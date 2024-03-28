@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-26 02:53+0000\n"
+"POT-Creation-Date: 2024-03-28 02:55+0000\n"
 "PO-Revision-Date: 2023-12-03 21:42+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -2389,27 +2389,22 @@ msgstr "Mistókst að útbúa PipeWire samhengi"
 msgid "Failed to connect PipeWire context"
 msgstr "Mistókst að tengja PipeWire samhengi"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Fann ekki gluggaauðkenni %1"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "Fann ekki úttak"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "Ógilt svæði"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "Svæði utan vinnusvæðisins"
-
-#: plugins/screencast/screencaststream.cpp:374
+#: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Mistókst að útbúa PipeWire straum"
@@ -4194,6 +4189,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland hrundi"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "Svæði utan vinnusvæðisins"
 
 #~ msgid "Set window type to"
 #~ msgstr "Stilla gerð glugga á"

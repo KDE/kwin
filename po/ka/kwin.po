@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-26 02:53+0000\n"
+"POT-Creation-Date: 2024-03-28 02:55+0000\n"
 "PO-Revision-Date: 2024-03-20 05:25+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2377,27 +2377,22 @@ msgstr "PipeWire-ის კონტექსტის შექმნის შ
 msgid "Failed to connect PipeWire context"
 msgstr "PipeWire-ის კონტექსტთან მიერთების შეცდომა"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "ფანჯარა ID-ით %1 ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "შეყვანა ვერ ვიპოვე"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "არასწორი რეგიონი"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "რეგიონი სამუშაო სივრცის გარეთ"
-
-#: plugins/screencast/screencaststream.cpp:374
+#: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
@@ -4183,6 +4178,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ავარიულად დასრულდა"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "რეგიონი სამუშაო სივრცის გარეთ"
 
 #~ msgid "Set window type to"
 #~ msgstr "ფანჯრის ტიპის დაყენება"

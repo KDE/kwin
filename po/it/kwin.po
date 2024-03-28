@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-26 02:53+0000\n"
+"POT-Creation-Date: 2024-03-28 02:55+0000\n"
 "PO-Revision-Date: 2024-01-19 03:44+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2407,27 +2407,22 @@ msgstr "Creazione del contesto PipeWire non riuscita"
 msgid "Failed to connect PipeWire context"
 msgstr "Impossibile connettere il contesto PipeWire"
 
-#: plugins/screencast/screencastmanager.cpp:109
+#: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
 msgid "Could not find window id %1"
 msgstr "Impossibile trovare l'ID della finestra %1"
 
-#: plugins/screencast/screencastmanager.cpp:149
+#: plugins/screencast/screencastmanager.cpp:87
 #, kde-format
 msgid "Could not find output"
 msgstr "Impossibile trovare l'uscita"
 
-#: plugins/screencast/screencastmanager.cpp:179
+#: plugins/screencast/screencastmanager.cpp:110
 #, kde-format
 msgid "Invalid region"
 msgstr "Regione non valida"
 
-#: plugins/screencast/screencastmanager.cpp:210
-#, kde-format
-msgid "Region outside the workspace"
-msgstr "Regione al di fuori dell'area di lavoro"
-
-#: plugins/screencast/screencaststream.cpp:374
+#: plugins/screencast/screencaststream.cpp:376
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossibile creare il flusso PipeWire"
@@ -4225,6 +4220,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland è stato terminato in modo inatteso"
+
+#~ msgid "Region outside the workspace"
+#~ msgstr "Regione al di fuori dell'area di lavoro"
 
 #~ msgid "Set window type to"
 #~ msgstr "Imposta il tipo di finestra a"
