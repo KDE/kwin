@@ -1,15 +1,16 @@
 # translation of kwin_effects.po to Esperanto
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
+# Copyright (C) 2007 Free Software Foundation, Inc.
+# This file is distributed under the same license as the kwin package.
 # Cindy McKee <cfmckee@gmail.com>, 2007, 2008.
+# Oliver Kellogg <okellogg@users.sourceforge.net>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin_effects\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-26 02:49+0000\n"
-"PO-Revision-Date: 2008-01-10 09:34-0600\n"
-"Last-Translator: Cindy McKee <cfmckee@gmail.com>\n"
+"PO-Revision-Date: 2024-03-28 18:58+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -20,33 +21,29 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "&Forto:"
+msgstr "Malklariga forto:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: blur/blur_config.ui:42 blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Dekstra"
+msgstr "Lumo"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
 #: blur/blur_config.ui:74 blur/blur_config.ui:137
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strong"
-msgstr "&Forto:"
+msgstr "Forta"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "&Forto:"
+msgstr "Brua forto:"
 
 #: colorpicker/colorpicker.cpp:101
 #, kde-format
@@ -87,8 +84,7 @@ msgid "Top"
 msgstr "Supra"
 
 #: desktopgrid/desktopgrid_config.cpp:63
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgid "Top-Right"
 msgstr "Supre-dekstra"
 
@@ -101,8 +97,7 @@ msgid "Right"
 msgstr "Dekstra"
 
 #: desktopgrid/desktopgrid_config.cpp:65
-#, fuzzy, kde-format
-#| msgid "Bottom-right"
+#, kde-format
 msgid "Bottom-Right"
 msgstr "Malsupre-dekstra"
 
@@ -115,10 +110,9 @@ msgid "Bottom"
 msgstr "Malsupra"
 
 #: desktopgrid/desktopgrid_config.cpp:67
-#, fuzzy, kde-format
-#| msgid "Bottom-left"
+#, kde-format
 msgid "Bottom-Left"
-msgstr "Malsupre-maldekstra"
+msgstr "Malsupre-Maldekstre"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -129,10 +123,9 @@ msgid "Left"
 msgstr "Maldekstra"
 
 #: desktopgrid/desktopgrid_config.cpp:69
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgid "Top-Left"
-msgstr "Supre-maldekstra"
+msgstr "Supre-Maldekstre"
 
 #: desktopgrid/desktopgrid_config.cpp:70
 #, kde-format
@@ -166,10 +159,9 @@ msgstr "Propra"
 
 #. i18n: ectx: property (text), widget (QLabel, layoutRowsLabel)
 #: desktopgrid/desktopgrid_config.ui:48
-#, fuzzy, kde-format
-#| msgid "&Number of snowflakes"
+#, kde-format
 msgid "N&umber of rows:"
-msgstr "&Nombro da neĝeroj"
+msgstr "N&nombro de vicoj:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: desktopgrid/desktopgrid_config.ui:103
@@ -211,10 +203,9 @@ msgstr "Nenio"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: desktopgrid/desktopgrid_config.ui:155
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Windows layout:"
-msgstr "Fenestroj"
+msgstr "Fenestra aranĝo:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
 #: desktopgrid/desktopgrid_config.ui:171
@@ -224,10 +215,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "&Forto:"
+msgstr "Forto:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: diminactive/diminactive_config.ui:40
@@ -243,17 +233,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "Show Desktop Grid"
+#, kde-format
 msgid "Desktop"
-msgstr "Videbligi la labortablan kradon"
+msgstr "Surtabla"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Raise Window"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Malfonigi fenestron"
+msgstr "Konservi super fenestroj"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: diminactive/diminactive_config.ui:68
@@ -263,24 +251,21 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Fenestroj"
+msgstr "Plenekranaj fenestroj"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: glide/glide_config.ui:19 scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "Decorations:"
+#, kde-format
 msgid "Duration:"
-msgstr "Ornamaĵoj:"
+msgstr "Daŭro:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:32 scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgid "Decorations:"
+#, kde-format
 msgid "Default"
-msgstr "Ornamaĵoj:"
+msgstr "Defaŭlta"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #: glide/glide_config.ui:35 scale/package/contents/ui/config.ui:33
@@ -290,10 +275,9 @@ msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Maximal &width:"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Maksimuma &larĝo:"
+msgstr "Fenestro-Malfermiĝa Animacio"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
@@ -318,10 +302,9 @@ msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Maximal &width:"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Maksimuma &larĝo:"
+msgstr "Fenestro-Fermiĝa Animacion"
 
 #: invert/invert.cpp:42 invert/invert_config.cpp:38
 #, kde-format
@@ -329,10 +312,9 @@ msgid "Toggle Invert Effect"
 msgstr "Baskuligi inversan efekton"
 
 #: invert/invert.cpp:49 invert/invert_config.cpp:44
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Invert Effect on Window"
-msgstr "Baskuligi inversan efekton"
+msgstr "Baskuligi Inversig-Efekton al Fenestro"
 
 #: invert/invert.cpp:56
 #, kde-format
@@ -353,11 +335,10 @@ msgstr ""
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_AnimationDuration)
 #: magiclamp/magiclamp_config.ui:36
-#, fuzzy, kde-format
-#| msgid "Decorations:"
+#, kde-format
 msgctxt "Duration of rotation"
 msgid "Default"
-msgstr "Ornamaĵoj:"
+msgstr "Defaŭlta"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
 #: magiclamp/magiclamp_config.ui:39
@@ -391,10 +372,9 @@ msgid "&Height:"
 msgstr "&Alto:"
 
 #: mouseclick/mouseclick.cpp:34 mouseclick/mouseclick_config.cpp:51
-#, fuzzy, kde-format
-#| msgid "Toggle Expose Effect"
+#, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Baskuligi videbligan efekton"
+msgstr "Baskuligi Musklakan Efekton"
 
 #: mouseclick/mouseclick.cpp:41
 #, kde-format
@@ -403,11 +383,10 @@ msgid "Left"
 msgstr "Maldekstra"
 
 #: mouseclick/mouseclick.cpp:42
-#, fuzzy, kde-format
-#| msgid "Middle button:"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
-msgstr "Meza butono:"
+msgstr "Meza"
 
 #: mouseclick/mouseclick.cpp:43
 #, kde-format
@@ -433,31 +412,27 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "Left button:"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Maldekstra butono:"
+msgstr "Maldekstra Musbuton-Koloro:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Middle button:"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Meza butono:"
+msgstr "Meza Musbuton-Koloro:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "Right button:"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Dekstra butono:"
+msgstr "Dekstra Musbuton-Koloro:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "Plie"
+msgstr "Altnivelaj Agordoj"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: mouseclick/mouseclick_config.ui:97
@@ -467,18 +442,16 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, ring_line_width_label)
 #: mouseclick/mouseclick_config.ui:103
-#, fuzzy, kde-format
-#| msgid "&Width:"
+#, kde-format
 msgid "Line Width:"
-msgstr "&Larĝo:"
+msgstr "Liniolarĝo:"
 
 #. i18n: ectx: property (suffix), widget (QDoubleSpinBox, kcfg_LineWidth)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: mouseclick/mouseclick_config.ui:119 mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgid " pixel"
-msgstr " rm"
+msgstr " rastrumero"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: mouseclick/mouseclick_config.ui:132
@@ -488,17 +461,15 @@ msgstr " msek"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_duration_label)
 #: mouseclick/mouseclick_config.ui:145
-#, fuzzy, kde-format
-#| msgid "Decorations:"
+#, kde-format
 msgid "Ring Duration:"
-msgstr "Ornamaĵoj:"
+msgstr "Ringdaŭro:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_radius_label)
 #: mouseclick/mouseclick_config.ui:155
-#, fuzzy, kde-format
-#| msgid "&Radius:"
+#, kde-format
 msgid "Ring Radius:"
-msgstr "&Radiuso:"
+msgstr "Ringa Radiuso:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: mouseclick/mouseclick_config.ui:184
@@ -520,10 +491,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop Grid"
+#, kde-format
 msgid "Show Text:"
-msgstr "Videbligi la labortablan kradon"
+msgstr "Montri Tekston:"
 
 #: mousemark/mousemark.cpp:39
 #, kde-format
@@ -541,13 +511,12 @@ msgid "Clear Mouse Marks"
 msgstr "Viŝi la musospurojn"
 
 #: mousemark/mousemark_config.cpp:100
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] " rm"
-msgstr[1] " rm"
+msgstr[0] " rastrumero"
+msgstr[1] " rastrumeroj"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: mousemark/mousemark_config.ui:23
@@ -576,10 +545,9 @@ msgid "Unknown"
 msgstr ""
 
 #: overview/kcm/overvieweffectkcm.cpp:41 overview/overvieweffect.cpp:31
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgid "Toggle Overview"
-msgstr "Baskuligi inversan efekton"
+msgstr "Baskuligi Superrigardon"
 
 #. i18n: ectx: property (text), widget (QLabel, label_LayoutMode)
 #: overview/kcm/overvieweffectkcm.ui:22
@@ -590,17 +558,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_BlurBackground)
 #: overview/kcm/overvieweffectkcm.ui:56
-#, fuzzy, kde-format
-#| msgid "Background"
+#, kde-format
 msgid "Blur background:"
-msgstr "Fono"
+msgstr "Malklarigi fonon:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: overview/kcm/overvieweffectkcm.ui:73
-#, fuzzy, kde-format
-#| msgid "(Un-)Minimize window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Horizontala"
+msgstr "Ignori minimumigitajn fenestrojn:"
 
 #: overview/qml/DesktopBar.qml:187
 #, kde-format
@@ -608,16 +574,14 @@ msgid "Delete Virtual Desktop"
 msgstr ""
 
 #: overview/qml/DesktopBar.qml:283
-#, fuzzy, kde-format
-#| msgid "Show Desktop Grid"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "Videbligi la labortablan kradon"
+msgstr "Aldoni Virtualan Labortablon"
 
 #: overview/qml/ScreenView.qml:226
-#, fuzzy, kde-format
-#| msgid "Moved/resized windows:"
+#, kde-format
 msgid "No matching windows"
-msgstr "Movitaj/regrandigitaj fenestroj:"
+msgstr "Neniuj kongruaj fenestroj"
 
 #: private/qml/WindowHeapDelegate.qml:151
 #, kde-format
@@ -625,25 +589,22 @@ msgid "Drag Down To Close"
 msgstr ""
 
 #: private/qml/WindowHeapDelegate.qml:461
-#, fuzzy, kde-format
-#| msgid "Decorations:"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
-msgstr "Ornamaĵoj:"
+msgstr "Fermi fenestron"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Maximal &width:"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Maksimuma &larĝo:"
+msgstr "Fenestra malferma skalo:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Maximal &width:"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Maksimuma &larĝo:"
+msgstr "Ferma skalo de fenestro:"
 
 #: screenshot/screenshotdbusinterface1.cpp:478
 #, kde-format
@@ -674,11 +635,10 @@ msgid ""
 msgstr ""
 
 #: showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgid "Decorations:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Ornamaĵoj:"
+msgstr "Farbo Daŭro"
 
 #: showfps/qml/main.qml:162
 #, kde-format
@@ -693,11 +653,10 @@ msgid "Current FPS"
 msgstr ""
 
 #: showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximal &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Maksimuma &larĝo:"
+msgstr "Maksimuma FPS"
 
 #: showfps/qml/main.qml:192
 #, kde-format
@@ -706,10 +665,9 @@ msgid "This effect is not a benchmark"
 msgstr ""
 
 #: showpaint/showpaint.cpp:38 showpaint/showpaint_config.cpp:38
-#, fuzzy, kde-format
-#| msgid "Show Desktop Grid"
+#, kde-format
 msgid "Toggle Show Paint"
-msgstr "Videbligi la labortablan kradon"
+msgstr "Baskuligi Montri Farbon"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: slide/slide_config.ui:17
@@ -719,17 +677,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Horizontala"
+msgstr "Horizontala:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Vertikala"
+msgstr "Vertikala:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: slide/slide_config.ui:72
@@ -745,8 +701,7 @@ msgstr "Baskuligi miniaturan rigardon por nuna fenestro"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: thumbnailaside/thumbnailaside_config.ui:23
-#, fuzzy, kde-format
-#| msgid "Maximal &width:"
+#, kde-format
 msgid "Maximum &width:"
 msgstr "Maksimuma &larĝo:"
 
@@ -760,10 +715,9 @@ msgstr "&Spacado:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_MaxWidth)
 #: thumbnailaside/thumbnailaside_config.ui:55
 #: thumbnailaside/thumbnailaside_config.ui:106
-#, fuzzy, kde-format
-#| msgid " px"
+#, kde-format
 msgid " pixels"
-msgstr " rm"
+msgstr " rastrumeroj"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: thumbnailaside/thumbnailaside_config.ui:68
@@ -799,16 +753,14 @@ msgid "Close"
 msgstr ""
 
 #: tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Horizontal"
+#, kde-format
 msgid "Split Horizontally"
-msgstr "Horizontala"
+msgstr "Dividi Horizontale"
 
 #: tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Vertical"
+#, kde-format
 msgid "Split Vertically"
-msgstr "Vertikala"
+msgstr "Dividi Vertike"
 
 #: tileseditor/qml/TileDelegate.qml:182 tileseditor/qml/TileDelegate.qml:211
 #, kde-format
@@ -821,9 +773,9 @@ msgid "Delete"
 msgstr ""
 
 #: trackmouse/trackmouse.cpp:44 trackmouse/trackmouse_config.cpp:57
-#, fuzzy, kde-format
+#, kde-format
 msgid "Track mouse"
-msgstr "Grizkolore"
+msgstr "Spuri muson"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: trackmouse/trackmouse_config.ui:26
@@ -851,10 +803,9 @@ msgstr "Alt"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Control)
 #: trackmouse/trackmouse_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Ctrl"
-msgstr "Centrigita"
+msgstr "Ctrl"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Shift)
 #: trackmouse/trackmouse_config.ui:79
@@ -916,17 +867,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Moved/resized windows:"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Movitaj/regrandigitaj fenestroj:"
+msgstr "Movante fenestrojn:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Raise Window"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Malfonigi fenestron"
+msgstr "Neaktivaj fenestroj:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: translucency/package/contents/ui/config.ui:267
@@ -953,28 +902,24 @@ msgid "Torn-off menus:"
 msgstr ""
 
 #: windowview/kcm/windowvieweffectkcm.cpp:42 windowview/windowvieweffect.cpp:45
-#, fuzzy, kde-format
-#| msgid "for windows on current desktop: "
+#, kde-format
 msgid "Toggle Present Windows (Current desktop)"
-msgstr "por fenestroj kiuj estas en la nuna labortablo: "
+msgstr "Baskuligi Prezenti Fenstrojn (Nuna labortablo)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:49 windowview/windowvieweffect.cpp:54
-#, fuzzy, kde-format
-#| msgid "for windows on all desktops: "
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "por fenestroj kiuj estas en ĉiuj labortabloj: "
+msgstr "Baskuligi Prezenti Fenestron (Ĉiuj labortabloj)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:56 windowview/windowvieweffect.cpp:63
-#, fuzzy, kde-format
-#| msgid "for windows on all desktops: "
+#, kde-format
 msgid "Toggle Present Windows (Window class)"
-msgstr "por fenestroj kiuj estas en ĉiuj labortabloj: "
+msgstr "Baskuligi Prezenti Fenestrojn (Fenestra klaso)"
 
 #: windowview/kcm/windowvieweffectkcm.cpp:62 windowview/windowvieweffect.cpp:72
-#, fuzzy, kde-format
-#| msgid "for windows on current desktop: "
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "por fenestroj kiuj estas en la nuna labortablo: "
+msgstr "Baskuligi Prezenti Fenestron (Fenestra klaso sur nuna labortablo)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: windowview/kcm/windowvieweffectkcm.ui:56
@@ -988,16 +933,14 @@ msgid "No Matches"
 msgstr ""
 
 #: windowview/qml/main.qml:108
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Fenestroj"
+msgstr "Neniu Fenestro"
 
 #: windowview/qml/main.qml:123
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Fenestroj"
+msgstr "Filtri fenestrojn…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: wobblywindows/wobblywindows_config.ui:20
@@ -1013,10 +956,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: wobblywindows/wobblywindows_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Dialogs:"
+#, kde-format
 msgid "Dra&g:"
-msgstr "Dialogoj:"
+msgstr "&Treni:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: wobblywindows/wobblywindows_config.ui:81
@@ -1091,16 +1033,14 @@ msgid "Move Mouse to Center"
 msgstr ""
 
 #: zoom/zoom_config.cpp:80
-#, fuzzy, kde-format
-#| msgid "Top-left"
+#, kde-format
 msgid "Move Left"
-msgstr "Supre-maldekstra"
+msgstr "Movi Maldekstren"
 
 #: zoom/zoom_config.cpp:87
-#, fuzzy, kde-format
-#| msgid "Top-right"
+#, kde-format
 msgid "Move Right"
-msgstr "Supre-dekstra"
+msgstr "Movi Dekstren"
 
 #: zoom/zoom_config.cpp:94
 #, kde-format
@@ -1191,17 +1131,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Horizontal"
+#, kde-format
 msgid "Proportional"
-msgstr "Horizontala"
+msgstr "Proporcia"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: zoom/zoom_config.ui:130
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Centered"
-msgstr "Centrigita"
+msgstr "Centrita"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: zoom/zoom_config.ui:135
@@ -1220,531 +1158,3 @@ msgstr "Malŝaltita"
 #, kde-format
 msgid "Mouse Tracking:"
 msgstr ""
-
-#~ msgid "&Radius:"
-#~ msgstr "&Radiuso:"
-
-#, fuzzy
-#~ msgid "Nowhere"
-#~ msgstr "Sfero"
-
-#, fuzzy
-#~| msgid "Top-left"
-#~ msgid "Top Left"
-#~ msgstr "Supre-maldekstra"
-
-#, fuzzy
-#~| msgid "Top-right"
-#~ msgid "Top Right"
-#~ msgstr "Supre-dekstra"
-
-#, fuzzy
-#~| msgid "Bottom-left"
-#~ msgid "Bottom Left"
-#~ msgstr "Malsupre-maldekstra"
-
-#, fuzzy
-#~| msgid "Bottom-right"
-#~ msgid "Bottom Right"
-#~ msgstr "Malsupre-dekstra"
-
-#~ msgid "Text color:"
-#~ msgstr "Teksta koloro:"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgid "Show Message:"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgctxt "Duration of zoom"
-#~ msgid "Default"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgid "Switch desktop only"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#~ msgid "Left button:"
-#~ msgstr "Maldekstra butono:"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgid "Activate window"
-#~ msgstr "Ornamaĵoj:"
-
-#~ msgid "End effect"
-#~ msgstr "Vertikala"
-
-#, fuzzy
-#~| msgid "for windows on current desktop: "
-#~ msgid "Bring window to current desktop"
-#~ msgstr "por fenestroj kiuj estas en la nuna labortablo: "
-
-#, fuzzy
-#~| msgid "for windows on all desktops: "
-#~ msgid "Send window to all desktops"
-#~ msgstr "por fenestroj kiuj estas en ĉiuj labortabloj: "
-
-#~ msgid "Middle button:"
-#~ msgstr "Meza butono:"
-
-#~ msgid "Right button:"
-#~ msgstr "Dekstra butono:"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgctxt "@title:group actions when clicking on desktop"
-#~ msgid "Desktop"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgid "Show desktop"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgid "Scale window"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Moved/resized windows:"
-#~ msgid "Display for moving windows"
-#~ msgstr "Movitaj/regrandigitaj fenestroj:"
-
-#, fuzzy
-#~| msgid "&Color:"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Color Picker"
-#~ msgstr "&Koloro:"
-
-#, fuzzy
-#~| msgid "Shadow opacity:"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Background contrast"
-#~ msgstr "Opakeco de la ombro:"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Desktop Grid"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~| msgid "Raise Window"
-#~ msgctxt "Comment describing the KWin Effect"
-#~ msgid "Darken inactive windows"
-#~ msgstr "Malfonigi fenestron"
-
-#, fuzzy
-#~| msgid "for windows on all desktops: "
-#~ msgctxt "Comment describing the KWin Effect"
-#~ msgid "Closed windows fall into pieces"
-#~ msgstr "por fenestroj kiuj estas en ĉiuj labortabloj: "
-
-#, fuzzy
-#~| msgid "Maximal &width:"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Mouse Click Animation"
-#~ msgstr "Maksimuma &larĝo:"
-
-#, fuzzy
-#~| msgid "Clear Mouse Marks"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Mouse Mark"
-#~ msgstr "Viŝi la musospurojn"
-
-#, fuzzy
-#~| msgid "Windows"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Present Windows"
-#~ msgstr "Fenestroj"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Resize Window"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Transparent"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Transform"
-#~ msgstr "Travidebla"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Show Paint"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Track Mouse"
-#~ msgstr "Grizkolore"
-
-#, fuzzy
-#~| msgid "Windows"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Wobbly Windows"
-#~ msgstr "Fenestroj"
-
-#, fuzzy
-#~| msgid "Bottom"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Zoom"
-#~ msgstr "Malsupra"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgctxt "Special entry in alt+tab list for minimizing all windows"
-#~ msgid "Show Desktop"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~| msgid "Bottom"
-#~ msgid "Zoom"
-#~ msgstr "Malsupra"
-
-#, fuzzy
-#~| msgid "Maximal &width:"
-#~ msgid "Animation"
-#~ msgstr "Maksimuma &larĝo:"
-
-#, fuzzy
-#~| msgid "Maximal &width:"
-#~ msgid "Animate switch"
-#~ msgstr "Maksimuma &larĝo:"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgid "Reflections"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "&Color:"
-#~ msgid "Rear color"
-#~ msgstr "&Koloro:"
-
-#, fuzzy
-#~| msgid "Shadow opacity:"
-#~ msgid "Front color"
-#~ msgstr "Opakeco de la ombro:"
-
-#, fuzzy
-#~| msgid "Desktop %1"
-#~ msgid "Desktop Cube"
-#~ msgstr "Labortablo %1"
-
-#, fuzzy
-#~| msgid "Show Desktop Grid"
-#~ msgid "Desktop Cylinder"
-#~ msgstr "Videbligi la labortablan kradon"
-
-#, fuzzy
-#~| msgid "Ad&vanced"
-#~ msgctxt "@title:tab Advanced Settings"
-#~ msgid "Advanced"
-#~ msgstr "&Altnivela"
-
-#~ msgid "Tab 1"
-#~ msgstr "Langeto 1"
-
-#, fuzzy
-#~| msgid "Shadow opacity:"
-#~ msgid "Background color:"
-#~ msgstr "Opakeco de la ombro:"
-
-#, fuzzy
-#~| msgid "Animate desktop changes"
-#~ msgid "Display desktop name"
-#~ msgstr "Animigi labortablajn ŝanĝojn"
-
-#~ msgid "Reflection"
-#~ msgstr "Resendo"
-
-#, fuzzy
-#~| msgid "&Opacity:"
-#~ msgid "Opacity"
-#~ msgstr "&Opakeco:"
-
-#, fuzzy
-#~| msgid "Changes opacity of following elements:"
-#~ msgid "Do not change opacity of windows"
-#~ msgstr "Ŝanĝas opakecon de la sekvantaj:"
-
-#~ msgid "Tab 2"
-#~ msgstr "Langeto 2"
-
-#, fuzzy
-#~| msgid "&Color:"
-#~ msgid "Cap color:"
-#~ msgstr "&Koloro:"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgid "Sphere Cap Deformation"
-#~ msgstr "Ornamaĵoj:"
-
-#~ msgid "Sphere"
-#~ msgstr "Sfero"
-
-#, fuzzy
-#~| msgid "for windows on all desktops: "
-#~ msgid "Do not animate windows on all desktops"
-#~ msgstr "por fenestroj kiuj estas en ĉiuj labortabloj: "
-
-#, fuzzy
-#~| msgid "Desktop %1"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Desktop Cube"
-#~ msgstr "Labortablo %1"
-
-#, fuzzy
-#~| msgid "Desktop %1"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Desktop Cube Animation"
-#~ msgstr "Labortablo %1"
-
-#, fuzzy
-#~| msgid "for windows on current desktop: "
-#~ msgid "Toggle Flip Switch (Current desktop)"
-#~ msgstr "por fenestroj kiuj estas en la nuna labortablo: "
-
-#, fuzzy
-#~| msgid "for windows on all desktops: "
-#~ msgid "Toggle Flip Switch (All desktops)"
-#~ msgstr "por fenestroj kiuj estas en ĉiuj labortabloj: "
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgctxt "Duration of flip animation"
-#~ msgid "Default"
-#~ msgstr "Ornamaĵoj:"
-
-#~ msgid "Angle:"
-#~ msgstr "Angulo:"
-
-#~ msgid " °"
-#~ msgstr " °"
-
-#~ msgid ""
-#~ "Filter:\n"
-#~ "%1"
-#~ msgstr ""
-#~ "Filtrilo:\n"
-#~ "%1"
-
-#, fuzzy
-#~| msgid "Maximal &width:"
-#~ msgctxt "Name of a KWin Effect"
-#~ msgid "Minimize Animation"
-#~ msgstr "Maksimuma &larĝo:"
-
-#~ msgid "Shortcut"
-#~ msgstr "Klavosigno"
-
-#~ msgid "Apply effect to &panels"
-#~ msgstr "Apliki efekton al &paneloj"
-
-#, fuzzy
-#~| msgid "Apply effect to &groups"
-#~ msgid "Apply effect to the desk&top"
-#~ msgstr "Apliki efekton al &grupoj"
-
-#, fuzzy
-#~| msgid "Apply effect to &panels"
-#~ msgid "Apply effect to &keep-above windows"
-#~ msgstr "Apliki efekton al &paneloj"
-
-#~ msgid "Apply effect to &groups"
-#~ msgstr "Apliki efekton al &grupoj"
-
-#~ msgid "Out"
-#~ msgstr "Elen"
-
-#, fuzzy
-#~| msgid "Angle:"
-#~ msgid "Glide Angle:"
-#~ msgstr "Angulo:"
-
-#~ msgid "-90"
-#~ msgstr "-90"
-
-#~ msgid "90"
-#~ msgstr "90"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgctxt "Duration of the slide animation"
-#~ msgid "Default"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Right"
-#~ msgctxt "More brightness"
-#~ msgid "Lighter"
-#~ msgstr "Dekstra"
-
-#, fuzzy
-#~| msgid "Apply effect to &groups"
-#~ msgid "Apply blur effect to background"
-#~ msgstr "Apliki efekton al &grupoj"
-
-#~ msgid "Decorations:"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Shadow opacity:"
-#~ msgid "Background window &opacity:"
-#~ msgstr "Opakeco de la ombro:"
-
-#, fuzzy
-#~| msgid "&Number of snowflakes"
-#~ msgid "Number of windows:"
-#~ msgstr "&Nombro da neĝeroj"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgctxt "Duration of fading"
-#~ msgid "Default"
-#~ msgstr "Ornamaĵoj:"
-
-#~ msgid "Toggle Video Recording"
-#~ msgstr "Baskuligi registradon de video"
-
-#~ msgid "Path to save video:"
-#~ msgstr "Vojo por konservi la videon:"
-
-#~ msgid "Snow"
-#~ msgstr "Neĝo"
-
-#, fuzzy
-#~| msgid "Toggle Snow on the desktop"
-#~ msgid "Toggle Snow on Desktop"
-#~ msgstr "Baskuligi neĝon sur la labortablo"
-
-#, fuzzy
-#~| msgid " px"
-#~ msgid " pixel/frame"
-#~ msgid_plural " pixels/frame"
-#~ msgstr[0] " rm"
-#~ msgstr[1] " rm"
-
-#~ msgctxt "@action Enables/Disables an effect that makes windows more sharp"
-#~ msgid "Toggle Sharpen Effect"
-#~ msgstr "Baskuligi akrigan efekton"
-
-#, fuzzy
-#~| msgid "&Number of snowflakes"
-#~ msgid "&Number of snowflakes:"
-#~ msgstr "&Nombro da neĝeroj"
-
-#, fuzzy
-#~| msgid "M&inimum size of snowflake"
-#~ msgid "M&inimum size of snowflake:"
-#~ msgstr "M&inimuma grando de neĝero"
-
-#, fuzzy
-#~| msgid "M&aximum size of snowflake"
-#~ msgid "M&aximum size of snowflake:"
-#~ msgstr "M&aksimuma grando de neĝero"
-
-#, fuzzy
-#~| msgid "Maximal &width:"
-#~ msgid "Maximum &vertical speed:"
-#~ msgstr "Maksimuma &larĝo:"
-
-#, fuzzy
-#~| msgid "Moved/resized windows:"
-#~ msgid "Snow &behind windows"
-#~ msgstr "Movitaj/regrandigitaj fenestroj:"
-
-#, fuzzy
-#~| msgid "X offset:"
-#~ msgid "&X offset:"
-#~ msgstr "X-deŝovo:"
-
-#, fuzzy
-#~| msgid "Y offset:"
-#~ msgid "&Y offset:"
-#~ msgstr "Y-deŝovo:"
-
-#, fuzzy
-#~| msgid " %"
-#~ msgid "%"
-#~ msgstr " %"
-
-#, fuzzy
-#~| msgid "Shadow fuzzyness:"
-#~ msgid "&Fuzziness:"
-#~ msgstr "Svageco de la ombro:"
-
-#, fuzzy
-#~| msgid "Size"
-#~ msgid "&Size:"
-#~ msgstr "Grando"
-
-#, fuzzy
-#~| msgid "Active window has stronger shadow"
-#~ msgid "&Active windows have stronger shadows"
-#~ msgstr "Aktiva fenestro havas pli malluman ombron"
-
-#, fuzzy
-#~| msgid "Background"
-#~ msgid "Background brightness"
-#~ msgstr "Fono"
-
-#, fuzzy
-#~| msgid "Background"
-#~ msgid "Background saturation"
-#~ msgstr "Fono"
-
-#, fuzzy
-#~| msgid "End effect"
-#~ msgid "Effects"
-#~ msgstr "Vertikala"
-
-#~ msgid "Hold Ctrl+Meta keys to see where the mouse cursor is."
-#~ msgstr "Premu la Ctrl+Metan-klavojn por trovi la muskursoron."
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgctxt "Duration of rearrangement"
-#~ msgid "Default"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgid "Default Shadow"
-#~ msgstr "Ornamaĵoj:"
-
-#, fuzzy
-#~| msgid "Decorations:"
-#~ msgid "Decoration Shadows"
-#~ msgstr "Ornamaĵoj:"
-
-#~ msgid "Shadow size (relative to window):"
-#~ msgstr "Grando de la ombro (relativa al la fenestro):"
-
-#, fuzzy
-#~| msgid "Animate desktop changes"
-#~ msgid "Show cube when desktop changed"
-#~ msgstr "Animigi labortablajn ŝanĝojn"
-
-#, fuzzy
-#~| msgid "&Opacity:"
-#~ msgid "Cube &opacity:"
-#~ msgstr "&Opakeco:"
-
-#~ msgid "Activate when cursor is at a specific edge or corner of the screen:"
-#~ msgstr ""
-#~ "Aktivigi kiam la kursoro estas ĉe difinita rando aŭ angulo de la ekrano:"
-
-#, fuzzy
-#~| msgid "Toggle Expose Effect (incl other desktops)"
-#~ msgid "Toggle Expose Effect (incl. other desktops)"
-#~ msgstr "Baskuligi videbligan efekton (inkluz. aliajn labortablojn)"
