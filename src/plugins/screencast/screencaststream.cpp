@@ -541,7 +541,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         uint8_t *data = static_cast<uint8_t *>(spa_data->data);
         if (!data) {
             qCWarning(KWIN_SCREENCAST) << "Failed to record frame: invalid buffer data";
-            spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+            corruptHeader(spa_buffer);
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
         }
@@ -552,7 +552,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
         if ((stride * size.height()) > spa_data->maxsize) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: frame is too big";
-            spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+            corruptHeader(spa_buffer);
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
         }
@@ -571,7 +571,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         auto dmabuf = m_dmabufDataForPwBuffer.constFind(buffer);
         if (dmabuf == m_dmabufDataForPwBuffer.constEnd()) {
             qCDebug(KWIN_SCREENCAST) << "Failed to record frame: no dmabuf data";
-            spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+            corruptHeader(spa_buffer);
             pw_stream_queue_buffer(m_pwStream, buffer);
             return;
         }
@@ -625,7 +625,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         }
     } else {
         qCWarning(KWIN_SCREENCAST, "Failed to record frame: invalid buffer type: %d", spa_data[0].type);
-        spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+        corruptHeader(spa_buffer);
         pw_stream_queue_buffer(m_pwStream, buffer);
         return;
     }
@@ -648,6 +648,14 @@ void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
         spaHeader->dts_offset = 0;
         spaHeader->seq = m_sequential++;
         spaHeader->pts = m_source->clock().count();
+    }
+}
+
+void ScreenCastStream::corruptHeader(spa_buffer *spaBuffer)
+{
+    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spaHeader));
+    if (spaHeader) {
+        spaHeader->flags = SPA_META_HEADER_FLAG_CORRUPTED;
     }
 }
 
