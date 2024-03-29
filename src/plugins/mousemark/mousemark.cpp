@@ -125,7 +125,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         QList<QVector2D> verts;
         for (const Mark &mark : std::as_const(marks)) {
             verts.clear();
-            verts.reserve(mark.size() * 2);
+            verts.reserve(mark.size());
             for (const QPointF &p : std::as_const(mark)) {
                 verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
@@ -134,7 +134,7 @@ void MouseMarkEffect::paintScreen(const RenderTarget &renderTarget, const Render
         }
         if (!drawing.isEmpty()) {
             verts.clear();
-            verts.reserve(drawing.size() * 2);
+            verts.reserve(drawing.size());
             for (const QPointF &p : std::as_const(drawing)) {
                 verts.push_back(QVector2D(p.x() * scale, p.y() * scale));
             }
