@@ -211,8 +211,8 @@ void MouseMarkEffect::slotMouseChanged(const QPointF &pos, const QPointF &,
     } else { // neither freedraw, nor arrowdraw modifiers pressed, but mouse moved
         if (drawing.length() > 1) {
             marks.append(drawing);
-            drawing.clear();
         }
+        drawing.clear();
         arrow_tail = nullPoint();
     }
 }
