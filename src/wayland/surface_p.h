@@ -7,7 +7,8 @@
 #pragma once
 
 #include "core/graphicsbuffer.h"
-#include "surface.h"
+#include "wayland/surface.h"
+#include "wayland/transactions_v1_p.h"
 // Qt
 #include <QHash>
 #include <QList>
@@ -28,6 +29,7 @@ class FractionalScaleV1Interface;
 class FrogColorManagementSurfaceV1;
 class PresentationTimeFeedback;
 class XXColorSurfaceV2;
+class TransactionV1;
 
 struct SurfaceState
 {
@@ -147,6 +149,8 @@ public:
     qreal scaleOverride = 1.;
     qreal pendingScaleOverride = 1.;
 
+    QPointer<TransactionV1> transactionV1;
+    std::unique_ptr<Transaction> transaction;
     Transaction *firstTransaction = nullptr;
     Transaction *lastTransaction = nullptr;
 
@@ -174,7 +178,6 @@ public:
     struct
     {
         SubSurfaceInterface *handle = nullptr;
-        std::unique_ptr<Transaction> transaction;
     } subsurface;
 
     std::vector<std::unique_ptr<PresentationTimeFeedback>> pendingPresentationFeedbacks;

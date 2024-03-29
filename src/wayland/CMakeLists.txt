@@ -231,6 +231,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v2.xml
     BASENAME xx-color-management-v2
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/transactions-v1.xml
+    BASENAME transactions-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -303,6 +307,7 @@ target_sources(kwin PRIVATE
     textinput_v3.cpp
     touch.cpp
     transaction.cpp
+    transactions_v1.cpp
     viewporter.cpp
     xdgactivation_v1.cpp
     xdgdecoration_v1.cpp
@@ -378,6 +383,8 @@ install(FILES
     textinput_v2.h
     textinput_v3.h
     touch.h
+    transaction.h
+    transactions_v1.h
     viewporter.h
     xdgactivation_v1.h
     xdgdecoration_v1.h

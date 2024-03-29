@@ -66,8 +66,8 @@ void SurfaceInterfacePrivate::addChild(SubSurfaceInterface *child)
     current->subsurface.above.append(child);
     pending->subsurface.above.append(child);
 
-    if (subsurface.transaction) {
-        subsurface.transaction->amend(q, [child](SurfaceState *state) {
+    if (transaction) {
+        transaction->amend(q, [child](SurfaceState *state) {
             state->subsurface.above.append(child);
         });
     }
@@ -102,8 +102,8 @@ void SurfaceInterfacePrivate::removeChild(SubSurfaceInterface *child)
     pending->subsurface.below.removeAll(child);
     pending->subsurface.above.removeAll(child);
 
-    if (subsurface.transaction) {
-        subsurface.transaction->amend(q, [child](SurfaceState *state) {
+    if (transaction) {
+        transaction->amend(q, [child](SurfaceState *state) {
             state->subsurface.below.removeOne(child);
             state->subsurface.above.removeOne(child);
         });
@@ -342,36 +342,31 @@ void SurfaceInterfacePrivate::surface_set_input_region(Resource *resource, struc
 
 void SurfaceInterfacePrivate::surface_commit(Resource *resource)
 {
-    const bool sync = subsurface.handle && subsurface.handle->isSynchronized();
-
-    Transaction *transaction;
-    if (sync) {
-        if (!subsurface.transaction) {
-            subsurface.transaction = std::make_unique<Transaction>();
-        }
-        transaction = subsurface.transaction.get();
-    } else {
-        transaction = new Transaction();
+    if (!transaction) {
+        transaction = std::make_unique<Transaction>();
     }
 
     for (SubSurfaceInterface *subsurface : std::as_const(pending->subsurface.below)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
-        if (surfacePrivate->subsurface.transaction) {
-            transaction->merge(surfacePrivate->subsurface.transaction.get());
-            surfacePrivate->subsurface.transaction.reset();
+        if (surfacePrivate->transaction) {
+            transaction->merge(surfacePrivate->transaction.get());
+            surfacePrivate->transaction.reset();
         }
     }
     for (SubSurfaceInterface *subsurface : std::as_const(pending->subsurface.above)) {
         auto surfacePrivate = SurfaceInterfacePrivate::get(subsurface->surface());
-        if (surfacePrivate->subsurface.transaction) {
-            transaction->merge(surfacePrivate->subsurface.transaction.get());
-            surfacePrivate->subsurface.transaction.reset();
+        if (surfacePrivate->transaction) {
+            transaction->merge(surfacePrivate->transaction.get());
+            surfacePrivate->transaction.reset();
         }
     }
 
     transaction->add(q);
-    if (!sync) {
+
+    const bool sync = subsurface.handle && subsurface.handle->isSynchronized();
+    if (!transactionV1 && !sync) {
         transaction->commit();
+        transaction.release();
     }
 
     pending->serial++;

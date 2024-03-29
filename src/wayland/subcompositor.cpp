@@ -195,7 +195,6 @@ SubSurfaceInterface::~SubSurfaceInterface()
     if (d->surface) {
         SurfaceInterfacePrivate *surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
         surfacePrivate->subsurface.handle = nullptr;
-        surfacePrivate->subsurface.transaction.reset();
     }
 }
 
@@ -261,9 +260,9 @@ void SubSurfaceInterface::parentDesynchronized()
     }
 
     auto surfacePrivate = SurfaceInterfacePrivate::get(d->surface);
-    if (surfacePrivate->subsurface.transaction) {
-        surfacePrivate->subsurface.transaction->commit();
-        surfacePrivate->subsurface.transaction.release();
+    if (surfacePrivate->transaction && surfacePrivate->transactionV1.isNull()) {
+        surfacePrivate->transaction->commit();
+        surfacePrivate->transaction.release();
     }
 
     const auto below = d->surface->below();

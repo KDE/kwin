@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="transactions_v1">
+
+  <copyright>
+    Copyright © 2020      Red Hat Inc.
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice (including the next
+    paragraph) shall be included in all copies or substantial portions of the
+    Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+  </copyright>
+
+  <interface name="wp_transaction_manager_v1" version="1">
+    <description summary="surface group transactions">
+      This interface offers ways to make multiple surfaces commit atomically,
+      instead of each surface by themself. It works simimarly to how subsurface
+      state synhronization in that the state committed by a wl_surface.commit is
+      cached compositor side, then later applied to the active surface state at
+      a later point.
+
+      It can be used either as a replacement for subsurface synchronization, or
+      for example synchronize a popup surface with its parent, or a transient
+      dialog with its parent.
+
+      Warning! The protocol described in this file is currently in the testing
+      phase. Backward compatible changes may be added together with the
+      corresponding interface version bump. Backward incompatible changes can
+      only be done by creating a new major version of the extension.
+    </description>
+
+    <request name="destroy" type="destructor">
+      <description summary="unbind the transaction factory">
+	Destroy the wp_transaction_manager_v1 object. Objects created through
+	this interface will remain valid.
+      </description>
+    </request>
+
+    <request name="create_transaction">
+      <description summary="create a new transaction object">
+	Create a new one time transaction object. A transaction object can be
+	used once to group multiple surfaces together making all their committed
+	state being applied atomically at the same time.
+      </description>
+      <arg name="id" type="new_id" interface="wp_transaction_v1"
+	   summary="the new transaction object"/>
+    </request>
+  </interface>
+
+  <interface name="wp_transaction_v1" version="1">
+    <description summary="transaction object">
+      This objects represent a surface group that will always be atomically
+      applied together. Clients can add surfaces with
+      wp_transaction_v1.add_surface.
+
+      When surfaces that have been added to a wp_transaction_v1 object request
+      wl_surface.commit, the pending state will be cached by the compositor.
+      When the state of all the surfaces that should be updated together has
+      been committed, the client can request wp_transaction_v1.commit to apply
+      all the surfaces state in one go.
+
+      After a transaction object is committed, it becomes defunct and cannot be
+      reused.
+
+      When an added surface is a synchronized subsurface, the state that is
+      cached is not the state committed using wl_surface.commit but the state
+      that is effectively applied as defined by the wl_subsurface protocol. Thus
+      for a synchronized subsurface to have its state to be applied to the
+      active state of the surface, while also added to a wp_transaction_v1
+      object, the state must first be applied according to the subsurface
+      protocol, at which point it will be cached as part of the
+      wp_transaction_v1 object, then committed using wp_transaction_v1.commit.
+    </description>
+
+    <enum name="error">
+      <entry name="already_used" value="0"
+	     summary="the surface already belongs to another transaction object"/>
+    </enum>
+
+    <request name="add_surface">
+      <description summary="add a surface to the transaction object">
+	Add a surface to the transaction object. After a surface has been added,
+	all pending state committed using wl_surface.commit will be cached until
+	wp_transaction_v1.commit is called.
+
+	A surface can only be added to one transaction object at a time. If
+	added while already belonging to some transaction object, an
+	'already_used' error will be raised.
+
+	If a surface added to a transaction object is destroyed, it's cached
+	state is dropped as well, and the wp_transaction_v1 object will behave as
+	if the surface was never added.
+      </description>
+      <arg name="surface" type="object" interface="wl_surface"/>
+    </request>
+
+    <request name="commit" type="destructor">
+      <description summary="commit all the cached surface states">
+	Commit all the state that has been committed and cached by the surfaces
+	in the wp_transaction_v1 object. This request has no effect on any
+	pending wl_surface state.
+
+	This will also destroy the wp_transaction_v1 object.
+      </description>
+    </request>
+  </interface>
+
+</protocol>

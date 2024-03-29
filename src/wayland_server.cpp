@@ -64,6 +64,7 @@
 #include "wayland/subcompositor.h"
 #include "wayland/tablet_v2.h"
 #include "wayland/tearingcontrol_v1.h"
+#include "wayland/transactions_v1.h"
 #include "wayland/viewporter.h"
 #include "wayland/xdgactivation_v1.h"
 #include "wayland/xdgdecoration_v1.h"
@@ -498,6 +499,8 @@ bool WaylandServer::init(InitializationFlags flags)
     if (qEnvironmentVariableIntValue("KWIN_ENABLE_XX_COLOR_MANAGEMENT")) {
         m_xxColorManager = new XXColorManagerV2(m_display, m_display);
     }
+    new TransactionsManagerV1(m_display, m_display);
+
     return true;
 }
 
