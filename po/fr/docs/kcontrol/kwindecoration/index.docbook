@@ -27,7 +27,7 @@
 <keyword
 >Configuration du système</keyword>
 <keyword
->kwin</keyword>
+>KWin</keyword>
 <keyword
 >fenêtre</keyword>
 <keyword
@@ -66,7 +66,7 @@
 </para>
 
 <para
->Choisir un style de décoration de fenêtre dans la liste d'aperçus, en utilisant le champ de recherche en haut de l'écran ou télécharger un nouveau style en utilisant le bouton <guibutton
+>Sélectionnez un style de décoration de fenêtres dans la liste d'aperçus ou téléchargez un nouveau style en utilisant le bouton <guibutton
 >Obtenir de nouvelles décorations de fenêtres</guibutton
 >.</para>
 
@@ -106,15 +106,15 @@
 
 <tip>
 <para
->Pour des raisons d'accessibilité, certaines décorations de fenêtres prennent en compte des bords très larges. Si cette option est disponible, vous pouvez également choisir la  <guilabel
+>Pour des raisons d'accessibilité, certaines décorations de fenêtres prennent en compte des bords très larges. Si cette option est disponible, vous pouvez également choisir la <guilabel
 >taille de la bordure</guilabel
 > ici. Ces bordures larges sont plus faciles à voir pour les mal voyants et plus faciles à déplacer pour les personnes à mobilité réduite ou ayant des difficultés à manipuler la souris.</para>
 </tip>
 
 <tip>
 <para
->If you are interested in creating your own window decoration, you can learn more about it <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
->in this tutorial</ulink
+>Si vous êtes intéressé par créer votre propre décoration de fenêtres, vous pouvez en savoir plus à ce sujet  <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>dans ce tutoriel</ulink
 >.</para>
 </tip>
 
@@ -148,8 +148,8 @@
 >Boutons de barre de titre</title>
 
 <para
->Cet onglet vous permet de personnaliser l'emplacement du bouton sur la barre de titre. Vous pouvez faire glisser les boutons, &pex; le <guilabel
->Menu d'application</guilabel
+>Cet page vous permet de personnaliser l'emplacement du bouton sur la barre de titre. Vous pouvez faire glisser les boutons, &pex; le <guilabel
+>Menu d'applications</guilabel
 > dans la barre de titre, les supprimer ou les faire glisser autour des boutons jusqu'à trouver l'ordre qui vous convient. </para>
 
 <screenshot>
