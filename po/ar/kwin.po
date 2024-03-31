@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-27 09:15+0000\n"
-"PO-Revision-Date: 2024-02-15 17:21+0400\n"
+"PO-Revision-Date: 2024-03-30 11:06+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1692,13 +1692,13 @@ msgstr "حركات غلق النوافذ"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "مدة عدم النشاط (بالثّواني):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "أخفِ المؤشّر عند الكتابة"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2517,10 +2517,9 @@ msgid "Padding:"
 msgstr "الحشو:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "حمّل تخطيطًا..."
+msgstr "حمّل تخطيطًا…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
