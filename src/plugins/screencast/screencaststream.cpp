@@ -357,6 +357,10 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
 ScreenCastStream::~ScreenCastStream()
 {
     m_closed = true;
+
+    if (m_pwRenegotiate) {
+        pw_loop_destroy_source(m_pwCore->pwMainLoop, m_pwRenegotiate);
+    }
     if (m_pwStream) {
         pw_stream_destroy(m_pwStream);
     }
