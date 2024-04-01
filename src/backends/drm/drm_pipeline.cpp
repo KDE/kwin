@@ -402,6 +402,12 @@ bool DrmPipeline::updateCursor()
     if (needsModeset() || !m_pending.crtc || !m_pending.active) {
         return false;
     }
+    // We need to make sure that on vmwgfx software cursor is selected
+    // until Broadcom fixes hw cursor issues with vmwgfx. Otherwise
+    // the cursor is missing.
+    if (gpu()->isVmwgfx()) {
+        return false;
+    }
     // explicitly check for the cursor plane and not for AMS, as we might not always have one
     if (m_pending.crtc->cursorPlane()) {
         // test the full state, to take pending commits into account
