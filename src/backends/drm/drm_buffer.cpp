@@ -39,8 +39,9 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
     , m_gpu(gpu)
     , m_bufferRef(buffer)
 {
-    if (s_disableBufferWait || (m_gpu->isI915() && !s_envIsSet)) {
+    if (s_disableBufferWait || ((m_gpu->isI915() || m_gpu->isVmwgfx()) && !s_envIsSet)) {
         // buffer readability checks cause frames to be wrongly delayed on some Intel laptops
+        // and on Virtual Machines running vmwgfx
         // See https://gitlab.freedesktop.org/drm/intel/-/issues/9415
         m_readable = true;
     }
