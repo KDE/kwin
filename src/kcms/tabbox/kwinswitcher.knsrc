@@ -53,6 +53,7 @@ Name[zh_CN]=窗口管理器切换布局
 Name[zh_TW]=視窗切換器佈局
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
+ContentWarning=Executables
 Categories=Kwin Switching Layouts Plasma 6
 StandardResource=tmp
 Uncompress=kpackage
