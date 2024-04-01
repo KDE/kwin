@@ -80,6 +80,7 @@ public:
     bool isI915() const;
     bool isNVidia() const;
     bool isAmdgpu() const;
+    bool isVmwgfx() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
@@ -137,6 +138,7 @@ private:
     bool m_isNVidia;
     bool m_isI915;
     bool m_isAmdgpu;
+    bool m_isVmwgfx;
     bool m_isVirtualMachine;
     bool m_supportsCursorPlaneHotspot = false;
     bool m_asyncPageflipSupported = false;

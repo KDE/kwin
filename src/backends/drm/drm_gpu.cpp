@@ -80,6 +80,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     m_isI915 = strstr(version->name, "i915");
     m_isNVidia = strstr(version->name, "nvidia-drm");
     m_isAmdgpu = strstr(version->name, "amdgpu");
+    m_isVmwgfx = strstr(version->name, "vmwgfx");
     m_isVirtualMachine = strstr(version->name, "virtio") || strstr(version->name, "qxl")
         || strstr(version->name, "vmwgfx") || strstr(version->name, "vboxvideo");
 
@@ -676,6 +677,11 @@ bool DrmGpu::isNVidia() const
 bool DrmGpu::isAmdgpu() const
 {
     return m_isAmdgpu;
+}
+
+bool DrmGpu::isVmwgfx() const
+{
+    return m_isVmwgfx;
 }
 
 bool DrmGpu::isRemoved() const
