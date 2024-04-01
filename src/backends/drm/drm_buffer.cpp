@@ -28,10 +28,6 @@
 #include <linux/dma-buf.h>
 #endif
 
-#ifndef DRM_IOCTL_MODE_CLOSEFB
-#define DRM_IOCTL_MODE_CLOSEFB 0xD0
-#endif
-
 namespace KWin
 {
 
@@ -65,9 +61,18 @@ DrmFramebuffer::DrmFramebuffer(DrmGpu *gpu, uint32_t fbId, GraphicsBuffer *buffe
 DrmFramebuffer::~DrmFramebuffer()
 {
     uint32_t nonConstFb = m_framebufferId;
-    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CLOSEFB, &nonConstFb) != 0) {
+
+#ifdef DRM_IOCTL_MODE_CLOSEFB
+    struct drm_mode_closefb closeArgs{
+        .fb_id = m_framebufferId,
+        .pad = 0,
+    };
+    if (drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_CLOSEFB, &closeArgs) != 0) {
         drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
     }
+#else
+    drmIoctl(m_gpu->fd(), DRM_IOCTL_MODE_RMFB, &nonConstFb);
+#endif
 }
 
 uint32_t DrmFramebuffer::framebufferId() const
