@@ -30,6 +30,9 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
         return err;
     }
     const auto buffer = m_primaryLayer->currentBuffer();
+    if (m_primaryLayer->bufferSourceBox() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+        return Error::InvalidArguments;
+    }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
     if (!commit->doPageflip(m_pending.presentationMode)) {
         qCWarning(KWIN_DRM) << "Page flip failed:" << strerror(errno);
@@ -50,7 +53,11 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
     if (!m_primaryLayer->checkTestBuffer()) {
         return Error::TestBufferFailed;
     }
-    auto commit = std::make_unique<DrmLegacyCommit>(this, m_primaryLayer->currentBuffer());
+    const auto buffer = m_primaryLayer->currentBuffer();
+    if (m_primaryLayer->bufferSourceBox() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+        return Error::InvalidArguments;
+    }
+    auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
     if (!commit->doModeset(m_connector, m_pending.mode.get())) {
         qCWarning(KWIN_DRM) << "Modeset failed!" << strerror(errno);
         return errnoToError();

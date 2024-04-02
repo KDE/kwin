@@ -39,6 +39,7 @@ public:
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
     OutputTransform hardwareTransform() const override;
+    QRect bufferSourceBox() const override;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
@@ -46,6 +47,7 @@ private:
     OutputTransform m_scanoutTransform = OutputTransform::Kind::Normal;
     // the output transform the buffer is made for
     OutputTransform m_scanoutBufferTransform = OutputTransform::Kind::Normal;
+    QRect m_bufferSourceBox;
     QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;

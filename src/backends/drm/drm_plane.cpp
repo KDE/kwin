@@ -126,14 +126,13 @@ bool DrmPlane::updateProperties()
     return true;
 }
 
-void DrmPlane::set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst)
+void DrmPlane::set(DrmAtomicCommit *commit, const QRect &src, const QRect &dst)
 {
     // Src* are in 16.16 fixed point format
-    commit->addProperty(srcX, srcPos.x() << 16);
-    commit->addProperty(srcX, srcPos.x() << 16);
-    commit->addProperty(srcY, srcPos.y() << 16);
-    commit->addProperty(srcW, srcSize.width() << 16);
-    commit->addProperty(srcH, srcSize.height() << 16);
+    commit->addProperty(srcX, src.x() << 16);
+    commit->addProperty(srcY, src.y() << 16);
+    commit->addProperty(srcW, src.width() << 16);
+    commit->addProperty(srcH, src.height() << 16);
     commit->addProperty(crtcX, dst.x());
     commit->addProperty(crtcY, dst.y());
     commit->addProperty(crtcW, dst.width());

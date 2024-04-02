@@ -266,7 +266,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     } else if (planeTransform != DrmPlane::Transformation::Rotate0) {
         return Error::InvalidArguments;
     }
-    primary->set(commit, QPoint(0, 0), fb->buffer()->size(), centerBuffer(transform.map(fb->buffer()->size()), m_pending.mode->size()));
+    primary->set(commit, m_primaryLayer->bufferSourceBox(), centerBuffer(transform.map(fb->buffer()->size()), m_pending.mode->size()));
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
     if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
@@ -283,12 +283,17 @@ void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
 {
     auto plane = m_pending.crtc->cursorPlane();
     const auto layer = cursorLayer();
-    plane->set(commit, QPoint(0, 0), gpu()->cursorSize(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
-    commit->addProperty(plane->crtcId, layer->isEnabled() ? m_pending.crtc->id() : 0);
-    commit->addBuffer(plane, layer->isEnabled() ? layer->currentBuffer() : nullptr);
-    if (plane->vmHotspotX.isValid() && plane->vmHotspotY.isValid()) {
-        commit->addProperty(plane->vmHotspotX, std::round(layer->hotspot().x()));
-        commit->addProperty(plane->vmHotspotY, std::round(layer->hotspot().y()));
+    if (layer->isEnabled()) {
+        plane->set(commit, layer->bufferSourceBox(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
+        commit->addProperty(plane->crtcId, m_pending.crtc->id());
+        commit->addBuffer(plane, layer->currentBuffer());
+        if (plane->vmHotspotX.isValid() && plane->vmHotspotY.isValid()) {
+            commit->addProperty(plane->vmHotspotX, std::round(layer->hotspot().x()));
+            commit->addProperty(plane->vmHotspotY, std::round(layer->hotspot().y()));
+        }
+    } else {
+        commit->addProperty(plane->crtcId, 0);
+        commit->addBuffer(plane, nullptr);
     }
 }
 

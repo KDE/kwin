@@ -94,6 +94,13 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     const auto surface = item->surface();
+    // kernel documentation says that
+    // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
+    // so we need to make sure that doesn't cause a difference vs the composited result
+    m_bufferSourceBox = surface->bufferSourceBox().toRect();
+    if (surface->bufferSourceBox() != m_bufferSourceBox) {
+        return false;
+    }
     const auto neededTransform = surface->bufferTransform().combine(m_pipeline->output()->transform().inverted());
     const auto plane = m_pipeline->crtc()->primaryPlane();
     if (neededTransform != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(neededTransform))) {
@@ -159,5 +166,10 @@ std::chrono::nanoseconds EglGbmLayer::queryRenderTime() const
 OutputTransform EglGbmLayer::hardwareTransform() const
 {
     return m_scanoutBuffer ? m_scanoutTransform : OutputTransform::Normal;
+}
+
+QRect EglGbmLayer::bufferSourceBox() const
+{
+    return m_scanoutBuffer ? m_bufferSourceBox : QRect(QPoint(0, 0), m_surface.currentBuffer()->buffer()->size());
 }
 }

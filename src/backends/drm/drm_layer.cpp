@@ -7,6 +7,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_layer.h"
+#include "core/graphicsbuffer.h"
+#include "drm_buffer.h"
 #include "drm_pipeline.h"
 
 #include <QMatrix4x4>
@@ -35,5 +37,11 @@ DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
 OutputTransform DrmPipelineLayer::hardwareTransform() const
 {
     return OutputTransform::Kind::Normal;
+}
+
+QRect DrmPipelineLayer::bufferSourceBox() const
+{
+    const auto buffer = currentBuffer();
+    return buffer ? QRect(QPoint(0, 0), currentBuffer()->buffer()->size()) : QRect();
 }
 }

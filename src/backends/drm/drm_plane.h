@@ -41,7 +41,7 @@ public:
     void setCurrentBuffer(const std::shared_ptr<DrmFramebuffer> &b);
     void releaseCurrentBuffer();
 
-    void set(DrmAtomicCommit *commit, const QPoint &srcPos, const QSize &srcSize, const QRect &dst);
+    void set(DrmAtomicCommit *commit, const QRect &src, const QRect &dst);
 
     enum class TypeIndex : uint64_t {
         Overlay = 0,
