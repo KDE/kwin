@@ -131,13 +131,14 @@ void DrmGpu::initDrmResources()
 {
     // try atomic mode setting
     bool isEnvVarSet = false;
-    const bool supportsVmCursorHotspot = drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) == 0;
     const bool noAMS = qEnvironmentVariableIntValue("KWIN_DRM_NO_AMS", &isEnvVarSet) != 0 && isEnvVarSet;
+    const bool supportsAMS = drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) == 0;
+    const bool supportsVmCursorHotspot = supportsAMS && drmSetClientCap(m_fd, DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT, 1) == 0;
     if (m_isVirtualMachine && !supportsVmCursorHotspot && !isEnvVarSet) {
         qCWarning(KWIN_DRM, "Atomic Mode Setting disabled on GPU %s because of cursor offset issues in virtual machines", qPrintable(m_drmDevice->path()));
     } else if (noAMS) {
         qCWarning(KWIN_DRM) << "Atomic Mode Setting requested off via environment variable. Using legacy mode on GPU" << this;
-    } else if (drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, 1) != 0) {
+    } else if (!supportsAMS) {
         qCWarning(KWIN_DRM) << "drmSetClientCap for Atomic Mode Setting failed. Using legacy mode on GPU" << this;
     } else {
         DrmUniquePtr<drmModePlaneRes> planeResources(drmModeGetPlaneResources(m_fd));
@@ -161,6 +162,7 @@ void DrmGpu::initDrmResources()
         }
     }
     m_atomicModeSetting = !m_planes.empty();
+    drmSetClientCap(m_fd, DRM_CLIENT_CAP_ATOMIC, m_atomicModeSetting ? 1 : 0);
 
     DrmUniquePtr<drmModeRes> resources(drmModeGetResources(m_fd));
     if (!resources) {
