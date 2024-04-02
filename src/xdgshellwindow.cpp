@@ -284,6 +284,8 @@ void XdgSurfaceWindow::destroyWindow()
 {
     handleRoleDestroyed();
     markAsDeleted();
+    Q_EMIT closed();
+
     stopDelayedInteractiveMoveResize();
     if (isInteractiveMoveResize()) {
         leaveInteractiveMoveResize();
@@ -294,7 +296,6 @@ void XdgSurfaceWindow::destroyWindow()
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
     cleanTabBox();
-    Q_EMIT closed();
     StackingUpdatesBlocker blocker(workspace());
     workspace()->rulebook()->discardUsed(this, true);
     cleanGrouping();
