@@ -335,6 +335,7 @@ void InternalWindow::destroyWindow()
 
     Q_EMIT closed();
 
+    setTile(nullptr);
     workspace()->removeInternalWindow(this);
     m_handle = nullptr;
 

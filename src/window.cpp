@@ -101,9 +101,7 @@ Window::Window()
 
 Window::~Window()
 {
-    if (m_tile) {
-        m_tile->removeWindow(this);
-    }
+    Q_ASSERT(!m_tile);
     Q_ASSERT(m_blockGeometryUpdates == 0);
 }
 
@@ -3611,6 +3609,7 @@ void Window::setTile(Tile *tile)
     m_tile = tile;
 
     if (m_tile) {
+        Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
     }
 

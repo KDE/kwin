@@ -300,6 +300,7 @@ void XdgSurfaceWindow::destroyWindow()
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
     }
+    setTile(nullptr);
     m_configureTimer->stop();
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
