@@ -2582,7 +2582,7 @@ Output *Workspace::xineramaIndexToOutput(int index) const
     }
 
     const int infoCount = xcb_xinerama_query_screens_screen_info_length(screens.get());
-    if (index >= infoCount) {
+    if (index < 0 || index >= infoCount) {
         return nullptr;
     }
 
