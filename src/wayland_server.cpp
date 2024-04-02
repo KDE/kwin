@@ -158,13 +158,12 @@ public:
             return true;
         }
 
-        if (client->executablePath().isEmpty()) {
-            qCDebug(KWIN_CORE) << "Could not identify process with pid" << client->processId();
-            return false;
-        }
-
         static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_WAYLAND_NO_PERMISSION_CHECKS") == 1;
         if (!permissionCheckDisabled) {
+            if (client->executablePath().isEmpty()) {
+                qCDebug(KWIN_CORE) << "Could not identify process with pid" << client->processId();
+                return false;
+            }
             auto requestedInterfaces = client->property("requestedInterfaces");
             if (requestedInterfaces.isNull()) {
                 requestedInterfaces = fetchRequestedInterfaces(client);
