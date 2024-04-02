@@ -253,9 +253,6 @@ bool InputEventFilter::passToInputMethod(KeyboardKeyEvent *event)
         return false;
     }
     if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
-        if (event->state == KeyboardKeyState::Repeated) {
-            return true;
-        }
         const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp);
         keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), std::chrono::duration_cast<std::chrono::milliseconds>(timestamp).count(), event->nativeScanCode, event->state);
         return true;
@@ -367,10 +364,6 @@ public:
     {
         if (!waylandServer()->isScreenLocked()) {
             return false;
-        }
-        if (event->state == KeyboardKeyState::Repeated) {
-            // wayland client takes care of it
-            return true;
         }
 
         // FIXME: Ideally we want to move all whitelisted global shortcuts here and process it here instead of lockscreen
@@ -2140,10 +2133,6 @@ public:
     }
     bool keyboardKey(KeyboardKeyEvent *event) override
     {
-        if (event->state == KeyboardKeyState::Repeated) {
-            // handled by Wayland client
-            return false;
-        }
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp);

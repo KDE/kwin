@@ -39,7 +39,7 @@
 
 namespace KWin
 {
-static const int s_version = 9;
+static const int s_version = 10;
 
 SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
 {

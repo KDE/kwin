@@ -100,10 +100,6 @@ bool PopupInputFilter::keyboardKey(KeyboardKeyEvent *event)
                                                        event->state == KeyboardKeyState::Repeated);
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
-            if (event->state == KeyboardKeyState::Repeated) {
-                return true;
-            }
-
             waylandServer()->seat()->setTimestamp(event->timestamp);
             waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode, event->state);
         }

@@ -201,7 +201,7 @@ set_package_properties(epoxy PROPERTIES
     PURPOSE "OpenGL dispatch library"
 )
 
-find_package(Wayland 1.23)
+find_package(Wayland 1.24)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"

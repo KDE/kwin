@@ -22,6 +22,7 @@ class KeyboardInterfacePrivate : public QtWaylandServer::wl_keyboard
 public:
     KeyboardInterfacePrivate(SeatInterface *s);
 
+    void sendRepeatInfo(Resource *resource);
     void sendKeymap(Resource *resource);
     void sendModifiers(SurfaceInterface *surface);
     void sendModifiers(SurfaceInterface *surface, quint32 depressed, quint32 latched, quint32 locked, quint32 group, quint32 serial);

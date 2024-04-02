@@ -31,9 +31,7 @@ void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
 {
     const ClientConnection *focusedClient = focusedSurface ? focusedSurface->client() : nullptr;
 
-    if (resource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
-        send_repeat_info(resource->handle, keyRepeat.charactersPerSecond, keyRepeat.delay);
-    }
+    sendRepeatInfo(resource);
     if (!keymap.isNull()) {
         sendKeymap(resource);
     }
@@ -68,6 +66,20 @@ void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 seri
     for (Resource *keyboardResource : keyboards) {
         send_enter(keyboardResource->handle, serial, surface->resource(), data);
     }
+}
+
+void KeyboardInterfacePrivate::sendRepeatInfo(Resource *resource)
+{
+    if (resource->version() < WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
+        return;
+    }
+
+    qint32 effectiveRate = keyRepeat.charactersPerSecond;
+    if (resource->version() >= WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION) {
+        effectiveRate = 0;
+    }
+
+    send_repeat_info(resource->handle, effectiveRate, keyRepeat.delay);
 }
 
 void KeyboardInterfacePrivate::sendKeymap(Resource *resource)
@@ -118,9 +130,11 @@ bool KeyboardInterfacePrivate::updateKey(quint32 key, KeyboardKeyState state)
         return true;
     case KeyboardKeyState::Released:
         return pressedKeys.removeOne(key);
-    default:
-        Q_UNREACHABLE();
+    case KeyboardKeyState::Repeated:
+        return pressedKeys.contains(key);
     }
+
+    Q_UNREACHABLE();
 }
 
 KeyboardInterface::KeyboardInterface(SeatInterface *seat)
@@ -184,12 +198,16 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConne
         waylandState = WL_KEYBOARD_KEY_STATE_RELEASED;
         break;
     case KeyboardKeyState::Repeated:
-        Q_UNREACHABLE();
+        waylandState = WL_KEYBOARD_KEY_STATE_REPEATED;
+        break;
     }
 
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
     const quint32 serial = d->seat->display()->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
+        if (keyboardResource->version() < WL_KEYBOARD_KEY_STATE_REPEATED_SINCE_VERSION && state == KeyboardKeyState::Repeated) {
+            continue;
+        }
         d->send_key(keyboardResource->handle, serial, d->seat->timestamp().count(), key, waylandState);
     }
 }
@@ -255,9 +273,7 @@ void KeyboardInterface::setRepeatInfo(qint32 charactersPerSecond, qint32 delay)
     d->keyRepeat.delay = std::max(delay, 0);
     const auto keyboards = d->resourceMap();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        if (keyboardResource->version() >= WL_KEYBOARD_REPEAT_INFO_SINCE_VERSION) {
-            d->send_repeat_info(keyboardResource->handle, d->keyRepeat.charactersPerSecond, d->keyRepeat.delay);
-        }
+        d->sendRepeatInfo(keyboardResource);
     }
 }
 
