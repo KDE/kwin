@@ -119,6 +119,7 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
     if (!formats[dmabufAttributes->format].contains(dmabufAttributes->modifier)) {
+        m_dmabufFeedback.scanoutFailed(surface, formats);
         return false;
     }
     m_scanoutTransform = neededTransform;
