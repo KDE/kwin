@@ -121,6 +121,9 @@ bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
     if (!buffer) {
         return false;
     }
+    if (surface->bufferSourceBox() != QRectF(QPointF(0, 0), buffer->size())) {
+        return false;
+    }
 
     const DmaBufAttributes *dmabufAttributes = buffer->dmabufAttributes();
     if (!dmabufAttributes) {
