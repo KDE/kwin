@@ -188,6 +188,17 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto keyboardGroup = group.group(QStringLiteral("Keyboard"));
+    for (const auto &device : keyboardGroup.groupList()) {
+        const auto keyboardDeviceGroup = keyboardGroup.group(device);
+        for (const auto &binding : keyboardDeviceGroup.keyList()) {
+            const auto entry = keyboardDeviceGroup.readEntry(binding, QStringList());
+            const auto button = QKeySequence::fromString(binding);
+            insert(Keyboard, {device, uint(button[0])}, entry);
+            foundActions = true;
+        }
+    }
+
     if (foundActions) {
         KWin::input()->prependInputEventFilter(this);
     }
@@ -211,6 +222,14 @@ bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const 
         return false;
     }
     return send(TabletPad, {tabletPadId.name, button}, pressed, time);
+}
+
+bool ButtonRebindsFilter::keyEvent(KWin::KeyEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+    return send(Keyboard, {event->device() ? event->device()->name() : QString(), uint(event->modifiers() | event->key())}, event->type() == QEvent::KeyPress, event->timestamp());
 }
 
 bool ButtonRebindsFilter::tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time)
@@ -255,11 +274,12 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
 bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pressed, std::chrono::microseconds timestamp)
 {
     const auto &typeActions = m_actions.at(type);
-    if (typeActions.isEmpty()) {
+    auto it = typeActions.constFind(trigger);
+    if (it == typeActions.constEnd()) {
         return false;
     }
 
-    const auto &action = typeActions[trigger];
+    const auto &action = *it;
     if (const QKeySequence *seq = std::get_if<QKeySequence>(&action)) {
         return sendKeySequence(*seq, pressed, timestamp);
     }
@@ -330,19 +350,16 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     }
 
     RebindScope scope;
+    auto sendModifierKey = [&sendKey](uint modifier, uint keyToEmit) {
+        if (modifier) {
+            sendKey(keyToEmit);
+        }
+    };
 
-    if (key & Qt::ShiftModifier) {
-        sendKey(KEY_LEFTSHIFT);
-    }
-    if (key & Qt::ControlModifier) {
-        sendKey(KEY_LEFTCTRL);
-    }
-    if (key & Qt::AltModifier) {
-        sendKey(KEY_LEFTALT);
-    }
-    if (key & Qt::MetaModifier) {
-        sendKey(KEY_LEFTMETA);
-    }
+    sendModifierKey(key & Qt::ShiftModifier, KEY_LEFTSHIFT);
+    sendModifierKey(key & Qt::ControlModifier, KEY_LEFTCTRL);
+    sendModifierKey(key & Qt::AltModifier, KEY_LEFTALT);
+    sendModifierKey(key & Qt::MetaModifier, KEY_LEFTMETA);
 
     sendKey(keyCode.value());
     return true;

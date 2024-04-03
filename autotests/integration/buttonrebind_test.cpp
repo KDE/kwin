@@ -11,10 +11,13 @@
 #include "pointer_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
+#include "xkb.h"
 
 #include <KWayland/Client/keyboard.h>
 #include <KWayland/Client/seat.h>
+#include <keyboard_input.h>
 #include <linux/input-event-codes.h>
+#include <private/qxkbcommon_p.h>
 
 using namespace KWin;
 
@@ -29,8 +32,11 @@ private Q_SLOTS:
     void cleanup();
     void initTestCase();
 
-    void testKey_data();
-    void testKey();
+    void testMouseButtons_data();
+    void testMouseButtons();
+
+    void testKeyboard_data();
+    void testKeyboard();
 
 private:
     quint32 timestamp = 1;
@@ -61,7 +67,7 @@ void TestButtonRebind::initTestCase()
     QVERIFY(applicationStartedSpy.wait());
 }
 
-void TestButtonRebind::testKey_data()
+void TestButtonRebind::testMouseButtons_data()
 {
     QTest::addColumn<QKeySequence>("boundKeys");
     QTest::addColumn<QList<quint32>>("expectedKeys");
@@ -75,21 +81,30 @@ void TestButtonRebind::testKey_data()
     QTest::newRow("keypad enter") << QKeySequence(Qt::KeypadModifier | Qt::Key_Enter) << QList<quint32>{KEY_KPENTER};
 }
 
-void TestButtonRebind::testKey()
+static std::unique_ptr<KWayland::Client::Keyboard> createKeyboard()
 {
-    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
-    QFETCH(QKeySequence, boundKeys);
-    buttonGroup.writeEntry("ExtraButton7", QStringList{"Key", boundKeys.toString(QKeySequence::PortableText)}, KConfig::Notify);
-    buttonGroup.sync();
-
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
 
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
     QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    if (!enteredSpy.wait()) {
+        return nullptr;
+    }
+    return keyboard;
+}
+
+void TestButtonRebind::testMouseButtons()
+{
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
+    QFETCH(QKeySequence, boundKeys);
+    buttonGroup.writeEntry("ExtraButton7", QStringList{"Key", boundKeys.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    auto keyboard = createKeyboard();
+    QVERIFY(keyboard);
     QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
-    QVERIFY(enteredSpy.wait());
 
     // 0x119 is Qt::ExtraButton7
     Test::pointerButtonPressed(0x119, timestamp++);
@@ -104,6 +119,63 @@ void TestButtonRebind::testKey()
         QCOMPARE(keyChangedSpy.at(i).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
     }
     Test::pointerButtonReleased(0x119, timestamp++);
+}
+
+void TestButtonRebind::testKeyboard_data()
+{
+    QTest::addColumn<QKeySequence>("trigger");
+    QTest::addColumn<QKeySequence>("effect");
+    QTest::addColumn<QList<quint32>>("output");
+
+    QTest::newRow("1to1") << QKeySequence(Qt::Key_A) << QKeySequence(Qt::Key_B) << QList<quint32>{KEY_B};
+    QTest::newRow("1to2") << QKeySequence(Qt::Key_F12) << QKeySequence(Qt::ControlModifier | Qt::Key_C) << QList<quint32>{KEY_LEFTCTRL, KEY_C};
+    QTest::newRow("2to1") << QKeySequence(Qt::ControlModifier | Qt::Key_Left) << QKeySequence(Qt::Key_Home) << QList<quint32>{KEY_HOME};
+}
+
+static QList<int> keycodes(const QKeySequence &keys)
+{
+    QKeyEvent ev(QEvent::KeyPress, keys[0] & ~Qt::KeyboardModifierMask, Qt::NoModifier);
+    const QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
+    QList<int> ret;
+    ret.reserve(syms.size());
+    for (int sym : syms) {
+        auto code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
+        if (!code) {
+            qDebug() << "cannot find a keycode for" << sym;
+            Q_UNREACHABLE();
+        }
+        ret << *code;
+    }
+    return ret;
+}
+
+void TestButtonRebind::testKeyboard()
+{
+    QFETCH(const QKeySequence, trigger);
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Keyboard")).group("Virtual Keyboard 1");
+    QFETCH(const QKeySequence, effect);
+    buttonGroup.writeEntry(trigger.toString(QKeySequence::PortableText), QStringList{"Key", effect.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    auto keyboard = createKeyboard();
+    QVERIFY(keyboard);
+    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+
+    const auto codes = keycodes(trigger);
+    for (int keycode : codes) {
+        Test::keyboardKeyPressed(keycode, timestamp++);
+    }
+    QVERIFY(keyChangedSpy.wait());
+    QFETCH(const QList<quint32>, output);
+    QCOMPARE(keyChangedSpy.count(), output.count());
+    for (int i = 0; i < keyChangedSpy.count(); i++) {
+        QCOMPARE(keyChangedSpy.at(i).at(0).value<quint32>(), output.at(i));
+        QCOMPARE(keyChangedSpy.at(i).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
+    }
+    for (int keycode : codes) {
+        Test::keyboardKeyReleased(keycode, timestamp++);
+    }
+    buttonGroup.deleteEntry(trigger.toString());
 }
 
 WAYLANDTEST_MAIN(TestButtonRebind)

@@ -49,6 +49,13 @@ struct Trigger
     }
 };
 
+static QDebug operator<<(QDebug debug, const Trigger &trigger)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "Trigger(device: " << trigger.device << ", button: 0x" << Qt::hex << trigger.button << ')';
+    return debug;
+}
+
 class ButtonRebindsFilter : public KWin::Plugin, public KWin::InputEventFilter
 {
     Q_OBJECT
@@ -57,6 +64,7 @@ public:
         Pointer,
         TabletPad,
         TabletToolButtonType,
+        Keyboard,
         LastType
     };
     Q_ENUM(TriggerType)
@@ -73,6 +81,7 @@ public:
     bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override;
     bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
     bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time) override;
+    bool keyEvent(KWin::KeyEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
