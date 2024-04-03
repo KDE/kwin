@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 09:15+0000\n"
+"POT-Creation-Date: 2024-04-03 00:39+0000\n"
 "PO-Revision-Date: 2024-02-29 15:57+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -2401,7 +2401,7 @@ msgstr "Non poteva trovar sortita"
 msgid "Invalid region"
 msgstr "Region invalide"
 
-#: plugins/screencast/screencaststream.cpp:379
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Falleva a crear fluxo (stream) de PipeWire"
@@ -4169,7 +4169,7 @@ msgstr "Commuta un Scriptorio a basso"
 msgid "Switch to Desktop %1"
 msgstr "Commuta a Scriptorio %1"
 
-#: window.cpp:3131
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

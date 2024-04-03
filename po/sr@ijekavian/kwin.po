@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 09:15+0000\n"
+"POT-Creation-Date: 2024-04-03 00:39+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2650,7 +2650,7 @@ msgstr ""
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:379
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4559,7 +4559,7 @@ msgstr "На прву површ испод"
 msgid "Switch to Desktop %1"
 msgstr "На површ %1"
 
-#: window.cpp:3131
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

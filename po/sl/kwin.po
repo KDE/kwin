@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1676587 2024-03-27 09:42:20Z scripty $
+# $Id: kwin.po 1677014 2024-04-03 01:08:38Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 09:15+0000\n"
+"POT-Creation-Date: 2024-04-03 00:39+0000\n"
 "PO-Revision-Date: 2024-03-08 17:53+0100\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2412,7 +2412,7 @@ msgstr "Ni bilo mogoče najti outputa"
 msgid "Invalid region"
 msgstr "Neveljavna regija"
 
-#: plugins/screencast/screencaststream.cpp:379
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Kreiranje toka PipeWire ni uspelo"
@@ -4175,7 +4175,7 @@ msgstr "Preklopi na eno namizje navzdol"
 msgid "Switch to Desktop %1"
 msgstr "Preklopi na namizje %1"
 
-#: window.cpp:3131
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

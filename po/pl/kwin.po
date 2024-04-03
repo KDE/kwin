@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1676587 $
+# Version: $Revision: 1677014 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-27 09:15+0000\n"
+"POT-Creation-Date: 2024-04-03 00:39+0000\n"
 "PO-Revision-Date: 2024-03-02 12:49+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2418,7 +2418,7 @@ msgstr "Nie można znaleźć wyjścia"
 msgid "Invalid region"
 msgstr "Nieprawidłowy obszar"
 
-#: plugins/screencast/screencaststream.cpp:379
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Nie udało się utworzyć strumienia PipeWire"
@@ -4184,7 +4184,7 @@ msgstr "Przełącz jeden pulpit niżej"
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"
 
-#: window.cpp:3131
+#: window.cpp:3129
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
