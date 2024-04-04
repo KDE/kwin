@@ -347,7 +347,7 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
     }
 
     const auto sort = [](const auto &lhs, const auto &rhs) {
-        if (lhs.drmFormat == rhs.drmFormat) {
+        if (lhs.bitsPerColor == rhs.bitsPerColor && lhs.bitsPerPixel == rhs.bitsPerPixel) {
             // prefer having an alpha channel
             return lhs.alphaBits > rhs.alphaBits;
         } else if ((lhs.bitsPerColor == 10) != (rhs.bitsPerColor == 10)) {
