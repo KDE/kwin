@@ -36,6 +36,8 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     QImage *image();
     std::chrono::nanoseconds queryRenderTime() const override;
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
     Output *const m_output;

@@ -65,6 +65,16 @@ std::chrono::nanoseconds VirtualQPainterLayer::queryRenderTime() const
     return m_renderTime;
 }
 
+DrmDevice *VirtualQPainterLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> VirtualQPainterLayer::supportedDrmFormats() const
+{
+    return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
+}
+
 VirtualQPainterBackend::VirtualQPainterBackend(VirtualBackend *backend)
     : m_allocator(std::make_unique<ShmGraphicsBufferAllocator>())
 {

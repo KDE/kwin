@@ -10,6 +10,7 @@
 #include "kwin_export.h"
 
 #include <QObject>
+#include <QPointer>
 #include <QRegion>
 #include <chrono>
 #include <optional>
@@ -18,6 +19,8 @@ namespace KWin
 {
 
 class SurfaceItem;
+class DrmDevice;
+class GraphicsBuffer;
 
 struct OutputLayerBeginFrameInfo
 {
@@ -69,20 +72,31 @@ public:
      * Tries to import the newest buffer of the surface for direct scanout
      * Returns @c true if scanout succeeds, @c false if rendering is necessary
      */
-    virtual bool scanout(SurfaceItem *surfaceItem);
+    bool attemptScanout(SurfaceItem *item);
+
+    /**
+     * Notify that there's no scanout candidate this frame
+     */
+    void notifyNoScanoutCandidate();
 
     /**
      * queries the render time of the last frame. If rendering isn't complete yet, this may block until it is
      */
     virtual std::chrono::nanoseconds queryRenderTime() const = 0;
 
-private:
+    virtual DrmDevice *scanoutDevice() const = 0;
+    virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
+
+protected:
+    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage);
+
     QRegion m_repaints;
     QPointF m_hotspot;
     QPointF m_position;
     QSizeF m_size;
     qreal m_scale = 1.0;
     bool m_enabled = false;
+    QPointer<SurfaceItem> m_scanoutCandidate;
 };
 
 } // namespace KWin

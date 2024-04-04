@@ -120,6 +120,16 @@ std::chrono::nanoseconds X11WindowedEglPrimaryLayer::queryRenderTime() const
     return m_query->result();
 }
 
+DrmDevice *X11WindowedEglPrimaryLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats() const
+{
+    return m_backend->backend()->driFormats();
+}
+
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
     : m_output(output)
     , m_backend(backend)
@@ -176,6 +186,16 @@ std::chrono::nanoseconds X11WindowedEglCursorLayer::queryRenderTime() const
 {
     m_backend->makeCurrent();
     return m_query->result();
+}
+
+DrmDevice *X11WindowedEglCursorLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> X11WindowedEglCursorLayer::supportedDrmFormats() const
+{
+    return m_backend->supportedFormats();
 }
 
 X11WindowedEglBackend::X11WindowedEglBackend(X11WindowedBackend *backend)

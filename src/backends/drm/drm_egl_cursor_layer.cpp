@@ -70,4 +70,14 @@ std::optional<QSize> EglGbmCursorLayer::fixedSize() const
 {
     return m_pipeline->gpu()->cursorSize();
 }
+
+DrmDevice *EglGbmCursorLayer::scanoutDevice() const
+{
+    return m_pipeline->gpu()->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> EglGbmCursorLayer::supportedDrmFormats() const
+{
+    return m_pipeline->cursorFormats();
+}
 }

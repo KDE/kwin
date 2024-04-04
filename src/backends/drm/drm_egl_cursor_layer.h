@@ -9,7 +9,6 @@
 #pragma once
 #include "drm_layer.h"
 
-#include "drm_dmabuf_feedback.h"
 #include "drm_egl_layer_surface.h"
 
 #include <QMap>
@@ -36,6 +35,8 @@ public:
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
     std::optional<QSize> fixedSize() const override;
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
     EglGbmLayerSurface m_surface;

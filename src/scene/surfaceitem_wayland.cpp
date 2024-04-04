@@ -6,8 +6,10 @@
 
 #include "scene/surfaceitem_wayland.h"
 #include "compositor.h"
+#include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
 #include "core/renderbackend.h"
+#include "wayland/linuxdmabufv1clientbuffer.h"
 #include "wayland/subcompositor.h"
 #include "wayland/surface.h"
 #include "window.h"
@@ -161,6 +163,25 @@ ContentType SurfaceItemWayland::contentType() const
     return m_surface ? m_surface->contentType() : ContentType::None;
 }
 
+void SurfaceItemWayland::setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats)
+{
+    if (!m_surface || !m_surface->dmabufFeedbackV1()) {
+        return;
+    }
+    if (!device && m_scanoutFeedback.has_value()) {
+        m_surface->dmabufFeedbackV1()->setTranches({});
+        m_scanoutFeedback.reset();
+        return;
+    }
+    if (!m_scanoutFeedback || m_scanoutFeedback->device != device || m_scanoutFeedback->formats != drmFormats) {
+        m_scanoutFeedback = ScanoutFeedback{
+            .device = device,
+            .formats = drmFormats,
+        };
+        m_surface->dmabufFeedbackV1()->setScanoutTranches(device, drmFormats);
+    }
+}
+
 void SurfaceItemWayland::freeze()
 {
     if (!m_surface) {
@@ -247,7 +268,6 @@ QRegion SurfaceItemXwayland::opaque() const
     return QRegion();
 }
 #endif
-
 } // namespace KWin
 
 #include "moc_surfaceitem_wayland.cpp"

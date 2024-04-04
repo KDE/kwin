@@ -85,6 +85,16 @@ std::chrono::nanoseconds WaylandQPainterPrimaryLayer::queryRenderTime() const
     return m_renderTime;
 }
 
+DrmDevice *WaylandQPainterPrimaryLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> WaylandQPainterPrimaryLayer::supportedDrmFormats() const
+{
+    return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
+}
+
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
     : m_output(output)
     , m_backend(backend)
@@ -129,6 +139,16 @@ bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const Q
 std::chrono::nanoseconds WaylandQPainterCursorLayer::queryRenderTime() const
 {
     return m_renderTime;
+}
+
+DrmDevice *WaylandQPainterCursorLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> WaylandQPainterCursorLayer::supportedDrmFormats() const
+{
+    return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 }
 
 WaylandQPainterBackend::WaylandQPainterBackend(Wayland::WaylandBackend *b)

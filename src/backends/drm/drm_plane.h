@@ -34,7 +34,7 @@ public:
     void disable(DrmAtomicCommit *commit) override;
 
     bool isCrtcSupported(int pipeIndex) const;
-    QMap<uint32_t, QList<uint64_t>> formats() const;
+    QHash<uint32_t, QList<uint64_t>> formats() const;
     bool supportsTransformation(OutputTransform transform) const;
 
     std::shared_ptr<DrmFramebuffer> currentBuffer() const;
@@ -98,7 +98,7 @@ public:
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
 
-    QMap<uint32_t, QList<uint64_t>> m_supportedFormats;
+    QHash<uint32_t, QList<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;
 };
 

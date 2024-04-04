@@ -31,6 +31,7 @@ public:
     QList<QRectF> shape() const override;
     QRegion opaque() const override;
     ContentType contentType() const override;
+    void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats) override;
     void freeze() override;
 
     SurfaceInterface *surface() const;
@@ -57,6 +58,12 @@ private:
     SurfaceItemWayland *getOrCreateSubSurfaceItem(SubSurfaceInterface *s);
 
     QPointer<SurfaceInterface> m_surface;
+    struct ScanoutFeedback
+    {
+        DrmDevice *device = nullptr;
+        QHash<uint32_t, QList<uint64_t>> formats;
+    };
+    std::optional<ScanoutFeedback> m_scanoutFeedback;
     std::unordered_map<SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
 };
 

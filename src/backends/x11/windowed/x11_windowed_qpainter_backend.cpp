@@ -95,6 +95,16 @@ std::chrono::nanoseconds X11WindowedQPainterPrimaryLayer::queryRenderTime() cons
     return m_renderTime;
 }
 
+DrmDevice *X11WindowedQPainterPrimaryLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterPrimaryLayer::supportedDrmFormats() const
+{
+    return m_backend->supportedFormats();
+}
+
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
     : m_output(output)
 {
@@ -125,6 +135,16 @@ bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, con
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_output->cursor()->update(m_buffer, hotspot());
     return true;
+}
+
+DrmDevice *X11WindowedQPainterCursorLayer::scanoutDevice() const
+{
+    return nullptr;
+}
+
+QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterCursorLayer::supportedDrmFormats() const
+{
+    return {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}};
 }
 
 X11WindowedQPainterBackend::X11WindowedQPainterBackend(X11WindowedBackend *backend)

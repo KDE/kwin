@@ -80,6 +80,16 @@ std::chrono::nanoseconds VirtualEglLayer::queryRenderTime() const
     }
 }
 
+DrmDevice *VirtualEglLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> VirtualEglLayer::supportedDrmFormats() const
+{
+    return m_backend->supportedFormats();
+}
+
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
     : AbstractEglBackend()
     , m_backend(b)

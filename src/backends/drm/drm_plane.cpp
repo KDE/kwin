@@ -144,7 +144,7 @@ bool DrmPlane::isCrtcSupported(int pipeIndex) const
     return (m_possibleCrtcs & (1 << pipeIndex));
 }
 
-QMap<uint32_t, QList<uint64_t>> DrmPlane::formats() const
+QHash<uint32_t, QList<uint64_t>> DrmPlane::formats() const
 {
     return m_supportedFormats;
 }

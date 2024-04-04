@@ -74,7 +74,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QMap<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -258,7 +258,7 @@ const ColorDescription &EglGbmLayerSurface::colorDescription() const
     }
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
+bool EglGbmLayerSurface::doesSurfaceFit(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const
 {
     return doesSurfaceFit(m_surface.get(), size, formats);
 }
@@ -272,7 +272,7 @@ std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QMap<uint32_t, QList<uint64_t>> &formats)
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats)
 {
     if (checkSurface(bufferSize, formats)) {
         return m_surface->currentFramebuffer;
@@ -288,7 +288,7 @@ void EglGbmLayerSurface::forgetDamage()
     }
 }
 
-bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats)
+bool EglGbmLayerSurface::checkSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats)
 {
     if (doesSurfaceFit(m_surface.get(), size, formats)) {
         return true;
@@ -308,7 +308,7 @@ bool EglGbmLayerSurface::checkSurface(const QSize &size, const QMap<uint32_t, QL
     return false;
 }
 
-bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
+bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const
 {
     if (!surface || !surface->gbmSwapchain || surface->gbmSwapchain->size() != size) {
         return false;
@@ -333,7 +333,7 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
     Q_UNREACHABLE();
 }
 
-std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QMap<uint32_t, QList<uint64_t>> &formats) const
+std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const
 {
     QList<FormatInfo> preferredFormats;
     QList<FormatInfo> fallbackFormats;

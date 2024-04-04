@@ -23,6 +23,7 @@ namespace KWin
 class SceneDelegate;
 class Scene;
 class SyncReleasePoint;
+class DrmDevice;
 
 /**
  * The Item class is the base class for items in the scene.

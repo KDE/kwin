@@ -101,6 +101,16 @@ std::chrono::nanoseconds DrmQPainterLayer::queryRenderTime() const
     return m_renderTime;
 }
 
+DrmDevice *DrmQPainterLayer::scanoutDevice() const
+{
+    return m_pipeline->gpu()->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> DrmQPainterLayer::supportedDrmFormats() const
+{
+    return m_pipeline->formats();
+}
+
 DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
 {
@@ -158,6 +168,16 @@ std::chrono::nanoseconds DrmCursorQPainterLayer::queryRenderTime() const
     return m_renderTime;
 }
 
+DrmDevice *DrmCursorQPainterLayer::scanoutDevice() const
+{
+    return m_pipeline->gpu()->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> DrmCursorQPainterLayer::supportedDrmFormats() const
+{
+    return m_pipeline->cursorFormats();
+}
+
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
     : m_output(output)
 {
@@ -194,5 +214,16 @@ void DrmVirtualQPainterLayer::releaseBuffers()
 std::chrono::nanoseconds DrmVirtualQPainterLayer::queryRenderTime() const
 {
     return m_renderTime;
+}
+
+DrmDevice *DrmVirtualQPainterLayer::scanoutDevice() const
+{
+    // TODO make this use GraphicsBuffers too?
+    return nullptr;
+}
+
+QHash<uint32_t, QList<uint64_t>> DrmVirtualQPainterLayer::supportedDrmFormats() const
+{
+    return {{DRM_FORMAT_ARGB8888, QList<uint64_t>{DRM_FORMAT_MOD_LINEAR}}};
 }
 }

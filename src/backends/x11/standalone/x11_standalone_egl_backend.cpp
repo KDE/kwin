@@ -51,6 +51,16 @@ std::chrono::nanoseconds EglLayer::queryRenderTime() const
     return m_backend->queryRenderTime();
 }
 
+DrmDevice *EglLayer::scanoutDevice() const
+{
+    return nullptr;
+}
+
+QHash<uint32_t, QList<uint64_t>> EglLayer::supportedDrmFormats() const
+{
+    return {};
+}
+
 EglBackend::EglBackend(::Display *display, X11StandaloneBackend *backend)
     : m_backend(backend)
     , m_overlayWindow(std::make_unique<OverlayWindowX11>(backend))

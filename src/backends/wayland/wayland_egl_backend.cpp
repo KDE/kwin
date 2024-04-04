@@ -116,23 +116,22 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
     return true;
 }
 
-bool WaylandEglPrimaryLayer::scanout(SurfaceItem *surfaceItem)
+bool WaylandEglPrimaryLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
 {
     Q_ASSERT(!m_presentationBuffer);
-    if (surfaceItem->size() != m_waylandOutput->modeSize()) {
+    // TODO use viewporter to relax this check
+    if (sourceRect != QRectF(QPointF(0, 0), targetSize) || targetSize != m_waylandOutput->modeSize()) {
         return false;
     }
-    SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
-    if (!item || !item->surface() || item->surface()->bufferTransform() != OutputTransform::Kind::Normal) {
+    if (transform != OutputTransform::Kind::Normal || color != ColorDescription::sRGB) {
         return false;
     }
-    m_presentationBuffer = m_backend->backend()->importBuffer(item->surface()->buffer());
+    m_presentationBuffer = m_backend->backend()->importBuffer(buffer);
     return m_presentationBuffer;
 }
 
 void WaylandEglPrimaryLayer::present()
 {
-
     KWayland::Client::Surface *surface = m_waylandOutput->surface();
     surface->attachBuffer(m_presentationBuffer);
     surface->damage(m_damageJournal.lastDamage());
@@ -146,6 +145,16 @@ std::chrono::nanoseconds WaylandEglPrimaryLayer::queryRenderTime() const
 {
     m_backend->makeCurrent();
     return m_query->result();
+}
+
+DrmDevice *WaylandEglPrimaryLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> WaylandEglPrimaryLayer::supportedDrmFormats() const
+{
+    return m_backend->backend()->display()->linuxDmabuf()->formats();
 }
 
 WaylandEglCursorLayer::WaylandEglCursorLayer(WaylandOutput *output, WaylandEglBackend *backend)
@@ -225,6 +234,16 @@ std::chrono::nanoseconds WaylandEglCursorLayer::queryRenderTime() const
 {
     m_backend->makeCurrent();
     return m_query->result();
+}
+
+DrmDevice *WaylandEglCursorLayer::scanoutDevice() const
+{
+    return m_backend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> WaylandEglCursorLayer::supportedDrmFormats() const
+{
+    return m_backend->supportedFormats();
 }
 
 WaylandEglBackend::WaylandEglBackend(WaylandBackend *b)

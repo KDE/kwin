@@ -30,14 +30,12 @@ namespace KWin
 EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
     , m_surface(pipeline->gpu(), eglBackend)
-    , m_dmabufFeedback(pipeline->gpu(), eglBackend)
 {
 }
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
 {
     m_scanoutBuffer.reset();
-    m_dmabufFeedback.renderingSurface();
 
     return m_surface.startRendering(m_pipeline->mode()->size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
@@ -77,71 +75,41 @@ ColorDescription EglGbmLayer::colorDescription() const
     return m_surface.colorDescription();
 }
 
-bool EglGbmLayer::scanout(SurfaceItem *surfaceItem)
+bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
     if (directScanoutDisabled) {
         return false;
     }
-    if (surfaceItem->colorDescription() != m_pipeline->colorDescription() || m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || m_pipeline->iccProfile()) {
+    if (color != m_pipeline->colorDescription() || m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || m_pipeline->iccProfile()) {
         // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
         return false;
     }
-
-    SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
-    if (!item || !item->surface()) {
-        return false;
-    }
-    const auto surface = item->surface();
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
     // so we need to make sure that doesn't cause a difference vs the composited result
-    m_bufferSourceBox = surface->bufferSourceBox().toRect();
-    if (surface->bufferSourceBox() != m_bufferSourceBox) {
+    m_bufferSourceBox = sourceRect.toRect();
+    if (sourceRect != m_bufferSourceBox) {
         return false;
     }
-    const auto neededTransform = surface->bufferTransform().combine(m_pipeline->output()->transform().inverted());
+    const auto neededTransform = transform.combine(m_pipeline->output()->transform().inverted());
     const auto plane = m_pipeline->crtc()->primaryPlane();
     if (neededTransform != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(neededTransform))) {
         return false;
     }
-    const auto buffer = surface->buffer();
-    if (!buffer) {
-        return false;
-    }
-
-    const DmaBufAttributes *dmabufAttributes = buffer->dmabufAttributes();
-    if (!dmabufAttributes) {
-        return false;
-    }
-
-    const auto formats = m_pipeline->formats();
-    if (!formats.contains(dmabufAttributes->format)) {
-        m_dmabufFeedback.scanoutFailed(surface, formats);
-        return false;
-    }
-    if (dmabufAttributes->modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
-        // importing a buffer from another GPU without an explicit modifier can mess up the buffer format
-        return false;
-    }
-    if (!formats[dmabufAttributes->format].contains(dmabufAttributes->modifier)) {
-        m_dmabufFeedback.scanoutFailed(surface, formats);
+    // importing a buffer from another GPU without an explicit modifier can mess up the buffer format
+    if (buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
         return false;
     }
     m_scanoutTransform = neededTransform;
-    m_scanoutBufferTransform = surface->bufferTransform();
+    m_scanoutBufferTransform = transform;
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
-        m_dmabufFeedback.scanoutSuccessful(surface);
-        m_currentDamage = surfaceItem->mapFromBuffer(surfaceItem->damage());
-        surfaceItem->resetDamage();
-        // ensure the pixmap is updated when direct scanout ends
-        surfaceItem->destroyPixmap();
+        m_currentDamage = damage;
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
         return true;
     } else {
-        m_dmabufFeedback.scanoutFailed(surface, formats);
         m_scanoutBuffer.reset();
         return false;
     }
@@ -171,5 +139,15 @@ OutputTransform EglGbmLayer::hardwareTransform() const
 QRect EglGbmLayer::bufferSourceBox() const
 {
     return m_scanoutBuffer ? m_bufferSourceBox : QRect(QPoint(0, 0), m_surface.currentBuffer()->buffer()->size());
+}
+
+DrmDevice *EglGbmLayer::scanoutDevice() const
+{
+    return m_pipeline->gpu()->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedDrmFormats() const
+{
+    return m_pipeline->formats();
 }
 }

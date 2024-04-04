@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/graphicsbuffer.h"
 #include "drm_layer.h"
 #include "utils/damagejournal.h"
 
@@ -21,7 +22,6 @@ namespace KWin
 
 class EglSwapchain;
 class EglSwapchainSlot;
-class GraphicsBuffer;
 class GLTexture;
 class EglGbmBackend;
 class DrmVirtualOutput;
@@ -36,19 +36,22 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-    bool scanout(SurfaceItem *surfaceItem) override;
 
     QRegion currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    const ColorDescription &colorDescription() const;
 
 private:
+    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage) override;
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 
-    QPointer<SurfaceInterface> m_scanoutSurface;
-    QPointer<GraphicsBuffer> m_scanoutBuffer;
+    GraphicsBufferRef m_scanoutBuffer;
+    ColorDescription m_scanoutColor = ColorDescription::sRGB;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;
     QRegion m_currentDamage;

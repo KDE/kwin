@@ -66,11 +66,6 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     }
 
     m_currentSlot = slot;
-    m_scanoutSurface.clear();
-    if (m_scanoutBuffer) {
-        m_scanoutBuffer->unref();
-        m_scanoutBuffer = nullptr;
-    }
 
     if (!m_query) {
         m_query = std::make_unique<GLRenderTimeQuery>();
@@ -137,7 +132,7 @@ bool VirtualEglGbmLayer::doesGbmSwapchainFit(EglSwapchain *swapchain) const
 
 std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
 {
-    if (m_scanoutSurface) {
+    if (m_scanoutBuffer) {
         return m_eglBackend->importDmaBufAsTexture(*m_scanoutBuffer->dmabufAttributes());
     } else if (m_currentSlot) {
         return m_currentSlot->texture();
@@ -145,7 +140,7 @@ std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
+bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -153,25 +148,12 @@ bool VirtualEglGbmLayer::scanout(SurfaceItem *surfaceItem)
         return false;
     }
 
-    SurfaceItemWayland *item = qobject_cast<SurfaceItemWayland *>(surfaceItem);
-    if (!item || !item->surface()) {
+    if (sourceRect != QRectF(QPointF(0, 0), targetSize) || targetSize != m_output->modeSize() || targetSize != buffer->size()) {
         return false;
-    }
-    const auto buffer = item->surface()->buffer();
-    if (!buffer || !buffer->dmabufAttributes() || buffer->size() != m_output->modeSize()) {
-        return false;
-    }
-    buffer->ref();
-    if (m_scanoutBuffer) {
-        m_scanoutBuffer->unref();
     }
     m_scanoutBuffer = buffer;
-    // damage tracking for screen casting
-    m_currentDamage = m_scanoutSurface == item->surface() ? surfaceItem->mapFromBuffer(surfaceItem->damage()) : infiniteRegion();
-    surfaceItem->resetDamage();
-    // ensure the pixmap is updated when direct scanout ends
-    surfaceItem->destroyPixmap();
-    m_scanoutSurface = item->surface();
+    m_currentDamage = damage;
+    m_scanoutColor = color;
     return true;
 }
 
@@ -191,5 +173,20 @@ std::chrono::nanoseconds VirtualEglGbmLayer::queryRenderTime() const
 {
     m_eglBackend->makeCurrent();
     return m_query->result();
+}
+
+DrmDevice *VirtualEglGbmLayer::scanoutDevice() const
+{
+    return m_eglBackend->drmDevice();
+}
+
+QHash<uint32_t, QList<uint64_t>> VirtualEglGbmLayer::supportedDrmFormats() const
+{
+    return m_eglBackend->supportedFormats();
+}
+
+const ColorDescription &VirtualEglGbmLayer::colorDescription() const
+{
+    return m_scanoutBuffer ? m_scanoutColor : ColorDescription::sRGB;
 }
 }

@@ -93,8 +93,8 @@ public:
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
 
-    QMap<uint32_t, QList<uint64_t>> formats() const;
-    QMap<uint32_t, QList<uint64_t>> cursorFormats() const;
+    QHash<uint32_t, QList<uint64_t>> formats() const;
+    QHash<uint32_t, QList<uint64_t>> cursorFormats() const;
     bool hasCTM() const;
     bool hasGammaRamp() const;
     bool pruneModifier();
@@ -177,7 +177,7 @@ private:
     struct State
     {
         DrmCrtc *crtc = nullptr;
-        QMap<uint32_t, QList<uint64_t>> formats;
+        QHash<uint32_t, QList<uint64_t>> formats;
         bool active = true; // whether or not the pipeline should be currently used
         bool enabled = true; // whether or not the pipeline needs a crtc
         bool needsModeset = false;

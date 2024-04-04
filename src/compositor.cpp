@@ -185,8 +185,10 @@ void Compositor::composite(RenderLoop *renderLoop)
                 return sublayer->isVisible();
             });
             if (scanoutPossible) {
-                directScanout = primaryLayer->scanout(scanoutCandidate);
+                directScanout = primaryLayer->attemptScanout(scanoutCandidate);
             }
+        } else {
+            primaryLayer->notifyNoScanoutCandidate();
         }
 
         if (!directScanout) {

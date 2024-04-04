@@ -57,6 +57,7 @@ public:
     void unreferencePreviousPixmap();
 
     virtual ContentType contentType() const;
+    virtual void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats);
 
     virtual void freeze();
 

@@ -271,6 +271,10 @@ ContentType SurfaceItem::contentType() const
     return ContentType::None;
 }
 
+void SurfaceItem::setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats)
+{
+}
+
 void SurfaceItem::freeze()
 {
 }

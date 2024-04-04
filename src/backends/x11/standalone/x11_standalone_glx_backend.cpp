@@ -119,6 +119,16 @@ std::chrono::nanoseconds GlxLayer::queryRenderTime() const
     return m_backend->queryRenderTime();
 }
 
+DrmDevice *GlxLayer::scanoutDevice() const
+{
+    return nullptr;
+}
+
+QHash<uint32_t, QList<uint64_t>> GlxLayer::supportedDrmFormats() const
+{
+    return {};
+}
+
 GlxBackend::GlxBackend(::Display *display, X11StandaloneBackend *backend)
     : OpenGLBackend()
     , m_overlayWindow(std::make_unique<OverlayWindowX11>(backend))

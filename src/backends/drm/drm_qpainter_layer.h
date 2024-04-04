@@ -34,6 +34,8 @@ public:
     QRegion currentDamage() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
     bool doesSwapchainFit() const;
@@ -59,6 +61,8 @@ public:
     QRegion currentDamage() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
     std::shared_ptr<QPainterSwapchain> m_swapchain;
@@ -79,6 +83,8 @@ public:
     QRegion currentDamage() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
+    DrmDevice *scanoutDevice() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
     QImage m_image;
