@@ -142,12 +142,28 @@ Item *WorkspaceScene::containerItem() const
 
 static SurfaceItem *findTopMostSurface(SurfaceItem *item)
 {
-    const QList<Item *> children = item->childItems();
-    if (children.isEmpty()) {
-        return item;
-    } else {
-        return findTopMostSurface(static_cast<SurfaceItem *>(children.constLast()));
+    if (!item->isVisible()) {
+        return nullptr;
     }
+    const QList<Item *> children = item->sortedChildItems();
+    for (const auto &child : children | std::views::reverse) {
+        if (child->z() >= 0) {
+            if (auto item = findTopMostSurface(static_cast<SurfaceItem *>(child))) {
+                return item;
+            }
+        }
+    }
+    if (item->pixmap()) {
+        return item;
+    }
+    for (const auto &child : children | std::views::reverse) {
+        if (child->z() < 0) {
+            if (auto item = findTopMostSurface(static_cast<SurfaceItem *>(child))) {
+                return item;
+            }
+        }
+    }
+    return nullptr;
 }
 
 SurfaceItem *WorkspaceScene::scanoutCandidate() const
@@ -160,7 +176,7 @@ SurfaceItem *WorkspaceScene::scanoutCandidate() const
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             WindowItem *windowItem = stacking_order[i];
             Window *window = windowItem->window();
-            if (window->isOnOutput(painted_screen) && window->opacity() > 0) {
+            if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
                 if (!window->isClient() || !window->isFullScreen() || window->opacity() != 1.0) {
                     break;
                 }
@@ -168,6 +184,9 @@ SurfaceItem *WorkspaceScene::scanoutCandidate() const
                     break;
                 }
                 SurfaceItem *topMost = findTopMostSurface(windowItem->surfaceItem());
+                if (!topMost) {
+                    break;
+                }
                 // the subsurface has to be able to cover the whole window
                 if (topMost->position() != QPoint(0, 0)) {
                     break;
