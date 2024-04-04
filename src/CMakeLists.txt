@@ -90,7 +90,6 @@ target_sources(kwin PRIVATE
     effect/timeline.cpp
     focuschain.cpp
     ftrace.cpp
-    gesture.cpp
     gestures.cpp
     globalshortcuts.cpp
     hide_cursor_spy.cpp
