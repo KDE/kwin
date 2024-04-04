@@ -17,31 +17,40 @@
 #ifndef __STROKE_H__
 #define __STROKE_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <QList>
+#include <QPointF>
 
-struct _stroke_t;
+#include <memory> // std::unique_ptr
 
-typedef struct _stroke_t stroke_t;
+struct stroke_t;
 
-stroke_t *stroke_alloc(int n);
-void stroke_add_point(stroke_t *stroke, double x, double y);
-void stroke_finish(stroke_t *stroke);
-void stroke_free(stroke_t *stroke);
-stroke_t *stroke_copy(const stroke_t *stroke);
+struct stroke_deleter
+{
+    void operator()(stroke_t *s) const;
+};
 
-int stroke_get_size(const stroke_t *stroke);
-void stroke_get_point(const stroke_t *stroke, int n, double *x, double *y);
-double stroke_get_time(const stroke_t *stroke, int n);
-double stroke_get_angle(const stroke_t *stroke, int n);
-double stroke_angle_difference(const stroke_t *a, const stroke_t *b, int i, int j);
+class Stroke
+{
+public:
+    std::unique_ptr<stroke_t, stroke_deleter> stroke;
 
-double stroke_compare(const stroke_t *a, const stroke_t *b, int *path_x, int *path_y);
+    Stroke()
+        : stroke(nullptr, stroke_deleter())
+    {
+    }
+    Stroke(const QList<QPointF> &s);
+    Stroke clone() const;
 
-extern const double stroke_infinity;
+    static bool compare(const Stroke &, const Stroke &, double &score_out);
+    static double min_matching_score();
 
-#ifdef __cplusplus
-}
-#endif
+    unsigned int size() const;
+    bool trivial() const
+    {
+        return size() == 0;
+    }
+    QPointF pointAt(int n) const;
+    double time(int n) const;
+};
+
 #endif
