@@ -21,7 +21,6 @@
 #include <optional>
 
 #include "qwayland-cursor-shape-v1.h"
-#include "qwayland-dialog-v1.h"
 #include "qwayland-fake-input.h"
 #include "qwayland-fractional-scale-v1.h"
 #include "qwayland-idle-inhibit-unstable-v1.h"
@@ -35,6 +34,11 @@
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
 #include "qwayland-zkde-screencast-unstable-v1.h"
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 1)
+#include "qwayland-dialog-v1.h"
+#else
+#include "qwayland-xdg-dialog-v1.h"
+#endif
 
 namespace KWayland
 {

@@ -25,12 +25,19 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         ${PLASMA_WAYLAND_PROTOCOLS_DIR}/fake-input.xml
 )
 
-# the qtwaylandscanner macro cannot handle the mismatched file name and <protocol  name=""
-find_package(QtWaylandScanner REQUIRED)
-ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
-    BASENAME dialog-v1
-)
+if (Qt6_VERSION VERSION_LESS "6.7.1")
+    # the qtwaylandscanner macro cannot handle the mismatched file name and <protocol  name=""
+    find_package(QtWaylandScanner REQUIRED)
+    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
+        PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+        BASENAME dialog-v1
+    )
+else()
+    qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
+        FILES
+            ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+    )
+endif()
 
 target_sources(KWinIntegrationTestFramework PRIVATE
     generic_scene_opengl_test.cpp
