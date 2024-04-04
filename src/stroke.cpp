@@ -1,6 +1,7 @@
 /*
- * Copyright (c) 2009, Thomas Jaeger <ThJaeger@gmail.com>
- * Copyright (c) 2023, Daniel Kondor <kondor.dani@gmail.com>
+ * Copyright (c) 2008-2009, Thomas Jaeger <ThJaeger@gmail.com>
+ * Copyright (c) 2020-2023, Daniel Kondor <kondor.dani@gmail.com>
+ * Copyright (c) 2024, Jakob Petsovits <jpetso@petsovits.com>
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -23,8 +24,94 @@
 #include <stdlib.h>
 #include <string.h>
 
-const double stroke_infinity = 0.2;
+//
+// C functions originally from Easystroke, adapted from wstroke almost verbatim
+
+stroke_t *stroke_alloc(int n);
+void stroke_add_point(stroke_t *stroke, double x, double y);
+void stroke_finish(stroke_t *stroke);
+void stroke_free(stroke_t *stroke);
+stroke_t *stroke_copy(const stroke_t *stroke);
+
+int stroke_get_size(const stroke_t *stroke);
+void stroke_get_point(const stroke_t *stroke, int n, double *x, double *y);
+double stroke_get_time(const stroke_t *stroke, int n);
+double stroke_get_angle(const stroke_t *stroke, int n);
+double stroke_angle_difference(const stroke_t *a, const stroke_t *b, int i, int j);
+
+double stroke_compare(const stroke_t *a, const stroke_t *b, int *path_x, int *path_y);
+
+constexpr double stroke_infinity = 0.2;
 #define EPS 0.000001
+
+//
+// C++ wrapper, adopted from wstroke's gesture.{h,cpp} but we'll change it where it makes sense
+
+void stroke_deleter::operator()(stroke_t *s) const
+{
+    stroke_free(s);
+}
+
+Stroke::Stroke(const QList<QPointF> &ps)
+    : stroke(nullptr, stroke_deleter())
+{
+    if (ps.size() >= 2) {
+        stroke_t *s = stroke_alloc(ps.size());
+        for (const auto &t : ps)
+            stroke_add_point(s, t.x(), t.y());
+        stroke_finish(s);
+        stroke.reset(s);
+    }
+}
+
+Stroke Stroke::clone() const
+{
+    Stroke s;
+    if (stroke)
+        s.stroke.reset(stroke_copy(stroke.get()));
+    return s;
+}
+
+bool Stroke::compare(const Stroke &a, const Stroke &b, double &score)
+{
+    score = 0.0;
+    if (!a.stroke || !b.stroke) {
+        if (!a.stroke && !b.stroke) {
+            score = 1.0;
+            return true;
+        }
+        return false;
+    }
+    double cost = stroke_compare(a.stroke.get(), b.stroke.get(), nullptr, nullptr);
+    if (cost >= stroke_infinity)
+        return false;
+    score = std::max(1.0 - 2.5 * cost, 0.0);
+    return true;
+}
+
+double Stroke::min_matching_score()
+{
+    return 0.7;
+}
+
+unsigned int Stroke::size() const
+{
+    return stroke ? stroke_get_size(stroke.get()) : 0;
+}
+
+QPointF Stroke::pointAt(int n) const
+{
+    QPointF p;
+    stroke_get_point(stroke.get(), n, &p.rx(), &p.ry());
+    return p;
+}
+
+double Stroke::time(int n) const
+{
+    return stroke_get_time(stroke.get(), n);
+}
+
+// end of C++ wrapper, back to Easystroke C types and functions
 
 struct point
 {
@@ -35,7 +122,7 @@ struct point
     double alpha;
 };
 
-struct _stroke_t
+struct stroke_t
 {
     int n;
     int capacity;
