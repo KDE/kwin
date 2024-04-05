@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-29 23:31+0200\n"
+"PO-Revision-Date: 2024-04-05 00:33+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -236,7 +236,7 @@ msgstr "Aktyvavimo iš naujo &delsa:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Kampo barjeras:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -248,19 +248,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Čia galite įjungti arba išjungti tarp ekranų esantį virtualų kampo barjerą. "
+"Barjeras neleidžia pelės žymekliui pereiti į kitą ekraną tuomet, kai jis jau "
+"liečia ekrano kampą. Kai naudojami keli ekranai, tai leidžia lengviau "
+"inicijuoti naudotojo sąsajos elementus, pavyzdžiui, spustelėti ant "
+"išskleistų langų užvėrimo mygtukų."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Neleidžia žymekliui kirsti ekrano kampuose."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "K&rašto barjeras:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -272,6 +277,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Čia galite nustatyti krašto barjero, esančio tarp skirtingų ekranų, dydį. "
+"Barjeras prideda papildomą atstumą, kurį turi įveikti jūsų pelės žymeklis, "
+"prieš kirsdamas kraštą ir patekdamas į kitą ekraną. Tai leidžia lengviau "
+"pasiekti naudotojo sąsajos elementus, pavyzdžiui, krašte tarp ekranų "
+"esančius Plasma skydelius."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -279,18 +289,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Papildomas atstumas, kurį žymekliui reikia nukeliauti, kad kirstų ekrano "
+"kraštus."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nėra"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " piks."
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
