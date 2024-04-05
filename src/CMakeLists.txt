@@ -229,6 +229,7 @@ target_link_libraries(kwin
         KF6::CoreAddons
         KF6::WindowSystem
         epoxy::epoxy
+        XKB::XKB
 
     PRIVATE
         Qt::Concurrent
@@ -248,7 +249,6 @@ target_link_libraries(kwin
         KDecoration2::KDecoration2Private
 
         UDev::UDev
-        XKB::XKB
         EGL::EGL
         epoxy::epoxy
 
