@@ -6,7 +6,23 @@
 #include "syncobjtimeline.h"
 
 #include <sys/eventfd.h>
+#include <sys/ioctl.h>
 #include <xf86drm.h>
+
+#if defined(Q_OS_LINUX)
+#include <linux/sync_file.h>
+#else
+struct sync_merge_data
+{
+    char name[32];
+    __s32 fd2;
+    __s32 fence;
+    __u32 flags;
+    __u32 pad;
+};
+#define SYNC_IOC_MAGIC '>'
+#define SYNC_IOC_MERGE _IOWR(SYNC_IOC_MAGIC, 3, struct sync_merge_data)
+#endif
 
 namespace KWin
 {
@@ -19,7 +35,39 @@ SyncReleasePoint::SyncReleasePoint(const std::shared_ptr<SyncTimeline> &timeline
 
 SyncReleasePoint::~SyncReleasePoint()
 {
-    m_timeline->signal(m_timelinePoint);
+    if (m_releaseFence.isValid()) {
+        m_timeline->moveInto(m_timelinePoint, m_releaseFence);
+    } else {
+        m_timeline->signal(m_timelinePoint);
+    }
+}
+
+static FileDescriptor mergeSyncFds(const FileDescriptor &fd1, const FileDescriptor &fd2)
+{
+    struct sync_merge_data data
+    {
+        .name = "merged release fence",
+        .fd2 = fd2.get(),
+        .fence = -1,
+    };
+    int err = -1;
+    do {
+        err = ioctl(fd1.get(), SYNC_IOC_MERGE, &data);
+    } while (err == -1 && (errno == EINTR || errno == EAGAIN));
+    if (err < 0) {
+        return FileDescriptor{};
+    } else {
+        return FileDescriptor(data.fence);
+    }
+}
+
+void SyncReleasePoint::addReleaseFence(const FileDescriptor &fd)
+{
+    if (m_releaseFence.isValid()) {
+        m_releaseFence = mergeSyncFds(m_releaseFence, fd);
+    } else {
+        m_releaseFence = fd.duplicate();
+    }
 }
 
 SyncTimeline *SyncReleasePoint::timeline() const
@@ -60,17 +108,8 @@ void SyncTimeline::signal(uint64_t timelinePoint)
     drmSyncobjTimelineSignal(m_drmFd, &m_handle, &timelinePoint, 1);
 }
 
-SyncReleasePointHolder::SyncReleasePointHolder(FileDescriptor &&requirement, std::unordered_set<std::shared_ptr<SyncReleasePoint>> &&releasePoints)
-    : m_fence(std::move(requirement))
-    , m_notifier(m_fence.get(), QSocketNotifier::Type::Read)
-    , m_releasePoints(std::move(releasePoints))
+void SyncTimeline::moveInto(uint64_t timelinePoint, const FileDescriptor &fd)
 {
-    connect(&m_notifier, &QSocketNotifier::activated, this, &SyncReleasePointHolder::signaled);
-    m_notifier.setEnabled(true);
-}
-
-void SyncReleasePointHolder::signaled()
-{
-    delete this;
+    drmSyncobjImportSyncFile(m_drmFd, m_handle, fd.get());
 }
 }

@@ -7,11 +7,8 @@
 #include "kwin_export.h"
 #include "utils/filedescriptor.h"
 
-#include <QObject>
-#include <QSocketNotifier>
 #include <memory>
 #include <stdint.h>
-#include <unordered_set>
 
 namespace KWin
 {
@@ -30,9 +27,16 @@ public:
     SyncTimeline *timeline() const;
     uint64_t timelinePoint() const;
 
+    /**
+     * Adds the fence of a graphics job that this release point should wait for
+     * before the timeline point is signaled
+     */
+    void addReleaseFence(const FileDescriptor &fd);
+
 private:
     const std::shared_ptr<SyncTimeline> m_timeline;
     const uint64_t m_timelinePoint;
+    FileDescriptor m_releaseFence;
 };
 
 class KWIN_EXPORT SyncTimeline
@@ -47,26 +51,10 @@ public:
     FileDescriptor eventFd(uint64_t timelinePoint) const;
 
     void signal(uint64_t timelinePoint);
+    void moveInto(uint64_t timelinePoint, const FileDescriptor &fd);
 
 private:
     const int32_t m_drmFd;
     const uint32_t m_handle;
-};
-
-class SyncReleasePointHolder : public QObject
-{
-    Q_OBJECT
-public:
-    /**
-     * @param requirement the filedescriptor that needs to be readable before the release points may be signalled. Once that's happened, this object deletes itself!'
-     */
-    explicit SyncReleasePointHolder(FileDescriptor &&requirement, std::unordered_set<std::shared_ptr<SyncReleasePoint>> &&releasePoints);
-
-private:
-    void signaled();
-
-    const FileDescriptor m_fence;
-    QSocketNotifier m_notifier;
-    const std::unordered_set<std::shared_ptr<SyncReleasePoint>> m_releasePoints;
 };
 }

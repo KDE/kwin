@@ -53,7 +53,10 @@ void ItemRendererOpenGL::endFrame()
     if (m_eglDisplay) {
         EGLNativeFence fence(m_eglDisplay);
         if (fence.isValid()) {
-            new SyncReleasePointHolder(std::move(fence.fileDescriptor()), std::move(m_releasePoints));
+            for (const auto &releasePoint : m_releasePoints) {
+                releasePoint->addReleaseFence(fence.fileDescriptor());
+            }
+            m_releasePoints.clear();
         }
     }
     m_releasePoints.clear();
