@@ -132,8 +132,8 @@ set_package_properties(KF6DocTools PROPERTIES
 )
 add_feature_info("KF6DocTools" KF6DocTools_FOUND "Enable building documentation")
 
-find_package(KF6Kirigami2 ${KF6_MIN_VERSION} CONFIG)
-set_package_properties(KF6Kirigami2 PROPERTIES
+find_package(KF6Kirigami ${KF6_MIN_VERSION} CONFIG)
+set_package_properties(KF6Kirigami PROPERTIES
     DESCRIPTION "A QtQuick based components set"
     PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
