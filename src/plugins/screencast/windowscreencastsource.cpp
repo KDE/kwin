@@ -41,11 +41,6 @@ WindowScreenCastSource::~WindowScreenCastSource()
     pause();
 }
 
-quint32 WindowScreenCastSource::drmFormat() const
-{
-    return DRM_FORMAT_ARGB8888;
-}
-
 QSize WindowScreenCastSource::textureSize() const
 {
     return m_window->clientGeometry().size().toSize();

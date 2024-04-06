@@ -37,7 +37,6 @@ public:
     explicit RegionScreenCastSource(const QRect &region, qreal scale, QObject *parent = nullptr);
     ~RegionScreenCastSource() override;
 
-    quint32 drmFormat() const override;
     QSize textureSize() const override;
     uint refreshRate() const override;
 

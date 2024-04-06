@@ -36,11 +36,6 @@ OutputScreenCastSource::~OutputScreenCastSource()
     pause();
 }
 
-quint32 OutputScreenCastSource::drmFormat() const
-{
-    return DRM_FORMAT_ARGB8888;
-}
-
 QSize OutputScreenCastSource::textureSize() const
 {
     return m_output->pixelSize();

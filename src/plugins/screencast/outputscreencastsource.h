@@ -25,7 +25,6 @@ public:
 
     uint refreshRate() const override;
     QSize textureSize() const override;
-    quint32 drmFormat() const override;
 
     void render(GLFramebuffer *target) override;
     void render(QImage *target) override;

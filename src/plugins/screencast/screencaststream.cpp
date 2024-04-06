@@ -357,7 +357,9 @@ bool ScreenCastStream::createStream()
     m_pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
 
     const auto supported = Compositor::self()->backend()->supportedFormats();
-    auto itModifiers = supported.constFind(m_source->drmFormat());
+    const uint32_t preferredFormat = DRM_FORMAT_ARGB8888;
+
+    auto itModifiers = supported.constFind(preferredFormat);
 
     // If the offered format is not available for dmabuf, prefer converting to another one than resorting to memfd
     if (itModifiers == supported.constEnd() && !supported.isEmpty()) {
@@ -368,7 +370,7 @@ bool ScreenCastStream::createStream()
     }
 
     if (itModifiers == supported.constEnd()) {
-        m_drmFormat = m_source->drmFormat();
+        m_drmFormat = preferredFormat;
         m_modifiers = {DRM_FORMAT_MOD_INVALID};
     } else {
         m_drmFormat = itModifiers.key();

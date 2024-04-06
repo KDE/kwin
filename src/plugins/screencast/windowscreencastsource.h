@@ -23,7 +23,6 @@ public:
     explicit WindowScreenCastSource(Window *window, QObject *parent = nullptr);
     ~WindowScreenCastSource() override;
 
-    quint32 drmFormat() const override;
     QSize textureSize() const override;
     uint refreshRate() const override;
 
