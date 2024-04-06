@@ -344,8 +344,10 @@ public:
     void setPreferredColorDescription(const ColorDescription &descr);
 
     /**
-     * @returns the release point that should be referenced as long as the buffer on this surface
-     *          is, or may still be used by the compositor
+     * Returns the current release point for the buffer on this surface. The buffer keeps the
+     * release point referenced as long as it's referenced itself; for synchronization on the
+     * GPU side, the compositor has to either keep the release point referenced as long as the
+     * GPU task is running, or add a fence for each GPU task to the release point
      */
     std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
