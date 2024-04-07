@@ -14,19 +14,45 @@ import org.kde.kirigami 2.20 as Kirigami
 KCM.ScrollViewKCM {
     id: root
 
-    Connections {
-        target: kcm.desktopsModel
-
-        function onReadyChanged() {
-            rowsSpinBox.value = kcm.desktopsModel.rows;
-        }
-
-        function onRowsChanged() {
-            rowsSpinBox.value = kcm.desktopsModel.rows;
-        }
-    }
     implicitWidth: Kirigami.Units.gridUnit * 35
     implicitHeight: Kirigami.Units.gridUnit * 30
+
+    actions:  [
+        Kirigami.Action {
+            displayComponent: QQC2.SpinBox {
+                id: rowsSpinBox
+
+                from: 1
+                to: 20
+                editable: true
+                value: kcm.desktopsModel.rows
+
+                textFromValue: (value, locale) => i18np("1 Row", "%1 Rows", value)
+                valueFromText: (text, locale) => parseInt(text, 10)
+
+                onValueModified: kcm.desktopsModel.rows = value
+
+                KCM.SettingHighlighter {
+                    highlight: kcm.desktopsModel.rows !== 2
+                }
+                Connections {
+                    target: kcm.desktopsModel
+
+                    function onReadyChanged() {
+                        rowsSpinBox.value = kcm.desktopsModel.rows;
+                    }
+                    function onRowsChanged() {
+                        rowsSpinBox.value = kcm.desktopsModel.rows;
+                    }
+                }
+            }
+        },
+        Kirigami.Action {
+            text: i18nc("@action:button", "Add")
+            icon.name: "list-add"
+            onTriggered: kcm.desktopsModel.createDesktop()
+        }
+    ]
 
     Component {
         id: desktopsListItemComponent
@@ -164,37 +190,6 @@ KCM.ScrollViewKCM {
     }
 
     footer: ColumnLayout {
-        RowLayout {
-            QQC2.Button {
-                text: i18nc("@action:button", "Add")
-                icon.name: "list-add"
-
-                onClicked: kcm.desktopsModel.createDesktop()
-            }
-
-            Item { // Spacer
-                Layout.fillWidth: true
-            }
-
-            QQC2.SpinBox {
-                id: rowsSpinBox
-
-                from: 1
-                to: 20
-                editable: true
-                value: kcm.desktopsModel.rows
-
-                textFromValue: (value, locale) => i18np("1 Row", "%1 Rows", value)
-                valueFromText: (text, locale) => parseInt(text, 10)
-
-                onValueModified: kcm.desktopsModel.rows = value
-
-                KCM.SettingHighlighter {
-                    highlight: kcm.desktopsModel.rows !== 2
-                }
-            }
-        }
-
         Kirigami.FormLayout {
 
             QQC2.CheckBox {
