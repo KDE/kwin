@@ -8,7 +8,7 @@ import QtQuick
 import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.plasma.components 3.0 as PlasmaComponents
 
 Item {
@@ -110,7 +110,7 @@ Item {
                 margins: Kirigami.Units.smallSpacing
             }
             visible: tile.tiles.length === 0
-            radius: 3
+            radius: Kirigami.Units.cornerRadius
             opacity: tile.layoutDirection === KWinComponents.Tile.Floating ? 0.6 : 0.3
             color: tile.layoutDirection === KWinComponents.Tile.Floating ? Kirigami.Theme.backgroundColor : "transparent"
             border.color: Kirigami.Theme.textColor
@@ -119,7 +119,7 @@ Item {
                     fill: parent
                     margins: 1
                 }
-                radius: 3
+                radius: Kirigami.Units.cornerRadius
                 color: "transparent"
                 border.color: Kirigami.Theme.backgroundColor
             }

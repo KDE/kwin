@@ -9,7 +9,7 @@ import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 
 Rectangle {
     id: handle
@@ -23,7 +23,7 @@ Rectangle {
     implicitWidth: Kirigami.Units.gridUnit
     implicitHeight: Kirigami.Units.gridUnit
 
-    radius: 3
+    radius: Kirigami.Units.cornerRadius
     color: Kirigami.Theme.highlightColor
     opacity: hoverHandler.hovered || dragHandler.active ? 0.4 : 0
     visible: tile &&

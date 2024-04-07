@@ -9,7 +9,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 
-import org.kde.kirigami 2.12 as Kirigami
+import org.kde.kirigami as Kirigami
 
 Rectangle {
     id: root
@@ -20,7 +20,7 @@ Rectangle {
     implicitHeight: layout.implicitHeight + 2 * layout.anchors.margins
 
     color: Qt.rgba(0, 0, 0, effectFrame.frameOpacity)
-    radius: layout.anchors.margins
+    radius: Kirigami.Units.cornerRadius
 
     RowLayout {
         id: layout

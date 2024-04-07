@@ -9,7 +9,7 @@
 import QtQuick
 import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.milou as Milou
@@ -527,7 +527,7 @@ FocusScope {
                         color: "transparent"
                         source: desktopElement
 
-                        radius: Kirigami.Units.largeSpacing * 2 * (overviewVal + gridVal * 2)
+                        radius: Kirigami.Units.cornerRadius * (overviewVal + gridVal * 2)
 
                         shadow {
                             size: Kirigami.Units.gridUnit * 2

@@ -7,7 +7,7 @@
 import QtQuick
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 
 Rectangle {
     id: handle
@@ -25,7 +25,7 @@ Rectangle {
     implicitWidth: Kirigami.Units.smallSpacing * 2
     implicitHeight: Kirigami.Units.smallSpacing * 2
 
-    radius: 3
+    radius: Kirigami.Units.cornerRadius
     color: Kirigami.Theme.highlightColor
     opacity: hoverHandler.hovered || dragHandler.active ? 0.4 : 0
     visible: valid && (tile.layoutDirection === KWinComponents.Tile.Floating || tile.positionInLayout > 0)

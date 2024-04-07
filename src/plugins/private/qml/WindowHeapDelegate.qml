@@ -8,7 +8,7 @@
 import QtQuick
 import QtQuick.Window
 import Qt5Compat.GraphicalEffects
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kwin as KWinComponents
 import org.kde.kwin.private.effects
 import org.kde.plasma.components 3.0 as PC3
@@ -136,7 +136,7 @@ Item {
             border.color: Kirigami.Theme.highlightColor
             anchors.fill: parent
             anchors.margins: -border.width
-            radius: border.width
+            radius: Kirigami.Units.cornerRadius
             color: "transparent"
             visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || (thumb.selected && Window.window.activeFocusItem)) && windowHeap.effectiveOrganized
         }

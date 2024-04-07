@@ -65,6 +65,8 @@ DecorationButton {
     width: size
     height: size
     Rectangle {
+        // Intentionally not using Kirigami.Units.cornerRadius to mimic a
+        // particular style
         radius: 2
         smooth: true
         anchors.fill: parent
@@ -79,6 +81,8 @@ DecorationButton {
             }
         }
         Rectangle {
+            // Intentionally not using Kirigami.Units.cornerRadius to mimic a
+            // particular style
             radius: 2
             smooth: true
             anchors {

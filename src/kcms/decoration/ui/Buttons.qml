@@ -9,7 +9,7 @@ import QtQuick.Layouts
 import QtQuick.Controls as QQC2
 
 import org.kde.kcmutils as KCM
-import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigami as Kirigami
 import org.kde.kwin.private.kdecoration as KDecoration
 
 // Fake Window
@@ -22,7 +22,7 @@ Rectangle {
     readonly property bool hideDragHint: draggingTitlebarButtons || availableButtonsGrid.dragActive
 
     color: palette.base
-    radius: Kirigami.Units.smallSpacing
+    radius: Kirigami.Units.cornerRadius
 
     KDecoration.Bridge {
         id: bridgeItem
@@ -40,7 +40,7 @@ Rectangle {
         Rectangle {
             Layout.fillWidth: true
             implicitHeight: buttonPreviewRow.implicitHeight + 2 * baseLayout.titleBarSpacing
-            radius: Kirigami.Units.smallSpacing
+            radius: Kirigami.Units.cornerRadius
             gradient: Gradient {
                 GradientStop { position: 0.0; color: palette.midlight }
                 GradientStop { position: 1.0; color: palette.window }
@@ -68,7 +68,7 @@ Rectangle {
                         color: "transparent"
                         border.color: Kirigami.Theme.neutralTextColor
                         border.width: 1
-                        radius: Kirigami.Units.smallSpacing
+                        radius: Kirigami.Units.cornerRadius
                     }
 
                     KCM.SettingStateBinding {
@@ -97,7 +97,7 @@ Rectangle {
                         color: "transparent"
                         border.color: Kirigami.Theme.neutralTextColor
                         border.width: 1
-                        radius: Kirigami.Units.smallSpacing
+                        radius: Kirigami.Units.cornerRadius
                     }
 
                     KCM.SettingStateBinding {
@@ -190,7 +190,7 @@ Rectangle {
                 Rectangle {
                     Layout.alignment: Qt.AlignHCenter
                     color: palette.window
-                    radius: Kirigami.Units.smallSpacing
+                    radius: Kirigami.Units.cornerRadius
                     implicitWidth: baseLayout.buttonIconSize + Kirigami.Units.largeSpacing
                     implicitHeight: baseLayout.buttonIconSize + Kirigami.Units.largeSpacing
 

@@ -139,7 +139,7 @@ Item {
                         Rectangle {
                             readonly property bool active: (delegate.activeFocus || dropArea.containsDrag || mouseArea.containsPress || bar.selectedDesktop === delegate.desktop)
                             anchors.fill: parent
-                            radius: width / 20
+                            radius: Kirigami.Units.cornerRadius
                             color: "transparent"
                             border.width: active ? 2 : 1
                             border.color: active ? Kirigami.Theme.highlightColor : Kirigami.Theme.textColor
