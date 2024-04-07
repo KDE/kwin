@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-06 00:39+0000\n"
+"POT-Creation-Date: 2024-04-07 00:39+0000\n"
 "PO-Revision-Date: 2024-02-29 22:55+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1577,7 +1577,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr "Intentsitatea:"
 
-#: plugins/colorpicker/colorpicker.cpp:104
+#: plugins/colorpicker/colorpicker.cpp:105
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"

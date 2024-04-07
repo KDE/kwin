@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1677239 $
+# Version: $Revision: 1677376 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # Norbert Popiołek <norbert@kde.com.pl>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-06 00:39+0000\n"
+"POT-Creation-Date: 2024-04-07 00:39+0000\n"
 "PO-Revision-Date: 2024-03-02 12:49+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1583,7 +1583,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr "Natężenie:"
 
-#: plugins/colorpicker/colorpicker.cpp:104
+#: plugins/colorpicker/colorpicker.cpp:105
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"

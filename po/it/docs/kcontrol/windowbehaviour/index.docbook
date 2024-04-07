@@ -381,17 +381,6 @@
 <varlistentry>
 <term
 ><guilabel
->Lo schermo attivo segue il mouse</guilabel
-></term>
-<listitem>
-<para
->Quando questa opzione è abilitata, lo schermo attivo (dove, ad esempio, appaiono le nuove finestre) è lo schermo contenente il puntatore del mouse. Quando è disabilitata, lo schermo attivo è quello contenente la finestra attiva. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Fuoco degli schermi separati</guilabel
 ></term>
 <listitem>
