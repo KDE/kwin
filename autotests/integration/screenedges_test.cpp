@@ -65,6 +65,8 @@ private Q_SLOTS:
     void testPushBack();
     void testObjectEdge_data();
     void testObjectEdge();
+    void testMultipleEntry_data();
+    void testMultipleEntry();
     void testKdeNetWmScreenEdgeShow();
 };
 
@@ -302,6 +304,50 @@ void ScreenEdgesTest::testObjectEdge()
     timestamp += 250;
     Test::pointerMotion(triggerPoint, timestamp);
     QCOMPARE(spy.count(), 2);
+}
+
+void ScreenEdgesTest::testMultipleEntry_data()
+{
+    QTest::addColumn<ElectricBorder>("border");
+    QTest::addColumn<QPointF>("triggerPoint");
+    QTest::addColumn<QPointF>("delta");
+
+    QTest::newRow("top") << ElectricTop << QPointF(640, 0) << QPointF(0, 50);
+    QTest::newRow("right") << ElectricRight << QPointF(1279, 512) << QPointF(-50, 0);
+    QTest::newRow("bottom") << ElectricBottom << QPointF(640, 1023) << QPointF(0, -50);
+    QTest::newRow("left") << ElectricLeft << QPointF(0, 512) << QPointF(50, 0);
+}
+
+void ScreenEdgesTest::testMultipleEntry()
+{
+    TestObject callback;
+    QSignalSpy spy(&callback, &TestObject::gotCallback);
+
+    // Reserve a screen edge border.
+    QFETCH(ElectricBorder, border);
+    workspace()->screenEdges()->reserve(border, &callback, "callback");
+
+    QFETCH(QPointF, triggerPoint);
+    QFETCH(QPointF, delta);
+
+    qint64 timestamp = 0;
+
+    while (timestamp < 300) {
+        // doesn't activate from repeated entries of short duration
+        Test::pointerMotion(triggerPoint, timestamp);
+        QVERIFY(spy.isEmpty());
+        timestamp += 50;
+        Test::pointerMotion(triggerPoint + delta, timestamp);
+        QVERIFY(spy.isEmpty());
+        timestamp += 50;
+    }
+
+    // and this one triggers
+    Test::pointerMotion(triggerPoint, timestamp);
+    timestamp += 110;
+    Test::pointerMotion(triggerPoint, timestamp);
+    QVERIFY(!spy.isEmpty());
+    QCOMPARE(spy.count(), 1);
 }
 
 static void enableAutoHide(xcb_connection_t *connection, xcb_window_t windowId, ElectricBorder border)

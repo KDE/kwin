@@ -311,6 +311,9 @@ bool Edge::triggersFor(const QPoint &cursorPos) const
 bool Edge::check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack)
 {
     if (!triggersFor(cursorPos)) {
+        if ((cursorPos - m_triggeredPoint).manhattanLength() > DISTANCE_RESET) {
+            m_lastReset = QDateTime(); // invalidate
+        }
         return false;
     }
     if (m_lastTrigger.isValid() && // still in cooldown
@@ -1449,11 +1452,10 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
                 edge->stopApproaching();
             }
         }
-        if (edge->geometry().contains(event->globalPos())) {
-            if (edge->check(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC))) {
-                if (edge->client()) {
-                    activatedForClient = true;
-                }
+        // always send event to all edges so that they can update their state
+        if (edge->check(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC))) {
+            if (edge->client()) {
+                activatedForClient = true;
             }
         }
     }
