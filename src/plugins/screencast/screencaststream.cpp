@@ -192,11 +192,6 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
                 for (uint64_t modifier : receivedModifiers) {
                     m_modifiers.removeAll(modifier);
                 }
-            // Also in case DRM_FORMAT_MOD_INVALID was used and didn't fail, we still need to
-            // set it as our modifier, otherwise it would be set to default value (0) which is
-            // also a valid modifier, but not the one we want to actually use
-            } else if (receivedModifiers.count() == 1 && receivedModifiers.constFirst() == DRM_FORMAT_MOD_INVALID) {
-                m_dmabufParams->modifier = DRM_FORMAT_MOD_INVALID;
             }
 
             qCDebug(KWIN_SCREENCAST) << objectName() << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
