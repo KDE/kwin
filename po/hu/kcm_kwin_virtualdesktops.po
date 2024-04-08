@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.0\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-04-08 00:39+0000\n"
 "PO-Revision-Date: 2024-01-05 11:46+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -53,25 +53,38 @@ msgstr "Hiba történt a kompozitor beállításainak mentése során."
 msgid "There was an error requesting information from the compositor."
 msgstr "Hiba történt a kompozitortól történi információlekérés során."
 
-#: ui/main.qml:89
+#: ui/main.qml:30
+#, kde-format
+msgid "1 Row"
+msgid_plural "%1 Rows"
+msgstr[0] "1 sor"
+msgstr[1] "%1 sor"
+
+#: ui/main.qml:51
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "Hozzáadás"
+
+#: ui/main.qml:115
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Átnevezés"
 
-#: ui/main.qml:101
+#: ui/main.qml:127
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Új név megerősítése"
 
-#: ui/main.qml:110
+#: ui/main.qml:136
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Eltávolítás"
 
-#: ui/main.qml:143
+#: ui/main.qml:169
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -80,50 +93,37 @@ msgstr ""
 "A virtuális asztalok beállítását a modul hatáskörén kívül módosították. A "
 "mentés felül fogja írni ezeket a változtatásokat."
 
-#: ui/main.qml:159
+#: ui/main.qml:185
 #, kde-format
 msgid "Row %1"
 msgstr "%1. sor"
 
-#: ui/main.qml:169
-#, kde-format
-msgctxt "@action:button"
-msgid "Add"
-msgstr "Hozzáadás"
-
-#: ui/main.qml:187
-#, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "1 sor"
-msgstr[1] "%1 sor"
-
-#: ui/main.qml:203
+#: ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "Beállítások:"
 
-#: ui/main.qml:205
+#: ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Körkörös navigáció"
 
-#: ui/main.qml:223
+#: ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Animáció váltáskor:"
 
-#: ui/main.qml:274
+#: ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Miniatűr megjelenítése váltáskor:"
 
-#: ui/main.qml:293
+#: ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:317
+#: ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Asztalelrendezés-jelzők megjelenítése"

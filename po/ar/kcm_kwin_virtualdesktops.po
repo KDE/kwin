@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-04-08 00:39+0000\n"
 "PO-Revision-Date: 2022-12-22 12:22+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -58,45 +58,7 @@ msgid "There was an error requesting information from the compositor."
 msgstr ""
 "حدث خطأ أثناء الحصول على معلومات حول برنامج مزج التأثيرات الخاصة للعرض."
 
-#: ui/main.qml:89
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Rename"
-msgstr "غيّر الاسم"
-
-#: ui/main.qml:101
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Confirm new name"
-msgstr "أكِّد عبارة الاسم الجديد"
-
-#: ui/main.qml:110
-#, kde-format
-msgctxt "@info:tooltip"
-msgid "Remove"
-msgstr "أزل"
-
-#: ui/main.qml:143
-#, kde-format
-msgid ""
-"Virtual desktops have been changed outside this settings application. Saving "
-"now will overwrite the changes."
-msgstr ""
-"غُيرت أسطح المكتب الافتراضية خارج تطبيق الإعدادات هذا. الحفظ الآن سيحل محل "
-"تلك التغييرات."
-
-#: ui/main.qml:159
-#, kde-format
-msgid "Row %1"
-msgstr "الصف %1"
-
-#: ui/main.qml:169
-#, kde-format
-msgctxt "@action:button"
-msgid "Add"
-msgstr "أضِف"
-
-#: ui/main.qml:187
+#: ui/main.qml:30
 #, kde-format
 msgid "1 Row"
 msgid_plural "%1 Rows"
@@ -107,32 +69,70 @@ msgstr[3] "%1 صفوف"
 msgstr[4] "%1 صفا"
 msgstr[5] "%1 صف"
 
-#: ui/main.qml:203
+#: ui/main.qml:51
+#, kde-format
+msgctxt "@action:button"
+msgid "Add"
+msgstr "أضِف"
+
+#: ui/main.qml:115
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Rename"
+msgstr "غيّر الاسم"
+
+#: ui/main.qml:127
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Confirm new name"
+msgstr "أكِّد عبارة الاسم الجديد"
+
+#: ui/main.qml:136
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Remove"
+msgstr "أزل"
+
+#: ui/main.qml:169
+#, kde-format
+msgid ""
+"Virtual desktops have been changed outside this settings application. Saving "
+"now will overwrite the changes."
+msgstr ""
+"غُيرت أسطح المكتب الافتراضية خارج تطبيق الإعدادات هذا. الحفظ الآن سيحل محل "
+"تلك التغييرات."
+
+#: ui/main.qml:185
+#, kde-format
+msgid "Row %1"
+msgstr "الصف %1"
+
+#: ui/main.qml:198
 #, kde-format
 msgid "Options:"
 msgstr "الخيارات:"
 
-#: ui/main.qml:205
+#: ui/main.qml:200
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "يلف التنقل"
 
-#: ui/main.qml:223
+#: ui/main.qml:218
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "أظهر التحريك عند التبديل:"
 
-#: ui/main.qml:274
+#: ui/main.qml:269
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "إظهار العرض على الشاشة عند التبديل:"
 
-#: ui/main.qml:293
+#: ui/main.qml:288
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 مث"
 
-#: ui/main.qml:317
+#: ui/main.qml:312
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "أظهر مؤشرات تخطيط سطح المكتب"
