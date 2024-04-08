@@ -827,6 +827,10 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
         return std::nullopt;
     }
 
+    if (attrs->planeCount != 1) {
+        return std::nullopt;
+    }
+
     return ScreenCastDmaBufTextureParams{
         .planeCount = attrs->planeCount,
         .width = attrs->width,
