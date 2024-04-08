@@ -86,7 +86,7 @@ private:
     QList<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
     void updateParams();
     void coreFailed(const QString &errorMessage);
-    void sendCursorData(Cursor *cursor, spa_meta_cursor *spa_cursor);
+    void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
     void addHeader(spa_buffer *spaBuffer);
     void corruptHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);

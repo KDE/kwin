@@ -558,8 +558,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     if (m_cursor.mode == ScreencastV1Interface::Metadata) {
-        sendCursorData(Cursors::self()->currentCursor(),
-                       (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
+        addCursorMetadata(spa_buffer, Cursors::self()->currentCursor());
     }
 
     addDamage(spa_buffer, damagedRegion);
@@ -648,8 +647,7 @@ void ScreenCastStream::recordCursor()
     // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
     spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
 
-    sendCursorData(Cursors::self()->currentCursor(),
-                   (spa_meta_cursor *)spa_buffer_find_meta_data(spa_buffer, SPA_META_Cursor, sizeof(spa_meta_cursor)));
+    addCursorMetadata(spa_buffer, Cursors::self()->currentCursor());
     addHeader(spa_buffer);
     addDamage(spa_buffer, {});
     enqueue(pwBuffer);
@@ -737,55 +735,60 @@ bool ScreenCastStream::includesCursor(Cursor *cursor) const
     return m_cursor.viewport.intersects(cursor->geometry());
 }
 
-void ScreenCastStream::sendCursorData(Cursor *cursor, spa_meta_cursor *spa_meta_cursor)
+void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
 {
-    if (!cursor || !spa_meta_cursor) {
+    if (!cursor) {
+        return;
+    }
+
+    auto spaMetaCursor = (spa_meta_cursor *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Cursor, sizeof(spa_meta_cursor));
+    if (!spaMetaCursor) {
         return;
     }
 
     if (!includesCursor(cursor)) {
-        spa_meta_cursor->id = 0;
-        spa_meta_cursor->position.x = -1;
-        spa_meta_cursor->position.y = -1;
-        spa_meta_cursor->hotspot.x = -1;
-        spa_meta_cursor->hotspot.y = -1;
-        spa_meta_cursor->bitmap_offset = 0;
+        spaMetaCursor->id = 0;
+        spaMetaCursor->position.x = -1;
+        spaMetaCursor->position.y = -1;
+        spaMetaCursor->hotspot.x = -1;
+        spaMetaCursor->hotspot.y = -1;
+        spaMetaCursor->bitmap_offset = 0;
         m_cursor.visible = false;
         return;
     }
     m_cursor.visible = true;
     const auto position = (cursor->pos() - m_cursor.viewport.topLeft()) * m_cursor.scale;
 
-    spa_meta_cursor->id = 1;
-    spa_meta_cursor->position.x = position.x();
-    spa_meta_cursor->position.y = position.y();
-    spa_meta_cursor->hotspot.x = cursor->hotspot().x() * m_cursor.scale;
-    spa_meta_cursor->hotspot.y = cursor->hotspot().y() * m_cursor.scale;
-    spa_meta_cursor->bitmap_offset = 0;
+    spaMetaCursor->id = 1;
+    spaMetaCursor->position.x = position.x();
+    spaMetaCursor->position.y = position.y();
+    spaMetaCursor->hotspot.x = cursor->hotspot().x() * m_cursor.scale;
+    spaMetaCursor->hotspot.y = cursor->hotspot().y() * m_cursor.scale;
+    spaMetaCursor->bitmap_offset = 0;
 
     if (!m_cursor.invalid) {
         return;
     }
 
     m_cursor.invalid = false;
-    spa_meta_cursor->bitmap_offset = sizeof(struct spa_meta_cursor);
+    spaMetaCursor->bitmap_offset = sizeof(struct spa_meta_cursor);
 
     const QSize targetSize = (cursor->rect().size() * m_cursor.scale).toSize();
 
-    struct spa_meta_bitmap *spa_meta_bitmap = SPA_MEMBER(spa_meta_cursor,
-                                                         spa_meta_cursor->bitmap_offset,
-                                                         struct spa_meta_bitmap);
-    spa_meta_bitmap->format = SPA_VIDEO_FORMAT_RGBA;
-    spa_meta_bitmap->offset = sizeof(struct spa_meta_bitmap);
-    spa_meta_bitmap->size.width = std::min(m_cursor.bitmapSize.width(), targetSize.width());
-    spa_meta_bitmap->size.height = std::min(m_cursor.bitmapSize.height(), targetSize.height());
-    spa_meta_bitmap->stride = spa_meta_bitmap->size.width * 4;
+    struct spa_meta_bitmap *spaMetaBitmap = SPA_MEMBER(spaMetaCursor,
+                                                       spaMetaCursor->bitmap_offset,
+                                                       struct spa_meta_bitmap);
+    spaMetaBitmap->format = SPA_VIDEO_FORMAT_RGBA;
+    spaMetaBitmap->offset = sizeof(struct spa_meta_bitmap);
+    spaMetaBitmap->size.width = std::min(m_cursor.bitmapSize.width(), targetSize.width());
+    spaMetaBitmap->size.height = std::min(m_cursor.bitmapSize.height(), targetSize.height());
+    spaMetaBitmap->stride = spaMetaBitmap->size.width * 4;
 
-    uint8_t *bitmap_data = SPA_MEMBER(spa_meta_bitmap, spa_meta_bitmap->offset, uint8_t);
+    uint8_t *bitmap_data = SPA_MEMBER(spaMetaBitmap, spaMetaBitmap->offset, uint8_t);
     QImage dest(bitmap_data,
-                spa_meta_bitmap->size.width,
-                spa_meta_bitmap->size.height,
-                spa_meta_bitmap->stride,
+                spaMetaBitmap->size.width,
+                spaMetaBitmap->size.height,
+                spaMetaBitmap->stride,
                 QImage::Format_RGBA8888_Premultiplied);
     dest.fill(Qt::transparent);
 
