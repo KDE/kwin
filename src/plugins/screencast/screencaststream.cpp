@@ -232,20 +232,23 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *buffer)
 
     if (dmabuff) {
         const DmaBufAttributes *dmabufAttribs = dmabuff->buffer()->dmabufAttributes();
-        Q_ASSERT(buffer->buffer->n_datas >= uint(dmabufAttribs->planeCount));
-        for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
-            spa_data[i].type = SPA_DATA_DmaBuf;
-            spa_data[i].flags = SPA_DATA_FLAG_READWRITE;
-            spa_data[i].mapoffset = 0;
-            spa_data[i].maxsize = i == 0 ? dmabufAttribs->pitch[i] * dmabufAttribs->height : 0; // TODO: dmabufs don't have a well defined size, it should be zero but some clients check the size to see if the buffer is valid
-            spa_data[i].fd = dmabufAttribs->fd[i].get();
-            spa_data[i].data = nullptr;
-            spa_data[i].chunk->offset = dmabufAttribs->offset[i];
-            spa_data[i].chunk->size = spa_data[i].maxsize;
-            spa_data[i].chunk->stride = dmabufAttribs->pitch[i];
-            spa_data[i].chunk->flags = SPA_CHUNK_FLAG_NONE;
+        if (buffer->buffer->n_datas != uint32_t(dmabufAttribs->planeCount)) {
+            qCWarning(KWIN_SCREENCAST, "Dmabuf buffer has invalid n_datas: got %d, expected %d", buffer->buffer->n_datas, dmabufAttribs->planeCount);
+        } else {
+            for (int i = 0; i < dmabufAttribs->planeCount; ++i) {
+                spa_data[i].type = SPA_DATA_DmaBuf;
+                spa_data[i].flags = SPA_DATA_FLAG_READWRITE;
+                spa_data[i].mapoffset = 0;
+                spa_data[i].maxsize = i == 0 ? dmabufAttribs->pitch[i] * dmabufAttribs->height : 0; // TODO: dmabufs don't have a well defined size, it should be zero but some clients check the size to see if the buffer is valid
+                spa_data[i].fd = dmabufAttribs->fd[i].get();
+                spa_data[i].data = nullptr;
+                spa_data[i].chunk->offset = dmabufAttribs->offset[i];
+                spa_data[i].chunk->size = spa_data[i].maxsize;
+                spa_data[i].chunk->stride = dmabufAttribs->pitch[i];
+                spa_data[i].chunk->flags = SPA_CHUNK_FLAG_NONE;
+            }
+            m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
         }
-        m_dmabufDataForPwBuffer.insert(buffer, dmabuff);
 #ifdef F_SEAL_SEAL // Disable memfd on systems that don't have it, like BSD < 12
     } else {
         if (!(spa_data->type & (1 << SPA_DATA_MemFd))) {
