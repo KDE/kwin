@@ -42,7 +42,7 @@ void BackingStore::resize(const QSize &size, const QRegion &staticContents)
 void BackingStore::beginPaint(const QRegion &region)
 {
     Window *platformWindow = static_cast<Window *>(window()->handle());
-    Swapchain *swapchain = platformWindow->swapchain({{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}});
+    Swapchain *swapchain = platformWindow->swapchain(nullptr, {{DRM_FORMAT_ARGB8888, {DRM_FORMAT_MOD_LINEAR}}});
     if (!swapchain) {
         qCCritical(KWIN_QPA, "Failed to ceate a swapchain for the backing store!");
         return;

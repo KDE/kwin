@@ -51,6 +51,9 @@ EGLPlatformContext::EGLPlatformContext(QOpenGLContext *context, EglDisplay *disp
 
 EGLPlatformContext::~EGLPlatformContext()
 {
+    if (!m_eglContext) {
+        return;
+    }
     if (!m_renderTargets.empty() || !m_zombieRenderTargets.empty()) {
         m_eglContext->makeCurrent();
         m_renderTargets.clear();
@@ -60,9 +63,18 @@ EGLPlatformContext::~EGLPlatformContext()
 
 bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
 {
+    if (!m_eglContext) {
+        return false;
+    }
     const bool ok = m_eglContext->makeCurrent();
     if (!ok) {
         qCWarning(KWIN_QPA, "eglMakeCurrent failed: %x", eglGetError());
+        return false;
+    }
+    if (m_eglContext->checkGraphicsResetStatus() != GL_NO_ERROR) {
+        m_renderTargets.clear();
+        m_zombieRenderTargets.clear();
+        m_eglContext.reset();
         return false;
     }
 
@@ -75,7 +87,7 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
         QOpenGLContextPrivate::setCurrentContext(context());
 
         Window *window = static_cast<Window *>(surface);
-        Swapchain *swapchain = window->swapchain(m_eglDisplay->nonExternalOnlySupportedDrmFormats());
+        Swapchain *swapchain = window->swapchain(m_eglContext, m_eglDisplay->nonExternalOnlySupportedDrmFormats());
 
         GraphicsBuffer *buffer = swapchain->acquire();
         if (!buffer) {
@@ -116,7 +128,9 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
 
 void EGLPlatformContext::doneCurrent()
 {
-    m_eglContext->doneCurrent();
+    if (m_eglContext) {
+        m_eglContext->doneCurrent();
+    }
 }
 
 bool EGLPlatformContext::isValid() const

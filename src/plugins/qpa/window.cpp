@@ -43,13 +43,14 @@ Window::~Window()
     unmap();
 }
 
-Swapchain *Window::swapchain(const QHash<uint32_t, QList<uint64_t>> &formats)
+Swapchain *Window::swapchain(const std::shared_ptr<EglContext> &context, const QHash<uint32_t, QList<uint64_t>> &formats)
 {
     const QSize nativeSize = geometry().size() * devicePixelRatio();
+    const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us
     if (!m_swapchain || m_swapchain->size() != nativeSize
         || !formats.contains(m_swapchain->format())
-        || m_swapchain->modifiers() != formats[m_swapchain->format()]) {
-        const bool software = window()->surfaceType() == QSurface::RasterSurface; // RasterGLSurface is unsupported by us
+        || m_swapchain->modifiers() != formats[m_swapchain->format()]
+        || (!software && m_eglContext.lock() != context)) {
 
         GraphicsBufferAllocator *allocator;
         if (software) {
@@ -72,6 +73,7 @@ Swapchain *Window::swapchain(const QHash<uint32_t, QList<uint64_t>> &formats)
                     continue;
                 }
                 m_swapchain = std::make_unique<Swapchain>(allocator, options, buffer);
+                m_eglContext = context;
                 break;
             }
         }

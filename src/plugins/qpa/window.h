@@ -16,6 +16,7 @@ namespace KWin
 {
 
 class InternalWindow;
+class EglContext;
 
 namespace QPA
 {
@@ -37,7 +38,7 @@ public:
     void requestActivateWindow() override;
 
     InternalWindow *internalWindow() const;
-    Swapchain *swapchain(const QHash<uint32_t, QList<uint64_t>> &formats);
+    Swapchain *swapchain(const std::shared_ptr<EglContext> &context, const QHash<uint32_t, QList<uint64_t>> &formats);
 
 private:
     void map();
@@ -46,6 +47,7 @@ private:
     QSurfaceFormat m_format;
     QPointer<InternalWindow> m_handle;
     std::unique_ptr<Swapchain> m_swapchain;
+    std::weak_ptr<EglContext> m_eglContext;
     quint32 m_windowId;
     qreal m_scale = 1;
 };
