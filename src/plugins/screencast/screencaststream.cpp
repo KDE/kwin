@@ -125,8 +125,14 @@ void ScreenCastStream::newStreamParams()
                             SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                             SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
     } else {
+        int blocks;
+        if (m_dmabufParams->modifier == DRM_FORMAT_MOD_INVALID) {
+            blocks = 1;
+        } else {
+            blocks = m_dmabufParams->planeCount;
+        }
         spa_pod_builder_add(&pod_builder,
-                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(m_dmabufParams->planeCount), 0);
+                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(blocks), 0);
     }
     spa_pod *bufferPod = (spa_pod *)spa_pod_builder_pop(&pod_builder, &f);
 

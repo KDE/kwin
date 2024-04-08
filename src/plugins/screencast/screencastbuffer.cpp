@@ -11,6 +11,8 @@
 #include "opengl/glframebuffer.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
+#include <drm_fourcc.h>
+
 namespace KWin
 {
 
@@ -65,8 +67,8 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
 
     struct spa_data *spaData = pwBuffer->buffer->datas;
 
-    Q_ASSERT(pwBuffer->buffer->n_datas >= uint(attrs->planeCount));
-    for (int i = 0; i < attrs->planeCount; ++i) {
+    Q_ASSERT((pwBuffer->buffer->n_datas == 1 && attrs->modifier == DRM_FORMAT_MOD_INVALID) || (pwBuffer->buffer->n_datas == uint32_t(attrs->planeCount)));
+    for (uint32_t i = 0; i < pwBuffer->buffer->n_datas; ++i) {
         spaData[i].type = SPA_DATA_DmaBuf;
         spaData[i].flags = SPA_DATA_FLAG_READWRITE;
         spaData[i].mapoffset = 0;
