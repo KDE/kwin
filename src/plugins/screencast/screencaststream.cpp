@@ -569,7 +569,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
 {
-    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spaHeader));
+    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spa_meta_header));
     if (spaHeader) {
         spaHeader->flags = 0;
         spaHeader->dts_offset = 0;
@@ -580,7 +580,7 @@ void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
 
 void ScreenCastStream::corruptHeader(spa_buffer *spaBuffer)
 {
-    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spaHeader));
+    spa_meta_header *spaHeader = (spa_meta_header *)spa_buffer_find_meta_data(spaBuffer, SPA_META_Header, sizeof(spa_meta_header));
     if (spaHeader) {
         spaHeader->flags = SPA_META_HEADER_FLAG_CORRUPTED;
     }
