@@ -49,6 +49,11 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         return nullptr;
     }
 
+    if (pwBuffer->buffer->n_datas != uint32_t(attrs->planeCount)) {
+        buffer->drop();
+        return nullptr;
+    }
+
     backend->makeCurrent();
 
     auto texture = backend->importDmaBufAsTexture(*attrs);
@@ -64,8 +69,6 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
     }
 
     struct spa_data *spaData = pwBuffer->buffer->datas;
-
-    Q_ASSERT(pwBuffer->buffer->n_datas >= uint(attrs->planeCount));
     for (int i = 0; i < attrs->planeCount; ++i) {
         spaData[i].type = SPA_DATA_DmaBuf;
         spaData[i].flags = SPA_DATA_FLAG_READWRITE;
