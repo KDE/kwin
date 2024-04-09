@@ -29,3 +29,6 @@ target_link_libraries(nightlight kwin KF6::ConfigGui KF6::GlobalAccel KF6::I18n)
 
 install(FILES nightlightsettings.kcfg DESTINATION ${KDE_INSTALL_KCFGDIR})
 install(FILES org.kde.KWin.NightLight.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
+
+install(PROGRAMS kconf_update/rename-nightcolor-to-nightlight.py DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
+install(FILES kconf_update/rename-nightcolor-to-nightlight.upd DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})

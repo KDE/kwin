@@ -1,0 +1,7 @@
+# SPDX-FileCopyrightText: 2024 Natalie Clarius <natalie.clarius@kde.org>
+# SPDX-License-Identifier: GPL-2.0-only OR GPL-3.0-only OR LicenseRef-KDE-Accepted-GPL
+
+Version=6
+
+Id=rename-nightcolor-to-nightlight
+Script=rename-nightcolor-to-nightlight.py
