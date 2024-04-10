@@ -146,6 +146,7 @@ class KWIN_EXPORT EffectsHandler : public QObject
     Q_PROPERTY(QSize virtualScreenSize READ virtualScreenSize NOTIFY virtualScreenSizeChanged)
     Q_PROPERTY(QRect virtualScreenGeometry READ virtualScreenGeometry NOTIFY virtualScreenGeometryChanged)
     Q_PROPERTY(bool hasActiveFullScreenEffect READ hasActiveFullScreenEffect NOTIFY hasActiveFullScreenEffectChanged)
+    Q_PROPERTY(bool colorPickerActive READ isColorPickerActive NOTIFY colorPickerActiveChanged)
 
     /**
      * The status of the session i.e if the user is logging out
@@ -699,9 +700,14 @@ public:
     KSharedConfigPtr inputConfig() const;
 
     /**
-     * Returns if activeFullScreenEffect is set
+     * Returns true if activeFullScreenEffect is set
      */
     bool hasActiveFullScreenEffect() const;
+
+    /**
+     * Returns true if color picker effect is currently picking colors.
+     */
+    bool isColorPickerActive() const;
 
     /**
      * Render the supplied OffscreenQuickView onto the scene
@@ -1031,6 +1037,8 @@ Q_SIGNALS:
      * @since 5.15
      */
     void hasActiveFullScreenEffectChanged();
+
+    void colorPickerActiveChanged();
 
     /**
      * This signal is emitted when the session state was changed

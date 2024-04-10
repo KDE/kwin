@@ -41,6 +41,7 @@ public Q_SLOTS:
 private:
     void showInfoMessage();
     void hideInfoMessage();
+    void setPicking(bool picking);
 
     QDBusMessage m_replyMessage;
     QPointF m_scheduledPosition;

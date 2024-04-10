@@ -51,7 +51,10 @@ ColorPickerEffect::ColorPickerEffect()
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ColorPicker"), this, QDBusConnection::ExportScriptableContents);
 }
 
-ColorPickerEffect::~ColorPickerEffect() = default;
+ColorPickerEffect::~ColorPickerEffect()
+{
+    setPicking(false);
+}
 
 void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen)
 {
@@ -67,7 +70,7 @@ void ColorPickerEffect::paintScreen(const RenderTarget &renderTarget, const Rend
         glReadPixels(texturePosition.x(), renderTarget.size().height() - texturePosition.y() - PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE, GL_RGBA, GL_FLOAT, data.data());
         QVector3D sRGB = 255 * renderTarget.colorDescription().mapTo(QVector3D(data[0], data[1], data[2]), sRGBencoding);
         QDBusConnection::sessionBus().send(m_replyMessage.createReply(QColor(sRGB.x(), sRGB.y(), sRGB.z())));
-        m_picking = false;
+        setPicking(false);
         m_scheduledPosition = QPoint(-1, -1);
     }
 }
@@ -81,7 +84,7 @@ QColor ColorPickerEffect::pick()
         sendErrorReply(QDBusError::Failed, "Color picking is already in progress");
         return QColor();
     }
-    m_picking = true;
+    setPicking(true);
     m_replyMessage = message();
     setDelayedReply(true);
     showInfoMessage();
@@ -91,7 +94,7 @@ QColor ColorPickerEffect::pick()
             if (p == QPointF(-1, -1)) {
                 // error condition
                 QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
-                m_picking = false;
+                setPicking(false);
             } else {
                 m_scheduledPosition = p;
                 effects->addRepaintFull();
@@ -110,9 +113,17 @@ void ColorPickerEffect::hideInfoMessage()
     effects->hideOnScreenMessage();
 }
 
+void ColorPickerEffect::setPicking(bool picking)
+{
+    if (m_picking != picking) {
+        m_picking = picking;
+        Q_EMIT effects->colorPickerActiveChanged();
+    }
+}
+
 bool ColorPickerEffect::isActive() const
 {
-    return m_picking && ((m_scheduledPosition != QPoint(-1, -1))) && !effects->isScreenLocked();
+    return m_picking && !effects->isScreenLocked();
 }
 
 } // namespace

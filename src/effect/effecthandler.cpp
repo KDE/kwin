@@ -432,6 +432,11 @@ bool EffectsHandler::hasActiveFullScreenEffect() const
     return fullscreen_effect;
 }
 
+bool EffectsHandler::isColorPickerActive() const
+{
+    return isEffectActive(QStringLiteral("colorpicker"));
+}
+
 bool EffectsHandler::grabKeyboard(Effect *effect)
 {
     if (keyboard_grab_effect != nullptr) {

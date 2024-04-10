@@ -20,7 +20,7 @@ var dialogParentEffect = {
                 dialogParentEffect.restartAnimation(window);
             }
         });
-        window.windowModalityChanged.connect(dialogParentEffect.modalDialogChanged);
+        window.windowModalityChanged.connect(dialogParentEffect.windowModalityChanged);
         window.windowDesktopsChanged.connect(dialogParentEffect.cancelAnimationInstant);
         window.windowDesktopsChanged.connect(dialogParentEffect.restartAnimation);
 
@@ -97,23 +97,19 @@ var dialogParentEffect = {
         // effect has to come after the full screen effect in the effect chain,
         // otherwise this slot will be invoked before the full screen effect can mark
         // itself as a full screen effect.
-        if (effects.hasActiveFullScreenEffect) {
+        if (dialogParentEffect.globallyInhibited()) {
             return;
         }
 
-        var windows = effects.stackingOrder;
-        for (var i = 0; i < windows.length; ++i) {
-            var window = windows[i];
+        const windows = effects.stackingOrder;
+        for (const window of windows) {
             dialogParentEffect.cancelAnimationInstant(window);
             dialogParentEffect.restartAnimation(window);
         }
     },
-    modalDialogChanged: function(dialog) {
+    windowModalityChanged: function (window) {
         "use strict";
-        if (dialog.modal === false)
-            dialogParentEffect.dialogLostModality(dialog);
-        else if (dialog.modal === true)
-            dialogParentEffect.dialogGotModality(dialog);
+        dialogParentEffect.refreshWindowEffect(window);
     },
     restartAnimation: function (window) {
         "use strict";
@@ -125,19 +121,21 @@ var dialogParentEffect = {
             complete(window.dialogParentAnimation);
         }
     },
-    activeFullScreenEffectChanged: function () {
+    activeFullScreenOrColorPickerChanged: function () {
         "use strict";
-        var windows = effects.stackingOrder;
-        for (var i = 0; i < windows.length; ++i) {
-            var dialog = windows[i];
-            if (!dialog.modal) {
-                continue;
-            }
-            if (effects.hasActiveFullScreenEffect) {
-                dialogParentEffect.dialogLostModality(dialog);
-            } else {
-                dialogParentEffect.dialogGotModality(dialog);
-            }
+        const windows = effects.stackingOrder;
+        for (const window of windows) {
+            dialogParentEffect.refreshWindowEffect(window);
+        }
+    },
+    globallyInhibited: function () {
+        return effects.hasActiveFullScreenEffect || effects.colorPickerActive;
+    },
+    refreshWindowEffect: function (window) {
+        if (dialogParentEffect.globallyInhibited() || !window.modal) {
+            dialogParentEffect.dialogLostModality(window);
+        } else {
+            dialogParentEffect.dialogGotModality(window);
         }
     },
     init: function () {
@@ -147,7 +145,9 @@ var dialogParentEffect = {
         effects.windowClosed.connect(dialogParentEffect.windowClosed);
         effects.desktopChanged.connect(dialogParentEffect.desktopChanged);
         effects.activeFullScreenEffectChanged.connect(
-            dialogParentEffect.activeFullScreenEffectChanged);
+            dialogParentEffect.activeFullScreenOrColorPickerChanged);
+        effects.colorPickerActiveChanged.connect(
+            dialogParentEffect.activeFullScreenOrColorPickerChanged);
 
         windows = effects.stackingOrder;
         for (i = 0; i < windows.length; i += 1) {
