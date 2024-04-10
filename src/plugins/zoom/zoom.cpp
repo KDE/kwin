@@ -456,6 +456,7 @@ void ZoomEffect::zoomIn(double to)
     } else {
         target_zoom = to;
     }
+    target_zoom = std::min(target_zoom, 100.0);
     if (!polling) {
         polling = true;
         effects->startMousePolling();
