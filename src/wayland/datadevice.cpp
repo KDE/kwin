@@ -164,7 +164,6 @@ DataOfferInterface *DataDeviceInterfacePrivate::createDataOffer(AbstractDataSour
     DataOfferInterface *offer = new DataOfferInterface(source, data_offer_resource);
     send_data_offer(offer->resource());
     offer->sendAllOffers();
-    offer->sendSourceActions();
     return offer;
 }
 
@@ -276,6 +275,8 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         dragSource->accept(QString());
     }
     DataOfferInterface *offer = d->createDataOffer(dragSource);
+    offer->sendSourceActions();
+
     d->drag.surface = surface;
     if (d->seat->isDragPointer()) {
         d->drag.posConnection = connect(d->seat, &SeatInterface::pointerPosChanged, this, [this] {
