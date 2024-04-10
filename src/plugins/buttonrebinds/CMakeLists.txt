@@ -14,4 +14,4 @@ target_sources(buttonsrebind PRIVATE
     main.cpp
     buttonrebindsfilter.cpp
 )
-target_link_libraries(buttonsrebind PRIVATE kwin Qt::GuiPrivate XKB::XKB)
+target_link_libraries(buttonsrebind PRIVATE kwin Qt::GuiPrivate Xkbcommon::Xkbcommon)

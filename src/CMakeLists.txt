@@ -247,7 +247,7 @@ target_link_libraries(kwin
         KDecoration2::KDecoration2Private
 
         UDev::UDev
-        XKB::XKB
+        Xkbcommon::Xkbcommon
         EGL::EGL
         epoxy::epoxy
 
