@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-09 02:46+0000\n"
+"POT-Creation-Date: 2024-04-10 02:47+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2559,7 +2559,7 @@ msgstr ""
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:383
+#: plugins/screencast/screencaststream.cpp:378
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
