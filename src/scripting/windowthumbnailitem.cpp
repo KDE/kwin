@@ -51,10 +51,17 @@ WindowThumbnailSource::WindowThumbnailSource(QQuickWindow *view, Window *handle)
     });
 
     connect(Compositor::self()->scene(), &WorkspaceScene::preFrameRender, this, &WindowThumbnailSource::update);
+
+    m_handle->refOffscreenRendering();
 }
 
 WindowThumbnailSource::~WindowThumbnailSource()
 {
+
+    if (m_handle) {
+        m_handle->unrefOffscreenRendering();
+    }
+
     if (!m_offscreenTexture) {
         return;
     }
