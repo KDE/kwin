@@ -275,7 +275,7 @@ bool WindowFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     }
 
     if (m_output) {
-        if (!window->isOnOutput(m_output)) {
+        if (window->output() != m_output) {
             return false;
         }
     }
