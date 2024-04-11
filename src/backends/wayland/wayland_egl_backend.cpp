@@ -345,7 +345,7 @@ std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(S
 void WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
-    static_cast<WaylandOutput *>(output)->framePending(frame);
+    static_cast<WaylandOutput *>(output)->setPendingFrame(frame);
 }
 
 OutputLayer *WaylandEglBackend::primaryLayer(Output *output)

@@ -145,7 +145,7 @@ WaylandOutput::~WaylandOutput()
     m_surface.reset();
 }
 
-void WaylandOutput::framePending(const std::shared_ptr<OutputFrame> &frame)
+void WaylandOutput::setPendingFrame(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
 }
