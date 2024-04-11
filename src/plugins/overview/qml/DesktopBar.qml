@@ -149,17 +149,10 @@ Item {
                         MouseArea {
                             id: mouseArea
                             anchors.fill: parent
-                            acceptedButtons: Qt.LeftButton | Qt.MiddleButton
+                            acceptedButtons: Qt.LeftButton
                             onClicked: mouse => {
                                 mouse.accepted = true;
-                                switch (mouse.button) {
-                                case Qt.LeftButton:
-                                    delegate.activate();
-                                    break;
-                                case Qt.MiddleButton:
-                                    delegate.remove();
-                                    break;
-                                }
+                                delegate.activate();
                             }
                         }
 
