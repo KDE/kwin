@@ -13,12 +13,13 @@ import org.kde.kirigami 2.20 as Kirigami
 import org.kde.ksvg 1.0 as KSvg
 import org.kde.kwin
 
-PlasmaCore.Dialog {
+PlasmaCore.Window {
     id: dialog
-    location: PlasmaCore.Types.Floating
     visible: false
     flags: Qt.X11BypassWindowManagerHint | Qt.FramelessWindowHint
-    outputOnly: true
+
+    width: mainItem.implicitWidth + leftPadding + rightPadding
+    height: mainItem.implicitHeight + topPadding + bottomPadding
 
     mainItem: Item {
         function loadConfig() {
@@ -38,8 +39,8 @@ PlasmaCore.Dialog {
         property int animationDuration: 1000
         property bool showGrid: true
 
-        width: dialogItem.showGrid ? view.itemWidth * view.columns : Math.ceil(textElement.implicitWidth)
-        height: dialogItem.showGrid ? view.itemHeight * view.rows + textElement.height : textElement.height
+        implicitWidth: dialogItem.showGrid ? view.itemWidth * view.columns : Math.ceil(textElement.implicitWidth)
+        implicitHeight: dialogItem.showGrid ? view.itemHeight * view.rows + textElement.implicitHeight : textElement.implicitHeight
 
         Kirigami.Heading {
             id: textElement
