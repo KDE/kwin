@@ -13,8 +13,6 @@
 
 #include <QRect>
 
-struct gbm_device;
-
 namespace KWin
 {
 class VirtualBackend;

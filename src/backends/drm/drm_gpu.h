@@ -21,8 +21,6 @@
 #include <epoxy/egl.h>
 #include <sys/types.h>
 
-struct gbm_device;
-
 namespace KWin
 {
 class DrmOutput;

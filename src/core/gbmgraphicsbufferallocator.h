@@ -8,7 +8,6 @@
 
 #include "core/graphicsbufferallocator.h"
 
-struct gbm_bo;
 struct gbm_device;
 
 namespace KWin

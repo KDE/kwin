@@ -21,7 +21,6 @@
 
 #include <xcb/xcb.h>
 
-struct gbm_device;
 struct _XDisplay;
 typedef struct _XDisplay Display;
 typedef struct _XCBKeySymbols xcb_key_symbols_t;

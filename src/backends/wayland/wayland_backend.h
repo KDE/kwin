@@ -26,7 +26,6 @@
 
 struct wl_buffer;
 struct wl_display;
-struct gbm_device;
 
 namespace KWayland
 {

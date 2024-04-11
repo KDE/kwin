@@ -21,8 +21,6 @@
 #include "utils/damagejournal.h"
 #include "utils/filedescriptor.h"
 
-struct gbm_bo;
-
 namespace KWin
 {
 
