@@ -401,21 +401,6 @@ bool Output::isInternal() const
     return m_information.internal;
 }
 
-void Output::inhibitDirectScanout()
-{
-    m_directScanoutCount++;
-}
-
-void Output::uninhibitDirectScanout()
-{
-    m_directScanoutCount--;
-}
-
-bool Output::directScanoutInhibited() const
-{
-    return m_directScanoutCount;
-}
-
 std::chrono::milliseconds Output::dimAnimationTime()
 {
     // See kscreen.kcfg

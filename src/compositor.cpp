@@ -184,7 +184,7 @@ void Compositor::composite(RenderLoop *renderLoop)
             const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
                 return sublayer->isVisible();
             });
-            if (scanoutPossible && !output->directScanoutInhibited()) {
+            if (scanoutPossible) {
                 directScanout = primaryLayer->scanout(scanoutCandidate);
             }
         }

@@ -290,11 +290,6 @@ public:
      */
     virtual RenderLoop *renderLoop() const = 0;
 
-    void inhibitDirectScanout();
-    void uninhibitDirectScanout();
-
-    bool directScanoutInhibited() const;
-
     /**
      * @returns the configured time for an output to dim
      *
@@ -477,7 +472,6 @@ protected:
     State m_state;
     Information m_information;
     QUuid m_uuid;
-    int m_directScanoutCount = 0;
     int m_refCount = 1;
 };
 
