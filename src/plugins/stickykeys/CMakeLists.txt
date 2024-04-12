@@ -14,5 +14,5 @@ target_sources(StickyKeysPlugin PRIVATE
     main.cpp
     stickykeys.cpp
 )
-target_link_libraries(StickyKeysPlugin PRIVATE kwin KF6::WindowSystem XKB::XKB)
+target_link_libraries(StickyKeysPlugin PRIVATE kwin KF6::WindowSystem)
 

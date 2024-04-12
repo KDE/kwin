@@ -222,16 +222,8 @@ set_package_properties(PlasmaWaylandProtocols PROPERTIES
     URL "https://invent.kde.org/libraries/plasma-wayland-protocols/"
 )
 
-find_package(XKB 0.7.0)
-set_package_properties(XKB PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Required for building KWin with Wayland support"
-)
-if (XKB_VERSION VERSION_GREATER_EQUAL 1.5.0)
-    set(HAVE_XKBCOMMON_NO_SECURE_GETENV 1)
-else()
-    set(HAVE_XKBCOMMON_NO_SECURE_GETENV 0)
-endif()
+pkg_check_modules(Xkbcommon REQUIRED IMPORTED_TARGET xkbcommon>=1.5.0)
+add_feature_info(Xkbcommon Xkbcommon_FOUND "Required for building KWin with Wayland support")
 
 if (KWIN_BUILD_X11)
     pkg_check_modules(XKBX11 IMPORTED_TARGET xkbcommon-x11 REQUIRED)

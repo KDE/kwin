@@ -206,8 +206,6 @@ target_link_libraries(testXkb
 
     KF6::ConfigCore
     KF6::WindowSystem
-
-    XKB::XKB
 )
 add_test(NAME kwin-testXkb COMMAND testXkb)
 ecm_mark_as_test(testXkb)
