@@ -116,6 +116,12 @@ public:
      */
     static GraphicsBuffer *bufferForResource(wl_resource *resource);
 
+    /**
+     * Sets the default maximum size for connection buffers of new clients. The size is in bytes.
+     * The minimum buffer size is 4096.
+     */
+    void setDefaultMaxBufferSize(size_t max);
+
 private Q_SLOTS:
     void flush();
 

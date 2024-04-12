@@ -5,6 +5,9 @@
     SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 */
 #include "display.h"
+
+#include "config-kwin.h"
+
 #include "clientconnection.h"
 #include "display_p.h"
 #include "linuxdmabufv1clientbuffer_p.h"
@@ -241,6 +244,13 @@ GraphicsBuffer *Display::bufferForResource(wl_resource *resource)
         Q_ASSERT_X(false, Q_FUNC_INFO, "Failed to find matching GraphicsBuffer for wl_resource");
         return nullptr;
     }
+}
+
+void Display::setDefaultMaxBufferSize(size_t max)
+{
+#if HAVE_WL_DISPLAY_SET_DEFAULT_MAX_BUFFER_SIZE
+    wl_display_set_default_max_buffer_size(d->display, max);
+#endif
 }
 
 SecurityContext::SecurityContext(Display *display, FileDescriptor &&listenFd, FileDescriptor &&closeFd, const QString &appId)
