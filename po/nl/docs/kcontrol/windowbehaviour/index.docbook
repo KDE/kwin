@@ -353,17 +353,6 @@
 <varlistentry>
 <term
 ><guilabel
->Actief scherm volgt de muis</guilabel
-></term>
-<listitem>
-<para
->Als deze optie is ingeschakeld is het actieve scherm (waarin bijv. nieuwe vensters verschijnen) het scherm waar zich de muisaanwijzer bevindt. Wanneer uitgeschakeld is het actieve scherm het scherm waarin het venster met de focus zich bevindt. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Gescheiden schermfocus</guilabel
 ></term>
 <listitem>
