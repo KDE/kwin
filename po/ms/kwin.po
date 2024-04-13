@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-10 00:39+0000\n"
+"POT-Creation-Date: 2024-04-13 00:39+0000\n"
 "PO-Revision-Date: 2010-08-23 19:35+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -1553,7 +1553,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr ""
 
-#: plugins/colorpicker/colorpicker.cpp:105
+#: plugins/colorpicker/colorpicker.cpp:108
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2328,13 +2328,13 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "togol Tentingkap Atas/Bawah"
 
-#: plugins/overview/qml/DesktopBar.qml:172
+#: plugins/overview/qml/DesktopBar.qml:165
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Ke Ruang Ke&rja"
 
-#: plugins/overview/qml/DesktopBar.qml:269
+#: plugins/overview/qml/DesktopBar.qml:262
 #, fuzzy, kde-format
 #| msgid "Show Desktop"
 msgid "Add Virtual Desktop"

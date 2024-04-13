@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-10 00:39+0000\n"
+"POT-Creation-Date: 2024-04-13 00:39+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1697,7 +1697,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr ""
 
-#: plugins/colorpicker/colorpicker.cpp:105
+#: plugins/colorpicker/colorpicker.cpp:108
 #, fuzzy, kde-format
 #| msgid ""
 #| "Select window to force close with left click or enter.\n"
@@ -2550,13 +2550,13 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Ефекат извртања"
 
-#: plugins/overview/qml/DesktopBar.qml:172
+#: plugins/overview/qml/DesktopBar.qml:165
 #, fuzzy, kde-format
 #| msgid "Move To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Премести на &површ"
 
-#: plugins/overview/qml/DesktopBar.qml:269
+#: plugins/overview/qml/DesktopBar.qml:262
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"

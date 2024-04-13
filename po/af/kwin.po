@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin stable\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-10 00:39+0000\n"
+"POT-Creation-Date: 2024-04-13 00:39+0000\n"
 "PO-Revision-Date: 2005-11-28 12:28+0200\n"
 "Last-Translator: Kobus Venter <kabousv@therugby.co.za>\n"
 "Language-Team: AFRIKAANS <translate-discuss-af@lists.sourceforge.net>\n"
@@ -1552,7 +1552,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr ""
 
-#: plugins/colorpicker/colorpicker.cpp:105
+#: plugins/colorpicker/colorpicker.cpp:108
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2324,13 +2324,13 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Wissel Venster Lig/Sagter"
 
-#: plugins/overview/qml/DesktopBar.qml:172
+#: plugins/overview/qml/DesktopBar.qml:165
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgid "Delete Virtual Desktop"
 msgstr "Na Werkskerm"
 
-#: plugins/overview/qml/DesktopBar.qml:269
+#: plugins/overview/qml/DesktopBar.qml:262
 #, fuzzy, kde-format
 #| msgid "Switch to Desktop 1"
 msgid "Add Virtual Desktop"

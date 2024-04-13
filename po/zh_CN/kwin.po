@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-10 00:39+0000\n"
+"POT-Creation-Date: 2024-04-13 00:39+0000\n"
 "PO-Revision-Date: 2024-04-07 19:29\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1548,7 +1548,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr "强度："
 
-#: plugins/colorpicker/colorpicker.cpp:105
+#: plugins/colorpicker/colorpicker.cpp:108
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2286,12 +2286,12 @@ msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "切换网格视图"
 
-#: plugins/overview/qml/DesktopBar.qml:172
+#: plugins/overview/qml/DesktopBar.qml:165
 #, kde-format
 msgid "Delete Virtual Desktop"
 msgstr "删除虚拟桌面"
 
-#: plugins/overview/qml/DesktopBar.qml:269
+#: plugins/overview/qml/DesktopBar.qml:262
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "添加虚拟桌面"
