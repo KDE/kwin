@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Category": "Appearance",
+        "Description": "Animates fading in and out of the session",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "Session Fade"
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
