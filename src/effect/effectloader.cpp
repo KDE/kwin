@@ -324,9 +324,6 @@ QStringList PluginEffectLoader::listOfKnownEffects() const
 bool PluginEffectLoader::loadEffect(const QString &name)
 {
     const auto info = findEffect(name);
-    if (!info.isValid()) {
-        return false;
-    }
     return loadEffect(info, LoadEffectFlag::Load);
 }
 
