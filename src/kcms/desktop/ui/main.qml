@@ -19,36 +19,39 @@ KCM.ScrollViewKCM {
 
     actions:  [
         Kirigami.Action {
-            displayComponent: QQC2.SpinBox {
-                id: rowsSpinBox
+            displayComponent: RowLayout {
+                spacing: Kirigami.Units.smallSpacing
 
-                from: 1
-                to: 20
-                editable: true
-                value: kcm.desktopsModel.rows
-
-                textFromValue: (value, locale) => i18np("1 Row", "%1 Rows", value)
-                valueFromText: (text, locale) => parseInt(text, 10)
-
-                onValueModified: kcm.desktopsModel.rows = value
-
-                KCM.SettingHighlighter {
-                    highlight: kcm.desktopsModel.rows !== 2
+                QQC2.Label {
+                    text: i18nc("@text:label Number of rows, label associated to a number input field", "Rows:")
                 }
-                Connections {
-                    target: kcm.desktopsModel
+                QQC2.SpinBox {
+                    id: rowsSpinBox
 
-                    function onReadyChanged() {
-                        rowsSpinBox.value = kcm.desktopsModel.rows;
+                    from: 1
+                    to: 20
+                    editable: true
+                    value: kcm.desktopsModel.rows
+                    onValueModified: kcm.desktopsModel.rows = value
+
+                    KCM.SettingHighlighter {
+                        highlight: kcm.desktopsModel.rows !== 2
                     }
-                    function onRowsChanged() {
-                        rowsSpinBox.value = kcm.desktopsModel.rows;
+                    Connections {
+                        target: kcm.desktopsModel
+
+                        function onReadyChanged() {
+                            rowsSpinBox.value = kcm.desktopsModel.rows;
+                        }
+                        function onRowsChanged() {
+                            rowsSpinBox.value = kcm.desktopsModel.rows;
+                        }
                     }
                 }
             }
         },
         Kirigami.Action {
-            text: i18nc("@action:button", "Add")
+            text: i18nc("@action:button", "Add Desktop")
             icon.name: "list-add"
             onTriggered: kcm.desktopsModel.createDesktop()
         }
