@@ -34,7 +34,6 @@ DpmsInputEventFilter::DpmsInputEventFilter()
 
 DpmsInputEventFilter::~DpmsInputEventFilter()
 {
-    notify();
 }
 
 bool DpmsInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
