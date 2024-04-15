@@ -3335,6 +3335,7 @@ void InputRedirection::registerAxisShortcut(Qt::KeyboardModifiers modifiers, Poi
 
 void InputRedirection::registerTouchpadSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> cb)
 {
+    return;
 #if KWIN_BUILD_GLOBALSHORTCUTS
     m_shortcuts->registerTouchpadSwipe(direction, fingerCount, action, cb);
 #endif
