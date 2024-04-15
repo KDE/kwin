@@ -186,6 +186,9 @@ bool XwaylandLauncher::start()
     arguments << QStringLiteral("-displayfd") << QString::number(pipeFds[1]);
     arguments << QStringLiteral("-rootless");
     arguments << QStringLiteral("-wm") << QString::number(fd);
+#if HAVE_XWAYLAND_ENABLE_EI_PORTAL
+    arguments << QStringLiteral("-enable-ei-portal");
+#endif
 
     m_xwaylandProcess = new QProcess(this);
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);

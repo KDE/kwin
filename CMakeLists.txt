@@ -275,6 +275,7 @@ if (KWIN_BUILD_X11)
         PURPOSE "Needed for running kwin_wayland"
     )
     set(HAVE_XWAYLAND_LISTENFD ${Xwayland_HAVE_LISTENFD})
+    set(HAVE_XWAYLAND_ENABLE_EI_PORTAL ${Xwayland_HAVE_ENABLE_EI_PORTAL})
 
     set(HAVE_GLX ${epoxy_HAS_GLX})
     get_target_property(QT_DISABLED_FEATURES Qt6::Gui QT_DISABLED_PUBLIC_FEATURES)

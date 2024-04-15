@@ -12,6 +12,8 @@
 #     The version of Xwayland
 # ``Xwayland_HAVE_LISTENFD``
 #     True if (the requested version of) Xwayland has -listenfd option
+# ``Xwayland_HAVE_ENABLE_EI_PORTAL``
+#    True if (the requested version of) Xwayland has -enable-ei-portal option
 
 #=============================================================================
 # SPDX-FileCopyrightText: 2016 Martin Gräßlin <mgraesslin@kde.org>
@@ -25,6 +27,7 @@ pkg_check_modules(PKG_xwayland QUIET xwayland)
 
 set(Xwayland_VERSION ${PKG_xwayland_VERSION})
 pkg_get_variable(Xwayland_HAVE_LISTENFD xwayland have_listenfd)
+pkg_get_variable(Xwayland_HAVE_ENABLE_EI_PORTAL xwayland have_enable_ei_portal)
 
 find_program(Xwayland_EXECUTABLE NAMES Xwayland)
 find_package_handle_standard_args(Xwayland
