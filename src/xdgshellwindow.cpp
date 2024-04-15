@@ -10,6 +10,8 @@
 */
 #include "xdgshellwindow.h"
 #include "core/output.h"
+#include "effect/globals.h"
+#include "utils/common.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -18,6 +20,7 @@
 #include "placement.h"
 #include "pointer_input.h"
 #include "tablet_input.h"
+#include "tiles/tilemanager.h"
 #include "touch_input.h"
 #include "utils/subsurfacemonitor.h"
 #include "virtualdesktops.h"
@@ -814,7 +817,7 @@ static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
 
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    const Qt::Edges anchors = anchorsForQuickTileMode(quickTileMode());
+    const Qt::Edges anchors = anchorsForQuickTileMode(m_requestedQuickTileMode);
 
     if (anchors & Qt::LeftEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledLeft;
@@ -1032,6 +1035,26 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
     }
     if (delta & XdgToplevelInterface::State::FullScreen) {
         updateFullScreenMode(states & XdgToplevelInterface::State::FullScreen);
+    }
+
+    if (delta & (XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
+        QuickTileMode newTileMode = QuickTileFlag::None;
+        if (states & XdgToplevelInterface::State::TiledLeft) {
+            newTileMode |= QuickTileFlag::Left;
+        }
+        if (states & XdgToplevelInterface::State::TiledTop) {
+            newTileMode |= QuickTileFlag::Top;
+        }
+        if (states & XdgToplevelInterface::State::TiledRight) {
+            newTileMode |= QuickTileFlag::Right;
+        }
+        if (states & XdgToplevelInterface::State::TiledBottom) {
+            newTileMode |= QuickTileFlag::Bottom;
+        }
+
+        if (newTileMode != quickTileMode()) {
+            setTile(workspace()->tileManager(output())->quickTile(newTileMode));
+        }
     }
 
     m_acknowledgedStates = states;
@@ -1511,6 +1534,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         return;
     }
 
+    const auto oldQuickTileMode = requestedQuickTileMode();
     Q_EMIT maximizedAboutToChange(mode);
     m_requestedMaximizeMode = mode;
 
@@ -1534,7 +1558,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         setNoBorder(m_requestedMaximizeMode == MaximizeFull);
     }
 
-    if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+    if (oldQuickTileMode == QuickTileMode(QuickTileFlag::None)) {
         QRectF savedGeometry = geometryRestore();
         if (!(oldMode & MaximizeVertical)) {
             savedGeometry.setTop(oldGeometry.top());
@@ -1585,24 +1609,17 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         }
     }
 
-    const auto oldQuickTileMode = quickTileMode();
     if (m_requestedMaximizeMode == MaximizeFull) {
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
-        setTile(nullptr);
     } else {
         updateQuickTileMode(QuickTileFlag::None);
     }
 
     moveResize(geometry);
-
-    if (oldQuickTileMode != quickTileMode()) {
-        doSetQuickTileMode();
-        Q_EMIT quickTileModeChanged();
-    }
 
     doSetMaximized();
 }

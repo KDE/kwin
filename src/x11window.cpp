@@ -30,6 +30,7 @@
 #include "scene/windowitem.h"
 #include "screenedge.h"
 #include "shadow.h"
+#include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -2599,6 +2600,11 @@ bool X11Window::acceptsFocus() const
     return info->input();
 }
 
+void X11Window::doSetQuickTileMode()
+{
+    setTile(workspace()->tileManager(output())->quickTile(m_requestedQuickTileMode));
+}
+
 void X11Window::setBlockingCompositing(bool block)
 {
     const bool blocks = rules()->checkBlockCompositing(block && options->windowsBlockCompositing());
@@ -4430,6 +4436,8 @@ void X11Window::maximize(MaximizeMode mode)
         return;
     }
 
+    const auto currentQuickTileMode = requestedQuickTileMode();
+
     QRectF clientArea;
     if (isElectricBorderMaximizing()) {
         clientArea = workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor());
@@ -4606,7 +4614,6 @@ void X11Window::maximize(MaximizeMode mode)
         } else {
             updateQuickTileMode(QuickTileFlag::None);
         }
-        setTile(nullptr);
         info->setState(NET::Max, NET::Max);
         break;
     }
@@ -4617,7 +4624,6 @@ void X11Window::maximize(MaximizeMode mode)
     blockGeometryUpdates(false);
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
-    Q_EMIT quickTileModeChanged();
 
     if (max_mode != old_mode) {
         Q_EMIT maximizedChanged();

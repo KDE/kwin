@@ -41,6 +41,10 @@ Tile::~Tile()
     if (m_parentTile) {
         m_parentTile->removeChild(this);
     }
+
+    if (m_tiling->tearingDown()) {
+        return;
+    }
     for (auto *w : std::as_const(m_windows)) {
         Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
         w->setTile(tile);
@@ -284,7 +288,6 @@ void Tile::addWindow(Window *window)
     if (!m_windows.contains(window)) {
         window->moveResize(windowGeometry());
         m_windows.append(window);
-        window->setTile(this);
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
@@ -294,7 +297,6 @@ void Tile::removeWindow(Window *window)
 {
     // We already ensure there is a single copy of window in m_windows
     if (m_windows.removeOne(window)) {
-        window->setTile(nullptr);
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
     }

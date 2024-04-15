@@ -93,7 +93,7 @@ void PlacementTracker::restore(const QString &key)
             // don't touch windows where the user intentionally changed their state
             bool restore = window->interactiveMoveResizeCount() == newData.interactiveMoveResizeCount
                 && window->requestedMaximizeMode() == newData.maximize
-                && window->quickTileMode() == newData.quickTile
+                && window->requestedQuickTileMode() == newData.quickTile
                 && window->isFullScreen() == newData.fullscreen;
             if (!restore) {
                 // the logic above can have false negatives if PlacementTracker changed the window state
@@ -101,7 +101,7 @@ void PlacementTracker::restore(const QString &key)
                 if (const auto it = m_lastRestoreData.find(window); it != m_lastRestoreData.end()) {
                     restore = window->interactiveMoveResizeCount() == it->interactiveMoveResizeCount
                         && window->requestedMaximizeMode() == it->maximize
-                        && window->quickTileMode() == it->quickTile
+                        && window->requestedQuickTileMode() == it->quickTile
                         && window->isFullScreen() == it->fullscreen
                         && window->moveResizeOutput()->uuid() == it->outputUuid;
                 }

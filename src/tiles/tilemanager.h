@@ -44,6 +44,8 @@ public:
     explicit TileManager(Output *parent = nullptr);
     ~TileManager() override;
 
+    bool tearingDown() const;
+
     Output *output() const;
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
@@ -69,6 +71,7 @@ private:
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
     std::unique_ptr<TileModel> m_tileModel = nullptr;
+    bool m_tearingDown = false;
     friend class CustomTile;
 };
 
