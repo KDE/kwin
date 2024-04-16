@@ -629,6 +629,11 @@ int Cursor::defaultThemeSize()
     return 24;
 }
 
+QString Cursor::fallbackThemeName()
+{
+    return QStringLiteral("breeze_cursors");
+}
+
 QByteArray CursorShape::name() const
 {
     switch (m_shape) {
