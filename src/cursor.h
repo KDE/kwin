@@ -149,6 +149,10 @@ public:
      * Returns the default Xcursor theme size.
      */
     static int defaultThemeSize();
+    /**
+     * Returns the fallback Xcursor theme name.
+     */
+    static QString fallbackThemeName();
 
     /**
      * Returns the current cursor position. This method does an update of the mouse position if

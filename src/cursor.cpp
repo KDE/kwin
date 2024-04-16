@@ -345,6 +345,11 @@ int Cursor::defaultThemeSize()
     return 24;
 }
 
+QString Cursor::fallbackThemeName()
+{
+    return QStringLiteral("breeze_cursors");
+}
+
 QList<QByteArray> CursorShape::alternatives(const QByteArray &name)
 {
     static const QHash<QByteArray, QList<QByteArray>> alternatives = {
