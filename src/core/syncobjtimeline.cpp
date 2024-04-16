@@ -117,6 +117,10 @@ void SyncTimeline::signal(uint64_t timelinePoint)
 
 void SyncTimeline::moveInto(uint64_t timelinePoint, const FileDescriptor &fd)
 {
-    drmSyncobjImportSyncFile(m_drmFd, m_handle, fd.get());
+    uint32_t tempHandle = 0;
+    drmSyncobjCreate(m_drmFd, 0, &tempHandle);
+    drmSyncobjImportSyncFile(m_drmFd, tempHandle, fd.get());
+    drmSyncobjTransfer(m_drmFd, m_handle, timelinePoint, tempHandle, 0, 0);
+    drmSyncobjDestroy(m_drmFd, tempHandle);
 }
 }
