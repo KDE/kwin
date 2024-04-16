@@ -19,6 +19,7 @@
 #include "layershellv1window.h"
 #include "main.h"
 #include "options.h"
+#include "utils/kernel.h"
 #include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/appmenu.h"
@@ -820,6 +821,15 @@ LinuxDrmSyncObjV1Interface *WaylandServer::linuxSyncObj() const
 void WaylandServer::setRenderBackend(RenderBackend *backend)
 {
     if (backend->supportsTimelines()) {
+        // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
+        const auto linuxVersion = linuxKernelVersion();
+        if (linuxVersion.majorVersion() < 6 && linuxVersion.minorVersion() < 6) {
+            return;
+        }
+        // also ensure the implementation isn't totally broken, see https://lists.freedesktop.org/archives/dri-devel/2024-January/439101.html
+        if (linuxVersion.majorVersion() == 6 && (linuxVersion.minorVersion() == 7 || (linuxVersion.minorVersion() == 6 && linuxVersion.patchVersion() < 19))) {
+            return;
+        }
         if (!m_linuxDrmSyncObj) {
             m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display);
         }
