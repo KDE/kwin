@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 00:39+0000\n"
-"PO-Revision-Date: 2024-03-16 18:28+0000\n"
+"PO-Revision-Date: 2024-03-25 14:32+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
@@ -473,7 +473,7 @@ msgstr ""
 #: advanced.ui:45 focus.ui:85 focus.ui:178
 #, kde-format
 msgid " ms"
-msgstr " ms"
+msgstr " msek."
 
 #. i18n: ectx: property (text), widget (QLabel, windowPlacementLabel)
 #: advanced.ui:66
@@ -928,7 +928,7 @@ msgstr "&Gluggaaðgerðir"
 #: main.cpp:94
 #, kde-format
 msgid "Mo&vement"
-msgstr "&Hreyfing:"
+msgstr "&Tilfærsla"
 
 #: main.cpp:99
 #, kde-format

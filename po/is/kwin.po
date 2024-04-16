@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-13 00:39+0000\n"
-"PO-Revision-Date: 2024-03-06 14:03+0000\n"
+"POT-Creation-Date: 2024-04-16 00:39+0000\n"
+"PO-Revision-Date: 2024-03-25 14:23+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
@@ -1231,7 +1231,7 @@ msgstr "Teikniborð fært í %1"
 msgid "Tablets switched outputs"
 msgstr "Teikniborð skiptu um úttak"
 
-#: input.cpp:3184
+#: input.cpp:3185
 #, kde-format
 msgid "Touchpad"
 msgstr "Snertiplatti"
@@ -2078,7 +2078,7 @@ msgstr "Breidd línu:"
 #: plugins/mouseclick/mouseclick_config.ui:171
 #, kde-format
 msgid " pixel"
-msgstr " díll/dílar"
+msgstr " px"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
@@ -2142,8 +2142,8 @@ msgstr "Hreinsa músarslóðir"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] " díll"
-msgstr[1] " dílar"
+msgstr[0] " px"
+msgstr[1] " px"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2507,7 +2507,7 @@ msgstr "Mi&llibil:"
 #: plugins/thumbnailaside/thumbnailaside_config.ui:106
 #, kde-format
 msgid " pixels"
-msgstr " dílar"
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68

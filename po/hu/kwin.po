@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-13 00:39+0000\n"
+"POT-Creation-Date: 2024-04-16 00:39+0000\n"
 "PO-Revision-Date: 2024-01-23 12:28+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -1223,7 +1223,7 @@ msgstr "Rajztábla áthelyezve ide: %1"
 msgid "Tablets switched outputs"
 msgstr "A rajztáblák kimenetet váltottak"
 
-#: input.cpp:3184
+#: input.cpp:3185
 #, kde-format
 msgid "Touchpad"
 msgstr "Érintőtábla"

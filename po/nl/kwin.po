@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-13 00:39+0000\n"
+"POT-Creation-Date: 2024-04-16 00:39+0000\n"
 "PO-Revision-Date: 2024-03-26 11:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -1237,7 +1237,7 @@ msgstr "Tablet verplaatst naar %1"
 msgid "Tablets switched outputs"
 msgstr "Tabletten schakelden uitvoer om"
 
-#: input.cpp:3184
+#: input.cpp:3185
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
