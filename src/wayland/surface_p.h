@@ -59,7 +59,6 @@ struct SurfaceState
     bool contentTypeIsSet = false;
     bool presentationModeHintIsSet = false;
     bool colorDescriptionIsSet = false;
-    bool releasePointIsSet = false;
     qint32 bufferScale = 1;
     OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
