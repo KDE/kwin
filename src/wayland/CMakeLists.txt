@@ -252,6 +252,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
     BASENAME linux-drm-syncobj-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xdg-toplevel-icon-v1.xml
+    BASENAME xdg-toplevel-icon-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -333,6 +337,7 @@ target_sources(kwin PRIVATE
     xdgoutput_v1.cpp
     xdgshell.cpp
     xdgtopleveldrag_v1.cpp
+    xdgtoplevelicon_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
     xx_colormanagement_v2.cpp
@@ -409,6 +414,7 @@ install(FILES
     xdgforeign_v2.h
     xdgoutput_v1.h
     xdgshell.h
+    xdgtoplevelicon_v1.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
     xx_colormanagement_v2.h

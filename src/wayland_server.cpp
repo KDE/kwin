@@ -74,6 +74,7 @@
 #include "wayland/xdgoutput_v1.h"
 #include "wayland/xdgshell.h"
 #include "wayland/xdgtopleveldrag_v1.h"
+#include "wayland/xdgtoplevelicon_v1.h"
 #include "wayland/xx_colormanagement_v2.h"
 #include "workspace.h"
 #include "xdgactivationv1.h"
@@ -490,6 +491,8 @@ bool WaylandServer::init(InitializationFlags flags)
     m_contentTypeManager = new ContentTypeManagerV1Interface(m_display, m_display);
     m_tearingControlInterface = new TearingControlManagerV1Interface(m_display, m_display);
     new XdgToplevelDragManagerV1Interface(m_display, this);
+
+    new XdgToplevelIconManagerV1Interface(m_display, this);
 
     auto screenEdgeManager = new ScreenEdgeManagerV1Interface(m_display, m_display);
     connect(screenEdgeManager, &ScreenEdgeManagerV1Interface::edgeRequested, this, [this](AutoHideScreenEdgeV1Interface *edge) {

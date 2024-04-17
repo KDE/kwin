@@ -304,6 +304,8 @@ public:
      */
     QSize maximumSize() const;
 
+    QIcon customIcon() const;
+
     /**
      * Sends a configure event to the client. \a size specifies the new window geometry size. A size
      * of zero means the client should decide its own window dimensions.
@@ -373,6 +375,8 @@ Q_SIGNALS:
      * This signal is emitted when the toplevel's maximum size has been changed.
      */
     void maximumSizeChanged(const QSize &size);
+
+    void customIconChanged();
 
     /**
      * This signal is emitted when the toplevel wants to be interactively moved. The \a seat and

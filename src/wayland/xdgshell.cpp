@@ -376,6 +376,7 @@ void XdgToplevelInterfacePrivate::reset()
     windowClass = QString();
     minimumSize = QSize();
     maximumSize = QSize();
+    customIcon = QIcon();
     pending = XdgToplevelCommit{};
     stashed.clear();
 
@@ -581,6 +582,11 @@ QSize XdgToplevelInterface::minimumSize() const
 QSize XdgToplevelInterface::maximumSize() const
 {
     return d->maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->maximumSize;
+}
+
+QIcon XdgToplevelInterface::customIcon() const
+{
+    return d->customIcon;
 }
 
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)

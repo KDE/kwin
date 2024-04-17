@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <QIcon>
+
 #include "qwayland-server-xdg-shell.h"
 #include "xdgshell.h"
 
@@ -150,6 +152,7 @@ public:
     QString windowClass;
     QSize minimumSize;
     QSize maximumSize;
+    QIcon customIcon; // managed externally by the xdg_toplevel_icon interface
 
 protected:
     void xdg_toplevel_destroy_resource(Resource *resource) override;

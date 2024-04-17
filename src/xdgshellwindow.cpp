@@ -462,6 +462,10 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 
     connect(waylandServer(), &WaylandServer::foreignTransientChanged,
             this, &XdgToplevelWindow::handleForeignTransientForChanged);
+
+    connect(shellSurface, &XdgToplevelInterface::customIconChanged, this, &XdgToplevelWindow::updateIcon);
+    connect(this, &XdgToplevelWindow::desktopFileNameChanged, this, &XdgToplevelWindow::updateIcon);
+    updateIcon();
 }
 
 XdgToplevelWindow::~XdgToplevelWindow()
@@ -1307,6 +1311,21 @@ void XdgToplevelWindow::updateCapabilities()
         m_capabilities = caps;
         m_shellSurface->sendWmCapabilities(caps);
     }
+}
+
+void XdgToplevelWindow::updateIcon()
+{
+    if (!m_shellSurface->customIcon().isNull()) {
+        setIcon(m_shellSurface->customIcon());
+        return;
+    }
+    const QString waylandIconName = QStringLiteral("wayland");
+    const QString dfIconName = iconFromDesktopFile();
+    const QString iconName = dfIconName.isEmpty() ? waylandIconName : dfIconName;
+    if (iconName == icon().name()) {
+        return;
+    }
+    setIcon(QIcon::fromTheme(iconName));
 }
 
 QString XdgToplevelWindow::preferredColorScheme() const
