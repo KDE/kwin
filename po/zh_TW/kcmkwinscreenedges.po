@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-12 02:19+0900\n"
+"PO-Revision-Date: 2024-04-16 19:18+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -230,7 +230,7 @@ msgstr "再次觸發延遲(&R)"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "角落屏障(&C)："
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -242,19 +242,22 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"在此您可以啟用或停用螢幕之間的虛擬角落屏障。這個屏障會在游標已經碰著一個螢幕"
+"角落時防止游標移動到另一個螢幕去。這個功能讓多螢幕時能夠更容易使用螢幕角落的"
+"介面元素，像是最大化視窗的關閉按鈕。"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "防止游標從角落移動到別的視窗。"
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "邊緣屏障(&E)："
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -266,6 +269,9 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"在此您可以設定螢幕間邊緣屏障的大小。這個屏障讓您必須多移動游標一段距離才會真"
+"正跨越邊緣到另一個螢幕去。這讓螢幕之間邊緣上的介面元素更容易使用，像是 "
+"Plasma 的面板。"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
