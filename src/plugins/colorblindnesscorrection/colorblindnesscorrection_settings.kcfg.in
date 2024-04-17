@@ -15,5 +15,8 @@
         <entry name="Intensity" type="Double">
             <default>1.0</default>
         </entry>
+        <entry name="ShowInApplet" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>

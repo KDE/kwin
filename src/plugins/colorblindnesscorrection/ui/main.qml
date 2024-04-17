@@ -16,7 +16,7 @@ KCM.SimpleKCM {
     id: root
 
     implicitWidth: Kirigami.Units.gridUnit * 30
-    implicitHeight: Kirigami.Units.gridUnit * 24
+    implicitHeight: Kirigami.Units.gridUnit * 26
 
     RowLayout {
         id: previewArea
@@ -89,6 +89,13 @@ KCM.SimpleKCM {
             value: kcm.settings.intensity
 
             onMoved: kcm.settings.intensity = value
+        }
+
+        QQC.CheckBox {
+            Kirigami.FormData.label: i18ndc("kwin", "@label", "Show in Brightness and Color Applet:")
+            checked: kcm.settings.showInApplet
+
+            onToggled: kcm.settings.showInApplet = checked
         }
     }
 }

@@ -28,6 +28,7 @@ ColorBlindnessCorrectionEffect::ColorBlindnessCorrectionEffect()
     ColorBlindnessCorrectionSettings::instance(effects->config());
     m_mode = static_cast<Mode>(ColorBlindnessCorrectionSettings::mode());
     m_intensity = std::clamp<float>(ColorBlindnessCorrectionSettings::intensity(), 0.0f, 1.0f);
+    m_showInApplet = ColorBlindnessCorrectionSettings::showInApplet();
 
     loadData();
 }
@@ -119,9 +120,11 @@ void ColorBlindnessCorrectionEffect::reconfigure(ReconfigureFlags flags)
     if (m_mode == newMode && qFuzzyCompare(m_intensity, newIntensity)) {
         return;
     }
+    const auto newShowInApplet = ColorBlindnessCorrectionSettings::showInApplet();
 
     m_mode = newMode;
     m_intensity = newIntensity;
+    m_showInApplet = newShowInApplet;
 
     disconnect(effects, &EffectsHandler::windowDeleted, this, &ColorBlindnessCorrectionEffect::slotWindowDeleted);
     disconnect(effects, &EffectsHandler::windowAdded, this, &ColorBlindnessCorrectionEffect::correctColor);

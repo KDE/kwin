@@ -49,6 +49,7 @@ private:
 
     Mode m_mode = Protanopia;
     float m_intensity = 1.0f;
+    bool m_showInApplet = false;
 
     std::unordered_set<KWin::EffectWindow *> m_windows;
     std::unique_ptr<GLShader> m_shader;
