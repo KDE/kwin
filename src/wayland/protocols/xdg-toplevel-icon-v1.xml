@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<protocol name="xdg_toplevel_icon_v1">
+
+  <copyright>
+    Copyright © 2023-2024 Matthias Klumpp
+
+    Permission is hereby granted, free of charge, to any person obtaining a
+    copy of this software and associated documentation files (the "Software"),
+    to deal in the Software without restriction, including without limitation
+    the rights to use, copy, modify, merge, publish, distribute, sublicense,
+    and/or sell copies of the Software, and to permit persons to whom the
+    Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice (including the next
+    paragraph) shall be included in all copies or substantial portions of the
+    Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+  </copyright>
+
+  <description summary="protocol to assign explicit icons to toplevels">
+    This protocol allows clients to set icons for their toplevel surfaces
+    either via an XDG icon stock (using an icon name), or from pixel data.
+
+    A toplevel icon represents the individual toplevel (unlike the application
+    or launcher icon, which represents the application as a whole), and may be
+    shown in window switchers, window overviews and taskbars that list
+    individual windows.
+
+    This document adheres to RFC 2119 when using words like "must",
+    "should", "may", etc.
+
+    Warning! The protocol described in this file is currently in the testing
+    phase. Backward compatible changes may be added together with the
+    corresponding interface version bump. Backward incompatible changes can
+    only be done by creating a new major version of the extension.
+  </description>
+
+  <interface name="xdg_toplevel_icon_v1" version="1">
+    <description summary="interface to set toplevel window icons">
+      This interface provides a way for clients to set a dedicated icon for
+      their toplevels to represent them in overviews.
+
+      Icons are supposed to be static, and while it is allowed to change an
+      icon for an already existing window, icons should not be used to convey
+      status information or try to be animated.
+      Compositors may rate-limit toplevel icon changes.
+
+      An icon can either be set from an XDG stock icon via 'set_icon_name' or
+      from pixel data via 'set_icon_buffer'.
+
+      In case both pixel data and an icon name are set by the client, the named
+      icon must always be preferred as long as it is valid and found in the
+      current theme.
+
+      The compositor may alter the icon as it sees fit (for example, scale it,
+      desaturate it or tint it) in order to integrate it with the environment.
+    </description>
+
+    <enum name="error">
+      <entry name="wrong_format" summary="the provided icon does not match the requested format"
+	     value="1"/>
+    </enum>
+
+    <request name="set_icon_name">
+      <description summary="set the toplevel icon via a stock icon name, or clear the icon">
+        This request assigns an icon to 'toplevel' using its XDG icon-theme
+        name, or clears the toplevel icon.
+        This state is double-buffered and is applied on the next
+        wl_surface.commit of the toplevel.
+
+        The request must specify an icon name for a stock icon in the icon
+        theme.
+        If 'icon_name' is set to null, the icon of the respective toplevel is
+        reset to its default icon (usually the icon of the application,
+        derived from its desktop-entry file, or a placeholder icon).
+
+        The compositor must resolve 'icon_name' according to the lookup rules
+        described in the XDG icon theme specification[1] using the
+        environment's current icon theme.
+
+        This request must be honored if sent as part of the xdg_toplevel's
+        configure sequence. The client can send it at a later time to request
+        an update of the icon.
+
+        If a compositor does not support setting an icon by its name, it should
+        ignore all 'set_icon_name' requests that do not have 'icon_name' set
+        to null.
+
+        [1]: https://specifications.freedesktop.org/icon-theme-spec/icon-theme-spec-latest.html
+      </description>
+      <arg name="toplevel" type="object" interface="xdg_toplevel" summary="the toplevel to act on"/>
+      <arg name="icon_name" type="string" allow-null="true"/>
+    </request>
+
+    <request name="set_icon_buffer">
+      <description summary="set a toplevel icon from a pixel buffer">
+        This request assigns a window icon to 'toplevel' using pixel data
+        supplied as wl_buffer.
+        This state is double-buffered and is applied on the next
+        wl_surface.commit of the toplevel.
+
+        This request provides the compositor with pixel data for the window
+        icon of 'toplevel' for the scaling factor 'scale'.
+
+        The client should submit pixel data for all icon sizes it can provide.
+
+        The wl_buffer supplying pixel data as 'icon' must be backed by wl_shm
+        and must be a square (width and height being equal).
+        If any of these buffer requirements are not fulfilled, a 'wrong_format'
+        error must be raised.
+
+        The client may invoke this request multiple times to provide an icon in
+        multiple sizes.
+        If the compositor already has a buffer of the same size and scale from
+        a previous 'set_icon_buffer' request, data from the latest request
+        overrides the preexisting pixel data.
+
+        To reset the icon to the compositor's default and clear all submitted
+        buffers, the client should perform a 'set_icon_name' request with an
+        'icon_name' of null.
+      </description>
+      <arg name="toplevel" type="object" interface="xdg_toplevel" summary="the toplevel to act on"/>
+      <arg name="icon" type="object" interface="wl_buffer"/>
+      <arg name="scale" type="int"
+	   summary="the scaling factor of the icon, e.g. 1"/>
+    </request>
+
+    <request name="get_icon_sizes">
+      <description summary="retrieve a list of preferred toplevel icon sizes">
+        When rendering a vector graphic icon, it is useful for the client to
+        know which icon sizes it should preferrably provide to the compositor.
+
+        The compositor must reply to this request with 'icon_size' events, one
+        for each size that it may need in future (icons may be used within the
+        compositor, but also by other desktop components, which the compositor
+        should take into account).
+
+        After all 'icon_size' events are emitted, a 'done' event must be sent.
+        The client may the render its icons to the appropriate sizes and
+        submit them using 'set_icon_buffer'.
+
+        If the compositor does not want to provide any preferences at all,
+        it must reply solely with a 'done' event, without emitting any
+        'icon_size' events.
+
+        The provided icon sizes are not toplevel-specific and the client may
+        cache and use them for all its toplevel surfaces.
+
+        If the compositor preferences change, it may emit a new 'icon_size'
+        sequence to update the client information, even if a 'get_icon_sizes'
+        request was not explicitly made again (but the request must have been
+        made at least once prior).
+      </description>
+    </request>
+
+    <event name="icon_size">
+      <description summary="describes a supported icon size">
+        This event indicates an icon size the compositor prefers to be
+        available if the client can render it.
+        Multiple 'icon_size' events are emitted in response to the client
+        performing a 'get_icon_sizes' request.
+
+        A sequence of 'icon_size' events is finished with a 'done' event.
+      </description>
+      <arg name="size" type="int"
+	   summary="the edge size of the square icon in surface-local coordinates, e.g. 64"/>
+      <arg name="scale" type="int"
+	   summary="the scaling factor of the icon, e.g. 1"/>
+    </event>
+
+    <event name="done">
+      <description summary="all information has been sent">
+        This event is sent after all 'icon_size' events have been sent.
+      </description>
+    </event>
+
+  </interface>
+
+</protocol>
