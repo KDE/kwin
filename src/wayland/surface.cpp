@@ -608,7 +608,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool visibilityChanged = bufferChanged && bool(current->buffer) != bool(next->buffer);
     const bool colorDescriptionChanged = next->colorDescriptionIsSet;
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
-    const bool bufferReleasePointChanged = next->releasePointIsSet;
+    const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
