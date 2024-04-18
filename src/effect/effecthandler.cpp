@@ -122,7 +122,6 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     , m_compositor(compositor)
     , m_scene(scene)
     , m_effectLoader(new EffectLoader(this))
-    , m_trackingCursorChanges(0)
 {
     if (compositing_type == NoCompositing) {
         return;
@@ -238,6 +237,8 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
     if (auto inputMethod = kwinApp()->inputMethod()) {
         connect(inputMethod, &InputMethod::panelChanged, this, &EffectsHandler::inputPanelChanged);
     }
+
+    connect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
 
     reconfigure();
 }
@@ -633,20 +634,6 @@ void EffectsHandler::registerTouchpadPinchShortcut(PinchDirection dir, uint fing
 void EffectsHandler::registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback)
 {
     input()->registerTouchscreenSwipeShortcut(direction, fingerCount, action, progressCallback);
-}
-
-void EffectsHandler::startMousePolling()
-{
-    if (Cursors::self()->mouse()) {
-        Cursors::self()->mouse()->startMousePolling();
-    }
-}
-
-void EffectsHandler::stopMousePolling()
-{
-    if (Cursors::self()->mouse()) {
-        Cursors::self()->mouse()->stopMousePolling();
-    }
 }
 
 bool EffectsHandler::hasKeyboardGrab() const
@@ -1080,30 +1067,6 @@ bool EffectsHandler::checkInputWindowEvent(QWheelEvent *e)
         effect->windowInputMouseEvent(e);
     }
     return true;
-}
-
-void EffectsHandler::connectNotify(const QMetaMethod &signal)
-{
-    if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {
-        if (!m_trackingCursorChanges) {
-            connect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
-            Cursors::self()->mouse()->startCursorTracking();
-        }
-        ++m_trackingCursorChanges;
-    }
-    QObject::connectNotify(signal);
-}
-
-void EffectsHandler::disconnectNotify(const QMetaMethod &signal)
-{
-    if (signal == QMetaMethod::fromSignal(&EffectsHandler::cursorShapeChanged)) {
-        Q_ASSERT(m_trackingCursorChanges > 0);
-        if (!--m_trackingCursorChanges) {
-            Cursors::self()->mouse()->stopCursorTracking();
-            disconnect(Cursors::self()->mouse(), &Cursor::cursorChanged, this, &EffectsHandler::cursorShapeChanged);
-        }
-    }
-    QObject::disconnectNotify(signal);
 }
 
 void EffectsHandler::checkInputWindowStacking()

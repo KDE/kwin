@@ -73,19 +73,16 @@ TrackMouseEffect::TrackMouseEffect()
     KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>());
     connect(action, &QAction::triggered, this, &TrackMouseEffect::toggle);
 
-    connect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
     reconfigure(ReconfigureAll);
 }
 
 TrackMouseEffect::~TrackMouseEffect()
 {
-    if (m_mousePolling) {
-        effects->stopMousePolling();
-    }
 }
 
 void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
+    const bool active = bool(m_modifiers);
     m_modifiers = Qt::KeyboardModifiers();
     TrackMouseConfig::self()->read();
     if (TrackMouseConfig::shift()) {
@@ -100,15 +97,11 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
     if (TrackMouseConfig::meta()) {
         m_modifiers |= Qt::MetaModifier;
     }
-
-    if (m_modifiers) {
-        if (!m_mousePolling) {
-            effects->startMousePolling();
-        }
-        m_mousePolling = true;
-    } else if (m_mousePolling) {
-        effects->stopMousePolling();
-        m_mousePolling = false;
+    const bool newActive = bool(m_modifiers);
+    if (newActive && !active) {
+        connect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
+    } else if (!newActive && active) {
+        disconnect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
     }
 }
 
@@ -155,10 +148,6 @@ void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
                                         Qt::MouseButtons, Qt::MouseButtons,
                                         Qt::KeyboardModifiers modifiers, Qt::KeyboardModifiers)
 {
-    if (!m_mousePolling) { // we didn't ask for it but maybe someone else did...
-        return;
-    }
-
     switch (m_state) {
     case State::ActivatedByModifiers:
         if (modifiers != m_modifiers) {

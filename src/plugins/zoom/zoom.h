@@ -82,6 +82,7 @@ private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
     void slotWindowDamaged();
     void slotScreenRemoved(Output *screen);
+    void setTargetZoom(double value);
 
 private:
     void showCursor();
@@ -106,7 +107,6 @@ private:
     double zoom;
     double target_zoom;
     double source_zoom;
-    bool polling; // Mouse polling
     double zoomFactor;
     enum MouseTrackingType {
         MouseTrackingProportional = 0,

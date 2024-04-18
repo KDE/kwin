@@ -37,7 +37,6 @@ class TrackMouseEffect : public Effect
 {
     Q_OBJECT
     Q_PROPERTY(Qt::KeyboardModifiers modifiers READ modifiers)
-    Q_PROPERTY(bool mousePolling READ isMousePolling)
 public:
     TrackMouseEffect();
     ~TrackMouseEffect() override;
@@ -50,10 +49,6 @@ public:
     Qt::KeyboardModifiers modifiers() const
     {
         return m_modifiers;
-    }
-    bool isMousePolling() const
-    {
-        return m_mousePolling;
     }
 private Q_SLOTS:
     void toggle();
@@ -68,7 +63,6 @@ private:
         Inactive
     };
     State m_state = State::Inactive;
-    bool m_mousePolling = false;
     float m_angle = 0;
     Qt::KeyboardModifiers m_modifiers;
     std::unique_ptr<RotatingArcsItem> m_rotatingArcsItem;

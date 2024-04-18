@@ -24,17 +24,24 @@ X11Cursor::X11Cursor(bool xInputSupport)
     , m_timeStamp(XCB_TIME_CURRENT_TIME)
     , m_buttonMask(0)
     , m_hasXInput(xInputSupport)
-    , m_needsPoll(false)
 {
     Cursors::self()->setMouse(this);
-    m_resetTimeStampTimer.setSingleShot(true);
-    connect(&m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
-    // TODO: How often do we really need to poll?
-    m_mousePollingTimer.setInterval(50);
-    connect(&m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::mousePolled);
-
     if (m_hasXInput) {
+        // with XInput we don't have to poll the mouse on a timer, Xorg will notify us when it moved
+        m_resetTimeStampTimer.setSingleShot(true);
+        m_mousePollingTimer.setSingleShot(true);
+        m_mousePollingTimer.setInterval(50);
         connect(qApp->eventDispatcher(), &QAbstractEventDispatcher::aboutToBlock, this, &X11Cursor::aboutToBlock);
+    } else {
+        connect(&m_resetTimeStampTimer, &QTimer::timeout, this, &X11Cursor::resetTimeStamp);
+        connect(&m_mousePollingTimer, &QTimer::timeout, this, &X11Cursor::pollMouse);
+        m_resetTimeStampTimer.setSingleShot(true);
+        m_mousePollingTimer.setSingleShot(false);
+        m_mousePollingTimer.setInterval(50);
+        m_mousePollingTimer.start();
+    }
+    if (Xcb::Extensions::self()->isFixesAvailable()) {
+        xcb_xfixes_select_cursor_input(connection(), rootWindow(), XCB_XFIXES_CURSOR_NOTIFY_MASK_DISPLAY_CURSOR);
     }
 
 #ifndef KCMRULES
@@ -81,37 +88,12 @@ void X11Cursor::resetTimeStamp()
 
 void X11Cursor::aboutToBlock()
 {
-    if (m_needsPoll) {
-        mousePolled();
-        m_needsPoll = false;
-    }
-}
-
-void X11Cursor::doStartMousePolling()
-{
-    if (!m_hasXInput) {
+    if (!m_mousePollingTimer.isActive()) {
         m_mousePollingTimer.start();
     }
 }
 
-void X11Cursor::doStopMousePolling()
-{
-    if (!m_hasXInput) {
-        m_mousePollingTimer.stop();
-    }
-}
-
-void X11Cursor::doStartCursorTracking()
-{
-    xcb_xfixes_select_cursor_input(connection(), rootWindow(), XCB_XFIXES_CURSOR_NOTIFY_MASK_DISPLAY_CURSOR);
-}
-
-void X11Cursor::doStopCursorTracking()
-{
-    xcb_xfixes_select_cursor_input(connection(), rootWindow(), 0);
-}
-
-void X11Cursor::mousePolled()
+void X11Cursor::pollMouse()
 {
     static QPointF lastPos = currentPos();
     static uint16_t lastMask = m_buttonMask;
@@ -127,13 +109,13 @@ void X11Cursor::mousePolled()
 
 void X11Cursor::notifyCursorChanged()
 {
-    if (!isCursorTracking()) {
-        // cursor change tracking is currently disabled, so don't emit signal
-        return;
-    }
     Q_EMIT cursorChanged();
 }
 
+void X11Cursor::notifyCursorPosChanged()
+{
+    pollMouse();
+}
 }
 
 #include "moc_x11_standalone_cursor.cpp"

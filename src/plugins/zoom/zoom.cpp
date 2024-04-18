@@ -38,7 +38,6 @@ ZoomEffect::ZoomEffect()
     : Effect()
     , zoom(1)
     , target_zoom(1)
-    , polling(false)
     , zoomFactor(1.25)
     , mouseTracking(MouseTrackingProportional)
     , mousePointer(MousePointerScale)
@@ -111,7 +110,6 @@ ZoomEffect::ZoomEffect()
     timeline.setDuration(350);
     timeline.setFrameRange(0, 100);
     connect(&timeline, &QTimeLine::frameChanged, this, &ZoomEffect::timelineFrameChanged);
-    connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
     connect(effects, &EffectsHandler::windowAdded, this, &ZoomEffect::slotWindowAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &ZoomEffect::slotScreenRemoved);
 
@@ -235,7 +233,7 @@ void ZoomEffect::reconfigure(ReconfigureFlags)
     if (source_zoom < 0) {
         // Load the saved zoom value.
         source_zoom = 1.0;
-        target_zoom = ZoomConfig::initialZoom();
+        setTargetZoom(ZoomConfig::initialZoom());
         if (target_zoom > 1.0) {
             zoomIn(target_zoom);
         }
@@ -452,14 +450,9 @@ void ZoomEffect::zoomIn(double to)
 {
     source_zoom = zoom;
     if (to < 0.0) {
-        target_zoom *= zoomFactor;
+        setTargetZoom(target_zoom * zoomFactor);
     } else {
-        target_zoom = to;
-    }
-    target_zoom = std::min(target_zoom, 100.0);
-    if (!polling) {
-        polling = true;
-        effects->startMousePolling();
+        setTargetZoom(to);
     }
     cursorPoint = effects->cursorPos().toPoint();
     if (mouseTracking == MouseTrackingDisabled) {
@@ -471,13 +464,9 @@ void ZoomEffect::zoomIn(double to)
 void ZoomEffect::zoomOut()
 {
     source_zoom = zoom;
-    target_zoom /= zoomFactor;
+    setTargetZoom(target_zoom / zoomFactor);
     if ((zoomFactor > 1 && target_zoom < 1.01) || (zoomFactor < 1 && target_zoom > 0.99)) {
-        target_zoom = 1;
-        if (polling) {
-            polling = false;
-            effects->stopMousePolling();
-        }
+        setTargetZoom(1);
     }
     if (mouseTracking == MouseTrackingDisabled) {
         prevPoint = effects->cursorPos().toPoint();
@@ -488,11 +477,7 @@ void ZoomEffect::zoomOut()
 void ZoomEffect::actualSize()
 {
     source_zoom = zoom;
-    target_zoom = 1;
-    if (polling) {
-        polling = false;
-        effects->stopMousePolling();
-    }
+    setTargetZoom(1);
     effects->addRepaintFull();
 }
 
@@ -649,6 +634,19 @@ bool ZoomEffect::screenExistsAt(const QPoint &point) const
 {
     const Output *output = effects->screenAt(point);
     return output && output->geometry().contains(point);
+}
+
+void ZoomEffect::setTargetZoom(double value)
+{
+    value = std::min(value, 100.0);
+    const bool newActive = value != 1.0;
+    const bool oldActive = target_zoom != 1.0;
+    if (newActive && !oldActive) {
+        connect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
+    } else if (!newActive && oldActive) {
+        disconnect(effects, &EffectsHandler::mouseChanged, this, &ZoomEffect::slotMouseChanged);
+    }
+    target_zoom = value;
 }
 
 } // namespace

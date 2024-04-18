@@ -23,25 +23,20 @@ public:
     X11Cursor(bool xInputSupport = false);
     ~X11Cursor() override;
 
-    void schedulePoll()
-    {
-        m_needsPoll = true;
-    }
-
     /**
      * @internal
      *
      * Called from X11 event handler.
      */
     void notifyCursorChanged();
+    /**
+     * @internal queries the cursor position
+     */
+    void notifyCursorPosChanged();
 
 protected:
     void doSetPos() override;
     void doGetPos() override;
-    void doStartMousePolling() override;
-    void doStopMousePolling() override;
-    void doStartCursorTracking() override;
-    void doStopCursorTracking() override;
 
 private Q_SLOTS:
     /**
@@ -50,8 +45,8 @@ private Q_SLOTS:
      * to be also refetched after each return to the event loop.
      */
     void resetTimeStamp();
-    void mousePolled();
     void aboutToBlock();
+    void pollMouse();
 
 private:
     xcb_timestamp_t m_timeStamp;
@@ -59,7 +54,6 @@ private:
     QTimer m_resetTimeStampTimer;
     QTimer m_mousePollingTimer;
     bool m_hasXInput;
-    bool m_needsPoll;
 
     std::unique_ptr<XFixesCursorEventFilter> m_xfixesFilter;
 

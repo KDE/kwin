@@ -110,7 +110,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     connect(effects, &EffectsHandler::startupRemoved, this, &StartupFeedbackEffect::gotRemoveStartup);
     connect(effects, &EffectsHandler::startupChanged, this, &StartupFeedbackEffect::gotStartupChange);
 
-    connect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
     connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this]() {
         reconfigure(ReconfigureAll);
     });
@@ -130,9 +129,6 @@ StartupFeedbackEffect::StartupFeedbackEffect()
 
 StartupFeedbackEffect::~StartupFeedbackEffect()
 {
-    if (m_active) {
-        effects->stopMousePolling();
-    }
 }
 
 bool StartupFeedbackEffect::supported()
@@ -320,9 +316,8 @@ void StartupFeedbackEffect::start(const Startup &startup)
     if (!output) {
         return;
     }
-
     if (!m_active) {
-        effects->startMousePolling();
+        connect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
     }
     m_active = true;
 
@@ -347,9 +342,10 @@ void StartupFeedbackEffect::start(const Startup &startup)
 
 void StartupFeedbackEffect::stop()
 {
-    if (m_active) {
-        effects->stopMousePolling();
+    if (!m_active) {
+        return;
     }
+    disconnect(effects, &EffectsHandler::mouseChanged, this, &StartupFeedbackEffect::slotMouseChanged);
     m_active = false;
     m_lastPresentTime = std::chrono::milliseconds::zero();
     effects->makeOpenGLContextCurrent();
@@ -396,8 +392,7 @@ void StartupFeedbackEffect::prepareTextures(const QPixmap &pix, qreal devicePixe
         break;
     default:
         // for safety
-        m_active = false;
-        m_lastPresentTime = std::chrono::milliseconds::zero();
+        stop();
         break;
     }
 }

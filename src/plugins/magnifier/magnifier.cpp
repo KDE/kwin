@@ -32,7 +32,6 @@ const int FRAME_WIDTH = 5;
 MagnifierEffect::MagnifierEffect()
     : m_zoom(1)
     , m_targetZoom(1)
-    , m_polling(false)
     , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_texture(nullptr)
     , m_fbo(nullptr)
@@ -203,10 +202,6 @@ QRect MagnifierEffect::magnifierArea(QPointF pos) const
 void MagnifierEffect::zoomIn()
 {
     m_targetZoom *= 1.2;
-    if (!m_polling) {
-        m_polling = true;
-        effects->startMousePolling();
-    }
     if (effects->isOpenGLCompositing() && !m_texture) {
         effects->makeOpenGLContextCurrent();
         m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
@@ -224,10 +219,6 @@ void MagnifierEffect::zoomOut()
     m_targetZoom /= 1.2;
     if (m_targetZoom <= 1) {
         m_targetZoom = 1;
-        if (m_polling) {
-            m_polling = false;
-            effects->stopMousePolling();
-        }
         if (m_zoom == m_targetZoom) {
             effects->makeOpenGLContextCurrent();
             m_fbo.reset();
@@ -243,10 +234,6 @@ void MagnifierEffect::toggle()
         if (m_targetZoom == 1.0) {
             m_targetZoom = 2;
         }
-        if (!m_polling) {
-            m_polling = true;
-            effects->startMousePolling();
-        }
         if (effects->isOpenGLCompositing() && !m_texture) {
             effects->makeOpenGLContextCurrent();
             m_texture = GLTexture::allocate(GL_RGBA16F, m_magnifierSize);
@@ -258,10 +245,6 @@ void MagnifierEffect::toggle()
         }
     } else {
         m_targetZoom = 1;
-        if (m_polling) {
-            m_polling = false;
-            effects->stopMousePolling();
-        }
     }
     effects->addRepaint(magnifierArea().adjusted(-FRAME_WIDTH, -FRAME_WIDTH, FRAME_WIDTH, FRAME_WIDTH));
 }

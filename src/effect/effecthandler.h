@@ -253,10 +253,6 @@ public:
      */
     void registerTouchscreenSwipeShortcut(SwipeDirection direction, uint fingerCount, QAction *action, std::function<void(qreal)> progressCallback);
 
-    // Mouse polling
-    void startMousePolling();
-    void stopMousePolling();
-
     void reserveElectricBorder(ElectricBorder border, Effect *effect);
     void unreserveElectricBorder(ElectricBorder border, Effect *effect);
 
@@ -1065,8 +1061,6 @@ public Q_SLOTS:
     Q_SCRIPTABLE QString debug(const QString &name, const QString &parameter = QString()) const;
 
 protected:
-    void connectNotify(const QMetaMethod &signal) override;
-    void disconnectNotify(const QMetaMethod &signal) override;
     void effectsChanged();
     void setupWindowConnections(KWin::Window *window);
 
@@ -1122,7 +1116,6 @@ protected:
     WorkspaceScene *m_scene;
     QList<Effect *> m_grabbedMouseEffects;
     EffectLoader *m_effectLoader;
-    int m_trackingCursorChanges;
     std::unique_ptr<WindowPropertyNotifyX11Filter> m_x11WindowPropertyNotify;
 };
 

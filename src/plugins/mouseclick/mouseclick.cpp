@@ -49,9 +49,6 @@ MouseClickEffect::MouseClickEffect()
 
 MouseClickEffect::~MouseClickEffect()
 {
-    if (m_enabled) {
-        effects->stopMousePolling();
-    }
 }
 
 void MouseClickEffect::reconfigure(ReconfigureFlags)
@@ -234,10 +231,8 @@ void MouseClickEffect::toggleEnabled()
 
     if (m_enabled) {
         connect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
-        effects->startMousePolling();
     } else {
         disconnect(effects, &EffectsHandler::mouseChanged, this, &MouseClickEffect::slotMouseChanged);
-        effects->stopMousePolling();
     }
 
     m_clicks.clear();

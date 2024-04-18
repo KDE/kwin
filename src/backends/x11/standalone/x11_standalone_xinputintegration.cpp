@@ -80,11 +80,7 @@ public:
                 break;
                 // TODO: further buttons, horizontal scrolling?
             }
-        }
-            if (m_x11Cursor) {
-                m_x11Cursor->schedulePoll();
-            }
-            break;
+        } break;
         case XI_RawButtonRelease: {
             auto e = reinterpret_cast<xXIRawEvent *>(event);
             switch (e->detail) {
@@ -107,11 +103,12 @@ public:
                 break;
                 // TODO: further buttons, horizontal scrolling?
             }
-        }
+        } break;
+        case XI_RawMotion: {
             if (m_x11Cursor) {
-                m_x11Cursor->schedulePoll();
+                m_x11Cursor->notifyCursorPosChanged();
             }
-            break;
+        } break;
         case XI_TouchBegin: {
             auto e = reinterpret_cast<xXIDeviceEvent *>(event);
             m_lastTouchPositions.insert(e->detail, QPointF(fixed1616ToReal(e->event_x), fixed1616ToReal(e->event_y)));
@@ -150,9 +147,6 @@ public:
             break;
         }
         default:
-            if (m_x11Cursor) {
-                m_x11Cursor->schedulePoll();
-            }
             break;
         }
         return false;

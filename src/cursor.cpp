@@ -113,9 +113,7 @@ void Cursors::emitCurrentCursorChanged()
 }
 
 Cursor::Cursor()
-    : m_mousePollingCounter(0)
-    , m_cursorTrackingCounter(0)
-    , m_themeName(defaultThemeName())
+    : m_themeName(defaultThemeName())
     , m_themeSize(defaultThemeSize())
 {
     loadThemeSettings();
@@ -283,56 +281,6 @@ void Cursor::updatePos(const QPointF &pos)
     }
     m_pos = pos;
     Q_EMIT posChanged(m_pos);
-}
-
-void Cursor::startMousePolling()
-{
-    ++m_mousePollingCounter;
-    if (m_mousePollingCounter == 1) {
-        doStartMousePolling();
-    }
-}
-
-void Cursor::stopMousePolling()
-{
-    Q_ASSERT(m_mousePollingCounter > 0);
-    --m_mousePollingCounter;
-    if (m_mousePollingCounter == 0) {
-        doStopMousePolling();
-    }
-}
-
-void Cursor::doStartMousePolling()
-{
-}
-
-void Cursor::doStopMousePolling()
-{
-}
-
-void Cursor::startCursorTracking()
-{
-    ++m_cursorTrackingCounter;
-    if (m_cursorTrackingCounter == 1) {
-        doStartCursorTracking();
-    }
-}
-
-void Cursor::stopCursorTracking()
-{
-    Q_ASSERT(m_cursorTrackingCounter > 0);
-    --m_cursorTrackingCounter;
-    if (m_cursorTrackingCounter == 0) {
-        doStopCursorTracking();
-    }
-}
-
-void Cursor::doStartCursorTracking()
-{
-}
-
-void Cursor::doStopCursorTracking()
-{
 }
 
 QString Cursor::defaultThemeName()
