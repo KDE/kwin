@@ -94,14 +94,6 @@ static void restoreNofileLimit()
     }
 }
 
-void disableDrKonqi()
-{
-    KCrash::setDrKonqiEnabled(false);
-}
-// run immediately, before Q_CORE_STARTUP functions
-// that would enable drkonqi
-Q_CONSTRUCTOR_FUNCTION(disableDrKonqi)
-
 //************************************
 // ApplicationWayland
 //************************************
@@ -296,6 +288,8 @@ int main(int argc, char *argv[])
 
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
     qunsetenv("QT_QPA_PLATFORM");
+
+    KCrash::initialize();
 
     KSignalHandler::self()->watchSignal(SIGTERM);
     KSignalHandler::self()->watchSignal(SIGINT);
