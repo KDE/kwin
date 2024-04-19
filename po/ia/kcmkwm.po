@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# g.sora <g.sora@tiscali.it>, 2010, 2011, 2012, 2013, 2020, 2021, 2022, 2023.
+# g.sora <g.sora@tiscali.it>, 2010, 2011, 2012, 2013, 2020, 2021, 2022, 2023, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 03:08+0000\n"
-"PO-Revision-Date: 2023-06-29 12:52+0200\n"
+"PO-Revision-Date: 2024-04-18 12:38+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -206,7 +206,7 @@ msgid ""
 "In this row you can customize left click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"In iste riga tu pote adaptar le comportamento del pression (click) sinistre "
+"In iste rango tu pote adaptar le comportamento del pression (click) sinistre "
 "quando tu pulsa sur le barra de titulo o le quadro de un fenestra."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
@@ -347,7 +347,7 @@ msgid ""
 "In this row you can customize middle click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"In iste riga tu pote adaptar le comportamento del pression (click) central "
+"In iste rango tu pote adaptar le comportamento del pression (click) central "
 "quando tu pulsa sur le barra de titulo o le quadro de un fenestra."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
@@ -364,7 +364,7 @@ msgid ""
 "In this row you can customize right click behavior when clicking into the "
 "titlebar or the frame."
 msgstr ""
-"In iste riga tu pote adaptar le comportamento del pression (click) dextere "
+"In iste rango tu pote adaptar le comportamento del pression (click) dextere "
 "quando tu pulsa sur le barra de titulo o le quadro de un fenestra."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
