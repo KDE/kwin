@@ -153,17 +153,7 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
             }
         }
     }
-    if (item->pixmap()) {
-        return item;
-    }
-    for (const auto &child : children | std::views::reverse) {
-        if (child->z() < 0) {
-            if (auto item = findTopMostSurface(static_cast<SurfaceItem *>(child))) {
-                return item;
-            }
-        }
-    }
-    return nullptr;
+    return item;
 }
 
 SurfaceItem *WorkspaceScene::scanoutCandidate() const
