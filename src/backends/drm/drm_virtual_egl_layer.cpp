@@ -92,7 +92,7 @@ bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &
     m_damageJournal.add(damagedRegion);
 
     EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
-    m_gbmSwapchain->release(m_currentSlot, releaseFence.fileDescriptor().duplicate());
+    m_gbmSwapchain->release(m_currentSlot, releaseFence.takeFileDescriptor());
     return true;
 }
 

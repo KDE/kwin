@@ -51,7 +51,7 @@ const FileDescriptor &EGLNativeFence::fileDescriptor() const
     return m_fileDescriptor;
 }
 
-FileDescriptor &&EGLNativeFence::fileDescriptor()
+FileDescriptor &&EGLNativeFence::takeFileDescriptor()
 {
     return std::move(m_fileDescriptor);
 }

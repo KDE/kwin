@@ -27,7 +27,7 @@ public:
 
     bool isValid() const;
     const FileDescriptor &fileDescriptor() const;
-    FileDescriptor &&fileDescriptor();
+    FileDescriptor &&takeFileDescriptor();
     bool waitSync() const;
 
     static EGLNativeFence importFence(EglDisplay *display, FileDescriptor &&fd);

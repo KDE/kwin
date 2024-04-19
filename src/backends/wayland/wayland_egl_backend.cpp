@@ -110,7 +110,7 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
 
     m_presentationBuffer = m_backend->backend()->importBuffer(m_buffer->buffer());
-    m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
+    m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
 
     m_damageJournal.add(damagedRegion);
     return true;
@@ -217,7 +217,7 @@ bool WaylandEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegio
     m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
 
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
-    m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
+    m_swapchain->release(m_buffer, releaseFence.takeFileDescriptor());
     return true;
 }
 

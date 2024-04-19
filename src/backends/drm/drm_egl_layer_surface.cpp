@@ -198,7 +198,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         glDisable(GL_BLEND);
         m_surface->currentShadowSlot->texture()->render(m_surface->gbmSwapchain->size());
         EGLNativeFence fence(m_surface->context->displayObject());
-        m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.fileDescriptor().duplicate());
+        m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.takeFileDescriptor());
         GLFramebuffer::popFramebuffer();
     }
     m_surface->damageJournal.add(damagedRegion);
@@ -211,7 +211,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion)
         glFinish();
     }
     m_surface->gbmSwapchain->release(m_surface->currentSlot, sourceFence.fileDescriptor().duplicate());
-    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.fileDescriptor());
+    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.takeFileDescriptor());
     m_surface->renderEnd = std::chrono::steady_clock::now();
     if (buffer) {
         m_surface->currentFramebuffer = buffer;
@@ -533,14 +533,14 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, const FileDescriptor &readFence) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, FileDescriptor &&readFence) const
 {
     if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot);
     } else if (surface->importMode == MultiGpuImportMode::Egl) {
-        return importWithEgl(surface, slot->buffer(), readFence);
+        return importWithEgl(surface, slot->buffer(), std::move(readFence));
     } else {
-        const auto ret = m_gpu->importBuffer(slot->buffer(), readFence.duplicate());
+        const auto ret = m_gpu->importBuffer(slot->buffer(), std::move(readFence));
         if (!ret) {
             qCWarning(KWIN_DRM, "Failed to create framebuffer: %s", strerror(errno));
         }
@@ -548,7 +548,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, const FileDescriptor &readFence) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence) const
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
@@ -564,7 +564,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     surface->importTimeQuery->begin();
 
     if (readFence.isValid()) {
-        const auto destinationFence = EGLNativeFence::importFence(surface->importContext->displayObject(), readFence.duplicate());
+        const auto destinationFence = EGLNativeFence::importFence(surface->importContext->displayObject(), std::move(readFence));
         destinationFence.waitSync();
     }
 
@@ -609,7 +609,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
 
     // restore the old context
     m_eglBackend->makeCurrent();
-    return m_gpu->importBuffer(slot->buffer(), endFence.fileDescriptor().duplicate());
+    return m_gpu->importBuffer(slot->buffer(), endFence.takeFileDescriptor());
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surface, EglSwapchainSlot *source) const
