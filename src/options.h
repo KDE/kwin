@@ -107,7 +107,6 @@ class KWIN_EXPORT Options : public QObject
      * Whether to see Xinerama screens separately for focus (in Alt+Tab, when activating next client)
      */
     Q_PROPERTY(bool separateScreenFocus READ isSeparateScreenFocus WRITE setSeparateScreenFocus NOTIFY separateScreenFocusChanged)
-    Q_PROPERTY(bool activeMouseScreen READ activeMouseScreen WRITE setActiveMouseScreen NOTIFY activeMouseScreenChanged)
     Q_PROPERTY(PlacementPolicy placement READ placement WRITE setPlacement NOTIFY placementChanged)
     Q_PROPERTY(ActivationDesktopPolicy activationDesktopPolicy READ activationDesktopPolicy WRITE setActivationDesktopPolicy NOTIFY activationDesktopPolicyChanged)
     Q_PROPERTY(bool focusPolicyIsReasonable READ focusPolicyIsReasonable NOTIFY focusPolicyIsResonableChanged)
@@ -330,11 +329,6 @@ public:
     bool isSeparateScreenFocus() const
     {
         return m_separateScreenFocus;
-    }
-
-    bool activeMouseScreen() const
-    {
-        return m_activeMouseScreen;
     }
 
     PlacementPolicy placement() const
@@ -728,7 +722,6 @@ public:
     void setShadeHover(bool shadeHover);
     void setShadeHoverInterval(int shadeHoverInterval);
     void setSeparateScreenFocus(bool separateScreenFocus);
-    void setActiveMouseScreen(bool activeMouseScreen);
     void setPlacement(PlacementPolicy placement);
     void setActivationDesktopPolicy(ActivationDesktopPolicy activationDesktopPolicy);
     void setBorderSnapZone(int borderSnapZone);
@@ -931,7 +924,6 @@ Q_SIGNALS:
     void shadeHoverChanged();
     void shadeHoverIntervalChanged();
     void separateScreenFocusChanged(bool);
-    void activeMouseScreenChanged();
     void placementChanged();
     void activationDesktopPolicyChanged();
     void borderSnapZoneChanged();
@@ -995,7 +987,6 @@ private:
     bool m_shadeHover;
     int m_shadeHoverInterval;
     bool m_separateScreenFocus;
-    bool m_activeMouseScreen;
     PlacementPolicy m_placement;
     ActivationDesktopPolicy m_activationDesktopPolicy;
     int m_borderSnapZone;

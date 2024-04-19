@@ -1348,9 +1348,6 @@ void Workspace::updateOutputs(const QList<Output *> &outputOrder)
     if (!m_activeOutput || !m_outputs.contains(m_activeOutput)) {
         setActiveOutput(m_outputs[0]);
     }
-    if (!m_outputs.contains(m_activeCursorOutput)) {
-        m_activeCursorOutput = nullptr;
-    }
 
     if (!outputOrder.empty()) {
         setOutputOrder(outputOrder);
@@ -1776,12 +1773,6 @@ QString Workspace::supportInformation() const
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral("=======\n"));
-    support.append(QStringLiteral("Active screen follows mouse: "));
-    if (options->activeMouseScreen()) {
-        support.append(QStringLiteral(" yes\n"));
-    } else {
-        support.append(QStringLiteral(" no\n"));
-    }
     const QList<Output *> outputs = kwinApp()->outputBackend()->outputs();
     support.append(QStringLiteral("Number of Screens: %1\n\n").arg(outputs.count()));
     for (int i = 0; i < outputs.count(); ++i) {
@@ -2614,18 +2605,6 @@ QList<Output *> Workspace::outputOrder() const
 
 Output *Workspace::activeOutput() const
 {
-    if (options->activeMouseScreen()) {
-        if (m_activeCursorOutput) {
-            return m_activeCursorOutput;
-        } else {
-            return outputAt(Cursors::self()->mouse()->pos());
-        }
-    }
-
-    if (m_activeWindow && !m_activeWindow->isOnOutput(m_activeOutput)) {
-        return m_activeWindow->output();
-    }
-
     return m_activeOutput;
 }
 
@@ -2637,16 +2616,6 @@ void Workspace::setActiveOutput(Output *output)
 void Workspace::setActiveOutput(const QPointF &pos)
 {
     setActiveOutput(outputAt(pos));
-}
-
-void Workspace::setActiveCursorOutput(Output *output)
-{
-    m_activeCursorOutput = output;
-}
-
-void Workspace::setActiveCursorOutput(const QPointF &pos)
-{
-    setActiveCursorOutput(outputAt(pos));
 }
 
 /**

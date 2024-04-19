@@ -138,7 +138,7 @@ void TouchInputRedirection::processDown(qint32 id, const QPointF &pos, std::chro
     m_activeTouchPoints.insert(id);
     if (m_activeTouchPoints.count() == 1) {
         update();
-        workspace()->setActiveCursorOutput(pos);
+        workspace()->setActiveOutput(pos);
     }
     input()->setLastInputHandler(this);
     input()->processSpies(std::bind(&InputEventSpy::touchDown, std::placeholders::_1, id, pos, time));

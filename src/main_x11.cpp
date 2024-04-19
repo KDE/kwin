@@ -310,6 +310,8 @@ void ApplicationX11::performStartup()
 
         notifyKSplash();
         notifyStarted();
+
+        connect(Cursors::self()->mouse(), &Cursor::posChanged, this, qOverload<const QPointF &>(&Workspace::setActiveOutput));
     });
     // we need to do an XSync here, otherwise the QPA might crash us later on
     Xcb::sync();

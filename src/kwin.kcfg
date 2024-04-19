@@ -100,9 +100,6 @@
         <entry name="SeparateScreenFocus" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="ActiveMouseScreen" type="Bool">
-            <default>true</default>
-        </entry>
         <entry name="RollOverDesktops" type="Bool">
             <default>false</default>
         </entry>

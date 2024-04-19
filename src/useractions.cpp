@@ -1255,66 +1255,39 @@ void Workspace::slotWindowToDesktop(VirtualDesktop *desktop)
     }
 }
 
-static bool screenSwitchImpossible()
-{
-    if (!options->activeMouseScreen()) {
-        return false;
-    }
-    QStringList args;
-    args << QStringLiteral("--passivepopup") << i18n("The window manager is configured to consider the screen with the mouse on it as active one.\n"
-                                                     "Therefore it is not possible to switch to a screen explicitly.")
-         << QStringLiteral("20");
-    KProcess::startDetached(QStringLiteral("kdialog"), args);
-    return true;
-}
-
 void Workspace::slotSwitchToScreen(Output *output)
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(output);
-    }
+    switchToOutput(output);
 }
 
 void Workspace::slotSwitchToLeftScreen()
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(findOutput(activeOutput(), Direction::DirectionWest, true));
-    }
+    switchToOutput(findOutput(activeOutput(), Direction::DirectionWest, true));
 }
 
 void Workspace::slotSwitchToRightScreen()
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(findOutput(activeOutput(), Direction::DirectionEast, true));
-    }
+    switchToOutput(findOutput(activeOutput(), Direction::DirectionEast, true));
 }
 
 void Workspace::slotSwitchToAboveScreen()
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(findOutput(activeOutput(), Direction::DirectionNorth, true));
-    }
+    switchToOutput(findOutput(activeOutput(), Direction::DirectionNorth, true));
 }
 
 void Workspace::slotSwitchToBelowScreen()
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(findOutput(activeOutput(), Direction::DirectionSouth, true));
-    }
+    switchToOutput(findOutput(activeOutput(), Direction::DirectionSouth, true));
 }
 
 void Workspace::slotSwitchToPrevScreen()
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(findOutput(activeOutput(), Direction::DirectionPrev, true));
-    }
+    switchToOutput(findOutput(activeOutput(), Direction::DirectionPrev, true));
 }
 
 void Workspace::slotSwitchToNextScreen()
 {
-    if (!screenSwitchImpossible()) {
-        switchToOutput(findOutput(activeOutput(), Direction::DirectionNext, true));
-    }
+    switchToOutput(findOutput(activeOutput(), Direction::DirectionNext, true));
 }
 
 void Workspace::slotWindowToScreen(Output *output)

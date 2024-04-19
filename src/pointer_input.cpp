@@ -846,7 +846,7 @@ void PointerInputRedirection::updatePosition(const QPointF &pos, std::chrono::mi
 
     m_pos = p;
 
-    workspace()->setActiveCursorOutput(m_pos);
+    workspace()->setActiveOutput(m_pos);
     m_cursor->updateCursorOutputs(m_pos);
 
     Q_EMIT input()->globalPointerChanged(m_pos);
