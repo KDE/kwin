@@ -106,6 +106,13 @@ public:
 
     std::optional<int> keycodeFromKeysym(xkb_keysym_t keysym);
 
+    /**
+     * Returns list of candidate keysyms corresponding to the given Qt key.
+     *
+     * Internally filters the results based on whether keyQt has the numlock modifier.
+     */
+    static QList<xkb_keysym_t> keysymsFromQtKey(int keyQt);
+
     void setFollowLocale1(bool follow);
 
 public Q_SLOTS:

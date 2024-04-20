@@ -60,8 +60,7 @@ static std::vector<quint32> textToKey(const QString &text)
         return {};
     }
 
-    QKeyEvent ev(QEvent::KeyPress, sequence[0], Qt::NoModifier);
-    const QList<xkb_keysym_t> syms(QXkbCommon::toKeysym(&ev));
+    const QList<xkb_keysym_t> syms = KWin::Xkb::keysymsFromQtKey(sequence[0]);
     if (syms.empty()) {
         return {};
     }
