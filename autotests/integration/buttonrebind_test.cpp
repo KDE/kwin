@@ -94,8 +94,6 @@ void TestButtonRebind::testKey()
     // 0x119 is Qt::ExtraButton7
     Test::pointerButtonPressed(0x119, timestamp++);
 
-    QEXPECT_FAIL("delete", "https://bugreports.qt.io/browse/QTBUG-123135", Abort);
-    QEXPECT_FAIL("keypad delete", "https://bugreports.qt.io/browse/QTBUG-123135", Abort);
     QVERIFY(keyChangedSpy.wait());
     QFETCH(QList<quint32>, expectedKeys);
     QCOMPARE(keyChangedSpy.count(), expectedKeys.count());
