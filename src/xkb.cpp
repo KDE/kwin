@@ -30,6 +30,14 @@
 #include <sys/mman.h>
 #include <unistd.h>
 
+// TODO: drop these ifdefs when xkbcommon >= 1.8.0 is required
+#ifndef XKB_LED_NAME_COMPOSE
+#define XKB_LED_NAME_COMPOSE "Compose"
+#endif
+#ifndef XKB_LED_NAME_KANA
+#define XKB_LED_NAME_KANA "Kana"
+#endif
+
 Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtWarningMsg)
 
 /* The offset between KEY_* numbering, and keycodes in the XKB evdev
@@ -447,6 +455,8 @@ Xkb::Xkb(bool followLocale1)
     , m_numLock(0)
     , m_capsLock(0)
     , m_scrollLock(0)
+    , m_composeLed(0)
+    , m_kanaLed(0)
     , m_modifiers(Qt::NoModifier)
     , m_consumedModifiers(Qt::NoModifier)
     , m_keysym(XKB_KEY_NoSymbol)
@@ -663,6 +673,8 @@ void Xkb::updateKeymap(xkb_keymap *keymap)
     m_numLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_NUM);
     m_capsLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_CAPS);
     m_scrollLock = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_SCROLL);
+    m_composeLed = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_COMPOSE);
+    m_kanaLed = xkb_keymap_led_get_index(m_keymap, XKB_LED_NAME_KANA);
 
     m_currentLayout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
 
@@ -810,6 +822,12 @@ void Xkb::updateModifiers()
     }
     if (xkb_state_led_index_is_active(m_state, m_scrollLock) == 1) {
         leds = leds | LED::ScrollLock;
+    }
+    if (xkb_state_led_index_is_active(m_state, m_composeLed) == 1) {
+        leds = leds | LED::Compose;
+    }
+    if (xkb_state_led_index_is_active(m_state, m_kanaLed) == 1) {
+        leds = leds | LED::Kana;
     }
     if (m_leds != leds) {
         m_leds = leds;

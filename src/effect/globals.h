@@ -158,7 +158,9 @@ Q_ENUM_NS(SessionState)
 enum class LED {
     NumLock = 1 << 0,
     CapsLock = 1 << 1,
-    ScrollLock = 1 << 2
+    ScrollLock = 1 << 2,
+    Compose = 1 << 3,
+    Kana = 1 << 4,
 };
 Q_DECLARE_FLAGS(LEDs, LED)
 Q_FLAG_NS(LEDs)

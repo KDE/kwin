@@ -163,6 +163,8 @@ private:
     xkb_led_index_t m_numLock;
     xkb_led_index_t m_capsLock;
     xkb_led_index_t m_scrollLock;
+    xkb_led_index_t m_composeLed;
+    xkb_led_index_t m_kanaLed;
     Qt::KeyboardModifiers m_modifiers;
     Qt::KeyboardModifiers m_consumedModifiers;
     xkb_keysym_t m_keysym;

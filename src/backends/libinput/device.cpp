@@ -831,6 +831,12 @@ static libinput_led toLibinputLEDS(LEDs leds)
     if (leds.testFlag(LED::ScrollLock)) {
         libinputLeds = libinputLeds | LIBINPUT_LED_SCROLL_LOCK;
     }
+    if (leds.testFlag(LED::Compose)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_COMPOSE;
+    }
+    if (leds.testFlag(LED::Kana)) {
+        libinputLeds = libinputLeds | LIBINPUT_LED_KANA;
+    }
     return libinput_led(libinputLeds);
 }
 

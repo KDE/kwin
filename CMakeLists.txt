@@ -302,7 +302,7 @@ else()
     set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building kwin_x11" FORCE)
 endif()
 
-find_package(Libinput 1.19)
+find_package(Libinput 1.26)
 set_package_properties(Libinput PROPERTIES TYPE REQUIRED PURPOSE "Required for input handling on Wayland.")
 
 find_package(Libeis-1.0)
