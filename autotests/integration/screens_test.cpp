@@ -30,10 +30,8 @@ private Q_SLOTS:
     void initTestCase();
     void init();
     void cleanup();
-    void testCurrent_data();
-    void testCurrent();
-    void testCurrentWithFollowsMouse_data();
-    void testCurrentWithFollowsMouse();
+    void testActiveOutputFollowsMouse_data();
+    void testActiveOutputFollowsMouse();
     void testCurrentPoint_data();
     void testCurrentPoint();
 };
@@ -92,30 +90,7 @@ void ScreensTest::cleanup()
     });
 }
 
-void ScreensTest::testCurrent_data()
-{
-    QTest::addColumn<int>("currentId");
-
-    QTest::newRow("first") << 0;
-    QTest::newRow("second") << 1;
-}
-
-void ScreensTest::testCurrent()
-{
-    QFETCH(int, currentId);
-    Output *output = workspace()->outputs().at(currentId);
-
-    // Disable "active screen follows mouse"
-    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
-    group.writeEntry("ActiveMouseScreen", false);
-    group.sync();
-    workspace()->slotReconfigure();
-
-    workspace()->setActiveOutput(output);
-    QCOMPARE(workspace()->activeOutput(), output);
-}
-
-void ScreensTest::testCurrentWithFollowsMouse_data()
+void ScreensTest::testActiveOutputFollowsMouse_data()
 {
     QTest::addColumn<QList<QRect>>("geometries");
     QTest::addColumn<QPoint>("cursorPos");
@@ -127,12 +102,8 @@ void ScreensTest::testCurrentWithFollowsMouse_data()
     QTest::newRow("gap") << QList<QRect>{{QRect{0, 0, 10, 20}, QRect{20, 40, 10, 20}}} << QPoint(15, 30) << 1;
 }
 
-void ScreensTest::testCurrentWithFollowsMouse()
+void ScreensTest::testActiveOutputFollowsMouse()
 {
-    // Enable "active screen follows mouse"
-    auto group = kwinApp()->config()->group(QStringLiteral("Windows"));
-    group.writeEntry("ActiveMouseScreen", true);
-    group.sync();
     auto edgeBarrierGroup = kwinApp()->config()->group(QStringLiteral("EdgeBarrier"));
     edgeBarrierGroup.writeEntry("EdgeBarrier", 0);
     edgeBarrierGroup.writeEntry("CornerBarrier", false);
