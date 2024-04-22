@@ -132,7 +132,15 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
                     if (requireAlpha && info->alphaBits == 0) {
                         continue;
                     }
-                    m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), it.key(), it.value());
+                    auto mods = it.value();
+                    if (m_eglBackend->gpu()->isAmdgpu() && qEnvironmentVariableIntValue("KWIN_DRM_NO_DCC_WORKAROUND") == 0) {
+                        // using modifiers with DCC here causes glitches on amdgpu: https://gitlab.freedesktop.org/mesa/mesa/-/issues/10875
+                        if (!mods.contains(DRM_FORMAT_MOD_LINEAR)) {
+                            continue;
+                        }
+                        mods = {DRM_FORMAT_MOD_LINEAR};
+                    }
+                    m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), it.key(), mods);
                     if (m_surface->shadowSwapchain) {
                         break;
                     }
