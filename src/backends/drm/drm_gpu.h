@@ -80,6 +80,7 @@ public:
     bool isNVidia() const;
     bool isAmdgpu() const;
     bool isVmwgfx() const;
+    bool isVirtualMachine() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
