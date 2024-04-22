@@ -141,7 +141,8 @@ void Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
         }
         py = area.y();
     }
-    c->move(QPoint(tx, ty));
+    c->commit(WindowTransaction()
+                  .setPreferredPosition(QPoint(tx, ty)));
     cascadeIfCovering(c, area);
 }
 
@@ -340,7 +341,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     }
 
     // place the window
-    window->move(QPoint(x_optimal, y_optimal));
+    window->commit(WindowTransaction().setPreferredPosition(QPoint(x_optimal, y_optimal)));
 }
 
 void Placement::reinitCascading()
@@ -429,7 +430,7 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
     }
 
     // place the window
-    c->move(QPoint(xp, yp));
+    c->commit(WindowTransaction().setPreferredPosition(QPoint(xp, yp)));
 
     // new position
     cci[dn].pos = QPoint(xp + delta.x(), yp + delta.y());
@@ -450,7 +451,7 @@ void Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*n
     const int yp = area.top() + (area.height() - c->height()) / 2;
 
     // place the window
-    c->move(QPoint(xp, yp));
+    c->commit(WindowTransaction().setPreferredPosition(QPoint(xp, yp)));
     cascadeIfCovering(c, area);
 }
 
@@ -462,7 +463,7 @@ void Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy 
     Q_ASSERT(area.isValid());
 
     // get the maximum allowed windows space and desk's origin
-    c->move(area.topLeft());
+    c->commit(WindowTransaction().setPreferredPosition(area.topLeft()));
     cascadeIfCovering(c, area);
 }
 
@@ -484,12 +485,12 @@ void Placement::placeOnScreenDisplay(Window *c, const QRect &area)
     const int x = area.left() + (area.width() - c->width()) / 2;
     const int y = area.top() + 2 * area.height() / 3 - c->height() / 2;
 
-    c->move(QPoint(x, y));
+    c->commit(WindowTransaction().setPreferredPosition(QPoint(x, y)));
 }
 
 void Placement::placeTransient(Window *c)
 {
-    c->moveResize(c->transientPlacement());
+    c->commit(WindowTransaction().setPreferredGeometry(c->transientPlacement()));
 }
 
 void Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPlacement)
@@ -503,7 +504,7 @@ void Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*
 
     QRectF geom = c->frameGeometry();
     geom.moveCenter(Cursors::self()->mouse()->pos());
-    c->move(geom.topLeft().toPoint());
+    c->commit(WindowTransaction().setPreferredPosition(geom.topLeft().toPoint()));
     c->keepInArea(area); // make sure it's kept inside workarea
     cascadeIfCovering(c, area);
 }
@@ -557,7 +558,7 @@ void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
     }
     QRect geom = c->frameGeometry().toRect();
     geom.moveCenter(place_on->frameGeometry().center().toPoint());
-    c->move(geom.topLeft());
+    c->commit(WindowTransaction().setPreferredPosition(geom.topLeft()));
     // get area again, because the mainwindow may be on different xinerama screen
     const QRect placementArea = workspace()->clientArea(PlacementArea, c).toRect();
     c->keepInArea(placementArea); // make sure it's kept inside workarea
@@ -572,13 +573,13 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
     }
     if (c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height()) {
         if (workspace()->clientArea(MaximizeArea, c) == area) {
-            c->maximize(MaximizeFull);
+            c->commit(WindowTransaction().setMaximized(MaximizeFull));
         } else { // if the geometry doesn't match default maximize area (xinerama case?),
             // it's probably better to use the given area
-            c->moveResize(area);
+            c->commit(WindowTransaction().setPreferredGeometry(area));
         }
     } else {
-        c->moveResize(c->resizeWithChecks(c->moveResizeGeometry(), c->maxSize().boundedTo(area.size())));
+        c->commit(WindowTransaction().setPreferredGeometry(c->resizeWithChecks(c->moveResizeGeometry(), c->maxSize().boundedTo(area.size()))));
         place(c, area, nextPlacement);
     }
 }
@@ -630,7 +631,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
         }
     }
 
-    window->move(possibleGeo.topLeft());
+    window->commit(WindowTransaction().setPreferredPosition(possibleGeo.topLeft()));
 }
 
 void Placement::cascadeDesktop()
@@ -685,7 +686,7 @@ void Window::packTo(qreal left, qreal top)
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
 
     const Output *oldOutput = moveResizeOutput();
-    move(QPoint(left, top));
+    commit(WindowTransaction().setPreferredPosition(QPoint(left, top)));
     if (moveResizeOutput() != oldOutput) {
         workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
         if (requestedMaximizeMode() != MaximizeRestore) {
@@ -774,7 +775,7 @@ void Window::growHorizontal()
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-    moveResize(geom);
+    commit(WindowTransaction().setPreferredGeometry(geom));
 }
 
 void Workspace::slotWindowShrinkHorizontal()
@@ -797,7 +798,7 @@ void Window::shrinkHorizontal()
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedW));
     if (geom.width() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-        moveResize(geom);
+        commit(WindowTransaction().setPreferredGeometry(geom));
     }
 }
 
@@ -829,7 +830,7 @@ void Window::growVertical()
     }
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-    moveResize(geom);
+    commit(WindowTransaction().setPreferredGeometry(geom));
 }
 
 void Workspace::slotWindowShrinkVertical()
@@ -852,7 +853,7 @@ void Window::shrinkVertical()
     geom.setSize(constrainFrameSize(geom.size(), SizeModeFixedH));
     if (geom.height() > 20) {
         workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event;
-        moveResize(geom);
+        commit(WindowTransaction().setPreferredGeometry(geom));
     }
 }
 

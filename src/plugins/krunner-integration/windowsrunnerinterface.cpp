@@ -220,22 +220,27 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
         window->closeWindow();
         break;
     case MinimizeAction:
-        window->setMinimized(!window->isMinimized());
+        window->commit(WindowTransaction()
+                           .setMinimized(!window->isMinimized()));
         break;
     case MaximizeAction:
-        window->setMaximize(window->maximizeMode() == MaximizeRestore, window->maximizeMode() == MaximizeRestore);
+        window->commit(WindowTransaction()
+                           .setMaximized(window->maximizeMode() != MaximizeRestore ? MaximizeRestore : MaximizeFull));
         break;
     case FullscreenAction:
-        window->setFullScreen(!window->isFullScreen());
+        window->commit(WindowTransaction()
+                           .setFullScreen(!window->isFullScreen()));
         break;
     case ShadeAction:
         window->toggleShade();
         break;
     case KeepAboveAction:
-        window->setKeepAbove(!window->keepAbove());
+        window->commit(WindowTransaction()
+                           .setKeepAbove(!window->keepAbove()));
         break;
     case KeepBelowAction:
-        window->setKeepBelow(!window->keepBelow());
+        window->commit(WindowTransaction()
+                           .setKeepBelow(!window->keepBelow()));
         break;
     case ActivateDesktopAction:
         Q_UNREACHABLE();

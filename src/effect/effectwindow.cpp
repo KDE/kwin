@@ -465,14 +465,16 @@ void EffectWindow::elevate(bool elevate)
 void EffectWindow::minimize()
 {
     if (d->m_window->isClient()) {
-        d->m_window->setMinimized(true);
+        d->m_window->commit(WindowTransaction()
+                                .setMinimized(true));
     }
 }
 
 void EffectWindow::unminimize()
 {
     if (d->m_window->isClient()) {
-        d->m_window->setMinimized(false);
+        d->m_window->commit(WindowTransaction()
+                                .setMinimized(false));
     }
 }
 

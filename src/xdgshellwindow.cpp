@@ -327,13 +327,15 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     m_plasmaShellSurface = shellSurface;
 
     auto updatePosition = [this, shellSurface] {
-        move(shellSurface->position());
+        commit(WindowTransaction()
+                   .setPreferredPosition(shellSurface->position()));
     };
     auto showUnderCursor = [this] {
         // Wait for the first commit
         auto moveUnderCursor = [this] {
             if (input()->hasPointer()) {
-                move(input()->globalPointer());
+                commit(WindowTransaction()
+                           .setPreferredPosition(input()->globalPointer()));
                 keepInArea(workspace()->clientArea(PlacementArea, this));
             }
         };
@@ -426,7 +428,8 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
         setOnActivities({a->current()});
     }
 #endif
-    move(workspace()->activeOutput()->geometry().center());
+    commit(WindowTransaction()
+               .setPreferredPosition(workspace()->activeOutput()->geometry().center()));
 
     connect(shellSurface, &XdgToplevelInterface::windowTitleChanged,
             this, &XdgToplevelWindow::handleWindowTitleChanged);
@@ -746,7 +749,9 @@ void XdgToplevelWindow::doMinimize()
 
 void XdgToplevelWindow::doInteractiveResizeSync(const QRectF &rect)
 {
-    moveResize(rect);
+    commit(WindowTransaction()
+               .setPreferredPosition(rect.topLeft())
+               .setPreferredSize(rect.size()));
 }
 
 void XdgToplevelWindow::doSetActive()
@@ -1104,7 +1109,7 @@ void XdgToplevelWindow::handleUnfullscreenRequested()
 
 void XdgToplevelWindow::handleMinimizeRequested()
 {
-    setMinimized(true);
+    commit(WindowTransaction().setMinimized(true));
 }
 
 void XdgToplevelWindow::handleTransientForChanged()
@@ -1220,11 +1225,13 @@ void XdgToplevelWindow::initialize()
     // Move or resize the window only if enforced by a window rule.
     const QPointF forcedPosition = rules()->checkPositionSafe(invalidPoint, true);
     if (forcedPosition != invalidPoint) {
-        move(forcedPosition);
+        commit(WindowTransaction()
+                   .setPreferredPosition(forcedPosition));
     }
     const QSizeF forcedSize = rules()->checkSize(QSize(), true);
     if (forcedSize.isValid()) {
-        resize(forcedSize);
+        commit(WindowTransaction()
+                   .setPreferredSize(forcedSize));
     }
 
     maximize(rules()->checkMaximize(initialMaximizeMode(), true));
@@ -1496,17 +1503,23 @@ void XdgToplevelWindow::setFullScreen(bool set)
 
     if (set) {
         const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : moveResizeOutput();
+        const QRectF area = workspace()->clientArea(FullScreenArea, this, output);
         setFullscreenGeometryRestore(moveResizeGeometry());
-        moveResize(workspace()->clientArea(FullScreenArea, this, output));
+        commit(WindowTransaction()
+                   .setPreferredPosition(area.topLeft())
+                   .setPreferredSize(area.size()));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
-                              constrainFrameSize(fullscreenGeometryRestore().size())));
+            commit(WindowTransaction()
+                       .setPreferredPosition(fullscreenGeometryRestore().topLeft())
+                       .setPreferredSize(fullscreenGeometryRestore().size()));
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
-            moveResize(QRectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
+            commit(WindowTransaction()
+                       .setPreferredPosition(workspace()->clientArea(PlacementArea, this).topLeft())
+                       .setPreferredSize(QSize(0, 0)));
         }
     }
 
@@ -1619,7 +1632,9 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         updateQuickTileMode(QuickTileFlag::None);
     }
 
-    moveResize(geometry);
+    commit(WindowTransaction()
+               .setPreferredPosition(geometry.topLeft())
+               .setPreferredSize(geometry.size()));
 
     doSetMaximized();
 }

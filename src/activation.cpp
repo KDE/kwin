@@ -325,7 +325,8 @@ void Workspace::activateWindow(Window *window, bool force)
     }
 #endif
     if (window->isMinimized()) {
-        window->setMinimized(false);
+        window->commit(WindowTransaction()
+                           .setMinimized(false));
     }
 
     // ensure the window is really visible - could eg. be a hidden utility window, see bug #348083

@@ -116,8 +116,10 @@ void PlacementTracker::restore(const QString &key)
             }
             if (restore) {
                 window->setQuickTileMode(newData.quickTile, true);
-                window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
-                window->setFullScreen(newData.fullscreen);
+                window->commit(WindowTransaction()
+                                   .setMaximized(newData.maximize));
+                window->commit(WindowTransaction()
+                                   .setFullScreen(newData.fullscreen));
                 if (newData.quickTile || newData.maximize || newData.fullscreen) {
                     // send the window to the correct output
                     const auto outputIt = std::find_if(outputs.begin(), outputs.end(), [&newData](const auto output) {
@@ -127,7 +129,7 @@ void PlacementTracker::restore(const QString &key)
                         window->sendToOutput(*outputIt);
                     }
                 } else {
-                    window->moveResize(newData.geometry);
+                    window->commit(WindowTransaction().setPreferredGeometry(newData.geometry));
                 }
                 window->setGeometryRestore(newData.geometryRestore);
                 window->setFullscreenGeometryRestore(newData.fullscreenGeometryRestore);

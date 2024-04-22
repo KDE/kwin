@@ -187,7 +187,8 @@ DELEGATE(requestContextHelp, showContextHelp)
 
 void DecoratedClientImpl::requestMinimize()
 {
-    m_window->setMinimized(true);
+    m_window->commit(WindowTransaction()
+                         .setMinimized(true));
 }
 
 void DecoratedClientImpl::requestClose()

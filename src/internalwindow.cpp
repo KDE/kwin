@@ -280,14 +280,16 @@ void InternalWindow::setNoBorder(bool set)
 void InternalWindow::createDecoration(const QRectF &oldGeometry)
 {
     setDecoration(std::shared_ptr<KDecoration2::Decoration>(Workspace::self()->decorationBridge()->createDecoration(this)));
-    moveResize(QRectF(oldGeometry.topLeft(), clientSizeToFrameSize(clientSize())));
+    commit(WindowTransaction()
+               .setPreferredPosition(oldGeometry.topLeft())
+               .setPreferredSize(clientSizeToFrameSize(clientSize())));
 }
 
 void InternalWindow::destroyDecoration()
 {
     const QSizeF clientSize = frameSizeToClientSize(moveResizeGeometry().size());
     setDecoration(nullptr);
-    resize(clientSize);
+    commit(WindowTransaction().setPreferredSize(clientSize));
 }
 
 void InternalWindow::updateDecoration(bool check_workspace_pos, bool force)
@@ -403,7 +405,9 @@ bool InternalWindow::belongsToSameApplication(const Window *other, SameApplicati
 
 void InternalWindow::doInteractiveResizeSync(const QRectF &rect)
 {
-    moveResize(rect);
+    commit(WindowTransaction()
+               .setPreferredPosition(rect.topLeft())
+               .setPreferredSize(rect.size()));
 }
 
 void InternalWindow::updateCaption()

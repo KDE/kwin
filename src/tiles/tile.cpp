@@ -113,7 +113,7 @@ void Tile::setRelativeGeometry(const QRectF &geom)
     Q_EMIT windowGeometryChanged();
 
     for (auto *w : std::as_const(m_windows)) {
-        w->moveResize(windowGeometry());
+        w->commit(WindowTransaction().setPreferredGeometry(windowGeometry()));
     }
 }
 
@@ -189,7 +189,7 @@ void Tile::setPadding(qreal padding)
         t->setPadding(padding);
     }
     for (auto *w : std::as_const(m_windows)) {
-        w->moveResize(windowGeometry());
+        w->commit(WindowTransaction().setPreferredGeometry(windowGeometry()));
     }
 
     Q_EMIT paddingChanged(padding);
@@ -286,7 +286,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 void Tile::addWindow(Window *window)
 {
     if (!m_windows.contains(window)) {
-        window->moveResize(windowGeometry());
+        window->commit(WindowTransaction().setPreferredGeometry(windowGeometry()));
         m_windows.append(window);
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();

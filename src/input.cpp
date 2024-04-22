@@ -2392,7 +2392,8 @@ public:
             if (!m_currentToplevelDragWindow) {
                 return;
             }
-            m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
+            m_currentToplevelDragWindow->commit(WindowTransaction()
+                                                    .setKeepAbove(m_wasKeepAbove));
             workspace()->takeActivity(m_currentToplevelDragWindow, Workspace::ActivityFlag::ActivityFocus | Workspace::ActivityFlag::ActivityRaise);
             m_currentToplevelDragWindow = nullptr;
         });
@@ -2625,17 +2626,20 @@ private:
 
         if (m_currentToplevelDragWindow != window) {
             if (m_currentToplevelDragWindow) {
-                m_currentToplevelDragWindow->setKeepAbove(m_wasKeepAbove);
+                m_currentToplevelDragWindow->commit(WindowTransaction()
+                                                        .setKeepAbove(m_wasKeepAbove));
             }
             m_currentToplevelDragWindow = window;
             if (window) {
                 m_wasKeepAbove = window->keepAbove();
-                window->setKeepAbove(true);
+                window->commit(WindowTransaction()
+                                   .setKeepAbove(true));
             }
         }
 
         if (window) {
-            window->move(pos - toplevelDrag->offset());
+            window->commit(WindowTransaction()
+                               .setPreferredPosition(pos - toplevelDrag->offset()));
         }
     }
 

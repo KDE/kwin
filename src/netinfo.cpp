@@ -279,24 +279,26 @@ void WinInfo::changeState(NET::States state, NET::States mask)
     state &= mask; // for safety, clear all other bits
 
     if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) == 0) {
-        m_client->setFullScreen(false);
+        m_client->commit(WindowTransaction().setFullScreen(false));
     }
     if ((mask & NET::Max) == NET::Max) {
-        m_client->setMaximize(state & NET::MaxVert, state & NET::MaxHoriz);
+        m_client->commit(WindowTransaction().setMaximized(state & NET::MaxVert, state & NET::MaxHoriz));
     } else if (mask & NET::MaxVert) {
-        m_client->setMaximize(state & NET::MaxVert, m_client->maximizeMode() & MaximizeHorizontal);
+        m_client->commit(WindowTransaction().setMaximized(state & NET::MaxVert, m_client->maximizeMode() & MaximizeHorizontal));
     } else if (mask & NET::MaxHoriz) {
-        m_client->setMaximize(m_client->maximizeMode() & MaximizeVertical, state & NET::MaxHoriz);
+        m_client->commit(WindowTransaction().setMaximized(m_client->maximizeMode() & MaximizeVertical, state & NET::MaxHoriz));
     }
 
     if (mask & NET::Shaded) {
         m_client->setShade(state & NET::Shaded ? ShadeNormal : ShadeNone);
     }
     if (mask & NET::KeepAbove) {
-        m_client->setKeepAbove((state & NET::KeepAbove) != 0);
+        m_client->commit(WindowTransaction()
+                             .setKeepAbove((state & NET::KeepAbove) != 0));
     }
     if (mask & NET::KeepBelow) {
-        m_client->setKeepBelow((state & NET::KeepBelow) != 0);
+        m_client->commit(WindowTransaction()
+                             .setKeepBelow((state & NET::KeepBelow) != 0));
     }
     if (mask & NET::SkipTaskbar) {
         m_client->setOriginalSkipTaskbar((state & NET::SkipTaskbar) != 0);
@@ -315,7 +317,7 @@ void WinInfo::changeState(NET::States state, NET::States mask)
     }
     // unsetting fullscreen first, setting it last (because e.g. maximize works only for !isFullScreen() )
     if ((mask & NET::FullScreen) != 0 && (state & NET::FullScreen) != 0) {
-        m_client->setFullScreen(true);
+        m_client->commit(WindowTransaction().setFullScreen(true));
     }
 }
 

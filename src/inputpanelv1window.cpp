@@ -102,7 +102,9 @@ void InputPanelV1Window::reposition()
         geo.moveLeft(availableArea.left() + (availableArea.width() - geo.width()) / 2);
         geo.moveBottom(availableArea.bottom());
 
-        moveResize(geo);
+        commit(WindowTransaction()
+                   .setPreferredPosition(geo.topLeft())
+                   .setPreferredSize(geo.size()));
     } break;
     case Mode::Overlay: {
         auto textInputSurface = waylandServer()->seat()->focusedTextInputSurface();
@@ -154,7 +156,9 @@ void InputPanelV1Window::reposition()
                 popupRect.moveBottom(screen.bottom());
             }
 
-            moveResize(popupRect);
+            commit(WindowTransaction()
+                       .setPreferredPosition(popupRect.topLeft())
+                       .setPreferredSize(popupRect.size()));
         }
     } break;
     }

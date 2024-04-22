@@ -590,7 +590,8 @@ bool X11Window::mapRequestEvent(xcb_map_request_event_t *e)
     }
     // also copied in clientMessage()
     if (isMinimized()) {
-        setMinimized(false);
+        commit(WindowTransaction()
+                   .setMinimized(false));
     }
     if (isShade()) {
         setShade(ShadeNone);
@@ -671,7 +672,8 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
     // WM_STATE
     if (e->type == atoms->wm_change_state) {
         if (e->data.data32[0] == XCB_ICCCM_WM_STATE_ICONIC) {
-            setMinimized(true);
+            commit(WindowTransaction()
+                       .setMinimized(true));
         }
         return;
     }

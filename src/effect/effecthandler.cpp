@@ -744,9 +744,9 @@ void EffectsHandler::moveWindow(EffectWindow *w, const QPoint &pos, bool snap, d
     }
 
     if (snap) {
-        window->move(Workspace::self()->adjustWindowPosition(window, pos, true, snapAdjust));
+        window->commit(WindowTransaction().setPreferredPosition(Workspace::self()->adjustWindowPosition(window, pos, true, snapAdjust)));
     } else {
-        window->move(pos);
+        window->commit(WindowTransaction().setPreferredPosition(pos));
     }
 }
 

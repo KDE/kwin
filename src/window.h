@@ -55,6 +55,54 @@ class DecoratedClientImpl;
 class DecorationPalette;
 }
 
+/**
+ * The WindowTransaction type provides a way to request new state of a Window atomically.
+ */
+class KWIN_EXPORT WindowTransaction
+{
+public:
+    WindowTransaction() = default;
+
+    std::optional<QStringList> activities() const;
+    std::optional<QList<VirtualDesktop *>> desktops() const;
+    std::optional<bool> keepBelow() const;
+    std::optional<bool> keepAbove() const;
+    std::optional<Output *> output() const;
+    std::optional<QPointF> preferredPosition() const;
+    std::optional<QSizeF> preferredSize() const;
+    std::optional<Output *> preferredOutput() const;
+    std::optional<bool> minimized() const;
+    std::optional<bool> fullScreen() const;
+    std::optional<MaximizeMode> maximized() const;
+
+    WindowTransaction &setActivities(const QStringList &activities);
+    WindowTransaction &setDesktops(const QList<VirtualDesktop *> &desktops);
+    WindowTransaction &setKeepBelow(bool below);
+    WindowTransaction &setKeepAbove(bool above);
+    WindowTransaction &setOutput(Output *output);
+    WindowTransaction &setPreferredPosition(const QPointF &position);
+    WindowTransaction &setPreferredSize(const QSizeF &size);
+    WindowTransaction &setPreferredGeometry(const QRectF &geometry);
+    WindowTransaction &setPreferredOutput(Output *output);
+    WindowTransaction &setMinimized(bool minimized);
+    WindowTransaction &setFullScreen(bool fullscreen);
+    WindowTransaction &setMaximized(MaximizeMode maximized);
+    WindowTransaction &setMaximized(bool vertically, bool horizontally);
+
+private:
+    std::optional<QPointF> m_preferredPosition;
+    std::optional<QSizeF> m_preferredSize;
+    std::optional<Output *> m_output;
+    std::optional<Output *> m_preferredOutput;
+    std::optional<bool> m_keepBelow;
+    std::optional<bool> m_keepAbove;
+    std::optional<QStringList> m_activities;
+    std::optional<QList<VirtualDesktop *>> m_desktops;
+    std::optional<bool> m_minimized;
+    std::optional<bool> m_fullScreen;
+    std::optional<MaximizeMode> m_maximized;
+};
+
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
@@ -547,6 +595,11 @@ public:
 
     void ref();
     void unref();
+
+    /**
+     * Commits the specified window transaction.
+     */
+    virtual void commit(const WindowTransaction &transaction);
 
     /**
      * Returns the last requested geometry. The returned value indicates the bounding
@@ -2114,6 +2167,148 @@ inline Window::MoveResizeMode Window::pendingMoveResizeMode() const
 inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
 {
     m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
+}
+
+inline std::optional<QStringList> WindowTransaction::activities() const
+{
+    return m_activities;
+}
+
+inline std::optional<QList<VirtualDesktop *>> WindowTransaction::desktops() const
+{
+    return m_desktops;
+}
+
+inline std::optional<bool> WindowTransaction::keepBelow() const
+{
+    return m_keepBelow;
+}
+
+inline std::optional<bool> WindowTransaction::keepAbove() const
+{
+    return m_keepAbove;
+}
+
+inline std::optional<Output *> WindowTransaction::output() const
+{
+    return m_output;
+}
+
+inline std::optional<QPointF> WindowTransaction::preferredPosition() const
+{
+    return m_preferredPosition;
+}
+
+inline std::optional<QSizeF> WindowTransaction::preferredSize() const
+{
+    return m_preferredSize;
+}
+
+inline std::optional<Output *> WindowTransaction::preferredOutput() const
+{
+    return m_preferredOutput;
+}
+
+inline std::optional<bool> WindowTransaction::minimized() const
+{
+    return m_minimized;
+}
+
+inline std::optional<bool> WindowTransaction::fullScreen() const
+{
+    return m_fullScreen;
+}
+
+inline std::optional<MaximizeMode> WindowTransaction::maximized() const
+{
+    return m_maximized;
+}
+
+inline WindowTransaction &WindowTransaction::setKeepBelow(bool below)
+{
+    m_keepBelow = below;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setKeepAbove(bool above)
+{
+    m_keepAbove = above;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setOutput(Output *output)
+{
+    m_output = output;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setActivities(const QStringList &activities)
+{
+    m_activities = activities;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setDesktops(const QList<VirtualDesktop *> &desktops)
+{
+    m_desktops = desktops;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setPreferredPosition(const QPointF &position)
+{
+    m_preferredPosition = position;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setPreferredSize(const QSizeF &size)
+{
+    m_preferredSize = size;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setPreferredGeometry(const QRectF &geometry)
+{
+    m_preferredPosition = geometry.topLeft();
+    m_preferredSize = geometry.size();
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setPreferredOutput(Output *output)
+{
+    m_preferredOutput = output;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setMinimized(bool minimized)
+{
+    m_minimized = minimized;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setFullScreen(bool fullscreen)
+{
+    m_fullScreen = fullscreen;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setMaximized(MaximizeMode maximized)
+{
+    m_maximized = maximized;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setMaximized(bool vertically, bool horizontally)
+{
+    MaximizeMode mode = MaximizeRestore;
+    if (vertically) {
+        mode = MaximizeMode(mode | MaximizeVertical);
+    }
+    if (horizontally) {
+        mode = MaximizeMode(mode | MaximizeHorizontal);
+    }
+
+    m_maximized = mode;
+    return *this;
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);

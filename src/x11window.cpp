@@ -878,7 +878,8 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (!session) {
             position = clientPosToFramePos(position);
         }
-        move(position);
+        commit(WindowTransaction()
+                   .setPreferredPosition(position));
     }
 
     // Create client group if the window will have a decoration
@@ -891,11 +892,12 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     updateDecoration(false); // Also gravitates
     // TODO: Is CentralGravity right here, when resizing is done after gravitating?
     const QSizeF constrainedClientSize = constrainClientSize(geom.size());
-    resize(rules()->checkSize(clientSizeToFrameSize(constrainedClientSize), !isMapped));
+    commit(WindowTransaction().setPreferredSize(rules()->checkSize(clientSizeToFrameSize(constrainedClientSize), !isMapped)));
 
     QPointF forced_pos = rules()->checkPositionSafe(invalidPoint, !isMapped);
     if (forced_pos != invalidPoint) {
-        move(forced_pos);
+        commit(WindowTransaction()
+                   .setPreferredPosition(forced_pos));
         placementDone = true;
         // Don't keep inside workarea if the window has specially configured position
         partial_keep_in_area = true;
@@ -1367,7 +1369,7 @@ void X11Window::createDecoration()
     }
     setDecoration(decoration);
 
-    moveResize(QRectF(calculateGravitation(false), clientSizeToFrameSize(clientSize())));
+    commit(WindowTransaction().setPreferredGeometry(QRectF(calculateGravitation(false), clientSizeToFrameSize(clientSize()))));
     maybeCreateX11DecorationRenderer();
 }
 
@@ -1377,7 +1379,7 @@ void X11Window::destroyDecoration()
         QPointF grav = calculateGravitation(true);
         setDecoration(nullptr);
         maybeDestroyX11DecorationRenderer();
-        moveResize(QRectF(grav, clientSizeToFrameSize(clientSize())));
+        commit(WindowTransaction().setPreferredGeometry(QRectF(grav, clientSizeToFrameSize(clientSize()))));
     }
     m_decoInputExtent.reset();
 }
@@ -1464,7 +1466,7 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     // several configure requests to the application upon restoring it from the
     // maximized or fullscreen state. Notice that a client-side decorated client
     // cannot be shaded, therefore it's okay not to use the adjusted size here.
-    moveResize(moveResizeGeometry());
+    commit(WindowTransaction().setPreferredGeometry(moveResizeGeometry()));
 }
 
 /**
@@ -1745,7 +1747,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
         m_client.unmap();
         m_wrapper.selectInput(wrapperEventMask());
         exportMappingState(XCB_ICCCM_WM_STATE_ICONIC);
-        resize(s);
+        commit(WindowTransaction().setPreferredSize(s));
         shade_geometry_change = false;
         if (previousShadeMode == ShadeHover) {
             if (shade_below && workspace()->stackingOrder().indexOf(shade_below) > -1) {
@@ -1764,7 +1766,7 @@ void X11Window::doSetShade(ShadeMode previousShadeMode)
         }
         QSizeF s(implicitSize());
         shade_geometry_change = false;
-        resize(s);
+        commit(WindowTransaction().setPreferredSize(s));
         setGeometryRestore(moveResizeGeometry());
         if ((shadeMode() == ShadeHover || shadeMode() == ShadeActivated) && rules()->checkAcceptFocus(info->input())) {
             setActive(true);
@@ -3044,7 +3046,7 @@ void X11Window::handleSync()
 
 void X11Window::performInteractiveResize()
 {
-    resize(moveResizeGeometry().size());
+    commit(WindowTransaction().setPreferredSize(moveResizeGeometry().size()));
 }
 
 bool X11Window::belongToSameApplication(const X11Window *c1, const X11Window *c2, SameApplicationChecks checks)
@@ -3847,7 +3849,7 @@ void X11Window::getWmNormalHints()
         QSizeF new_size = clientSizeToFrameSize(constrainClientSize(clientSize()));
         if (new_size != size() && !isFullScreen()) {
             QRectF origClientGeometry = m_clientGeometry;
-            moveResize(resizeWithChecks(moveResizeGeometry(), new_size));
+            commit(WindowTransaction().setPreferredGeometry(resizeWithChecks(moveResizeGeometry(), new_size)));
             if ((!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
@@ -3917,7 +3919,7 @@ void X11Window::handleXwaylandScaleChanged()
 {
     // while KWin implicitly considers the window already resized when the scale changes,
     // this is needed to make Xwayland actually resize it as well
-    resize(moveResizeGeometry().size());
+    commit(WindowTransaction().setPreferredSize(moveResizeGeometry().size()));
 }
 
 QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
@@ -4074,8 +4076,9 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
 
         QRectF origClientGeometry = m_clientGeometry;
         GeometryUpdatesBlocker blocker(this);
-        move(new_pos);
-        resize(requestedFrameSize);
+        commit(WindowTransaction()
+                   .setPreferredPosition(new_pos)
+                   .setPreferredSize(requestedFrameSize));
         QRectF area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
         if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
             && area.contains(origClientGeometry)) {
@@ -4107,7 +4110,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
             QRectF origClientGeometry = m_clientGeometry;
             GeometryUpdatesBlocker blocker(this);
-            moveResize(resizeWithChecks(moveResizeGeometry(), requestedFrameSize, xcb_gravity_t(gravity)));
+            commit(WindowTransaction().setPreferredGeometry(resizeWithChecks(moveResizeGeometry(), requestedFrameSize, xcb_gravity_t(gravity))));
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
@@ -4528,14 +4531,15 @@ void X11Window::maximize(MaximizeMode mode)
             if (geometryRestore().width() == 0) {
                 // needs placement
                 const QSizeF constraintedSize = constrainFrameSize(QSizeF(width() * 2 / 3, clientArea.height()), SizeModeFixedH);
-                resize(QSizeF(constraintedSize.width(), clientArea.height()));
+                commit(WindowTransaction().setPreferredSize(QSizeF(constraintedSize.width(), clientArea.height())));
                 workspace()->placement()->placeSmart(this, clientArea);
             } else {
-                moveResize(QRectF(QPointF(geometryRestore().x(), clientArea.top()),
-                                  QSize(geometryRestore().width(), clientArea.height())));
+                commit(WindowTransaction()
+                           .setPreferredPosition(QPointF(geometryRestore().x(), clientArea.top()))
+                           .setPreferredSize(QSize(geometryRestore().width(), clientArea.height())));
             }
         } else {
-            moveResize(QRectF(x(), clientArea.top(), width(), clientArea.height()));
+            commit(WindowTransaction().setPreferredGeometry(QRectF(x(), clientArea.top(), width(), clientArea.height())));
         }
         info->setState(NET::MaxVert, NET::Max);
         break;
@@ -4546,14 +4550,15 @@ void X11Window::maximize(MaximizeMode mode)
             if (geometryRestore().height() == 0) {
                 // needs placement
                 const QSizeF constraintedSize = constrainFrameSize(QSizeF(clientArea.width(), height() * 2 / 3), SizeModeFixedW);
-                resize(QSizeF(clientArea.width(), constraintedSize.height()));
+                commit(WindowTransaction().setPreferredSize(QSizeF(clientArea.width(), constraintedSize.height())));
                 workspace()->placement()->placeSmart(this, clientArea);
             } else {
-                moveResize(QRectF(QPoint(clientArea.left(), geometryRestore().y()),
-                                  QSize(clientArea.width(), geometryRestore().height())));
+                commit(WindowTransaction()
+                           .setPreferredPosition(QPoint(clientArea.left(), geometryRestore().y()))
+                           .setPreferredSize(QSize(clientArea.width(), geometryRestore().height())));
             }
         } else {
-            moveResize(QRectF(clientArea.left(), y(), clientArea.width(), height()));
+            commit(WindowTransaction().setPreferredGeometry(QRectF(clientArea.left(), y(), clientArea.width(), height())));
         }
         info->setState(NET::MaxHoriz, NET::Max);
         break;
@@ -4578,7 +4583,7 @@ void X11Window::maximize(MaximizeMode mode)
             if (geometryRestore().height() > 0) {
                 s.setHeight(geometryRestore().height());
             }
-            resize(constrainFrameSize(s));
+            commit(WindowTransaction().setPreferredSize(constrainFrameSize(s)));
             workspace()->placement()->placeSmart(this, clientArea);
             restore = moveResizeGeometry();
             if (geometryRestore().width() > 0) {
@@ -4600,7 +4605,7 @@ void X11Window::maximize(MaximizeMode mode)
             }
         }
 
-        moveResize(restore);
+        commit(WindowTransaction().setPreferredGeometry(restore));
 
         info->setState(NET::States(), NET::Max);
         updateQuickTileMode(QuickTileFlag::None);
@@ -4608,7 +4613,7 @@ void X11Window::maximize(MaximizeMode mode)
     }
 
     case MaximizeFull: {
-        moveResize(clientArea);
+        commit(WindowTransaction().setPreferredGeometry(clientArea));
         if (options->electricBorderMaximize()) {
             updateQuickTileMode(QuickTileFlag::Maximize);
         } else {
@@ -4668,13 +4673,13 @@ void X11Window::setFullScreen(bool set)
 
     if (set) {
         if (info->fullscreenMonitors().isSet()) {
-            moveResize(fullscreenMonitorsArea(info->fullscreenMonitors()));
+            commit(WindowTransaction().setPreferredGeometry(fullscreenMonitorsArea(info->fullscreenMonitors())));
         } else {
-            moveResize(workspace()->clientArea(FullScreenArea, this, moveResizeOutput()));
+            commit(WindowTransaction().setPreferredGeometry(workspace()->clientArea(FullScreenArea, this, moveResizeOutput())));
         }
     } else {
         Q_ASSERT(!fullscreenGeometryRestore().isNull());
-        moveResize(QRectF(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size())));
+        commit(WindowTransaction().setPreferredGeometry(QRectF(fullscreenGeometryRestore().topLeft(), constrainFrameSize(fullscreenGeometryRestore().size()))));
     }
 
     updateWindowRules(Rules::Fullscreen | Rules::Position | Rules::Size);
@@ -4697,7 +4702,7 @@ void X11Window::updateFullscreenMonitors(NETFullscreenMonitors topology)
 
     info->setFullscreenMonitors(topology);
     if (isFullScreen()) {
-        moveResize(fullscreenMonitorsArea(topology));
+        commit(WindowTransaction().setPreferredGeometry(fullscreenMonitorsArea(topology)));
     }
 }
 

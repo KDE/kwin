@@ -1167,25 +1167,27 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         QMetaObject::invokeMethod(window, &Window::closeWindow, Qt::QueuedConnection);
         break;
     case Options::MaximizeOp:
-        window->maximize(window->maximizeMode() == MaximizeFull
-                             ? MaximizeRestore
-                             : MaximizeFull);
+        window->commit(WindowTransaction()
+                           .setMaximized(window->maximizeMode() == MaximizeFull
+                                             ? MaximizeRestore
+                                             : MaximizeFull));
         takeActivity(window, ActivityFocus | ActivityRaise);
         break;
     case Options::HMaximizeOp:
-        window->maximize(window->maximizeMode() ^ MaximizeHorizontal);
+        window->commit(WindowTransaction().setMaximized(window->maximizeMode() ^ MaximizeHorizontal));
         takeActivity(window, ActivityFocus | ActivityRaise);
         break;
     case Options::VMaximizeOp:
-        window->maximize(window->maximizeMode() ^ MaximizeVertical);
+        window->commit(WindowTransaction().setMaximized(window->maximizeMode() ^ MaximizeVertical));
         takeActivity(window, ActivityFocus | ActivityRaise);
         break;
     case Options::RestoreOp:
-        window->maximize(MaximizeRestore);
+        window->commit(WindowTransaction().setMaximized(MaximizeRestore));
         takeActivity(window, ActivityFocus | ActivityRaise);
         break;
     case Options::MinimizeOp:
-        window->setMinimized(true);
+        window->commit(WindowTransaction()
+                           .setMinimized(true));
         break;
     case Options::ShadeOp:
         window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
@@ -1194,7 +1196,8 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         window->setOnAllDesktops(!window->isOnAllDesktops());
         break;
     case Options::FullScreenOp:
-        window->setFullScreen(!window->isFullScreen());
+        window->commit(WindowTransaction()
+                           .setFullScreen(!window->isFullScreen()));
         break;
     case Options::NoBorderOp:
         if (window->userCanSetNoBorder()) {
@@ -1204,7 +1207,8 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
     case Options::KeepAboveOp: {
         StackingUpdatesBlocker blocker(this);
         bool was = window->keepAbove();
-        window->setKeepAbove(!window->keepAbove());
+        window->commit(WindowTransaction()
+                           .setKeepAbove(!window->keepAbove()));
         if (was && !window->keepAbove()) {
             raiseWindow(window);
         }
@@ -1213,7 +1217,8 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
     case Options::KeepBelowOp: {
         StackingUpdatesBlocker blocker(this);
         bool was = window->keepBelow();
-        window->setKeepBelow(!window->keepBelow());
+        window->commit(WindowTransaction()
+                           .setKeepBelow(!window->keepBelow()));
         if (was && !window->keepBelow()) {
             lowerWindow(window);
         }

@@ -1122,7 +1122,7 @@ QRectF Window::keepInArea(QRectF geometry, QRectF area, bool partial)
 
 void Window::keepInArea(QRectF area, bool partial)
 {
-    moveResize(keepInArea(moveResizeGeometry(), area, partial));
+    commit(WindowTransaction().setPreferredGeometry(keepInArea(moveResizeGeometry(), area, partial)));
 }
 
 /**
@@ -1221,7 +1221,7 @@ bool Window::startInteractiveMoveResize()
                 originalGeometry.setX(moveResizeGeometry().x());
                 originalGeometry.setWidth(moveResizeGeometry().width());
                 setGeometryRestore(originalGeometry);
-                maximize(requestedMaximizeMode() ^ MaximizeHorizontal);
+                commit(WindowTransaction().setMaximized(requestedMaximizeMode() ^ MaximizeHorizontal));
             }
             break;
         case Gravity::Top:
@@ -1232,7 +1232,7 @@ bool Window::startInteractiveMoveResize()
                 originalGeometry.setY(moveResizeGeometry().y());
                 originalGeometry.setHeight(moveResizeGeometry().height());
                 setGeometryRestore(originalGeometry);
-                maximize(requestedMaximizeMode() ^ MaximizeVertical);
+                commit(WindowTransaction().setMaximized(requestedMaximizeMode() ^ MaximizeVertical));
             }
             break;
         case Gravity::TopLeft:
@@ -1241,7 +1241,7 @@ bool Window::startInteractiveMoveResize()
         case Gravity::BottomRight:
             // Quit the maximized mode if the window is resized by dragging one of its corners.
             setGeometryRestore(moveResizeGeometry());
-            maximize(MaximizeRestore);
+            commit(WindowTransaction().setMaximized(MaximizeRestore));
             break;
         default:
             break;
@@ -1270,9 +1270,9 @@ void Window::finishInteractiveMoveResize(bool cancel)
     doFinishInteractiveMoveResize();
 
     if (cancel) {
-        moveResize(initialInteractiveMoveResizeGeometry());
+        commit(WindowTransaction().setPreferredGeometry(initialInteractiveMoveResizeGeometry()));
         if (m_interactiveMoveResize.initialMaximizeMode != MaximizeMode::MaximizeRestore) {
-            setMaximize(m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeVertical, m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeHorizontal);
+            commit(WindowTransaction().setMaximized(m_interactiveMoveResize.initialMaximizeMode));
             setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
         } else if (m_interactiveMoveResize.initialQuickTileMode) {
             setQuickTileMode(m_interactiveMoveResize.initialQuickTileMode, true);
@@ -1420,13 +1420,15 @@ void Window::updateInteractiveMoveResize(const QPointF &global)
                 if (maximizeMode() != MaximizeRestore) {
                     if (maximizeMode() & MaximizeHorizontal) {
                         if (nextMoveResizeGeom.x() != currentMoveResizeGeom.x() || nextMoveResizeGeom.width() != currentMoveResizeGeom.width()) {
-                            maximize(MaximizeRestore);
+                            commit(WindowTransaction()
+                                       .setMaximized(MaximizeRestore));
                             return;
                         }
                     }
                     if (maximizeMode() & MaximizeVertical) {
                         if (nextMoveResizeGeom.y() != currentMoveResizeGeom.y() || nextMoveResizeGeom.height() != currentMoveResizeGeom.height()) {
-                            maximize(MaximizeRestore);
+                            commit(WindowTransaction()
+                                       .setMaximized(MaximizeRestore));
                             return;
                         }
                     }
@@ -1436,7 +1438,8 @@ void Window::updateInteractiveMoveResize(const QPointF &global)
                 }
             }
 
-            move(nextMoveResizeGeom.topLeft());
+            commit(WindowTransaction()
+                       .setPreferredPosition(nextMoveResizeGeom.topLeft()));
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
 
@@ -1878,19 +1881,24 @@ void Window::setupWindowManagementInterface()
         performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
     });
     connect(w, &PlasmaWindowInterface::fullscreenRequested, this, [this](bool set) {
-        setFullScreen(set);
+        commit(WindowTransaction()
+                   .setFullScreen(set));
     });
     connect(w, &PlasmaWindowInterface::minimizedRequested, this, [this](bool set) {
-        setMinimized(set);
+        commit(WindowTransaction()
+                   .setMinimized(set));
     });
     connect(w, &PlasmaWindowInterface::maximizedRequested, this, [this](bool set) {
-        maximize(set ? MaximizeFull : MaximizeRestore);
+        commit(WindowTransaction()
+                   .setMaximized(set ? MaximizeFull : MaximizeRestore));
     });
     connect(w, &PlasmaWindowInterface::keepAboveRequested, this, [this](bool set) {
-        setKeepAbove(set);
+        commit(WindowTransaction()
+                   .setKeepAbove(set));
     });
     connect(w, &PlasmaWindowInterface::keepBelowRequested, this, [this](bool set) {
-        setKeepBelow(set);
+        commit(WindowTransaction()
+                   .setKeepBelow(set));
     });
     connect(w, &PlasmaWindowInterface::demandsAttentionRequested, this, [this](bool set) {
         demandAttention(set);
@@ -2083,29 +2091,36 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         replay = true;
         break;
     case Options::MouseMaximize:
-        maximize(MaximizeFull);
+        commit(WindowTransaction()
+                   .setMaximized(MaximizeFull));
         break;
     case Options::MouseRestore:
-        maximize(MaximizeRestore);
+        commit(WindowTransaction()
+                   .setMaximized(MaximizeRestore));
         break;
     case Options::MouseMinimize:
-        setMinimized(true);
+        commit(WindowTransaction()
+                   .setMinimized(true));
         break;
     case Options::MouseAbove: {
         StackingUpdatesBlocker blocker(workspace());
         if (keepBelow()) {
-            setKeepBelow(false);
+            commit(WindowTransaction()
+                       .setKeepBelow(false));
         } else {
-            setKeepAbove(true);
+            commit(WindowTransaction()
+                       .setKeepAbove(true));
         }
         break;
     }
     case Options::MouseBelow: {
         StackingUpdatesBlocker blocker(workspace());
         if (keepAbove()) {
-            setKeepAbove(false);
+            commit(WindowTransaction()
+                       .setKeepAbove(false));
         } else {
-            setKeepBelow(true);
+            commit(WindowTransaction()
+                       .setKeepBelow(true));
         }
         break;
     }
@@ -2950,7 +2965,7 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
     if (geo.isEmpty() && !m_keyboardGeometryRestore.isEmpty()) {
         const QRectF availableArea = workspace()->clientArea(MaximizeArea, this);
         QRectF newWindowGeometry = (requestedMaximizeMode() & MaximizeHorizontal) ? availableArea : m_keyboardGeometryRestore;
-        moveResize(newWindowGeometry);
+        commit(WindowTransaction().setPreferredGeometry(newWindowGeometry));
         m_keyboardGeometryRestore = QRectF();
     } else if (geo.isEmpty()) {
         return;
@@ -2975,7 +2990,7 @@ void Window::setVirtualKeyboardGeometry(const QRectF &geo)
     newWindowGeometry.setHeight(std::min(newWindowGeometry.height(), geo.top() - availableArea.top()));
     newWindowGeometry.moveTop(std::max(geo.top() - newWindowGeometry.height(), availableArea.top()));
     newWindowGeometry = newWindowGeometry.intersected(availableArea);
-    moveResize(newWindowGeometry);
+    commit(WindowTransaction().setPreferredGeometry(newWindowGeometry));
 }
 
 QRectF Window::keyboardGeometryRestore() const
@@ -3373,6 +3388,50 @@ void Window::moveResize(const QRectF &rect)
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
 
+void Window::commit(const WindowTransaction &transaction)
+{
+    if (const auto minimized = transaction.minimized()) {
+        setMinimized(minimized.value());
+    }
+    if (const auto maximized = transaction.maximized()) {
+        maximize(maximized.value());
+    }
+    if (const auto fullscreen = transaction.fullScreen()) {
+        setFullScreen(fullscreen.value());
+    }
+
+    const std::optional<QPointF> preferredPosition = transaction.preferredPosition();
+    const std::optional<QSizeF> preferredSize = transaction.preferredSize();
+    if (preferredPosition && preferredSize) {
+        moveResize(QRectF(preferredPosition.value(), preferredSize.value()));
+    } else if (preferredPosition) {
+        move(preferredPosition.value());
+    } else if (preferredSize) {
+        resize(preferredSize.value());
+    }
+
+    if (const auto activities = transaction.activities()) {
+        setOnActivities(activities.value());
+    }
+    if (const auto desktops = transaction.desktops()) {
+        setDesktops(desktops.value());
+    }
+
+    if (const auto output = transaction.output()) {
+        setOutput(output.value());
+    }
+    if (const auto preferredOutput = transaction.preferredOutput()) {
+        setMoveResizeOutput(preferredOutput.value());
+    }
+
+    if (const auto keepBelow = transaction.keepBelow()) {
+        setKeepBelow(keepBelow.value());
+    }
+    if (const auto keepAbove = transaction.keepAbove()) {
+        setKeepAbove(keepAbove.value());
+    }
+}
+
 void Window::setElectricBorderMode(QuickTileMode mode)
 {
     if (mode != QuickTileMode(QuickTileFlag::Maximize)) {
@@ -3484,11 +3543,11 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
         if (requestedMaximizeMode() == MaximizeFull) {
             m_requestedQuickTileMode = QuickTileFlag::None;
-            setMaximize(false, false);
+            commit(WindowTransaction().setMaximized(MaximizeRestore));
         } else {
             QRectF effectiveGeometryRestore = quickTileGeometryRestore();
             m_requestedQuickTileMode = QuickTileFlag::Maximize;
-            setMaximize(true, true);
+            commit(WindowTransaction().setMaximized(MaximizeFull));
             setGeometryRestore(effectiveGeometryRestore);
         }
         doSetQuickTileMode();
@@ -3507,13 +3566,13 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     if (requestedMaximizeMode() != MaximizeRestore) {
         if (mode != QuickTileMode(QuickTileFlag::None)) {
             m_requestedQuickTileMode = QuickTileFlag::None;
-            setMaximize(false, false);
-            moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
+            commit(WindowTransaction().setMaximized(MaximizeRestore));
+            commit(WindowTransaction().setPreferredGeometry(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos())));
             // Store the mode change
             m_requestedQuickTileMode = mode;
         } else {
             m_requestedQuickTileMode = mode;
-            setMaximize(false, false);
+            commit(WindowTransaction().setMaximized(MaximizeRestore));
         }
 
         doSetQuickTileMode();
@@ -3547,7 +3606,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
                 mode = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
             } else {
                 // Move to other screen
-                moveResize(geometryRestore().translated(nextOutput->geometry().topLeft() - currentOutput->geometry().topLeft()));
+                commit(WindowTransaction().setPreferredGeometry(geometryRestore().translated(nextOutput->geometry().topLeft() - currentOutput->geometry().topLeft())));
                 whichScreen = nextOutput->geometry().center();
 
                 // Swap sides
@@ -3579,7 +3638,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             geometry.moveTopLeft(QPointF(anchor.x() - geometry.width() * offset.x(),
                                          anchor.y() - geometry.height() * offset.y()));
         }
-        moveResize(geometry);
+        commit(WindowTransaction().setPreferredGeometry(geometry));
         // Custom tiles need to be untiled immediately
         if (oldMode == QuickTileFlag::Custom) {
             setTile(nullptr);
@@ -3601,9 +3660,9 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     } else {
         Tile *newTile = workspace()->tileManager(output())->quickTile(m_requestedQuickTileMode);
         if (newTile) {
-            moveResize(newTile->absoluteGeometry());
+            commit(WindowTransaction().setPreferredGeometry(newTile->absoluteGeometry()));
         } else if (tile()) {
-            moveResize(quickTileGeometryRestore());
+            commit(WindowTransaction().setPreferredGeometry(quickTileGeometryRestore()));
         }
     }
     doSetQuickTileMode();
@@ -3738,7 +3797,7 @@ void Window::sendToOutput(Output *newOutput)
 
     QRectF newGeom = moveToArea(oldGeom, oldScreenArea, screenArea);
     newGeom = ensureSpecialStateGeometry(newGeom);
-    moveResize(newGeom);
+    commit(WindowTransaction().setPreferredGeometry(newGeom));
 
     // move geometry restores to the new output as well
     setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
@@ -3795,7 +3854,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
     }
 
     if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore || quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-        moveResize(ensureSpecialStateGeometry(newGeom));
+        commit(WindowTransaction().setPreferredGeometry(ensureSpecialStateGeometry(newGeom)));
         setFullscreenGeometryRestore(moveToArea(m_fullscreenGeometryRestore, oldScreenArea, screenArea));
         setGeometryRestore(moveToArea(m_maximizeGeometryRestore, oldScreenArea, screenArea));
         return;
@@ -3942,7 +4001,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         newGeom.setSize(constrainFrameSize(newGeom.size()));
     }
 
-    moveResize(newGeom);
+    commit(WindowTransaction().setPreferredGeometry(newGeom));
 }
 
 void Window::checkOffscreenPosition(QRectF *geom, const QRectF &screenArea)
@@ -4209,23 +4268,23 @@ void Window::applyWindowRules()
     const QRectF oldGeometry = moveResizeGeometry();
     const QRectF geometry = client_rules->checkGeometrySafe(oldGeometry);
     if (geometry != oldGeometry) {
-        moveResize(geometry);
+        commit(WindowTransaction().setPreferredGeometry(geometry));
     }
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
-    setDesktops(desktops());
+    commit(WindowTransaction().setDesktops(desktops()));
     workspace()->sendWindowToOutput(this, moveResizeOutput());
-    setOnActivities(activities());
+    commit(WindowTransaction().setActivities(activities()));
     // Type
-    maximize(requestedMaximizeMode());
-    setMinimized(isMinimized());
+    commit(WindowTransaction().setMaximized(requestedMaximizeMode()));
+    commit(WindowTransaction().setMinimized(isMinimized()));
     setShade(shadeMode());
     setOriginalSkipTaskbar(skipTaskbar());
     setSkipPager(skipPager());
     setSkipSwitcher(skipSwitcher());
-    setKeepAbove(keepAbove());
-    setKeepBelow(keepBelow());
-    setFullScreen(isRequestedFullScreen());
+    commit(WindowTransaction().setKeepAbove(keepAbove()));
+    commit(WindowTransaction().setKeepBelow(keepBelow()));
+    commit(WindowTransaction().setFullScreen(isRequestedFullScreen()));
     setNoBorder(noBorder());
     updateColorScheme();
     updateLayer();

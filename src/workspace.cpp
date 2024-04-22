@@ -2151,28 +2151,28 @@ void Workspace::updateMinimizedOfTransients(Window *window)
             }
             // but to keep them to eg. watch progress or whatever
             if (!(*it)->isMinimized()) {
-                (*it)->setMinimized(true);
+                (*it)->commit(WindowTransaction().setMinimized(true));
                 updateMinimizedOfTransients((*it));
             }
         }
         if (window->isModal()) { // if a modal dialog is minimized, minimize its mainwindow too
             const auto windows = window->mainWindows();
             for (Window *main : std::as_const(windows)) {
-                main->setMinimized(true);
+                main->commit(WindowTransaction().setMinimized(true));
             }
         }
     } else {
         // else unmiminize the transients
         for (auto it = window->transients().constBegin(); it != window->transients().constEnd(); ++it) {
             if ((*it)->isMinimized()) {
-                (*it)->setMinimized(false);
+                (*it)->commit(WindowTransaction().setMinimized(false));
                 updateMinimizedOfTransients((*it));
             }
         }
         if (window->isModal()) {
             const auto windows = window->mainWindows();
             for (Window *main : std::as_const(windows)) {
-                main->setMinimized(false);
+                main->commit(WindowTransaction().setMinimized(false));
             }
         }
     }
@@ -2228,8 +2228,9 @@ void Workspace::desktopResized()
 
     const auto stack = stackingOrder();
     for (Window *window : stack) {
-        window->setMoveResizeOutput(outputAt(window->moveResizeGeometry().center()));
-        window->setOutput(outputAt(window->frameGeometry().center()));
+        window->commit(WindowTransaction()
+                           .setOutput(outputAt(window->frameGeometry().center()))
+                           .setPreferredOutput(outputAt(window->moveResizeGeometry().center())));
     }
 
     // restore cursor position
