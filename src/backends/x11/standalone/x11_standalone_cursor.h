@@ -38,20 +38,10 @@ protected:
     void doSetPos() override;
     void doGetPos() override;
 
-private Q_SLOTS:
-    /**
-     * Because of QTimer's and the impossibility to get events for all mouse
-     * movements (at least I haven't figured out how) the position needs
-     * to be also refetched after each return to the event loop.
-     */
-    void resetTimeStamp();
-    void aboutToBlock();
+private:
     void pollMouse();
 
-private:
-    xcb_timestamp_t m_timeStamp;
     uint16_t m_buttonMask;
-    QTimer m_resetTimeStampTimer;
     QTimer m_mousePollingTimer;
     bool m_hasXInput;
 
