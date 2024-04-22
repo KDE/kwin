@@ -25,6 +25,7 @@
 #include <QDBusMessage>
 #include <QDBusPendingCall>
 #include <QDirIterator>
+#include <QFileInfo>
 #include <QStandardPaths>
 
 namespace KWin
@@ -64,6 +65,12 @@ static QString translatedCategory(const QString &category)
 static EffectsModel::Status effectStatus(bool enabled)
 {
     return enabled ? EffectsModel::Status::Enabled : EffectsModel::Status::Disabled;
+}
+
+static bool isKwin4Effect(const KPluginMetaData &plugin)
+{
+    const QFileInfo fi(plugin.fileName());
+    return fi.dir().dirName().startsWith(QLatin1String("kwin4_effect_"));
 }
 
 EffectsModel::EffectsModel(QObject *parent)
@@ -222,7 +229,7 @@ void EffectsModel::loadBuiltInEffects(const KConfigGroup &kwinConfig)
         it.next();
 
         const KPluginMetaData metaData = KPluginMetaData::fromJsonFile(it.filePath());
-        if (!metaData.isValid()) {
+        if (!metaData.isValid() || isKwin4Effect(metaData)) {
             continue;
         }
 
@@ -275,6 +282,10 @@ void EffectsModel::loadJavascriptEffects(const KConfigGroup &kwinConfig)
         QStringLiteral("KWin/Effect"),
         QStringLiteral("kwin/effects"));
     for (const KPluginMetaData &plugin : plugins) {
+        if (isKwin4Effect(plugin)) {
+            continue;
+        }
+
         EffectData effect;
 
         effect.name = plugin.name();
@@ -321,7 +332,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 {
     const auto pluginEffects = KPluginMetaData::findPlugins(QStringLiteral("kwin/effects/plugins"));
     for (const KPluginMetaData &pluginEffect : pluginEffects) {
-        if (!pluginEffect.isValid()) {
+        if (!pluginEffect.isValid() || isKwin4Effect(pluginEffect)) {
             continue;
         }
         EffectData effect;
