@@ -2873,6 +2873,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 
     // Close and reopen the window.
     destroyTestWindow();
+    workspace()->setActiveOutput(outputs.at(0));
     createTestWindow();
 
     QEXPECT_FAIL("", "Applying a screen rule on a new client fails on Wayland", Continue);
@@ -2963,6 +2964,7 @@ void TestXdgShellWindowRules::testScreenForceTemporarily()
 
     // Close and reopen the window.
     destroyTestWindow();
+    workspace()->setActiveOutput(outputs.at(0));
     createTestWindow();
 
     // The rule should be discarded now
