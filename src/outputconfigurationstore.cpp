@@ -52,12 +52,6 @@ std::optional<std::tuple<OutputConfiguration, QList<Output *>, OutputConfigurati
         storeConfig(relevantOutputs, isLidClosed, config, order);
         return std::make_tuple(config, order, ConfigType::Preexisting);
     }
-    if (auto kscreenConfig = KScreenIntegration::readOutputConfig(relevantOutputs, KScreenIntegration::connectedOutputsHash(relevantOutputs, isLidClosed))) {
-        auto &[config, order] = *kscreenConfig;
-        applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
-        storeConfig(relevantOutputs, isLidClosed, config, order);
-        return std::make_tuple(config, order, ConfigType::Preexisting);
-    }
     auto [config, order] = generateConfig(relevantOutputs, isLidClosed);
     applyOrientationReading(config, relevantOutputs, orientation, isTabletMode);
     storeConfig(relevantOutputs, isLidClosed, config, order);
@@ -397,12 +391,16 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             return *closedConfig;
         }
     }
+    const auto kscreenConfig = KScreenIntegration::readOutputConfig(outputs, KScreenIntegration::connectedOutputsHash(outputs, isLidClosed));
     OutputConfiguration ret;
     QList<Output *> outputOrder;
     QPoint pos(0, 0);
     for (const auto output : outputs) {
+        const auto kscreenChangeSetPtr = kscreenConfig ? kscreenConfig->first.constChangeSet(output) : nullptr;
+        const auto kscreenChangeSet = kscreenChangeSetPtr ? *kscreenChangeSetPtr : OutputChangeSet{};
+
         const auto outputIndex = findOutput(output, outputs);
-        const bool enable = !isLidClosed || !output->isInternal() || outputs.size() == 1;
+        const bool enable = kscreenChangeSet.enabled.value_or(!isLidClosed || !output->isInternal() || outputs.size() == 1);
         const OutputState existingData = outputIndex ? m_outputs[*outputIndex] : OutputState{};
 
         const auto modes = output->modes();
@@ -411,19 +409,21 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
                 && mode->size() == existingData.mode->size
                 && mode->refreshRate() == existingData.mode->refreshRate;
         });
-        const auto mode = modeIt == modes.end() ? output->currentMode() : *modeIt;
+        const auto mode = modeIt == modes.end() ? kscreenChangeSet.mode.value_or(output->currentMode()).lock() : *modeIt;
 
         const auto changeset = ret.changeSet(output);
         *changeset = {
             .mode = mode,
-            .enabled = enable,
+            .enabled = kscreenChangeSet.enabled.value_or(enable),
             .pos = pos,
+            // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,
+            // and we don't know if it's from Xorg or the 5.27 Wayland session... so just ignore it
             .scale = existingData.scale.value_or(chooseScale(output, mode.get())),
-            .transform = existingData.transform.value_or(output->panelOrientation()),
-            .manualTransform = existingData.manualTransform.value_or(output->panelOrientation()),
-            .overscan = existingData.overscan.value_or(0),
-            .rgbRange = existingData.rgbRange.value_or(Output::RgbRange::Automatic),
-            .vrrPolicy = existingData.vrrPolicy.value_or(VrrPolicy::Automatic),
+            .transform = existingData.transform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
+            .manualTransform = existingData.manualTransform.value_or(kscreenChangeSet.transform.value_or(output->panelOrientation())),
+            .overscan = existingData.overscan.value_or(kscreenChangeSet.overscan.value_or(0)),
+            .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(Output::RgbRange::Automatic)),
+            .vrrPolicy = existingData.vrrPolicy.value_or(kscreenChangeSet.vrrPolicy.value_or(VrrPolicy::Automatic)),
             .highDynamicRange = existingData.highDynamicRange.value_or(false),
             .sdrBrightness = existingData.sdrBrightness.value_or(200),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
@@ -435,7 +435,16 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             outputOrder.push_back(output);
         }
     }
-    return std::make_pair(ret, outputs);
+    if (kscreenConfig && kscreenConfig->second.size() == outputOrder.size()) {
+        // make sure the old output order is consistent with the enablement states of the outputs
+        const bool consistent = std::ranges::all_of(outputOrder, [&kscreenConfig](const auto output) {
+            return kscreenConfig->second.contains(output);
+        });
+        if (consistent) {
+            outputOrder = kscreenConfig->second;
+        }
+    }
+    return std::make_pair(ret, outputOrder);
 }
 
 std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output) const
