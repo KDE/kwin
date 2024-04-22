@@ -714,6 +714,11 @@ bool DrmGpu::isVmwgfx() const
     return m_isVmwgfx;
 }
 
+bool DrmGpu::isVirtualMachine() const
+{
+    return m_isVirtualMachine;
+}
+
 bool DrmGpu::isRemoved() const
 {
     return m_isRemoved;

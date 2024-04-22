@@ -42,7 +42,7 @@ static OutputTransform drmToOutputTransform(DrmPipeline *pipeline)
 
 EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
     : DrmPipelineLayer(pipeline)
-    , m_surface(pipeline->gpu(), eglBackend, pipeline->gpu()->atomicModeSetting() ? EglGbmLayerSurface::BufferTarget::Linear : EglGbmLayerSurface::BufferTarget::Dumb, EglGbmLayerSurface::FormatOption::RequireAlpha)
+    , m_surface(pipeline->gpu(), eglBackend, pipeline->gpu()->atomicModeSetting() && !pipeline->gpu()->isVirtualMachine() ? EglGbmLayerSurface::BufferTarget::Linear : EglGbmLayerSurface::BufferTarget::Dumb, EglGbmLayerSurface::FormatOption::RequireAlpha)
 {
 }
 

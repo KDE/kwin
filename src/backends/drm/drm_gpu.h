@@ -80,6 +80,7 @@ public:
     bool isI915() const;
     bool isNVidia() const;
     bool isVmwgfx() const;
+    bool isVirtualMachine() const;
     gbm_device *gbmDevice() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
