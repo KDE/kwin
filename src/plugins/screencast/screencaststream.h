@@ -29,6 +29,7 @@ namespace KWin
 class Cursor;
 class GLTexture;
 class PipeWireCore;
+class ScreenCastBuffer;
 class ScreenCastSource;
 
 struct ScreenCastDmaBufTextureParams
@@ -47,6 +48,14 @@ public:
     explicit ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent);
     ~ScreenCastStream();
 
+    enum class Content {
+        None,
+        Video = 0x1,
+        Cursor = 0x2,
+    };
+    Q_FLAG(Content)
+    Q_DECLARE_FLAGS(Contents, Content)
+
     bool init();
     uint framerate();
     uint nodeId();
@@ -61,13 +70,12 @@ public:
      * Renders @p frame into the current framebuffer into the stream
      * @p timestamp
      */
-    void recordFrame(const QRegion &damagedRegion);
+    void recordFrame(const QRegion &damagedRegion, Contents contents = Content::Video);
 
     void setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
 public Q_SLOTS:
     void invalidateCursor();
-    void recordCursor();
     bool includesCursor(Cursor *cursor) const;
 
 Q_SIGNALS:
@@ -86,11 +94,11 @@ private:
     void resize(const QSize &resolution);
     void coreFailed(const QString &errorMessage);
     void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
+    QRegion addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cursor);
     void addHeader(spa_buffer *spaBuffer);
     void corruptHeader(spa_buffer *spaBuffer);
     void addDamage(spa_buffer *spaBuffer, const QRegion &damagedRegion);
     void newStreamParams();
-    void enqueue(pw_buffer *buffer);
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
@@ -134,6 +142,9 @@ private:
     std::optional<std::chrono::steady_clock::time_point> m_lastSent;
     QRegion m_pendingDamages;
     QTimer m_pendingFrame;
+    Contents m_pendingContents = Content::None;
 };
 
 } // namespace KWin
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::ScreenCastStream::Contents)

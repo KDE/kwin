@@ -251,7 +251,9 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_source(source)
     , m_resolution(source->textureSize())
 {
-    connect(source, &ScreenCastSource::frame, this, &ScreenCastStream::recordFrame);
+    connect(source, &ScreenCastSource::frame, this, [this](const QRegion &damage) {
+        recordFrame(damage, Content::Video);
+    });
     connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::close);
 
     m_pwStreamEvents.version = PW_VERSION_STREAM_EVENTS;
@@ -274,7 +276,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
 
     m_pendingFrame.setSingleShot(true);
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        recordFrame(m_pendingDamages);
+        recordFrame(m_pendingDamages, m_pendingContents);
     });
 }
 
@@ -359,14 +361,16 @@ bool ScreenCastStream::createStream()
         return false;
     }
 
-    if (m_cursor.mode == ScreencastV1Interface::Embedded) {
+    switch (m_cursor.mode) {
+    case ScreencastV1Interface::Hidden:
+        break;
+    case ScreencastV1Interface::Embedded:
+    case ScreencastV1Interface::Metadata:
         m_cursor.changedConnection = connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
-            recordFrame({});
+            recordFrame({}, Content::Cursor);
         });
-    } else if (m_cursor.mode == ScreencastV1Interface::Metadata) {
-        m_cursor.changedConnection = connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
-        m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, &ScreenCastStream::recordCursor);
+        break;
     }
 
     qCDebug(KWIN_SCREENCAST) << objectName() << "stream created, drm format:" << FormatInfo::drmFormatName(m_drmFormat) << "with DMA-BUF:" << m_hasDmaBuf;
@@ -397,7 +401,7 @@ void ScreenCastStream::close()
     Q_EMIT closed();
 }
 
-void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
+void ScreenCastStream::recordFrame(const QRegion &_damagedRegion, Contents contents)
 {
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_closed);
@@ -411,12 +415,19 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
+    if (contents == Content::Cursor) {
+        if (!m_cursor.visible && !includesCursor(Cursors::self()->currentCursor())) {
+            return;
+        }
+    }
+
     if (m_videoFormat.max_framerate.num != 0 && m_lastSent.has_value()) {
         const auto now = std::chrono::steady_clock::now();
         const auto frameInterval = std::chrono::milliseconds(1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
         const auto lastSentAgo = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastSent.value());
         if (lastSentAgo < frameInterval) {
             m_pendingDamages += damagedRegion;
+            m_pendingContents |= contents;
             if (!m_pendingFrame.isActive()) {
                 m_pendingFrame.start(frameInterval - lastSentAgo);
             }
@@ -425,6 +436,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     m_pendingDamages = {};
+    m_pendingContents = {};
 
     struct pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
     if (!pwBuffer) {
@@ -442,77 +454,58 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    EglContext *context = static_cast<AbstractEglBackend *>(Compositor::self()->backend())->openglContext();
-    context->makeCurrent();
-
-    spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
-    if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
-        m_source->render(memfd->view.image());
-
-        auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == ScreencastV1Interface::Embedded && includesCursor(cursor)) {
-            QPainter painter(memfd->view.image());
-            const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
-            const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
-            painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
-        }
-    } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
-        m_source->render(dmabuf->framebuffer.get());
-
-        auto cursor = Cursors::self()->currentCursor();
-        if (m_cursor.mode == ScreencastV1Interface::Embedded && includesCursor(cursor)) {
-            if (m_cursor.invalid) {
-                m_cursor.invalid = false;
-                const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
-                if (cursorImage.isNull()) {
-                    m_cursor.texture = nullptr;
-                } else {
-                    m_cursor.texture = GLTexture::upload(cursorImage.image());
-                }
-            }
-            if (m_cursor.texture) {
-                GLFramebuffer::pushFramebuffer(dmabuf->framebuffer.get());
-
-                auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
-
-                const QRectF cursorRect = scaledRect(cursor->geometry().translated(-m_cursor.viewport.topLeft()), m_cursor.scale);
-                QMatrix4x4 mvp;
-                mvp.scale(1, -1);
-                mvp.ortho(QRectF(QPointF(0, 0), dmabuf->texture->size()));
-                mvp.translate(cursorRect.x(), cursorRect.y());
-                shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-
-                glEnable(GL_BLEND);
-                glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-                m_cursor.texture->render(cursorRect.size());
-                glDisable(GL_BLEND);
-
-                ShaderManager::instance()->popShader();
-                GLFramebuffer::popFramebuffer();
-
-                damagedRegion += QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
-                m_cursor.lastRect = cursorRect;
-            } else {
-                damagedRegion += m_cursor.lastRect.toAlignedRect();
-                m_cursor.lastRect = {};
-            }
-        }
-
-        // Implicit sync is broken on Nvidia.
-        if (context->glPlatform()->isNvidia()) {
-            glFinish();
-        } else {
-            glFlush();
+    Contents effectiveContents = contents;
+    if (m_cursor.mode != ScreencastV1Interface::Hidden) {
+        effectiveContents.setFlag(Content::Cursor);
+        if (m_cursor.mode == ScreencastV1Interface::Embedded) {
+            effectiveContents.setFlag(Content::Video);
         }
     }
 
-    if (m_cursor.mode == ScreencastV1Interface::Metadata) {
-        addCursorMetadata(spa_buffer, Cursors::self()->currentCursor());
+    EglContext *context = static_cast<AbstractEglBackend *>(Compositor::self()->backend())->openglContext();
+    context->makeCurrent();
+
+    if (effectiveContents & Content::Video) {
+        if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
+            m_source->render(memfd->view.image());
+        } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
+            m_source->render(dmabuf->framebuffer.get());
+        }
+    }
+
+    if (effectiveContents & Content::Cursor) {
+        Cursor *cursor = Cursors::self()->currentCursor();
+        switch (m_cursor.mode) {
+        case ScreencastV1Interface::Hidden:
+            break;
+        case ScreencastV1Interface::Embedded:
+            damagedRegion += addCursorEmbedded(buffer, cursor);
+            break;
+        case ScreencastV1Interface::Metadata:
+            addCursorMetadata(spa_buffer, cursor);
+            break;
+        }
+    }
+
+    // Implicit sync is broken on Nvidia.
+    if (context->glPlatform()->isNvidia()) {
+        glFinish();
+    } else {
+        glFlush();
     }
 
     addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
-    enqueue(pwBuffer);
+
+    if (effectiveContents & Content::Video) {
+        spa_data->chunk->flags = SPA_CHUNK_FLAG_NONE;
+    } else {
+        // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
+        spa_data->chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
+    }
+
+    pw_stream_queue_buffer(m_pwStream, pwBuffer);
+    m_lastSent = std::chrono::steady_clock::now();
 
     resize(m_source->textureSize());
 }
@@ -578,48 +571,6 @@ void ScreenCastStream::addDamage(spa_buffer *spaBuffer, const QRegion &damagedRe
 void ScreenCastStream::invalidateCursor()
 {
     m_cursor.invalid = true;
-}
-
-void ScreenCastStream::recordCursor()
-{
-    Q_ASSERT(!m_closed);
-
-    const char *error = "";
-    auto state = pw_stream_get_state(m_pwStream, &error);
-    if (state != PW_STREAM_STATE_STREAMING) {
-        if (error) {
-            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record cursor position: stream is not active" << error;
-        }
-        return;
-    }
-
-    if (!includesCursor(Cursors::self()->currentCursor()) && !m_cursor.visible) {
-        return;
-    }
-
-    pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
-    if (!pwBuffer) {
-        return;
-    }
-
-    struct spa_buffer *spa_buffer = pwBuffer->buffer;
-
-    // in pipewire terms, corrupted means "do not look at the frame contents" and here they're empty.
-    spa_buffer->datas[0].chunk->flags = SPA_CHUNK_FLAG_CORRUPTED;
-
-    addCursorMetadata(spa_buffer, Cursors::self()->currentCursor());
-    addHeader(spa_buffer);
-    addDamage(spa_buffer, {});
-    enqueue(pwBuffer);
-}
-
-void ScreenCastStream::enqueue(pw_buffer *pwBuffer)
-{
-    pw_stream_queue_buffer(m_pwStream, pwBuffer);
-
-    if (pwBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
-        m_lastSent = std::chrono::steady_clock::now();
-    }
 }
 
 QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
@@ -757,6 +708,60 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
         QPainter painter(&dest);
         painter.drawImage(QRect({0, 0}, targetSize), image);
     }
+}
+
+QRegion ScreenCastStream::addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cursor)
+{
+    if (!includesCursor(cursor)) {
+        const QRegion damage = m_cursor.lastRect.toAlignedRect();
+        m_cursor.visible = false;
+        m_cursor.lastRect = QRectF();
+        return damage;
+    }
+
+    const QRectF cursorRect = scaledRect(cursor->geometry().translated(-m_cursor.viewport.topLeft()), m_cursor.scale);
+    if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
+        QPainter painter(memfd->view.image());
+        const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
+        const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
+        painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
+    } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
+        if (m_cursor.invalid) {
+            m_cursor.invalid = false;
+            const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
+            if (cursorImage.isNull()) {
+                m_cursor.texture = nullptr;
+            } else {
+                m_cursor.texture = GLTexture::upload(cursorImage.image());
+            }
+        }
+
+        if (m_cursor.texture) {
+            GLFramebuffer::pushFramebuffer(dmabuf->framebuffer.get());
+
+            auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+
+            QMatrix4x4 mvp;
+            mvp.scale(1, -1);
+            mvp.ortho(QRectF(QPointF(0, 0), dmabuf->texture->size()));
+            mvp.translate(cursorRect.x(), cursorRect.y());
+            shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            m_cursor.texture->render(cursorRect.size());
+            glDisable(GL_BLEND);
+
+            ShaderManager::instance()->popShader();
+            GLFramebuffer::popFramebuffer();
+        }
+    }
+
+    const QRegion damage = QRegion{m_cursor.lastRect.toAlignedRect()} | cursorRect.toAlignedRect();
+    m_cursor.visible = true;
+    m_cursor.lastRect = cursorRect;
+
+    return damage;
 }
 
 void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport)
