@@ -9,7 +9,11 @@
 #include "display.h"
 #include "xdgshell.h"
 
+#if HAVE_XDG_DIALOG_V1_HEADER
+#include "qwayland-server-xdg-dialog-v1.h"
+#else
 #include "qwayland-server-dialog-v1.h"
+#endif
 
 #include <QHash>
 

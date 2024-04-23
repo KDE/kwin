@@ -28,14 +28,30 @@ qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
 if (Qt6_VERSION VERSION_LESS "6.7.1")
     # the qtwaylandscanner macro cannot handle the mismatched file name and <protocol  name=""
     find_package(QtWaylandScanner REQUIRED)
-    ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
-        PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
-        BASENAME dialog-v1
-    )
+    if (WaylandProtocols_VERSION VERSION_LESS 1.36)
+        ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
+            PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+            BASENAME dialog-v1
+        )
+        target_compile_definitions(KWinIntegrationTestFramework PUBLIC
+            -DHAVE_XDG_DIALOG_V1_HEADER=0
+        )
+    else()
+        ecm_add_qtwayland_client_protocol(KWinIntegrationTestFramework
+            PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+            BASENAME xdg-dialog-v1
+        )
+        target_compile_definitions(KWinIntegrationTestFramework PUBLIC
+            -DHAVE_XDG_DIALOG_V1_HEADER=1
+        )
+    endif()
 else()
     qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
         FILES
             ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+    )
+    target_compile_definitions(KWinIntegrationTestFramework PUBLIC
+        -DHAVE_XDG_DIALOG_V1_HEADER=1
     )
 endif()
 
