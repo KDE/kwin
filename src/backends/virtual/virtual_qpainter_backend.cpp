@@ -21,7 +21,7 @@ namespace KWin
 {
 
 VirtualQPainterLayer::VirtualQPainterLayer(Output *output, VirtualQPainterBackend *backend)
-    : m_output(output)
+    : OutputLayer(output)
     , m_backend(backend)
 {
 }
@@ -30,7 +30,7 @@ VirtualQPainterLayer::~VirtualQPainterLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::doBeginFrame()
 {
     const QSize nativeSize(m_output->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
@@ -49,7 +49,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualQPainterLayer::beginFrame()
     };
 }
 
-bool VirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     return true;

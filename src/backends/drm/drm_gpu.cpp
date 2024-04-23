@@ -442,6 +442,17 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
             return c1->crtcId.value() > c2->crtcId.value();
         });
     }
+    // reset all outputs to their most basic configuration (primary plane without scaling)
+    // for the test, and set the target rects appropriately
+    for (const auto output : std::as_const(m_drmOutputs)) {
+        if (!output->lease()) {
+            const auto primary = output->primaryLayer();
+            primary->setTargetRect(QRect(QPoint(0, 0), output->connector()->pipeline()->mode()->size()));
+            primary->setSourceRect(QRect(QPoint(0, 0), output->connector()->pipeline()->mode()->size()));
+            primary->setEnabled(true);
+            output->cursorLayer()->setEnabled(false);
+        }
+    }
     return checkCrtcAssignment(connectors, crtcs);
 }
 

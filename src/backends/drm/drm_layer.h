@@ -24,6 +24,7 @@ class DrmPipeline;
 class DrmOutputLayer : public OutputLayer
 {
 public:
+    explicit DrmOutputLayer(Output *output);
     virtual ~DrmOutputLayer();
 
     virtual std::shared_ptr<GLTexture> texture() const;
@@ -37,8 +38,6 @@ public:
 
     virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
-    virtual OutputTransform hardwareTransform() const;
-    virtual QRect bufferSourceBox() const;
 
 protected:
     DrmPipeline *const m_pipeline;

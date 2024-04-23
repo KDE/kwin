@@ -23,7 +23,8 @@ namespace KWin
 {
 
 X11WindowedQPainterPrimaryLayer::X11WindowedQPainterPrimaryLayer(X11WindowedOutput *output, X11WindowedQPainterBackend *backend)
-    : m_output(output)
+    : OutputLayer(output)
+    , m_output(output)
     , m_backend(backend)
 {
 }
@@ -32,7 +33,7 @@ X11WindowedQPainterPrimaryLayer::~X11WindowedQPainterPrimaryLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::doBeginFrame()
 {
     const QSize bufferSize = m_output->modeSize();
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
@@ -54,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterPrimaryLayer::beginF
     };
 }
 
-bool X11WindowedQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     return true;
@@ -106,13 +107,14 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedQPainterPrimaryLayer::supportedDrmFo
 }
 
 X11WindowedQPainterCursorLayer::X11WindowedQPainterCursorLayer(X11WindowedOutput *output)
-    : m_output(output)
+    : OutputLayer(output)
+    , m_output(output)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedQPainterCursorLayer::doBeginFrame()
 {
-    const auto tmp = size().expandedTo(QSize(64, 64));
+    const auto tmp = targetRect().size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (m_buffer.size() != bufferSize) {
         m_buffer = QImage(bufferSize, QImage::Format_ARGB32_Premultiplied);
@@ -130,7 +132,7 @@ std::chrono::nanoseconds X11WindowedQPainterCursorLayer::queryRenderTime() const
     return m_renderTime;
 }
 
-bool X11WindowedQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_output->cursor()->update(m_buffer, hotspot());

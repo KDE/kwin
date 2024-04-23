@@ -30,7 +30,7 @@ DrmPipeline::Error DrmPipeline::presentLegacy()
         return err;
     }
     const auto buffer = m_primaryLayer->currentBuffer();
-    if (m_primaryLayer->bufferSourceBox() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (m_primaryLayer->sourceRect() != m_primaryLayer->targetRect() || m_primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
@@ -54,7 +54,7 @@ DrmPipeline::Error DrmPipeline::legacyModeset()
         return Error::TestBufferFailed;
     }
     const auto buffer = m_primaryLayer->currentBuffer();
-    if (m_primaryLayer->bufferSourceBox() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+    if (m_primaryLayer->sourceRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
         return Error::InvalidArguments;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
@@ -184,8 +184,8 @@ bool DrmPipeline::setCursorLegacy()
     struct drm_mode_cursor2 arg = {
         .flags = DRM_MODE_CURSOR_BO | DRM_MODE_CURSOR_MOVE,
         .crtc_id = m_pending.crtc->id(),
-        .x = int32_t(m_cursorLayer->position().x()),
-        .y = int32_t(m_cursorLayer->position().y()),
+        .x = int32_t(m_cursorLayer->targetRect().x()),
+        .y = int32_t(m_cursorLayer->targetRect().y()),
         .width = (uint32_t)gpu()->cursorSize().width(),
         .height = (uint32_t)gpu()->cursorSize().height(),
         .handle = handle,

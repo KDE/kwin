@@ -26,7 +26,8 @@ namespace Wayland
 {
 
 WaylandQPainterPrimaryLayer::WaylandQPainterPrimaryLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
-    : m_waylandOutput(output)
+    : OutputLayer(output)
+    , m_waylandOutput(output)
     , m_backend(backend)
 {
 }
@@ -54,7 +55,7 @@ QRegion WaylandQPainterPrimaryLayer::accumulateDamage(int bufferAge) const
     return m_damageJournal.accumulate(bufferAge, infiniteRegion());
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::doBeginFrame()
 {
     const QSize nativeSize(m_waylandOutput->modeSize());
     if (!m_swapchain || m_swapchain->size() != nativeSize) {
@@ -73,7 +74,7 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterPrimaryLayer::beginFrame
     };
 }
 
-bool WaylandQPainterPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_damageJournal.add(damagedRegion);
@@ -96,7 +97,7 @@ QHash<uint32_t, QList<uint64_t>> WaylandQPainterPrimaryLayer::supportedDrmFormat
 }
 
 WaylandQPainterCursorLayer::WaylandQPainterCursorLayer(WaylandOutput *output, WaylandQPainterBackend *backend)
-    : m_output(output)
+    : OutputLayer(output)
     , m_backend(backend)
 {
 }
@@ -105,9 +106,9 @@ WaylandQPainterCursorLayer::~WaylandQPainterCursorLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::doBeginFrame()
 {
-    const auto tmp = size().expandedTo(QSize(64, 64));
+    const auto tmp = targetRect().size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_swapchain || m_swapchain->size() != bufferSize) {
         m_swapchain = std::make_unique<QPainterSwapchain>(m_backend->graphicsBufferAllocator(), bufferSize, DRM_FORMAT_ARGB8888);
@@ -125,13 +126,13 @@ std::optional<OutputLayerBeginFrameInfo> WaylandQPainterCursorLayer::beginFrame(
     };
 }
 
-bool WaylandQPainterCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool WaylandQPainterCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
-    wl_buffer *buffer = m_output->backend()->importBuffer(m_back->buffer());
+    wl_buffer *buffer = static_cast<WaylandOutput *>(m_output)->backend()->importBuffer(m_back->buffer());
     Q_ASSERT(buffer);
 
-    m_output->cursor()->update(buffer, scale(), hotspot().toPoint());
+    static_cast<WaylandOutput *>(m_output)->cursor()->update(buffer, scale(), hotspot().toPoint());
     m_swapchain->release(m_back);
     return true;
 }

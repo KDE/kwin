@@ -63,8 +63,8 @@ class GlxLayer : public OutputLayer
 public:
     GlxLayer(GlxBackend *backend);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     std::chrono::nanoseconds queryRenderTime() const override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
@@ -84,7 +84,7 @@ public:
     GlxBackend(::Display *display, X11StandaloneBackend *backend);
     ~GlxBackend() override;
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
-    OutputLayerBeginFrameInfo beginFrame();
+    OutputLayerBeginFrameInfo doBeginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
     std::chrono::nanoseconds queryRenderTime();
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;

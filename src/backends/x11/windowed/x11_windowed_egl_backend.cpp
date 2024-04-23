@@ -22,7 +22,8 @@ namespace KWin
 {
 
 X11WindowedEglPrimaryLayer::X11WindowedEglPrimaryLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
-    : m_output(output)
+    : OutputLayer(output)
+    , m_output(output)
     , m_backend(backend)
 {
 }
@@ -31,7 +32,7 @@ X11WindowedEglPrimaryLayer::~X11WindowedEglPrimaryLayer()
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::doBeginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;
@@ -68,7 +69,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglPrimaryLayer::beginFrame(
     };
 }
 
-bool X11WindowedEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_query->end();
     return true;
@@ -129,7 +130,7 @@ QHash<uint32_t, QList<uint64_t>> X11WindowedEglPrimaryLayer::supportedDrmFormats
 }
 
 X11WindowedEglCursorLayer::X11WindowedEglCursorLayer(X11WindowedEglBackend *backend, X11WindowedOutput *output)
-    : m_output(output)
+    : OutputLayer(output)
     , m_backend(backend)
 {
 }
@@ -141,13 +142,13 @@ X11WindowedEglCursorLayer::~X11WindowedEglCursorLayer()
     m_texture.reset();
 }
 
-std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::doBeginFrame()
 {
     if (!m_backend->openglContext()->makeCurrent()) {
         return std::nullopt;
     }
 
-    const auto tmp = size().expandedTo(QSize(64, 64));
+    const auto tmp = targetRect().size().expandedTo(QSize(64, 64));
     const QSize bufferSize(std::ceil(tmp.width()), std::ceil(tmp.height()));
     if (!m_texture || m_texture->size() != bufferSize) {
         m_texture = GLTexture::allocate(GL_RGBA8, bufferSize);
@@ -166,7 +167,7 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::beginFrame()
     };
 }
 
-bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool X11WindowedEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);
 
@@ -174,7 +175,7 @@ bool X11WindowedEglCursorLayer::endFrame(const QRegion &renderedRegion, const QR
     glReadPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.bits());
     GLFramebuffer::popFramebuffer();
 
-    m_output->cursor()->update(buffer.mirrored(false, true), hotspot());
+    static_cast<X11WindowedOutput *>(m_output)->cursor()->update(buffer.mirrored(false, true), hotspot());
     m_query->end();
 
     return true;

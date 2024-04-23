@@ -32,7 +32,7 @@ class KWIN_EXPORT OutputLayer : public QObject
 {
     Q_OBJECT
 public:
-    explicit OutputLayer(QObject *parent = nullptr);
+    explicit OutputLayer(Output *output);
 
     qreal scale() const;
     void setScale(qreal scale);
@@ -40,8 +40,6 @@ public:
     QPointF hotspot() const;
     void setHotspot(const QPointF &hotspot);
 
-    QSizeF size() const;
-    void setSize(const QSizeF &size);
     /**
      * For most drm drivers, the buffer used for the cursor has to have a fixed size.
      * If such a fixed size is required by the backend, this function should return it
@@ -54,19 +52,13 @@ public:
     bool needsRepaint() const;
 
     /**
-     * @arg position in device coordinates
-     */
-    void setPosition(const QPointF &position);
-    QPointF position() const;
-
-    /**
      * Enables or disables this layer. Note that disabling the primary layer will cause problems
      */
     void setEnabled(bool enable);
     bool isEnabled() const;
 
-    virtual std::optional<OutputLayerBeginFrameInfo> beginFrame() = 0;
-    virtual bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
+    std::optional<OutputLayerBeginFrameInfo> beginFrame();
+    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion);
 
     /**
      * Tries to import the newest buffer of the surface for direct scanout
@@ -87,16 +79,40 @@ public:
     virtual DrmDevice *scanoutDevice() const = 0;
     virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
 
+    /**
+     * Returns the source rect this output layer should sample from, in buffer local coordinates
+     */
+    QRectF sourceRect() const;
+    void setSourceRect(const QRectF &rect);
+    /**
+     * Returns the target rect this output layer should be shown at, in device coordinates
+     */
+    QRect targetRect() const;
+    void setTargetRect(const QRect &rect);
+    /**
+     * Returns the transform this layer will apply to content passed to it
+     */
+    OutputTransform offloadTransform() const;
+    /**
+     * Returns the transform a buffer passed into this layer already has
+     */
+    OutputTransform bufferTransform() const;
+
 protected:
-    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color);
+    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color);
+    virtual std::optional<OutputLayerBeginFrameInfo> doBeginFrame() = 0;
+    virtual bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) = 0;
 
     QRegion m_repaints;
     QPointF m_hotspot;
-    QPointF m_position;
-    QSizeF m_size;
+    QRectF m_sourceRect;
+    QRect m_targetRect;
     qreal m_scale = 1.0;
     bool m_enabled = false;
+    OutputTransform m_offloadTransform = OutputTransform::Kind::Normal;
+    OutputTransform m_bufferTransform = OutputTransform::Kind::Normal;
     QPointer<SurfaceItem> m_scanoutCandidate;
+    Output *const m_output;
 };
 
 } // namespace KWin

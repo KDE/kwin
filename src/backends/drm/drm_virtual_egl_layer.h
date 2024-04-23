@@ -34,8 +34,8 @@ public:
     VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output);
     ~VirtualEglGbmLayer() override;
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
@@ -45,7 +45,7 @@ public:
     const ColorDescription &colorDescription() const;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color) override;
+    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 
@@ -58,7 +58,6 @@ private:
     std::shared_ptr<EglSwapchainSlot> m_currentSlot;
     std::unique_ptr<GLRenderTimeQuery> m_query;
 
-    DrmVirtualOutput *const m_output;
     EglGbmBackend *const m_eglBackend;
 };
 

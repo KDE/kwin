@@ -9,6 +9,7 @@
 #include "drm_layer.h"
 #include "core/graphicsbuffer.h"
 #include "drm_buffer.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 
 #include <QMatrix4x4>
@@ -16,6 +17,11 @@
 
 namespace KWin
 {
+
+DrmOutputLayer::DrmOutputLayer(Output *output)
+    : OutputLayer(output)
+{
+}
 
 DrmOutputLayer::~DrmOutputLayer() = default;
 
@@ -25,18 +31,8 @@ std::shared_ptr<GLTexture> DrmOutputLayer::texture() const
 }
 
 DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
-    : m_pipeline(pipeline)
+    : DrmOutputLayer(pipeline->output())
+    , m_pipeline(pipeline)
 {
-}
-
-OutputTransform DrmPipelineLayer::hardwareTransform() const
-{
-    return OutputTransform::Kind::Normal;
-}
-
-QRect DrmPipelineLayer::bufferSourceBox() const
-{
-    const auto buffer = currentBuffer();
-    return buffer ? QRect(QPoint(0, 0), currentBuffer()->buffer()->size()) : QRect();
 }
 }

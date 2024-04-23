@@ -33,14 +33,14 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
     m_scanoutBuffer.reset();
 
     return m_surface.startRendering(m_pipeline->mode()->size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
-bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     return m_surface.endRendering(damagedRegion);
 }
@@ -54,7 +54,7 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 {
     if (m_scanoutBuffer) {
         const auto ret = m_surface.eglBackend()->importDmaBufAsTexture(*m_scanoutBuffer->buffer()->dmabufAttributes());
-        ret->setContentTransform(m_scanoutBufferTransform.combine(OutputTransform::FlipY));
+        ret->setContentTransform(offloadTransform().combine(OutputTransform::FlipY));
         return ret;
     } else {
         return m_surface.texture();
@@ -66,7 +66,7 @@ ColorDescription EglGbmLayer::colorDescription() const
     return m_surface.colorDescription();
 }
 
-bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color)
+bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -80,21 +80,17 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceR
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
     // so we need to make sure that doesn't cause a difference vs the composited result
-    m_bufferSourceBox = sourceRect.toRect();
-    if (sourceRect != m_bufferSourceBox) {
+    if (sourceRect() != sourceRect().toRect()) {
         return false;
     }
-    const auto neededTransform = transform.combine(m_pipeline->output()->transform().inverted());
     const auto plane = m_pipeline->crtc()->primaryPlane();
-    if (neededTransform != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(neededTransform))) {
+    if (offloadTransform() != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(offloadTransform()))) {
         return false;
     }
     // importing a buffer from another GPU without an explicit modifier can mess up the buffer format
     if (buffer->dmabufAttributes()->modifier == DRM_FORMAT_MOD_INVALID && m_pipeline->gpu()->platform()->gpuCount() > 1) {
         return false;
     }
-    m_scanoutTransform = neededTransform;
-    m_scanoutBufferTransform = transform;
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
@@ -119,16 +115,6 @@ void EglGbmLayer::releaseBuffers()
 std::chrono::nanoseconds EglGbmLayer::queryRenderTime() const
 {
     return m_surface.queryRenderTime();
-}
-
-OutputTransform EglGbmLayer::hardwareTransform() const
-{
-    return m_scanoutBuffer ? m_scanoutTransform : OutputTransform::Normal;
-}
-
-QRect EglGbmLayer::bufferSourceBox() const
-{
-    return m_scanoutBuffer ? m_bufferSourceBox : QRect(QPoint(0, 0), m_surface.currentBuffer()->buffer()->size());
 }
 
 DrmDevice *EglGbmLayer::scanoutDevice() const

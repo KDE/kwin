@@ -24,8 +24,8 @@ namespace KWin
 {
 
 VirtualEglLayer::VirtualEglLayer(Output *output, VirtualEglBackend *backend)
-    : m_backend(backend)
-    , m_output(output)
+    : OutputLayer(output)
+    , m_backend(backend)
 {
 }
 
@@ -34,7 +34,7 @@ std::shared_ptr<GLTexture> VirtualEglLayer::texture() const
     return m_current->texture();
 }
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::doBeginFrame()
 {
     m_backend->makeCurrent();
 
@@ -62,7 +62,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglLayer::beginFrame()
     };
 }
 
-bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_query->end();
     glFlush(); // flush pending rendering commands.

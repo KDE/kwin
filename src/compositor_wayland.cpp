@@ -256,6 +256,21 @@ void WaylandCompositor::stop()
     Q_EMIT compositingToggled(false);
 }
 
+static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
+{
+    const double widthScale = bufferSize.width() / double(modeSize.width());
+    const double heightScale = bufferSize.height() / double(modeSize.height());
+    if (widthScale > heightScale) {
+        const QSize size = (bufferSize / widthScale).toSize();
+        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
+        return QRect(QPoint(0, yOffset), size);
+    } else {
+        const QSize size = (bufferSize / heightScale).toSize();
+        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
+        return QRect(QPoint(xOffset, 0), size);
+    }
+}
+
 void WaylandCompositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -305,6 +320,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
                 return sublayer->isVisible();
             });
             if (scanoutPossible) {
+                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidate->size()), output->modeSize()));
                 directScanout = primaryLayer->attemptScanout(scanoutCandidate);
             }
         } else {
@@ -312,6 +328,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         }
 
         if (!directScanout) {
+            primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
@@ -392,9 +409,8 @@ void WaylandCompositor::addOutput(Output *output)
                 bufferSize = *fixedSize;
                 nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), bufferSize), output->pixelSize());
             }
-            outputLayer->setPosition(nativeCursorRect.topLeft());
             outputLayer->setHotspot(output->transform().map(cursor->hotspot() * output->scale(), bufferSize));
-            outputLayer->setSize(bufferSize);
+            outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), bufferSize));
             if (auto beginInfo = outputLayer->beginFrame()) {
                 const RenderTarget &renderTarget = beginInfo->renderTarget;
 
@@ -437,8 +453,8 @@ void WaylandCompositor::addOutput(Output *output)
         if (outputLayer) {
             if (outputLayer->isEnabled()) {
                 const QRectF nativeCursorRect = output->transform()
-                                                    .map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->size()), output->pixelSize());
-                outputLayer->setPosition(nativeCursorRect.topLeft());
+                                                    .map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
+                outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
                 hardwareCursor = output->updateCursorLayer();
             } else if (!cursorLayer->isVisible() && !forceSoftwareCursor) {
                 // this is for the case that the cursor wasn't visible because it was on a different output before

@@ -26,7 +26,7 @@ DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::doBeginFrame()
 {
     if (!doesSwapchainFit()) {
         m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->mode()->size(), DRM_FORMAT_XRGB8888);
@@ -46,7 +46,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmQPainterLayer::beginFrame()
     };
 }
 
-bool DrmQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
@@ -111,7 +111,7 @@ DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::doBeginFrame()
 {
     if (!m_swapchain) {
         m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
@@ -127,7 +127,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::beginFrame()
     };
 }
 
-bool DrmCursorQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmCursorQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
@@ -169,11 +169,11 @@ QHash<uint32_t, QList<uint64_t>> DrmCursorQPainterLayer::supportedDrmFormats() c
 }
 
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)
-    : m_output(output)
+    : DrmOutputLayer(output)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::doBeginFrame()
 {
     if (m_image.isNull() || m_image.size() != m_output->modeSize()) {
         m_image = QImage(m_output->modeSize(), QImage::Format_RGB32);
@@ -185,7 +185,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
     };
 }
 
-bool DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool DrmVirtualQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
     return true;

@@ -30,8 +30,8 @@ class VirtualEglLayer : public OutputLayer
 public:
     VirtualEglLayer(Output *output, VirtualEglBackend *backend);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     std::shared_ptr<GLTexture> texture() const;
     std::chrono::nanoseconds queryRenderTime() const override;
@@ -40,7 +40,6 @@ public:
 
 private:
     VirtualEglBackend *const m_backend;
-    Output *m_output;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_current;
     std::unique_ptr<GLRenderTimeQuery> m_query;

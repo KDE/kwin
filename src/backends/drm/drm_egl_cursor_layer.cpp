@@ -25,7 +25,7 @@ EglGbmCursorLayer::EglGbmCursorLayer(EglGbmBackend *eglBackend, DrmPipeline *pip
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::doBeginFrame()
 {
     if (m_pipeline->amdgpuVrrWorkaroundActive()) {
         return std::nullopt;
@@ -36,7 +36,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmCursorLayer::beginFrame()
     return m_surface.startRendering(m_pipeline->gpu()->cursorSize(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->cursorFormats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
-bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglGbmCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     return m_surface.endRendering(damagedRegion);
 }

@@ -12,8 +12,8 @@
 namespace KWin
 {
 
-OutputLayer::OutputLayer(QObject *parent)
-    : QObject(parent)
+OutputLayer::OutputLayer(Output *output)
+    : m_output(output)
 {
 }
 
@@ -35,16 +35,6 @@ QPointF OutputLayer::hotspot() const
 void OutputLayer::setHotspot(const QPointF &hotspot)
 {
     m_hotspot = hotspot;
-}
-
-QSizeF OutputLayer::size() const
-{
-    return m_size;
-}
-
-void OutputLayer::setSize(const QSizeF &size)
-{
-    m_size = size;
 }
 
 std::optional<QSize> OutputLayer::fixedSize() const
@@ -72,7 +62,7 @@ bool OutputLayer::needsRepaint() const
     return !m_repaints.isEmpty();
 }
 
-bool OutputLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color)
+bool OutputLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
 {
     return false;
 }
@@ -97,13 +87,30 @@ bool OutputLayer::attemptScanout(SurfaceItem *surfaceItem)
         surfaceItem->setScanoutHint(scanoutDevice(), supportedDrmFormats());
         return false;
     }
-    const bool ret = doAttemptScanout(buffer, surfaceItem->bufferSourceBox(), surfaceItem->destinationSize(), surfaceItem->bufferTransform(), surfaceItem->colorDescription());
+    m_sourceRect = surfaceItem->bufferSourceBox();
+    m_bufferTransform = surfaceItem->bufferTransform();
+    const auto desiredTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
+    m_offloadTransform = m_bufferTransform.combine(desiredTransform.inverted());
+    const bool ret = doAttemptScanout(buffer, surfaceItem->colorDescription());
     if (ret) {
         surfaceItem->resetDamage();
         // ensure the pixmap is updated when direct scanout ends
         surfaceItem->destroyPixmap();
     }
     return ret;
+}
+
+std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()
+{
+    m_sourceRect = QRectF(QPointF(0, 0), m_targetRect.size());
+    m_bufferTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
+    m_offloadTransform = OutputTransform::Kind::Normal;
+    return doBeginFrame();
+}
+
+bool OutputLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+{
+    return doEndFrame(renderedRegion, damagedRegion);
 }
 
 void OutputLayer::notifyNoScanoutCandidate()
@@ -114,16 +121,6 @@ void OutputLayer::notifyNoScanoutCandidate()
     }
 }
 
-void OutputLayer::setPosition(const QPointF &position)
-{
-    m_position = position;
-}
-
-QPointF OutputLayer::position() const
-{
-    return m_position;
-}
-
 void OutputLayer::setEnabled(bool enable)
 {
     m_enabled = enable;
@@ -132,6 +129,36 @@ void OutputLayer::setEnabled(bool enable)
 bool OutputLayer::isEnabled() const
 {
     return m_enabled;
+}
+
+QRectF OutputLayer::sourceRect() const
+{
+    return m_sourceRect;
+}
+
+void OutputLayer::setSourceRect(const QRectF &rect)
+{
+    m_sourceRect = rect;
+}
+
+OutputTransform OutputLayer::offloadTransform() const
+{
+    return m_offloadTransform;
+}
+
+OutputTransform OutputLayer::bufferTransform() const
+{
+    return m_bufferTransform;
+}
+
+QRect OutputLayer::targetRect() const
+{
+    return m_targetRect;
+}
+
+void OutputLayer::setTargetRect(const QRect &rect)
+{
+    m_targetRect = rect;
 }
 
 } // namespace KWin

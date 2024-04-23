@@ -211,21 +211,6 @@ DrmPipeline::Error DrmPipeline::prepareAtomicCommit(DrmAtomicCommit *commit, Com
     return Error::None;
 }
 
-static QRect centerBuffer(const QSize &bufferSize, const QSize &modeSize)
-{
-    const double widthScale = bufferSize.width() / double(modeSize.width());
-    const double heightScale = bufferSize.height() / double(modeSize.height());
-    if (widthScale > heightScale) {
-        const QSize size = bufferSize / widthScale;
-        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
-        return QRect(QPoint(0, yOffset), size);
-    } else {
-        const QSize size = bufferSize / heightScale;
-        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
-        return QRect(QPoint(xOffset, 0), size);
-    }
-}
-
 DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commit)
 {
     commit->setPresentationMode(m_pending.presentationMode);
@@ -256,7 +241,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         return Error::InvalidArguments;
     }
     const auto primary = m_pending.crtc->primaryPlane();
-    const auto transform = m_primaryLayer->hardwareTransform();
+    const auto transform = m_primaryLayer->offloadTransform();
     const auto planeTransform = DrmPlane::outputTransformToPlaneTransform(transform);
     if (primary->rotation.isValid()) {
         if (!primary->rotation.hasEnum(planeTransform)) {
@@ -266,7 +251,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     } else if (planeTransform != DrmPlane::Transformation::Rotate0) {
         return Error::InvalidArguments;
     }
-    primary->set(commit, m_primaryLayer->bufferSourceBox(), centerBuffer(transform.map(fb->buffer()->size()), m_pending.mode->size()));
+    primary->set(commit, m_primaryLayer->sourceRect().toRect(), m_primaryLayer->targetRect());
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
     if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
@@ -284,7 +269,7 @@ void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
     auto plane = m_pending.crtc->cursorPlane();
     const auto layer = cursorLayer();
     if (layer->isEnabled()) {
-        plane->set(commit, layer->bufferSourceBox(), QRect(layer->position().toPoint(), gpu()->cursorSize()));
+        plane->set(commit, layer->sourceRect().toRect(), layer->targetRect());
         commit->addProperty(plane->crtcId, m_pending.crtc->id());
         commit->addBuffer(plane, layer->currentBuffer());
         if (plane->vmHotspotX.isValid() && plane->vmHotspotY.isValid()) {

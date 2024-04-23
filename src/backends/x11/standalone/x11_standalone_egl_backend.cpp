@@ -31,16 +31,17 @@ namespace KWin
 {
 
 EglLayer::EglLayer(EglBackend *backend)
-    : m_backend(backend)
+    : OutputLayer(nullptr)
+    , m_backend(backend)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> EglLayer::doBeginFrame()
 {
     return m_backend->beginFrame();
 }
 
-bool EglLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool EglLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;

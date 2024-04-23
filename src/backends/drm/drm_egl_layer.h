@@ -27,28 +27,21 @@ class EglGbmLayer : public DrmPipelineLayer
 public:
     EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     std::shared_ptr<GLTexture> texture() const override;
     ColorDescription colorDescription() const;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
-    OutputTransform hardwareTransform() const override;
-    QRect bufferSourceBox() const override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color) override;
+    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
-    // the transform the drm plane will apply to the buffer
-    OutputTransform m_scanoutTransform = OutputTransform::Kind::Normal;
-    // the output transform the buffer is made for
-    OutputTransform m_scanoutBufferTransform = OutputTransform::Kind::Normal;
-    QRect m_bufferSourceBox;
 
     EglGbmLayerSurface m_surface;
 };

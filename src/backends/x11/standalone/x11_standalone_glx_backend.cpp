@@ -99,16 +99,17 @@ bool SwapEventFilter::event(xcb_generic_event_t *event)
 }
 
 GlxLayer::GlxLayer(GlxBackend *backend)
-    : m_backend(backend)
+    : OutputLayer(nullptr)
+    , m_backend(backend)
 {
 }
 
-std::optional<OutputLayerBeginFrameInfo> GlxLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> GlxLayer::doBeginFrame()
 {
-    return m_backend->beginFrame();
+    return m_backend->doBeginFrame();
 }
 
-bool GlxLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool GlxLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_backend->endFrame(renderedRegion, damagedRegion);
     return true;
@@ -660,7 +661,7 @@ std::unique_ptr<SurfaceTexture> GlxBackend::createSurfaceTextureX11(SurfacePixma
     return std::make_unique<GlxSurfaceTextureX11>(this, pixmap);
 }
 
-OutputLayerBeginFrameInfo GlxBackend::beginFrame()
+OutputLayerBeginFrameInfo GlxBackend::doBeginFrame()
 {
     QRegion repaint;
     makeCurrent();

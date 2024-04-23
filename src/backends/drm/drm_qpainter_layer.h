@@ -27,8 +27,8 @@ class DrmQPainterLayer : public DrmPipelineLayer
 public:
     DrmQPainterLayer(DrmPipeline *pipeline);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     void releaseBuffers() override;
@@ -52,8 +52,8 @@ class DrmCursorQPainterLayer : public DrmPipelineLayer
 public:
     DrmCursorQPainterLayer(DrmPipeline *pipeline);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
@@ -75,8 +75,8 @@ class DrmVirtualQPainterLayer : public DrmOutputLayer
 public:
     DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
-    std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
-    bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
+    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
+    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
@@ -85,7 +85,6 @@ public:
 
 private:
     QImage m_image;
-    DrmVirtualOutput *const m_output;
     std::chrono::steady_clock::time_point m_renderStart;
     std::chrono::nanoseconds m_renderTime;
 };

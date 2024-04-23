@@ -27,14 +27,14 @@ namespace KWin
 {
 
 VirtualEglGbmLayer::VirtualEglGbmLayer(EglGbmBackend *eglBackend, DrmVirtualOutput *output)
-    : m_output(output)
+    : DrmOutputLayer(output)
     , m_eglBackend(eglBackend)
 {
 }
 
 VirtualEglGbmLayer::~VirtualEglGbmLayer() = default;
 
-std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
+std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::doBeginFrame()
 {
     // gbm surface
     if (doesGbmSwapchainFit(m_gbmSwapchain.get())) {
@@ -79,7 +79,7 @@ std::optional<OutputLayerBeginFrameInfo> VirtualEglGbmLayer::beginFrame()
     };
 }
 
-bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
+bool VirtualEglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_query->end();
     glFlush();
@@ -134,7 +134,7 @@ std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color)
+bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -142,7 +142,7 @@ bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &
         return false;
     }
 
-    if (sourceRect != QRectF(QPointF(0, 0), targetSize) || targetSize != m_output->modeSize() || targetSize != buffer->size()) {
+    if (sourceRect() != targetRect() || targetRect().topLeft() != QPointF(0, 0) || targetRect().size() != m_output->modeSize() || targetRect().size() != buffer->size() || offloadTransform() != OutputTransform::Kind::Normal) {
         return false;
     }
     m_scanoutBuffer = buffer;
