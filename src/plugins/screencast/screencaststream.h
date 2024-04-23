@@ -141,7 +141,7 @@ private:
     bool m_waitForNewBuffers = false;
     quint32 m_drmFormat = 0;
 
-    QDateTime m_lastSent;
+    std::optional<std::chrono::steady_clock::time_point> m_lastSent;
     QRegion m_pendingDamages;
     QTimer m_pendingFrame;
 };
