@@ -276,7 +276,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
 
     m_pendingFrame.setSingleShot(true);
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        recordFrame(m_pendingDamages, m_pendingContents);
+        recordFrame(m_pendingDamage, m_pendingContents);
     });
 }
 
@@ -401,9 +401,8 @@ void ScreenCastStream::close()
     Q_EMIT closed();
 }
 
-void ScreenCastStream::recordFrame(const QRegion &_damagedRegion, Contents contents)
+void ScreenCastStream::recordFrame(const QRegion &damage, Contents contents)
 {
-    QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_closed);
 
     const char *error = "";
@@ -426,7 +425,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion, Contents conte
         const auto frameInterval = std::chrono::milliseconds(1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
         const auto lastSentAgo = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastSent.value());
         if (lastSentAgo < frameInterval) {
-            m_pendingDamages += damagedRegion;
+            m_pendingDamage += damage;
             m_pendingContents |= contents;
             if (!m_pendingFrame.isActive()) {
                 m_pendingFrame.start(frameInterval - lastSentAgo);
@@ -435,7 +434,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion, Contents conte
         }
     }
 
-    m_pendingDamages = {};
+    m_pendingDamage = {};
     m_pendingContents = {};
 
     struct pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
@@ -473,13 +472,14 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion, Contents conte
         }
     }
 
+    QRegion effectiveDamage = damage;
     if (effectiveContents & Content::Cursor) {
         Cursor *cursor = Cursors::self()->currentCursor();
         switch (m_cursor.mode) {
         case ScreencastV1Interface::Hidden:
             break;
         case ScreencastV1Interface::Embedded:
-            damagedRegion += addCursorEmbedded(buffer, cursor);
+            effectiveDamage += addCursorEmbedded(buffer, cursor);
             break;
         case ScreencastV1Interface::Metadata:
             addCursorMetadata(spa_buffer, cursor);
@@ -494,7 +494,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion, Contents conte
         glFlush();
     }
 
-    addDamage(spa_buffer, damagedRegion);
+    addDamage(spa_buffer, effectiveDamage);
     addHeader(spa_buffer);
 
     if (effectiveContents & Content::Video) {

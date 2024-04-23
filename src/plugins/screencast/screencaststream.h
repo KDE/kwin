@@ -66,11 +66,7 @@ public:
 
     void close();
 
-    /**
-     * Renders @p frame into the current framebuffer into the stream
-     * @p timestamp
-     */
-    void recordFrame(const QRegion &damagedRegion, Contents contents = Content::Video);
+    void recordFrame(const QRegion &damage, Contents contents = Content::Video);
 
     void setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
@@ -140,7 +136,7 @@ private:
     quint32 m_drmFormat = 0;
 
     std::optional<std::chrono::steady_clock::time_point> m_lastSent;
-    QRegion m_pendingDamages;
+    QRegion m_pendingDamage;
     QTimer m_pendingFrame;
     Contents m_pendingContents = Content::None;
 };
