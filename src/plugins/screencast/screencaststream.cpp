@@ -90,7 +90,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
         break;
     case PW_STREAM_STATE_STREAMING:
         m_streaming = true;
-        m_lastSent = QDateTime();
+        m_lastSent.reset();
         m_source->resume();
         break;
     case PW_STREAM_STATE_CONNECTING:
@@ -436,9 +436,10 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
         return;
     }
 
-    if (m_videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
-        auto frameInterval = (1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
-        auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
+    if (m_videoFormat.max_framerate.num != 0 && m_lastSent.has_value()) {
+        const auto now = std::chrono::steady_clock::now();
+        const auto frameInterval = std::chrono::milliseconds(1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
+        const auto lastSentAgo = std::chrono::duration_cast<std::chrono::milliseconds>(now - m_lastSent.value());
         if (lastSentAgo < frameInterval) {
             m_pendingDamages += damagedRegion;
             if (!m_pendingFrame.isActive()) {
@@ -654,7 +655,7 @@ void ScreenCastStream::enqueue(pw_buffer *pwBuffer)
     pw_stream_queue_buffer(m_pwStream, pwBuffer);
 
     if (pwBuffer->buffer->datas[0].chunk->flags != SPA_CHUNK_FLAG_CORRUPTED) {
-        m_lastSent = QDateTime::currentDateTimeUtc();
+        m_lastSent = std::chrono::steady_clock::now();
     }
 }
 
