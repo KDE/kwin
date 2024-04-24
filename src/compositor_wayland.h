@@ -26,6 +26,7 @@ public:
 protected:
     void start() override;
     void stop() override;
+    void composite(RenderLoop *loop) override;
 
 private:
     explicit WaylandCompositor(QObject *parent);

@@ -134,7 +134,7 @@ protected:
     static Compositor *s_compositor;
 
 protected Q_SLOTS:
-    virtual void composite(RenderLoop *renderLoop);
+    virtual void composite(RenderLoop *renderLoop) = 0;
 
 private Q_SLOTS:
     void handleFrameRequested(RenderLoop *renderLoop);
