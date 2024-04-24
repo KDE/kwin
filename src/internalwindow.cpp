@@ -247,11 +247,6 @@ QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &si
 
 void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
-        return;
-    }
-
     const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
     if (clientSize() == requestedClientSize) {
         commitGeometry(rect);
@@ -295,8 +290,6 @@ void InternalWindow::updateDecoration(bool check_workspace_pos, bool force)
     if (!force && isDecorated() == !noBorder()) {
         return;
     }
-
-    GeometryUpdatesBlocker blocker(this);
 
     const QRectF oldFrameGeometry = frameGeometry();
     if (force) {

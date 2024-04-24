@@ -251,11 +251,6 @@ void XdgSurfaceWindow::resetHaveNextWindowGeometry()
 
 void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
-    if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
-        return;
-    }
-
     Q_EMIT frameGeometryAboutToChange();
 
     if (mode != MoveResizeMode::Move) {
