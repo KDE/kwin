@@ -86,11 +86,6 @@ std::shared_ptr<DrmFramebuffer> DrmQPainterLayer::currentBuffer() const
     return m_currentFramebuffer;
 }
 
-QRegion DrmQPainterLayer::currentDamage() const
-{
-    return m_damageJournal.lastDamage();
-}
-
 void DrmQPainterLayer::releaseBuffers()
 {
     m_swapchain.reset();
@@ -153,11 +148,6 @@ std::shared_ptr<DrmFramebuffer> DrmCursorQPainterLayer::currentBuffer() const
     return m_currentFramebuffer;
 }
 
-QRegion DrmCursorQPainterLayer::currentDamage() const
-{
-    return {};
-}
-
 void DrmCursorQPainterLayer::releaseBuffers()
 {
     m_swapchain.reset();
@@ -198,13 +188,7 @@ std::optional<OutputLayerBeginFrameInfo> DrmVirtualQPainterLayer::beginFrame()
 bool DrmVirtualQPainterLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
     m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
-    m_currentDamage = damagedRegion;
     return true;
-}
-
-QRegion DrmVirtualQPainterLayer::currentDamage() const
-{
-    return m_currentDamage;
 }
 
 void DrmVirtualQPainterLayer::releaseBuffers()

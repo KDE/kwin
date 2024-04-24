@@ -116,7 +116,7 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
     return true;
 }
 
-bool WaylandEglPrimaryLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
+bool WaylandEglPrimaryLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color)
 {
     Q_ASSERT(!m_presentationBuffer);
     // TODO use viewporter to relax this check
@@ -137,7 +137,6 @@ void WaylandEglPrimaryLayer::present()
     surface->damage(m_damageJournal.lastDamage());
     surface->setScale(std::ceil(m_waylandOutput->scale()));
     surface->commit();
-    Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
     m_presentationBuffer = nullptr;
 }
 
@@ -365,6 +364,7 @@ void WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFram
 {
     m_outputs[output].primaryLayer->present();
     static_cast<WaylandOutput *>(output)->setPendingFrame(frame);
+    Q_EMIT static_cast<WaylandOutput *>(output)->outputChange(frame->damage());
 }
 
 OutputLayer *WaylandEglBackend::primaryLayer(Output *output)

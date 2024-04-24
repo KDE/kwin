@@ -30,7 +30,6 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
     bool checkTestBuffer() override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;

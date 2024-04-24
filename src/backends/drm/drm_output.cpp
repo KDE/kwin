@@ -299,7 +299,7 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     if (success) {
-        Q_EMIT outputChange(m_pipeline->primaryLayer()->currentDamage());
+        Q_EMIT outputChange(frame->damage());
         return true;
     } else if (!needsModeset) {
         qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);

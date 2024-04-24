@@ -66,7 +66,6 @@ bool VirtualEglLayer::endFrame(const QRegion &renderedRegion, const QRegion &dam
 {
     m_query->end();
     glFlush(); // flush pending rendering commands.
-    Q_EMIT m_output->outputChange(damagedRegion);
     return true;
 }
 

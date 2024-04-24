@@ -19,11 +19,6 @@ namespace KWin
 
 DrmOutputLayer::~DrmOutputLayer() = default;
 
-QRegion DrmOutputLayer::currentDamage() const
-{
-    return {};
-}
-
 std::shared_ptr<GLTexture> DrmOutputLayer::texture() const
 {
     return nullptr;

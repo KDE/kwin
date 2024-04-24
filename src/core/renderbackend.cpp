@@ -59,6 +59,16 @@ PresentationMode OutputFrame::presentationMode() const
     return m_presentationMode;
 }
 
+void OutputFrame::setDamage(const QRegion &region)
+{
+    m_damage = region;
+}
+
+QRegion OutputFrame::damage() const
+{
+    return m_damage;
+}
+
 RenderBackend::RenderBackend(QObject *parent)
     : QObject(parent)
 {

@@ -41,11 +41,6 @@ bool EglGbmCursorLayer::endFrame(const QRegion &renderedRegion, const QRegion &d
     return m_surface.endRendering(damagedRegion);
 }
 
-QRegion EglGbmCursorLayer::currentDamage() const
-{
-    return {};
-}
-
 std::shared_ptr<DrmFramebuffer> EglGbmCursorLayer::currentBuffer() const
 {
     return m_surface.currentBuffer();

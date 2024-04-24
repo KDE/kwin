@@ -27,7 +27,6 @@ public:
     virtual ~DrmOutputLayer();
 
     virtual std::shared_ptr<GLTexture> texture() const;
-    virtual QRegion currentDamage() const;
     virtual void releaseBuffers() = 0;
 };
 

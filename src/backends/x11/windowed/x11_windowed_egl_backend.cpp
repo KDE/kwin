@@ -103,8 +103,6 @@ void X11WindowedEglPrimaryLayer::present()
                        0,
                        nullptr);
 
-    Q_EMIT m_output->outputChange(infiniteRegion());
-
     EGLNativeFence releaseFence{m_backend->eglDisplayObject()};
     m_swapchain->release(m_buffer, releaseFence.fileDescriptor().duplicate());
 }
@@ -279,6 +277,7 @@ void X11WindowedEglBackend::init()
 void X11WindowedEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
+    Q_EMIT static_cast<X11WindowedOutput *>(output)->outputChange(frame->damage());
     static_cast<X11WindowedOutput *>(output)->framePending(frame);
 }
 

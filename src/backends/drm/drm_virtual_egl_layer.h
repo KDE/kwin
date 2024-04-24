@@ -37,7 +37,6 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    QRegion currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
@@ -46,7 +45,7 @@ public:
     const ColorDescription &colorDescription() const;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage) override;
+    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color) override;
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 
@@ -54,7 +53,6 @@ private:
     ColorDescription m_scanoutColor = ColorDescription::sRGB;
     DamageJournal m_damageJournal;
     DamageJournal m_oldDamageJournal;
-    QRegion m_currentDamage;
     std::shared_ptr<EglSwapchain> m_gbmSwapchain;
     std::shared_ptr<EglSwapchain> m_oldGbmSwapchain;
     std::shared_ptr<EglSwapchainSlot> m_currentSlot;

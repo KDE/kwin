@@ -31,7 +31,6 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
     std::shared_ptr<GLTexture> texture() const override;
     ColorDescription colorDescription() const;
     void releaseBuffers() override;
@@ -42,7 +41,7 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color, const QRegion &damage) override;
+    bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
     // the transform the drm plane will apply to the buffer
@@ -50,7 +49,6 @@ private:
     // the output transform the buffer is made for
     OutputTransform m_scanoutBufferTransform = OutputTransform::Kind::Normal;
     QRect m_bufferSourceBox;
-    QRegion m_currentDamage;
 
     EglGbmLayerSurface m_surface;
 };

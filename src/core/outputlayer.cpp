@@ -72,7 +72,7 @@ bool OutputLayer::needsRepaint() const
     return !m_repaints.isEmpty();
 }
 
-bool OutputLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
+bool OutputLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color)
 {
     return false;
 }
@@ -97,8 +97,7 @@ bool OutputLayer::attemptScanout(SurfaceItem *surfaceItem)
         surfaceItem->setScanoutHint(scanoutDevice(), supportedDrmFormats());
         return false;
     }
-    // TODO actually do proper damage tracking
-    const bool ret = doAttemptScanout(buffer, surfaceItem->bufferSourceBox(), surfaceItem->destinationSize(), surfaceItem->bufferTransform(), surfaceItem->colorDescription(), infiniteRegion());
+    const bool ret = doAttemptScanout(buffer, surfaceItem->bufferSourceBox(), surfaceItem->destinationSize(), surfaceItem->bufferTransform(), surfaceItem->colorDescription());
     if (ret) {
         surfaceItem->resetDamage();
         // ensure the pixmap is updated when direct scanout ends

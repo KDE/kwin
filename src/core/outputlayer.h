@@ -88,7 +88,7 @@ public:
     virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
 
 protected:
-    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage);
+    virtual bool doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color);
 
     QRegion m_repaints;
     QPointF m_hotspot;

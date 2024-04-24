@@ -42,16 +42,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::beginFrame()
 
 bool EglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
 {
-    const bool ret = m_surface.endRendering(damagedRegion);
-    if (ret) {
-        m_currentDamage = damagedRegion;
-    }
-    return ret;
-}
-
-QRegion EglGbmLayer::currentDamage() const
-{
-    return m_currentDamage;
+    return m_surface.endRendering(damagedRegion);
 }
 
 bool EglGbmLayer::checkTestBuffer()
@@ -75,7 +66,7 @@ ColorDescription EglGbmLayer::colorDescription() const
     return m_surface.colorDescription();
 }
 
-bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
+bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &size, OutputTransform transform, const ColorDescription &color)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -106,7 +97,6 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceR
     m_scanoutBufferTransform = transform;
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
     if (m_scanoutBuffer && m_pipeline->testScanout()) {
-        m_currentDamage = damage;
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
         return true;
     } else {

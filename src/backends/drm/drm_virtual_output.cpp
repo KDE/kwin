@@ -9,6 +9,7 @@
 */
 #include "drm_virtual_output.h"
 
+#include "core/renderbackend.h"
 #include "drm_backend.h"
 #include "drm_gpu.h"
 #include "drm_layer.h"
@@ -50,7 +51,7 @@ bool DrmVirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
     m_frame = frame;
     m_vsyncMonitor->arm();
     m_pageFlipPending = true;
-    Q_EMIT outputChange(m_layer->currentDamage());
+    Q_EMIT outputChange(frame->damage());
     return true;
 }
 

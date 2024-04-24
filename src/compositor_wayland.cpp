@@ -283,6 +283,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         QRegion surfaceDamage = primaryLayer->repaints();
         primaryLayer->resetRepaints();
         prePaintPass(superLayer, &surfaceDamage);
+        frame->setDamage(surfaceDamage);
 
         Window *const activeWindow = workspace()->activeWindow();
         SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;

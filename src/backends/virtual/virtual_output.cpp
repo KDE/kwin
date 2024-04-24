@@ -47,6 +47,7 @@ void VirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     m_vsyncMonitor->arm();
+    Q_EMIT outputChange(frame->damage());
 }
 
 void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale)

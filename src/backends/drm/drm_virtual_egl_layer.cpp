@@ -83,17 +83,11 @@ bool VirtualEglGbmLayer::endFrame(const QRegion &renderedRegion, const QRegion &
 {
     m_query->end();
     glFlush();
-    m_currentDamage = damagedRegion;
     m_damageJournal.add(damagedRegion);
 
     EGLNativeFence releaseFence{m_eglBackend->eglDisplayObject()};
     m_gbmSwapchain->release(m_currentSlot, releaseFence.takeFileDescriptor());
     return true;
-}
-
-QRegion VirtualEglGbmLayer::currentDamage() const
-{
-    return m_currentDamage;
 }
 
 std::shared_ptr<EglSwapchain> VirtualEglGbmLayer::createGbmSwapchain() const
@@ -140,7 +134,7 @@ std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color, const QRegion &damage)
+bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &sourceRect, const QSizeF &targetSize, OutputTransform transform, const ColorDescription &color)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -152,7 +146,6 @@ bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const QRectF &
         return false;
     }
     m_scanoutBuffer = buffer;
-    m_currentDamage = damage;
     m_scanoutColor = color;
     return true;
 }

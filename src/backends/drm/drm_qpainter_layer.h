@@ -31,7 +31,6 @@ public:
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
     DrmDevice *scanoutDevice() const override;
@@ -58,7 +57,6 @@ public:
 
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    QRegion currentDamage() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
     DrmDevice *scanoutDevice() const override;
@@ -80,7 +78,6 @@ public:
     std::optional<OutputLayerBeginFrameInfo> beginFrame() override;
     bool endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
 
-    QRegion currentDamage() const override;
     void releaseBuffers() override;
     std::chrono::nanoseconds queryRenderTime() const override;
     DrmDevice *scanoutDevice() const override;
@@ -88,7 +85,6 @@ public:
 
 private:
     QImage m_image;
-    QRegion m_currentDamage;
     DrmVirtualOutput *const m_output;
     std::chrono::steady_clock::time_point m_renderStart;
     std::chrono::nanoseconds m_renderTime;
