@@ -683,7 +683,6 @@ public:
     void shrinkVertical();
 
     virtual QRectF resizeWithChecks(const QRectF &geometry, const QSizeF &s) = 0;
-    void keepInArea(QRectF area, bool partial = false);
     QRectF keepInArea(QRectF geometry, QRectF area, bool partial = false);
 
     // prefer isXXX() instead

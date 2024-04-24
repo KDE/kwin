@@ -504,7 +504,7 @@ void Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*
     QRectF geom = c->frameGeometry();
     geom.moveCenter(Cursors::self()->mouse()->pos());
     c->move(geom.topLeft().toPoint());
-    c->keepInArea(area); // make sure it's kept inside workarea
+    c->moveResize(c->keepInArea(c->moveResizeGeometry(), area)); // make sure it's kept inside workarea
     cascadeIfCovering(c, area);
 }
 
@@ -560,7 +560,7 @@ void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
     c->move(geom.topLeft());
     // get area again, because the mainwindow may be on different xinerama screen
     const QRect placementArea = workspace()->clientArea(PlacementArea, c).toRect();
-    c->keepInArea(placementArea); // make sure it's kept inside workarea
+    c->moveResize(c->keepInArea(c->moveResizeGeometry(), placementArea)); // make sure it's kept inside workarea
 }
 
 void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy nextPlacement)

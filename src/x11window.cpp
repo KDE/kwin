@@ -969,13 +969,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
                 setGeometryRestore(savedGeometry);
             }
             if (keepInFsArea) {
-                keepInArea(fsa, partial_keep_in_area);
+                moveResize(keepInArea(moveResizeGeometry(), fsa, partial_keep_in_area));
             }
         }
     }
 
     if ((!isSpecialWindow() || isToolbar()) && isMovable() && !dontKeepInArea) {
-        keepInArea(area, partial_keep_in_area);
+        moveResize(keepInArea(moveResizeGeometry(), area, partial_keep_in_area));
     }
 
     updateShape();
@@ -3853,11 +3853,11 @@ void X11Window::getWmNormalHints()
                 // if that fails at least keep it visible somewhere
                 QRectF area = workspace()->clientArea(MovementArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
-                    keepInArea(area);
+                    moveResize(keepInArea(moveResizeGeometry(), area));
                 }
                 area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
-                    keepInArea(area);
+                    moveResize(keepInArea(moveResizeGeometry(), area));
                 }
             }
         }
@@ -4079,7 +4079,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         QRectF area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
         if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
             && area.contains(origClientGeometry)) {
-            keepInArea(area);
+            moveResize(keepInArea(moveResizeGeometry(), area));
         }
 
         // this is part of the kicker-xinerama-hack... it should be
@@ -4113,11 +4113,11 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
                 // if that fails at least keep it visible somewhere
                 QRectF area = workspace()->clientArea(MovementArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
-                    keepInArea(area);
+                    moveResize(keepInArea(moveResizeGeometry(), area));
                 }
                 area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
                 if (area.contains(origClientGeometry)) {
-                    keepInArea(area);
+                    moveResize(keepInArea(moveResizeGeometry(), area));
                 }
             }
         }

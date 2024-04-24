@@ -1120,11 +1120,6 @@ QRectF Window::keepInArea(QRectF geometry, QRectF area, bool partial)
     return geometry;
 }
 
-void Window::keepInArea(QRectF area, bool partial)
-{
-    moveResize(keepInArea(moveResizeGeometry(), area, partial));
-}
-
 /**
  * Returns the maximum client size, not the maximum frame size.
  */

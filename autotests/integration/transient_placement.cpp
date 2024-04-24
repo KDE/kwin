@@ -497,7 +497,7 @@ void TransientPlacementTest::testXdgPopupWithPanel()
 
     QVERIFY(!parent->isDecorated());
     parent->move(QPointF(0, output->geometry().height() - 600));
-    parent->keepInArea(workspace()->clientArea(PlacementArea, parent));
+    parent->moveResize(parent->keepInArea(parent->moveResizeGeometry(), workspace()->clientArea(PlacementArea, parent)));
     QCOMPARE(parent->frameGeometry(), QRect(0, output->geometry().height() - 600 - 50, 800, 600));
 
     std::unique_ptr<KWayland::Client::Surface> transientSurface(Test::createSurface());
