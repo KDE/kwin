@@ -95,6 +95,8 @@ public:
     xcb_window_t wmClientLeader() const;
     QString wmCommand();
 
+    void commit(const WindowTransaction &transaction) override;
+
     QPointF framePosToClientPos(const QPointF &point) const override;
     QPointF clientPosToFramePos(const QPointF &point) const override;
     QSizeF frameSizeToClientSize(const QSizeF &size) const override;
@@ -154,13 +156,11 @@ public:
     bool isShadeable() const override;
     bool isMaximizable() const override;
     MaximizeMode maximizeMode() const override;
-    void maximize(MaximizeMode mode) override;
 
     bool isMinimizable() const override;
     QRectF iconGeometry() const override;
 
     bool isFullScreenable() const override;
-    void setFullScreen(bool set) override;
     bool isFullScreen() const override;
     int fullScreenMode() const
     {
@@ -349,7 +349,6 @@ protected:
     QSizeF resizeIncrements() const override;
     bool acceptsFocus() const override;
     void doSetQuickTileMode() override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
 Q_SIGNALS:
@@ -390,6 +389,10 @@ private:
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
     void resizeDecoration();
+
+    void processMoveResize(const std::optional<QPointF> &position, const std::optional<QSizeF> &size);
+    void processMaximized(MaximizeMode mode);
+    void processFullScreen(bool set);
 
     void pingWindow();
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);

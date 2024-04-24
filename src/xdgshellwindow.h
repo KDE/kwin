@@ -64,7 +64,7 @@ public:
     void installPlasmaShellSurface(PlasmaShellSurfaceInterface *shellSurface);
 
 protected:
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void processMoveResize(WindowTransaction *transaction);
 
     virtual XdgSurfaceConfigure *sendRoleConfigure() const = 0;
     virtual void handleRoleCommit();
@@ -127,6 +127,7 @@ public:
 
     XdgToplevelInterface *shellSurface() const;
 
+    void commit(const WindowTransaction &transaction) override;
     MaximizeMode maximizeMode() const override;
     MaximizeMode requestedMaximizeMode() const override;
     QSizeF minSize() const override;
@@ -152,9 +153,7 @@ public:
     bool takeFocus() override;
     bool wantsInput() const override;
     bool dockWantsInput() const override;
-    void setFullScreen(bool set) override;
     void closeWindow() override;
-    void maximize(MaximizeMode mode) override;
 
     void installAppMenu(AppMenuInterface *appMenu);
     void installServerDecoration(ServerSideDecorationInterface *decoration);
@@ -170,8 +169,6 @@ protected:
     void doMinimize() override;
     void doInteractiveResizeSync(const QRectF &rect) override;
     void doSetActive() override;
-    void doSetFullScreen();
-    void doSetMaximized();
     bool doStartInteractiveMoveResize() override;
     void doFinishInteractiveMoveResize() override;
     bool acceptsFocus() const override;
@@ -210,6 +207,8 @@ private:
     void configureServerDecoration(DecorationMode decorationMode);
     void clearDecoration();
     void updateCapabilities();
+    void processFullScreen(WindowTransaction *transaction);
+    void processMaximized(WindowTransaction *transaction);
 
     QPointer<AppMenuInterface> m_appMenuInterface;
     QPointer<ServerSideDecorationPaletteInterface> m_paletteInterface;
@@ -242,6 +241,7 @@ public:
     explicit XdgPopupWindow(XdgPopupInterface *shellSurface);
     ~XdgPopupWindow() override;
 
+    void commit(const WindowTransaction &transaction) override;
     bool hasPopupGrab() const override;
     void popupDone() override;
     bool isPopupWindow() const override;

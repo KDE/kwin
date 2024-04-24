@@ -365,6 +365,26 @@ X11Window::~X11Window()
     Q_ASSERT(!check_active_modal);
 }
 
+void X11Window::commit(const WindowTransaction &transaction)
+{
+    if (transaction.maximized().has_value()) {
+        processMaximized(transaction.maximized().value());
+    }
+    if (transaction.fullScreen().has_value()) {
+        processFullScreen(transaction.fullScreen().value());
+    }
+    if (transaction.position().has_value() || transaction.size().has_value()) {
+        processMoveResize(transaction.position(), transaction.size());
+    }
+
+    if (transaction.output().has_value()) {
+        setOutput(transaction.output().value());
+    }
+    if (transaction.preferredOutput().has_value()) {
+        setMoveResizeOutput(transaction.preferredOutput().value());
+    }
+}
+
 std::unique_ptr<WindowItem> X11Window::createItem(Item *parentItem)
 {
     return std::make_unique<WindowItemX11>(this, parentItem);
@@ -4302,7 +4322,7 @@ bool X11Window::isMaximizable() const
 /**
  * Reimplemented to inform the client about the new window position.
  */
-void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void X11Window::processMoveResize(const std::optional<QPointF> &position, const std::optional<QSizeF> &size)
 {
     // Ok, the shading geometry stuff. Generally, code doesn't care about shaded geometry,
     // simply because there are too many places dealing with geometry. Those places
@@ -4314,6 +4334,15 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // setGeometry( geometry()) - geometry() will return the shaded frame geometry.
     // Such code is wrong and should be changed to handle the case when the window is shaded,
     // for example using X11Window::clientSize()
+
+    QRectF rect = moveResizeGeometry();
+    if (position.has_value()) {
+        rect.moveTopLeft(position.value());
+    }
+    if (size.has_value()) {
+        rect.setSize(size.value());
+    }
+    setMoveResizeGeometry(rect);
 
     if (isUnmanaged()) {
         qCWarning(KWIN_CORE) << "Cannot move or resize unmanaged window" << this;
@@ -4337,13 +4366,18 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     m_frameGeometry = frameGeometry;
     m_bufferGeometry = frameRectToBufferRect(frameGeometry);
 
-    if (pendingMoveResizeMode() == MoveResizeMode::None && m_lastBufferGeometry == m_bufferGeometry && m_lastFrameGeometry == m_frameGeometry && m_lastClientGeometry == m_clientGeometry) {
+    if ((!m_pendingPosition.has_value() && !m_pendingSize.has_value()) && m_lastBufferGeometry == m_bufferGeometry && m_lastFrameGeometry == m_frameGeometry && m_lastClientGeometry == m_clientGeometry) {
         return;
     }
 
     m_output = workspace()->outputAt(frameGeometry.center());
     if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
+        if (position.has_value()) {
+            setPendingMoveResizePosition(position);
+        }
+        if (size.has_value()) {
+            setPendingMoveResizeSize(size);
+        }
         return;
     }
 
@@ -4418,7 +4452,7 @@ void X11Window::updateServerGeometry()
 }
 
 static bool changeMaximizeRecursion = false;
-void X11Window::maximize(MaximizeMode mode)
+void X11Window::processMaximized(MaximizeMode mode)
 {
     if (isUnmanaged()) {
         qCWarning(KWIN_CORE) << "Cannot change maximized state of unmanaged window" << this;
@@ -4630,7 +4664,7 @@ void X11Window::maximize(MaximizeMode mode)
     }
 }
 
-void X11Window::setFullScreen(bool set)
+void X11Window::processFullScreen(bool set)
 {
     set = rules()->checkFullScreen(set);
 

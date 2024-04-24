@@ -55,6 +55,35 @@ class DecoratedClientImpl;
 class DecorationPalette;
 }
 
+class KWIN_EXPORT WindowTransaction
+{
+public:
+    WindowTransaction() = default;
+
+    std::optional<QPointF> position() const;
+    std::optional<QSizeF> size() const;
+    std::optional<Output *> output() const;
+    std::optional<Output *> preferredOutput() const;
+    std::optional<bool> fullScreen() const;
+    std::optional<MaximizeMode> maximized() const;
+
+    WindowTransaction &setPosition(const QPointF &position);
+    WindowTransaction &setSize(const QSizeF &size);
+    WindowTransaction &setGeometry(const QRectF &geometry);
+    WindowTransaction &setOutput(Output *output);
+    WindowTransaction &setPreferredOutput(Output *output);
+    WindowTransaction &setFullScreen(bool fullscreen);
+    WindowTransaction &setMaximized(MaximizeMode maximized);
+
+private:
+    std::optional<QPointF> m_position;
+    std::optional<QSizeF> m_size;
+    std::optional<Output *> m_output;
+    std::optional<Output *> m_preferredOutput;
+    std::optional<bool> m_fullscreen;
+    std::optional<MaximizeMode> m_maximized;
+};
+
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
@@ -549,6 +578,11 @@ public:
     void unref();
 
     /**
+     * Applies the specified window transaction. Note that some new state can be applied later.
+     */
+    virtual void commit(const WindowTransaction &transaction) = 0;
+
+    /**
      * Returns the last requested geometry. The returned value indicates the bounding
      * geometry, meaning that the client can commit smaller window geometry if the window
      * is resized.
@@ -564,7 +598,6 @@ public:
      * window is expected to land on this output after the move/resize operation completes.
      */
     Output *moveResizeOutput() const;
-    void setMoveResizeOutput(Output *output);
 
     /**
      * Returns the geometry of the pixmap or buffer attached to this Window.
@@ -996,7 +1029,7 @@ public:
     virtual bool isFullScreenable() const;
     virtual bool isFullScreen() const;
     virtual bool isRequestedFullScreen() const;
-    virtual void setFullScreen(bool set);
+    void setFullScreen(bool set);
 
     bool wantsAdaptiveSync() const;
 
@@ -1005,7 +1038,7 @@ public:
     virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
-    virtual void maximize(MaximizeMode mode);
+    void maximize(MaximizeMode mode);
     /**
      * Sets the maximization according to @p vertically and @p horizontally.
      */
@@ -1555,15 +1588,10 @@ protected:
     void blockGeometryUpdates();
     void unblockGeometryUpdates();
     bool areGeometryUpdatesBlocked() const;
-    enum class MoveResizeMode : uint {
-        None,
-        Move = 0x1,
-        Resize = 0x2,
-        MoveResize = Move | Resize,
-    };
-    MoveResizeMode pendingMoveResizeMode() const;
-    void setPendingMoveResizeMode(MoveResizeMode mode);
-    virtual void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) = 0;
+    std::optional<QPointF> pendingMoveResizePosition() const;
+    std::optional<QSizeF> pendingMoveResizeSize() const;
+    void setPendingMoveResizePosition(const std::optional<QPointF> &position);
+    void setPendingMoveResizeSize(const std::optional<QSizeF> &size);
 
     /**
      * @returns whether the Window is currently in move resize mode
@@ -1617,6 +1645,7 @@ protected:
         return m_interactiveMoveResize.initialGeometry;
     }
     void setMoveResizeGeometry(const QRectF &geo);
+    void setMoveResizeOutput(Output *output);
     void setInteractiveMoveResizeGravity(Gravity gravity)
     {
         m_interactiveMoveResize.gravity = gravity;
@@ -1789,7 +1818,8 @@ protected:
 
     // geometry
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
-    MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
+    std::optional<QPointF> m_pendingPosition;
+    std::optional<QSizeF> m_pendingSize;
     friend class GeometryUpdatesBlocker;
     Output *m_moveResizeOutput;
     QRectF m_moveResizeGeometry;
@@ -2106,14 +2136,97 @@ inline void Window::unblockGeometryUpdates()
     m_blockGeometryUpdates--;
 }
 
-inline Window::MoveResizeMode Window::pendingMoveResizeMode() const
+inline std::optional<QPointF> Window::pendingMoveResizePosition() const
 {
-    return m_pendingMoveResizeMode;
+    return m_pendingPosition;
 }
 
-inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
+inline std::optional<QSizeF> Window::pendingMoveResizeSize() const
 {
-    m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
+    return m_pendingSize;
+}
+
+inline void Window::setPendingMoveResizePosition(const std::optional<QPointF> &position)
+{
+    m_pendingPosition = position;
+}
+
+inline void Window::setPendingMoveResizeSize(const std::optional<QSizeF> &size)
+{
+    m_pendingSize = size;
+}
+
+inline std::optional<QPointF> WindowTransaction::position() const
+{
+    return m_position;
+}
+
+inline std::optional<QSizeF> WindowTransaction::size() const
+{
+    return m_size;
+}
+
+inline std::optional<Output *> WindowTransaction::output() const
+{
+    return m_output;
+}
+
+inline std::optional<Output *> WindowTransaction::preferredOutput() const
+{
+    return m_preferredOutput;
+}
+
+inline std::optional<bool> WindowTransaction::fullScreen() const
+{
+    return m_fullscreen;
+}
+
+inline std::optional<MaximizeMode> WindowTransaction::maximized() const
+{
+    return m_maximized;
+}
+
+inline WindowTransaction &WindowTransaction::setPosition(const QPointF &position)
+{
+    m_position = position;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setSize(const QSizeF &size)
+{
+    m_size = size;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setGeometry(const QRectF &geometry)
+{
+    m_position = geometry.topLeft();
+    m_size = geometry.size();
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setOutput(Output *output)
+{
+    m_output = output;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setPreferredOutput(Output *output)
+{
+    m_preferredOutput = output;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setFullScreen(bool fullscreen)
+{
+    m_fullscreen = fullscreen;
+    return *this;
+}
+
+inline WindowTransaction &WindowTransaction::setMaximized(MaximizeMode maximized)
+{
+    m_maximized = maximized;
+    return *this;
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);

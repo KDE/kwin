@@ -91,6 +91,56 @@ void LayerShellV1Window::scheduleRearrange()
     workspace()->scheduleRearrange();
 }
 
+void LayerShellV1Window::commit(const WindowTransaction &transaction)
+{
+    WindowTransaction effectiveTransaction = transaction;
+
+    if (effectiveTransaction.position().has_value() || effectiveTransaction.size().has_value()) {
+        processMoveResize(&effectiveTransaction);
+    }
+
+    if (effectiveTransaction.output().has_value()) {
+        setOutput(effectiveTransaction.output().value());
+    }
+    if (effectiveTransaction.preferredOutput().has_value()) {
+        setMoveResizeOutput(effectiveTransaction.preferredOutput().value());
+    }
+}
+
+void LayerShellV1Window::processMoveResize(WindowTransaction *transaction)
+{
+    QRectF rect = moveResizeGeometry();
+    if (transaction->position().has_value()) {
+        rect.moveTopLeft(transaction->position().value());
+    }
+    if (transaction->size().has_value()) {
+        rect.setSize(transaction->size().value());
+    }
+    setMoveResizeGeometry(rect);
+
+    if (areGeometryUpdatesBlocked()) {
+        if (transaction->position().has_value()) {
+            setPendingMoveResizePosition(transaction->position());
+        }
+        if (transaction->size().has_value()) {
+            setPendingMoveResizeSize(transaction->size());
+        }
+        return;
+    }
+
+    const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
+    if (requestedClientSize != clientSize()) {
+        m_shellSurface->sendConfigure(rect.size().toSize());
+
+        // The surface position is updated synchronously.
+        QRectF updateRect = m_frameGeometry;
+        updateRect.moveTopLeft(rect.topLeft());
+        updateGeometry(updateRect);
+    } else {
+        updateGeometry(rect);
+    }
+}
+
 WindowType LayerShellV1Window::windowType() const
 {
     return m_windowType;
@@ -231,27 +281,6 @@ Layer LayerShellV1Window::belongsToLayer() const
 bool LayerShellV1Window::acceptsFocus() const
 {
     return !isDeleted() && m_shellSurface->acceptsFocus();
-}
-
-void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
-{
-    if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
-        return;
-    }
-
-    const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
-    if (requestedClientSize != clientSize()) {
-        m_shellSurface->sendConfigure(rect.size().toSize());
-    } else {
-        updateGeometry(rect);
-        return;
-    }
-
-    // The surface position is updated synchronously.
-    QRectF updateRect = m_frameGeometry;
-    updateRect.moveTopLeft(rect.topLeft());
-    updateGeometry(updateRect);
 }
 
 void LayerShellV1Window::handleSizeChanged()

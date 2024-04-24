@@ -249,16 +249,30 @@ void XdgSurfaceWindow::resetHaveNextWindowGeometry()
     m_haveNextWindowGeometry = false;
 }
 
-void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
+void XdgSurfaceWindow::processMoveResize(WindowTransaction *transaction)
 {
+    QRectF rect = moveResizeGeometry();
+    if (transaction->position().has_value()) {
+        rect.moveTopLeft(transaction->position().value());
+    }
+    if (transaction->size().has_value()) {
+        rect.setSize(transaction->size().value());
+    }
+    setMoveResizeGeometry(rect);
+
     if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
+        if (transaction->position().has_value()) {
+            setPendingMoveResizePosition(transaction->position());
+        }
+        if (transaction->size().has_value()) {
+            setPendingMoveResizeSize(transaction->size());
+        }
         return;
     }
 
     Q_EMIT frameGeometryAboutToChange();
 
-    if (mode != MoveResizeMode::Move) {
+    if (transaction->size().has_value()) {
         const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
         if (requestedClientSize == clientSize()) {
             updateGeometry(rect);
@@ -272,7 +286,7 @@ void XdgSurfaceWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mod
             configureEvent->flags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
         }
         m_configureFlags.setFlag(XdgSurfaceConfigure::ConfigurePosition, false);
-        updateGeometry(QRectF(rect.topLeft(), size()));
+        updateGeometry(QRectF(rect.topLeft(), frameGeometry().size()));
     }
 }
 
@@ -473,6 +487,28 @@ XdgToplevelWindow::~XdgToplevelWindow()
 {
     if (m_killPrompt) {
         m_killPrompt->quit();
+    }
+}
+
+void XdgToplevelWindow::commit(const WindowTransaction &transaction)
+{
+    WindowTransaction effectiveTransaction = transaction;
+
+    if (effectiveTransaction.maximized().has_value()) {
+        processMaximized(&effectiveTransaction);
+    }
+    if (effectiveTransaction.fullScreen().has_value()) {
+        processFullScreen(&effectiveTransaction);
+    }
+    if (effectiveTransaction.position().has_value() || effectiveTransaction.size().has_value()) {
+        processMoveResize(&effectiveTransaction);
+    }
+
+    if (effectiveTransaction.output().has_value()) {
+        setOutput(effectiveTransaction.output().value());
+    }
+    if (effectiveTransaction.preferredOutput().has_value()) {
+        setMoveResizeOutput(effectiveTransaction.preferredOutput().value());
     }
 }
 
@@ -757,34 +793,6 @@ void XdgToplevelWindow::doSetActive()
         m_nextStates |= XdgToplevelInterface::State::Activated;
     } else {
         m_nextStates &= ~XdgToplevelInterface::State::Activated;
-    }
-
-    scheduleConfigure();
-}
-
-void XdgToplevelWindow::doSetFullScreen()
-{
-    if (isRequestedFullScreen()) {
-        m_nextStates |= XdgToplevelInterface::State::FullScreen;
-    } else {
-        m_nextStates &= ~XdgToplevelInterface::State::FullScreen;
-    }
-
-    scheduleConfigure();
-}
-
-void XdgToplevelWindow::doSetMaximized()
-{
-    if (requestedMaximizeMode() & MaximizeHorizontal) {
-        m_nextStates |= XdgToplevelInterface::State::MaximizedHorizontal;
-    } else {
-        m_nextStates &= ~XdgToplevelInterface::State::MaximizedHorizontal;
-    }
-
-    if (requestedMaximizeMode() & MaximizeVertical) {
-        m_nextStates |= XdgToplevelInterface::State::MaximizedVertical;
-    } else {
-        m_nextStates &= ~XdgToplevelInterface::State::MaximizedVertical;
     }
 
     scheduleConfigure();
@@ -1480,13 +1488,13 @@ void XdgToplevelWindow::installXdgDialogV1(XdgDialogV1Interface *dialog)
     setModal(dialog->isModal());
 }
 
-void XdgToplevelWindow::setFullScreen(bool set)
+void XdgToplevelWindow::processFullScreen(WindowTransaction *transaction)
 {
     if (!isFullScreenable()) {
         return;
     }
 
-    set = rules()->checkFullScreen(set);
+    const bool set = rules()->checkFullScreen(transaction->fullScreen().value());
     if (m_isRequestedFullScreen == set) {
         return;
     }
@@ -1497,24 +1505,30 @@ void XdgToplevelWindow::setFullScreen(bool set)
     if (set) {
         const Output *output = m_fullScreenRequestedOutput ? m_fullScreenRequestedOutput.data() : moveResizeOutput();
         setFullscreenGeometryRestore(moveResizeGeometry());
-        moveResize(workspace()->clientArea(FullScreenArea, this, output));
+        transaction->setGeometry(workspace()->clientArea(FullScreenArea, this, output));
     } else {
         m_fullScreenRequestedOutput.clear();
         if (fullscreenGeometryRestore().isValid()) {
-            moveResize(QRectF(fullscreenGeometryRestore().topLeft(),
-                              constrainFrameSize(fullscreenGeometryRestore().size())));
+            transaction->setGeometry(QRectF(fullscreenGeometryRestore().topLeft(),
+                                            constrainFrameSize(fullscreenGeometryRestore().size())));
         } else {
             // this can happen when the window was first shown already fullscreen,
             // so let the client set the size by itself
-            moveResize(QRectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
+            transaction->setGeometry(QRectF(workspace()->clientArea(PlacementArea, this).topLeft(), QSize(0, 0)));
         }
     }
 
-    doSetFullScreen();
+    if (set) {
+        m_nextStates |= XdgToplevelInterface::State::FullScreen;
+    } else {
+        m_nextStates &= ~XdgToplevelInterface::State::FullScreen;
+    }
+
+    scheduleConfigure();
 }
 
 static bool changeMaximizeRecursion = false;
-void XdgToplevelWindow::maximize(MaximizeMode mode)
+void XdgToplevelWindow::processMaximized(WindowTransaction *transaction)
 {
     if (changeMaximizeRecursion) {
         return;
@@ -1529,7 +1543,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
     const MaximizeMode oldMode = m_requestedMaximizeMode;
     const QRectF oldGeometry = moveResizeGeometry();
 
-    mode = rules()->checkMaximize(mode);
+    const MaximizeMode mode = rules()->checkMaximize(transaction->maximized().value());
     if (m_requestedMaximizeMode == mode) {
         return;
     }
@@ -1619,9 +1633,21 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         updateQuickTileMode(QuickTileFlag::None);
     }
 
-    moveResize(geometry);
+    transaction->setGeometry(geometry);
 
-    doSetMaximized();
+    if (mode & MaximizeHorizontal) {
+        m_nextStates |= XdgToplevelInterface::State::MaximizedHorizontal;
+    } else {
+        m_nextStates &= ~XdgToplevelInterface::State::MaximizedHorizontal;
+    }
+
+    if (mode & MaximizeVertical) {
+        m_nextStates |= XdgToplevelInterface::State::MaximizedVertical;
+    } else {
+        m_nextStates &= ~XdgToplevelInterface::State::MaximizedVertical;
+    }
+
+    scheduleConfigure();
 }
 
 XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
@@ -1680,6 +1706,22 @@ void XdgPopupWindow::relayout()
 
 XdgPopupWindow::~XdgPopupWindow()
 {
+}
+
+void XdgPopupWindow::commit(const WindowTransaction &transaction)
+{
+    WindowTransaction effectiveTransaction = transaction;
+
+    if (effectiveTransaction.position().has_value() || effectiveTransaction.size().has_value()) {
+        processMoveResize(&effectiveTransaction);
+    }
+
+    if (effectiveTransaction.output().has_value()) {
+        setOutput(effectiveTransaction.output().value());
+    }
+    if (effectiveTransaction.preferredOutput().has_value()) {
+        setMoveResizeOutput(effectiveTransaction.preferredOutput().value());
+    }
 }
 
 bool XdgPopupWindow::hasPopupGrab() const

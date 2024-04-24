@@ -28,6 +28,7 @@ public:
     LayerSurfaceV1Interface *shellSurface() const;
     Output *desiredOutput() const;
 
+    void commit(const WindowTransaction &transaction) override;
     WindowType windowType() const override;
     bool isPlaceable() const override;
     bool isCloseable() const override;
@@ -49,9 +50,9 @@ public:
 protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
 
 private:
+    void processMoveResize(WindowTransaction *transaction);
     void handleSizeChanged();
     void handleUnmapped();
     void handleCommitted();

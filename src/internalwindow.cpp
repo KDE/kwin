@@ -117,6 +117,43 @@ bool InternalWindow::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
+void InternalWindow::commit(const WindowTransaction &transaction)
+{
+    if (transaction.position().has_value() || transaction.size().has_value()) {
+        QRectF rect = moveResizeGeometry();
+        if (transaction.position().has_value()) {
+            rect.moveTopLeft(transaction.position().value());
+        }
+        if (transaction.size().has_value()) {
+            rect.setSize(transaction.size().value());
+        }
+        setMoveResizeGeometry(rect);
+
+        if (areGeometryUpdatesBlocked()) {
+            if (transaction.position().has_value()) {
+                setPendingMoveResizePosition(transaction.position());
+            }
+            if (transaction.size().has_value()) {
+                setPendingMoveResizeSize(transaction.size());
+            }
+        } else {
+            const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
+            if (clientSize() == requestedClientSize) {
+                commitGeometry(rect);
+            } else {
+                requestGeometry(rect);
+            }
+        }
+    }
+
+    if (transaction.output().has_value()) {
+        setOutput(transaction.output().value());
+    }
+    if (transaction.preferredOutput().has_value()) {
+        setMoveResizeOutput(transaction.preferredOutput().value());
+    }
+}
+
 qreal InternalWindow::bufferScale() const
 {
     if (m_handle) {
@@ -243,21 +280,6 @@ QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &si
     }
     const QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());
     return QRectF(moveResizeGeometry().topLeft(), size.boundedTo(area.size()));
-}
-
-void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
-{
-    if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
-        return;
-    }
-
-    const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
-    if (clientSize() == requestedClientSize) {
-        commitGeometry(rect);
-    } else {
-        requestGeometry(rect);
-    }
 }
 
 bool InternalWindow::takeFocus()

@@ -30,6 +30,7 @@ public:
     };
     Q_ENUM(Mode)
 
+    void commit(const WindowTransaction &transaction) override;
     void destroyWindow() override;
     bool isPlaceable() const override
     {
@@ -80,9 +81,6 @@ public:
     void allow();
     void show();
     void hide();
-
-protected:
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
 
 private:
     void showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position);

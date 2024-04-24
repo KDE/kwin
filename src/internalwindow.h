@@ -32,6 +32,7 @@ public:
 
     bool eventFilter(QObject *watched, QEvent *event) override;
 
+    void commit(const WindowTransaction &transaction) override;
     QString captionNormal() const override;
     QString captionSuffix() const override;
     QSizeF minSize() const override;
@@ -76,7 +77,6 @@ protected:
     bool belongsToSameApplication(const Window *other, SameApplicationChecks checks) const override;
     void doInteractiveResizeSync(const QRectF &rect) override;
     void updateCaption() override;
-    void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
     std::unique_ptr<WindowItem> createItem(Item *parentItem) override;
 
 private:

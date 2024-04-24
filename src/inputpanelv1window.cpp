@@ -160,6 +160,29 @@ void InputPanelV1Window::reposition()
     }
 }
 
+void InputPanelV1Window::commit(const WindowTransaction &transaction)
+{
+    if (transaction.position().has_value() || transaction.size().has_value()) {
+        QRectF rect = moveResizeGeometry();
+        if (transaction.position().has_value()) {
+            rect.moveTopLeft(transaction.position().value());
+        }
+        if (transaction.size().has_value()) {
+            rect.setSize(transaction.size().value());
+        }
+
+        setMoveResizeGeometry(rect);
+        updateGeometry(rect);
+    }
+
+    if (transaction.output().has_value()) {
+        setOutput(transaction.output().value());
+    }
+    if (transaction.preferredOutput().has_value()) {
+        setMoveResizeOutput(transaction.preferredOutput().value());
+    }
+}
+
 void InputPanelV1Window::destroyWindow()
 {
     m_panelSurface->disconnect(this);
@@ -182,11 +205,6 @@ WindowType InputPanelV1Window::windowType() const
 QRectF InputPanelV1Window::frameRectToBufferRect(const QRectF &rect) const
 {
     return QRectF(rect.topLeft() - m_windowGeometry.topLeft(), surface()->size());
-}
-
-void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
-{
-    updateGeometry(rect);
 }
 
 void InputPanelV1Window::handleMapped()

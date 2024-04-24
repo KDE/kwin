@@ -1145,14 +1145,25 @@ void Window::blockGeometryUpdates(bool block)
 {
     if (block) {
         if (m_blockGeometryUpdates == 0) {
-            m_pendingMoveResizeMode = MoveResizeMode::None;
+            m_pendingPosition.reset();
+            m_pendingSize.reset();
         }
         ++m_blockGeometryUpdates;
     } else {
         if (--m_blockGeometryUpdates == 0) {
-            if (m_pendingMoveResizeMode != MoveResizeMode::None) {
-                moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
-                m_pendingMoveResizeMode = MoveResizeMode::None;
+            if (m_pendingPosition.has_value() || m_pendingSize.has_value()) {
+                WindowTransaction transaction;
+                if (m_pendingPosition.has_value()) {
+                    transaction.setPosition(m_pendingPosition.value());
+                }
+                if (m_pendingSize.has_value()) {
+                    transaction.setSize(m_pendingSize.value());
+                }
+
+                commit(transaction);
+
+                m_pendingPosition.reset();
+                m_pendingSize.reset();
             }
         }
     }
@@ -1160,7 +1171,7 @@ void Window::blockGeometryUpdates(bool block)
 
 void Window::maximize(MaximizeMode mode)
 {
-    qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
+    commit(WindowTransaction().setMaximized(mode));
 }
 
 void Window::setMaximize(bool vertically, bool horizontally)
@@ -3353,24 +3364,17 @@ void Window::setMoveResizeOutput(Output *output)
 
 void Window::move(const QPointF &point)
 {
-    const QRectF rect = QRectF(point, m_moveResizeGeometry.size());
-
-    setMoveResizeGeometry(rect);
-    moveResizeInternal(rect, MoveResizeMode::Move);
+    commit(WindowTransaction().setPosition(point));
 }
 
 void Window::resize(const QSizeF &size)
 {
-    const QRectF rect = QRectF(m_moveResizeGeometry.topLeft(), size);
-
-    setMoveResizeGeometry(rect);
-    moveResizeInternal(rect, MoveResizeMode::Resize);
+    commit(WindowTransaction().setSize(size));
 }
 
 void Window::moveResize(const QRectF &rect)
 {
-    setMoveResizeGeometry(rect);
-    moveResizeInternal(rect, MoveResizeMode::MoveResize);
+    commit(WindowTransaction().setGeometry(rect));
 }
 
 void Window::setElectricBorderMode(QuickTileMode mode)
@@ -4046,7 +4050,7 @@ bool Window::isRequestedFullScreen() const
  */
 void Window::setFullScreen(bool set)
 {
-    qCWarning(KWIN_CORE, "%s doesn't support setting fullscreen state", metaObject()->className());
+    commit(WindowTransaction().setFullScreen(set));
 }
 
 bool Window::wantsAdaptiveSync() const
