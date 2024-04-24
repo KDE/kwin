@@ -176,7 +176,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
         std::sort(receivedModifiers.begin(), receivedModifiers.end());
         receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
 
-        if (!m_dmabufParams || !receivedModifiers.contains(m_dmabufParams->modifier)) {
+        if (!m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height() || !receivedModifiers.contains(m_dmabufParams->modifier)) {
             if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
                 // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
                 // item on the list
@@ -316,7 +316,7 @@ void ScreenCastStream::onStreamRenegotiateFormat(uint64_t)
 
     m_streaming = false; // pause streaming as we wait for the renegotiation
     char buffer[2048];
-    auto params = buildFormats(m_dmabufParams.has_value(), buffer);
+    auto params = buildFormats(false, buffer);
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
@@ -516,7 +516,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     if (size != m_resolution) {
         m_resolution = size;
         m_waitForNewBuffers = true;
-        m_dmabufParams = std::nullopt;
         pw_loop_signal_event(m_pwCore->pwMainLoop, m_pwRenegotiate);
         return;
     }
