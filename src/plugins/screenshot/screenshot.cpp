@@ -344,7 +344,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
 
 bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const RenderViewport &viewport, ScreenShotScreenData *screenshot)
 {
-    if (m_paintedScreen && screenshot->screen != m_paintedScreen) {
+    if (effects->waylandDisplay() && screenshot->screen != m_paintedScreen) {
         return false;
     }
 
