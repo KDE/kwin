@@ -1382,6 +1382,8 @@ void Workspace::updateOutputs(const QList<Output *> &outputOrder)
     }
     maybeDestroyDpmsFilter();
 
+    m_placementTracker->inhibit();
+
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
         Q_EMIT outputRemoved(output);
@@ -1425,6 +1427,9 @@ void Workspace::updateOutputs(const QList<Output *> &outputOrder)
     }
 
     desktopResized();
+
+    m_placementTracker->uninhibit();
+    m_placementTracker->restore(getPlacementTrackerHash());
 
     for (Output *output : removed) {
         output->unref();
@@ -2200,8 +2205,6 @@ void Workspace::checkTransients(xcb_window_t w)
  */
 void Workspace::desktopResized()
 {
-    m_placementTracker->inhibit();
-
     const QRect oldGeometry = m_geometry;
     m_geometry = QRect();
     for (const Output *output : std::as_const(m_outputs)) {
@@ -2245,8 +2248,6 @@ void Workspace::desktopResized()
     // TODO: emit a signal instead and remove the deep function calls into edges and effects
     m_screenEdges->recreateEdges();
 
-    m_placementTracker->uninhibit();
-    m_placementTracker->restore(getPlacementTrackerHash());
     if (m_geometry != oldGeometry) {
         Q_EMIT geometryChanged();
     }

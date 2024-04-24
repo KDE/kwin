@@ -115,6 +115,10 @@ void PlacementTracker::restore(const QString &key)
                 }
             }
             if (restore) {
+                // to work around setQuickTileMode having unexpected side effects, make sure the window isn't tiled before
+                // setting the desired quick tile mode
+                // TODO fix this more properly
+                window->setQuickTileMode(QuickTileFlag::None, true);
                 window->setQuickTileMode(newData.quickTile, true);
                 window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
                 window->setFullScreen(newData.fullscreen);
