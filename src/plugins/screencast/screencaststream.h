@@ -10,7 +10,6 @@
 
 #include "wayland/screencast_v1.h"
 
-#include <QDateTime>
 #include <QHash>
 #include <QObject>
 #include <QRegion>
