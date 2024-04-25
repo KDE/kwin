@@ -1353,7 +1353,6 @@ void X11Window::createDecoration()
             if (isDeleted()) {
                 return;
             }
-            GeometryUpdatesBlocker blocker(this);
             const QRectF oldGeometry = moveResizeGeometry();
             if (!isShade()) {
                 checkWorkspacePosition(oldGeometry);

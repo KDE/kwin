@@ -88,7 +88,6 @@ Window::Window()
     // replace on-screen-display on size changes
     connect(this, &Window::frameGeometryChanged, this, [this](const QRectF &old) {
         if (isOnScreenDisplay() && !frameGeometry().isEmpty() && old.size() != frameGeometry().size() && isPlaceable()) {
-            GeometryUpdatesBlocker blocker(this);
             workspace()->placement()->place(this, workspace()->clientArea(PlacementArea, this, workspace()->activeOutput()));
         }
     });
@@ -887,7 +886,6 @@ void Window::setShade(ShadeMode mode)
     }
 
     Q_ASSERT(isDecorated());
-    GeometryUpdatesBlocker blocker(this);
 
     doSetShade(previousShadeMode);
     updateWindowRules(Rules::Shade);
