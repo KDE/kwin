@@ -10,6 +10,7 @@
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
 #include "pointer_input.h"
+#include "tiles/tilemanager.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -42,6 +43,8 @@ private Q_SLOTS:
     void testMaximizedWindowRestoredAfterEnablingOutput();
     void testFullScreenWindowRestoredAfterEnablingOutput();
     void testQuickTiledWindowRestoredAfterEnablingOutput();
+    void testCustomTiledWindowRestoredAfterEnablingOutput_data();
+    void testCustomTiledWindowRestoredAfterEnablingOutput();
     void testWindowRestoredAfterChangingScale();
     void testMaximizeStateRestoredAfterEnablingOutput_data();
     void testMaximizeStateRestoredAfterEnablingOutput();
@@ -524,6 +527,119 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     QCOMPARE(window->quickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Right);
     QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
+}
+
+void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput_data()
+{
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    const size_t tileCount = workspace()->tileManager(outputs[1])->rootTile()->childTiles().size();
+
+    QTest::addColumn<size_t>("tileIndex");
+    for (size_t i = 0; i < tileCount; i++) {
+        QTest::addRow("tile %lu", i) << i;
+    }
+}
+
+void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
+{
+    // This test verifies that a custom tiled window will be moved to
+    // its original output and tile when the output is re-enabled
+
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+
+    // start with only one output
+    {
+        OutputConfiguration config;
+        auto changeSet = config.changeSet(outputs[1]);
+        changeSet->enabled = false;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    const auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+
+    // kwin will send a configure event with the actived state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    const QRectF originalGeometry = window->moveResizeGeometry();
+
+    // Enable the right output
+    {
+        OutputConfiguration config;
+        auto changeSet = config.changeSet(outputs[1]);
+        changeSet->enabled = true;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    QFETCH(size_t, tileIndex);
+    const QRectF customTileGeom = workspace()->tileManager(outputs[1])->rootTile()->childTiles()[tileIndex]->windowGeometry();
+
+    // Move the window to the right monitor and put it in the middle tile.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->move(customTileGeom.topLeft() + QPointF(50, 50));
+    const auto geomBeforeTiling = window->moveResizeGeometry();
+    window->setQuickTileMode(QuickTileFlag::Custom, true);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), customTileGeom.size().toSize());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), customTileGeom.size().toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+
+    QCOMPARE(window->frameGeometry(), customTileGeom);
+    QCOMPARE(window->moveResizeGeometry(), customTileGeom);
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Custom);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Custom);
+    QCOMPARE(window->geometryRestore(), geomBeforeTiling);
+
+    // Disable the right output.
+    {
+        OutputConfiguration config;
+        auto changeSet = config.changeSet(outputs[1]);
+        changeSet->enabled = false;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    // The window will be moved to the left monitor, and the original geometry restored
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), originalGeometry.size().toSize());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), originalGeometry.size().toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+
+    QCOMPARE(window->frameGeometry(), originalGeometry);
+    QCOMPARE(window->moveResizeGeometry(), originalGeometry);
+    QCOMPARE(window->output(), outputs[0]);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+
+    // Enable the right monitor again
+    {
+        OutputConfiguration config;
+        auto changeSet = config.changeSet(outputs[1]);
+        changeSet->enabled = true;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    // The window will be moved back to the right monitor, and put in the correct tile
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), customTileGeom.size().toSize());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), customTileGeom.size().toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+
+    QCOMPARE(window->frameGeometry(), customTileGeom);
+    QCOMPARE(window->moveResizeGeometry(), customTileGeom);
+    QCOMPARE(window->output(), outputs[1]);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::Custom);
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Custom);
+    QCOMPARE(window->geometryRestore(), geomBeforeTiling);
 }
 
 void OutputChangesTest::testWindowRestoredAfterChangingScale()

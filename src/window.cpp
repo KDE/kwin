@@ -3559,19 +3559,12 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
         // Custom tileMode is the only one that gets immediately assigned without a roundtrip
-        Tile *tile = nullptr;
-        if (keyboard) {
-            tile = workspace()->tileManager(output())->bestTileForPosition(moveResizeGeometry().center());
-        } else {
-            Output *output = workspace()->outputAt(Cursors::self()->mouse()->pos());
-            tile = workspace()->tileManager(output)->bestTileForPosition(Cursors::self()->mouse()->pos());
-        }
         m_requestedQuickTileMode = mode;
-        setTile(tile);
+        setTile(workspace()->tileManager(workspace()->outputAt(whichScreen))->bestTileForPosition(whichScreen));
         // Don't go into setTileMode as custom tiles don't go trough configure events
         return;
     } else {
-        Tile *newTile = workspace()->tileManager(output())->quickTile(m_requestedQuickTileMode);
+        Tile *newTile = workspace()->tileManager(moveResizeOutput())->quickTile(m_requestedQuickTileMode);
         if (newTile) {
             moveResize(newTile->absoluteGeometry());
         } else if (tile()) {
