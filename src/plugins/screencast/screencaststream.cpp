@@ -93,6 +93,7 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
         break;
     case PW_STREAM_STATE_STREAMING:
         m_streaming = true;
+        m_lastSent = QDateTime();
         m_source->resume();
         break;
     case PW_STREAM_STATE_CONNECTING:
