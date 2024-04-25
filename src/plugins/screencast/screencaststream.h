@@ -79,11 +79,11 @@ private:
     void onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message);
     void onStreamAddBuffer(pw_buffer *buffer);
     void onStreamRemoveBuffer(pw_buffer *buffer);
-    void onStreamRenegotiateFormat(uint64_t);
 
     bool createStream();
     QList<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
     void updateParams();
+    void resize(const QSize &resolution);
     void coreFailed(const QString &errorMessage);
     void addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor);
     void addHeader(spa_buffer *spaBuffer);
@@ -100,7 +100,6 @@ private:
     std::shared_ptr<PipeWireCore> m_pwCore;
     std::unique_ptr<ScreenCastSource> m_source;
     struct pw_stream *m_pwStream = nullptr;
-    struct spa_source *m_pwRenegotiate = nullptr;
     spa_hook m_streamListener;
     pw_stream_events m_pwStreamEvents = {};
 
@@ -108,7 +107,6 @@ private:
 
     QSize m_resolution;
     bool m_closed = false;
-    bool m_streaming = false;
 
     spa_video_info_raw m_videoFormat;
     QString m_error;
@@ -131,7 +129,6 @@ private:
 
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
-    bool m_waitForNewBuffers = false;
     quint32 m_drmFormat = 0;
 
     std::optional<std::chrono::steady_clock::time_point> m_lastSent;

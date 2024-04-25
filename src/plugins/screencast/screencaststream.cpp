@@ -75,8 +75,6 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
         return;
     }
 
-    m_streaming = false;
-
     switch (state) {
     case PW_STREAM_STATE_ERROR:
         qCWarning(KWIN_SCREENCAST) << objectName() << "Stream error: " << error_message;
@@ -89,7 +87,6 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
         m_source->pause();
         break;
     case PW_STREAM_STATE_STREAMING:
-        m_streaming = true;
         m_lastSent.reset();
         m_source->resume();
         break;
@@ -207,7 +204,6 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
     qCDebug(KWIN_SCREENCAST) << objectName() << "Stream format found, defining buffers";
     newStreamParams();
-    m_streaming = true;
 }
 
 void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
@@ -215,8 +211,6 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
     if (m_closed) {
         return;
     }
-
-    m_waitForNewBuffers = false;
 
     struct spa_data *spa_data = pwBuffer->buffer->datas;
     if (spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
@@ -249,18 +243,6 @@ void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *pwBuffer)
         delete buffer;
         pwBuffer->user_data = nullptr;
     }
-}
-
-void ScreenCastStream::onStreamRenegotiateFormat(uint64_t)
-{
-    if (m_closed) {
-        return;
-    }
-
-    m_streaming = false; // pause streaming as we wait for the renegotiation
-    char buffer[2048];
-    auto params = buildFormats(false, buffer);
-    pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
 ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
@@ -300,9 +282,6 @@ ScreenCastStream::~ScreenCastStream()
 {
     m_closed = true;
 
-    if (m_pwRenegotiate) {
-        pw_loop_destroy_source(m_pwCore->pwMainLoop, m_pwRenegotiate);
-    }
     if (m_pwStream) {
         pw_stream_destroy(m_pwStream);
     }
@@ -322,13 +301,6 @@ bool ScreenCastStream::init()
         m_error = i18n("Failed to create PipeWire stream");
         return false;
     }
-
-    m_pwRenegotiate = pw_loop_add_event(
-        m_pwCore->pwMainLoop, [](void *data, uint64_t format) {
-            auto _this = static_cast<ScreenCastStream *>(data);
-            _this->onStreamRenegotiateFormat(format);
-        },
-        this);
 
     return true;
 }
@@ -412,7 +384,6 @@ void ScreenCastStream::close()
         return;
     }
 
-    m_streaming = false;
     m_closed = true;
     m_pendingFrame.stop();
 
@@ -431,8 +402,12 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     QRegion damagedRegion = _damagedRegion;
     Q_ASSERT(!m_closed);
 
-    if (!m_streaming) {
-        m_pendingDamages += damagedRegion;
+    const char *error = "";
+    auto state = pw_stream_get_state(m_pwStream, &error);
+    if (state != PW_STREAM_STATE_STREAMING) {
+        if (error) {
+            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: stream is not active" << error;
+        }
         return;
     }
 
@@ -450,28 +425,6 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     m_pendingDamages = {};
-
-    if (m_waitForNewBuffers) {
-        qCWarning(KWIN_SCREENCAST) << objectName() << "Waiting for new buffers to be created";
-        return;
-    }
-
-    const auto size = m_source->textureSize();
-    if (size != m_resolution) {
-        m_resolution = size;
-        m_waitForNewBuffers = true;
-        pw_loop_signal_event(m_pwCore->pwMainLoop, m_pwRenegotiate);
-        return;
-    }
-
-    const char *error = "";
-    auto state = pw_stream_get_state(m_pwStream, &error);
-    if (state != PW_STREAM_STATE_STREAMING) {
-        if (error) {
-            qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: stream is not active" << error;
-        }
-        return;
-    }
 
     struct pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
     if (!pwBuffer) {
@@ -525,7 +478,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
                 const QRectF cursorRect = scaledRect(cursor->geometry().translated(-m_cursor.viewport.topLeft()), m_cursor.scale);
                 QMatrix4x4 mvp;
                 mvp.scale(1, -1);
-                mvp.ortho(QRectF(QPointF(0, 0), size));
+                mvp.ortho(QRectF(QPointF(0, 0), dmabuf->texture->size()));
                 mvp.translate(cursorRect.x(), cursorRect.y());
                 shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
 
@@ -560,6 +513,20 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     addDamage(spa_buffer, damagedRegion);
     addHeader(spa_buffer);
     enqueue(pwBuffer);
+
+    resize(m_source->textureSize());
+}
+
+void ScreenCastStream::resize(const QSize &resolution)
+{
+    if (m_resolution == resolution) {
+        return;
+    }
+    m_resolution = resolution;
+
+    char buffer[2048];
+    auto params = buildFormats(false, buffer);
+    pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
 void ScreenCastStream::addHeader(spa_buffer *spaBuffer)
@@ -616,9 +583,6 @@ void ScreenCastStream::invalidateCursor()
 void ScreenCastStream::recordCursor()
 {
     Q_ASSERT(!m_closed);
-    if (!m_streaming) {
-        return;
-    }
 
     const char *error = "";
     auto state = pw_stream_get_state(m_pwStream, &error);
