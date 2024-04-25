@@ -3539,14 +3539,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
         checkWorkspacePosition(); // Just in case it's a different screen
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
-        Tile *tile = nullptr;
-        if (keyboard) {
-            tile = workspace()->tileManager(output())->bestTileForPosition(moveResizeGeometry().center());
-        } else {
-            Output *output = workspace()->outputAt(Cursors::self()->mouse()->pos());
-            tile = workspace()->tileManager(output)->bestTileForPosition(Cursors::self()->mouse()->pos());
-        }
-        setTile(tile);
+        setTile(workspace()->tileManager(workspace()->outputAt(whichScreen))->bestTileForPosition(whichScreen));
     } else {
         // Use whichScreen to move to next screen when retiling to the same edge as the old behavior
         Output *output = workspace()->outputAt(whichScreen);

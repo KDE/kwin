@@ -119,10 +119,15 @@ void PlacementTracker::restore(const QString &key)
                 // setting the desired quick tile mode
                 // TODO fix this more properly
                 window->setQuickTileMode(QuickTileFlag::None, true);
-                window->setQuickTileMode(newData.quickTile, true);
+                if (newData.quickTile != QuickTileFlag::Custom) {
+                    window->setQuickTileMode(newData.quickTile, true);
+                }
                 window->setMaximize(newData.maximize & MaximizeMode::MaximizeVertical, newData.maximize & MaximizeMode::MaximizeHorizontal);
                 window->setFullScreen(newData.fullscreen);
                 window->moveResize(newData.geometry);
+                if (newData.quickTile == QuickTileFlag::Custom) {
+                    window->setQuickTileMode(QuickTileFlag::Custom, true);
+                }
                 window->setGeometryRestore(newData.geometryRestore);
                 window->setFullscreenGeometryRestore(newData.fullscreenGeometryRestore);
                 m_lastRestoreData[window] = dataForWindow(window);
