@@ -437,7 +437,7 @@ void ScreenCastStream::recordFrame(const QRegion &_damagedRegion)
     }
 
     if (m_videoFormat.max_framerate.num != 0 && !m_lastSent.isNull()) {
-        auto frameInterval = (1000. * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
+        auto frameInterval = (1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
         auto lastSentAgo = m_lastSent.msecsTo(QDateTime::currentDateTimeUtc());
         if (lastSentAgo < frameInterval) {
             m_pendingDamages += damagedRegion;
