@@ -555,7 +555,7 @@ void ZoomEffect::moveMouseToFocus()
 
 void ZoomEffect::moveMouseToCenter()
 {
-    const QRect r = effects->virtualScreenGeometry();
+    const QRect r = effects->activeScreen()->geometry();
     QCursor::setPos(r.x() + r.width() / 2, r.y() + r.height() / 2);
 }
 
