@@ -799,7 +799,6 @@ void Workspace::addWaylandWindow(Window *window)
     window->updateLayer();
 
     if (window->isPlaceable()) {
-        const QRectF area = clientArea(PlacementArea, window, activeOutput());
         bool placementDone = false;
         if (window->isRequestedFullScreen()) {
             placementDone = true;
@@ -811,6 +810,7 @@ void Workspace::addWaylandWindow(Window *window)
             placementDone = true;
         }
         if (!placementDone) {
+            const QRectF area = clientArea(PlacementArea, window, activeOutput());
             m_placement->place(window, area);
         }
     }
