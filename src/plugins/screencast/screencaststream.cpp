@@ -219,7 +219,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
     m_waitForNewBuffers = false;
 
     struct spa_data *spa_data = pwBuffer->buffer->datas;
-    if (spa_data[0].type != SPA_ID_INVALID && spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
+    if (spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
         Q_ASSERT(m_dmabufParams);
         if (auto dmabuf = DmaBufScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
                                                                        .size = QSize(m_dmabufParams->width, m_dmabufParams->height),
@@ -231,7 +231,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
         }
     }
 
-    if (spa_data->type & (1 << SPA_DATA_MemFd)) {
+    if (spa_data[0].type & (1 << SPA_DATA_MemFd)) {
         if (auto memfd = MemFdScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
                                                                      .size = m_resolution,
                                                                      .format = m_drmFormat,
