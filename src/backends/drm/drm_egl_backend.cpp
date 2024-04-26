@@ -28,8 +28,7 @@ namespace KWin
 {
 
 EglGbmBackend::EglGbmBackend(DrmBackend *drmBackend)
-    : AbstractEglBackend(drmBackend->primaryGpu()->drmDevice()->deviceId())
-    , m_backend(drmBackend)
+    : m_backend(drmBackend)
 {
     drmBackend->setRenderBackend(this);
     connect(m_backend, &DrmBackend::gpuRemoved, this, [this](DrmGpu *gpu) {

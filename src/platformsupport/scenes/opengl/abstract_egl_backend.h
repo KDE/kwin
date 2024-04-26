@@ -40,7 +40,6 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedFormats() const override;
 
     QList<LinuxDmaBufV1Feedback::Tranche> tranches() const;
-    dev_t deviceId() const;
 
     std::shared_ptr<GLTexture> importDmaBufAsTexture(const DmaBufAttributes &attributes) const;
     EGLImageKHR importDmaBufAsImage(const DmaBufAttributes &attributes) const;
@@ -49,7 +48,7 @@ public:
     EGLImageKHR importBufferAsImage(GraphicsBuffer *buffer, int plane, int format, const QSize &size);
 
 protected:
-    AbstractEglBackend(dev_t deviceId = 0);
+    AbstractEglBackend();
     void cleanup();
     virtual void cleanupSurfaces();
     void setEglDisplay(EglDisplay *display);
@@ -67,7 +66,6 @@ protected:
     EglDisplay *m_display = nullptr;
     std::shared_ptr<EglContext> m_context;
     QList<QByteArray> m_clientExtensions;
-    const dev_t m_deviceId;
     QList<LinuxDmaBufV1Feedback::Tranche> m_tranches;
     QHash<std::pair<GraphicsBuffer *, int>, EGLImageKHR> m_importedBuffers;
 };
