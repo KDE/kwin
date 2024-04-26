@@ -915,6 +915,10 @@ QList<OutputInterface *> SurfaceInterface::outputs() const
 
 void SurfaceInterface::setOutputs(const QList<OutputInterface *> &outputs, OutputInterface *primaryOutput)
 {
+    if (d->outputs == outputs && d->primaryOutput == primaryOutput) {
+        return;
+    }
+
     QList<OutputInterface *> removedOutputs = d->outputs;
     for (auto it = outputs.constBegin(), end = outputs.constEnd(); it != end; ++it) {
         const auto o = *it;
