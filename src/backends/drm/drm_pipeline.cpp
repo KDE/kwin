@@ -493,7 +493,11 @@ QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats(DrmPlane::TypeIndex planeT
             return legacyCursorFormats;
         }
     case DrmPlane::TypeIndex::Overlay:
-        return {};
+        if (m_pending.crtc && m_pending.crtc->overlayPlane()) {
+            return m_pending.crtc->overlayPlane()->formats();
+        } else {
+            return {};
+        }
     }
     Q_UNREACHABLE();
 }
