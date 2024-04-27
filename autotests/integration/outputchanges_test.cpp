@@ -45,6 +45,8 @@ private Q_SLOTS:
     void testMaximizeStateRestoredAfterEnablingOutput_data();
     void testMaximizeStateRestoredAfterEnablingOutput();
     void testInvalidGeometryRestoreAfterEnablingOutput();
+    void testMaximizedWindowDoesntDisappear_data();
+    void testMaximizedWindowDoesntDisappear();
 
     void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
     void testLaptopLidClosed();
@@ -697,6 +699,90 @@ void OutputChangesTest::testInvalidGeometryRestoreAfterEnablingOutput()
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
     QCOMPARE(window->geometryRestore(), rightGeometryRestore);
+}
+
+void OutputChangesTest::testMaximizedWindowDoesntDisappear_data()
+{
+    QTest::addColumn<MaximizeMode>("maximizeMode");
+    QTest::addRow("Vertical Maximization") << MaximizeMode::MaximizeVertical;
+    QTest::addRow("Horizontal Maximization") << MaximizeMode::MaximizeHorizontal;
+    QTest::addRow("Full Maximization") << MaximizeMode::MaximizeFull;
+}
+
+void OutputChangesTest::testMaximizedWindowDoesntDisappear()
+{
+    // This test verifies that (vertically, horizontally) maximized windows don't get placed out of the screen
+    // when the output they're on gets disabled or removed
+
+    Test::setOutputConfig({
+        Test::OutputInfo{
+            .geometry = QRect(5120 / 3, 1440, 2256 / 1.3, 1504 / 1.3),
+            .scale = 1.3,
+            .internal = true,
+        },
+        Test::OutputInfo{
+            .geometry = QRect(0, 0, 5120, 1440),
+            .scale = 1,
+            .internal = false,
+        },
+    });
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    QFETCH(MaximizeMode, maximizeMode);
+
+    workspace()->setActiveOutput(outputs[1]);
+
+    // Create a window.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(500, 300), Qt::blue);
+    QVERIFY(window);
+
+    // kwin will send a configure event with the actived state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    window->move(outputs[1]->geometry().topLeft() + QPoint(3500, 500));
+    const QRectF originalGeometry = window->frameGeometry();
+    QVERIFY(outputs[1]->geometryF().contains(originalGeometry));
+
+    // vertically maximize the window
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    window->maximize(maximizeMode);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+
+    QCOMPARE(window->output(), outputs[1]);
+    const auto maximizedGeometry = window->moveResizeGeometry();
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
+    QCOMPARE(window->maximizeMode(), maximizeMode);
+    QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
+    QCOMPARE(window->geometryRestore(), originalGeometry);
+
+    // Disable the top output
+    {
+        OutputConfiguration config;
+        auto changeSet0 = config.changeSet(outputs[0]);
+        changeSet0->pos = QPoint(0, 0);
+        auto changeSet = config.changeSet(outputs[1]);
+        changeSet->enabled = false;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    // The window should be moved to the left output
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+
+    QCOMPARE(window->output(), outputs[0]);
+    QVERIFY(outputs[0]->geometryF().contains(window->frameGeometry()));
+    QVERIFY(outputs[0]->geometryF().contains(window->moveResizeGeometry()));
+    QCOMPARE(window->maximizeMode(), maximizeMode);
+    QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
 }
 
 void OutputChangesTest::testLaptopLidClosed()
