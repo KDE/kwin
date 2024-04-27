@@ -7,10 +7,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "drm_plane.h"
 #include "drm_render_backend.h"
-#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
-
 #include "opengl/glutils.h"
+#include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 
 #include <QHash>
 #include <QPointer>
@@ -51,8 +51,7 @@ public:
     OutputLayer *cursorLayer(Output *output) override;
 
     void init() override;
-    std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
-    std::shared_ptr<DrmPipelineLayer> createCursorLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) override;
     std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
     std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> textureForOutput(Output *requestedOutput) const override;

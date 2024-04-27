@@ -12,7 +12,6 @@
 #include "core/syncobjtimeline.h"
 #include "drm_abstract_output.h"
 #include "drm_backend.h"
-#include "drm_egl_cursor_layer.h"
 #include "drm_egl_layer.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -167,14 +166,9 @@ std::pair<std::shared_ptr<KWin::GLTexture>, ColorDescription> EglGbmBackend::tex
     return std::make_pair(layer->texture(), layer->colorDescription());
 }
 
-std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createPrimaryLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
 {
-    return std::make_shared<EglGbmLayer>(this, pipeline);
-}
-
-std::shared_ptr<DrmPipelineLayer> EglGbmBackend::createCursorLayer(DrmPipeline *pipeline)
-{
-    return std::make_shared<EglGbmCursorLayer>(this, pipeline);
+    return std::make_shared<EglGbmLayer>(this, pipeline, type);
 }
 
 std::shared_ptr<DrmOutputLayer> EglGbmBackend::createLayer(DrmVirtualOutput *output)

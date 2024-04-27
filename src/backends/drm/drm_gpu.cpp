@@ -290,7 +290,7 @@ bool DrmGpu::updateOutputs()
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
-            pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
+            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
             pipeline->setActive(!conn->isNonDesktop());
             pipeline->applyPendingChanges();
         }
@@ -831,7 +831,7 @@ void DrmGpu::releaseBuffers()
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : std::as_const(m_pipelines)) {
-        pipeline->setLayers(m_platform->renderBackend()->createPrimaryLayer(pipeline), m_platform->renderBackend()->createCursorLayer(pipeline));
+        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
         pipeline->applyPendingChanges();
     }
     for (const auto &output : std::as_const(m_virtualOutputs)) {

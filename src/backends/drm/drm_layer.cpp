@@ -30,9 +30,10 @@ std::shared_ptr<GLTexture> DrmOutputLayer::texture() const
     return nullptr;
 }
 
-DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline)
+DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
     : DrmOutputLayer(pipeline->output())
     , m_pipeline(pipeline)
+    , m_type(type)
 {
 }
 }

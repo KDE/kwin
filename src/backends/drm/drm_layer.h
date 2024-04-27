@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "core/outputlayer.h"
+#include "drm_plane.h"
 
 #include <QRegion>
 #include <memory>
@@ -34,12 +35,13 @@ public:
 class DrmPipelineLayer : public DrmOutputLayer
 {
 public:
-    DrmPipelineLayer(DrmPipeline *pipeline);
+    explicit DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type);
 
     virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
 
 protected:
     DrmPipeline *const m_pipeline;
+    const DrmPlane::TypeIndex m_type;
 };
 }

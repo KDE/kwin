@@ -25,7 +25,7 @@ class DrmFramebuffer;
 class DrmQPainterLayer : public DrmPipelineLayer
 {
 public:
-    DrmQPainterLayer(DrmPipeline *pipeline);
+    explicit DrmQPainterLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -47,33 +47,10 @@ private:
     std::chrono::nanoseconds m_renderTime;
 };
 
-class DrmCursorQPainterLayer : public DrmPipelineLayer
-{
-public:
-    DrmCursorQPainterLayer(DrmPipeline *pipeline);
-
-    std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
-    bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
-
-    bool checkTestBuffer() override;
-    std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
-    void releaseBuffers() override;
-    std::chrono::nanoseconds queryRenderTime() const override;
-    DrmDevice *scanoutDevice() const override;
-    QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
-
-private:
-    std::shared_ptr<QPainterSwapchain> m_swapchain;
-    std::shared_ptr<QPainterSwapchainSlot> m_currentBuffer;
-    std::shared_ptr<DrmFramebuffer> m_currentFramebuffer;
-    std::chrono::steady_clock::time_point m_renderStart;
-    std::chrono::nanoseconds m_renderTime;
-};
-
 class DrmVirtualQPainterLayer : public DrmOutputLayer
 {
 public:
-    DrmVirtualQPainterLayer(DrmVirtualOutput *output);
+    explicit DrmVirtualQPainterLayer(DrmVirtualOutput *output);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;

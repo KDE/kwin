@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "drm_plane.h"
 
 #include <memory>
 
@@ -24,8 +25,7 @@ class DrmRenderBackend
 public:
     virtual ~DrmRenderBackend() = default;
 
-    virtual std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) = 0;
-    virtual std::shared_ptr<DrmPipelineLayer> createCursorLayer(DrmPipeline *pipeline) = 0;
+    virtual std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) = 0;
     virtual std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) = 0;
 };
 

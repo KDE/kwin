@@ -481,18 +481,21 @@ DrmOutput *DrmPipeline::output() const
     return m_output;
 }
 
-QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats() const
+QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats(DrmPlane::TypeIndex planeType) const
 {
-    return m_pending.formats;
-}
-
-QHash<uint32_t, QList<uint64_t>> DrmPipeline::cursorFormats() const
-{
-    if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
-        return m_pending.crtc->cursorPlane()->formats();
-    } else {
-        return legacyCursorFormats;
+    switch (planeType) {
+    case DrmPlane::TypeIndex::Primary:
+        return m_pending.formats;
+    case DrmPlane::TypeIndex::Cursor:
+        if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
+            return m_pending.crtc->cursorPlane()->formats();
+        } else {
+            return legacyCursorFormats;
+        }
+    case DrmPlane::TypeIndex::Overlay:
+        return {};
     }
+    Q_UNREACHABLE();
 }
 
 bool DrmPipeline::hasCTM() const

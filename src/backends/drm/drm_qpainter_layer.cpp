@@ -21,8 +21,8 @@
 namespace KWin
 {
 
-DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
+DrmQPainterLayer::DrmQPainterLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
+    : DrmPipelineLayer(pipeline, type)
 {
 }
 
@@ -103,69 +103,7 @@ DrmDevice *DrmQPainterLayer::scanoutDevice() const
 
 QHash<uint32_t, QList<uint64_t>> DrmQPainterLayer::supportedDrmFormats() const
 {
-    return m_pipeline->formats();
-}
-
-DrmCursorQPainterLayer::DrmCursorQPainterLayer(DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
-{
-}
-
-std::optional<OutputLayerBeginFrameInfo> DrmCursorQPainterLayer::doBeginFrame()
-{
-    if (!m_swapchain) {
-        m_swapchain = std::make_shared<QPainterSwapchain>(m_pipeline->gpu()->drmDevice()->allocator(), m_pipeline->gpu()->cursorSize(), DRM_FORMAT_ARGB8888);
-    }
-    m_currentBuffer = m_swapchain->acquire();
-    if (!m_currentBuffer) {
-        return std::nullopt;
-    }
-    m_renderStart = std::chrono::steady_clock::now();
-    return OutputLayerBeginFrameInfo{
-        .renderTarget = RenderTarget(m_currentBuffer->view()->image()),
-        .repaint = infiniteRegion(),
-    };
-}
-
-bool DrmCursorQPainterLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
-{
-    m_renderTime = std::chrono::steady_clock::now() - m_renderStart;
-    m_currentFramebuffer = m_pipeline->gpu()->importBuffer(m_currentBuffer->buffer(), FileDescriptor{});
-    m_swapchain->release(m_currentBuffer);
-    if (!m_currentFramebuffer) {
-        qCWarning(KWIN_DRM, "Failed to create dumb framebuffer for the cursor: %s", strerror(errno));
-    }
-    return m_currentFramebuffer != nullptr;
-}
-
-bool DrmCursorQPainterLayer::checkTestBuffer()
-{
-    return false;
-}
-
-std::shared_ptr<DrmFramebuffer> DrmCursorQPainterLayer::currentBuffer() const
-{
-    return m_currentFramebuffer;
-}
-
-void DrmCursorQPainterLayer::releaseBuffers()
-{
-    m_swapchain.reset();
-}
-
-std::chrono::nanoseconds DrmCursorQPainterLayer::queryRenderTime() const
-{
-    return m_renderTime;
-}
-
-DrmDevice *DrmCursorQPainterLayer::scanoutDevice() const
-{
-    return m_pipeline->gpu()->drmDevice();
-}
-
-QHash<uint32_t, QList<uint64_t>> DrmCursorQPainterLayer::supportedDrmFormats() const
-{
-    return m_pipeline->cursorFormats();
+    return m_pipeline->formats(m_type);
 }
 
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)

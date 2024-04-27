@@ -27,17 +27,34 @@
 namespace KWin
 {
 
-EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline)
-    : DrmPipelineLayer(pipeline)
-    , m_surface(pipeline->gpu(), eglBackend)
+static EglGbmLayerSurface::BufferTarget targetFor(DrmPipeline *pipeline, DrmPlane::TypeIndex planeType)
+{
+    if (planeType != DrmPlane::TypeIndex::Cursor) {
+        return EglGbmLayerSurface::BufferTarget::Normal;
+    }
+    if (pipeline->gpu()->atomicModeSetting() && !pipeline->gpu()->isVirtualMachine()) {
+        return EglGbmLayerSurface::BufferTarget::Linear;
+    }
+    return EglGbmLayerSurface::BufferTarget::Dumb;
+}
+
+EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPlane::TypeIndex type)
+    : DrmPipelineLayer(pipeline, type)
+    , m_surface(pipeline->gpu(), eglBackend, targetFor(pipeline, type), type == DrmPlane::TypeIndex::Primary ? EglGbmLayerSurface::FormatOption::PreferAlpha : EglGbmLayerSurface::FormatOption::RequireAlpha)
 {
 }
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
-    m_scanoutBuffer.reset();
+    if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->amdgpuVrrWorkaroundActive()) {
+        return std::nullopt;
+    }
+    // note that this allows blending to happen in sRGB or PQ encoding with the cursor plane.
+    // That's technically incorrect, but it looks okay and is intentionally allowed
+    // as the hardware cursor is more important than an incorrectly blended cursor edge
 
-    return m_surface.startRendering(m_pipeline->mode()->size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
+    m_scanoutBuffer.reset();
+    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion)
@@ -47,7 +64,7 @@ bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damag
 
 bool EglGbmLayer::checkTestBuffer()
 {
-    return m_surface.renderTestBuffer(m_pipeline->mode()->size(), m_pipeline->formats()) != nullptr;
+    return m_surface.renderTestBuffer(targetRect().size(), m_pipeline->formats(m_type)) != nullptr;
 }
 
 std::shared_ptr<GLTexture> EglGbmLayer::texture() const
@@ -83,7 +100,7 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (sourceRect() != sourceRect().toRect()) {
         return false;
     }
-    const auto plane = m_pipeline->crtc()->primaryPlane();
+    const auto plane = m_type == DrmPlane::TypeIndex::Primary ? m_pipeline->crtc()->primaryPlane() : m_pipeline->crtc()->cursorPlane();
     if (offloadTransform() != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(offloadTransform()))) {
         return false;
     }
@@ -124,6 +141,11 @@ DrmDevice *EglGbmLayer::scanoutDevice() const
 
 QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedDrmFormats() const
 {
-    return m_pipeline->formats();
+    return m_pipeline->formats(m_type);
+}
+
+std::optional<QSize> EglGbmLayer::fixedSize() const
+{
+    return m_type == DrmPlane::TypeIndex::Cursor ? std::make_optional(m_pipeline->gpu()->cursorSize()) : std::nullopt;
 }
 }

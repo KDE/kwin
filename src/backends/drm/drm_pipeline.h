@@ -93,8 +93,7 @@ public:
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
 
-    QHash<uint32_t, QList<uint64_t>> formats() const;
-    QHash<uint32_t, QList<uint64_t>> cursorFormats() const;
+    QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
     bool hasCTM() const;
     bool hasGammaRamp() const;
     bool pruneModifier();

@@ -34,8 +34,7 @@ public:
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 
-    std::shared_ptr<DrmPipelineLayer> createPrimaryLayer(DrmPipeline *pipeline) override;
-    std::shared_ptr<DrmPipelineLayer> createCursorLayer(DrmPipeline *pipeline) override;
+    std::shared_ptr<DrmPipelineLayer> createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type) override;
     std::shared_ptr<DrmOutputLayer> createLayer(DrmVirtualOutput *output) override;
 
 private:

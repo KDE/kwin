@@ -8,7 +8,6 @@ target_sources(kwin PRIVATE
     drm_connector.cpp
     drm_crtc.cpp
     drm_egl_backend.cpp
-    drm_egl_cursor_layer.cpp
     drm_egl_layer.cpp
     drm_egl_layer_surface.cpp
     drm_gpu.cpp

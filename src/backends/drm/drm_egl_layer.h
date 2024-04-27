@@ -25,7 +25,7 @@ class EglGbmBackend;
 class EglGbmLayer : public DrmPipelineLayer
 {
 public:
-    EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline);
+    explicit EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPlane::TypeIndex type);
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion) override;
@@ -37,6 +37,7 @@ public:
     std::chrono::nanoseconds queryRenderTime() const override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
+    std::optional<QSize> fixedSize() const override;
 
 private:
     bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;

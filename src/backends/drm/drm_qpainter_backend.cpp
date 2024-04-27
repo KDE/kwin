@@ -52,14 +52,9 @@ OutputLayer *DrmQPainterBackend::cursorLayer(Output *output)
     return static_cast<DrmAbstractOutput *>(output)->cursorLayer();
 }
 
-std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createPrimaryLayer(DrmPipeline *pipeline)
+std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createDrmPlaneLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex type)
 {
-    return std::make_shared<DrmQPainterLayer>(pipeline);
-}
-
-std::shared_ptr<DrmPipelineLayer> DrmQPainterBackend::createCursorLayer(DrmPipeline *pipeline)
-{
-    return std::make_shared<DrmCursorQPainterLayer>(pipeline);
+    return std::make_shared<DrmQPainterLayer>(pipeline, type);
 }
 
 std::shared_ptr<DrmOutputLayer> DrmQPainterBackend::createLayer(DrmVirtualOutput *output)
