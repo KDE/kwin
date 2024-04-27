@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2022-12-23 10:32+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -62,40 +62,39 @@ msgstr "Ошибка при сохранении параметров в ком�
 msgid "There was an error requesting information from the compositor."
 msgstr "Ошибка при выполнении запроса информации из компоновщика."
 
-#: ui/main.qml:30
-#, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "%1 строка"
-msgstr[1] "%1 строки"
-msgstr[2] "%1 строк"
-msgstr[3] "1 строка"
+#: ui/main.qml:26
+#, fuzzy, kde-format
+#| msgid "Rows:"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr "Рядов:"
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgid "New Desktop"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "Добавить"
+msgid "Add Desktop"
+msgstr "Новый рабочий стол"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Переименовать"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Подтвердить переименование"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Удалить"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -104,40 +103,51 @@ msgstr ""
 "Параметры рабочих столов были изменены другим приложением. При сохранении "
 "параметров в этом окне будут проигнорированы сторонние изменения."
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "Строка %1"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "Параметры:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "С переходом по циклу"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Анимация при переключении:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Показывать экранное уведомление при переключении:"
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 мс"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Схематический обзор всех рабочих столов"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "%1 строка"
+#~ msgstr[1] "%1 строки"
+#~ msgstr[2] "%1 строк"
+#~ msgstr[3] "1 строка"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "Добавить"
 
 #~ msgid ""
 #~ "This module lets you configure the navigation, number and layout of "
@@ -148,12 +158,6 @@ msgstr "Схематический обзор всех рабочих столо
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "Рабочие столы"
-
-#~ msgid "New Desktop"
-#~ msgstr "Новый рабочий стол"
-
-#~ msgid "Rows:"
-#~ msgstr "Рядов:"
 
 #~ msgid "Configure Virtual Desktops"
 #~ msgstr "Настройка рабочих столов"

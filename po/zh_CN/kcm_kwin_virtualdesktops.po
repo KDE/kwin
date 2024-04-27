@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -49,74 +49,85 @@ msgstr "保存显示特效合成器设置时出错。"
 msgid "There was an error requesting information from the compositor."
 msgstr "获取显示特效合成器信息时出错。"
 
-#: ui/main.qml:30
+#: ui/main.qml:26
 #, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "%1 行"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr ""
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgctxt "A numbered name for virtual desktops"
+#| msgid "Desktop %1"
+#| msgid_plural "Desktop %1"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "添加"
+msgid "Add Desktop"
+msgstr "桌面 %1"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "重命名"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "确认新名称"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "移除"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr "虚拟桌面已在此设置程序外部进行了更改。现在保存将覆盖之前的更改。"
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "行 %1"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "选项："
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "循环切换"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切换时显示动画："
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切换时显示屏幕提示："
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 毫秒"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "显示桌面布局指示图"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "%1 行"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "添加"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2023-01-08 18:01+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -49,37 +49,40 @@ msgstr "Đã có lỗi khi lưu thiết lập vào trình kết hợp."
 msgid "There was an error requesting information from the compositor."
 msgstr "Đã có lỗi khi yêu cầu thông tin từ trình kết hợp."
 
-#: ui/main.qml:30
+#: ui/main.qml:26
 #, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "%1 hàng"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr ""
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgctxt "A numbered name for virtual desktops"
+#| msgid "Desktop %1"
+#| msgid_plural "Desktop %1"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "Thêm"
+msgid "Add Desktop"
+msgstr "Bàn làm việc %1"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Đổi tên"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Xác nhận tên mới"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Bỏ"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -88,40 +91,48 @@ msgstr ""
 "Các bàn làm việc ảo đã bị thay đổi bên ngoài ứng dụng thiết lập này. Việc "
 "lưu bây giờ sẽ ghi đè lên các thay đổi đó."
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "Hàng %1"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "Lựa chọn:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Điều hướng xoay vòng lặp lại"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Hiện hiệu ứng động khi chuyển:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Hiện ô hiện nổi khi chuyển:"
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Hiện các chỉ dấu bố cục bàn làm việc"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "%1 hàng"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "Thêm"
 
 #~ msgid ""
 #~ "This module lets you configure the navigation, number and layout of "

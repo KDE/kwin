@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2024-01-06 01:31+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -51,37 +51,40 @@ msgstr "コンポジタ設定の保存中にエラーが発生しました。"
 msgid "There was an error requesting information from the compositor."
 msgstr "コンポジタからの情報の取得中にエラーが発生しました。"
 
-#: ui/main.qml:30
+#: ui/main.qml:26
 #, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "%1 列"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr ""
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgctxt "A numbered name for virtual desktops"
+#| msgid "Desktop %1"
+#| msgid_plural "Desktop %1"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "追加"
+msgid "Add Desktop"
+msgstr "デスクトップ %1"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "名前変更"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "新しい名前を確定"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "削除"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -90,37 +93,45 @@ msgstr ""
 "この設定アプリケーション以外で仮想デスクトップが変更されました。今すぐ保存す"
 "ると、変更が上書きされます。"
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "%1 列目"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "オプション:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "ナビゲーションを循環させる"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切り替え時にアニメーションを表示:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切り替え時にオンスクリーンディスプレイを表示:"
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ミリ秒"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "デスクトップ配置インジケータを表示する"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "%1 列"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "追加"

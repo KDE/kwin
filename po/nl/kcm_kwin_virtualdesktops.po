@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2022-12-15 10:44+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -52,38 +52,41 @@ msgstr ""
 "Er deed zich een fout voor tijdens het vragen van informatie uit de "
 "opsteller."
 
-#: ui/main.qml:30
-#, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "1 rij"
-msgstr[1] "%1 rijen"
+#: ui/main.qml:26
+#, fuzzy, kde-format
+#| msgid "Rows:"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr "Rijen:"
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgctxt "A numbered name for virtual desktops"
+#| msgid "Desktop %1"
+#| msgid_plural "Desktop %1"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "Toevoegen"
+msgid "Add Desktop"
+msgstr "Bureaublad %1"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Hernoemen"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Nieuwe naam bevestigen"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -92,40 +95,49 @@ msgstr ""
 "Virtuele bureaubladen zijn gewijzigd buiten deze toepassing voor instellen. "
 "Nu opslaan zal de wijzigingen overschrijven."
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "Rij %1"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "Opties:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Doorlopende navigatie"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Animatie tonen bij omschakelen:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "On-screen-display tonen bij omschakelen:"
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Indicatoren voor bureaubladindeling tonen"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "1 rij"
+#~ msgstr[1] "%1 rijen"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "Toevoegen"
 
 #~ msgid ""
 #~ "This module lets you configure the navigation, number and layout of "
@@ -136,9 +148,6 @@ msgstr "Indicatoren voor bureaubladindeling tonen"
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "Virtuele bureaubladen"
-
-#~ msgid "Rows:"
-#~ msgstr "Rijen:"
 
 #~ msgid "Configure Virtual Desktops"
 #~ msgstr "Virtuele bureaubladen configureren"

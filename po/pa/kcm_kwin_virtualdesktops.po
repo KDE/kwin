@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2024-01-28 15:23-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -51,84 +51,90 @@ msgstr "ਕੰਪੋਜ਼ਟਰ ਨਾਲ ਸੈਟਿੰਗਾਂ ਸੰਭਾਲ
 msgid "There was an error requesting information from the compositor."
 msgstr ""
 
-#: ui/main.qml:30
+#: ui/main.qml:26
 #, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "1 ਕਤਾਰ"
-msgstr[1] "%1 ਕਤਾਰਾਂ"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr ""
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgid "New Desktop"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "ਜੋੜੋ"
+msgid "Add Desktop"
+msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "ਨਾਂ ਬਦਲੋ"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "ਨਵੇਂ ਨਾਂ ਦੀ ਤਸਦੀਕ ਕਰੋ"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "ਹਟਾਓ"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "ਕਤਾਰ %1"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "ਚੋਣਾਂ:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "ਨੇਵੀਗੇਸ਼ਨ ਪਾਸਿਓ ਸਮੇਟੋ"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr ""
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr ""
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ਮਿਲੀਸਕਿੰਟ"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "ਡੈਸਕਟਾਪ ਲੇਆਉਟ ਇੰਡੀਕੇਟਰ ਵੇਖੋ"
 
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "1 ਕਤਾਰ"
+#~ msgstr[1] "%1 ਕਤਾਰਾਂ"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "ਜੋੜੋ"
+
 #~ msgid "Virtual Desktops"
 #~ msgstr "ਫ਼ਰਜ਼ੀ ਡੈਸਕਟਾਪ"
-
-#~ msgid "New Desktop"
-#~ msgstr "ਨਵਾਂ ਡੈਸਕਟਾਪ"
 
 #~ msgid "Desktop %1:"
 #~ msgstr "ਡੈਸਕਟਾਪ %1:"

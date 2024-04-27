@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2022-12-15 03:17+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -53,38 +53,39 @@ msgstr "Ha ocurrido un error al guardar las preferencias en el compositor."
 msgid "There was an error requesting information from the compositor."
 msgstr "Ha ocurrido un error al solicitar información del compositor."
 
-#: ui/main.qml:30
-#, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "1 fila"
-msgstr[1] "%1 filas"
+#: ui/main.qml:26
+#, fuzzy, kde-format
+#| msgid "Rows:"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr "Filas:"
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgid "New Desktop"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "Añadir"
+msgid "Add Desktop"
+msgstr "Nuevo escritorio"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Cambiar nombre"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Confirmar nuevo nombre"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -94,40 +95,49 @@ msgstr ""
 "de preferencias. Si guarda ahora estas preferencias se sobrescribirán las "
 "modificaciones."
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "Fila %1"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "Opciones:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navegación cíclica"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostrar animación al cambiar:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostrar información en la pantalla al cambiar:"
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar indicadores de disposición de escritorio"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "1 fila"
+#~ msgstr[1] "%1 filas"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "Añadir"
 
 #~ msgid ""
 #~ "This module lets you configure the navigation, number and layout of "
@@ -138,12 +148,6 @@ msgstr "Mostrar indicadores de disposición de escritorio"
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "Escritorios virtuales"
-
-#~ msgid "New Desktop"
-#~ msgstr "Nuevo escritorio"
-
-#~ msgid "Rows:"
-#~ msgstr "Filas:"
 
 #~ msgid "Configure Virtual Desktops"
 #~ msgstr "Configurar los escritorios virtuales"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-08 00:39+0000\n"
+"POT-Creation-Date: 2024-04-27 00:39+0000\n"
 "PO-Revision-Date: 2023-07-23 21:06+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -49,37 +49,39 @@ msgstr "컴포지터에 설정을 저장하는 중 오류가 발생했습니다.
 msgid "There was an error requesting information from the compositor."
 msgstr "컴포지터에 정보를 요청하는 중 오류가 발생했습니다."
 
-#: ui/main.qml:30
-#, kde-format
-msgid "1 Row"
-msgid_plural "%1 Rows"
-msgstr[0] "%1열"
+#: ui/main.qml:26
+#, fuzzy, kde-format
+#| msgid "Rows:"
+msgctxt "@text:label Number of rows, label associated to a number input field"
+msgid "Rows:"
+msgstr "줄:"
 
-#: ui/main.qml:51
-#, kde-format
+#: ui/main.qml:54
+#, fuzzy, kde-format
+#| msgid "New Desktop"
 msgctxt "@action:button"
-msgid "Add"
-msgstr "추가"
+msgid "Add Desktop"
+msgstr "새 바탕 화면"
 
-#: ui/main.qml:115
+#: ui/main.qml:118
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "이름 바꾸기"
 
-#: ui/main.qml:127
+#: ui/main.qml:130
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "새 이름 확인"
 
-#: ui/main.qml:136
+#: ui/main.qml:139
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "삭제"
 
-#: ui/main.qml:169
+#: ui/main.qml:172
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -88,40 +90,48 @@ msgstr ""
 "가상 바탕 화면 설정이 이 앱 외부에서 변경되었습니다. 설정을 저장하면 해당 변"
 "경 사항을 덮어씁니다."
 
-#: ui/main.qml:185
+#: ui/main.qml:188
 #, kde-format
 msgid "Row %1"
 msgstr "%1줄"
 
-#: ui/main.qml:198
+#: ui/main.qml:201
 #, kde-format
 msgid "Options:"
 msgstr "옵션:"
 
-#: ui/main.qml:200
+#: ui/main.qml:203
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "탐색 시 끝에 도달했을 때 되돌아가기"
 
-#: ui/main.qml:218
+#: ui/main.qml:221
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "전환 시 사용할 애니메이션:"
 
-#: ui/main.qml:269
+#: ui/main.qml:272
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "전환 시 화면 상 표시 내용:"
 
-#: ui/main.qml:288
+#: ui/main.qml:291
 #, kde-format
 msgid "%1 ms"
 msgstr "%1밀리초"
 
-#: ui/main.qml:312
+#: ui/main.qml:315
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "바탕 화면 레이아웃 표시기 표시"
+
+#~ msgid "1 Row"
+#~ msgid_plural "%1 Rows"
+#~ msgstr[0] "%1열"
+
+#~ msgctxt "@action:button"
+#~ msgid "Add"
+#~ msgstr "추가"
 
 #~ msgid ""
 #~ "This module lets you configure the navigation, number and layout of "
@@ -131,12 +141,6 @@ msgstr "바탕 화면 레이아웃 표시기 표시"
 
 #~ msgid "Virtual Desktops"
 #~ msgstr "가상 바탕 화면"
-
-#~ msgid "New Desktop"
-#~ msgstr "새 바탕 화면"
-
-#~ msgid "Rows:"
-#~ msgstr "줄:"
 
 #~ msgid "Configure Virtual Desktops"
 #~ msgstr "가상 데스크톱 설정"
