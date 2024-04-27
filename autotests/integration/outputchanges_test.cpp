@@ -42,6 +42,7 @@ private Q_SLOTS:
     void testMaximizedWindowRestoredAfterEnablingOutput();
     void testFullScreenWindowRestoredAfterEnablingOutput();
     void testWindowRestoredAfterChangingScale();
+    void testMaximizeStateRestoredAfterEnablingOutput_data();
     void testMaximizeStateRestoredAfterEnablingOutput();
     void testInvalidGeometryRestoreAfterEnablingOutput();
 
@@ -502,10 +503,20 @@ void OutputChangesTest::testWindowRestoredAfterChangingScale()
     QCOMPARE(window->output(), output);
 }
 
+void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput_data()
+{
+    QTest::addColumn<MaximizeMode>("maximizeMode");
+    QTest::addRow("Vertical Maximization") << MaximizeMode::MaximizeVertical;
+    QTest::addRow("Horizontal Maximization") << MaximizeMode::MaximizeHorizontal;
+    QTest::addRow("Full Maximization") << MaximizeMode::MaximizeFull;
+}
+
 void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
 {
     // This test verifies that the window state will get restored after disabling and enabling an output,
     // even if its maximize state changed in the process
+
+    QFETCH(MaximizeMode, maximizeMode);
 
     const auto outputs = kwinApp()->outputBackend()->outputs();
 
@@ -541,17 +552,16 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
     // Move the window to the right monitor and make it maximized.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
-    window->maximize(MaximizeFull);
+    window->maximize(maximizeMode);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280, 1024));
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.get(), QSize(1280, 1024), Qt::blue);
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    const auto maximizedGeometry = window->moveResizeGeometry();
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
     QCOMPARE(window->output(), outputs[1]);
-    QCOMPARE(window->maximizeMode(), MaximizeFull);
-    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->maximizeMode(), maximizeMode);
+    QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
     QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
 
     // Disable the right output
@@ -584,15 +594,15 @@ void OutputChangesTest::testMaximizeStateRestoredAfterEnablingOutput()
 
     // The window will be moved back to the right monitor, maximized and the geometry restore will be updated
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), outputs[1]->geometry().size());
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), maximizedGeometry.size());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.get(), outputs[1]->geometry().size(), Qt::blue);
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), Qt::blue);
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
-    QCOMPARE(window->moveResizeGeometry(), QRectF(1280, 0, 1280, 1024));
+    QCOMPARE(window->frameGeometry(), maximizedGeometry);
+    QCOMPARE(window->moveResizeGeometry(), maximizedGeometry);
     QCOMPARE(window->output(), outputs[1]);
-    QCOMPARE(window->maximizeMode(), MaximizeFull);
-    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->maximizeMode(), maximizeMode);
+    QCOMPARE(window->requestedMaximizeMode(), maximizeMode);
     QCOMPARE(window->geometryRestore(), QRectF(1280 + 50, 100, 100, 50));
 }
 
