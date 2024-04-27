@@ -48,6 +48,7 @@ public:
 
     void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
+    OutputLayer *overlayLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 
     void init() override;

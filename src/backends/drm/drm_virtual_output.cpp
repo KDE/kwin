@@ -74,6 +74,11 @@ DrmOutputLayer *DrmVirtualOutput::primaryLayer() const
     return m_layer.get();
 }
 
+DrmOutputLayer *DrmVirtualOutput::overlayLayer() const
+{
+    return nullptr;
+}
+
 DrmOutputLayer *DrmVirtualOutput::cursorLayer() const
 {
     return nullptr;

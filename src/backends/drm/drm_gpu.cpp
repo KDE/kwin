@@ -178,12 +178,15 @@ void DrmGpu::initDrmResources()
         uint32_t crtcId = resources->crtcs[i];
         QList<DrmPlane *> primaryCandidates;
         QList<DrmPlane *> cursorCandidates;
+        QList<DrmPlane *> overlayCandidates;
         for (const auto &plane : m_planes) {
             if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
                 if (plane->type.enumValue() == DrmPlane::TypeIndex::Primary) {
                     primaryCandidates.push_back(plane.get());
                 } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
                     cursorCandidates.push_back(plane.get());
+                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Overlay) {
+                    overlayCandidates.push_back(plane.get());
                 }
             }
         }
@@ -210,13 +213,19 @@ void DrmGpu::initDrmResources()
         };
         DrmPlane *primary = findBestPlane(primaryCandidates);
         DrmPlane *cursor = findBestPlane(cursorCandidates);
-        assignedPlanes.push_back(primary);
+        DrmPlane *overlay = findBestPlane(overlayCandidates);
+        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary, cursor, overlay);
+        if (!crtc->init()) {
+            continue;
+        }
+        if (primary) {
+            assignedPlanes.push_back(primary);
+        }
         if (cursor) {
             assignedPlanes.push_back(cursor);
         }
-        auto crtc = std::make_unique<DrmCrtc>(this, crtcId, i, primary, cursor);
-        if (!crtc->init()) {
-            continue;
+        if (overlay) {
+            assignedPlanes.push_back(overlay);
         }
         m_allObjects << crtc.get();
         m_crtcs.push_back(std::move(crtc));
@@ -295,7 +304,9 @@ bool DrmGpu::updateOutputs()
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
-            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary),
+                                m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor),
+                                m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Overlay));
             pipeline->setActive(!conn->isNonDesktop());
             // only "enable" VR headsets here; Workspace makes this decision for normal outputs
             pipeline->setEnable(conn->isNonDesktop());
@@ -581,7 +592,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
 {
     qCDebug(KWIN_DRM) << "Removing output" << output;
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->setLayers(nullptr, nullptr);
+    output->pipeline()->setLayers(nullptr, nullptr, nullptr);
     m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     output->unref();
@@ -818,7 +829,9 @@ void DrmGpu::releaseBuffers()
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : std::as_const(m_pipelines)) {
-        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary),
+                            m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor),
+                            m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Overlay));
         pipeline->applyPendingChanges();
     }
 }

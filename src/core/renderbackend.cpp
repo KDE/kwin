@@ -147,6 +147,11 @@ std::chrono::nanoseconds OutputFrame::predictedRenderTime() const
     return m_predictedRenderTime;
 }
 
+OutputLayer *RenderBackend::overlayLayer(Output *output)
+{
+    return nullptr;
+}
+
 OutputLayer *RenderBackend::cursorLayer(Output *output)
 {
     return nullptr;

@@ -41,7 +41,7 @@ EglGbmBackend::~EglGbmBackend()
     const auto outputs = m_backend->outputs();
     for (const auto output : outputs) {
         if (auto drmOutput = dynamic_cast<DrmOutput *>(output)) {
-            drmOutput->pipeline()->setLayers(nullptr, nullptr);
+            drmOutput->pipeline()->setLayers(nullptr, nullptr, nullptr);
         }
     }
     m_contexts.clear();
@@ -149,6 +149,11 @@ void EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &
 OutputLayer *EglGbmBackend::primaryLayer(Output *output)
 {
     return static_cast<DrmAbstractOutput *>(output)->primaryLayer();
+}
+
+OutputLayer *EglGbmBackend::overlayLayer(Output *output)
+{
+    return static_cast<DrmAbstractOutput *>(output)->overlayLayer();
 }
 
 OutputLayer *EglGbmBackend::cursorLayer(Output *output)
