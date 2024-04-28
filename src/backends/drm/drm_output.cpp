@@ -428,6 +428,11 @@ DrmOutputLayer *DrmOutput::primaryLayer() const
     return m_pipeline->primaryLayer();
 }
 
+DrmOutputLayer *DrmOutput::overlayLayer() const
+{
+    return m_pipeline->overlayLayer();
+}
+
 DrmOutputLayer *DrmOutput::cursorLayer() const
 {
     return m_pipeline->cursorLayer();

@@ -261,6 +261,36 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
         commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
     }
+    if (m_overlayLayer && m_overlayLayer->isEnabled() && m_overlayLayer->currentBuffer()) {
+        const auto plane = m_pending.crtc->overlayPlane();
+        if (!plane) {
+            return Error::InvalidArguments;
+        }
+        const auto transform = m_overlayLayer->offloadTransform();
+        const auto planeTransform = DrmPlane::outputTransformToPlaneTransform(transform);
+        const auto fb = m_overlayLayer->currentBuffer();
+        if (plane->rotation.isValid()) {
+            if (!plane->rotation.hasEnum(planeTransform)) {
+                return Error::InvalidArguments;
+            }
+            commit->addEnum(plane->rotation, planeTransform);
+        } else if (planeTransform != DrmPlane::Transformation::Rotate0) {
+            return Error::InvalidArguments;
+        }
+        commit->addProperty(plane->crtcId, m_pending.crtc->id());
+        plane->set(commit, m_overlayLayer->sourceRect().toRect(), m_overlayLayer->targetRect());
+        commit->addBuffer(plane, fb);
+        if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
+            if (!plane->colorEncoding.isValid() || !plane->colorRange.isValid()) {
+                // don't allow NV12 direct scanout if we don't know what the driver will do
+                return Error::InvalidArguments;
+            }
+            commit->addEnum(plane->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
+            commit->addEnum(plane->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        }
+    } else if (m_pending.crtc->overlayPlane()) {
+        m_pending.crtc->overlayPlane()->disable(commit);
+    }
     return Error::None;
 }
 
@@ -290,6 +320,9 @@ void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
         m_pending.crtc->primaryPlane()->disable(commit);
         if (auto cursor = m_pending.crtc->cursorPlane()) {
             cursor->disable(commit);
+        }
+        if (auto overlay = m_pending.crtc->overlayPlane()) {
+            overlay->disable(commit);
         }
     }
 }
@@ -362,6 +395,17 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
             commit->addEnum(cursor->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
         }
         prepareAtomicCursor(commit);
+    }
+    if (const auto overlay = m_pending.crtc->overlayPlane()) {
+        if (overlay->rotation.isValid()) {
+            commit->addEnum(overlay->rotation, {DrmPlane::Transformation::Rotate0});
+        }
+        if (overlay->alpha.isValid()) {
+            commit->addProperty(overlay->alpha, 0xFFFF);
+        }
+        if (overlay->pixelBlendMode.isValid()) {
+            commit->addEnum(overlay->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
+        }
     }
     return true;
 }
@@ -615,6 +659,11 @@ DrmPipelineLayer *DrmPipeline::cursorLayer() const
     return m_cursorLayer.get();
 }
 
+DrmPipelineLayer *DrmPipeline::overlayLayer() const
+{
+    return m_overlayLayer.get();
+}
+
 PresentationMode DrmPipeline::presentationMode() const
 {
     return m_pending.presentationMode;
@@ -673,10 +722,11 @@ void DrmPipeline::setEnable(bool enable)
     m_pending.enabled = enable;
 }
 
-void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer)
+void DrmPipeline::setLayers(const std::shared_ptr<DrmPipelineLayer> &primaryLayer, const std::shared_ptr<DrmPipelineLayer> &cursorLayer, const std::shared_ptr<DrmPipelineLayer> &overlayLayer)
 {
     m_primaryLayer = primaryLayer;
     m_cursorLayer = cursorLayer;
+    m_overlayLayer = overlayLayer;
 }
 
 void DrmPipeline::setPresentationMode(PresentationMode mode)

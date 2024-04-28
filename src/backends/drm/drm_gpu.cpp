@@ -296,7 +296,9 @@ bool DrmGpu::updateOutputs()
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
-            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary),
+                                m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor),
+                                m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Overlay));
             pipeline->setActive(!conn->isNonDesktop());
             pipeline->applyPendingChanges();
         }
@@ -578,7 +580,7 @@ void DrmGpu::removeOutput(DrmOutput *output)
 {
     qCDebug(KWIN_DRM) << "Removing output" << output;
     m_pipelines.removeOne(output->pipeline());
-    output->pipeline()->setLayers(nullptr, nullptr);
+    output->pipeline()->setLayers(nullptr, nullptr, nullptr);
     m_drmOutputs.removeOne(output);
     Q_EMIT outputRemoved(output);
     output->unref();
@@ -830,7 +832,9 @@ void DrmGpu::releaseBuffers()
 void DrmGpu::recreateSurfaces()
 {
     for (const auto &pipeline : std::as_const(m_pipelines)) {
-        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+        pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary),
+                            m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor),
+                            m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Overlay));
         pipeline->applyPendingChanges();
     }
     for (const auto &output : std::as_const(m_virtualOutputs)) {

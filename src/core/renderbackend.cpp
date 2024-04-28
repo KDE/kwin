@@ -128,6 +128,11 @@ RenderBackend::RenderBackend(QObject *parent)
 {
 }
 
+OutputLayer *RenderBackend::overlayLayer(Output *output)
+{
+    return nullptr;
+}
+
 OutputLayer *RenderBackend::cursorLayer(Output *output)
 {
     return nullptr;

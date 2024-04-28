@@ -120,6 +120,7 @@ public:
     virtual bool checkGraphicsReset();
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
+    virtual OutputLayer *overlayLayer(Output *output);
     virtual OutputLayer *cursorLayer(Output *output);
     virtual void present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
 
