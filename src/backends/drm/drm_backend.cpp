@@ -136,9 +136,9 @@ void DrmBackend::handleUdevEvent()
     while (auto device = m_udevMonitor->getDevice()) {
         // Ignore the device seat if the KWIN_DRM_DEVICES envvar is set.
         if (!m_explicitGpus.isEmpty()) {
-            const auto canonicalPath = QFileInfo(device->devNode()).canonicalPath();
+            const auto canonicalPath = QFileInfo(device->devNode()).canonicalFilePath();
             const bool foundMatch = std::ranges::any_of(m_explicitGpus, [&canonicalPath](const QString &explicitPath) {
-                return QFileInfo(explicitPath).canonicalPath() == canonicalPath;
+                return QFileInfo(explicitPath).canonicalFilePath() == canonicalPath;
             });
             if (!foundMatch) {
                 continue;
