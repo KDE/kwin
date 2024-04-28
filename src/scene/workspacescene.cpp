@@ -167,41 +167,55 @@ static SurfaceItem *findTopMostSurface(SurfaceItem *item)
     return item;
 }
 
-SurfaceItem *WorkspaceScene::scanoutCandidate() const
+static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount)
+{
+    const QList<Item *> children = item->sortedChildItems();
+    for (const auto &child : children | std::views::reverse) {
+        if (child->z() >= 0 && child->isVisible()) {
+            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount)) {
+                return false;
+            }
+        }
+    }
+    if (candidates.size() >= maxCount) {
+        return false;
+    }
+    candidates.push_back(item);
+    for (const auto &child : children | std::views::reverse) {
+        if (child->z() < 0 && child->isVisible()) {
+            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
 {
     if (!waylandServer()) {
-        return nullptr;
+        return {};
     }
-    SurfaceItem *candidate = nullptr;
+    QList<SurfaceItem *> ret;
     if (!effects->blocksDirectScanout()) {
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             WindowItem *windowItem = stacking_order[i];
             Window *window = windowItem->window();
             if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
-                if (!window->isClient() || !window->isFullScreen() || window->opacity() != 1.0) {
-                    break;
+                if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen()) {
+                    return {};
                 }
                 if (!windowItem->surfaceItem()) {
-                    break;
+                    continue;
                 }
-                SurfaceItem *topMost = findTopMostSurface(windowItem->surfaceItem());
-                if (!topMost) {
-                    break;
+                if (!addCandidates(windowItem->surfaceItem(), ret, maxCount)) {
+                    return {};
                 }
-                // the subsurface has to be able to cover the whole window
-                if (topMost->position() != QPoint(0, 0)) {
-                    break;
-                }
-                // and it has to be completely opaque
-                if (!topMost->opaque().contains(QRect(0, 0, window->width(), window->height()))) {
-                    break;
-                }
-                candidate = topMost;
-                break;
+                return ret;
             }
         }
     }
-    return candidate;
+    return ret;
 }
 
 void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)

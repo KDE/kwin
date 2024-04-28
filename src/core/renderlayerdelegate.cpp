@@ -32,9 +32,9 @@ void RenderLayerDelegate::postPaint()
 {
 }
 
-SurfaceItem *RenderLayerDelegate::scanoutCandidate() const
+QList<SurfaceItem *> RenderLayerDelegate::scanoutCandidates(ssize_t maxCount) const
 {
-    return nullptr;
+    return {};
 }
 
 } // namespace KWin

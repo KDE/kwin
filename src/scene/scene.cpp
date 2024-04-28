@@ -24,9 +24,9 @@ SceneDelegate::~SceneDelegate()
     m_scene->removeDelegate(this);
 }
 
-SurfaceItem *SceneDelegate::scanoutCandidate() const
+QList<SurfaceItem *> SceneDelegate::scanoutCandidates(ssize_t maxCount) const
 {
-    return m_scene->scanoutCandidate();
+    return m_scene->scanoutCandidates(maxCount);
 }
 
 QRegion SceneDelegate::prePaint()
@@ -134,9 +134,9 @@ void Scene::removeDelegate(SceneDelegate *delegate)
     Q_EMIT delegateRemoved(delegate);
 }
 
-SurfaceItem *Scene::scanoutCandidate() const
+QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
 {
-    return nullptr;
+    return {};
 }
 
 void Scene::frame(SceneDelegate *delegate, OutputFrame *frame)
