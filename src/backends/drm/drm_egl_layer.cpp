@@ -47,6 +47,9 @@ EglGbmLayer::EglGbmLayer(EglGbmBackend *eglBackend, DrmPipeline *pipeline, DrmPl
 
 std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 {
+    if (m_type == DrmPlane::TypeIndex::Overlay && !m_pipeline->crtc()->overlayPlane()) {
+        return std::nullopt;
+    }
     if (m_type == DrmPlane::TypeIndex::Cursor && m_pipeline->amdgpuVrrWorkaroundActive()) {
         return std::nullopt;
     }
@@ -98,6 +101,9 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         // the hardware to some buffer format we can't switch away from
         return false;
     }
+    if (m_type == DrmPlane::TypeIndex::Overlay && !m_pipeline->crtc()->overlayPlane()) {
+        return false;
+    }
     if (m_pipeline->output()->colorProfileSource() == Output::ColorProfileSource::ICC && !m_pipeline->output()->highDynamicRange() && m_pipeline->iccProfile()) {
         // TODO make the icc profile output a color pipeline too?
         return false;
@@ -115,7 +121,7 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
     if (sourceRect() != sourceRect().toRect()) {
         return false;
     }
-    const auto plane = m_type == DrmPlane::TypeIndex::Primary ? m_pipeline->crtc()->primaryPlane() : m_pipeline->crtc()->cursorPlane();
+    const auto plane = m_type == DrmPlane::TypeIndex::Primary ? m_pipeline->crtc()->primaryPlane() : (m_type == DrmPlane::TypeIndex::Overlay ? m_pipeline->crtc()->overlayPlane() : m_pipeline->crtc()->cursorPlane());
     if (offloadTransform() != OutputTransform::Kind::Normal && (!plane || !plane->supportsTransformation(offloadTransform()))) {
         return false;
     }
