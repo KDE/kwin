@@ -129,12 +129,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Vis skrivebordoppsett-indikatorar"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "1 rad"
-#~ msgstr[1] "%1 rader"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "Legg til"

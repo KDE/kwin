@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-27 00:39+0000\n"
-"PO-Revision-Date: 2023-03-31 08:30+0200\n"
+"PO-Revision-Date: 2024-04-27 06:46+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -62,14 +62,13 @@ msgstr "Pri zahtevah informacij od upodobilnika je prišlo do napake."
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "Vrstic:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Novo namizje"
+msgstr "Dodaj namizje"
 
 #: ui/main.qml:118
 #, kde-format

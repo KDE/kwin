@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2018, 2019, 2021, 2022.
+# SPDX-FileCopyrightText: 2018, 2019, 2021, 2022, 2024 Freek de Kruijf <freekdekruijf@kde.nl>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-27 00:39+0000\n"
-"PO-Revision-Date: 2022-12-15 10:44+0100\n"
+"PO-Revision-Date: 2024-04-27 09:58+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,12 +15,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Freek de Kruijf - 2018-2019;2021-2022"
+msgstr "Freek de Kruijf - 2018-2019;2021-2024"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -53,20 +53,16 @@ msgstr ""
 "opsteller."
 
 #: ui/main.qml:26
-#, fuzzy, kde-format
-#| msgid "Rows:"
+#, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
 msgstr "Rijen:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgctxt "A numbered name for virtual desktops"
-#| msgid "Desktop %1"
-#| msgid_plural "Desktop %1"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Bureaublad %1"
+msgstr "Bureaublad toevoegen"
 
 #: ui/main.qml:118
 #, kde-format

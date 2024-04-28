@@ -3,21 +3,21 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Jaime Robles <jaime@robles.nu>, 2007.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2010, 2013, 2014, 2018, 2019, 2021, 2022.
+# SPDX-FileCopyrightText: 2010, 2013, 2014, 2018, 2019, 2021, 2022, 2024 Eloy Cuadra <ecuadra@eloihr.net>
 # Javier Vinal <fjvinal@gmail.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-27 00:39+0000\n"
-"PO-Revision-Date: 2022-12-15 03:17+0100\n"
+"PO-Revision-Date: 2024-04-28 01:00+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 24.02.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -54,18 +54,16 @@ msgid "There was an error requesting information from the compositor."
 msgstr "Ha ocurrido un error al solicitar información del compositor."
 
 #: ui/main.qml:26
-#, fuzzy, kde-format
-#| msgid "Rows:"
+#, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
 msgstr "Filas:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgid "New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Nuevo escritorio"
+msgstr "Añadir escritorio"
 
 #: ui/main.qml:118
 #, kde-format
