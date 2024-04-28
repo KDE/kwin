@@ -159,6 +159,11 @@ void OutputFrame::setDesiredHdrHeadroom(double edr)
     m_desiredHdrHeadroom = edr;
 }
 
+OutputLayer *RenderBackend::overlayLayer(Output *output)
+{
+    return nullptr;
+}
+
 OutputLayer *RenderBackend::cursorLayer(Output *output)
 {
     return nullptr;

@@ -31,6 +31,7 @@ public:
 
     bool present(const std::shared_ptr<OutputFrame> &frame) override;
     DrmOutputLayer *primaryLayer() const override;
+    DrmOutputLayer *overlayLayer() const override;
     DrmOutputLayer *cursorLayer() const override;
     void recreateSurface();
 

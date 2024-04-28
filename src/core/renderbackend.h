@@ -129,6 +129,7 @@ public:
     virtual bool checkGraphicsReset();
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
+    virtual OutputLayer *overlayLayer(Output *output);
     virtual OutputLayer *cursorLayer(Output *output);
     virtual bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual void repairPresentation(Output *output);
