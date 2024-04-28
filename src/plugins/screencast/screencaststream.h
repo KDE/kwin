@@ -66,7 +66,7 @@ public:
 
     void close();
 
-    void recordFrame(const QRegion &damage, Contents contents = Content::Video);
+    void scheduleRecord(Contents contents, const QRegion &damage = QRegion());
 
     void setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport);
 
@@ -83,6 +83,7 @@ private:
     void onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message);
     void onStreamAddBuffer(pw_buffer *buffer);
     void onStreamRemoveBuffer(pw_buffer *buffer);
+    void onStreamProcess();
 
     bool createStream();
     QList<const spa_pod *> buildFormats(bool fixate, char buffer[2048]);
@@ -98,6 +99,8 @@ private:
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
+    void record(Contents contents, const QRegion &damage);
+    void triggerProcess();
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
 
@@ -135,9 +138,11 @@ private:
     bool m_hasDmaBuf = false;
     quint32 m_drmFormat = 0;
 
-    std::optional<std::chrono::steady_clock::time_point> m_lastSent;
+    QTimer m_processThrottleTimer;
+    std::optional<std::chrono::steady_clock::time_point> m_lastProcessTimestamp;
+    bool m_havePendingProcess = false;
+
     QRegion m_pendingDamage;
-    QTimer m_pendingFrame;
     Contents m_pendingContents = Content::None;
 };
 
