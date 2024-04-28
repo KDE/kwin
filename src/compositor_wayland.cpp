@@ -314,14 +314,14 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         }
 
         bool directScanout = false;
-        if (const auto scanoutCandidate = superLayer->delegate()->scanoutCandidate()) {
+        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(1); !scanoutCandidates.isEmpty()) {
             const auto sublayers = superLayer->sublayers();
             const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
                 return sublayer->isVisible();
             });
             if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidate->size()), output->modeSize()));
-                directScanout = primaryLayer->attemptScanout(scanoutCandidate);
+                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates[0]->size()), output->modeSize()));
+                directScanout = primaryLayer->attemptScanout(scanoutCandidates[0]);
             }
         } else {
             primaryLayer->notifyNoScanoutCandidate();

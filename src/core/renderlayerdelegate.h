@@ -53,7 +53,7 @@ public:
      * Returns the direct scanout candidate hint. It can be used to avoid compositing the
      * render layer.
      */
-    virtual SurfaceItem *scanoutCandidate() const;
+    virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
 
     /**
      * This function is called when the compositor wants the render layer delegate

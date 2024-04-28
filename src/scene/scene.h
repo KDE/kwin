@@ -29,7 +29,7 @@ public:
     qreal scale() const;
     QRect viewport() const;
 
-    SurfaceItem *scanoutCandidate() const override;
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
     QRegion prePaint() override;
     void postPaint() override;
@@ -81,7 +81,7 @@ public:
     void addDelegate(SceneDelegate *delegate);
     void removeDelegate(SceneDelegate *delegate);
 
-    virtual SurfaceItem *scanoutCandidate() const;
+    virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
     virtual QRegion prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;

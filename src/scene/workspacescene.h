@@ -49,7 +49,7 @@ public:
     Item *containerItem() const;
     Item *overlayItem() const;
 
-    SurfaceItem *scanoutCandidate() const override;
+    QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     QRegion prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
