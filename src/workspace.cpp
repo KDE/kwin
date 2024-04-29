@@ -248,18 +248,20 @@ void Workspace::init()
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
     m_placementTracker->init(getPlacementTrackerHash());
 
-    const auto applySensorChanges = [this]() {
+    if (waylandServer()) {
+        const auto applySensorChanges = [this]() {
+            m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+            const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+            if (opt) {
+                const auto &[config, order, type] = *opt;
+                applyOutputConfiguration(config, order);
+            }
+        };
+        connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
+        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
+        connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-        const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-        if (opt) {
-            const auto &[config, order, type] = *opt;
-            applyOutputConfiguration(config, order);
-        }
-    };
-    connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
-    connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
-    connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
-    m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+    }
 }
 
 QString Workspace::getPlacementTrackerHash()
