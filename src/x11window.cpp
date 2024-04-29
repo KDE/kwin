@@ -417,7 +417,6 @@ void X11Window::releaseWindow(bool on_shutdown)
             leaveInteractiveMoveResize();
         }
         finishWindowRules();
-        blockGeometryUpdates();
         // Grab X during the release to make removing of properties, setting to withdrawn state
         // and repareting to root an atomic operation (https://lists.kde.org/?l=kde-devel&m=116448102901184&w=2)
         grabXServer();
@@ -455,7 +454,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         m_client.reset();
         m_wrapper.reset();
         m_frame.reset();
-        unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
         ungrabXServer();
     }
     if (m_syncRequest.alarm != XCB_NONE) {
@@ -496,7 +494,6 @@ void X11Window::destroyWindow()
             leaveInteractiveMoveResize();
         }
         finishWindowRules();
-        blockGeometryUpdates();
         workspace()->activateNextWindow(this);
         cleanGrouping();
         workspace()->removeX11Window(this);
@@ -506,7 +503,6 @@ void X11Window::destroyWindow()
         m_client.reset(); // invalidate
         m_wrapper.reset();
         m_frame.reset();
-        unblockGeometryUpdates(); // Don't use GeometryUpdatesBlocker, it would now set the geometry
     }
     if (m_syncRequest.alarm != XCB_NONE) {
         xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
