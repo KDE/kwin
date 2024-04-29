@@ -1257,7 +1257,6 @@ bool Window::startInteractiveMoveResize()
 void Window::finishInteractiveMoveResize(bool cancel)
 {
     const bool wasMove = isInteractiveMove();
-    GeometryUpdatesBlocker blocker(this);
     leaveInteractiveMoveResize();
 
     doFinishInteractiveMoveResize();
@@ -3468,8 +3467,6 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
     }
 
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
-
-    GeometryUpdatesBlocker blocker(this);
 
     const QuickTileMode oldMode = requestedQuickTileMode();
     QPointF whichScreen = keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos();
