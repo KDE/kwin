@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-27 00:39+0000\n"
+"POT-Creation-Date: 2024-04-29 00:40+0000\n"
 "PO-Revision-Date: 2024-02-23 01:30\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -2404,7 +2404,7 @@ msgstr "Не ўдалося знайсці вывад"
 msgid "Invalid region"
 msgstr "Хібная вобласць"
 
-#: plugins/screencast/screencaststream.cpp:322
+#: plugins/screencast/screencaststream.cpp:303
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не ўдалося стварыць струмень PipeWire"
