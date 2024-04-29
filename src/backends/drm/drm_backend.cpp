@@ -239,7 +239,7 @@ void DrmBackend::removeOutput(DrmAbstractOutput *o)
     if (o->dpmsMode() == Output::DpmsMode::Off) {
         const QUuid id = o->uuid();
         m_recentlyUnpluggedDpmsOffOutputs.push_back(id);
-        QTimer::singleShot(1000, this, [this, id]() {
+        QTimer::singleShot(2000, this, [this, id]() {
             m_recentlyUnpluggedDpmsOffOutputs.removeOne(id);
         });
     }
