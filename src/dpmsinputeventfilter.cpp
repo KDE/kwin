@@ -38,7 +38,11 @@ DpmsInputEventFilter::~DpmsInputEventFilter()
 
 bool DpmsInputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
 {
-    notify();
+    if (!event->isWarp()) {
+        // The intention is to wake the screen on user interactions
+        // warp events aren't user interactions, so ignore them.
+        notify();
+    }
     return true;
 }
 
