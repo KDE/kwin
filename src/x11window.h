@@ -474,8 +474,6 @@ private:
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
-    MoveResizeMode pendingMoveResizeMode() const;
-    void setPendingMoveResizeMode(MoveResizeMode mode);
 
     NETWinInfo *info = nullptr;
     xcb_window_t m_transientForId;
@@ -529,12 +527,10 @@ private:
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMarginsF m_clientFrameExtents;
-    Output *m_lastOutput = nullptr;
     QRectF m_lastBufferGeometry;
     QRectF m_lastFrameGeometry;
     QRectF m_lastClientGeometry;
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
-    MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
 
     std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
 
@@ -682,16 +678,6 @@ inline void X11Window::blockGeometryUpdates()
 inline void X11Window::unblockGeometryUpdates()
 {
     m_blockGeometryUpdates--;
-}
-
-inline Window::MoveResizeMode X11Window::pendingMoveResizeMode() const
-{
-    return m_pendingMoveResizeMode;
-}
-
-inline void X11Window::setPendingMoveResizeMode(MoveResizeMode mode)
-{
-    m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
 }
 
 } // namespace

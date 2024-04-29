@@ -4294,15 +4294,11 @@ bool X11Window::isMaximizable() const
 void X11Window::blockGeometryUpdates(bool block)
 {
     if (block) {
-        if (m_blockGeometryUpdates == 0) {
-            m_pendingMoveResizeMode = MoveResizeMode::None;
-        }
         ++m_blockGeometryUpdates;
     } else {
         if (--m_blockGeometryUpdates == 0) {
-            if (m_pendingMoveResizeMode != MoveResizeMode::None) {
-                moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
-                m_pendingMoveResizeMode = MoveResizeMode::None;
+            if (m_lastBufferGeometry != m_bufferGeometry || m_lastFrameGeometry != m_frameGeometry || m_lastClientGeometry != m_clientGeometry) {
+                updateServerGeometry();
             }
         }
     }
@@ -4330,45 +4326,39 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     }
 
     QRectF frameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
-
+    QRectF clientGeometry = m_clientGeometry;
     if (shade_geometry_change) {
         ; // nothing
     } else if (isShade()) {
         if (frameGeometry.height() == borderTop() + borderBottom()) {
             qCDebug(KWIN_CORE) << "Shaded geometry passed for size:";
         } else {
-            m_clientGeometry = frameRectToClientRect(frameGeometry);
+            clientGeometry = frameRectToClientRect(frameGeometry);
             frameGeometry.setHeight(borderTop() + borderBottom());
         }
     } else {
-        m_clientGeometry = frameRectToClientRect(frameGeometry);
+        clientGeometry = frameRectToClientRect(frameGeometry);
     }
-    m_frameGeometry = frameGeometry;
-    m_bufferGeometry = frameRectToBufferRect(frameGeometry);
+    const QRectF bufferGeometry = frameRectToBufferRect(frameGeometry);
 
-    if (pendingMoveResizeMode() == MoveResizeMode::None && m_lastBufferGeometry == m_bufferGeometry && m_lastFrameGeometry == m_frameGeometry && m_lastClientGeometry == m_clientGeometry) {
-        return;
-    }
-
-    m_output = workspace()->outputAt(frameGeometry.center());
-    if (areGeometryUpdatesBlocked()) {
-        setPendingMoveResizeMode(mode);
+    if (m_bufferGeometry == bufferGeometry && m_clientGeometry == clientGeometry && m_frameGeometry == frameGeometry) {
         return;
     }
 
     Q_EMIT frameGeometryAboutToChange();
-    const QRectF oldBufferGeometry = m_lastBufferGeometry;
-    const QRectF oldFrameGeometry = m_lastFrameGeometry;
-    const QRectF oldClientGeometry = m_lastClientGeometry;
-    const Output *oldOutput = m_lastOutput;
+
+    const QRectF oldBufferGeometry = m_bufferGeometry;
+    const QRectF oldFrameGeometry = m_frameGeometry;
+    const QRectF oldClientGeometry = m_clientGeometry;
+    const Output *oldOutput = m_output;
+
+    m_frameGeometry = frameGeometry;
+    m_clientGeometry = clientGeometry;
+    m_bufferGeometry = bufferGeometry;
+    m_output = workspace()->outputAt(frameGeometry.center());
 
     updateServerGeometry();
     updateWindowRules(Rules::Position | Rules::Size);
-
-    m_lastBufferGeometry = m_bufferGeometry;
-    m_lastFrameGeometry = m_frameGeometry;
-    m_lastClientGeometry = m_clientGeometry;
-    m_lastOutput = m_output;
 
     if (isActive()) {
         workspace()->setActiveOutput(output());
@@ -4392,6 +4382,10 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 
 void X11Window::updateServerGeometry()
 {
+    if (areGeometryUpdatesBlocked()) {
+        return;
+    }
+
     const QRectF oldBufferGeometry = m_lastBufferGeometry;
 
     // Compute the old client rect, the client geometry is always inside the buffer geometry.
@@ -4424,6 +4418,10 @@ void X11Window::updateServerGeometry()
         // Unconditionally move the input window: it won't affect rendering
         m_decoInputExtent.move(pos().toPoint() + inputPos());
     }
+
+    m_lastBufferGeometry = m_bufferGeometry;
+    m_lastFrameGeometry = m_frameGeometry;
+    m_lastClientGeometry = m_clientGeometry;
 }
 
 static bool changeMaximizeRecursion = false;
