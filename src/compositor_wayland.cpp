@@ -284,6 +284,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
 
     Output *output = findOutput(renderLoop);
     OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    OutputLayer *overlayLayer = m_backend->overlayLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
@@ -314,27 +315,62 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
 
-        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(1); !scanoutCandidates.isEmpty()) {
-            const auto sublayers = superLayer->sublayers();
-            const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-                return sublayer->isVisible();
-            });
-            if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates[0]->size()), output->modeSize()));
-                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates[0]);
+        static int s_planes = 0;
+        int planes = 0;
+        const bool scanoutPossible = std::ranges::none_of(superLayer->sublayers(), [](RenderLayer *sublayer) {
+            return sublayer->isVisible();
+        });
+        if (scanoutPossible) {
+            const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(overlayLayer ? 2 : 1);
+            if (!scanoutCandidates.isEmpty()) {
+                // FIXME this scaling needs to happen at an earlier stage, in WindowItem!
+                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.back()->size()), output->modeSize()));
+                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.back());
+                if (scanoutCandidates.size() == 2) {
+                    const auto target = scanoutCandidates.front()->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates.front()->size())).toRect();
+                    overlayLayer->setTargetRect(target);
+                    overlayLayer->setEnabled(true);
+                    directScanout &= overlayLayer->importScanoutBuffer(scanoutCandidates.front());
+                } else if (overlayLayer) {
+                    overlayLayer->setEnabled(false);
+                }
                 if (directScanout) {
                     directScanout &= m_backend->present(output, frame);
                     if (directScanout) {
+                        planes = scanoutCandidates.size();
                         primaryLayer->notifyScanoutSuccessful();
+                        if (scanoutCandidates.size() == 2) {
+                            overlayLayer->notifyScanoutSuccessful();
+                        }
                     }
                 }
             }
+            if (scanoutCandidates.isEmpty()) {
+                primaryLayer->notifyNoScanoutCandidate();
+            }
+            if (scanoutCandidates.size() < 2 && overlayLayer) {
+                overlayLayer->notifyNoScanoutCandidate();
+            }
         } else {
             primaryLayer->notifyNoScanoutCandidate();
+            if (overlayLayer) {
+                overlayLayer->notifyNoScanoutCandidate();
+            }
+        }
+        if (s_planes != planes) {
+            if (planes) {
+                qWarning() << "starting direct scanout with" << planes << "planes";
+            } else {
+                qWarning() << "stopping direct scanout";
+            }
+            s_planes = planes;
         }
 
         if (!directScanout) {
             primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
+            if (overlayLayer) {
+                overlayLayer->setEnabled(false);
+            }
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 

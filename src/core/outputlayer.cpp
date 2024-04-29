@@ -69,8 +69,8 @@ bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
 
 bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem)
 {
-    const bool newCandidate = m_scanoutCandidate && m_scanoutCandidate != surfaceItem;
-    if (newCandidate) {
+    const bool newCandidate = m_scanoutCandidate != surfaceItem;
+    if (m_scanoutCandidate && newCandidate) {
         m_scanoutCandidate->setScanoutHint(nullptr, {});
     }
     m_scanoutCandidate = surfaceItem;
@@ -86,7 +86,7 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem)
     const auto formats = supportedDrmFormats();
     if (!formats.contains(attrs->format) || !formats[attrs->format].contains(attrs->modifier)) {
         if (newCandidate) {
-            surfaceItem->setScanoutHint(scanoutDevice(), supportedDrmFormats());
+            surfaceItem->setScanoutHint(scanoutDevice(), formats);
         }
         return false;
     }
