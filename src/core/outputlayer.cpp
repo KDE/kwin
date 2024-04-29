@@ -62,13 +62,18 @@ bool OutputLayer::needsRepaint() const
     return !m_repaints.isEmpty();
 }
 
-bool OutputLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
+bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color)
 {
     return false;
 }
 
-bool OutputLayer::attemptScanout(SurfaceItem *surfaceItem)
+bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem)
 {
+    const bool newCandidate = m_scanoutCandidate && m_scanoutCandidate != surfaceItem;
+    if (newCandidate) {
+        m_scanoutCandidate->setScanoutHint(nullptr, {});
+    }
+    m_scanoutCandidate = surfaceItem;
     SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem);
     if (!wayland || !wayland->surface()) {
         return false;
@@ -80,24 +85,22 @@ bool OutputLayer::attemptScanout(SurfaceItem *surfaceItem)
     }
     const auto formats = supportedDrmFormats();
     if (!formats.contains(attrs->format) || !formats[attrs->format].contains(attrs->modifier)) {
-        if (m_scanoutCandidate && m_scanoutCandidate != surfaceItem) {
-            m_scanoutCandidate->setScanoutHint(nullptr, {});
+        if (newCandidate) {
+            surfaceItem->setScanoutHint(scanoutDevice(), supportedDrmFormats());
         }
-        m_scanoutCandidate = surfaceItem;
-        surfaceItem->setScanoutHint(scanoutDevice(), supportedDrmFormats());
         return false;
     }
     m_sourceRect = surfaceItem->bufferSourceBox();
     m_bufferTransform = surfaceItem->bufferTransform();
     const auto desiredTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
     m_offloadTransform = m_bufferTransform.combine(desiredTransform.inverted());
-    const bool ret = doAttemptScanout(buffer, surfaceItem->colorDescription());
-    if (ret) {
-        surfaceItem->resetDamage();
-        // ensure the pixmap is updated when direct scanout ends
-        surfaceItem->destroyPixmap();
-    }
-    return ret;
+    return doImportScanoutBuffer(buffer, surfaceItem->colorDescription());
+}
+
+void OutputLayer::notifyScanoutSuccessful()
+{
+    // ensure the pixmap is updated when direct scanout ends
+    m_scanoutCandidate->destroyPixmap();
 }
 
 std::optional<OutputLayerBeginFrameInfo> OutputLayer::beginFrame()

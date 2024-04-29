@@ -37,9 +37,10 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     std::optional<QSize> fixedSize() const override;
+    void notifyScanoutSuccessful() override;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;
+    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
 

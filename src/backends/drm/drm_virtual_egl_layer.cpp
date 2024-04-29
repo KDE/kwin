@@ -133,7 +133,7 @@ std::shared_ptr<GLTexture> VirtualEglGbmLayer::texture() const
     return nullptr;
 }
 
-bool VirtualEglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
+bool VirtualEglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;

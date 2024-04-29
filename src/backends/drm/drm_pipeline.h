@@ -70,7 +70,6 @@ public:
      * if the test fails, there is a guarantee for no lasting changes
      */
     Error present();
-    bool testScanout();
     bool maybeModeset();
     void forceLegacyModeset();
 
@@ -171,7 +170,6 @@ private:
     DrmConnector *m_connector = nullptr;
 
     bool m_modesetPresentPending = false;
-    bool m_didLegacyScanoutHack = false;
     std::shared_ptr<DrmGammaRamp> m_currentLegacyGamma;
 
     struct State

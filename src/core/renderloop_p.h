@@ -31,7 +31,7 @@ public:
     void scheduleRepaint();
     void maybeScheduleRepaint();
 
-    void notifyFrameFailed();
+    void notifyFrameDropped();
     void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<std::chrono::nanoseconds> renderTime, PresentationMode mode = PresentationMode::VSync);
     void notifyVblank(std::chrono::nanoseconds timestamp);
 

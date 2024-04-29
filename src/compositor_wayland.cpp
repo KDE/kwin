@@ -292,6 +292,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop);
 
+    bool directScanout = false;
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         renderLoop->beginPaint();
 
@@ -313,7 +314,6 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
 
-        bool directScanout = false;
         if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(1); !scanoutCandidates.isEmpty()) {
             const auto sublayers = superLayer->sublayers();
             const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
@@ -321,7 +321,13 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             });
             if (scanoutPossible) {
                 primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates[0]->size()), output->modeSize()));
-                directScanout = primaryLayer->attemptScanout(scanoutCandidates[0]);
+                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates[0]);
+                if (directScanout) {
+                    directScanout &= m_backend->present(output, frame);
+                    if (directScanout) {
+                        primaryLayer->notifyScanoutSuccessful();
+                    }
+                }
             }
         } else {
             primaryLayer->notifyNoScanoutCandidate();
@@ -342,7 +348,9 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         postPaintPass(superLayer);
     }
 
-    m_backend->present(output, frame);
+    if (!directScanout) {
+        m_backend->present(output, frame);
+    }
 
     framePass(superLayer, frame.get());
 

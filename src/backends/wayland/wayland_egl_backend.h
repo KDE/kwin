@@ -44,7 +44,7 @@ public:
 
     std::optional<OutputLayerBeginFrameInfo> doBeginFrame() override;
     bool doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame) override;
-    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;
+    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color) override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
@@ -104,7 +104,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap) override;
 
     void init() override;
-    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
+    bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;
 

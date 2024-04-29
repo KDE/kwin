@@ -46,7 +46,7 @@ public:
 
     DrmDevice *drmDevice() const override;
 
-    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
+    bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     OutputLayer *primaryLayer(Output *output) override;
     OutputLayer *overlayLayer(Output *output) override;
     OutputLayer *cursorLayer(Output *output) override;

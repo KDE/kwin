@@ -111,7 +111,7 @@ bool WaylandEglPrimaryLayer::doEndFrame(const QRegion &renderedRegion, const QRe
     return true;
 }
 
-bool WaylandEglPrimaryLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color)
+bool WaylandEglPrimaryLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color)
 {
     Q_ASSERT(!m_presentationBuffer);
     // TODO use viewporter to relax this check
@@ -347,11 +347,12 @@ std::unique_ptr<SurfaceTexture> WaylandEglBackend::createSurfaceTextureWayland(S
     return std::make_unique<BasicEGLSurfaceTextureWayland>(this, pixmap);
 }
 
-void WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool WaylandEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
     static_cast<WaylandOutput *>(output)->setPendingFrame(frame);
     Q_EMIT static_cast<WaylandOutput *>(output)->outputChange(frame->damage());
+    return true;
 }
 
 OutputLayer *WaylandEglBackend::primaryLayer(Output *output)

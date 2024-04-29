@@ -141,9 +141,9 @@ DrmDevice *EglGbmBackend::drmDevice() const
     return gpu()->drmDevice();
 }
 
-void EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    static_cast<DrmAbstractOutput *>(output)->present(frame);
+    return static_cast<DrmAbstractOutput *>(output)->present(frame);
 }
 
 OutputLayer *EglGbmBackend::primaryLayer(Output *output)

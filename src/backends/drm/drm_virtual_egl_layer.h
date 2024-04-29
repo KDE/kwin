@@ -44,7 +44,7 @@ public:
     const ColorDescription &colorDescription() const;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color) override;
+    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color) override;
     std::shared_ptr<EglSwapchain> createGbmSwapchain() const;
     bool doesGbmSwapchainFit(EglSwapchain *swapchain) const;
 

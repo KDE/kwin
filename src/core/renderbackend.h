@@ -79,7 +79,6 @@ public:
     ~OutputFrame();
 
     void presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, PresentationMode mode);
-    void failed();
 
     void addFeedback(std::unique_ptr<PresentationFeedback> &&feedback);
 
@@ -102,6 +101,7 @@ private:
     PresentationMode m_presentationMode = PresentationMode::VSync;
     QRegion m_damage;
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
+    bool m_presented = false;
 };
 
 /**
@@ -122,7 +122,7 @@ public:
     virtual OutputLayer *primaryLayer(Output *output) = 0;
     virtual OutputLayer *overlayLayer(Output *output);
     virtual OutputLayer *cursorLayer(Output *output);
-    virtual void present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
 
     virtual DrmDevice *drmDevice() const;
 

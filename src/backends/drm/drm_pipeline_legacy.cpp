@@ -26,12 +26,13 @@ namespace KWin
 
 DrmPipeline::Error DrmPipeline::presentLegacy()
 {
-    if (Error err = applyPendingChangesLegacy(); err != Error::None) {
-        return err;
-    }
     const auto buffer = m_primaryLayer->currentBuffer();
     if (m_primaryLayer->sourceRect() != m_primaryLayer->targetRect() || m_primaryLayer->targetRect() != QRect(QPoint(0, 0), buffer->buffer()->size())) {
+        // legacy can't do scaling or cropping
         return Error::InvalidArguments;
+    }
+    if (Error err = applyPendingChangesLegacy(); err != Error::None) {
+        return err;
     }
     auto commit = std::make_unique<DrmLegacyCommit>(this, buffer);
     if (!commit->doPageflip(m_pending.presentationMode)) {

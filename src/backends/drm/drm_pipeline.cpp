@@ -56,28 +56,6 @@ DrmPipeline::~DrmPipeline()
     }
 }
 
-bool DrmPipeline::testScanout()
-{
-    if (gpu()->needsModeset()) {
-        return false;
-    }
-    if (gpu()->atomicModeSetting()) {
-        return commitPipelines({this}, CommitMode::Test) == Error::None;
-    } else {
-        if (m_primaryLayer->currentBuffer()->buffer()->size() != m_pending.mode->size()) {
-            // scaling isn't supported with the legacy API
-            return false;
-        }
-        // no other way to test than to do it.
-        // As we only have a maximum of one test per scanout cycle, this is fine
-        const bool ret = presentLegacy() == Error::None;
-        if (ret) {
-            m_didLegacyScanoutHack = true;
-        }
-        return ret;
-    }
-}
-
 DrmPipeline::Error DrmPipeline::present()
 {
     Q_ASSERT(m_pending.crtc);
@@ -102,11 +80,6 @@ DrmPipeline::Error DrmPipeline::present()
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;
     } else {
-        if (m_didLegacyScanoutHack) {
-            // already presented
-            m_didLegacyScanoutHack = false;
-            return Error::None;
-        }
         return presentLegacy();
     }
 }
