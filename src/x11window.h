@@ -103,6 +103,11 @@ public:
     QPointF wrapperPos() const;
     QSizeF implicitSize() const;
 
+    void blockGeometryUpdates(bool block);
+    void blockGeometryUpdates();
+    void unblockGeometryUpdates();
+    bool areGeometryUpdatesBlocked() const;
+
     xcb_visualid_t visual() const;
     int depth() const;
     bool hasAlpha() const;
@@ -469,6 +474,8 @@ private:
     void cleanGrouping();
     void checkGroupTransients();
     void setTransient(xcb_window_t new_transient_for_id);
+    MoveResizeMode pendingMoveResizeMode() const;
+    void setPendingMoveResizeMode(MoveResizeMode mode);
 
     NETWinInfo *info = nullptr;
     xcb_window_t m_transientForId;
@@ -526,12 +533,35 @@ private:
     QRectF m_lastBufferGeometry;
     QRectF m_lastFrameGeometry;
     QRectF m_lastClientGeometry;
+    int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
+    MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
+
     std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
 
     bool m_unmanaged = false;
     bool m_outline = false;
     quint32 m_pendingSurfaceId = 0;
     quint64 m_surfaceSerial = 0;
+};
+
+/**
+ * Helper for X11Window::blockGeometryUpdates() being called in pairs (true/false)
+ */
+class X11GeometryUpdatesBlocker
+{
+public:
+    explicit X11GeometryUpdatesBlocker(X11Window *c)
+        : cl(c)
+    {
+        cl->blockGeometryUpdates(true);
+    }
+    ~X11GeometryUpdatesBlocker()
+    {
+        cl->blockGeometryUpdates(false);
+    }
+
+private:
+    X11Window *cl;
 };
 
 inline xcb_visualid_t X11Window::visual() const
@@ -637,6 +667,31 @@ inline quint64 X11Window::surfaceSerial() const
 inline quint32 X11Window::pendingSurfaceId() const
 {
     return m_pendingSurfaceId;
+}
+
+inline bool X11Window::areGeometryUpdatesBlocked() const
+{
+    return m_blockGeometryUpdates != 0;
+}
+
+inline void X11Window::blockGeometryUpdates()
+{
+    m_blockGeometryUpdates++;
+}
+
+inline void X11Window::unblockGeometryUpdates()
+{
+    m_blockGeometryUpdates--;
+}
+
+inline Window::MoveResizeMode X11Window::pendingMoveResizeMode() const
+{
+    return m_pendingMoveResizeMode;
+}
+
+inline void X11Window::setPendingMoveResizeMode(MoveResizeMode mode)
+{
+    m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
 }
 
 } // namespace

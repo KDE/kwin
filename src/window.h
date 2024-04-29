@@ -1550,18 +1550,12 @@ protected:
     int borderTop() const;
     int borderBottom() const;
 
-    void blockGeometryUpdates(bool block);
-    void blockGeometryUpdates();
-    void unblockGeometryUpdates();
-    bool areGeometryUpdatesBlocked() const;
     enum class MoveResizeMode : uint {
         None,
         Move = 0x1,
         Resize = 0x2,
         MoveResize = Move | Resize,
     };
-    MoveResizeMode pendingMoveResizeMode() const;
-    void setPendingMoveResizeMode(MoveResizeMode mode);
     virtual void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) = 0;
 
     /**
@@ -1787,9 +1781,6 @@ protected:
     QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry
-    int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
-    MoveResizeMode m_pendingMoveResizeMode = MoveResizeMode::None;
-    friend class GeometryUpdatesBlocker;
     Output *m_moveResizeOutput;
     QRectF m_moveResizeGeometry;
     QRectF m_keyboardGeometryRestore;
@@ -1837,26 +1828,6 @@ protected:
     bool m_lockScreenOverlay = false;
     uint32_t m_offscreenRenderCount = 0;
     QTimer m_offscreenFramecallbackTimer;
-};
-
-/**
- * Helper for Window::blockGeometryUpdates() being called in pairs (true/false)
- */
-class GeometryUpdatesBlocker
-{
-public:
-    explicit GeometryUpdatesBlocker(Window *c)
-        : cl(c)
-    {
-        cl->blockGeometryUpdates(true);
-    }
-    ~GeometryUpdatesBlocker()
-    {
-        cl->blockGeometryUpdates(false);
-    }
-
-private:
-    Window *cl;
 };
 
 inline QRectF Window::bufferGeometry() const
@@ -2088,31 +2059,6 @@ inline bool Window::isPopupWindow() const
 inline const QList<Window *> &Window::transients() const
 {
     return m_transients;
-}
-
-inline bool Window::areGeometryUpdatesBlocked() const
-{
-    return m_blockGeometryUpdates != 0;
-}
-
-inline void Window::blockGeometryUpdates()
-{
-    m_blockGeometryUpdates++;
-}
-
-inline void Window::unblockGeometryUpdates()
-{
-    m_blockGeometryUpdates--;
-}
-
-inline Window::MoveResizeMode Window::pendingMoveResizeMode() const
-{
-    return m_pendingMoveResizeMode;
-}
-
-inline void Window::setPendingMoveResizeMode(MoveResizeMode mode)
-{
-    m_pendingMoveResizeMode = MoveResizeMode(uint(m_pendingMoveResizeMode) | uint(mode));
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const Window *window);

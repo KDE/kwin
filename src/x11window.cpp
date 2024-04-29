@@ -363,6 +363,7 @@ X11Window::~X11Window()
 
     Q_ASSERT(!isInteractiveMoveResize());
     Q_ASSERT(!check_active_modal);
+    Q_ASSERT(m_blockGeometryUpdates == 0);
 }
 
 std::unique_ptr<WindowItem> X11Window::createItem(Item *parentItem)
@@ -4072,7 +4073,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         }
 
         QRectF origClientGeometry = m_clientGeometry;
-        GeometryUpdatesBlocker blocker(this);
+        X11GeometryUpdatesBlocker blocker(this);
         move(new_pos);
         resize(requestedFrameSize);
         QRectF area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
@@ -4105,7 +4106,7 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
 
         if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
             QRectF origClientGeometry = m_clientGeometry;
-            GeometryUpdatesBlocker blocker(this);
+            X11GeometryUpdatesBlocker blocker(this);
             moveResize(resizeWithChecks(moveResizeGeometry(), requestedFrameSize, xcb_gravity_t(gravity)));
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
@@ -4296,6 +4297,23 @@ bool X11Window::isMaximizable() const
         return true;
     }
     return false;
+}
+
+void X11Window::blockGeometryUpdates(bool block)
+{
+    if (block) {
+        if (m_blockGeometryUpdates == 0) {
+            m_pendingMoveResizeMode = MoveResizeMode::None;
+        }
+        ++m_blockGeometryUpdates;
+    } else {
+        if (--m_blockGeometryUpdates == 0) {
+            if (m_pendingMoveResizeMode != MoveResizeMode::None) {
+                moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
+                m_pendingMoveResizeMode = MoveResizeMode::None;
+            }
+        }
+    }
 }
 
 /**
@@ -4657,7 +4675,7 @@ void X11Window::setFullScreen(bool set)
     }
 
     StackingUpdatesBlocker blocker1(workspace());
-    GeometryUpdatesBlocker blocker2(this);
+    X11GeometryUpdatesBlocker blocker2(this);
 
     // active fullscreens get different layer
     updateLayer();

@@ -101,7 +101,6 @@ Window::Window()
 Window::~Window()
 {
     Q_ASSERT(!m_tile);
-    Q_ASSERT(m_blockGeometryUpdates == 0);
 }
 
 void Window::ref()
@@ -1132,23 +1131,6 @@ QSizeF Window::maxSize() const
 QSizeF Window::minSize() const
 {
     return rules()->checkMinSize(QSize(0, 0));
-}
-
-void Window::blockGeometryUpdates(bool block)
-{
-    if (block) {
-        if (m_blockGeometryUpdates == 0) {
-            m_pendingMoveResizeMode = MoveResizeMode::None;
-        }
-        ++m_blockGeometryUpdates;
-    } else {
-        if (--m_blockGeometryUpdates == 0) {
-            if (m_pendingMoveResizeMode != MoveResizeMode::None) {
-                moveResizeInternal(moveResizeGeometry(), m_pendingMoveResizeMode);
-                m_pendingMoveResizeMode = MoveResizeMode::None;
-            }
-        }
-    }
 }
 
 void Window::maximize(MaximizeMode mode)
