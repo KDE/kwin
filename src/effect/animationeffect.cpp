@@ -523,7 +523,6 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
 {
     Q_D(AnimationEffect);
     AniMap::const_iterator entry = d->m_animations.constFind(w);
-    auto finalRegion = region;
 
     if (entry != d->m_animations.constEnd()) {
         for (QList<AniData>::const_iterator anim = entry->first.constBegin(); anim != entry->first.constEnd(); ++anim) {
@@ -564,7 +563,7 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
                 break;
             }
             case Clip:
-                finalRegion = clipRect(w->expandedGeometry().toAlignedRect(), *anim);
+                region = clipRect(w->expandedGeometry().toAlignedRect(), *anim);
                 break;
             case Translation:
                 data += QPointF(interpolated(*anim, 0), interpolated(*anim, 1));
