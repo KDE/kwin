@@ -34,6 +34,7 @@ public:
 
 private:
     void relayoutToFit(Tile *tile);
+    void tryReset();
 
     Tile *m_resizedTile = nullptr;
 
