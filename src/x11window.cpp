@@ -4068,15 +4068,13 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
             return; // not allowed by rule
         }
 
-        QRectF origClientGeometry = m_clientGeometry;
-        X11GeometryUpdatesBlocker blocker(this);
-        move(new_pos);
-        resize(requestedFrameSize);
-        QRectF area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
-        if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()
-            && area.contains(origClientGeometry)) {
-            moveResize(keepInArea(moveResizeGeometry(), area));
+        QRectF geometry = QRectF(new_pos, requestedFrameSize);
+        const QRectF area = workspace()->clientArea(WorkArea, this, geometry.center());
+        if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen() && area.contains(clientGeometry())) {
+            geometry = keepInArea(geometry, area);
         }
+
+        moveResize(geometry);
 
         // this is part of the kicker-xinerama-hack... it should be
         // safe to remove when kicker gets proper ExtendedStrut support;
@@ -4097,25 +4095,23 @@ void X11Window::configureRequest(int value_mask, qreal rx, qreal ry, qreal rw, q
         }
 
         const QSizeF requestedClientSize = constrainClientSize(QSizeF(nw, nh));
-        QSizeF requestedFrameSize = clientSizeToFrameSize(requestedClientSize);
-        requestedFrameSize = rules()->checkSize(requestedFrameSize);
+        const QSizeF requestedFrameSize = rules()->checkSize(clientSizeToFrameSize(requestedClientSize));
 
         if (requestedFrameSize != size()) { // don't restore if some app sets its own size again
-            QRectF origClientGeometry = m_clientGeometry;
-            X11GeometryUpdatesBlocker blocker(this);
-            moveResize(resizeWithChecks(moveResizeGeometry(), requestedFrameSize, xcb_gravity_t(gravity)));
+            QRectF geometry = resizeWithChecks(moveResizeGeometry(), requestedFrameSize, xcb_gravity_t(gravity));
             if (!from_tool && (!isSpecialWindow() || isToolbar()) && !isFullScreen()) {
                 // try to keep the window in its xinerama screen if possible,
                 // if that fails at least keep it visible somewhere
-                QRectF area = workspace()->clientArea(MovementArea, this, moveResizeOutput());
-                if (area.contains(origClientGeometry)) {
-                    moveResize(keepInArea(moveResizeGeometry(), area));
+                QRectF area = workspace()->clientArea(MovementArea, this, geometry.center());
+                if (area.contains(clientGeometry())) {
+                    geometry = keepInArea(geometry, area);
                 }
-                area = workspace()->clientArea(WorkArea, this, moveResizeOutput());
-                if (area.contains(origClientGeometry)) {
-                    moveResize(keepInArea(moveResizeGeometry(), area));
+                area = workspace()->clientArea(WorkArea, this, geometry.center());
+                if (area.contains(clientGeometry())) {
+                    geometry = keepInArea(geometry, area);
                 }
             }
+            moveResize(geometry);
         }
     }
     // No need to send synthetic configure notify event here, either it's sent together
