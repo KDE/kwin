@@ -6,17 +6,20 @@
 
 #pragma once
 
+#include "renderbackend.h"
 #include "renderjournal.h"
 #include "renderloop.h"
 
 #include <QTimer>
 
+#include <fstream>
 #include <optional>
 
 namespace KWin
 {
 
 class SurfaceItem;
+class OutputFrame;
 
 class KWIN_EXPORT RenderLoopPrivate
 {
@@ -32,11 +35,12 @@ public:
     void scheduleRepaint(std::chrono::nanoseconds lastTargetTimestamp);
 
     void notifyFrameDropped();
-    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<std::chrono::nanoseconds> renderTime, PresentationMode mode = PresentationMode::VSync);
+    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame);
     void notifyVblank(std::chrono::nanoseconds timestamp);
 
     RenderLoop *const q;
     Output *const output;
+    std::optional<std::fstream> m_debugOutput;
     std::chrono::nanoseconds lastPresentationTimestamp = std::chrono::nanoseconds::zero();
     std::chrono::nanoseconds nextPresentationTimestamp = std::chrono::nanoseconds::zero();
     QTimer compositeTimer;
