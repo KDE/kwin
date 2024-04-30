@@ -75,7 +75,6 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
 
 private:
-    WaylandOutput *m_output;
     WaylandEglBackend *m_backend;
     std::shared_ptr<EglSwapchain> m_swapchain;
     std::shared_ptr<EglSwapchainSlot> m_buffer;
