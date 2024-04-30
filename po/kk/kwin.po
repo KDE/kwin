@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-29 00:40+0000\n"
+"POT-Creation-Date: 2024-04-30 00:39+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -76,17 +76,17 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:145
+#: compositor_wayland.cpp:279 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Үстел эффекттері графика ысыруға байланысты жаңадан басталды"
 
-#: compositor_x11.cpp:98
+#: compositor_x11.cpp:102
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Композициялауды аялдату"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:556
 #, fuzzy, kde-format
 #| msgid ""
 #| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -107,12 +107,12 @@ msgstr ""
 "ол бірден қирауға апарып соғуға мүмкін!</b></p><p>Басқа амал - XRender "
 "тетігін қолдану.</p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:563
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Қажетті X кеңейтулері (XComposite пен XDamage) жоқ."
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:566
 #, fuzzy, kde-format
 #| msgid "GLX/OpenGL and XRender/XFixes are not available."
 msgid "GLX/OpenGL is not available."
@@ -1466,7 +1466,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:402 main_x11.cpp:431
+#: main_wayland.cpp:402 main_x11.cpp:433
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1506,7 +1506,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: басқа терезе менеджері жегілген бе? (--replace деп көріңіз)\n"
 
-#: main_x11.cpp:424
+#: main_x11.cpp:426
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Істеп тұрған ICCCM2.0-секілді терезе менеджерін алмастыру"
@@ -2931,35 +2931,35 @@ msgstr "Азайсын"
 msgid "More"
 msgstr "Үлғайсын"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:69
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Терезені сол жақтағы үстелге ауыстыру"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:76
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Терезені оң жақтағы үстелге ауыстыру"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Үлкейту аумағын жоғарға жылжыту"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:90
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Үлкейту аумағын төменге жылжыту"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "Mouse Emulation"
 msgid "Move Mouse to Focus"
 msgstr "Тышқанды эмуляциялау"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to Group"
 msgid "Move Mouse to Center"
@@ -4304,17 +4304,6 @@ msgstr "Терезені құрту"
 msgid "Activate Window (%1)"
 msgstr "Терезені белсендету (%1)"
 
-#: useractions.cpp:1264
-#, kde-format
-msgid ""
-"The window manager is configured to consider the screen with the mouse on it "
-"as active one.\n"
-"Therefore it is not possible to switch to a screen explicitly."
-msgstr ""
-"Терезе менеджердің баптауы бойынша тышқан меңзері астындағы экран белсенді "
-"болып саналады.\n"
-"Сондықтан тура басқа экранға ауысу болмайды."
-
 #: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
@@ -4360,13 +4349,13 @@ msgstr "Төмен жақтағы үстелге ауысу"
 msgid "Switch to Desktop %1"
 msgstr "%1-үстелге ауысу"
 
-#: window.cpp:3122
+#: window.cpp:3103
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1662
+#: workspace.cpp:1659
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -4403,6 +4392,15 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid ""
+#~ "The window manager is configured to consider the screen with the mouse on "
+#~ "it as active one.\n"
+#~ "Therefore it is not possible to switch to a screen explicitly."
+#~ msgstr ""
+#~ "Терезе менеджердің баптауы бойынша тышқан меңзері астындағы экран "
+#~ "белсенді болып саналады.\n"
+#~ "Сондықтан тура басқа экранға ауысу болмайды."
 
 #~ msgid "Layout mode:"
 #~ msgstr "Орналастыру тәртібі:"

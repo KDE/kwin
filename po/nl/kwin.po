@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-29 00:40+0000\n"
+"POT-Creation-Date: 2024-04-30 00:39+0000\n"
 "PO-Revision-Date: 2024-03-26 11:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -83,17 +83,17 @@ msgstr "Rechter Ctrl indrukken om invoer vast te pakken"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor.cpp:145
+#: compositor_wayland.cpp:279 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Bureaubladeffecten zijn opnieuw gestart vanwege een grafische reset"
 
-#: compositor_x11.cpp:98
+#: compositor_x11.cpp:102
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Compositing uitstellen"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:556
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -108,12 +108,12 @@ msgstr ""
 "maar <b>wees er op bedacht dat dit kan resulteren in een onmiddellijke crash!"
 "</b></p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:563
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "De vereiste X-extensies (XComposite en XDamage) zijn niet beschikbaar."
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:566
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL is niet beschikbaar."
@@ -1457,7 +1457,7 @@ msgstr "Start de sessie zonder ondersteuning voor schermvergrendeling."
 msgid "Starts the session without global shortcuts support."
 msgstr "Start de sessie zonder ondersteuning voor globale sneltoetsen."
 
-#: main_wayland.cpp:402 main_x11.cpp:431
+#: main_wayland.cpp:402 main_x11.cpp:433
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Integratie met KActivities uitschakelen."
@@ -1500,7 +1500,7 @@ msgstr ""
 "kwin: er draait reeds een andere windowmanager (probeer --replace te "
 "gebruiken)\n"
 
-#: main_x11.cpp:424
+#: main_x11.cpp:426
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Reeds gestarte ICCCM2.0 compliant windowmanager vervangen"
@@ -2832,32 +2832,32 @@ msgstr "Minder"
 msgid "More"
 msgstr "Meer"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:69
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "Ingezoomde gebied naar links verplaatsen"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:76
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "Ingezoomde gebied naar rechts verplaatsen"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Ingezoomde gebied naar omhoog verplaatsen"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:90
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Ingezoomde gebied naar omlaag verplaatsen"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "Muis naar focus verplaatsen"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "Muis naar het midden verplaatsen"
@@ -4123,17 +4123,6 @@ msgstr "Venster geforceerd sluiten"
 msgid "Activate Window (%1)"
 msgstr "Venster (%1) activeren"
 
-#: useractions.cpp:1264
-#, kde-format
-msgid ""
-"The window manager is configured to consider the screen with the mouse on it "
-"as active one.\n"
-"Therefore it is not possible to switch to a screen explicitly."
-msgstr ""
-"De windowmanager is ingesteld om het scherm met de muis erop als de actieve "
-"te beschouwen.\n"
-"Het is daarom niet mogelijk om expliciet naar een scherm om te schakelen."
-
 #: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
@@ -4179,13 +4168,13 @@ msgstr "Een bureaublad omlaag schakelen"
 msgid "Switch to Desktop %1"
 msgstr "Schakel naar bureaublad %1"
 
-#: window.cpp:3122
+#: window.cpp:3103
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reageert niet)"
 
-#: workspace.cpp:1662
+#: workspace.cpp:1659
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4213,6 +4202,15 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland is gecrasht"
+
+#~ msgid ""
+#~ "The window manager is configured to consider the screen with the mouse on "
+#~ "it as active one.\n"
+#~ "Therefore it is not possible to switch to a screen explicitly."
+#~ msgstr ""
+#~ "De windowmanager is ingesteld om het scherm met de muis erop als de "
+#~ "actieve te beschouwen.\n"
+#~ "Het is daarom niet mogelijk om expliciet naar een scherm om te schakelen."
 
 #~ msgid "Region outside the workspace"
 #~ msgstr "Gebied buiten de werkruimte"

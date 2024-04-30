@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-29 00:40+0000\n"
+"POT-Creation-Date: 2024-04-30 00:39+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -69,17 +69,17 @@ msgstr "按右 Ctrl 键抓取输入"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 显示特效混合器"
 
-#: compositor.cpp:145
+#: compositor_wayland.cpp:279 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "由于显卡重置，桌面效果已重启。"
 
-#: compositor_x11.cpp:98
+#: compositor_x11.cpp:102
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "暂停显示特效合成"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:556
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -92,12 +92,12 @@ msgstr ""
 "显示驱动程序，<br>您可以重置此保护措施，<b>但不排除这会导致 KWin 立即崩溃！</"
 "b></p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:563
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "所需的 X 扩展 (XComposite 和 XDamage) 不可用。"
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:566
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL 不可用。"
@@ -1427,7 +1427,7 @@ msgstr "在没有锁屏支持的状态下启动会话。"
 msgid "Starts the session without global shortcuts support."
 msgstr "在没有全局快捷键支持的情况状态下启动会话。"
 
-#: main_wayland.cpp:402 main_x11.cpp:431
+#: main_wayland.cpp:402 main_x11.cpp:433
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "禁用 KActivities 集成。"
@@ -1467,7 +1467,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin：其他窗口管理器正在运行 (请尝试使用 --replace 参数)\n"
 
-#: main_x11.cpp:424
+#: main_x11.cpp:426
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "替换正在运行的兼容 ICCCM2.0 的窗口管理器"
@@ -2791,32 +2791,32 @@ msgstr "低"
 msgid "More"
 msgstr "高"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:69
 #, kde-format
 msgid "Move Zoomed Area to Left"
 msgstr "将缩放区域向左移动"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:76
 #, kde-format
 msgid "Move Zoomed Area to Right"
 msgstr "将缩放区域向右移动"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "将缩放区域向上移动"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:90
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "将缩放区域向下移动"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
 #, kde-format
 msgid "Move Mouse to Focus"
 msgstr "移动鼠标到焦点"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
 #, kde-format
 msgid "Move Mouse to Center"
 msgstr "移动鼠标到中央"
@@ -4079,16 +4079,6 @@ msgstr "强制终止窗口"
 msgid "Activate Window (%1)"
 msgstr "活动窗口 (%1)"
 
-#: useractions.cpp:1264
-#, kde-format
-msgid ""
-"The window manager is configured to consider the screen with the mouse on it "
-"as active one.\n"
-"Therefore it is not possible to switch to a screen explicitly."
-msgstr ""
-"窗口管理器已设置为将鼠标所在屏幕视作活动屏幕。\n"
-"因此无法明确切换到一个指定的屏幕。"
-
 #: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
@@ -4134,13 +4124,13 @@ msgstr "切换到下方桌面"
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3122
+#: window.cpp:3103
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(没有响应)"
 
-#: workspace.cpp:1662
+#: workspace.cpp:1659
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
@@ -4165,3 +4155,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
+
+#~ msgid ""
+#~ "The window manager is configured to consider the screen with the mouse on "
+#~ "it as active one.\n"
+#~ "Therefore it is not possible to switch to a screen explicitly."
+#~ msgstr ""
+#~ "窗口管理器已设置为将鼠标所在屏幕视作活动屏幕。\n"
+#~ "因此无法明确切换到一个指定的屏幕。"

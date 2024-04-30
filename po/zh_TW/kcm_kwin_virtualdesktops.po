@@ -6,21 +6,21 @@
 # Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2009, 2010, 2013, 2014.
 # pan93412 <pan93412@gmail.com>, 2018, 2019.
 # Jeff Huang <s8321414@gmail.com>, 2022.
-# Kisaragi Hiu <mail@kisaragi-hiu.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-27 00:39+0000\n"
-"PO-Revision-Date: 2022-12-26 03:37+0900\n"
+"PO-Revision-Date: 2024-04-29 17:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
-"Language-Team: Traditional Chinese <zh-l10n@linux.org.tw>\n"
+"Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "dot tw>\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 24.04.70\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -59,16 +59,13 @@ msgstr "從合成器請求資訊時發生錯誤。"
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "行數："
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgctxt "A numbered name for virtual desktops"
-#| msgid "Desktop %1"
-#| msgid_plural "Desktop %1"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "桌面 %1"
+msgstr "新增桌面"
 
 #: ui/main.qml:118
 #, kde-format

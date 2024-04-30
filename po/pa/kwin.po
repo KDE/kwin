@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-29 00:40+0000\n"
+"POT-Creation-Date: 2024-04-30 00:39+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -72,17 +72,17 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:145
+#: compositor_wayland.cpp:279 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "ਗਰਾਫਿਕਸ ਬਦਲਣ ਦੇ ਕਰਕੇ ਡੈਸਕਟਾਪ ਪ੍ਰਭਾਵ ਮੁੜ-ਚਾਲੂ ਕੀਤੇ ਗਏ ਸਨ"
 
-#: compositor_x11.cpp:98
+#: compositor_x11.cpp:102
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "ਸਸਪੈਂਡ ਕੰਪੋਜ਼ਿਸ਼ਨ"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:556
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -91,12 +91,12 @@ msgid ""
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:563
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "ਲੋੜੀਦੀ X ਇਕਸਟੈਨਸ਼ਨ (XComposite ਤੇ XDamage) ਉਪਲੱਬਧ ਨਹੀਂ ਹੈ।"
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:566
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ਮੌਜੂਦ ਨਹੀਂ ਹੈ।"
@@ -1434,7 +1434,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:402 main_x11.cpp:431
+#: main_wayland.cpp:402 main_x11.cpp:433
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1479,7 +1479,7 @@ msgstr ""
 "kwin: ਕਲੇਮ ਮੈਨੇਜਰ ਚੁਣਨ ਵਿੱਚ ਅਸਫਲ, ਇੱਕ ਹੋਰ wm (ਵਿੰਡੋ ਮੈਨੇਜਰ) ਚੱਲ ਰਿਹਾ ਹੈ? (ਇਹ ਵਰਤ ਕੇ ਕੋਸ਼ਿਸ "
 "ਕਰੋ --replace)\n"
 
-#: main_x11.cpp:424
+#: main_x11.cpp:426
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "ਪਹਿਲਾਂ ਚੱਲ ਰਹੇ ICCCM2.0-compliant ਵਿੰਡੋ ਮੈਨੇਜਰ ਨਾਲ ਬਦਲਿਆ"
@@ -2914,35 +2914,35 @@ msgstr "ਘੱਟ"
 msgid "More"
 msgstr "ਵੱਧ"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:69
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਖੱਬੇ ਕਰੋ"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:76
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "ਵਿੰਡੋ ਇੱਕ ਡੈਸਕਟਾਪ ਸੱਜੇ ਕਰੋ"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:90
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr ""
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "ਕੋਈ ਮਾਊਸ ਬਟਨ"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"
@@ -4243,14 +4243,6 @@ msgstr "ਵਿੰਡੋ ਖਤਮ ਕਰੋ"
 msgid "Activate Window (%1)"
 msgstr "ਵਿੰਡੋ (%1) ਸਰਗਰਮ"
 
-#: useractions.cpp:1264
-#, kde-format
-msgid ""
-"The window manager is configured to consider the screen with the mouse on it "
-"as active one.\n"
-"Therefore it is not possible to switch to a screen explicitly."
-msgstr ""
-
 #: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
@@ -4296,13 +4288,13 @@ msgstr "ਇੱਕ ਡੈਸਕਟਾਪ ਹੇਠਾਂ ਜਾਓ"
 msgid "Switch to Desktop %1"
 msgstr "ਡੈਸਕਟਾਪ %1 ਉੱਤੇ ਜਾਓ"
 
-#: window.cpp:3122
+#: window.cpp:3103
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(ਜਵਾਬ ਨਹੀਂ ਦੇ ਰਹੇ)"
 
-#: workspace.cpp:1662
+#: workspace.cpp:1659
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-29 00:40+0000\n"
+"POT-Creation-Date: 2024-04-30 00:39+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -74,17 +74,17 @@ msgstr ""
 msgid "KDE Wayland Compositor"
 msgstr ""
 
-#: compositor.cpp:145
+#: compositor_wayland.cpp:279 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Töölauaefektid taaskäivitati graafika lähtestamise tõttu"
 
-#: compositor_x11.cpp:98
+#: compositor_x11.cpp:102
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Komposiidi peatamine"
 
-#: compositor_x11.cpp:513
+#: compositor_x11.cpp:556
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -97,12 +97,12 @@ msgstr ""
 "paigaldanud stabiilse draiveri,<br>võid selle kaitse maha võtta, aga "
 "<b>arvesta, et see võib kaasa tuua kohese krahhi!</b></p>"
 
-#: compositor_x11.cpp:520
+#: compositor_x11.cpp:563
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Nõutavaid X'i laiendusi (XComposite ja XDamage) pole saadaval."
 
-#: compositor_x11.cpp:523
+#: compositor_x11.cpp:566
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL ei ole saadaval."
@@ -1445,7 +1445,7 @@ msgstr "Seansi käivitamine ekraani lukustamise toetuseta."
 msgid "Starts the session without global shortcuts support."
 msgstr "Seansi käivitamine globaalsete kiirklahvide toetuseta."
 
-#: main_wayland.cpp:402 main_x11.cpp:431
+#: main_wayland.cpp:402 main_x11.cpp:433
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivitiesi lõimimise keelamine"
@@ -1486,7 +1486,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: muu aknahaldur töötab (proovi kasutada võtit --replace)\n"
 
-#: main_x11.cpp:424
+#: main_x11.cpp:426
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Asendab juba töötava ICCCM2.0 ühilduva aknahalduri"
@@ -2932,35 +2932,35 @@ msgstr "Vähem"
 msgid "More"
 msgstr "Rohkem"
 
-#: plugins/zoom/zoom.cpp:70
+#: plugins/zoom/zoom.cpp:69
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Left"
 msgid "Move Zoomed Area to Left"
 msgstr "Aken üks töölaud vasakule"
 
-#: plugins/zoom/zoom.cpp:77
+#: plugins/zoom/zoom.cpp:76
 #, fuzzy, kde-format
 #| msgid "Window One Desktop to the Right"
 msgid "Move Zoomed Area to Right"
 msgstr "Aken üks töölaud paremale"
 
-#: plugins/zoom/zoom.cpp:84
+#: plugins/zoom/zoom.cpp:83
 #, kde-format
 msgid "Move Zoomed Area Upwards"
 msgstr "Suurendatud ala liigutamine üles"
 
-#: plugins/zoom/zoom.cpp:91
+#: plugins/zoom/zoom.cpp:90
 #, kde-format
 msgid "Move Zoomed Area Downwards"
 msgstr "Suurendatud ala liigutamine alla"
 
-#: plugins/zoom/zoom.cpp:99 plugins/zoom/zoom_config.cpp:98
+#: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
 #, fuzzy, kde-format
 #| msgid "No Mouse Buttons"
 msgid "Move Mouse to Focus"
 msgstr "Hiirenuppe pole"
 
-#: plugins/zoom/zoom.cpp:106 plugins/zoom/zoom_config.cpp:105
+#: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
 #, fuzzy, kde-format
 #| msgid "Move Window to the Center"
 msgid "Move Mouse to Center"
@@ -4257,16 +4257,6 @@ msgstr "Akna tapmine"
 msgid "Activate Window (%1)"
 msgstr "Akna aktiveerimine (%1)"
 
-#: useractions.cpp:1264
-#, kde-format
-msgid ""
-"The window manager is configured to consider the screen with the mouse on it "
-"as active one.\n"
-"Therefore it is not possible to switch to a screen explicitly."
-msgstr ""
-"Aknahaldur on seadistatud pidama hiirekursoriga ekraani aktiivseks.\n"
-"Seepärast ei saa otse ekraanile lülituda."
-
 #: utils/edid.cpp:234
 #, kde-format
 msgid "unknown"
@@ -4312,13 +4302,13 @@ msgstr "Lülitumine üks töölaud alla"
 msgid "Switch to Desktop %1"
 msgstr "Lülitumine töölauale %1"
 
-#: window.cpp:3122
+#: window.cpp:3103
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(ei reageeri)"
 
-#: workspace.cpp:1662
+#: workspace.cpp:1659
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""
@@ -4356,6 +4346,14 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgid ""
+#~ "The window manager is configured to consider the screen with the mouse on "
+#~ "it as active one.\n"
+#~ "Therefore it is not possible to switch to a screen explicitly."
+#~ msgstr ""
+#~ "Aknahaldur on seadistatud pidama hiirekursoriga ekraani aktiivseks.\n"
+#~ "Seepärast ei saa otse ekraanile lülituda."
 
 #, fuzzy
 #~| msgctxt "Name of a hardware switch"
