@@ -192,11 +192,7 @@ void AbstractEglBackend::initWayland()
         LinuxDmaBufV1ClientBufferIntegration *dmabuf = waylandServer()->linuxDmabuf();
         dmabuf->setRenderBackend(this);
         dmabuf->setSupportedFormatsWithModifiers(m_tranches);
-        if (auto syncObj = waylandServer()->linuxSyncObj()) {
-            syncObj->setRenderBackend(this);
-        }
     }
-
     waylandServer()->setRenderBackend(this);
 }
 

@@ -855,6 +855,10 @@ void WaylandServer::setRenderBackend(RenderBackend *backend)
         }
     } else if (m_linuxDrmSyncObj) {
         m_linuxDrmSyncObj->remove();
+        m_linuxDrmSyncObj = nullptr;
+    }
+    if (m_linuxDrmSyncObj) {
+        m_linuxDrmSyncObj->setRenderBackend(backend);
     }
 }
 
