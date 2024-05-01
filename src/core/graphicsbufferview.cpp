@@ -34,6 +34,8 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
         return QImage::Format_ARGB32_Premultiplied;
     case DRM_FORMAT_XRGB8888:
         return QImage::Format_RGB32;
+    case DRM_FORMAT_R8:
+        return QImage::Format_Alpha8;
     default:
         return QImage::Format_Invalid;
     }
