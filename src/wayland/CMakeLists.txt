@@ -252,12 +252,17 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
     BASENAME linux-drm-syncobj-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-blur-v1.xml
+    BASENAME kde-blur-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
     abstract_drop_handler.cpp
     appmenu.cpp
     blur.cpp
+    blurv1.cpp
     clientconnection.cpp
     compositor.cpp
     contenttype_v1.cpp
@@ -341,6 +346,7 @@ target_sources(kwin PRIVATE
 install(FILES
     appmenu.h
     blur.h
+    blurv1.h
     clientconnection.h
     compositor.h
     contenttype_v1.h

@@ -20,6 +20,7 @@ namespace KWin
 
 class GraphicsBuffer;
 class BlurInterface;
+class BlurV1Interface;
 class ClientConnection;
 class ConfinedPointerV1Interface;
 class ContrastInterface;
@@ -192,6 +193,7 @@ public:
      * @returns The Blur for this Surface.
      */
     BlurInterface *blur() const;
+    BlurV1Interface *blurV1() const;
 
     /**
      * @returns The Slide for this Surface.
@@ -401,6 +403,7 @@ Q_SIGNALS:
     void sizeChanged();
     void shadowChanged();
     void blurChanged();
+    void blurV1Changed();
     void slideOnShowHideChanged();
     void contrastChanged();
     /**

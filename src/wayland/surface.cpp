@@ -6,6 +6,7 @@
 */
 #include "surface.h"
 #include "blur.h"
+#include "blurv1.h"
 #include "clientconnection.h"
 #include "compositor.h"
 #include "contrast.h"
@@ -553,6 +554,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->blur = blur;
         target->blurIsSet = true;
     }
+    if (blurV1IsSet) {
+        target->blurV1 = blurV1;
+        target->blurV1IsSet = true;
+    }
     if (contrastIsSet) {
         target->contrast = contrast;
         target->contrastIsSet = true;
@@ -604,6 +609,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool transformChanged = next->bufferTransformIsSet && (current->bufferTransform != next->bufferTransform);
     const bool shadowChanged = next->shadowIsSet;
     const bool blurChanged = next->blurIsSet;
+    const bool blurV1Changed = next->blurV1IsSet;
     const bool contrastChanged = next->contrastIsSet;
     const bool slideChanged = next->slideIsSet;
     const bool subsurfaceOrderChanged = next->subsurfaceOrderChanged;
@@ -727,6 +733,10 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
 
     Q_EMIT q->stateApplied(next->serial);
     Q_EMIT q->committed();
+
+    if (blurV1Changed) {
+        Q_EMIT q->blurV1Changed();
+    }
 }
 
 bool SurfaceInterfacePrivate::computeEffectiveMapped() const
@@ -891,6 +901,11 @@ ShadowInterface *SurfaceInterface::shadow() const
 BlurInterface *SurfaceInterface::blur() const
 {
     return d->current->blur;
+}
+
+BlurV1Interface *SurfaceInterface::blurV1() const
+{
+    return d->current->blurV1;
 }
 
 ContrastInterface *SurfaceInterface::contrast() const

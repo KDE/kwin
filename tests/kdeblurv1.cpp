@@ -46,6 +46,7 @@ public:
     Shm()
         : QWaylandClientExtensionTemplate<Shm>(2)
     {
+        initialize();
     }
 
     ~Shm() override

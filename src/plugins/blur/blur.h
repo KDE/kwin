@@ -18,6 +18,7 @@ namespace KWin
 {
 
 class BlurManagerInterface;
+class BlurManagerV1Interface;
 
 struct BlurRenderData
 {
@@ -146,9 +147,11 @@ private:
     QList<BlurValuesStruct> blurStrengthValues;
 
     QMap<EffectWindow *, QMetaObject::Connection> windowBlurChangedConnections;
+    QMap<EffectWindow *, QMetaObject::Connection> windowBlurV1ChangedConnections;
     std::unordered_map<EffectWindow *, BlurEffectData> m_windows;
 
     static BlurManagerInterface *s_blurManager;
+    static BlurManagerV1Interface *s_blurManagerV1;
     static QTimer *s_blurManagerRemoveTimer;
 };
 

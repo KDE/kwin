@@ -50,6 +50,7 @@ struct SurfaceState
     bool bufferIsSet = false;
     bool shadowIsSet = false;
     bool blurIsSet = false;
+    bool blurV1IsSet = false;
     bool contrastIsSet = false;
     bool slideIsSet = false;
     bool subsurfaceOrderChanged = false;
@@ -66,6 +67,7 @@ struct SurfaceState
     QPointer<GraphicsBuffer> buffer;
     QPointer<ShadowInterface> shadow;
     QPointer<BlurInterface> blur;
+    QPointer<BlurV1Interface> blurV1;
     QPointer<ContrastInterface> contrast;
     QPointer<SlideInterface> slide;
     ContentType contentType = ContentType::None;

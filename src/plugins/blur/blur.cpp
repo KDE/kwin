@@ -16,6 +16,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/glplatform.h"
 #include "wayland/blur.h"
+#include "wayland/blurv1.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
 
@@ -51,6 +52,7 @@ namespace KWin
 static const QByteArray s_blurAtomName = QByteArrayLiteral("_KDE_NET_WM_BLUR_BEHIND_REGION");
 
 BlurManagerInterface *BlurEffect::s_blurManager = nullptr;
+BlurManagerV1Interface *BlurEffect::s_blurManagerV1 = nullptr;
 QTimer *BlurEffect::s_blurManagerRemoveTimer = nullptr;
 
 BlurEffect::BlurEffect()
@@ -110,11 +112,16 @@ BlurEffect::BlurEffect()
             s_blurManagerRemoveTimer->callOnTimeout([]() {
                 s_blurManager->remove();
                 s_blurManager = nullptr;
+                s_blurManagerV1->remove();
+                s_blurManagerV1 = nullptr;
             });
         }
         s_blurManagerRemoveTimer->stop();
         if (!s_blurManager) {
             s_blurManager = new BlurManagerInterface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
+        }
+        if (!s_blurManagerV1) {
+            s_blurManagerV1 = new BlurManagerV1Interface(effects->waylandDisplay(), s_blurManagerRemoveTimer);
         }
     }
 
@@ -242,10 +249,12 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
     }
 #endif
 
-    SurfaceInterface *surf = w->surface();
-
-    if (surf && surf->blur()) {
-        content = surf->blur()->region();
+    if (SurfaceInterface *surface = w->surface()) {
+        if (surface->blurV1()) {
+            content = surface->blurV1()->shape();
+        } else if (surface->blur()) {
+            content = surface->blur()->region();
+        }
     }
 
     if (auto internal = w->internalWindow()) {
@@ -281,6 +290,11 @@ void BlurEffect::slotWindowAdded(EffectWindow *w)
                 updateBlurRegion(w);
             }
         });
+        windowBlurV1ChangedConnections[w] = connect(surf, &SurfaceInterface::blurV1Changed, this, [this, w]() {
+            if (w) {
+                updateBlurRegion(w);
+            }
+        });
     }
     if (auto internal = w->internalWindow()) {
         internal->installEventFilter(this);
@@ -301,6 +315,10 @@ void BlurEffect::slotWindowDeleted(EffectWindow *w)
     if (auto it = windowBlurChangedConnections.find(w); it != windowBlurChangedConnections.end()) {
         disconnect(*it);
         windowBlurChangedConnections.erase(it);
+    }
+    if (auto it = windowBlurV1ChangedConnections.find(w); it != windowBlurV1ChangedConnections.end()) {
+        disconnect(*it);
+        windowBlurV1ChangedConnections.erase(it);
     }
 }
 
