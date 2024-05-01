@@ -76,3 +76,11 @@ target_link_libraries(xdgforeign-test Qt::Gui Plasma::KWaylandClient)
 
 add_executable(xdg-test xdgtest.cpp)
 target_link_libraries(xdg-test Qt::Gui Plasma::KWaylandClient)
+
+add_executable(kdeblurv1 kdeblurv1.cpp)
+qt6_generate_wayland_protocol_client_sources(kdeblurv1
+    FILES
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-blur-v1.xml
+        ${Wayland_DATADIR}/wayland.xml
+)
+target_link_libraries(kdeblurv1 kwin Qt::Gui Qt::GuiPrivate Qt::WaylandClient Qt::Widgets Wayland::Client)
