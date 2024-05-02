@@ -74,15 +74,16 @@ void XwaylandLauncher::enable()
     if (m_enabled) {
         return;
     }
-    m_enabled = true;
 
     if (!m_listenFds.isEmpty()) {
         Q_ASSERT(!m_displayName.isEmpty());
     } else {
-        m_socket = std::make_unique<XwaylandSocket>(XwaylandSocket::OperationMode::CloseFdsOnExec);
-        if (!m_socket->isValid()) {
-            qFatal("Failed to establish X11 socket");
+        auto socket = std::make_unique<XwaylandSocket>(XwaylandSocket::OperationMode::CloseFdsOnExec);
+        if (!socket->isValid()) {
+            qCWarning(KWIN_XWL) << "Failed to establish X11 socket";
+            return;
         }
+        m_socket = std::move(socket);
         m_displayName = m_socket->name();
         m_listenFds = m_socket->fileDescriptors();
     }
@@ -102,6 +103,8 @@ void XwaylandLauncher::enable()
             notifier->setEnabled(m_enabled);
         });
     }
+
+    m_enabled = true;
 }
 
 void XwaylandLauncher::disable()
