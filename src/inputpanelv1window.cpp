@@ -186,6 +186,7 @@ QRectF InputPanelV1Window::frameRectToBufferRect(const QRectF &rect) const
 
 void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
+    setMoveResizeGeometry(rect);
     updateGeometry(rect);
 }
 

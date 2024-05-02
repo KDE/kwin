@@ -4320,6 +4320,8 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     // Such code is wrong and should be changed to handle the case when the window is shaded,
     // for example using X11Window::clientSize()
 
+    setMoveResizeGeometry(rect);
+
     if (isUnmanaged()) {
         qCWarning(KWIN_CORE) << "Cannot move or resize unmanaged window" << this;
         return;

@@ -235,6 +235,8 @@ bool LayerShellV1Window::acceptsFocus() const
 
 void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
+    setMoveResizeGeometry(rect);
+
     const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
     if (requestedClientSize != clientSize()) {
         m_shellSurface->sendConfigure(rect.size().toSize());

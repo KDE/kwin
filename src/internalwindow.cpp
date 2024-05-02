@@ -247,6 +247,8 @@ QRectF InternalWindow::resizeWithChecks(const QRectF &geometry, const QSizeF &si
 
 void InternalWindow::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
+    setMoveResizeGeometry(rect);
+
     const QSizeF requestedClientSize = frameSizeToClientSize(rect.size());
     if (clientSize() == requestedClientSize) {
         commitGeometry(rect);

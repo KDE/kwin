@@ -3329,7 +3329,6 @@ void Window::move(const QPointF &point)
 {
     const QRectF rect = QRectF(point, m_moveResizeGeometry.size());
 
-    setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::Move);
 }
 
@@ -3337,13 +3336,11 @@ void Window::resize(const QSizeF &size)
 {
     const QRectF rect = QRectF(m_moveResizeGeometry.topLeft(), size);
 
-    setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::Resize);
 }
 
 void Window::moveResize(const QRectF &rect)
 {
-    setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
 
