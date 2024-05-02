@@ -25,6 +25,7 @@ class Window;
 class Output;
 class Rules;
 class RuleSettings;
+class RuleBookSettings;
 class VirtualDesktop;
 
 #ifndef KCMRULES // only for kwin core
@@ -143,6 +144,8 @@ public:
     };
     void write(RuleSettings *) const;
     bool isEmpty() const;
+    QString id() const;
+
 #ifndef KCMRULES
     bool discardUsed(bool withdrawn);
     bool match(const Window *c) const;
@@ -208,6 +211,7 @@ private:
 #endif
     enum Layer layer;
     ForceRule layerrule;
+    QString m_id;
     QString description;
     QString wmclass;
     StringMatch wmclassmatch;
@@ -308,11 +312,7 @@ public:
     void load();
     void edit(Window *c, bool whole_app);
     void requestDiskStorage();
-
-    void setConfig(const KSharedConfig::Ptr &config)
-    {
-        m_config = config;
-    }
+    void setConfig(const KSharedConfig::Ptr &config);
 
 private Q_SLOTS:
     void save();
@@ -322,7 +322,7 @@ private:
     QTimer *m_updateTimer;
     bool m_updatesDisabled;
     QList<Rules *> m_rules;
-    KSharedConfig::Ptr m_config;
+    std::unique_ptr<RuleBookSettings> m_book;
 };
 
 inline bool RuleBook::areUpdatesDisabled() const

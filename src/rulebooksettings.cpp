@@ -20,18 +20,8 @@ RuleBookSettings::RuleBookSettings(KSharedConfig::Ptr config, QObject *parent)
 {
 }
 
-RuleBookSettings::RuleBookSettings(const QString &configname, KConfig::OpenFlags flags, QObject *parent)
-    : RuleBookSettings(KSharedConfig::openConfig(configname, flags), parent)
-{
-}
-
-RuleBookSettings::RuleBookSettings(KConfig::OpenFlags flags, QObject *parent)
-    : RuleBookSettings(QStringLiteral("kwinrulesrc"), flags, parent)
-{
-}
-
 RuleBookSettings::RuleBookSettings(QObject *parent)
-    : RuleBookSettings(KConfig::FullConfig, parent)
+    : RuleBookSettings(KSharedConfig::openConfig(QStringLiteral("kwinrulesrc"), KConfig::NoGlobals), parent)
 {
 }
 
@@ -40,39 +30,7 @@ RuleBookSettings::~RuleBookSettings()
     qDeleteAll(m_list);
 }
 
-void RuleBookSettings::setRules(const QList<Rules *> &rules)
-{
-    mCount = rules.count();
-    mRuleGroupList.clear();
-    mRuleGroupList.reserve(rules.count());
-
-    int i = 0;
-    const int list_length = m_list.length();
-    for (const auto &rule : rules) {
-        RuleSettings *settings;
-        if (i < list_length) {
-            // Optimization. Reuse RuleSettings already created
-            settings = m_list.at(i);
-            settings->setDefaults();
-        } else {
-            // If there are more rules than in cache
-            settings = new RuleSettings(this->sharedConfig(), QString::number(i + 1), this);
-            m_list.append(settings);
-        }
-
-        rule->write(settings);
-        mRuleGroupList.append(settings->currentGroup());
-
-        i++;
-    }
-
-    for (int j = m_list.count() - 1; j >= rules.count(); j--) {
-        delete m_list[j];
-        m_list.removeAt(j);
-    }
-}
-
-QList<Rules *> RuleBookSettings::rules()
+QList<Rules *> RuleBookSettings::rules() const
 {
     QList<Rules *> result;
     result.reserve(m_list.count());
@@ -133,6 +91,16 @@ bool RuleBookSettings::usrIsSaveNeeded() const
 int RuleBookSettings::ruleCount() const
 {
     return m_list.count();
+}
+
+std::optional<int> RuleBookSettings::indexForId(const QString &id) const
+{
+    for (int i = 0; i < m_list.count(); i++) {
+        if (m_list.at(i)->currentGroup() == id) {
+            return i;
+        }
+    }
+    return std::nullopt;
 }
 
 RuleSettings *RuleBookSettings::ruleSettingsAt(int row) const

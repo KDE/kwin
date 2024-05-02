@@ -98,6 +98,7 @@ Rules::Rules(const RuleSettings *settings)
 
 void Rules::readFromSettings(const RuleSettings *settings)
 {
+    m_id = settings->currentGroup();
     description = settings->description();
     if (description.isEmpty()) {
         description = settings->descriptionLegacy();
@@ -166,6 +167,11 @@ void Rules::readFromSettings(const RuleSettings *settings)
 #undef READ_FORCE_RULE
 #undef READ_FORCE_RULE2
 
+QString Rules::id() const
+{
+    return m_id;
+}
+
 #define WRITE_MATCH_STRING(var, capital, force) \
     settings->set##capital##match(var##match);  \
     if (!var.isEmpty() || force) {              \
@@ -186,6 +192,8 @@ void Rules::readFromSettings(const RuleSettings *settings)
 
 void Rules::write(RuleSettings *settings) const
 {
+    settings->setDefaults();
+
     settings->setDescription(description);
     // always write wmclass
     WRITE_MATCH_STRING(wmclass, Wmclass, true);
@@ -944,51 +952,59 @@ void RuleBook::edit(Window *c, bool whole_app)
     p->start();
 }
 
+void RuleBook::setConfig(const KSharedConfig::Ptr &config)
+{
+    m_book = std::make_unique<RuleBookSettings>(config);
+}
+
 void RuleBook::load()
 {
     deleteAll();
-    if (!m_config) {
-        m_config = KSharedConfig::openConfig(QStringLiteral("kwinrulesrc"), KConfig::NoGlobals);
+    if (!m_book) {
+        m_book = std::make_unique<RuleBookSettings>();
     } else {
-        m_config->reparseConfiguration();
+        m_book->sharedConfig()->reparseConfiguration();
     }
-    RuleBookSettings book(m_config);
-    book.load();
-    m_rules = book.rules();
+    m_book->load();
+    m_rules = m_book->rules();
 }
 
 void RuleBook::save()
 {
     m_updateTimer->stop();
-    if (!m_config) {
+    if (!m_book) {
         qCWarning(KWIN_CORE) << "RuleBook::save invoked without prior invocation of RuleBook::load";
         return;
     }
-    RuleBookSettings settings(m_config);
-    settings.setRules(m_rules);
-    settings.save();
+    m_book->save();
 }
 
 void RuleBook::discardUsed(Window *c, bool withdrawn)
 {
-    bool updated = false;
     for (QList<Rules *>::Iterator it = m_rules.begin();
          it != m_rules.end();) {
         if (c->rules()->contains(*it)) {
+            const auto index = m_book->indexForId((*it)->id());
             if ((*it)->discardUsed(withdrawn)) {
-                updated = true;
+                if (index) {
+                    RuleSettings *setting = m_book->ruleSettingsAt(index.value());
+                    (*it)->write(setting);
+                }
             }
             if ((*it)->isEmpty()) {
                 c->removeRule(*it);
                 Rules *r = *it;
                 it = m_rules.erase(it);
                 delete r;
+                if (index) {
+                    m_book->removeRuleSettingsAt(index.value());
+                }
                 continue;
             }
         }
         ++it;
     }
-    if (updated) {
+    if (m_book->usrIsSaveNeeded()) {
         requestDiskStorage();
     }
 }
