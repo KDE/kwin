@@ -189,7 +189,6 @@ public:
     void stopPreview();
 
 public Q_SLOTS:
-    void resetSlowUpdateStartTimer();
     void quickAdjust(int targetTemp);
 
 Q_SIGNALS:
@@ -252,10 +251,10 @@ private:
     /**
      * Slow shift to daytime target Temperature
      */
-    void resetSlowUpdateTimer();
+    void resetSlowUpdateTimers(const QDateTime &todayNow = QDateTime::currentDateTime());
 
     void updateTargetTemperature();
-    void updateTransitionTimings(bool force);
+    void updateTransitionTimings(bool force, const QDateTime &todayNow = QDateTime::currentDateTime());
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
     bool checkAutomaticSunTimings() const;
 

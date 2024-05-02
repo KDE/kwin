@@ -330,7 +330,7 @@ void NightLightManager::resetQuickAdjustTimer(int targetTemp)
         }
         m_quickAdjustTimer->start(interval);
     } else {
-        resetSlowUpdateStartTimer();
+        resetSlowUpdateTimers();
     }
 }
 
@@ -352,11 +352,11 @@ void NightLightManager::quickAdjust(int targetTemp)
     if (nextTemp == targetTemp) {
         // stop timer, we reached the target temp
         m_quickAdjustTimer.reset();
-        resetSlowUpdateStartTimer();
+        resetSlowUpdateTimers();
     }
 }
 
-void NightLightManager::resetSlowUpdateStartTimer()
+void NightLightManager::resetSlowUpdateTimers(const QDateTime &todayNow)
 {
     m_slowUpdateStartTimer.reset();
 
@@ -374,12 +374,13 @@ void NightLightManager::resetSlowUpdateStartTimer()
     // set up the next slow update
     m_slowUpdateStartTimer = std::make_unique<QTimer>();
     m_slowUpdateStartTimer->setSingleShot(true);
-    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, &NightLightManager::resetSlowUpdateStartTimer);
-
-    updateTransitionTimings(false);
+    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, [this]() {
+        resetSlowUpdateTimers(m_next.first);
+    });
+    updateTransitionTimings(false, todayNow);
     updateTargetTemperature();
 
-    const int diff = QDateTime::currentDateTime().msecsTo(m_next.first);
+    const int diff = todayNow.msecsTo(m_next.first);
     if (diff <= 0) {
         qCCritical(KWIN_NIGHTLIGHT) << "Error in time calculation. Deactivating Night Light.";
         return;
@@ -387,14 +388,8 @@ void NightLightManager::resetSlowUpdateStartTimer()
     m_slowUpdateStartTimer->start(diff);
 
     // start the current slow update
-    resetSlowUpdateTimer();
-}
-
-void NightLightManager::resetSlowUpdateTimer()
-{
     m_slowUpdateTimer.reset();
 
-    const QDateTime now = QDateTime::currentDateTime();
     const bool isDay = daylight();
     const int targetTemp = isDay ? m_dayTargetTemp : m_nightTargetTemp;
 
@@ -404,8 +399,8 @@ void NightLightManager::resetSlowUpdateTimer()
         return;
     }
 
-    if (m_prev.first <= now && now <= m_prev.second) {
-        int availTime = now.msecsTo(m_prev.second);
+    if (m_prev.first <= todayNow && todayNow <= m_prev.second) {
+        int availTime = todayNow.msecsTo(m_prev.second);
         m_slowUpdateTimer = std::make_unique<QTimer>();
         m_slowUpdateTimer->setSingleShot(false);
         if (isDay) {
@@ -490,7 +485,7 @@ void NightLightManager::updateTargetTemperature()
     Q_EMIT targetTemperatureChanged();
 }
 
-void NightLightManager::updateTransitionTimings(bool force)
+void NightLightManager::updateTransitionTimings(bool force, const QDateTime &todayNow)
 {
     const auto oldPrev = m_prev;
     const auto oldNext = m_next;
@@ -500,11 +495,9 @@ void NightLightManager::updateTransitionTimings(bool force)
         m_next = DateTimes();
         m_prev = DateTimes();
     } else if (m_mode == NightLightMode::Timings) {
-        const QDateTime todayNow = QDateTime::currentDateTime();
-
-        const QDateTime nextMorB = QDateTime(todayNow.date().addDays(m_morning < todayNow.time()), m_morning);
+        const QDateTime nextMorB = QDateTime(todayNow.date().addDays(m_morning <= todayNow.time()), m_morning);
         const QDateTime nextMorE = nextMorB.addSecs(m_trTime * 60);
-        const QDateTime nextEveB = QDateTime(todayNow.date().addDays(m_evening < todayNow.time()), m_evening);
+        const QDateTime nextEveB = QDateTime(todayNow.date().addDays(m_evening <= todayNow.time()), m_evening);
         const QDateTime nextEveE = nextEveB.addSecs(m_trTime * 60);
 
         if (nextEveB < nextMorB) {
@@ -517,8 +510,6 @@ void NightLightManager::updateTransitionTimings(bool force)
             m_prev = DateTimes(nextEveB.addDays(-1), nextEveE.addDays(-1));
         }
     } else {
-        const QDateTime todayNow = QDateTime::currentDateTime();
-
         double lat, lng;
         if (m_mode == NightLightMode::Automatic) {
             lat = m_latAuto;
