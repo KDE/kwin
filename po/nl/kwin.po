@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-01 00:39+0000\n"
+"POT-Creation-Date: 2024-05-03 00:39+0000\n"
 "PO-Revision-Date: 2024-03-26 11:34+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -4198,7 +4198,7 @@ msgstr ""
 "zoals https://paste.kde.org in plaats van het te plakken in "
 "ondersteuningsdiscussie.\n"
 
-#: xwayland/xwaylandlauncher.cpp:271
+#: xwayland/xwaylandlauncher.cpp:274
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland is gecrasht"
