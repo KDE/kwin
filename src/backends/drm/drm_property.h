@@ -42,6 +42,11 @@ public:
     uint64_t maxValue() const;
     bool isValid() const;
 
+    /**
+     * Prints a warning and returns false if @p value is unacceptable for the property
+     */
+    void checkValueInRange(uint64_t value) const;
+
     void update(DrmPropertyList &propertyList);
     bool setPropertyLegacy(uint64_t value);
 
@@ -60,9 +65,7 @@ protected:
 
     QMap<uint64_t, uint64_t> m_enumToPropertyMap;
     QMap<uint64_t, uint64_t> m_propertyToEnumMap;
-    bool m_immutable = false;
-    bool m_isBlob = false;
-    bool m_isBitmask = false;
+    uint32_t m_flags;
 };
 
 template<typename Enum>
@@ -82,7 +85,7 @@ public:
     bool hasEnum(Enum value) const
     {
         const uint64_t integerValue = static_cast<uint64_t>(value);
-        if (m_isBitmask) {
+        if (isBitmask()) {
             for (uint64_t mask = 1; integerValue >= mask && mask != 0; mask <<= 1) {
                 if ((integerValue & mask) && !m_enumToPropertyMap.contains(mask)) {
                     return false;
@@ -96,7 +99,7 @@ public:
 
     Enum enumForValue(uint64_t value) const
     {
-        if (m_isBitmask) {
+        if (isBitmask()) {
             uint64_t ret = 0;
             for (uint64_t mask = 1; value >= mask && mask != 0; mask <<= 1) {
                 if (value & mask) {
@@ -112,7 +115,7 @@ public:
     uint64_t valueForEnum(Enum enumValue) const
     {
         const uint64_t integer = static_cast<uint64_t>(enumValue);
-        if (m_isBitmask) {
+        if (isBitmask()) {
             uint64_t set = 0;
             for (uint64_t mask = 1; integer >= mask && mask != 0; mask <<= 1) {
                 if (integer & mask) {

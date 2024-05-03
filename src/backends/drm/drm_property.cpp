@@ -42,9 +42,7 @@ void DrmProperty::update(DrmPropertyList &propertyList)
         const auto &[prop, value] = *opt;
         m_propId = prop->prop_id;
         m_current = value;
-        m_immutable = prop->flags & DRM_MODE_PROP_IMMUTABLE;
-        m_isBlob = prop->flags & DRM_MODE_PROP_BLOB;
-        m_isBitmask = prop->flags & DRM_MODE_PROP_BITMASK;
+        m_flags = prop->flags;
         if (prop->flags & DRM_MODE_PROP_RANGE) {
             Q_ASSERT(prop->count_values > 1);
             m_minValue = prop->values[0];
@@ -58,7 +56,7 @@ void DrmProperty::update(DrmPropertyList &propertyList)
                 struct drm_mode_property_enum *en = &prop->enums[i];
                 int j = m_enumNames.indexOf(QByteArray(en->name));
                 if (j >= 0) {
-                    if (m_isBitmask) {
+                    if (m_flags & DRM_MODE_PROP_BITMASK) {
                         m_enumToPropertyMap[1 << j] = 1 << en->value;
                         m_propertyToEnumMap[1 << en->value] = 1 << j;
                     } else {
@@ -68,7 +66,7 @@ void DrmProperty::update(DrmPropertyList &propertyList)
                 }
             }
         }
-        if (m_immutable && m_isBlob) {
+        if ((m_flags & DRM_MODE_PROP_IMMUTABLE) && (m_flags & DRM_MODE_PROP_BLOB)) {
             if (m_current != 0) {
                 m_immutableBlob.reset(drmModeGetPropertyBlob(m_obj->gpu()->fd(), m_current));
                 if (m_immutableBlob && (!m_immutableBlob->data || !m_immutableBlob->length)) {
@@ -108,12 +106,17 @@ const QByteArray &DrmProperty::name() const
 
 bool DrmProperty::isImmutable() const
 {
-    return m_immutable;
+    return m_flags & DRM_MODE_PROP_IMMUTABLE;
 }
 
 bool DrmProperty::isBitmask() const
 {
-    return m_isBitmask;
+    return m_flags & DRM_MODE_PROP_BITMASK;
+}
+
+uint64_t DrmProperty::maxValue() const
+{
+    return m_maxValue;
 }
 
 uint64_t DrmProperty::minValue() const
@@ -121,9 +124,14 @@ uint64_t DrmProperty::minValue() const
     return m_minValue;
 }
 
-uint64_t DrmProperty::maxValue() const
+void DrmProperty::checkValueInRange(uint64_t value) const
 {
-    return m_maxValue;
+    if (Q_UNLIKELY(m_flags & DRM_MODE_PROP_RANGE && (value > m_maxValue || value < m_minValue))) {
+        qCWarning(KWIN_DRM) << "Range property value out of bounds." << m_propName << " value:" << value << "min:" << m_minValue << "max:" << m_maxValue;
+    }
+    if (Q_UNLIKELY(m_flags & DRM_MODE_PROP_SIGNED_RANGE && (int64_t(value) > int64_t(m_maxValue) || int64_t(value) < int64_t(m_minValue)))) {
+        qCWarning(KWIN_DRM) << "Signed range property value out of bounds." << m_propName << " value:" << int64_t(value) << "min:" << int64_t(m_minValue) << "max:" << int64_t(m_maxValue);
+    }
 }
 
 drmModePropertyBlobRes *DrmProperty::immutableBlob() const

@@ -44,6 +44,7 @@ DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
 
 void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
 {
+    prop.checkValueInRange(value);
     m_properties[prop.drmObject()->id()][prop.propId()] = value;
 }
 
