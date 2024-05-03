@@ -15,6 +15,8 @@
 // KConfigSkeleton
 #include "mousemarkconfig.h"
 
+#include "input_event.h"
+
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
@@ -55,6 +57,15 @@ MouseMarkEffect::MouseMarkEffect()
     connect(effects, &EffectsHandler::screenLockingChanged, this, &MouseMarkEffect::screenLockingChanged);
     reconfigure(ReconfigureAll);
     arrow_tail = nullPoint();
+}
+
+bool MouseMarkEffect::tabletToolEvent(QTabletEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        slotMouseChanged(event->position(), {}, {}, {}, event->modifiers(), {});
+    }
+
+    return false;
 }
 
 MouseMarkEffect::~MouseMarkEffect()

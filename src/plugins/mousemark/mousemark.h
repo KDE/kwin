@@ -31,6 +31,7 @@ public:
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     bool isActive() const override;
     int requestedEffectChainPosition() const override;
+    bool tabletToolEvent(QTabletEvent *event) override;
 
     // for properties
     int configuredWidth() const
