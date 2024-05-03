@@ -346,7 +346,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addEnum(primary->rotation, {DrmPlane::Transformation::Rotate0});
     }
     if (primary->alpha.isValid()) {
-        commit->addProperty(primary->alpha, 0xFFFF);
+        commit->addProperty(primary->alpha, primary->alpha.maxValue());
     }
     if (primary->pixelBlendMode.isValid()) {
         commit->addEnum(primary->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
@@ -356,7 +356,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
             commit->addEnum(cursor->rotation, DrmPlane::Transformations(DrmPlane::Transformation::Rotate0));
         }
         if (cursor->alpha.isValid()) {
-            commit->addProperty(cursor->alpha, 0xFFFF);
+            commit->addProperty(cursor->alpha, cursor->alpha.maxValue());
         }
         if (cursor->pixelBlendMode.isValid()) {
             commit->addEnum(cursor->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
