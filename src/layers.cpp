@@ -165,7 +165,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
 
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
-        if (!window || window->isUnmanaged() || window->hiddenPreview()) {
+        if (!window || window->isDeleted() || window->isUnmanaged() || window->hiddenPreview()) {
             continue;
         }
 
@@ -182,7 +182,7 @@ void Workspace::propagateWindows(bool propagate_new_windows)
     // these windows that should be unmapped to interfere with other windows
     for (int i = stacking_order.size() - 1; i >= 0; --i) {
         X11Window *window = qobject_cast<X11Window *>(stacking_order.at(i));
-        if (!window || window->isUnmanaged() || !window->hiddenPreview()) {
+        if (!window || window->isDeleted() || window->isUnmanaged() || !window->hiddenPreview()) {
             continue;
         }
         newWindowStack << window->frameId();
