@@ -81,7 +81,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
                    0, // tangentialPressure
                    rotation,
                    0, // z
-                   Qt::NoModifier, button, button, tabletToolId);
+                   input()->keyboardModifiers(), button, button, tabletToolId);
 
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
