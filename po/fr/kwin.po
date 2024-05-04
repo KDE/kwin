@@ -24,10 +24,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-03 00:39+0000\n"
-"PO-Revision-Date: 2024-03-01 09:40+0100\n"
+"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"PO-Revision-Date: 2024-05-02 16:55+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
-"Language-Team: fr\n"
+"Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1441,7 +1441,7 @@ msgstr ""
 #: main_wayland.cpp:355
 #, kde-format
 msgid "Render through drm node."
-msgstr "Réaliser le rendu en mode drm."
+msgstr "Réaliser le rendu en mode « DRM »."
 
 #: main_wayland.cpp:356
 #, kde-format
@@ -4210,7 +4210,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1661
+#: workspace.cpp:1666
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
