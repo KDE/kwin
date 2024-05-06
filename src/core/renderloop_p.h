@@ -32,7 +32,7 @@ public:
     void maybeScheduleRepaint();
 
     void notifyFrameFailed();
-    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode = PresentationMode::VSync);
+    void notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<std::chrono::nanoseconds> renderTime, PresentationMode mode = PresentationMode::VSync);
     void notifyVblank(std::chrono::nanoseconds timestamp);
 
     RenderLoop *const q;

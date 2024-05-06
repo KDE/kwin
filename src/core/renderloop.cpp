@@ -91,14 +91,16 @@ void RenderLoopPrivate::notifyFrameFailed()
     }
 }
 
-void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::chrono::nanoseconds renderTime, PresentationMode mode)
+void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<std::chrono::nanoseconds> renderTime, PresentationMode mode)
 {
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
 
     notifyVblank(timestamp);
 
-    renderJournal.add(renderTime, timestamp);
+    if (renderTime) {
+        renderJournal.add(*renderTime, timestamp);
+    }
     if (!inhibitCount) {
         maybeScheduleRepaint();
     }

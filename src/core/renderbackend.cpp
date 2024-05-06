@@ -15,6 +15,14 @@
 namespace KWin
 {
 
+RenderTimeSpan RenderTimeSpan::operator|(const RenderTimeSpan &other) const
+{
+    return RenderTimeSpan{
+        .start = std::min(start, other.start),
+        .end = std::max(end, other.end),
+    };
+}
+
 CpuRenderTimeQuery::CpuRenderTimeQuery()
     : m_start(std::chrono::steady_clock::now())
 {
@@ -25,10 +33,13 @@ void CpuRenderTimeQuery::end()
     m_end = std::chrono::steady_clock::now();
 }
 
-std::chrono::nanoseconds CpuRenderTimeQuery::query()
+std::optional<RenderTimeSpan> CpuRenderTimeQuery::query()
 {
     Q_ASSERT(m_end);
-    return *m_end - m_start;
+    return RenderTimeSpan{
+        .start = m_start,
+        .end = *m_end,
+    };
 }
 
 OutputFrame::OutputFrame(RenderLoop *loop)
@@ -43,12 +54,29 @@ void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
     m_feedbacks.push_back(std::move(feedback));
 }
 
+std::optional<std::chrono::nanoseconds> OutputFrame::queryRenderTime() const
+{
+    if (m_renderTimeQueries.empty()) {
+        return std::chrono::nanoseconds::zero();
+    }
+    const auto first = m_renderTimeQueries.front()->query();
+    if (!first) {
+        return std::nullopt;
+    }
+    RenderTimeSpan ret = *first;
+    for (const auto &query : m_renderTimeQueries | std::views::drop(1)) {
+        const auto opt = query->query();
+        if (!opt) {
+            return std::nullopt;
+        }
+        ret = ret | *opt;
+    }
+    return ret.end - ret.start;
+}
+
 void OutputFrame::presented(std::chrono::nanoseconds refreshDuration, std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
-    const auto view = m_renderTimeQueries | std::views::transform([](const auto &query) {
-        return query->query();
-    });
-    const auto renderTime = std::accumulate(view.begin(), view.end(), std::chrono::nanoseconds::zero());
+    std::optional<std::chrono::nanoseconds> renderTime = queryRenderTime();
     RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(refreshDuration, timestamp, mode);

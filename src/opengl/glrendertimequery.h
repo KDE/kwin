@@ -31,7 +31,7 @@ public:
     /**
      * fetches the result of the query. If rendering is not done yet, this will block!
      */
-    std::chrono::nanoseconds query() override;
+    std::optional<RenderTimeSpan> query() override;
 
 private:
     const std::weak_ptr<OpenGlContext> m_context;
@@ -39,15 +39,15 @@ private:
 
     struct
     {
-        std::chrono::nanoseconds start = std::chrono::nanoseconds::zero();
-        std::chrono::nanoseconds end = std::chrono::nanoseconds::zero();
+        std::chrono::steady_clock::time_point start;
+        std::chrono::steady_clock::time_point end;
     } m_cpuProbe;
 
     struct
     {
         GLuint query = 0;
-        GLint64 start = 0;
-        GLint64 end = 0;
+        std::chrono::nanoseconds start{0};
+        std::chrono::nanoseconds end{0};
     } m_gpuProbe;
 };
 

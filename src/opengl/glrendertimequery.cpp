@@ -36,9 +36,11 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
 void GLRenderTimeQuery::begin()
 {
     if (m_gpuProbe.query) {
-        glGetInteger64v(GL_TIMESTAMP, &m_gpuProbe.start);
+        GLint64 start = 0;
+        glGetInteger64v(GL_TIMESTAMP, &start);
+        m_gpuProbe.start = std::chrono::nanoseconds(start);
     }
-    m_cpuProbe.start = std::chrono::steady_clock::now().time_since_epoch();
+    m_cpuProbe.start = std::chrono::steady_clock::now();
 }
 
 void GLRenderTimeQuery::end()
@@ -48,32 +50,35 @@ void GLRenderTimeQuery::end()
     if (m_gpuProbe.query) {
         glQueryCounter(m_gpuProbe.query, GL_TIMESTAMP);
     }
-    m_cpuProbe.end = std::chrono::steady_clock::now().time_since_epoch();
+    m_cpuProbe.end = std::chrono::steady_clock::now();
 }
 
-std::chrono::nanoseconds GLRenderTimeQuery::query()
+std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
     if (!m_hasResult) {
-        return std::chrono::nanoseconds::zero();
+        return std::nullopt;
     }
     m_hasResult = false;
 
     if (m_gpuProbe.query) {
         const auto context = m_context.lock();
         if (!context) {
-            return std::chrono::nanoseconds::zero();
+            return std::nullopt;
         }
         context->makeCurrent();
-        glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &m_gpuProbe.end);
+        GLint64 end = 0;
+        glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &end);
+        m_gpuProbe.end = std::chrono::nanoseconds(end);
     }
 
-    const std::chrono::nanoseconds gpuTime(m_gpuProbe.end - m_gpuProbe.start);
-    const std::chrono::nanoseconds cpuTime = m_cpuProbe.end - m_cpuProbe.start;
     // timings are pretty unpredictable in the sub-millisecond range; this minimum
     // ensures that when CPU or GPU power states change, we don't drop any frames
     const std::chrono::nanoseconds minimumTime = std::chrono::milliseconds(2);
-
-    return std::max({gpuTime, cpuTime, minimumTime});
+    const auto end = std::max({m_cpuProbe.start + (m_gpuProbe.end - m_gpuProbe.start), m_cpuProbe.end, m_cpuProbe.start + minimumTime});
+    return RenderTimeSpan{
+        .start = m_cpuProbe.start,
+        .end = end,
+    };
 }
 
 }

@@ -40,11 +40,19 @@ public:
     virtual void presented(std::chrono::nanoseconds refreshCycleDuration, std::chrono::nanoseconds timestamp, PresentationMode mode) = 0;
 };
 
+struct RenderTimeSpan
+{
+    std::chrono::steady_clock::time_point start;
+    std::chrono::steady_clock::time_point end;
+
+    RenderTimeSpan operator|(const RenderTimeSpan &other) const;
+};
+
 class KWIN_EXPORT RenderTimeQuery
 {
 public:
     virtual ~RenderTimeQuery() = default;
-    virtual std::chrono::nanoseconds query() = 0;
+    virtual std::optional<RenderTimeSpan> query() = 0;
 };
 
 class KWIN_EXPORT CpuRenderTimeQuery : public RenderTimeQuery
@@ -57,7 +65,7 @@ public:
 
     void end();
 
-    std::chrono::nanoseconds query() override;
+    std::optional<RenderTimeSpan> query() override;
 
 private:
     const std::chrono::steady_clock::time_point m_start;
@@ -86,6 +94,8 @@ public:
     void addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query);
 
 private:
+    std::optional<std::chrono::nanoseconds> queryRenderTime() const;
+
     RenderLoop *const m_loop;
     std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
