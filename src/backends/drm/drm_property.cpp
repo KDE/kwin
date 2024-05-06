@@ -43,7 +43,7 @@ void DrmProperty::update(DrmPropertyList &propertyList)
         m_propId = prop->prop_id;
         m_current = value;
         m_flags = prop->flags;
-        if (prop->flags & DRM_MODE_PROP_RANGE) {
+        if ((prop->flags & DRM_MODE_PROP_RANGE) || (prop->flags & DRM_MODE_PROP_SIGNED_RANGE)) {
             Q_ASSERT(prop->count_values > 1);
             m_minValue = prop->values[0];
             m_maxValue = prop->values[1];
