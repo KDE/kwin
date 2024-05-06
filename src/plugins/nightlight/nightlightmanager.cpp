@@ -64,8 +64,8 @@ NightLightManager::NightLightManager()
                                                                            : QStringLiteral("redshift-status-on");
 
         const QString text = isInhibited()
-            ? i18nc("Night Light was disabled", "Night Light Off")
-            : i18nc("Night Light was enabled", "Night Light On");
+            ? i18nc("Night Light was temporarily disabled", "Night Light Suspended")
+            : i18nc("Night Light was reenabled from temporary suspension", "Night Light Resumed");
 
         QDBusMessage message = QDBusMessage::createMethodCall(
             QStringLiteral("org.kde.plasmashell"),
@@ -86,7 +86,7 @@ NightLightManager::NightLightManager()
     QAction *toggleAction = new QAction(this);
     toggleAction->setProperty("componentName", QStringLiteral("kwin"));
     toggleAction->setObjectName(QStringLiteral("Toggle Night Color"));
-    toggleAction->setText(i18n("Toggle Night Light"));
+    toggleAction->setText(i18nc("Temporarily disable/reenable Night Light", "Suspend/Resume Night Light"));
     KGlobalAccel::setGlobalShortcut(toggleAction, QList<QKeySequence>());
     connect(toggleAction, &QAction::triggered, this, &NightLightManager::toggle);
 
