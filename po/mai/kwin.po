@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2010-09-24 21:47+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <bhashaghar@googlegroups.com>\n"
@@ -2265,21 +2265,21 @@ msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:67
 #, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Show Desktop Grid"
-msgid "Toggle Night Light"
-msgstr "डेस्कटॉप देखाबू"
+#, kde-format
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4340,6 +4340,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Show Desktop Grid"
+#~ msgid "Toggle Night Light"
+#~ msgstr "डेस्कटॉप देखाबू"
 
 #, fuzzy
 #~| msgid "&Close"

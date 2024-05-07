@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -2243,21 +2243,21 @@ msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:67
 #, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Snow on Desktop"
-msgid "Toggle Night Light"
-msgstr "Efekta Berfê yê Sermasê Veke/Bigire"
+#, kde-format
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4315,6 +4315,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Toggle Snow on Desktop"
+#~ msgid "Toggle Night Light"
+#~ msgstr "Efekta Berfê yê Sermasê Veke/Bigire"
 
 #, fuzzy
 #~| msgid "&Close"

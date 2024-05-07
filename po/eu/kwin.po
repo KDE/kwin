@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2024-02-29 22:55+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2232,21 +2232,26 @@ msgid "Arrow draw modifier keys:"
 msgstr "Geziak marrazteko tekla aldarazleak:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
-msgstr "Gaueko argia itzalita"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
+msgstr "Gaueko argia piztuta"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr "Gaueko argia piztuta"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
-msgid "Toggle Night Light"
-msgstr "Txandakatu gaueko argia"
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4202,6 +4207,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland kraskatu egin da"
+
+#~ msgctxt "Night Light was disabled"
+#~ msgid "Night Light Off"
+#~ msgstr "Gaueko argia itzalita"
+
+#~ msgid "Toggle Night Light"
+#~ msgstr "Txandakatu gaueko argia"
 
 #~ msgid ""
 #~ "The window manager is configured to consider the screen with the mouse on "

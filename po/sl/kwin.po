@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1679202 2024-05-04 01:13:01Z scripty $
+# $Id: kwin.po 1679402 2024-05-07 01:10:25Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2024-03-08 17:53+0100\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2236,21 +2236,26 @@ msgid "Arrow draw modifier keys:"
 msgstr "Tipke puščic kot spremenilniki za risanje:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
-msgstr "Nočna barva izklopljena"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
+msgstr "Nočna barva vklopljena"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr "Nočna barva vklopljena"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
-msgid "Toggle Night Light"
-msgstr "Preklopi nočno barvo"
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4196,6 +4201,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se je sesul"
+
+#~ msgctxt "Night Light was disabled"
+#~ msgid "Night Light Off"
+#~ msgstr "Nočna barva izklopljena"
+
+#~ msgid "Toggle Night Light"
+#~ msgstr "Preklopi nočno barvo"
 
 #~ msgid ""
 #~ "The window manager is configured to consider the screen with the mouse on "

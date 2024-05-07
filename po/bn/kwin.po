@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2009-01-09 21:22-0800\n"
 "Last-Translator: Deepayan Sarkar <deepayan.sarkar@gmail.com>\n"
 "Language-Team: en_US <kde-translation@bengalinux.org>\n"
@@ -2239,21 +2239,21 @@ msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:67
 #, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Snow on Desktop"
-msgid "Toggle Night Light"
-msgstr "ডেস্কটপ-এ বরফ পড়া চালু/বন্ধ করো"
+#, kde-format
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4312,6 +4312,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Toggle Snow on Desktop"
+#~ msgid "Toggle Night Light"
+#~ msgstr "ডেস্কটপ-এ বরফ পড়া চালু/বন্ধ করো"
 
 #~ msgid "Layout mode:"
 #~ msgstr "লে-আউট মোড:"

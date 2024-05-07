@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2024-03-06 10:48+0100\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2225,21 +2225,26 @@ msgid "Arrow draw modifier keys:"
 msgstr "Модификационни клавиши за чертане на стрелки:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
-msgstr "Вечерни цветове са изключени"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
+msgstr "Вечерни цветове са включени"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr "Вечерни цветове са включени"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
-msgid "Toggle Night Light"
-msgstr "Превключване на вечерни цветове"
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4194,6 +4199,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
+
+#~ msgctxt "Night Light was disabled"
+#~ msgid "Night Light Off"
+#~ msgstr "Вечерни цветове са изключени"
+
+#~ msgid "Toggle Night Light"
+#~ msgstr "Превключване на вечерни цветове"
 
 #~ msgid ""
 #~ "The window manager is configured to consider the screen with the mouse on "

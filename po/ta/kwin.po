@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2024-03-24 17:31+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2214,21 +2214,26 @@ msgid "Arrow draw modifier keys:"
 msgstr "அம்பு வரைவிற்கான மாற்றிவிசைகள்:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
-msgstr "இரவு நிறமாற்றம் முடக்கப்பட்டது"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
+msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+#, fuzzy, kde-format
+#| msgctxt "Night Light was enabled"
+#| msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
-msgid "Toggle Night Light"
-msgstr "இரவு நிறமாற்றத்தை நிலைமாற்று"
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4185,6 +4190,13 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgctxt "Night Light was disabled"
+#~ msgid "Night Light Off"
+#~ msgstr "இரவு நிறமாற்றம் முடக்கப்பட்டது"
+
+#~ msgid "Toggle Night Light"
+#~ msgstr "இரவு நிறமாற்றத்தை நிலைமாற்று"
 
 #~ msgid ""
 #~ "The window manager is configured to consider the screen with the mouse on "

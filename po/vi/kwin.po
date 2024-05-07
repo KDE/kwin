@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -2271,25 +2271,25 @@ msgstr "Phím bổ trợ"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
 #, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
-msgstr "Màu buổi tối tắt"
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
+msgstr "Màu buổi tối bật"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr "Màu buổi tối bật"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
-msgid "Toggle Night Light"
-msgstr "Bật/tắt màu buổi tối"
+#, kde-format
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4312,6 +4312,18 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "Night Color was disabled"
+#~| msgid "Night Color Off"
+#~ msgctxt "Night Light was disabled"
+#~ msgid "Night Light Off"
+#~ msgstr "Màu buổi tối tắt"
+
+#, fuzzy
+#~| msgid "Toggle Night Color"
+#~ msgid "Toggle Night Light"
+#~ msgstr "Bật/tắt màu buổi tối"
 
 #~ msgid ""
 #~ "The window manager is configured to consider the screen with the mouse on "

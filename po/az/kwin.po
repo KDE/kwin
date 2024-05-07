@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2272,25 +2272,25 @@ msgstr "Dəyişdiricilər"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
 #, fuzzy, kde-format
-#| msgctxt "Night Color was disabled"
-#| msgid "Night Color Off"
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
-msgstr "Gecə Rəngi söndürülüb"
+#| msgctxt "Night Color was enabled"
+#| msgid "Night Color On"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
+msgstr "Gecə Rəngi aktivdir"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr "Gecə Rəngi aktivdir"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Night Color"
-msgid "Toggle Night Light"
-msgstr "Gecə Rəngini aktivləşdirmək/söndürmək"
+#, kde-format
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4331,6 +4331,18 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "Night Color was disabled"
+#~| msgid "Night Color Off"
+#~ msgctxt "Night Light was disabled"
+#~ msgid "Night Light Off"
+#~ msgstr "Gecə Rəngi söndürülüb"
+
+#, fuzzy
+#~| msgid "Toggle Night Color"
+#~ msgid "Toggle Night Light"
+#~ msgstr "Gecə Rəngini aktivləşdirmək/söndürmək"
 
 #~ msgid ""
 #~ "The window manager is configured to consider the screen with the mouse on "

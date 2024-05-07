@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-04 00:41+0000\n"
+"POT-Creation-Date: 2024-05-07 00:40+0000\n"
 "PO-Revision-Date: 2013-09-08 07:05+0900\n"
 "Last-Translator: Gheyret Kenji <gheyret@gmail.com>\n"
 "Language-Team: Uyghur Computer Science Association <UKIJ@yahoogroups.com>\n"
@@ -2274,21 +2274,21 @@ msgstr "سۈپەتلىگۈچىلەر"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
 #, kde-format
-msgctxt "Night Light was disabled"
-msgid "Night Light Off"
+msgctxt "Night Light was temporarily disabled"
+msgid "Night Light Suspended"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
-msgctxt "Night Light was enabled"
-msgid "Night Light On"
+msgctxt "Night Light was reenabled from temporary suspension"
+msgid "Night Light Resumed"
 msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:89
-#, fuzzy, kde-format
-#| msgid "Toggle Floating"
-msgid "Toggle Night Light"
-msgstr "لەيلەت ئۈنۈمىنى ئالماشتۇر"
+#, kde-format
+msgctxt "Temporarily disable/reenable Night Light"
+msgid "Suspend/Resume Night Light"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -4336,6 +4336,11 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Toggle Floating"
+#~ msgid "Toggle Night Light"
+#~ msgstr "لەيلەت ئۈنۈمىنى ئالماشتۇر"
 
 #~ msgid "Layout mode:"
 #~ msgstr "جايلاشتۇرۇش ئۇسۇلى:"
