@@ -55,11 +55,7 @@ void GLRenderTimeQuery::end()
 
 std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
-    if (!m_hasResult) {
-        return std::nullopt;
-    }
-    m_hasResult = false;
-
+    Q_ASSERT(m_hasResult);
     if (m_gpuProbe.query) {
         const auto context = m_context.lock();
         if (!context) {
@@ -80,5 +76,4 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
         .end = end,
     };
 }
-
 }
