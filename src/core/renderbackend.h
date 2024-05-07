@@ -130,9 +130,6 @@ public:
 
     virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap);
     virtual std::unique_ptr<SurfaceTexture> createSurfaceTextureWayland(SurfacePixmap *pixmap);
-
-    virtual bool supportsTimelines() const;
-    virtual std::unique_ptr<SyncTimeline> importTimeline(FileDescriptor &&syncObjFd);
 };
 
 } // namespace KWin

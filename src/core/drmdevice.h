@@ -30,6 +30,7 @@ public:
     gbm_device *gbmDevice() const;
     GraphicsBufferAllocator *allocator() const;
     int fileDescriptor() const;
+    bool supportsSyncObjTimelines() const;
 
     static std::unique_ptr<DrmDevice> open(const QString &path);
     static std::unique_ptr<DrmDevice> openWithAuthentication(const QString &path, int authenticatedFd);
@@ -42,6 +43,7 @@ private:
     const FileDescriptor m_fd;
     gbm_device *const m_gbmDevice;
     const std::unique_ptr<GraphicsBufferAllocator> m_allocator;
+    bool m_supportsSyncObjTimelines;
 };
 
 }

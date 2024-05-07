@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "backends/drm/drm_backend.h"
+#include "core/drmdevice.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "idle_inhibition.h"
@@ -840,7 +841,7 @@ LinuxDrmSyncObjV1Interface *WaylandServer::linuxSyncObj() const
 
 void WaylandServer::setRenderBackend(RenderBackend *backend)
 {
-    if (backend->supportsTimelines()) {
+    if (backend->drmDevice()->supportsSyncObjTimelines()) {
         // ensure the DRM_IOCTL_SYNCOBJ_EVENTFD ioctl is supported
         const auto linuxVersion = linuxKernelVersion();
         if (linuxVersion.majorVersion() < 6 && linuxVersion.minorVersion() < 6) {
@@ -851,14 +852,11 @@ void WaylandServer::setRenderBackend(RenderBackend *backend)
             return;
         }
         if (!m_linuxDrmSyncObj) {
-            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display);
+            m_linuxDrmSyncObj = new LinuxDrmSyncObjV1Interface(m_display, m_display, backend->drmDevice());
         }
     } else if (m_linuxDrmSyncObj) {
         m_linuxDrmSyncObj->remove();
         m_linuxDrmSyncObj = nullptr;
-    }
-    if (m_linuxDrmSyncObj) {
-        m_linuxDrmSyncObj->setRenderBackend(backend);
     }
 }
 

@@ -21,14 +21,14 @@ class Display;
 class SurfaceInterface;
 class RenderBackend;
 class SyncTimeline;
+class DrmDevice;
 
 class KWIN_EXPORT LinuxDrmSyncObjV1Interface : public QObject, private QtWaylandServer::wp_linux_drm_syncobj_manager_v1
 {
     Q_OBJECT
 public:
-    explicit LinuxDrmSyncObjV1Interface(Display *display, QObject *parent = nullptr);
+    explicit LinuxDrmSyncObjV1Interface(Display *display, QObject *parent, DrmDevice *drmDevice);
 
-    void setRenderBackend(RenderBackend *backend);
     void remove();
 
 private:
@@ -37,7 +37,7 @@ private:
     void wp_linux_drm_syncobj_manager_v1_destroy(Resource *resource) override;
     void wp_linux_drm_syncobj_manager_v1_destroy_global() override;
 
-    QPointer<RenderBackend> m_renderBackend;
+    DrmDevice *const m_drmDevice;
 };
 
 class LinuxDrmSyncObjSurfaceV1 : private QtWaylandServer::wp_linux_drm_syncobj_surface_v1

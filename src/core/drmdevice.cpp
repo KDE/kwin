@@ -25,6 +25,8 @@ DrmDevice::DrmDevice(const QString &path, dev_t id, FileDescriptor &&fd, gbm_dev
     , m_gbmDevice(gbmDevice)
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(gbmDevice))
 {
+    uint64_t value = 0;
+    m_supportsSyncObjTimelines = drmGetCap(m_fd.get(), DRM_CAP_SYNCOBJ_TIMELINE, &value) == 0 && value != 0;
 }
 
 DrmDevice::~DrmDevice()
@@ -55,6 +57,11 @@ GraphicsBufferAllocator *DrmDevice::allocator() const
 int DrmDevice::fileDescriptor() const
 {
     return m_fd.get();
+}
+
+bool DrmDevice::supportsSyncObjTimelines() const
+{
+    return m_supportsSyncObjTimelines;
 }
 
 std::unique_ptr<DrmDevice> DrmDevice::open(const QString &path)

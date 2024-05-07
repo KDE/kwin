@@ -61,9 +61,6 @@ public:
     EglDisplay *displayForGpu(DrmGpu *gpu);
     std::shared_ptr<EglContext> contextForGpu(DrmGpu *gpu);
 
-    bool supportsTimelines() const override;
-    std::unique_ptr<SyncTimeline> importTimeline(FileDescriptor &&syncObjFd) override;
-
 private:
     bool initializeEgl();
     bool initRenderingContext();

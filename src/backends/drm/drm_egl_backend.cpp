@@ -181,21 +181,6 @@ DrmGpu *EglGbmBackend::gpu() const
     return m_backend->primaryGpu();
 }
 
-bool EglGbmBackend::supportsTimelines() const
-{
-    return m_backend->primaryGpu()->syncObjTimelinesSupported();
-}
-
-std::unique_ptr<SyncTimeline> EglGbmBackend::importTimeline(FileDescriptor &&syncObjFd)
-{
-    uint32_t handle = 0;
-    if (drmSyncobjFDToHandle(m_backend->primaryGpu()->fd(), syncObjFd.get(), &handle) != 0) {
-        qCWarning(KWIN_DRM) << "importing syncobj timeline failed!" << strerror(errno);
-        return nullptr;
-    }
-    return std::make_unique<SyncTimeline>(m_backend->primaryGpu()->fd(), handle);
-}
-
 } // namespace KWin
 
 #include "moc_drm_egl_backend.cpp"

@@ -168,16 +168,6 @@ std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(Surfa
     return nullptr;
 }
 
-bool RenderBackend::supportsTimelines() const
-{
-    return false;
-}
-
-std::unique_ptr<SyncTimeline> RenderBackend::importTimeline(FileDescriptor &&syncObjFd)
-{
-    return nullptr;
-}
-
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"

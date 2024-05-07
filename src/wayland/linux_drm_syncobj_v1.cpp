@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "linux_drm_syncobj_v1.h"
+#include "core/drmdevice.h"
 #include "core/syncobjtimeline.h"
 #include "display.h"
 #include "linux_drm_syncobj_v1_p.h"
@@ -22,9 +23,10 @@ namespace KWin
 
 static constexpr uint32_t s_version = 1;
 
-LinuxDrmSyncObjV1Interface::LinuxDrmSyncObjV1Interface(Display *display, QObject *parent)
+LinuxDrmSyncObjV1Interface::LinuxDrmSyncObjV1Interface(Display *display, QObject *parent, DrmDevice *drmDevice)
     : QObject(parent)
     , QtWaylandServer::wp_linux_drm_syncobj_manager_v1(*display, s_version)
+    , m_drmDevice(drmDevice)
 {
 }
 
@@ -42,23 +44,17 @@ void LinuxDrmSyncObjV1Interface::wp_linux_drm_syncobj_manager_v1_get_surface(Res
 void LinuxDrmSyncObjV1Interface::wp_linux_drm_syncobj_manager_v1_import_timeline(Resource *resource, uint32_t id, int32_t rawFd)
 {
     FileDescriptor fd(rawFd);
-    // TODO add a GPU abstraction, instead of using the render backend
-    if (!m_renderBackend || isGlobalRemoved()) {
+    if (isGlobalRemoved()) {
         // to not crash the client, create an inert timeline
         new LinuxDrmSyncObjTimelineV1(resource->client(), id, nullptr);
         return;
     }
-    auto timeline = m_renderBackend->importTimeline(std::move(fd));
-    if (!timeline) {
+    uint32_t handle = 0;
+    if (drmSyncobjFDToHandle(m_drmDevice->fileDescriptor(), fd.get(), &handle) != 0) {
         wl_resource_post_error(resource->handle, WP_LINUX_DRM_SYNCOBJ_MANAGER_V1_ERROR_INVALID_TIMELINE, "Importing timeline failed");
         return;
     }
-    new LinuxDrmSyncObjTimelineV1(resource->client(), id, std::move(timeline));
-}
-
-void LinuxDrmSyncObjV1Interface::setRenderBackend(RenderBackend *backend)
-{
-    m_renderBackend = backend;
+    new LinuxDrmSyncObjTimelineV1(resource->client(), id, std::make_unique<SyncTimeline>(m_drmDevice->fileDescriptor(), handle));
 }
 
 void LinuxDrmSyncObjV1Interface::wp_linux_drm_syncobj_manager_v1_destroy(Resource *resource)
