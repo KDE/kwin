@@ -48,7 +48,6 @@ public:
     bool queueChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &properties);
     void revertQueuedChanges();
-    void updateModes();
     void updateDpmsMode(DpmsMode dpmsMode);
 
     bool updateCursorLayer() override;
@@ -62,11 +61,15 @@ public:
     QVector3D channelFactors() const;
     bool needsColormanagement() const;
 
+    void updateConnectorProperties();
+
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     bool doSetChannelFactors(const QVector3D &rgb);
     ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
+    Capabilities computeCapabilities() const;
+    void updateInformation();
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
