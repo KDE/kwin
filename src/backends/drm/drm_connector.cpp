@@ -304,19 +304,6 @@ bool DrmConnector::updateProperties()
         if (scalingMode.isValid() && scalingMode.hasEnum(ScalingMode::Full_Aspect)) {
             m_modes.append(generateCommonModes());
         }
-        if (m_pipeline->mode()) {
-            if (const auto mode = findMode(*m_pipeline->mode()->nativeMode())) {
-                m_pipeline->setMode(mode);
-            } else {
-                m_pipeline->setMode(m_modes.constFirst());
-            }
-        } else {
-            m_pipeline->setMode(m_modes.constFirst());
-        }
-        m_pipeline->applyPendingChanges();
-        if (m_pipeline->output()) {
-            m_pipeline->output()->updateModes();
-        }
     }
 
     m_mstPath.clear();
