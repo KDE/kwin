@@ -552,8 +552,12 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
 
 void Output::setInformation(const Information &information)
 {
+    const auto oldInfo = m_information;
     m_information = information;
     m_uuid = generateOutputId(eisaId(), model(), serialNumber(), name());
+    if (oldInfo.capabilities != information.capabilities) {
+        Q_EMIT capabilitiesChanged();
+    }
 }
 
 void Output::setState(const State &state)
