@@ -259,13 +259,22 @@ QQmlComponent *QuickSceneEffect::delegate() const
 
 void QuickSceneEffect::setDelegate(QQmlComponent *delegate)
 {
-    if (isRunning()) {
-        qWarning() << "Cannot change QuickSceneEffect.source while running";
-        return;
-    }
     if (d->delegate.get() != delegate) {
         d->source = QUrl();
         d->delegate = delegate;
+        if (isRunning()) {
+            auto reloadViews = [this]() {
+                if (!isRunning()) {
+                    return;
+                }
+                const auto screens = effects->screens();
+                for (Output *screen : screens) {
+                    removeScreen(screen);
+                    addScreen(screen);
+                }
+            };
+            QMetaObject::invokeMethod(this, reloadViews, Qt::QueuedConnection);
+        }
         Q_EMIT delegateChanged();
     }
 }
@@ -414,9 +423,7 @@ void QuickSceneEffect::handleScreenAdded(Output *screen)
 
 void QuickSceneEffect::handleScreenRemoved(Output *screen)
 {
-    d->views.erase(screen);
-    d->incubators.erase(screen);
-    d->contexts.erase(screen);
+    removeScreen(screen);
 }
 
 void QuickSceneEffect::addScreen(Output *screen)
@@ -457,6 +464,13 @@ void QuickSceneEffect::addScreen(Output *screen)
     d->contexts[screen].reset(context);
     d->incubators[screen].reset(incubator);
     d->delegate->create(*incubator, context);
+}
+
+void QuickSceneEffect::removeScreen(Output *screen)
+{
+    d->views.erase(screen);
+    d->incubators.erase(screen);
+    d->contexts.erase(screen);
 }
 
 void QuickSceneEffect::startInternal()

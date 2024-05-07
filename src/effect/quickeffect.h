@@ -175,6 +175,7 @@ private:
     void handleScreenRemoved(Output *screen);
 
     void addScreen(Output *screen);
+    void removeScreen(Output *screen);
     void startInternal();
     void stopInternal();
 
