@@ -34,11 +34,7 @@
 #include "qwayland-xdg-decoration-unstable-v1.h"
 #include "qwayland-xdg-shell.h"
 #include "qwayland-zkde-screencast-unstable-v1.h"
-#if HAVE_XDG_DIALOG_V1_HEADER
 #include "qwayland-xdg-dialog-v1.h"
-#else
-#include "qwayland-dialog-v1.h"
-#endif
 
 namespace KWayland
 {

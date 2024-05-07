@@ -286,25 +286,11 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/xx-color-management-v4.xml
     BASENAME xx-color-management-v4
 )
-if (WaylandProtocols_VERSION VERSION_LESS 1.36)
-    ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-        PRIVATE_CODE
-        PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
-        BASENAME dialog-v1
-    )
-    target_compile_definitions(kwin PRIVATE
-        -DHAVE_XDG_DIALOG_V1_HEADER=0
-    )
-else()
-    ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-        PRIVATE_CODE
-        PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
-        BASENAME xdg-dialog-v1
-    )
-    target_compile_definitions(kwin PRIVATE
-        -DHAVE_XDG_DIALOG_V1_HEADER=1
-    )
-endif()
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-dialog/xdg-dialog-v1.xml
+    BASENAME xdg-dialog-v1
+)
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PRIVATE_CODE
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
