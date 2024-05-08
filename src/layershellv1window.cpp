@@ -75,6 +75,8 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
             this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::exclusiveZoneChanged,
             this, &LayerShellV1Window::scheduleRearrange);
+    connect(shellSurface, &LayerSurfaceV1Interface::accomodateExclusiveZonesChanged,
+            this, &LayerShellV1Window::scheduleRearrange);
     connect(shellSurface, &LayerSurfaceV1Interface::acceptsFocusChanged,
             this, &LayerShellV1Window::handleAcceptsFocusChanged);
     connect(shellSurface, &LayerSurfaceV1Interface::configureAcknowledged,

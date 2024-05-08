@@ -393,6 +393,9 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (previous.exclusiveZone != state.exclusiveZone) {
         Q_EMIT q->exclusiveZoneChanged();
     }
+    if (previous.accomodateExclusiveZones != state.accomodateExclusiveZones) {
+        Q_EMIT q->accomodateExclusiveZonesChanged();
+    }
     if (previous.margins != state.margins) {
         Q_EMIT q->marginsChanged();
     }
@@ -487,7 +490,7 @@ int LayerSurfaceV1Interface::exclusiveZone() const
 
 bool LayerSurfaceV1Interface::accomodateExclusiveZones() const
 {
-    return d->state.accomodateExclusiveZones;
+    return d->state.accomodateExclusiveZones || d->state.exclusiveZone == -1;
 }
 
 Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const

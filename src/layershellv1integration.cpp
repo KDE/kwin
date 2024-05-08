@@ -95,7 +95,7 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         QRect bounds;
-        if (shellSurface->exclusiveZone() == -1 || !shellSurface->accomodateExclusiveZones()) {
+        if (!shellSurface->accomodateExclusiveZones()) {
             bounds = window->desiredOutput()->geometry();
         } else {
             bounds = *workArea;
