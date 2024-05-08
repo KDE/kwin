@@ -1,21 +1,21 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
-# Vit Pelcak <vit@pelcak.org>, 2018, 2019, 2021, 2023.
+# SPDX-FileCopyrightText: 2018, 2019, 2021, 2023, 2024 Vit Pelcak <vit@pelcak.org>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-04-27 00:39+0000\n"
-"PO-Revision-Date: 2023-01-28 07:42+0100\n"
-"Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
+"PO-Revision-Date: 2024-04-30 15:28+0200\n"
+"Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -55,16 +55,13 @@ msgstr "Došlo k chybě při získávání informací z kompozitoru."
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "Řádky:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgctxt "A numbered name for virtual desktops"
-#| msgid "Desktop %1"
-#| msgid_plural "Desktop %1"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Plocha %1"
+msgstr "Přidat plochu"
 
 #: ui/main.qml:118
 #, kde-format
@@ -127,13 +124,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Zobrazit ukazatele rozložení plochy"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "1 řádek"
-#~ msgstr[1] "%1 řádky"
-#~ msgstr[2] "%1 řádků"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "Přidat"

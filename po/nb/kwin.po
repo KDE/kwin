@@ -4150,12 +4150,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#~ msgid ""
-#~ "The window manager is configured to consider the screen with the mouse on "
-#~ "it as active one.\n"
-#~ "Therefore it is not possible to switch to a screen explicitly."
-#~ msgstr ""
-#~ "Vindusbehandleren er satt opp til å betrakte den skjermen som har "
-#~ "musepekeren som den aktive.\n"
-#~ "Derfor er det ikke mulig å uttrykkelig bytte til en skjerm."

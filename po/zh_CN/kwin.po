@@ -2198,20 +2198,16 @@ msgid "Arrow draw modifier keys:"
 msgstr "箭头绘制修饰键："
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "夜间颜色开启"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "夜间颜色开启"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
@@ -4160,18 +4156,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgctxt "Night Light was disabled"
-#~ msgid "Night Light Off"
-#~ msgstr "夜间颜色关闭"
-
-#~ msgid "Toggle Night Light"
-#~ msgstr "开关夜间颜色"
-
-#~ msgid ""
-#~ "The window manager is configured to consider the screen with the mouse on "
-#~ "it as active one.\n"
-#~ "Therefore it is not possible to switch to a screen explicitly."
-#~ msgstr ""
-#~ "窗口管理器已设置为将鼠标所在屏幕视作活动屏幕。\n"
-#~ "因此无法明确切换到一个指定的屏幕。"

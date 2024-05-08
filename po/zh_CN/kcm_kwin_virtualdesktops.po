@@ -53,16 +53,13 @@ msgstr "获取显示特效合成器信息时出错。"
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "行数："
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgctxt "A numbered name for virtual desktops"
-#| msgid "Desktop %1"
-#| msgid_plural "Desktop %1"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "桌面 %1"
+msgstr "添加桌面"
 
 #: ui/main.qml:118
 #, kde-format
@@ -123,11 +120,3 @@ msgstr "%1 毫秒"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "显示桌面布局指示图"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "%1 行"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "添加"

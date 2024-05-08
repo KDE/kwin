@@ -4210,24 +4210,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#, fuzzy
-#~| msgctxt "Night Color was disabled"
-#~| msgid "Night Color Off"
-#~ msgctxt "Night Light was disabled"
-#~ msgid "Night Light Off"
-#~ msgstr "Kveldsfargar av"
-
-#, fuzzy
-#~| msgid "Toggle Night Color"
-#~ msgid "Toggle Night Light"
-#~ msgstr "Slå på/av kveldsfargar"
-
-#~ msgid ""
-#~ "The window manager is configured to consider the screen with the mouse on "
-#~ "it as active one.\n"
-#~ "Therefore it is not possible to switch to a screen explicitly."
-#~ msgstr ""
-#~ "Vindaugshandsamaren er sett opp til å rekna skjermen som har musepeikaren "
-#~ "som den aktive.\n"
-#~ "Derfor er det ikkje mogleg å manuelt byta skjerm."
