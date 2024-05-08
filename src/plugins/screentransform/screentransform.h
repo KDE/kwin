@@ -9,6 +9,7 @@
 #pragma once
 
 #include "core/output.h"
+#include "effect/crossfaderenderer.h"
 #include "effect/effect.h"
 #include "effect/timeline.h"
 
@@ -58,12 +59,8 @@ private:
     void removeScreen(Output *screen);
 
     QHash<Output *, ScreenState> m_states;
+    CrossFadeRenderer m_crossfader;
 
-    std::unique_ptr<GLShader> m_shader;
-    int m_previousTextureLocation = -1;
-    int m_currentTextureLocation = -1;
-    int m_modelViewProjectioMatrixLocation = -1;
-    int m_blendFactorLocation = -1;
     bool m_capturing = false;
 };
 

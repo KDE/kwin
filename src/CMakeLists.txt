@@ -86,6 +86,8 @@ target_sources(kwin PRIVATE
     dpmsinputeventfilter.cpp
     effect/anidata.cpp
     effect/animationeffect.cpp
+    effect/crossfade.qrc
+    effect/crossfaderenderer.cpp
     effect/effect.cpp
     effect/effectframe.cpp
     effect/effecthandler.cpp

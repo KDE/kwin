@@ -6,6 +6,7 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
+
 // own
 #include "sessionfade.h"
 #include "core/outputconfiguration.h"
@@ -24,12 +25,6 @@
 #include <window.h>
 #include <workspace.h>
 
-static void ensureResources()
-{
-    // Must initialize resources manually because the effect is a static lib.
-    Q_INIT_RESOURCE(screentransform);
-}
-
 using namespace std::chrono_literals;
 
 namespace KWin
@@ -42,19 +37,6 @@ SessionFadeEffect::SessionFadeEffect()
                                                  QStringLiteral("org.kde.KWin.SessionFade"),
                                                  this,
                                                  QDBusConnection::ExportAllSlots);
-
-    // Make sure that shaders in /effects/screentransform/shaders/* are loaded.
-    ensureResources();
-
-    m_shader = ShaderManager::instance()->generateShaderFromFile(
-        ShaderTrait::MapTexture,
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.vert"),
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.frag"));
-
-    m_modelViewProjectioMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
-    m_blendFactorLocation = m_shader->uniformLocation("blendFactor");
-    m_previousTextureLocation = m_shader->uniformLocation("previousTexture");
-    m_currentTextureLocation = m_shader->uniformLocation("currentTexture");
 
     connect(effects, &EffectsHandler::screenRemoved, this, &SessionFadeEffect::removeScreen);
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateAboutToChange, this, [this](ScreenLocker::KSldApp::LockState newState) {
@@ -149,52 +131,6 @@ void SessionFadeEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mi
     effects->prePaintScreen(data, presentTime);
 }
 
-static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)
-{
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-
-    const auto opt = vbo->map<GLVertex2D>(6);
-    if (!opt) {
-        return nullptr;
-    }
-    const auto map = *opt;
-
-    auto deviceGeometry = scaledRect(geometry, scale);
-
-    // first triangle
-    map[0] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
-        .texcoord = QVector2D(0.0, 1.0),
-    };
-    map[1] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
-        .texcoord = QVector2D(1.0, 0.0),
-    };
-    map[2] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.left(), deviceGeometry.bottom()),
-        .texcoord = QVector2D(0.0, 0.0),
-    };
-
-    // second triangle
-    map[3] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
-        .texcoord = QVector2D(0.0, 1.0),
-    };
-    map[4] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.right(), deviceGeometry.top()),
-        .texcoord = QVector2D(1.0, 1.0),
-    };
-    map[5] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
-        .texcoord = QVector2D(1.0, 0.0),
-    };
-
-    vbo->unmap();
-    return vbo;
-}
-
 void SessionFadeEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, KWin::Output *screen)
 {
     auto it = m_states.find(screen);
@@ -227,41 +163,8 @@ void SessionFadeEffect::paintScreen(const RenderTarget &renderTarget, const Rend
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
     if (m_timeLine.direction() == TimeLine::Forward && it->m_prev.texture) {
-        const qreal blendFactor = m_timeLine.value();
-        const QRectF screenRect = screen->geometry();
-
-        const auto scale = viewport.scale();
-
-        glActiveTexture(GL_TEXTURE1);
-        it->m_prev.texture->bind();
-        glActiveTexture(GL_TEXTURE0);
-        it->m_current.texture->bind();
-
-        // Clear the background.
-        glClearColor(0, 0, 0, 0);
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        GLVertexBuffer *vbo = texturedRectVbo(screenRect, scale);
-        if (!vbo) {
-            return;
-        }
-
-        ShaderManager *sm = ShaderManager::instance();
-        ShaderBinder binder(m_shader.get());
-        m_shader->setUniform(m_modelViewProjectioMatrixLocation, viewport.projectionMatrix());
-        m_shader->setUniform(m_blendFactorLocation, float(blendFactor));
-        m_shader->setUniform(m_currentTextureLocation, 0);
-        m_shader->setUniform(m_previousTextureLocation, 1);
-
-        vbo->bindArrays();
-        vbo->draw(GL_TRIANGLES, 0, 6);
-        vbo->unbindArrays();
-        sm->popShader();
-
-        glActiveTexture(GL_TEXTURE1);
-        it->m_prev.texture->unbind();
-        glActiveTexture(GL_TEXTURE0);
-        it->m_current.texture->unbind();
+        const QRectF screenRect = scaledRect(screen->geometry(), viewport.scale());
+        m_crossfader.render(viewport.projectionMatrix(), it->m_prev.texture.get(), it->m_current.texture.get(), screenRect, m_timeLine.value());
     } else {
         GLShader *shader = ShaderManager::instance()->shader(ShaderTrait::MapTexture | ShaderTrait::Modulate);
         ShaderBinder binder(shader);
@@ -270,8 +173,8 @@ void SessionFadeEffect::paintScreen(const RenderTarget &renderTarget, const Rend
         const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
         shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
-
         shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(alpha, alpha, alpha, alpha));
+
         if (it->m_current.texture) {
             it->m_current.texture->render(nativeSize);
         }

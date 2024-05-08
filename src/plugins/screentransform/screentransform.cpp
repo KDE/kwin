@@ -20,31 +20,12 @@
 
 using namespace std::chrono_literals;
 
-static void ensureResources()
-{
-    // Must initialize resources manually because the effect is a static lib.
-    Q_INIT_RESOURCE(screentransform);
-}
-
 namespace KWin
 {
 
 ScreenTransformEffect::ScreenTransformEffect()
     : Effect()
 {
-    // Make sure that shaders in /effects/screentransform/shaders/* are loaded.
-    ensureResources();
-
-    m_shader = ShaderManager::instance()->generateShaderFromFile(
-        ShaderTrait::MapTexture,
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.vert"),
-        QStringLiteral(":/effects/screentransform/shaders/crossfade.frag"));
-
-    m_modelViewProjectioMatrixLocation = m_shader->uniformLocation("modelViewProjectionMatrix");
-    m_blendFactorLocation = m_shader->uniformLocation("blendFactor");
-    m_previousTextureLocation = m_shader->uniformLocation("previousTexture");
-    m_currentTextureLocation = m_shader->uniformLocation("currentTexture");
-
     const QList<Output *> screens = effects->screens();
     for (auto screen : screens) {
         addScreen(screen);
@@ -134,52 +115,6 @@ void ScreenTransformEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono
     effects->prePaintScreen(data, presentTime);
 }
 
-static GLVertexBuffer *texturedRectVbo(const QRectF &geometry, qreal scale)
-{
-    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
-    vbo->reset();
-    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
-
-    const auto opt = vbo->map<GLVertex2D>(6);
-    if (!opt) {
-        return nullptr;
-    }
-    const auto map = *opt;
-
-    auto deviceGeometry = scaledRect(geometry, scale);
-
-    // first triangle
-    map[0] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
-        .texcoord = QVector2D(0.0, 1.0),
-    };
-    map[1] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
-        .texcoord = QVector2D(1.0, 0.0),
-    };
-    map[2] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.left(), deviceGeometry.bottom()),
-        .texcoord = QVector2D(0.0, 0.0),
-    };
-
-    // second triangle
-    map[3] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.left(), deviceGeometry.top()),
-        .texcoord = QVector2D(0.0, 1.0),
-    };
-    map[4] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.right(), deviceGeometry.top()),
-        .texcoord = QVector2D(1.0, 1.0),
-    };
-    map[5] = GLVertex2D{
-        .position = QVector2D(deviceGeometry.right(), deviceGeometry.bottom()),
-        .texcoord = QVector2D(1.0, 0.0),
-    };
-
-    vbo->unmap();
-    return vbo;
-}
-
 static qreal lerp(qreal a, qreal b, qreal t)
 {
     return (1 - t) * a + t * b;
@@ -227,42 +162,14 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
     const auto scale = viewport.scale();
 
     // Projection matrix + rotate transform.
+    const QRectF rect = scaledRect(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
     const QVector3D transformOrigin(screenRect.center());
     QMatrix4x4 modelViewProjectionMatrix(viewport.projectionMatrix());
     modelViewProjectionMatrix.translate(transformOrigin * scale);
     modelViewProjectionMatrix.rotate(angle, 0, 0, 1);
     modelViewProjectionMatrix.translate(-transformOrigin * scale);
 
-    glActiveTexture(GL_TEXTURE1);
-    it->m_prev.texture->bind();
-    glActiveTexture(GL_TEXTURE0);
-    it->m_current.texture->bind();
-
-    // Clear the background.
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    GLVertexBuffer *vbo = texturedRectVbo(lerp(it->m_oldGeometry, screenRect, blendFactor), scale);
-    if (!vbo) {
-        return;
-    }
-
-    ShaderManager *sm = ShaderManager::instance();
-    sm->pushShader(m_shader.get());
-    m_shader->setUniform(m_modelViewProjectioMatrixLocation, modelViewProjectionMatrix);
-    m_shader->setUniform(m_blendFactorLocation, float(blendFactor));
-    m_shader->setUniform(m_currentTextureLocation, 0);
-    m_shader->setUniform(m_previousTextureLocation, 1);
-
-    vbo->bindArrays();
-    vbo->draw(GL_TRIANGLES, 0, 6);
-    vbo->unbindArrays();
-    sm->popShader();
-
-    glActiveTexture(GL_TEXTURE1);
-    it->m_prev.texture->unbind();
-    glActiveTexture(GL_TEXTURE0);
-    it->m_current.texture->unbind();
+    m_crossfader.render(modelViewProjectionMatrix, it->m_prev.texture.get(), it->m_current.texture.get(), rect, blendFactor);
 
     effects->addRepaintFull();
 }
