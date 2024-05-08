@@ -18,7 +18,7 @@
 
 namespace KWin
 {
-static const int s_version = 5;
+static const int s_version = 6;
 
 class LayerShellV1InterfacePrivate : public QtWaylandServer::zwlr_layer_shell_v1
 {
@@ -46,6 +46,7 @@ public:
     std::optional<QMargins> margins;
     std::optional<QSize> desiredSize;
     std::optional<int> exclusiveZone;
+    std::optional<bool> accomodateExclusiveZones;
     std::optional<Qt::Edge> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
@@ -60,6 +61,7 @@ struct LayerSurfaceV1State
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
     Qt::Edge exclusiveEdge = Qt::Edge();
+    bool accomodateExclusiveZones = true;
     bool acceptsFocus = false;
     bool configured = false;
     bool closed = false;
@@ -86,6 +88,7 @@ protected:
     void zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor) override;
     void zwlr_layer_surface_v1_set_exclusive_edge(Resource *resource, uint32_t edge) override;
     void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone) override;
+    void zwlr_layer_surface_v1_set_accomodate_exclusive_zones(Resource *resource, uint32_t accomodates) override;
     void zwlr_layer_surface_v1_set_margin(Resource *resource, int32_t top, int32_t right, int32_t bottom, int32_t left) override;
     void zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity) override;
     void zwlr_layer_surface_v1_get_popup(Resource *resource, struct ::wl_resource *popup) override;
@@ -227,6 +230,11 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Re
     pending->exclusiveZone = zone;
 }
 
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_accomodate_exclusive_zones(Resource *, uint32_t accomodates)
+{
+    pending.accomodateExclusiveZones = bool(accomodates);
+}
+
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *, int32_t top, int32_t right, int32_t bottom, int32_t left)
 {
     pending->margins = QMargins(left, top, right, bottom);
@@ -362,6 +370,9 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveEdge.has_value()) {
         state.exclusiveEdge = commit->exclusiveEdge.value();
     }
+    if (commit->accomodateExclusiveZones.has_value()) {
+        state.accomodateExclusiveZones = commit->accomodateExclusiveZones.value();
+    }
 
     if (commit->acceptsFocus.has_value()) {
         state.acceptsFocus = commit->acceptsFocus.value();
@@ -472,6 +483,11 @@ int LayerSurfaceV1Interface::bottomMargin() const
 int LayerSurfaceV1Interface::exclusiveZone() const
 {
     return d->state.exclusiveZone;
+}
+
+bool LayerSurfaceV1Interface::accomodateExclusiveZones() const
+{
+    return d->state.accomodateExclusiveZones;
 }
 
 Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const

@@ -143,6 +143,8 @@ public:
      */
     int exclusiveZone() const;
 
+    bool accomodateExclusiveZones() const;
+
     /**
      * If the exclusive zone is positive, this function returns the corresponding exclusive
      * anchor edge, otherwise returns a Qt::Edge() value.
@@ -183,6 +185,7 @@ Q_SIGNALS:
     void anchorChanged();
     void desiredSizeChanged();
     void exclusiveZoneChanged();
+    void accomodateExclusiveZonesChanged();
     void marginsChanged();
 
 private:
