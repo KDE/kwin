@@ -225,9 +225,13 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_edge(Re
     }
 }
 
-void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *, int32_t zone)
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone)
 {
-    pending->exclusiveZone = zone;
+    if (resource->version() >= ZWLR_LAYER_SURFACE_V1_SET_ACCOMODATE_EXCLUSIVE_ZONES_SINCE_VERSION && zone < 0) {
+        wl_resource_post_error(resource->handle, error_invalid_exclusive_zone, "Invalid exclusive zone: %d", zone);
+    } else {
+        pending->exclusiveZone = zone;
+    }
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_accomodate_exclusive_zones(Resource *, uint32_t accomodates)

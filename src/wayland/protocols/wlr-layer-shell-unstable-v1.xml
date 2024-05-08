@@ -303,6 +303,7 @@
       <entry name="invalid_size" value="1" summary="size is invalid"/>
       <entry name="invalid_anchor" value="2" summary="anchor bitfield is invalid"/>
       <entry name="invalid_exclusive_edge" value="4" summary="exclusive edge is invalid given the surface anchors"/>
+      <entry name="invalid_exclusive_zone" value="5" summary="exclusive zone value is invalid"/>
     </enum>
 
     <enum name="anchor" bitfield="true">
