@@ -229,6 +229,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .maxAverageBrightnessOverride = changeSet->maxAverageBrightnessOverride.value_or(output->maxAverageBrightnessOverride()),
                 .minBrightnessOverride = changeSet->minBrightnessOverride.value_or(output->minBrightnessOverride()),
                 .sdrGamutWideness = changeSet->sdrGamutWideness.value_or(output->sdrGamutWideness()),
+                .brightness = changeSet->hdrBrightness.value_or(output->hdrBrightness()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -263,6 +264,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
                 .minBrightnessOverride = output->minBrightnessOverride(),
                 .sdrGamutWideness = output->sdrGamutWideness(),
+                .brightness = output->hdrBrightness(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -311,6 +313,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .minBrightnessOverride = state.minBrightnessOverride,
             .sdrGamutWideness = state.sdrGamutWideness,
             .colorProfileSource = state.colorProfileSource,
+            .hdrBrightness = state.brightness,
         };
         if (setupState.enabled) {
             priorities.push_back(std::make_pair(output, setupState.priority));
@@ -432,6 +435,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
             .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
+            .hdrBrightness = existingData.brightness.value_or(1.0),
         };
         if (enable) {
             const auto modeSize = changeset->transform->map(mode->size());
@@ -737,6 +741,9 @@ void OutputConfigurationStore::load()
                 state.colorProfileSource = Output::ColorProfileSource::sRGB;
             }
         }
+        if (const auto it = data.find("brightness"); it != data.end() && it->isDouble()) {
+            state.brightness = std::clamp(it->toDouble(), 0.0, 1.0);
+        }
         outputDatas.push_back(state);
     }
 
@@ -965,6 +972,9 @@ void OutputConfigurationStore::save()
                 o["colorProfileSource"] = "EDID";
                 break;
             }
+        }
+        if (output.brightness) {
+            o["brightness"] = *output.brightness;
         }
         outputsData.append(o);
     }

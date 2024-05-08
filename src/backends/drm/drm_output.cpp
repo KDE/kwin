@@ -402,6 +402,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.colorDescription = m_pipeline->colorDescription();
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
+    next.hdrBrightness = props->hdrBrightness.value_or(m_state.hdrBrightness);
     setState(next);
 
     if (!isEnabled() && m_pipeline->needsModeset()) {

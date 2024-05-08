@@ -54,7 +54,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     // as the hardware cursor is more important than an incorrectly blended cursor edge
 
     m_scanoutBuffer.reset();
-    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
+    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement(), m_pipeline->output()->hdrBrightness());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)

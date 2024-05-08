@@ -610,6 +610,9 @@ void Output::setState(const State &state)
     if (oldState.colorProfileSource != state.colorProfileSource) {
         Q_EMIT colorProfileSourceChanged();
     }
+    if (oldState.hdrBrightness != state.hdrBrightness) {
+        Q_EMIT hdrBrightnessChanged();
+    }
     if (oldState.enabled != state.enabled) {
         Q_EMIT enabledChanged();
     }
@@ -760,6 +763,11 @@ double Output::sdrGamutWideness() const
 Output::ColorProfileSource Output::colorProfileSource() const
 {
     return m_state.colorProfileSource;
+}
+
+double Output::hdrBrightness() const
+{
+    return m_state.hdrBrightness;
 }
 } // namespace KWin
 

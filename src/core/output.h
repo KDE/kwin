@@ -358,6 +358,8 @@ public:
     double sdrGamutWideness() const;
     ColorProfileSource colorProfileSource() const;
 
+    double hdrBrightness() const;
+
     const ColorDescription &colorDescription() const;
 
 Q_SIGNALS:
@@ -423,6 +425,7 @@ Q_SIGNALS:
     void sdrGamutWidenessChanged();
     void colorDescriptionChanged();
     void colorProfileSourceChanged();
+    void hdrBrightnessChanged();
 
 protected:
     struct Information
@@ -472,6 +475,7 @@ protected:
         std::optional<double> minBrightnessOverride;
         double sdrGamutWideness = 0;
         VrrPolicy vrrPolicy = VrrPolicy::Automatic;
+        double hdrBrightness = 1.0;
     };
 
     void setInformation(const Information &information);

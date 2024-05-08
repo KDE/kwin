@@ -43,6 +43,7 @@ public:
     std::optional<std::optional<double>> minBrightnessOverride;
     std::optional<double> sdrGamutWideness;
     std::optional<Output::ColorProfileSource> colorProfileSource;
+    std::optional<double> hdrBrightness;
 };
 
 class KWIN_EXPORT OutputConfiguration
