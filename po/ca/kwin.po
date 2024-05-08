@@ -4207,6 +4207,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
-
-#~ msgid "Region outside the workspace"
-#~ msgstr "Regió situada fora de l'espai de treball"
