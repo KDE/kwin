@@ -25,7 +25,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-04 02:52+0000\n"
-"PO-Revision-Date: 2024-05-02 16:55+0200\n"
+"PO-Revision-Date: 2024-05-07 08:26+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -1194,7 +1194,7 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
-"<para>« %1 » de<application>%2</application> ne répond plus. Voulez-vous "
+"<para> « %1 » de <application>%2</application> ne répond plus. Voulez-vous "
 "fermer cette application ?</para>"
 
 #: helpers/killer/killer.cpp:153
@@ -2423,12 +2423,12 @@ msgstr "Impossible de créer une boucle principale « PipeWire »"
 #: plugins/screencast/pipewirecore.cpp:76
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr "Impossible de créer un context « PipeWire »"
+msgstr "Impossible de créer un contexte « PipeWire »"
 
 #: plugins/screencast/pipewirecore.cpp:83
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr "Impossible de se connecter à un context « PipeWire »"
+msgstr "Impossible de se connecter à un contexte « PipeWire »"
 
 #: plugins/screencast/screencastmanager.cpp:45
 #, kde-format
@@ -2527,7 +2527,7 @@ msgstr "Vertical :"
 #: plugins/slide/slide_config.ui:72
 #, kde-format
 msgid "Slide desktop background"
-msgstr "Fond d’écran de diapositives"
+msgstr "Fond d'écran de diapositives"
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -4239,7 +4239,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:271
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr "Xwayland s'est planté."
+msgstr "XWayland s'est planté."
 
 #~ msgid "Region outside the workspace"
 #~ msgstr "Région en dehors de l'espace de travail"

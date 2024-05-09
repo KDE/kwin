@@ -1803,8 +1803,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
-"Seleccioneu esta opció si la vora de la finestra s'ha de pintar en el color "
-"de la barra de títol. Altrament es pintarà en el color del fons."
+"Marqueu esta opció si la vora de la finestra s'ha de pintar en el color de "
+"la barra de títol. Altrament es pintarà en el color del fons."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -1819,8 +1819,8 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
-"Seleccioneu esta opció si voleu que els botons sobreïsquen quan el punter "
-"del ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
+"Marqueu esta opció si voleu que els botons sobreïsquen quan el punter del "
+"ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
@@ -2555,7 +2555,7 @@ msgstr "Farciment:"
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout..."
-msgstr "Carrega una disposició..."
+msgstr "Carrega una disposició…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -3532,7 +3532,7 @@ msgstr "Diàleg"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: sm.cpp:469
 #, kde-format
@@ -4209,6 +4209,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Region outside the workspace"
-#~ msgstr "Regió situada fora de l'espai de treball"
