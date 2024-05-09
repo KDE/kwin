@@ -2201,19 +2201,19 @@ msgstr "箭头绘制修饰键："
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "夜间色温已暂停"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "夜间色温已继续"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "暂停/继续夜间色温"
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format

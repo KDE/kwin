@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-07 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 12:50+0100\n"
+"PO-Revision-Date: 2024-05-07 11:45+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -1821,8 +1821,8 @@ msgid ""
 "Check this option if the window border should be painted in the titlebar "
 "color. Otherwise it will be painted in the background color."
 msgstr ""
-"Seleccioneu esta opció si la vora de la finestra s'ha de pintar en el color "
-"de la barra de títol. Altrament es pintarà en el color del fons."
+"Marqueu esta opció si la vora de la finestra s'ha de pintar en el color de "
+"la barra de títol. Altrament es pintarà en el color del fons."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
@@ -1837,8 +1837,8 @@ msgid ""
 "Check this option if you want the buttons to fade in when the mouse pointer "
 "hovers over them and fade out again when it moves away."
 msgstr ""
-"Seleccioneu esta opció si voleu que els botons sobreïsquen quan el punter "
-"del ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
+"Marqueu esta opció si voleu que els botons sobreïsquen quan el punter del "
+"ratolí passe per damunt i tornen a l'estat normal quan s'allunye."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
@@ -2241,26 +2241,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Tecles modificadores de dibuix amb fletxes:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Llum de nit activada"
+msgstr "S'ha suspés la llum de nit"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Llum de nit activada"
+msgstr "S'ha représ la llum de nit"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspén/reprén la llum de nit"
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -3546,7 +3542,7 @@ msgstr "Diàleg"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: sm.cpp:479
 #, kde-format
@@ -4213,22 +4209,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgctxt "Night Light was disabled"
-#~ msgid "Night Light Off"
-#~ msgstr "Llum de nit desactivada"
-
-#~ msgid "Toggle Night Light"
-#~ msgstr "Canvia la llum de nit"
-
-#~ msgid ""
-#~ "The window manager is configured to consider the screen with the mouse on "
-#~ "it as active one.\n"
-#~ "Therefore it is not possible to switch to a screen explicitly."
-#~ msgstr ""
-#~ "El gestor de finestres està configurat per a considerar com a activa la "
-#~ "pantalla amb el cursor del ratolí.\n"
-#~ "Per tant, no es pot canviar explícitament a una pantalla."
-
-#~ msgid "Region outside the workspace"
-#~ msgstr "Regió situada fora de l'espai de treball"
