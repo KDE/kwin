@@ -71,6 +71,7 @@ public:
     ~MockConnector() = default;
 
     void addMode(uint32_t width, uint32_t height, float refreshRate, bool preferred = false);
+    void setVrrCapable(bool cap);
 
     drmModeConnection connection;
     uint32_t type;
