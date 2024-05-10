@@ -15,7 +15,7 @@
 
 #include <QObject>
 
-#include "effect/globals.h"
+#include "input_event_spy.h"
 #include <kwin_export.h>
 
 #include <QPointer>
@@ -34,7 +34,7 @@ class InputMethodGrabV1;
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
  * the Virtual Keyboard using supported input method client (maliit-keyboard e.g.)
  **/
-class KWIN_EXPORT InputMethod : public QObject
+class KWIN_EXPORT InputMethod : public QObject, public KWin::InputEventSpy
 {
     Q_OBJECT
 public:
@@ -78,6 +78,9 @@ Q_SIGNALS:
     void availableChanged();
     void activeClientSupportsTextInputChanged();
 
+protected:
+    void pointerEvent(MouseEvent *event) override;
+
 private Q_SLOTS:
     // textinput interface slots
     void handleFocusedSurfaceChanged();
@@ -119,12 +122,20 @@ private:
     void resetPendingPreedit();
     void refreshActive();
 
+    void flushPreedit();
+
     struct
     {
         QString text = QString();
         qint32 cursor = 0;
         std::vector<std::pair<quint32, quint32>> highlightRanges;
     } preedit;
+
+    // In some IM backends pre-edit text should be submitted on
+    // user interaction. In some it should be discarded
+    // TextInputV3 does not have a flag for this, so we have to
+    // handle it compositor side
+    QString m_preTextToCommit;
 
     bool m_enabled = true;
     quint32 m_serial = 0;

@@ -11,6 +11,7 @@
 #include "config-kwin.h"
 
 #include "input.h"
+#include "input_event.h"
 #include "inputpanelv1window.h"
 #include "keyboard_input.h"
 #include "utils/common.h"
@@ -21,6 +22,7 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+#include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
 #include "wayland/display.h"
@@ -105,6 +107,8 @@ InputMethod::~InputMethod()
 
 void InputMethod::init()
 {
+    input()->installInputEventSpy(this);
+
     // Stop restarting the input method if it starts crashing very frequently
     m_inputMethodCrashTimer.setInterval(20000);
     m_inputMethodCrashTimer.setSingleShot(true);
@@ -123,6 +127,7 @@ void InputMethod::init()
         new TextInputManagerV2Interface(waylandServer()->display(), this);
         new TextInputManagerV3Interface(waylandServer()->display(), this);
 
+        connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceAboutToChange, this, &InputMethod::flushPreedit);
         connect(waylandServer()->seat(), &SeatInterface::focusedTextInputSurfaceChanged, this, &InputMethod::handleFocusedSurfaceChanged);
 
         TextInputV1Interface *textInputV1 = waylandServer()->seat()->textInputV1();
@@ -206,6 +211,14 @@ void InputMethod::refreshActive()
     }
 
     setActive(active);
+}
+
+void InputMethod::flushPreedit()
+{
+    if (!m_preTextToCommit.isEmpty()) {
+        commitString(m_serial++, m_preTextToCommit);
+        m_preTextToCommit.clear();
+    }
 }
 
 void InputMethod::setActive(bool active)
@@ -293,6 +306,7 @@ void InputMethod::handleFocusedSurfaceChanged()
     setTrackedWindow(waylandServer()->findWindow(focusedSurface));
 
     const auto client = focusedSurface ? focusedSurface->client() : nullptr;
+
     bool ret = seat->textInputV2()->clientSupportsTextInput(client)
             || seat->textInputV3()->clientSupportsTextInput(client);
     if (ret != m_activeClientSupportsTextInput) {
@@ -699,6 +713,7 @@ void InputMethod::setPreeditStyling(quint32 index, quint32 length, quint32 style
 
 void InputMethod::setPreeditString(uint32_t serial, const QString &text, const QString &commit)
 {
+
     auto t1 = waylandServer()->seat()->textInputV1();
     if (t1 && t1->isEnabled()) {
         t1->preEdit(text.toUtf8(), commit.toUtf8());
@@ -710,6 +725,8 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
         preedit.text = text;
+        m_preTextToCommit = commit;
+
         if (!preedit.text.isEmpty()) {
             quint32 cursor = 0, cursorEnd = 0;
             if (preedit.cursor > 0) {
@@ -987,6 +1004,23 @@ void InputMethod::textInputInterfaceV3EnableRequested()
 {
     refreshActive();
     show();
+}
+
+void InputMethod::pointerEvent(MouseEvent *event)
+{
+    if (input()->pointer()->focus() != m_trackedWindow) {
+        return;
+    }
+
+    if (event->type() != QEvent::MouseButtonPress) {
+        return;
+    }
+
+    flushPreedit();
+
+    // should really be processed after the other filters
+    // which FWICT means making this a filter rather than a spy
+    // also we need to do touch
 }
 }
 

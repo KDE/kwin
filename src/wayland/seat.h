@@ -702,6 +702,12 @@ Q_SIGNALS:
      * before dragEnded
      */
     void dragDropped();
+
+    /**
+     * Emitted whenever the focused text input is about to change
+     * @see focusedTextInput
+     */
+    void focusedTextInputSurfaceAboutToChange();
     /**
      * Emitted whenever the focused text input changed.
      * @see focusedTextInput

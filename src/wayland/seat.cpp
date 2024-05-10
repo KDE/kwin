@@ -1240,6 +1240,7 @@ void SeatInterface::setFocusedTextInputSurface(SurfaceInterface *surface)
     if (d->focusedTextInputSurface == surface) {
         return;
     }
+    Q_EMIT focusedTextInputSurfaceAboutToChange();
 
     if (d->focusedTextInputSurface) {
         disconnect(d->focusedSurfaceDestroyConnection);
