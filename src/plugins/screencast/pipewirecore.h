@@ -28,6 +28,7 @@ public:
     ~PipeWireCore();
 
     bool init();
+    bool isValid() const;
 
     static std::shared_ptr<PipeWireCore> self();
 
@@ -41,6 +42,9 @@ public:
 
 Q_SIGNALS:
     void pipewireFailed(const QString &message);
+
+private:
+    bool m_valid = false;
 };
 
 } // namespace KWin

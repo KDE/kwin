@@ -27,9 +27,9 @@ namespace KWin
 
 ScreencastManager::ScreencastManager()
     : m_screencast(new ScreencastV1Interface(waylandServer()->display(), this))
-    , m_core(new PipeWireCore)
 {
-    m_core->init();
+    getPipewireConnection();
+
     connect(m_screencast, &ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
     connect(m_screencast, &ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
     connect(m_screencast, &ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
@@ -46,7 +46,7 @@ void ScreencastManager::streamWindow(ScreencastStreamV1Interface *waylandStream,
         return;
     }
 
-    auto stream = new ScreenCastStream(new WindowScreenCastSource(window), m_core, this);
+    auto stream = new ScreenCastStream(new WindowScreenCastSource(window), getPipewireConnection(), this);
     stream->setObjectName(window->desktopFileName());
     stream->setCursorMode(mode, 1, window->clientGeometry());
 
@@ -88,7 +88,7 @@ void ScreencastManager::streamOutput(ScreencastStreamV1Interface *waylandStream,
         return;
     }
 
-    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), m_core, this);
+    auto stream = new ScreenCastStream(new OutputScreenCastSource(streamOutput), getPipewireConnection(), this);
     stream->setObjectName(streamOutput->name());
     stream->setCursorMode(mode, streamOutput->scale(), streamOutput->geometry());
 
@@ -112,7 +112,7 @@ void ScreencastManager::streamRegion(ScreencastStreamV1Interface *waylandStream,
     }
 
     auto source = new RegionScreenCastSource(geometry, scale);
-    auto stream = new ScreenCastStream(source, m_core, this);
+    auto stream = new ScreenCastStream(source, getPipewireConnection(), this);
     stream->setObjectName(rectToString(geometry));
     stream->setCursorMode(mode, scale, geometry);
 
@@ -132,6 +132,20 @@ void ScreencastManager::integrateStreams(ScreencastStreamV1Interface *waylandStr
     if (!stream->init()) {
         waylandStream->sendFailed(stream->error());
         delete stream;
+    }
+}
+
+std::shared_ptr<PipeWireCore> ScreencastManager::getPipewireConnection()
+{
+    if (m_pipewireConnectionCache && m_pipewireConnectionCache->isValid()) {
+        return m_pipewireConnectionCache;
+    } else {
+        std::shared_ptr<PipeWireCore> pipeWireCore = std::make_shared<PipeWireCore>();
+        if (pipeWireCore->init()) {
+            m_pipewireConnectionCache = pipeWireCore;
+        }
+        // return a valid object even if init fails
+        return pipeWireCore;
     }
 }
 

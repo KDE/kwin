@@ -46,8 +46,10 @@ private:
 
     void integrateStreams(ScreencastStreamV1Interface *waylandStream, ScreenCastStream *stream);
 
+    std::shared_ptr<PipeWireCore> getPipewireConnection();
+
     ScreencastV1Interface *m_screencast;
-    std::shared_ptr<PipeWireCore> m_core;
+    std::shared_ptr<PipeWireCore> m_pipewireConnectionCache;
 };
 
 } // namespace KWin

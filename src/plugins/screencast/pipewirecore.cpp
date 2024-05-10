@@ -48,6 +48,7 @@ void PipeWireCore::onCoreError(void *data, uint32_t id, int seq, int res, const 
     qCWarning(KWIN_SCREENCAST) << "PipeWire remote error: " << message;
     if (id == PW_ID_CORE && res == -EPIPE) {
         PipeWireCore *pw = static_cast<PipeWireCore *>(data);
+        pw->m_valid = false;
         Q_EMIT pw->pipewireFailed(QString::fromUtf8(message));
     }
 }
@@ -91,7 +92,13 @@ bool PipeWireCore::init()
     }
 
     pw_core_add_listener(pwCore, &coreListener, &pwCoreEvents, this);
+    m_valid = true;
     return true;
+}
+
+bool PipeWireCore::isValid() const
+{
+    return m_valid;
 }
 
 } // namespace KWin
