@@ -22,7 +22,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-07 00:40+0000\n"
-"PO-Revision-Date: 2024-03-02 08:58+0100\n"
+"PO-Revision-Date: 2024-05-09 19:23+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2235,26 +2235,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Teclas modificadoras de debuxo con frechas:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Luz nocturna activada"
+msgstr "Suspendeuse a luz nocturna"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Luz nocturna activada"
+msgstr "Retomouse a luz nocturna"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspender ou retomar a luz nocturna"
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format

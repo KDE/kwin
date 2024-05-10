@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-07 00:40+0000\n"
-"PO-Revision-Date: 2024-03-30 11:06+0400\n"
+"PO-Revision-Date: 2024-05-09 09:44+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -2209,26 +2209,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "المفاتيح المغيِّرة لرسم السهم:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "الإضاءة الليلية مفعلة"
+msgstr "عُلقت الإضاءة الليلية"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "الإضاءة الليلية مفعلة"
+msgstr "استأنفت الإضاءة الليلية"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "علق/استأنف وضع الإضاءة الليلية"
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format

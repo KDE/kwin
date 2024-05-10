@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-07 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 15:57+0100\n"
+"PO-Revision-Date: 2024-05-09 11:39+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -2225,26 +2225,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Claves de Modificar de dessigno de flecha:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Color de Nocte active"
+msgstr "Color de Nocte suspendite"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Color de Nocte active"
+msgstr "Color de Nocte reprendite"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspende/Reprende Lumine (Color) de Nocte"
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
