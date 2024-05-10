@@ -15,7 +15,7 @@
 
 #include <QObject>
 
-#include "effect/globals.h"
+#include "input_event_spy.h"
 #include <kwin_export.h>
 
 #include <QPointer>
@@ -58,6 +58,7 @@ public:
     void show();
     bool isVisible() const;
     bool isAvailable() const;
+    Window *activeWindow() const;
 
     InputPanelV1Window *panel() const;
     void setPanel(InputPanelV1Window *panel);
@@ -69,6 +70,8 @@ public:
     void forwardModifiers(ForwardModifiersForce force);
     bool activeClientSupportsTextInput() const;
     void forceActivate();
+
+    void commmitPendingText();
 
 Q_SIGNALS:
     void panelChanged();
@@ -119,11 +122,18 @@ private:
     void resetPendingPreedit();
     void refreshActive();
 
+    // buffered till the preedit text is set
     struct
     {
         qint32 cursor = 0;
         std::vector<std::pair<quint32, quint32>> highlightRanges;
     } preedit;
+
+    // In some IM backends pre-edit text should be submitted on
+    // user interaction. In some it should be discarded
+    // TextInputV3 does not have a flag for this, so we have to
+    // handle it compositor side
+    QString m_pendingText = QString();
 
     bool m_enabled = true;
     quint32 m_serial = 0;

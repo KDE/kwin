@@ -273,6 +273,7 @@ bool InputEventFilter::passToInputMethod(QKeyEvent *event)
         keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
         return true;
     } else {
+        kwinApp()->inputMethod()->commmitPendingText();
         return false;
     }
 }
@@ -1767,9 +1768,42 @@ public:
     }
 };
 
-class InputKeyboardFilter : public InputEventFilter
+class InputMethodEventFilter : public InputEventFilter
 {
 public:
+    bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
+    {
+        auto inputMethod = kwinApp()->inputMethod();
+        if (!inputMethod) {
+            return false;
+        }
+        if (event->type() != QEvent::MouseButtonPress) {
+            return false;
+        }
+
+        // clicking on an on screen keyboard shouldn't flush, check we're clicking on our target window
+        if (input()->pointer()->focus() != inputMethod->activeWindow()) {
+            return false;
+        }
+
+        inputMethod->commmitPendingText();
+        return false;
+    }
+
+    bool touchDown(qint32 id, const QPointF &point, std::chrono::microseconds time) override
+    {
+        auto inputMethod = kwinApp()->inputMethod();
+        if (!inputMethod) {
+            return false;
+        }
+        if (input()->findToplevel(point) != inputMethod->activeWindow()) {
+            return false;
+        }
+
+        inputMethod->commmitPendingText();
+        return false;
+    }
+
     bool keyEvent(KeyEvent *event) override
     {
         return passToInputMethod(event);
@@ -2973,7 +3007,7 @@ void InputRedirection::setupInputFilters()
     m_internalWindowFilter = std::make_unique<InternalWindowEventFilter>();
     installInputEventFilter(m_internalWindowFilter.get());
 
-    m_inputKeyboardFilter = std::make_unique<InputKeyboardFilter>();
+    m_inputKeyboardFilter = std::make_unique<InputMethodEventFilter>();
     installInputEventFilter(m_inputKeyboardFilter.get());
 
     m_forwardFilter = std::make_unique<ForwardInputFilter>();
