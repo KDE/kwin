@@ -102,6 +102,9 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->colormanagementEnabled = enableColormanagement;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
+        m_surface->adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(colorDescription.colorimetry()) * channelFactors;
+        // normalize red to be the original brightness value again
+        m_surface->adaptedChannelFactors *= channelFactors.x() / m_surface->adaptedChannelFactors.x();
         m_surface->iccProfile = iccProfile;
         m_surface->brightness = brightness;
         if (iccProfile) {
@@ -185,16 +188,16 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness(), m_surface->channelFactors);
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness(), m_surface->adaptedChannelFactors);
         } else {
             // enforce a 25 nits minimum sdr brightness
             constexpr double minBrightness = 25;
             const double sdrBrightness = m_surface->intermediaryColorDescription.sdrBrightness();
             const double brightnessFactor = (m_surface->brightness * (1 - (minBrightness / sdrBrightness))) + (minBrightness / sdrBrightness);
             QMatrix4x4 ctm;
-            ctm(0, 0) = m_surface->channelFactors.x() * brightnessFactor;
-            ctm(1, 1) = m_surface->channelFactors.y() * brightnessFactor;
-            ctm(2, 2) = m_surface->channelFactors.z() * brightnessFactor;
+            ctm(0, 0) = m_surface->adaptedChannelFactors.x() * brightnessFactor;
+            ctm(1, 1) = m_surface->adaptedChannelFactors.y() * brightnessFactor;
+            ctm(2, 2) = m_surface->adaptedChannelFactors.z() * brightnessFactor;
             binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
             binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
             binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));

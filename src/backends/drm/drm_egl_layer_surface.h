@@ -102,6 +102,7 @@ private:
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
         double brightness = 1.0;
+        QVector3D adaptedChannelFactors = {1, 1, 1};
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
 
