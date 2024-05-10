@@ -212,6 +212,14 @@ void MockConnector::addMode(uint32_t width, uint32_t height, float refreshRate, 
     free(modeInfo);
 }
 
+void MockConnector::setVrrCapable(bool cap)
+{
+    auto &prop = *std::ranges::find_if(props, [](const auto &prop) {
+        return prop.name == "vrr_capable";
+    });
+    prop.value = cap ? 1 : 0;
+}
+
 //
 
 MockCrtc::MockCrtc(MockGpu *gpu, const std::shared_ptr<MockPlane> &legacyPlane, int pipeIndex, int gamma_size)
