@@ -337,7 +337,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     } else {
         m_pipeline->setIccProfile(props->iccProfile.value_or(m_state.iccProfile));
     }
-    if (bt2020 || hdr || m_pipeline->iccProfile() || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::sRGB) {
+    if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::sRGB) {
         // remove unused gamma ramp and ctm, if present
         m_pipeline->setGammaRamp(nullptr);
         m_pipeline->setCTM(QMatrix3x3{});
@@ -411,10 +411,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     m_renderLoop->setRefreshRate(refreshRate());
     m_renderLoop->scheduleRepaint();
 
-    if (!next.wideColorGamut && !next.highDynamicRange && !m_pipeline->iccProfile()) {
-        // re-set the CTM and/or gamma lut
-        doSetChannelFactors(m_channelFactors);
-    }
+    // re-set the CTM and/or gamma lut, if necessary
+    doSetChannelFactors(m_channelFactors);
 
     Q_EMIT changed();
 }
@@ -443,7 +441,7 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
 {
     m_renderLoop->scheduleRepaint();
     m_channelFactors = rgb;
-    if (m_state.wideColorGamut || m_state.highDynamicRange || m_state.iccProfile) {
+    if (m_state.wideColorGamut || m_state.highDynamicRange || m_state.colorProfileSource != ColorProfileSource::sRGB) {
         // the shader "fallback" is always active
         return true;
     }
