@@ -431,7 +431,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(Output::RgbRange::Automatic)),
             .vrrPolicy = existingData.vrrPolicy.value_or(kscreenChangeSet.vrrPolicy.value_or(VrrPolicy::Automatic)),
             .highDynamicRange = existingData.highDynamicRange.value_or(false),
-            .sdrBrightness = existingData.sdrBrightness.value_or(200),
+            .sdrBrightness = existingData.sdrBrightness.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
             .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
