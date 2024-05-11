@@ -192,6 +192,7 @@ KCM.ScrollViewKCM {
         reuseItems: true
     }
 
+    extraFooterTopPadding: true // re-add separator line
     footer: ColumnLayout {
         Kirigami.FormLayout {
 
