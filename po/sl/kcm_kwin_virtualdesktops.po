@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-27 00:39+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2024-04-27 06:46+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -102,32 +102,32 @@ msgstr ""
 msgid "Row %1"
 msgstr "Vrstica %1"
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Options:"
 msgstr "Opcije:"
 
-#: ui/main.qml:203
+#: ui/main.qml:204
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Krmarjenje med namizji se krožno nadaljuje"
 
-#: ui/main.qml:221
+#: ui/main.qml:222
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Prikaži animacijo ob preklopu:"
 
-#: ui/main.qml:272
+#: ui/main.qml:273
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Ob preklopu prikaži zaslon na zaslonu:"
 
-#: ui/main.qml:291
+#: ui/main.qml:292
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:315
+#: ui/main.qml:316
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Prikaži prikazovalnik razporeda namizij"

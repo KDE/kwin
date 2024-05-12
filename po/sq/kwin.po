@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-07 00:40+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -2379,18 +2379,18 @@ msgstr "Vrije Dritaren"
 msgid "Window close scale:"
 msgstr "Vrije Dritaren"
 
-#: plugins/screencast/pipewirecore.cpp:60
-#: plugins/screencast/pipewirecore.cpp:89
+#: plugins/screencast/pipewirecore.cpp:61
+#: plugins/screencast/pipewirecore.cpp:90
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr ""
 
-#: plugins/screencast/pipewirecore.cpp:76
+#: plugins/screencast/pipewirecore.cpp:77
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr ""
 
-#: plugins/screencast/pipewirecore.cpp:83
+#: plugins/screencast/pipewirecore.cpp:84
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr ""
@@ -4226,7 +4226,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1666
+#: workspace.cpp:1670
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-27 00:39+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2022-07-03 13:56+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -96,32 +96,32 @@ msgstr ""
 msgid "Row %1"
 msgstr "Sətir %1"
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Options:"
 msgstr "Seçimlər:"
 
-#: ui/main.qml:203
+#: ui/main.qml:204
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Dairəvi naviqasiya"
 
-#: ui/main.qml:221
+#: ui/main.qml:222
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Dəyişdirmə zamanı animasiyaları göstərmək"
 
-#: ui/main.qml:272
+#: ui/main.qml:273
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Dəyişdirilmə zamanı bildirişi ekranda göstərmək:"
 
-#: ui/main.qml:291
+#: ui/main.qml:292
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 msan"
 
-#: ui/main.qml:315
+#: ui/main.qml:316
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Bütün İş Masalarının sxematik görünüşü"

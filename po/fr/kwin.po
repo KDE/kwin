@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-07 00:40+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2024-05-07 08:26+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -2416,18 +2416,18 @@ msgstr "Taille d'ouverture de fenêtre :"
 msgid "Window close scale:"
 msgstr "Taille de fermeture de fenêtre :"
 
-#: plugins/screencast/pipewirecore.cpp:60
-#: plugins/screencast/pipewirecore.cpp:89
+#: plugins/screencast/pipewirecore.cpp:61
+#: plugins/screencast/pipewirecore.cpp:90
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr "Impossible de créer une boucle principale « PipeWire »"
 
-#: plugins/screencast/pipewirecore.cpp:76
+#: plugins/screencast/pipewirecore.cpp:77
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr "Impossible de créer un contexte « PipeWire »"
 
-#: plugins/screencast/pipewirecore.cpp:83
+#: plugins/screencast/pipewirecore.cpp:84
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr "Impossible de se connecter à un contexte « PipeWire »"
@@ -4215,7 +4215,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ne répond plus)"
 
-#: workspace.cpp:1666
+#: workspace.cpp:1670
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

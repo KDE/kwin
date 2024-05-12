@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-07 00:40+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2023-02-20 11:15+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -2438,18 +2438,18 @@ msgstr "Vai trò cửa sổ"
 msgid "Window close scale:"
 msgstr "Vai trò cửa sổ"
 
-#: plugins/screencast/pipewirecore.cpp:60
-#: plugins/screencast/pipewirecore.cpp:89
+#: plugins/screencast/pipewirecore.cpp:61
+#: plugins/screencast/pipewirecore.cpp:90
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr ""
 
-#: plugins/screencast/pipewirecore.cpp:76
+#: plugins/screencast/pipewirecore.cpp:77
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr ""
 
-#: plugins/screencast/pipewirecore.cpp:83
+#: plugins/screencast/pipewirecore.cpp:84
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr ""
@@ -4274,7 +4274,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Không hồi đáp)"
 
-#: workspace.cpp:1666
+#: workspace.cpp:1670
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-27 00:39+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2013-09-15 06:47+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -96,33 +96,33 @@ msgstr ""
 msgid "Row %1"
 msgstr ""
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Options:"
 msgstr ""
 
-#: ui/main.qml:203
+#: ui/main.qml:204
 #, fuzzy, kde-format
 #| msgid "Desktop navigation wraps around"
 msgid "Navigation wraps around"
 msgstr "Тұйық үстел навигациясы"
 
-#: ui/main.qml:221
+#: ui/main.qml:222
 #, kde-format
 msgid "Show animation when switching:"
 msgstr ""
 
-#: ui/main.qml:272
+#: ui/main.qml:273
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr ""
 
-#: ui/main.qml:291
+#: ui/main.qml:292
 #, kde-format
 msgid "%1 ms"
 msgstr ""
 
-#: ui/main.qml:315
+#: ui/main.qml:316
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Үстелдегінін орналасу индикаторы болсын"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-04-27 00:39+0000\n"
+"POT-Creation-Date: 2024-05-12 00:40+0000\n"
 "PO-Revision-Date: 2022-12-15 09:36+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -93,32 +93,32 @@ msgstr ""
 msgid "Row %1"
 msgstr "Linha %1"
 
-#: ui/main.qml:201
+#: ui/main.qml:202
 #, kde-format
 msgid "Options:"
 msgstr "Opções:"
 
-#: ui/main.qml:203
+#: ui/main.qml:204
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "A navegação dá a volta"
 
-#: ui/main.qml:221
+#: ui/main.qml:222
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Mostrar uma animação ao mudar:"
 
-#: ui/main.qml:272
+#: ui/main.qml:273
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Mostrar a visualização no ecrã ao mudar:"
 
-#: ui/main.qml:291
+#: ui/main.qml:292
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:315
+#: ui/main.qml:316
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Mostrar os indicadores de disposição do ecrã"
