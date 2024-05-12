@@ -21,6 +21,10 @@ namespace KWin
  * This should always be longer than any real pageflip can take, even with PSR and modesets
  */
 static constexpr auto s_pageflipTimeout = 5s;
+/**
+ * Max. change frame to frame
+ */
+static constexpr auto s_maxVrrChangeRate = 200us;
 
 DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
 {
@@ -40,7 +44,16 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
             if (m_committed) {
                 timeout = m_commitPending.wait_for(lock, s_pageflipTimeout) == std::cv_status::timeout;
             } else if (m_commits.empty()) {
-                m_commitPending.wait(lock);
+                if (m_vrr && m_flipped) {
+                    // ensure the refresh rate doesn't drop too quickly
+                    m_commitPending.wait_until(lock, m_lastPageflip + std::min(m_lastPageflipDelta, m_maxVblankInterval) + s_maxVrrChangeRate - m_vrrCommitToPageflip);
+                    if (m_commits.empty()) {
+                        submitFlipped();
+                        continue;
+                    }
+                } else {
+                    m_commitPending.wait(lock);
+                }
             }
             if (m_committed) {
                 // the commit would fail with EBUSY, wait until the pageflip is done
@@ -53,9 +66,10 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 continue;
             }
             const auto now = std::chrono::steady_clock::now();
-            if (m_targetPageflipTime > now + m_safetyMargin) {
+            const auto commitToPageflip = m_vrr ? m_vrrCommitToPageflip : m_safetyMargin;
+            if (m_targetPageflipTime > now + commitToPageflip) {
                 lock.unlock();
-                std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
+                std::this_thread::sleep_until(m_targetPageflipTime - commitToPageflip);
                 lock.lock();
             }
             optimizeCommits();
@@ -99,8 +113,20 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
     m_thread->start();
 }
 
+void DrmCommitThread::submitFlipped()
+{
+    qWarning() << "submitFlipped";
+    const auto time = std::chrono::steady_clock::now();
+    const bool success = m_flipped->commit();
+    if (success) {
+        m_committed = std::move(m_flipped);
+        m_lastCommitTime = time;
+    }
+}
+
 void DrmCommitThread::submit()
 {
+    const auto time = std::chrono::steady_clock::now();
     auto &commit = m_commits.front();
     const auto vrr = commit->isVrr();
     const bool success = commit->commit();
@@ -108,6 +134,7 @@ void DrmCommitThread::submit()
         m_vrr = vrr.value_or(m_vrr);
         m_committed = std::move(commit);
         m_commits.erase(m_commits.begin());
+        m_lastCommitTime = time;
     } else {
         if (m_commits.size() > 1) {
             // the failure may have been because of the reordering of commits
@@ -245,8 +272,8 @@ void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     std::unique_lock lock(m_mutex);
     m_commits.push_back(std::move(commit));
     const auto now = std::chrono::steady_clock::now();
-    if (m_vrr && now >= m_lastPageflip + m_minVblankInterval) {
-        m_targetPageflipTime = now;
+    if (m_vrr) {
+        m_targetPageflipTime = std::max(now, m_lastPageflip + std::min(m_lastPageflipDelta, m_maxVblankInterval) - s_maxVrrChangeRate - m_vrrCommitToPageflip);
     } else {
         m_targetPageflipTime = estimateNextVblank(now);
     }
@@ -269,6 +296,7 @@ void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vbl
 {
     std::unique_lock lock(m_mutex);
     m_minVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / maximum);
+    m_maxVblankInterval = std::chrono::nanoseconds(1'000'000'000'000ull / 60000);
     // the kernel rejects commits that happen during vblank
     // the 1.5ms on top of that was chosen experimentally, for the time it takes to commit + scheduling inaccuracies
     m_safetyMargin = vblankTime + 1500us;
@@ -277,9 +305,22 @@ void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vbl
 void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
+    m_lastPageflipDelta = TimePoint(timestamp) - m_lastPageflip;
+    if (m_vrr) {
+        qWarning() << "delta t:" << std::chrono::duration_cast<std::chrono::microseconds>(m_lastPageflipDelta);
+    }
     m_lastPageflip = TimePoint(timestamp);
+    m_vrrCommitToPageflip = m_lastPageflip - m_lastCommitTime;
+    if (auto atomic = dynamic_cast<DrmAtomicCommit *>(m_committed.get())) {
+        m_flipped.reset(atomic);
+        // TODO triple buffering patches...
+        // m_flipped->removeFrames();
+        // -> bad workaround:
+        m_flipped->setCursorOnly(true);
+        m_committed.release();
+    }
     m_committed.reset();
-    if (!m_commits.empty()) {
+    if (!m_commits.empty() || m_vrr) {
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());
         m_commitPending.notify_all();
     }
