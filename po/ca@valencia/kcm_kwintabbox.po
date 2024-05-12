@@ -46,7 +46,7 @@ msgstr "Alternativa"
 #: main.cpp:69
 #, kde-format
 msgid "Get New Task Switchers..."
-msgstr "Obtín commutadors nous de tasques..."
+msgstr "Obtín commutadors nous de tasques…"
 
 #: main.cpp:83
 #, kde-format
