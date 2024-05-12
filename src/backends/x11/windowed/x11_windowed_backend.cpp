@@ -513,10 +513,10 @@ void X11WindowedBackend::updateWindowTitle()
 
 void X11WindowedBackend::handleClientMessage(xcb_client_message_event_t *event)
 {
-    auto it = std::ranges::find_if(m_outputs, [event](X11WindowedOutput *output) {
+    auto it = std::ranges::find_if(std::as_const(m_outputs), [event](X11WindowedOutput *output) {
         return output->window() == event->window;
     });
-    if (it == m_outputs.end()) {
+    if (it == m_outputs.cend()) {
         return;
     }
     if (event->type == m_protocols && m_protocols != XCB_ATOM_NONE) {
