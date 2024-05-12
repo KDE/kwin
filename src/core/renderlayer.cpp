@@ -103,7 +103,7 @@ void RenderLayer::setDelegate(std::unique_ptr<RenderLayerDelegate> delegate)
 
 QRectF RenderLayer::rect() const
 {
-    return QRect(0, 0, m_geometry.width(), m_geometry.height());
+    return QRectF(0, 0, m_geometry.width(), m_geometry.height());
 }
 
 QRectF RenderLayer::boundingRect() const
