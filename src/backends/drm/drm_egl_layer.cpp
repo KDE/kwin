@@ -90,8 +90,12 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (directScanoutDisabled) {
         return false;
     }
-    if (color != m_pipeline->colorDescription() || m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || m_pipeline->iccProfile()) {
+    if (m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || m_pipeline->iccProfile()) {
         // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
+        return false;
+    }
+    const auto &targetColor = m_pipeline->colorDescription();
+    if (color.colorimetry() != targetColor.colorimetry() || color.transferFunction() != targetColor.transferFunction()) {
         return false;
     }
     // kernel documentation says that
