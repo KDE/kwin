@@ -86,7 +86,7 @@ uint OutputScreenCastSource::refreshRate() const
 void OutputScreenCastSource::report(const QRegion &damage)
 {
     if (!damage.isEmpty()) {
-        Q_EMIT frame(scaleRegion(damage.translated(-m_output->geometry().topLeft()), m_output->scale()));
+        Q_EMIT frame(scaleRegion(damage, m_output->scale()));
     }
 }
 
@@ -97,7 +97,7 @@ void OutputScreenCastSource::resume()
     }
 
     connect(m_output, &Output::outputChange, this, &OutputScreenCastSource::report);
-    report(m_output->geometry());
+    report(m_output->rect());
 
     m_active = true;
 }
