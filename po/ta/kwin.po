@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-04 02:52+0000\n"
-"PO-Revision-Date: 2024-03-24 17:31+0530\n"
+"PO-Revision-Date: 2024-05-12 15:50+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.1\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "tamilpc team,,"
+msgstr "tamilpc team,"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -1415,6 +1415,7 @@ msgstr ""
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"வட்டார அமைப்புகளை பயனரின் அமைப்புகளிலிருந்து கண்டறியாமல் locale1-இலிருந்து கண்டறி"
 
 #: main_wayland.cpp:363
 #, kde-format
@@ -2224,17 +2225,17 @@ msgid "Unknown"
 msgstr "தெரியாதது"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr "மேலோட்டம் மற்றும் கிரிட் பார்வை"
+msgstr "மேலோட்டப் பார்வை மற்றும் கிரிட் பார்வைக்கிடையே மாறு"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:132
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "கிரிட் பார்வை மற்றும் மேலோட்டப் பார்வைக்கிடையே மாறு"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, kde-format
