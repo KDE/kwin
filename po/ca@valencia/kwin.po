@@ -2155,7 +2155,7 @@ msgstr "Diàleg"
 #: shortcutdialog.ui:25
 #, kde-format
 msgid "..."
-msgstr "..."
+msgstr "…"
 
 #: tabbox/tabbox.cpp:381
 #, kde-format
@@ -2287,17 +2287,17 @@ msgstr "Se&nse barra de títol ni marc"
 #: useractions.cpp:280
 #, kde-format
 msgid "Set Window Short&cut..."
-msgstr "Establix la dre&cera de la finestra..."
+msgstr "Establix la dre&cera de la finestra…"
 
 #: useractions.cpp:286
 #, kde-format
 msgid "Configure Special &Window Settings..."
-msgstr "Configura la configuració e&special de la finestra..."
+msgstr "Configura la configuració e&special de la finestra…"
 
 #: useractions.cpp:291
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "Configura la configuració es&pecial de l'aplicació..."
+msgstr "Configura la configuració es&pecial de l'aplicació…"
 
 #: useractions.cpp:298
 #, kde-format
@@ -2305,7 +2305,7 @@ msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
 "of KWin"
 msgid "Configure W&indow Manager..."
-msgstr "Configura el gestor de f&inestres..."
+msgstr "Configura el gestor de f&inestres…"
 
 #: useractions.cpp:325
 #, kde-format

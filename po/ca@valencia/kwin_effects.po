@@ -541,7 +541,8 @@ msgstr "&Color:"
 #: mousemark/mousemark_config.ui:82
 #, kde-format
 msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
-msgstr "Dibuixa amb el ratolí prement les tecles Maj+Meta i movent el ratolí."
+msgstr ""
+"Dibuixa amb el ratolí prement les tecles «Maj+Meta» i movent el ratolí."
 
 #: outputlocator/outputlocator.cpp:48
 #, kde-format
@@ -755,7 +756,7 @@ msgstr "Farciment:"
 #: tileseditor/qml/main.qml:160
 #, kde-format
 msgid "Load Layout..."
-msgstr "Carrega una disposició..."
+msgstr "Carrega una disposició…"
 
 #: tileseditor/qml/main.qml:274
 #, kde-format

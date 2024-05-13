@@ -238,8 +238,8 @@ msgstr "Actualment no s'han definit regles per a finestres específiques"
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
-"Feu clic en el botó <interface>Afig nova...</interface> de davall per a "
-"afegir-ne"
+"Feu clic en el botó <interface>Afig nova…</interface> de davall per a afegir-"
+"ne"
 
 #: package/contents/ui/main.qml:68
 #, kde-format
@@ -264,12 +264,12 @@ msgstr "Guarda les regles"
 #: package/contents/ui/main.qml:97
 #, kde-format
 msgid "Add New..."
-msgstr "Afig nova..."
+msgstr "Afig nova…"
 
 #: package/contents/ui/main.qml:108
 #, kde-format
 msgid "Import..."
-msgstr "Importa..."
+msgstr "Importa…"
 
 #: package/contents/ui/main.qml:116
 #, kde-format
@@ -279,7 +279,7 @@ msgstr "Cancel·la l'exportació"
 #: package/contents/ui/main.qml:116
 #, kde-format
 msgid "Export..."
-msgstr "Exporta..."
+msgstr "Exporta…"
 
 #: package/contents/ui/main.qml:206
 #, kde-format
@@ -335,7 +335,7 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"Feu clic en el botó <interface>Afig propietat...</interface> de davall per a "
+"Feu clic en el botó <interface>Afig propietat…</interface> de davall per a "
 "afegir diverses propietats de les finestres que seran afectades per la regla"
 
 #: package/contents/ui/RulesEditor.qml:85
@@ -346,7 +346,7 @@ msgstr "Tanca"
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
 msgid "Add Property..."
-msgstr "Afig una propietat..."
+msgstr "Afig una propietat…"
 
 #: package/contents/ui/RulesEditor.qml:98
 #, kde-format
