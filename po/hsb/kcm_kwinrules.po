@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: desktop_kdebase\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-29 00:39+0000\n"
+"POT-Creation-Date: 2024-05-13 00:39+0000\n"
 "PO-Revision-Date: 2008-11-21 23:13+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -789,27 +789,27 @@ msgstr ""
 msgid "Save Rules"
 msgstr ""
 
-#: ui/main.qml:188
+#: ui/main.qml:196
 #, fuzzy, kde-format
 msgid "Edit"
 msgstr "&Wobdźěłać"
 
-#: ui/main.qml:194
+#: ui/main.qml:202
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
-#: ui/main.qml:200
+#: ui/main.qml:208
 #, fuzzy, kde-format
 msgid "Delete"
 msgstr "Niču"
 
-#: ui/main.qml:232
+#: ui/main.qml:240
 #, kde-format
 msgid "Import Rules"
 msgstr ""
 
-#: ui/main.qml:244
+#: ui/main.qml:252
 #, kde-format
 msgid "Export Rules"
 msgstr ""

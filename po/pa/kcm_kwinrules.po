@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-29 00:39+0000\n"
+"POT-Creation-Date: 2024-05-13 00:39+0000\n"
 "PO-Revision-Date: 2024-01-28 17:58-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -780,27 +780,27 @@ msgstr "ਸਭ ਚੁਣੋ"
 msgid "Save Rules"
 msgstr "ਰੂਲਾਂ ਨੂੰ ਸੰਭਾਲੋ"
 
-#: ui/main.qml:188
+#: ui/main.qml:196
 #, kde-format
 msgid "Edit"
 msgstr "ਸੋਧ"
 
-#: ui/main.qml:194
+#: ui/main.qml:202
 #, kde-format
 msgid "Duplicate"
 msgstr "ਡੁਪਲੀਕੇਟ"
 
-#: ui/main.qml:200
+#: ui/main.qml:208
 #, kde-format
 msgid "Delete"
 msgstr "ਹਟਾਓ"
 
-#: ui/main.qml:232
+#: ui/main.qml:240
 #, kde-format
 msgid "Import Rules"
 msgstr "ਨਿਯਮ ਇੰਪੋਰਟ"
 
-#: ui/main.qml:244
+#: ui/main.qml:252
 #, kde-format
 msgid "Export Rules"
 msgstr "ਰੂਲ ਐਕਸਪੋਰਟ ਕਰੋ"

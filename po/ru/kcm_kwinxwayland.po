@@ -2,12 +2,13 @@
 # This file is distributed under the same license as the kwin package.
 #
 # SPDX-FileCopyrightText: 2022, 2023, 2024 Alexander Yavorsky <kekcuha@gmail.com>
+# Alexander Yavorsky <kekcuha@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-05-06 09:22+0300\n"
+"PO-Revision-Date: 2024-05-12 16:47+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -16,16 +17,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 21.08.3\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -34,12 +29,14 @@ msgid ""
 "need to use such apps, you can choose your preferred balance of security and "
 "functionality here."
 msgstr ""
-"Устаревшим приложениям, поддерживающими только графический сервер X11, для "
-"поддержки системных комбинаций клавиш необходимо иметь возможность получать "
-"информацию о нажатии клавиш на клавиатуре из других приложений. Передача  "
-"набираемого текста и информации о нажатий клавиш отключена по умолчанию из "
-"соображений безопасности. Данный модуль позволяет настроить баланс между "
-"безопасностью и функциональностью для таких приложений."
+"Некоторым устаревшим приложениям X11 для выполнения определённых функций, "
+"таких как обработка глобальных комбинаций клавиш, необходимо  получать "
+"сведения о нажатиях клавиш из других приложений. Такое поведение разрешено "
+"по умолчанию. Однако для других функций может потребоваться возможность "
+"считывать нажатия всех клавиш, и эта возможность отключена по умолчанию из "
+"соображений безопасности. Если вам нужно использовать такие устаревшие "
+"приложения, вы можете настроить баланс между безопасностью и "
+"функциональностью здесь."
 
 #: ui/main.qml:48
 #, kde-format

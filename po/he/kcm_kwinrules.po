@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-29 00:39+0000\n"
+"POT-Creation-Date: 2024-05-13 00:39+0000\n"
 "PO-Revision-Date: 2024-05-05 12:05+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -842,27 +842,27 @@ msgstr "בחירה בהכול"
 msgid "Save Rules"
 msgstr "שמירת כללים"
 
-#: ui/main.qml:188
+#: ui/main.qml:196
 #, kde-format
 msgid "Edit"
 msgstr "עריכה"
 
-#: ui/main.qml:194
+#: ui/main.qml:202
 #, kde-format
 msgid "Duplicate"
 msgstr "שכפול"
 
-#: ui/main.qml:200
+#: ui/main.qml:208
 #, kde-format
 msgid "Delete"
 msgstr "מחיקה"
 
-#: ui/main.qml:232
+#: ui/main.qml:240
 #, kde-format
 msgid "Import Rules"
 msgstr "ייבוא כללים"
 
-#: ui/main.qml:244
+#: ui/main.qml:252
 #, kde-format
 msgid "Export Rules"
 msgstr "ייצוא כללים"

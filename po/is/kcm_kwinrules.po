@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-29 00:39+0000\n"
+"POT-Creation-Date: 2024-05-13 00:39+0000\n"
 "PO-Revision-Date: 2024-03-06 13:54+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -874,27 +874,27 @@ msgstr "Velja allt"
 msgid "Save Rules"
 msgstr "Vista reglur"
 
-#: ui/main.qml:188
+#: ui/main.qml:196
 #, kde-format
 msgid "Edit"
 msgstr "Breyta"
 
-#: ui/main.qml:194
+#: ui/main.qml:202
 #, kde-format
 msgid "Duplicate"
 msgstr "Tvítaka"
 
-#: ui/main.qml:200
+#: ui/main.qml:208
 #, kde-format
 msgid "Delete"
 msgstr "Eyða"
 
-#: ui/main.qml:232
+#: ui/main.qml:240
 #, kde-format
 msgid "Import Rules"
 msgstr "Flytja inn reglur"
 
-#: ui/main.qml:244
+#: ui/main.qml:252
 #, kde-format
 msgid "Export Rules"
 msgstr "Flytja út reglur"

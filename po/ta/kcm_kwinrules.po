@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-29 00:39+0000\n"
+"POT-Creation-Date: 2024-05-13 00:39+0000\n"
 "PO-Revision-Date: 2024-02-18 17:41+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -790,27 +790,27 @@ msgstr "அனைத்தையும் தேர்ந்தெடு"
 msgid "Save Rules"
 msgstr "விதிமுறைகளை சேமி"
 
-#: ui/main.qml:188
+#: ui/main.qml:196
 #, kde-format
 msgid "Edit"
 msgstr "திருத்து"
 
-#: ui/main.qml:194
+#: ui/main.qml:202
 #, kde-format
 msgid "Duplicate"
 msgstr "நகலெடு"
 
-#: ui/main.qml:200
+#: ui/main.qml:208
 #, kde-format
 msgid "Delete"
 msgstr "நீக்கு"
 
-#: ui/main.qml:232
+#: ui/main.qml:240
 #, kde-format
 msgid "Import Rules"
 msgstr "விதிமுறைகளை இறக்குமதி செய்"
 
-#: ui/main.qml:244
+#: ui/main.qml:252
 #, kde-format
 msgid "Export Rules"
 msgstr "விதிமுறைகளை ஏற்றுமதி செய்"

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-12 00:40+0000\n"
-"PO-Revision-Date: 2024-03-24 17:31+0530\n"
+"PO-Revision-Date: 2024-05-12 15:50+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.1\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "tamilpc team,,"
+msgstr "tamilpc team,"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
@@ -1415,6 +1415,7 @@ msgstr ""
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"வட்டார அமைப்புகளை பயனரின் அமைப்புகளிலிருந்து கண்டறியாமல் locale1-இலிருந்து கண்டறி"
 
 #: main_wayland.cpp:382
 #, kde-format
@@ -1557,7 +1558,7 @@ msgstr "நீலம்-மஞ்சள் வேறுபடாமை (tritanop
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "செறிவு:"
 
 #: plugins/colorpicker/colorpicker.cpp:108
 #, kde-format
@@ -1701,13 +1702,13 @@ msgstr "சாளரங்களை மூடும்போது"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "செயலற்று இருக்கும் காலநீட்சி (நொடிகளில்):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "தட்டச்சிடும்போது சுட்டிக்குறியை மறை"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2214,26 +2215,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "அம்பு வரைவிற்கான மாற்றிவிசைகள்:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
+msgstr "இரவு நிறமாற்றம் இடைநிறுத்தப்பட்டுள்ளது"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "இரவு நிறமாற்றம் இயக்கப்பட்டது"
+msgstr "இரவு நிறமாற்றம் தொடரப்பட்டது"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "இரவு நிறமாற்றத்தை இடைநிறுத்து/தொடர்"
 
 #: plugins/nightlight/nightlightmanager.cpp:467
 #, kde-format
@@ -2247,17 +2244,17 @@ msgid "Unknown"
 msgstr "தெரியாதது"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr "மேலோட்டம் மற்றும் கிரிட் பார்வை"
+msgstr "மேலோட்டப் பார்வை மற்றும் கிரிட் பார்வைக்கிடையே மாறு"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "கிரிட் பார்வை மற்றும் மேலோட்டப் பார்வைக்கிடையே மாறு"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, kde-format
@@ -2528,10 +2525,9 @@ msgid "Padding:"
 msgstr "இடையிலான இடைவெளி:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "தளவமைப்பை ஏற்று..."
+msgstr "தளவமைப்பை ஏற்று…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
