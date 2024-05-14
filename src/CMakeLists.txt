@@ -42,22 +42,23 @@ target_sources(kwin PRIVATE
     colors/colormanager.cpp
     compositor.cpp
     compositor_wayland.cpp
-    core/colorlut.cpp
     core/colorlut3d.cpp
+    core/colorlut.cpp
+    core/colorpipeline.cpp
     core/colorpipelinestage.cpp
     core/colorspace.cpp
     core/colortransformation.cpp
     core/drmdevice.cpp
     core/gbmgraphicsbufferallocator.cpp
-    core/graphicsbuffer.cpp
     core/graphicsbufferallocator.cpp
+    core/graphicsbuffer.cpp
     core/graphicsbufferview.cpp
     core/iccprofile.cpp
     core/inputbackend.cpp
     core/inputdevice.cpp
-    core/output.cpp
     core/outputbackend.cpp
     core/outputconfiguration.cpp
+    core/output.cpp
     core/outputlayer.cpp
     core/overlaywindow.cpp
     core/renderbackend.cpp
@@ -67,8 +68,8 @@ target_sources(kwin PRIVATE
     core/renderloop.cpp
     core/rendertarget.cpp
     core/renderviewport.cpp
-    core/session.cpp
     core/session_consolekit.cpp
+    core/session.cpp
     core/session_logind.cpp
     core/session_noop.cpp
     core/shmgraphicsbufferallocator.cpp
@@ -100,8 +101,8 @@ target_sources(kwin PRIVATE
     ftrace.cpp
     gestures.cpp
     hide_cursor_spy.cpp
-    idle_inhibition.cpp
     idledetector.cpp
+    idle_inhibition.cpp
     input.cpp
     input_event.cpp
     input_event_spy.cpp
@@ -131,8 +132,8 @@ target_sources(kwin PRIVATE
     opengl/eglnativefence.cpp
     opengl/eglswapchain.cpp
     opengl/glframebuffer.cpp
-    opengl/gllut.cpp
     opengl/gllut3D.cpp
+    opengl/gllut.cpp
     opengl/glplatform.cpp
     opengl/glrendertimequery.cpp
     opengl/glshader.cpp
@@ -547,6 +548,7 @@ install(FILES
 install(FILES
     core/colorlut.h
     core/colorlut3d.h
+    core/colorpipeline.h
     core/colorpipelinestage.h
     core/colorspace.h
     core/colortransformation.h

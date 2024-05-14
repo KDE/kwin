@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "colorpipeline.h"
+#include "colorspace.h"
 #include "core/rendertarget.h"
 #include "kwin_export.h"
 

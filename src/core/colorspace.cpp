@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorspace.h"
+#include "colorpipeline.h"
 
 #include <qassert.h>
 

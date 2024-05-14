@@ -90,12 +90,21 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || m_pipeline->iccProfile()) {
-        // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
+    if (m_pipeline->iccProfile()) {
+        // TODO make the icc profile also spit out a color pipeline
         return false;
     }
-    const auto &targetColor = m_pipeline->colorDescription();
-    if (color.colorimetry() != targetColor.colorimetry() || color.transferFunction() != targetColor.transferFunction()) {
+    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->colorDescription());
+    if (m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1)) {
+        // TODO this shouldn't need a matrix
+        // maybe a channel factor colorop would make sense
+        QMatrix4x4 mat;
+        mat(0, 0) = m_pipeline->output()->channelFactors().x();
+        mat(1, 1) = m_pipeline->output()->channelFactors().y();
+        mat(2, 2) = m_pipeline->output()->channelFactors().z();
+        pipeline.ops.push_back(ColorMatrix(mat));
+    }
+    if (!pipeline.ops.empty()) {
         return false;
     }
     // kernel documentation says that
