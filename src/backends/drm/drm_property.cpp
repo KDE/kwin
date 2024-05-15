@@ -50,10 +50,16 @@ void DrmProperty::update(DrmPropertyList &propertyList)
         }
         m_enumToPropertyMap.clear();
         m_propertyToEnumMap.clear();
+        m_enumValues.clear();
         // bitmasks need translation too, not just enums
         if (prop->flags & (DRM_MODE_PROP_ENUM | DRM_MODE_PROP_BITMASK)) {
             for (int i = 0; i < prop->count_enums; i++) {
                 struct drm_mode_property_enum *en = &prop->enums[i];
+                if (m_flags & DRM_MODE_PROP_BITMASK) {
+                    m_enumValues.push_back(1 << en->value);
+                } else {
+                    m_enumValues.push_back(en->value);
+                }
                 int j = m_enumNames.indexOf(QByteArray(en->name));
                 if (j >= 0) {
                     if (m_flags & DRM_MODE_PROP_BITMASK) {
@@ -81,6 +87,7 @@ void DrmProperty::update(DrmPropertyList &propertyList)
         m_immutableBlob.reset();
         m_enumToPropertyMap.clear();
         m_propertyToEnumMap.clear();
+        m_enumValues.clear();
     }
 }
 
@@ -147,5 +154,10 @@ DrmObject *DrmProperty::drmObject() const
 bool DrmProperty::isValid() const
 {
     return m_propId != 0;
+}
+
+QList<uint64_t> DrmProperty::enumValues() const
+{
+    return m_enumValues;
 }
 }

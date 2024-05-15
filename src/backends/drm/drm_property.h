@@ -41,6 +41,7 @@ public:
     uint64_t minValue() const;
     uint64_t maxValue() const;
     bool isValid() const;
+    QList<uint64_t> enumValues() const;
 
     /**
      * Prints a warning and returns false if @p value is unacceptable for the property
@@ -65,6 +66,7 @@ protected:
 
     QMap<uint64_t, uint64_t> m_enumToPropertyMap;
     QMap<uint64_t, uint64_t> m_propertyToEnumMap;
+    QList<uint64_t> m_enumValues;
     uint32_t m_flags;
 };
 
