@@ -43,9 +43,6 @@ public:
     void dndAction(DataDeviceManagerInterface::DnDAction action) override;
     void dndCancelled() override;
 
-    bool isDndCancelled() const;
-    bool isDropPerformed() const;
-
     wl_resource *resource() const;
 
     wl_client *client() const override;

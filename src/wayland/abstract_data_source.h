@@ -56,11 +56,16 @@ public:
     /**
      * The user performed the drop action during a drag and drop operation.
      */
-    virtual void dropPerformed(){};
+    virtual void dropPerformed()
+    {
+        m_dndDropped = true;
+    }
     /**
      * The drop destination finished interoperating with this data source.
      */
-    virtual void dndFinished(){};
+    virtual void dndFinished()
+    {
+    }
     /**
      * This event indicates the @p action selected by the compositor after matching the
      * source/destination side actions. Only one action (or none) will be offered here.
@@ -69,11 +74,22 @@ public:
     {
     };
 
+    bool isDndCancelled() const
+    {
+        return m_dndCancelled;
+    }
+
+    bool isDropPerformed() const
+    {
+        return m_dndDropped;
+    }
+
     /**
      *  Called when a user stops clicking but it is not accepted by a client.
      */
     virtual void dndCancelled()
     {
+        m_dndCancelled = true;
     }
 
     virtual wl_client *client() const
@@ -89,6 +105,10 @@ Q_SIGNALS:
 
 protected:
     explicit AbstractDataSource(QObject *parent = nullptr);
+
+private:
+    bool m_dndCancelled = false;
+    bool m_dndDropped = false;
 };
 
 }
