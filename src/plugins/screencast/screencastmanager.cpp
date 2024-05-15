@@ -28,8 +28,6 @@ namespace KWin
 ScreencastManager::ScreencastManager()
     : m_screencast(new ScreencastV1Interface(waylandServer()->display(), this))
 {
-    getPipewireConnection();
-
     connect(m_screencast, &ScreencastV1Interface::windowScreencastRequested, this, &ScreencastManager::streamWindow);
     connect(m_screencast, &ScreencastV1Interface::outputScreencastRequested, this, &ScreencastManager::streamWaylandOutput);
     connect(m_screencast, &ScreencastV1Interface::virtualOutputScreencastRequested, this, &ScreencastManager::streamVirtualOutput);
