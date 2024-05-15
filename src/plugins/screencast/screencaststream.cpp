@@ -37,35 +37,79 @@
 namespace KWin
 {
 
-static spa_video_format drmFourCCToSpaVideoFormat(quint32 format)
+static const struct
 {
-    switch (format) {
-    case DRM_FORMAT_ARGB8888:
-        return SPA_VIDEO_FORMAT_BGRA;
-    case DRM_FORMAT_XRGB8888:
-        return SPA_VIDEO_FORMAT_BGRx;
-    case DRM_FORMAT_RGBA8888:
-        return SPA_VIDEO_FORMAT_ABGR;
-    case DRM_FORMAT_RGBX8888:
-        return SPA_VIDEO_FORMAT_xBGR;
-    case DRM_FORMAT_ABGR8888:
-        return SPA_VIDEO_FORMAT_RGBA;
-    case DRM_FORMAT_XBGR8888:
-        return SPA_VIDEO_FORMAT_RGBx;
-    case DRM_FORMAT_BGRA8888:
-        return SPA_VIDEO_FORMAT_ARGB;
-    case DRM_FORMAT_BGRX8888:
-        return SPA_VIDEO_FORMAT_xRGB;
-    case DRM_FORMAT_NV12:
-        return SPA_VIDEO_FORMAT_NV12;
-    case DRM_FORMAT_RGB888:
-        return SPA_VIDEO_FORMAT_BGR;
-    case DRM_FORMAT_BGR888:
-        return SPA_VIDEO_FORMAT_RGB;
-    default:
-        qCDebug(KWIN_SCREENCAST) << "unknown format" << format;
-        return SPA_VIDEO_FORMAT_xRGB;
+    uint32_t drmFormat;
+    spa_video_format spaFormat;
+} supportedFormats[] = {
+    {
+        .drmFormat = DRM_FORMAT_ARGB8888,
+        .spaFormat = SPA_VIDEO_FORMAT_BGRA,
+    },
+    {
+        .drmFormat = DRM_FORMAT_XRGB8888,
+        .spaFormat = SPA_VIDEO_FORMAT_BGRx,
+    },
+    {
+        .drmFormat = DRM_FORMAT_RGBA8888,
+        .spaFormat = SPA_VIDEO_FORMAT_ABGR,
+    },
+    {
+        .drmFormat = DRM_FORMAT_RGBX8888,
+        .spaFormat = SPA_VIDEO_FORMAT_xBGR,
+    },
+    {
+        .drmFormat = DRM_FORMAT_ABGR8888,
+        .spaFormat = SPA_VIDEO_FORMAT_RGBA,
+    },
+    {
+        .drmFormat = DRM_FORMAT_XBGR8888,
+        .spaFormat = SPA_VIDEO_FORMAT_RGBx,
+    },
+    {
+        .drmFormat = DRM_FORMAT_BGRA8888,
+        .spaFormat = SPA_VIDEO_FORMAT_ARGB,
+    },
+    {
+        .drmFormat = DRM_FORMAT_BGRX8888,
+        .spaFormat = SPA_VIDEO_FORMAT_xRGB,
+    },
+    {
+        .drmFormat = DRM_FORMAT_NV12,
+        .spaFormat = SPA_VIDEO_FORMAT_NV12,
+    },
+    {
+        .drmFormat = DRM_FORMAT_RGB888,
+        .spaFormat = SPA_VIDEO_FORMAT_BGR,
+    },
+    {
+        .drmFormat = DRM_FORMAT_BGR888,
+        .spaFormat = SPA_VIDEO_FORMAT_RGB,
+    },
+};
+
+static spa_video_format drmFormatToSpaVideoFormat(quint32 drmFormat)
+{
+    for (const auto &info : supportedFormats) {
+        if (info.drmFormat == drmFormat) {
+            return info.spaFormat;
+        }
     }
+
+    qCDebug(KWIN_SCREENCAST) << "cannot convert drm format to spa format:" << drmFormat;
+    return SPA_VIDEO_FORMAT_UNKNOWN;
+}
+
+static uint32_t spaVideoFormatToDrmFormat(spa_video_format spaFormat)
+{
+    for (const auto &info : supportedFormats) {
+        if (info.spaFormat == spaFormat) {
+            return info.drmFormat;
+        }
+    }
+
+    qCDebug(KWIN_SCREENCAST) << "cannot convert spa format to drm format:" << spaFormat;
+    return DRM_FORMAT_INVALID;
 }
 
 void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state state, const char *error_message)
@@ -214,11 +258,10 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
 
     struct spa_data *spa_data = pwBuffer->buffer->datas;
     if (spa_data[0].type & (1 << SPA_DATA_DmaBuf)) {
-        Q_ASSERT(m_dmabufParams);
         if (auto dmabuf = DmaBufScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
-                                                                       .size = QSize(m_dmabufParams->width, m_dmabufParams->height),
-                                                                       .format = m_dmabufParams->format,
-                                                                       .modifiers = {m_dmabufParams->modifier},
+                                                                       .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
+                                                                       .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
+                                                                       .modifiers = {m_videoFormat.modifier},
                                                                    })) {
             pwBuffer->user_data = dmabuf;
             return;
@@ -227,8 +270,8 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
 
     if (spa_data[0].type & (1 << SPA_DATA_MemFd)) {
         if (auto memfd = MemFdScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
-                                                                     .size = m_resolution,
-                                                                     .format = m_drmFormat,
+                                                                     .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
+                                                                     .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
                                                                      .software = true,
                                                                  })) {
             pwBuffer->user_data = memfd;
@@ -575,7 +618,7 @@ void ScreenCastStream::invalidateCursor()
 
 QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
 {
-    const auto format = drmFourCCToSpaVideoFormat(m_drmFormat);
+    const auto format = drmFormatToSpaVideoFormat(m_drmFormat);
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
     spa_fraction defFramerate = SPA_FRACTION(0, 1);
     spa_fraction minFramerate = SPA_FRACTION(1, 1);
