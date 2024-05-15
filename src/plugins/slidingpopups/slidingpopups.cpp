@@ -101,10 +101,11 @@ bool SlidingPopupsEffect::supported()
 void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
 {
     SlidingPopupsConfig::self()->read();
+    // Keep these durations in sync with the value of Kirigami.Units.longDuration
     m_slideInDuration = std::chrono::milliseconds(
-        static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideInTime()) : 150ms)));
+        static_cast<int>(animationTime(SlidingPopupsConfig::slideInTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideInTime()) : 200ms)));
     m_slideOutDuration = std::chrono::milliseconds(
-        static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideOutTime()) : 250ms)));
+        static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideOutTime()) : 200ms)));
 
     auto animationIt = m_animations.begin();
     while (animationIt != m_animations.end()) {
