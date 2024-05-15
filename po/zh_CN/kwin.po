@@ -2183,18 +2183,18 @@ msgstr "箭头绘制修饰键："
 #, kde-format
 msgctxt "Night Light was disabled"
 msgid "Night Light Off"
-msgstr "夜间颜色关闭"
+msgstr "夜间色温关闭"
 
 #: plugins/nightcolor/nightcolormanager.cpp:68
 #, kde-format
 msgctxt "Night Light was enabled"
 msgid "Night Light On"
-msgstr "夜间颜色开启"
+msgstr "夜间色温开启"
 
 #: plugins/nightcolor/nightcolormanager.cpp:89
 #, kde-format
 msgid "Toggle Night Light"
-msgstr "开关夜间颜色"
+msgstr "开启/关闭夜间色温"
 
 #: plugins/nightcolor/nightcolormanager.cpp:467
 #, kde-format

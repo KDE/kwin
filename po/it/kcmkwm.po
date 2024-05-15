@@ -1,17 +1,17 @@
 # translation of kcmkwm.po to Italian
+# SPDX-FileCopyrightText: 2015, 2018, 2019, 2020, 2021, 2022, 2024 Vincenzo Reale <smart2128vr@gmail.com>
 # Andrea Rizzi <rizzi@kde.org>, 2003, 2004, 2005.
 # Andrea RIZZI <arizzi@pi.infn.it>, 2004.
 # Pino Toscano <toscano.pino@tiscali.it>, 2006.
 # Luciano Montanaro <mikelima@cirulla.net>, 2007, 2008, 2009, 2010, 2011, 2012.
 # Luigi Toscano <luigi.toscano@tiscali.it>, 2013.
-# Vincenzo Reale <smart2128vr@gmail.com>, 2015, 2018, 2019, 2020, 2021, 2022.
 # Paolo Zamponi <feus73@gmail.com>, 2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 03:08+0000\n"
-"PO-Revision-Date: 2022-12-06 00:44+0100\n"
+"PO-Revision-Date: 2024-05-09 16:45+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.08.3\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -343,7 +343,7 @@ msgstr "Non fare niente"
 #: actions.ui:318
 #, kde-format
 msgid "Middle &click:"
-msgstr "Tasto &centrale:"
+msgstr "Clic &centrale:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
 #: actions.ui:331
