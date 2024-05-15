@@ -77,6 +77,7 @@ void DataOfferInterfacePrivate::data_offer_finish(Resource *resource)
         return;
     }
     source->dndFinished();
+    source.clear();
     // TODO: It is a client error to perform other requests than wl_data_offer.destroy after this one
 }
 
@@ -163,7 +164,13 @@ DataOfferInterface::DataOfferInterface(AbstractDataSource *source, wl_resource *
     });
 }
 
-DataOfferInterface::~DataOfferInterface() = default;
+DataOfferInterface::~DataOfferInterface()
+{
+    if (d->source && d->source->isDropPerformed()) {
+        d->source->dndFinished();
+        d->source.clear();
+    }
+}
 
 void DataOfferInterface::sendAllOffers()
 {

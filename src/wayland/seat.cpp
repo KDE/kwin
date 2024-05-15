@@ -731,6 +731,7 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
             }
 
             SurfaceInterface *focusedSurface = focusedPointerSurface();
+
             if (focusedSurface && !d->dragInhibitsPointer(focusedSurface)) {
                 d->pointer->sendButton(button, state, serial);
             }
@@ -738,6 +739,10 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
             return;
         }
     }
+
+    SurfaceInterface *focusedSurface = focusedPointerSurface();
+
+    qDebug() << "sending button press to" << focusedSurface->client()->executablePath();
 
     d->pointer->sendButton(button, state, serial);
 }
