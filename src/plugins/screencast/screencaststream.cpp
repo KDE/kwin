@@ -618,7 +618,9 @@ void ScreenCastStream::invalidateCursor()
 
 QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2048])
 {
-    const auto format = drmFormatToSpaVideoFormat(m_drmFormat);
+    const auto dmabufFormat = drmFormatToSpaVideoFormat(m_drmFormat);
+    const auto shmFormat = drmFormatToSpaVideoFormat(DRM_FORMAT_ARGB8888);
+
     spa_pod_builder podBuilder = SPA_POD_BUILDER_INIT(buffer, 2048);
     spa_fraction defFramerate = SPA_FRACTION(0, 1);
     spa_fraction minFramerate = SPA_FRACTION(1, 1);
@@ -629,12 +631,12 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
     QList<const spa_pod *> params;
     params.reserve(fixate + m_hasDmaBuf + 1);
     if (fixate) {
-        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
+        params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
     }
     if (m_hasDmaBuf) {
-        params.append(buildFormat(&podBuilder, SPA_VIDEO_FORMAT_BGRA, &resolution, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
+        params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     }
-    params.append(buildFormat(&podBuilder, format, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, 0));
+    params.append(buildFormat(&podBuilder, shmFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, 0));
     return params;
 }
 
