@@ -27,9 +27,9 @@ The Breeze decorations theme is not located in the KWin repository, and is in fa
 
 ### Tab Switcher
 
-The default visual appearance of the tab switcher is not located in the KWin repository, and is in fact part of [Plasma Workspace](https://invent.kde.org/plasma/plasma-workspace), located at `lookandfeel/contents/windowswitcher`.
+The default visual appearance of the tab switcher is located in `src/tabbox/switchers`.
 
-Other window switchers usually shipped by default are located in [Plasma Addons](https://invent.kde.org/plasma/kdeplasma-addons), located in the `windowswitchers` directory.
+Other window switchers usually shipped by default are located in [Plasma Addons](https://invent.kde.org/plasma/kdeplasma-addons), located in the `kwin/windowswitchers` directory.
 
 ### Window Management
 
