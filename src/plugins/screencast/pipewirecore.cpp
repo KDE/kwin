@@ -41,6 +41,8 @@ PipeWireCore::~PipeWireCore()
     if (pwMainLoop) {
         pw_loop_destroy(pwMainLoop);
     }
+
+    pw_deinit();
 }
 
 void PipeWireCore::onCoreError(void *data, uint32_t id, int seq, int res, const char *message)
