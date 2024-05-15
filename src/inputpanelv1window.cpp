@@ -78,6 +78,7 @@ void InputPanelV1Window::hide()
 
 void InputPanelV1Window::reposition()
 {
+    Q_ASSERT(!isDeleted());
     if (!readyForPainting()) {
         return;
     }
@@ -164,6 +165,7 @@ void InputPanelV1Window::destroyWindow()
 {
     m_panelSurface->disconnect(this);
     m_panelSurface->surface()->disconnect(this);
+    disconnect(workspace(), &Workspace::outputsChanged, this, &InputPanelV1Window::reposition);
 
     markAsDeleted();
 
