@@ -5,15 +5,15 @@
 # Matthias Peick <matthias@peick.de>, 2004.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
 # Pierre-Marie Pédrot <pedrotpmx@wanadoo.fr>, 2008.
-# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
+# Oliver Kellogg <olivermkellogg@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-05-16 00:39+0000\n"
 "PO-Revision-Date: 2024-05-09 22:01+0100\n"
-"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
-"cfmckee@gmail.com,okellogg@users.sourceforge.net"
+"cfmckee@gmail.com,olivermkellogg@gmail.com"
 
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
@@ -2369,18 +2369,18 @@ msgstr "Fenestromalferma skalo:"
 msgid "Window close scale:"
 msgstr "Ferma skalo de fenestro:"
 
-#: plugins/screencast/pipewirecore.cpp:61
-#: plugins/screencast/pipewirecore.cpp:90
+#: plugins/screencast/pipewirecore.cpp:63
+#: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr "Malsukcesis komenci ĉefan PipeWire-buklon"
 
-#: plugins/screencast/pipewirecore.cpp:77
+#: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr "Malsukcesis krei PipeWire-kuntekston"
 
-#: plugins/screencast/pipewirecore.cpp:84
+#: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr "Malsukcesis konekti PipeWire-kuntekston"
@@ -4182,7 +4182,7 @@ msgstr ""
 "algluaĵujo servo. \n"
 "kiel https://paste.kde.org anstataŭ alglui en subtenajn fadenojn.\n"
 
-#: xwayland/xwaylandlauncher.cpp:274
+#: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"

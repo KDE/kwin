@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-05-16 00:39+0000\n"
 "PO-Revision-Date: 2024-05-09 10:59+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -2371,18 +2371,18 @@ msgstr "Opnunarkvarði glugga:"
 msgid "Window close scale:"
 msgstr "Lokunarkvarði glugga:"
 
-#: plugins/screencast/pipewirecore.cpp:61
-#: plugins/screencast/pipewirecore.cpp:90
+#: plugins/screencast/pipewirecore.cpp:63
+#: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr "Mistókst að ræsa aðal PipeWire-lúppu"
 
-#: plugins/screencast/pipewirecore.cpp:77
+#: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr "Mistókst að útbúa PipeWire samhengi"
 
-#: plugins/screencast/pipewirecore.cpp:84
+#: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr "Mistókst að tengja PipeWire samhengi"
@@ -4184,7 +4184,7 @@ msgstr ""
 "Settu upplýsingarnar fyrir neðan þennan inngangstexta í afritunarsíðu \n"
 "eins og https://paste.kde.org í stað þess að líma þær inn í aðstoðarbeiðni.\n"
 
-#: xwayland/xwaylandlauncher.cpp:274
+#: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland hrundi"

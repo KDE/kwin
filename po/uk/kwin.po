@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-05-16 00:39+0000\n"
 "PO-Revision-Date: 2024-05-07 08:59+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian\n"
@@ -2376,18 +2376,18 @@ msgstr "Масштаб відкриття вікна:"
 msgid "Window close scale:"
 msgstr "Масштаб закриття вікна:"
 
-#: plugins/screencast/pipewirecore.cpp:61
-#: plugins/screencast/pipewirecore.cpp:90
+#: plugins/screencast/pipewirecore.cpp:63
+#: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr "Не вдалося запустити основний цикл PipeWire"
 
-#: plugins/screencast/pipewirecore.cpp:77
+#: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr "Не вдалося створити контекст PipeWire"
 
-#: plugins/screencast/pipewirecore.cpp:84
+#: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr "Не вдалося встановити з'єднання із контекстом PipeWire"
@@ -4195,7 +4195,7 @@ msgstr ""
 "текстових фрагментів, подібної до https://paste.kde.org, замість додавання "
 "безпосередньо до тексту повідомлення.\n"
 
-#: xwayland/xwaylandlauncher.cpp:274
+#: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland завершив роботу в аварійному режимі"

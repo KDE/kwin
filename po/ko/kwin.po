@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-05-16 00:39+0000\n"
 "PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2359,18 +2359,18 @@ msgstr "창 열 때 크기 조정:"
 msgid "Window close scale:"
 msgstr "창 닫을 때 크기 조정:"
 
-#: plugins/screencast/pipewirecore.cpp:61
-#: plugins/screencast/pipewirecore.cpp:90
+#: plugins/screencast/pipewirecore.cpp:63
+#: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
 msgstr "주 PipeWire 루프를 시작할 수 없음"
 
-#: plugins/screencast/pipewirecore.cpp:77
+#: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
 msgstr "PipeWire 콘텍스트를 만들 수 없음"
 
-#: plugins/screencast/pipewirecore.cpp:84
+#: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
 msgstr "PipeWire 콘텍스트에 연결할 수 없음"
@@ -4171,7 +4171,7 @@ msgstr ""
 "이 메시지 아래에 있는 지원 정보를 글에 바로 붙여넣기보다는\n"
 "https://paste.kde.org 등 외부 사이트에 링크하는 것을 권장합니다.\n"
 
-#: xwayland/xwaylandlauncher.cpp:274
+#: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland가 충돌함"
