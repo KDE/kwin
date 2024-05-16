@@ -1875,6 +1875,11 @@ void Window::setupWindowManagementInterface()
         setShade(set);
     });
 
+    w->setGeometryWithoutBorder(clientGeometry().toRect());
+    connect(this, &Window::clientGeometryChanged, w, [w, this]() {
+        w->setGeometryWithoutBorder(clientGeometry().toRect());
+    });
+
     for (const auto vd : std::as_const(m_desktops)) {
         w->addPlasmaVirtualDesktop(vd->id());
     }
