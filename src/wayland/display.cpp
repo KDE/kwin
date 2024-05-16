@@ -270,12 +270,18 @@ SecurityContext::~SecurityContext()
 
 void SecurityContext::onListenFdActivated(QSocketDescriptor socketDescriptor)
 {
-    int clientFd = accept4(socketDescriptor, nullptr, nullptr, SOCK_CLOEXEC);
+    const int clientFd = accept4(socketDescriptor, nullptr, nullptr, SOCK_CLOEXEC);
     if (clientFd < 0) {
         qCWarning(KWIN_CORE) << "Failed to accept client from security listen FD";
         return;
     }
+
     auto client = m_display->createClient(clientFd);
+    if (!client) {
+        close(clientFd);
+        return;
+    }
+
     client->setSecurityContextAppId(m_appId);
 }
 
