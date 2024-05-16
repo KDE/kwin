@@ -255,13 +255,13 @@ void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDevice
 
 void SeatInterfacePrivate::cancelDrag()
 {
-    if (drag.target) {
-        drag.target->updateDragTarget(nullptr, 0);
-        drag.target = nullptr;
-    }
     QObject::disconnect(drag.dragSourceDestroyConnection);
     if (drag.source) {
         drag.source->dndCancelled();
+    }
+    if (drag.target) {
+        drag.target->updateDragTarget(nullptr, 0);
+        drag.target = nullptr;
     }
     drag = Drag();
     Q_EMIT q->dragSurfaceChanged();
