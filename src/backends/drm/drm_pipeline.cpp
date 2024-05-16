@@ -38,6 +38,16 @@ static const QList<uint64_t> implicitModifier = {DRM_FORMAT_MOD_INVALID};
 static const QHash<uint32_t, QList<uint64_t>> legacyFormats = {{DRM_FORMAT_XRGB8888, implicitModifier}};
 static const QHash<uint32_t, QList<uint64_t>> legacyCursorFormats = {{DRM_FORMAT_ARGB8888, implicitModifier}};
 
+static uint64_t doubleToFixed(double value)
+{
+    // ctm values are in S31.32 sign-magnitude format
+    uint64_t ret = std::abs(value) * (1ull << 32);
+    if (value < 0) {
+        ret |= 1ull << 63;
+    }
+    return ret;
+}
+
 DrmPipeline::DrmPipeline(DrmConnector *conn)
     : m_connector(conn)
     , m_commitThread(std::make_unique<DrmCommitThread>(conn->gpu(), conn->connectorName()))
@@ -252,6 +262,21 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         return Error::InvalidArguments;
     }
     primary->set(commit, m_primaryLayer->sourceRect().toRect(), m_primaryLayer->targetRect());
+    const auto primaryPipeline = m_primaryLayer->colorPipeline();
+    if (!primary->colorPipelines.empty()) {
+        // TODO try the other pipelines?
+        if (primaryPipeline.ops.empty()) {
+            commit->addEnum(primary->colorPipeline, DrmPlane::PipelineEnum::Bypass);
+        } else {
+            if (!primary->colorPipelines.front()->matchPipeline(commit, primaryPipeline)) {
+                qWarning() << "pipeline failed";
+                return Error::InvalidArguments;
+            }
+            commit->addProperty(primary->colorPipeline, primary->colorPipelines.front()->id());
+        }
+    } else if (!primaryPipeline.ops.empty()) {
+        return Error::InvalidArguments;
+    }
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb);
     if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
@@ -264,7 +289,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     return Error::None;
 }
 
-void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
+bool DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
 {
     auto plane = m_pending.crtc->cursorPlane();
     const auto layer = cursorLayer();
@@ -276,10 +301,25 @@ void DrmPipeline::prepareAtomicCursor(DrmAtomicCommit *commit)
             commit->addProperty(plane->vmHotspotX, std::round(layer->hotspot().x()));
             commit->addProperty(plane->vmHotspotY, std::round(layer->hotspot().y()));
         }
+        const auto pipeline = layer->colorPipeline();
+        if (!plane->colorPipelines.empty()) {
+            if (pipeline.ops.empty()) {
+                commit->addProperty(plane->colorPipeline, 0);
+            } else {
+                if (!plane->colorPipelines.front()->matchPipeline(commit, pipeline)) {
+                    qWarning() << "pipeline failed on the cursor";
+                    return false;
+                }
+                commit->addProperty(plane->colorPipeline, plane->colorPipelines.front()->id());
+            }
+        } else if (!pipeline.ops.empty()) {
+            return false;
+        }
     } else {
         commit->addProperty(plane->crtcId, 0);
         commit->addBuffer(plane, nullptr);
     }
+    return true;
 }
 
 void DrmPipeline::prepareAtomicDisable(DrmAtomicCommit *commit)
@@ -700,16 +740,6 @@ void DrmPipeline::setGammaRamp(const std::shared_ptr<ColorTransformation> &trans
     }
 }
 
-static uint64_t doubleToFixed(double value)
-{
-    // ctm values are in S31.32 sign-magnitude format
-    uint64_t ret = std::abs(value) * (1ull << 32);
-    if (value < 0) {
-        ret |= 1ull << 63;
-    }
-    return ret;
-}
-
 void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
 {
     if (ctm.isIdentity()) {
@@ -717,9 +747,16 @@ void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
     } else {
         drm_color_ctm blob = {
             .matrix = {
-                doubleToFixed(ctm(0, 0)), doubleToFixed(ctm(1, 0)), doubleToFixed(ctm(2, 0)),
-                doubleToFixed(ctm(0, 1)), doubleToFixed(ctm(1, 1)), doubleToFixed(ctm(2, 1)),
-                doubleToFixed(ctm(0, 2)), doubleToFixed(ctm(1, 2)), doubleToFixed(ctm(2, 2))},
+                doubleToFixed(ctm(0, 0)),
+                doubleToFixed(ctm(1, 0)),
+                doubleToFixed(ctm(2, 0)),
+                doubleToFixed(ctm(0, 1)),
+                doubleToFixed(ctm(1, 1)),
+                doubleToFixed(ctm(2, 1)),
+                doubleToFixed(ctm(0, 2)),
+                doubleToFixed(ctm(1, 2)),
+                doubleToFixed(ctm(2, 2)),
+            },
         };
         m_pending.ctm = DrmBlob::create(gpu(), &blob, sizeof(blob));
     }

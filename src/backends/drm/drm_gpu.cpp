@@ -41,6 +41,9 @@
 #ifndef DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT
 #define DRM_CLIENT_CAP_CURSOR_PLANE_HOTSPOT 6
 #endif
+#ifndef DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
+#define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE 7
+#endif
 
 namespace KWin
 {
@@ -91,6 +94,7 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     connect(m_socketNotifier.get(), &QSocketNotifier::activated, this, &DrmGpu::dispatchEvents);
 
     initDrmResources();
+    drmSetClientCap(m_fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1);
 
     if (m_atomicModeSetting == false) {
         // only supported with legacy

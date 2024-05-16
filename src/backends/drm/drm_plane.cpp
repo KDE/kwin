@@ -66,6 +66,9 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
     , vmHotspotX(this, QByteArrayLiteral("HOTSPOT_X"))
     , vmHotspotY(this, QByteArrayLiteral("HOTSPOT_Y"))
     , inFenceFd(this, QByteArrayLiteral("IN_FENCE_FD"))
+    , colorPipeline(this, QByteArrayLiteral("COLOR_PIPELINE"), {
+                                                                   QByteArrayLiteral("Bypass"),
+                                                               })
 {
 }
 
@@ -97,6 +100,7 @@ bool DrmPlane::updateProperties()
     vmHotspotX.update(props);
     vmHotspotY.update(props);
     inFenceFd.update(props);
+    colorPipeline.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
@@ -123,6 +127,19 @@ bool DrmPlane::updateProperties()
             m_supportedFormats.insert(DRM_FORMAT_XRGB8888, modifiers);
         }
     }
+
+    // possible color pipelines shouldn't change after first initialization
+    if (colorPipelines.empty() && colorPipeline.isValid() && colorPipeline.hasEnum(PipelineEnum::Bypass)) {
+        // FIXME multiple planes could have overlapping color pipelines?
+        for (const uint32_t id : colorPipeline.enumValues()) {
+            if (id == 0) {
+                continue;
+            }
+            colorPipelines.push_back(std::make_unique<DrmColorOp>(gpu(), id));
+            colorPipelines.back()->updateProperties();
+        }
+    }
+
     return true;
 }
 

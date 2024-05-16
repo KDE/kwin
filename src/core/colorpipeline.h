@@ -18,7 +18,9 @@ class KWIN_EXPORT ColorTransferFunction
 public:
     explicit ColorTransferFunction(NamedTransferFunction tf);
 
-    const NamedTransferFunction tf;
+    bool operator==(const ColorTransferFunction &) const = default;
+
+    NamedTransferFunction tf;
 };
 
 class KWIN_EXPORT InverseColorTransferFunction
@@ -26,7 +28,9 @@ class KWIN_EXPORT InverseColorTransferFunction
 public:
     explicit InverseColorTransferFunction(NamedTransferFunction tf);
 
-    const NamedTransferFunction tf;
+    bool operator==(const InverseColorTransferFunction &) const = default;
+
+    NamedTransferFunction tf;
 };
 
 class KWIN_EXPORT ColorMatrix
@@ -34,15 +38,20 @@ class KWIN_EXPORT ColorMatrix
 public:
     explicit ColorMatrix(const QMatrix4x4 &mat);
 
-    const QMatrix4x4 mat;
+    bool operator==(const ColorMatrix &) const = default;
+
+    QMatrix4x4 mat;
 };
 
 class KWIN_EXPORT ColorMultiplier
 {
 public:
-    explicit ColorMultiplier(double factor);
+    explicit ColorMultiplier(double factor, bool extendedInputOutputSpace);
 
-    const double factor;
+    bool operator==(const ColorMultiplier &) const = default;
+
+    double factor;
+    bool extendedInputOutputSpace;
 };
 
 using ColorOp = std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier>;
@@ -51,6 +60,8 @@ class KWIN_EXPORT ColorPipeline
 {
 public:
     static ColorPipeline create(const ColorDescription &from, const ColorDescription &to);
+
+    bool operator==(const ColorPipeline &other) const = default;
 
     std::vector<ColorOp> ops;
 };

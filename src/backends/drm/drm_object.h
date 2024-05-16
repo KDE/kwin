@@ -34,7 +34,6 @@ public:
     void addProperty(DrmUniquePtr<drmModePropertyRes> &&prop, uint64_t value);
     std::optional<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> takeProperty(const QByteArray &name);
 
-private:
     std::vector<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> m_properties;
 };
 

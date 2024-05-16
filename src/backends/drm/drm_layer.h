@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorpipeline.h"
 #include "core/outputlayer.h"
 #include "drm_plane.h"
 
@@ -39,6 +40,7 @@ public:
 
     virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
+    virtual ColorPipeline colorPipeline() const;
 
 protected:
     DrmPipeline *const m_pipeline;

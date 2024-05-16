@@ -21,6 +21,7 @@
 #include "core/output.h"
 #include "core/renderloop_p.h"
 #include "drm_blob.h"
+#include "drm_colorop.h"
 #include "drm_connector.h"
 #include "drm_plane.h"
 
@@ -162,7 +163,7 @@ private:
     Error prepareAtomicCommit(DrmAtomicCommit *commit, CommitMode mode);
     bool prepareAtomicModeset(DrmAtomicCommit *commit);
     Error prepareAtomicPresentation(DrmAtomicCommit *commit);
-    void prepareAtomicCursor(DrmAtomicCommit *commit);
+    bool prepareAtomicCursor(DrmAtomicCommit *commit);
     void prepareAtomicDisable(DrmAtomicCommit *commit);
     static Error commitPipelinesAtomic(const QList<DrmPipeline *> &pipelines, CommitMode mode, const QList<DrmObject *> &unusedObjects);
 

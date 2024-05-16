@@ -42,6 +42,11 @@ DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
 {
 }
 
+DrmAtomicCommit::DrmAtomicCommit(DrmGpu *gpu)
+    : DrmCommit(gpu)
+{
+}
+
 void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
 {
     prop.checkValueInRange(value);

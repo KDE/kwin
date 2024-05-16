@@ -17,19 +17,32 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
         return {};
     }
     ColorPipeline ret;
-    // attempt to go to 0-1 here
+    double inputScaling = 1;
     if (from.transferFunction() == NamedTransferFunction::scRGB) {
-        ret.ops.push_back(ColorMultiplier(80.0f / to.sdrBrightness()));
+        // attempt to go to 0-1 here
+        inputScaling = from.maxHdrHighlightBrightness() == 0 ? to.sdrBrightness() : from.maxHdrHighlightBrightness();
+        ret.ops.push_back(ColorMultiplier(80.0f / inputScaling, true));
     } else if (from.transferFunction() != NamedTransferFunction::linear) {
         ret.ops.push_back(ColorTransferFunction(from.transferFunction()));
     }
     if (from.colorimetry() != to.colorimetry()) {
         ret.ops.push_back(ColorMatrix(from.colorimetry().toOther(to.colorimetry())));
     }
-    if (to.transferFunction() == NamedTransferFunction::scRGB) {
-        ret.ops.push_back(ColorMultiplier(to.sdrBrightness() / 80.0f));
-    } else if (to.transferFunction() != NamedTransferFunction::linear) {
+    switch (to.transferFunction()) {
+    case NamedTransferFunction::scRGB:
+        ret.ops.push_back(ColorMultiplier(inputScaling / 80.0f, true));
+        break;
+    case NamedTransferFunction::linear:
+        ret.ops.push_back(ColorMultiplier(inputScaling, true));
+        break;
+    case NamedTransferFunction::gamma22:
+    case NamedTransferFunction::sRGB:
+    case NamedTransferFunction::PerceptualQuantizer:
+        if (inputScaling != to.sdrBrightness()) {
+            ret.ops.push_back(ColorMultiplier(to.sdrBrightness() / inputScaling, true));
+        }
         ret.ops.push_back(InverseColorTransferFunction(to.transferFunction()));
+        break;
     }
     return ret;
 }
@@ -46,6 +59,12 @@ InverseColorTransferFunction::InverseColorTransferFunction(NamedTransferFunction
 
 ColorMatrix::ColorMatrix(const QMatrix4x4 &mat)
     : mat(mat)
+{
+}
+
+ColorMultiplier::ColorMultiplier(double factor, bool extendedInputOutputSpace)
+    : factor(factor)
+    , extendedInputOutputSpace(extendedInputOutputSpace)
 {
 }
 }

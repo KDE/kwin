@@ -9,7 +9,9 @@
 */
 #pragma once
 
+#include "core/colorpipeline.h"
 #include "core/output.h"
+#include "drm_colorop.h"
 #include "drm_object.h"
 
 #include <QMap>
@@ -73,6 +75,9 @@ public:
         Limited_YCbCr,
         Full_YCbCr
     };
+    enum class PipelineEnum : uint64_t {
+        Bypass = 0, // other values are defined by the driver, somehow
+    };
 
     DrmEnumProperty<TypeIndex> type;
     DrmProperty srcX;
@@ -94,6 +99,10 @@ public:
     DrmProperty vmHotspotX;
     DrmProperty vmHotspotY;
     DrmProperty inFenceFd;
+    DrmEnumProperty<PipelineEnum> colorPipeline;
+
+    std::vector<std::unique_ptr<DrmColorOp>> colorPipelines;
+    std::vector<ColorPipeline> currentPipelines;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
