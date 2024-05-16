@@ -1794,6 +1794,7 @@ void Window::setupWindowManagementInterface()
     w->setVirtualDesktopChangeable(true); // FIXME Matches X11Window::actionSupported(), but both should be implemented.
     w->setParentWindow(transientFor() ? transientFor()->windowManagementInterface() : nullptr);
     w->setGeometry(frameGeometry().toRect());
+    w->setClientGeometry(clientGeometry().toRect());
     connect(this, &Window::skipTaskbarChanged, w, [w, this]() {
         w->setSkipTaskbar(skipTaskbar());
     });
@@ -1834,6 +1835,9 @@ void Window::setupWindowManagementInterface()
     });
     connect(this, &Window::frameGeometryChanged, w, [w, this]() {
         w->setGeometry(frameGeometry().toRect());
+    });
+    connect(this, &Window::clientGeometryChanged, w, [w, this]() {
+        w->setClientGeometry(clientGeometry().toRect());
     });
     connect(this, &Window::applicationMenuChanged, w, [w, this]() {
         w->setApplicationMenuPaths(applicationMenuServiceName(), applicationMenuObjectPath());

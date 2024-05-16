@@ -227,6 +227,11 @@ public:
      */
     QString uuid() const;
 
+    /**
+     * Set the client geometry (i.e. without window border/style)
+     */
+    void setClientGeometry(const QRect &geometry);
+
 Q_SIGNALS:
     void closeRequested();
     void moveRequested();
@@ -289,6 +294,7 @@ Q_SIGNALS:
      * Requests sending the window to @p output
      */
     void sendToOutput(KWin::OutputInterface *output);
+    void clientGeometryChanged(const QRect &geometry);
 
 private:
     friend class PlasmaWindowManagementInterface;

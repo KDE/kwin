@@ -24,7 +24,7 @@
 
 namespace KWin
 {
-static const quint32 s_version = 17;
+static const quint32 s_version = 18;
 static const quint32 s_activationVersion = 1;
 
 class PlasmaWindowManagementInterfacePrivate : public QtWaylandServer::org_kde_plasma_window_management
@@ -81,6 +81,7 @@ public:
     void setResourceName(const QString &resourceName);
     void sendInitialState(Resource *resource);
     wl_resource *resourceForParent(PlasmaWindowInterface *parent, Resource *child) const;
+    void setClientGeometry(const QRect &geometry);
 
     quint32 windowId = 0;
     QHash<SurfaceInterface *, QRect> minimizedGeometries;
@@ -103,6 +104,7 @@ public:
     quint32 m_state = 0;
     QString uuid;
     QString m_resourceName;
+    QRect clientGeometry;
 
 protected:
     Resource *org_kde_plasma_window_allocate() override;
@@ -431,6 +433,10 @@ void PlasmaWindowInterfacePrivate::sendInitialState(Resource *resource)
         if (resource->version() >= ORG_KDE_PLASMA_WINDOW_RESOURCE_NAME_CHANGED_SINCE_VERSION) {
             send_resource_name_changed(resource->handle, m_resourceName);
         }
+    }
+
+    if (clientGeometry.isValid() && resource->version() >= ORG_KDE_PLASMA_WINDOW_CLIENT_GEOMETRY_SINCE_VERSION) {
+        send_client_geometry(resource->handle, clientGeometry.x(), clientGeometry.y(), clientGeometry.width(), clientGeometry.height());
     }
 }
 
@@ -1139,6 +1145,29 @@ void PlasmaWindowActivationInterface::sendAppId(const QString &appid)
     }
 }
 
+void PlasmaWindowInterface::setClientGeometry(const QRect &geometry)
+{
+    d->setClientGeometry(geometry);
+}
+
+void PlasmaWindowInterfacePrivate::setClientGeometry(const QRect &geometry)
+{
+    if (clientGeometry == geometry) {
+        return;
+    }
+    clientGeometry = geometry;
+    if (!clientGeometry.isValid()) {
+        return;
+    }
+
+    const auto clientResources = resourceMap();
+    for (auto resource : clientResources) {
+        if (resource->version() < ORG_KDE_PLASMA_WINDOW_CLIENT_GEOMETRY_SINCE_VERSION) {
+            continue;
+        }
+        send_client_geometry(resource->handle, clientGeometry.x(), clientGeometry.y(), clientGeometry.width(), clientGeometry.height());
+    }
+}
 }
 
 #include "moc_plasmawindowmanagement.cpp"
