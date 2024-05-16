@@ -629,11 +629,10 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
     QList<const spa_pod *> params;
-    params.reserve(fixate + m_hasDmaBuf + 1);
-    if (fixate) {
-        params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
-    }
     if (m_hasDmaBuf) {
+        if (fixate) {
+            params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
+        }
         params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, m_modifiers, SPA_POD_PROP_FLAG_MANDATORY | SPA_POD_PROP_FLAG_DONT_FIXATE));
     }
     params.append(buildFormat(&podBuilder, shmFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {}, 0));
