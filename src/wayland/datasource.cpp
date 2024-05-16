@@ -185,12 +185,15 @@ wl_client *DataSourceInterface::client() const
 
 bool DataSourceInterface::isAccepted() const
 {
-    return d->isAccepted;
-}
-
-void DataSourceInterface::setAccepted(bool accepted)
-{
-    d->isAccepted = accepted;
+    if (d->isAccepted) {
+        return false;
+    }
+    if (d->resource()->version() >= WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
+        if (d->selectedDndAction == DataDeviceManagerInterface::DnDAction::None) {
+            return false;
+        }
+    }
+    return true;
 }
 
 XdgToplevelDragV1Interface *DataSourceInterface::xdgToplevelDrag() const
