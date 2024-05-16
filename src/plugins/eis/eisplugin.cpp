@@ -7,11 +7,13 @@
 #include "eisplugin.h"
 
 #include "eisbackend.h"
+#include "eisinputcapturemanager.h"
 
 #include "input.h"
 
 EisPlugin::EisPlugin()
     : Plugin()
+    , m_inputCapture(std::make_unique<KWin::EisInputCaptureManager>())
 {
     KWin::input()->addInputBackend(std::make_unique<KWin::EisBackend>());
 }

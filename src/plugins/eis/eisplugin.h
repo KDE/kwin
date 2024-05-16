@@ -8,10 +8,18 @@
 
 #include "plugin.h"
 
+namespace KWin
+{
+class EisInputCaptureManager;
+};
+
 class EisPlugin : public KWin::Plugin
 {
     Q_OBJECT
 public:
     EisPlugin();
     ~EisPlugin() override;
+
+private:
+    std::unique_ptr<KWin::EisInputCaptureManager> m_inputCapture;
 };
