@@ -107,17 +107,21 @@ bool WaylandEglPrimaryLayer::endFrame(const QRegion &renderedRegion, const QRegi
 
 void WaylandEglPrimaryLayer::present()
 {
-    wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->buffer());
-    Q_ASSERT(buffer);
-
     KWayland::Client::Surface *surface = m_waylandOutput->surface();
-    surface->attachBuffer(buffer);
-    surface->damage(m_damageJournal.lastDamage());
-    surface->setScale(std::ceil(m_waylandOutput->scale()));
-    surface->commit();
-    Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
 
-    m_swapchain->release(m_buffer);
+    if (m_buffer) {
+        wl_buffer *buffer = m_backend->backend()->importBuffer(m_buffer->buffer());
+        Q_ASSERT(buffer);
+
+        surface->attachBuffer(buffer);
+        surface->damage(m_damageJournal.lastDamage());
+        surface->setScale(std::ceil(m_waylandOutput->scale()));
+        m_swapchain->release(m_buffer);
+    }
+
+    surface->commit();
+
+    Q_EMIT m_waylandOutput->outputChange(m_damageJournal.lastDamage());
 }
 
 std::chrono::nanoseconds WaylandEglPrimaryLayer::queryRenderTime() const
