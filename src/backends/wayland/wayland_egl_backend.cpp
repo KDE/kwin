@@ -129,11 +129,13 @@ void WaylandEglPrimaryLayer::present()
 {
     const auto waylandOutput = static_cast<WaylandOutput *>(m_output);
     KWayland::Client::Surface *surface = waylandOutput->surface();
-    surface->attachBuffer(m_presentationBuffer);
-    surface->damage(m_damageJournal.lastDamage());
-    surface->setScale(std::ceil(waylandOutput->scale()));
+    if (m_presentationBuffer) {
+        surface->attachBuffer(m_presentationBuffer);
+        surface->damage(m_damageJournal.lastDamage());
+        surface->setScale(std::ceil(waylandOutput->scale()));
+        m_presentationBuffer = nullptr;
+    }
     surface->commit();
-    m_presentationBuffer = nullptr;
 }
 
 DrmDevice *WaylandEglPrimaryLayer::scanoutDevice() const
