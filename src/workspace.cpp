@@ -2719,7 +2719,14 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
                 if (!(*l)->isOnCurrentActivity()) {
                     continue; // wrong activity
                 }
-                if ((*l)->isUnmanaged() || (*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay() || (*l)->isAppletPopup()) {
+
+                // We do not snap to docks (i.e. panels) since the ones we actually want to snap to
+                // (i.e. always visible ones) will restrict the workspace area, and the window will
+                // snap to that, effectively snapping to the panel too. Explicitly avoiding panel
+                // snapping solves any possible issue of floating panels, since they change their
+                // size when a window gets near them.
+
+                if ((*l)->isUnmanaged() || (*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay() || (*l)->isAppletPopup() || (*l)->isDock()) {
                     continue;
                 }
 
