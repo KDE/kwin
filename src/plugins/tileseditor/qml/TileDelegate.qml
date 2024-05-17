@@ -164,14 +164,14 @@ Item {
                 id: splitButton
                 Layout.fillWidth: true
                 icon.name: "view-split-left-right"
-                text: i18nd("kwin","Split Horizontally")
+                text: i18nd("kwin","Split Left/Right")
                 display: parent.compact ? PlasmaComponents.Button.IconOnly : PlasmaComponents.Button.TextBesideIcon
                 onClicked: tile.split(KWinComponents.Tile.Horizontal)
             }
             PlasmaComponents.Button {
                 Layout.fillWidth: true
                 icon.name: "view-split-top-bottom"
-                text: i18nd("kwin","Split Vertically")
+                text: i18nd("kwin","Split Top/Bottom")
                 display: parent.compact ? PlasmaComponents.Button.IconOnly : PlasmaComponents.Button.TextBesideIcon
                 onClicked: tile.split(KWinComponents.Tile.Vertical)
             }
