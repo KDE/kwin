@@ -399,7 +399,7 @@ void NightLightManager::resetSlowUpdateTimers(const QDateTime &todayNow)
         return;
     }
 
-    if (m_prev.first <= todayNow && todayNow <= m_prev.second) {
+    if (todayNow < m_prev.second) {
         int availTime = todayNow.msecsTo(m_prev.second);
         m_slowUpdateTimer = std::make_unique<QTimer>();
         m_slowUpdateTimer->setSingleShot(false);
@@ -419,6 +419,8 @@ void NightLightManager::resetSlowUpdateTimers(const QDateTime &todayNow)
             interval = 1;
         }
         m_slowUpdateTimer->start(interval);
+    } else {
+        commitGammaRamps(targetTemp);
     }
 }
 
