@@ -608,7 +608,7 @@ int NightLightManager::currentTargetTemp() const
     const QDateTime todayNow = QDateTime::currentDateTime();
 
     auto f = [this, todayNow](int target1, int target2) {
-        if (todayNow <= m_prev.second) {
+        if (todayNow < m_prev.second) {
             double residueQuota = todayNow.msecsTo(m_prev.second) / (double)m_prev.first.msecsTo(m_prev.second);
 
             double ret = (int)((1. - residueQuota) * (double)target2 + residueQuota * (double)target1);
