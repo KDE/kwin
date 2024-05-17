@@ -27,7 +27,6 @@ class ClockSkewNotifier;
 class NightLightDBusInterface;
 
 typedef QPair<QDateTime, QDateTime> DateTimes;
-typedef QPair<QTime, QTime> Times;
 
 /**
  * This enum type is used to specify operation mode of the night light manager.
