@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-16 00:39+0000\n"
-"PO-Revision-Date: 2024-05-08 19:52+0200\n"
+"POT-Creation-Date: 2024-05-17 00:40+0000\n"
+"PO-Revision-Date: 2024-05-16 20:37+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -2410,7 +2410,7 @@ msgstr "Fann ikkje uteining"
 msgid "Invalid region"
 msgstr "Ugyldig område"
 
-#: plugins/screencast/screencaststream.cpp:303
+#: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikkje starta PipeWire-straum"
@@ -2552,15 +2552,19 @@ msgstr "Opna utforming …"
 msgid "Close"
 msgstr "Lukk"
 
+# Denne funksjonen tyder det stikk motsette av funksjonen med same namn i Kate, forvirrande nok! Her i KWin (test med «Windows + T») deler han ruta i ein venstre og høgre del.
+# Sjå elles: https://bugs.kde.org/show_bug.cgi?id=475103
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Horizontally"
-msgstr "Del oppe/nede"
+msgstr "Del venstre/høgre"
 
+# Denne funksjonen tyder det stikk motsette av funksjonen med same namn i Kate, forvirrande nok! Her i KWin (test med «Windows + T») deler han ruta i ein øvre og nedre del.
+# Sjå elles: https://bugs.kde.org/show_bug.cgi?id=475103
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Vertically"
-msgstr "Del venstre/høgre"
+msgstr "Del oppe/nede"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
