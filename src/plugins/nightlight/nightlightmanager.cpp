@@ -390,37 +390,27 @@ void NightLightManager::resetSlowUpdateTimers(const QDateTime &todayNow)
     // start the current slow update
     m_slowUpdateTimer.reset();
 
-    const bool isDay = daylight();
-    const int targetTemp = isDay ? m_dayTargetTemp : m_nightTargetTemp;
-
     // We've reached the target color temperature or the transition time is zero.
-    if (m_prev.first == m_prev.second || m_currentTemp == targetTemp) {
-        commitGammaRamps(targetTemp);
+    if (m_prev.first == m_prev.second || m_currentTemp == m_targetTemperature) {
+        commitGammaRamps(m_targetTemperature);
         return;
     }
 
     if (todayNow < m_prev.second) {
-        int availTime = todayNow.msecsTo(m_prev.second);
         m_slowUpdateTimer = std::make_unique<QTimer>();
         m_slowUpdateTimer->setSingleShot(false);
-        if (isDay) {
-            connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
-                slowUpdate(m_dayTargetTemp);
-            });
-        } else {
-            connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
-                slowUpdate(m_nightTargetTemp);
-            });
-        }
+        connect(m_slowUpdateTimer.get(), &QTimer::timeout, this, [this]() {
+            slowUpdate(m_targetTemperature);
+        });
 
         // calculate interval such as temperature is changed by TEMPERATURE_STEP K per timer timeout
-        int interval = availTime * TEMPERATURE_STEP / std::abs(targetTemp - m_currentTemp);
+        int interval = todayNow.msecsTo(m_prev.second) * TEMPERATURE_STEP / std::abs(m_targetTemperature - m_currentTemp);
         if (interval == 0) {
             interval = 1;
         }
         m_slowUpdateTimer->start(interval);
     } else {
-        commitGammaRamps(targetTemp);
+        commitGammaRamps(m_targetTemperature);
     }
 }
 
