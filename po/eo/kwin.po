@@ -5,15 +5,15 @@
 # Matthias Peick <matthias@peick.de>, 2004.
 # Cindy McKee <cfmckee@gmail.com>, 2007.
 # Pierre-Marie Pédrot <pedrotpmx@wanadoo.fr>, 2008.
-# Oliver Kellogg <okellogg@users.sourceforge.net>, 2023.
+# Oliver Kellogg <olivermkellogg@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-04 02:52+0000\n"
-"PO-Revision-Date: 2024-01-20 15:45+0100\n"
-"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
+"PO-Revision-Date: 2024-05-09 22:01+0100\n"
+"Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -33,7 +33,7 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr ""
 "wolfram@steloj.de,Steffen.Pietsch@BerlinOnline.de,matthias@peick.de,"
-"cfmckee@gmail.com,okellogg@users.sourceforge.net"
+"cfmckee@gmail.com,olivermkellogg@gmail.com"
 
 #: backends/wayland/wayland_output.cpp:276
 #, kde-format
@@ -4186,6 +4186,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland paneis"
-
-#~ msgid "Region outside the workspace"
-#~ msgstr "Regiono ekster la laborspaco"
