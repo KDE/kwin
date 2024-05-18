@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-17 00:40+0000\n"
+"POT-Creation-Date: 2024-05-18 00:39+0000\n"
 "PO-Revision-Date: 2024-05-09 19:11+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -2241,7 +2241,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Gece Işığını Sürdür/Askıya Al"
 
-#: plugins/nightlight/nightlightmanager.cpp:467
+#: plugins/nightlight/nightlightmanager.cpp:462
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Renk Sıcaklığı Önizlemesi"
