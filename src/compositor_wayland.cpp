@@ -450,18 +450,32 @@ void WaylandCompositor::addOutput(Output *output)
         const QRectF outputLocalRect = output->mapFromGlobal(cursor->geometry());
         const auto outputLayer = m_backend->cursorLayer(output);
         bool hardwareCursor = false;
-        if (outputLayer) {
-            if (outputLayer->isEnabled()) {
-                const QRectF nativeCursorRect = output->transform()
-                                                    .map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
-                outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
-                hardwareCursor = output->updateCursorLayer();
-            } else if (!cursorLayer->isVisible() && !forceSoftwareCursor) {
-                // this is for the case that the cursor wasn't visible because it was on a different output before
-                hardwareCursor = updateCursorLayer();
+        const bool shouldBeVisible = cursor->isOnOutput(output);
+        if (outputLayer && !forceSoftwareCursor) {
+            if (shouldBeVisible) {
+                const bool enabledBefore = outputLayer->isEnabled();
+                if (enabledBefore) {
+                    // just move it
+                    const QRectF nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), outputLayer->targetRect().size()), output->pixelSize());
+                    outputLayer->setTargetRect(QRect(nativeCursorRect.topLeft().toPoint(), outputLayer->targetRect().size()));
+                    outputLayer->setEnabled(true);
+                    hardwareCursor = output->updateCursorLayer();
+                    if (!hardwareCursor) {
+                        outputLayer->setEnabled(false);
+                        if (enabledBefore) {
+                            output->updateCursorLayer();
+                        }
+                    }
+                } else {
+                    // do the full update
+                    hardwareCursor = updateCursorLayer();
+                }
+            } else if (outputLayer->isEnabled()) {
+                outputLayer->setEnabled(false);
+                output->updateCursorLayer();
             }
         }
-        cursorLayer->setVisible(cursor->isOnOutput(output) && !hardwareCursor);
+        cursorLayer->setVisible(shouldBeVisible && !hardwareCursor);
         cursorLayer->setGeometry(outputLocalRect);
         cursorLayer->addRepaintFull();
     };
