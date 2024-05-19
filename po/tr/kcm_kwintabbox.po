@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-02-29 16:50+0300\n"
+"PO-Revision-Date: 2024-05-18 22:13+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.07.70\n"
 
 #: layoutpreview.cpp:127
 #, kde-format
@@ -100,7 +100,7 @@ msgstr "Sıralama düzeni:"
 #: main.ui:114
 #, kde-format
 msgid "Filter windows by"
-msgstr "Pencereleri süzme ölçütü"
+msgstr "Pencereleri Şuna Göre Süz"
 
 #. i18n: ectx: property (text), widget (QCheckBox, filterDesktops)
 #: main.ui:123
