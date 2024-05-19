@@ -1,7 +1,7 @@
 # translation of kcmkwm.po to Turkish
 # translation of kcmkwm.po to
 # Copyright (C) 2003, 2004, 2005, 2007, 2008 Free Software Foundation, Inc.
-# SPDX-FileCopyrightText: 2022, 2023 Emir SARI <emir_sari@icloud.com>
+# SPDX-FileCopyrightText: 2022, 2023, 2024 Emir SARI <emir_sari@icloud.com>
 # Serdar Cevher <scevher@anet.com.tr>, 2001.
 # Görkem Çetin <gorkem@kde.org>, 2002, 2003, 2004.
 # Adil Yıldız <adil@linux-sevenler.org>, 2004.
@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-06 03:08+0000\n"
-"PO-Revision-Date: 2023-12-27 13:02+0300\n"
+"PO-Revision-Date: 2024-05-18 22:18+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -26,7 +26,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.01.85\n"
+"X-Generator: Lokalize 24.07.70\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:17
@@ -140,7 +140,7 @@ msgid ""
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
 "Bu satırdan, etkin olmayan bir iç pencere üzerinde sarma yapıldığında nasıl "
-"davranılacağını özelleştirebilirsiniz ('iç' şu anlama gelir: Başlık çubuğu "
+"davranılacağını özelleştirebilirsiniz (“iç” şu anlama gelir: Başlık çubuğu "
 "ve çerçeve değil)."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
@@ -626,7 +626,7 @@ msgstr "Sanal Masaüstü davranışı:"
 #: advanced.ui:153
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr "Başka bir Sanal Masaüstü'nde bir pencereyi etkinleştirirken:"
+msgstr "Başka bir Sanal Masaüstü’nde bir pencereyi etkinleştirirken:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:160
@@ -640,25 +640,25 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
-"<html><head/><body><p>Bu ayar, geçerli Sanal Masaüstü'nden başka bir "
+"<html><head/><body><p>Bu ayar, geçerli Sanal Masaüstü’nden başka bir "
 "masaüstünde bulunan bir pencere etkinleştirildiğinde ne olacağını denetler. "
-"</p><p><span style=\" font-style:italic;\">Diğer Sanal Masaüstü'ne Geç</"
-"span>, pencerenin şu anda bulunduğu Sanal Masaüstü'ne geçecektir. </"
-"p><p><span style=\" font-style:italic;\">Pencereyi Geçerli Sanal Masaüstü'ne "
-"Getir</span>, pencerenin etkin Sanal Masaüstü'ne geçmesine neden olur. </p></"
+"</p><p><span style=\" font-style:italic;\">Diğer Sanal Masaüstü’ne Geç</"
+"span>, pencerenin şu anda bulunduğu Sanal Masaüstü’ne geçecektir. </"
+"p><p><span style=\" font-style:italic;\">Pencereyi Geçerli Sanal Masaüstü’ne "
+"Getir</span>, pencerenin etkin Sanal Masaüstü’ne geçmesine neden olur. </p></"
 "body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:164
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr "Söz konusu Sanal Masaüstü'ne geç"
+msgstr "Söz konusu Sanal Masaüstü’ne geç"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:169
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr "Pencereyi geçerli Sanal Masaüstü'ne getir"
+msgstr "Pencereyi geçerli Sanal Masaüstü’ne getir"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -768,7 +768,7 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
-"<html><head/><body><p>Bu ayar, KWin'in, yeni pencerelerin beklenmedik bir "
+"<html><head/><body><p>Bu ayar, KWin’in, yeni pencerelerin beklenmedik bir "
 "şekilde etkin olmasından kaynaklanan odak çalmasını engellemek için ne kadar "
 "uğraşacağını belirler. (Not: Bu özellik <span style=\" font-style:italic;"
 "\">Odak farenin altında</span> veya <span style=\" font-style:italic;\">Odak "
@@ -1148,7 +1148,7 @@ msgid ""
 "magnetic field which will make windows snap to the border when moved near it."
 msgstr ""
 "Burada ekran kenarları için tutturma bölgesini, yani yanına taşındığında "
-"pencerelerin kenarlığa yapışmasını sağlayacak manyetik alanın 'kuvvetini' "
+"pencerelerin kenarlığa yapışmasını sağlayacak manyetik alanın “kuvvetini” "
 "ayarlayabilirsiniz."
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -1175,7 +1175,7 @@ msgid ""
 msgstr ""
 "Burada pencereler için tutturma bölgesini, yani yanına taşındığında "
 "pencerelerin birbirlerine yapışmalarını sağlayacak manyetik alanın "
-"'kuvvetini' ayarlayabilirsiniz."
+"“kuvvetini” ayarlayabilirsiniz."
 
 #. i18n: ectx: property (text), widget (QLabel, centerSnaplabel)
 #: moving.ui:84
@@ -1193,7 +1193,7 @@ msgid ""
 msgstr ""
 "Burada ekran merkezi için tutturma bölgesini, yani pencerelerin yanına "
 "taşındığında ekranın merkezine yapışmasını sağlayacak manyetik alanın "
-"'kuvvetini' ayarlayabilirsiniz."
+"“kuvvetini” ayarlayabilirsiniz."
 
 #. i18n: ectx: property (text), widget (QLabel, OverlapSnapLabel)
 #: moving.ui:113
@@ -1242,7 +1242,7 @@ msgstr ""
 "em> ile aynıdır. Sistem tarafından etkin bir pencerenin seçilmesi "
 "gerekiyorsa (örneğin, o anda etkin olan kapalı olduğu için) farenin "
 "altındaki pencere tercih edilen adaydır. Alışılmadık; ancak <em>Odak için "
-"tıkla</em>'nın olası bir çeşididir."
+"tıkla</em>’nın olası bir çeşididir."
 
 #: windows.cpp:98
 #, kde-format
@@ -1282,8 +1282,8 @@ msgid ""
 msgstr ""
 "<em>Odak farenin altında:</em> Odak her zaman farenin altındaki pencerede "
 "kalır.<br/><strong>Uyarı:</strong> <em>Odak çalma koruması</em> ve <em>sekme "
-"kutusu ('Seçenek+Sekme)'</em>, etkinleştirme ilkesine karşıttır ve "
-"çalışmazlar. Bu durumda <em>Odak fareyi izler (fare önceliği)</em>'ni "
+"kutusu (Seçenek+Sekme)</em>, etkinleştirme ilkesine karşıttır ve "
+"çalışmazlar. Bu durumda <em>Odak fareyi izler (fare önceliği)</em>’ni "
 "kullanmak isteyeceksinizdir!"
 
 #: windows.cpp:107
@@ -1299,9 +1299,9 @@ msgstr ""
 "<em>Odak katıca farenin altında:</em> Odak her zaman farenin altındaki "
 "pencerede kalır (kuşkudaysa hiçbir yerde) ve bu eski yönetilmeyen X11 "
 "ortamlarındaki davranışa çok benzer.<br/><strong>Uyarı:</strong> <em>Odak "
-"çalma koruması</em> ve <em>sekme kutusu ('Seçenek+Sekme)'</em>, "
-"etkinleştirme ilkesine karşıttır ve çalışmazlar. Bu durumda <em>Odak fareyi "
-"izler (fare önceliği)</em>'ni kullanmak isteyeceksinizdir!"
+"çalma koruması</em> ve <em>sekme kutusu (Seçenek+Sekme)</em>, etkinleştirme "
+"ilkesine karşıttır ve çalışmazlar. Bu durumda <em>Odak fareyi izler (fare "
+"önceliği)</em>’ni kullanmak isteyeceksinizdir!"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "
