@@ -13,6 +13,8 @@
 
 #include <QRect>
 
+#include <sys/types.h>
+
 struct gbm_device;
 
 namespace KWin
@@ -50,6 +52,7 @@ public:
     EglDisplay *sceneEglDisplayObject() const override;
 
     gbm_device *gbmDevice() const;
+    dev_t drmDeviceId() const;
 
 Q_SIGNALS:
     void virtualOutputsSet(bool countChanged);
@@ -61,6 +64,7 @@ private:
     std::unique_ptr<EglDisplay> m_display;
     FileDescriptor m_drmFileDescriptor;
     gbm_device *m_gbmDevice = nullptr;
+    dev_t m_drmDeviceId = 0;
 };
 
 } // namespace KWin

@@ -14,6 +14,7 @@
 
 #include <fcntl.h>
 #include <gbm.h>
+#include <sys/stat.h>
 #include <xf86drm.h>
 
 namespace KWin
@@ -61,6 +62,11 @@ VirtualBackend::VirtualBackend(QObject *parent)
     m_drmFileDescriptor = findRenderDevice();
     if (m_drmFileDescriptor.isValid()) {
         m_gbmDevice = gbm_create_device(m_drmFileDescriptor.get());
+
+        struct stat buf;
+        if (fstat(m_drmFileDescriptor.get(), &buf) != -1) {
+            m_drmDeviceId = buf.st_rdev;
+        }
     }
 }
 
@@ -89,6 +95,11 @@ QList<CompositingType> VirtualBackend::supportedCompositors() const
 gbm_device *VirtualBackend::gbmDevice() const
 {
     return m_gbmDevice;
+}
+
+dev_t VirtualBackend::drmDeviceId() const
+{
+    return m_drmDeviceId;
 }
 
 std::unique_ptr<QPainterBackend> VirtualBackend::createQPainterBackend()

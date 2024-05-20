@@ -80,7 +80,7 @@ std::chrono::nanoseconds VirtualEglLayer::queryRenderTime() const
 }
 
 VirtualEglBackend::VirtualEglBackend(VirtualBackend *b)
-    : AbstractEglBackend()
+    : AbstractEglBackend(b->drmDeviceId())
     , m_backend(b)
     , m_allocator(std::make_unique<GbmGraphicsBufferAllocator>(b->gbmDevice()))
 {
