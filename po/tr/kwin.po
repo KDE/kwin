@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-04 02:52+0000\n"
-"PO-Revision-Date: 2024-03-01 14:45+0300\n"
+"PO-Revision-Date: 2024-05-19 23:08+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.07.70\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -97,11 +97,11 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
-"<b>OpenGL bileşikleştirmesi (öntanımlı), daha önce KWin'in çökmesine neden "
+"<b>OpenGL bileşikleştirmesi (öntanımlı), daha önce KWin’in çökmesine neden "
 "oldu.</b><br>Bu, büyük olasılıkla bir sürücü hatasından kaynaklanıyordu."
 "<p>Bu olaydan bu yana, daha kararlı bir sürücüye yükseltme yaptığınızı "
 "düşünüyorsanız<br>bu korumayı sıfırlayabilirsiniz; ancak <b>bir hata "
-"durumunda KWin'in anında çökeceğini not edin!</b></p>"
+"durumunda KWin’in anında çökeceğini not edin!</b></p>"
 
 #: compositor_x11.cpp:520
 #, kde-format
@@ -1173,7 +1173,7 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
-"<para><application>%2</application> uygulamasının \"%1\" penceresi yanıt "
+"<para><application>%2</application> uygulamasının “%1” penceresi yanıt "
 "vermiyor. Bu uygulamayı sonlandırmak istiyor musunuz?</para>"
 
 #: helpers/killer/killer.cpp:153
@@ -1340,8 +1340,7 @@ msgstr "Köksüz bir Xwayland sunucusu başlat."
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
-msgstr ""
-"Dinlenecek Wayland soketinin adı. Ayarlanmazsa \"wayland-0\" kullanılır."
+msgstr "Dinlenecek Wayland yuvasının adı. Ayarlanmazsa “wayland-0” kullanılır."
 
 #: main_wayland.cpp:296
 #, kde-format
@@ -1361,24 +1360,24 @@ msgstr "Sanal bir çerçeve arabelleğine sun."
 #: main_wayland.cpp:303
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
-msgstr "Pencereli kipin genişliği. Öntanımlı genişlik 1024'tür."
+msgstr "Pencereli kipin genişliği. Öntanımlı genişlik 1024’tür."
 
 #: main_wayland.cpp:307
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
-msgstr "Pencereli kipin yüksekliği. Öntanımlı yükseklik 768'tir."
+msgstr "Pencereli kipin yüksekliği. Öntanımlı yükseklik 768’tir."
 
 #: main_wayland.cpp:312
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
-msgstr "Pencerelenmiş kipin ölçeği. Öntanımlı değer 1'dir."
+msgstr "Pencerelenmiş kipin ölçeği. Öntanımlı değer 1’dir."
 
 #: main_wayland.cpp:317
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr ""
-"Pencere kipinde çıkış olarak açılacak pencere sayısı. Öntanımlı değer 1'dir"
+"Pencere kipinde çıkış olarak açılacak pencere sayısı. Öntanımlı değer 1’dir"
 
 #: main_wayland.cpp:322
 #, kde-format
@@ -1395,7 +1394,7 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
-"XWayland'in gelen bağlantıları için kullanılacak XWayland yuvası; bu, birden "
+"XWayland’in gelen bağlantıları için kullanılacak XWayland yuvası; bu, birden "
 "çok kez ayarlanabilir"
 
 #: main_wayland.cpp:330
@@ -1424,12 +1423,12 @@ msgstr "Drm düğümü ile sunun."
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
-msgstr "Yerel ayar bilgisini kullanıcı yapılandırması yerine locale1'den çıkar"
+msgstr "Yerel ayar bilgisini kullanıcı yapılandırması yerine locale1’den çıkar"
 
 #: main_wayland.cpp:363
 #, kde-format
 msgid "Input method that KWin starts."
-msgstr "KWin'in başlattığı giriş yöntemi."
+msgstr "KWin’in başlattığı giriş yöntemi."
 
 #: main_wayland.cpp:369
 #, kde-format
@@ -2891,9 +2890,9 @@ msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"Odaklanan konumun izlenmesini etkinleştirin. Bu, QAccessible'ın her uygulama "
-"için etkinleştirilmesini gerektirir (\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+"Odaklanan konumun izlenmesini etkinleştirin. Bu, QAccessible’ın her uygulama "
+"için etkinleştirilmesini gerektirir (“export "
+"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:69
@@ -2908,9 +2907,9 @@ msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"Metin imlecinin izlenmesini etkinleştirin. Bu, QAccessible'ın her uygulama "
-"için etkinleştirilmesini gerektirir (\"export "
-"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
+"Metin imlecinin izlenmesini etkinleştirin. Bu, QAccessible’ın her uygulama "
+"için etkinleştirilmesini gerektirir (“export "
+"QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1”)."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
@@ -3979,7 +3978,7 @@ msgstr "Etkin Pencerenin Matlığını %​5 Azalt"
 #: useractions.cpp:991
 #, kde-format
 msgid "Keep Window on All Desktops"
-msgstr "Pencere'yi Tüm Masaüstlerinde Bulundur"
+msgstr "Pencere’yi Tüm Masaüstlerinde Bulundur"
 
 #: useractions.cpp:1002
 #, kde-format
