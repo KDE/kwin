@@ -59,37 +59,21 @@ void ScreenTransformEffect::addScreen(Output *screen)
             return;
         }
 
-        Scene *scene = effects->scene();
-        RenderLayer layer(screen->renderLoop());
-        SceneDelegate delegate(scene, screen);
-        delegate.setLayer(&layer);
-
         // Avoid including this effect while capturing previous screen state.
         m_capturing = true;
-        auto resetCapturing = qScopeGuard([this]() {
-            m_capturing = false;
-        });
 
-        scene->prePaint(&delegate);
-
-        effects->makeOpenGLContextCurrent();
-        if (auto texture = GLTexture::allocate(GL_RGBA8, screen->pixelSize())) {
-            auto &state = m_states[screen];
+        auto &state = m_states[screen];
+        if (renderOutput(state.m_prev, screen)) {
             state.m_oldTransform = screen->transform();
             state.m_oldGeometry = screen->geometry();
             state.m_timeLine.setDuration(std::chrono::milliseconds(long(animationTime(250ms))));
             state.m_timeLine.setEasingCurve(QEasingCurve::InOutCubic);
             state.m_angle = transformAngle(changeSet->transform.value(), state.m_oldTransform);
-            state.m_prev.texture = std::move(texture);
-            state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
-
-            RenderTarget renderTarget(state.m_prev.framebuffer.get());
-            scene->paint(renderTarget, screen->geometry());
         } else {
             m_states.remove(screen);
         }
 
-        scene->postPaint();
+        m_capturing = false;
     });
 }
 
@@ -136,24 +120,11 @@ void ScreenTransformEffect::paintScreen(const RenderTarget &renderTarget, const 
         effects->paintScreen(renderTarget, viewport, mask, region, screen);
         return;
     }
-
-    // Render the screen in an offscreen texture.
-    const QSize nativeSize = screen->geometry().size() * screen->scale();
-    if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
-        it->m_current.texture = GLTexture::allocate(GL_RGBA8, nativeSize);
-        if (!it->m_current.texture) {
-            m_states.remove(screen);
-            return;
-        }
-        it->m_current.framebuffer = std::make_unique<GLFramebuffer>(it->m_current.texture.get());
+    if (!paintScreenInTexture(it->m_current, viewport, mask, region, screen)) {
+        m_states.erase(it);
+        effects->paintScreen(renderTarget, viewport, mask, region, screen);
+        return;
     }
-
-    RenderTarget fboRenderTarget(it->m_current.framebuffer.get());
-    RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
-
-    GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-    effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
-    GLFramebuffer::popFramebuffer();
 
     const qreal blendFactor = it->m_timeLine.value();
     const QRectF screenRect = screen->geometry();

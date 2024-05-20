@@ -11,6 +11,7 @@
 #include "core/output.h"
 #include "effect/crossfaderenderer.h"
 #include "effect/effect.h"
+#include "effect/screensnapshots.h"
 #include "effect/timeline.h"
 
 namespace KWin
@@ -39,12 +40,6 @@ public:
     static bool supported();
 
 private:
-    struct Snapshot
-    {
-        std::shared_ptr<GLTexture> texture;
-        std::shared_ptr<GLFramebuffer> framebuffer;
-    };
-
     struct ScreenState
     {
         TimeLine m_timeLine;

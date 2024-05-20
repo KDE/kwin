@@ -67,30 +67,11 @@ void SessionFadeEffect::removeScreen(Output *output)
 
 void SessionFadeEffect::saveCurrentState()
 {
-    Scene *scene = effects->scene();
     for (auto screen : workspace()->outputs()) {
-        RenderLayer layer(screen->renderLoop());
-        SceneDelegate delegate(scene, screen);
-        delegate.setLayer(&layer);
-
-        // Avoid including this effect while capturing previous screen state.
         m_capturing = true;
-        scene->prePaint(&delegate);
-
-        effects->makeOpenGLContextCurrent();
-        if (auto texture = GLTexture::allocate(GL_RGBA8, screen->pixelSize())) {
-            auto &state = m_states[screen];
-            state.m_prev.texture = std::move(texture);
-            state.m_prev.framebuffer = std::make_unique<GLFramebuffer>(state.m_prev.texture.get());
-
-            RenderTarget renderTarget(state.m_prev.framebuffer.get());
-            scene->paint(renderTarget, screen->geometry());
-        } else {
+        if (!renderOutput(m_states[screen].m_prev, screen)) {
             m_states.remove(screen);
         }
-
-        scene->postPaint();
-        effects->doneOpenGLContextCurrent();
         m_capturing = false;
     }
     effects->addRepaintFull();
@@ -143,21 +124,11 @@ void SessionFadeEffect::paintScreen(const RenderTarget &renderTarget, const Rend
     // Render the screen in an offscreen texture.
     const QSize nativeSize = screen->pixelSize();
     if (m_timeLine.direction() == TimeLine::Forward) {
-        if (!it->m_current.texture || it->m_current.texture->size() != nativeSize) {
-            it->m_current.texture = GLTexture::allocate(GL_RGBA8, nativeSize);
-            if (!it->m_current.texture) {
-                m_states.remove(screen);
-                return;
-            }
-            it->m_current.framebuffer = std::make_unique<GLFramebuffer>(it->m_current.texture.get());
+        if (!paintScreenInTexture(it->m_current, viewport, mask, region, screen)) {
+            m_states.remove(screen);
+            effects->paintScreen(renderTarget, viewport, mask, region, screen);
+            return;
         }
-
-        // If we're fading in, we want to render it fresh
-        RenderTarget fboRenderTarget(it->m_current.framebuffer.get());
-        RenderViewport fboViewport(viewport.renderRect(), viewport.scale(), fboRenderTarget);
-        GLFramebuffer::pushFramebuffer(it->m_current.framebuffer.get());
-        effects->paintScreen(fboRenderTarget, fboViewport, mask, region, screen);
-        GLFramebuffer::popFramebuffer();
     }
 
     glClearColor(0, 0, 0, 0);

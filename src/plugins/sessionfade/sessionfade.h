@@ -11,6 +11,7 @@
 #include "core/output.h"
 #include "effect/crossfaderenderer.h"
 #include "effect/effect.h"
+#include "effect/screensnapshots.h"
 #include "effect/timeline.h"
 
 namespace KWin
@@ -46,12 +47,6 @@ public Q_SLOTS:
 private:
     void saveCurrentState();
     void removeScreen(Output *output);
-
-    struct Snapshot
-    {
-        std::shared_ptr<GLTexture> texture;
-        std::shared_ptr<GLFramebuffer> framebuffer;
-    };
 
     TimeLine m_timeLine;
     struct ScreenState

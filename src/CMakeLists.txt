@@ -98,6 +98,7 @@ target_sources(kwin PRIVATE
     effect/offscreeneffect.cpp
     effect/offscreenquickview.cpp
     effect/quickeffect.cpp
+    effect/screensnapshots.cpp
     effect/timeline.cpp
     focuschain.cpp
     ftrace.cpp
