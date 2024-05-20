@@ -404,6 +404,9 @@ public:
         if (!m_filterMouse || (window && window->isLockScreen())) {
             return;
         }
+        if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
+            return;
+        }
 
         auto pointer = waylandServer()->seat()->pointer();
         auto surface = pointer->focusedSurface();
