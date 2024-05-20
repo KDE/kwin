@@ -107,6 +107,12 @@ public:
                         m_states.clear();
                     }
                 });
+
+        // every minute, if there is no user activity, send a fake key event to Xwayland
+        // this stops X11 apps from thinking the user is idle when they are using a wayland app
+        m_simulateUserActivityTimer.setSingleShot(true);
+        m_simulateUserActivityTimer.setInterval(std::chrono::minutes(1));
+        connect(&m_simulateUserActivityTimer, &QTimer::timeout, this, &XwaylandInputSpy::simulateUserActivity);
     }
 
     void setMode(XwaylandEavesdropsMode mode, bool eavesdropsMouse)
@@ -367,6 +373,7 @@ public:
         if (event->isAutoRepeat()) {
             return;
         }
+        notifyX11OfActivity();
 
         Window *window = workspace()->activeWindow();
         if (!m_filterKey || !m_filterKey(event->key(), event->modifiers()) || (window && window->isLockScreen())) {
@@ -400,7 +407,10 @@ public:
 
     void pointerEvent(KWin::MouseEvent *event) override
     {
+        notifyX11OfActivity();
+
         Window *window = workspace()->activeWindow();
+
         if (!m_filterMouse || (window && window->isLockScreen())) {
             return;
         }
@@ -434,9 +444,38 @@ public:
         return true;
     }
 
+    void notifyX11OfActivity()
+    {
+        // event compression, as we don't need fine granularity
+        if (!m_simulateUserActivityTimer.isActive()) {
+            m_simulateUserActivityTimer.start();
+        }
+    }
+
+    void simulateUserActivity()
+    {
+        // if an X11 client has focus, we don't want to send fake key events
+        // X11 apps will get getting events anyway
+        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+
+        auto keyboard = waylandServer()->seat()->keyboard();
+        auto keyboardSurface = keyboard->focusedSurface();
+
+        if (keyboardSurface) {
+            ClientConnection *client = keyboardSurface->client();
+            if (xwaylandClient && xwaylandClient == client) {
+                return;
+            }
+        }
+        // yolo!
+        keyboard->sendKey(0x1000, KeyboardKeyState::Released, xwaylandClient);
+    }
+
     QHash<quint32, KeyboardKeyState> m_states;
     std::function<bool(int key, Qt::KeyboardModifiers)> m_filterKey;
     bool m_filterMouse = false;
+
+    QTimer m_simulateUserActivityTimer;
 };
 
 Xwayland::Xwayland(Application *app)
