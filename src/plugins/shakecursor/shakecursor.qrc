@@ -1,0 +1,6 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/shakecursor/">
+  <file>breeze_cursors.png</file>
+  <file>Breeze_Light.png</file>
+</qresource>
+</RCC>

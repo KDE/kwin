@@ -11,16 +11,33 @@
 #include "plugins/shakecursor/shakecursorconfig.h"
 #include "pointer_input.h"
 #include "scene/cursoritem.h"
+#include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
 
 using namespace std::chrono_literals;
 
+static void ensureResources()
+{
+    Q_INIT_RESOURCE(shakecursor);
+}
+
 namespace KWin
 {
+
+BuiltinCursorItem::BuiltinCursorItem(const QImage &image, const QPoint &hotspot, Item *parentItem)
+    : Item(parentItem)
+{
+    m_imageItem = scene()->renderer()->createImageItem(this);
+    m_imageItem->setImage(image);
+    m_imageItem->setPosition(-hotspot);
+    m_imageItem->setSize(image.deviceIndependentSize());
+}
 
 ShakeCursorEffect::ShakeCursorEffect()
     : m_cursor(Cursors::self()->mouse())
 {
+    ensureResources();
+
     input()->installInputEventSpy(this);
 
     m_deflateTimer.setSingleShot(true);
@@ -109,6 +126,40 @@ void ShakeCursorEffect::pointerEvent(MouseEvent *event)
     }
 }
 
+std::unique_ptr<Item> ShakeCursorEffect::createCursorItem(Item *parentItem) const
+{
+    // These are regular breeze cursors but with high resolution.
+    static const struct
+    {
+        QString name;
+        qreal size;
+        QPoint hotspot;
+    } builtinCursors[] = {
+        {
+            .name = QStringLiteral("breeze_cursors"),
+            .size = 288,
+            .hotspot = QPoint(4, 4),
+        },
+        {
+            .name = QStringLiteral("Breeze_Light"),
+            .size = 288,
+            .hotspot = QPoint(4, 4),
+        },
+    };
+
+    for (const auto &builtinCursor : builtinCursors) {
+        if (builtinCursor.name == m_cursor->themeName()) {
+            QImage image(QStringLiteral(":/effects/shakecursor/%1.png").arg(builtinCursor.name));
+            image.setDevicePixelRatio(builtinCursor.size / m_cursor->themeSize());
+            if (!image.isNull()) {
+                return std::make_unique<BuiltinCursorItem>(image, builtinCursor.hotspot, parentItem);
+            }
+        }
+    }
+
+    return std::make_unique<CursorItem>(effects->scene()->overlayItem());
+}
+
 void ShakeCursorEffect::magnify(qreal magnification)
 {
     if (magnification == 1.0) {
@@ -123,7 +174,7 @@ void ShakeCursorEffect::magnify(qreal magnification)
         if (!m_cursorItem) {
             effects->hideCursor();
 
-            m_cursorItem = std::make_unique<CursorItem>(effects->scene()->overlayItem());
+            m_cursorItem = createCursorItem(effects->scene()->overlayItem());
             m_cursorItem->setPosition(m_cursor->pos());
             connect(m_cursor, &Cursor::posChanged, m_cursorItem.get(), [this]() {
                 m_cursorItem->setPosition(m_cursor->pos());

@@ -9,6 +9,7 @@
 #include "effect/effect.h"
 #include "input_event_spy.h"
 #include "plugins/shakecursor/shakedetector.h"
+#include "scene/imageitem.h"
 
 #include <QTimer>
 #include <QVariantAnimation>
@@ -18,6 +19,17 @@ namespace KWin
 
 class Cursor;
 class CursorItem;
+
+class BuiltinCursorItem : public Item
+{
+    Q_OBJECT
+
+public:
+    explicit BuiltinCursorItem(const QImage &image, const QPoint &hotspot, Item *parentItem = nullptr);
+
+private:
+    std::unique_ptr<ImageItem> m_imageItem;
+};
 
 class ShakeCursorEffect : public Effect, public InputEventSpy
 {
@@ -40,12 +52,14 @@ private:
     void deflate();
     void animateTo(qreal magnification);
 
+    std::unique_ptr<Item> createCursorItem(Item *parentItem) const;
+
     QTimer m_deflateTimer;
     QVariantAnimation m_scaleAnimation;
     ShakeDetector m_shakeDetector;
 
     Cursor *m_cursor;
-    std::unique_ptr<CursorItem> m_cursorItem;
+    std::unique_ptr<Item> m_cursorItem;
     qreal m_targetMagnification = 1.0;
     qreal m_currentMagnification = 1.0;
 };
