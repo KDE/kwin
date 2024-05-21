@@ -102,7 +102,28 @@ KXcursorThemePrivate::KXcursorThemePrivate(const QString &themeName, int size, q
 
 static QList<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
 {
-    XcursorImages *images = XcursorFileLoadImages(QFile::encodeName(filePath), desiredSize * devicePixelRatio);
+    QFile file(filePath);
+    if (!file.open(QFile::ReadOnly)) {
+        return {};
+    }
+
+    XcursorFile reader {
+        .closure = &file,
+        .read = [](XcursorFile *file, uint8_t *buffer, int len) -> int {
+            QFile *device = static_cast<QFile *>(file->closure);
+            return device->read(reinterpret_cast<char *>(buffer), len);
+        },
+        .skip = [](XcursorFile *file, long offset) -> XcursorBool {
+            QFile *device = static_cast<QFile *>(file->closure);
+            return device->skip(offset) != -1;
+        },
+        .seek = [](XcursorFile *file, long offset) -> XcursorBool {
+            QFile *device = static_cast<QFile *>(file->closure);
+            return device->seek(offset);
+        },
+    };
+
+    XcursorImages *images = XcursorXcFileLoadImages(&reader, desiredSize * devicePixelRatio);
     if (!images) {
         return {};
     }

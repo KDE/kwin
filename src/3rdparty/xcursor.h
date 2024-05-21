@@ -57,8 +57,17 @@ typedef struct _XcursorImages {
     XcursorImage    **images;	/* array of XcursorImage pointers */
 } XcursorImages;
 
+typedef struct _XcursorFile XcursorFile;
+
+struct _XcursorFile {
+    void    *closure;
+    int	    (*read)  (XcursorFile *file, uint8_t *buf, int len);
+    XcursorBool     (*skip)  (XcursorFile *file, long offset);
+    XcursorBool	    (*seek)  (XcursorFile *file, long offset);
+};
+
 XcursorImages *
-XcursorFileLoadImages (const char *file, int size);
+XcursorXcFileLoadImages (XcursorFile *file, int size);
 
 void
 XcursorImagesDestroy (XcursorImages *images);
