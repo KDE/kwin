@@ -16,6 +16,7 @@
 
 #include <QFile>
 #include <QStandardPaths>
+#include <cstdlib>
 
 #include <KLocalizedString>
 #include <QCryptographicHash>
@@ -92,6 +93,34 @@ static QByteArray parseVendor(const uint8_t *data)
     return {};
 }
 
+static QSize determineScreenPhysicalSizeMm(const di_edid *edid)
+{
+    // An EDID can contain zero or more detailed timing definitions, which can
+    // contain more precise physical dimensions (in millimeters, as opposed to
+    // centimeters). Pick the first sane physical dimension from detailed timings
+    // and fall back to the basic dimensions.
+    const struct di_edid_detailed_timing_def *const *detailedTimings = di_edid_get_detailed_timing_defs(edid);
+    // detailedTimings is a null-terminated array.
+    for (int i = 0; detailedTimings[i] != nullptr; i++) {
+        const struct di_edid_detailed_timing_def *timing = detailedTimings[i];
+        // Sanity check dimensions: physical aspect ratio should roughly equal
+        // mode aspect ratio (i.e. width_in_pixels / height_in_pixels).
+        // This assumes that the display has square pixels, but this is true for
+        // basically all modern displays.
+        if (timing->horiz_image_mm > 0 && timing->vert_image_mm > 0
+            && timing->horiz_video > 0 && timing->vert_video > 0) {
+            const double physicalAspectRatio = double(timing->horiz_image_mm) / double(timing->vert_image_mm);
+            const double modeAspectRatio = double(timing->horiz_video) / double(timing->vert_video);
+
+            if (std::abs(physicalAspectRatio - modeAspectRatio) <= 0.1) {
+                return QSize(timing->horiz_image_mm, timing->vert_image_mm);
+            }
+        }
+    }
+    const di_edid_screen_size *screenSize = di_edid_get_screen_size(edid);
+    return QSize(screenSize->width_cm, screenSize->height_cm) * 10;
+}
+
 Edid::Edid()
 {
 }
@@ -110,10 +139,9 @@ Edid::Edid(const void *data, uint32_t size)
     }
     const di_edid *edid = di_info_get_edid(info);
     const di_edid_vendor_product *productInfo = di_edid_get_vendor_product(edid);
-    const di_edid_screen_size *screenSize = di_edid_get_screen_size(edid);
 
     // basic output information
-    m_physicalSize = QSize(screenSize->width_cm, screenSize->height_cm) * 10;
+    m_physicalSize = determineScreenPhysicalSizeMm(edid);
     m_eisaId = parseEisaId(bytes);
     UniqueCPtr<char> monitorName{di_info_get_model(info)};
     m_monitorName = QByteArray(monitorName.get());
