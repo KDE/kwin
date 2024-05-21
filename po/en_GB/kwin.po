@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-18 00:39+0000\n"
+"POT-Creation-Date: 2024-05-21 00:40+0000\n"
 "PO-Revision-Date: 2023-04-22 10:52+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -2247,7 +2247,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:462
+#: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Colour Temperature Preview"
@@ -2559,13 +2559,13 @@ msgstr "Close"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
-msgid "Split Horizontally"
-msgstr "Split Horizontally"
+msgid "Split Left/Right"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
-msgid "Split Vertically"
-msgstr "Split Vertically"
+msgid "Split Top/Bottom"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4206,6 +4206,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland has crashed"
+
+#~ msgid "Split Horizontally"
+#~ msgstr "Split Horizontally"
+
+#~ msgid "Split Vertically"
+#~ msgstr "Split Vertically"
 
 #, fuzzy
 #~| msgctxt "Night Color was disabled"

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-18 00:39+0000\n"
+"POT-Creation-Date: 2024-05-21 00:40+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -2252,7 +2252,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:462
+#: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Náhľad teploty farieb"
@@ -2558,13 +2558,13 @@ msgstr "Zavrieť"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
-msgid "Split Horizontally"
-msgstr "Rozdeliť horizontálne"
+msgid "Split Left/Right"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
-msgid "Split Vertically"
-msgstr "Rozdeliť vertikálne"
+msgid "Split Top/Bottom"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4203,6 +4203,12 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadol"
+
+#~ msgid "Split Horizontally"
+#~ msgstr "Rozdeliť horizontálne"
+
+#~ msgid "Split Vertically"
+#~ msgstr "Rozdeliť vertikálne"
 
 #~ msgctxt "Night Light was disabled"
 #~ msgid "Night Light Off"

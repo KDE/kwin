@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-18 00:39+0000\n"
+"POT-Creation-Date: 2024-05-21 00:40+0000\n"
 "PO-Revision-Date: 2013-02-24 11:33+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: Marathi <kde-i18n-doc@kde.org>\n"
@@ -2271,7 +2271,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:462
+#: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -2590,16 +2590,14 @@ msgid "Close"
 msgstr "बंद करा (&C)"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
-msgid "Split Horizontally"
-msgstr "चौकट पूर्ण आडवी मोठी करा"
+#, kde-format
+msgid "Split Left/Right"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
-msgid "Split Vertically"
-msgstr "चौकट पूर्ण उभी मोठी करा"
+#, kde-format
+msgid "Split Top/Bottom"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4319,6 +4317,16 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Maximize Window Horizontally"
+#~ msgid "Split Horizontally"
+#~ msgstr "चौकट पूर्ण आडवी मोठी करा"
+
+#, fuzzy
+#~| msgid "Maximize Window Vertically"
+#~ msgid "Split Vertically"
+#~ msgstr "चौकट पूर्ण उभी मोठी करा"
 
 #, fuzzy
 #~| msgid "Show &panels"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-18 00:39+0000\n"
+"POT-Creation-Date: 2024-05-21 00:40+0000\n"
 "PO-Revision-Date: 2006-12-17 12:27+0000\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -2250,7 +2250,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:462
+#: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -2564,16 +2564,14 @@ msgid "Close"
 msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
-msgid "Split Horizontally"
-msgstr "Oynani eniga yoyish"
+#, kde-format
+msgid "Split Left/Right"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
-msgid "Split Vertically"
-msgstr "Oynani boʻyiga yoyish"
+#, kde-format
+msgid "Split Top/Bottom"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4292,6 +4290,16 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Maximize Window Horizontally"
+#~ msgid "Split Horizontally"
+#~ msgstr "Oynani eniga yoyish"
+
+#, fuzzy
+#~| msgid "Maximize Window Vertically"
+#~ msgid "Split Vertically"
+#~ msgstr "Oynani boʻyiga yoyish"
 
 #, fuzzy
 #~| msgid "Window to Next Desktop"

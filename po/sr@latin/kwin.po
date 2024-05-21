@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-18 00:39+0000\n"
+"POT-Creation-Date: 2024-05-21 00:40+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -2469,7 +2469,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:462
+#: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -2815,21 +2815,15 @@ msgstr "Podesi rasporede..."
 msgid "Close"
 msgstr "&Zatvori"
 
-# >> @item
 #: plugins/tileseditor/qml/TileDelegate.qml:167
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
-msgid "Split Horizontally"
-msgstr "vodoravno"
+#, kde-format
+msgid "Split Left/Right"
+msgstr ""
 
-# >> @item
 #: plugins/tileseditor/qml/TileDelegate.qml:174
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
-msgid "Split Vertically"
-msgstr "uspravno"
+#, kde-format
+msgid "Split Top/Bottom"
+msgstr ""
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4591,6 +4585,20 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+# >> @item
+#, fuzzy
+#~| msgctxt "An orientation of a pointer axis event"
+#~| msgid "Horizontal"
+#~ msgid "Split Horizontally"
+#~ msgstr "vodoravno"
+
+# >> @item
+#, fuzzy
+#~| msgctxt "An orientation of a pointer axis event"
+#~| msgid "Vertical"
+#~ msgid "Split Vertically"
+#~ msgstr "uspravno"
 
 #, fuzzy
 #~| msgctxt "Name of a KWin Effect"
