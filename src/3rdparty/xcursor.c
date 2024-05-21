@@ -180,14 +180,6 @@ typedef struct _XcursorComment {
 #define XCURSOR_IMAGE_HEADER_LEN    (XCURSOR_CHUNK_HEADER_LEN + (5*4))
 #define XCURSOR_IMAGE_MAX_SIZE	    0x7fff	/* 32767x32767 max cursor size */
 
-typedef struct _XcursorFile XcursorFile;
-
-struct _XcursorFile {
-    void    *closure;
-    int	    (*read)  (XcursorFile *file, unsigned char *buf, int len);
-    int	    (*seek)  (XcursorFile *file, long offset, int whence);
-};
-
 typedef struct _XcursorComments {
     int		    ncomment;	/* number of comments */
     XcursorComment  **comments;	/* array of XcursorComment pointers */
@@ -256,7 +248,7 @@ XcursorImagesDestroy (XcursorImages *images)
 static XcursorBool
 _XcursorReadUInt (XcursorFile *file, XcursorUInt *u)
 {
-    unsigned char   bytes[4];
+    uint8_t   bytes[4];
 
     if (!file || !u)
         return XcursorFalse;
@@ -318,7 +310,7 @@ _XcursorReadFileHeader (XcursorFile *file)
 	return NULL;
     skip = head.header - XCURSOR_FILE_HEADER_LEN;
     if (skip)
-	if ((*file->seek) (file, skip, SEEK_CUR) == EOF)
+	if (!(*file->skip) (file, skip))
 	    return NULL;
     fileHeader = _XcursorFileHeaderCreate (head.ntoc);
     if (!fileHeader)
@@ -349,10 +341,9 @@ _XcursorSeekToToc (XcursorFile		*file,
 		   XcursorFileHeader	*fileHeader,
 		   int			toc)
 {
-    if (!file || !fileHeader || \
-        (*file->seek) (file, fileHeader->tocs[toc].position, SEEK_SET) == EOF)
-	return XcursorFalse;
-    return XcursorTrue;
+    if (!file || !fileHeader)
+        return XcursorFalse;
+    return (*file->seek) (file, fileHeader->tocs[toc].position);
 }
 
 static XcursorBool
@@ -498,7 +489,7 @@ _XcursorReadImage (XcursorFile		*file,
     return image;
 }
 
-static XcursorImages *
+XcursorImages *
 XcursorXcFileLoadImages (XcursorFile *file, int size)
 {
     XcursorFileHeader	*fileHeader;
@@ -542,44 +533,5 @@ XcursorXcFileLoadImages (XcursorFile *file, int size)
 	XcursorImagesDestroy (images);
 	images = NULL;
     }
-    return images;
-}
-
-static int
-_XcursorStdioFileRead (XcursorFile *file, unsigned char *buf, int len)
-{
-    FILE    *f = file->closure;
-    return fread (buf, 1, len, f);
-}
-
-static int
-_XcursorStdioFileSeek (XcursorFile *file, long offset, int whence)
-{
-    FILE    *f = file->closure;
-    return fseek (f, offset, whence);
-}
-
-static void
-_XcursorStdioFileInitialize (FILE *stdfile, XcursorFile *file)
-{
-    file->closure = stdfile;
-    file->read = _XcursorStdioFileRead;
-    file->seek = _XcursorStdioFileSeek;
-}
-
-XcursorImages *
-XcursorFileLoadImages (const char *file, int size)
-{
-    XcursorFile	f;
-    XcursorImages *images;
-
-    FILE *fp = fopen(file, "r");
-    if (!fp)
-        return NULL;
-
-    _XcursorStdioFileInitialize (fp, &f);
-    images = XcursorXcFileLoadImages (&f, size);
-    fclose(fp);
-
     return images;
 }
