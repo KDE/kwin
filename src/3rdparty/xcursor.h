@@ -32,45 +32,47 @@ extern "C" {
 
 #include <stdint.h>
 
-typedef int		XcursorBool;
-typedef uint32_t	XcursorUInt;
+typedef int XcursorBool;
+typedef uint32_t XcursorUInt;
 
-typedef XcursorUInt	XcursorDim;
-typedef XcursorUInt	XcursorPixel;
+typedef XcursorUInt XcursorDim;
+typedef XcursorUInt XcursorPixel;
 
-typedef struct _XcursorImage {
-    XcursorUInt	    version;	/* version of the image data */
-    XcursorDim	    size;	/* nominal size for matching */
-    XcursorDim	    width;	/* actual width */
-    XcursorDim	    height;	/* actual height */
-    XcursorDim	    xhot;	/* hot spot x (must be inside image) */
-    XcursorDim	    yhot;	/* hot spot y (must be inside image) */
-    XcursorUInt	    delay;	/* animation delay to next frame (ms) */
-    XcursorPixel    *pixels;	/* pointer to pixels */
+typedef struct _XcursorImage
+{
+    XcursorUInt version; /* version of the image data */
+    XcursorDim size; /* nominal size for matching */
+    XcursorDim width; /* actual width */
+    XcursorDim height; /* actual height */
+    XcursorDim xhot; /* hot spot x (must be inside image) */
+    XcursorDim yhot; /* hot spot y (must be inside image) */
+    XcursorUInt delay; /* animation delay to next frame (ms) */
+    XcursorPixel *pixels; /* pointer to pixels */
 } XcursorImage;
 
 /*
  * Other data structures exposed by the library API
  */
-typedef struct _XcursorImages {
-    int		    nimage;	/* number of images */
-    XcursorImage    **images;	/* array of XcursorImage pointers */
+typedef struct _XcursorImages
+{
+    int nimage; /* number of images */
+    XcursorImage **images; /* array of XcursorImage pointers */
 } XcursorImages;
 
 typedef struct _XcursorFile XcursorFile;
 
-struct _XcursorFile {
-    void    *closure;
-    int	    (*read)  (XcursorFile *file, uint8_t *buf, int len);
-    XcursorBool     (*skip)  (XcursorFile *file, long offset);
-    XcursorBool	    (*seek)  (XcursorFile *file, long offset);
+struct _XcursorFile
+{
+    void *closure;
+    int (*read)(XcursorFile *file, uint8_t *buf, int len);
+    XcursorBool (*skip)(XcursorFile *file, long offset);
+    XcursorBool (*seek)(XcursorFile *file, long offset);
 };
 
 XcursorImages *
-XcursorXcFileLoadImages (XcursorFile *file, int size);
+XcursorXcFileLoadImages(XcursorFile *file, int size);
 
-void
-XcursorImagesDestroy (XcursorImages *images);
+void XcursorImagesDestroy(XcursorImages *images);
 
 #ifdef __cplusplus
 }
