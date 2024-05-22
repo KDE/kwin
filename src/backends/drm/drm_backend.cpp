@@ -95,8 +95,11 @@ bool DrmBackend::initialize()
         }
     });
     connect(m_session, &Session::deviceResumed, this, [this](dev_t deviceId) {
-        if (const auto gpu = findGpu(deviceId)) {
+        if (const auto gpu = findGpu(deviceId); gpu && !gpu->isActive()) {
             gpu->setActive(true);
+            // the output list might've changed while the device was inactive
+            // note that this might delete the gpu!
+            updateOutputs();
         }
     });
 
