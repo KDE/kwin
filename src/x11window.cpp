@@ -302,6 +302,9 @@ X11Window::X11Window()
     , m_decoInputExtent()
     , m_focusOutTimer(nullptr)
 {
+    setOutput(workspace()->activeOutput());
+    setMoveResizeOutput(workspace()->activeOutput());
+
     // TODO: Do all as initialization
     m_syncRequest.counter = m_syncRequest.alarm = XCB_NONE;
     m_syncRequest.timeout = m_syncRequest.failsafeTimeout = nullptr;

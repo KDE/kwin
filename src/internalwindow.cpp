@@ -38,6 +38,8 @@ InternalWindow::InternalWindow(QWindow *handle)
     connect(m_handle, &QWindow::opacityChanged, this, &InternalWindow::setOpacity);
     connect(m_handle, &QWindow::destroyed, this, &InternalWindow::destroyWindow);
 
+    setOutput(workspace()->activeOutput());
+    setMoveResizeOutput(workspace()->activeOutput());
     setCaption(m_handle->title());
     setIcon(QIcon::fromTheme(QStringLiteral("kwin")));
     setOnAllDesktops(true);

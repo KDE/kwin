@@ -153,11 +153,6 @@ void WaylandWindow::updateClientOutputs()
     }
     surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()),
                           waylandServer()->display()->largestIntersectingOutput(frameGeometry().toAlignedRect()));
-    if (output()) {
-        surface()->setPreferredBufferScale(output()->scale());
-        surface()->setPreferredBufferTransform(output()->transform());
-        surface()->setPreferredColorDescription(output()->colorDescription());
-    }
 }
 
 void WaylandWindow::updateIcon()

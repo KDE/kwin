@@ -415,6 +415,8 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     : XdgSurfaceWindow(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
+    setOutput(workspace()->activeOutput());
+    setMoveResizeOutput(workspace()->activeOutput());
     setDesktops({VirtualDesktopManager::self()->currentDesktop()});
 #if KWIN_BUILD_ACTIVITIES
     if (auto a = Workspace::self()->activities()) {
@@ -674,6 +676,10 @@ void XdgToplevelWindow::closeWindow()
 
 XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
 {
+    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferTransform(preferredBufferTransform());
+    surface()->setPreferredColorDescription(preferredColorDescription());
+
     QSize framePadding(0, 0);
     if (m_nextDecoration) {
         framePadding.setWidth(m_nextDecoration->borderLeft() + m_nextDecoration->borderRight());
@@ -868,6 +874,36 @@ void XdgToplevelWindow::doSetSuspended()
     }
 
     scheduleConfigure();
+}
+
+void XdgToplevelWindow::doSetPreferredBufferScale()
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_isInitialized) {
+        scheduleConfigure();
+    }
+}
+
+void XdgToplevelWindow::doSetPreferredBufferTransform()
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_isInitialized) {
+        scheduleConfigure();
+    }
+}
+
+void XdgToplevelWindow::doSetPreferredColorDescription()
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_isInitialized) {
+        scheduleConfigure();
+    }
 }
 
 bool XdgToplevelWindow::takeFocus()
@@ -1261,7 +1297,6 @@ void XdgToplevelWindow::initialize()
     scheduleConfigure();
     updateColorScheme();
     updateCapabilities();
-    updateClientOutputs();
     setupWindowManagementInterface();
 
     m_isInitialized = true;
@@ -1623,6 +1658,9 @@ XdgPopupWindow::XdgPopupWindow(XdgPopupInterface *shellSurface)
     : XdgSurfaceWindow(shellSurface->xdgSurface())
     , m_shellSurface(shellSurface)
 {
+    setOutput(workspace()->activeOutput());
+    setMoveResizeOutput(workspace()->activeOutput());
+
     m_windowType = WindowType::Unknown;
 
     connect(shellSurface, &XdgPopupInterface::grabRequested,
@@ -1749,6 +1787,10 @@ bool XdgPopupWindow::acceptsFocus() const
 
 XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
 {
+    surface()->setPreferredBufferScale(preferredBufferScale());
+    surface()->setPreferredBufferTransform(preferredBufferTransform());
+    surface()->setPreferredColorDescription(preferredColorDescription());
+
     const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
     const QPointF popupPosition = moveResizeGeometry().topLeft() - parentPosition;
 
@@ -1781,6 +1823,36 @@ void XdgPopupWindow::initialize()
 
     workspace()->placement()->place(this, QRectF());
     scheduleConfigure();
+}
+
+void XdgPopupWindow::doSetPreferredBufferScale()
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_shellSurface->isConfigured()) {
+        scheduleConfigure();
+    }
+}
+
+void XdgPopupWindow::doSetPreferredBufferTransform()
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_shellSurface->isConfigured()) {
+        scheduleConfigure();
+    }
+}
+
+void XdgPopupWindow::doSetPreferredColorDescription()
+{
+    if (isDeleted()) {
+        return;
+    }
+    if (m_shellSurface->isConfigured()) {
+        scheduleConfigure();
+    }
 }
 
 } // namespace KWin

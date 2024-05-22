@@ -50,6 +50,9 @@ protected:
     Layer belongsToLayer() const override;
     bool acceptsFocus() const override;
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void doSetPreferredBufferScale() override;
+    void doSetPreferredBufferTransform() override;
+    void doSetPreferredColorDescription() override;
 
 private:
     void handleSizeChanged();

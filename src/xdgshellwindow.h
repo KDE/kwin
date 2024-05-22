@@ -177,6 +177,9 @@ protected:
     bool acceptsFocus() const override;
     void doSetQuickTileMode() override;
     void doSetSuspended() override;
+    void doSetPreferredBufferScale() override;
+    void doSetPreferredBufferTransform() override;
+    void doSetPreferredColorDescription() override;
 
 private:
     void handleWindowTitleChanged();
@@ -260,6 +263,9 @@ protected:
     bool acceptsFocus() const override;
     XdgSurfaceConfigure *sendRoleConfigure() const override;
     void handleRoleDestroyed() override;
+    void doSetPreferredBufferScale() override;
+    void doSetPreferredBufferTransform() override;
+    void doSetPreferredColorDescription() override;
 
 private:
     void handleGrabRequested(SeatInterface *seat, quint32 serial);

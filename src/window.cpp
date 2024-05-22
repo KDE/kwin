@@ -59,13 +59,11 @@ QHash<QString, std::weak_ptr<Decoration::DecorationPalette>> Window::s_palettes;
 std::shared_ptr<Decoration::DecorationPalette> Window::s_defaultPalette;
 
 Window::Window()
-    : m_output(workspace()->activeOutput())
-    , ready_for_painting(false)
+    : ready_for_painting(false)
     , m_internalId(QUuid::createUuid())
     , m_clientMachine(new ClientMachine(this))
     , m_skipCloseAnimation(false)
     , m_colorScheme(QStringLiteral("kdeglobals"))
-    , m_moveResizeOutput(workspace()->activeOutput())
 {
     connect(this, &Window::bufferGeometryChanged, this, &Window::inputTransformationChanged);
 
@@ -3322,7 +3320,26 @@ Output *Window::moveResizeOutput() const
 
 void Window::setMoveResizeOutput(Output *output)
 {
+    if (m_moveResizeOutput == output) {
+        return;
+    }
+
+    if (m_moveResizeOutput) {
+        disconnect(m_moveResizeOutput, &Output::scaleChanged, this, &Window::updatePreferredBufferScale);
+        disconnect(m_moveResizeOutput, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
+        disconnect(m_moveResizeOutput, &Output::colorDescriptionChanged, this, &Window::updatePreferredColorDescription);
+    }
+
     m_moveResizeOutput = output;
+    if (output) {
+        connect(output, &Output::scaleChanged, this, &Window::updatePreferredBufferScale);
+        connect(output, &Output::transformChanged, this, &Window::updatePreferredBufferTransform);
+        connect(output, &Output::colorDescriptionChanged, this, &Window::updatePreferredColorDescription);
+    }
+
+    updatePreferredBufferScale();
+    updatePreferredBufferTransform();
+    updatePreferredColorDescription();
 }
 
 void Window::move(const QPointF &point)
@@ -4338,6 +4355,72 @@ void Window::doSetSuspended()
 
 void Window::doSetModal()
 {
+}
+
+qreal Window::preferredBufferScale() const
+{
+    return m_preferredBufferScale;
+}
+
+void Window::setPreferredBufferScale(qreal scale)
+{
+    if (m_preferredBufferScale != scale) {
+        m_preferredBufferScale = scale;
+        doSetPreferredBufferScale();
+    }
+}
+
+void Window::doSetPreferredBufferScale()
+{
+}
+
+void Window::updatePreferredBufferScale()
+{
+    setPreferredBufferScale(m_moveResizeOutput->scale());
+}
+
+OutputTransform Window::preferredBufferTransform() const
+{
+    return m_preferredBufferTransform;
+}
+
+void Window::setPreferredBufferTransform(OutputTransform transform)
+{
+    if (m_preferredBufferTransform != transform) {
+        m_preferredBufferTransform = transform;
+        doSetPreferredBufferTransform();
+    }
+}
+
+void Window::doSetPreferredBufferTransform()
+{
+}
+
+void Window::updatePreferredBufferTransform()
+{
+    setPreferredBufferTransform(m_moveResizeOutput->transform());
+}
+
+const ColorDescription &Window::preferredColorDescription() const
+{
+    return m_preferredColorDescription;
+}
+
+void Window::setPreferredColorDescription(const ColorDescription &description)
+{
+    if (m_preferredColorDescription != description) {
+        m_preferredColorDescription = description;
+        doSetPreferredColorDescription();
+    }
+}
+
+void Window::doSetPreferredColorDescription()
+{
+}
+
+void Window::updatePreferredColorDescription()
+{
+    setPreferredColorDescription(m_moveResizeOutput->colorDescription());
 }
 
 } // namespace KWin

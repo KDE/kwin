@@ -83,6 +83,9 @@ public:
 
 protected:
     void moveResizeInternal(const QRectF &rect, MoveResizeMode mode) override;
+    void doSetPreferredBufferScale() override;
+    void doSetPreferredBufferTransform() override;
+    void doSetPreferredColorDescription() override;
 
 private:
     void showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position);

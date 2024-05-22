@@ -43,6 +43,8 @@ LayerShellV1Window::LayerShellV1Window(LayerSurfaceV1Interface *shellSurface,
     , m_shellSurface(shellSurface)
     , m_windowType(scopeToType(shellSurface->scope()))
 {
+    setOutput(output);
+    setMoveResizeOutput(output);
     setSkipSwitcher(!isDesktop());
     setSkipPager(true);
     setSkipTaskbar(true);
@@ -247,6 +249,30 @@ void LayerShellV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode m
     QRectF updateRect = m_frameGeometry;
     updateRect.moveTopLeft(rect.topLeft());
     updateGeometry(updateRect);
+}
+
+void LayerShellV1Window::doSetPreferredBufferScale()
+{
+    if (isDeleted()) {
+        return;
+    }
+    surface()->setPreferredBufferScale(preferredBufferScale());
+}
+
+void LayerShellV1Window::doSetPreferredBufferTransform()
+{
+    if (isDeleted()) {
+        return;
+    }
+    surface()->setPreferredBufferTransform(preferredBufferTransform());
+}
+
+void LayerShellV1Window::doSetPreferredColorDescription()
+{
+    if (isDeleted()) {
+        return;
+    }
+    surface()->setPreferredColorDescription(preferredColorDescription());
 }
 
 void LayerShellV1Window::handleSizeChanged()

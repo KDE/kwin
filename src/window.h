@@ -9,6 +9,7 @@
 */
 #pragma once
 
+#include "core/output.h"
 #include "cursor.h"
 #include "effect/globals.h"
 #include "options.h"
@@ -1322,6 +1323,15 @@ public:
     void refOffscreenRendering();
     void unrefOffscreenRendering();
 
+    qreal preferredBufferScale() const;
+    void setPreferredBufferScale(qreal scale);
+
+    OutputTransform preferredBufferTransform() const;
+    void setPreferredBufferTransform(OutputTransform transform);
+
+    const ColorDescription &preferredColorDescription() const;
+    void setPreferredColorDescription(const ColorDescription &description);
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1517,6 +1527,9 @@ protected:
     virtual void doSetHiddenByShowDesktop();
     virtual void doSetSuspended();
     virtual void doSetModal();
+    virtual void doSetPreferredBufferScale();
+    virtual void doSetPreferredBufferTransform();
+    virtual void doSetPreferredColorDescription();
 
     void setupWindowManagementInterface();
     void destroyWindowManagementInterface();
@@ -1715,6 +1728,10 @@ protected:
     void cleanTabBox();
     void maybeSendFrameCallback();
 
+    void updatePreferredBufferScale();
+    void updatePreferredBufferTransform();
+    void updatePreferredColorDescription();
+
     Output *m_output = nullptr;
     QRectF m_frameGeometry;
     QRectF m_clientGeometry;
@@ -1722,6 +1739,10 @@ protected:
     bool ready_for_painting;
     bool m_hidden = false;
     bool m_hiddenByShowDesktop = false;
+
+    qreal m_preferredBufferScale = 1;
+    OutputTransform m_preferredBufferTransform = OutputTransform::Normal;
+    ColorDescription m_preferredColorDescription = ColorDescription::sRGB;
 
     int m_refCount = 1;
     QUuid m_internalId;
@@ -1781,7 +1802,7 @@ protected:
     QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry
-    Output *m_moveResizeOutput;
+    Output *m_moveResizeOutput = nullptr;
     QRectF m_moveResizeGeometry;
     QRectF m_keyboardGeometryRestore;
     QRectF m_maximizeGeometryRestore;

@@ -26,6 +26,8 @@ InputPanelV1Window::InputPanelV1Window(InputPanelSurfaceV1Interface *panelSurfac
     : WaylandWindow(panelSurface->surface())
     , m_panelSurface(panelSurface)
 {
+    setOutput(workspace()->activeOutput());
+    setMoveResizeOutput(workspace()->activeOutput());
     setSkipSwitcher(true);
     setSkipPager(true);
     setSkipTaskbar(true);
@@ -189,6 +191,30 @@ QRectF InputPanelV1Window::frameRectToBufferRect(const QRectF &rect) const
 void InputPanelV1Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
 {
     updateGeometry(rect);
+}
+
+void InputPanelV1Window::doSetPreferredBufferScale()
+{
+    if (isDeleted()) {
+        return;
+    }
+    surface()->setPreferredBufferScale(preferredBufferScale());
+}
+
+void InputPanelV1Window::doSetPreferredBufferTransform()
+{
+    if (isDeleted()) {
+        return;
+    }
+    surface()->setPreferredBufferTransform(preferredBufferTransform());
+}
+
+void InputPanelV1Window::doSetPreferredColorDescription()
+{
+    if (isDeleted()) {
+        return;
+    }
+    surface()->setPreferredColorDescription(preferredColorDescription());
 }
 
 void InputPanelV1Window::handleMapped()
