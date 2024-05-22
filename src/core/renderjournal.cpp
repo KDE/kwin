@@ -25,13 +25,13 @@ void RenderJournal::add(std::chrono::nanoseconds renderTime, std::chrono::nanose
     const auto timeDifference = m_lastAdd ? presentationTimestamp - *m_lastAdd : 10s;
     m_lastAdd = presentationTimestamp;
 
-    static constexpr std::chrono::nanoseconds varianceTimeConstant = 3s;
-    const double varianceRatio = std::clamp(timeDifference.count() / double(varianceTimeConstant.count()), 0.1, 1.0);
+    static constexpr std::chrono::nanoseconds varianceTimeConstant = 6s;
+    const double varianceRatio = std::clamp(timeDifference.count() / double(varianceTimeConstant.count()), 0.001, 0.1);
     const auto renderTimeDiff = std::max(renderTime - m_result, 0ns);
     m_variance = std::max(mix(renderTimeDiff, m_variance, varianceRatio), renderTimeDiff);
 
     static constexpr std::chrono::nanoseconds timeConstant = 500ms;
-    const double ratio = std::clamp(timeDifference.count() / double(timeConstant.count()), 0.1, 1.0);
+    const double ratio = std::clamp(timeDifference.count() / double(timeConstant.count()), 0.01, 1.0);
     m_result = mix(renderTime, m_result, ratio);
 }
 
