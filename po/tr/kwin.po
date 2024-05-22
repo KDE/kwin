@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-04 02:52+0000\n"
-"PO-Revision-Date: 2024-05-19 23:08+0300\n"
+"PO-Revision-Date: 2024-05-21 13:48+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -57,12 +57,12 @@ msgstr "KDE Wayland Bileşikleştiricisi %1"
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
 msgid "- Output disabled"
-msgstr "- Çıktı devre dışı"
+msgstr "— Çıktı devre dışı"
 
 #: backends/wayland/wayland_output.cpp:287
 #, kde-format
 msgid "- Output dimmed"
-msgstr "- Çıktı karartıldı"
+msgstr "— Çıktı karartıldı"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:515
 #, kde-format
@@ -1184,8 +1184,8 @@ msgid ""
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
 "<para><emphasis strong='true'>Bu uygulamanın sonlandırılması tüm "
-"pencerelerin kapanmasına neden olacaktır. Kaydedilmemiş tüm veri "
-"kaybolacaktır.</emphasis></para>"
+"pencerelerin kapanmasına neden olacaktır. Kaydedilmemiş tüm veri kaybolur.</"
+"emphasis></para>"
 
 #: helpers/killer/killer.cpp:155
 #, kde-format
@@ -1274,7 +1274,7 @@ msgstr "KDE pencere yöneticisi"
 #: main.cpp:184
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "(c) 1999-2019, KDE Geliştiricileri"
+msgstr "(c) 1999–2019, KDE Geliştiricileri"
 
 #: main.cpp:186
 #, kde-format
@@ -1560,7 +1560,7 @@ msgstr "Yeşil körlüğü"
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr "Sarı-mavi körlüğü"
+msgstr "Sarı–mavi körlüğü"
 
 #: plugins/colorpicker/colorpicker.cpp:105
 #, kde-format
