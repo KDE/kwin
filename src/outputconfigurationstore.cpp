@@ -200,9 +200,13 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
             outputIt = setup->outputs.end() - 1;
         }
         if (const auto changeSet = config.constChangeSet(output)) {
-            std::shared_ptr<OutputMode> mode = changeSet->mode.value_or(output->currentMode()).lock();
-            if (!mode) {
-                mode = output->currentMode();
+            QSize modeSize = changeSet->desiredModeSize.value_or(output->desiredModeSize());
+            if (modeSize.isEmpty()) {
+                modeSize = output->currentMode()->size();
+            }
+            uint32_t refreshRate = changeSet->desiredModeRefreshRate.value_or(output->desiredModeRefreshRate());
+            if (refreshRate == 0) {
+                refreshRate = output->currentMode()->refreshRate();
             }
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
@@ -210,8 +214,8 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
                 .mstPath = output->mstPath(),
                 .mode = ModeData{
-                    .size = mode->size(),
-                    .refreshRate = mode->refreshRate(),
+                    .size = modeSize,
+                    .refreshRate = refreshRate,
                 },
                 .scale = changeSet->scale.value_or(output->scale()),
                 .transform = changeSet->transform.value_or(output->transform()),
@@ -238,15 +242,22 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .priority = int(outputOrder.indexOf(output)),
             };
         } else {
-            const auto mode = output->currentMode();
+            QSize modeSize = output->desiredModeSize();
+            if (modeSize.isEmpty()) {
+                modeSize = output->currentMode()->size();
+            }
+            uint32_t refreshRate = output->desiredModeRefreshRate();
+            if (refreshRate == 0) {
+                refreshRate = output->currentMode()->refreshRate();
+            }
             m_outputs[*outputIndex] = OutputState{
                 .edidIdentifier = output->edid().identifier(),
                 .connectorName = output->name(),
                 .edidHash = output->edid().isValid() ? output->edid().hash() : QString{},
                 .mstPath = output->mstPath(),
                 .mode = ModeData{
-                    .size = mode->size(),
-                    .refreshRate = mode->refreshRate(),
+                    .size = modeSize,
+                    .refreshRate = refreshRate,
                 },
                 .scale = output->scale(),
                 .transform = output->transform(),
@@ -287,13 +298,19 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             return state.outputIndex == outputIndex;
         });
         const auto modes = output->modes();
-        const auto mode = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
+        const auto modeIt = std::find_if(modes.begin(), modes.end(), [&state](const auto &mode) {
             return state.mode
                 && mode->size() == state.mode->size
                 && mode->refreshRate() == state.mode->refreshRate;
         });
+        std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
+        if (!mode.has_value()) {
+            mode = chooseMode(output);
+        }
         *ret.changeSet(output) = OutputChangeSet{
-            .mode = mode == modes.end() ? std::nullopt : std::optional(*mode),
+            .mode = mode,
+            .desiredModeSize = state.mode.has_value() ? std::make_optional(state.mode->size) : std::nullopt,
+            .desiredModeRefreshRate = state.mode.has_value() ? std::make_optional(state.mode->refreshRate) : std::nullopt,
             .enabled = setupState.enabled,
             .pos = setupState.position,
             .scale = state.scale,
@@ -420,6 +437,8 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
         const auto changeset = ret.changeSet(output);
         *changeset = {
             .mode = mode,
+            .desiredModeSize = mode->size(),
+            .desiredModeRefreshRate = mode->refreshRate(),
             .enabled = kscreenChangeSet.enabled.value_or(enable),
             .pos = pos,
             // kscreen scale is unreliable because it gets overwritten with the value 1 on Xorg,

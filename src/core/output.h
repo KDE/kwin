@@ -321,6 +321,8 @@ public:
     const Edid &edid() const;
     QList<std::shared_ptr<OutputMode>> modes() const;
     std::shared_ptr<OutputMode> currentMode() const;
+    QSize desiredModeSize() const;
+    uint32_t desiredModeRefreshRate() const;
     DpmsMode dpmsMode() const;
     virtual void setDpmsMode(DpmsMode mode);
 
@@ -457,6 +459,8 @@ protected:
         OutputTransform manualTransform = OutputTransform::Normal;
         QList<std::shared_ptr<OutputMode>> modes;
         std::shared_ptr<OutputMode> currentMode;
+        QSize desiredModeSize;
+        uint32_t desiredModeRefreshRate = 0;
         DpmsMode dpmsMode = DpmsMode::On;
         SubPixel subPixel = SubPixel::Unknown;
         bool enabled = false;

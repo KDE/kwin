@@ -487,6 +487,16 @@ std::shared_ptr<OutputMode> Output::currentMode() const
     return m_state.currentMode;
 }
 
+QSize Output::desiredModeSize() const
+{
+    return m_state.desiredModeSize;
+}
+
+uint32_t Output::desiredModeRefreshRate() const
+{
+    return m_state.desiredModeRefreshRate;
+}
+
 Output::SubPixel Output::subPixel() const
 {
     return m_information.subPixel;
@@ -512,6 +522,8 @@ void Output::applyChanges(const OutputConfiguration &config)
         next.iccProfile = IccProfile::load(*props->iccProfilePath);
     }
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
+    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
+    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
 
     setState(next);
 

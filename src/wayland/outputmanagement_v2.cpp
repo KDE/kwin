@@ -121,7 +121,15 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_mode(Resource *
     OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice);
     OutputDeviceModeV2Interface *mode = OutputDeviceModeV2Interface::get(modeResource);
     if (output && mode) {
-        config.changeSet(output->handle())->mode = mode->handle().lock();
+        const auto change = config.changeSet(output->handle());
+        const auto modePtr = mode->handle().lock();
+        if (!modePtr) {
+            invalid = true;
+            return;
+        }
+        change->mode = modePtr;
+        change->desiredModeSize = modePtr->size();
+        change->desiredModeRefreshRate = modePtr->refreshRate();
     } else {
         invalid = true;
     }
