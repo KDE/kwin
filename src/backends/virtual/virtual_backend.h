@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "core/output.h"
 #include "core/outputbackend.h"
 #include "utils/filedescriptor.h"
 
@@ -37,6 +38,8 @@ public:
         QRect geometry;
         double scale = 1;
         bool internal = false;
+        QSize physicalSizeInMM;
+        QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
     };
     Output *addOutput(const OutputInfo &info);
     void setVirtualOutputs(const QList<OutputInfo> &infos);

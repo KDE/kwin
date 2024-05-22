@@ -318,7 +318,7 @@ public:
     OutputTransform manualTransform() const;
     QSize orientateSize(const QSize &size) const;
 
-    void applyChanges(const OutputConfiguration &config);
+    virtual void applyChanges(const OutputConfiguration &config);
 
     SubPixel subPixel() const;
     QString description() const;

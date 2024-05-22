@@ -9,6 +9,7 @@
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/outputconfiguration.h"
+#include "outputconfigurationstore.h"
 #include "pointer_input.h"
 #include "tiles/tilemanager.h"
 #include "wayland_server.h"
@@ -59,6 +60,8 @@ private Q_SLOTS:
 
     void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
     void testLaptopLidClosed();
+    void testGenerateConfigs_data();
+    void testGenerateConfigs();
 };
 
 void OutputChangesTest::initTestCase()
@@ -1179,6 +1182,112 @@ void OutputChangesTest::testXwaylandScaleChange()
     // the window should be back in its original geometry
     QCOMPARE(kwinApp()->xwaylandScale(), 2);
     QCOMPARE(window->frameGeometry(), originalGeometry);
+}
+
+using ModeInfo = std::tuple<QSize, uint64_t, OutputMode::Flags>;
+
+void OutputChangesTest::testGenerateConfigs_data()
+{
+    QTest::addColumn<Test::OutputInfo>("outputInfo");
+    QTest::addColumn<std::tuple<QSize, uint64_t, OutputMode::Flags>>("defaultMode");
+    QTest::addColumn<double>("defaultScale");
+
+    QTest::addRow("1080p 27\"") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 1920, 1080),
+        .internal = false,
+        .physicalSizeInMM = QSize(598, 336),
+        .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(1920, 1080), 60000ul, OutputMode::Flag::Preferred)
+                                << 1.0;
+
+    QTest::addRow("2160p 27\"") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 3840, 2160),
+        .internal = false,
+        .physicalSizeInMM = QSize(598, 336),
+        .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
+                                << 1.75;
+
+    QTest::addRow("2160p invalid size") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 3840, 2160),
+        .internal = false,
+        .physicalSizeInMM = QSize(),
+        .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
+                                        << 1.0;
+
+    QTest::addRow("2160p impossibly tiny size") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 3840, 2160),
+        .internal = false,
+        .physicalSizeInMM = QSize(1, 1),
+        .modes = {ModeInfo(QSize(3840, 2160), 60000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(3840, 2160), 60000ul, OutputMode::Flag::Preferred)
+                                                << 1.0;
+
+    QTest::addRow("1080p 27\" with non-preferred high refresh option") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 1920, 1080),
+        .internal = false,
+        .physicalSizeInMM = QSize(598, 336),
+        .modes = {ModeInfo(QSize(1920, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(1920, 1080), 120000, OutputMode::Flags{})},
+    } << ModeInfo(QSize(1920, 1080), 120000ul, OutputMode::Flags{}) << 1.0;
+
+    QTest::addRow("2160p 27\" with 30Hz preferred mode") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 3840, 2160),
+        .internal = false,
+        .physicalSizeInMM = QSize(598, 336),
+        .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flags{})},
+    } << ModeInfo(QSize(2560, 1440), 60000ul, OutputMode::Flags{})
+                                                         << 1.25;
+
+    QTest::addRow("2160p 27\" with 30Hz preferred and a generated 60Hz mode") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 3840, 2160),
+        .internal = false,
+        .physicalSizeInMM = QSize(598, 336),
+        .modes = {ModeInfo(QSize(3840, 2160), 30000, OutputMode::Flag::Preferred), ModeInfo(QSize(2560, 1440), 60000, OutputMode::Flag::Generated)},
+    } << ModeInfo(QSize(3840, 2160), 30000ul, OutputMode::Flag::Preferred) << 1.75;
+
+    QTest::addRow("1440p 32:9 49\" with two preferred modes") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 5120, 1440),
+        .internal = false,
+        .physicalSizeInMM = QSize(1190, 340),
+        .modes = {ModeInfo(QSize(3840, 1080), 120000, OutputMode::Flag::Preferred), ModeInfo(QSize(5120, 1440), 120000, OutputMode::Flag::Preferred)},
+    } << ModeInfo(QSize(5120, 1440), 120000ul, OutputMode::Flag::Preferred)
+                                                              << 1.0;
+
+    QTest::addRow("2160p 32:9 57\" with non-native preferred mode") << Test::OutputInfo{
+        .geometry = QRect(0, 0, 7680, 2160),
+        .internal = false,
+        .physicalSizeInMM = QSize(1400, 400),
+        .modes = {ModeInfo(QSize(3840, 1080), 60000, OutputMode::Flag::Preferred), ModeInfo(QSize(7680, 2160), 120000, OutputMode::Flags{})},
+    } << ModeInfo(QSize(7680, 2160), 120000ul, OutputMode::Flags{}) << 1.5;
+}
+
+void OutputChangesTest::testGenerateConfigs()
+{
+    // delete the previous config to avoid clashes between test runs
+    QFile(QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kwinoutputconfig.json"))).remove();
+
+    QFETCH(Test::OutputInfo, outputInfo);
+    Test::setOutputConfig({outputInfo});
+    const auto outputs = kwinApp()->outputBackend()->outputs();
+    OutputConfigurationStore configs;
+    auto cfg = configs.queryConfig(outputs, false, nullptr, false);
+    QVERIFY(cfg.has_value());
+    const auto [config, order, type] = *cfg;
+    const auto outputConfig = config.constChangeSet(outputs.front());
+
+    QFETCH(ModeInfo, defaultMode);
+    const auto &[modeSize, modeRefresh, modeFlags] = defaultMode;
+
+    const auto mode = outputConfig->mode->lock();
+    QVERIFY(mode);
+    QCOMPARE(mode->size(), modeSize);
+    QCOMPARE(mode->refreshRate(), modeRefresh);
+    QCOMPARE(mode->flags(), modeFlags);
+
+    QFETCH(double, defaultScale);
+    QVERIFY(outputConfig->scale);
+    QCOMPARE(*outputConfig->scale, defaultScale);
 }
 
 } // namespace KWin
