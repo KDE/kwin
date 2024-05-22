@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
 "PO-Revision-Date: 2024-02-14 18:54+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -4135,7 +4135,7 @@ msgstr "Tapa ikkuna"
 msgid "Activate Window (%1)"
 msgstr "Aktivoi ikkuna (%1)"
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr "tuntematon"

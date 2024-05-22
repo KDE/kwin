@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
 "PO-Revision-Date: 2015-08-27 20:54+0200\n"
 "Last-Translator: Bjørn Steensrud <bjornst@skogkatt.homelinux.org>\n"
 "Language-Team: Norwegian Bokmål <l10n-no@lister.huftis.org>\n"
@@ -4080,7 +4080,7 @@ msgstr "Avbryt vindu"
 msgid "Activate Window (%1)"
 msgstr "Skru på vindu (%1) "
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr ""
@@ -4150,7 +4150,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
-
-#, fuzzy
-#~ msgid "Split Horizontally"
-#~ msgstr "Maksimer vindu vannrett"

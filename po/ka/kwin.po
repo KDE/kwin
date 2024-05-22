@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
-"PO-Revision-Date: 2024-05-07 04:58+0200\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
+"PO-Revision-Date: 2024-05-21 07:41+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -2534,12 +2534,12 @@ msgstr "დახურვა"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "ხედის მარჯვენა/მარცხენაზე გაყოფა"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "ხედის ზედა/ქვედაზე გაყოფა"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4099,7 +4099,7 @@ msgstr "ფანჯრის ნაძალადევი დაღუპვ�
 msgid "Activate Window (%1)"
 msgstr "ფანჯრის გააქტიურება (%1)"
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr "unknown"

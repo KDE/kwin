@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1680502 2024-05-21 01:11:24Z scripty $
+# $Id: kwin.po 1680570 2024-05-22 01:12:01Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
-"PO-Revision-Date: 2024-05-07 06:26+0200\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
+"PO-Revision-Date: 2024-05-21 07:39+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
 "Translator: Andrej Mernik <andrejm@ubuntu.si>\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2557,12 +2557,12 @@ msgstr "Zapri"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Razdeli Levo/Desno"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Razdeli Zgoraj/Spodaj"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4120,7 +4120,7 @@ msgstr "Uniči okno"
 msgid "Activate Window (%1)"
 msgstr "Omogoči okno (%1)"
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr "neznano"

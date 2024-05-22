@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
-"PO-Revision-Date: 2024-05-07 12:59+0200\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
+"PO-Revision-Date: 2024-05-21 10:27+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -2560,12 +2560,12 @@ msgstr "Sluiten"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Verticaal opsplitsen"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Horizontaal opsplitsen"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4124,7 +4124,7 @@ msgstr "Venster geforceerd sluiten"
 msgid "Activate Window (%1)"
 msgstr "Venster (%1) activeren"
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr "onbekend"

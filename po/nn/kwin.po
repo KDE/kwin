@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
 "PO-Revision-Date: 2024-05-16 20:37+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -4119,7 +4119,7 @@ msgstr "Tvangsavslutt vindauge"
 msgid "Activate Window (%1)"
 msgstr "Aktiver vindauge (%1)"
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr "ukjend"
@@ -4198,13 +4198,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-# Denne funksjonen tyder det stikk motsette av funksjonen med same namn i Kate, forvirrande nok! Her i KWin (test med «Windows + T») deler han ruta i ein venstre og høgre del.
-# Sjå elles: https://bugs.kde.org/show_bug.cgi?id=475103
-#~ msgid "Split Horizontally"
-#~ msgstr "Del venstre/høgre"
-
-# Denne funksjonen tyder det stikk motsette av funksjonen med same namn i Kate, forvirrande nok! Her i KWin (test med «Windows + T») deler han ruta i ein øvre og nedre del.
-# Sjå elles: https://bugs.kde.org/show_bug.cgi?id=475103
-#~ msgid "Split Vertically"
-#~ msgstr "Del oppe/nede"

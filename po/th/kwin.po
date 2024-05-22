@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-21 00:40+0000\n"
+"POT-Creation-Date: 2024-05-22 00:40+0000\n"
 "PO-Revision-Date: 2010-12-17 20:20+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -4286,7 +4286,7 @@ msgstr "บังคับปิดหน้าต่าง"
 msgid "Activate Window (%1)"
 msgstr "เรียกใช้งานหน้าต่าง (%1)"
 
-#: utils/edid.cpp:234
+#: utils/edid.cpp:262
 #, kde-format
 msgid "unknown"
 msgstr ""
