@@ -10,6 +10,7 @@
 #include "virtual_backend.h"
 
 #include "compositor.h"
+#include "core/outputconfiguration.h"
 #include "core/outputlayer.h"
 #include "core/renderbackend.h"
 #include "core/renderloop.h"
@@ -18,7 +19,7 @@
 namespace KWin
 {
 
-VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal)
+VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM)
     : Output(parent)
     , m_backend(parent)
     , m_renderLoop(std::make_unique<RenderLoop>(this))
@@ -30,6 +31,7 @@ VirtualOutput::VirtualOutput(VirtualBackend *parent, bool internal)
     m_identifier = ++identifier;
     setInformation(Information{
         .name = QStringLiteral("Virtual-%1").arg(identifier),
+        .physicalSize = physicalSizeInMM,
         .internal = internal,
     });
 }
@@ -50,20 +52,51 @@ void VirtualOutput::present(const std::shared_ptr<OutputFrame> &frame)
     Q_EMIT outputChange(frame->damage());
 }
 
-void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale)
+void VirtualOutput::init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes)
 {
-    const int refreshRate = 60000; // TODO: Make the refresh rate configurable.
-    m_renderLoop->setRefreshRate(refreshRate);
-    m_vsyncMonitor->setRefreshRate(refreshRate);
+    QList<std::shared_ptr<OutputMode>> modeList;
+    for (const auto &mode : modes) {
+        const auto &[size, refresh, flags] = mode;
+        modeList.push_back(std::make_shared<OutputMode>(size, refresh, flags));
+    }
+    if (modeList.empty()) {
+        modeList.push_back(std::make_shared<OutputMode>(pixelSize, 60000, OutputMode::Flag::Preferred));
+    }
 
-    auto mode = std::make_shared<OutputMode>(pixelSize, m_vsyncMonitor->refreshRate());
-
+    m_renderLoop->setRefreshRate(modeList.front()->refreshRate());
+    m_vsyncMonitor->setRefreshRate(modeList.front()->refreshRate());
     setState(State{
         .position = logicalPosition,
         .scale = scale,
-        .modes = {mode},
-        .currentMode = mode,
+        .modes = modeList,
+        .currentMode = modeList.front(),
     });
+}
+
+void VirtualOutput::applyChanges(const OutputConfiguration &config)
+{
+    auto props = config.constChangeSet(this);
+    if (!props) {
+        return;
+    }
+    Q_EMIT aboutToChange(props.get());
+
+    State next = m_state;
+    next.enabled = props->enabled.value_or(m_state.enabled);
+    next.transform = props->transform.value_or(m_state.transform);
+    next.position = props->pos.value_or(m_state.position);
+    next.scale = props->scale.value_or(m_state.scale);
+    next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
+    next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.currentMode = props->mode.value_or(m_state.currentMode).lock();
+    if (!next.currentMode) {
+        next.currentMode = next.modes.front();
+    }
+    setState(next);
+    m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
+    m_vsyncMonitor->setRefreshRate(next.currentMode->refreshRate());
+
+    Q_EMIT changed();
 }
 
 void VirtualOutput::updateEnabled(bool enabled)

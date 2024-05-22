@@ -298,6 +298,8 @@ void Test::setOutputConfig(const QList<OutputInfo> &infos)
             .geometry = info.geometry,
             .scale = info.scale,
             .internal = info.internal,
+            .physicalSizeInMM = info.physicalSizeInMM,
+            .modes = info.modes,
         };
     });
     static_cast<VirtualBackend *>(kwinApp()->outputBackend())->setVirtualOutputs(converted);

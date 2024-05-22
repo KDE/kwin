@@ -929,6 +929,8 @@ struct OutputInfo
     QRect geometry;
     double scale = 1;
     bool internal = false;
+    QSize physicalSizeInMM;
+    QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> modes;
 };
 void setOutputConfig(const QList<QRect> &geometries);
 void setOutputConfig(const QList<OutputInfo> &infos);

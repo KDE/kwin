@@ -25,14 +25,16 @@ class VirtualOutput : public Output
     Q_OBJECT
 
 public:
-    VirtualOutput(VirtualBackend *parent, bool internal);
+    explicit VirtualOutput(VirtualBackend *parent, bool internal, const QSize &physicalSizeInMM);
     ~VirtualOutput() override;
 
     RenderLoop *renderLoop() const override;
     void present(const std::shared_ptr<OutputFrame> &frame);
 
-    void init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale);
+    void init(const QPoint &logicalPosition, const QSize &pixelSize, qreal scale, const QList<std::tuple<QSize, uint64_t, OutputMode::Flags>> &modes);
     void updateEnabled(bool enabled);
+
+    void applyChanges(const OutputConfiguration &config) override;
 
 private:
     void vblank(std::chrono::nanoseconds timestamp);

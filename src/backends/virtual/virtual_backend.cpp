@@ -102,8 +102,8 @@ Outputs VirtualBackend::outputs() const
 
 VirtualOutput *VirtualBackend::createOutput(const OutputInfo &info)
 {
-    VirtualOutput *output = new VirtualOutput(this, info.internal);
-    output->init(info.geometry.topLeft(), info.geometry.size() * info.scale, info.scale);
+    VirtualOutput *output = new VirtualOutput(this, info.internal, info.physicalSizeInMM);
+    output->init(info.geometry.topLeft(), info.geometry.size() * info.scale, info.scale, info.modes);
     m_outputs.append(output);
     Q_EMIT outputAdded(output);
     output->updateEnabled(true);

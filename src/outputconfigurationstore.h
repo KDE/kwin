@@ -25,7 +25,7 @@ namespace KWin
 
 class OutputConfiguration;
 
-class OutputConfigurationStore
+class KWIN_EXPORT OutputConfigurationStore
 {
 public:
     OutputConfigurationStore();
@@ -36,15 +36,14 @@ public:
         Generated,
     };
     std::optional<std::tuple<OutputConfiguration, QList<Output *>, ConfigType>> queryConfig(const QList<Output *> &outputs, bool isLidClosed, QOrientationReading *orientation, bool isTabletMode);
-
     void storeConfig(const QList<Output *> &allOutputs, bool isLidClosed, const OutputConfiguration &config, const QList<Output *> &outputOrder);
+    std::pair<OutputConfiguration, QList<Output *>> generateConfig(const QList<Output *> &outputs, bool isLidClosed);
 
     bool isAutoRotateActive(const QList<Output *> &outputs, bool isTabletMode) const;
 
 private:
     void applyOrientationReading(OutputConfiguration &config, const QList<Output *> &outputs, QOrientationReading *orientation, bool isTabletMode);
     std::optional<std::pair<OutputConfiguration, QList<Output *>>> generateLidClosedConfig(const QList<Output *> &outputs);
-    std::pair<OutputConfiguration, QList<Output *>> generateConfig(const QList<Output *> &outputs, bool isLidClosed);
     std::shared_ptr<OutputMode> chooseMode(Output *output) const;
     double chooseScale(Output *output, OutputMode *mode) const;
     double targetDpi(Output *output) const;
