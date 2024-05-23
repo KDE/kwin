@@ -338,7 +338,7 @@ public:
             Qt::Key_Dead_Greek,
             Qt::Key_Dead_Lowline,
             Qt::Key_Dead_Aboveverticalline,
-            Qt::Key_Dead_Belowverticalline
+            Qt::Key_Dead_Belowverticalline,
         };
 
         switch (mode) {
