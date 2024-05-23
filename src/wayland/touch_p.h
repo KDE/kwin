@@ -11,6 +11,7 @@
 #include "qwayland-server-wayland.h"
 
 #include <QPointer>
+#include <QSet>
 
 namespace KWin
 {
@@ -23,11 +24,12 @@ public:
     TouchInterfacePrivate(TouchInterface *q, SeatInterface *seat);
 
     QList<Resource *> touchesForClient(ClientConnection *client) const;
+    QList<Resource *> touchesForClient(wl_client *client) const;
     bool hasTouchesForClient(ClientConnection *client) const;
 
     TouchInterface *q;
-    QPointer<SurfaceInterface> focusedSurface;
     SeatInterface *seat;
+    QSet<wl_client *> m_clientsInFrame;
 
 protected:
     void touch_release(Resource *resource) override;

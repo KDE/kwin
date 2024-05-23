@@ -93,7 +93,7 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
     const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == focusSurface;
     if (!pointerGrab) {
         // Client doesn't have pointer grab.
-        const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->focusedTouchSurface() == focusSurface;
+        const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->isSurfaceTouched(focusSurface);
         if (!touchGrab) {
             // Client neither has pointer nor touch grab. No drag start allowed.
             return;
@@ -314,7 +314,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     if (d->seat->isDragPointer()) {
         pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
     } else if (d->seat->isDragTouch()) {
-        pos = d->seat->dragSurfaceTransformation().map(d->seat->firstTouchPointPosition());
+        pos = d->seat->dragSurfaceTransformation().map(d->seat->firstTouchPointPosition(surface));
     }
     d->send_enter(serial, surface->resource(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()), offer ? offer->resource() : nullptr);
     if (offer) {

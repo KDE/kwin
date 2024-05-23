@@ -293,10 +293,9 @@ void TestDragAndDrop::testTouchDragAndDrop()
     // now we need to pass touch focus to the Surface and simulate a touch down
     QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
     QSignalSpy pointAddedSpy(m_touch, &KWayland::Client::Touch::pointAdded);
-    m_seatInterface->setFocusedTouchSurface(serverSurface);
     m_seatInterface->setTimestamp(timestamp++);
     const qint32 touchId = 0;
-    m_seatInterface->notifyTouchDown(touchId, QPointF(50, 50));
+    m_seatInterface->notifyTouchDown(serverSurface, QPoint(0, 0), touchId, QPointF(50, 50));
     QVERIFY(sequenceStartedSpy.wait());
 
     std::unique_ptr<KWayland::Client::TouchPoint> tp(sequenceStartedSpy.first().at(0).value<KWayland::Client::TouchPoint *>());
