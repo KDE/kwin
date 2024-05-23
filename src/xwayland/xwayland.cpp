@@ -209,7 +209,11 @@ public:
             Qt::Key_twosuperior,
             Qt::Key_threesuperior,
             Qt::Key_acute,
+#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
             Qt::Key_mu,
+#else
+            Qt::Key_micro,
+#endif
             Qt::Key_paragraph,
             Qt::Key_periodcentered,
             Qt::Key_cedilla,
@@ -334,7 +338,8 @@ public:
             Qt::Key_Dead_Greek,
             Qt::Key_Dead_Lowline,
             Qt::Key_Dead_Aboveverticalline,
-            Qt::Key_Dead_Belowverticalline};
+            Qt::Key_Dead_Belowverticalline
+        };
 
         switch (mode) {
         case None:
