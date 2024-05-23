@@ -1740,9 +1740,8 @@ void TestWaylandSeat::testTouch()
     SurfaceInterface *serverSurface = surfaceCreatedSpy.first().first().value<KWin::SurfaceInterface *>();
     QVERIFY(serverSurface);
 
-    m_seatInterface->setFocusedTouchSurface(serverSurface);
     // no keyboard yet
-    QCOMPARE(m_seatInterface->focusedTouchSurface(), serverSurface);
+    QCOMPARE(m_seatInterface->isSurfaceTouched(serverSurface), false);
 
     KWayland::Client::Touch *touch = m_seat->createTouch(m_seat);
     QVERIFY(touch->isValid());
@@ -1762,10 +1761,9 @@ void TestWaylandSeat::testTouch()
     std::chrono::milliseconds timestamp(1);
 
     // try a few things
-    m_seatInterface->setFocusedTouchSurfacePosition(QPointF(10, 20));
-    QCOMPARE(m_seatInterface->focusedTouchSurfacePosition(), QPointF(10, 20));
+    const QPointF surfacePosition(10, 20);
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(0, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, QPointF(10, 20), 0, QPointF(15, 26));
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(sequenceEndedSpy.count(), 0);
@@ -1818,7 +1816,7 @@ void TestWaylandSeat::testTouch()
 
     // add onther point
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(1, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26));
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1866,7 +1864,7 @@ void TestWaylandSeat::testTouch()
 
     // send another down and up
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(1, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26));
     m_seatInterface->notifyTouchFrame();
     m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyTouchUp(1);
@@ -1888,9 +1886,8 @@ void TestWaylandSeat::testTouch()
     QVERIFY(!m_seatInterface->isTouchSequence());
 
     // try cancel
-    m_seatInterface->setFocusedTouchSurface(serverSurface, QPointF(15, 26));
     m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(0, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, QPointF(15, 26), 0, QPointF(15, 26));
     m_seatInterface->notifyTouchFrame();
     m_seatInterface->notifyTouchCancel();
     QVERIFY(sequenceCanceledSpy.wait());

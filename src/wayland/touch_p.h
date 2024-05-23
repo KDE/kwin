@@ -26,8 +26,8 @@ public:
     bool hasTouchesForClient(ClientConnection *client) const;
 
     TouchInterface *q;
-    QPointer<SurfaceInterface> focusedSurface;
     SeatInterface *seat;
+    QList<QPointer<ClientConnection>> m_clientsInFrame;
 
 protected:
     void touch_release(Resource *resource) override;
