@@ -870,6 +870,11 @@ SubSurfaceInterface *SurfaceInterface::subSurface() const
     return d->subsurface.handle;
 }
 
+SurfaceInterface *SurfaceInterface::mainSurface()
+{
+    return subSurface() ? subSurface()->mainSurface() : this;
+}
+
 QSizeF SurfaceInterface::size() const
 {
     return d->surfaceSize;

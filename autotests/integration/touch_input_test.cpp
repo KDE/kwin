@@ -183,22 +183,29 @@ void TouchInputTest::testMultipleTouchPoints()
     QCOMPARE(pointAddedSpy.count(), 0);
     QCOMPARE(pointMovedSpy.count(), 0);
 
-    // a point outside the window
+    auto [window2, surface2, shellSurface2, decoration2] = showWindow(decorated);
+    QCOMPARE(window2->isDecorated(), decorated);
+    QVERIFY(window2);
+    window2->moveResize(QRect(0, 0, 100, 50));
+
+    // a point outside the window, where window2 is
     Test::touchDown(2, window->mapFromLocal(QPointF(-100, -100)), timestamp++);
     QVERIFY(pointAddedSpy.wait());
     QCOMPARE(pointAddedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(-100, -100));
+    QCOMPARE(m_touch->sequence().at(1)->surface(), surface2.get());
+    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
     QCOMPARE(pointMovedSpy.count(), 0);
 
-    // let's move that one
+    // let's move that one. Since it started in window2 it stays with window2
     Test::touchMotion(2, window->mapFromLocal(QPointF(0, 0)), timestamp++);
     QVERIFY(pointMovedSpy.wait());
     QCOMPARE(pointMovedSpy.count(), 1);
     QCOMPARE(m_touch->sequence().count(), 2);
     QCOMPARE(m_touch->sequence().at(1)->isDown(), true);
-    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(0, 0));
+    QCOMPARE(m_touch->sequence().at(1)->surface(), surface2.get());
+    QCOMPARE(m_touch->sequence().at(1)->position(), QPointF(100, 100));
 
     Test::touchUp(1, timestamp++);
     QVERIFY(pointRemovedSpy.wait());

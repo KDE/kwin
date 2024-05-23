@@ -14,6 +14,7 @@
 
 namespace KWin
 {
+class ClientConnection;
 class SeatInterface;
 class SurfaceInterface;
 class TouchInterfacePrivate;
@@ -29,16 +30,15 @@ class KWIN_EXPORT TouchInterface : public QObject
 public:
     ~TouchInterface() override;
 
-    SurfaceInterface *focusedSurface() const;
-
-    void sendDown(qint32 id, quint32 serial, const QPointF &localPos, SurfaceInterface *surface);
-    void sendUp(qint32 id, quint32 serial);
+    void sendDown(SurfaceInterface *surface, qint32 id, quint32 serial, const QPointF &localPos);
+    void sendUp(ClientConnection *client, qint32 id, quint32 serial);
+    void sendCancel(SurfaceInterface *surface);
+    void sendMotion(SurfaceInterface *surface, qint32 id, const QPointF &localPos);
     void sendFrame();
-    void sendCancel();
-    void sendMotion(qint32 id, const QPointF &localPos);
 
 private:
     explicit TouchInterface(SeatInterface *seat);
+    void addToFrame(ClientConnection *client);
     std::unique_ptr<TouchInterfacePrivate> d;
 
     friend class SeatInterfacePrivate;

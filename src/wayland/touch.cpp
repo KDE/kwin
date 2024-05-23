@@ -49,18 +49,13 @@ TouchInterface::~TouchInterface()
 {
 }
 
-SurfaceInterface *TouchInterface::focusedSurface() const
+void TouchInterface::sendCancel(SurfaceInterface *surface)
 {
-    return d->focusedSurface;
-}
-
-void TouchInterface::sendCancel()
-{
-    if (!d->focusedSurface) {
+    if (!surface) {
         return;
     }
 
-    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+    const auto touchResources = d->touchesForClient(surface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
         d->send_cancel(resource->handle);
     }
@@ -68,61 +63,70 @@ void TouchInterface::sendCancel()
 
 void TouchInterface::sendFrame()
 {
-    if (!d->focusedSurface) {
-        return;
+    for (auto client : std::as_const(d->m_clientsInFrame)) {
+        if (!client) {
+            continue;
+        }
+        const auto touchResources = d->touchesForClient(client);
+        for (TouchInterfacePrivate::Resource *resource : touchResources) {
+            d->send_frame(resource->handle);
+        }
     }
-
-    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
-    for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_frame(resource->handle);
-    }
+    d->m_clientsInFrame.clear();
 }
 
-void TouchInterface::sendMotion(qint32 id, const QPointF &localPos)
-{
-    if (!d->focusedSurface) {
-        return;
-    }
-
-    QPointF pos = d->focusedSurface->toSurfaceLocal(localPos);
-
-    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
-    for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_motion(resource->handle, d->seat->timestamp().count(), id, wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
-    }
-}
-
-void TouchInterface::sendUp(qint32 id, quint32 serial)
-{
-    if (!d->focusedSurface) {
-        return;
-    }
-
-    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
-    for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_up(resource->handle, serial, d->seat->timestamp().count(), id);
-    }
-}
-
-void TouchInterface::sendDown(qint32 id, quint32 serial, const QPointF &localPos, SurfaceInterface *surface)
+void TouchInterface::sendMotion(SurfaceInterface *surface, qint32 id, const QPointF &localPos)
 {
     if (!surface) {
         return;
     }
 
-    d->focusedSurface = surface;
+    QPointF pos = surface->toSurfaceLocal(localPos);
 
-    QPointF pos = d->focusedSurface->toSurfaceLocal(localPos);
+    const auto touchResources = d->touchesForClient(surface->client());
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_motion(resource->handle, d->seat->timestamp().count(), id, wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+    }
+    addToFrame(surface->client());
+}
 
-    const auto touchResources = d->touchesForClient(d->focusedSurface->client());
+void TouchInterface::sendUp(ClientConnection *client, qint32 id, quint32 serial)
+{
+    if (!client) {
+        return;
+    }
+
+    const auto touchResources = d->touchesForClient(client);
+    for (TouchInterfacePrivate::Resource *resource : touchResources) {
+        d->send_up(resource->handle, serial, d->seat->timestamp().count(), id);
+    }
+    addToFrame(client);
+}
+
+void TouchInterface::sendDown(SurfaceInterface *surface, qint32 id, quint32 serial, const QPointF &localPos)
+{
+    if (!surface) {
+        return;
+    }
+
+    const QPointF pos = surface->toSurfaceLocal(localPos);
+    const auto touchResources = d->touchesForClient(surface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
         d->send_down(resource->handle,
                      serial,
                      d->seat->timestamp().count(),
-                     d->focusedSurface->resource(),
+                     surface->resource(),
                      id,
                      wl_fixed_from_double(pos.x()),
                      wl_fixed_from_double(pos.y()));
+    }
+    addToFrame(surface->client());
+}
+
+void TouchInterface::addToFrame(ClientConnection *client)
+{
+    if (!d->m_clientsInFrame.contains(client)) {
+        d->m_clientsInFrame.append(client);
     }
 }
 

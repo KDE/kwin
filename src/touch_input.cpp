@@ -94,33 +94,9 @@ void TouchInputRedirection::focusUpdate(Window *focusOld, Window *focusNow)
     if (focusOld && focusOld->isClient()) {
         focusOld->pointerLeaveEvent();
     }
-    disconnect(m_focusGeometryConnection);
-    m_focusGeometryConnection = QMetaObject::Connection();
-
     if (focusNow && focusNow->isClient()) {
         focusNow->pointerEnterEvent(m_lastPosition);
     }
-
-    auto seat = waylandServer()->seat();
-    if (!focusNow || !focusNow->surface()) {
-        seat->setFocusedTouchSurface(nullptr);
-        return;
-    }
-
-    // TODO: invalidate pointer focus?
-
-    // FIXME: add input transformation API to SeatInterface for touch input
-    seat->setFocusedTouchSurface(focusNow->surface(), -1 * focusNow->inputTransformation().map(focusNow->pos()) + focusNow->pos());
-    m_focusGeometryConnection = connect(focusNow, &Window::frameGeometryChanged, this, [this]() {
-        if (!focus()) {
-            return;
-        }
-        auto seat = waylandServer()->seat();
-        if (focus()->surface() != seat->focusedTouchSurface()) {
-            return;
-        }
-        seat->setFocusedTouchSurfacePosition(-1 * focus()->inputTransformation().map(focus()->pos()) + focus()->pos());
-    });
 }
 
 void TouchInputRedirection::cleanupDecoration(Decoration::DecoratedClientImpl *old, Decoration::DecoratedClientImpl *now)

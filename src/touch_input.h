@@ -79,7 +79,6 @@ private:
     QSet<qint32> m_activeTouchPoints;
     qint32 m_decorationId = -1;
     qint32 m_internalId = -1;
-    QMetaObject::Connection m_focusGeometryConnection;
     bool m_windowUpdatedInCycle = false;
     QPointF m_lastPosition;
 };

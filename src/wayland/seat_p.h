@@ -115,16 +115,28 @@ public:
     // Touch related members
     struct Touch
     {
-        struct Focus
+        struct Interaction
         {
+            Interaction()
+            {
+            }
+            Q_DISABLE_COPY(Interaction)
+
+            ~Interaction()
+            {
+                QObject::disconnect(destroyConnection);
+            }
+
             SurfaceInterface *surface = nullptr;
             QMetaObject::Connection destroyConnection;
-            QPointF offset = QPointF();
             QPointF firstTouchPos;
+            QPointF offset;
             QMatrix4x4 transformation;
+            uint refs = 0;
         };
-        Focus focus;
-        QMap<qint32, quint32> ids;
+        std::unordered_map<SurfaceInterface *, std::unique_ptr<Interaction>> focus;
+
+        std::map<qint32, std::unique_ptr<TouchPoint>> ids;
     };
     Touch globalTouch;
 

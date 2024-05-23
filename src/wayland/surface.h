@@ -359,6 +359,11 @@ public:
      */
     void traverseTree(std::function<void(SurfaceInterface *surface)> callback);
 
+    /**
+     * @returns the last surface found while traversing the subsurfaces parents
+     */
+    SurfaceInterface *mainSurface();
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.

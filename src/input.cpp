@@ -419,8 +419,9 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        if (touchSurfaceAllowed()) {
-            seat->notifyTouchDown(id, pos);
+        Window *window = input()->findToplevel(pos);
+        if (window && surfaceAllowed(window->surface())) {
+            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
         }
         return true;
     }
@@ -431,9 +432,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        if (touchSurfaceAllowed()) {
-            seat->notifyTouchMotion(id, pos);
-        }
+        seat->notifyTouchMotion(id, pos);
         return true;
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
@@ -443,9 +442,7 @@ public:
         }
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
-        if (touchSurfaceAllowed()) {
-            seat->notifyTouchUp(id);
-        }
+        seat->notifyTouchUp(id);
         return true;
     }
     bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
@@ -501,9 +498,9 @@ public:
     }
 
 private:
-    bool surfaceAllowed(SurfaceInterface *(SeatInterface::*method)() const) const
+    bool surfaceAllowed(SurfaceInterface *s) const
     {
-        if (SurfaceInterface *s = (waylandServer()->seat()->*method)()) {
+        if (s) {
             if (Window *t = waylandServer()->findWindow(s)) {
                 return t->isLockScreen() || t->isInputMethod() || t->isLockScreenOverlay();
             }
@@ -513,15 +510,11 @@ private:
     }
     bool pointerSurfaceAllowed() const
     {
-        return surfaceAllowed(&SeatInterface::focusedPointerSurface);
+        return surfaceAllowed(waylandServer()->seat()->focusedPointerSurface());
     }
     bool keyboardSurfaceAllowed() const
     {
-        return surfaceAllowed(&SeatInterface::focusedKeyboardSurface);
-    }
-    bool touchSurfaceAllowed() const
-    {
-        return surfaceAllowed(&SeatInterface::focusedTouchSurface);
+        return surfaceAllowed(waylandServer()->seat()->focusedKeyboardSurface());
     }
 };
 
@@ -1929,8 +1922,20 @@ public:
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
+        auto w = input()->findToplevel(pos);
+        if (!w) {
+            qCCritical(KWIN_CORE) << "Could not touch down, there's no window under" << pos;
+            return false;
+        }
+        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), id, pos);
+        if (!tp) {
+            qCCritical(KWIN_CORE) << "Could not touch down" << pos;
+            return false;
+        }
         seat->setTimestamp(time);
-        seat->notifyTouchDown(id, pos);
+        QObject::connect(w, &Window::bufferGeometryChanged, tp, [w, tp]() {
+            tp->setSurfacePosition(w->bufferGeometry().topLeft());
+        });
         return true;
     }
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
@@ -2596,8 +2601,9 @@ public:
         if (m_touchId != id) {
             return true;
         }
+        Window *window = input()->findToplevel(pos);
         seat->setTimestamp(time);
-        seat->notifyTouchDown(id, pos);
+        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
         m_lastPos = pos;
         return true;
     }

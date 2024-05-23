@@ -24,6 +24,7 @@ class DataDeviceInterface;
 class Display;
 class KeyboardInterface;
 class PointerInterface;
+class SeatInterface;
 class SeatInterfacePrivate;
 class SurfaceInterface;
 class TextInputV1Interface;
@@ -82,6 +83,24 @@ enum class PointerButtonState : quint32 {
 enum class KeyboardKeyState : quint32 {
     Released = 0,
     Pressed = 1,
+};
+
+class TouchPoint : public QObject
+{
+    Q_OBJECT
+public:
+    TouchPoint(quint32 serial, SurfaceInterface *surface, SeatInterface *seat)
+        : serial(serial)
+        , surface(surface)
+        , seat(seat)
+    {
+    }
+
+    void setSurfacePosition(const QPointF &offset);
+
+    quint32 serial = 0;
+    SurfaceInterface *surface = nullptr;
+    SeatInterface *seat = nullptr;
 };
 
 /**
@@ -560,18 +579,15 @@ public:
      * @name  touch related methods
      */
     ///@{
-    void setFocusedTouchSurface(SurfaceInterface *surface, const QPointF &surfacePosition = QPointF());
-    SurfaceInterface *focusedTouchSurface() const;
     TouchInterface *touch() const;
-    void setFocusedTouchSurfacePosition(const QPointF &surfacePosition);
-    QPointF focusedTouchSurfacePosition() const;
-    void notifyTouchDown(qint32 id, const QPointF &globalPosition);
+    bool isSurfaceTouched(SurfaceInterface *surface) const;
+    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition);
     void notifyTouchUp(qint32 id);
     void notifyTouchMotion(qint32 id, const QPointF &globalPosition);
     void notifyTouchFrame();
     void notifyTouchCancel();
     bool isTouchSequence() const;
-    QPointF firstTouchPointPosition() const;
+    QPointF firstTouchPointPosition(SurfaceInterface *surface) const;
     /**
      * @returns true if there is a touch sequence going on associated with a touch
      * down of the given @p serial.
@@ -714,8 +730,11 @@ Q_SIGNALS:
     void focusedKeyboardSurfaceAboutToChange(SurfaceInterface *nextSurface);
 
 private:
+    void discardSurfaceTouches(SurfaceInterface *surface);
+
     std::unique_ptr<SeatInterfacePrivate> d;
     friend class SeatInterfacePrivate;
+    friend class TouchPoint;
 };
 
 }
