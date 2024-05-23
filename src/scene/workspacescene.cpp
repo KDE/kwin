@@ -207,6 +207,9 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                     continue;
                 }
                 addCandidates(windowItem->surfaceItem(), ret, maxCount);
+                if (windowItem->decorationItem()) {
+                    return {};
+                }
                 if (ret.size() > maxCount) {
                     return {};
                 }
