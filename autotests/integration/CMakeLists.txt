@@ -167,6 +167,12 @@ if (KWIN_BUILD_ACTIVITIES)
     integrationTest(NAME testActivities SRCS activities_test.cpp LIBS XCB::ICCCM Plasma::Activities)
 endif()
 
+if (KWIN_BUILD_EIS)
+    pkg_check_modules(PKG_libei REQUIRED IMPORTED_TARGET libei-1.0)
+    integrationTest(NAME testInputCapture SRCS input_capture_test.cpp  LIBS PkgConfig::PKG_libei)
+endif()
+
+
 add_subdirectory(scripting)
 add_subdirectory(effects)
 add_subdirectory(fakes)
