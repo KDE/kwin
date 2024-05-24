@@ -271,13 +271,15 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
     if (!d->m_visible) {
         return;
     }
+    auto replayDevice = QPointingDevice::primaryPointingDevice("mouseReplayDevice");
     switch (e->type()) {
     case QEvent::MouseMove:
     case QEvent::MouseButtonPress:
     case QEvent::MouseButtonRelease: {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
         const QPoint widgetPos = d->m_view->mapFromGlobal(me->pos());
-        QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers());
+
+        QMouseEvent cloneEvent(me->type(), widgetPos, me->pos(), me->button(), me->buttons(), me->modifiers(), replayDevice);
         cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
@@ -289,7 +291,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
             d->lastMousePressButton = me->button();
             if (doubleClick) {
                 d->lastMousePressButton = Qt::NoButton;
-                QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->localPos(), me->windowPos(), me->screenPos(), me->button(), me->buttons(), me->modifiers());
+                QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->localPos(), me->windowPos(), me->screenPos(), me->button(), me->buttons(), me->modifiers(), replayDevice);
                 QCoreApplication::sendEvent(d->m_view.get(), &doubleClickEvent);
             }
         }
@@ -312,7 +314,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
         QWheelEvent *we = static_cast<QWheelEvent *>(e);
         const QPointF widgetPos = d->m_view->mapFromGlobal(we->position().toPoint());
         QWheelEvent cloneEvent(widgetPos, we->globalPosition(), we->pixelDelta(), we->angleDelta(), we->buttons(),
-                               we->modifiers(), we->phase(), we->inverted());
+                               we->modifiers(), we->phase(), we->inverted(), Qt::MouseEventNotSynthesized, replayDevice);
         cloneEvent.setAccepted(false);
         QCoreApplication::sendEvent(d->m_view.get(), &cloneEvent);
         e->setAccepted(cloneEvent.isAccepted());
