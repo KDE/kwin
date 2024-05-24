@@ -674,9 +674,21 @@ public:
     virtual QSizeF constrainClientSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
     QSizeF constrainFrameSize(const QSizeF &size, SizeMode mode = SizeModeAny) const;
 
-    void move(const QPointF &point);
+    /**
+     * Moves the window so that the new topLeft corner of the frame is @p topLeft.
+     */
+    void move(const QPointF &topLeft);
+
+    /**
+     * Resizes the window to have a new @p size but stay with the top-left corner in the same position.
+     */
     void resize(const QSizeF &size);
-    void moveResize(const QRectF &rect);
+
+    /**
+     * Requests a new @p geometry for the window that the implementation will need to adopt
+     * within its possibilities.
+     */
+    void moveResize(const QRectF &geometry);
 
     void growHorizontal();
     void shrinkHorizontal();
