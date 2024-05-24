@@ -73,6 +73,9 @@ class ScreencastingV1;
 
 namespace KWin
 {
+
+class WaylandServer;
+
 #if KWIN_BUILD_X11
 namespace Xwl
 {
@@ -113,6 +116,8 @@ private:
 
     void createVirtualInputDevices();
     void destroyVirtualInputDevices();
+
+    std::unique_ptr<WaylandServer> m_waylandServer;
 #if KWIN_BUILD_X11
     std::unique_ptr<Xwl::Xwayland> m_xwayland;
 #endif

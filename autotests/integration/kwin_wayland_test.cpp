@@ -95,7 +95,7 @@ WaylandTestApplication::WaylandTestApplication(OperationMode mode, int &argc, ch
 
     setSession(Session::create(Session::Type::Noop));
     setOutputBackend(std::make_unique<VirtualBackend>());
-    WaylandServer::create(this);
+    m_waylandServer.reset(WaylandServer::create());
     setProcessStartupEnvironment(QProcessEnvironment::systemEnvironment());
 }
 
@@ -116,6 +116,7 @@ WaylandTestApplication::~WaylandTestApplication()
     destroyInputMethod();
     destroyCompositor();
     destroyInput();
+    m_waylandServer.reset();
 }
 
 void WaylandTestApplication::createVirtualInputDevices()
