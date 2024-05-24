@@ -7,6 +7,8 @@
 #include "core/graphicsbuffer.h"
 #include "utils/drm_format_helper.h"
 
+#include <QCoreApplication>
+
 #include <drm_fourcc.h>
 
 namespace KWin
@@ -29,11 +31,13 @@ bool GraphicsBuffer::isDropped() const
 
 void GraphicsBuffer::ref()
 {
+    Q_ASSERT(QCoreApplication::instance()->thread() == thread());
     ++m_refCount;
 }
 
 void GraphicsBuffer::unref()
 {
+    Q_ASSERT(QCoreApplication::instance()->thread() == thread());
     Q_ASSERT(m_refCount > 0);
     --m_refCount;
     if (!m_refCount) {
