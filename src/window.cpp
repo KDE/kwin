@@ -3310,7 +3310,7 @@ QRectF Window::moveResizeGeometry() const
 void Window::setMoveResizeGeometry(const QRectF &geo)
 {
     m_moveResizeGeometry = geo;
-    m_moveResizeOutput = workspace()->outputAt(geo.center());
+    setMoveResizeOutput(workspace()->outputAt(geo.center()));
 }
 
 Output *Window::moveResizeOutput() const
