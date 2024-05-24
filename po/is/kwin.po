@@ -7,20 +7,20 @@
 # Pjetur G. Hjaltason <pjetur@pjetur.net>, 2003.
 # Arnar Leosson <leosson@frisurf.no>, 2005.
 # Sveinn í Felli <sveinki@nett.is>, 2008, 2009, 2010, 2022.
-# Guðmundur Erlingsson <gudmundure@gmail.com>, 2022.
+# SPDX-FileCopyrightText: 2022, 2024 Guðmundur Erlingsson <gudmundure@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2022-12-31 14:10+0000\n"
-"Last-Translator: gummi <gudmundure@gmail.com>\n"
+"PO-Revision-Date: 2024-05-13 11:51+0000\n"
+"Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 23.08.3\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -29,13 +29,14 @@ msgstr ""
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr ""
-"Richard Allen, Þórarinn R. Einarsson, Pjetur G. Hjaltason,Guðmundur "
+"Richard Allen, Þórarinn R. Einarsson, Pjetur G. Hjaltason, Guðmundur "
 "Erlingsson"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "ra@ra.is, thori@mindspring.com, pjetur@pjetur.net,gudmundure@gmail.com"
+msgstr ""
+"ra@ra.is, thori@mindspring.com, pjetur@pjetur.net, gudmundure@gmail.com"
 
 #: composite.cpp:646
 #, kde-format
@@ -49,7 +50,7 @@ msgid ""
 "resume using the '%1' shortcut."
 msgstr ""
 "Skjáborðsbrellur voru settar í bið af öðru forriti.<br/>Þú getur haldið "
-"áfram með því að nota flýtilyklana '%1'."
+"áfram með því að nota flýtilykilinn '%1'."
 
 #: composite.cpp:1064
 #, kde-format
@@ -59,6 +60,10 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>OpenGL-myndsmíði (sjálfgefið) hefur áður valdið því að KWin hrynur.\n"
+"Líklega stafar það af galla í rekli.<p>Ef þú telur þig hafa uppfært í "
+"stöðugan rekil síðan það gerðist<br>geturðu endurstillt þessa vörn en "
+"<b>gættu að því að það gæti valdið tafarlausu hruni!</b></p>"
 
 #: composite.cpp:1071
 #, kde-format
@@ -67,10 +72,9 @@ msgstr ""
 "Skilyrtar X framlengingar (XComposite og XDamage) eru ekki aðgengilegar."
 
 #: composite.cpp:1074
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL og XRender/XFixes eru ekki tiltæk."
+msgstr "GLX/OpenGL er ekki tiltækt."
 
 #: debug_console.cpp:79 debug_console.cpp:84
 #, kde-format
@@ -1166,19 +1170,17 @@ msgstr "Bíða lengur"
 #: input.cpp:2014
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Færðu teikniborðið í næsta úttak"
 
 #: input.cpp:2093
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Teikniborðssnið"
+msgstr "Teikniborð fært í %1"
 
 #: input.cpp:2093
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Teikniborð skiptu um úttak"
 
 #: input.cpp:3098
 #, kde-format
@@ -1357,6 +1359,8 @@ msgstr "Myndgera í gegnum drm-hnút."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Sækja upplýsingar um landsstaðal frá locale1 frekar en grunnstillingum "
+"notandans"
 
 #: main_wayland.cpp:386
 #, kde-format
@@ -1586,7 +1590,7 @@ msgstr "Víxla næturlitum af/á"
 #: plugins/nightcolor/nightcolormanager.cpp:471
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Forskoðun á lithita"
 
 #. i18n: ectx: label, entry (count), group (General)
 #: rulebooksettingsbase.kcfg:9
@@ -2114,20 +2118,20 @@ msgstr "Regla af gerðinni Heiti skjáborðsskrár"
 #, kde-format
 msgctxt "Error message"
 msgid "Could not locate package metadata"
-msgstr ""
+msgstr "Fann ekki lýsigögn pakka"
 
 #: scripting/genericscriptedconfig.cpp:84
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not contain a valid metadata.json file"
-msgstr ""
+msgstr "%1 inniheldur ekki gilda metadata.json-skrá"
 
 #: scripting/genericscriptedconfig.cpp:90
 #: scripting/genericscriptedconfig.cpp:96
 #, kde-format
 msgctxt "Required file does not exist"
 msgid "%1 does not exist"
-msgstr ""
+msgstr "%1 er ekki til"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -2261,10 +2265,9 @@ msgid "&Shade"
 msgstr "&Rúlla upp"
 
 #: useractions.cpp:272
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "&No Titlebar and Frame"
-msgstr "Engin titilstika og rammi"
+msgstr "&Engin titilstika og rammi"
 
 #: useractions.cpp:280
 #, kde-format
@@ -2335,11 +2338,9 @@ msgid "Show in &Activities"
 msgstr "Sýna í &Athöfnum"
 
 #: useractions.cpp:525
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move the window to that desktop"
-#| msgid "Move to New Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Færa á nýtt skjáborð"
+msgstr "Færa á &núverandi skjáborð"
 
 #: useractions.cpp:535 useractions.cpp:602
 #, kde-format
@@ -2383,10 +2384,9 @@ msgid "&All Activities"
 msgstr "&Allar athafnir"
 
 #: useractions.cpp:776
-#, fuzzy, kde-format
-#| msgid "Move to %1 %2"
+#, kde-format
 msgid "Move to %1"
-msgstr "Færa í %1 %2"
+msgstr "Færa á %1"
 
 #: useractions.cpp:901
 #, kde-format
@@ -2466,10 +2466,9 @@ msgid "Make Window Fullscreen"
 msgstr "Láta gluggann fylla allan skjáinn"
 
 #: useractions.cpp:1009
-#, fuzzy, kde-format
-#| msgid "No titlebar and frame"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Engin titilstika og rammi"
+msgstr "Víxla titilstiku glugga og ramma"
 
 #: useractions.cpp:1011
 #, kde-format
@@ -2597,16 +2596,14 @@ msgid "Switch to Window to the Left"
 msgstr "Skipta yfir í glugga til vinstri"
 
 #: useractions.cpp:1061
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
-msgstr "Auka ógagnsæi virks glugga um 5 %"
+msgstr "Auka ógagnsæi virks glugga um 5%"
 
 #: useractions.cpp:1063
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
-msgstr "Minnka ógagnsæi virks glugga um 5 %"
+msgstr "Minnka ógagnsæi virks glugga um 5%"
 
 #: useractions.cpp:1066
 #, kde-format
@@ -2664,28 +2661,24 @@ msgid "Window to Previous Screen"
 msgstr "Gluggi á fyrri skjá"
 
 #: useractions.cpp:1102
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Window One Screen to the Right"
-msgstr "Færa glugga um eitt skjáborð til hægri"
+msgstr "Gluggi einn skjá til hægri"
 
 #: useractions.cpp:1104
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Window One Screen to the Left"
-msgstr "Færa glugga um eitt skjáborð til vinstri"
+msgstr "Gluggi einn skjá til vinstri"
 
 #: useractions.cpp:1106
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Window One Screen Up"
-msgstr "Gluggi á skjá 2"
+msgstr "Gluggi upp um einn skjá"
 
 #: useractions.cpp:1108
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Window One Screen Down"
-msgstr "Færa glugga um eitt skjáborð niður"
+msgstr "Gluggi niður um einn skjá"
 
 #: useractions.cpp:1112
 #, kde-format
@@ -2703,28 +2696,24 @@ msgid "Switch to Previous Screen"
 msgstr "Skipta á fyrri skjá"
 
 #: useractions.cpp:1121
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Skipta yfir í glugga til hægri"
+msgstr "Skipta á skjá til hægri"
 
 #: useractions.cpp:1123
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Skipta yfir í glugga til vinstri"
+msgstr "Skipta á skjá til vinstri"
 
 #: useractions.cpp:1125
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Á skjá 0"
+msgstr "Skipta á skjá fyrir ofan"
 
 #: useractions.cpp:1127
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Á skjá 0"
+msgstr "Skipta á skjá fyrir neðan"
 
 #: useractions.cpp:1130
 #, kde-format
