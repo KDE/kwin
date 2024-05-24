@@ -1392,6 +1392,7 @@ public:
         if (!decoration) {
             return false;
         }
+        const QPointF globalPos = event->screenPos();
         const QPointF p = event->screenPos() - decoration->window()->pos();
         switch (event->type()) {
         case QEvent::MouseMove: {
@@ -1411,10 +1412,10 @@ public:
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
             if (!e.isAccepted() && event->type() == QEvent::MouseButtonPress) {
-                decoration->window()->processDecorationButtonPress(&e);
+                decoration->window()->processDecorationButtonPress(p, globalPos, event->button());
             }
             if (event->type() == QEvent::MouseButtonRelease) {
-                decoration->window()->processDecorationButtonRelease(&e);
+                decoration->window()->processDecorationButtonRelease(event->button());
             }
             return true;
         }
@@ -1484,7 +1485,7 @@ public:
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration->decoration(), &e);
         if (!e.isAccepted()) {
-            decoration->window()->processDecorationButtonPress(&e);
+            decoration->window()->processDecorationButtonPress(m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton);
         }
         return true;
     }
@@ -1534,7 +1535,7 @@ public:
         QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
         e.setAccepted(false);
         QCoreApplication::sendEvent(decoration->decoration(), &e);
-        decoration->window()->processDecorationButtonRelease(&e);
+        decoration->window()->processDecorationButtonRelease(Qt::LeftButton);
 
         QHoverEvent leaveEvent(QEvent::HoverLeave, QPointF(), QPointF());
         QCoreApplication::sendEvent(decoration->decoration(), &leaveEvent);
@@ -1550,6 +1551,7 @@ public:
         if (!decoration) {
             return false;
         }
+        const QPointF globalPos = event->globalPosF();
         const QPointF p = event->globalPosF() - decoration->window()->pos();
         switch (event->type()) {
         case QEvent::TabletMove:
@@ -1571,10 +1573,10 @@ public:
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
             if (!e.isAccepted() && isPressed) {
-                decoration->window()->processDecorationButtonPress(&e);
+                decoration->window()->processDecorationButtonPress(p, globalPos, Qt::LeftButton);
             }
             if (event->type() == QEvent::TabletRelease) {
-                decoration->window()->processDecorationButtonRelease(&e);
+                decoration->window()->processDecorationButtonRelease(Qt::LeftButton);
             }
             break;
         }

@@ -2715,7 +2715,7 @@ void Window::processDecorationMove(const QPointF &localPos, const QPointF &globa
     }
 }
 
-bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
+bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu)
 {
     Options::MouseCommand com = Options::MouseNothing;
     bool active = isActive();
@@ -2724,7 +2724,7 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
     }
 
     // check whether it is a double click
-    if (event->button() == Qt::LeftButton) {
+    if (button == Qt::LeftButton) {
         if (m_decoration.doubleClickTimer.isValid()) {
             const qint64 interval = m_decoration.doubleClickTimer.elapsed();
             m_decoration.doubleClickTimer.invalidate();
@@ -2763,21 +2763,21 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
         }
     }
 
-    if (event->button() == Qt::LeftButton) {
+    if (button == Qt::LeftButton) {
         com = active ? options->commandActiveTitlebar1() : options->commandInactiveTitlebar1();
-    } else if (event->button() == Qt::MiddleButton) {
+    } else if (button == Qt::MiddleButton) {
         com = active ? options->commandActiveTitlebar2() : options->commandInactiveTitlebar2();
-    } else if (event->button() == Qt::RightButton) {
+    } else if (button == Qt::RightButton) {
         com = active ? options->commandActiveTitlebar3() : options->commandInactiveTitlebar3();
     }
-    if (event->button() == Qt::LeftButton
+    if (button == Qt::LeftButton
         && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
         && com != Options::MouseMinimize) // mouse release event
     {
         setInteractiveMoveResizeGravity(mouseGravity());
         setInteractiveMoveResizePointerButtonDown(true);
-        setInteractiveMoveResizeAnchor(event->globalPosition());
-        setInteractiveMoveOffset(QPointF(qreal(event->pos().x()) / width(), qreal(event->pos().y()) / height()));
+        setInteractiveMoveResizeAnchor(globalPos);
+        setInteractiveMoveOffset(QPointF(qreal(localPos.x()) / width(), qreal(localPos.y()) / height()));
         setUnrestrictedInteractiveMoveResize(false);
         startDelayedInteractiveMoveResize();
         updateCursor();
@@ -2785,15 +2785,15 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
     // In the new API the decoration may process the menu action to display an inactive tab's menu.
     // If the event is unhandled then the core will create one for the active window in the group.
     if (!ignoreMenu || com != Options::MouseOperationsMenu) {
-        performMouseCommand(com, event->globalPos());
+        performMouseCommand(com, globalPos);
     }
     return !( // Return events that should be passed to the decoration in the new API
         com == Options::MouseRaise || com == Options::MouseOperationsMenu || com == Options::MouseActivateAndRaise || com == Options::MouseActivate || com == Options::MouseActivateRaiseAndPassClick || com == Options::MouseActivateAndPassClick || com == Options::MouseNothing);
 }
 
-void Window::processDecorationButtonRelease(QMouseEvent *event)
+void Window::processDecorationButtonRelease(Qt::MouseButton button)
 {
-    if (event->buttons() == Qt::NoButton) {
+    if (button == Qt::LeftButton) {
         setInteractiveMoveResizePointerButtonDown(false);
         stopDelayedInteractiveMoveResize();
         if (isInteractiveMoveResize()) {
