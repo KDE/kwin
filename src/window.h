@@ -1174,8 +1174,8 @@ public:
     void triggerDecorationRepaint();
     void layoutDecorationRects(QRectF &left, QRectF &top, QRectF &right, QRectF &bottom) const;
     void processDecorationMove(const QPointF &localPos, const QPointF &globalPos);
-    bool processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu = false);
-    void processDecorationButtonRelease(QMouseEvent *event);
+    bool processDecorationButtonPress(const QPointF &localPos, const QPointF &globalPos, Qt::MouseButton button, bool ignoreMenu = false);
+    void processDecorationButtonRelease(Qt::MouseButton button);
 
     virtual void invalidateDecoration();
 

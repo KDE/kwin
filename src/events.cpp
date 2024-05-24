@@ -1045,14 +1045,7 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
     if (w == inputId()) {
         x = x_root - frameGeometry().x();
         y = y_root - frameGeometry().y();
-        // New API processes core events FIRST and only passes unused ones to the decoration
-        QMouseEvent ev(QMouseEvent::MouseButtonPress,
-                       QPoint(x, y),
-                       QPoint(x_root, y_root),
-                       x11ToQtMouseButton(button),
-                       x11ToQtMouseButtons(state) | x11ToQtMouseButton(button),
-                       Qt::KeyboardModifiers());
-        return processDecorationButtonPress(&ev, true);
+        return processDecorationButtonPress(QPoint(x, y), QPoint(x_root, y_root), x11ToQtMouseButton(button), true);
     }
     if (w == frameId() && isDecorated()) {
         if (button >= 4 && button <= 7) {
@@ -1089,7 +1082,7 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted()) {
-                processDecorationButtonPress(&event);
+                processDecorationButtonPress(QPointF(x, y), QPointF(x_root, y_root), x11ToQtMouseButton(button));
             }
         }
         return true;
@@ -1114,9 +1107,6 @@ bool X11Window::buttonReleaseEvent(xcb_window_t w, int button, int state, int x,
                               x11ToQtKeyboardModifiers(state));
             event.setAccepted(false);
             QCoreApplication::sendEvent(decoration(), &event);
-            if (event.isAccepted() || !titlebarPositionUnderMouse()) {
-                invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
-            }
         }
     }
     if (w == wrapperId()) {
