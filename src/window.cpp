@@ -2793,10 +2793,6 @@ bool Window::processDecorationButtonPress(QMouseEvent *event, bool ignoreMenu)
 
 void Window::processDecorationButtonRelease(QMouseEvent *event)
 {
-    if (event->isAccepted()) {
-        invalidateDecorationDoubleClickTimer(); // click was for the deco and shall not init a doubleclick
-    }
-
     if (event->buttons() == Qt::NoButton) {
         setInteractiveMoveResizePointerButtonDown(false);
         stopDelayedInteractiveMoveResize();
