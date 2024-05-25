@@ -1413,7 +1413,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global)
         }
 
         if (!isRequestedFullScreen()) {
-            if (input()->modifiersRelevantForGlobalShortcuts() & Qt::ShiftModifier) {
+            if (input()->keyboardModifiers() & Qt::ShiftModifier) {
                 resetQuickTilingMaximizationZones();
                 const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
                 if (r.isEmpty()) {
