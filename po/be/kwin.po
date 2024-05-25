@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-24 00:40+0000\n"
+"POT-Creation-Date: 2024-05-25 00:40+0000\n"
 "PO-Revision-Date: 2024-02-23 01:30\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -34,29 +34,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "ihar.hrachyshka@gmail.com, symbol@akeeri.tk, nashtlumach@gmail.com"
 
-#: backends/wayland/wayland_output.cpp:276
+#: backends/wayland/wayland_output.cpp:275
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Каб скасаваць захопліванне паказальніка, націсніце правую клавішу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:278
+#: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Каб захапіць паказальнік, націсніце правую клавішу Ctrl"
 
-#: backends/wayland/wayland_output.cpp:282
+#: backends/wayland/wayland_output.cpp:281
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "Сродак кампазітынгу KDE Wayland %1"
 
-#: backends/wayland/wayland_output.cpp:285
+#: backends/wayland/wayland_output.cpp:284
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Вывад адключаны"
 
-#: backends/wayland/wayland_output.cpp:287
+#: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Вывад зацемнены"
