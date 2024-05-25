@@ -3,13 +3,13 @@
 #
 # Malcolm Hunter <malcolm.hunter@gmx.co.uk>, 2003, 2004, 2005, 2008.
 # Andrew Coles <andrew_coles@yahoo.co.uk>, 2004, 2005, 2009, 2010.
-# Steve Allewell <steve.allewell@gmail.com>, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Steve Allewell <steve.allewell@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-24 00:40+0000\n"
-"PO-Revision-Date: 2023-04-22 10:52+0100\n"
+"PO-Revision-Date: 2024-05-24 16:48+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.03.70\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -42,12 +42,11 @@ msgid "Press right control key to grab pointer"
 msgstr "Press right control key to grab pointer"
 
 #: backends/wayland/wayland_output.cpp:282
-#, fuzzy, kde-format
-#| msgid "KDE Wayland Compositor"
+#, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr "KDE Wayland Compositor"
+msgstr "KDE Wayland Compositor %1"
 
 #: backends/wayland/wayland_output.cpp:285
 #, kde-format
@@ -1157,6 +1156,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> is not responding. Do you want to "
+"terminate this application?</para>"
 
 #: helpers/killer/killer.cpp:151
 #, kde-kuit-format
@@ -1165,57 +1166,48 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" of <application>%2</application> is not responding. Do you want "
+"to terminate this application?</para>"
 
 #: helpers/killer/killer.cpp:154
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Do you want to terminate this application?</"
-"para><para><warning>Terminating the application will close all of its child "
-"windows. Any unsaved data will be lost.</warning></para>"
+"<para><emphasis strong='true'>Terminating this application will close all of "
+"its windows. Any unsaved data will be lost.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:156
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Terminate"
+msgstr "&Terminate %1"
 
 #: helpers/killer/killer.cpp:157
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Wait Longer"
+msgstr "&Wait Longer"
 
 #: helpers/killer/killer.cpp:165
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Not Responding)"
+msgstr "Not Responding"
 
 #: helpers/killer/killer.cpp:181
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Process ID: %1"
 
 #: helpers/killer/killer.cpp:183
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "hostname"
+msgstr "Host name: %1"
 
 #: input.cpp:2018
 #, kde-format
@@ -1317,11 +1309,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Very Huge"
+msgstr "Xaver Hugl"
 
 #: main.cpp:216
 #, kde-format
@@ -1521,52 +1511,52 @@ msgstr "Noise strength:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Red"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Green"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Blue"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Purple"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:71
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Mode:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopia (red weak)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deuteranopia (green weak)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:78
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopia (blue-yellow)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:85
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensity:"
 
 #: plugins/colorpicker/colorpicker.cpp:108
 #, kde-format
@@ -1710,13 +1700,13 @@ msgstr "Window Close Animation"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Inactivity duration (seconds):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Hide cursor on typing"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2166,17 +2156,15 @@ msgstr "&Colour:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+msgstr "Draw with the mouse by holding modifier keys and moving the mouse"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Modifier keys:"
+msgstr "Free draw modifier keys:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2220,32 +2208,27 @@ msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifier keys:"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Modifier keys:"
+msgstr "Arrow draw modifier keys:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Night Colour On"
+msgstr "Night Light Suspended"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Night Colour On"
+msgstr "Night Light Resumed"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspend/Resume Night Light"
 
 #: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
@@ -2262,28 +2245,26 @@ msgstr "Unknown"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Cycle through Overview and Grid View"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Cycle through Grid View and Overview"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Toggle Overview"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Toggle Overview"
+msgstr "Toggle Grid View"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
@@ -2295,33 +2276,31 @@ msgstr "Ignore minimised windows:"
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Organise windows in the Grid View:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Search results include filtered windows:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Cycle through Overview and Grid View"
 
 #: plugins/overview/overvieweffect.cpp:143
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
 msgstr "Toggle Overview"
 
 #: plugins/overview/overvieweffect.cpp:151
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Toggle Overview"
+msgstr "Toggle Grid View"
 
 #: plugins/overview/qml/DesktopBar.qml:165
 #, kde-format
@@ -2334,29 +2313,25 @@ msgid "Add Virtual Desktop"
 msgstr "Add Virtual Desktop"
 
 #: plugins/overview/qml/main.qml:381
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Delete Virtual Desktop"
+msgstr "No other Virtual Desktops to show"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Add Virtual Desktop"
 
 #: plugins/overview/qml/main.qml:394
-#, fuzzy, kde-format
-#| msgid "Configure virtual keyboards..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Configure virtual keyboards..."
+msgstr "Configure Virtual Desktops…"
 
 #: plugins/overview/qml/main.qml:739
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "No matching windows"
@@ -2547,10 +2522,9 @@ msgid "Padding:"
 msgstr "Padding:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Load Layout..."
+msgstr "Load Layout…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -2560,12 +2534,12 @@ msgstr "Close"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Split Left/Right"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Split Top/Bottom"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -3508,27 +3482,25 @@ msgstr "Desktop file name rule type"
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Layer"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Shaded rule type"
+msgstr "Layer rule type"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Activity rule type"
+msgstr "AdaptiveSync rule type"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3548,18 +3520,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"The following applications did not close:\n"
+"%1"
 
 #: sm.cpp:480
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Cancel Logout"
 
 #: sm.cpp:481
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Log Out Anyway"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3568,11 +3542,10 @@ msgid "Show Desktop"
 msgstr "Show Desktop"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "No Windows"
+msgstr "No open windows"
 
 #: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows"
@@ -3677,22 +3650,19 @@ msgid "&No Titlebar and Frame"
 msgstr "&No Titlebar and Frame"
 
 #: useractions.cpp:258
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Set Window Short&cut..."
+msgstr "Set Window Short&cut…"
 
 #: useractions.cpp:264
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Configure Special &Window Settings..."
+msgstr "Configure Special &Window Settings…"
 
 #: useractions.cpp:269
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Configure S&pecial Application Settings..."
+msgstr "Configure S&pecial Application Settings…"
 
 #: useractions.cpp:275
 #, kde-format

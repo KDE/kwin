@@ -3,13 +3,13 @@
 #
 # Andrew Coles <andrew_coles@yahoo.co.uk>, 2004, 2005, 2009, 2010.
 # Malcolm Hunter <malcolm.hunter@gmx.co.uk>, 2005, 2008.
-# Steve Allewell <steve.allewell@gmail.com>, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
+# SPDX-FileCopyrightText: 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Steve Allewell <steve.allewell@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-13 00:39+0000\n"
-"PO-Revision-Date: 2023-06-17 12:06+0100\n"
+"PO-Revision-Date: 2024-05-24 16:46+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.03.70\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -582,12 +582,12 @@ msgstr "Block compositing"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Layer"
 
 #: rulesmodel.cpp:725
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Adaptive Sync"
 
 #: rulesmodel.cpp:777
 #, kde-format
@@ -759,38 +759,37 @@ msgstr "Extreme"
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Below"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Above"
 
 #: rulesmodel.cpp:926
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Position"
+msgstr "Notification"
 
 #: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Popup"
 
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Critical Notification"
 
 #: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Overlay"
 
 #: rulesmodel.cpp:956
 #, kde-format
@@ -838,12 +837,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "No rules for specific windows are currently set"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr "Click the <interface>Add New…</interface> button below to add some"
+msgstr "Click <interface>Add New…</interface> to add some"
 
 #: ui/main.qml:97
 #, kde-format
