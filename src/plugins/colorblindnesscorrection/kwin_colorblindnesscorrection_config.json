@@ -2,8 +2,6 @@
     "KPlugin": {
         "License": "GPL-2.0+",
         "Name": "Colorblindness Correction",
-        "Name[ar]": "تصحيح عمى الألوان",
-        "Name[be]": "Карэкцыя дальтанізму",
         "Name[bg]": "Корекция на цветна слепота",
         "Name[ca@valencia]": "Correcció del daltonisme",
         "Name[ca]": "Correcció del daltonisme",
@@ -23,7 +21,6 @@
         "Name[ka]": "ფერების სიბრმავის შესწორება",
         "Name[ko]": "색각 이상 보정",
         "Name[lt]": "Spalvinio aklumo korekcija",
-        "Name[lv]": "Krāsu akluma korekcija",
         "Name[nl]": "Correctie voor kleurenblindheid",
         "Name[pl]": "Poprawki dla ślepych na barwy",
         "Name[ru]": "Корректировка при цветовой слепоте",
