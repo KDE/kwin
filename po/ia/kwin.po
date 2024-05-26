@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-24 00:40+0000\n"
+"POT-Creation-Date: 2024-05-26 02:26+0000\n"
 "PO-Revision-Date: 2024-05-21 10:08+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -29,29 +29,29 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "g.sora@tiscali.it"
 
-#: backends/wayland/wayland_output.cpp:276
+#: backends/wayland/wayland_output.cpp:275
 #, kde-format
 msgid "Press right control to ungrab pointer"
 msgstr "Pressa controlo dextere per lassar punctator"
 
-#: backends/wayland/wayland_output.cpp:278
+#: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control key to grab pointer"
 msgstr "Pressa controlo dextere per prender punctator"
 
-#: backends/wayland/wayland_output.cpp:282
+#: backends/wayland/wayland_output.cpp:281
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
 msgstr "KDE Wayland Compositor %1"
 
-#: backends/wayland/wayland_output.cpp:285
+#: backends/wayland/wayland_output.cpp:284
 #, kde-format
 msgid "- Output disabled"
 msgstr "- Sortita dishabilitate"
 
-#: backends/wayland/wayland_output.cpp:287
+#: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output dimmed"
 msgstr "- Sortita obscurate"
