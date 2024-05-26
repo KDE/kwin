@@ -32,13 +32,6 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     });
 }
 
-static std::chrono::nanoseconds estimateNextPageflip(std::chrono::nanoseconds earliestSubmitTime, std::chrono::nanoseconds lastPageflip, std::chrono::nanoseconds vblankInterval)
-{
-    // the last pageflip may be in the future
-    const uint64_t pageflipsSince = earliestSubmitTime > lastPageflip ? (earliestSubmitTime - lastPageflip) / vblankInterval : 0;
-    return lastPageflip + vblankInterval * (pageflipsSince + 1);
-}
-
 void RenderLoopPrivate::scheduleNextRepaint()
 {
     if (kwinApp()->isTerminating() || compositeTimer.isActive()) {
@@ -59,13 +52,11 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
     if (presentationMode == PresentationMode::VSync) {
         // normal presentation: pageflips only happen at vblank
-        if (maxPendingFrameCount == 1) {
-            // keep the old behavior for backends not supporting triple buffering
-            nextPresentationTimestamp = estimateNextPageflip(currentTime, lastPresentationTimestamp, vblankInterval);
-        } else {
-            // estimate the next pageflip that can realistically be hit
-            nextPresentationTimestamp = estimateNextPageflip(std::max(lastTargetTimestamp, currentTime + expectedCompositingTime), lastPresentationTimestamp, vblankInterval);
-        }
+        const uint64_t pageflipsSince = std::max<int64_t>((currentTime - lastPresentationTimestamp) / vblankInterval, 0);
+        const uint64_t pageflipsInAdvance = std::min<int64_t>(expectedCompositingTime / vblankInterval + 1, maxPendingFrameCount);
+        const uint64_t pageflipsSinceLastToTarget = std::max<int64_t>(std::round((lastTargetTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0);
+
+        nextPresentationTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
     } else if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
         // tearing: pageflips happen ASAP
         nextPresentationTimestamp = currentTime;
