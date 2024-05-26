@@ -19,6 +19,8 @@
 #include <QApplication>
 #include <QThread>
 
+using namespace std::chrono_literals;
+
 namespace KWin
 {
 
@@ -65,6 +67,13 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
         addProperty(plane->inFenceFd, buffer ? buffer->syncFd().get() : -1);
     }
     m_planes.emplace(plane);
+    if (frame) {
+        if (m_targetPageflipTime) {
+            m_targetPageflipTime = std::min(*m_targetPageflipTime, frame->targetPageflipTime());
+        } else {
+            m_targetPageflipTime = frame->targetPageflipTime();
+        }
+    }
 }
 
 void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr)
@@ -198,6 +207,11 @@ void DrmAtomicCommit::merge(DrmAtomicCommit *onTop)
         m_vrr = onTop->m_vrr;
     }
     m_cursorOnly &= onTop->isCursorOnly();
+    if (!m_targetPageflipTime) {
+        m_targetPageflipTime = onTop->m_targetPageflipTime;
+    } else if (onTop->m_targetPageflipTime) {
+        *m_targetPageflipTime = std::min(*m_targetPageflipTime, *onTop->m_targetPageflipTime);
+    }
 }
 
 void DrmAtomicCommit::setCursorOnly(bool cursor)
@@ -208,6 +222,17 @@ void DrmAtomicCommit::setCursorOnly(bool cursor)
 bool DrmAtomicCommit::isCursorOnly() const
 {
     return m_cursorOnly;
+}
+
+std::optional<std::chrono::steady_clock::time_point> DrmAtomicCommit::targetPageflipTime() const
+{
+    return m_targetPageflipTime;
+}
+
+bool DrmAtomicCommit::isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const
+{
+    static constexpr auto s_pageflipSlop = 500us;
+    return (!m_targetPageflipTime || pageflipTarget + s_pageflipSlop >= *m_targetPageflipTime) && areBuffersReadable();
 }
 
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)

@@ -47,6 +47,7 @@ std::optional<RenderTimeSpan> CpuRenderTimeQuery::query()
 OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDuration)
     : m_loop(loop)
     , m_refreshDuration(refreshDuration)
+    , m_targetPageflipTime(loop->nextPresentationTimestamp())
 {
 }
 
@@ -126,6 +127,11 @@ QRegion OutputFrame::damage() const
 void OutputFrame::addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query)
 {
     m_renderTimeQueries.push_back(std::move(query));
+}
+
+std::chrono::steady_clock::time_point OutputFrame::targetPageflipTime() const
+{
+    return m_targetPageflipTime;
 }
 
 RenderBackend::RenderBackend(QObject *parent)

@@ -46,7 +46,7 @@ public:
 private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;
-    void optimizeCommits();
+    void optimizeCommits(TimePoint pageflipTarget);
     void submit();
 
     std::unique_ptr<DrmCommit> m_committed;
