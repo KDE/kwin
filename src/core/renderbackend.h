@@ -92,11 +92,14 @@ public:
     QRegion damage() const;
     void addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query);
 
+    std::chrono::steady_clock::time_point targetPageflipTime() const;
+
 private:
     std::optional<std::chrono::nanoseconds> queryRenderTime() const;
 
     RenderLoop *const m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
+    const std::chrono::steady_clock::time_point m_targetPageflipTime;
     std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;

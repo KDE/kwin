@@ -82,10 +82,14 @@ public:
     void setCursorOnly(bool cursor);
     bool isCursorOnly() const;
 
+    std::optional<std::chrono::steady_clock::time_point> targetPageflipTime() const;
+    bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
+
 private:
     bool doCommit(uint32_t flags);
 
     const QList<DrmPipeline *> m_pipelines;
+    std::optional<std::chrono::steady_clock::time_point> m_targetPageflipTime;
     std::unordered_map<const DrmProperty *, std::shared_ptr<DrmBlob>> m_blobs;
     std::unordered_map<DrmPlane *, std::shared_ptr<DrmFramebuffer>> m_buffers;
     std::unordered_map<DrmPlane *, std::shared_ptr<OutputFrame>> m_frames;

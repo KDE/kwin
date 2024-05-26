@@ -60,8 +60,8 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
                 lock.lock();
             }
-            optimizeCommits();
-            if (!m_commits.front()->areBuffersReadable()) {
+            optimizeCommits(m_targetPageflipTime);
+            if (!m_commits.front()->isReadyFor(m_targetPageflipTime)) {
                 // no commit is ready yet, reschedule
                 if (m_vrr) {
                     m_targetPageflipTime += 50us;
@@ -86,7 +86,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                     bool timeout = true;
                     while (std::chrono::steady_clock::now() < cursorTarget && timeout && m_commits.front()->isCursorOnly()) {
                         timeout = m_commitPending.wait_for(lock, 50us) == std::cv_status::timeout;
-                        optimizeCommits();
+                        optimizeCommits(cursorTarget);
                     }
                     if (!timeout) {
                         // some new commit was added, process that
@@ -144,20 +144,20 @@ static std::unique_ptr<DrmAtomicCommit> mergeCommits(std::span<const std::unique
     return ret;
 }
 
-void DrmCommitThread::optimizeCommits()
+void DrmCommitThread::optimizeCommits(TimePoint pageflipTarget)
 {
     if (m_commits.size() <= 1) {
         return;
     }
     // merge commits in the front that are already ready (regardless of which planes they modify)
     if (m_commits.front()->areBuffersReadable()) {
-        const auto firstNotReadable = std::find_if(m_commits.begin() + 1, m_commits.end(), [](const auto &commit) {
-            return !commit->areBuffersReadable();
+        const auto firstNotReady = std::find_if(m_commits.begin() + 1, m_commits.end(), [pageflipTarget](const auto &commit) {
+            return !commit->isReadyFor(pageflipTarget);
         });
-        if (firstNotReadable != m_commits.begin() + 1) {
-            auto merged = mergeCommits(std::span(m_commits.begin(), firstNotReadable));
-            std::move(m_commits.begin(), firstNotReadable, std::back_inserter(m_commitsToDelete));
-            m_commits.erase(m_commits.begin() + 1, firstNotReadable);
+        if (firstNotReady != m_commits.begin() + 1) {
+            auto merged = mergeCommits(std::span(m_commits.begin(), firstNotReady));
+            std::move(m_commits.begin(), firstNotReady, std::back_inserter(m_commitsToDelete));
+            m_commits.erase(m_commits.begin() + 1, firstNotReady);
             m_commits.front() = std::move(merged);
         }
     }
@@ -165,24 +165,24 @@ void DrmCommitThread::optimizeCommits()
     for (auto it = m_commits.begin(); it != m_commits.end();) {
         const auto startIt = it;
         auto &startCommit = *startIt;
-        const auto firstNotSamePlaneReadable = std::find_if(startIt + 1, m_commits.end(), [&startCommit](const auto &commit) {
-            return startCommit->modifiedPlanes() != commit->modifiedPlanes() || !commit->areBuffersReadable();
+        const auto firstNotSamePlaneNotReady = std::find_if(startIt + 1, m_commits.end(), [&startCommit, pageflipTarget](const auto &commit) {
+            return startCommit->modifiedPlanes() != commit->modifiedPlanes() || !commit->isReadyFor(pageflipTarget);
         });
-        if (firstNotSamePlaneReadable == startIt + 1) {
+        if (firstNotSamePlaneNotReady == startIt + 1) {
             it++;
             continue;
         }
-        auto merged = mergeCommits(std::span(startIt, firstNotSamePlaneReadable));
-        std::move(startIt, firstNotSamePlaneReadable, std::back_inserter(m_commitsToDelete));
+        auto merged = mergeCommits(std::span(startIt, firstNotSamePlaneNotReady));
+        std::move(startIt, firstNotSamePlaneNotReady, std::back_inserter(m_commitsToDelete));
         startCommit = std::move(merged);
-        it = m_commits.erase(startIt + 1, firstNotSamePlaneReadable);
+        it = m_commits.erase(startIt + 1, firstNotSamePlaneNotReady);
     }
     if (m_commits.size() == 1) {
         // already done
         return;
     }
     std::unique_ptr<DrmAtomicCommit> front;
-    if (m_commits.front()->areBuffersReadable()) {
+    if (m_commits.front()->isReadyFor(pageflipTarget)) {
         // can't just move the commit, or merging might drop the last reference
         // to an OutputFrame, which should only happen in the main thread
         front = std::make_unique<DrmAtomicCommit>(*m_commits.front());
@@ -192,6 +192,10 @@ void DrmCommitThread::optimizeCommits()
     // try to move commits that are ready to the front
     for (auto it = m_commits.begin() + 1; it != m_commits.end();) {
         auto &commit = *it;
+        if (!commit->isReadyFor(pageflipTarget)) {
+            it++;
+            continue;
+        }
         // commits that target the same plane(s) need to stay in the same order
         const auto &planes = commit->modifiedPlanes();
         const bool skipping = std::any_of(m_commits.begin(), it, [&planes](const auto &other) {
@@ -199,7 +203,7 @@ void DrmCommitThread::optimizeCommits()
                 return other->modifiedPlanes().contains(plane);
             });
         });
-        if (skipping || !commit->areBuffersReadable()) {
+        if (skipping) {
             it++;
             continue;
         }
