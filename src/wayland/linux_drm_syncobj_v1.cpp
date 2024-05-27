@@ -157,7 +157,7 @@ void LinuxDrmSyncObjSurfaceV1::wp_linux_drm_syncobj_surface_v1_destroy(Resource 
 bool LinuxDrmSyncObjSurfaceV1::maybeEmitProtocolErrors()
 {
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
-    if (!priv->pending->bufferIsSet && !priv->pending->acquirePoint.timeline && !priv->pending->releasePoint) {
+    if ((!priv->pending->bufferIsSet || !priv->pending->buffer) && !priv->pending->acquirePoint.timeline && !priv->pending->releasePoint) {
         return false;
     }
     if (!priv->pending->acquirePoint.timeline) {
