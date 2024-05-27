@@ -158,8 +158,8 @@ bool Xvisit::handleFinished(xcb_client_message_event_t *event)
 
 void Xvisit::sendPosition(const QPointF &globalPos)
 {
-    const int16_t x = globalPos.x();
-    const int16_t y = globalPos.y();
+    const int16_t x = Xcb::toXNative(globalPos.x());
+    const int16_t y = Xcb::toXNative(globalPos.y());
 
     if (m_pos.pending) {
         m_pos.cache = QPoint(x, y);
