@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-26 02:26+0000\n"
+"POT-Creation-Date: 2024-05-28 02:29+0000\n"
 "PO-Revision-Date: 2024-05-21 15:44+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1219,22 +1219,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom de l'amfitrió: %1"
 
-#: input.cpp:2018
+#: input.cpp:2020
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mou la tauleta cap a l'eixida següent"
 
-#: input.cpp:2097
+#: input.cpp:2099
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "La tauleta s'ha mogut cap a %1"
 
-#: input.cpp:2097
+#: input.cpp:2099
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Les tauletes han intercanviat les eixides"
 
-#: input.cpp:3185
+#: input.cpp:3187
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -4175,7 +4175,7 @@ msgstr "Canvia un escriptori avall"
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3101
+#: window.cpp:3097
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
