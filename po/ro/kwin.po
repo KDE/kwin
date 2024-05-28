@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-25 00:40+0000\n"
+"POT-Creation-Date: 2024-05-28 00:39+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -1226,24 +1226,24 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "gazdă"
 
-#: input.cpp:2018
+#: input.cpp:2020
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2097
+#: input.cpp:2099
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Regim tabletă"
 
-#: input.cpp:2097
+#: input.cpp:2099
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3185
+#: input.cpp:3187
 #, kde-format
 msgid "Touchpad"
 msgstr "Zonă tactilă"
@@ -4442,7 +4442,7 @@ msgstr "Comută un birou în jos"
 msgid "Switch to Desktop %1"
 msgstr "Comută la biroul %1"
 
-#: window.cpp:3101
+#: window.cpp:3097
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

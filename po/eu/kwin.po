@@ -14,15 +14,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-25 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 22:55+0100\n"
+"POT-Creation-Date: 2024-05-28 00:39+0000\n"
+"PO-Revision-Date: 2024-05-27 17:18+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.02.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #, kde-format
@@ -1219,22 +1219,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ostalari-izena: %1"
 
-#: input.cpp:2018
+#: input.cpp:2020
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Eraman tableta hurrengo irteerakora"
 
-#: input.cpp:2097
+#: input.cpp:2099
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tableta %1(e)ra eraman da"
 
-#: input.cpp:2097
+#: input.cpp:2099
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletek irteerakoak trukatu dituzte"
 
-#: input.cpp:3185
+#: input.cpp:3187
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -2232,26 +2232,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Geziak marrazteko tekla aldarazleak:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Gaueko argia piztuta"
+msgstr "Gaueko argia eten egin da"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Gaueko argia piztuta"
+msgstr "Gaueko argia berrekin da"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Gaueko argia eten/berrekin"
 
 #: plugins/nightlight/nightlightmanager.cpp:454
 #, kde-format
@@ -2558,12 +2554,12 @@ msgstr "Itxi"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Zatitu ezker/eskuin"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Zatitu goian/behean"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4172,7 +4168,7 @@ msgstr "Aldatu beheko mahaigainera"
 msgid "Switch to Desktop %1"
 msgstr "Aldatu %1 mahaigainera"
 
-#: window.cpp:3101
+#: window.cpp:3097
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
