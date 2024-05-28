@@ -441,7 +441,6 @@ void WaylandCompositor::addOutput(Output *output)
             }
             cursorLayer->setVisible(cursor->isOnOutput(output));
             cursorLayer->setGeometry(outputLocalRect);
-            cursorLayer->addRepaintFull();
             return false;
         }
     };
@@ -477,7 +476,6 @@ void WaylandCompositor::addOutput(Output *output)
         }
         cursorLayer->setVisible(shouldBeVisible && !hardwareCursor);
         cursorLayer->setGeometry(outputLocalRect);
-        cursorLayer->addRepaintFull();
     };
     updateCursorLayer();
     connect(output, &Output::geometryChanged, cursorLayer, updateCursorLayer);
