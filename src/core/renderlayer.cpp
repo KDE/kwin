@@ -190,7 +190,7 @@ void RenderLayer::addRepaint(const QRegion &region)
     }
     if (!region.isEmpty()) {
         m_repaints += region;
-        m_loop->scheduleRepaint();
+        m_loop->scheduleRepaint(nullptr, this);
     }
 }
 
@@ -237,7 +237,7 @@ void RenderLayer::updateEffectiveVisibility()
     } else {
         if (m_outputLayer) {
             m_outputLayer->addRepaint(mapToGlobal(boundingRect()).toAlignedRect());
-            m_loop->scheduleRepaint();
+            m_loop->scheduleRepaint(nullptr, this);
         }
     }
 

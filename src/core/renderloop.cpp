@@ -196,7 +196,7 @@ void RenderLoop::setPresentationSafetyMargin(std::chrono::nanoseconds safetyMarg
     d->safetyMargin = safetyMargin;
 }
 
-void RenderLoop::scheduleRepaint(Item *item)
+void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer)
 {
     if (d->pendingRepaint) {
         return;
@@ -204,7 +204,7 @@ void RenderLoop::scheduleRepaint(Item *item)
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
     if (vrr && workspace()->activeWindow() && d->output) {
         Window *const activeWindow = workspace()->activeWindow();
-        if (activeWindow->isOnOutput(d->output) && activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30) {
+        if ((item || layer) && activeWindow->isOnOutput(d->output) && activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30) {
             return;
         }
     }
