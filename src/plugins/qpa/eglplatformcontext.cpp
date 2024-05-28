@@ -21,10 +21,6 @@
 
 #include "logging.h"
 
-#include <QOpenGLContext>
-
-#include <private/qopenglcontext_p.h>
-
 namespace KWin
 {
 namespace QPA
@@ -81,13 +77,11 @@ bool EGLPlatformContext::makeCurrent(QPlatformSurface *surface)
     m_zombieRenderTargets.clear();
 
     if (surface->surface()->surfaceClass() == QSurface::Window) {
-        // QOpenGLContextPrivate::setCurrentContext will be called after this
-        // method returns, but that's too late, as we need a current context in
-        // order to bind the content framebuffer object.
-        QOpenGLContextPrivate::setCurrentContext(context());
-
         Window *window = static_cast<Window *>(surface);
         Swapchain *swapchain = window->swapchain(m_eglContext, m_eglDisplay->nonExternalOnlySupportedDrmFormats());
+        if (!swapchain) {
+            return false;
+        }
 
         GraphicsBuffer *buffer = swapchain->acquire();
         if (!buffer) {
