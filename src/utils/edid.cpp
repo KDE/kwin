@@ -145,7 +145,8 @@ Edid::Edid(const void *data, uint32_t size)
     m_eisaId = parseEisaId(bytes);
     UniqueCPtr<char> monitorName{di_info_get_model(info)};
     m_monitorName = QByteArray(monitorName.get());
-    m_serialNumber = QByteArray::number(productInfo->serial);
+    UniqueCPtr<char> serial{di_info_get_serial(info)};
+    m_serialNumber = QByteArray(serial.get());
     m_vendor = parseVendor(bytes);
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(m_raw);
