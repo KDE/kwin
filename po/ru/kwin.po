@@ -23,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 02:29+0000\n"
-"PO-Revision-Date: 2024-02-27 21:37+0300\n"
+"POT-Creation-Date: 2024-05-29 03:09+0000\n"
+"PO-Revision-Date: 2024-05-28 11:00+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
 "Language: ru\n"
@@ -2259,20 +2259,16 @@ msgid "Arrow draw modifier keys:"
 msgstr "Клавиши-модификаторы для рисования стрелок:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Ночная цветовая схема отключена"
+msgstr "Использование ночной цветовой схемы приостановлено"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Ночная цветовая схема отключена"
+msgstr "Использование ночной цветовой схемы возобновлено"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
@@ -2574,8 +2570,7 @@ msgid "Padding:"
 msgstr "Отступ:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
 msgstr "Загрузить макет…"
 
@@ -4156,7 +4151,7 @@ msgstr "Принудительно закрыть окно"
 msgid "Activate Window (%1)"
 msgstr "Активировать окно (%1)"
 
-#: utils/edid.cpp:262
+#: utils/edid.cpp:263
 #, kde-format
 msgid "unknown"
 msgstr "неизвестный"
