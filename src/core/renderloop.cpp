@@ -229,6 +229,10 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 
 void RenderLoop::setPresentationMode(PresentationMode mode)
 {
+    if (d->presentationMode != mode) {
+        const bool tearing = mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync;
+        qWarning() << "presentation mode changed. Tearing?" << tearing;
+    }
     d->presentationMode = mode;
 }
 
