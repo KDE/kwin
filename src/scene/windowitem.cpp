@@ -50,6 +50,7 @@ WindowItem::WindowItem(Window *window, Item *parent)
     connect(window, &Window::hiddenByShowDesktopChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::activitiesChanged, this, &WindowItem::updateVisibility);
     connect(window, &Window::desktopsChanged, this, &WindowItem::updateVisibility);
+    connect(window, &Window::offscreenRenderingChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentActivityChanged, this, &WindowItem::updateVisibility);
     connect(workspace(), &Workspace::currentDesktopChanged, this, &WindowItem::updateVisibility);
     updateVisibility();
@@ -187,7 +188,7 @@ void WindowItem::updateVisibility()
     setVisible(visible);
 
     if (m_window->readyForPainting()) {
-        m_window->setSuspended(!visible);
+        m_window->setSuspended(!visible && !m_window->isOffscreenRendering());
     }
 }
 

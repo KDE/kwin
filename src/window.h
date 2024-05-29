@@ -1322,6 +1322,7 @@ public:
 
     void refOffscreenRendering();
     void unrefOffscreenRendering();
+    bool isOffscreenRendering() const;
 
     qreal preferredBufferScale() const;
     void setPreferredBufferScale(qreal scale);
@@ -1447,6 +1448,7 @@ Q_SIGNALS:
     void readyForPaintingChanged();
     void maximizeGeometryRestoreChanged();
     void fullscreenGeometryRestoreChanged();
+    void offscreenRenderingChanged();
 
 protected:
     Window();

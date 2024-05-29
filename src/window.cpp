@@ -4261,10 +4261,11 @@ bool Window::isLockScreenOverlay() const
 
 void Window::refOffscreenRendering()
 {
-    if (m_offscreenRenderCount == 0) {
-        m_offscreenFramecallbackTimer.start(1'000'000 / output()->refreshRate());
-    }
     m_offscreenRenderCount++;
+    if (m_offscreenRenderCount == 1) {
+        m_offscreenFramecallbackTimer.start(1'000'000 / output()->refreshRate());
+        Q_EMIT offscreenRenderingChanged();
+    }
 }
 
 void Window::unrefOffscreenRendering()
@@ -4273,7 +4274,13 @@ void Window::unrefOffscreenRendering()
     m_offscreenRenderCount--;
     if (m_offscreenRenderCount == 0) {
         m_offscreenFramecallbackTimer.stop();
+        Q_EMIT offscreenRenderingChanged();
     }
+}
+
+bool Window::isOffscreenRendering() const
+{
+    return m_offscreenRenderCount > 0;
 }
 
 void Window::maybeSendFrameCallback()
