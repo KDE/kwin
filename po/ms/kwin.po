@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:39+0000\n"
+"POT-Creation-Date: 2024-05-29 00:39+0000\n"
 "PO-Revision-Date: 2010-08-23 19:35+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -4234,7 +4234,7 @@ msgstr "Bunuh Tetingkap"
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: utils/edid.cpp:262
+#: utils/edid.cpp:263
 #, kde-format
 msgid "unknown"
 msgstr ""

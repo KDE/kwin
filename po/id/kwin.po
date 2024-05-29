@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:39+0000\n"
+"POT-Creation-Date: 2024-05-29 00:39+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -4353,7 +4353,7 @@ msgstr "Matikan Jendela"
 msgid "Activate Window (%1)"
 msgstr "Aktifkan Jendela (%1)"
 
-#: utils/edid.cpp:262
+#: utils/edid.cpp:263
 #, kde-format
 msgid "unknown"
 msgstr "takdiketahui"

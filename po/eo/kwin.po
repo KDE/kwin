@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:39+0000\n"
+"POT-Creation-Date: 2024-05-29 00:39+0000\n"
 "PO-Revision-Date: 2024-05-21 23:26+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -4107,7 +4107,7 @@ msgstr "Mortigi fenestron"
 msgid "Activate Window (%1)"
 msgstr "Aktivigi Fenestron (%1)"
 
-#: utils/edid.cpp:262
+#: utils/edid.cpp:263
 #, kde-format
 msgid "unknown"
 msgstr "nekonata"

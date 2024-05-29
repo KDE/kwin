@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:39+0000\n"
+"POT-Creation-Date: 2024-05-29 00:39+0000\n"
 "PO-Revision-Date: 2024-05-24 16:48+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -4097,7 +4097,7 @@ msgstr "Kill Window"
 msgid "Activate Window (%1)"
 msgstr "Activate Window (%1)"
 
-#: utils/edid.cpp:262
+#: utils/edid.cpp:263
 #, kde-format
 msgid "unknown"
 msgstr "unknown"

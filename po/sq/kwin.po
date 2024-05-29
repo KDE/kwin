@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-28 00:39+0000\n"
+"POT-Creation-Date: 2024-05-29 00:39+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -4172,7 +4172,7 @@ msgstr "Vrije Dritaren"
 msgid "Activate Window (%1)"
 msgstr ""
 
-#: utils/edid.cpp:262
+#: utils/edid.cpp:263
 #, kde-format
 msgid "unknown"
 msgstr ""
