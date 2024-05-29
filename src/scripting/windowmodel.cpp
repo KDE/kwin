@@ -258,7 +258,7 @@ bool WindowFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourc
     }
 
     Window *window = qvariant_cast<Window *>(data);
-    if (!window) {
+    if (!window || !window->isClient()) {
         return false;
     }
 
