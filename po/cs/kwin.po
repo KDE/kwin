@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-29 00:39+0000\n"
-"PO-Revision-Date: 2024-04-30 15:28+0200\n"
+"PO-Revision-Date: 2024-05-29 11:26+0200\n"
 "Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -2203,13 +2203,13 @@ msgstr ""
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "Noční světlo bylo pozastaveno"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "Noční světlo bylo znovu zapnuto"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
@@ -2517,12 +2517,12 @@ msgstr "Zavřít"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Rozdělit levý/pravý"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Rozdělit horní/dolní"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4147,9 +4147,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland spadnul"
-
-#~ msgid "Split Horizontally"
-#~ msgstr "Rozdělit vodorovně"
-
-#~ msgid "Split Vertically"
-#~ msgstr "Rozdělit svisle"
