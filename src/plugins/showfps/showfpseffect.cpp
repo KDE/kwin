@@ -74,6 +74,11 @@ void ShowFpsEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::millis
         m_scene = std::make_unique<OffscreenQuickScene>();
         const auto url = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/showfps/qml/main.qml")));
         m_scene->setSource(url, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
+        if (!m_scene->rootItem()) {
+            // main-fallback.qml has less dependencies than main.qml, so it should work on any system where kwin compiles
+            const auto fallbackUrl = QUrl::fromLocalFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/effects/showfps/qml/main-fallback.qml")));
+            m_scene->setSource(fallbackUrl, {{QStringLiteral("effect"), QVariant::fromValue(this)}});
+        }
     }
 }
 
