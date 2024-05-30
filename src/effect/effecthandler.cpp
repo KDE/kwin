@@ -419,6 +419,8 @@ void EffectsHandler::setActiveFullScreenEffect(Effect *e)
     Q_EMIT activeFullScreenEffectChanged();
     if (activeChanged) {
         Q_EMIT hasActiveFullScreenEffectChanged();
+
+        setShowingDesktop(false);
         workspace()->screenEdges()->checkBlocking();
     }
 }
