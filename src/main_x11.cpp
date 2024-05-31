@@ -400,6 +400,11 @@ int main(int argc, char *argv[])
     // For sharing thumbnails between our scene graph and qtquick.
     QCoreApplication::setAttribute(Qt::AA_ShareOpenGLContexts);
 
+    // The shader (currently) causes a blocking disk flush on load and save of every QQuickWindow
+    // Because it's on load, it will happen every time not just occasionally
+    // The gains are minimal, disable until it's fixed
+    QCoreApplication::setAttribute(Qt::AA_DisableShaderDiskCache);
+
     QSurfaceFormat format = QSurfaceFormat::defaultFormat();
     // shared opengl contexts must have the same reset notification policy
     format.setOptions(QSurfaceFormat::ResetNotification);

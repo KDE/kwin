@@ -285,6 +285,11 @@ int main(int argc, char *argv[])
     // enforce our internal qpa plugin, unfortunately command line switch has precedence
     setenv("QT_QPA_PLATFORM", "wayland-org.kde.kwin.qpa", true);
 
+    // The shader (currently) causes a blocking disk flush on load and save of every QQuickWindow
+    // Because it's on load, it will happen every time not just occasionally
+    // The gains are minimal, disable until it's fixed
+    QCoreApplication::setAttribute(Qt::AA_DisableShaderDiskCache);
+
     KWin::ApplicationWayland a(argc, argv);
 
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
