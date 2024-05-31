@@ -1352,6 +1352,10 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 
 void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, int dragSerial, DragAndDropIcon *dragIcon)
 {
+    if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
+        return;
+    }
+
     if (hasImplicitPointerGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
         d->drag.transformation = d->globalPointer.focus.transformation;
