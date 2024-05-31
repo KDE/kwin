@@ -2393,7 +2393,7 @@ void Window::updateCursor()
         break;
     default:
         if (isInteractiveMoveResize()) {
-            c = Qt::SizeAllCursor;
+            c = Qt::ClosedHandCursor;
         } else {
             c = Qt::ArrowCursor;
         }
