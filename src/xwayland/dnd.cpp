@@ -106,11 +106,10 @@ void Dnd::doHandleXfixesNotify(xcb_xfixes_selection_notify_event_t *event)
         return;
     }
     createX11Source(event);
-    X11Source *source = x11Source();
-    if (!source) {
-        return;
+    if (X11Source *source = x11Source()) {
+        SeatInterface *seat = waylandServer()->seat();
+        seat->startDrag(source->dataSource(), seat->focusedPointerSurface(), seat->pointerButtonSerial(Qt::LeftButton));
     }
-    m_currentDrag = new XToWlDrag(source, this);
 }
 
 void Dnd::x11OfferLost()
@@ -142,25 +141,24 @@ DragEventReply Dnd::dragMoveFilter(Window *target)
 
 void Dnd::startDrag()
 {
-    auto dragSource = waylandServer()->seat()->dragSource();
-    if (qobject_cast<XwlDataSource *>(dragSource)) {
-        return;
-    }
-
     // There can only ever be one Wl native drag at the same time.
     Q_ASSERT(!m_currentDrag);
 
-    // New Wl to X drag, init drag and Wl source.
-    m_currentDrag = new WlToXDrag(this);
-    auto source = new WlSource(this);
-    source->setDataSourceIface(dragSource);
-    connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
-        if (source == wlSource()) {
-            setWlSource(nullptr);
-        }
-    });
-    setWlSource(source);
-    ownSelection(true);
+    auto dragSource = waylandServer()->seat()->dragSource();
+    if (qobject_cast<XwlDataSource *>(dragSource)) {
+        m_currentDrag = new XToWlDrag(x11Source(), this);
+    } else {
+        m_currentDrag = new WlToXDrag(this);
+        auto source = new WlSource(this);
+        source->setDataSourceIface(dragSource);
+        connect(dragSource, &AbstractDataSource::aboutToBeDestroyed, this, [this, source] {
+            if (source == wlSource()) {
+                setWlSource(nullptr);
+            }
+        });
+        setWlSource(source);
+        ownSelection(true);
+    }
 }
 
 void Dnd::endDrag()

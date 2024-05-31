@@ -27,6 +27,7 @@ class AbstractDataSource;
 namespace Xwl
 {
 class Selection;
+class XwlDataSource;
 
 /**
  * Base class representing a data source.
@@ -112,6 +113,7 @@ class X11Source : public SelectionSource
 
 public:
     X11Source(Selection *selection, xcb_xfixes_selection_notify_event_t *event);
+    ~X11Source() override;
 
     void getTargets();
 
@@ -120,6 +122,11 @@ public:
         return m_offers;
     }
     void setOffers(const Mimes &offers);
+
+    XwlDataSource *dataSource() const
+    {
+        return m_dataSource.get();
+    }
 
     bool handleSelectionNotify(xcb_selection_notify_event_t *event);
 
@@ -137,6 +144,7 @@ private:
     void handleTargets();
 
     Mimes m_offers;
+    std::unique_ptr<XwlDataSource> m_dataSource;
 
     Q_DISABLE_COPY(X11Source)
 };
