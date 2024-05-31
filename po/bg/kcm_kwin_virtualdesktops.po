@@ -125,12 +125,3 @@ msgstr "%1 ms"
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Показване на индикатори за подредба на работния плот"
-
-#~ msgid "1 Row"
-#~ msgid_plural "%1 Rows"
-#~ msgstr[0] "1 ред"
-#~ msgstr[1] "%1 Редове"
-
-#~ msgctxt "@action:button"
-#~ msgid "Add"
-#~ msgstr "Добавяне"
