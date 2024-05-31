@@ -58,8 +58,6 @@ private:
     Dnd *const m_dnd;
     Mimes m_offers;
 
-    XwlDataSource m_selectionSource;
-
     X11Source *m_source;
     QList<QPair<xcb_timestamp_t, bool>> m_dataRequests;
 
