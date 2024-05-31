@@ -211,7 +211,7 @@ Rectangle {
                         id: dragArea
                         anchors.fill: availableButton
                         drag.target: availableButton
-                        cursorShape: Qt.SizeAllCursor
+                        cursorShape: availableButton.Drag.active ? Qt.ClosedHandCursor : Qt.OpenHandCursor
                         onReleased: {
                             if (availableButton.Drag.target) {
                                 availableButton.Drag.drop();
