@@ -16,6 +16,11 @@ CursorSource::CursorSource(QObject *parent)
 {
 }
 
+bool CursorSource::isBlank() const
+{
+    return m_size.isEmpty();
+}
+
 QSizeF CursorSource::size() const
 {
     return m_size;

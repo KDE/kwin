@@ -30,6 +30,8 @@
 #include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
+#include "cursor.h"
+#include "cursorsource.h"
 #include "effect/effecthandler.h"
 #include "opengl/glutils.h"
 
@@ -268,6 +270,15 @@ void StartupFeedbackEffect::slotMouseChanged(const QPointF &pos, const QPointF &
 
 void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
 {
+    if (Cursors::self()->isCursorHidden()) {
+        return;
+    }
+
+    const Cursor *mouse = Cursors::self()->mouse();
+    if (mouse->source() && mouse->source()->isBlank()) {
+        return;
+    }
+
     Startup &startup = m_startups[id];
     startup.icon = icon;
 
@@ -285,7 +296,9 @@ void StartupFeedbackEffect::gotNewStartup(const QString &id, const QIcon &icon)
 
 void StartupFeedbackEffect::gotRemoveStartup(const QString &id)
 {
-    m_startups.remove(id);
+    if (!m_startups.remove(id)) {
+        return;
+    }
     if (m_startups.isEmpty()) {
         m_currentStartup.clear();
         stop();

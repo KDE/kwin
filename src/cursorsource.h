@@ -28,6 +28,7 @@ class KWIN_EXPORT CursorSource : public QObject
 public:
     explicit CursorSource(QObject *parent = nullptr);
 
+    bool isBlank() const;
     QSizeF size() const;
     QPointF hotspot() const;
 
