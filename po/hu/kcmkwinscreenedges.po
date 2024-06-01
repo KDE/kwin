@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-01-05 13:24+0100\n"
+"PO-Revision-Date: 2024-05-31 15:53+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -77,7 +77,7 @@ msgstr "Áttekintés"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Rács"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -170,7 +170,7 @@ msgstr "Asztalváltás az egérkurzornak a képernyő sarkához húzásával"
 #: main.ui:177
 #, kde-format
 msgid "&Switch desktop on edge:"
-msgstr "A&sztalváltás a sarkon:"
+msgstr "A&sztalváltás a széleken:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:188
@@ -230,7 +230,7 @@ msgstr "&Újraaktiválási késleltetés:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Sarokhatár:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -242,19 +242,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Itt engedélyezheti vagy letilthatja a képernyők közötti virtuális "
+"sarokhatárt. A határ megakadályozza, hogy a kurzor egy másik képernyőre "
+"mozogjon, amikor már megérintette a képernyő egyik sarkát. Ez megkönnyíti a "
+"felhasználói felület olyan elemeinek aktiválását több képernyők használata "
+"esetén, mint például a maximalizált ablakok bezárógombjai."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Megakadályozza, hogy a kurzorok áthaladjanak a képernyősarkokon."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "Szél&határ:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -266,6 +271,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Itt állíthatja be a különböző képernyők közötti szélhatár méretét. A határ "
+"további távolságot ad hozzá, amivel a kurzort el kell mozdítania, mielőtt az "
+"átlépi a másik képernyőre. Ez megkönnyíti a felhasználói felület elemeihez "
+"hozzáférést, például a Plasma panelekhez, amelyek a képernyők közötti "
+"széleken helyezkednek el."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -273,18 +283,20 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"A kurzornak további távolságot kell megtennie, hogy átlépje a "
+"képernyőszéleket."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nincs"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " képpont"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

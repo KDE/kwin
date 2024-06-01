@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-01-11 12:44+0100\n"
+"PO-Revision-Date: 2024-05-31 14:39+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -15,16 +15,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -33,11 +27,13 @@ msgid ""
 "need to use such apps, you can choose your preferred balance of security and "
 "functionality here."
 msgstr ""
-"Az örökölt X11 alkalmazásoknak szüksége van a más alkalmazásokban írt "
+"Néhány örökölt X11 alkalmazásoknak szüksége van a más alkalmazásokban írt "
 "billentyűleütések olvasására a globális billentyűparancsokkal aktivált "
-"szolgáltatásokhoz. Ez biztonsági okokból alapértelmezetten ki van kapcsolva. "
-"Ha ilyen alkalmazásokat szeretne használni, itt kiválaszthatja a biztonság "
-"és a funkcionalitás kívánt egyensúlyát."
+"szolgáltatásokhoz. Ez alapértelmezetten engedélyezett. Más funkciók azonban "
+"megkövetelhetik, hogy az összes billentyű olvasását, és ez biztonsági "
+"okokból alapértelmezés szerint le van tiltva.Ha ilyen alkalmazásokat "
+"szeretne használni, itt kiválaszthatja a biztonság és a funkcionalitás "
+"kívánt egyensúlyát."
 
 #: ui/main.qml:48
 #, kde-format
@@ -54,7 +50,7 @@ msgstr "Soha"
 #: ui/main.qml:55
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr ""
+msgstr "Csak Meta, Control, Alt és Shift billentyűk"
 
 #: ui/main.qml:61
 #, kde-format
@@ -72,7 +68,7 @@ msgstr "Mindig"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Továbbá egérgombok"
 
 #: ui/main.qml:89
 #, kde-format
