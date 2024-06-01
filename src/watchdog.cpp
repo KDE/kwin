@@ -8,6 +8,8 @@
 */
 
 #include "watchdoglogging.h"
+#include <unistd.h>
+#include <sys/types.h>
 #include <QCoreApplication>
 #include <QTimer>
 #include <systemd/sd-daemon.h>
