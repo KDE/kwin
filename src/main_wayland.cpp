@@ -503,47 +503,6 @@ int main(int argc, char *argv[])
         outputCount = std::max(1, count);
     }
 
-    // TODO: create backend without having the server running
-    KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
-
-    KWin::WaylandServer::InitializationFlags flags;
-#if KWIN_BUILD_SCREENLOCKER
-    if (parser.isSet(screenLockerOption)) {
-        flags = KWin::WaylandServer::InitializationFlag::LockScreen;
-    } else if (parser.isSet(noScreenLockerOption)) {
-        flags = KWin::WaylandServer::InitializationFlag::NoLockScreenIntegration;
-    }
-#endif
-    if (parser.isSet(noGlobalShortcutsOption)) {
-        flags |= KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts;
-    }
-
-    const QString socketName = parser.value(waylandSocketOption);
-    if (parser.isSet(waylandSocketFdOption)) {
-        bool ok;
-        int fd = parser.value(waylandSocketFdOption).toInt(&ok);
-        if (ok) {
-            // make sure we don't leak this FD to children
-            fcntl(fd, F_SETFD, FD_CLOEXEC);
-            server->display()->addSocketFileDescriptor(fd, socketName);
-        } else {
-            std::cerr << "FATAL ERROR: could not parse socket FD" << std::endl;
-            return 1;
-        }
-    } else {
-        // socketName empty is fine here, addSocketName will automatically pick one
-        if (!server->display()->addSocketName(socketName)) {
-            std::cerr << "FATAL ERROR: could not add wayland socket " << qPrintable(socketName) << std::endl;
-            return 1;
-        }
-        qInfo() << "Accepting client connections on sockets:" << server->display()->socketNames();
-    }
-
-    if (!server->init(flags)) {
-        std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
-        return 1;
-    }
-
     switch (backendType) {
     case BackendType::Kms:
         a.setSession(KWin::Session::create());
@@ -595,6 +554,45 @@ int main(int argc, char *argv[])
         }));
         break;
     }
+    }
+
+    KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
+    KWin::WaylandServer::InitializationFlags flags;
+#if KWIN_BUILD_SCREENLOCKER
+    if (parser.isSet(screenLockerOption)) {
+        flags = KWin::WaylandServer::InitializationFlag::LockScreen;
+    } else if (parser.isSet(noScreenLockerOption)) {
+        flags = KWin::WaylandServer::InitializationFlag::NoLockScreenIntegration;
+    }
+#endif
+    if (parser.isSet(noGlobalShortcutsOption)) {
+        flags |= KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts;
+    }
+
+    const QString socketName = parser.value(waylandSocketOption);
+    if (parser.isSet(waylandSocketFdOption)) {
+        bool ok;
+        int fd = parser.value(waylandSocketFdOption).toInt(&ok);
+        if (ok) {
+            // make sure we don't leak this FD to children
+            fcntl(fd, F_SETFD, FD_CLOEXEC);
+            server->display()->addSocketFileDescriptor(fd, socketName);
+        } else {
+            std::cerr << "FATAL ERROR: could not parse socket FD" << std::endl;
+            return 1;
+        }
+    } else {
+        // socketName empty is fine here, addSocketName will automatically pick one
+        if (!server->display()->addSocketName(socketName)) {
+            std::cerr << "FATAL ERROR: could not add wayland socket " << qPrintable(socketName) << std::endl;
+            return 1;
+        }
+        qInfo() << "Accepting client connections on sockets:" << server->display()->socketNames();
+    }
+
+    if (!server->init(flags)) {
+        std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
+        return 1;
     }
 
     QObject::connect(&a, &KWin::Application::workspaceCreated, server, &KWin::WaylandServer::initWorkspace);
