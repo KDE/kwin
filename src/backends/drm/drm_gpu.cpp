@@ -289,6 +289,8 @@ bool DrmGpu::updateOutputs()
             Q_EMIT outputAdded(output);
             pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
             pipeline->setActive(!conn->isNonDesktop());
+            // only "enable" VR headsets here; Workspace makes this decision for normal outputs
+            pipeline->setEnable(conn->isNonDesktop());
             pipeline->applyPendingChanges();
         }
         if (stillExists) {
