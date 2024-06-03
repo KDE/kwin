@@ -274,8 +274,11 @@ bool DrmConnector::updateProperties()
         if (!m_edid.isValid()) {
             qCWarning(KWIN_DRM) << "Couldn't parse EDID for connector" << this;
         }
-    } else if (m_conn->connection == DRM_MODE_CONNECTED) {
-        qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
+    } else {
+        m_edid = Edid{};
+        if (m_conn->connection == DRM_MODE_CONNECTED) {
+            qCDebug(KWIN_DRM) << "Could not find edid for connector" << this;
+        }
     }
 
     // check the physical size
