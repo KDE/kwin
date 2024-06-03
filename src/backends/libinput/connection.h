@@ -56,7 +56,7 @@ public:
 
     QStringList devicesSysNames() const;
 
-    static std::unique_ptr<Connection> create(Session *session);
+    static Connection *create(Session *session);
 
 Q_SIGNALS:
     void deviceAdded(KWin::LibInput::Device *);
