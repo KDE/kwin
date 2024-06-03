@@ -80,7 +80,7 @@ Q_SIGNALS:
     void deviceRemoved(QString sysName);
 };
 
-std::unique_ptr<Connection> Connection::create(Session *session)
+Connection *Connection::create(Session *session)
 {
     std::unique_ptr<Udev> udev = std::make_unique<Udev>();
     if (!udev->isValid()) {
@@ -96,7 +96,7 @@ std::unique_ptr<Connection> Connection::create(Session *session)
         qCWarning(KWIN_LIBINPUT) << "Failed to initialize context";
         return nullptr;
     }
-    return std::unique_ptr<Connection>(new Connection(std::move(context)));
+    return new Connection(std::move(context));
 }
 
 Connection::Connection(std::unique_ptr<Context> &&input)

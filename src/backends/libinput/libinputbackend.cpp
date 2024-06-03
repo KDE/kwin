@@ -21,21 +21,23 @@ LibinputBackend::LibinputBackend(Session *session, QObject *parent)
     m_connection->moveToThread(&m_thread);
 
     connect(
-        m_connection.get(), &LibInput::Connection::eventsRead, this, [this]() {
-            m_connection->processEvents();
-        },
+        m_connection, &LibInput::Connection::eventsRead, this, [this]() {
+        m_connection->processEvents();
+    },
         Qt::QueuedConnection);
 
     // Direct connection because the deviceAdded() and the deviceRemoved() signals are emitted
     // from the main thread.
-    connect(m_connection.get(), &LibInput::Connection::deviceAdded,
+    connect(m_connection, &LibInput::Connection::deviceAdded,
             this, &InputBackend::deviceAdded, Qt::DirectConnection);
-    connect(m_connection.get(), &LibInput::Connection::deviceRemoved,
+    connect(m_connection, &LibInput::Connection::deviceRemoved,
             this, &InputBackend::deviceRemoved, Qt::DirectConnection);
 }
 
 LibinputBackend::~LibinputBackend()
 {
+    m_connection->deleteLater();
+
     m_thread.quit();
     m_thread.wait();
 }

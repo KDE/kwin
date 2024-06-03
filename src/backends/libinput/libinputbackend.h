@@ -33,7 +33,7 @@ public:
 
 private:
     QThread m_thread;
-    std::unique_ptr<LibInput::Connection> m_connection;
+    LibInput::Connection *m_connection = nullptr;
 };
 
 } // namespace KWin
