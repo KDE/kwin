@@ -382,9 +382,13 @@ public:
         auto surface = keyboard->focusedSurface();
         ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
 
+        if (!xwaylandClient) {
+            return;
+        }
+
         if (surface) {
             ClientConnection *client = surface->client();
-            if (xwaylandClient && xwaylandClient == client) {
+            if (xwaylandClient == client) {
                 return;
             }
         }
