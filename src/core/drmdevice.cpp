@@ -9,6 +9,7 @@
 #include "drmdevice.h"
 
 #include "gbmgraphicsbufferallocator.h"
+#include "utils/common.h"
 
 #include <fcntl.h>
 #include <gbm.h>
@@ -73,19 +74,26 @@ std::unique_ptr<DrmDevice> DrmDevice::openWithAuthentication(const QString &path
 {
     FileDescriptor fd(::open(path.toLocal8Bit(), O_RDWR | O_CLOEXEC));
     if (!fd.isValid()) {
+        qCWarning(KWIN_CORE) << "Failed to open drm node:" << path;
         return nullptr;
     }
     struct stat buf;
     if (fstat(fd.get(), &buf) == -1) {
+        qCWarning(KWIN_CORE) << "Failed to fstat drm fd" << path;
         return nullptr;
     }
     if (authenticatedFd != -1) {
         drm_magic_t magic;
-        drmGetMagic(fd.get(), &magic);
-        drmAuthMagic(authenticatedFd, magic);
+        if (drmGetMagic(fd.get(), &magic) < 0) {
+            qCDebug(KWIN_CORE) << "Failed to get the drm magic token for" << path;
+        }
+        if (drmAuthMagic(authenticatedFd, magic) < 0) {
+            qCWarning(KWIN_CORE) << "Failed to authenticate the drm magic token. path:" << path << "error:" << strerror(errno);
+        }
     }
     gbm_device *device = gbm_create_device(fd.get());
     if (!device) {
+        qCWarning(KWIN_CORE) << "Failed to create gbm device for" << path;
         return nullptr;
     }
     return std::unique_ptr<DrmDevice>(new DrmDevice(path, buf.st_rdev, std::move(fd), device));

@@ -100,6 +100,7 @@ bool DrmPlane::updateProperties()
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
+        qCWarning(KWIN_DRM) << "Failed to update the basic plane properties";
         return false;
     }
 

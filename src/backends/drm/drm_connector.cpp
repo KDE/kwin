@@ -264,6 +264,7 @@ bool DrmConnector::updateProperties()
     path.update(props);
 
     if (gpu()->atomicModeSetting() && !crtcId.isValid()) {
+        qCWarning(KWIN_DRM) << "Failed to update the basic connector properties (CRTC_ID)";
         return false;
     }
 

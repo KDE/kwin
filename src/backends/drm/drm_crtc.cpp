@@ -49,7 +49,11 @@ bool DrmCrtc::updateProperties()
     degammaLut.update(props);
     degammaLutSize.update(props);
 
-    return !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
+    const bool ret = !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
+    if (!ret) {
+        qCWarning(KWIN_DRM) << "Failed to update the basic crtc properties. modeId:" << modeId.isValid() << "active:" << active.isValid();
+    }
+    return ret;
 }
 
 drmModeModeInfo DrmCrtc::queryCurrentMode()
