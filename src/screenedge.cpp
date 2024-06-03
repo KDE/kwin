@@ -797,8 +797,6 @@ ScreenEdges::ScreenEdges()
 {
     const int gridUnit = QFontMetrics(QFontDatabase::systemFont(QFontDatabase::GeneralFont)).boundingRect(QLatin1Char('M')).height();
     m_cornerOffset = 4 * gridUnit;
-
-    connect(workspace(), &Workspace::windowRemoved, this, &ScreenEdges::deleteEdgeForClient);
 }
 
 void ScreenEdges::init()
@@ -1340,6 +1338,10 @@ void ScreenEdges::unreserveTouch(ElectricBorder border, QAction *action)
 
 bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
 {
+    if (client->isDeleted()) {
+        return false;
+    }
+
     int y = 0;
     int x = 0;
     int width = 0;
@@ -1391,10 +1393,12 @@ bool ScreenEdges::createEdgeForClient(Window *client, ElectricBorder border)
         return false;
     }
 
-    m_edges.push_back(createEdge(border, x, y, width, height, output, false));
-    Edge *edge = m_edges.back().get();
+    const auto &edge = m_edges.emplace_back(createEdge(border, x, y, width, height, output, false));
     edge->setClient(client);
     edge->reserve();
+    connect(client, &Window::closed, edge.get(), [this, client]() {
+        deleteEdgeForClient(client);
+    });
     return true;
 }
 
