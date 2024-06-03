@@ -133,6 +133,8 @@ ApplicationWayland::~ApplicationWayland()
     destroyInputMethod();
     destroyCompositor();
     destroyInput();
+
+    delete WaylandServer::self();
 }
 
 void ApplicationWayland::performStartup()
@@ -556,7 +558,7 @@ int main(int argc, char *argv[])
     }
     }
 
-    KWin::WaylandServer *server = KWin::WaylandServer::create(&a);
+    KWin::WaylandServer *server = KWin::WaylandServer::create();
     KWin::WaylandServer::InitializationFlags flags;
 #if KWIN_BUILD_SCREENLOCKER
     if (parser.isSet(screenLockerOption)) {
