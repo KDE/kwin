@@ -555,16 +555,15 @@ int main(int argc, char *argv[])
     }
 
     KWin::WaylandServer *server = KWin::WaylandServer::create();
-    KWin::WaylandServer::InitializationFlags flags;
 #if KWIN_BUILD_SCREENLOCKER
     if (parser.isSet(screenLockerOption)) {
-        flags = KWin::WaylandServer::InitializationFlag::LockScreen;
+        a.setInitiallyLocked(true);
     } else if (parser.isSet(noScreenLockerOption)) {
-        flags = KWin::WaylandServer::InitializationFlag::NoLockScreenIntegration;
+        a.setSupportsLockScreen(false);
     }
 #endif
     if (parser.isSet(noGlobalShortcutsOption)) {
-        flags |= KWin::WaylandServer::InitializationFlag::NoGlobalShortcuts;
+        a.setSupportsGlobalShortcuts(false);
     }
 
     const QString socketName = parser.value(waylandSocketOption);
@@ -588,7 +587,7 @@ int main(int argc, char *argv[])
         qInfo() << "Accepting client connections on sockets:" << server->display()->socketNames();
     }
 
-    if (!server->init(flags)) {
+    if (!server->init()) {
         std::cerr << "FATAL ERROR: could not create Wayland server" << std::endl;
         return 1;
     }

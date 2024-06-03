@@ -49,7 +49,7 @@ void TouchInputRedirection::init()
     InputDeviceHandler::init();
 
 #if KWIN_BUILD_SCREENLOCKER
-    if (waylandServer()->hasScreenLockerIntegration()) {
+    if (kwinApp()->supportsLockScreen()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
             cancel();
             // position doesn't matter

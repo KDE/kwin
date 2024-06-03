@@ -305,17 +305,16 @@ bool WaylandServer::start()
     return m_display->start();
 }
 
-bool WaylandServer::init(const QString &socketName, InitializationFlags flags)
+bool WaylandServer::init(const QString &socketName)
 {
     if (!m_display->addSocketName(socketName)) {
         return false;
     }
-    return init(flags);
+    return init();
 }
 
-bool WaylandServer::init(InitializationFlags flags)
+bool WaylandServer::init()
 {
-    m_initFlags = flags;
     m_compositor = new CompositorInterface(m_display, m_display);
 #if KWIN_BUILD_X11
     connect(m_compositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
@@ -600,7 +599,7 @@ void WaylandServer::initWorkspace()
     connect(workspace(), &Workspace::outputAdded, this, &WaylandServer::handleOutputEnabled);
     connect(workspace(), &Workspace::outputRemoved, this, &WaylandServer::handleOutputDisabled);
 
-    if (hasScreenLockerIntegration()) {
+    if (kwinApp()->supportsLockScreen()) {
         initScreenLocker();
     }
 
@@ -666,7 +665,7 @@ void WaylandServer::initScreenLocker()
 
     ScreenLocker::KSldApp::self()->initialize();
 
-    if (m_initFlags.testFlag(InitializationFlag::LockScreen)) {
+    if (kwinApp()->initiallyLocked()) {
         ScreenLocker::KSldApp::self()->lock(ScreenLocker::EstablishLock::Immediate);
     }
 #endif
@@ -787,27 +786,13 @@ XdgSurfaceWindow *WaylandServer::findXdgSurfaceWindow(SurfaceInterface *surface)
 bool WaylandServer::isScreenLocked() const
 {
 #if KWIN_BUILD_SCREENLOCKER
-    if (!hasScreenLockerIntegration()) {
+    if (!kwinApp()->supportsLockScreen()) {
         return false;
     }
     return ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::Locked || ScreenLocker::KSldApp::self()->lockState() == ScreenLocker::KSldApp::AcquiringLock;
 #else
     return false;
 #endif
-}
-
-bool WaylandServer::hasScreenLockerIntegration() const
-{
-#if KWIN_BUILD_SCREENLOCKER
-    return !m_initFlags.testFlag(InitializationFlag::NoLockScreenIntegration);
-#else
-    return false;
-#endif
-}
-
-bool WaylandServer::hasGlobalShortcutSupport() const
-{
-    return !m_initFlags.testFlag(InitializationFlag::NoGlobalShortcuts);
 }
 
 bool WaylandServer::isKeyboardShortcutsInhibited() const

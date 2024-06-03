@@ -110,7 +110,7 @@ void PointerInputRedirection::init()
 
     connect(workspace(), &Workspace::outputsChanged, this, &PointerInputRedirection::updateAfterScreenChange);
 #if KWIN_BUILD_SCREENLOCKER
-    if (waylandServer()->hasScreenLockerIntegration()) {
+    if (kwinApp()->supportsLockScreen()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
             if (waylandServer()->seat()->hasPointer()) {
                 waylandServer()->seat()->cancelPointerPinchGesture();
@@ -963,7 +963,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_serverCursor.shape = std::make_unique<ShapeCursorSource>();
 
 #if KWIN_BUILD_SCREENLOCKER
-    if (waylandServer()->hasScreenLockerIntegration()) {
+    if (kwinApp()->supportsLockScreen()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &CursorImage::reevaluteSource);
     }
 #endif

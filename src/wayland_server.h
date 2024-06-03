@@ -68,18 +68,9 @@ class KWIN_EXPORT WaylandServer : public QObject
     Q_OBJECT
 
 public:
-    enum class InitializationFlag {
-        NoOptions = 0x0,
-        LockScreen = 0x1,
-        NoLockScreenIntegration = 0x2,
-        NoGlobalShortcuts = 0x4
-    };
-
-    Q_DECLARE_FLAGS(InitializationFlags, InitializationFlag)
-
     ~WaylandServer() override;
-    bool init(const QString &socketName, InitializationFlags flags = InitializationFlag::NoOptions);
-    bool init(InitializationFlags flags = InitializationFlag::NoOptions);
+    bool init(const QString &socketName);
+    bool init();
 
     bool start();
 
@@ -184,15 +175,6 @@ public:
      * @returns true if screen is locked.
      */
     bool isScreenLocked() const;
-    /**
-     * @returns whether integration with KScreenLocker is available.
-     */
-    bool hasScreenLockerIntegration() const;
-
-    /**
-     * @returns whether any kind of global shortcuts are supported.
-     */
-    bool hasGlobalShortcutSupport() const;
 
     void initWorkspace();
 
@@ -300,7 +282,6 @@ private:
     PresentationTime *m_presentationTime = nullptr;
     LinuxDrmSyncObjV1Interface *m_linuxDrmSyncObj = nullptr;
     QList<Window *> m_windows;
-    InitializationFlags m_initFlags;
     QHash<Output *, OutputInterface *> m_waylandOutputs;
     QHash<Output *, OutputDeviceV2Interface *> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;

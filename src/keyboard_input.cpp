@@ -154,7 +154,7 @@ void KeyboardInputRedirection::init()
         update();
     });
 #if KWIN_BUILD_SCREENLOCKER
-    if (waylandServer()->hasScreenLockerIntegration()) {
+    if (kwinApp()->supportsLockScreen()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, &KeyboardInputRedirection::update);
     }
 #endif

@@ -2916,7 +2916,6 @@ private:
 
 void InputRedirection::setupInputFilters()
 {
-    const bool hasGlobalShortcutSupport = waylandServer()->hasGlobalShortcutSupport();
     if (kwinApp()->session()->capabilities() & Session::Capability::SwitchTerminal) {
         m_virtualTerminalFilter = std::make_unique<VirtualTerminalFilter>();
         installInputEventFilter(m_virtualTerminalFilter.get());
@@ -2934,7 +2933,7 @@ void InputRedirection::setupInputFilters()
     m_lockscreenFilter = std::make_unique<LockScreenFilter>();
     installInputEventFilter(m_lockscreenFilter.get());
 
-    if (hasGlobalShortcutSupport) {
+    if (kwinApp()->supportsGlobalShortcuts()) {
         m_screenEdgeFilter = std::make_unique<ScreenEdgeInputFilter>();
         installInputEventFilter(m_screenEdgeFilter.get());
     }
@@ -2950,7 +2949,7 @@ void InputRedirection::setupInputFilters()
     installInputEventFilter(m_tabboxFilter.get());
 #endif
 #if KWIN_BUILD_GLOBALSHORTCUTS
-    if (hasGlobalShortcutSupport) {
+    if (kwinApp()->supportsGlobalShortcuts()) {
         m_globalShortcutFilter = std::make_unique<GlobalShortcutFilter>();
         installInputEventFilter(m_globalShortcutFilter.get());
     }

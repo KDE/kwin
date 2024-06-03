@@ -272,6 +272,15 @@ public:
         return m_terminating;
     }
 
+    bool initiallyLocked() const;
+    void setInitiallyLocked(bool locked);
+
+    bool supportsLockScreen() const;
+    void setSupportsLockScreen(bool set);
+
+    bool supportsGlobalShortcuts() const;
+    void setSupportsGlobalShortcuts(bool set);
+
     void installNativeX11EventFilter();
     void removeNativeX11EventFilter();
 
@@ -386,6 +395,9 @@ private:
 #endif
     bool m_followLocale1 = false;
     bool m_configLock;
+    bool m_initiallyLocked = false;
+    bool m_supportsLockScreen = true;
+    bool m_supportsGlobalShortcuts = true;
     KSharedConfigPtr m_config;
     KSharedConfigPtr m_kxkbConfig;
     KSharedConfigPtr m_inputConfig;
@@ -413,6 +425,36 @@ private:
 #endif
     std::unique_ptr<Cursor> m_platformCursor;
 };
+
+inline bool Application::initiallyLocked() const
+{
+    return m_initiallyLocked;
+}
+
+inline void Application::setInitiallyLocked(bool locked)
+{
+    m_initiallyLocked = locked;
+}
+
+inline bool Application::supportsLockScreen() const
+{
+    return m_supportsLockScreen;
+}
+
+inline void Application::setSupportsLockScreen(bool set)
+{
+    m_supportsLockScreen = set;
+}
+
+inline bool Application::supportsGlobalShortcuts() const
+{
+    return m_supportsGlobalShortcuts;
+}
+
+inline void Application::setSupportsGlobalShortcuts(bool set)
+{
+    m_supportsGlobalShortcuts = set;
+}
 
 inline static Application *kwinApp()
 {

@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "screenlockerwatcher.h"
-#include "wayland_server.h"
 
 // dbus generated
 #include "kscreenlocker_interface.h"
@@ -22,11 +21,7 @@ ScreenLockerWatcher::ScreenLockerWatcher()
     : m_serviceWatcher(new QDBusServiceWatcher(this))
     , m_locked(false)
 {
-    if (waylandServer() && waylandServer()->hasScreenLockerIntegration()) {
-        connect(waylandServer(), &WaylandServer::initialized, this, &ScreenLockerWatcher::initialize);
-    } else {
-        initialize();
-    }
+    initialize();
 }
 
 void ScreenLockerWatcher::initialize()
