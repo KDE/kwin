@@ -787,17 +787,19 @@ void Options::loadConfig()
     }
     setGlPreferBufferSwap(c);
 
-    HiddenPreviews previews = Options::defaultHiddenPreviews();
-    // 4 - off, 5 - shown, 6 - always, other are old values
-    int hps = config.readEntry("HiddenPreviews", 5);
-    if (hps == 4) {
-        previews = HiddenPreviewsNever;
-    } else if (hps == 5) {
-        previews = HiddenPreviewsShown;
-    } else if (hps == 6) {
-        previews = HiddenPreviewsAlways;
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        HiddenPreviews previews = Options::defaultHiddenPreviews();
+        // 4 - off, 5 - shown, 6 - always, other are old values
+        int hps = config.readEntry("HiddenPreviews", 5);
+        if (hps == 4) {
+            previews = HiddenPreviewsNever;
+        } else if (hps == 5) {
+            previews = HiddenPreviewsShown;
+        } else if (hps == 6) {
+            previews = HiddenPreviewsAlways;
+        }
+        setHiddenPreviews(previews);
     }
-    setHiddenPreviews(previews);
 
     auto interfaceToKey = [](OpenGLPlatformInterface interface) {
         switch (interface) {
