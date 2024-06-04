@@ -96,7 +96,7 @@ OffscreenQuickView::OffscreenQuickView(ExportMode exportMode, bool alpha)
     if (!usingGl) {
         qCDebug(LIBKWINEFFECTS) << "QtQuick Software rendering mode detected";
         d->m_useBlit = true;
-        d->m_renderControl->initialize();
+        // explicilty do not call QQuickRenderControl::initialize, see Qt docs
     } else {
         QSurfaceFormat format;
         format.setOption(QSurfaceFormat::ResetNotification);
@@ -238,10 +238,14 @@ void OffscreenQuickView::update()
     }
 
     d->m_renderControl->polishItems();
-    d->m_renderControl->beginFrame();
+    if (usingGl) {
+        d->m_renderControl->beginFrame();
+    }
     d->m_renderControl->sync();
     d->m_renderControl->render();
-    d->m_renderControl->endFrame();
+    if (usingGl) {
+        d->m_renderControl->endFrame();
+    }
 
     if (usingGl) {
         QQuickOpenGLUtils::resetOpenGLState();
