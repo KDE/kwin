@@ -16,5 +16,10 @@ target_sources(kwin-6.0-remove-breeze-tabbox-default PRIVATE kwin-6.0-remove-bre
 target_link_libraries(kwin-6.0-remove-breeze-tabbox-default PRIVATE KF6::ConfigCore)
 install(TARGETS kwin-6.0-remove-breeze-tabbox-default DESTINATION ${KDE_INSTALL_LIBDIR}/kconf_update_bin/)
 
+add_executable(kwin-6.1-remove-gridview-expose-shortcuts)
+target_sources(kwin-6.1-remove-gridview-expose-shortcuts PRIVATE kwin-6.1-remove-gridview-expose-shortcuts.cpp)
+target_link_libraries(kwin-6.1-remove-gridview-expose-shortcuts PRIVATE KF6::GlobalAccel)
+install(TARGETS kwin-6.1-remove-gridview-expose-shortcuts DESTINATION ${KDE_INSTALL_LIBDIR}/kconf_update_bin/)
+
 install(FILES kwin.upd
         DESTINATION ${KDE_INSTALL_KCONFUPDATEDIR})
