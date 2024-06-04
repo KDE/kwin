@@ -383,7 +383,6 @@ bool ScreenCastStream::createStream()
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
     }
-    m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
     char buffer[2048];
     QList<const spa_pod *> params = buildFormats(false, buffer);
@@ -410,7 +409,6 @@ bool ScreenCastStream::createStream()
         break;
     }
 
-    qCDebug(KWIN_SCREENCAST) << objectName() << "stream created, drm format:" << FormatInfo::drmFormatName(m_drmFormat) << "with DMA-BUF:" << m_hasDmaBuf;
     return true;
 }
 void ScreenCastStream::coreFailed(const QString &errorMessage)
@@ -623,7 +621,7 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
     QList<const spa_pod *> params;
-    if (m_hasDmaBuf && !m_avoidDmaBuf) {
+    if (!m_avoidDmaBuf) {
         if (fixate) {
             params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
         }
