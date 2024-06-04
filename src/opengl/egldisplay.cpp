@@ -286,6 +286,8 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
         qCCritical(KWIN_OPENGL) << "eglQueryDmaBufFormatsEXT with count" << count << "failed!" << getEglErrorString();
         return {};
     }
+    // NVidia doesn't support invalid modifiers
+    const bool isNVidia = QByteArrayView(eglQueryString(m_handle, EGL_VENDOR)) == "NVIDIA";
     QHash<uint32_t, DrmFormatInfo> ret;
     for (const auto format : std::as_const(formats)) {
         if (m_functions.queryDmaBufModifiersEXT != nullptr) {
@@ -305,7 +307,7 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
                             drmFormatInfo.externalOnlyModifiers.removeAll(drmFormatInfo.allModifiers[i]);
                         }
                     }
-                    if (!drmFormatInfo.allModifiers.empty()) {
+                    if (!drmFormatInfo.allModifiers.empty() && !isNVidia) {
                         if (!drmFormatInfo.allModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
                             drmFormatInfo.allModifiers.push_back(DRM_FORMAT_MOD_INVALID);
                             drmFormatInfo.nonExternalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
