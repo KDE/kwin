@@ -35,9 +35,6 @@ class ScreenCastSource;
 struct ScreenCastDmaBufTextureParams
 {
     int planeCount = 0;
-    int width = 0;
-    int height = 0;
-    uint32_t format = 0;
     uint64_t modifier = 0;
 };
 
@@ -133,6 +130,7 @@ private:
 
     quint64 m_sequential = 0;
     bool m_hasDmaBuf = false;
+    bool m_avoidDmaBuf = false;
     quint32 m_drmFormat = 0;
 
     std::optional<std::chrono::steady_clock::time_point> m_lastSent;

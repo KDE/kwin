@@ -204,47 +204,42 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     spa_format_video_raw_parse(format, &m_videoFormat);
-    auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
-    QList<uint64_t> receivedModifiers;
-    if (modifierProperty) {
-        const struct spa_pod *modifierPod = &modifierProperty->value;
 
-        uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod);
-        uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
-        receivedModifiers = QList<uint64_t>(modifiers, modifiers + modifiersCount);
-        // Remove duplicates
-        std::sort(receivedModifiers.begin(), receivedModifiers.end());
-        receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
+    if (auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier)) {
+        if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
+            const uint32_t modifierCount = SPA_POD_CHOICE_N_VALUES(&modifierProperty->value);
+            const uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(&modifierProperty->value);
 
-        if (!m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height() || !receivedModifiers.contains(m_dmabufParams->modifier)) {
-            if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
-                // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
-                // item on the list
-                if (receivedModifiers.count() > 1) {
-                    receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
+            m_dmabufParams.reset();
+
+            if (modifierCount > 0) {
+                const QList<uint64_t> supportedModifiers(modifiers + 1, modifiers + modifierCount); // modifiers[0] is the default choice
+
+                QList<uint64_t> explicitModifiers = supportedModifiers;
+                explicitModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
+                if (!explicitModifiers.isEmpty()) {
+                    m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, explicitModifiers);
                 }
-                m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
-            } else {
-                m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
-            }
 
-            // In case we fail to use any modifier from the list of offered ones, remove these
-            // from our all future offerings, otherwise there will be no indication that it cannot
-            // be used and clients can go for it over and over
-            if (!m_dmabufParams.has_value()) {
-                for (uint64_t modifier : receivedModifiers) {
-                    m_modifiers.removeAll(modifier);
+                if (!m_dmabufParams) {
+                    if (supportedModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
+                        m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, {});
+                    }
                 }
             }
 
-            qCDebug(KWIN_SCREENCAST) << objectName() << "Stream dmabuf modifiers received, offering our best suited modifier" << m_dmabufParams.has_value();
+            if (!m_dmabufParams) {
+                m_avoidDmaBuf = true;
+                qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to negotiate dmabuf modifier. Falling back to shm";
+            }
+
             char buffer[2048];
             auto params = buildFormats(m_dmabufParams.has_value(), buffer);
             pw_stream_update_params(m_pwStream, params.data(), params.count());
             return;
         }
     } else {
-      m_dmabufParams.reset();
+        m_dmabufParams.reset();
     }
 
     qCDebug(KWIN_SCREENCAST) << objectName() << "Stream format found, defining buffers";
@@ -387,8 +382,6 @@ bool ScreenCastStream::createStream()
     } else {
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
-        // Also support modifier-less DmaBufs
-        m_modifiers += DRM_FORMAT_MOD_INVALID;
     }
     m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
@@ -630,7 +623,7 @@ QList<const spa_pod *> ScreenCastStream::buildFormats(bool fixate, char buffer[2
     spa_rectangle resolution = SPA_RECTANGLE(uint32_t(m_resolution.width()), uint32_t(m_resolution.height()));
 
     QList<const spa_pod *> params;
-    if (m_hasDmaBuf) {
+    if (m_hasDmaBuf && !m_avoidDmaBuf) {
         if (fixate) {
             params.append(buildFormat(&podBuilder, dmabufFormat, &resolution, &defFramerate, &minFramerate, &maxFramerate, {m_dmabufParams->modifier}, SPA_POD_PROP_FLAG_MANDATORY));
         }
@@ -842,9 +835,6 @@ std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(
 
     return ScreenCastDmaBufTextureParams{
         .planeCount = attrs->planeCount,
-        .width = attrs->width,
-        .height = attrs->height,
-        .format = attrs->format,
         .modifier = attrs->modifier,
     };
 }
