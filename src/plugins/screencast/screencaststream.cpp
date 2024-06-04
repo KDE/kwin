@@ -147,51 +147,6 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
 #define CURSOR_META_SIZE(w, h) (sizeof(struct spa_meta_cursor) + sizeof(struct spa_meta_bitmap) + w * h * CURSOR_BPP)
 static const int videoDamageRegionCount = 16;
 
-void ScreenCastStream::newStreamParams()
-{
-    qCDebug(KWIN_SCREENCAST) << objectName() << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
-    uint8_t paramsBuffer[1024];
-    spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
-    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
-    const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
-    const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
-
-    struct spa_pod_frame f;
-    spa_pod_builder_push_object(&pod_builder, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
-    spa_pod_builder_add(&pod_builder,
-                        SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(3, 2, 4),
-                        SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
-    if (!m_dmabufParams) {
-        spa_pod_builder_add(&pod_builder,
-                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
-                            SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
-                            SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
-                            SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
-    } else {
-        spa_pod_builder_add(&pod_builder,
-                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(m_dmabufParams->planeCount), 0);
-    }
-    spa_pod *bufferPod = (spa_pod *)spa_pod_builder_pop(&pod_builder, &f);
-
-    QVarLengthArray<const spa_pod *> params = {
-        bufferPod,
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
-                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
-                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Cursor),
-                                              SPA_PARAM_META_size, SPA_POD_Int(CURSOR_META_SIZE(m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))),
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
-                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
-                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
-                                              SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(sizeof(struct spa_meta_region) * videoDamageRegionCount, sizeof(struct spa_meta_region) * 1, sizeof(struct spa_meta_region) * videoDamageRegionCount)),
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
-                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
-                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
-                                              SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
-    };
-
-    pw_stream_update_params(m_pwStream, params.data(), params.count());
-}
-
 void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *format)
 {
     if (m_closed) {
@@ -242,8 +197,47 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
         m_dmabufParams.reset();
     }
 
-    qCDebug(KWIN_SCREENCAST) << objectName() << "Stream format found, defining buffers";
-    newStreamParams();
+    qCDebug(KWIN_SCREENCAST) << objectName() << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
+    uint8_t paramsBuffer[1024];
+    spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
+    const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
+    const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
+    const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
+
+    struct spa_pod_frame f;
+    spa_pod_builder_push_object(&pod_builder, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
+    spa_pod_builder_add(&pod_builder,
+                        SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(3, 2, 4),
+                        SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
+    if (!m_dmabufParams) {
+        spa_pod_builder_add(&pod_builder,
+                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
+                            SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
+                            SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
+                            SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
+    } else {
+        spa_pod_builder_add(&pod_builder,
+                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(m_dmabufParams->planeCount), 0);
+    }
+    spa_pod *bufferPod = (spa_pod *)spa_pod_builder_pop(&pod_builder, &f);
+
+    QVarLengthArray<const spa_pod *> params = {
+        bufferPod,
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Cursor),
+                                              SPA_PARAM_META_size, SPA_POD_Int(CURSOR_META_SIZE(m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))),
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
+                                              SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(sizeof(struct spa_meta_region) * videoDamageRegionCount, sizeof(struct spa_meta_region) * 1, sizeof(struct spa_meta_region) * videoDamageRegionCount)),
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                              SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
+                                              SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
+    };
+
+    pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
 
 void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
