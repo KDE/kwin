@@ -92,7 +92,7 @@
         "Description[x-test]": "xxCross fade animation when Tooltips or Notifications change their geometryxx",
         "Description[zh_CN]": "工具提示/通知信息框大小变化时呈现过渡动效",
         "Description[zh_TW]": "當工具提示或通知變更位置時交錯淡出動畫",
-        "EnabledByDefault": true,
+        "EnabledByDefault": false,
         "Icon": "preferences-system-windows-effect-morphingpopups",
         "Id": "morphingpopups",
         "License": "GPL",
