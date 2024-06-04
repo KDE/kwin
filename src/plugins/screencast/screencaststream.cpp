@@ -395,7 +395,7 @@ bool ScreenCastStream::createStream()
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
     }
-    m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
+    m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, m_modifiers).has_value();
 
     char buffer[2048];
     QList<const spa_pod *> params = buildFormats(false, buffer);
