@@ -364,6 +364,8 @@ void DrmTest::testModeset_data()
 
 void DrmTest::testModeset()
 {
+    // to reenable, make this part of an integration test, so that kwinApp() isn't nullptr
+    QSKIP("this test needs output pipelines to be enabled by default, which is no longer the case");
     // test if doing a modeset would succeed
     QFETCH(int, AMS);
     const auto mockGpu = findPrimaryDevice(5);
