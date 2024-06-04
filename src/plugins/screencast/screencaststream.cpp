@@ -387,8 +387,6 @@ bool ScreenCastStream::createStream()
     } else {
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
-        // Also support modifier-less DmaBufs
-        m_modifiers += DRM_FORMAT_MOD_INVALID;
     }
     m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
