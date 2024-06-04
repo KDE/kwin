@@ -3,10 +3,11 @@ Description=KDE Window Manager
 PartOf=graphical-session.target
 
 [Service]
-Type=notify-reload
 ExecStart=@CMAKE_INSTALL_FULL_BINDIR@/kwin_wayland_wrapper --xwayland
 BusName=org.kde.KWinWrapper
 Slice=session.slice
-WatchdogSec=15s
-NotifyAccess=all
-WatchdogSignal=SIGHUP
+# the watchdog is disabled because of issues with s2idle and hibernate: https://github.com/systemd/systemd/issues/9538
+# Type=notify-reload
+# WatchdogSec=15s
+# NotifyAccess=all
+# WatchdogSignal=SIGHUP
