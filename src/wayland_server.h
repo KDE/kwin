@@ -51,6 +51,7 @@ class TearingControlManagerV1Interface;
 class XwaylandShellV1Interface;
 class OutputOrderV1Interface;
 class XdgDialogWmV1Interface;
+class ExternalBrightnessV1;
 
 class Window;
 class Output;
@@ -62,6 +63,7 @@ class PresentationTime;
 class XXColorManagerV2;
 class LinuxDrmSyncObjV1Interface;
 class RenderBackend;
+class BrightnessDevice;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -226,6 +228,8 @@ Q_SIGNALS:
     void initialized();
     void foreignTransientChanged(KWin::SurfaceInterface *child);
     void lockStateChanged();
+    void brightnessDeviceAdded(BrightnessDevice *device);
+    void brightnessDeviceRemoved(BrightnessDevice *device);
 
 private:
     int createScreenLockerConnection();
@@ -288,6 +292,7 @@ private:
     OutputOrderV1Interface *m_outputOrder = nullptr;
     XXColorManagerV2 *m_xxColorManager = nullptr;
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
+    ExternalBrightnessV1 *m_externalBrightness = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

@@ -34,6 +34,7 @@
 #include "wayland/dpms.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/drmlease_v1.h"
+#include "wayland/externalbrightness_v1.h"
 #include "wayland/filtered_display.h"
 #include "wayland/fractionalscale_v1.h"
 #include "wayland/frog_colormanagement_v1.h"
@@ -522,6 +523,10 @@ bool WaylandServer::init()
             window->installXdgDialogV1(dialog);
         }
     });
+
+    m_externalBrightness = new ExternalBrightnessV1(m_display, m_display);
+    connect(m_externalBrightness, &ExternalBrightnessV1::deviceAdded, this, &WaylandServer::brightnessDeviceAdded);
+    connect(m_externalBrightness, &ExternalBrightnessV1::deviceRemoved, this, &WaylandServer::brightnessDeviceRemoved);
 
     return true;
 }

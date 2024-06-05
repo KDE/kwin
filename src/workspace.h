@@ -82,6 +82,7 @@ class OutputConfigurationStore;
 class LidSwitchTracker;
 class DpmsInputEventFilter;
 class OrientationSensor;
+class BrightnessDevice;
 
 class KWIN_EXPORT Workspace : public QObject
 {
@@ -643,6 +644,7 @@ private:
     void updateOutputs(const std::optional<QList<Output *>> &outputOrder = std::nullopt);
     void createDpmsFilter();
     void maybeDestroyDpmsFilter();
+    void assignBrightnessDevices();
 
     bool breaksShowingDesktop(Window *window) const;
 
@@ -668,6 +670,7 @@ private:
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
     QList<Output *> m_outputOrder;
+    QList<BrightnessDevice *> m_brightnessDevices;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;

@@ -29,6 +29,7 @@ class OutputConfiguration;
 class ColorTransformation;
 class IccProfile;
 class OutputChangeSet;
+class BrightnessDevice;
 
 /**
  * The OutputTransform type is used to describe the transform applied to the output content.
@@ -157,6 +158,7 @@ public:
         AutoRotation = 1 << 6,
         IccProfile = 1 << 7,
         Tearing = 1 << 8,
+        BrightnessControl = 1 << 9,
     };
     Q_DECLARE_FLAGS(Capabilities, Capability)
 
@@ -360,9 +362,13 @@ public:
     double sdrGamutWideness() const;
     ColorProfileSource colorProfileSource() const;
 
+    double softwareBrightness() const;
     double brightness() const;
 
     const ColorDescription &colorDescription() const;
+
+    BrightnessDevice *brightnessDevice() const;
+    virtual void setBrightnessDevice(BrightnessDevice *device);
 
 Q_SIGNALS:
     /**
@@ -489,6 +495,7 @@ protected:
     Information m_information;
     QUuid m_uuid;
     int m_refCount = 1;
+    BrightnessDevice *m_brightnessDevice = nullptr;
 };
 
 inline QRect Output::rect() const

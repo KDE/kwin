@@ -21,6 +21,7 @@
 #include "core/renderloop_p.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
+#include "wayland/externalbrightness_v1.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -260,6 +261,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
         // TODO only set this if an orientation sensor is available?
         capabilities |= Capability::AutoRotation;
     }
+    if (m_brightnessDevice || m_state.highDynamicRange) {
+        capabilities |= Capability::BrightnessControl;
+    }
     return capabilities;
 }
 
@@ -414,6 +418,15 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
 
+    updateInformation();
+    if (m_brightnessDevice) {
+        if (m_state.highDynamicRange) {
+            m_brightnessDevice->setBrightness(1);
+        } else {
+            m_brightnessDevice->setBrightness(m_state.brightness);
+        }
+    }
+
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset(nullptr);
     }
@@ -425,6 +438,19 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     doSetChannelFactors(m_channelFactors);
 
     Q_EMIT changed();
+}
+
+void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
+{
+    Output::setBrightnessDevice(device);
+    if (device) {
+        if (m_state.highDynamicRange) {
+            device->setBrightness(1);
+        } else {
+            device->setBrightness(m_state.brightness);
+        }
+    }
+    updateInformation();
 }
 
 void DrmOutput::revertQueuedChanges()

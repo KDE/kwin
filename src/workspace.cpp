@@ -61,6 +61,7 @@
 #include "wayland_server.h"
 #if KWIN_BUILD_X11
 #include "atoms.h"
+#include "core/brightnessdevice.h"
 #include "group.h"
 #include "netinfo.h"
 #include "utils/xcbutils.h"
@@ -260,6 +261,16 @@ void Workspace::init()
     connect(this, &Workspace::windowAdded, m_placementTracker.get(), &PlacementTracker::add);
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
     m_placementTracker->init(getPlacementTrackerHash());
+
+    if (waylandServer()) {
+        connect(waylandServer(), &WaylandServer::brightnessDeviceAdded, this, [this](BrightnessDevice *device) {
+            m_brightnessDevices.push_back(device);
+            assignBrightnessDevices();
+        });
+        connect(waylandServer(), &WaylandServer::brightnessDeviceRemoved, this, [this](BrightnessDevice *device) {
+            m_brightnessDevices.removeOne(device);
+        });
+    }
 }
 
 QString Workspace::getPlacementTrackerHash()
@@ -1327,6 +1338,10 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->uninhibit();
     m_placementTracker->restore(getPlacementTrackerHash());
 
+    if (!added.isEmpty() || !removed.isEmpty()) {
+        assignBrightnessDevices();
+    }
+
     for (Output *output : removed) {
         output->unref();
     }
@@ -1349,6 +1364,26 @@ void Workspace::maybeDestroyDpmsFilter()
     });
     if (allOn) {
         m_dpmsFilter.reset();
+    }
+}
+
+void Workspace::assignBrightnessDevices()
+{
+    QList<Output *> candidates = m_outputs;
+    for (BrightnessDevice *device : m_brightnessDevices) {
+        // assign the device to the most fitting output
+        for (auto it = candidates.begin(); it != candidates.end(); it++) {
+            Output *output = *it;
+            if (output->isInternal() != device->isInternal()) {
+                continue;
+            }
+            if (!output->isInternal() && (!output->edid().isValid() || device->edidBeginning().isEmpty() || !output->edid().raw().startsWith(device->edidBeginning()))) {
+                continue;
+            }
+            output->setBrightnessDevice(device);
+            candidates.erase(it);
+            break;
+        }
     }
 }
 
