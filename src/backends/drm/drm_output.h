@@ -67,6 +67,8 @@ private:
     void setDpmsMode(DpmsMode mode) override;
     bool doSetChannelFactors(const QVector3D &rgb);
     ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
+    void setBrightnessDevice(BrightnessDevice *device) override;
+    void updateBrightnessCap();
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 

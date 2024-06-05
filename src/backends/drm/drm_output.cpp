@@ -21,6 +21,7 @@
 #include "core/renderloop_p.h"
 #include "drm_layer.h"
 #include "drm_logging.h"
+#include "wayland/externalbrightness_v1.h"
 // Qt
 #include <QCryptographicHash>
 #include <QMatrix4x4>
@@ -409,6 +410,15 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
 
+    updateBrightnessCap();
+    if (m_brightnessDevice) {
+        if (m_state.highDynamicRange) {
+            m_brightnessDevice->setBrightness(1);
+        } else {
+            m_brightnessDevice->setBrightness(m_state.brightness);
+        }
+    }
+
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset(nullptr);
     }
@@ -420,6 +430,34 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     doSetChannelFactors(m_channelFactors);
 
     Q_EMIT changed();
+}
+
+void DrmOutput::updateBrightnessCap()
+{
+    auto newCaps = m_information.capabilities;
+    if (m_brightnessDevice || m_state.highDynamicRange) {
+        newCaps |= Capability::BrightnessControl;
+    } else {
+        newCaps ^= Capability::BrightnessControl;
+    }
+    if (newCaps != m_information.capabilities) {
+        Information info = m_information;
+        info.capabilities = newCaps;
+        setInformation(info);
+    }
+}
+
+void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
+{
+    Output::setBrightnessDevice(device);
+    if (device) {
+        if (m_state.highDynamicRange) {
+            device->setBrightness(1);
+        } else {
+            device->setBrightness(m_state.brightness);
+        }
+    }
+    updateBrightnessCap();
 }
 
 void DrmOutput::revertQueuedChanges()

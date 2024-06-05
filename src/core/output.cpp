@@ -8,6 +8,7 @@
 */
 
 #include "output.h"
+#include "brightnessdevice.h"
 #include "iccprofile.h"
 #include "outputconfiguration.h"
 
@@ -340,6 +341,9 @@ Output::Output(QObject *parent)
 
 Output::~Output()
 {
+    if (m_brightnessDevice) {
+        m_brightnessDevice->setOutput(nullptr);
+    }
 }
 
 void Output::ref()
@@ -552,8 +556,12 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
 
 void Output::setInformation(const Information &information)
 {
+    const bool capsChange = m_information.capabilities != information.capabilities;
     m_information = information;
     m_uuid = generateOutputId(eisaId(), model(), serialNumber(), name());
+    if (capsChange) {
+        Q_EMIT capabilitiesChanged();
+    }
 }
 
 void Output::setState(const State &state)
@@ -777,9 +785,33 @@ Output::ColorProfileSource Output::colorProfileSource() const
     return m_state.colorProfileSource;
 }
 
+double Output::softwareBrightness() const
+{
+    return (m_state.highDynamicRange || !m_brightnessDevice) ? brightness() : 1;
+}
+
 double Output::brightness() const
 {
     return m_state.brightness;
+}
+
+BrightnessDevice *Output::brightnessDevice() const
+{
+    return m_brightnessDevice;
+}
+
+void Output::setBrightnessDevice(BrightnessDevice *device)
+{
+    if (m_brightnessDevice == device) {
+        return;
+    }
+    if (m_brightnessDevice) {
+        m_brightnessDevice->setOutput(nullptr);
+    }
+    m_brightnessDevice = device;
+    if (device) {
+        device->setOutput(this);
+    }
 }
 } // namespace KWin
 
