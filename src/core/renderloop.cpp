@@ -202,13 +202,15 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer)
         return;
     }
     const bool vrr = d->presentationMode == PresentationMode::AdaptiveSync || d->presentationMode == PresentationMode::AdaptiveAsync;
-    if (vrr && workspace()->activeWindow() && d->output) {
+    const bool tearing = d->presentationMode == PresentationMode::Async || d->presentationMode == PresentationMode::AdaptiveAsync;
+    if ((vrr || tearing) && workspace()->activeWindow() && d->output) {
         Window *const activeWindow = workspace()->activeWindow();
         if ((item || layer) && activeWindow->isOnOutput(d->output) && activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30) {
             return;
         }
     }
-    if (d->pendingFrameCount < d->maxPendingFrameCount && !d->inhibitCount) {
+    const int effectiveMaxPendingFrameCount = (vrr || tearing) ? 1 : d->maxPendingFrameCount;
+    if (d->pendingFrameCount < effectiveMaxPendingFrameCount && !d->inhibitCount) {
         d->scheduleNextRepaint();
     } else {
         d->delayScheduleRepaint();
