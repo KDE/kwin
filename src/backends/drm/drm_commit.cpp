@@ -47,6 +47,10 @@ DrmAtomicCommit::DrmAtomicCommit(const QList<DrmPipeline *> &pipelines)
 
 void DrmAtomicCommit::addProperty(const DrmProperty &prop, uint64_t value)
 {
+    if (Q_UNLIKELY(!prop.isValid())) {
+        qCWarning(KWIN_DRM) << "Trying to add an invalid property" << prop.name();
+        return;
+    }
     prop.checkValueInRange(value);
     m_properties[prop.drmObject()->id()][prop.propId()] = value;
 }
