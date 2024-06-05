@@ -22,7 +22,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 8;
+static const quint32 s_version = 9;
 
 static QtWaylandServer::kde_output_device_v2::transform kwinTransformToOutputDeviceTransform(OutputTransform transform)
 {
@@ -57,6 +57,9 @@ static uint32_t kwinCapabilitiesToOutputDeviceCapabilities(Output::Capabilities 
     }
     if (caps & Output::Capability::IccProfile) {
         ret |= QtWaylandServer::kde_output_device_v2::capability_icc_profile;
+    }
+    if (caps & Output::Capability::BrightnessControl) {
+        ret |= QtWaylandServer::kde_output_device_v2::capability_brightness;
     }
     return ret;
 }

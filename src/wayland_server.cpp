@@ -34,6 +34,7 @@
 #include "wayland/dpms.h"
 #include "wayland/drmclientbuffer.h"
 #include "wayland/drmlease_v1.h"
+#include "wayland/externalbrightness_v1.h"
 #include "wayland/filtered_display.h"
 #include "wayland/fractionalscale_v1.h"
 #include "wayland/frog_colormanagement_v1.h"
@@ -523,6 +524,8 @@ bool WaylandServer::init()
         }
     });
 
+    m_externalBrightness = new ExternalBrightnessV1(m_display, m_display);
+
     return true;
 }
 
@@ -838,6 +841,11 @@ QString WaylandServer::socketName() const
 LinuxDrmSyncObjV1Interface *WaylandServer::linuxSyncObj() const
 {
     return m_linuxDrmSyncObj;
+}
+
+ExternalBrightnessV1 *WaylandServer::externalBrightness() const
+{
+    return m_externalBrightness;
 }
 
 void WaylandServer::setRenderBackend(RenderBackend *backend)

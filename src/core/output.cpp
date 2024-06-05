@@ -8,6 +8,7 @@
 */
 
 #include "output.h"
+#include "brightnessdevice.h"
 #include "iccprofile.h"
 #include "outputconfiguration.h"
 
@@ -340,6 +341,9 @@ Output::Output(QObject *parent)
 
 Output::~Output()
 {
+    if (m_brightnessDevice) {
+        m_brightnessDevice->setOutput(nullptr);
+    }
 }
 
 void Output::ref()
@@ -784,6 +788,25 @@ Output::ColorProfileSource Output::colorProfileSource() const
 double Output::brightness() const
 {
     return m_state.brightness;
+}
+
+BrightnessDevice *Output::brightnessDevice() const
+{
+    return m_brightnessDevice;
+}
+
+void Output::setBrightnessDevice(BrightnessDevice *device)
+{
+    if (m_brightnessDevice == device) {
+        return;
+    }
+    if (m_brightnessDevice) {
+        m_brightnessDevice->setOutput(nullptr);
+    }
+    m_brightnessDevice = device;
+    if (device) {
+        device->setOutput(this);
+    }
 }
 } // namespace KWin
 

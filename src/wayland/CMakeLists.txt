@@ -252,6 +252,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/linux-drm-syncobj/linux-drm-syncobj-v1.xml
     BASENAME linux-drm-syncobj-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-external-brightness-v1.xml
+    BASENAME kde-external-brightness-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -275,6 +279,7 @@ target_sources(kwin PRIVATE
     dpms.cpp
     drmclientbuffer.cpp
     drmlease_v1.cpp
+    externalbrightness_v1.cpp
     filtered_display.cpp
     fractionalscale_v1.cpp
     frog_colormanagement_v1.cpp
@@ -357,6 +362,7 @@ install(FILES
     display.h
     dpms.h
     drmlease_v1.h
+    externalbrightness_v1.h
     fractionalscale_v1.h
     frog_colormanagement_v1.h
     idle.h
@@ -415,11 +421,13 @@ install(FILES
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-color-management-v1.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v2.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v2-server-protocol.h

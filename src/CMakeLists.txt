@@ -42,6 +42,7 @@ target_sources(kwin PRIVATE
     colors/colormanager.cpp
     compositor.cpp
     compositor_wayland.cpp
+    core/brightnessdevice.cpp
     core/colorlut.cpp
     core/colorlut3d.cpp
     core/colorpipeline.cpp

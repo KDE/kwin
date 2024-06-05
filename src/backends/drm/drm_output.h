@@ -73,6 +73,7 @@ private:
     ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
+    void setBrightnessDevice(BrightnessDevice *device) override;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 

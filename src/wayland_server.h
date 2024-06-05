@@ -51,6 +51,7 @@ class TearingControlManagerV1Interface;
 class XwaylandShellV1Interface;
 class OutputOrderV1Interface;
 class XdgDialogWmV1Interface;
+class ExternalBrightnessV1;
 
 class Window;
 class Output;
@@ -217,6 +218,7 @@ public:
     }
 
     LinuxDrmSyncObjV1Interface *linuxSyncObj() const;
+    ExternalBrightnessV1 *externalBrightness() const;
 
     void setRenderBackend(RenderBackend *backend);
 
@@ -288,6 +290,7 @@ private:
     OutputOrderV1Interface *m_outputOrder = nullptr;
     XXColorManagerV2 *m_xxColorManager = nullptr;
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
+    ExternalBrightnessV1 *m_externalBrightness = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 
