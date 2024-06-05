@@ -41,6 +41,7 @@ bool BasicEGLSurfaceTextureWayland::create()
     } else if (m_pixmap->buffer()->shmAttributes()) {
         return loadShmTexture(m_pixmap->buffer());
     } else {
+        qCDebug(KWIN_OPENGL) << "Failed to create BasicEGLSurfaceTextureWayland for a buffer of unknown type" << m_pixmap->buffer();
         return false;
     }
 }
@@ -57,6 +58,8 @@ void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
         updateDmabufTexture(m_pixmap->buffer());
     } else if (m_pixmap->buffer()->shmAttributes()) {
         updateShmTexture(m_pixmap->buffer(), region);
+    } else {
+        qCDebug(KWIN_OPENGL) << "Failed to update BasicEGLSurfaceTextureWayland for a buffer of unknown type" << m_pixmap->buffer();
     }
 }
 
