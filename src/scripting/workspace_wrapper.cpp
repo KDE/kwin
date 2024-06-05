@@ -250,6 +250,9 @@ QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) co
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
 {
+    if (!output) {
+        return QRect();
+    }
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
 }
 
