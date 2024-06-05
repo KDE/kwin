@@ -416,6 +416,11 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
     return tileManager;
 }
 
+Placement *WorkspaceWrapper::placement() const
+{
+    return workspace()->placement();
+}
+
 QtScriptWorkspaceWrapper::QtScriptWorkspaceWrapper(QObject *parent)
     : WorkspaceWrapper(parent)
 {

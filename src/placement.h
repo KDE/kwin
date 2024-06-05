@@ -12,6 +12,7 @@
 #pragma once
 // KWin
 #include "options.h"
+#include "window.h"
 // Qt
 #include <QList>
 #include <QPoint>
@@ -23,10 +24,10 @@ namespace KWin
 {
 
 class VirtualDesktop;
-class Window;
 
-class KWIN_EXPORT Placement
+class KWIN_EXPORT Placement : public QObject
 {
+    Q_OBJECT
 public:
     explicit Placement();
 
@@ -50,6 +51,9 @@ public:
     void unclutterDesktop();
 
     static const char *policyToString(PlacementPolicy policy);
+
+Q_SIGNALS:
+    void placing(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement);
 
 private:
     void place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);

@@ -95,6 +95,7 @@ void Placement::place(Window *c, const QRectF &area, PlacementPolicy policy, Pla
     default:
         placeSmart(c, area, nextPlacement);
     }
+    Q_EMIT placing(c, area, policy, nextPlacement);
 }
 
 /**

@@ -11,6 +11,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include "placement.h"
 #include <QObject>
 #include <QQmlListProperty>
 #include <QRect>
@@ -67,6 +68,8 @@ class WorkspaceWrapper : public QObject
      * The current position of the cursor.
      */
     Q_PROPERTY(QPoint cursorPos READ cursorPos NOTIFY cursorPosChanged)
+
+    Q_PROPERTY(Placement *placement READ placement CONSTANT)
 
 private:
     Q_DISABLE_COPY(WorkspaceWrapper)
@@ -287,6 +290,8 @@ public:
      * @since 6.0
      */
     Q_INVOKABLE bool isEffectActive(const QString &pluginId) const;
+
+    Placement *placement() const;
 
 public Q_SLOTS:
     // all the available key bindings
