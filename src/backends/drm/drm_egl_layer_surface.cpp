@@ -115,7 +115,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             m_surface->iccShader.reset();
         }
         if (enableColormanagement) {
-            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::linear,
+            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::gamma22,
                                                                        colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
                                                                        colorDescription.maxFrameAverageBrightness(), colorDescription.maxHdrHighlightBrightness(),
                                                                        colorDescription.sdrColorimetry());
@@ -188,7 +188,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness(), m_surface->adaptedChannelFactors);
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, m_surface->adaptedChannelFactors);
         } else {
             // enforce a 25 nits minimum sdr brightness
             constexpr double minBrightness = 25;

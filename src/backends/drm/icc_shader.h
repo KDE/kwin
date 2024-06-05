@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #pragma once
+#include "core/colorspace.h"
 
 #include <QMatrix4x4>
 #include <QSizeF>
@@ -25,7 +26,7 @@ public:
     ~IccShader();
 
     GLShader *shader() const;
-    void setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness, const QVector3D &channelFactors);
+    void setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColorDescription, const QVector3D &channelFactors);
 
 private:
     bool setProfile(const std::shared_ptr<IccProfile> &profile);
@@ -41,6 +42,7 @@ private:
     std::unique_ptr<GlLookUpTable> m_A;
     struct Locations
     {
+        int sourceNamedTransferFunction;
         int src;
         int sdrBrightness;
         int toXYZD50;

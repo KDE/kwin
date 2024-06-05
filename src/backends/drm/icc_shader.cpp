@@ -21,6 +21,7 @@ IccShader::IccShader()
     : m_shader(ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/backends/drm/icc.frag")))
 {
     m_locations = {
+        .sourceNamedTransferFunction = m_shader->uniformLocation("sourceNamedTransferFunction"),
         .src = m_shader->uniformLocation("src"),
         .sdrBrightness = m_shader->uniformLocation("sdrBrightness"),
         .toXYZD50 = m_shader->uniformLocation("toXYZD50"),
@@ -145,7 +146,7 @@ GLShader *IccShader::shader() const
     return m_shader.get();
 }
 
-void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness, const QVector3D &channelFactors)
+void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColorDescription, const QVector3D &channelFactors)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
     setProfile(profile);
@@ -155,7 +156,8 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sd
     nightColor(1, 1) = channelFactors.y();
     nightColor(2, 2) = channelFactors.z();
     m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50 * nightColor);
-    m_shader->setUniform(m_locations.sdrBrightness, sdrBrightness);
+    m_shader->setUniform(m_locations.sdrBrightness, float(inputColorDescription.sdrBrightness()));
+    m_shader->setUniform(m_locations.sourceNamedTransferFunction, int(inputColorDescription.transferFunction()));
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {
