@@ -3577,7 +3577,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // Don't go into setTileMode as custom tiles don't go trough configure events
         return;
     } else {
-        Tile *newTile = workspace()->tileManager(moveResizeOutput())->quickTile(m_requestedQuickTileMode);
+        Tile *newTile = workspace()->tileManager(workspace()->outputAt(whichScreen))->quickTile(m_requestedQuickTileMode);
         if (newTile) {
             moveResize(newTile->absoluteGeometry());
         } else if (tile()) {
