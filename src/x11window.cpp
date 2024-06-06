@@ -5290,7 +5290,7 @@ void X11Window::startupIdChanged()
     if (asn_data.xinerama() != -1) {
         Output *output = workspace()->xineramaIndexToOutput(asn_data.xinerama());
         if (output) {
-            workspace()->sendWindowToOutput(this, output);
+            sendToOutput(output);
         }
     }
     const xcb_timestamp_t timestamp = asn_id.timestamp();

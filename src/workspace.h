@@ -313,7 +313,6 @@ public:
     void sendWindowToDesktops(Window *window, const QList<VirtualDesktop *> &desktops, bool dont_activate);
     void windowToPreviousDesktop(Window *window);
     void windowToNextDesktop(Window *window);
-    void sendWindowToOutput(Window *window, Output *output);
 
 #if KWIN_BUILD_X11
     QList<X11Window *> ensureStackingOrder(const QList<X11Window *> &windows) const;

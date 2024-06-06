@@ -1251,7 +1251,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
             setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
         }
     } else if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
-        workspace()->sendWindowToOutput(this, moveResizeOutput()); // checks rule validity
+        sendToOutput(moveResizeOutput()); // checks rule validity
         if (isRequestedFullScreen() || requestedMaximizeMode() != MaximizeRestore) {
             checkWorkspacePosition();
         }
@@ -4192,7 +4192,7 @@ void Window::applyWindowRules()
     // MinSize, MaxSize handled by Geometry
     // IgnoreGeometry
     setDesktops(desktops());
-    workspace()->sendWindowToOutput(this, moveResizeOutput());
+    sendToOutput(moveResizeOutput());
     setOnActivities(activities());
     // Type
     maximize(requestedMaximizeMode());

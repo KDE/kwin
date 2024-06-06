@@ -481,7 +481,7 @@ void TestXdgShellWindow::testSendFullScreenWindowToAnotherOutput()
     QCOMPARE(window->output(), outputs[0]);
 
     // Send the window to another output.
-    workspace()->sendWindowToOutput(window, outputs[1]);
+    window->sendToOutput(outputs[1]);
     QCOMPARE(window->isFullScreen(), true);
     QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
     QCOMPARE(window->fullscreenGeometryRestore(), QRectF(1280 + 10, 20, 100, 50));
@@ -1795,7 +1795,7 @@ void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()
     QCOMPARE(window->output(), outputs[0]);
 
     // Send the window to another output.
-    workspace()->sendWindowToOutput(window, outputs[1]);
+    window->sendToOutput(outputs[1]);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->frameGeometry(), QRectF(1280, 0, 1280, 1024));
     QCOMPARE(window->geometryRestore(), QRectF(1280 + 10, 20, 100, 50));

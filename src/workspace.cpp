@@ -1547,11 +1547,6 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
     rearrange();
 }
 
-void Workspace::sendWindowToOutput(Window *window, Output *output)
-{
-    window->sendToOutput(output);
-}
-
 /**
  * Delayed focus functions
  */

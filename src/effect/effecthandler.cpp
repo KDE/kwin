@@ -752,7 +752,7 @@ void EffectsHandler::windowToScreen(EffectWindow *w, Output *screen)
 {
     auto window = w->window();
     if (window->isClient() && !window->isDesktop() && !window->isDock()) {
-        Workspace::self()->sendWindowToOutput(window, screen);
+        window->sendToOutput(screen);
     }
 }
 

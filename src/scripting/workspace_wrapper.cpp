@@ -395,7 +395,7 @@ QSize WorkspaceWrapper::virtualScreenSize() const
 
 void WorkspaceWrapper::sendClientToScreen(Window *client, Output *output)
 {
-    workspace()->sendWindowToOutput(client, output);
+    client->sendToOutput(output);
 }
 
 KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) const
