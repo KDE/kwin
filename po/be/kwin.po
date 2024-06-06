@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-05 00:40+0000\n"
-"PO-Revision-Date: 2024-02-23 01:30\n"
+"PO-Revision-Date: 2024-06-05 07:04\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -2228,20 +2228,16 @@ msgid "Arrow draw modifier keys:"
 msgstr "Стрэлкі як клавішы-мадыфікатары для малявання:"
 
 #: plugins/nightlight/nightlightmanager.cpp:67
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Начны рэжым уключаны"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:68
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Начны рэжым уключаны"
+msgstr ""
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
@@ -2543,10 +2539,9 @@ msgid "Padding:"
 msgstr "Водступ:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Загрузіць макет..."
+msgstr ""
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format

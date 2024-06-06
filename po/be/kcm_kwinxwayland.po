@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-23 01:30\n"
+"PO-Revision-Date: 2024-02-28 07:43\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -57,10 +57,9 @@ msgid "Never"
 msgstr "Ніколі"
 
 #: ui/main.qml:55
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr "Толькі Meta, Control, Alt, Shift"
+msgstr ""
 
 #: ui/main.qml:61
 #, kde-format
