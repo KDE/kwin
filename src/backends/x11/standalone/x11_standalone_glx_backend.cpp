@@ -714,8 +714,10 @@ void GlxBackend::present(Output *output, const std::shared_ptr<OutputFrame> &fra
 
 void GlxBackend::vblank(std::chrono::nanoseconds timestamp)
 {
-    m_frame->presented(timestamp, PresentationMode::VSync);
-    m_frame.reset();
+    if (m_frame) {
+        m_frame->presented(timestamp, PresentationMode::VSync);
+        m_frame.reset();
+    }
 }
 
 bool GlxBackend::makeCurrent()
