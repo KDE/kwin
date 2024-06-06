@@ -80,9 +80,9 @@ void FrogColorManagementSurfaceV1::setPreferredColorDescription(const ColorDescr
                             encodePrimary(color.green().x()), encodePrimary(color.green().y()),
                             encodePrimary(color.blue().x()), encodePrimary(color.blue().y()),
                             encodePrimary(color.white().x()), encodePrimary(color.white().y()),
-                            std::round(colorDescription.maxHdrHighlightBrightness()),
+                            std::round(colorDescription.maxHdrHighlightBrightness().value_or(0)),
                             std::round(colorDescription.minHdrBrightness() / 0.0001),
-                            std::round(colorDescription.maxFrameAverageBrightness()));
+                            std::round(colorDescription.maxFrameAverageBrightness().value_or(0)));
 }
 
 void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_transfer_function(Resource *resource, uint32_t transfer_function)
@@ -130,8 +130,12 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_hdr_metadata(R
                                                                                uint32_t max_display_mastering_luminance, uint32_t min_display_mastering_luminance,
                                                                                uint32_t max_cll, uint32_t max_fall)
 {
-    m_maxPeakBrightness = max_cll;
-    m_maxFrameAverageBrightness = max_fall;
+    if (max_fall > 0) {
+        m_maxFrameAverageBrightness = max_fall;
+    }
+    if (max_cll > 0) {
+        m_maxPeakBrightness = max_cll;
+    }
     if (mastering_display_primary_red_x > 0 && mastering_display_primary_red_y > 0 && mastering_display_primary_green_x > 0 && mastering_display_primary_green_y > 0 && mastering_display_primary_blue_x > 0 && mastering_display_primary_blue_y > 0 && mastering_white_point_x > 0 && mastering_white_point_y > 0) {
         m_masteringColorimetry = Colorimetry{
             QVector2D(mastering_display_primary_red_x / 10'000.0, mastering_display_primary_red_y / 10'000.0),
@@ -156,7 +160,6 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_destroy_resource(R
 void FrogColorManagementSurfaceV1::updateColorDescription()
 {
     if (m_surface) {
-        // TODO make brightness values optional in ColorDescription
         SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(m_surface);
         priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, 0, 0, m_maxFrameAverageBrightness, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
         priv->pending->colorDescriptionIsSet = true;

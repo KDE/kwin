@@ -453,7 +453,7 @@ bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
         && setUniform(FloatUniform::SdrBrightness, dst.sdrBrightness())
-        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrHighlightBrightness());
+        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrHighlightBrightness().value_or(10'000));
 }
 
 bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)

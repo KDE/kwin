@@ -200,17 +200,17 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
 
 const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100);
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness)
     : ColorDescription(containerColorimetry, tf, sdrBrightness, minHdrBrightness, maxFrameAverageBrightness, maxHdrHighlightBrightness, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness)
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness)
     : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, sdrBrightness, minHdrBrightness, maxFrameAverageBrightness, maxHdrHighlightBrightness, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
 {
 }
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
     : m_containerColorimetry(containerColorimetry)
     , m_masteringColorimetry(masteringColorimetry)
     , m_transferFunction(tf)
@@ -222,7 +222,7 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Name
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
     : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, sdrBrightness, minHdrBrightness, maxFrameAverageBrightness, maxHdrHighlightBrightness, masteringColorimetry, sdrColorimetry)
 {
 }
@@ -257,12 +257,12 @@ double ColorDescription::minHdrBrightness() const
     return m_minHdrBrightness;
 }
 
-double ColorDescription::maxFrameAverageBrightness() const
+std::optional<double> ColorDescription::maxFrameAverageBrightness() const
 {
     return m_maxFrameAverageBrightness;
 }
 
-double ColorDescription::maxHdrHighlightBrightness() const
+std::optional<double> ColorDescription::maxHdrHighlightBrightness() const
 {
     return m_maxHdrHighlightBrightness;
 }
