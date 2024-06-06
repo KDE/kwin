@@ -375,7 +375,8 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const bool effectiveWcg = wcg && screenSupportsHdr && driverSupportsHdr;
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
 
-    const Colorimetry colorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT2020) : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709));
+    const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT2020) : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709));
+    const Colorimetry masteringColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709);
     const Colorimetry sdrColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)) : Colorimetry::fromName(NamedColorimetry::BT709);
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
     const NamedTransferFunction transferFunction = effectiveHdr ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::gamma22;
@@ -383,7 +384,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.sdrBrightness)) : 200;
     const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(1000)) : 200;
     const double sdrBrightness = effectiveHdr ? props->sdrBrightness.value_or(m_state.sdrBrightness) : maxPeakBrightness;
-    return ColorDescription(colorimetry, transferFunction, sdrBrightness, minBrightness, maxAverageBrightness, maxPeakBrightness, sdrColorimetry);
+    return ColorDescription(containerColorimetry, transferFunction, sdrBrightness, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)

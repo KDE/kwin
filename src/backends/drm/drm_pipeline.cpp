@@ -313,7 +313,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     } else if (m_pending.colorDescription.transferFunction() != NamedTransferFunction::gamma22) {
         return false;
     }
-    if (m_pending.colorDescription.colorimetry() == NamedColorimetry::BT2020) {
+    if (m_pending.colorDescription.containerColorimetry() == NamedColorimetry::BT2020) {
         if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
             return false;
         }

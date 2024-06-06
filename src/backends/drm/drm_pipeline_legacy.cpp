@@ -126,7 +126,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             m_connector->hdrMetadata.setPropertyLegacy(blob ? blob->blobId() : 0);
         }
         if (m_connector->colorspace.isValid()) {
-            if (m_pending.colorDescription.colorimetry() == NamedColorimetry::BT2020) {
+            if (m_pending.colorDescription.containerColorimetry() == NamedColorimetry::BT2020) {
                 m_connector->colorspace.setEnumLegacy(DrmConnector::Colorspace::BT2020_RGB);
             } else {
                 m_connector->colorspace.setEnumLegacy(DrmConnector::Colorspace::Default);

@@ -354,7 +354,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             }
             shader = ShaderManager::instance()->pushShader(traits);
             if (traits & ShaderTrait::AdjustSaturation) {
-                const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
+                const auto toXYZ = renderTarget.colorDescription().containerColorimetry().toXYZ();
                 shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());
                 shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
             }

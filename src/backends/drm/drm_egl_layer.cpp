@@ -95,7 +95,7 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
         return false;
     }
     const auto &targetColor = m_pipeline->colorDescription();
-    if (color.colorimetry() != targetColor.colorimetry() || color.transferFunction() != targetColor.transferFunction()) {
+    if (color.containerColorimetry() != targetColor.containerColorimetry() || color.transferFunction() != targetColor.transferFunction()) {
         return false;
     }
     // kernel documentation says that

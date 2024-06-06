@@ -102,7 +102,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->colormanagementEnabled = enableColormanagement;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
-        m_surface->adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(colorDescription.colorimetry()) * channelFactors;
+        m_surface->adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(colorDescription.containerColorimetry()) * channelFactors;
         // normalize red to be the original brightness value again
         m_surface->adaptedChannelFactors *= channelFactors.x() / m_surface->adaptedChannelFactors.x();
         m_surface->iccProfile = iccProfile;
@@ -115,10 +115,10 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             m_surface->iccShader.reset();
         }
         if (enableColormanagement) {
-            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.colorimetry(), NamedTransferFunction::linear,
+            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), NamedTransferFunction::linear,
                                                                        colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
                                                                        colorDescription.maxFrameAverageBrightness(), colorDescription.maxHdrHighlightBrightness(),
-                                                                       colorDescription.sdrColorimetry());
+                                                                       colorDescription.containerColorimetry(), colorDescription.sdrColorimetry());
         } else {
             m_surface->intermediaryColorDescription = colorDescription;
         }

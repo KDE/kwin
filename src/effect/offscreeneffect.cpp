@@ -182,7 +182,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     QMatrix4x4 mvp = viewport.projectionMatrix();
     mvp.translate(std::round(window->x() * scale), std::round(window->y() * scale));
 
-    const auto toXYZ = renderTarget.colorDescription().colorimetry().toXYZ();
+    const auto toXYZ = renderTarget.colorDescription().containerColorimetry().toXYZ();
     shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp * data.toMatrix(scale));
     shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(rgb, rgb, rgb, a));
     shader->setUniform(GLShader::FloatUniform::Saturation, data.saturation());

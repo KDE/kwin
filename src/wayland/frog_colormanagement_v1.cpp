@@ -74,7 +74,7 @@ uint16_t encodePrimary(float primary)
 
 void FrogColorManagementSurfaceV1::setPreferredColorDescription(const ColorDescription &colorDescription)
 {
-    const auto &color = colorDescription.colorimetry();
+    const auto color = colorDescription.masteringColorimetry().value_or(colorDescription.containerColorimetry());
     send_preferred_metadata(kwinToFrogTransferFunction(colorDescription.transferFunction()),
                             encodePrimary(color.red().x()), encodePrimary(color.red().y()),
                             encodePrimary(color.green().x()), encodePrimary(color.green().y()),
@@ -108,10 +108,10 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_containe
     switch (primaries) {
     case primaries_undefined:
     case primaries_rec709:
-        m_colorimetry = NamedColorimetry::BT709;
+        m_containerColorimetry = NamedColorimetry::BT709;
         break;
     case primaries_rec2020:
-        m_colorimetry = NamedColorimetry::BT2020;
+        m_containerColorimetry = NamedColorimetry::BT2020;
         break;
     }
     updateColorDescription();
@@ -132,6 +132,14 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_hdr_metadata(R
 {
     m_maxPeakBrightness = max_cll;
     m_maxFrameAverageBrightness = max_fall;
+    if (mastering_display_primary_red_x > 0 && mastering_display_primary_red_y > 0 && mastering_display_primary_green_x > 0 && mastering_display_primary_green_y > 0 && mastering_display_primary_blue_x > 0 && mastering_display_primary_blue_y > 0 && mastering_white_point_x > 0 && mastering_white_point_y > 0) {
+        m_masteringColorimetry = Colorimetry{
+            QVector2D(mastering_display_primary_red_x / 10'000.0, mastering_display_primary_red_y / 10'000.0),
+            QVector2D(mastering_display_primary_green_x / 10'000.0, mastering_display_primary_green_y / 10'000.0),
+            QVector2D(mastering_display_primary_blue_x / 10'000.0, mastering_display_primary_blue_y / 10'000.0),
+            QVector2D(mastering_white_point_x / 10'000.0, mastering_white_point_y / 10'000.0),
+        };
+    }
     updateColorDescription();
 }
 
@@ -150,7 +158,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
     if (m_surface) {
         // TODO make brightness values optional in ColorDescription
         SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(m_surface);
-        priv->pending->colorDescription = ColorDescription(m_colorimetry, m_transferFunction, 0, 0, m_maxFrameAverageBrightness, m_maxPeakBrightness);
+        priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, 0, 0, m_maxFrameAverageBrightness, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
         priv->pending->colorDescriptionIsSet = true;
     }
 }

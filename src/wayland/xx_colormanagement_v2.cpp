@@ -277,7 +277,7 @@ static uint32_t kwinTFtoProtoTF(NamedTransferFunction tf)
 void XXImageDescriptionV2::xx_image_description_v2_get_information(Resource *qtResource, uint32_t information)
 {
     auto resource = wl_resource_create(qtResource->client(), &xx_image_description_info_v2_interface, qtResource->version(), information);
-    const auto c = m_description.colorimetry();
+    const auto c = m_description.containerColorimetry();
     const auto round = [](float f) {
         return std::clamp(std::round(f * 10'000.0), 0.0, 1.0);
     };

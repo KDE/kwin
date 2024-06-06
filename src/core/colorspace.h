@@ -103,7 +103,7 @@ class KWIN_EXPORT ColorDescription
 {
 public:
     /**
-     * @param colorimety the colorimety of this description
+     * @param containerColorimetry the container colorimety of this description
      * @param tf the transfer function of this description
      * @param sdrBrightness the brightness of SDR content
      * @param minHdrBrightness the minimum brightness of HDR content
@@ -111,10 +111,22 @@ public:
      * @param maxHdrHighlightBrightness the maximum brightness of HDR content, for a small part of the screen only
      * @param sdrColorimetry
      */
-    explicit ColorDescription(const Colorimetry &colorimety, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, const Colorimetry &sdrColorimetry = Colorimetry::fromName(NamedColorimetry::BT709));
-    explicit ColorDescription(NamedColorimetry colorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, const Colorimetry &sdrColorimetry = Colorimetry::fromName(NamedColorimetry::BT709));
+    explicit ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, double maxFrameAverageBrightness, double maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
 
-    const Colorimetry &colorimetry() const;
+    /**
+     * The primaries and whitepoint that colors are encoded for. This is used to convert between different colorspaces.
+     * In most cases this will be the rec.709 primaries for SDR, or rec.2020 for HDR
+     */
+    const Colorimetry &containerColorimetry() const;
+    /**
+     * The mastering colorimetry contains all colors that the image actually (may) contain, which can be used to improve the conversion to a different color description.
+     * In most cases this will be smaller than the container colorimetry; for example a screen with an HDR mode but only rec.709 colors would have a container colorimetry of rec.2020 and a mastering colorimetry of rec.709.
+     * In some cases however it can be bigger than the container colorimetry, like with scRGB. It has the container colorimetry of sRGB, but a mastering colorimetry that can be bigger (like rec.2020 for example)
+     */
+    const std::optional<Colorimetry> &masteringColorimetry() const;
     const Colorimetry &sdrColorimetry() const;
     NamedTransferFunction transferFunction() const;
     double sdrBrightness() const;
@@ -134,7 +146,8 @@ public:
     static QVector3D nitsToEncoded(const QVector3D &rgb, NamedTransferFunction tf, double sdrBrightness);
 
 private:
-    Colorimetry m_colorimetry;
+    Colorimetry m_containerColorimetry;
+    std::optional<Colorimetry> m_masteringColorimetry;
     NamedTransferFunction m_transferFunction;
     Colorimetry m_sdrColorimetry;
     double m_sdrBrightness;
