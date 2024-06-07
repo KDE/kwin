@@ -887,7 +887,8 @@ void Workspace::updateToolWindows(bool also_hide)
     if (!options->isHideUtilityWindowsForInactive()) {
 #if KWIN_BUILD_X11
         for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-            if (X11Window *x11Window = qobject_cast<X11Window *>(*it)) {
+            X11Window *x11Window = qobject_cast<X11Window *>(*it);
+            if (x11Window && x11Window->isUtility()) {
                 x11Window->setHidden(false);
             }
         }
