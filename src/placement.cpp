@@ -568,7 +568,7 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
     Q_ASSERT(area.isValid());
 
     if (nextPlacement == PlacementUnknown) {
-        nextPlacement = PlacementSmart;
+        nextPlacement = PlacementCentered;
     }
     if (c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height()) {
         if (workspace()->clientArea(MaximizeArea, c) == area) {
