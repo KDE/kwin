@@ -564,6 +564,9 @@ void Window::updateLayer()
 
 Layer Window::belongsToLayer() const
 {
+    if (isOutline()) {
+        return NormalLayer;
+    }
     if (isUnmanaged() || isInternal()) {
         return OverlayLayer;
     }
@@ -2415,7 +2418,6 @@ void Window::leaveInteractiveMoveResize()
     }
     if (isElectricBorderMaximizing()) {
         workspace()->outline()->hide();
-        elevate(false);
     }
 }
 
@@ -3382,7 +3384,6 @@ void Window::setElectricBorderMaximizing(bool maximizing)
     } else {
         workspace()->outline()->hide();
     }
-    elevate(maximizing);
 }
 
 QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
