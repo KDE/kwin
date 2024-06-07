@@ -3227,7 +3227,6 @@ void X11Window::setTransient(xcb_window_t new_transient_for_id)
         setTransientFor(transient_for);
         checkGroup(nullptr, true); // force, because transiency has changed
         updateLayer();
-        workspace()->resetUpdateToolWindowsTimer();
         Q_EMIT transientChanged();
     }
 }

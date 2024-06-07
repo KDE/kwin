@@ -181,10 +181,6 @@ class KWIN_EXPORT Options : public QObject
      * timeout before non-responding application will be killed after attempt to close.
      */
     Q_PROPERTY(int killPingTimeout READ killPingTimeout WRITE setKillPingTimeout NOTIFY killPingTimeoutChanged)
-    /**
-     * Whether to hide utility windows for inactive applications.
-     */
-    Q_PROPERTY(bool hideUtilityWindowsForInactive READ isHideUtilityWindowsForInactive WRITE setHideUtilityWindowsForInactive NOTIFY hideUtilityWindowsForInactiveChanged)
     Q_PROPERTY(int compositingMode READ compositingMode WRITE setCompositingMode NOTIFY compositingModeChanged)
     Q_PROPERTY(bool useCompositing READ isUseCompositing WRITE setUseCompositing NOTIFY useCompositingChanged)
     Q_PROPERTY(int hiddenPreviews READ hiddenPreviews WRITE setHiddenPreviews NOTIFY hiddenPreviewsChanged)
@@ -636,14 +632,6 @@ public:
     }
 
     /**
-     * Whether to hide utility windows for inactive applications.
-     */
-    bool isHideUtilityWindowsForInactive() const
-    {
-        return m_hideUtilityWindowsForInactive;
-    }
-
-    /**
      * Returns the animation time factor for desktop effects.
      */
     double animationTimeFactor() const;
@@ -756,7 +744,6 @@ public:
     void setElectricBorderCornerRatio(float electricBorderCornerRatio);
     void setBorderlessMaximizedWindows(bool borderlessMaximizedWindows);
     void setKillPingTimeout(int killPingTimeout);
-    void setHideUtilityWindowsForInactive(bool hideUtilityWindowsForInactive);
     void setCompositingMode(int compositingMode);
     void setUseCompositing(bool useCompositing);
     void setHiddenPreviews(int hiddenPreviews);
@@ -958,7 +945,6 @@ Q_SIGNALS:
     void electricBorderCornerRatioChanged();
     void borderlessMaximizedWindowsChanged();
     void killPingTimeoutChanged();
-    void hideUtilityWindowsForInactiveChanged();
     void compositingModeChanged();
     void useCompositingChanged();
     void hiddenPreviewsChanged();
@@ -998,7 +984,6 @@ private:
     bool m_rollOverDesktops;
     int m_focusStealingPreventionLevel;
     int m_killPingTimeout;
-    bool m_hideUtilityWindowsForInactive;
     XwaylandCrashPolicy m_xwaylandCrashPolicy;
     int m_xwaylandMaxCrashCount;
     XwaylandEavesdropsMode m_xwaylandEavesdrops;

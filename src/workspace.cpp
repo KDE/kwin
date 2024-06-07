@@ -208,11 +208,9 @@ void Workspace::init()
 
     reconfigureTimer.setSingleShot(true);
     m_rearrangeTimer.setSingleShot(true);
-    updateToolWindowsTimer.setSingleShot(true);
 
     connect(&reconfigureTimer, &QTimer::timeout, this, &Workspace::slotReconfigure);
     connect(&m_rearrangeTimer, &QTimer::timeout, this, &Workspace::rearrange);
-    connect(&updateToolWindowsTimer, &QTimer::timeout, this, &Workspace::slotUpdateToolWindows);
 
     // TODO: do we really need to reconfigure everything when fonts change?
     // maybe just reconfigure the decorations? Move this into libkdecoration?
@@ -739,9 +737,6 @@ void Workspace::addX11Window(X11Window *window)
     window->checkActiveModal();
     checkTransients(window->window()); // SELI TODO: Does this really belong here?
     updateStackingOrder(true); // Propagatem new window
-    if (window->isUtility() || window->isMenu() || window->isToolbar()) {
-        updateToolWindows(true);
-    }
     updateTabbox();
 }
 
@@ -881,112 +876,6 @@ void Workspace::removeWindow(Window *window)
     updateTabbox();
 }
 
-void Workspace::updateToolWindows(bool also_hide)
-{
-    // TODO: What if Client's transiency/group changes? should this be called too? (I'm paranoid, am I not?)
-    if (!options->isHideUtilityWindowsForInactive()) {
-#if KWIN_BUILD_X11
-        for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
-            X11Window *x11Window = qobject_cast<X11Window *>(*it);
-            if (x11Window && x11Window->isUtility()) {
-                x11Window->setHidden(false);
-            }
-        }
-#endif
-        return;
-    }
-    const Group *group = nullptr;
-    auto window = m_activeWindow;
-    // Go up in transiency hiearchy, if the top is found, only tool transients for the top mainwindow
-    // will be shown; if a group transient is group, all tools in the group will be shown
-    while (window != nullptr) {
-        if (!window->isTransient()) {
-            break;
-        }
-        if (window->groupTransient()) {
-            group = window->group();
-            break;
-        }
-        window = window->transientFor();
-    }
-    // Use stacking order only to reduce flicker, it doesn't matter if block_stacking_updates == 0,
-    // I.e. if it's not up to date
-
-    // SELI TODO: But maybe it should - what if a new window has been added that's not in stacking order yet?
-    QList<Window *> to_show, to_hide;
-    for (auto it = stacking_order.constBegin(); it != stacking_order.constEnd(); ++it) {
-        auto c = *it;
-        if (!c->isClient()) {
-            continue;
-        }
-        if (c->isUtility() || c->isMenu() || c->isToolbar()) {
-            bool show = true;
-            if (!c->isTransient()) {
-#if KWIN_BUILD_X11
-                if (!c->group() || c->group()->members().count() == 1) { // Has its own group, keep always visible
-                    show = true;
-                } else if (window != nullptr && c->group() == window->group()) {
-                    show = true;
-                } else
-#endif
-                {
-                    show = false;
-                }
-            } else {
-                if (group != nullptr && c->group() == group) {
-                    show = true;
-                } else if (window != nullptr && window->hasTransient(c, true)) {
-                    show = true;
-                } else {
-                    show = false;
-                }
-            }
-            if (!show && also_hide) {
-                const auto mainwindows = c->mainWindows();
-                // Don't hide utility windows which are standalone(?) or
-                // have e.g. kicker as mainwindow
-                if (mainwindows.isEmpty()) {
-                    show = true;
-                }
-                for (auto it2 = mainwindows.constBegin(); it2 != mainwindows.constEnd(); ++it2) {
-                    if ((*it2)->isSpecialWindow()) {
-                        show = true;
-                    }
-                }
-                if (!show) {
-                    to_hide.append(c);
-                }
-            }
-            if (show) {
-                to_show.append(c);
-            }
-        }
-    } // First show new ones, then hide
-    for (int i = to_show.size() - 1; i >= 0; --i) { // From topmost
-        // TODO: Since this is in stacking order, the order of taskbar entries changes :(
-        to_show.at(i)->setHidden(false);
-    }
-    if (also_hide) {
-        for (auto it = to_hide.constBegin(); it != to_hide.constEnd(); ++it) { // From bottommost
-            (*it)->setHidden(true);
-        }
-        updateToolWindowsTimer.stop();
-    } else { // setActiveWindow() is after called with NULL window, quickly followed
-        // by setting a new window, which would result in flickering
-        resetUpdateToolWindowsTimer();
-    }
-}
-
-void Workspace::resetUpdateToolWindowsTimer()
-{
-    updateToolWindowsTimer.start(200);
-}
-
-void Workspace::slotUpdateToolWindows()
-{
-    updateToolWindows(true);
-}
-
 void Workspace::slotReloadConfig()
 {
     reconfigure();
@@ -1013,7 +902,6 @@ void Workspace::slotReconfigure()
 
     Q_EMIT configChanged();
     m_userActionsMenu->discard();
-    updateToolWindows(true);
 
     m_rulebook->load();
     for (Window *window : std::as_const(m_windows)) {

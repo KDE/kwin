@@ -236,7 +236,6 @@ public:
     void restackWindowUnderActive(Window *window);
     void restack(Window *window, Window *under, bool force = false);
     void raiseOrLowerWindow(Window *window);
-    void resetUpdateToolWindowsTimer();
     void updateStackingOrder(bool propagate_new_windows = false);
     void forceRestacking();
 
@@ -549,7 +548,6 @@ private Q_SLOTS:
 #if KWIN_BUILD_X11
     void selectWmInputEventMask();
 #endif
-    void slotUpdateToolWindows();
     void delayFocus();
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
@@ -610,7 +608,6 @@ private:
     void lowerWindowWithinApplication(Window *window);
     bool allowFullClientRaising(const Window *window, uint32_t timestamp);
     void blockStackingUpdates(bool block);
-    void updateToolWindows(bool also_hide);
     void saveOldScreenSizes();
     void addToStack(Window *window);
     void removeFromStack(Window *window);
@@ -719,8 +716,6 @@ private:
 
     // Timer to collect requests for 'reconfigure'
     QTimer reconfigureTimer;
-
-    QTimer updateToolWindowsTimer;
 
     static Workspace *_self;
 #if KWIN_BUILD_X11

@@ -205,9 +205,6 @@
         <entry name="KillPingTimeout" type="Int">
             <default>5000</default>
         </entry>
-        <entry name="HideUtilityWindowsForInactive" type="Bool">
-            <default>true</default>
-        </entry>
         <entry name="InactiveTabsSkipTaskbar" type="Bool">
             <default>false</default>
         </entry>

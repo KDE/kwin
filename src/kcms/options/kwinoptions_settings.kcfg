@@ -49,10 +49,6 @@
         <default>Centered</default>
     </entry>
 
-    <entry key="HideUtilityWindowsForInactive" type="Bool">
-        <default>true</default>
-    </entry>
-
     <entry name="ActivationDesktopPolicy" type="Enum">
         <choices name="ActivationDesktopPolicyChoices">
             <choice name="SwitchToOtherDesktop"></choice>

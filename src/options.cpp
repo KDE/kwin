@@ -52,7 +52,6 @@ Options::Options(QObject *parent)
     , m_rollOverDesktops(false)
     , m_focusStealingPreventionLevel(0)
     , m_killPingTimeout(0)
-    , m_hideUtilityWindowsForInactive(false)
     , m_xwaylandCrashPolicy(Options::defaultXwaylandCrashPolicy())
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
     , m_xwaylandEavesdrops(Options::defaultXwaylandEavesdrops())
@@ -556,15 +555,6 @@ void Options::setKillPingTimeout(int killPingTimeout)
     Q_EMIT killPingTimeoutChanged();
 }
 
-void Options::setHideUtilityWindowsForInactive(bool hideUtilityWindowsForInactive)
-{
-    if (m_hideUtilityWindowsForInactive == hideUtilityWindowsForInactive) {
-        return;
-    }
-    m_hideUtilityWindowsForInactive = hideUtilityWindowsForInactive;
-    Q_EMIT hideUtilityWindowsForInactiveChanged();
-}
-
 void Options::setCompositingMode(int compositingMode)
 {
     if (m_compositingMode == static_cast<CompositingType>(compositingMode)) {
@@ -849,7 +839,6 @@ void Options::syncFromKcfgc()
     setCornerBarrier(m_settings->cornerBarrier());
     setSnapOnlyWhenOverlapping(m_settings->snapOnlyWhenOverlapping());
     setKillPingTimeout(m_settings->killPingTimeout());
-    setHideUtilityWindowsForInactive(m_settings->hideUtilityWindowsForInactive());
     setBorderlessMaximizedWindows(m_settings->borderlessMaximizedWindows());
     setElectricBorderMaximize(m_settings->electricBorderMaximize());
     setElectricBorderTiling(m_settings->electricBorderTiling());
