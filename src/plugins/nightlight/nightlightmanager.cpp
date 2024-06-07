@@ -375,7 +375,8 @@ void NightLightManager::resetSlowUpdateTimers(const QDateTime &todayNow)
     m_slowUpdateStartTimer = std::make_unique<QTimer>();
     m_slowUpdateStartTimer->setSingleShot(true);
     connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, [this]() {
-        resetSlowUpdateTimers(m_next.first);
+        const QDateTime nextMilestone = m_next.first; // make a copy so the current time stays the same after updateTransitionTimings() is called
+        resetSlowUpdateTimers(nextMilestone);
     });
     updateTransitionTimings(false, todayNow);
     updateTargetTemperature();
