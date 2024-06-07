@@ -253,9 +253,8 @@ private:
     void resetSlowUpdateTimers();
 
     void updateTargetTemperature();
-    void updateTransitionTimings(bool force, const QDateTime &todayNow);
+    void updateTransitionTimings(const QDateTime &todayNow);
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
-    bool checkAutomaticSunTimings() const;
 
     void commitGammaRamps(int temperature);
 
