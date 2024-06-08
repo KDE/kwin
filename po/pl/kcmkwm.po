@@ -1,6 +1,6 @@
 # translation of kcmkwm.po to Polish
 # translation of kcmkwm.po to
-# Version: $Revision: 1681059 $
+# Version: $Revision: 1681862 $
 # Previous translations Piotr Roszatycki <dexter@debian.org>
 # Michał Rudolf <mrudolf@kdewebdev.org>, 2002.
 # Michal Rudolf <mrudolf@kdewebdev.org>, 2002, 2003, 2004.
@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2022-12-29 10:14+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -332,7 +332,7 @@ msgstr "Zwiększa nieprzezroczystość"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -587,46 +587,20 @@ msgstr ""
 "Zezwól aplikacjom na zapamiętywanie położenia swoich okien, jeśli to "
 "obsługują"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "&Okna wyjątkowe:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Po zaznaczeniu tego pola, okna pomocnicze (paski narzędziowe, swobodne menu) "
-"nieaktywnych programów będą ukryte i pojawią się dopiero po uaktywnieniu "
-"programu. Uwaga: program musi oznaczyć okna odpowiednio, by były one "
-"rozpoznane jako pomocnicze."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Ukryj okna pomocnicze nieaktywnych programów"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Zachowanie wirtualnego pulpitu:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Po przywołaniu okna na innym pulpicie wirtualnym:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -646,13 +620,13 @@ msgstr ""
 "p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Przełącza na ten pulpit wirtualny"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Przenieś okno na bieżący pulpit wirtualny"
@@ -1304,6 +1278,23 @@ msgstr ""
 "przed zmianą aktywnego okna</em> i <em>pole kart („Alt+Tab”)</em> zaprzecza "
 "tej zasadzie i nie zadziała. W tym przypadku prawdopodobnie chcesz użyć "
 "<em>Uaktywnienie podąża za myszą (mysz ma pierwszeństwo)</em>."
+
+#~ msgid "&Special windows:"
+#~ msgstr "&Okna wyjątkowe:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Po zaznaczeniu tego pola, okna pomocnicze (paski narzędziowe, swobodne "
+#~ "menu) nieaktywnych programów będą ukryte i pojawią się dopiero po "
+#~ "uaktywnieniu programu. Uwaga: program musi oznaczyć okna odpowiednio, by "
+#~ "były one rozpoznane jako pomocnicze."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Ukryj okna pomocnicze nieaktywnych programów"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

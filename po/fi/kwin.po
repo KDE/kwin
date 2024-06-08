@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 00:40+0000\n"
-"PO-Revision-Date: 2024-02-14 18:54+0200\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"PO-Revision-Date: 2024-03-12 10:48+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -1576,11 +1576,12 @@ msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
 msgstr "Sinisokeus (sininen–keltainen)"
 
+# *** TARKISTA: Pitäisi tietää, mistä puhutaan!
 #: plugins/colorblindnesscorrection/ui/main.qml:85
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensiteetti:"
 
 #: plugins/colorpicker/colorpicker.cpp:108
 #, kde-format
@@ -1724,13 +1725,13 @@ msgstr "Ikkunan sulkemisanimointi"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Passiivisuuden kesto (sekunteina):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Piilota osoitin näppäiltäessä"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2258,7 +2259,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:454
+#: plugins/nightlight/nightlightmanager.cpp:455
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Värilämpötilan esikatselu"
@@ -2550,8 +2551,7 @@ msgid "Padding:"
 msgstr "Täyte:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
 msgstr "Lataa asettelu…"
 
@@ -4181,13 +4181,13 @@ msgstr "Vaihda työpöytää alas päin"
 msgid "Switch to Desktop %1"
 msgstr "Vaihda työpöydälle %1"
 
-#: window.cpp:3097
+#: window.cpp:3099
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Ei vastaa)"
 
-#: workspace.cpp:1670
+#: workspace.cpp:1557
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

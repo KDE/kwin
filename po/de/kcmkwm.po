@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2023-04-16 14:03+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -332,7 +332,7 @@ msgstr "Deckkraft vergrößern"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -594,46 +594,21 @@ msgstr ""
 "Anwendungen erlauben, die Position ihrer eigenen Fenster zu speichern, wenn "
 "sie das unterstützen"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "Be&sondere Fenster:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Wenn diese Einstellung aktiviert ist, werden Dienstprogrammfenster "
-"(Werkzeugfenster, schwebende Menüs, ...) nur angezeigt, wenn das zugehörige "
-"Hauptfenster aktiv ist."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Werkzeugfenster von inaktiven Programmen ausblenden"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Verhalten virtueller Arbeitsflächen:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr ""
 "Wenn ein Fenster auf einer anderen virtuellen Arbeitsfläche aktiviert wird:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -646,13 +621,13 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Zu dieser virtuellen Arbeitsfläche wechseln"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Fenster auf aktuelle virtuelle Arbeitsfläche holen"
@@ -1315,6 +1290,22 @@ msgstr ""
 "em> und der <em>Anwendungsumschalter („Alt+Tab“)</em> widersprechen dieser "
 "Regelung und werden nicht funktionieren.Sie sollten stattdessen besser "
 "<em>Aktivierung bei Mauskontakt – Vorrang für Maus</em> verwenden."
+
+#~ msgid "&Special windows:"
+#~ msgstr "Be&sondere Fenster:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Wenn diese Einstellung aktiviert ist, werden Dienstprogrammfenster "
+#~ "(Werkzeugfenster, schwebende Menüs, ...) nur angezeigt, wenn das "
+#~ "zugehörige Hauptfenster aktiv ist."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Werkzeugfenster von inaktiven Programmen ausblenden"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

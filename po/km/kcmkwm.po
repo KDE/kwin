@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2012-06-13 15:40+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -339,7 +339,7 @@ msgstr "បង្កើន​ភាព​ស្រអាប់"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, fuzzy, kde-format
@@ -609,46 +609,20 @@ msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, fuzzy, kde-format
-#| msgid "Windows"
-msgid "&Special windows:"
-msgstr "បង្អួច"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"ពេល​បាន​បើក បង្អួច​ឧបករណ៍ (បង្អួច​ឧបករណ៍, ម៉ឺនុយ​ដែល​ទុក​ចោល,...) របស់​កម្មវិធី​សកម្ម នឹង​ត្រូវ​បាន​លាក់ "
-"ហើយ នឹង​បង្ហាញ​តែ​ពេល​កម្មវិធីសកម្ម ។ សូម​ចំណាំថា កម្មវិធី​ត្រូវ​សម្គាល់​បង្អួច​ដោយ​ប្រភេទ​បង្អួច​សមរម្យ ដើម្បី​"
-"លក្ខណៈ​ពិសេស​នេះដំណើរការ ។"
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "លាក់​បង្អួច​ឧបករណ៍ សម្រាប់​កម្មវិធី​អសកម្ម"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -661,13 +635,13 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr ""
@@ -1323,6 +1297,24 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Windows"
+#~ msgid "&Special windows:"
+#~ msgstr "បង្អួច"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "ពេល​បាន​បើក បង្អួច​ឧបករណ៍ (បង្អួច​ឧបករណ៍, ម៉ឺនុយ​ដែល​ទុក​ចោល,...) របស់​កម្មវិធី​សកម្ម នឹង​ត្រូវ​បាន​លាក់ "
+#~ "ហើយ នឹង​បង្ហាញ​តែ​ពេល​កម្មវិធីសកម្ម ។ សូម​ចំណាំថា កម្មវិធី​ត្រូវ​សម្គាល់​បង្អួច​ដោយ​ប្រភេទ​បង្អួច​សមរម្យ "
+#~ "ដើម្បី​លក្ខណៈ​ពិសេស​នេះដំណើរការ ។"
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "លាក់​បង្អួច​ឧបករណ៍ សម្រាប់​កម្មវិធី​អសកម្ម"
 
 #, fuzzy
 #~| msgid ""

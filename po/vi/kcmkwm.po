@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2023-01-08 17:48+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -329,7 +329,7 @@ msgstr "Tăng độ mờ đục"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -585,46 +585,20 @@ msgstr ""
 "Cho phép các ứng dụng nhớ vị trí các cửa sổ của chúng, nếu chúng hỗ trợ việc "
 "đó"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "Cửa sổ đặc &biệt:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Khi được bật, các cửa sổ tiện ích (cửa sổ công cụ, trình đơn xé tách, ...) "
-"của các ứng dụng bất hoạt sẽ bị ẩn và sẽ chỉ được hiển thị khi ứng dụng đó "
-"hoạt động trở lại. Lưu ý rằng để tính năng này hoạt động, ứng dụng phải đánh "
-"dấu cửa sổ bằng kiểu cửa sổ thích hợp."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Ẩn cửa sổ tiện ích cho các ứng dụng bất hoạt"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Ứng xử của bàn làm việc ảo:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Khi kích hoạt một cửa sổ ở một bàn làm việc ảo khác:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -643,13 +617,13 @@ msgstr ""
 "khiến cửa sổ đó nhảy đến bàn làm việc ảo đang hoạt động.</p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Chuyển sang bàn làm việc ảo đó"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Đưa cửa sổ đến bàn làm việc ảo hiện tại"
@@ -1293,6 +1267,23 @@ msgstr ""
 "thuẫn với chính sách kích hoạt này và sẽ không hoạt động. Rất nhiều khả năng "
 "là bạn muốn dùng <em>Nhắm đi theo chuột (ưu tiên chuột)</em> chứ không phải "
 "cái này!"
+
+#~ msgid "&Special windows:"
+#~ msgstr "Cửa sổ đặc &biệt:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Khi được bật, các cửa sổ tiện ích (cửa sổ công cụ, trình đơn xé "
+#~ "tách, ...) của các ứng dụng bất hoạt sẽ bị ẩn và sẽ chỉ được hiển thị khi "
+#~ "ứng dụng đó hoạt động trở lại. Lưu ý rằng để tính năng này hoạt động, ứng "
+#~ "dụng phải đánh dấu cửa sổ bằng kiểu cửa sổ thích hợp."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Ẩn cửa sổ tiện ích cho các ứng dụng bất hoạt"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

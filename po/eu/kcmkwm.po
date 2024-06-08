@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2022-12-03 15:48+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -332,7 +332,7 @@ msgstr "Handitu opakutasuna"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -587,46 +587,20 @@ msgstr ""
 "Onartu aplikazioek beren leihoen kokapena gogoratzea, hori egitea onartzen "
 "badute"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "Leiho &bereziak:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Piztuta dagoenean, aplikazio inaktiboen utilitate leihoak (tresna leihoak, "
-"menu hedagarriak...) ezkutatuko dira eta bistaratuko dira aplikazioa berriz "
-"aktiboa denean. Ohar zaitez aplikaziok haien leihoei dagozkien motekin "
-"markatu behar dituztela, hau funtziona dadin."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Ezkutatu utilitate leihoak aktiboan ez dauden aplikazioetarako"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Alegiazko mahaigainaren jokabidea:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Alegiazko beste mahaigain batean leiho bat aktibatzean:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -646,13 +620,13 @@ msgstr ""
 "p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Aldatu alegiazko mahai horretara"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Ekarri leihoa uneko alegiazko mahaigainera"
@@ -1299,6 +1273,23 @@ msgstr ""
 "prebentzioa</em> eta <em>fitxa-kutxa ('Alt+Tab')</em> gidalerroarekin "
 "kontraesankorrak dira eta ez dira ibiliko. Ziur aski, <em>Fokuak saguari "
 "jarraitzen dio (Saguak lehentasuna)</em> erabili nahiko duzu honen ordez!"
+
+#~ msgid "&Special windows:"
+#~ msgstr "Leiho &bereziak:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Piztuta dagoenean, aplikazio inaktiboen utilitate leihoak (tresna "
+#~ "leihoak, menu hedagarriak...) ezkutatuko dira eta bistaratuko dira "
+#~ "aplikazioa berriz aktiboa denean. Ohar zaitez aplikaziok haien leihoei "
+#~ "dagozkien motekin markatu behar dituztela, hau funtziona dadin."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Ezkutatu utilitate leihoak aktiboan ez dauden aplikazioetarako"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

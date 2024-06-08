@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2024-03-25 14:32+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -335,7 +335,7 @@ msgstr "Draga úr gagnsæi"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -588,46 +588,20 @@ msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr "Leyfa forritum að muna staðsetningu eigin glugga, ef þau styðja það"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "Sérstakir &gluggar:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Þegar kveikt er á þessu verða verkfæragluggar, afrifnar valmyndir o.fl. sem "
-"tilheyra óvirkum glugga falin og birtast aðeins þegar forritin verða virk. "
-"Athugið að forrit verða að merkja gluggana með viðeigandi gluggagerð til að "
-"þetta virki."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Fela verkfæraglugga fyrir óvirk forrit"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Hegðun sýndarskjáborðs:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Þegar gluggi er virkjaður á öðru sýndarskjáborði:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -647,13 +621,13 @@ msgstr ""
 "body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Skipta yfir á það sýndarskjáborð"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Færa gluggann á sýndarskjáborðið sem er í notkun"
@@ -1295,6 +1269,23 @@ msgstr ""
 "fókusstuldi</em> og <em>Alt+Tab</em> stangast á við þessa virknireglu og eru "
 "því óvirk. Þú vilt mjög líklega nota <em>Fókus fylgir mús (mús í forgangi)</"
 "em> í staðinn!"
+
+#~ msgid "&Special windows:"
+#~ msgstr "Sérstakir &gluggar:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Þegar kveikt er á þessu verða verkfæragluggar, afrifnar valmyndir o.fl. "
+#~ "sem tilheyra óvirkum glugga falin og birtast aðeins þegar forritin verða "
+#~ "virk. Athugið að forrit verða að merkja gluggana með viðeigandi "
+#~ "gluggagerð til að þetta virki."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Fela verkfæraglugga fyrir óvirk forrit"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

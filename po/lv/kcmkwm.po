@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2024-01-22 18:56+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -331,7 +331,7 @@ msgstr "Palielināt necaurspīdīgumu"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -584,46 +584,20 @@ msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr "Programmas atcerēsies savu logu novietojumu, ja atbalsta šādu funkciju"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "&Speciālie logi:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Ieslēdzot šo, neaktīvo programmu utilītu logi (rīku logi, atdalītās "
-"izvēlnes,...) tiks noslēpti un parādīsies tikai aktivizējot programmu. "
-"Ņemiet vērā ka, lai šis strādātu, programmām šiem logiem jānorāda atbilstošs "
-"loga tips."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Slēpt neaktīvo programmu utilītu logus"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Virtuālās darbvirsmas uzvedība:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Aktivizējot logu citā virtuālajā darbvirsmā:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -643,13 +617,13 @@ msgstr ""
 "darbvirsmu. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Pārslēgties uz šo virtuālo darbvirsmu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Pārvietot logu uz aktīvo virtuālo darbvirsmu"
@@ -1291,6 +1265,23 @@ msgstr ""
 "novēršana</em> un <em>Alt+Tab lodziņš</em> ir pretrunā aktivācijas politikai "
 "un nedarbosies. Ļoti iespējams, ka tā vietā vēlēsieties izmantot <em>Fokuss "
 "seko pelei (peles priekšroka)</em>!"
+
+#~ msgid "&Special windows:"
+#~ msgstr "&Speciālie logi:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Ieslēdzot šo, neaktīvo programmu utilītu logi (rīku logi, atdalītās "
+#~ "izvēlnes,...) tiks noslēpti un parādīsies tikai aktivizējot programmu. "
+#~ "Ņemiet vērā ka, lai šis strādātu, programmām šiem logiem jānorāda "
+#~ "atbilstošs loga tips."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Slēpt neaktīvo programmu utilītu logus"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

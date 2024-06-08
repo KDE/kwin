@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2024-03-23 14:00+0100\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -328,7 +328,7 @@ msgstr "Auk tettleiken"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -581,46 +581,20 @@ msgid ""
 msgstr ""
 "Tillèt program å hugsa siste vindaugsplassering dersom dei støttar dette"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "&Spesialvindauge:"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Her kan du velja om verktøyvindauge (verktøypalettar, lause menyar, osv.) "
-"som høyrer til program som ikkje er i bruk skal gøymast og berre visast når "
-"programmet vert teke i bruk. Legg merke til at programma må markera vindauga "
-"med rett vindaugstype for at denne funksjonen skal verka."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Gøym verktøyvindauge for program som ikkje er i bruk"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Åtferd for virtuelle skrivebord:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Ved aktivering av vindauge på eit anna virtuelt skrivebord:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -640,13 +614,13 @@ msgstr ""
 "gjeldande skrivebordet. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Byt til det virtuelle skrivebordet"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Flytt vindauget til det gjeldande skrivebordet"
@@ -1287,3 +1261,20 @@ msgstr ""
 "<em>Hindring av fokus­steling</em> og <em>programbyte­vindauget («Alt+Tab»)</"
 "em> er mot denne praksisen og vil ikkje verka. Du vil truleg heller vilja "
 "bruka <em>Fokuset følgjer musa – musprioritet</em> i staden."
+
+#~ msgid "&Special windows:"
+#~ msgstr "&Spesialvindauge:"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Her kan du velja om verktøyvindauge (verktøypalettar, lause menyar, osv.) "
+#~ "som høyrer til program som ikkje er i bruk skal gøymast og berre visast "
+#~ "når programmet vert teke i bruk. Legg merke til at programma må markera "
+#~ "vindauga med rett vindaugstype for at denne funksjonen skal verka."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Gøym verktøyvindauge for program som ikkje er i bruk"

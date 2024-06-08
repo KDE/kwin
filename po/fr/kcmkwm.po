@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2024-05-06 16:26+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -346,7 +346,7 @@ msgstr "Augmenter l'opacité"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -606,47 +606,20 @@ msgstr ""
 "Permettre aux applications le prenant en charge de se rappeler la position "
 "de leurs fenêtres"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "Fenêtres &spéciales :"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"Lorsque cette option est sélectionnée, les fenêtres d'utilitaires (fenêtres "
-"d'outils, menus séparés, etc.) des applications inactives seront cachées et "
-"ne se ré-afficheront que lorsque celles-ci redeviennent actives. Veuillez "
-"noter que les applications devront appliquer une marque spécifique sur "
-"chacune de leurs fenêtres d'utilitaires pour que cela fonctionne."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "Cacher les fenêtres d'utilitaires pour les applications inactives"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "Comportement du bureau virtuel :"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "Lors de l'activation d'une fenêtre sur un bureau virtuel différent :"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -666,13 +639,13 @@ msgstr ""
 "transfert de la fenêtre vers le bureau virtuel actif. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "Basculer vers ce bureau virtuel"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "Déplacer une fenêtre vers le bureau virtuel courant"
@@ -1335,6 +1308,25 @@ msgstr ""
 "(« Alt » + « Tab »)</em>sont contradictoires vis à vis des règles et ne "
 "fonctionneront pas. Vous aimerez très probablement utiliser <em>Le focus "
 "suit la souris (Précédence de la souris)</em> à la place !"
+
+#~ msgid "&Special windows:"
+#~ msgstr "Fenêtres &spéciales :"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "Lorsque cette option est sélectionnée, les fenêtres d'utilitaires "
+#~ "(fenêtres d'outils, menus séparés, etc.) des applications inactives "
+#~ "seront cachées et ne se ré-afficheront que lorsque celles-ci redeviennent "
+#~ "actives. Veuillez noter que les applications devront appliquer une marque "
+#~ "spécifique sur chacune de leurs fenêtres d'utilitaires pour que cela "
+#~ "fonctionne."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "Cacher les fenêtres d'utilitaires pour les applications inactives"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "

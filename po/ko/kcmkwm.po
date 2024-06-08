@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2023-08-09 00:20+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -324,7 +324,7 @@ msgstr "불투명도 증가"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -571,45 +571,20 @@ msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr "지원하는 앱에서 자기 창 위치 기억 허용"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "특별 창(&S):"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"이 옵션을 사용하면 비활성 앱의 유틸리티 창(도구 창, 분리된 메뉴 등)을 숨기고 "
-"앱이 활성화될 때에만 표시합니다. 이 기능을 제대로 사용하려면 개별 앱이 창의 "
-"용도를 제대로 표시하여야 합니다."
-
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "비활성 앱의 유틸리티 창 숨기기"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "가상 바탕 화면 행동:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "다른 가상 바탕 화면의 창을 활성화할 때:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -628,13 +603,13 @@ msgstr ""
 "html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "해당 가상 바탕 화면으로 전환"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "창을 현재 가상 바탕 화면으로 가져오기"
@@ -1262,6 +1237,22 @@ msgstr ""
 "스 훔치기 방지</em> 및 <em>탭 상자(\"Alt+Tab\")</em>는 이 정책에 모순되며 작"
 "동하지 않습니다. 만약 위 설정을 사용해야 한다면 <em>마우스가 포커스를 따라감"
 "(마우스 우선)</em> 설정을 사용하십시오!"
+
+#~ msgid "&Special windows:"
+#~ msgstr "특별 창(&S):"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "이 옵션을 사용하면 비활성 앱의 유틸리티 창(도구 창, 분리된 메뉴 등)을 숨기"
+#~ "고 앱이 활성화될 때에만 표시합니다. 이 기능을 제대로 사용하려면 개별 앱이 "
+#~ "창의 용도를 제대로 표시하여야 합니다."
+
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr "비활성 앱의 유틸리티 창 숨기기"
 
 #~ msgid ""
 #~ "When this option is enabled, the active screen (where new windows appear, "
