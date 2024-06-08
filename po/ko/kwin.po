@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 03:02+0000\n"
+"POT-Creation-Date: 2024-06-08 02:33+0000\n"
 "PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2230,7 +2230,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:454
+#: plugins/nightlight/nightlightmanager.cpp:455
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "색 온도 미리 보기"
@@ -4142,13 +4142,13 @@ msgstr "아래쪽 바탕 화면으로 전환"
 msgid "Switch to Desktop %1"
 msgstr "바탕 화면 %1(으)로 전환"
 
-#: window.cpp:3097
+#: window.cpp:3099
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(응답 없음)"
 
-#: workspace.cpp:1670
+#: workspace.cpp:1674
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-05 03:02+0000\n"
+"POT-Creation-Date: 2024-06-08 02:33+0000\n"
 "PO-Revision-Date: 2024-05-31 12:34+0200\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -2248,7 +2248,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Pozastaviť/Obnoviť nočnú farbu"
 
-#: plugins/nightlight/nightlightmanager.cpp:454
+#: plugins/nightlight/nightlightmanager.cpp:455
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Náhľad teploty farieb"
@@ -4164,13 +4164,13 @@ msgstr "Prepnúť o jednu plochu dolu"
 msgid "Switch to Desktop %1"
 msgstr "Prepnúť na plochu %1"
 
-#: window.cpp:3097
+#: window.cpp:3099
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovedá)"
 
-#: workspace.cpp:1670
+#: workspace.cpp:1674
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

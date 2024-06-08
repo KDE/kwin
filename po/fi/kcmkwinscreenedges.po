@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-01-29 21:52+0200\n"
+"PO-Revision-Date: 2024-03-12 10:47+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -81,7 +81,7 @@ msgstr "Yleiskuva"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Ruudukko"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -239,7 +239,7 @@ msgstr "&Toistoviive:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "K&ulmaeste:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -251,19 +251,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Tässä voi ottaa käyttöön tai poistaa käytöstä näyttöjen välisen virtuaalisen "
+"kulmaesteen. Se estää osoitinta siirtymästä näytöltä toiselle sen "
+"koskettaessa jo näytön kulmaa. Näin voi monta näyttöä käytettäessä helpommin "
+"tavoittaa käyttöliittymäalkiot kuten suurennettujen ikkunoiden "
+"sulkemispainikkeet."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Estää osoitinta ylittämästä näyttöä sen kulmista."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Reunaeste:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -275,6 +280,10 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Tässä voi asettaa näyttöjen välisen reunaesteen koon. Este lisää matkaa, "
+"joka osoittimen on liikuttava ennen kuin se siirtyy näytöltä toiselle. Tämä "
+"helpottaa näytön reunoille sijoitettujen käyttöliittymäalkioiden kuten "
+"Plasma-paneelin käyttöä."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -282,18 +291,19 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Osoittimelta liikkeeltä vaadittu lisämatka näytönreunojen ylittämiseksi"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Ei mitään"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
