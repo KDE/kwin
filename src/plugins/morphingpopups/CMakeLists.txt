@@ -1,1 +1,0 @@
-kwin_add_scripted_effect(morphingpopups package)
