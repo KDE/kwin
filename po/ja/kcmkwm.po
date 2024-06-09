@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-06 00:39+0000\n"
+"POT-Creation-Date: 2024-06-08 00:40+0000\n"
 "PO-Revision-Date: 2024-02-15 12:48+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -331,7 +331,7 @@ msgstr "不透明度を上げる"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:174
+#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
 #: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
 #: mouse.ui:501 mouse.ui:563
 #, kde-format
@@ -602,48 +602,20 @@ msgstr ""
 "アプリケーションにウィンドウの位置を記憶することを許可 (アプリケーションがサ"
 "ポートする場合)"
 
-#. i18n: ectx: property (text), widget (QLabel, specialWindowsLabel)
-#: advanced.ui:123
-#, kde-format
-msgid "&Special windows:"
-msgstr "特別なウィンドウ(&S):"
-
-#. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:133
-#, kde-format
-msgid ""
-"When turned on, utility windows (tool windows, torn-off menus,...) of "
-"inactive applications will be hidden and will be shown only when the "
-"application becomes active. Note that applications have to mark the windows "
-"with the proper window type for this feature to work."
-msgstr ""
-"このオプションを有効にすると、アクティブではないアプリケーションのユーティリ"
-"ティウィンドウ (ツールウィンドウや分離したメニューなど) は、アプリケーション"
-"がアクティブになったときだけ表示されます。この機能が動作するためには、アプリ"
-"ケーションのウィンドウに適切なウィンドウタイプが指定されている必要がありま"
-"す。"
-
-# ACCELERATOR added by translator
-#. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideUtilityWindowsForInactive)
-#: advanced.ui:136
-#, kde-format
-msgid "Hide utility windows for inactive applications"
-msgstr "アクティブでないアプリケーションのユーティリティウィンドウを隠す(&Z)"
-
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
-#: advanced.ui:143
+#: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
 msgstr "仮想デスクトップの挙動:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
-#: advanced.ui:153
+#: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
 msgstr "別の仮想デスクトップでウィンドウをアクティブ化したとき:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:160
+#: advanced.ui:140
 #, kde-format
 msgid ""
 "<html><head/><body><p>This setting controls what happens when an open window "
@@ -656,13 +628,13 @@ msgid ""
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:164
+#: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
 msgstr "その仮想デスクトップに切り替え"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
-#: advanced.ui:169
+#: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
 msgstr "現在の仮想デスクトップにウィンドウを移動"
@@ -1314,3 +1286,23 @@ msgstr ""
 "クス ('Alt+Tab') はアクティブ化ポリシーに反するため機能しません。代わりに"
 "<strong>マウスに従ってフォーカス (マウス優先)</strong> を使用するべきでしょ"
 "う。"
+
+#~ msgid "&Special windows:"
+#~ msgstr "特別なウィンドウ(&S):"
+
+#~ msgid ""
+#~ "When turned on, utility windows (tool windows, torn-off menus,...) of "
+#~ "inactive applications will be hidden and will be shown only when the "
+#~ "application becomes active. Note that applications have to mark the "
+#~ "windows with the proper window type for this feature to work."
+#~ msgstr ""
+#~ "このオプションを有効にすると、アクティブではないアプリケーションのユーティ"
+#~ "リティウィンドウ (ツールウィンドウや分離したメニューなど) は、アプリケー"
+#~ "ションがアクティブになったときだけ表示されます。この機能が動作するために"
+#~ "は、アプリケーションのウィンドウに適切なウィンドウタイプが指定されている必"
+#~ "要があります。"
+
+# ACCELERATOR added by translator
+#~ msgid "Hide utility windows for inactive applications"
+#~ msgstr ""
+#~ "アクティブでないアプリケーションのユーティリティウィンドウを隠す(&Z)"
