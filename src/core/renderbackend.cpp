@@ -54,7 +54,7 @@ OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDurat
 OutputFrame::~OutputFrame()
 {
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
-    if (!m_presented) {
+    if (!m_presented && m_loop) {
         RenderLoopPrivate::get(m_loop)->notifyFrameDropped();
     }
 }
@@ -87,7 +87,9 @@ std::optional<std::chrono::nanoseconds> OutputFrame::queryRenderTime() const
 void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
     std::optional<std::chrono::nanoseconds> renderTime = queryRenderTime();
-    RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
+    if (m_loop) {
+        RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
+    }
     m_presented = true;
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(m_refreshDuration, timestamp, mode);

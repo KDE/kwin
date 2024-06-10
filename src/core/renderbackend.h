@@ -97,7 +97,7 @@ public:
 private:
     std::optional<std::chrono::nanoseconds> queryRenderTime() const;
 
-    RenderLoop *const m_loop;
+    const QPointer<RenderLoop> m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;
     std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
