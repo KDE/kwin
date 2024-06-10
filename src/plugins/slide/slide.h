@@ -130,6 +130,7 @@ private:
 
     QList<EffectWindow *> m_elevatedWindows;
     QHash<EffectWindow *, WindowData> m_windowData;
+    bool m_switchingActivity = false;
 };
 
 inline int SlideEffect::horizontalGap() const

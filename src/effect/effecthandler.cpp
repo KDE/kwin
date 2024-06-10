@@ -186,6 +186,7 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
         connect(activities, &Activities::added, this, &EffectsHandler::activityAdded);
         connect(activities, &Activities::removed, this, &EffectsHandler::activityRemoved);
         connect(activities, &Activities::currentChanged, this, &EffectsHandler::currentActivityChanged);
+        connect(activities, &Activities::currentAboutToChange, this, &EffectsHandler::currentActivityAboutToChange);
     }
 #endif
     connect(ws, &Workspace::stackingOrderChanged, this, &EffectsHandler::stackingOrderChanged);
