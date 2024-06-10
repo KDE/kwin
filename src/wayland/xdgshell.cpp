@@ -347,8 +347,12 @@ void XdgToplevelInterfacePrivate::apply(XdgToplevelCommit *commit)
 
     const auto minSize = commit->minimumSize.value_or(minimumSize);
     const auto maxSize = commit->maximumSize.value_or(maximumSize);
-    if (!minSize.isEmpty() && !maxSize.isEmpty() && (minSize.width() > maxSize.width() || minSize.height() > maxSize.height())) {
-        wl_resource_post_error(resource()->handle, error_invalid_size, "minimum size can't be bigger than the maximum");
+    if ((minSize.width() > 0) && (maxSize.width() > 0) && (minSize.width() > maxSize.width())) {
+        wl_resource_post_error(resource()->handle, error_invalid_size, "minimum width can't be bigger than the maximum width");
+        return;
+    }
+    if ((minSize.height() > 0) && (maxSize.height() > 0) && (minSize.height() > maxSize.height())) {
+        wl_resource_post_error(resource()->handle, error_invalid_size, "minimum height can't be bigger than the maximum height");
         return;
     }
 
@@ -575,12 +579,14 @@ QString XdgToplevelInterface::windowClass() const
 
 QSize XdgToplevelInterface::minimumSize() const
 {
-    return d->minimumSize.isEmpty() ? QSize(0, 0) : d->minimumSize;
+    return QSize(d->minimumSize.width() > 0 ? d->minimumSize.width() : 0,
+                 d->minimumSize.height() > 0 ? d->minimumSize.height() : 0);
 }
 
 QSize XdgToplevelInterface::maximumSize() const
 {
-    return d->maximumSize.isEmpty() ? QSize(INT_MAX, INT_MAX) : d->maximumSize;
+    return QSize(d->maximumSize.width() > 0 ? d->maximumSize.width() : INT_MAX,
+                 d->maximumSize.height() > 0 ? d->maximumSize.height() : INT_MAX);
 }
 
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)
