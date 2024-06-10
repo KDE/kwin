@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "effect/effecthandler.h"
 #include "outline.h"
+#include "scripting_logging.h"
 #include "tiles/tilemanager.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -250,7 +251,8 @@ QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, KWin::Window *c) co
 
 QRectF WorkspaceWrapper::clientArea(ClientAreaOption option, Output *output, VirtualDesktop *desktop) const
 {
-    if (!output) {
+    if (!output || !desktop) {
+        qCWarning(KWIN_SCRIPTING) << "clientArea needs valid output:" << output << "and desktop:" << desktop << "arguments";
         return QRect();
     }
     return workspace()->clientArea(static_cast<clientAreaOption>(option), output, desktop);
