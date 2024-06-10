@@ -626,6 +626,9 @@ bool Workspace::restoreFocus()
 
 void Workspace::windowAttentionChanged(Window *window, bool set)
 {
+    if (window->isDeleted()) {
+        return;
+    }
     if (set) {
         attention_chain.removeAll(window);
         attention_chain.prepend(window);
