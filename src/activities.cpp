@@ -8,6 +8,7 @@
 */
 #include "activities.h"
 // KWin
+#include "virtualdesktops.h"
 #include "window.h"
 #include "workspace.h"
 #if KWIN_BUILD_X11
@@ -24,14 +25,23 @@
 namespace KWin
 {
 
-Activities::Activities()
+Activities::Activities(const KSharedConfig::Ptr &config)
     : m_controller(new KActivities::Controller(this))
+    , m_config(config)
 {
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::slotRemoved);
     connect(m_controller, &KActivities::Controller::activityRemoved, this, &Activities::removed);
     connect(m_controller, &KActivities::Controller::activityAdded, this, &Activities::added);
     connect(m_controller, &KActivities::Controller::currentActivityChanged, this, &Activities::slotCurrentChanged);
     connect(m_controller, &KActivities::Controller::serviceStatusChanged, this, &Activities::slotServiceStatusChanged);
+
+    const auto group = m_config->group("Activities").group("LastVirtualDesktop");
+    for (const auto &activity : group.keyList()) {
+        const QString desktop = group.readEntry(activity);
+        if (!desktop.isEmpty()) {
+            m_lastVirtualDesktop[activity] = desktop;
+        }
+    }
 }
 
 KActivities::Consumer::ServiceStatus Activities::serviceStatus() const
@@ -61,6 +71,12 @@ void Activities::setCurrent(const QString &activity)
     m_controller->setCurrentActivity(activity);
 }
 
+void Activities::notifyCurrentDesktopChanged(VirtualDesktop *desktop)
+{
+    m_lastVirtualDesktop[m_current] = desktop->id();
+    m_config->group("Activities").group("LastVirtualDesktop").writeEntry(m_current, desktop->id());
+}
+
 void Activities::slotCurrentChanged(const QString &newActivity)
 {
     if (m_current == newActivity) {
@@ -68,6 +84,18 @@ void Activities::slotCurrentChanged(const QString &newActivity)
     }
     m_previous = m_current;
     m_current = newActivity;
+
+    if (m_previous != nullUuid()) {
+        m_lastVirtualDesktop[m_previous] = VirtualDesktopManager::self()->currentDesktop()->id();
+    }
+    const auto it = m_lastVirtualDesktop.find(m_current);
+    if (it != m_lastVirtualDesktop.end()) {
+        VirtualDesktop *desktop = VirtualDesktopManager::self()->desktopForId(it->second);
+        if (desktop) {
+            VirtualDesktopManager::self()->setCurrent(desktop);
+        }
+    }
+
     Q_EMIT currentChanged(newActivity);
 }
 
@@ -86,6 +114,9 @@ void Activities::slotRemoved(const QString &activity)
     // toss out any session data for it
     KConfigGroup cg(KSharedConfig::openConfig(), QLatin1String("SubSession: ") + activity);
     cg.deleteGroup();
+
+    m_lastVirtualDesktop.erase(activity);
+    m_config->group("Activities").group("LastVirtualDesktop").deleteEntry(activity);
 }
 
 void Activities::toggleWindowOnActivity(Window *window, const QString &activity, bool dont_activate)

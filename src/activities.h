@@ -11,7 +11,9 @@
 #include <QObject>
 #include <QStringList>
 #include <kwin_export.h>
+#include <unordered_map>
 
+#include <KSharedConfig>
 #include <PlasmaActivities/Controller>
 
 namespace KActivities
@@ -22,13 +24,14 @@ class Controller;
 namespace KWin
 {
 class Window;
+class VirtualDesktop;
 
 class KWIN_EXPORT Activities : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Activities();
+    explicit Activities(const KSharedConfig::Ptr &config);
 
     bool stop(const QString &id);
     bool start(const QString &id);
@@ -68,6 +71,9 @@ Q_SIGNALS:
      */
     void removed(const QString &id);
 
+public Q_SLOTS:
+    void notifyCurrentDesktopChanged(VirtualDesktop *desktop);
+
 private Q_SLOTS:
     void slotServiceStatusChanged();
     void slotRemoved(const QString &activity);
@@ -78,6 +84,8 @@ private:
     QString m_previous;
     QString m_current;
     KActivities::Controller *m_controller;
+    std::unordered_map<QString, QString> m_lastVirtualDesktop;
+    KSharedConfig::Ptr m_config;
 };
 
 inline QStringList Activities::all() const
