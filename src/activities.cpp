@@ -66,8 +66,11 @@ void Activities::slotServiceStatusChanged()
     }
 }
 
-void Activities::setCurrent(const QString &activity)
+void Activities::setCurrent(const QString &activity, VirtualDesktop *desktop)
 {
+    if (desktop) {
+        m_lastVirtualDesktop[activity] = desktop->id();
+    }
     m_controller->setCurrentActivity(activity);
 }
 

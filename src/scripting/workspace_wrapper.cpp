@@ -94,7 +94,7 @@ void WorkspaceWrapper::setCurrentActivity(const QString &activity)
 {
 #if KWIN_BUILD_ACTIVITIES
     if (Workspace::self()->activities()) {
-        Workspace::self()->activities()->setCurrent(activity);
+        Workspace::self()->activities()->setCurrent(activity, nullptr);
     }
 #endif
 }
