@@ -58,6 +58,10 @@ public:
 
 Q_SIGNALS:
     /**
+     * emitted before the current activity actually changes
+     */
+    void currentAboutToChange();
+    /**
      * This signal is emitted when the global
      * activity is changed
      * @param id id of the new current activity

@@ -85,6 +85,7 @@ void Activities::slotCurrentChanged(const QString &newActivity)
     if (m_current == newActivity) {
         return;
     }
+    Q_EMIT currentAboutToChange();
     m_previous = m_current;
     m_current = newActivity;
 
