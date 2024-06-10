@@ -122,7 +122,6 @@ public:
     }
 
     const QSet<QByteArray> interfacesBlackList = {
-        QByteArrayLiteral("org_kde_kwin_remote_access_manager"),
         QByteArrayLiteral("org_kde_plasma_window_management"),
         QByteArrayLiteral("org_kde_kwin_fake_input"),
         QByteArrayLiteral("org_kde_kwin_keystate"),
