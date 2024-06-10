@@ -378,8 +378,8 @@ void XdgToplevelInterfacePrivate::reset()
 
     windowTitle = QString();
     windowClass = QString();
-    minimumSize = QSize();
-    maximumSize = QSize();
+    minimumSize = QSize(0, 0);
+    maximumSize = QSize(0, 0);
     pending = XdgToplevelCommit{};
     stashed.clear();
 
@@ -579,8 +579,7 @@ QString XdgToplevelInterface::windowClass() const
 
 QSize XdgToplevelInterface::minimumSize() const
 {
-    return QSize(d->minimumSize.width() > 0 ? d->minimumSize.width() : 0,
-                 d->minimumSize.height() > 0 ? d->minimumSize.height() : 0);
+    return d->minimumSize;
 }
 
 QSize XdgToplevelInterface::maximumSize() const

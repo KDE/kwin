@@ -148,8 +148,8 @@ public:
     XdgSurfaceInterface *xdgSurface;
     QString windowTitle;
     QString windowClass;
-    QSize minimumSize;
-    QSize maximumSize;
+    QSize minimumSize = QSize(0, 0);
+    QSize maximumSize = QSize(0, 0);
 
 protected:
     void xdg_toplevel_destroy_resource(Resource *resource) override;
