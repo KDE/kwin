@@ -122,7 +122,7 @@ int DBusInterface::currentDesktop()
 
 bool DBusInterface::setCurrentDesktop(int desktop)
 {
-    return VirtualDesktopManager::self()->setCurrent(desktop);
+    return VirtualDesktopManager::self()->setCurrent(workspace()->activeOutput(), desktop);
 }
 
 void DBusInterface::nextDesktop()
@@ -349,7 +349,8 @@ VirtualDesktopManagerDBusInterface::VirtualDesktopManagerDBusInterface(VirtualDe
                                                  this);
 
     connect(m_manager, &VirtualDesktopManager::currentChanged, this, [this]() {
-        Q_EMIT currentChanged(m_manager->currentDesktop()->id());
+        // this isn't really correct
+        Q_EMIT currentChanged(m_manager->currentDesktop(workspace()->activeOutput())->id());
     });
 
     connect(m_manager, &VirtualDesktopManager::countChanged, this, [this](uint previousCount, uint newCount) {
@@ -419,19 +420,14 @@ uint VirtualDesktopManagerDBusInterface::rows() const
 
 void VirtualDesktopManagerDBusInterface::setCurrent(const QString &id)
 {
-    if (m_manager->currentDesktop()->id() == id) {
-        return;
-    }
-
-    auto *vd = m_manager->desktopForId(id);
-    if (vd) {
-        m_manager->setCurrent(vd);
+    if (auto *vd = m_manager->desktopForId(id)) {
+        m_manager->setCurrent(workspace()->activeOutput(), vd);
     }
 }
 
 QString VirtualDesktopManagerDBusInterface::current() const
 {
-    return m_manager->currentDesktop()->id();
+    return m_manager->currentDesktop(workspace()->activeOutput())->id();
 }
 
 void VirtualDesktopManagerDBusInterface::setNavigationWrappingAround(bool wraps)

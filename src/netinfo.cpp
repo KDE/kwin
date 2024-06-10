@@ -144,7 +144,7 @@ void RootInfo::changeNumberOfDesktops(int n)
 
 void RootInfo::changeCurrentDesktop(int d)
 {
-    VirtualDesktopManager::self()->setCurrent(d);
+    VirtualDesktopManager::self()->setCurrent(nullptr, d);
 }
 
 void RootInfo::changeActiveWindow(xcb_window_t w, NET::RequestSource src, xcb_timestamp_t timestamp, xcb_window_t active_window)

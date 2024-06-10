@@ -95,7 +95,7 @@ void DesktopBackgroundItem::updateWindow()
 
     VirtualDesktop *desktop = m_desktop;
     if (!desktop) {
-        desktop = VirtualDesktopManager::self()->currentDesktop();
+        desktop = VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput());
     }
 
     QString activity = m_activity;

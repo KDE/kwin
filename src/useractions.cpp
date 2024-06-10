@@ -475,13 +475,13 @@ void UserActionsMenu::desktopPopupAboutToShow()
     QActionGroup *group = new QActionGroup(m_desktopMenu);
 
     QAction *action = m_desktopMenu->addAction(i18n("Move &To Current Desktop"));
-    action->setEnabled(m_window && (m_window->isOnAllDesktops() || !m_window->isOnDesktop(vds->currentDesktop())));
+    action->setEnabled(m_window && (m_window->isOnAllDesktops() || !m_window->isOnCurrentDesktop()));
     connect(action, &QAction::triggered, this, [this]() {
         if (!m_window) {
             return;
         }
         VirtualDesktopManager *vds = VirtualDesktopManager::self();
-        workspace()->sendWindowToDesktops(m_window, {vds->currentDesktop()}, false);
+        workspace()->sendWindowToDesktops(m_window, {vds->currentDesktop(m_window->moveResizeOutput())}, false);
     });
 
     action = m_desktopMenu->addAction(i18n("&All Desktops"));
@@ -1416,7 +1416,7 @@ void Workspace::slotWindowLower()
                     requestFocus(next, false);
                 }
             } else {
-                activateWindow(topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop()));
+                activateWindow(topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput())));
             }
         }
     }
@@ -1490,7 +1490,7 @@ void windowToDesktop(Window *window, VirtualDesktopManager::Direction direction)
     if (window && !window->isDesktop()
         && !window->isDock()) {
         ws->setMoveResizeWindow(window);
-        vds->setCurrent(desktop);
+        vds->setCurrent(window->moveResizeOutput(), desktop);
         ws->setMoveResizeWindow(nullptr);
     }
 }
@@ -1529,13 +1529,13 @@ void activeWindowToDesktop(VirtualDesktopManager::Direction direction)
 {
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
-    VirtualDesktop *current = vds->currentDesktop();
+    VirtualDesktop *current = vds->currentDesktop(workspace()->activeOutput());
     VirtualDesktop *newCurrent = VirtualDesktopManager::self()->inDirection(current, direction, options->isRollOverDesktops());
     if (newCurrent == current) {
         return;
     }
     ws->setMoveResizeWindow(ws->activeWindow());
-    vds->setCurrent(newCurrent);
+    vds->setCurrent(workspace()->activeOutput(), newCurrent);
     ws->setMoveResizeWindow(nullptr);
 }
 
@@ -1587,7 +1587,7 @@ void Workspace::switchWindow(Direction direction)
         return;
     }
     Window *window = m_activeWindow;
-    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop(window->moveResizeOutput());
 
     // Centre of the active window
     QPoint curPos(window->x() + window->width() / 2, window->y() + window->height() / 2);

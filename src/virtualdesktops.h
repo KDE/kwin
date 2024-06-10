@@ -31,6 +31,8 @@ namespace KWin
 class Options;
 class PlasmaVirtualDesktopManagementInterface;
 
+class Output;
+
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
     Q_OBJECT
@@ -136,10 +138,6 @@ class KWIN_EXPORT VirtualDesktopManager : public QObject
      */
     Q_PROPERTY(uint count READ count WRITE setCount NOTIFY countChanged)
     /**
-     * The id of the virtual desktop which is currently in use.
-     */
-    Q_PROPERTY(uint current READ current WRITE setCurrent NOTIFY currentChanged)
-    /**
      * Whether navigation in the desktop layout wraps around at the borders.
      */
     Q_PROPERTY(bool navigationWrappingAround READ isNavigationWrappingAround WRITE setNavigationWrappingAround NOTIFY navigationWrappingAroundChanged)
@@ -180,7 +178,7 @@ public:
      * @see setCurrent
      * @see currentChanged
      */
-    VirtualDesktop *currentDesktop() const;
+    VirtualDesktop *currentDesktop(Output *output) const;
     /**
      * Moves to the desktop through the algorithm described by Direction.
      * @param wrap If @c true wraps around to the other side of the layout
@@ -319,7 +317,7 @@ public Q_SLOTS:
      * @see currentChanged
      * @see moveTo
      */
-    bool setCurrent(uint current);
+    bool setCurrent(Output *output, uint current);
     /**
      * Set the current desktop to @a current.
      * @returns True on success, false otherwise.
@@ -327,7 +325,7 @@ public Q_SLOTS:
      * @see currentChanged
      * @see moveTo
      */
-    bool setCurrent(VirtualDesktop *current);
+    bool setCurrent(Output *output, VirtualDesktop *current);
     /**
      * Updates the layout to a new number of rows. The number of columns will be calculated accordingly
      */
@@ -384,7 +382,7 @@ Q_SIGNALS:
      * @param previousDesktop The virtual desktop changed from
      * @param newDesktop The virtual desktop changed to
      */
-    void currentChanged(KWin::VirtualDesktop *previousDesktop, KWin::VirtualDesktop *newDesktop);
+    void currentChanged(Output *output, KWin::VirtualDesktop *previousDesktop, KWin::VirtualDesktop *newDesktop);
 
     /**
      * Signal emmitted for realtime desktop switching animations.
@@ -393,7 +391,7 @@ Q_SIGNALS:
      * Offset x and y are negative if switching Left and Down.
      * Example: x = 0.6 means 60% of the way to the desktop to the right.
      */
-    void currentChanging(KWin::VirtualDesktop *currentDesktop, QPointF offset);
+    void currentChanging(Output *output, KWin::VirtualDesktop *currentDesktop, QPointF offset);
     void currentChangingCancelled();
 
     /**

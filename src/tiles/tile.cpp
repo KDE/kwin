@@ -150,13 +150,13 @@ QRectF Tile::windowGeometry() const
     effectiveMargins.setBottom(m_relativeGeometry.bottom() < 1.0 ? m_padding / 2.0 : m_padding);
 
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop())) - effectiveMargins;
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop(m_tiling->output()))) - effectiveMargins;
 }
 
 QRectF Tile::maximizedWindowGeometry() const
 {
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop()));
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop(m_tiling->output())));
 }
 
 bool Tile::isLayout() const

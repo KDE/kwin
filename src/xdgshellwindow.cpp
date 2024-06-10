@@ -417,7 +417,7 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 {
     setOutput(workspace()->activeOutput());
     setMoveResizeOutput(workspace()->activeOutput());
-    setDesktops({VirtualDesktopManager::self()->currentDesktop()});
+    setDesktops({VirtualDesktopManager::self()->currentDesktop(moveResizeOutput())});
 #if KWIN_BUILD_ACTIVITIES
     if (auto a = Workspace::self()->activities()) {
         setOnActivities({a->current()});

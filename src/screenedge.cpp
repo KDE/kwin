@@ -478,7 +478,7 @@ void Edge::switchDesktop(const QPoint &cursorPos)
 {
     QPoint pos(cursorPos);
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
-    VirtualDesktop *oldDesktop = vds->currentDesktop();
+    VirtualDesktop *oldDesktop = vds->currentDesktop(workspace()->activeOutput());
     VirtualDesktop *desktop = oldDesktop;
     const int OFFSET = 2;
     if (isLeft()) {
@@ -514,8 +514,8 @@ void Edge::switchDesktop(const QPoint &cursorPos)
             return;
         }
     }
-    vds->setCurrent(desktop);
-    if (vds->currentDesktop() != oldDesktop) {
+    vds->setCurrent(workspace()->activeOutput(), desktop);
+    if (vds->currentDesktop(workspace()->activeOutput()) != oldDesktop) {
         m_pushBackBlocked = true;
         Cursors::self()->mouse()->setPos(pos);
         auto unblockPush = [this] {

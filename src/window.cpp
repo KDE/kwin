@@ -684,7 +684,7 @@ void Window::autoRaise()
 bool Window::isMostRecentlyRaised() const
 {
     // The last window in the unconstrained stacking order is the most recently raised one.
-    return workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(), nullptr, true, false) == this;
+    return workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(moveResizeOutput()), nullptr, true, false) == this;
 }
 
 bool Window::wantsTabFocus() const
@@ -811,7 +811,7 @@ void Window::setOnAllDesktops(bool b)
     if (b) {
         setDesktops({});
     } else {
-        setDesktops({VirtualDesktopManager::self()->currentDesktop()});
+        setDesktops({VirtualDesktopManager::self()->currentDesktop(moveResizeOutput())});
     }
 }
 
@@ -840,7 +840,7 @@ bool Window::isOnDesktop(VirtualDesktop *desktop) const
 
 bool Window::isOnCurrentDesktop() const
 {
-    return isOnDesktop(VirtualDesktopManager::self()->currentDesktop());
+    return isOnDesktop(VirtualDesktopManager::self()->currentDesktop(moveResizeOutput()));
 }
 
 ShadeMode Window::shadeMode() const
@@ -1528,7 +1528,7 @@ QRectF Window::nextInteractiveResizeGeometry(const QPointF &global) const
         // Make sure the titlebar isn't behind a restricted area. We don't need to restrict
         // the other directions. If not visible enough, move the window to the closest valid
         // point. We bruteforce this by slowly moving the window back to its previous position
-        const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+        const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop(moveResizeOutput()));
         QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
         for (const QRect &rect : strut) {
             availableArea -= rect;
@@ -1654,7 +1654,7 @@ QRectF Window::nextInteractiveMoveGeometry(const QPointF &global) const
     nextMoveResizeGeom.moveTopLeft(workspace()->adjustWindowPosition(this, nextMoveResizeGeom.topLeft(), isUnrestrictedInteractiveMoveResize()));
 
     if (!isUnrestrictedInteractiveMoveResize()) {
-        const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop());
+        const StrutRects strut = workspace()->restrictedMoveArea(VirtualDesktopManager::self()->currentDesktop(moveResizeOutput()));
         QRegion availableArea(workspace()->clientArea(FullArea, this, workspace()->activeOutput()).toRect());
         for (const QRect &rect : strut) {
             availableArea -= rect; // Strut areas
@@ -2846,7 +2846,7 @@ void Window::pointerEnterEvent(const QPointF &globalPos)
         return;
     }
 
-    if (options->isAutoRaise() && !isDesktop() && !isDock() && workspace()->focusChangeEnabled() && globalPos != workspace()->focusMousePosition() && workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(), options->isSeparateScreenFocus() ? output() : nullptr) != this) {
+    if (options->isAutoRaise() && !isDesktop() && !isDock() && workspace()->focusChangeEnabled() && globalPos != workspace()->focusMousePosition() && workspace()->topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(moveResizeOutput()), options->isSeparateScreenFocus() ? output() : nullptr) != this) {
         startAutoRaise();
     }
 
@@ -3745,7 +3745,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         oldGeometry = newGeom;
     }
 
-    VirtualDesktop *desktop = !isOnCurrentDesktop() ? desktops().constLast() : VirtualDesktopManager::self()->currentDesktop();
+    VirtualDesktop *desktop = !isOnCurrentDesktop() ? desktops().constLast() : VirtualDesktopManager::self()->currentDesktop(moveResizeOutput());
     if (!oldDesktop) {
         oldDesktop = desktop;
     }

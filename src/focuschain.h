@@ -168,7 +168,6 @@ public Q_SLOTS:
     void remove(KWin::Window *window);
     void setSeparateScreenFocus(bool enabled);
     void setActiveWindow(KWin::Window *window);
-    void setCurrentDesktop(VirtualDesktop *desktop);
     void addDesktop(VirtualDesktop *desktop);
     void removeDesktop(VirtualDesktop *desktop);
 
@@ -203,7 +202,6 @@ private:
     QHash<VirtualDesktop *, Chain> m_desktopFocusChains;
     bool m_separateScreenFocus = false;
     Window *m_activeWindow = nullptr;
-    VirtualDesktop *m_currentDesktop = nullptr;
 };
 
 inline bool FocusChain::contains(Window *window) const
@@ -219,11 +217,6 @@ inline void FocusChain::setSeparateScreenFocus(bool enabled)
 inline void FocusChain::setActiveWindow(Window *window)
 {
     m_activeWindow = window;
-}
-
-inline void FocusChain::setCurrentDesktop(VirtualDesktop *desktop)
-{
-    m_currentDesktop = desktop;
 }
 
 } // namespace

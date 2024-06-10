@@ -149,7 +149,7 @@ quint32 getLayout(const T &layouts, const U &reference)
 
 void VirtualDesktopPolicy::desktopChanged()
 {
-    auto d = VirtualDesktopManager::self()->currentDesktop();
+    auto d = VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput());
     if (!d) {
         return;
     }
@@ -158,7 +158,7 @@ void VirtualDesktopPolicy::desktopChanged()
 
 void VirtualDesktopPolicy::layoutChanged(uint index)
 {
-    auto d = VirtualDesktopManager::self()->currentDesktop();
+    auto d = VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput());
     if (!d) {
         return;
     }

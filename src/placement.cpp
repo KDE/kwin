@@ -180,7 +180,7 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     long int overlap, min_overlap = 0;
     int x_optimal, y_optimal;
     int possible;
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : window->desktops().front();
 
     int cxl, cxr, cyt, cyb; // temp coords
     int xl, xr, yt, yb; // temp coords
@@ -381,7 +381,7 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
     // CT how do I get from the 'Client' class the size that NW squarish "handle"
     const QPoint delta = workspace()->cascadeOffset(c);
 
-    VirtualDesktop *dn = c->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : c->desktops().constLast();
+    VirtualDesktop *dn = c->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : c->desktops().constLast();
 
     if (nextPlacement == PlacementUnknown) {
         nextPlacement = PlacementSmart;
@@ -590,7 +590,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
 {
     const QPoint offset = workspace()->cascadeOffset(window);
 
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : window->desktops().front();
 
     QRectF possibleGeo = window->frameGeometry();
     bool noOverlap = false;
@@ -636,7 +636,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
 void Placement::cascadeDesktop()
 {
     Workspace *ws = Workspace::self();
-    reinitCascading(VirtualDesktopManager::self()->currentDesktop());
+    reinitCascading(VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()));
     const auto stackingOrder = ws->stackingOrder();
     for (Window *window : stackingOrder) {
         if (!window->isClient() || (!window->isOnCurrentDesktop()) || (window->isMinimized()) || (window->isOnAllDesktops()) || (!window->isMovable())) {
@@ -894,7 +894,7 @@ qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdg
     if (oldX <= newX) {
         return oldX;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : window->desktops().front();
     for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
@@ -921,7 +921,7 @@ qreal Workspace::packPositionRight(const Window *window, qreal oldX, bool rightE
     if (oldX >= newX) {
         return oldX;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : window->desktops().front();
     for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
@@ -949,7 +949,7 @@ qreal Workspace::packPositionUp(const Window *window, qreal oldY, bool topEdge) 
     if (oldY <= newY) {
         return oldY;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : window->desktops().front();
     for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;
@@ -976,7 +976,7 @@ qreal Workspace::packPositionDown(const Window *window, qreal oldY, bool bottomE
     if (oldY >= newY) {
         return oldY;
     }
-    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
+    VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput()) : window->desktops().front();
     for (auto it = m_windows.constBegin(), end = m_windows.constEnd(); it != end; ++it) {
         if (isIrrelevant(*it, window, desktop)) {
             continue;

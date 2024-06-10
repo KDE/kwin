@@ -163,9 +163,9 @@ public:
      */
     Window *findInternal(QWindow *w) const;
 
-    QRectF clientArea(clientAreaOption, const Output *output, const VirtualDesktop *desktop) const;
+    QRectF clientArea(clientAreaOption, Output *output, const VirtualDesktop *desktop) const;
     QRectF clientArea(clientAreaOption, const Window *window) const;
-    QRectF clientArea(clientAreaOption, const Window *window, const Output *output) const;
+    QRectF clientArea(clientAreaOption, const Window *window, Output *output) const;
     QRectF clientArea(clientAreaOption, const Window *window, const QPointF &pos) const;
 
     /**
@@ -552,8 +552,8 @@ private Q_SLOTS:
     void slotReloadConfig();
     void updateCurrentActivity(const QString &new_activity);
     // virtual desktop handling
-    void slotCurrentDesktopChanged(VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop);
-    void slotCurrentDesktopChanging(VirtualDesktop *currentDesktop, QPointF delta);
+    void slotCurrentDesktopChanged(Output *output, VirtualDesktop *previousDesktop, VirtualDesktop *newDesktop);
+    void slotCurrentDesktopChanging(Output *output, VirtualDesktop *currentDesktop, QPointF delta);
     void slotCurrentDesktopChangingCancelled();
     void slotDesktopAdded(VirtualDesktop *desktop);
     void slotDesktopRemoved(VirtualDesktop *desktop);
@@ -634,7 +634,7 @@ private:
 
     void closeActivePopup();
     void updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
-    void activateWindowOnNewDesktop(VirtualDesktop *desktop);
+    void activateWindowOnNewDesktop(Output *output, VirtualDesktop *desktop);
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);
     QString getPlacementTrackerHash();

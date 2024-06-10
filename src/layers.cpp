@@ -289,8 +289,8 @@ void Workspace::raiseOrLowerWindow(Window *window)
     }
 
     const Window *topmost =
-        topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(),
-                           options->isSeparateScreenFocus() ? window->output() : nullptr);
+        topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(window->moveResizeOutput()),
+                           options->isSeparateScreenFocus() ? window->moveResizeOutput() : nullptr);
 
     if (window == topmost) {
         lowerWindow(window);

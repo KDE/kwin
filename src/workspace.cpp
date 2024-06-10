@@ -174,9 +174,6 @@ void Workspace::init()
 
     connect(this, &Workspace::windowRemoved, m_focusChain.get(), &FocusChain::remove);
     connect(this, &Workspace::windowActivated, m_focusChain.get(), &FocusChain::setActiveWindow);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, m_focusChain.get(), [this]() {
-        m_focusChain->setCurrentDesktop(VirtualDesktopManager::self()->currentDesktop());
-    });
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
@@ -204,7 +201,7 @@ void Workspace::init()
     //  load is needed to be called again when starting xwayalnd to sync to RootInfo, see BUG 385260
     vds->save();
 
-    vds->setCurrent(m_initialDesktop);
+    vds->setCurrent(activeOutput(), m_initialDesktop);
 
     reconfigureTimer.setSingleShot(true);
     m_rearrangeTimer.setSingleShot(true);
@@ -328,7 +325,7 @@ void Workspace::initializeX11()
     if (!waylandServer()) {
         if (!sessionRestored) {
             m_initialDesktop = client_info.currentDesktop();
-            vds->setCurrent(m_initialDesktop);
+            vds->setCurrent(activeOutput(), m_initialDesktop);
         }
     }
 
@@ -405,10 +402,10 @@ void Workspace::initializeX11()
     if (newActiveWindow == nullptr && activeWindow() == nullptr && should_get_focus.count() == 0) {
         // No client activated in manage()
         if (newActiveWindow == nullptr) {
-            newActiveWindow = topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop());
+            newActiveWindow = topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop(activeOutput()));
         }
         if (newActiveWindow == nullptr) {
-            newActiveWindow = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
+            newActiveWindow = findDesktop(true, VirtualDesktopManager::self()->currentDesktop(activeOutput()));
         }
     }
     if (newActiveWindow != nullptr) {
@@ -922,7 +919,7 @@ void Workspace::slotReconfigure()
     }
 }
 
-void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDesktop *newDesktop)
+void Workspace::slotCurrentDesktopChanged(Output *output, VirtualDesktop *oldDesktop, VirtualDesktop *newDesktop)
 {
     closeActivePopup();
     ++block_focus;
@@ -935,7 +932,7 @@ void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDes
     Q_EMIT currentDesktopChanged(oldDesktop, m_moveResizeWindow);
 }
 
-void Workspace::slotCurrentDesktopChanging(VirtualDesktop *currentDesktop, QPointF offset)
+void Workspace::slotCurrentDesktopChanging(Output *output, VirtualDesktop *currentDesktop, QPointF offset)
 {
     closeActivePopup();
     Q_EMIT currentDesktopChanging(currentDesktop, offset, m_moveResizeWindow);
@@ -984,7 +981,7 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
     }
 }
 
-void Workspace::activateWindowOnNewDesktop(VirtualDesktop *desktop)
+void Workspace::activateWindowOnNewDesktop(Output *output, VirtualDesktop *desktop)
 {
     Window *window = nullptr;
     if (options->focusPolicyIsReasonable()) {
@@ -1110,11 +1107,11 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
         window = m_activeWindow;
     } else if (options->focusPolicyIsReasonable()) {
         // Search in focus chain
-        window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop());
+        window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop(activeOutput()));
     }
 
     if (!window) {
-        window = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
+        window = findDesktop(true, VirtualDesktopManager::self()->currentDesktop(activeOutput()));
     }
 
     if (window != m_activeWindow) {
@@ -1513,12 +1510,12 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     }
 
     if (showing_desktop) {
-        Window *desktop = findDesktop(true, VirtualDesktopManager::self()->currentDesktop());
+        Window *desktop = findDesktop(true, VirtualDesktopManager::self()->currentDesktop(activeOutput()));
         if (desktop) {
             requestFocus(desktop);
         }
     } else if (!showing_desktop && changed) {
-        const auto window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop());
+        const auto window = m_focusChain->getForActivation(VirtualDesktopManager::self()->currentDesktop(activeOutput()));
         if (window) {
             activateWindow(window);
         }
@@ -2356,7 +2353,7 @@ void Workspace::rearrange()
  * geometry minus windows on the dock. Placement algorithms should
  * refer to this rather than Screens::geometry.
  */
-QRectF Workspace::clientArea(clientAreaOption opt, const Output *output, const VirtualDesktop *desktop) const
+QRectF Workspace::clientArea(clientAreaOption opt, Output *output, const VirtualDesktop *desktop) const
 {
     switch (opt) {
     case MaximizeArea:
@@ -2386,11 +2383,11 @@ QRectF Workspace::clientArea(clientAreaOption opt, const Window *window) const
     return clientArea(opt, window, window->output());
 }
 
-QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, const Output *output) const
+QRectF Workspace::clientArea(clientAreaOption opt, const Window *window, Output *output) const
 {
     const VirtualDesktop *desktop;
     if (window->isOnCurrentDesktop()) {
-        desktop = VirtualDesktopManager::self()->currentDesktop();
+        desktop = VirtualDesktopManager::self()->currentDesktop(output);
     } else {
         desktop = window->desktops().constLast();
     }
@@ -2545,7 +2542,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
     if (options->windowSnapZone() || !borderSnapZone.isNull() || options->centerSnapZone()) {
 
         const bool sOWO = options->isSnapOnlyWhenOverlapping();
-        const Output *output = outputAt(pos + window->rect().center());
+        Output *output = outputAt(pos + window->rect().center());
         if (maxRect.isNull()) {
             maxRect = clientArea(MaximizeArea, window, output);
         }

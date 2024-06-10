@@ -387,7 +387,7 @@ public:
     bool optionRollOverDesktops() const;
 
     Output *activeScreen() const; // Xinerama
-    QRectF clientArea(clientAreaOption, const Output *screen, const VirtualDesktop *desktop) const;
+    QRectF clientArea(clientAreaOption, Output *screen, const VirtualDesktop *desktop) const;
     QRectF clientArea(clientAreaOption, const EffectWindow *c) const;
     QRectF clientArea(clientAreaOption, const QPoint &p, const VirtualDesktop *desktop) const;
 

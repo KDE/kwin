@@ -304,10 +304,10 @@ void Workspace::activateWindow(Window *window, bool force)
         ++block_focus;
         switch (options->activationDesktopPolicy()) {
         case Options::ActivationDesktopPolicy::SwitchToOtherDesktop:
-            VirtualDesktopManager::self()->setCurrent(window->desktops().constLast());
+            VirtualDesktopManager::self()->setCurrent(window->moveResizeOutput(), window->desktops().constLast());
             break;
         case Options::ActivationDesktopPolicy::BringToCurrentDesktop:
-            window->enterDesktop(VirtualDesktopManager::self()->currentDesktop());
+            window->enterDesktop(VirtualDesktopManager::self()->currentDesktop(window->moveResizeOutput()));
             break;
         case Options::ActivationDesktopPolicy::DoNothing:
             break;
@@ -484,7 +484,7 @@ bool Workspace::activateNextWindow(Window *window)
 
     Window *focusCandidate = nullptr;
 
-    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop(window->moveResizeOutput());
 
     if (!focusCandidate && showingDesktop()) {
         focusCandidate = findDesktop(true, desktop); // to not break the state
@@ -532,7 +532,7 @@ void Workspace::switchToOutput(Output *output)
         return;
     }
     closeActivePopup();
-    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
+    VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop(output);
     Window *get_focus = m_focusChain->getForActivation(desktop, output);
     if (get_focus == nullptr) {
         get_focus = findDesktop(true, desktop);

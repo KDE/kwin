@@ -150,7 +150,7 @@ EffectsHandler::EffectsHandler(Compositor *compositor, WorkspaceScene *scene)
         }
     });
     connect(ws, &Workspace::currentDesktopChanged, this, [this](VirtualDesktop *old, Window *window) {
-        VirtualDesktop *newDesktop = VirtualDesktopManager::self()->currentDesktop();
+        VirtualDesktop *newDesktop = VirtualDesktopManager::self()->currentDesktop(window->output());
         Q_EMIT desktopChanged(old, newDesktop, window ? window->effectWindow() : nullptr);
     });
     connect(ws, &Workspace::currentDesktopChanging, this, [this](VirtualDesktop *currentDesktop, QPointF offset, KWin::Window *window) {
@@ -775,7 +775,8 @@ QString EffectsHandler::currentActivity() const
 
 VirtualDesktop *EffectsHandler::currentDesktop() const
 {
-    return VirtualDesktopManager::self()->currentDesktop();
+    // TODO
+    return VirtualDesktopManager::self()->currentDesktop(workspace()->activeOutput());
 }
 
 QList<VirtualDesktop *> EffectsHandler::desktops() const
@@ -785,7 +786,8 @@ QList<VirtualDesktop *> EffectsHandler::desktops() const
 
 void EffectsHandler::setCurrentDesktop(VirtualDesktop *desktop)
 {
-    VirtualDesktopManager::self()->setCurrent(desktop);
+    // TODO
+    VirtualDesktopManager::self()->setCurrent(workspace()->activeOutput(), desktop);
 }
 
 QSize EffectsHandler::desktopGridSize() const
@@ -1017,7 +1019,7 @@ Output *EffectsHandler::activeScreen() const
     return workspace()->activeOutput();
 }
 
-QRectF EffectsHandler::clientArea(clientAreaOption opt, const Output *screen, const VirtualDesktop *desktop) const
+QRectF EffectsHandler::clientArea(clientAreaOption opt, Output *screen, const VirtualDesktop *desktop) const
 {
     return Workspace::self()->clientArea(opt, screen, desktop);
 }
@@ -1030,7 +1032,7 @@ QRectF EffectsHandler::clientArea(clientAreaOption opt, const EffectWindow *effe
 
 QRectF EffectsHandler::clientArea(clientAreaOption opt, const QPoint &p, const VirtualDesktop *desktop) const
 {
-    const Output *output = Workspace::self()->outputAt(p);
+    Output *output = Workspace::self()->outputAt(p);
     return Workspace::self()->clientArea(opt, output, desktop);
 }
 

@@ -744,7 +744,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
             if (on_all) {
                 initialDesktops = QList<VirtualDesktop *>{};
             } else if (on_current) {
-                initialDesktops = QList<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+                initialDesktops = QList<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop(m_moveResizeOutput)};
             } else if (maincl) {
                 initialDesktops = maincl->desktops();
             }
@@ -791,7 +791,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         if (isDesktop()) {
             initialDesktops = QList<VirtualDesktop *>{};
         } else {
-            initialDesktops = QList<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop()};
+            initialDesktops = QList<VirtualDesktop *>{VirtualDesktopManager::self()->currentDesktop(m_moveResizeOutput)};
         }
     }
     setDesktops(rules()->checkDesktops(*initialDesktops, !isMapped));
@@ -1103,7 +1103,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         // If session saving, force showing new windows (i.e. "save file?" dialogs etc.)
         // also force if activation is allowed
         if (!isOnCurrentDesktop() && !isMapped && !session && (allow || isSessionSaving)) {
-            VirtualDesktopManager::self()->setCurrent(desktopId());
+            VirtualDesktopManager::self()->setCurrent(moveResizeOutput(), desktopId());
         }
 
         // If the window is on an inactive activity during session saving, temporarily force it to show.
