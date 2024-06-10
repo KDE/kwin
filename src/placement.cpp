@@ -569,15 +569,9 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
     if (nextPlacement == PlacementUnknown) {
         nextPlacement = PlacementCentered;
     }
-    if (c->isMaximizable() && c->maxSize().width() >= area.width() && c->maxSize().height() >= area.height()) {
-        if (workspace()->clientArea(MaximizeArea, c) == area) {
-            c->maximize(MaximizeFull);
-        } else { // if the geometry doesn't match default maximize area (xinerama case?),
-            // it's probably better to use the given area
-            c->moveResize(area);
-        }
+    if (c->isMaximizable()) {
+        c->maximize(MaximizeFull);
     } else {
-        c->moveResize(c->resizeWithChecks(c->moveResizeGeometry(), c->maxSize().boundedTo(area.size())));
         place(c, area, nextPlacement);
     }
 }
