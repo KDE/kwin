@@ -326,7 +326,7 @@ void Workspace::activateWindow(Window *window, bool force)
         ++block_focus;
         // DBUS!
         // first isn't necessarily best, but it's easiest
-        m_activities->setCurrent(window->activities().constFirst());
+        m_activities->setCurrent(window->activities().constFirst(), window->isOnAllDesktops() ? nullptr : window->desktops().front());
         --block_focus;
     }
 #endif

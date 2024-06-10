@@ -35,7 +35,11 @@ public:
 
     bool stop(const QString &id);
     bool start(const QString &id);
-    void setCurrent(const QString &activity);
+    /**
+     * Sets the current activity to @param activity, and if desktop isn't nullptr,
+     * ensures that this doesn't interfere with virtual desktop switching
+     */
+    void setCurrent(const QString &activity, VirtualDesktop *desktop);
     /**
      * Adds/removes window \a window to/from \a activity.
      *
