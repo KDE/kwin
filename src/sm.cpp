@@ -140,7 +140,6 @@ void SessionManager::storeSession(const QString &sessionName, SMSavePhase phase)
     } else { // SMSavePhase2Full
         cg.writeEntry("count", count);
         cg.writeEntry("active", m_sessionActiveClient);
-        cg.writeEntry("desktop", VirtualDesktopManager::self()->current());
     }
     config->sync(); // it previously did some "revert to defaults" stuff for phase1 I think
 }
@@ -241,7 +240,6 @@ void SessionManager::loadSession(const QString &sessionName)
 
 void SessionManager::addSessionInfo(KConfigGroup &cg)
 {
-    workspace()->setInitialDesktop(cg.readEntry("desktop", 1));
     int count = cg.readEntry("count", 0);
     int active_client = cg.readEntry("active", 0);
     for (int i = 1; i <= count; i++) {

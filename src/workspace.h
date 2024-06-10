@@ -440,8 +440,6 @@ public:
      * @internal
      * Used by session management
      */
-    void setInitialDesktop(int desktop);
-
     bool inShouldGetFocus(Window *w) const
     {
         return should_get_focus.contains(w);
@@ -665,7 +663,6 @@ private:
     QWidget *active_popup;
     Window *m_activePopupWindow;
 
-    int m_initialDesktop;
     void updateTabbox();
 
     QList<Output *> m_outputs;
