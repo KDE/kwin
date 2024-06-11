@@ -32,6 +32,7 @@ class KConfigGroup;
 class KStartupInfo;
 class KStartupInfoData;
 class KStartupInfoId;
+class QLightSensor;
 
 namespace KWin
 {
@@ -760,6 +761,7 @@ private:
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
     std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
     std::unique_ptr<OrientationSensor> m_orientationSensor;
+    std::unique_ptr<QLightSensor> m_lightSensor;
     std::unique_ptr<DpmsInputEventFilter> m_dpmsFilter;
 
 private:
