@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-03-09 10:27+0300\n"
+"PO-Revision-Date: 2024-06-10 10:55+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 24.02.0\n"
+"X-Generator: Lokalize 24.07.70\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -178,19 +178,19 @@ msgstr "&Kenarda masaüstünü değiştir:"
 #, kde-format
 msgctxt "Switch desktop on edge"
 msgid "Disabled"
-msgstr "Devre Dışı"
+msgstr "Devre dışı"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
 #, kde-format
 msgid "Only When Moving Windows"
-msgstr "Yalnızca Pencereleri Taşırken"
+msgstr "Yalnızca pencereleri taşırken"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
 #, kde-format
 msgid "Always Enabled"
-msgstr "Her Zaman Etkin"
+msgstr "Her zaman etkin"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206
