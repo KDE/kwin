@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2024-05-23 16:03+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -2410,6 +2410,12 @@ msgstr ""
 "用滑鼠左鍵或 Enter 來建立螢幕截圖。\n"
 "按 Esc 或右鍵來取消。"
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "此效果非性能測試"
+
 #: plugins/showfps/qml/main.qml:110
 #, kde-format
 msgctxt "@label"
@@ -2433,12 +2439,6 @@ msgstr "目前 FPS"
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "最大 FPS"
-
-#: plugins/showfps/qml/main.qml:192
-#, kde-format
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "此效果非性能測試"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format

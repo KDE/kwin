@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -2500,6 +2500,12 @@ msgstr ""
 "Enter və ya sol kliklə məcburi bağlamaq üçün pəncərəni seçmək.\n"
 "Ləğv etmək üçün Escape düyməsinə vurun və ya sağ düyməni klikləyin."
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "Bu effekt sürət yoxlaması deyil"
+
 #: plugins/showfps/qml/main.qml:110
 #, fuzzy, kde-format
 #| msgctxt "A mouse pointer motion event"
@@ -2526,12 +2532,6 @@ msgstr "Cari klaviatura qatı:"
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "Maksimum kadr tezliyi"
-
-#: plugins/showfps/qml/main.qml:192
-#, kde-format
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "Bu effekt sürət yoxlaması deyil"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format

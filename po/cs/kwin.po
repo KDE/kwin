@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2024-05-29 11:26+0200\n"
 "Last-Translator: Vit Pelcak <vpelcak@suse.cz>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -2396,6 +2396,12 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "Tento efekt není benchmark"
+
 #: plugins/showfps/qml/main.qml:110
 #, kde-format
 msgctxt "@label"
@@ -2419,12 +2425,6 @@ msgstr "Současné FPS"
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "Maximum FPS"
-
-#: plugins/showfps/qml/main.qml:192
-#, kde-format
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "Tento efekt není benchmark"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format

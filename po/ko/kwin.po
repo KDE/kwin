@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2413,6 +2413,12 @@ msgstr ""
 "왼쪽 단추를 누르거나 Enter 키를 누르면 스크린샷을 찍습니다.\n"
 "Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "이 효과는 벤치마크가 아닙니다"
+
 #: plugins/showfps/qml/main.qml:110
 #, kde-format
 msgctxt "@label"
@@ -2436,12 +2442,6 @@ msgstr "현재 FPS"
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "최대 FPS"
-
-#: plugins/showfps/qml/main.qml:192
-#, kde-format
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "이 효과는 벤치마크가 아닙니다"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format

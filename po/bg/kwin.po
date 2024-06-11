@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2024-05-27 00:07+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2425,6 +2425,12 @@ msgstr ""
 "Създаване на снимка на екрана с левия бутон на мишката или въведете.\n"
 "Натиснете клавиш Escape  или десния бутон на мишката, за да отмените."
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "Този ефект не е бенчмарк"
+
 #: plugins/showfps/qml/main.qml:110
 #, kde-format
 msgctxt "@label"
@@ -2448,12 +2454,6 @@ msgstr "Текущи FPS"
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "Максимални FPS"
-
-#: plugins/showfps/qml/main.qml:192
-#, kde-format
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "Този ефект не е бенчмарк"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format

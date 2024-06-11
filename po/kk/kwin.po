@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2013-10-01 03:27+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -2508,6 +2508,13 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, fuzzy, kde-format
+#| msgid "This effect is not a benchmark"
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "Бұл эффект бағалау сынағы емес"
+
 #: plugins/showfps/qml/main.qml:110
 #, fuzzy, kde-format
 #| msgid "Ring Duration:"
@@ -2535,13 +2542,6 @@ msgstr "Т&ерезе қасиеттерін баптау..."
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "&Енінің шегі:"
-
-#: plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "Бұл эффект бағалау сынағы емес"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, fuzzy, kde-format

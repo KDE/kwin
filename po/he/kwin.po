@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-06-11 00:40+0000\n"
 "PO-Revision-Date: 2024-05-21 07:35+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2420,6 +2420,12 @@ msgstr ""
 "צילום המסך בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
 
+#: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
+#, kde-format
+msgctxt "@label"
+msgid "This effect is not a benchmark"
+msgstr "האפקט הזה אינו מיועד למדד ביצועים"
+
 #: plugins/showfps/qml/main.qml:110
 #, kde-format
 msgctxt "@label"
@@ -2443,12 +2449,6 @@ msgstr "תמוניות לשנייה כרגע"
 msgctxt "@label"
 msgid "Maximum FPS"
 msgstr "תמוניות לשנייה לכל היותר"
-
-#: plugins/showfps/qml/main.qml:192
-#, kde-format
-msgctxt "@label"
-msgid "This effect is not a benchmark"
-msgstr "האפקט הזה אינו מיועד למדד ביצועים"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
 #, kde-format
