@@ -205,16 +205,19 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
 
     spa_format_video_raw_parse(format, &m_videoFormat);
     auto modifierProperty = spa_pod_find_prop(format, nullptr, SPA_FORMAT_VIDEO_modifier);
-    QList<uint64_t> receivedModifiers;
     if (modifierProperty) {
-        const struct spa_pod *modifierPod = &modifierProperty->value;
+        const uint32_t valueCount = SPA_POD_CHOICE_N_VALUES(&modifierProperty->value);
+        const uint64_t *values = (uint64_t *)SPA_POD_CHOICE_VALUES(&modifierProperty->value); // values[0] is the preferred choice
 
-        uint32_t modifiersCount = SPA_POD_CHOICE_N_VALUES(modifierPod);
-        uint64_t *modifiers = (uint64_t *)SPA_POD_CHOICE_VALUES(modifierPod);
-        receivedModifiers = QList<uint64_t>(modifiers, modifiers + modifiersCount);
-        // Remove duplicates
-        std::sort(receivedModifiers.begin(), receivedModifiers.end());
-        receivedModifiers.erase(std::unique(receivedModifiers.begin(), receivedModifiers.end()), receivedModifiers.end());
+        // Note that we don't need to search for duplicates in values[1...] but we do that anyway as a
+        // sanity check because the DRM modifier negotiation logic can be easily tripped by bad input.
+        QList<uint64_t> receivedModifiers;
+        receivedModifiers.reserve(valueCount);
+        for (uint32_t i = 0; i < valueCount; ++i) {
+            if (!receivedModifiers.contains(values[i])) {
+                receivedModifiers.append(values[i]);
+            }
+        }
 
         if (!m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height() || !receivedModifiers.contains(m_dmabufParams->modifier)) {
             if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
@@ -387,8 +390,6 @@ bool ScreenCastStream::createStream()
     } else {
         m_drmFormat = itModifiers.key();
         m_modifiers = *itModifiers;
-        // Also support modifier-less DmaBufs
-        m_modifiers += DRM_FORMAT_MOD_INVALID;
     }
     m_hasDmaBuf = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID}).has_value();
 
