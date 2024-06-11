@@ -76,6 +76,7 @@
 #include <QCryptographicHash>
 #include <QDBusConnection>
 #include <QDBusPendingCall>
+#include <QLightSensor>
 #include <QMetaProperty>
 // xcb
 #include <xcb/xinerama.h>
@@ -118,6 +119,7 @@ Workspace::Workspace()
     , m_outputConfigStore(std::make_unique<OutputConfigurationStore>())
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
     , m_orientationSensor(std::make_unique<OrientationSensor>())
+    , m_lightSensor(std::make_unique<QLightSensor>())
 {
     _self = this;
 
@@ -260,6 +262,25 @@ void Workspace::init()
         connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
         connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
         m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+
+        const auto printSensorValues = [this]() {
+            if (!m_lightSensor->reading()) {
+                return;
+            }
+            qWarning() << "brightness:" << m_lightSensor->reading()->lux();
+            // FIXME this "curve" is pretty bad in low light situations on my laptop
+            // It'll also depend on the absolute display brightness (which we usually don't know), user preference and maybe even sensor
+            // -> the user needs to be able to tweak this somehow
+            const double brightness = std::clamp<double>(m_lightSensor->reading()->lux() / 100.0, 0, 1);
+            qWarning() << "setting brightness to" << brightness;
+            OutputConfiguration cfg;
+            for (const auto &output : m_outputs) {
+                cfg.changeSet(output)->brightness = brightness;
+            }
+            applyOutputConfiguration(cfg);
+        };
+        connect(m_lightSensor.get(), &QLightSensor::readingChanged, this, printSensorValues);
+        m_lightSensor->start();
 
         connect(waylandServer(), &WaylandServer::brightnessDeviceAdded, this, [this](BrightnessDevice *device) {
             m_brightnessDevices.push_back(device);
