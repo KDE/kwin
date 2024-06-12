@@ -215,6 +215,7 @@ void EGLPlatformContext::updateFormatFromContext()
     if (parseOpenGLVersion(version, major, minor)) {
         m_format.setMajorVersion(major);
         m_format.setMinorVersion(minor);
+        qWarning() << "setting version" << major << "," << minor;
     } else {
         qCWarning(KWIN_QPA) << "Unrecognized OpenGL version:" << version;
     }
@@ -225,24 +226,31 @@ void EGLPlatformContext::updateFormatFromContext()
         glGetIntegerv(GL_CONTEXT_FLAGS, &value);
         if (!(value & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT)) {
             m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
+            qWarning() << "setting DeprecatedFunctions option";
         }
         if (value & GL_CONTEXT_FLAG_DEBUG_BIT) {
             m_format.setOption(QSurfaceFormat::DebugContext);
+            qWarning() << "setting DebugContext option";
         }
     } else {
         m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
+        qWarning() << "setting DeprecatedFunctions option 2";
     }
 
     if (m_format.version() >= qMakePair(3, 2)) {
         glGetIntegerv(GL_CONTEXT_PROFILE_MASK, &value);
         if (value & GL_CONTEXT_CORE_PROFILE_BIT) {
             m_format.setProfile(QSurfaceFormat::CoreProfile);
+            qWarning() << "setting core profile";
         } else if (value & GL_CONTEXT_COMPATIBILITY_PROFILE_BIT) {
             m_format.setProfile(QSurfaceFormat::CompatibilityProfile);
+            qWarning() << "setting compat profile";
         } else {
             m_format.setProfile(QSurfaceFormat::NoProfile);
+            qWarning() << "setting no profile";
         }
     } else {
+        qWarning() << "setting no profile 2";
         m_format.setProfile(QSurfaceFormat::NoProfile);
     }
 
