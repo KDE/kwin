@@ -114,7 +114,6 @@ Workspace::Workspace()
     , m_focusChain(std::make_unique<FocusChain>())
     , m_applicationMenu(std::make_unique<ApplicationMenu>())
     , m_placementTracker(std::make_unique<PlacementTracker>(this))
-    , m_outputConfigStore(std::make_unique<OutputConfigurationStore>())
     , m_lidSwitchTracker(std::make_unique<LidSwitchTracker>())
     , m_orientationSensor(std::make_unique<OrientationSensor>())
 {
@@ -247,6 +246,8 @@ void Workspace::init()
     m_placementTracker->init(getPlacementTrackerHash());
 
     if (waylandServer()) {
+        m_outputConfigStore = std::make_unique<OutputConfigurationStore>();
+
         const auto applySensorChanges = [this]() {
             m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
             const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
