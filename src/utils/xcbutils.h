@@ -1642,6 +1642,10 @@ public:
     {
         return m_logicGeometry;
     }
+    QRect deviceGeometry() const
+    {
+        return m_deviceGeometry;
+    }
     /**
      * Configures the window with a new geometry.
      * @param geometry The new window geometry to be used
@@ -1686,6 +1690,7 @@ private:
     xcb_window_t m_window;
     bool m_destroy;
     QRectF m_logicGeometry;
+    QRect m_deviceGeometry;
 };
 
 inline Window::Window(xcb_window_t window, bool destroy)
@@ -1744,9 +1749,13 @@ inline void Window::create(const QRectF &geometry, uint32_t mask, const uint32_t
 inline xcb_window_t Window::doCreate(const QRectF &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
 {
     m_logicGeometry = geometry;
+    m_deviceGeometry = Xcb::toXNative(geometry);
     xcb_window_t w = xcb_generate_id(connection());
     xcb_create_window(connection(), XCB_COPY_FROM_PARENT, w, parent,
-                      Xcb::toXNative(geometry.x()), Xcb::toXNative(geometry.y()), Xcb::toXNative(geometry.width()), Xcb::toXNative(geometry.height()),
+                      m_deviceGeometry.x(),
+                      m_deviceGeometry.y(),
+                      m_deviceGeometry.width(),
+                      m_deviceGeometry.height(),
                       0, windowClass, XCB_COPY_FROM_PARENT, mask, values);
     return w;
 }
@@ -1766,11 +1775,12 @@ inline void Window::setGeometry(const QRectF &geometry)
 inline void Window::setGeometry(qreal x, qreal y, qreal width, qreal height)
 {
     m_logicGeometry.setRect(x, y, width, height);
+    m_deviceGeometry = Xcb::toXNative(m_logicGeometry);
     if (!isValid()) {
         return;
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y | XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {Xcb::toXNative(x), Xcb::toXNative(y), Xcb::toXNative(width), Xcb::toXNative(height)};
+    const uint32_t values[] = {uint32_t(m_deviceGeometry.x()), uint32_t(m_deviceGeometry.y()), uint32_t(m_deviceGeometry.width()), uint32_t(m_deviceGeometry.height())};
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
@@ -1782,10 +1792,13 @@ inline void Window::move(const QPointF &pos)
 inline void Window::move(qreal x, qreal y)
 {
     m_logicGeometry.moveTo(x, y);
+    m_deviceGeometry.moveTo(Xcb::toXNative(x), Xcb::toXNative(y));
     if (!isValid()) {
         return;
     }
-    moveWindow(m_window, x, y);
+    const uint16_t mask = XCB_CONFIG_WINDOW_X | XCB_CONFIG_WINDOW_Y;
+    const uint32_t values[] = {uint32_t(m_deviceGeometry.x()), uint32_t(m_deviceGeometry.y())};
+    xcb_configure_window(connection(), m_window, mask, values);
 }
 
 inline void Window::resize(const QSizeF &size)
@@ -1796,11 +1809,12 @@ inline void Window::resize(const QSizeF &size)
 inline void Window::resize(qreal width, qreal height)
 {
     m_logicGeometry.setSize(QSizeF(width, height));
+    m_deviceGeometry.setSize(QSize(Xcb::toXNative(width), Xcb::toXNative(height)));
     if (!isValid()) {
         return;
     }
     const uint16_t mask = XCB_CONFIG_WINDOW_WIDTH | XCB_CONFIG_WINDOW_HEIGHT;
-    const uint32_t values[] = {Xcb::toXNative(width), Xcb::toXNative(height)};
+    const uint32_t values[] = {uint32_t(m_deviceGeometry.width()), uint32_t(m_deviceGeometry.height())};
     xcb_configure_window(connection(), m_window, mask, values);
 }
 
