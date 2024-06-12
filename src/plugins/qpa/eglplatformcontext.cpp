@@ -224,7 +224,7 @@ void EGLPlatformContext::updateFormatFromContext()
 
     if (m_format.version() >= qMakePair(3, 0)) {
         glGetIntegerv(GL_CONTEXT_FLAGS, &value);
-        if (!(value & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT)) {
+        if (!(value & GL_CONTEXT_FLAG_FORWARD_COMPATIBLE_BIT) && m_format.version() != qMakePair(3, 1)) {
             m_format.setOption(QSurfaceFormat::DeprecatedFunctions);
             qWarning() << "setting DeprecatedFunctions option";
         }
