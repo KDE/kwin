@@ -488,7 +488,7 @@ Workspace::~Workspace()
     _self = nullptr;
 }
 
-bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, const QList<Output *> &outputOrder)
+bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder)
 {
     if (!kwinApp()->outputBackend()->applyOutputChanges(config)) {
         return false;
@@ -500,7 +500,7 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
     if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
         double maxScale = 0;
-        for (Output *output : outputOrder) {
+        for (Output *output : m_outputOrder) {
             const auto changeset = config.constChangeSet(output);
             maxScale = std::max(maxScale, changeset ? changeset->scale.value_or(output->scale()) : output->scale());
         }
@@ -1215,7 +1215,7 @@ void Workspace::slotOutputBackendOutputsQueried()
     updateOutputs();
 }
 
-void Workspace::updateOutputs(const QList<Output *> &outputOrder)
+void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
 {
     const auto availableOutputs = kwinApp()->outputBackend()->outputs();
     const auto oldOutputs = m_outputs;
@@ -1247,8 +1247,8 @@ void Workspace::updateOutputs(const QList<Output *> &outputOrder)
         setActiveOutput(m_outputs[0]);
     }
 
-    if (!outputOrder.empty()) {
-        setOutputOrder(outputOrder);
+    if (outputOrder) {
+        setOutputOrder(*outputOrder);
     } else {
         // ensure all enabled but no disabled outputs are in the output order
         for (Output *output : std::as_const(m_outputs)) {

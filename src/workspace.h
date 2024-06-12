@@ -468,7 +468,7 @@ public:
      * Apply the requested output configuration. Note that you must use this function
      * instead of Platform::applyOutputChanges().
      */
-    bool applyOutputConfiguration(const OutputConfiguration &config, const QList<Output *> &outputOrder = {});
+    bool applyOutputConfiguration(const OutputConfiguration &config, const std::optional<QList<Output *>> &outputOrder = std::nullopt);
 
 public Q_SLOTS:
     void performWindowOperation(KWin::Window *window, Options::WindowOperation op);
@@ -640,7 +640,7 @@ private:
     QString getPlacementTrackerHash();
 
     void updateOutputConfiguration();
-    void updateOutputs(const QList<Output *> &outputOrder = {});
+    void updateOutputs(const std::optional<QList<Output *>> &outputOrder = std::nullopt);
     void createDpmsFilter();
     void maybeDestroyDpmsFilter();
 

@@ -400,7 +400,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
         return;
     }
 
-    QList<Output *> sortedOrder;
+    std::optional<QList<Output *>> sortedOrder;
     if (!outputOrder.empty()) {
         const int desktopOutputs = std::count_if(allOutputs.begin(), allOutputs.end(), [](Output *output) {
             return !output->isNonDesktop();
@@ -431,8 +431,9 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_apply(Resource 
             }
             i++;
         }
-        sortedOrder.reserve(outputOrder.size());
-        std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(sortedOrder), [](const auto &pair) {
+        sortedOrder = QList<Output *>();
+        sortedOrder->reserve(outputOrder.size());
+        std::transform(outputOrder.begin(), outputOrder.end(), std::back_inserter(*sortedOrder), [](const auto &pair) {
             return pair.second->handle();
         });
     }
