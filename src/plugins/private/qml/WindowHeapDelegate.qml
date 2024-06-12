@@ -226,10 +226,10 @@ Item {
             name: "partial"
             PropertyChanges {
                 target: thumb
-                x: (thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (1 - thumb.partialActivationFactor) + cell.x * thumb.partialActivationFactor
-                y: (thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (1 - thumb.partialActivationFactor) + cell.y * thumb.partialActivationFactor
-                width: thumb.window.width * (1 - thumb.partialActivationFactor) + cell.width * thumb.partialActivationFactor
-                height: thumb.window.height * (1 - thumb.partialActivationFactor) + cell.height * thumb.partialActivationFactor
+                x: (thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + (thumb.activeHidden ? 0 : cell.x * thumb.partialActivationFactor)
+                y: (thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + (thumb.activeHidden ? 0 : cell.y * thumb.partialActivationFactor)
+                width: thumb.window.width * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + cell.width * (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
+                height: thumb.window.height * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + cell.height * (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
                 opacity: thumb.initialHidden
                     ? (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
                     : (thumb.activeHidden ? 1 - thumb.partialActivationFactor : 1)
