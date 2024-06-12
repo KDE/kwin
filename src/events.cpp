@@ -23,6 +23,7 @@
 #include "netinfo.h"
 #include "rules.h"
 #include "screenedge.h"
+#include "touch_input.h"
 #include "useractions.h"
 #include "utils/xcbutils.h"
 #include "wayland/surface.h"
@@ -1284,11 +1285,11 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
     } else if (direction == NET::Move || (direction >= NET::TopLeft && direction <= NET::Left)) {
         if (waylandServer()) {
             if (!button) {
-                if (!input()->qtButtonStates()) {
+                if (!input()->qtButtonStates() && !input()->touch()->touchPointCount()) {
                     return;
                 }
             } else {
-                if (!(input()->qtButtonStates() & x11ToQtMouseButton(button))) {
+                if (!(input()->qtButtonStates() & x11ToQtMouseButton(button)) && !input()->touch()->touchPointCount()) {
                     return;
                 }
             }
