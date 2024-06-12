@@ -14,8 +14,11 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#include "x11window.h"
 
 #include <KWayland/Client/surface.h>
+#include <netwm.h>
+#include <xcb/xcb_icccm.h>
 
 using namespace std::chrono_literals;
 
@@ -51,6 +54,7 @@ private Q_SLOTS:
     void testInvalidGeometryRestoreAfterEnablingOutput();
     void testMaximizedWindowDoesntDisappear_data();
     void testMaximizedWindowDoesntDisappear();
+    void testXwaylandScaleChange();
 
     void testWindowNotRestoredAfterMovingWindowAndEnablingOutput();
     void testLaptopLidClosed();
@@ -1002,6 +1006,80 @@ void OutputChangesTest::testLaptopLidClosed()
     QVERIFY(external->isEnabled());
 
     input()->removeInputDevice(lidSwitch.get());
+}
+
+static X11Window *createX11Window(xcb_connection_t *connection, const QRect &geometry, std::function<void(xcb_window_t)> setup = {})
+{
+    xcb_window_t windowId = xcb_generate_id(connection);
+    xcb_create_window(connection, XCB_COPY_FROM_PARENT, windowId, rootWindow(),
+                      geometry.x(),
+                      geometry.y(),
+                      geometry.width(),
+                      geometry.height(),
+                      0, XCB_WINDOW_CLASS_INPUT_OUTPUT, XCB_COPY_FROM_PARENT, 0, nullptr);
+
+    xcb_size_hints_t hints;
+    memset(&hints, 0, sizeof(hints));
+    xcb_icccm_size_hints_set_position(&hints, 1, geometry.x(), geometry.y());
+    xcb_icccm_size_hints_set_size(&hints, 1, geometry.width(), geometry.height());
+    xcb_icccm_set_wm_normal_hints(connection, windowId, &hints);
+
+    if (setup) {
+        setup(windowId);
+    }
+
+    xcb_map_window(connection, windowId);
+    xcb_flush(connection);
+
+    QSignalSpy windowCreatedSpy(workspace(), &Workspace::windowAdded);
+    if (!windowCreatedSpy.wait()) {
+        return nullptr;
+    }
+    return windowCreatedSpy.last().first().value<X11Window *>();
+}
+
+void OutputChangesTest::testXwaylandScaleChange()
+{
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
+    const auto outputs = workspace()->outputs();
+
+    {
+        OutputConfiguration config;
+        config.changeSet(outputs[0])->scale = 2;
+        config.changeSet(outputs[1])->scale = 1;
+        workspace()->applyOutputConfiguration(config);
+    }
+    QCOMPARE(kwinApp()->xwaylandScale(), 2);
+
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    X11Window *window = createX11Window(c.get(), QRect(0, 0, 100, 200));
+    const QRectF originalGeometry = window->frameGeometry();
+
+    // disable the left output -> window gets moved to the right output
+    {
+        OutputConfiguration config;
+        config.changeSet(outputs[0])->enabled = false;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    // the window should still have logical size of 100, 200
+    QCOMPARE(kwinApp()->xwaylandScale(), 1);
+    QCOMPARE(window->frameGeometry().size(), originalGeometry.size());
+
+    // enable the left output again
+    {
+        OutputConfiguration config;
+        config.changeSet(outputs[0])->enabled = true;
+        workspace()->applyOutputConfiguration(config);
+    }
+
+    // the window should be back in its original geometry
+    QCOMPARE(kwinApp()->xwaylandScale(), 2);
+    QCOMPARE(window->frameGeometry(), originalGeometry);
 }
 
 } // namespace KWin
