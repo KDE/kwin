@@ -307,6 +307,12 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
         if (d->drag.posConnection) {
             disconnect(d->drag.posConnection);
         }
+        if (d->drag.sourceActionConnection) {
+            disconnect(d->drag.sourceActionConnection);
+        }
+        if (d->drag.targetActionConnection) {
+            disconnect(d->drag.targetActionConnection);
+        }
         d->drag = DataDeviceInterfacePrivate::Drag();
     });
 
