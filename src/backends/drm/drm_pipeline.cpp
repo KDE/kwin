@@ -321,8 +321,12 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     } else if (m_connector->colorspace.isValid()) {
         commit->addEnum(m_connector->colorspace, DrmConnector::Colorspace::Default);
     }
-    if (m_connector->scalingMode.isValid() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
-        commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
+    if (m_connector->scalingMode.isValid()) {
+        if (m_connector->isInternal() && m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::Full_Aspect) && (m_pending.mode->flags() & OutputMode::Flag::Generated)) {
+            commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::Full_Aspect);
+        } else if (m_connector->scalingMode.hasEnum(DrmConnector::ScalingMode::None)) {
+            commit->addEnum(m_connector->scalingMode, DrmConnector::ScalingMode::None);
+        }
     }
 
     commit->addProperty(m_pending.crtc->active, 1);
