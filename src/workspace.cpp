@@ -179,6 +179,22 @@ void Workspace::init()
     connect(options, &Options::separateScreenFocusChanged, m_focusChain.get(), &FocusChain::setSeparateScreenFocus);
     m_focusChain->setSeparateScreenFocus(options->isSeparateScreenFocus());
 
+    if (waylandServer()) {
+        m_outputConfigStore = std::make_unique<OutputConfigurationStore>();
+
+        const auto applySensorChanges = [this]() {
+            m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+            const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+            if (opt) {
+                const auto &[config, order, type] = *opt;
+                applyOutputConfiguration(config, order);
+            }
+        };
+        connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
+        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
+        connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
+        m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
+    }
     slotOutputBackendOutputsQueried();
     connect(kwinApp()->outputBackend(), &OutputBackend::outputsQueried, this, &Workspace::slotOutputBackendOutputsQueried);
 
@@ -244,23 +260,6 @@ void Workspace::init()
     connect(this, &Workspace::windowAdded, m_placementTracker.get(), &PlacementTracker::add);
     connect(this, &Workspace::windowRemoved, m_placementTracker.get(), &PlacementTracker::remove);
     m_placementTracker->init(getPlacementTrackerHash());
-
-    if (waylandServer()) {
-        m_outputConfigStore = std::make_unique<OutputConfigurationStore>();
-
-        const auto applySensorChanges = [this]() {
-            m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-            const auto opt = m_outputConfigStore->queryConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
-            if (opt) {
-                const auto &[config, order, type] = *opt;
-                applyOutputConfiguration(config, order);
-            }
-        };
-        connect(m_lidSwitchTracker.get(), &LidSwitchTracker::lidStateChanged, this, applySensorChanges);
-        connect(m_orientationSensor.get(), &OrientationSensor::orientationChanged, this, applySensorChanges);
-        connect(kwinApp()->tabletModeManager(), &TabletModeManager::tabletModeChanged, this, applySensorChanges);
-        m_orientationSensor->setEnabled(m_outputConfigStore->isAutoRotateActive(kwinApp()->outputBackend()->outputs(), kwinApp()->tabletModeManager()->effectiveTabletMode()));
-    }
 }
 
 QString Workspace::getPlacementTrackerHash()
