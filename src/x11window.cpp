@@ -4785,7 +4785,19 @@ bool X11Window::isWaitingForInteractiveResizeSync() const
 
 void X11Window::doInteractiveResizeSync(const QRectF &rect)
 {
-    setMoveResizeGeometry(rect);
+    const QRectF moveResizeFrameGeometry = Xcb::fromXNative(Xcb::toXNative(rect));
+    const QRectF moveResizeClientGeometry = frameRectToClientRect(moveResizeFrameGeometry);
+    const QRectF moveResizeBufferGeometry = frameRectToBufferRect(moveResizeFrameGeometry);
+
+    const QRectF xFrameGeometry = moveResizeBufferGeometry;
+    const QRectF xWrapperGeometry = moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft());
+    const QRectF xClientGeometry = QRectF(QPointF(0, 0), moveResizeClientGeometry.size());
+
+    if (m_frame.deviceGeometry() == Xcb::toXNative(xFrameGeometry) && m_wrapper.deviceGeometry() == Xcb::toXNative(xWrapperGeometry) && m_client.deviceGeometry() == Xcb::toXNative(xClientGeometry)) {
+        return;
+    }
+
+    setMoveResizeGeometry(moveResizeFrameGeometry);
 
     if (!m_syncRequest.timeout) {
         m_syncRequest.timeout = new QTimer(this);
@@ -4805,16 +4817,13 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
         m_syncRequest.timeout->start(33);
     }
 
-    const QRectF moveResizeClientGeometry = frameRectToClientRect(moveResizeGeometry());
-    const QRectF moveResizeBufferGeometry = frameRectToBufferRect(moveResizeGeometry());
-
     // According to the Composite extension spec, a window will get a new pixmap allocated each time
     // it is mapped or resized. Given that we redirect frame windows and not client windows, we have
     // to resize the frame window in order to forcefully reallocate offscreen storage. If we don't do
     // this, then we might render partially updated client window. I know, it sucks.
-    m_frame.setGeometry(moveResizeBufferGeometry);
-    m_wrapper.setGeometry(moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft()));
-    m_client.setGeometry(QRectF(QPointF(0, 0), moveResizeClientGeometry.size()));
+    m_frame.setGeometry(xFrameGeometry);
+    m_wrapper.setGeometry(xWrapperGeometry);
+    m_client.setGeometry(xClientGeometry);
 }
 
 void X11Window::handleSyncTimeout()
