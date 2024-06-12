@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-11 00:40+0000\n"
-"PO-Revision-Date: 2024-06-05 07:04\n"
+"POT-Creation-Date: 2024-06-12 00:40+0000\n"
+"PO-Revision-Date: 2024-06-11 08:11\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
 "Language: be\n"
@@ -1712,13 +1712,13 @@ msgstr "Анімацыя закрыцця акон"
 #: plugins/hidecursor/hidecursor_config.ui:9
 #, kde-format
 msgid "Inactivity duration (seconds):"
-msgstr ""
+msgstr "Працягласць бяздзейнасці (у секундах):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:23
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Хаваць курсор падчас уводу"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2231,19 +2231,19 @@ msgstr "Стрэлкі як клавішы-мадыфікатары для ма�
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "Начны рэжым прыпынены"
 
 #: plugins/nightlight/nightlightmanager.cpp:68
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "Начны рэжым узноўлены"
 
 #: plugins/nightlight/nightlightmanager.cpp:89
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Прыпыніць або ўзнавіць начны рэжым"
 
 #: plugins/nightlight/nightlightmanager.cpp:455
 #, kde-format
@@ -2405,7 +2405,7 @@ msgstr "Не ўдалося знайсці вывад"
 msgid "Invalid region"
 msgstr "Хібная вобласць"
 
-#: plugins/screencast/screencaststream.cpp:347
+#: plugins/screencast/screencaststream.cpp:350
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Не ўдалося стварыць струмень PipeWire"
@@ -2541,7 +2541,7 @@ msgstr "Водступ:"
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout…"
-msgstr ""
+msgstr "Загрузіць макет…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -2551,12 +2551,12 @@ msgstr "Закрыць"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Падзяліць па вертыкалі"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Падзяліць па гарызанталі"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
