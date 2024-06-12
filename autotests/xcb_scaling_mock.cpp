@@ -17,6 +17,11 @@ uint32_t Xcb::toXNative(qreal value)
     return value;
 }
 
+QRect Xcb::toXNative(const QRectF &rect)
+{
+    return rect.toRect();
+}
+
 qreal Xcb::fromXNative(int value)
 {
     return value;
