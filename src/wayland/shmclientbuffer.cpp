@@ -33,6 +33,8 @@ static constexpr uint32_t s_formats[] = {
     WL_SHM_FORMAT_ABGR16161616,
     WL_SHM_FORMAT_XBGR16161616,
 #endif
+    WL_SHM_FORMAT_BGR888,
+    WL_SHM_FORMAT_RGB888,
 };
 
 class ShmSigbusData

@@ -7,6 +7,7 @@
 #include "core/graphicsbufferview.h"
 #include "core/graphicsbuffer.h"
 #include "utils/common.h"
+#include "utils/drm_format_helper.h"
 
 #include <drm_fourcc.h>
 
@@ -34,6 +35,10 @@ static QImage::Format drmFormatToQImageFormat(uint32_t drmFormat)
         return QImage::Format_ARGB32_Premultiplied;
     case DRM_FORMAT_XRGB8888:
         return QImage::Format_RGB32;
+    case DRM_FORMAT_BGR888:
+        return QImage::Format_RGB888;
+    case DRM_FORMAT_RGB888:
+        return QImage::Format_BGR888;
     default:
         return QImage::Format_Invalid;
     }
@@ -65,6 +70,9 @@ GraphicsBufferView::GraphicsBufferView(GraphicsBuffer *buffer, GraphicsBuffer::M
     const auto [data, stride] = buffer->map(accessFlags);
     if (data) {
         m_image = QImage(static_cast<uchar *>(data), width, height, stride, drmFormatToQImageFormat(format));
+        if (Q_UNLIKELY(m_image.isNull())) {
+            qCWarning(KWIN_CORE) << "Cannot create a graphics buffer view" << buffer << FormatInfo::drmFormatName(format) << drmFormatToQImageFormat(format);
+        }
     }
 }
 
