@@ -243,9 +243,8 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
     }
 
     if (d->drag.surface) {
-        if (d->drag.surface->resource()) {
-            d->send_leave();
-        }
+        d->send_leave();
+
         if (d->drag.posConnection) {
             disconnect(d->drag.posConnection);
             d->drag.posConnection = QMetaObject::Connection();
