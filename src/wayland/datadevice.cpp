@@ -301,7 +301,7 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
             d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         });
     }
-    d->drag.destroyConnection = connect(d->drag.surface, &QObject::destroyed, this, [this] {
+    d->drag.destroyConnection = connect(d->drag.surface, &SurfaceInterface::aboutToBeDestroyed, this, [this] {
         d->send_leave();
         if (d->drag.posConnection) {
             disconnect(d->drag.posConnection);
