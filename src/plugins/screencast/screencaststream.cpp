@@ -10,7 +10,6 @@
 #include "compositor.h"
 #include "core/drmdevice.h"
 #include "core/graphicsbufferallocator.h"
-#include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "cursor.h"
 #include "kwinscreencast_logging.h"
@@ -20,7 +19,6 @@
 #include "opengl/glutils.h"
 #include "pipewirecore.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
-#include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/workspacescene.h"
 #include "screencastbuffer.h"
 #include "screencastsource.h"
@@ -343,6 +341,12 @@ bool ScreenCastStream::init()
         return false;
     }
 
+    AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    if (!backend) {
+        m_error = QStringLiteral("OpenGL compositing is required for screencasting");
+        return false;
+    }
+
     connect(m_pwCore.get(), &PipeWireCore::pipewireFailed, this, &ScreenCastStream::coreFailed);
 
     if (!createStream()) {
@@ -482,6 +486,11 @@ void ScreenCastStream::recordFrame(const QRegion &damage, Contents contents)
     m_pendingDamage = {};
     m_pendingContents = {};
 
+    AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    if (!backend) {
+        return;
+    }
+
     struct pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
     if (!pwBuffer) {
         return;
@@ -506,7 +515,7 @@ void ScreenCastStream::recordFrame(const QRegion &damage, Contents contents)
         }
     }
 
-    EglContext *context = static_cast<AbstractEglBackend *>(Compositor::self()->backend())->openglContext();
+    EglContext *context = backend->openglContext();
     context->makeCurrent();
 
     if (effectiveContents & Content::Video) {
@@ -819,7 +828,7 @@ void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qre
 
 std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers)
 {
-    AbstractEglBackend *backend = dynamic_cast<AbstractEglBackend *>(Compositor::self()->backend());
+    AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
     if (!backend) {
         return std::nullopt;
     }
