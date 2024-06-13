@@ -4385,7 +4385,6 @@ void X11Window::updateServerGeometry()
     const QRectF clientRect = m_clientGeometry.translated(-m_bufferGeometry.topLeft());
 
     if (oldBufferGeometry.size() != m_bufferGeometry.size() || oldClientRect != clientRect) {
-        updateInputWindow();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
         // them again.
@@ -4404,6 +4403,7 @@ void X11Window::updateServerGeometry()
             sendSyntheticConfigureNotify();
         }
         updateShape();
+        updateInputWindow();
     } else {
         m_frame.move(m_bufferGeometry.topLeft());
         sendSyntheticConfigureNotify();
