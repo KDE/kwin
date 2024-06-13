@@ -1466,16 +1466,8 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     moveResize(moveResizeGeometry());
 }
 
-/**
- * Resizes the decoration, and makes sure the decoration widget gets resize event
- * even if the size hasn't changed. This is needed to make sure the decoration
- * re-layouts (e.g. when maximization state changes,
- * the decoration may alter some borders, but the actual size
- * of the decoration stays the same).
- */
 void X11Window::resizeDecoration()
 {
-    triggerDecorationRepaint();
     updateInputWindow();
 }
 
