@@ -608,7 +608,7 @@ int NightLightManager::currentTargetTemp() const
 
     const QDateTime todayNow = QDateTime::currentDateTime();
 
-    auto f = [this, todayNow](int target1, int target2) {
+    auto f = [this, todayNow](int target1, int target2) -> int {
         if (todayNow <= m_prev.first) {
             return target1;
         }
@@ -616,11 +616,8 @@ int NightLightManager::currentTargetTemp() const
             return target2;
         }
 
-        double residueQuota = todayNow.msecsTo(m_prev.second) / (double)m_prev.first.msecsTo(m_prev.second);
-        double ret = (int)((1. - residueQuota) * (double)target2 + residueQuota * (double)target1);
-        // remove single digits
-        ret = ((int)(0.1 * ret)) * 10;
-        return (int)ret;
+        const double progress = double(m_prev.first.msecsTo(todayNow)) / m_prev.first.msecsTo(m_prev.second);
+        return std::lerp(target1, target2, progress);
     };
 
     if (daylight()) {
