@@ -1466,11 +1466,6 @@ void X11Window::setClientFrameExtents(const NETStrut &strut)
     moveResize(moveResizeGeometry());
 }
 
-void X11Window::resizeDecoration()
-{
-    updateInputWindow();
-}
-
 bool X11Window::userNoBorder() const
 {
     return noborder;
@@ -4390,7 +4385,7 @@ void X11Window::updateServerGeometry()
     const QRectF clientRect = m_clientGeometry.translated(-m_bufferGeometry.topLeft());
 
     if (oldBufferGeometry.size() != m_bufferGeometry.size() || oldClientRect != clientRect) {
-        resizeDecoration();
+        updateInputWindow();
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
         // them again.

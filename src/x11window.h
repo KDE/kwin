@@ -394,7 +394,6 @@ private:
     void performInteractiveResize();
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
-    void resizeDecoration();
 
     void pingWindow();
     void killProcess(bool ask, xcb_timestamp_t timestamp = XCB_TIME_CURRENT_TIME);
