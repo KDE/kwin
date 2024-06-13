@@ -624,6 +624,16 @@ uint32_t toXNative(qreal value)
     return static_cast<int32_t>(std::round(kwinApp()->xwaylandScale() * value));
 }
 
+QPoint toXNative(const QPointF &p)
+{
+    return QPoint(toXNative(p.x()), toXNative(p.y()));
+}
+
+QSize toXNative(const QSizeF &s)
+{
+    return QSize(toXNative(s.width()), toXNative(s.height()));
+}
+
 QRect toXNative(const QRectF &r)
 {
     return QRect(toXNative(r.x()), toXNative(r.y()), toXNative(r.width()), toXNative(r.height()));

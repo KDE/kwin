@@ -443,7 +443,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         m_client.deleteProperty(atoms->net_frame_extents);
         m_client.deleteProperty(atoms->kde_net_wm_frame_strut);
         const QPointF grav = calculateGravitation(true);
-        m_client.reparent(kwinApp()->x11RootWindow(), grav.x(), grav.y());
+        m_client.reparent(kwinApp()->x11RootWindow(), Xcb::toXNative(grav.x()), Xcb::toXNative(grav.y()));
         xcb_change_save_set(c, XCB_SET_MODE_DELETE, m_client);
         m_client.selectInput(XCB_EVENT_MASK_NO_EVENT);
         if (on_shutdown) {
@@ -1280,11 +1280,11 @@ void X11Window::updateInputWindow()
         return;
     }
 
-    QRectF bounds = region.boundingRect();
+    QRect bounds = region.boundingRect();
     input_offset = bounds.topLeft();
 
     // Move the bounding rect to screen coordinates
-    bounds.translate(frameGeometry().topLeft());
+    bounds.translate(frameGeometry().topLeft().toPoint());
 
     // Move the region to input window coordinates
     region.translate(-input_offset.toPoint());
@@ -1586,7 +1586,7 @@ void X11Window::updateInputShape()
         if (!shape_helper_window.isValid()) {
             shape_helper_window.create(QRect(0, 0, 1, 1));
         }
-        const QSizeF bufferSize = m_bufferGeometry.size();
+        const QSize bufferSize = Xcb::toXNative(m_bufferGeometry.size());
         shape_helper_window.resize(bufferSize);
         xcb_connection_t *c = kwinApp()->x11Connection();
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
@@ -2927,7 +2927,7 @@ QPointF X11Window::wrapperPos() const
  */
 QSizeF X11Window::implicitSize() const
 {
-    return clientSizeToFrameSize(m_client.geometry().size());
+    return clientSizeToFrameSize(Xcb::fromXNative(m_client.geometry().size()));
 }
 
 pid_t X11Window::pid() const
@@ -4424,15 +4424,18 @@ void X11Window::updateServerGeometry()
         // If the client is being interactively resized, then the frame window, the wrapper window,
         // and the client window have correct geometry at this point, so we don't have to configure
         // them again.
-        if (m_frame.geometry() != m_bufferGeometry) {
-            m_frame.setGeometry(m_bufferGeometry);
+        const QRect xFrameGeometry = Xcb::toXNative(m_bufferGeometry);
+        if (m_frame.geometry() != xFrameGeometry) {
+            m_frame.setGeometry(xFrameGeometry);
         }
         if (!isShade()) {
-            if (m_wrapper.geometry() != clientRect) {
-                m_wrapper.setGeometry(clientRect);
+            const QRect xWrapperGeometry = Xcb::toXNative(clientRect);
+            if (m_wrapper.geometry() != xWrapperGeometry) {
+                m_wrapper.setGeometry(xWrapperGeometry);
             }
-            if (m_client.geometry() != QRectF(QPointF(0, 0), clientRect.size())) {
-                m_client.setGeometry(QRectF(QPointF(0, 0), clientRect.size()));
+            const QRect xClientGeometry = Xcb::toXNative(QRectF(QPointF(0, 0), clientRect.size()));
+            if (m_client.geometry() != xClientGeometry) {
+                m_client.setGeometry(xClientGeometry);
             }
             // SELI - won't this be too expensive?
             // THOMAS - yes, but gtk+ clients will not resize without ...
@@ -4441,10 +4444,10 @@ void X11Window::updateServerGeometry()
         updateShape();
         updateInputWindow();
     } else {
-        m_frame.move(m_bufferGeometry.topLeft());
+        m_frame.move(Xcb::toXNative(m_bufferGeometry.topLeft()));
         sendSyntheticConfigureNotify();
         // Unconditionally move the input window: it won't affect rendering
-        m_decoInputExtent.move(pos().toPoint() + inputPos());
+        m_decoInputExtent.move(Xcb::toXNative(pos() + inputPos()));
     }
 
     m_lastBufferGeometry = m_bufferGeometry;
@@ -4812,11 +4815,11 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     const QRectF moveResizeClientGeometry = frameRectToClientRect(moveResizeFrameGeometry);
     const QRectF moveResizeBufferGeometry = frameRectToBufferRect(moveResizeFrameGeometry);
 
-    const QRectF xFrameGeometry = moveResizeBufferGeometry;
-    const QRectF xWrapperGeometry = moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft());
-    const QRectF xClientGeometry = QRectF(QPointF(0, 0), moveResizeClientGeometry.size());
+    const QRect xFrameGeometry = Xcb::toXNative(moveResizeBufferGeometry);
+    const QRect xWrapperGeometry = Xcb::toXNative(moveResizeClientGeometry.translated(-moveResizeBufferGeometry.topLeft()));
+    const QRect xClientGeometry = Xcb::toXNative(QRectF(QPointF(0, 0), moveResizeClientGeometry.size()));
 
-    if (m_frame.deviceGeometry() == Xcb::toXNative(xFrameGeometry) && m_wrapper.deviceGeometry() == Xcb::toXNative(xWrapperGeometry) && m_client.deviceGeometry() == Xcb::toXNative(xClientGeometry)) {
+    if (m_frame.geometry() == xFrameGeometry && m_wrapper.geometry() == xWrapperGeometry && m_client.geometry() == xClientGeometry) {
         return;
     }
 
