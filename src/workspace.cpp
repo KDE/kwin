@@ -496,13 +496,13 @@ bool Workspace::applyOutputConfiguration(const OutputConfiguration &config, cons
         return false;
     }
     updateOutputs(outputOrder);
-    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, outputOrder);
+    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), config, m_outputOrder);
     KConfig cfg(QStringLiteral("kdeglobals"));
     KConfigGroup kscreenGroup = cfg.group(QStringLiteral("KScreen"));
     const bool xwaylandClientsScale = kscreenGroup.readEntry("XwaylandClientsScale", true);
-    if (xwaylandClientsScale && !outputOrder.isEmpty()) {
+    if (xwaylandClientsScale && !m_outputOrder.isEmpty()) {
         double maxScale = 0;
-        for (Output *output : outputOrder) {
+        for (Output *output : m_outputOrder) {
             const auto changeset = config.constChangeSet(output);
             maxScale = std::max(maxScale, changeset ? changeset->scale.value_or(output->scale()) : output->scale());
         }
