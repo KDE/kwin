@@ -179,7 +179,7 @@ public:
     /**
      * Previews a given temperature for a short time (15s).
      */
-    void preview(uint previewTemp);
+    void preview(uint previewTemperature);
 
     /**
      * Stops an ongoing preview.
@@ -188,7 +188,7 @@ public:
     void stopPreview();
 
 public Q_SLOTS:
-    void quickAdjust(int targetTemp);
+    void quickAdjust(int targetTemperature);
 
 Q_SIGNALS:
     /**
@@ -239,21 +239,21 @@ Q_SIGNALS:
 private:
     void readConfig();
     void hardReset();
-    void slowUpdate(int targetTemp);
+    void slowUpdate(int targetTemperature);
     void resetAllTimers();
-    int currentTargetTemp() const;
+    int currentTargetTemperature() const;
     void cancelAllTimers();
     /**
      * Quick shift on manual change to current target Temperature
      */
-    void resetQuickAdjustTimer(int targetTemp);
+    void resetQuickAdjustTimer(int targetTemperature);
     /**
      * Slow shift to daytime target Temperature
      */
     void resetSlowUpdateTimers();
 
     void updateTargetTemperature();
-    void updateTransitionTimings(const QDateTime &todayNow);
+    void updateTransitionTimings(const QDateTime &dateTime);
     DateTimes getSunTimings(const QDateTime &dateTime, double latitude, double longitude, bool morning) const;
 
     void commitGammaRamps(int temperature);
@@ -288,24 +288,24 @@ private:
     // manual times from config
     QTime m_morning = QTime(6, 0);
     QTime m_evening = QTime(18, 0);
-    int m_trTime = 30; // saved in minutes > 1
+    int m_transitionDuration = 30; // saved in minutes > 1
 
     // auto location provided by work space
-    double m_latAuto;
-    double m_lngAuto;
+    double m_latitudeAuto;
+    double m_longitudeAuto;
     // manual location from config
-    double m_latFixed;
-    double m_lngFixed;
+    double m_latitudeFixed;
+    double m_longitudeFixed;
 
     std::unique_ptr<QTimer> m_slowUpdateStartTimer;
     std::unique_ptr<QTimer> m_slowUpdateTimer;
     std::unique_ptr<QTimer> m_quickAdjustTimer;
     std::unique_ptr<QTimer> m_previewTimer;
 
-    int m_currentTemp = DEFAULT_DAY_TEMPERATURE;
+    int m_currentTemperature = DEFAULT_DAY_TEMPERATURE;
     int m_targetTemperature = DEFAULT_DAY_TEMPERATURE;
-    int m_dayTargetTemp = DEFAULT_DAY_TEMPERATURE;
-    int m_nightTargetTemp = DEFAULT_NIGHT_TEMPERATURE;
+    int m_dayTargetTemperature = DEFAULT_DAY_TEMPERATURE;
+    int m_nightTargetTemperature = DEFAULT_NIGHT_TEMPERATURE;
 
     int m_inhibitReferenceCount = 0;
     KConfigWatcher::Ptr m_configWatcher;
