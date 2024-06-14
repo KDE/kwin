@@ -129,6 +129,43 @@ bool DpmsInputEventFilter::touchMotion(qint32 id, const QPointF &pos, std::chron
     return true;
 }
 
+bool DpmsInputEventFilter::tabletToolEvent(TabletEvent *event)
+{
+    if (event->type() == QEvent::TabletPress) {
+        // Only wake when the tool is actually pressed down not just hovered over the tablet
+        notify();
+    }
+    return true;
+}
+
+bool DpmsInputEventFilter::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
+{
+    if (pressed) {
+        notify();
+    }
+    return true;
+}
+
+bool DpmsInputEventFilter::tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+    if (pressed) {
+        notify();
+    }
+    return true;
+}
+
+bool DpmsInputEventFilter::tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+    notify();
+    return true;
+}
+
+bool DpmsInputEventFilter::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+    notify();
+    return true;
+}
+
 void DpmsInputEventFilter::notify()
 {
     const QList<Output *> outputs = workspace()->outputs();
