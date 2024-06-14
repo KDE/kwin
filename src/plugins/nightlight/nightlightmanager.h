@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2017 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2024 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -288,7 +289,7 @@ private:
     // manual times from config
     QTime m_morning = QTime(6, 0);
     QTime m_evening = QTime(18, 0);
-    int m_transitionDuration = 30; // saved in minutes > 1
+    int m_transitionDuration = FALLBACK_SLOW_UPDATE_TIME; // in milliseconds
 
     // auto location provided by work space
     double m_latitudeAuto;

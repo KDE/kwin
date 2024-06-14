@@ -16,5 +16,6 @@ static const int MIN_TEMPERATURE = 1000;
 static const int DEFAULT_DAY_TEMPERATURE = 6500;
 static const int DEFAULT_NIGHT_TEMPERATURE = 4500;
 static const int FALLBACK_SLOW_UPDATE_TIME = 1800000; /* 30 minutes */
+static const int MIN_TRANSITION_DURATION = 60000;
 
 }

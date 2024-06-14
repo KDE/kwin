@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2017 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2024 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -283,16 +284,16 @@ void NightLightManager::readConfig()
     const int nightDuration = MSC_DAY - dayDuration;
     const int maximumTransitionDuration = std::min(dayDuration, nightDuration);
 
-    int transitionDuration = settings->transitionTime() * 1000 * 60;
-    if (transitionDuration < 0 || maximumTransitionDuration <= transitionDuration) {
-        // transition time too long - use defaults
+    int transitionDuration = std::max(settings->transitionTime() * 1000 * 60, MIN_TRANSITION_DURATION);
+    if (maximumTransitionDuration <= transitionDuration) {
         morning = QTime(6, 0);
         evening = QTime(18, 0);
         transitionDuration = FALLBACK_SLOW_UPDATE_TIME;
     }
+
     m_morning = morning;
     m_evening = evening;
-    m_transitionDuration = std::max(transitionDuration / 1000 / 60, 1);
+    m_transitionDuration = transitionDuration;
 }
 
 void NightLightManager::resetAllTimers()
@@ -498,9 +499,9 @@ void NightLightManager::updateTransitionTimings(const QDateTime &dateTime)
         const bool passedEvening = dateTime.time().secsTo(m_evening) <= granularity;
 
         const QDateTime nextEarlyMorning = QDateTime(dateTime.date().addDays(passedMorning), m_morning);
-        const QDateTime nextLateMorning = nextEarlyMorning.addSecs(m_transitionDuration * 60);
+        const QDateTime nextLateMorning = nextEarlyMorning.addMSecs(m_transitionDuration);
         const QDateTime nextEarlyEvening = QDateTime(dateTime.date().addDays(passedEvening), m_evening);
-        const QDateTime nextLateEvening = nextEarlyEvening.addSecs(m_transitionDuration * 60);
+        const QDateTime nextLateEvening = nextEarlyEvening.addMSecs(m_transitionDuration);
 
         if (nextEarlyEvening < nextEarlyMorning) {
             setDaylight(true);
