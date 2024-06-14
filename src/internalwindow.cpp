@@ -172,7 +172,7 @@ QString InternalWindow::windowRole() const
 
 void InternalWindow::closeWindow()
 {
-    if (m_handle) {
+    if (!isDeleted()) {
         m_handle->hide();
     }
 }
