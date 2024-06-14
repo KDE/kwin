@@ -668,6 +668,9 @@ void XdgToplevelWindow::applyWindowRules()
 
 void XdgToplevelWindow::closeWindow()
 {
+    if (isDeleted()) {
+        return;
+    }
     if (isCloseable()) {
         sendPing(PingReason::CloseWindow);
         m_shellSurface->sendClose();

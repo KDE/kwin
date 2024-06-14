@@ -2031,6 +2031,9 @@ bool X11Window::isCloseable() const
  */
 void X11Window::closeWindow()
 {
+    if (isDeleted()) {
+        return;
+    }
     if (!isCloseable()) {
         return;
     }

@@ -211,7 +211,9 @@ void LayerShellV1Window::destroyWindow()
 
 void LayerShellV1Window::closeWindow()
 {
-    m_shellSurface->sendClosed();
+    if (!isDeleted()) {
+        m_shellSurface->sendClosed();
+    }
 }
 
 Layer LayerShellV1Window::belongsToLayer() const
