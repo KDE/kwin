@@ -76,6 +76,7 @@ public:
     DrmCommitThread *commitThread() const;
 
     QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
+    QHash<uint32_t, QList<uint64_t>> asyncFormats(DrmPlane::TypeIndex planeType) const;
     bool pruneModifier();
     QList<QSize> recommendedSizes(DrmPlane::TypeIndex planeType) const;
 
