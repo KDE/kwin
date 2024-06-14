@@ -288,7 +288,7 @@ void NightLightManager::readConfig()
     if (maximumTransitionDuration <= transitionDuration) {
         morning = QTime(6, 0);
         evening = QTime(18, 0);
-        transitionDuration = FALLBACK_SLOW_UPDATE_TIME;
+        transitionDuration = DEFAULT_TRANSITION_DURATION;
     }
 
     m_morning = morning;
@@ -562,16 +562,16 @@ DateTimes NightLightManager::getSunTimings(const QDateTime &dateTime, double lat
     const bool endDefined = !dateTimes.second.isNull();
     if (!beginDefined || !endDefined) {
         if (beginDefined) {
-            dateTimes.second = dateTimes.first.addMSecs(FALLBACK_SLOW_UPDATE_TIME);
+            dateTimes.second = dateTimes.first.addMSecs(DEFAULT_TRANSITION_DURATION);
         } else if (endDefined) {
-            dateTimes.first = dateTimes.second.addMSecs(-FALLBACK_SLOW_UPDATE_TIME);
+            dateTimes.first = dateTimes.second.addMSecs(-DEFAULT_TRANSITION_DURATION);
         } else {
             // Just use default values for morning and evening, but the user
             // will probably deactivate Night Light anyway if he is living
             // in a region without clear sun rise and set.
             const QTime referenceTime = morning ? QTime(6, 0) : QTime(18, 0);
             dateTimes.first = QDateTime(dateTime.date(), referenceTime);
-            dateTimes.second = dateTimes.first.addMSecs(FALLBACK_SLOW_UPDATE_TIME);
+            dateTimes.second = dateTimes.first.addMSecs(DEFAULT_TRANSITION_DURATION);
         }
     }
     return dateTimes;

@@ -289,7 +289,7 @@ private:
     // manual times from config
     QTime m_morning = QTime(6, 0);
     QTime m_evening = QTime(18, 0);
-    int m_transitionDuration = FALLBACK_SLOW_UPDATE_TIME; // in milliseconds
+    int m_transitionDuration = DEFAULT_TRANSITION_DURATION; // in milliseconds
 
     // auto location provided by work space
     double m_latitudeAuto;
