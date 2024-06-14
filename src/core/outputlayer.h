@@ -72,6 +72,7 @@ public:
 
     virtual DrmDevice *scanoutDevice() const = 0;
     virtual QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const = 0;
+    virtual QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const;
 
     /**
      * Returns the source rect this output layer should sample from, in buffer local coordinates

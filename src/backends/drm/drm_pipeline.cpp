@@ -494,6 +494,27 @@ QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats(DrmPlane::TypeIndex planeT
     Q_UNREACHABLE();
 }
 
+QHash<uint32_t, QList<uint64_t>> DrmPipeline::asyncFormats(DrmPlane::TypeIndex planeType) const
+{
+    switch (planeType) {
+    case DrmPlane::TypeIndex::Primary:
+        if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
+            return m_pending.crtc->primaryPlane()->tearingFormats();
+        } else {
+            return legacyFormats;
+        }
+    case DrmPlane::TypeIndex::Cursor:
+        if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
+            return m_pending.crtc->cursorPlane()->tearingFormats();
+        } else {
+            return legacyCursorFormats;
+        }
+    case DrmPlane::TypeIndex::Overlay:
+        return {};
+    }
+    Q_UNREACHABLE();
+}
+
 bool DrmPipeline::pruneModifier()
 {
     const DmaBufAttributes *dmabufAttributes = m_primaryLayer->currentBuffer() ? m_primaryLayer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;

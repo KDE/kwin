@@ -72,7 +72,8 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::share
     if (!attrs) {
         return false;
     }
-    const auto formats = supportedDrmFormats();
+    const bool tearing = frame->presentationMode() == PresentationMode::Async || frame->presentationMode() == PresentationMode::AdaptiveAsync;
+    const auto formats = tearing ? supportedAsyncDrmFormats() : supportedDrmFormats();
     if (auto it = formats.find(attrs->format); it != formats.end() && !it->contains(attrs->modifier)) {
         if (m_scanoutCandidate && m_scanoutCandidate != surfaceItem) {
             m_scanoutCandidate->setScanoutHint(nullptr, {});
@@ -153,6 +154,11 @@ QRect OutputLayer::targetRect() const
 void OutputLayer::setTargetRect(const QRect &rect)
 {
     m_targetRect = rect;
+}
+
+QHash<uint32_t, QList<uint64_t>> OutputLayer::supportedAsyncDrmFormats() const
+{
+    return supportedDrmFormats();
 }
 
 } // namespace KWin

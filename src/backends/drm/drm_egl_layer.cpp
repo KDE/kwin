@@ -161,6 +161,11 @@ QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedDrmFormats() const
     return m_pipeline->formats(m_type);
 }
 
+QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedAsyncDrmFormats() const
+{
+    return m_pipeline->asyncFormats(m_type);
+}
+
 QList<QSize> EglGbmLayer::recommendedSizes() const
 {
     return m_pipeline->recommendedSizes(m_type);

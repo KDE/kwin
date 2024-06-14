@@ -69,6 +69,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
     , vmHotspotY(this, QByteArrayLiteral("HOTSPOT_Y"))
     , inFenceFd(this, QByteArrayLiteral("IN_FENCE_FD"))
     , sizeHints(this, QByteArrayLiteral("SIZE_HINTS"))
+    , inFormatsForTearing(this, QByteArrayLiteral("IN_FORMATS_ASYNC"))
 {
 }
 
@@ -106,6 +107,7 @@ bool DrmPlane::updateProperties()
     vmHotspotY.update(props);
     inFenceFd.update(props);
     sizeHints.update(props);
+    inFormatsForTearing.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
@@ -149,6 +151,16 @@ bool DrmPlane::updateProperties()
     if (m_sizeHints.empty() && type.enumValue() == TypeIndex::Cursor) {
         m_sizeHints = {gpu()->cursorSize()};
     }
+
+    if (inFormatsForTearing.isValid() && inFormatsForTearing.immutableBlob() && gpu()->addFB2ModifiersSupported()) {
+        m_supportedTearingFormats.clear();
+        drmModeFormatModifierIterator iterator{};
+        while (drmModeFormatModifierBlobIterNext(inFormatsForTearing.immutableBlob(), &iterator)) {
+            m_supportedTearingFormats[iterator.fmt].push_back(iterator.mod);
+        }
+    } else {
+        m_supportedTearingFormats = m_supportedFormats;
+    }
     return true;
 }
 
@@ -173,6 +185,11 @@ bool DrmPlane::isCrtcSupported(int pipeIndex) const
 QHash<uint32_t, QList<uint64_t>> DrmPlane::formats() const
 {
     return m_supportedFormats;
+}
+
+QHash<uint32_t, QList<uint64_t>> DrmPlane::tearingFormats() const
+{
+    return m_supportedTearingFormats;
 }
 
 std::shared_ptr<DrmFramebuffer> DrmPlane::currentBuffer() const

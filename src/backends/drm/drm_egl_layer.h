@@ -38,6 +38,7 @@ public:
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     QList<QSize> recommendedSizes() const override;
     const ColorPipeline &colorPipeline() const override;
+    QHash<uint32_t, QList<uint64_t>> supportedAsyncDrmFormats() const override;
 
 private:
     bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame) override;
