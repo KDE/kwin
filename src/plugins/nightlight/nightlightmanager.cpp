@@ -255,26 +255,21 @@ void NightLightManager::readConfig()
     m_dayTargetTemperature = std::clamp(settings->dayTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
     m_nightTargetTemperature = std::clamp(settings->nightTemperature(), MIN_TEMPERATURE, DEFAULT_DAY_TEMPERATURE);
 
-    double latitude, longitude;
-    auto correctReadin = [&latitude, &longitude]() {
-        if (!checkLocation(latitude, longitude)) {
-            // out of domain
-            latitude = 0;
-            longitude = 0;
-        }
-    };
-    // automatic
-    latitude = settings->latitudeAuto();
-    longitude = settings->longitudeAuto();
-    correctReadin();
-    m_latitudeAuto = latitude;
-    m_longitudeAuto = longitude;
-    // fixed location
-    latitude = settings->latitudeFixed();
-    longitude = settings->longitudeFixed();
-    correctReadin();
-    m_latitudeFixed = latitude;
-    m_longitudeFixed = longitude;
+    if (checkLocation(settings->latitudeAuto(), settings->longitudeAuto())) {
+        m_latitudeAuto = settings->latitudeAuto();
+        m_longitudeAuto = settings->longitudeAuto();
+    } else {
+        m_latitudeAuto = 0;
+        m_longitudeAuto = 0;
+    }
+
+    if (checkLocation(settings->latitudeFixed(), settings->longitudeFixed())) {
+        m_latitudeFixed = settings->latitudeFixed();
+        m_longitudeFixed = settings->longitudeFixed();
+    } else {
+        m_latitudeFixed = 0;
+        m_longitudeFixed = 0;
+    }
 
     // fixed timings
     QTime morning = QTime::fromString(settings->morningBeginFixed(), "hhmm");
