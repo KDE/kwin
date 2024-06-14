@@ -138,7 +138,7 @@ void NightLightManager::hardReset()
 {
     cancelAllTimers();
 
-    updateTransitionTimings(true, QDateTime::currentDateTime());
+    updateTransitionTimings(QDateTime::currentDateTime());
     updateTargetTemperature();
 
     if (isEnabled() && !isInhibited()) {
@@ -300,7 +300,7 @@ void NightLightManager::resetAllTimers()
     cancelAllTimers();
     setRunning(isEnabled() && !isInhibited());
     // we do this also for active being false in order to reset the temperature back to the day value
-    updateTransitionTimings(false, QDateTime::currentDateTime());
+    updateTransitionTimings(QDateTime::currentDateTime());
     updateTargetTemperature();
     resetQuickAdjustTimer(currentTargetTemp());
 }
@@ -379,7 +379,7 @@ void NightLightManager::resetSlowUpdateTimers()
     connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, [this]() {
         resetSlowUpdateTimers();
     });
-    updateTransitionTimings(false, todayNow);
+    updateTransitionTimings(todayNow);
     updateTargetTemperature();
 
     const int diff = todayNow.msecsTo(m_next.first);
@@ -460,7 +460,7 @@ void NightLightManager::preview(uint previewTemp)
 void NightLightManager::stopPreview()
 {
     if (m_previewTimer && m_previewTimer->isActive()) {
-        updateTransitionTimings(false, QDateTime::currentDateTime());
+        updateTransitionTimings(QDateTime::currentDateTime());
         updateTargetTemperature();
         resetQuickAdjustTimer(currentTargetTemp());
     }
@@ -479,7 +479,7 @@ void NightLightManager::updateTargetTemperature()
     Q_EMIT targetTemperatureChanged();
 }
 
-void NightLightManager::updateTransitionTimings(bool force, const QDateTime &todayNow)
+void NightLightManager::updateTransitionTimings(const QDateTime &todayNow)
 {
     const auto oldPrev = m_prev;
     const auto oldNext = m_next;
@@ -522,41 +522,24 @@ void NightLightManager::updateTransitionTimings(bool force, const QDateTime &tod
             lng = m_lngFixed;
         }
 
-        if (!force) {
-            // first try by only switching the timings
-            if (m_prev.first.date() == m_next.first.date()) {
-                // next is evening
+        const DateTimes morning = getSunTimings(todayNow, lat, lng, true);
+        if (todayNow.secsTo(morning.first) > granularity) {
+            // have not reached the morning yet
+            setDaylight(false);
+            m_prev = getSunTimings(todayNow.addDays(-1), lat, lng, false);
+            m_next = morning;
+        } else {
+            const DateTimes evening = getSunTimings(todayNow, lat, lng, false);
+            if (todayNow.secsTo(evening.first) > granularity) {
+                // have not reached the evening yet, it's daylight
                 setDaylight(true);
-                m_prev = m_next;
-                m_next = getSunTimings(todayNow, lat, lng, false);
+                m_prev = morning;
+                m_next = evening;
             } else {
-                // next is morning
+                // we are passed the evening, it's night time
                 setDaylight(false);
-                m_prev = m_next;
+                m_prev = evening;
                 m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
-            }
-        }
-
-        if (force || !checkAutomaticSunTimings()) {
-            const DateTimes morning = getSunTimings(todayNow, lat, lng, true);
-            if (todayNow.secsTo(morning.first) > granularity) {
-                // have not reached the morning yet
-                setDaylight(false);
-                m_prev = getSunTimings(todayNow.addDays(-1), lat, lng, false);
-                m_next = morning;
-            } else {
-                const DateTimes evening = getSunTimings(todayNow, lat, lng, false);
-                if (todayNow.secsTo(evening.first) > granularity) {
-                    // have not reached the evening yet, it's daylight
-                    setDaylight(true);
-                    m_prev = morning;
-                    m_next = evening;
-                } else {
-                    // we are passed the evening, it's night time
-                    setDaylight(false);
-                    m_prev = evening;
-                    m_next = getSunTimings(todayNow.addDays(1), lat, lng, true);
-                }
             }
         }
     }
@@ -592,15 +575,6 @@ DateTimes NightLightManager::getSunTimings(const QDateTime &dateTime, double lat
         }
     }
     return dateTimes;
-}
-
-bool NightLightManager::checkAutomaticSunTimings() const
-{
-    if (m_prev.first.isValid() && m_prev.second.isValid() && m_next.first.isValid() && m_next.second.isValid()) {
-        const QDateTime todayNow = QDateTime::currentDateTime();
-        return m_prev.first <= todayNow && todayNow < m_next.first && m_prev.first.msecsTo(m_next.first) < MSC_DAY * 23. / 24;
-    }
-    return false;
 }
 
 bool NightLightManager::daylight() const
