@@ -66,6 +66,11 @@
 #include "tabbox/tabbox.h"
 #endif
 
+namespace
+{
+constexpr int BASE = 10;
+}
+
 namespace KWin
 {
 
@@ -498,9 +503,17 @@ void UserActionsMenu::desktopPopupAboutToShow()
 
     m_desktopMenu->addSeparator();
 
+    int desktopNumber = 0;
+
     const auto desktops = vds->desktops();
     for (VirtualDesktop *desktop : desktops) {
-        action = m_desktopMenu->addAction(desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
+        ++desktopNumber;
+
+        QString actionText = desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&"));
+        if (desktopNumber < BASE) {
+            actionText.prepend(QStringLiteral("(&%1) ").arg(desktopNumber));
+        }
+        action = m_desktopMenu->addAction(actionText);
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 workspace()->sendWindowToDesktops(m_window, {desktop}, false);
@@ -576,9 +589,14 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
 
     m_multipleDesktopsMenu->addSeparator();
 
+    int desktopNumber = 0;
     for (VirtualDesktop *desktop : desktops) {
-        QString name = i18n("Move to %1", desktop->name());
-        QAction *action = m_multipleDesktopsMenu->addAction(name);
+        ++desktopNumber;
+        QString actionText = i18n("Move to %1", desktop->name().replace(QLatin1Char('&'), QStringLiteral("&&")));
+        if (desktopNumber < BASE) {
+            actionText.prepend(QStringLiteral("(&%1) ").arg(desktopNumber));
+        }
+        QAction *action = m_multipleDesktopsMenu->addAction(actionText);
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 m_window->setDesktops({desktop});
