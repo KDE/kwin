@@ -372,13 +372,6 @@ void NightLightManager::resetSlowUpdateTimers()
     }
 
     const QDateTime dateTime = QDateTime::currentDateTime();
-
-    // set up the next slow update
-    m_slowUpdateStartTimer = std::make_unique<QTimer>();
-    m_slowUpdateStartTimer->setSingleShot(true);
-    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, [this]() {
-        resetSlowUpdateTimers();
-    });
     updateTransitionTimings(dateTime);
     updateTargetTemperature();
 
@@ -387,6 +380,9 @@ void NightLightManager::resetSlowUpdateTimers()
         qCCritical(KWIN_NIGHTLIGHT) << "Error in time calculation. Deactivating Night Light.";
         return;
     }
+    m_slowUpdateStartTimer = std::make_unique<QTimer>();
+    m_slowUpdateStartTimer->setSingleShot(true);
+    connect(m_slowUpdateStartTimer.get(), &QTimer::timeout, this, &NightLightManager::resetSlowUpdateTimers);
     m_slowUpdateStartTimer->start(diff);
 
     // start the current slow update
