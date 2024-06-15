@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2017 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2024 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -16,6 +17,23 @@
 namespace KWin
 {
 
+static void announceChangedProperties(const QVariantMap &properties)
+{
+    QDBusMessage message = QDBusMessage::createSignal(
+        QStringLiteral("/org/kde/KWin/NightLight"),
+        QStringLiteral("org.freedesktop.DBus.Properties"),
+        QStringLiteral("PropertiesChanged")
+    );
+
+    message.setArguments({
+        QStringLiteral("org.kde.KWin.NightLight"),
+        properties,
+        QStringList(), // invalidated_properties
+    });
+
+    QDBusConnection::sessionBus().send(message);
+}
+
 NightLightDBusInterface::NightLightDBusInterface(NightLightManager *parent)
     : QObject(parent)
     , m_manager(parent)
@@ -27,167 +45,59 @@ NightLightDBusInterface::NightLightDBusInterface(NightLightManager *parent)
             this, &NightLightDBusInterface::removeInhibitorService);
 
     connect(m_manager, &NightLightManager::inhibitedChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("inhibited"), m_manager->isInhibited());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("inhibited"), m_manager->isInhibited()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::enabledChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("enabled"), m_manager->isEnabled());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("enabled"), m_manager->isEnabled()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::runningChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("running"), m_manager->isRunning());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("running"), m_manager->isRunning()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::currentTemperatureChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("currentTemperature"), m_manager->currentTemperature());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("currentTemperature"), m_manager->currentTemperature()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::targetTemperatureChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("targetTemperature"), m_manager->targetTemperature());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("targetTemperature"), m_manager->targetTemperature()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::modeChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("mode"), uint(m_manager->mode()));
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("mode"), uint(m_manager->mode())},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::daylightChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("daylight"), uint(m_manager->daylight()));
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("daylight"), uint(m_manager->daylight())},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::previousTransitionTimingsChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("previousTransitionDateTime"), previousTransitionDateTime());
-        changedProperties.insert(QStringLiteral("previousTransitionDuration"), previousTransitionDuration());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("previousTransitionDateTime"), previousTransitionDateTime()},
+            {QStringLiteral("previousTransitionDuration"), previousTransitionDuration()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     connect(m_manager, &NightLightManager::scheduledTransitionTimingsChanged, this, [this] {
-        QVariantMap changedProperties;
-        changedProperties.insert(QStringLiteral("scheduledTransitionDateTime"), scheduledTransitionDateTime());
-        changedProperties.insert(QStringLiteral("scheduledTransitionDuration"), scheduledTransitionDuration());
-
-        QDBusMessage message = QDBusMessage::createSignal(
-            QStringLiteral("/org/kde/KWin/NightLight"),
-            QStringLiteral("org.freedesktop.DBus.Properties"),
-            QStringLiteral("PropertiesChanged"));
-
-        message.setArguments({
-            QStringLiteral("org.kde.KWin.NightLight"),
-            changedProperties,
-            QStringList(), // invalidated_properties
+        announceChangedProperties({
+            {QStringLiteral("scheduledTransitionDateTime"), scheduledTransitionDateTime()},
+            {QStringLiteral("scheduledTransitionDuration"), scheduledTransitionDuration()},
         });
-
-        QDBusConnection::sessionBus().send(message);
     });
 
     new NightLightAdaptor(this);
