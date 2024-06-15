@@ -173,9 +173,10 @@ public:
      */
     qint64 scheduledTransitionDuration() const;
 
-    // for auto tests
+    /**
+     * Applies new night light settings.
+     */
     void reconfigure();
-    static NightLightManager *self();
 
     /**
      * Previews a given temperature for a short time (15s).

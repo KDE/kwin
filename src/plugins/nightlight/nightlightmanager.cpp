@@ -34,22 +34,15 @@ namespace KWin
 
 static const int QUICK_ADJUST_DURATION = 2000;
 static const int TEMPERATURE_STEP = 50;
-static NightLightManager *s_instance = nullptr;
 
 static bool checkLocation(double latitude, double longitude)
 {
     return -90 <= latitude && latitude <= 90 && -180 <= longitude && longitude <= 180;
 }
 
-NightLightManager *NightLightManager::self()
-{
-    return s_instance;
-}
-
 NightLightManager::NightLightManager()
 {
     NightLightSettings::instance(kwinApp()->config());
-    s_instance = this;
 
     m_iface = new NightLightDBusInterface(this);
     m_skewNotifier = new ClockSkewNotifier(this);
@@ -129,7 +122,6 @@ NightLightManager::NightLightManager()
 
 NightLightManager::~NightLightManager()
 {
-    s_instance = nullptr;
 }
 
 void NightLightManager::hardReset()
