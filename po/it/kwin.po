@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-12 02:35+0000\n"
+"POT-Creation-Date: 2024-06-15 02:27+0000\n"
 "PO-Revision-Date: 2024-05-22 07:07+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -2260,7 +2260,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Sospendi/Ripristina Luce notturna"
 
-#: plugins/nightlight/nightlightmanager.cpp:455
+#: plugins/nightlight/nightlightmanager.cpp:460
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Anteprima della temperatura del colore"
@@ -2420,7 +2420,7 @@ msgstr "Impossibile trovare l'uscita"
 msgid "Invalid region"
 msgstr "Regione non valida"
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossibile creare il flusso PipeWire"
