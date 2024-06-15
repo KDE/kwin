@@ -472,6 +472,8 @@ int main(int argc, char *argv[])
 
     if (parser.isSet(locale1Option)) {
         a.setFollowLocale1(true);
+    } else {
+        a.setFollowLocale1(a.config()->group(QStringLiteral("Wayland")).readEntry("FollowLocale1", false));
     }
 
     bool ok = false;
