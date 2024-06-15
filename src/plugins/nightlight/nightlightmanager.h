@@ -13,11 +13,11 @@
 #include "constants.h"
 #include "plugin.h"
 
+#include <KConfigWatcher>
+
 #include <QDateTime>
 #include <QObject>
 #include <QPair>
-
-#include <KConfigWatcher>
 
 class QTimer;
 

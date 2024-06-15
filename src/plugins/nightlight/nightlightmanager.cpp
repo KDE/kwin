@@ -11,16 +11,13 @@
 #include "clockskewnotifier.h"
 #include "colors/colordevice.h"
 #include "colors/colormanager.h"
+#include "core/outputbackend.h"
+#include "core/session.h"
+#include "main.h"
 #include "nightlightdbusinterface.h"
 #include "nightlightlogging.h"
 #include "nightlightsettings.h"
 #include "suncalc.h"
-
-#include <core/outputbackend.h>
-#include <core/session.h>
-#include <input.h>
-#include <main.h>
-#include <workspace.h>
 
 #include <KGlobalAccel>
 #include <KLocalizedString>
