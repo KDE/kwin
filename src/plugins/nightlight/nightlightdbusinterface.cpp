@@ -46,43 +46,43 @@ NightLightDBusInterface::NightLightDBusInterface(NightLightManager *parent)
 
     connect(m_manager, &NightLightManager::inhibitedChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("inhibited"), m_manager->isInhibited()},
+            {QStringLiteral("inhibited"), isInhibited()},
         });
     });
 
     connect(m_manager, &NightLightManager::enabledChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("enabled"), m_manager->isEnabled()},
+            {QStringLiteral("enabled"), isEnabled()},
         });
     });
 
     connect(m_manager, &NightLightManager::runningChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("running"), m_manager->isRunning()},
+            {QStringLiteral("running"), isRunning()},
         });
     });
 
     connect(m_manager, &NightLightManager::currentTemperatureChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("currentTemperature"), m_manager->currentTemperature()},
+            {QStringLiteral("currentTemperature"), currentTemperature()},
         });
     });
 
     connect(m_manager, &NightLightManager::targetTemperatureChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("targetTemperature"), m_manager->targetTemperature()},
+            {QStringLiteral("targetTemperature"), targetTemperature()},
         });
     });
 
     connect(m_manager, &NightLightManager::modeChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("mode"), uint(m_manager->mode())},
+            {QStringLiteral("mode"), mode()},
         });
     });
 
     connect(m_manager, &NightLightManager::daylightChanged, this, [this] {
         announceChangedProperties({
-            {QStringLiteral("daylight"), uint(m_manager->daylight())},
+            {QStringLiteral("daylight"), daylight()},
         });
     });
 
@@ -130,17 +130,17 @@ bool NightLightDBusInterface::isAvailable() const
     return true; // TODO: Night color should register its own dbus service instead.
 }
 
-int NightLightDBusInterface::currentTemperature() const
+quint32 NightLightDBusInterface::currentTemperature() const
 {
     return m_manager->currentTemperature();
 }
 
-int NightLightDBusInterface::targetTemperature() const
+quint32 NightLightDBusInterface::targetTemperature() const
 {
     return m_manager->targetTemperature();
 }
 
-int NightLightDBusInterface::mode() const
+quint32 NightLightDBusInterface::mode() const
 {
     return m_manager->mode();
 }

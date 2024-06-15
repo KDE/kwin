@@ -3,6 +3,7 @@
     This file is part of the KDE project.
 
     SPDX-FileCopyrightText: 2017 Roman Gilg <subdiff@gmail.com>
+    SPDX-FileCopyrightText: 2024 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -26,9 +27,9 @@ class NightLightDBusInterface : public QObject, public QDBusContext
     Q_PROPERTY(bool enabled READ isEnabled)
     Q_PROPERTY(bool running READ isRunning)
     Q_PROPERTY(bool available READ isAvailable)
-    Q_PROPERTY(int currentTemperature READ currentTemperature)
-    Q_PROPERTY(int targetTemperature READ targetTemperature)
-    Q_PROPERTY(int mode READ mode)
+    Q_PROPERTY(quint32 currentTemperature READ currentTemperature)
+    Q_PROPERTY(quint32 targetTemperature READ targetTemperature)
+    Q_PROPERTY(quint32 mode READ mode)
     Q_PROPERTY(bool daylight READ daylight)
     Q_PROPERTY(quint64 previousTransitionDateTime READ previousTransitionDateTime)
     Q_PROPERTY(quint32 previousTransitionDuration READ previousTransitionDuration)
@@ -43,9 +44,9 @@ public:
     bool isEnabled() const;
     bool isRunning() const;
     bool isAvailable() const;
-    int currentTemperature() const;
-    int targetTemperature() const;
-    int mode() const;
+    quint32 currentTemperature() const;
+    quint32 targetTemperature() const;
+    quint32 mode() const;
     bool daylight() const;
     quint64 previousTransitionDateTime() const;
     quint32 previousTransitionDuration() const;
