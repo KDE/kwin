@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2024-01-19 20:05+0200\n"
+"PO-Revision-Date: 2024-05-27 07:59+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -42,10 +42,9 @@ msgid "Alternative"
 msgstr "Alternatīvais"
 
 #: main.cpp:69
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switchers…"
-msgstr "Iegūt jaunus uzdevumu pārvaldniekus..."
+msgstr "Iegūt jaunus uzdevumu pārslēdzējus…"
 
 #: main.cpp:83
 #, kde-format
@@ -63,10 +62,9 @@ msgstr "Saturs"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Show Desktop\" entry"
-msgstr "Iekļauj „Parādīt darbvirsmu“ ikonu"
+msgstr "Iekļaut „Parādīt darbvirsmu“ ierakstu"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55

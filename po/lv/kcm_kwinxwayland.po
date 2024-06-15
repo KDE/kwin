@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-01-22 18:24+0200\n"
+"PO-Revision-Date: 2024-05-25 14:49+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
@@ -16,16 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.2\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -34,11 +28,12 @@ msgid ""
 "need to use such apps, you can choose your preferred balance of security and "
 "functionality here."
 msgstr ""
-"Vecajām X11 programmām ir nepieciešams spēt nolasīt citās programmās "
+"Dažām vecajām X11 programmām ir nepieciešams spēt nolasīt citās programmās "
 "spiestos taustiņus, lai darbotos iespējas, ko aktivē tastatūras globālo "
-"saīšņu lietojums. Drošības iemeslu pēc noklusējuma šāda pieeja ir liegta. "
-"Tomēr, ja jums ir nepieciešamas šādas programmas, varat izvēlēties sev "
-"vēlamo drošības un funkcionalitātes līdzsvaru."
+"saīšņu lietojums. Šāda rīcība pēc noklusējuma ir atļauta, tomēr citām "
+"iespējām var būt nepieciešams nolasīt visus taustiņus, kas drošības iemeslu "
+"dēļ pēc noklusējuma ir liegts. Ja jums ir jāizmanto šādas programmas, varat "
+"izvēlēties sev vēlamo drošības un funkcionalitātes līdzsvaru."
 
 #: ui/main.qml:48
 #, kde-format
@@ -54,15 +49,15 @@ msgstr "Nekad"
 #: ui/main.qml:55
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr ""
+msgstr "Tikai „Meta“, „Ctrl“ un „Shift“ taustiņus"
 
 #: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"Kā iepriekš un vēl jebkuru taustiņu, kas ir nospiests arī „Control“, „Alt“ "
-"vai „Meta“ taustiņš"
+"Kā iepriekš un vēl jebkuru taustiņu, kas ir nospiests arī Ctrl, „Alt“ vai "
+"„Meta“ taustiņš"
 
 #: ui/main.qml:68
 #, kde-format
@@ -72,7 +67,7 @@ msgstr "Vienmēr"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Papildus iekļaut peles pogas"
 
 #: ui/main.qml:89
 #, kde-format

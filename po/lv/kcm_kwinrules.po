@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-13 00:39+0000\n"
-"PO-Revision-Date: 2024-01-23 17:27+0200\n"
-"Last-Translator: Māris Nartišs <maris.kde@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2024-05-27 07:59+0300\n"
+"Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
+"Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 24.02.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -596,7 +596,7 @@ msgstr "Slānis"
 #: rulesmodel.cpp:725
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Adaptīvā sinhronizācija"
 
 #: rulesmodel.cpp:777
 #, kde-format
@@ -823,12 +823,12 @@ msgstr "KWin noteikumi (*.kwinrule)"
 #: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
-msgstr "Pievienot jaunu..."
+msgstr "Pievienot jaunu…"
 
 #: ui/main.qml:35
 #, kde-format
 msgid "Import…"
-msgstr "Importēt..."
+msgstr "Importēt…"
 
 #: ui/main.qml:40
 #, kde-format
@@ -838,7 +838,7 @@ msgstr "Atcelt eksportu"
 #: ui/main.qml:40
 #, kde-format
 msgid "Export…"
-msgstr "Eksportē..."
+msgstr "Eksportēt…"
 
 #: ui/main.qml:88
 #, kde-format
@@ -846,13 +846,10 @@ msgid "No rules for specific windows are currently set"
 msgstr "Šobrīd nav iestatīti noteikumi atsevišķiem logiem"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr ""
-"Spiediet uz  <interface>Pievienot jaunu…</interface> loga, lai pievienotu"
+msgstr "Spiediet uz  <interface>Pievienot jaunu…</interface>, lai pievienotu"
 
 #: ui/main.qml:97
 #, kde-format

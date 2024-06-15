@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-01-22 14:54+0200\n"
+"PO-Revision-Date: 2024-05-26 18:53+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.02.2\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -78,7 +78,7 @@ msgstr "Pārskats"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Režģis"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -231,7 +231,7 @@ msgstr "Dubultas aktivizācijas aizture:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Stūra barjera"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -243,19 +243,23 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Te varat ieslēgt vai izslēgt virtuālā stūra barjeru starp ekrāniem. Barjera "
+"liedz kursoram nonākt citā ekrānā, kad tas jau pieskaras ekrāna stūrim. "
+"Tādējādi, lietojot vairākus monitorus, ir vieglāk veikt lietotāja saskarnes "
+"elementu darbības, piemēram, izslēgt maksimizētus logus."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Liegtu kursoriem šķērsot ekrānu stūrus."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Malas barjera:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -267,25 +271,29 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Šeit varat iestatīt malas barjeru starp diviem ekrāniem. Barjera pievienot "
+"papildu attālumu, kādā ir jāpārvieto kursors, lai tas caur malu nonāktu citā "
+"ekrānā. Tas atvieglo piekļuvi lietotāja saskarnes elementiem, piemēram, "
+"„Plasma“ paneļiem, kas atrodas starp ekrāniem."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "Papildu attālums kursoram, lai šķērsotu ekrāna malas."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Nav"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
