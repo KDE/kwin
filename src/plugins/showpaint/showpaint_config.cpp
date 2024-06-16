@@ -36,8 +36,8 @@ ShowPaintEffectConfig::ShowPaintEffectConfig(QObject *parent, const KPluginMetaD
     QAction *toggleAction = actionCollection->addAction(QStringLiteral("Toggle"));
     toggleAction->setText(i18n("Toggle Show Paint"));
     toggleAction->setProperty("isConfigurationAction", true);
-    KGlobalAccel::self()->setDefaultShortcut(toggleAction, {});
-    KGlobalAccel::self()->setShortcut(toggleAction, {});
+    KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_P));
+    KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>() << (Qt::CTRL | Qt::META | Qt::ALT | Qt::Key_P));
 
     m_ui.shortcutsEditor->addCollection(actionCollection);
 
