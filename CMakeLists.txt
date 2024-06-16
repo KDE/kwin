@@ -191,19 +191,6 @@ if (epoxy_HAS_GLX)
     endif()
 endif()
 
-check_cxx_source_compiles("
-#include <fcntl.h>
-#include <sys/mman.h>
-#include <unistd.h>
-
-int main() {
-    const int size = 10;
-    int fd = memfd_create(\"test\", MFD_CLOEXEC | MFD_ALLOW_SEALING);
-    ftruncate(fd, size);
-    fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
-    mmap(nullptr, size, PROT_WRITE, MAP_SHARED, fd, 0);
-}" HAVE_MEMFD)
-
 find_package(Wayland 1.22)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
@@ -416,16 +403,29 @@ ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "PlasmaActivities_FOUND" OFF)
 cmake_dependent_option(KWIN_BUILD_EIS "Enable building KWin with libeis support" ON "Libeis-1.0_FOUND" OFF)
 
-check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
-add_feature_info("SCHED_RESET_ON_FORK"
-                 HAVE_SCHED_RESET_ON_FORK
-                 "Required for running kwin_wayland with real-time scheduling")
-
 include_directories(BEFORE
     ${CMAKE_CURRENT_BINARY_DIR}/src/wayland
     ${CMAKE_CURRENT_BINARY_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
+
+check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
+add_feature_info("SCHED_RESET_ON_FORK"
+                 HAVE_SCHED_RESET_ON_FORK
+                 "Required for running kwin_wayland with real-time scheduling")
+
+check_cxx_source_compiles("
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+
+int main() {
+    const int size = 10;
+    int fd = memfd_create(\"test\", MFD_CLOEXEC | MFD_ALLOW_SEALING);
+    ftruncate(fd, size);
+    fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
+    mmap(nullptr, size, PROT_WRITE, MAP_SHARED, fd, 0);
+}" HAVE_MEMFD)
 
 check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTED)
 if (COMPILER_UNUSED_PARAMETER_SUPPORTED)
