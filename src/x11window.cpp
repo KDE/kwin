@@ -4315,9 +4315,10 @@ void X11Window::blockGeometryUpdates(bool block)
         ++m_blockGeometryUpdates;
     } else {
         if (--m_blockGeometryUpdates == 0) {
-            if (m_lastBufferGeometry != m_bufferGeometry || m_lastFrameGeometry != m_frameGeometry || m_lastClientGeometry != m_clientGeometry) {
-                updateServerGeometry();
-            }
+            const QRect xFrameGeometry = Xcb::toXNative(m_bufferGeometry);
+            const QRect xWrapperGeometry = Xcb::toXNative(m_clientGeometry.translated(-m_bufferGeometry.topLeft()));
+            const QRect xClientGeometry = QRect(0, 0, xWrapperGeometry.width(), xWrapperGeometry.height());
+            configure(xFrameGeometry, xWrapperGeometry, xClientGeometry);
         }
     }
 }
@@ -4375,7 +4376,13 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     m_bufferGeometry = bufferGeometry;
     m_output = workspace()->outputAt(frameGeometry.center());
 
-    updateServerGeometry();
+    if (!areGeometryUpdatesBlocked()) {
+        const QRect xFrameGeometry = Xcb::toXNative(m_bufferGeometry);
+        const QRect xWrapperGeometry = Xcb::toXNative(m_clientGeometry.translated(-m_bufferGeometry.topLeft()));
+        const QRect xClientGeometry = QRect(0, 0, xWrapperGeometry.width(), xWrapperGeometry.height());
+        configure(xFrameGeometry, xWrapperGeometry, xClientGeometry);
+    }
+
     updateWindowRules(Rules::Position | Rules::Size);
 
     if (isActive()) {
@@ -4398,37 +4405,19 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     Q_EMIT shapeChanged();
 }
 
-void X11Window::updateServerGeometry()
+void X11Window::configure(const QRect &frame, const QRect &wrapper, const QRect &client)
 {
-    if (areGeometryUpdatesBlocked()) {
-        return;
-    }
-
-    const QRectF oldBufferGeometry = m_lastBufferGeometry;
-
-    // Compute the old client rect, the client geometry is always inside the buffer geometry.
-    const QRectF oldClientRect = m_lastClientGeometry.translated(-m_lastBufferGeometry.topLeft());
-    const QRectF clientRect = m_clientGeometry.translated(-m_bufferGeometry.topLeft());
-
-    if (oldBufferGeometry.size() != m_bufferGeometry.size() || oldClientRect != clientRect) {
-        // If the client is being interactively resized, then the frame window, the wrapper window,
-        // and the client window have correct geometry at this point, so we don't have to configure
-        // them again.
-        const QRect xFrameGeometry = Xcb::toXNative(m_bufferGeometry);
-        if (m_frame.geometry() != xFrameGeometry) {
-            m_frame.setGeometry(xFrameGeometry);
+    if (m_frame.size() != frame.size() || m_wrapper.geometry() != wrapper) {
+        if (m_frame.geometry() != frame) {
+            m_frame.setGeometry(frame);
         }
         if (!isShade()) {
-            const QRect xWrapperGeometry = Xcb::toXNative(clientRect);
-            if (m_wrapper.geometry() != xWrapperGeometry) {
-                m_wrapper.setGeometry(xWrapperGeometry);
+            if (m_wrapper.geometry() != wrapper) {
+                m_wrapper.setGeometry(wrapper);
             }
-            const QRect xClientGeometry = Xcb::toXNative(QRectF(QPointF(0, 0), clientRect.size()));
-            if (m_client.geometry() != xClientGeometry) {
-                m_client.setGeometry(xClientGeometry);
+            if (m_client.geometry() != client) {
+                m_client.setGeometry(client);
             }
-            // SELI - won't this be too expensive?
-            // THOMAS - yes, but gtk+ clients will not resize without ...
             sendSyntheticConfigureNotify();
         }
 
@@ -4442,17 +4431,13 @@ void X11Window::updateServerGeometry()
 
         updateInputShape();
         updateInputWindow();
-    } else {
-        m_frame.move(Xcb::toXNative(m_bufferGeometry.topLeft()));
-        sendSyntheticConfigureNotify();
+    } else if (m_frame.position() != frame.topLeft()) {
+        m_frame.move(frame.topLeft());
         if (m_decoInputExtent.isValid()) {
             m_decoInputExtent.move(m_frame.position() + input_offset);
         }
+        sendSyntheticConfigureNotify();
     }
-
-    m_lastBufferGeometry = m_bufferGeometry;
-    m_lastFrameGeometry = m_frameGeometry;
-    m_lastClientGeometry = m_clientGeometry;
 }
 
 static bool changeMaximizeRecursion = false;
@@ -4843,13 +4828,7 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
         m_syncRequest.timeout->start(33);
     }
 
-    // According to the Composite extension spec, a window will get a new pixmap allocated each time
-    // it is mapped or resized. Given that we redirect frame windows and not client windows, we have
-    // to resize the frame window in order to forcefully reallocate offscreen storage. If we don't do
-    // this, then we might render partially updated client window. I know, it sucks.
-    m_frame.setGeometry(xFrameGeometry);
-    m_wrapper.setGeometry(xWrapperGeometry);
-    m_client.setGeometry(xClientGeometry);
+    configure(xFrameGeometry, xWrapperGeometry, xClientGeometry);
 }
 
 void X11Window::handleSyncTimeout()
