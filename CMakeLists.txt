@@ -48,6 +48,8 @@ option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications sup
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
 option(KWIN_BUILD_X11 "Enable building kwin_x11 and Xwayland support" ON)
+option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
+option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -377,10 +379,10 @@ set(HAVE_ACCESSIBILITY ${QAccessibilityClient6_FOUND})
 pkg_check_modules(libsystemd IMPORTED_TARGET libsystemd)
 add_feature_info(libsystemd libsystemd_FOUND "Required for setting up the service watchdog")
 
-option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 if(KWIN_BUILD_GLOBALSHORTCUTS)
     find_package(KGlobalAccelD REQUIRED)
 endif()
+
 pkg_check_modules(libdisplayinfo IMPORTED_TARGET display-info)
 if (NOT libdisplayinfo_FOUND)
     pkg_check_modules(libdisplayinfo REQUIRED IMPORTED_TARGET libdisplay-info)
@@ -398,7 +400,6 @@ ecm_find_qmlmodule(org.kde.plasma.components 2.0)
 
 ########### configure tests ###############
 cmake_dependent_option(KWIN_BUILD_ACTIVITIES "Enable building of KWin with kactivities support" ON "PlasmaActivities_FOUND" OFF)
-option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 cmake_dependent_option(KWIN_BUILD_EIS "Enable building KWin with libeis support" ON "Libeis-1.0_FOUND" OFF)
 
 check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
