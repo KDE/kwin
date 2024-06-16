@@ -1640,7 +1640,31 @@ public:
      * @returns @c true if a window is managed, @c false otherwise.
      */
     bool isValid() const;
-    inline const QRect &geometry() const
+    int x() const
+    {
+        return m_geometry.x();
+    }
+    int y() const
+    {
+        return m_geometry.y();
+    }
+    int width() const
+    {
+        return m_geometry.width();
+    }
+    int height() const
+    {
+        return m_geometry.height();
+    }
+    QPoint position() const
+    {
+        return m_geometry.topLeft();
+    }
+    QSize size() const
+    {
+        return m_geometry.size();
+    }
+    QRect geometry() const
     {
         return m_geometry;
     }
