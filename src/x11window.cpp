@@ -4359,8 +4359,9 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
         clientGeometry = frameRectToClientRect(frameGeometry);
     }
     const QRectF bufferGeometry = frameRectToBufferRect(frameGeometry);
+    const qreal bufferScale = kwinApp()->xwaylandScale();
 
-    if (m_bufferGeometry == bufferGeometry && m_clientGeometry == clientGeometry && m_frameGeometry == frameGeometry) {
+    if (m_bufferGeometry == bufferGeometry && m_clientGeometry == clientGeometry && m_frameGeometry == frameGeometry && m_bufferScale == bufferScale) {
         return;
     }
 
@@ -4374,6 +4375,7 @@ void X11Window::moveResizeInternal(const QRectF &rect, MoveResizeMode mode)
     m_frameGeometry = frameGeometry;
     m_clientGeometry = clientGeometry;
     m_bufferGeometry = bufferGeometry;
+    m_bufferScale = bufferScale;
     m_output = workspace()->outputAt(frameGeometry.center());
 
     if (!areGeometryUpdatesBlocked()) {
