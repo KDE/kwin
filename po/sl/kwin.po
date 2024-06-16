@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1682380 2024-06-15 01:11:57Z scripty $
+# $Id: kwin.po 1682442 2024-06-16 01:12:03Z scripty $
 # $Source$
 #
 #
@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-15 00:40+0000\n"
-"PO-Revision-Date: 2024-05-21 07:39+0200\n"
+"POT-Creation-Date: 2024-06-16 00:40+0000\n"
+"PO-Revision-Date: 2024-06-15 08:13+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -2235,25 +2235,25 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Tipke puščic kot spremenilniki za risanje:"
 
-#: plugins/nightlight/nightlightmanager.cpp:67
+#: plugins/nightlight/nightlightmanager.cpp:58
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "Nočna barva začasno prekinjena"
 
-#: plugins/nightlight/nightlightmanager.cpp:68
+#: plugins/nightlight/nightlightmanager.cpp:59
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "Nočna barva spet vklopljena"
 
-#: plugins/nightlight/nightlightmanager.cpp:89
+#: plugins/nightlight/nightlightmanager.cpp:80
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Prekini/Nadaljuj nočne barve"
 
-#: plugins/nightlight/nightlightmanager.cpp:455
+#: plugins/nightlight/nightlightmanager.cpp:441
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Predogled barvne temperature"
@@ -2414,10 +2414,9 @@ msgid "Invalid region"
 msgstr "Neveljavna regija"
 
 #: plugins/screencast/screencaststream.cpp:346
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Noben upravljalnik skladnje OpenGL ne deluje"
+msgstr "Za predvajanje zaslona je potreben upodobilnik OpenGL"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format

@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-15 00:40+0000\n"
+"POT-Creation-Date: 2024-06-16 00:40+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -2230,7 +2230,7 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Modifikačné klávesy:"
 
-#: plugins/nightlight/nightlightmanager.cpp:67
+#: plugins/nightlight/nightlightmanager.cpp:58
 #, fuzzy, kde-format
 #| msgctxt "Night Light was enabled"
 #| msgid "Night Light On"
@@ -2238,7 +2238,7 @@ msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "Nočná farba zapnutá"
 
-#: plugins/nightlight/nightlightmanager.cpp:68
+#: plugins/nightlight/nightlightmanager.cpp:59
 #, fuzzy, kde-format
 #| msgctxt "Night Light was enabled"
 #| msgid "Night Light On"
@@ -2246,13 +2246,13 @@ msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "Nočná farba zapnutá"
 
-#: plugins/nightlight/nightlightmanager.cpp:89
+#: plugins/nightlight/nightlightmanager.cpp:80
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:455
+#: plugins/nightlight/nightlightmanager.cpp:441
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Náhľad teploty farieb"
