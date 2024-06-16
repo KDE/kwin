@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-13 00:39+0000\n"
-"PO-Revision-Date: 2024-06-09 12:06+0200\n"
+"PO-Revision-Date: 2024-06-15 14:16+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -346,6 +346,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
+"Vissa program som videospelare eller terminaler kan be Kwin att begränsa dem "
+"till vissa proportioner eller bara växa med värden större än dimensionerna "
+"för ett tecken. Använd egenskapen för att ignorera sådana begränsningar och "
+"tillåta att dessa fönster ändras till godtyckliga storlekar.<nl/><nl/>Det "
+"kan vara användbart för fönster som inte riktigt kan passa in i "
+"fullskärmsområdet när de är maximerade."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -459,6 +465,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin försöker förhindra att fönster som öppnades utan direkta "
+"användarkommandon höjs och fokuseras medan du för närvarande använder med "
+"ett annat fönster. Den här egenskapen kan användas för att ändra nivån på "
+"förebyggande av fokusstöld som tillämpas på enskilda fönster och program.<nl/"
+"><nl/>Här är vad som händer med ett fönster som öppnas utan ett direkt "
+"kommando på varje nivå av förebyggande av fokusstöld:<nl/"
+"><list><item><emphasis strong='true'>Inget:</emphasis> Fönstret höjs och "
+"fokuseras.</item><item><emphasis strong='true'>Lågt:</emphasis> Förebyggande "
+"av fokusstöld tillämpas, men i fallet med en situation som Kwin anser vara "
+"tvetydig, höjs och fokuseras fönstret.</item><item><emphasis "
+"strong='true'>Normalt:</emphasis> Förebyggande av fokusstöld tillämpas, och "
+"i fallet med en situation som KWin anser vara tvetydig, höjs och fokuseras "
+"fönstret <emphasis>inte</emphasis>.</item><item><emphasis strong='true'>Högt:"
+"</emphasis> Fönstret höjs och fokuseras bara om det tillhör samma program "
+"som det för närvarande fokuserade fönstret.</item><item><emphasis "
+"strong='true'>Extremt:</emphasis> Fönstret höjs och fokuseras aldrig.</"
+"item></list>"
 
 #: rulesmodel.cpp:658
 #, kde-format
@@ -488,6 +511,23 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Den här egenskapen styr nivån på fokusskydd för fönstret som för närvarande "
+"är aktivt. Den används för att åsidosätta skyddet mot fokusstöld som gäller "
+"för nya fönster som öppnas utan ett direkt kommando.<nl/><nl/>Här är vad som "
+"händer med nya fönster som öppnas utan ett direkt kommando för varje nivå av "
+"fokusskydd medan fönster med egenskapen har fokus:<nl/><list><item><emphasis "
+"strong='true'>Inget</emphasis>: Nyöppnade fönster höjs alltid och fokuseras."
+"</item><item><emphasis strong='true'>Lågt:</emphasis> Förebyggande av "
+"fokusstöld tillämpas för det nyöppnade fönstret, men i fallet med en "
+"situation som Kwin anser vara tvetydig, höjs och fokuseras fönstret.</"
+"item><item><emphasis strong='true'>Normalt:</emphasis> Förhindrande av "
+"fokusstöld tillämpas för det nyöppnade fönstret, och i fallet med en "
+"situation som Kwin anser vara tvetydig, höjs och fokuseras fönstret "
+"<emphasis>inte</emphasis>.</item><item><emphasis strong='true'>Högt:</"
+"emphasis> Nyöppnade fönster höjs bara och fokuseras om de tillhör samma "
+"program som det för närvarande fokuserade fönstret.</item><item><emphasis "
+"strong='true'>Extremt:</emphasis> Nyöppnade fönster höjs och fokuseras "
+"aldrig.</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -515,6 +555,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Använd den här egenskapen för att förhindra att globala snabbtangenter "
+"fungerar medan fönstret är fokuserat. Det kan vara användbart för program "
+"som emulatorer eller virtuella maskiner som själva hanterar några av samma "
+"genvägar.<nl/><nl/>Observera att du inte kommer att kunna använda "
+"<shortcut>Alt+Tabulator</shortcut> från fönster eller använda andra globala "
+"genvägar som <shortcut>Alt+Mellanslag</shortcut> för att aktivera Kör "
+"program."
 
 #: rulesmodel.cpp:704
 #, kde-format
@@ -687,27 +734,27 @@ msgstr "På huvudfönster"
 #: rulesmodel.cpp:892
 #, kde-format
 msgid "None"
-msgstr "Ingen"
+msgstr "Inget"
 
 #: rulesmodel.cpp:893
 #, kde-format
 msgid "Low"
-msgstr "Låg"
+msgstr "Lågt"
 
 #: rulesmodel.cpp:894 rulesmodel.cpp:924
 #, kde-format
 msgid "Normal"
-msgstr "Normal"
+msgstr "Normalt"
 
 #: rulesmodel.cpp:895
 #, kde-format
 msgid "High"
-msgstr "Hög"
+msgstr "Högt"
 
 #: rulesmodel.cpp:896
 #, kde-format
 msgid "Extreme"
-msgstr "Extrem"
+msgstr "Extremt"
 
 #: rulesmodel.cpp:923
 #, kde-format
