@@ -409,7 +409,7 @@ private:
     void updateHiddenPreview();
 
     void updateInputShape();
-    void updateServerGeometry();
+    void configure(const QRect &nativeFrame, const QRect &nativeWrapper, const QRect &nativeClient);
     void discardWindowPixmap();
     void updateWindowPixmap();
 
@@ -521,9 +521,6 @@ private:
     QMetaObject::Connection m_edgeGeometryTrackingConnection;
 
     QMarginsF m_clientFrameExtents;
-    QRectF m_lastBufferGeometry;
-    QRectF m_lastFrameGeometry;
-    QRectF m_lastClientGeometry;
     int m_blockGeometryUpdates = 0; // > 0 = New geometry is remembered, but not actually set
 
     std::unique_ptr<X11DecorationRenderer> m_decorationRenderer;
