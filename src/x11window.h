@@ -100,7 +100,6 @@ public:
     QSizeF frameSizeToClientSize(const QSizeF &size) const override;
     QSizeF clientSizeToFrameSize(const QSizeF &size) const override;
     QRectF frameRectToBufferRect(const QRectF &rect) const;
-    QPointF wrapperPos() const;
     QSizeF implicitSize() const;
 
     void blockGeometryUpdates(bool block);
@@ -136,10 +135,6 @@ public:
     QSizeF minSize() const override;
     QSizeF maxSize() const override;
     QSizeF basicUnit() const;
-    QPointF inputPos() const
-    {
-        return input_offset;
-    } // Inside of geometry()
 
     bool windowEvent(xcb_generic_event_t *e);
     WindowType windowType() const override;
@@ -518,7 +513,7 @@ private:
     bool sessionActivityOverride;
 
     Xcb::Window m_decoInputExtent;
-    QPointF input_offset;
+    QPoint input_offset; // in device pixels, valid only on X11
 
     QTimer *m_focusOutTimer;
     QTimer m_releaseTimer;

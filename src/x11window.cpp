@@ -1269,9 +1269,9 @@ void X11Window::updateInputWindow()
         if (left != 0 || top != 0 || right != 0 || bottom != 0) {
             region = QRegion(-left,
                              -top,
-                             decoration()->size().width() + left + right,
-                             decoration()->size().height() + top + bottom);
-            region = region.subtracted(decoration()->rect());
+                             m_frame.width() + left + right,
+                             m_frame.height() + top + bottom);
+            region = region.subtracted(QRect(0, 0, m_frame.width(), m_frame.height()));
         }
     }
 
@@ -1284,10 +1284,10 @@ void X11Window::updateInputWindow()
     input_offset = bounds.topLeft();
 
     // Move the bounding rect to screen coordinates
-    bounds.translate(frameGeometry().topLeft().toPoint());
+    bounds.translate(m_frame.position());
 
     // Move the region to input window coordinates
-    region.translate(-input_offset.toPoint());
+    region.translate(-input_offset);
 
     if (!m_decoInputExtent.isValid()) {
         const uint32_t mask = XCB_CW_OVERRIDE_REDIRECT | XCB_CW_EVENT_MASK;
@@ -1542,8 +1542,8 @@ void X11Window::updateShape()
                               XCB_SHAPE_SK_BOUNDING,
                               XCB_SHAPE_SK_BOUNDING,
                               frameId(),
-                              Xcb::toXNative(wrapperPos().x()),
-                              Xcb::toXNative(wrapperPos().y()),
+                              m_wrapper.x(),
+                              m_wrapper.y(),
                               window());
         }
     } else if (app_noborder) {
@@ -1586,8 +1586,7 @@ void X11Window::updateInputShape()
         if (!shape_helper_window.isValid()) {
             shape_helper_window.create(QRect(0, 0, 1, 1));
         }
-        const QSize bufferSize = Xcb::toXNative(m_bufferGeometry.size());
-        shape_helper_window.resize(bufferSize);
+        shape_helper_window.resize(m_frame.size());
         xcb_connection_t *c = kwinApp()->x11Connection();
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window, 0, 0, frameId());
@@ -1596,16 +1595,16 @@ void X11Window::updateInputShape()
                           XCB_SHAPE_SK_INPUT,
                           XCB_SHAPE_SK_BOUNDING,
                           shape_helper_window,
-                          Xcb::toXNative(wrapperPos().x()),
-                          Xcb::toXNative(wrapperPos().y()),
+                          m_wrapper.x(),
+                          m_wrapper.y(),
                           window());
         xcb_shape_combine(c,
                           XCB_SHAPE_SO_UNION,
                           XCB_SHAPE_SK_INPUT,
                           XCB_SHAPE_SK_INPUT,
                           shape_helper_window,
-                          Xcb::toXNative(wrapperPos().x()),
-                          Xcb::toXNative(wrapperPos().y()),
+                          m_wrapper.x(),
+                          m_wrapper.y(),
                           window());
         xcb_shape_combine(c, XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT, XCB_SHAPE_SK_INPUT,
                           frameId(), 0, 0, shape_helper_window);
@@ -2913,15 +2912,6 @@ QRectF X11Window::frameRectToBufferRect(const QRectF &rect) const
 }
 
 /**
- * Returns the position of the wrapper window relative to the frame window. On X11, it
- * is the same as QPoint(borderLeft(), borderTop()). On Wayland, it's QPoint(0, 0).
- */
-QPointF X11Window::wrapperPos() const
-{
-    return m_clientGeometry.topLeft() - m_bufferGeometry.topLeft();
-}
-
-/**
  * Returns the natural size of the window, if the window is not shaded it's the same
  * as size().
  */
@@ -3926,10 +3916,10 @@ void X11Window::sendSyntheticConfigureNotify()
     u.event.response_type = XCB_CONFIGURE_NOTIFY;
     u.event.event = window();
     u.event.window = window();
-    u.event.x = Xcb::toXNative(m_clientGeometry.x());
-    u.event.y = Xcb::toXNative(m_clientGeometry.y());
-    u.event.width = Xcb::toXNative(m_clientGeometry.width());
-    u.event.height = Xcb::toXNative(m_clientGeometry.height());
+    u.event.x = m_frame.x() + m_wrapper.x() + m_client.x();
+    u.event.y = m_frame.y() + m_wrapper.y() + m_client.y();
+    u.event.width = m_client.width();
+    u.event.height = m_client.height();
     u.event.border_width = 0;
     u.event.above_sibling = XCB_WINDOW_NONE;
     u.event.override_redirect = 0;
@@ -4446,8 +4436,9 @@ void X11Window::updateServerGeometry()
     } else {
         m_frame.move(Xcb::toXNative(m_bufferGeometry.topLeft()));
         sendSyntheticConfigureNotify();
-        // Unconditionally move the input window: it won't affect rendering
-        m_decoInputExtent.move(Xcb::toXNative(pos() + inputPos()));
+        if (m_decoInputExtent.isValid()) {
+            m_decoInputExtent.move(m_frame.position() + input_offset);
+        }
     }
 
     m_lastBufferGeometry = m_bufferGeometry;
