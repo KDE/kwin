@@ -389,6 +389,21 @@ if (NOT libdisplayinfo_FOUND)
 endif()
 add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
 
+pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
+add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
+
+if (KWIN_BUILD_NOTIFICATIONS)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Notifications)
+endif()
+
+if (KWIN_BUILD_SCREENLOCKER)
+    find_package(KScreenLocker CONFIG)
+    set_package_properties(KScreenLocker PROPERTIES
+        TYPE REQUIRED
+        PURPOSE "For screenlocker integration in kwin_wayland"
+    )
+endif()
+
 ecm_find_qmlmodule(QtQuick 2.3)
 ecm_find_qmlmodule(QtQuick.Controls 2.15)
 ecm_find_qmlmodule(QtQuick.Layouts 1.3)
@@ -406,22 +421,6 @@ check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
 add_feature_info("SCHED_RESET_ON_FORK"
                  HAVE_SCHED_RESET_ON_FORK
                  "Required for running kwin_wayland with real-time scheduling")
-
-
-pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.29)
-add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
-
-if (KWIN_BUILD_NOTIFICATIONS)
-    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Notifications)
-endif()
-
-if (KWIN_BUILD_SCREENLOCKER)
-    find_package(KScreenLocker CONFIG)
-    set_package_properties(KScreenLocker PROPERTIES
-        TYPE REQUIRED
-        PURPOSE "For screenlocker integration in kwin_wayland"
-    )
-endif()
 
 ########### global ###############
 
