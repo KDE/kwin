@@ -318,7 +318,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         yTranslation = -int(cursorPoint.y() * (zoom - 1.0));
         prevPoint = cursorPoint;
         break;
-    case MouseTrackingCentred:
+    case MouseTrackingCentered:
         prevPoint = cursorPoint;
         // fall through
     case MouseTrackingDisabled:

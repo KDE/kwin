@@ -1589,7 +1589,7 @@ void Workspace::switchWindow(Direction direction)
     Window *window = m_activeWindow;
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
 
-    // Centre of the active window
+    // Center of the active window
     QPoint curPos(window->x() + window->width() / 2, window->y() + window->height() / 2);
 
     if (!switchWindow(window, direction, curPos, desktop)) {
@@ -1624,7 +1624,7 @@ bool Workspace::switchWindow(Window *window, Direction direction, QPoint curPos,
             continue;
         }
         if (other->wantsTabFocus() && *i != window && other->isOnDesktop(desktop) && !other->isMinimized() && (*i)->isOnCurrentActivity()) {
-            // Centre of the other window
+            // Center of the other window
             const QPoint otherCenter(other->x() + other->width() / 2, other->y() + other->height() / 2);
 
             int distance;

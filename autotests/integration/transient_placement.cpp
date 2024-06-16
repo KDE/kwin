@@ -114,7 +114,7 @@ void TransientPlacementTest::testXdgPopup_data()
         .anchor = Test::XdgPositioner::anchor_none,
         .gravity = Test::XdgPositioner::gravity_bottom_right,
     };
-    QTest::newRow("anchorCentre") << QSize(500, 500) << QPoint(300, 300) << layoutAnchorCenter << QRect(550, 550, 200, 200);
+    QTest::newRow("anchorCenter") << QSize(500, 500) << QPoint(300, 300) << layoutAnchorCenter << QRect(550, 550, 200, 200);
 
     const PopupLayout layoutAnchorTopLeft{
         .anchorRect = QRect(50, 50, 400, 400),
@@ -189,7 +189,7 @@ void TransientPlacementTest::testXdgPopup_data()
         .anchor = Test::XdgPositioner::anchor_bottom_right,
         .gravity = Test::XdgPositioner::gravity_none,
     };
-    QTest::newRow("gravityCentre") << QSize(500, 500) << QPoint(300, 300) << layoutGravityCenter << QRect(650, 650, 200, 200);
+    QTest::newRow("gravityCenter") << QSize(500, 500) << QPoint(300, 300) << layoutGravityCenter << QRect(650, 650, 200, 200);
 
     const PopupLayout layoutGravityTopLeft{
         .anchorRect = QRect(50, 50, 400, 400),
