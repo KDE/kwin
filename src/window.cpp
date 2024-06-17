@@ -453,16 +453,12 @@ void Window::doSetSkipPager()
 
 void Window::setSkipTaskbar(bool b)
 {
-    int was_wants_tab_focus = wantsTabFocus();
     if (b == skipTaskbar()) {
         return;
     }
     m_skipTaskbar = b;
     doSetSkipTaskbar();
     updateWindowRules(Rules::SkipTaskbar);
-    if (was_wants_tab_focus != wantsTabFocus()) {
-        Workspace::self()->focusChain()->update(this, isActive() ? FocusChain::MakeFirst : FocusChain::Update);
-    }
     Q_EMIT skipTaskbarChanged();
 }
 
