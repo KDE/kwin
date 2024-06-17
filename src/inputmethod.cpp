@@ -550,18 +550,18 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
 void InputMethod::commitString(qint32 serial, const QString &text)
 {
     if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
-        t1->commitString(text.toUtf8());
+        t1->commitString(text);
         t1->setPreEditCursor(0);
         t1->preEdit({}, {});
         return;
     }
     if (auto t2 = waylandServer()->seat()->textInputV2(); t2 && t2->isEnabled()) {
-        t2->commitString(text.toUtf8());
+        t2->commitString(text);
         t2->setPreEditCursor(0);
         t2->preEdit({}, {});
         return;
     } else if (auto t3 = waylandServer()->seat()->textInputV3(); t3 && t3->isEnabled()) {
-        t3->commitString(text.toUtf8());
+        t3->commitString(text);
         t3->done();
         return;
     } else {
@@ -641,11 +641,11 @@ void InputMethod::setLanguage(uint32_t serial, const QString &language)
 {
     auto t1 = waylandServer()->seat()->textInputV1();
     if (t1 && t1->isEnabled()) {
-        t1->setLanguage(language.toUtf8());
+        t1->setLanguage(language);
     }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
-        t2->setLanguage(language.toUtf8());
+        t2->setLanguage(language);
     }
 }
 
@@ -700,11 +700,11 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
 {
     auto t1 = waylandServer()->seat()->textInputV1();
     if (t1 && t1->isEnabled()) {
-        t1->preEdit(text.toUtf8(), commit.toUtf8());
+        t1->preEdit(text, commit);
     }
     auto t2 = waylandServer()->seat()->textInputV2();
     if (t2 && t2->isEnabled()) {
-        t2->preEdit(text.toUtf8(), commit.toUtf8());
+        t2->preEdit(text, commit);
     }
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
@@ -899,12 +899,12 @@ void InputMethod::startInputMethod()
     socket = dup(socket);
 
     QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
-    environment.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
+    environment.insert(QStringLiteral("WAYLAND_SOCKET"), QString::number(socket));
     environment.insert(QStringLiteral("QT_QPA_PLATFORM"), QStringLiteral("wayland"));
     // When we use Maliit as virtual keyboard, we want KWin to handle the animation
     // since that works a lot better. So we need to tell Maliit to not do client side
     // animation.
-    environment.insert(QStringLiteral("MALIIT_ENABLE_ANIMATIONS"), "0");
+    environment.insert(QStringLiteral("MALIIT_ENABLE_ANIMATIONS"), QStringLiteral("0"));
 
     m_inputMethodProcess = new QProcess(this);
     m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
