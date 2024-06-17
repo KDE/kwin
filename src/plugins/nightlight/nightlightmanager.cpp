@@ -377,9 +377,7 @@ void NightLightManager::resetSlowUpdateTimers()
     // start the current slow update
     m_slowUpdateTimer.reset();
 
-    // We've reached the target color temperature or the transition time is zero.
-    if (m_prev.first == m_prev.second || m_currentTemperature == m_targetTemperature) {
-        commitGammaRamps(m_targetTemperature);
+    if (m_currentTemperature == m_targetTemperature) {
         return;
     }
 
