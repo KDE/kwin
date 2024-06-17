@@ -81,9 +81,8 @@ class ShadowInterfacePrivate : public QtWaylandServer::org_kde_kwin_shadow
 {
 public:
     ShadowInterfacePrivate(ShadowInterface *_q, wl_resource *resource);
-    ~ShadowInterfacePrivate();
 
-    struct State
+    struct Commit
     {
         enum Flags {
             None = 0,
@@ -110,12 +109,21 @@ public:
     };
 
     void commit();
-    void attach(State::Flags flag, wl_resource *buffer);
+    void attach(Commit::Flags flag, wl_resource *buffer);
 
-    ShadowManagerInterface *manager;
-    State current;
-    State pending;
     ShadowInterface *q;
+    ShadowManagerInterface *manager;
+    Commit pending;
+
+    GraphicsBufferRef left;
+    GraphicsBufferRef topLeft;
+    GraphicsBufferRef top;
+    GraphicsBufferRef topRight;
+    GraphicsBufferRef right;
+    GraphicsBufferRef bottomRight;
+    GraphicsBufferRef bottom;
+    GraphicsBufferRef bottomLeft;
+    QMarginsF offset;
 
 protected:
     void org_kde_kwin_shadow_destroy_resource(Resource *resource) override;
@@ -137,65 +145,70 @@ protected:
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 {
-#define BUFFER(__FLAG__, __PART__)                        \
-    if (pending.flags & State::Flags::__FLAG__##Buffer) { \
-        if (pending.__PART__) {                           \
-            pending.__PART__->ref();                      \
-        }                                                 \
-        if (current.__PART__) {                           \
-            current.__PART__->unref();                    \
-        }                                                 \
-        current.__PART__ = pending.__PART__;              \
+    if (pending.flags & Commit::Flags::LeftBuffer) {
+        left = pending.left;
     }
-    BUFFER(Left, left)
-    BUFFER(TopLeft, topLeft)
-    BUFFER(Top, top)
-    BUFFER(TopRight, topRight)
-    BUFFER(Right, right)
-    BUFFER(BottomRight, bottomRight)
-    BUFFER(Bottom, bottom)
-    BUFFER(BottomLeft, bottomLeft)
-#undef BUFFER
+    if (pending.flags & Commit::Flags::TopLeftBuffer) {
+        topLeft = pending.topLeft;
+    }
+    if (pending.flags & Commit::Flags::TopBuffer) {
+        top = pending.top;
+    }
+    if (pending.flags & Commit::Flags::TopRightBuffer) {
+        topRight = pending.topRight;
+    }
+    if (pending.flags & Commit::Flags::RightBuffer) {
+        right = pending.right;
+    }
+    if (pending.flags & Commit::Flags::BottomRightBuffer) {
+        bottomRight = pending.bottomRight;
+    }
+    if (pending.flags & Commit::Flags::BottomBuffer) {
+        bottom = pending.bottom;
+    }
+    if (pending.flags & Commit::Flags::BottomLeftBuffer) {
+        bottomLeft = pending.bottomLeft;
+    }
 
-    if (pending.flags & State::Offset) {
-        current.offset = pending.offset;
+    if (pending.flags & Commit::Flags::Offset) {
+        offset = pending.offset;
     }
-    pending = State();
+    pending = Commit();
 }
 
-void ShadowInterfacePrivate::attach(ShadowInterfacePrivate::State::Flags flag, wl_resource *buffer)
+void ShadowInterfacePrivate::attach(Commit::Flags flag, wl_resource *buffer)
 {
     GraphicsBuffer *b = Display::bufferForResource(buffer);
     switch (flag) {
-    case State::LeftBuffer:
+    case Commit::LeftBuffer:
         pending.left = b;
         break;
-    case State::TopLeftBuffer:
+    case Commit::TopLeftBuffer:
         pending.topLeft = b;
         break;
-    case State::TopBuffer:
+    case Commit::TopBuffer:
         pending.top = b;
         break;
-    case State::TopRightBuffer:
+    case Commit::TopRightBuffer:
         pending.topRight = b;
         break;
-    case State::RightBuffer:
+    case Commit::RightBuffer:
         pending.right = b;
         break;
-    case State::BottomRightBuffer:
+    case Commit::BottomRightBuffer:
         pending.bottomRight = b;
         break;
-    case State::BottomBuffer:
+    case Commit::BottomBuffer:
         pending.bottom = b;
         break;
-    case State::BottomLeftBuffer:
+    case Commit::BottomLeftBuffer:
         pending.bottomLeft = b;
         break;
     default:
         Q_UNREACHABLE();
         break;
     }
-    pending.flags = State::Flags(pending.flags | flag);
+    pending.flags = Commit::Flags(pending.flags | flag);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_destroy(Resource *resource)
@@ -210,65 +223,65 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_destroy_resource(Resource *reso
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_left(Resource *resource, wl_resource *buffer)
 {
-    attach(State::LeftBuffer, buffer);
+    attach(Commit::LeftBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_top_left(Resource *resource, wl_resource *buffer)
 {
-    attach(State::TopLeftBuffer, buffer);
+    attach(Commit::TopLeftBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_top(Resource *resource, wl_resource *buffer)
 {
-    attach(State::TopBuffer, buffer);
+    attach(Commit::TopBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_top_right(Resource *resource, wl_resource *buffer)
 {
-    attach(State::TopRightBuffer, buffer);
+    attach(Commit::TopRightBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_right(Resource *resource, wl_resource *buffer)
 {
-    attach(State::RightBuffer, buffer);
+    attach(Commit::RightBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom_right(Resource *resource, wl_resource *buffer)
 {
-    attach(State::BottomRightBuffer, buffer);
+    attach(Commit::BottomRightBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom(Resource *resource, wl_resource *buffer)
 {
-    attach(State::BottomBuffer, buffer);
+    attach(Commit::BottomBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_attach_bottom_left(Resource *resource, wl_resource *buffer)
 {
-    attach(State::BottomLeftBuffer, buffer);
+    attach(Commit::BottomLeftBuffer, buffer);
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_left_offset(Resource *resource, wl_fixed_t offset)
 {
-    pending.flags = State::Flags(pending.flags | State::Offset);
+    pending.flags = Commit::Flags(pending.flags | Commit::Offset);
     pending.offset.setLeft(wl_fixed_to_double(offset));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_top_offset(Resource *resource, wl_fixed_t offset)
 {
-    pending.flags = State::Flags(pending.flags | State::Offset);
+    pending.flags = Commit::Flags(pending.flags | Commit::Offset);
     pending.offset.setTop(wl_fixed_to_double(offset));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_right_offset(Resource *resource, wl_fixed_t offset)
 {
-    pending.flags = State::Flags(pending.flags | State::Offset);
+    pending.flags = Commit::Flags(pending.flags | Commit::Offset);
     pending.offset.setRight(wl_fixed_to_double(offset));
 }
 
 void ShadowInterfacePrivate::org_kde_kwin_shadow_set_bottom_offset(Resource *resource, wl_fixed_t offset)
 {
-    pending.flags = State::Flags(pending.flags | State::Offset);
+    pending.flags = Commit::Flags(pending.flags | Commit::Offset);
     pending.offset.setBottom(wl_fixed_to_double(offset));
 }
 
@@ -276,23 +289,6 @@ ShadowInterfacePrivate::ShadowInterfacePrivate(ShadowInterface *_q, wl_resource 
     : QtWaylandServer::org_kde_kwin_shadow(resource)
     , q(_q)
 {
-}
-
-ShadowInterfacePrivate::~ShadowInterfacePrivate()
-{
-#define CURRENT(__PART__)          \
-    if (current.__PART__) {        \
-        current.__PART__->unref(); \
-    }
-    CURRENT(left)
-    CURRENT(topLeft)
-    CURRENT(top)
-    CURRENT(topRight)
-    CURRENT(right)
-    CURRENT(bottomRight)
-    CURRENT(bottom)
-    CURRENT(bottomLeft)
-#undef CURRENT
 }
 
 ShadowInterface::ShadowInterface(ShadowManagerInterface *manager, wl_resource *resource)
@@ -306,23 +302,48 @@ ShadowInterface::~ShadowInterface() = default;
 
 QMarginsF ShadowInterface::offset() const
 {
-    return d->current.offset;
+    return d->offset;
 }
 
-#define BUFFER(__PART__)                              \
-    GraphicsBuffer *ShadowInterface::__PART__() const \
-    {                                                 \
-        return d->current.__PART__;                   \
-    }
+GraphicsBuffer *ShadowInterface::left() const
+{
+    return d->left.buffer();
+}
 
-BUFFER(left)
-BUFFER(topLeft)
-BUFFER(top)
-BUFFER(topRight)
-BUFFER(right)
-BUFFER(bottomRight)
-BUFFER(bottom)
-BUFFER(bottomLeft)
+GraphicsBuffer *ShadowInterface::topLeft() const
+{
+    return d->topLeft.buffer();
+}
+
+GraphicsBuffer *ShadowInterface::top() const
+{
+    return d->top.buffer();
+}
+
+GraphicsBuffer *ShadowInterface::topRight() const
+{
+    return d->topRight.buffer();
+}
+
+GraphicsBuffer *ShadowInterface::right() const
+{
+    return d->right.buffer();
+}
+
+GraphicsBuffer *ShadowInterface::bottomRight() const
+{
+    return d->bottomRight.buffer();
+}
+
+GraphicsBuffer *ShadowInterface::bottom() const
+{
+    return d->bottom.buffer();
+}
+
+GraphicsBuffer *ShadowInterface::bottomLeft() const
+{
+    return d->bottomLeft.buffer();
+}
 
 }
 
