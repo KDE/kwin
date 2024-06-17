@@ -730,44 +730,27 @@ void Window::setDesktops(QList<VirtualDesktop *> desktops)
 
     m_desktops = desktops;
 
-    if (windowManagementInterface()) {
-        if (m_desktops.isEmpty()) {
-            windowManagementInterface()->setOnAllDesktops(true);
-        } else {
-            windowManagementInterface()->setOnAllDesktops(false);
-            auto currentDesktops = windowManagementInterface()->plasmaVirtualDesktops();
-            for (auto desktop : std::as_const(m_desktops)) {
-                if (!currentDesktops.contains(desktop->id())) {
-                    windowManagementInterface()->addPlasmaVirtualDesktop(desktop->id());
-                } else {
-                    currentDesktops.removeOne(desktop->id());
-                }
-            }
-            for (const auto &desktopId : std::as_const(currentDesktops)) {
-                windowManagementInterface()->removePlasmaVirtualDesktop(desktopId);
+    if (!isDeleted()) {
+        auto transients_stacking_order = workspace()->ensureStackingOrder(transients());
+        for (auto it = transients_stacking_order.constBegin(); it != transients_stacking_order.constEnd(); ++it) {
+            (*it)->setDesktops(desktops);
+        }
+
+        if (isModal()) // if a modal dialog is moved, move the mainwindow with it as otherwise
+                       // the (just moved) modal dialog will confusingly return to the mainwindow with
+                       // the next desktop change
+        {
+            const auto windows = mainWindows();
+            for (Window *other : windows) {
+                other->setDesktops(desktops);
             }
         }
+
+        doSetDesktop();
+
+        Workspace::self()->focusChain()->update(this, FocusChain::MakeFirst);
+        updateWindowRules(Rules::Desktops);
     }
-
-    auto transients_stacking_order = workspace()->ensureStackingOrder(transients());
-    for (auto it = transients_stacking_order.constBegin(); it != transients_stacking_order.constEnd(); ++it) {
-        (*it)->setDesktops(desktops);
-    }
-
-    if (isModal()) // if a modal dialog is moved, move the mainwindow with it as otherwise
-                   // the (just moved) modal dialog will confusingly return to the mainwindow with
-                   // the next desktop change
-    {
-        const auto windows = mainWindows();
-        for (Window *other : windows) {
-            other->setDesktops(desktops);
-        }
-    }
-
-    doSetDesktop();
-
-    Workspace::self()->focusChain()->update(this, FocusChain::MakeFirst);
-    updateWindowRules(Rules::Desktops);
 
     Q_EMIT desktopsChanged();
 }
@@ -1886,6 +1869,25 @@ void Window::setupWindowManagementInterface()
     // Otherwise it will unconditionally add the current desktop to the interface
     // which may not be the case, for example, when using rules
     w->setOnAllDesktops(isOnAllDesktops());
+
+    connect(this, &Window::desktopsChanged, w, [this, w]() {
+        if (m_desktops.isEmpty()) {
+            w->setOnAllDesktops(true);
+        } else {
+            w->setOnAllDesktops(false);
+            auto currentDesktops = w->plasmaVirtualDesktops();
+            for (auto desktop : std::as_const(m_desktops)) {
+                if (!currentDesktops.contains(desktop->id())) {
+                    w->addPlasmaVirtualDesktop(desktop->id());
+                } else {
+                    currentDesktops.removeOne(desktop->id());
+                }
+            }
+            for (const auto &desktopId : std::as_const(currentDesktops)) {
+                w->removePlasmaVirtualDesktop(desktopId);
+            }
+        }
+    });
 
     // Plasma Virtual desktop management
     // show/hide when the window enters/exits from desktop
