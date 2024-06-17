@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-16 00:40+0000\n"
-"PO-Revision-Date: 2024-05-21 06:43+0300\n"
+"PO-Revision-Date: 2024-06-15 09:16+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian\n"
 "Language: uk\n"
@@ -2408,10 +2408,9 @@ msgid "Invalid region"
 msgstr "Некоректна область"
 
 #: plugins/screencast/screencaststream.cpp:346
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Засіб композиції OpenGL не запущено"
+msgstr "Для трансляцій з екрана потрібне композитне відтворення з OpenGL"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format

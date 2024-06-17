@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-16 00:40+0000\n"
-"PO-Revision-Date: 2024-05-12 15:50+0530\n"
+"PO-Revision-Date: 2024-06-16 17:49+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -957,13 +957,13 @@ msgstr "OpenGL"
 #: debug_console.ui:102
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr ""
+msgstr "எந்த OpenGL சாளரநிரலும் இயங்கவில்லை"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:130
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "OpenGL (ES) சாதனநிரல் விவரங்கள்"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:136
@@ -1017,13 +1017,13 @@ msgstr "GLSL பதிப்பு:"
 #: debug_console.ui:251
 #, kde-format
 msgid "Platform Extensions"
-msgstr ""
+msgstr "இயக்குதள நீட்டிப்புகள்"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:267
 #, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr ""
+msgstr "OpenGL (ES) நீட்டிப்புகள்"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:288
@@ -2542,19 +2542,18 @@ msgstr "மூடு"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "இடது/வலது என பிரி"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "மேல்/கீழ் என பிரி"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgid "Add Floating Tile"
-msgstr "சாளரத்தை மூடிவிடு"
+msgstr "மிதக்கும் பகுதியை சேர்"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
