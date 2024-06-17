@@ -49,7 +49,7 @@ msgstr "Fokus"
 #, kde-format
 msgctxt "Category of Desktop Effects, used as section header"
 msgid "Peek at Desktop Animation"
-msgstr "Titta på skrivbordsanimering"
+msgstr "Kika på skrivbordsanimering"
 
 #: effectsmodel.cpp:50
 #, kde-format
