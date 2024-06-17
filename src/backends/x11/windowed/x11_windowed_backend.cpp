@@ -24,19 +24,12 @@
 #include <QSocketNotifier>
 // xcb
 #include <xcb/dri3.h>
-#include <xcb/xcb_keysyms.h>
 #include <xcb/present.h>
 #include <xcb/shm.h>
-// X11
-#include <X11/Xlib-xcb.h>
-#include <fixx11h.h>
-#if HAVE_X11_XINPUT
-#include <X11/extensions/XI2proto.h>
-#include <X11/extensions/XInput2.h>
-#endif
+#include <xcb/xcb_keysyms.h>
+#include <xcb/xinput.h>
+#include <xkbcommon/xkbcommon-keysyms.h>
 // system
-#include <X11/Xlib-xcb.h>
-#include <X11/keysym.h>
 #include <drm_fourcc.h>
 #include <fcntl.h>
 #include <gbm.h>
@@ -178,14 +171,10 @@ X11WindowedBackend::~X11WindowedBackend()
 
 bool X11WindowedBackend::initialize()
 {
-    m_display = XOpenDisplay(m_options.display.toLatin1().constData());
-    if (!m_display) {
+    m_connection = xcb_connect(m_options.display.toLatin1(), &m_screenNumber);
+    if (!m_connection) {
         return false;
     }
-
-    m_connection = XGetXCBConnection(m_display);
-    m_screenNumber = XDefaultScreen(m_display);
-    XSetEventQueueOwner(m_display, XCBOwnsEventQueue);
 
     int screen = m_screenNumber;
     for (xcb_screen_iterator_t it = xcb_setup_roots_iterator(xcb_get_setup(m_connection));
@@ -274,27 +263,27 @@ bool X11WindowedBackend::initialize()
 void X11WindowedBackend::initXInput()
 {
 #if HAVE_X11_XINPUT
-    int xi_opcode, event, error;
-    // init XInput extension
-    if (!XQueryExtension(m_display, "XInputExtension", &xi_opcode, &event, &error)) {
+    const xcb_query_extension_reply_t *xinputExtension = xcb_get_extension_data(m_connection, &xcb_input_id);
+    if (!xinputExtension || !xinputExtension->present) {
         qCDebug(KWIN_X11WINDOWED) << "XInputExtension not present";
         return;
     }
+    m_xiOpcode = xinputExtension->major_opcode;
 
     // verify that the XInput extension is at at least version 2.0
-    int major = 2, minor = 2;
-    int result = XIQueryVersion(m_display, &major, &minor);
-    if (result != Success) {
+    auto cookie = xcb_input_xi_query_version(m_connection, 2, 2);
+    UniqueCPtr<xcb_input_xi_query_version_reply_t> reply(xcb_input_xi_query_version_reply( m_connection, cookie, nullptr));
+    if (!reply) {
         qCDebug(KWIN_X11WINDOWED) << "Failed to init XInput 2.2, trying 2.0";
-        minor = 0;
-        if (XIQueryVersion(m_display, &major, &minor) != Success) {
+        auto cookie = xcb_input_xi_query_version(m_connection, 2, 0);
+        reply.reset(xcb_input_xi_query_version_reply( m_connection, cookie, nullptr));
+        if (!reply) {
             qCDebug(KWIN_X11WINDOWED) << "Failed to init XInput";
             return;
         }
     }
-    m_xiOpcode = xi_opcode;
-    m_majorVersion = major;
-    m_minorVersion = minor;
+    m_majorVersion = reply->major_version;
+    m_minorVersion = reply->minor_version;
     m_hasXInput = m_majorVersion >= 2 && m_minorVersion >= 2;
 #endif
 }
@@ -400,7 +389,7 @@ void X11WindowedBackend::createOutputs()
 
 #if HAVE_X11_XINPUT
 
-static inline qreal fixed1616ToReal(FP1616 val)
+static inline qreal fixed1616ToReal(xcb_input_fp1616_t val)
 {
     return (val)*1.0 / (1 << 16);
 }
@@ -432,7 +421,7 @@ void X11WindowedBackend::handleEvent(xcb_generic_event_t *e)
                 m_keySymbols = xcb_key_symbols_alloc(m_connection);
             }
             const xcb_keysym_t kc = xcb_key_symbols_get_keysym(m_keySymbols, event->detail, 0);
-            if (kc == XK_Control_R) {
+            if (kc == XKB_KEY_Control_R) {
                 grabKeyboard(event->time);
             }
             Q_EMIT m_keyboardDevice->keyChanged(event->detail - 8,
@@ -638,7 +627,7 @@ void X11WindowedBackend::updateSize(xcb_configure_notify_event_t *event)
 void X11WindowedBackend::handleXinputEvent(xcb_ge_generic_event_t *ge)
 {
 #if HAVE_X11_XINPUT
-    auto te = reinterpret_cast<xXIDeviceEvent *>(ge);
+    auto te = reinterpret_cast<xcb_input_motion_event_t *>(ge);
     const X11WindowedOutput *output = findOutput(te->event);
     if (!output) {
         return;
@@ -647,24 +636,24 @@ void X11WindowedBackend::handleXinputEvent(xcb_ge_generic_event_t *ge)
     const QPointF position = output->mapFromGlobal(QPointF(fixed1616ToReal(te->root_x), fixed1616ToReal(te->root_y)));
 
     switch (ge->event_type) {
-    case XI_TouchBegin: {
+    case XCB_INPUT_TOUCH_BEGIN: {
         Q_EMIT m_touchDevice->touchDown(te->detail, position, std::chrono::milliseconds(te->time), m_touchDevice.get());
         Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
         break;
     }
-    case XI_TouchUpdate: {
+    case XCB_INPUT_TOUCH_UPDATE: {
         Q_EMIT m_touchDevice->touchMotion(te->detail, position, std::chrono::milliseconds(te->time), m_touchDevice.get());
         Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
         break;
     }
-    case XI_TouchEnd: {
+    case XCB_INPUT_TOUCH_END: {
         Q_EMIT m_touchDevice->touchUp(te->detail, std::chrono::milliseconds(te->time), m_touchDevice.get());
         Q_EMIT m_touchDevice->touchFrame(m_touchDevice.get());
         break;
     }
-    case XI_TouchOwnership: {
-        auto te = reinterpret_cast<xXITouchOwnershipEvent *>(ge);
-        XIAllowTouchEvents(m_display, te->deviceid, te->sourceid, te->touchid, XIAcceptTouch);
+    case XCB_INPUT_TOUCH_OWNERSHIP: {
+        auto *te = reinterpret_cast<xcb_input_touch_ownership_event_t *>(ge);
+        xcb_input_xi_allow_events(m_connection, te->time, te->deviceid, XCB_INPUT_EVENT_MODE_ACCEPT_TOUCH, te->touchid, te->event);
         break;
     }
     }
@@ -747,11 +736,6 @@ xcb_screen_t *X11WindowedBackend::screen() const
 int X11WindowedBackend::screenNumer() const
 {
     return m_screenNumber;
-}
-
-::Display *X11WindowedBackend::display() const
-{
-    return m_display;
 }
 
 bool X11WindowedBackend::hasXInput() const

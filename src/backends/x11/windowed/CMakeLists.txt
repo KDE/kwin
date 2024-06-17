@@ -8,11 +8,10 @@ target_sources(kwin PRIVATE
 
 target_link_libraries(kwin
 PRIVATE
-    X11::XCB
-    X11::X11
+    XCB::XCB
     XCB::DRI3
     XCB::PRESENT
 )
-if (X11_Xi_FOUND)
-    target_link_libraries(kwin PRIVATE X11::Xi)
+if (TARGET XCB::XINPUT)
+    target_link_libraries(kwin PRIVATE XCB::XINPUT)
 endif()

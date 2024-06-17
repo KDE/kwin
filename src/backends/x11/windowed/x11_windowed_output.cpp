@@ -30,6 +30,7 @@
 #include <drm_fourcc.h>
 #include <xcb/dri3.h>
 #include <xcb/shm.h>
+#include <xcb/xinput.h>
 
 namespace KWin
 {
@@ -281,18 +282,15 @@ void X11WindowedOutput::initXInputForWindow()
         return;
     }
 #if HAVE_X11_XINPUT
-    XIEventMask evmasks[1];
-    unsigned char mask1[XIMaskLen(XI_LASTEVENT)];
-
-    memset(mask1, 0, sizeof(mask1));
-    XISetMask(mask1, XI_TouchBegin);
-    XISetMask(mask1, XI_TouchUpdate);
-    XISetMask(mask1, XI_TouchOwnership);
-    XISetMask(mask1, XI_TouchEnd);
-    evmasks[0].deviceid = XIAllMasterDevices;
-    evmasks[0].mask_len = sizeof(mask1);
-    evmasks[0].mask = mask1;
-    XISelectEvents(m_backend->display(), m_window, evmasks, 1);
+    struct
+    {
+        xcb_input_event_mask_t head;
+        xcb_input_xi_event_mask_t mask;
+    } mask;
+    mask.head.deviceid = XCB_INPUT_DEVICE_ALL_MASTER;
+    mask.head.mask_len = 1;
+    mask.mask = static_cast<xcb_input_xi_event_mask_t>(XCB_INPUT_XI_EVENT_MASK_RAW_TOUCH_BEGIN | XCB_INPUT_XI_EVENT_MASK_RAW_TOUCH_UPDATE | XCB_INPUT_XI_EVENT_MASK_TOUCH_END | XCB_INPUT_XI_EVENT_MASK_TOUCH_OWNERSHIP);
+    xcb_input_xi_select_events(m_backend->connection(), m_window, 1, &mask.head);
 #endif
 }
 
