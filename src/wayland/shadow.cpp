@@ -139,11 +139,11 @@ void ShadowInterfacePrivate::org_kde_kwin_shadow_commit(Resource *resource)
 {
 #define BUFFER(__FLAG__, __PART__)                        \
     if (pending.flags & State::Flags::__FLAG__##Buffer) { \
-        if (current.__PART__) {                           \
-            current.__PART__->unref();                    \
-        }                                                 \
         if (pending.__PART__) {                           \
             pending.__PART__->ref();                      \
+        }                                                 \
+        if (current.__PART__) {                           \
+            current.__PART__->unref();                    \
         }                                                 \
         current.__PART__ = pending.__PART__;              \
     }
