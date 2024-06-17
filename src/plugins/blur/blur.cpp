@@ -594,9 +594,9 @@ void BlurEffect::blur(const RenderTarget &renderTarget, const RenderViewport &vi
     // Maybe reallocate offscreen render targets. Keep in mind that the first one contains
     // original background behind the window, it's not blurred.
     GLenum textureFormat = GL_RGBA8;
-    if (renderTarget.texture()) {
-        textureFormat = renderTarget.texture()->internalFormat();
-    }
+    // if (renderTarget.texture()) {
+    //     textureFormat = renderTarget.texture()->internalFormat();
+    // }
 
     if (renderInfo.framebuffers.size() != (m_iterationCount + 1) || renderInfo.textures[0]->size() != backgroundRect.size() || renderInfo.textures[0]->internalFormat() != textureFormat) {
         renderInfo.framebuffers.clear();
