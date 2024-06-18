@@ -13,8 +13,8 @@
 
 // own
 #include "x11_standalone_glx_backend.h"
-#include "../common/kwinxrenderutils.h"
 #include "glxcontext.h"
+#include "kwinxrenderutils.h"
 #include "utils/softwarevsyncmonitor.h"
 #include "x11_standalone_backend.h"
 #include "x11_standalone_glx_context_attribute_builder.h"

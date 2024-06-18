@@ -9,8 +9,7 @@
 */
 // own
 #include "x11_standalone_non_composited_outline.h"
-// KWin libs
-#include "../common/kwinxrenderutils.h"
+#include "kwinxrenderutils.h"
 // xcb
 #include <xcb/render.h>
 

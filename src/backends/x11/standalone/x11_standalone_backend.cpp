@@ -12,6 +12,7 @@
 
 #include "atoms.h"
 #include "core/session.h"
+#include "kwinxrenderutils.h"
 #include "x11_standalone_cursor.h"
 #include "x11_standalone_edge.h"
 #include "x11_standalone_placeholderoutput.h"
@@ -39,8 +40,6 @@
 #include "x11_standalone_output.h"
 #include "x11_standalone_screenedges_filter.h"
 #include "xkb.h"
-
-#include "../common/kwinxrenderutils.h"
 
 #include <KConfigGroup>
 #include <KLocalizedString>

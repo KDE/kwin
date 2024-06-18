@@ -8,6 +8,7 @@
 */
 #include "x11_standalone_xinputintegration.h"
 #include "core/outputbackend.h"
+#include "ge_event_mem_mover.h"
 #include "gestures.h"
 #include "keyboard_input.h"
 #include "main.h"
@@ -15,8 +16,6 @@
 #include "screenedge.h"
 #include "x11_standalone_cursor.h"
 #include "x11_standalone_logging.h"
-
-#include "../common/ge_event_mem_mover.h"
 
 #include "effect/globals.h"
 #include "effect/xcb.h"
