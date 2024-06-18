@@ -8,7 +8,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_windowed_backend.h"
-#include "../common/kwinxrenderutils.h"
 
 #include "config-kwin.h"
 
@@ -243,8 +242,8 @@ bool X11WindowedBackend::initialize()
 
     initXInput();
     initDri3();
+    initRender();
 
-    XRenderUtils::init(m_connection, m_screen->root);
     createOutputs();
 
     m_pointerDevice = std::make_unique<X11WindowedInputDevice>();
@@ -336,6 +335,22 @@ void X11WindowedBackend::initDri3()
         }
 
         xcb_depth_next(&it);
+    }
+}
+
+void X11WindowedBackend::initRender()
+{
+    xcb_render_query_pict_formats_cookie_t cookie = xcb_render_query_pict_formats(m_connection);
+    xcb_render_query_pict_formats_reply_t *reply = xcb_render_query_pict_formats_reply(m_connection, cookie, nullptr);
+    if (reply) {
+        for (xcb_render_pictforminfo_iterator_t it = xcb_render_query_pict_formats_formats_iterator(reply); it.rem; xcb_render_pictforminfo_next(&it)) {
+            xcb_render_pictforminfo_t *info = it.data;
+            if (info->depth == 32) {
+                m_pictureFormats.insert(info->depth, info->id);
+                break;
+            }
+        }
+        free(reply);
     }
 }
 
@@ -742,6 +757,11 @@ int X11WindowedBackend::screenNumer() const
 bool X11WindowedBackend::hasXInput() const
 {
     return m_hasXInput;
+}
+
+xcb_render_pictformat_t X11WindowedBackend::pictureFormatForDepth(int depth) const
+{
+    return m_pictureFormats.value(depth);
 }
 
 QHash<uint32_t, QList<uint64_t>> X11WindowedBackend::driFormats() const

@@ -9,7 +9,6 @@
 #include "x11_windowed_output.h"
 #include "config-kwin.h"
 
-#include "../common/kwinxrenderutils.h"
 #include "x11_windowed_backend.h"
 #include "x11_windowed_logging.h"
 
@@ -113,8 +112,10 @@ void X11WindowedCursor::update(const QImage &image, const QPointF &hotspot)
 
         xcb_put_image(connection, XCB_IMAGE_FORMAT_Z_PIXMAP, pix, gc, img.width(), img.height(), 0, 0, 0, 32, img.sizeInBytes(), img.constBits());
 
-        XRenderPicture pic(pix, 32);
+        xcb_render_picture_t pic = xcb_generate_id(connection);
+        xcb_render_create_picture(connection, pic, pix, backend->pictureFormatForDepth(32), 0, nullptr);
         xcb_render_create_cursor(connection, cid, pic, qRound(hotspot.x() * outputScale), qRound(hotspot.y() * outputScale));
+        xcb_render_free_picture(connection, pic);
     }
 
     xcb_change_window_attributes(connection, m_output->window(), XCB_CW_CURSOR, &cid);

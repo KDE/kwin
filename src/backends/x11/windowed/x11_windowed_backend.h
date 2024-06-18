@@ -19,6 +19,7 @@
 #include <QObject>
 #include <QSize>
 
+#include <xcb/render.h>
 #include <xcb/xcb.h>
 
 struct _XDisplay;
@@ -107,6 +108,8 @@ public:
 
     bool hasXInput() const;
 
+    xcb_render_pictformat_t pictureFormatForDepth(int depth) const;
+
     QHash<uint32_t, QList<uint64_t>> driFormats() const;
     uint32_t driFormatForDepth(int depth) const;
     int driMajorVersion() const;
@@ -139,6 +142,7 @@ private:
     void updateSize(xcb_configure_notify_event_t *event);
     void initXInput();
     void initDri3();
+    void initRender();
     X11WindowedOutput *findOutput(xcb_window_t window) const;
     void destroyOutputs();
 
@@ -178,6 +182,7 @@ private:
     std::unique_ptr<EglDisplay> m_eglDisplay;
 
     QList<X11WindowedOutput *> m_outputs;
+    QHash<int, xcb_render_pictformat_t> m_pictureFormats;
 };
 
 } // namespace KWin
