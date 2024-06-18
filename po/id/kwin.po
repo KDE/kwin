@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-16 00:40+0000\n"
+"POT-Creation-Date: 2024-06-18 00:40+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2335,7 +2335,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:441
+#: plugins/nightlight/nightlightmanager.cpp:439
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr ""
@@ -4404,7 +4404,7 @@ msgstr "Alihkan Satu Desktop ke Bawah"
 msgid "Switch to Desktop %1"
 msgstr "Alihkan ke Desktop %1"
 
-#: window.cpp:3099
+#: window.cpp:3095
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
