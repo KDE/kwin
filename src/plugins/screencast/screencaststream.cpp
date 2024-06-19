@@ -714,11 +714,6 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
 
     if (!includesCursor(cursor)) {
         spaMetaCursor->id = 0;
-        spaMetaCursor->position.x = -1;
-        spaMetaCursor->position.y = -1;
-        spaMetaCursor->hotspot.x = -1;
-        spaMetaCursor->hotspot.y = -1;
-        spaMetaCursor->bitmap_offset = 0;
         m_cursor.visible = false;
         return;
     }
