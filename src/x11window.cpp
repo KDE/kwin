@@ -1721,6 +1721,9 @@ bool X11Window::isShadeable() const
 
 void X11Window::doSetShade(ShadeMode previousShadeMode)
 {
+    if (isDeleted()) {
+        return;
+    }
     // TODO: All this unmapping, resizing etc. feels too much duplicated from elsewhere
     if (isShade()) {
         shade_geometry_change = true;
@@ -2135,58 +2138,91 @@ void X11Window::killProcess(bool ask, xcb_timestamp_t timestamp)
 
 void X11Window::doSetKeepAbove()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(keepAbove() ? NET::KeepAbove : NET::States(), NET::KeepAbove);
 }
 
 void X11Window::doSetKeepBelow()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(keepBelow() ? NET::KeepBelow : NET::States(), NET::KeepBelow);
 }
 
 void X11Window::doSetSkipTaskbar()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(skipTaskbar() ? NET::SkipTaskbar : NET::States(), NET::SkipTaskbar);
 }
 
 void X11Window::doSetSkipPager()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(skipPager() ? NET::SkipPager : NET::States(), NET::SkipPager);
 }
 
 void X11Window::doSetSkipSwitcher()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(skipSwitcher() ? NET::SkipSwitcher : NET::States(), NET::SkipSwitcher);
 }
 
 void X11Window::doSetDesktop()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setDesktop(desktopId());
     updateVisibility();
 }
 
 void X11Window::doSetDemandsAttention()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(isDemandingAttention() ? NET::DemandsAttention : NET::States(), NET::DemandsAttention);
 }
 
 void X11Window::doSetHidden()
 {
+    if (isDeleted()) {
+        return;
+    }
     updateVisibility();
 }
 
 void X11Window::doSetHiddenByShowDesktop()
 {
+    if (isDeleted()) {
+        return;
+    }
     updateVisibility();
 }
 
 void X11Window::doSetModal()
 {
+    if (isDeleted()) {
+        return;
+    }
     info->setState(isModal() ? NET::Modal : NET::States(), NET::Modal);
 }
 
 void X11Window::doSetOnActivities(const QStringList &activityList)
 {
 #if KWIN_BUILD_ACTIVITIES
+    if (isDeleted()) {
+        return;
+    }
     if (activityList.isEmpty()) {
         const QByteArray nullUuid = Activities::nullUuid().toUtf8();
         m_client.changeProperty(atoms->activities, XCB_ATOM_STRING, 8, nullUuid.length(), nullUuid.constData());
@@ -5259,6 +5295,9 @@ xcb_timestamp_t X11Window::userTime() const
 
 void X11Window::doSetActive()
 {
+    if (isDeleted()) {
+        return;
+    }
     updateUrgency(); // demand attention again if it's still urgent
     info->setState(isActive() ? NET::Focused : NET::States(), NET::Focused);
 }
