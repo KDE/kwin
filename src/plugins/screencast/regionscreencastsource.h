@@ -50,6 +50,11 @@ public:
     void pause() override;
     void resume() override;
 
+    bool includesCursor(Cursor *cursor) const override;
+
+    QPointF mapFromGlobal(const QPointF &point) const override;
+    QRectF mapFromGlobal(const QRectF &rect) const override;
+
 private:
     void blit(Output *output);
     void ensureTexture();

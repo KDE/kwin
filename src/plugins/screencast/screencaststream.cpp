@@ -468,7 +468,7 @@ void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
     }
 
     if (contents == Content::Cursor) {
-        if (!m_cursor.visible && !includesCursor(Cursors::self()->currentCursor())) {
+        if (!m_cursor.visible && !m_source->includesCursor(Cursors::self()->currentCursor())) {
             return;
         }
     }
@@ -703,14 +703,6 @@ spa_pod *ScreenCastStream::buildFormat(struct spa_pod_builder *b, enum spa_video
     return (spa_pod *)spa_pod_builder_pop(b, &f[0]);
 }
 
-bool ScreenCastStream::includesCursor(Cursor *cursor) const
-{
-    if (Cursors::self()->isCursorHidden()) {
-        return false;
-    }
-    return m_cursor.viewport.intersects(cursor->geometry());
-}
-
 void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
 {
     if (!cursor) {
@@ -722,13 +714,13 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
         return;
     }
 
-    if (!includesCursor(cursor)) {
+    if (!m_source->includesCursor(cursor)) {
         spaMetaCursor->id = 0;
         m_cursor.visible = false;
         return;
     }
     m_cursor.visible = true;
-    const auto position = (cursor->pos() - m_cursor.viewport.topLeft()) * m_cursor.scale;
+    const auto position = m_source->mapFromGlobal(cursor->pos()) * m_cursor.scale;
 
     spaMetaCursor->id = 1;
     spaMetaCursor->position.x = position.x();
@@ -772,17 +764,17 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
 
 QRegion ScreenCastStream::addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cursor)
 {
-    if (!includesCursor(cursor)) {
+    if (!m_source->includesCursor(cursor)) {
         const QRegion damage = m_cursor.lastRect.toAlignedRect();
         m_cursor.visible = false;
         m_cursor.lastRect = QRectF();
         return damage;
     }
 
-    const QRectF cursorRect = scaledRect(cursor->geometry().translated(-m_cursor.viewport.topLeft()), m_cursor.scale);
+    const QRectF cursorRect = scaledRect(m_source->mapFromGlobal(cursor->geometry()), m_cursor.scale);
     if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
         QPainter painter(memfd->view.image());
-        const auto position = (cursor->pos() - m_cursor.viewport.topLeft() - cursor->hotspot()) * m_cursor.scale;
+        const auto position = m_source->mapFromGlobal(cursor->pos() - cursor->hotspot()) * m_cursor.scale;
         const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
         painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
     } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
@@ -824,11 +816,10 @@ QRegion ScreenCastStream::addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cu
     return damage;
 }
 
-void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale, const QRectF &viewport)
+void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale)
 {
     m_cursor.mode = mode;
     m_cursor.scale = scale;
-    m_cursor.viewport = viewport;
 }
 
 std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers)

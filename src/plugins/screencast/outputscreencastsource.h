@@ -34,6 +34,11 @@ public:
     void resume() override;
     void pause() override;
 
+    bool includesCursor(Cursor *cursor) const override;
+
+    QPointF mapFromGlobal(const QPointF &point) const override;
+    QRectF mapFromGlobal(const QRectF &rect) const override;
+
 private:
     void report(const QRegion &damage);
 
