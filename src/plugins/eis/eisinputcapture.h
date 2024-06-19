@@ -47,8 +47,8 @@ public:
     Q_INVOKABLE void release(const QPointF &cursorPosition, bool applyPosition);
 Q_SIGNALS:
     void disabled();
-    void activated(int activationId, const QPointF &cursorPosition);
-    void deactivated(int activationId);
+    void activated(uint activationId, const QPointF &cursorPosition);
+    void deactivated(uint activationId);
 
 private:
     void handleEvents();
@@ -66,7 +66,7 @@ private:
     eis_device *m_pointer = nullptr;
     eis_device *m_keyboard = nullptr;
     eis_device *m_absoluteDevice = nullptr;
-    int m_activationId = 0;
+    uint m_activationId = 0;
 };
 
 }
