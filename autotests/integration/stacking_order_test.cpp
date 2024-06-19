@@ -48,6 +48,9 @@ private Q_SLOTS:
     void testKeepBelow();
 
     void testPreserveRelativeWindowStacking();
+
+    void testToggleRaiseLowerInSingleLayer();
+    void testToggleRaiseLowerInMultipleLayers();
 };
 
 void StackingOrderTest::initTestCase()
@@ -904,6 +907,131 @@ void StackingOrderTest::testPreserveRelativeWindowStacking()
     workspace()->activateWindow(windows[1]);
     workspace()->activateWindow(windows[2]);
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[3], windows[4], windows[1], windows[2]}));
+}
+
+void StackingOrderTest::testToggleRaiseLowerInSingleLayer()
+{
+    // This test verifies that Toggle Raise Lower causes proper action (lowering or raising) to top-most,
+    // bottom-most and middle-stacked windows, as well as this action doesn't transfer focus
+
+    const int windowCount = 3;
+
+    std::unique_ptr<KWayland::Client::Surface> surfaces[windowCount];
+    std::unique_ptr<Test::XdgToplevel> shellSurfaces[windowCount];
+    Window *windows[windowCount];
+
+    // Create 3 windows.
+    for (int i = 0; i < windowCount; i++) {
+        surfaces[i] = Test::createSurface();
+        QVERIFY(surfaces[i]);
+        shellSurfaces[i] = Test::createXdgToplevelSurface(surfaces[i].get());
+        QVERIFY(shellSurfaces[i]);
+        windows[i] = Test::renderAndWaitForShown(surfaces[i].get(), QSize(128, 128), Qt::green);
+        QVERIFY(windows[i]);
+    }
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2]}));
+
+    // Activate window 0, verify effects.
+    workspace()->activateWindow(windows[0]);
+    QVERIFY(windows[0]->isActive());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[1], windows[2], windows[0]}));
+
+    // TR&L (Toggle Raise Lower) top-most window 0.
+    workspace()->raiseOrLowerWindow(windows[0]);
+
+    // Verify that window 0 has been lowered and still has focus.
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2]}));
+    QVERIFY(windows[0]->isActive());
+
+    // TR&L window 0, which is now bottom-most.
+    workspace()->raiseOrLowerWindow(windows[0]);
+
+    // verify that window 0 has been raised and still has focus.
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[1], windows[2], windows[0]}));
+    QVERIFY(windows[0]->isActive());
+
+    // TR&L window 2, which is in the middle.
+    workspace()->raiseOrLowerWindow(windows[2]);
+    // verify that it got raised and focus stays with window 0.
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[1], windows[0], windows[2]}));
+    QVERIFY(!windows[2]->isActive());
+    QVERIFY(windows[0]->isActive());
+
+    // TR&L window 2, which is top-most now, but doesn't have focus.
+    workspace()->raiseOrLowerWindow(windows[2]);
+    // verify that it got lower and focus stays with window 0.
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[2], windows[1], windows[0]}));
+    QVERIFY(!windows[2]->isActive());
+    QVERIFY(windows[0]->isActive());
+}
+
+void StackingOrderTest::testToggleRaiseLowerInMultipleLayers()
+{
+    // This test verifies that Toggle Raise & Lower works independently within each window layer
+
+    const int windowCount = 9;
+
+    std::unique_ptr<KWayland::Client::Surface> surfaces[windowCount];
+    std::unique_ptr<Test::XdgToplevel> shellSurfaces[windowCount];
+    Window *windows[windowCount];
+
+    // Create 9 windows, place them in 3 layers, move to the same position, so they overlap each other.
+    for (int i = 0; i < windowCount; i++) {
+        surfaces[i] = Test::createSurface();
+        QVERIFY(surfaces[i]);
+        shellSurfaces[i] = Test::createXdgToplevelSurface(surfaces[i].get());
+        QVERIFY(shellSurfaces[i]);
+        windows[i] = Test::renderAndWaitForShown(surfaces[i].get(), QSize(128, 128), Qt::green);
+        QVERIFY(windows[i]);
+        windows[i]->move(QPoint(0, 0));
+    }
+    windows[0]->setKeepBelow(true);
+    windows[1]->setKeepBelow(true);
+    windows[2]->setKeepBelow(true);
+    windows[6]->setKeepAbove(true);
+    windows[7]->setKeepAbove(true);
+    windows[8]->setKeepAbove(true);
+
+    // Verify initial stacking order
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2],
+                                                            windows[3], windows[4], windows[5],
+                                                            windows[6], windows[7], windows[8]}));
+
+    // TR&L window 0 (lowest in BelowLayer), verify that it got raised within its layer
+    workspace()->raiseOrLowerWindow(windows[0]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[1], windows[2], windows[0],
+                                                            windows[3], windows[4], windows[5],
+                                                            windows[6], windows[7], windows[8]}));
+
+    // TR&L window 0, verify that it got lowered within its layer
+    workspace()->raiseOrLowerWindow(windows[0]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2],
+                                                            windows[3], windows[4], windows[5],
+                                                            windows[6], windows[7], windows[8]}));
+
+    // TR&L window 4 (middle in NormalLayer), verify that it got raised within its layer
+    workspace()->raiseOrLowerWindow(windows[4]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2],
+                                                            windows[3], windows[5], windows[4],
+                                                            windows[6], windows[7], windows[8]}));
+
+    // TR&L window 4, verify that it got lowered within NormalLayer
+    workspace()->raiseOrLowerWindow(windows[4]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2],
+                                                            windows[4], windows[3], windows[5],
+                                                            windows[6], windows[7], windows[8]}));
+
+    // TR&L window 8 (topmost in AboveLayer), verify that it got lowered within its layer
+    workspace()->raiseOrLowerWindow(windows[8]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2],
+                                                            windows[4], windows[3], windows[5],
+                                                            windows[8], windows[6], windows[7]}));
+
+    // TR&L window 8, verify that it got raised within its layer
+    workspace()->raiseOrLowerWindow(windows[8]);
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{windows[0], windows[1], windows[2],
+                                                            windows[4], windows[3], windows[5],
+                                                            windows[6], windows[7], windows[8]}));
 }
 
 WAYLANDTEST_MAIN(StackingOrderTest)
