@@ -2378,7 +2378,7 @@ msgstr "无效区域"
 #: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr ""
+msgstr "OpenGL 显示特效合成是屏幕录像所必须的"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format
