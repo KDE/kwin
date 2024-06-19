@@ -7,6 +7,7 @@
 #include "regionscreencastsource.h"
 #include "screencastutils.h"
 
+#include "cursor.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include <compositor.h>
@@ -204,6 +205,25 @@ void RegionScreenCastSource::resume()
     Compositor::self()->scene()->addRepaint(m_region);
 
     m_active = true;
+}
+
+bool RegionScreenCastSource::includesCursor(Cursor *cursor) const
+{
+    if (Cursors::self()->isCursorHidden()) {
+        return false;
+    }
+
+    return cursor->geometry().intersects(m_region);
+}
+
+QPointF RegionScreenCastSource::mapFromGlobal(const QPointF &point) const
+{
+    return point - m_region.topLeft();
+}
+
+QRectF RegionScreenCastSource::mapFromGlobal(const QRectF &rect) const
+{
+    return rect.translated(-m_region.topLeft());
 }
 
 } // namespace KWin

@@ -10,6 +10,7 @@
 #include "compositor.h"
 #include "core/output.h"
 #include "core/renderloop.h"
+#include "cursor.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
 #include "scene/workspacescene.h"
@@ -113,6 +114,25 @@ void OutputScreenCastSource::pause()
     }
 
     m_active = false;
+}
+
+bool OutputScreenCastSource::includesCursor(Cursor *cursor) const
+{
+    if (Cursors::self()->isCursorHidden()) {
+        return false;
+    }
+
+    return cursor->isOnOutput(m_output);
+}
+
+QPointF OutputScreenCastSource::mapFromGlobal(const QPointF &point) const
+{
+    return m_output->mapFromGlobal(point);
+}
+
+QRectF OutputScreenCastSource::mapFromGlobal(const QRectF &rect) const
+{
+    return m_output->mapFromGlobal(rect);
 }
 
 } // namespace KWin
