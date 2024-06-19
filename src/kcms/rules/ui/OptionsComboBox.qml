@@ -43,6 +43,11 @@ QQC2.ComboBox {
         return i18np("%1 selected", "%1 selected", selectionCount);
     }
 
+    // For multiple choice options we need to manually handle the Key events,
+    // so forward them to the current delegate
+    // HACK to reach it: ComboBox -> PopUp -> ScrollView -> ListView -> Delegate
+    Keys.forwardTo: (down && multipleChoice) ? [popup.contentItem.contentItem.currentItem] : []
+
     delegate: QQC2.ItemDelegate {
         id: delegateItem
 
@@ -54,17 +59,11 @@ QQC2.ComboBox {
                 id: radioButton
                 visible: multipleChoice && model.optionType === OptionsModel.ExclusiveOption
                 checked: (selectionMask & bitMask) == bitMask
-                enabled: false  // We don't want to uncheck the exclusive option on toggle
             }
             QQC2.CheckBox {
                 id: checkBox
                 visible: multipleChoice && model.optionType !== OptionsModel.ExclusiveOption
                 checked: (selectionMask & model.bitMask) == model.bitMask
-                onToggled: {
-                    selectionMask = (checked) ? selectionMask | model.bitMask : selectionMask & ~model.bitMask;
-                    selectionMask &= allOptionsMask;
-                    activated(index);
-                }
             }
             Kirigami.Icon {
                 source: model.decoration
@@ -82,15 +81,25 @@ QQC2.ComboBox {
         MouseArea {
             anchors.fill: contentItem
             enabled: multipleChoice
-            onClicked: {
-                if (checkBox.visible) {
-                    checkBox.toggle();
-                    checkBox.toggled();
-                } else if (radioButton.visible) {
-                    selectionMask = model.bitMask; // Only check the exclusive option
-                    activated(index);
-                }
+            onClicked: delegateItem.toggle()
+        }
+
+        // Space toggles an item and keeps the popup open
+        Keys.onSpacePressed: event => {
+            delegateItem.toggle();
+        }
+
+        function toggle() {
+            if (model.optionType === OptionsModel.ExclusiveOption) {
+                // Radio Button. Activate only the exclusive option
+                selectionMask = model.bitMask;
+            } else {
+                // CheckBox. Toggle the option and add it to the mask
+                checkBox.toggle();
+                selectionMask = (checkBox.checked) ? selectionMask | model.bitMask : selectionMask & ~model.bitMask;
+                selectionMask &= allOptionsMask;
             }
+            activated(index);
         }
 
         QQC2.ToolTip {
@@ -101,12 +110,6 @@ QQC2.ComboBox {
         Component.onCompleted: {
             //FIXME: work around bug https://bugs.kde.org/show_bug.cgi?id=403153
             optionsCombo.popup.width = Math.max(implicitWidth, optionsCombo.width, optionsCombo.popup.width);
-        }
-
-        onActiveFocusChanged: {
-            if (!activeFocus) {
-                popup.close();
-            }
         }
     }
 }
