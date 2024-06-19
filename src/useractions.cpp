@@ -746,14 +746,14 @@ void UserActionsMenu::slotWindowOperation(QAction *action)
     default:
         break;
     }
-    if (!type.isEmpty()) {
-        helperDialog(type);
-    }
     // need to delay performing the window operation as we need to have the
     // user actions menu closed before we destroy the decoration. Otherwise Qt crashes
     QMetaObject::invokeMethod(
-        workspace(), [c, op]() {
+        workspace(), [this, c, op, type]() {
             workspace()->performWindowOperation(c, op);
+            if (!type.isEmpty()) {
+                helperDialog(type);
+            }
         },
         Qt::QueuedConnection);
 }
