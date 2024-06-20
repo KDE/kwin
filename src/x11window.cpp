@@ -4471,8 +4471,6 @@ void X11Window::maximize(MaximizeMode mode)
         return;
     }
 
-    const auto currentQuickTileMode = requestedQuickTileMode();
-
     QRectF clientArea;
     if (isElectricBorderMaximizing()) {
         clientArea = workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor());
