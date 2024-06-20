@@ -277,6 +277,7 @@ ZoomEffect::OffscreenData *ZoomEffect::ensureOffscreenData(const RenderTarget &r
 
     OffscreenData &data = m_offscreenData[effects->waylandDisplay() ? screen : nullptr];
     data.viewport = rect;
+    data.color = renderTarget.colorDescription();
 
     const GLenum textureFormat = renderTarget.colorDescription() == ColorDescription::sRGB ? GL_RGBA8 : GL_RGBA16F;
     if (!data.texture || data.texture->size() != nativeSize || data.texture->internalFormat() != textureFormat) {
@@ -390,7 +391,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture);
+    auto shader = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
     for (auto &[screen, offscreen] : m_offscreenData) {
         QMatrix4x4 matrix;
         matrix.translate(xTranslation * scale, yTranslation * scale);
@@ -398,6 +399,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
+        shader->setColorspaceUniforms(offscreen.color, renderTarget.colorDescription());
 
         offscreen.texture->render(offscreen.viewport.size() * scale);
     }
