@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-18 00:40+0000\n"
+"POT-Creation-Date: 2024-06-20 00:40+0000\n"
 "PO-Revision-Date: 2024-06-15 13:45+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -58,17 +58,17 @@ msgstr "- uscita disabilitata"
 msgid "- Output dimmed"
 msgstr "- uscita oscurata"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Premi il tasto control destro per sbloccare l'inserimento"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Premi il tasto control destro per acquisire l'inserimento"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:508
+#: backends/x11/windowed/x11_windowed_backend.cpp:523
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Compositore KDE Wayland"

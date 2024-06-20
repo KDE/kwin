@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-18 00:40+0000\n"
+"POT-Creation-Date: 2024-06-20 00:40+0000\n"
 "PO-Revision-Date: 2024-05-25 16:16+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: \n"
@@ -52,17 +52,17 @@ msgstr "- الخرج معطّل"
 msgid "- Output dimmed"
 msgstr "- الخرج معتم"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "اضغط على مفتاح التحكم الأيمن لترك الإدخال"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "اضغط على مفتاح التحكم الأيمن للحصول على الإدخال"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:508
+#: backends/x11/windowed/x11_windowed_backend.cpp:523
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "مراكب ويلاند كيدي"

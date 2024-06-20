@@ -16,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-18 00:40+0000\n"
-"PO-Revision-Date: 2024-05-23 16:03+0900\n"
+"POT-Creation-Date: 2024-06-20 00:40+0000\n"
+"PO-Revision-Date: 2024-06-20 02:06+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -66,17 +66,17 @@ msgstr "- 輸出已停用"
 msgid "- Output dimmed"
 msgstr "- 輸出已暗化"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "按下右側 Ctrl 來取消抓取輸入"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "按下右側 Ctrl 鍵來抓取輸入"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:508
+#: backends/x11/windowed/x11_windowed_backend.cpp:523
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 合成器"
@@ -2388,10 +2388,9 @@ msgid "Invalid region"
 msgstr "無效的區域"
 
 #: plugins/screencast/screencaststream.cpp:346
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "沒有執行中的 OpenGL 合成器"
+msgstr "需要使用 OpenGL 合成才能利用螢幕錄製"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-18 00:40+0000\n"
+"POT-Creation-Date: 2024-06-20 00:40+0000\n"
 "PO-Revision-Date: 2024-06-16 17:49+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -58,17 +58,17 @@ msgstr "- வெளியீடு முடக்கப்பட்டுள்
 msgid "- Output dimmed"
 msgstr "வெளியீடு மங்கலாக்கப்பட்டுள்ளது"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "உள்ளீட்டை விடுவிக்க வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:507
+#: backends/x11/windowed/x11_windowed_backend.cpp:522
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "உள்ளீட்டை கைபற்ற வலது Ctrl விசையை அழுத்தவும்"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:508
+#: backends/x11/windowed/x11_windowed_backend.cpp:523
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
