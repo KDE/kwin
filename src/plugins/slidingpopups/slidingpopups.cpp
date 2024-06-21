@@ -211,7 +211,6 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
 
 void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
 {
-    connect(w, &EffectWindow::windowFrameGeometryChanged, this, &SlidingPopupsEffect::slotWindowFrameGeometryChanged);
     connect(w, &EffectWindow::windowHiddenChanged, this, &SlidingPopupsEffect::slotWindowHiddenChanged);
 
 #if KWIN_BUILD_X11
@@ -222,7 +221,9 @@ void SlidingPopupsEffect::setupSlideData(EffectWindow *w)
 #endif
 
     // Wayland
-    if (auto surf = w->surface()) {
+    if (effects->inputPanel() == w) {
+        setupInputPanelSlide();
+    } else if (auto surf = w->surface()) {
         slotWaylandSlideOnShowChanged(w);
         connect(surf, &SurfaceInterface::slideOnShowHideChanged, this, [this, surf] {
             slotWaylandSlideOnShowChanged(effects->findWindow(surf));
@@ -342,13 +343,6 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
     setupAnimData(w);
 }
 #endif
-
-void SlidingPopupsEffect::slotWindowFrameGeometryChanged(EffectWindow *w, const QRectF &)
-{
-    if (w == effects->inputPanel()) {
-        setupInputPanelSlide();
-    }
-}
 
 void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
 {
@@ -501,8 +495,6 @@ void SlidingPopupsEffect::setupInputPanelSlide()
     animData.slideOutDuration = m_slideOutDuration;
 
     setupAnimData(w);
-
-    slideIn(w);
 }
 
 bool SlidingPopupsEffect::eventFilter(QObject *watched, QEvent *event)
