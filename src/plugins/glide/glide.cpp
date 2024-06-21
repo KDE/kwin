@@ -145,6 +145,7 @@ void GlideEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, W
         break;
     }
 
+    quads = quads.makeRegularGrid(20, 20);
     for (WindowQuad &quad : quads) {
         for (int i = 0; i < 4; ++i) {
             const QPointF transformed = matrix.map(QPointF(quad[i].x(), quad[i].y()));
