@@ -90,6 +90,7 @@ protected:
 private:
     void showTopLevel(OutputInterface *output, InputPanelSurfaceV1Interface::Position position);
     void showOverlayPanel();
+    void resetPosition();
     void reposition();
     void handleMapped();
     void maybeShow();
