@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-20 00:40+0000\n"
-"PO-Revision-Date: 2024-06-15 13:43+0300\n"
+"PO-Revision-Date: 2024-06-20 13:56+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -1929,27 +1929,27 @@ msgstr "%1 üzerinde çalışan pencereyi kapat"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr "%1 üzerinde çalışan pencereler ekranı kaplasın/simge durumuna küçült"
+msgstr "%1 üzerindeki pencereleri kapla/simge durumuna küçült"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr "%1 üzerinde çalışan pencereleri ekranı kaplasın/geri yükle"
+msgstr "%1 üzerindeki pencereleri kapla/eski haline döndür"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr "%1 üzerinde çalışan pencereler için tam ekranı aç/kapat"
+msgstr "%1 üzerindeki pencereler için tam ekranı aç/kapat"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr "%1 üzerinde çalışan pencerelerin panjurunu aç/kapat"
+msgstr "%1 üzerindeki pencerelerin panjurunu aç/kapat"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr "%1 üzerinde çalışan pencereler için üzerinde tutmayı aç/kapat"
+msgstr "%1 üzerindeki pencereler için üzerinde tutmayı aç/kapat"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
@@ -1959,7 +1959,7 @@ msgstr "%1 üzerindeki pencereler üzerinde tutmayı aç/kapat"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
 #, kde-format
 msgid "Activate running window on %1"
-msgstr "%1 üzerinde çalışan pencereyi etkinleştir"
+msgstr "%1 üzerindeki pencereyi etkinleştir"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
