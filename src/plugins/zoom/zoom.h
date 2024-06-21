@@ -9,9 +9,9 @@
 */
 
 #pragma once
-
 #include "config-kwin.h"
 
+#include "core/colorspace.h"
 #include "effect/effect.h"
 #include <QTime>
 #include <QTimeLine>
@@ -95,6 +95,7 @@ private:
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> framebuffer;
         QRect viewport;
+        ColorDescription color = ColorDescription::sRGB;
     };
 
     GLTexture *ensureCursorTexture();
