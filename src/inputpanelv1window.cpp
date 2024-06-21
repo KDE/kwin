@@ -78,13 +78,9 @@ void InputPanelV1Window::hide()
     }
 }
 
-void InputPanelV1Window::reposition()
+void InputPanelV1Window::resetPosition()
 {
     Q_ASSERT(!isDeleted());
-    if (!readyForPainting()) {
-        return;
-    }
-
     switch (m_mode) {
     case Mode::None: {
         // should never happen
@@ -163,6 +159,15 @@ void InputPanelV1Window::reposition()
     }
 }
 
+void InputPanelV1Window::reposition()
+{
+    if (!readyForPainting()) {
+        return;
+    }
+
+    resetPosition();
+}
+
 void InputPanelV1Window::destroyWindow()
 {
     m_panelSurface->disconnect(this);
@@ -226,8 +231,8 @@ void InputPanelV1Window::maybeShow()
 {
     const bool shouldShow = m_mode == Mode::Overlay || (m_mode == Mode::VirtualKeyboard && m_allowed && m_virtualKeyboardShouldBeShown);
     if (shouldShow && !isDeleted() && surface()->isMapped()) {
+        resetPosition();
         markAsMapped();
-        reposition();
         setHidden(false);
     }
 }
