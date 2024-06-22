@@ -1,21 +1,21 @@
 # translation of kcmkwinrules.po to Swedish
 # Copyright (C) 2004, 2005, 2007, 2008, 2009 Free Software Foundation, Inc.
 #
-# Stefan Asserhäll <stefan.asserhall@gmail.com>, 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022.
+# SPDX-FileCopyrightText: 2004, 2005, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2024 Stefan Asserhäll <stefan.asserhall@gmail.com>
 # Mattias Newzella <newzella@linux.nu>, 2004.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-13 00:39+0000\n"
-"PO-Revision-Date: 2022-04-19 19:39+0200\n"
+"PO-Revision-Date: 2024-06-21 10:57+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.08.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:228
@@ -180,6 +180,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Läsbarheten kan försämras med extrem låg ogenomskinlighet. Vid 0 % blir "
+"fönstret osynligt."
 
 #: rulesmodel.cpp:388
 #, kde-format
@@ -311,6 +313,13 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Vissa program kan ställa in sin egen geometri och överskrider "
+"fönsterhanterarens inställningar. Att ange den här egenskapen överskrider "
+"deras begäran om placering.<nl/><nl/>Det påverkar <interface>Storlek</"
+"interface> och <interface>Position</interface> men inte <interface>Maximera</"
+"interface> eller <interface>Fullskärm</interface>.<nl/><nl/>Observera att "
+"positionen även kan användas för att avbilda på en annan <interface>Skärm</"
+"interface>."
 
 #: rulesmodel.cpp:552
 #, kde-format
@@ -328,13 +337,7 @@ msgid "Obey geometry restrictions"
 msgstr "Lyd geometribegränsningar"
 
 #: rulesmodel.cpp:564
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -343,11 +346,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Exempelvis terminaler och videospelare kan be om att få behålla\n"
-"en viss proportion, eller bara ändra storlek med värden större än\n"
-"ett (t.ex. med dimensionen av ett tecken).\n"
-"Det kan vara meningslöst och begränsningen förhindrar godtyckliga\n"
-"dimensioner, såsom hela skärmens storlek."
+"Vissa program som videospelare eller terminaler kan be Kwin att begränsa dem "
+"till vissa proportioner eller bara växa med värden större än dimensionerna "
+"för ett tecken. Använd egenskapen för att ignorera sådana begränsningar och "
+"tillåta att dessa fönster ändras till godtyckliga storlekar.<nl/><nl/>Det "
+"kan vara användbart för fönster som inte riktigt kan passa in i "
+"fullskärmsområdet när de är maximerade."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -374,7 +378,7 @@ msgstr "Hoppa över aktivitetsfält"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Bestämmer om fönstret visas i Aktivitetshanteraren eller inte."
 
 #: rulesmodel.cpp:591
 #, kde-format
@@ -386,7 +390,7 @@ msgstr "Hoppa över skrivbordsvisning"
 msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
-msgstr ""
+msgstr "Bestämmer om fönstret visas i den virtuella skrivbordshanteraren."
 
 #: rulesmodel.cpp:597
 #, kde-format
@@ -400,6 +404,7 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Bestämmer om fönstret visas i <shortcut>Alt+Tab</shortcut>-fönsterlistan."
 
 #: rulesmodel.cpp:603
 #, kde-format
@@ -460,6 +465,23 @@ msgid ""
 "currently-focused window.</item><item><emphasis strong='true'>Extreme:</"
 "emphasis> The window will never be raised and focused.</item></list>"
 msgstr ""
+"KWin försöker förhindra att fönster som öppnades utan direkta "
+"användarkommandon höjs och fokuseras medan du för närvarande använder med "
+"ett annat fönster. Den här egenskapen kan användas för att ändra nivån på "
+"förebyggande av fokusstöld som tillämpas på enskilda fönster och program.<nl/"
+"><nl/>Här är vad som händer med ett fönster som öppnas utan ett direkt "
+"kommando på varje nivå av förebyggande av fokusstöld:<nl/"
+"><list><item><emphasis strong='true'>Inget:</emphasis> Fönstret höjs och "
+"fokuseras.</item><item><emphasis strong='true'>Lågt:</emphasis> Förebyggande "
+"av fokusstöld tillämpas, men i fallet med en situation som Kwin anser vara "
+"tvetydig, höjs och fokuseras fönstret.</item><item><emphasis "
+"strong='true'>Normalt:</emphasis> Förebyggande av fokusstöld tillämpas, och "
+"i fallet med en situation som KWin anser vara tvetydig, höjs och fokuseras "
+"fönstret <emphasis>inte</emphasis>.</item><item><emphasis strong='true'>Högt:"
+"</emphasis> Fönstret höjs och fokuseras bara om det tillhör samma program "
+"som det för närvarande fokuserade fönstret.</item><item><emphasis "
+"strong='true'>Extremt:</emphasis> Fönstret höjs och fokuseras aldrig.</"
+"item></list>"
 
 #: rulesmodel.cpp:658
 #, kde-format
@@ -489,6 +511,23 @@ msgid ""
 "emphasis> Newly-opened windows never raise themselves and take focus.</"
 "item></list>"
 msgstr ""
+"Den här egenskapen styr nivån på fokusskydd för fönstret som för närvarande "
+"är aktivt. Den används för att åsidosätta skyddet mot fokusstöld som gäller "
+"för nya fönster som öppnas utan ett direkt kommando.<nl/><nl/>Här är vad som "
+"händer med nya fönster som öppnas utan ett direkt kommando för varje nivå av "
+"fokusskydd medan fönster med egenskapen har fokus:<nl/><list><item><emphasis "
+"strong='true'>Inget</emphasis>: Nyöppnade fönster höjs alltid och fokuseras."
+"</item><item><emphasis strong='true'>Lågt:</emphasis> Förebyggande av "
+"fokusstöld tillämpas för det nyöppnade fönstret, men i fallet med en "
+"situation som Kwin anser vara tvetydig, höjs och fokuseras fönstret.</"
+"item><item><emphasis strong='true'>Normalt:</emphasis> Förhindrande av "
+"fokusstöld tillämpas för det nyöppnade fönstret, och i fallet med en "
+"situation som Kwin anser vara tvetydig, höjs och fokuseras fönstret "
+"<emphasis>inte</emphasis>.</item><item><emphasis strong='true'>Högt:</"
+"emphasis> Nyöppnade fönster höjs bara och fokuseras om de tillhör samma "
+"program som det för närvarande fokuserade fönstret.</item><item><emphasis "
+"strong='true'>Extremt:</emphasis> Nyöppnade fönster höjs och fokuseras "
+"aldrig.</item></list>"
 
 #: rulesmodel.cpp:686
 #, kde-format
@@ -498,7 +537,7 @@ msgstr "Acceptera fokus"
 #: rulesmodel.cpp:688
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Bestämmer om fönstret fokuseras eller inte när det klickas."
 
 #: rulesmodel.cpp:692
 #, kde-format
@@ -516,6 +555,13 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Använd den här egenskapen för att förhindra att globala snabbtangenter "
+"fungerar medan fönstret är fokuserat. Det kan vara användbart för program "
+"som emulatorer eller virtuella maskiner som själva hanterar några av samma "
+"genvägar.<nl/><nl/>Observera att du inte kommer att kunna använda "
+"<shortcut>Alt+Tabulator</shortcut> från fönster eller använda andra globala "
+"genvägar som <shortcut>Alt+Mellanslag</shortcut> för att aktivera Kör "
+"program."
 
 #: rulesmodel.cpp:704
 #, kde-format
@@ -535,18 +581,17 @@ msgstr "Blockera skrivbordseffekter"
 #: rulesmodel.cpp:719
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Lager"
 
 #: rulesmodel.cpp:725
 #, kde-format
 msgid "Adaptive Sync"
-msgstr ""
+msgstr "Adaptiv synkronisering"
 
 #: rulesmodel.cpp:777
-#, fuzzy, kde-format
-#| msgid "Window class (application)"
+#, kde-format
 msgid "Window class not available"
-msgstr "Fönsterklass (program)"
+msgstr "Fönsterklass inte tillgänglig"
 
 #: rulesmodel.cpp:778
 #, kde-kuit-format
@@ -557,6 +602,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Programmet tillhandahåller inte en klass för fönster, så Kwin kan inte "
+"använda den för att matcha och tillämpa några regler. Om du ändå vill "
+"tillämpa regler för det, försök att matcha andra egenskaper som "
+"fönsterrubriken istället.<nl/><nl/>Överväg gärna att rapportera felet till "
+"programmets utvecklare."
 
 #: rulesmodel.cpp:812
 #, kde-format
@@ -709,42 +759,40 @@ msgstr "Extrem"
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "Under"
 
 #: rulesmodel.cpp:925
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "Ovanför"
 
 #: rulesmodel.cpp:926
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Position"
+msgstr "Underrättelse"
 
 #: rulesmodel.cpp:928
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Meddelanderuta"
 
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Critical Notification"
-msgstr ""
+msgstr "Kritisk underrättelse"
 
 #: rulesmodel.cpp:930
 #, kde-format
 msgid "OSD"
-msgstr ""
+msgstr "Skärmvisning"
 
 #: rulesmodel.cpp:931
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Överlagring"
 
 #: rulesmodel.cpp:956
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Ohanterat fönster"
 
@@ -765,16 +813,14 @@ msgid "KWin Rules (*.kwinrule)"
 msgstr "Kwin-regler (*.kwinrule)"
 
 #: ui/main.qml:29
-#, fuzzy, kde-format
-#| msgid "Add New..."
+#, kde-format
 msgid "Add New…"
-msgstr "Lägg till ny..."
+msgstr "Lägg till ny…"
 
 #: ui/main.qml:35
-#, fuzzy, kde-format
-#| msgid "Import..."
+#, kde-format
 msgid "Import…"
-msgstr "Importera..."
+msgstr "Importera…"
 
 #: ui/main.qml:40
 #, kde-format
@@ -782,8 +828,7 @@ msgid "Cancel Export"
 msgstr "Avbryt export"
 
 #: ui/main.qml:40
-#, fuzzy, kde-format
-#| msgid "Export..."
+#, kde-format
 msgid "Export…"
 msgstr "Exportera..."
 
@@ -793,14 +838,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Inga regler för specifika fönster är för närvarande inställda"
 
 #: ui/main.qml:89
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New...</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
-"Klicka på knappen <interface>Lägg till ny...</interface> nedan för att lägga "
-"till några"
+"Klicka på <interface>Lägg till ny...</interface> för att lägga till några"
 
 #: ui/main.qml:97
 #, kde-format

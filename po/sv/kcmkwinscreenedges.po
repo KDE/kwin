@@ -2,20 +2,20 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Stefan Asserhäll <stefan.asserhall@gmail.com>, 2009, 2010, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022.
+# SPDX-FileCopyrightText: 2009, 2010, 2012, 2013, 2014, 2016, 2017, 2018, 2019, 2021, 2022, 2024 Stefan Asserhäll <stefan.asserhall@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2022-08-03 10:13+0200\n"
+"PO-Revision-Date: 2024-06-21 10:59+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 20.08.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: main.cpp:151 touch.cpp:118
@@ -69,15 +69,14 @@ msgid "%1 - Current Application"
 msgstr "%1 - Aktuellt program"
 
 #: main.cpp:165 touch.cpp:132
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgid "Overview"
-msgstr "Ändra översikt"
+msgstr "Översikt"
 
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "Rutnät"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -234,7 +233,7 @@ msgstr "Återaktiveringsför&dröjning:"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "&Hörnbarriär:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -246,19 +245,24 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Här kan du aktivera eller inaktivera den virtuella hörnbarriären mellan "
+"skärmarna. Barriären hindrar markören från att gå till en annan skärm när "
+"den redan vidrör ett skärmhörn. Det gör det enklare att aktivera "
+"användargränssnittselement som maximerade fönsters stängningsknappar när "
+"flera skärmar används."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "Förhindrar markörer från att korsa vid skärmhörnen."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "&Kantbarriär:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -270,6 +274,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Här kan du ställa in storlek på kantbarriären mellan olika skärmar. "
+"Barriären lägger till ytterligare avstånd som markören måste flyttas innan "
+"den korsar kanten till den andra skärmen. Det gör det enklare att komma åt "
+"användargränssnittselement som paneler i Plasma som är placerade på en kant "
+"mellan skärmarna."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
@@ -277,18 +286,19 @@ msgstr ""
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
 msgstr ""
+"Ytterligare avstånd markören måste förflyttas för att korsa skärmkanterna."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Ingen"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " bildpunkter"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
