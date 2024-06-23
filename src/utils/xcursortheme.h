@@ -110,6 +110,21 @@ public:
     bool operator!=(const KXcursorTheme &other);
 
     /**
+     * The name of the requested Xcursor theme.
+     */
+    QString name() const;
+
+    /**
+     * The size of the requested Xcursor theme.
+     */
+    int size() const;
+
+    /**
+     * The scale factor of the requested Xcursor theme.
+     */
+    qreal devicePixelRatio() const;
+
+    /**
      * Returns @c true if the Xcursor theme is empty; otherwise returns @c false.
      */
     bool isEmpty() const;

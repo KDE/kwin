@@ -31,8 +31,15 @@ public:
 class KXcursorThemePrivate : public QSharedData
 {
 public:
-    void load(const QString &themeName, int size, qreal devicePixelRatio);
-    void loadCursors(const QString &packagePath, int size, qreal devicePixelRatio);
+    KXcursorThemePrivate();
+    KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio);
+
+    void load();
+    void loadCursors(const QString &packagePath);
+
+    QString name;
+    int size = 0;
+    qreal devicePixelRatio = 0;
 
     QHash<QByteArray, QList<KXcursorSprite>> registry;
 };
@@ -81,6 +88,17 @@ std::chrono::milliseconds KXcursorSprite::delay() const
     return d->delay;
 }
 
+KXcursorThemePrivate::KXcursorThemePrivate()
+{
+}
+
+KXcursorThemePrivate::KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio)
+    : name(themeName)
+    , size(size)
+    , devicePixelRatio(devicePixelRatio)
+{
+}
+
 static QList<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
 {
     XcursorImages *images = XcursorFileLoadImages(QFile::encodeName(filePath), desiredSize * devicePixelRatio);
@@ -106,7 +124,7 @@ static QList<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize
     return sprites;
 }
 
-void KXcursorThemePrivate::loadCursors(const QString &packagePath, int size, qreal devicePixelRatio)
+void KXcursorThemePrivate::loadCursors(const QString &packagePath)
 {
     const QDir dir(packagePath);
     QFileInfoList entries = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
@@ -156,14 +174,14 @@ static QStringList searchPaths()
     return paths;
 }
 
-void KXcursorThemePrivate::load(const QString &themeName, int size, qreal devicePixelRatio)
+void KXcursorThemePrivate::load()
 {
     const QStringList paths = searchPaths();
 
     QStack<QString> stack;
     QSet<QString> loaded;
 
-    stack.push(themeName);
+    stack.push(name);
 
     while (!stack.isEmpty()) {
         const QString themeName = stack.pop();
@@ -178,7 +196,7 @@ void KXcursorThemePrivate::load(const QString &themeName, int size, qreal device
             if (!dir.exists()) {
                 continue;
             }
-            loadCursors(dir.filePath(QStringLiteral("cursors")), size, devicePixelRatio);
+            loadCursors(dir.filePath(QStringLiteral("cursors")));
             if (inherits.isEmpty()) {
                 const KConfig config(dir.filePath(QStringLiteral("index.theme")), KConfig::NoGlobals);
                 inherits << KConfigGroup(&config, QStringLiteral("Icon Theme")).readEntry("Inherits", QStringList());
@@ -198,9 +216,9 @@ KXcursorTheme::KXcursorTheme()
 }
 
 KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio)
-    : d(new KXcursorThemePrivate)
+    : d(new KXcursorThemePrivate(themeName, size, devicePixelRatio))
 {
-    d->load(themeName, size, devicePixelRatio);
+    d->load();
 }
 
 KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
@@ -226,6 +244,21 @@ bool KXcursorTheme::operator==(const KXcursorTheme &other)
 bool KXcursorTheme::operator!=(const KXcursorTheme &other)
 {
     return !(*this == other);
+}
+
+QString KXcursorTheme::name() const
+{
+    return d->name;
+}
+
+int KXcursorTheme::size() const
+{
+    return d->size;
+}
+
+qreal KXcursorTheme::devicePixelRatio() const
+{
+    return d->devicePixelRatio;
 }
 
 bool KXcursorTheme::isEmpty() const
