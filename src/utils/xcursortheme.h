@@ -88,8 +88,10 @@ public:
      * Loads the Xcursor theme with the given @ themeName and the desired @a size.
      * The @a dpr specifies the desired scale factor. If no theme with the provided
      * name exists, the cursor theme will be empty.
+     *
+     * @a searchPaths specifies where the cursor theme should be looked for.
      */
-    KXcursorTheme(const QString &theme, int size, qreal devicePixelRatio);
+    KXcursorTheme(const QString &theme, int size, qreal devicePixelRatio, const QStringList &searchPaths = QStringList());
 
     /**
      * Constructs a copy of the KXcursorTheme object @a other.

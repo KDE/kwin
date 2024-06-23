@@ -34,7 +34,7 @@ public:
     KXcursorThemePrivate();
     KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio);
 
-    void load();
+    void load(const QStringList &searchPaths);
     void loadCursors(const QString &packagePath);
 
     QString name;
@@ -175,7 +175,7 @@ void KXcursorThemePrivate::loadCursors(const QString &packagePath)
     }
 }
 
-static QStringList searchPaths()
+static QStringList defaultSearchPaths()
 {
     static QStringList paths;
     if (paths.isEmpty()) {
@@ -195,9 +195,9 @@ static QStringList searchPaths()
     return paths;
 }
 
-void KXcursorThemePrivate::load()
+void KXcursorThemePrivate::load(const QStringList &searchPaths)
 {
-    const QStringList paths = searchPaths();
+    const QStringList paths = !searchPaths.isEmpty() ? searchPaths : defaultSearchPaths();
 
     QStack<QString> stack;
     QSet<QString> loaded;
@@ -236,10 +236,10 @@ KXcursorTheme::KXcursorTheme()
 {
 }
 
-KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio)
+KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio, const QStringList &searchPaths)
     : d(new KXcursorThemePrivate(themeName, size, devicePixelRatio))
 {
-    d->load();
+    d->load(searchPaths);
 }
 
 KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
