@@ -1,0 +1,8 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource prefix="/effects/shakecursor/">
+  <file>cursors/breeze_cursors/cursors/default</file>
+  <file>cursors/breeze_cursors/index.theme</file>
+  <file>cursors/Breeze_Light/cursors/default</file>
+  <file>cursors/Breeze_Light/index.theme</file>
+</qresource>
+</RCC>
