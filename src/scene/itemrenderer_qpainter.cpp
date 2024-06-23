@@ -9,6 +9,7 @@
 #include "effect/effect.h"
 #include "platformsupport/scenes/qpainter/qpaintersurfacetexture.h"
 #include "scene/imageitem.h"
+#include "scene/rectangleitem.h"
 #include "scene/workspacescene_qpainter.h"
 #include "window.h"
 
@@ -109,6 +110,8 @@ void ItemRendererQPainter::renderItem(QPainter *painter, Item *item) const
         renderDecorationItem(painter, decorationItem);
     } else if (auto imageItem = qobject_cast<ImageItem *>(item)) {
         renderImageItem(painter, imageItem);
+    } else if (auto rectangleItem = qobject_cast<RectangleItem *>(item)) {
+        renderRectangleItem(painter, rectangleItem);
     }
 
     for (Item *childItem : sortedChildItems) {
@@ -205,6 +208,11 @@ void ItemRendererQPainter::renderDecorationItem(QPainter *painter, DecorationIte
 void ItemRendererQPainter::renderImageItem(QPainter *painter, ImageItem *imageItem) const
 {
     painter->drawImage(imageItem->rect(), imageItem->image());
+}
+
+void ItemRendererQPainter::renderRectangleItem(QPainter *painter, RectangleItem *rectangleItem) const
+{
+    painter->fillRect(rectangleItem->rect(), rectangleItem->color());
 }
 
 } // namespace KWin

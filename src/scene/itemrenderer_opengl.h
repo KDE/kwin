@@ -22,7 +22,14 @@ class KWIN_EXPORT ItemRendererOpenGL : public ItemRenderer
 public:
     struct RenderNode
     {
+        enum class Type {
+            Color,
+            Texture,
+        };
+
+        Type type;
         std::variant<GLTexture *, OpenGLSurfaceContents> texture;
+        QColor color;
         RenderGeometry geometry;
         QMatrix4x4 transformMatrix;
         int firstVertex = 0;
