@@ -164,7 +164,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
-                .scale = scale,
                 .colorDescription = item->colorDescription(),
                 .bufferReleasePoint = nullptr,
             });
@@ -179,7 +178,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
-                .scale = scale,
                 .colorDescription = item->colorDescription(),
                 .bufferReleasePoint = nullptr,
             });
@@ -196,7 +194,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = NormalizedCoordinates,
-                    .scale = scale,
                     .colorDescription = item->colorDescription(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
                 });
@@ -211,7 +208,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = imageItem->image().hasAlphaChannel(),
                 .coordinateType = NormalizedCoordinates,
-                .scale = scale,
                 .colorDescription = item->colorDescription(),
                 .bufferReleasePoint = nullptr,
             });
