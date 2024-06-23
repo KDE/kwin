@@ -642,8 +642,29 @@ install(FILES
 )
 
 install(FILES
-    scene/item.h
+    scene/cursordelegate_opengl.h
+    scene/cursordelegate_qpainter.h
+    scene/cursoritem.h
+    scene/cursorscene.h
+    scene/decorationitem.h
+    scene/dndiconitem.h
+    scene/imageitem.h
     scene/itemgeometry.h
+    scene/item.h
+    scene/itemrenderer.h
+    scene/itemrenderer_opengl.h
+    scene/itemrenderer_qpainter.h
+    scene/rootitem.h
+    scene/scene.h
+    scene/shadowitem.h
+    scene/surfaceitem.h
+    scene/surfaceitem_internal.h
+    scene/surfaceitem_wayland.h
+    scene/surfaceitem_x11.h
+    scene/windowitem.h
+    scene/workspacescene.h
+    scene/workspacescene_opengl.h
+    scene/workspacescene_qpainter.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/scene COMPONENT Devel
 )
 
