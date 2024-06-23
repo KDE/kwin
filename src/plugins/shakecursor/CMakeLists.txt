@@ -3,6 +3,7 @@ kwin_add_builtin_effect(shakecursor)
 target_sources(shakecursor PRIVATE
     main.cpp
     shakecursor.cpp
+    shakecursor.qrc
     shakedetector.cpp
 )
 

@@ -15,6 +15,11 @@
 #include "scene/itemrenderer.h"
 #include "scene/workspacescene.h"
 
+static void ensureResources()
+{
+    Q_INIT_RESOURCE(shakecursor);
+}
+
 namespace KWin
 {
 
@@ -42,6 +47,7 @@ void ShakeCursorItem::refresh()
 ShakeCursorEffect::ShakeCursorEffect()
     : m_cursor(Cursors::self()->mouse())
 {
+    ensureResources();
     input()->installInputEventSpy(this);
 
     m_deflateTimer.setSingleShot(true);
@@ -146,7 +152,16 @@ void ShakeCursorEffect::magnify(qreal magnification)
 
             const qreal maxScale = ShakeCursorConfig::magnification() + 4 * ShakeCursorConfig::overMagnification();
             if (m_cursorTheme.name() != m_cursor->themeName() || m_cursorTheme.size() != m_cursor->themeSize() || m_cursorTheme.devicePixelRatio() != maxScale) {
-                m_cursorTheme = KXcursorTheme(m_cursor->themeName(), m_cursor->themeSize(), maxScale);
+                static const QStringList embeddedCursorThemes{
+                    QStringLiteral("breeze_cursors"),
+                    QStringLiteral("Breeze_Light"),
+                };
+
+                QStringList searchPaths;
+                if (embeddedCursorThemes.contains(m_cursor->themeName())) {
+                    searchPaths.append(QStringLiteral(":/effects/shakecursor/cursors"));
+                }
+                m_cursorTheme = KXcursorTheme(m_cursor->themeName(), m_cursor->themeSize(), maxScale, searchPaths);
             }
 
             m_cursorItem = std::make_unique<ShakeCursorItem>(m_cursorTheme, effects->scene()->overlayItem());
