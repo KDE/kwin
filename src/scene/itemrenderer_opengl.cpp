@@ -14,6 +14,7 @@
 #include "platformsupport/scenes/opengl/openglsurfacetexture.h"
 #include "scene/decorationitem.h"
 #include "scene/imageitem.h"
+#include "scene/rectangleitem.h"
 #include "scene/shadowitem.h"
 #include "scene/surfaceitem.h"
 #include "scene/workspacescene_opengl.h"
@@ -216,6 +217,8 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .bufferReleasePoint = nullptr,
             });
         }
+    } else if (auto rectangleItem = qobject_cast<RectangleItem *>(item)) {
+        // TODO
     }
 
     for (Item *childItem : sortedChildItems) {

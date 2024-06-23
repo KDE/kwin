@@ -14,6 +14,7 @@ namespace KWin
 {
 
 class DecorationItem;
+class RectangleItem;
 class SurfaceItem;
 
 class KWIN_EXPORT ItemRendererQPainter : public ItemRenderer
@@ -36,6 +37,7 @@ private:
     void renderSurfaceItem(QPainter *painter, SurfaceItem *surfaceItem) const;
     void renderDecorationItem(QPainter *painter, DecorationItem *decorationItem) const;
     void renderImageItem(QPainter *painter, ImageItem *imageItem) const;
+    void renderRectangleItem(QPainter *painter, RectangleItem *rectangleItem) const;
     void renderItem(QPainter *painter, Item *item) const;
 
     std::unique_ptr<QPainter> m_painter;

@@ -168,6 +168,7 @@ target_sources(kwin PRIVATE
     scene/itemrenderer.cpp
     scene/itemrenderer_opengl.cpp
     scene/itemrenderer_qpainter.cpp
+    scene/rectangleitem.cpp
     scene/rootitem.cpp
     scene/scene.cpp
     scene/shadowitem.cpp
