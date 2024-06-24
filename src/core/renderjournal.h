@@ -5,11 +5,10 @@
 */
 
 #pragma once
+#include "kwin_export.h"
 
-#include "effect/globals.h"
-
-#include <QElapsedTimer>
-#include <QQueue>
+#include <chrono>
+#include <optional>
 
 namespace KWin
 {
@@ -21,7 +20,7 @@ namespace KWin
 class KWIN_EXPORT RenderJournal
 {
 public:
-    RenderJournal();
+    explicit RenderJournal();
 
     void add(std::chrono::nanoseconds renderTime, std::chrono::nanoseconds presentationTimestamp);
 

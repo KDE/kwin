@@ -6,6 +6,8 @@
 
 #include "renderjournal.h"
 
+#include <math.h>
+
 using namespace std::chrono_literals;
 
 namespace KWin
