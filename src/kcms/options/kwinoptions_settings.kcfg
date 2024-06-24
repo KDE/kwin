@@ -132,7 +132,7 @@
     </entry>
 
     <entry key="SeparateScreenFocus" type="Bool">
-        <default>false</default>
+        <default>true</default>
     </entry>
 
     <entry key="FocusStealingPreventionLevel" type="Int">

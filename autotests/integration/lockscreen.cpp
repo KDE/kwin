@@ -211,6 +211,7 @@ void LockScreenTest::init()
 
     workspace()->setActiveOutput(QPoint(640, 512));
     input()->pointer()->warp(QPoint(640, 512));
+    options->setSeparateScreenFocus(false);
 }
 
 void LockScreenTest::cleanup()
