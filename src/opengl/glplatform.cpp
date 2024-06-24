@@ -703,13 +703,6 @@ QByteArray GLPlatform::chipClassToString8(ChipClass chipClass)
     }
 }
 
-// -------
-
-static void print(const QByteArray &label, QByteArrayView setting)
-{
-    qInfo("%-40s%s", label.data(), setting.data());
-}
-
 GLPlatform::GLPlatform(OpenGLPlatformInterface platformInterface, QByteArrayView openglVersionString, QByteArrayView glslVersionString, QByteArrayView renderer, QByteArrayView vendor)
     : m_openglVersionString(openglVersionString)
     , m_glslVersionString(glslVersionString)
@@ -996,24 +989,6 @@ GLPlatform::GLPlatform(OpenGLPlatformInterface platformInterface, QByteArrayView
         m_virtualMachine = true;
         m_recommendedCompositor = OpenGLCompositing;
     }
-
-    // print the results
-    print(QByteArrayLiteral("OpenGL vendor string:"), m_vendorString);
-    print(QByteArrayLiteral("OpenGL renderer string:"), m_rendererString);
-    print(QByteArrayLiteral("OpenGL version string:"), m_openglVersionString);
-    print(QByteArrayLiteral("OpenGL shading language version string:"), m_glslVersionString);
-    print(QByteArrayLiteral("Driver:"), driverToString8(m_driver));
-    if (!isMesaDriver()) {
-        print(QByteArrayLiteral("Driver version:"), m_driverVersion.toByteArray());
-    }
-    print(QByteArrayLiteral("GPU class:"), chipClassToString8(m_chipClass));
-    print(QByteArrayLiteral("OpenGL version:"), m_openglVersion.toByteArray());
-    print(QByteArrayLiteral("GLSL version:"), m_glslVersion.toByteArray());
-    if (isMesaDriver()) {
-        print(QByteArrayLiteral("Mesa version:"), mesaVersion().toByteArray());
-    }
-    print(QByteArrayLiteral("Requires strict binding:"), !m_looseBinding ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
-    print(QByteArrayLiteral("Virtual Machine:"), m_virtualMachine ? QByteArrayLiteral("yes") : QByteArrayLiteral("no"));
 }
 
 GLPlatform::~GLPlatform()
