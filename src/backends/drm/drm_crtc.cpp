@@ -58,8 +58,12 @@ bool DrmCrtc::updateProperties()
 
 drmModeModeInfo DrmCrtc::queryCurrentMode()
 {
-    m_crtc.reset(drmModeGetCrtc(gpu()->fd(), id()));
-    return m_crtc->mode;
+    DrmUniquePtr<drmModeCrtc> crtc(drmModeGetCrtc(gpu()->fd(), id()));
+    if (crtc) {
+        return crtc->mode;
+    } else {
+        return m_crtc->mode;
+    }
 }
 
 int DrmCrtc::pipeIndex() const
