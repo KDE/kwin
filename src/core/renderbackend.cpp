@@ -48,6 +48,7 @@ OutputFrame::OutputFrame(RenderLoop *loop, std::chrono::nanoseconds refreshDurat
     : m_loop(loop)
     , m_refreshDuration(refreshDuration)
     , m_targetPageflipTime(loop->nextPresentationTimestamp())
+    , m_predictedRenderTime(loop->predictedRenderTime())
 {
 }
 
@@ -139,6 +140,11 @@ std::chrono::steady_clock::time_point OutputFrame::targetPageflipTime() const
 std::chrono::nanoseconds OutputFrame::refreshDuration() const
 {
     return m_refreshDuration;
+}
+
+std::chrono::nanoseconds OutputFrame::predictedRenderTime() const
+{
+    return m_predictedRenderTime;
 }
 
 RenderBackend::RenderBackend(QObject *parent)

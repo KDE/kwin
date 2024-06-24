@@ -95,6 +95,11 @@ public:
 
     void setMaxPendingFrameCount(uint32_t maxCount);
 
+    /**
+     * Returns the expected time how long it is going to take to render the next frame.
+     */
+    std::chrono::nanoseconds predictedRenderTime() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the refresh rate of this RenderLoop has changed.
