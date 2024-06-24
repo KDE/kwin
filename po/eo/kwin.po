@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-20 00:40+0000\n"
+"POT-Creation-Date: 2024-06-24 00:39+0000\n"
 "PO-Revision-Date: 2024-06-1510:04+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -1229,7 +1229,7 @@ msgstr "Tablojdo movita al %1"
 msgid "Tablets switched outputs"
 msgstr "Tablojdoj ŝanĝis elirojn"
 
-#: input.cpp:3187
+#: input.cpp:3186
 #, kde-format
 msgid "Touchpad"
 msgstr "Tuŝplato"
