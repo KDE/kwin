@@ -64,10 +64,10 @@ void OutputFrame::addFeedback(std::unique_ptr<PresentationFeedback> &&feedback)
     m_feedbacks.push_back(std::move(feedback));
 }
 
-std::optional<std::chrono::nanoseconds> OutputFrame::queryRenderTime() const
+std::optional<RenderTimeSpan> OutputFrame::queryRenderTime() const
 {
     if (m_renderTimeQueries.empty()) {
-        return std::chrono::nanoseconds::zero();
+        return RenderTimeSpan{};
     }
     const auto first = m_renderTimeQueries.front()->query();
     if (!first) {
@@ -81,14 +81,14 @@ std::optional<std::chrono::nanoseconds> OutputFrame::queryRenderTime() const
         }
         ret = ret | *opt;
     }
-    return ret.end - ret.start;
+    return ret;
 }
 
 void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
-    std::optional<std::chrono::nanoseconds> renderTime = queryRenderTime();
+    const auto renderTime = queryRenderTime();
     if (m_loop) {
-        RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode);
+        RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode, this);
     }
     m_presented = true;
     for (const auto &feedback : m_feedbacks) {
@@ -134,6 +134,11 @@ void OutputFrame::addRenderTimeQuery(std::unique_ptr<RenderTimeQuery> &&query)
 std::chrono::steady_clock::time_point OutputFrame::targetPageflipTime() const
 {
     return m_targetPageflipTime;
+}
+
+std::chrono::nanoseconds OutputFrame::refreshDuration() const
+{
+    return m_refreshDuration;
 }
 
 RenderBackend::RenderBackend(QObject *parent)

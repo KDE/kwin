@@ -12,6 +12,8 @@
 #include "window.h"
 #include "workspace.h"
 
+#include <filesystem>
+
 using namespace std::chrono_literals;
 
 namespace KWin
@@ -21,6 +23,8 @@ RenderLoopPrivate *RenderLoopPrivate::get(RenderLoop *loop)
 {
     return loop->d.get();
 }
+
+static const bool s_printDebugInfo = qEnvironmentVariableIntValue("KWIN_LOG_PERFORMANCE_DATA") != 0;
 
 RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     : q(q)
@@ -85,15 +89,27 @@ void RenderLoopPrivate::notifyFrameDropped()
     }
 }
 
-void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<std::chrono::nanoseconds> renderTime, PresentationMode mode)
+void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp, std::optional<RenderTimeSpan> renderTime, PresentationMode mode, OutputFrame *frame)
 {
+    if (output && s_printDebugInfo && !m_debugOutput) {
+        m_debugOutput = std::fstream(qPrintable("kwin perf statistics " + output->name() + ".csv"), std::ios::out);
+        *m_debugOutput << "target pageflip timestamp,pageflip timestamp,render start,render end,safety margin,refresh duration,vrr,tearing\n";
+    }
+    if (m_debugOutput) {
+        auto times = renderTime.value_or(RenderTimeSpan{});
+        const bool vrr = mode == PresentationMode::AdaptiveSync || mode == PresentationMode::AdaptiveAsync;
+        const bool tearing = mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync;
+        *m_debugOutput << frame->targetPageflipTime().time_since_epoch().count() << "," << timestamp.count() << "," << times.start.time_since_epoch().count() << "," << times.end.time_since_epoch().count()
+                       << "," << safetyMargin.count() << "," << frame->refreshDuration().count() << "," << (vrr ? 1 : 0) << "," << (tearing ? 1 : 0) << "\n";
+    }
+
     Q_ASSERT(pendingFrameCount > 0);
     pendingFrameCount--;
 
     notifyVblank(timestamp);
 
     if (renderTime) {
-        renderJournal.add(*renderTime, timestamp);
+        renderJournal.add(renderTime->end - renderTime->start, timestamp);
     }
     if (compositeTimer.isActive()) {
         // reschedule to match the new timestamp and render time
