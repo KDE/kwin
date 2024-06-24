@@ -357,6 +357,8 @@ void LockScreenTest::testPointerAxis()
 
 void LockScreenTest::testKeyboard()
 {
+    workspace()->setActiveOutput(workspace()->outputs()[0]);
+
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(m_seat->createKeyboard());
     QVERIFY(keyboard != nullptr);
     QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);

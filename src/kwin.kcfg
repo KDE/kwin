@@ -98,7 +98,7 @@
             <default>false</default>
         </entry>
         <entry name="SeparateScreenFocus" type="Bool">
-            <default>false</default>
+            <default>true</default>
         </entry>
         <entry name="RollOverDesktops" type="Bool">
             <default>false</default>
