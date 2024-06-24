@@ -48,6 +48,8 @@ public:
 
     void init() override;
 
+    KXcursorTheme cursorTheme() const; // TODO: Make it a Cursor property
+
     void updateAfterScreenChange();
     bool supportsWarping() const;
     void warp(const QPointF &pos);
