@@ -62,17 +62,41 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
             // -> take that into account and start compositing very early
             expectedCompositingTime = std::max(vblankInterval - 1us, expectedCompositingTime);
         }
-        const uint64_t pageflipsInAdvance = std::min<int64_t>(expectedCompositingTime / vblankInterval + 1, maxPendingFrameCount);
         const uint64_t pageflipsSinceLastToTarget = std::max<int64_t>(std::round((lastTargetTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0);
+        uint64_t pageflipsInAdvance = std::min<int64_t>(expectedCompositingTime / vblankInterval + 1, maxPendingFrameCount);
+
+        // switching from double to triple buffering causes a frame drop
+        // -> apply some amount of hysteresis to avoid switching back and forth constantly
+        if (pageflipsInAdvance > 1) {
+            // immediately switch to triple buffering when needed
+            wasTripleBuffering = true;
+            doubleBufferingCounter = 0;
+        } else if (wasTripleBuffering) {
+            // but wait a bit before switching back to double buffering
+            if (doubleBufferingCounter >= 10) {
+                wasTripleBuffering = false;
+            } else if (expectedCompositingTime >= vblankInterval * 0.95) {
+                // also don't switch back if render times are just barely enough for double buffering
+                pageflipsInAdvance = 2;
+                doubleBufferingCounter = 0;
+            } else {
+                doubleBufferingCounter++;
+                pageflipsInAdvance = 2;
+            }
+        }
 
         nextPresentationTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
-    } else if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
-        // tearing: pageflips happen ASAP
-        nextPresentationTimestamp = currentTime;
     } else {
-        // adaptive sync: pageflips happen after one vblank interval
-        // TODO read minimum refresh rate from the EDID and take it into account here
-        nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
+        wasTripleBuffering = false;
+        doubleBufferingCounter = 0;
+        if (presentationMode == PresentationMode::Async || presentationMode == PresentationMode::AdaptiveAsync) {
+            // tearing: pageflips happen ASAP
+            nextPresentationTimestamp = currentTime;
+        } else {
+            // adaptive sync: pageflips happen after one vblank interval
+            // TODO read minimum refresh rate from the EDID and take it into account here
+            nextPresentationTimestamp = lastPresentationTimestamp + vblankInterval;
+        }
     }
 
     const std::chrono::nanoseconds nextRenderTimestamp = nextPresentationTimestamp - expectedCompositingTime;
