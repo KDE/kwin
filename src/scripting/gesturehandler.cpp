@@ -5,11 +5,9 @@
 */
 
 #include "gesturehandler.h"
-#include "effect/effecthandler.h"
-
-#include <QAction>
-
-#include <functional>
+#include "gestures.h"
+#include "globalshortcuts.h"
+#include "input.h"
 
 namespace KWin
 {
@@ -19,28 +17,34 @@ SwipeGestureHandler::SwipeGestureHandler(QObject *parent)
 {
 }
 
+SwipeGestureHandler::~SwipeGestureHandler()
+{
+}
+
 void SwipeGestureHandler::classBegin()
 {
 }
 
 void SwipeGestureHandler::componentComplete()
 {
-    m_action = new QAction(this);
-    connect(m_action, &QAction::triggered, this, &SwipeGestureHandler::activated);
+    m_gesture = std::make_unique<SwipeGesture>();
+    m_gesture->setDirection(SwipeDirection(m_direction));
+    m_gesture->setMinimumDelta(QPointF(200, 200));
+    m_gesture->setMaximumFingerCount(m_fingerCount);
+    m_gesture->setMinimumFingerCount(m_fingerCount);
 
-    std::function<void (EffectsHandler *, SwipeDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)> registrator;
+    connect(m_gesture.get(), &SwipeGesture::triggered, this, &SwipeGestureHandler::activated);
+    connect(m_gesture.get(), &SwipeGesture::cancelled, this, &SwipeGestureHandler::cancelled);
+    connect(m_gesture.get(), &SwipeGesture::progress, this, &SwipeGestureHandler::setProgress);
+
     switch (m_deviceType) {
     case Device::Touchpad:
-        registrator = std::mem_fn(&EffectsHandler::registerTouchpadSwipeShortcut);
+        input()->shortcuts()->registerTouchpadSwipe(m_gesture.get());
         break;
     case Device::Touchscreen:
-        registrator = std::mem_fn(&EffectsHandler::registerTouchscreenSwipeShortcut);
+        input()->shortcuts()->registerTouchscreenSwipe(m_gesture.get());
         break;
     }
-
-    registrator(effects, SwipeDirection(m_direction), m_fingerCount, m_action, [this](qreal progress) {
-        setProgress(progress);
-    });
 }
 
 SwipeGestureHandler::Direction SwipeGestureHandler::direction() const
@@ -100,25 +104,30 @@ PinchGestureHandler::PinchGestureHandler(QObject *parent)
 {
 }
 
+PinchGestureHandler::~PinchGestureHandler()
+{
+}
+
 void PinchGestureHandler::classBegin()
 {
 }
 
 void PinchGestureHandler::componentComplete()
 {
-    m_action = new QAction(this);
-    connect(m_action, &QAction::triggered, this, &PinchGestureHandler::activated);
+    m_gesture = std::make_unique<PinchGesture>();
+    m_gesture->setDirection(PinchDirection(m_direction));
+    m_gesture->setMaximumFingerCount(m_fingerCount);
+    m_gesture->setMinimumFingerCount(m_fingerCount);
 
-    std::function<void (EffectsHandler *, PinchDirection dir, uint fingerCount, QAction *onUp, std::function<void(qreal)> progressCallback)> registrator;
+    connect(m_gesture.get(), &PinchGesture::triggered, this, &PinchGestureHandler::activated);
+    connect(m_gesture.get(), &PinchGesture::cancelled, this, &PinchGestureHandler::cancelled);
+    connect(m_gesture.get(), &PinchGesture::progress, this, &PinchGestureHandler::setProgress);
+
     switch (m_deviceType) {
     case Device::Touchpad:
-        registrator = std::mem_fn(&EffectsHandler::registerTouchpadPinchShortcut);
+        input()->shortcuts()->registerTouchpadPinch(m_gesture.get());
         break;
     }
-
-    registrator(effects, PinchDirection(m_direction), m_fingerCount, m_action, [this](qreal progress) {
-        setProgress(progress);
-    });
 }
 
 PinchGestureHandler::Direction PinchGestureHandler::direction() const
