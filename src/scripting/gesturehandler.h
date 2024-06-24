@@ -6,14 +6,15 @@
 
 #pragma once
 
-#include "effect/globals.h"
-
 #include <QQmlParserStatus>
 
 class QAction;
 
 namespace KWin
 {
+
+class PinchGesture;
+class SwipeGesture;
 
 /**
  * The SwipeGestureHandler type provides a way to handle global swipe gestures.
@@ -39,6 +40,7 @@ class SwipeGestureHandler : public QObject, public QQmlParserStatus
 
 public:
     explicit SwipeGestureHandler(QObject *parent = nullptr);
+    ~SwipeGestureHandler() override;
 
     // Matches SwipeDirection.
     enum class Direction {
@@ -73,13 +75,14 @@ public:
 
 Q_SIGNALS:
     void activated();
+    void cancelled();
     void progressChanged();
     void directionChanged();
     void fingerCountChanged();
     void deviceTypeChanged();
 
 private:
-    QAction *m_action = nullptr;
+    std::unique_ptr<SwipeGesture> m_gesture;
     Direction m_direction = Direction::Invalid;
     Device m_deviceType = Device::Touchpad;
     qreal m_progress = 0;
@@ -109,6 +112,7 @@ class PinchGestureHandler : public QObject, public QQmlParserStatus
 
 public:
     explicit PinchGestureHandler(QObject *parent = nullptr);
+    ~PinchGestureHandler() override;
 
     // Matches PinchDirection.
     enum class Direction {
@@ -139,13 +143,14 @@ public:
 
 Q_SIGNALS:
     void activated();
+    void cancelled();
     void progressChanged();
     void directionChanged();
     void fingerCountChanged();
     void deviceTypeChanged();
 
 private:
-    QAction *m_action = nullptr;
+    std::unique_ptr<PinchGesture> m_gesture;
     Direction m_direction = Direction::Contracting;
     Device m_deviceType = Device::Touchpad;
     qreal m_progress = 0;
