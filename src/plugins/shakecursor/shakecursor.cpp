@@ -151,17 +151,18 @@ void ShakeCursorEffect::magnify(qreal magnification)
             effects->hideCursor();
 
             const qreal maxScale = ShakeCursorConfig::magnification() + 4 * ShakeCursorConfig::overMagnification();
-            if (m_cursorTheme.name() != m_cursor->themeName() || m_cursorTheme.size() != m_cursor->themeSize() || m_cursorTheme.devicePixelRatio() != maxScale) {
+            const KXcursorTheme originalTheme = input()->pointer()->cursorTheme();
+            if (m_cursorTheme.name() != originalTheme.name() || m_cursorTheme.size() != originalTheme.size() || m_cursorTheme.devicePixelRatio() != maxScale) {
                 static const QStringList embeddedCursorThemes{
                     QStringLiteral("breeze_cursors"),
                     QStringLiteral("Breeze_Light"),
                 };
 
                 QStringList searchPaths;
-                if (embeddedCursorThemes.contains(m_cursor->themeName())) {
+                if (embeddedCursorThemes.contains(originalTheme.name())) {
                     searchPaths.append(QStringLiteral(":/effects/shakecursor/cursors"));
                 }
-                m_cursorTheme = KXcursorTheme(m_cursor->themeName(), m_cursor->themeSize(), maxScale, searchPaths);
+                m_cursorTheme = KXcursorTheme(originalTheme.name(), originalTheme.size(), maxScale, searchPaths);
             }
 
             m_cursorItem = std::make_unique<ShakeCursorItem>(m_cursorTheme, effects->scene()->overlayItem());

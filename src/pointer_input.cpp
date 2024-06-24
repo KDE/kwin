@@ -79,6 +79,11 @@ PointerInputRedirection::PointerInputRedirection(InputRedirection *parent)
 
 PointerInputRedirection::~PointerInputRedirection() = default;
 
+KXcursorTheme PointerInputRedirection::cursorTheme() const
+{
+    return m_cursor->theme();
+}
+
 void PointerInputRedirection::init()
 {
     Q_ASSERT(!inited());
