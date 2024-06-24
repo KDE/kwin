@@ -93,14 +93,14 @@ void RenderLoopPrivate::notifyFrameCompleted(std::chrono::nanoseconds timestamp,
 {
     if (output && s_printDebugInfo && !m_debugOutput) {
         m_debugOutput = std::fstream(qPrintable("kwin perf statistics " + output->name() + ".csv"), std::ios::out);
-        *m_debugOutput << "target pageflip timestamp,pageflip timestamp,render start,render end,safety margin,refresh duration,vrr,tearing\n";
+        *m_debugOutput << "target pageflip timestamp,pageflip timestamp,render start,render end,safety margin,refresh duration,vrr,tearing,predicted render time\n";
     }
     if (m_debugOutput) {
         auto times = renderTime.value_or(RenderTimeSpan{});
         const bool vrr = mode == PresentationMode::AdaptiveSync || mode == PresentationMode::AdaptiveAsync;
         const bool tearing = mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync;
         *m_debugOutput << frame->targetPageflipTime().time_since_epoch().count() << "," << timestamp.count() << "," << times.start.time_since_epoch().count() << "," << times.end.time_since_epoch().count()
-                       << "," << safetyMargin.count() << "," << frame->refreshDuration().count() << "," << (vrr ? 1 : 0) << "," << (tearing ? 1 : 0) << "\n";
+                       << "," << safetyMargin.count() << "," << frame->refreshDuration().count() << "," << (vrr ? 1 : 0) << "," << (tearing ? 1 : 0) << "," << frame->predictedRenderTime().count() << "\n";
     }
 
     Q_ASSERT(pendingFrameCount > 0);
@@ -251,6 +251,11 @@ void RenderLoop::setPresentationMode(PresentationMode mode)
 void RenderLoop::setMaxPendingFrameCount(uint32_t maxCount)
 {
     d->maxPendingFrameCount = maxCount;
+}
+
+std::chrono::nanoseconds RenderLoop::predictedRenderTime() const
+{
+    return d->renderJournal.result();
 }
 
 } // namespace KWin

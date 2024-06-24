@@ -94,6 +94,7 @@ public:
 
     std::chrono::steady_clock::time_point targetPageflipTime() const;
     std::chrono::nanoseconds refreshDuration() const;
+    std::chrono::nanoseconds predictedRenderTime() const;
 
 private:
     std::optional<RenderTimeSpan> queryRenderTime() const;
@@ -101,6 +102,7 @@ private:
     const QPointer<RenderLoop> m_loop;
     const std::chrono::nanoseconds m_refreshDuration;
     const std::chrono::steady_clock::time_point m_targetPageflipTime;
+    const std::chrono::nanoseconds m_predictedRenderTime;
     std::vector<std::unique_ptr<PresentationFeedback>> m_feedbacks;
     std::optional<ContentType> m_contentType;
     PresentationMode m_presentationMode = PresentationMode::VSync;
