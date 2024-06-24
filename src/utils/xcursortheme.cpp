@@ -9,6 +9,7 @@
 
 #include <KConfig>
 #include <KConfigGroup>
+#include <KShell>
 
 #include <QDir>
 #include <QFile>
@@ -180,7 +181,10 @@ static QStringList defaultSearchPaths()
     static QStringList paths;
     if (paths.isEmpty()) {
         if (const QString env = qEnvironmentVariable("XCURSOR_PATH"); !env.isEmpty()) {
-            paths.append(env.split(':', Qt::SkipEmptyParts));
+            const QStringList rawPaths = env.split(':', Qt::SkipEmptyParts);
+            for (const QString &rawPath : rawPaths) {
+                paths.append(KShell::tildeExpand(rawPath));
+            }
         } else {
             const QString home = QDir::homePath();
             if (!home.isEmpty()) {
