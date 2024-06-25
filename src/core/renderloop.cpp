@@ -52,11 +52,16 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
 
     // Estimate when it's a good time to perform the next compositing cycle.
     // the 1ms on top of the safety margin is required for timer and scheduler inaccuracies
-    const std::chrono::nanoseconds expectedCompositingTime = std::min(renderJournal.result() + safetyMargin + 1ms, 2 * vblankInterval);
+    std::chrono::nanoseconds expectedCompositingTime = std::min(renderJournal.result() + safetyMargin + 1ms, 2 * vblankInterval);
 
     if (presentationMode == PresentationMode::VSync) {
         // normal presentation: pageflips only happen at vblank
         const uint64_t pageflipsSince = std::max<int64_t>((currentTime - lastPresentationTimestamp) / vblankInterval, 0);
+        if (pageflipsSince > 100) {
+            // if it's been a while since the last frame, the GPU is likely in a low power state and render time will be increased
+            // -> take that into account and start compositing very early
+            expectedCompositingTime = std::max(vblankInterval - 1us, expectedCompositingTime);
+        }
         const uint64_t pageflipsInAdvance = std::min<int64_t>(expectedCompositingTime / vblankInterval + 1, maxPendingFrameCount);
         const uint64_t pageflipsSinceLastToTarget = std::max<int64_t>(std::round((lastTargetTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0);
 
