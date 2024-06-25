@@ -9,6 +9,8 @@
 #include "openglcontext.h"
 #include "glframebuffer.h"
 #include "glplatform.h"
+#include "glshader.h"
+#include "glshadermanager.h"
 #include "glvertexbuffer.h"
 #include "utils/common.h"
 
@@ -261,7 +263,14 @@ bool OpenGlContext::checkSupported() const
     const bool supportsNonPowerOfTwoTextures = m_isOpenglES || hasOpenglExtension("GL_ARB_texture_non_power_of_two");
     const bool supports3DTextures = !m_isOpenglES || hasVersion(Version(3, 0)) || hasOpenglExtension("GL_OES_texture_3D");
     const bool supportsFBOs = m_isOpenglES || hasVersion(Version(3, 0)) || hasOpenglExtension("GL_ARB_framebuffer_object") || hasOpenglExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
-    return supportsGLSL && supportsNonPowerOfTwoTextures && supports3DTextures && supportsFBOs;
+
+    if (!supportsGLSL || !supportsNonPowerOfTwoTextures || !supports3DTextures || !supportsFBOs) {
+        return false;
+    }
+    // some old hardware only supports very limited shaders. To prevent the shaders KWin uses later on from not working,
+    // test a reasonably complex one here and bail out early if it doesn't work
+    auto shader = m_shaderManager->shader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace | ShaderTrait::AdjustSaturation | ShaderTrait::Modulate);
+    return shader->isValid();
 }
 
 void OpenGlContext::setShaderManager(ShaderManager *manager)
