@@ -296,18 +296,7 @@ bool ContrastEffect::enabledByDefault()
 
 bool ContrastEffect::supported()
 {
-    bool supported = effects->isOpenGLCompositing();
-
-    if (supported) {
-        int maxTexSize;
-        glGetIntegerv(GL_MAX_TEXTURE_SIZE, &maxTexSize);
-
-        const QSize screenSize = effects->virtualScreenSize();
-        if (screenSize.width() > maxTexSize || screenSize.height() > maxTexSize) {
-            supported = false;
-        }
-    }
-    return supported;
+    return effects->openglContext() && (effects->openglContext()->supportsBlits() || effects->waylandDisplay());
 }
 
 QRegion ContrastEffect::contrastRegion(const EffectWindow *w) const
