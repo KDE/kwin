@@ -6,7 +6,8 @@
 
 #include "renderjournal.h"
 
-#include <math.h>
+#include <algorithm>
+#include <cmath>
 
 using namespace std::chrono_literals;
 
