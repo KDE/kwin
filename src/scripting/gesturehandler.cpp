@@ -37,7 +37,6 @@ void SwipeGestureHandler::componentComplete()
     connect(m_gesture.get(), &SwipeGesture::cancelled, this, &SwipeGestureHandler::cancelled);
     connect(m_gesture.get(), &SwipeGesture::progress, this, &SwipeGestureHandler::setProgress);
 
-#if KWIN_BUILD_GLOBALSHORTCUTS // TODO: input()->shortcuts() should be built even when building without KGlobalAccelD
     switch (m_deviceType) {
     case Device::Touchpad:
         input()->shortcuts()->registerTouchpadSwipe(m_gesture.get());
@@ -46,7 +45,6 @@ void SwipeGestureHandler::componentComplete()
         input()->shortcuts()->registerTouchscreenSwipe(m_gesture.get());
         break;
     }
-#endif
 }
 
 SwipeGestureHandler::Direction SwipeGestureHandler::direction() const
@@ -125,13 +123,11 @@ void PinchGestureHandler::componentComplete()
     connect(m_gesture.get(), &PinchGesture::cancelled, this, &PinchGestureHandler::cancelled);
     connect(m_gesture.get(), &PinchGesture::progress, this, &PinchGestureHandler::setProgress);
 
-#if KWIN_BUILD_GLOBALSHORTCUTS // TODO: input()->shortcuts() should be built even when building without KGlobalAccelD
     switch (m_deviceType) {
     case Device::Touchpad:
         input()->shortcuts()->registerTouchpadPinch(m_gesture.get());
         break;
     }
-#endif
 }
 
 PinchGestureHandler::Direction PinchGestureHandler::direction() const

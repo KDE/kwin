@@ -166,12 +166,10 @@ public:
     void removeIdleInhibitor(Window *inhibitor);
 
     Window *findToplevel(const QPointF &pos);
-#if KWIN_BUILD_GLOBALSHORTCUTS
     GlobalShortcutsManager *shortcuts() const
     {
         return m_shortcuts;
     }
-#endif
 
     /**
      * Sends an event through all InputFilters.
@@ -322,9 +320,7 @@ private:
     TouchInputRedirection *m_touch;
     QObject *m_lastInputDevice = nullptr;
 
-#if KWIN_BUILD_GLOBALSHORTCUTS
     GlobalShortcutsManager *m_shortcuts;
-#endif
 
     std::vector<std::unique_ptr<InputBackend>> m_inputBackends;
     QList<InputDevice *> m_inputDevices;

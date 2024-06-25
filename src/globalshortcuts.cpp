@@ -16,8 +16,10 @@
 #include "main.h"
 #include "utils/common.h"
 // KDE
+#if KWIN_BUILD_GLOBALSHORTCUTS
 #include <kglobalaccel_interface.h>
 #include <kglobalacceld.h>
+#endif
 // Qt
 #include <QAction>
 // system
@@ -96,6 +98,7 @@ GlobalShortcutsManager::~GlobalShortcutsManager()
 
 void GlobalShortcutsManager::init()
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     if (kwinApp()->shouldUseWaylandForCompositing()) {
         qputenv("KGLOBALACCELD_PLATFORM", QByteArrayLiteral("org.kde.kwin"));
         m_kglobalAccel = std::make_unique<KGlobalAccelD>();
@@ -106,6 +109,7 @@ void GlobalShortcutsManager::init()
             qCDebug(KWIN_CORE) << "KGlobalAcceld inited";
         }
     }
+#endif
 }
 
 void GlobalShortcutsManager::objectDeleted(QObject *object)
@@ -189,6 +193,7 @@ void GlobalShortcutsManager::forceRegisterTouchscreenSwipe(SwipeDirection direct
 
 bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     if (m_kglobalAccelInterface) {
         auto check = [this](Qt::KeyboardModifiers mods, int keyQt) {
             bool retVal = false;
@@ -217,17 +222,20 @@ bool GlobalShortcutsManager::processKey(Qt::KeyboardModifiers mods, int keyQt)
             }
         }
     }
+#endif
     return false;
 }
 
 bool GlobalShortcutsManager::processKeyRelease(Qt::KeyboardModifiers mods, int keyQt)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     if (m_kglobalAccelInterface) {
         QMetaObject::invokeMethod(m_kglobalAccelInterface,
                                   "checkKeyReleased",
                                   Qt::DirectConnection,
                                   Q_ARG(int, int(mods) | keyQt));
     }
+#endif
     return false;
 }
 
@@ -248,6 +256,7 @@ bool match(QList<GlobalShortcut> &shortcuts, Args... args)
 // TODO(C++20): use ranges for a nicer way of filtering by shortcut type
 bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Qt::MouseButtons pointerButtons)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     // currently only used to better support modifier only shortcuts
     // modifier-only shortcuts are not triggered if a pointer button is pressed
     if (m_kglobalAccelInterface) {
@@ -256,11 +265,13 @@ bool GlobalShortcutsManager::processPointerPressed(Qt::KeyboardModifiers mods, Q
                                   Qt::DirectConnection,
                                   Q_ARG(Qt::MouseButtons, pointerButtons));
     }
+#endif
     return match<PointerButtonShortcut>(m_shortcuts, mods, pointerButtons);
 }
 
 bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxisDirection axis)
 {
+#if KWIN_BUILD_GLOBALSHORTCUTS
     // currently only used to better support modifier only shortcuts
     // modifier-only shortcuts are not triggered if a pointer axis is used
     if (m_kglobalAccelInterface) {
@@ -269,6 +280,7 @@ bool GlobalShortcutsManager::processAxis(Qt::KeyboardModifiers mods, PointerAxis
                                   Qt::DirectConnection,
                                   Q_ARG(int, axis));
     }
+#endif
     return match<PointerAxisShortcut>(m_shortcuts, mods, axis);
 }
 

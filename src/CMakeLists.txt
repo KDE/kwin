@@ -99,6 +99,7 @@ target_sources(kwin PRIVATE
     focuschain.cpp
     ftrace.cpp
     gestures.cpp
+    globalshortcuts.cpp
     hide_cursor_spy.cpp
     idle_inhibition.cpp
     idledetector.cpp
@@ -258,7 +259,6 @@ target_link_libraries(kwin
 )
 
 if (TARGET K::KGlobalAccelD)
-    target_sources(kwin PRIVATE globalshortcuts.cpp)
     target_link_libraries(kwin PRIVATE K::KGlobalAccelD)
 endif()
 
