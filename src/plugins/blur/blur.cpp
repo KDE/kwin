@@ -371,7 +371,7 @@ bool BlurEffect::enabledByDefault()
 
 bool BlurEffect::supported()
 {
-    return effects->openglContext() && effects->openglContext()->supportsBlits();
+    return effects->openglContext() && (effects->openglContext()->supportsBlits() || effects->waylandDisplay());
 }
 
 bool BlurEffect::decorationSupportsBlurBehind(const EffectWindow *w) const
