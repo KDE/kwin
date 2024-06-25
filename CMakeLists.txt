@@ -191,7 +191,7 @@ if (epoxy_HAS_GLX)
     endif()
 endif()
 
-find_package(Wayland 1.22)
+find_package(Wayland 1.23)
 set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
