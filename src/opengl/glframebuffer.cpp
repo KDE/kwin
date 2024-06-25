@@ -211,6 +211,28 @@ void GLFramebuffer::blitFromFramebuffer(const QRect &source, const QRect &destin
     }
 
     const GLFramebuffer *top = currentFramebuffer();
+    if (!OpenGlContext::currentContext()->supportsBlits()) {
+        const auto texture = top->colorAttachment();
+        if (!texture) {
+            // can't do anything
+            return;
+        }
+
+        GLFramebuffer::pushFramebuffer(this);
+
+        QMatrix4x4 mat;
+        mat.ortho(QRectF(QPointF(), size()));
+        // GLTexture::render renders with origin (0, 0), move it to the correct place
+        mat.translate(destination.x(), destination.y());
+
+        ShaderBinder binder(ShaderTrait::MapTexture);
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
+
+        texture->render(source, infiniteRegion(), destination.size(), 1);
+
+        GLFramebuffer::popFramebuffer();
+        return;
+    }
     GLFramebuffer::pushFramebuffer(this);
 
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, handle());
