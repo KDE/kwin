@@ -300,7 +300,7 @@ void MouseClickEffect::paintScreenSetupGl(const RenderTarget &renderTarget, cons
 {
     GLShader *shader = ShaderManager::instance()->pushShader(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
     shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-    shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
+    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
 
     glLineWidth(m_lineWidth);
     glEnable(GL_BLEND);

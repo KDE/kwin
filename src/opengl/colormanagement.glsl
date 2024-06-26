@@ -7,8 +7,10 @@ const int gamma22_EOTF = 4;
 uniform mat4 colorimetryTransform;
 uniform int sourceNamedTransferFunction;
 uniform int destinationNamedTransferFunction;
-uniform float referenceLuminance;// in nits
-uniform float maxHdrBrightness; // in nits
+// in nits
+uniform float sourceReferenceLuminance;
+uniform float destinationReferenceLuminance;
+uniform float maxDestinationLuminance;
 
 vec3 nitsToPq(vec3 nits) {
     vec3 normalized = clamp(nits / 10000.0, vec3(0), vec3(1));
@@ -60,7 +62,7 @@ vec3 doTonemapping(vec3 color, float maxBrightness) {
     return clamp(color.rgb, vec3(0.0), vec3(maxBrightness));
 }
 
-vec4 encodingToNits(vec4 color, int sourceTransferFunction) {
+vec4 encodingToNits(vec4 color, int sourceTransferFunction, float referenceLuminance) {
     if (sourceTransferFunction == sRGB_EOTF) {
         color.rgb /= max(color.a, 0.001);
         color.rgb = referenceLuminance * srgbToLinear(color.rgb);
@@ -80,12 +82,13 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction) {
 }
 
 vec4 sourceEncodingToNitsInDestinationColorspace(vec4 color) {
-    color = encodingToNits(color, sourceNamedTransferFunction);
+    color = encodingToNits(color, sourceNamedTransferFunction, sourceReferenceLuminance);
+    color.rgb = color.rgb * (destinationReferenceLuminance / sourceReferenceLuminance);
     color.rgb = (colorimetryTransform * vec4(color.rgb, 1.0)).rgb;
-    return vec4(doTonemapping(color.rgb, maxHdrBrightness), color.a);
+    return vec4(doTonemapping(color.rgb, maxDestinationLuminance), color.a);
 }
 
-vec4 nitsToEncoding(vec4 color, int destinationTransferFunction) {
+vec4 nitsToEncoding(vec4 color, int destinationTransferFunction, float referenceLuminance) {
     if (destinationTransferFunction == sRGB_EOTF) {
         color.rgb /= max(color.a, 0.001);
         color.rgb = linearToSrgb(doTonemapping(color.rgb, referenceLuminance) / referenceLuminance);
@@ -105,5 +108,5 @@ vec4 nitsToEncoding(vec4 color, int destinationTransferFunction) {
 }
 
 vec4 nitsToDestinationEncoding(vec4 color) {
-    return nitsToEncoding(color, destinationNamedTransferFunction);
+    return nitsToEncoding(color, destinationNamedTransferFunction, destinationReferenceLuminance);
 }

@@ -102,8 +102,9 @@ public:
 
     enum class FloatUniform {
         Saturation,
-        MaxHdrBrightness,
-        SdrBrightness,
+        MaxDestinationLuminance,
+        SourceReferenceLuminance,
+        DestinationReferenceLuminance,
         FloatUniformCount
     };
 
@@ -134,8 +135,6 @@ public:
     bool setUniform(ColorUniform uniform, const QColor &value);
 
     bool setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst);
-    bool setColorspaceUniformsFromSRGB(const ColorDescription &dst);
-    bool setColorspaceUniformsToSRGB(const ColorDescription &src);
 
 protected:
     GLShader(unsigned int flags = NoFlags);

@@ -113,7 +113,7 @@ void SnapHelperEffect::paintScreen(const RenderTarget &renderTarget, const Rende
         vbo->reset();
         ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix());
-        binder.shader()->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
+        binder.shader()->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 

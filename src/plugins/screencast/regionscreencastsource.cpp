@@ -101,7 +101,7 @@ void RegionScreenCastSource::blit(Output *output)
         projectionMatrix.translate(outputGeometry.left(), outputGeometry.top());
 
         shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
-        shaderBinder.shader()->setColorspaceUniformsToSRGB(colorDescription);
+        shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB);
 
         outputTexture->render(outputGeometry.size());
         GLFramebuffer::popFramebuffer();

@@ -225,8 +225,9 @@ void GLShader::resolveLocations()
     m_vec4Locations[Vec4Uniform::ModulationConstant] = uniformLocation("modulation");
 
     m_floatLocations[FloatUniform::Saturation] = uniformLocation("saturation");
-    m_floatLocations[FloatUniform::MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
-    m_floatLocations[FloatUniform::SdrBrightness] = uniformLocation("referenceLuminance");
+    m_floatLocations[FloatUniform::MaxDestinationLuminance] = uniformLocation("maxDestinationLuminance");
+    m_floatLocations[FloatUniform::SourceReferenceLuminance] = uniformLocation("sourceReferenceLuminance");
+    m_floatLocations[FloatUniform::DestinationReferenceLuminance] = uniformLocation("destinationReferenceLuminance");
 
     m_colorLocations[ColorUniform::Color] = uniformLocation("geometryColor");
 
@@ -458,21 +459,8 @@ bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
     return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
-        && setUniform(FloatUniform::SdrBrightness, dst.referenceLuminance())
-        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrLuminance().value_or(10'000));
-}
-
-bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
-{
-    return setColorspaceUniforms(ColorDescription::sRGB, dst);
-}
-
-bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
-{
-    return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, src.containerColorimetry().toOther(src.sdrColorimetry()))
-        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
-        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::gamma22))
-        && setUniform(FloatUniform::SdrBrightness, src.referenceLuminance())
-        && setUniform(FloatUniform::MaxHdrBrightness, src.referenceLuminance());
+        && setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance())
+        && setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance())
+        && setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
 }
 }

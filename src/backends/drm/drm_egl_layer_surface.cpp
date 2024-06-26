@@ -201,8 +201,9 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
             binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
             binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
             binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));
-            binder.shader()->setUniform(GLShader::FloatUniform::SdrBrightness, m_surface->intermediaryColorDescription.referenceLuminance());
-            binder.shader()->setUniform(GLShader::FloatUniform::MaxHdrBrightness, m_surface->intermediaryColorDescription.maxHdrLuminance().value_or(800));
+            binder.shader()->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, m_surface->intermediaryColorDescription.referenceLuminance());
+            binder.shader()->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, m_surface->intermediaryColorDescription.referenceLuminance());
+            binder.shader()->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, m_surface->intermediaryColorDescription.maxHdrLuminance().value_or(800));
         }
         QMatrix4x4 mat;
         mat.scale(1, -1);

@@ -189,7 +189,7 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     shader->setUniform(GLShader::Vec3Uniform::PrimaryBrightness, QVector3D(toXYZ(1, 0), toXYZ(1, 1), toXYZ(1, 2)));
     shader->setUniform(GLShader::IntUniform::TextureWidth, m_texture->width());
     shader->setUniform(GLShader::IntUniform::TextureHeight, m_texture->height());
-    shader->setColorspaceUniformsFromSRGB(renderTarget.colorDescription());
+    shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
 
     const bool clipping = region != infiniteRegion();
     const QRegion clipRegion = clipping ? viewport.mapToRenderTarget(region) : infiniteRegion();
