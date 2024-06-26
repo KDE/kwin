@@ -166,20 +166,27 @@ Item {
         anchors.bottom: thumbSource.bottom
         anchors.bottomMargin: -Math.round(height / 4)
         visible: !thumb.activeHidden && !activeDragHandler.active
-
-
-        PlasmaExtras.ShadowedLabel {
+        PC3.Label {
             id: caption
             visible: thumb.windowTitleVisible
             width: cell.width
             maximumLineCount: 1
             anchors.top: parent.bottom
+            anchors.topMargin: Kirigami.Units.largeSpacing
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             text: thumb.window.caption
+            color: Kirigami.Theme.textColor
             textFormat: Text.PlainText
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+            background: Rectangle {
+                anchors.centerIn: parent
+                height: parent.contentHeight + Kirigami.Units.gridUnit
+                width: parent.contentWidth + Kirigami.Units.gridUnit
+                color: Kirigami.Theme.backgroundColor
+                radius: Kirigami.Units.cornerRadius
+            }
         }
     }
 
