@@ -8,12 +8,30 @@
 
 #include <kcmodule.h>
 
+#include <QComboBox>
+
 #include "ui_hidecursor_config.h"
 
 class KActionCollection;
 
 namespace KWin
 {
+
+class InactivityDurationComboBox : public QComboBox
+{
+    Q_OBJECT
+    Q_PROPERTY(uint duration READ duration WRITE setDuration NOTIFY durationChanged)
+
+public:
+    explicit InactivityDurationComboBox(QWidget *parent = nullptr);
+
+    uint duration() const;
+    void setDuration(uint duration);
+
+Q_SIGNALS:
+    void durationChanged();
+};
+
 class HideCursorEffectConfig : public KCModule
 {
     Q_OBJECT
