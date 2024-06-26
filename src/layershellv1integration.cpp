@@ -90,9 +90,10 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
             continue;
         }
 
+        const QRect outputGeometry = window->desiredOutput()->geometry();
         QRect bounds;
         if (shellSurface->exclusiveZone() == -1) {
-            bounds = window->desiredOutput()->geometry();
+            bounds = outputGeometry;
         } else {
             bounds = *workArea;
         }
@@ -107,7 +108,7 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         } else if (shellSurface->anchor() & Qt::RightEdge) {
             geometry.moveRight(bounds.right());
         } else {
-            geometry.moveLeft(bounds.left() + (bounds.width() - geometry.width()) / 2);
+            geometry.moveLeft(outputGeometry.left() + (outputGeometry.width() - geometry.width()) / 2);
         }
 
         if ((shellSurface->anchor() & AnchorVertical) && geometry.height() == 0) {
@@ -118,7 +119,7 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         } else if (shellSurface->anchor() & Qt::BottomEdge) {
             geometry.moveBottom(bounds.bottom());
         } else {
-            geometry.moveTop(bounds.top() + (bounds.height() - geometry.height()) / 2);
+            geometry.moveTop(outputGeometry.top() + (outputGeometry.height() - geometry.height()) / 2);
         }
 
         if ((shellSurface->anchor() & AnchorHorizontal) == AnchorHorizontal) {
