@@ -594,8 +594,8 @@ void Output::setState(const State &state)
     if (oldState.highDynamicRange != state.highDynamicRange) {
         Q_EMIT highDynamicRangeChanged();
     }
-    if (oldState.sdrBrightness != state.sdrBrightness) {
-        Q_EMIT sdrBrightnessChanged();
+    if (oldState.referenceLuminance != state.referenceLuminance) {
+        Q_EMIT referenceLuminanceChanged();
     }
     if (oldState.wideColorGamut != state.wideColorGamut) {
         Q_EMIT wideColorGamutChanged();
@@ -706,9 +706,9 @@ bool Output::highDynamicRange() const
     return m_state.highDynamicRange;
 }
 
-uint32_t Output::sdrBrightness() const
+uint32_t Output::referenceLuminance() const
 {
-    return m_state.sdrBrightness;
+    return m_state.referenceLuminance;
 }
 
 Output::AutoRotationPolicy Output::autoRotationPolicy() const

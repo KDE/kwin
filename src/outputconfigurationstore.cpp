@@ -224,7 +224,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .rgbRange = changeSet->rgbRange.value_or(output->rgbRange()),
                 .vrrPolicy = changeSet->vrrPolicy.value_or(output->vrrPolicy()),
                 .highDynamicRange = changeSet->highDynamicRange.value_or(output->highDynamicRange()),
-                .sdrBrightness = changeSet->sdrBrightness.value_or(output->sdrBrightness()),
+                .referenceLuminance = changeSet->referenceLuminance.value_or(output->referenceLuminance()),
                 .wideColorGamut = changeSet->wideColorGamut.value_or(output->wideColorGamut()),
                 .autoRotation = changeSet->autoRotationPolicy.value_or(output->autoRotationPolicy()),
                 .iccProfilePath = changeSet->iccProfilePath.value_or(output->iccProfilePath()),
@@ -266,7 +266,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .rgbRange = output->rgbRange(),
                 .vrrPolicy = output->vrrPolicy(),
                 .highDynamicRange = output->highDynamicRange(),
-                .sdrBrightness = output->sdrBrightness(),
+                .referenceLuminance = output->referenceLuminance(),
                 .wideColorGamut = output->wideColorGamut(),
                 .autoRotation = output->autoRotationPolicy(),
                 .iccProfilePath = output->iccProfilePath(),
@@ -320,7 +320,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
             .rgbRange = state.rgbRange,
             .vrrPolicy = state.vrrPolicy,
             .highDynamicRange = state.highDynamicRange,
-            .sdrBrightness = state.sdrBrightness,
+            .referenceLuminance = state.referenceLuminance,
             .wideColorGamut = state.wideColorGamut,
             .autoRotationPolicy = state.autoRotation,
             .iccProfilePath = state.iccProfilePath,
@@ -450,7 +450,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .rgbRange = existingData.rgbRange.value_or(kscreenChangeSet.rgbRange.value_or(Output::RgbRange::Automatic)),
             .vrrPolicy = existingData.vrrPolicy.value_or(kscreenChangeSet.vrrPolicy.value_or(VrrPolicy::Automatic)),
             .highDynamicRange = existingData.highDynamicRange.value_or(false),
-            .sdrBrightness = existingData.sdrBrightness.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
+            .referenceLuminance = existingData.referenceLuminance.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
             .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
@@ -713,7 +713,7 @@ void OutputConfigurationStore::load()
             state.highDynamicRange = it->toBool();
         }
         if (const auto it = data.find("sdrBrightness"); it != data.end() && it->isDouble()) {
-            state.sdrBrightness = it->toInt(200);
+            state.referenceLuminance = it->toInt(200);
         }
         if (const auto it = data.find("wideColorGamut"); it != data.end() && it->isBool()) {
             state.wideColorGamut = it->toBool();
@@ -945,8 +945,8 @@ void OutputConfigurationStore::save()
         if (output.highDynamicRange) {
             o["highDynamicRange"] = *output.highDynamicRange;
         }
-        if (output.sdrBrightness) {
-            o["sdrBrightness"] = int(*output.sdrBrightness);
+        if (output.referenceLuminance) {
+            o["sdrBrightness"] = int(*output.referenceLuminance);
         }
         if (output.wideColorGamut) {
             o["wideColorGamut"] = *output.wideColorGamut;

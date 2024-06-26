@@ -226,7 +226,7 @@ void GLShader::resolveLocations()
 
     m_floatLocations[FloatUniform::Saturation] = uniformLocation("saturation");
     m_floatLocations[FloatUniform::MaxHdrBrightness] = uniformLocation("maxHdrBrightness");
-    m_floatLocations[FloatUniform::SdrBrightness] = uniformLocation("sdrBrightness");
+    m_floatLocations[FloatUniform::SdrBrightness] = uniformLocation("referenceLuminance");
 
     m_colorLocations[ColorUniform::Color] = uniformLocation("geometryColor");
 
@@ -458,8 +458,8 @@ bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
     return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
-        && setUniform(FloatUniform::SdrBrightness, dst.sdrBrightness())
-        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrHighlightBrightness().value_or(10'000));
+        && setUniform(FloatUniform::SdrBrightness, dst.referenceLuminance())
+        && setUniform(FloatUniform::MaxHdrBrightness, dst.maxHdrLuminance().value_or(10'000));
 }
 
 bool GLShader::setColorspaceUniformsFromSRGB(const ColorDescription &dst)
@@ -472,7 +472,7 @@ bool GLShader::setColorspaceUniformsToSRGB(const ColorDescription &src)
     return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, src.containerColorimetry().toOther(src.sdrColorimetry()))
         && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
         && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(NamedTransferFunction::gamma22))
-        && setUniform(FloatUniform::SdrBrightness, src.sdrBrightness())
-        && setUniform(FloatUniform::MaxHdrBrightness, src.sdrBrightness());
+        && setUniform(FloatUniform::SdrBrightness, src.referenceLuminance())
+        && setUniform(FloatUniform::MaxHdrBrightness, src.referenceLuminance());
 }
 }

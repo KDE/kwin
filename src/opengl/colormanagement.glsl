@@ -7,7 +7,7 @@ const int gamma22_EOTF = 4;
 uniform mat4 colorimetryTransform;
 uniform int sourceNamedTransferFunction;
 uniform int destinationNamedTransferFunction;
-uniform float sdrBrightness;// in nits
+uniform float referenceLuminance;// in nits
 uniform float maxHdrBrightness; // in nits
 
 vec3 nitsToPq(vec3 nits) {
@@ -63,7 +63,7 @@ vec3 doTonemapping(vec3 color, float maxBrightness) {
 vec4 encodingToNits(vec4 color, int sourceTransferFunction) {
     if (sourceTransferFunction == sRGB_EOTF) {
         color.rgb /= max(color.a, 0.001);
-        color.rgb = sdrBrightness * srgbToLinear(color.rgb);
+        color.rgb = referenceLuminance * srgbToLinear(color.rgb);
         color.rgb *= color.a;
     } else if (sourceTransferFunction == PQ_EOTF) {
         color.rgb /= max(color.a, 0.001);
@@ -73,7 +73,7 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction) {
         color.rgb *= 80.0;
     } else if (sourceTransferFunction == gamma22_EOTF) {
         color.rgb /= max(color.a, 0.001);
-        color.rgb = sdrBrightness * pow(color.rgb, vec3(2.2));
+        color.rgb = referenceLuminance * pow(color.rgb, vec3(2.2));
         color.rgb *= color.a;
     }
     return color;
@@ -88,7 +88,7 @@ vec4 sourceEncodingToNitsInDestinationColorspace(vec4 color) {
 vec4 nitsToEncoding(vec4 color, int destinationTransferFunction) {
     if (destinationTransferFunction == sRGB_EOTF) {
         color.rgb /= max(color.a, 0.001);
-        color.rgb = linearToSrgb(doTonemapping(color.rgb, sdrBrightness) / sdrBrightness);
+        color.rgb = linearToSrgb(doTonemapping(color.rgb, referenceLuminance) / referenceLuminance);
         color.rgb *= color.a;
     } else if (destinationTransferFunction == PQ_EOTF) {
         color.rgb /= max(color.a, 0.001);
@@ -98,7 +98,7 @@ vec4 nitsToEncoding(vec4 color, int destinationTransferFunction) {
         color.rgb /= 80.0;
     } else if (destinationTransferFunction == gamma22_EOTF) {
         color.rgb /= max(color.a, 0.001);
-        color.rgb = pow(color.rgb / sdrBrightness, vec3(1.0 / 2.2));
+        color.rgb = pow(color.rgb / referenceLuminance, vec3(1.0 / 2.2));
         color.rgb *= color.a;
     }
     return color;

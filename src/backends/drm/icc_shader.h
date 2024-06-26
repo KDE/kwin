@@ -25,7 +25,7 @@ public:
     ~IccShader();
 
     GLShader *shader() const;
-    void setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness, const QVector3D &channelFactors);
+    void setUniforms(const std::shared_ptr<IccProfile> &profile, float referenceLuminance, const QVector3D &channelFactors);
 
 private:
     bool setProfile(const std::shared_ptr<IccProfile> &profile);
@@ -42,7 +42,7 @@ private:
     struct Locations
     {
         int src;
-        int sdrBrightness;
+        int referenceLuminance;
         int toXYZD50;
         int bsize;
         int bsampler;

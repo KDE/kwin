@@ -381,10 +381,10 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
     const NamedTransferFunction transferFunction = effectiveHdr ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::gamma22;
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()) : 0;
-    const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.sdrBrightness)) : 200;
+    const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
     const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200;
-    const double sdrBrightness = effectiveHdr ? props->sdrBrightness.value_or(m_state.sdrBrightness) : maxPeakBrightness;
-    return ColorDescription(containerColorimetry, transferFunction, sdrBrightness, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
+    const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : maxPeakBrightness;
+    return ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -405,7 +405,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.overscan = m_pipeline->overscan();
     next.rgbRange = m_pipeline->rgbRange();
     next.highDynamicRange = props->highDynamicRange.value_or(m_state.highDynamicRange);
-    next.sdrBrightness = props->sdrBrightness.value_or(m_state.sdrBrightness);
+    next.referenceLuminance = props->referenceLuminance.value_or(m_state.referenceLuminance);
     next.wideColorGamut = props->wideColorGamut.value_or(m_state.wideColorGamut);
     next.autoRotatePolicy = props->autoRotationPolicy.value_or(m_state.autoRotatePolicy);
     next.maxPeakBrightnessOverride = props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride);

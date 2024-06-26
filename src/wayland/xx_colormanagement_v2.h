@@ -70,7 +70,7 @@ private:
 
     std::optional<Colorimetry> m_colorimetry;
     std::optional<NamedTransferFunction> m_transferFunction;
-    std::optional<double> m_maxFrameAverageBrightness;
+    std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxPeakBrightness;
 };
 

@@ -35,7 +35,7 @@ public:
     std::optional<Output::RgbRange> rgbRange;
     std::optional<VrrPolicy> vrrPolicy;
     std::optional<bool> highDynamicRange;
-    std::optional<uint32_t> sdrBrightness;
+    std::optional<uint32_t> referenceLuminance;
     std::optional<bool> wideColorGamut;
     std::optional<Output::AutoRotationPolicy> autoRotationPolicy;
     std::optional<QString> iccProfilePath;

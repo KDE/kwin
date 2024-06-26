@@ -56,7 +56,7 @@ private:
     NamedTransferFunction m_transferFunction = NamedTransferFunction::sRGB;
     NamedColorimetry m_containerColorimetry = NamedColorimetry::BT709;
     std::optional<Colorimetry> m_masteringColorimetry;
-    std::optional<double> m_maxFrameAverageBrightness;
+    std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxPeakBrightness;
 };
 

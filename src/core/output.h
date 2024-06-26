@@ -336,7 +336,7 @@ public:
     OutputTransform panelOrientation() const;
     bool wideColorGamut() const;
     bool highDynamicRange() const;
-    uint32_t sdrBrightness() const;
+    uint32_t referenceLuminance() const;
     AutoRotationPolicy autoRotationPolicy() const;
     std::shared_ptr<IccProfile> iccProfile() const;
     QString iccProfilePath() const;
@@ -418,7 +418,7 @@ Q_SIGNALS:
     void vrrPolicyChanged();
     void rgbRangeChanged();
     void wideColorGamutChanged();
-    void sdrBrightnessChanged();
+    void referenceLuminanceChanged();
     void highDynamicRangeChanged();
     void autoRotationPolicyChanged();
     void iccProfileChanged();
@@ -468,7 +468,7 @@ protected:
         RgbRange rgbRange = RgbRange::Automatic;
         bool wideColorGamut = false;
         bool highDynamicRange = false;
-        uint32_t sdrBrightness = 200;
+        uint32_t referenceLuminance = 200;
         AutoRotationPolicy autoRotatePolicy = AutoRotationPolicy::InTabletMode;
         QString iccProfilePath;
         std::shared_ptr<IccProfile> iccProfile;

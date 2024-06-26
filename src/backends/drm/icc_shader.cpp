@@ -22,7 +22,7 @@ IccShader::IccShader()
 {
     m_locations = {
         .src = m_shader->uniformLocation("src"),
-        .sdrBrightness = m_shader->uniformLocation("sdrBrightness"),
+        .referenceLuminance = m_shader->uniformLocation("referenceLuminance"),
         .toXYZD50 = m_shader->uniformLocation("toXYZD50"),
         .bsize = m_shader->uniformLocation("Bsize"),
         .bsampler = m_shader->uniformLocation("Bsampler"),
@@ -145,7 +145,7 @@ GLShader *IccShader::shader() const
     return m_shader.get();
 }
 
-void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sdrBrightness, const QVector3D &channelFactors)
+void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float referenceLuminance, const QVector3D &channelFactors)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
     setProfile(profile);
@@ -155,7 +155,7 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, float sd
     nightColor(1, 1) = channelFactors.y();
     nightColor(2, 2) = channelFactors.z();
     m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50 * nightColor);
-    m_shader->setUniform(m_locations.sdrBrightness, sdrBrightness);
+    m_shader->setUniform(m_locations.referenceLuminance, referenceLuminance);
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {

@@ -116,8 +116,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         }
         if (enableColormanagement) {
             m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), NamedTransferFunction::linear,
-                                                                       colorDescription.sdrBrightness(), colorDescription.minHdrBrightness(),
-                                                                       colorDescription.maxFrameAverageBrightness(), colorDescription.maxHdrHighlightBrightness(),
+                                                                       colorDescription.referenceLuminance(), colorDescription.minLuminance(),
+                                                                       colorDescription.maxAverageLuminance(), colorDescription.maxHdrLuminance(),
                                                                        colorDescription.containerColorimetry(), colorDescription.sdrColorimetry());
         } else {
             m_surface->intermediaryColorDescription = colorDescription;
@@ -188,12 +188,12 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.sdrBrightness(), m_surface->adaptedChannelFactors);
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.referenceLuminance(), m_surface->adaptedChannelFactors);
         } else {
             // enforce a 25 nits minimum sdr brightness
             constexpr double minBrightness = 25;
-            const double sdrBrightness = m_surface->intermediaryColorDescription.sdrBrightness();
-            const double brightnessFactor = (m_surface->brightness * (1 - (minBrightness / sdrBrightness))) + (minBrightness / sdrBrightness);
+            const double referenceLuminance = m_surface->intermediaryColorDescription.referenceLuminance();
+            const double brightnessFactor = (m_surface->brightness * (1 - (minBrightness / referenceLuminance))) + (minBrightness / referenceLuminance);
             QMatrix4x4 ctm;
             ctm(0, 0) = m_surface->adaptedChannelFactors.x() * brightnessFactor;
             ctm(1, 1) = m_surface->adaptedChannelFactors.y() * brightnessFactor;
@@ -201,8 +201,8 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
             binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
             binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
             binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));
-            binder.shader()->setUniform(GLShader::FloatUniform::SdrBrightness, m_surface->intermediaryColorDescription.sdrBrightness());
-            binder.shader()->setUniform(GLShader::FloatUniform::MaxHdrBrightness, m_surface->intermediaryColorDescription.maxHdrHighlightBrightness().value_or(800));
+            binder.shader()->setUniform(GLShader::FloatUniform::SdrBrightness, m_surface->intermediaryColorDescription.referenceLuminance());
+            binder.shader()->setUniform(GLShader::FloatUniform::MaxHdrBrightness, m_surface->intermediaryColorDescription.maxHdrLuminance().value_or(800));
         }
         QMatrix4x4 mat;
         mat.scale(1, -1);

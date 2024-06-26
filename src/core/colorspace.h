@@ -105,16 +105,16 @@ public:
     /**
      * @param containerColorimetry the container colorimety of this description
      * @param tf the transfer function of this description
-     * @param sdrBrightness the brightness of SDR content
-     * @param minHdrBrightness the minimum brightness of HDR content
-     * @param maxFrameAverageBrightness the maximum brightness of HDR content, if the whole screen is white
-     * @param maxHdrHighlightBrightness the maximum brightness of HDR content, for a small part of the screen only
+     * @param referenceLuminance the brightness of SDR content
+     * @param minLuminance the minimum brightness of HDR content
+     * @param maxAverageLuminance the maximum brightness of HDR content, if the whole screen is white
+     * @param maxHdrLuminance the maximum brightness of HDR content, for a small part of the screen only
      * @param sdrColorimetry
      */
-    explicit ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness);
-    explicit ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness);
-    explicit ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
-    explicit ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double sdrBrightness, double minHdrBrightness, std::optional<double> maxFrameAverageBrightness, std::optional<double> maxHdrHighlightBrightness, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
 
     /**
      * The primaries and whitepoint that colors are encoded for. This is used to convert between different colorspaces.
@@ -129,10 +129,10 @@ public:
     const std::optional<Colorimetry> &masteringColorimetry() const;
     const Colorimetry &sdrColorimetry() const;
     NamedTransferFunction transferFunction() const;
-    double sdrBrightness() const;
-    double minHdrBrightness() const;
-    std::optional<double> maxFrameAverageBrightness() const;
-    std::optional<double> maxHdrHighlightBrightness() const;
+    double referenceLuminance() const;
+    double minLuminance() const;
+    std::optional<double> maxAverageLuminance() const;
+    std::optional<double> maxHdrLuminance() const;
 
     bool operator==(const ColorDescription &other) const = default;
 
@@ -142,17 +142,17 @@ public:
      * This color description describes display-referred sRGB, with a gamma22 transfer function
      */
     static const ColorDescription sRGB;
-    static QVector3D encodedToNits(const QVector3D &nits, NamedTransferFunction tf, double sdrBrightness);
-    static QVector3D nitsToEncoded(const QVector3D &rgb, NamedTransferFunction tf, double sdrBrightness);
+    static QVector3D encodedToNits(const QVector3D &nits, NamedTransferFunction tf, double referenceLuminance);
+    static QVector3D nitsToEncoded(const QVector3D &rgb, NamedTransferFunction tf, double referenceLuminance);
 
 private:
     Colorimetry m_containerColorimetry;
     std::optional<Colorimetry> m_masteringColorimetry;
     NamedTransferFunction m_transferFunction;
     Colorimetry m_sdrColorimetry;
-    double m_sdrBrightness;
-    double m_minHdrBrightness;
-    std::optional<double> m_maxFrameAverageBrightness;
-    std::optional<double> m_maxHdrHighlightBrightness;
+    double m_referenceLuminance;
+    double m_minLuminance;
+    std::optional<double> m_maxAverageLuminance;
+    std::optional<double> m_maxHdrLuminance;
 };
 }

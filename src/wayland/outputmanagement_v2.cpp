@@ -273,7 +273,7 @@ void OutputConfigurationV2Interface::kde_output_configuration_v2_set_sdr_brightn
         return;
     }
     if (OutputDeviceV2Interface *output = OutputDeviceV2Interface::get(outputdevice)) {
-        config.changeSet(output->handle())->sdrBrightness = sdr_brightness;
+        config.changeSet(output->handle())->referenceLuminance = sdr_brightness;
     }
 }
 

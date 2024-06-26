@@ -148,11 +148,11 @@ void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_create(R
         wl_resource_post_error(resource->handle, error::error_incomplete_set, "colorimetry or transfer function missing");
         return;
     }
-    if (m_transferFunction != NamedTransferFunction::PerceptualQuantizer && (m_maxFrameAverageBrightness || m_maxPeakBrightness)) {
+    if (m_transferFunction != NamedTransferFunction::PerceptualQuantizer && (m_maxAverageLuminance || m_maxPeakBrightness)) {
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
-    new XXImageDescriptionV2(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, 100, 0, m_maxFrameAverageBrightness.value_or(100), m_maxPeakBrightness.value_or(100)));
+    new XXImageDescriptionV2(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, 100, 0, m_maxAverageLuminance.value_or(100), m_maxPeakBrightness.value_or(100)));
     wl_resource_destroy(resource->handle);
 }
 
@@ -235,7 +235,7 @@ void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_set_max_
 
 void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_set_max_fall(Resource *resource, uint32_t max_fall)
 {
-    m_maxFrameAverageBrightness = max_fall;
+    m_maxAverageLuminance = max_fall;
 }
 
 XXImageDescriptionV2::XXImageDescriptionV2(wl_client *client, uint32_t id, uint32_t version, const ColorDescription &color)
