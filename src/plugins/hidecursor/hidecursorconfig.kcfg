@@ -6,10 +6,10 @@
     <kcfgfile arg="true"/>
     <group name="Effect-hidecursor">
         <entry name="InactivityDuration" type="UInt">
-            <default>5</default>
+            <default>0</default>
         </entry>
         <entry name="HideOnTyping" type="Bool">
-            <default>false</default>
+            <default>true</default>
         </entry>
     </group>
 </kcfg>
