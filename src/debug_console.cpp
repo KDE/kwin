@@ -619,6 +619,8 @@ DebugConsole::DebugConsole()
         setWindowFlags(Qt::X11BypassWindowManagerHint);
     }
 
+    m_ui->tabWidget->addTab(new DebugConsoleEffectsTab(), i18nc("@label", "Effects"));
+
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
     connect(m_ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
         // delay creation of input event filter until the tab is selected
@@ -1565,6 +1567,62 @@ void DataSourceModel::setSource(AbstractDataSource *source)
     }
     endResetModel();
 }
+
+DebugConsoleEffectItem::DebugConsoleEffectItem(const QString &name, bool loaded, QWidget *parent)
+    : QWidget(parent)
+    , m_name(name)
+    , m_loaded(loaded)
+{
+    QHBoxLayout *layout = new QHBoxLayout(this);
+
+    QLabel *label = new QLabel(name, this);
+    layout->addWidget(label);
+
+    QPushButton *toggleButton = new QPushButton(this);
+    layout->addWidget(toggleButton);
+
+    if (loaded) {
+        toggleButton->setText(i18nc("@action:button unload an effect", "Unload"));
+    } else {
+        toggleButton->setText(i18nc("@action:button load an effect", "Load"));
+    }
+
+    connect(toggleButton, &QPushButton::clicked, this, [this, toggleButton]() {
+        if (m_loaded) {
+            m_loaded = false;
+            effects->unloadEffect(m_name);
+        } else {
+            m_loaded = effects->loadEffect(m_name);
+        }
+
+        if (m_loaded) {
+            toggleButton->setText(i18nc("@action:button unload an effect", "Unload"));
+        } else {
+            toggleButton->setText(i18nc("@action:button load an effect", "Load"));
+        }
+    });
 }
+
+DebugConsoleEffectsTab::DebugConsoleEffectsTab(QWidget *parent)
+    : QListWidget(parent)
+{
+    if (!effects) {
+        return;
+    }
+
+    const QStringList availableEffects = effects->listOfEffects();
+    const QStringList loadedEffects = effects->loadedEffects();
+
+    for (const QString &effectName : availableEffects) {
+        QListWidgetItem *item = new QListWidgetItem(this);
+        DebugConsoleEffectItem *effectItem = new DebugConsoleEffectItem(effectName, loadedEffects.contains(effectName));
+
+        addItem(item);
+        setItemWidget(item, effectItem);
+        item->setSizeHint(effectItem->sizeHint());
+    }
+}
+
+} // namespace KWin
 
 #include "moc_debug_console.cpp"

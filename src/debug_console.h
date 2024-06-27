@@ -16,10 +16,14 @@
 
 #include <QAbstractItemModel>
 #include <QList>
+#include <QListWidget>
 #include <QStyledItemDelegate>
+
 #include <functional>
 #include <memory>
 
+class QLabel;
+class QPushButton;
 class QTextEdit;
 
 namespace Ui
@@ -185,4 +189,25 @@ private:
     AbstractDataSource *m_source = nullptr;
     QList<QByteArray> m_data;
 };
-}
+
+class DebugConsoleEffectItem : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DebugConsoleEffectItem(const QString &name, bool loaded, QWidget *parent = nullptr);
+
+private:
+    QString m_name;
+    bool m_loaded = false;
+};
+
+class DebugConsoleEffectsTab : public QListWidget
+{
+    Q_OBJECT
+
+public:
+    explicit DebugConsoleEffectsTab(QWidget *parent = nullptr);
+};
+
+} // namespace KWin
