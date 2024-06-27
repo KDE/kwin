@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1683126 2024-06-24 01:10:25Z scripty $
+# $Id: kwin.po 1683336 2024-06-27 01:11:26Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-24 00:39+0000\n"
+"POT-Creation-Date: 2024-06-27 00:40+0000\n"
 "PO-Revision-Date: 2024-06-15 08:13+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1717,14 +1717,32 @@ msgstr "Razdalja:"
 msgid "Window Close Animation"
 msgstr "Animacija zapiranja okna"
 
-#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
-#: plugins/hidecursor/hidecursor_config.ui:9
+#: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
-msgid "Inactivity duration (seconds):"
-msgstr "Trajanje nedejavnosti (sekunde):"
+msgctxt "@item:inmenu never hide cursor on inactivity"
+msgid "Never"
+msgstr ""
+
+#: plugins/hidecursor/hidecursor_config.cpp:58
+#: plugins/hidecursor/hidecursor_config.cpp:62
+#, fuzzy, kde-format
+#| msgid " milliseconds"
+msgid "%1 second"
+msgid_plural "%1 seconds"
+msgstr[0] " milisekund"
+msgstr[1] " milisekund"
+msgstr[2] " milisekund"
+msgstr[3] " milisekund"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
+#: plugins/hidecursor/hidecursor_config.ui:17
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide cursor on inactivity:"
+msgstr "Skrij kazalko pri tipkanju"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "Skrij kazalko pri tipkanju"
@@ -2364,7 +2382,7 @@ msgstr "Ni ustreznih oken"
 msgid "Drag Down To Close"
 msgstr "Potegni dol za zapiranje"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -4202,6 +4220,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se je sesul"
+
+#~ msgid "Inactivity duration (seconds):"
+#~ msgstr "Trajanje nedejavnosti (sekunde):"
 
 #~ msgid "Split Horizontally"
 #~ msgstr "Razcepi vodoravno"

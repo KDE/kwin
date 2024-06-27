@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-24 00:39+0000\n"
+"POT-Creation-Date: 2024-06-27 00:40+0000\n"
 "PO-Revision-Date: 2014-08-21 16:21+0200\n"
 "Last-Translator: Sönke Dibbern <s_dibbern@web.de>\n"
 "Language-Team: Low Saxon <kde-i18n-nds@kde.org>\n"
@@ -1738,14 +1738,29 @@ msgstr ""
 msgid "Window Close Animation"
 msgstr "Finsterakschonen-Menü"
 
-#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
-#: plugins/hidecursor/hidecursor_config.ui:9
+#: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
-msgid "Inactivity duration (seconds):"
+msgctxt "@item:inmenu never hide cursor on inactivity"
+msgid "Never"
+msgstr ""
+
+#: plugins/hidecursor/hidecursor_config.cpp:58
+#: plugins/hidecursor/hidecursor_config.cpp:62
+#, fuzzy, kde-format
+#| msgid " milliseconds"
+msgid "%1 second"
+msgid_plural "%1 seconds"
+msgstr[0] " Millisekunnen"
+msgstr[1] " Millisekunnen"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
+#: plugins/hidecursor/hidecursor_config.ui:17
+#, kde-format
+msgid "Hide cursor on inactivity:"
 msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr ""
@@ -2434,7 +2449,7 @@ msgstr "Verschaven Finstern:"
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

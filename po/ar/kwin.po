@@ -4,16 +4,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-24 00:39+0000\n"
-"PO-Revision-Date: 2024-05-25 16:16+0400\n"
+"POT-Creation-Date: 2024-06-27 00:40+0000\n"
+"PO-Revision-Date: 2024-06-26 18:25+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
-"Language-Team: \n"
+"Language-Team: ar\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1687,14 +1688,34 @@ msgstr "المسافة:"
 msgid "Window Close Animation"
 msgstr "حركات غلق النوافذ"
 
-#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
-#: plugins/hidecursor/hidecursor_config.ui:9
+#: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
-msgid "Inactivity duration (seconds):"
-msgstr "مدة عدم النشاط (بالثّواني):"
+msgctxt "@item:inmenu never hide cursor on inactivity"
+msgid "Never"
+msgstr ""
+
+#: plugins/hidecursor/hidecursor_config.cpp:58
+#: plugins/hidecursor/hidecursor_config.cpp:62
+#, fuzzy, kde-format
+#| msgid " milliseconds"
+msgid "%1 second"
+msgid_plural "%1 seconds"
+msgstr[0] " م.ث"
+msgstr[1] " م.ث"
+msgstr[2] " م.ث"
+msgstr[3] " م.ث"
+msgstr[4] " م.ث"
+msgstr[5] " م.ث"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
+#: plugins/hidecursor/hidecursor_config.ui:17
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide cursor on inactivity:"
+msgstr "أخفِ المؤشّر عند الكتابة"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "أخفِ المؤشّر عند الكتابة"
@@ -2336,7 +2357,7 @@ msgstr "لا يوجد نوافذ مطابقة"
 msgid "Drag Down To Close"
 msgstr "اسحب للأسفل للإغلاق"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -2386,10 +2407,9 @@ msgid "Invalid region"
 msgstr "منطقة غير صالحة"
 
 #: plugins/screencast/screencaststream.cpp:346
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "لا يوجد مركب أوبن‌جي‌إل يعمل"
+msgstr "يتطلب تسجيل الشاشة تركب أوبن‌جي‌إل"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format
@@ -4175,6 +4195,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "إنهار ويلاند_اكس"
+
+#~ msgid "Inactivity duration (seconds):"
+#~ msgstr "مدة عدم النشاط (بالثّواني):"
 
 #~ msgid "Split Horizontally"
 #~ msgstr "اقسم أفقياً"

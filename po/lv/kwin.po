@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-24 00:39+0000\n"
+"POT-Creation-Date: 2024-06-27 00:40+0000\n"
 "PO-Revision-Date: 2024-05-27 08:00+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -1702,14 +1702,31 @@ msgstr "Attālums:"
 msgid "Window Close Animation"
 msgstr "Loga aizvēršanas animācija"
 
-#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
-#: plugins/hidecursor/hidecursor_config.ui:9
+#: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
-msgid "Inactivity duration (seconds):"
-msgstr "Dīkstāves ilgums (sekundes):"
+msgctxt "@item:inmenu never hide cursor on inactivity"
+msgid "Never"
+msgstr ""
+
+#: plugins/hidecursor/hidecursor_config.cpp:58
+#: plugins/hidecursor/hidecursor_config.cpp:62
+#, fuzzy, kde-format
+#| msgid " milliseconds"
+msgid "%1 second"
+msgid_plural "%1 seconds"
+msgstr[0] " milisekundes"
+msgstr[1] " milisekundes"
+msgstr[2] " milisekundes"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
+#: plugins/hidecursor/hidecursor_config.ui:17
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide cursor on inactivity:"
+msgstr "Paslēpt kursoru, kad raksta"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "Paslēpt kursoru, kad raksta"
@@ -2348,7 +2365,7 @@ msgstr "Nav atbilstošu logu"
 msgid "Drag Down To Close"
 msgstr "Vilkt lejup, lai aizvērtu"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -4193,6 +4210,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "„Xwayland“ ir avarējis"
+
+#~ msgid "Inactivity duration (seconds):"
+#~ msgstr "Dīkstāves ilgums (sekundes):"
 
 #~ msgid "Split Horizontally"
 #~ msgstr "Sadalīt horizontāli"

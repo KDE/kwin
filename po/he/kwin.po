@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-24 00:39+0000\n"
+"POT-Creation-Date: 2024-06-27 00:40+0000\n"
 "PO-Revision-Date: 2024-06-15 07:56+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1701,14 +1701,32 @@ msgstr "מרחק:"
 msgid "Window Close Animation"
 msgstr "הנפשת סגירת חלון"
 
-#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
-#: plugins/hidecursor/hidecursor_config.ui:9
+#: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
-msgid "Inactivity duration (seconds):"
-msgstr "משך העדר פעילות (שניות):"
+msgctxt "@item:inmenu never hide cursor on inactivity"
+msgid "Never"
+msgstr ""
+
+#: plugins/hidecursor/hidecursor_config.cpp:58
+#: plugins/hidecursor/hidecursor_config.cpp:62
+#, fuzzy, kde-format
+#| msgid " milliseconds"
+msgid "%1 second"
+msgid_plural "%1 seconds"
+msgstr[0] " אלפיות השנייה"
+msgstr[1] " אלפיות השנייה"
+msgstr[2] " אלפיות השנייה"
+msgstr[3] " אלפיות השנייה"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
+#: plugins/hidecursor/hidecursor_config.ui:17
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide cursor on inactivity:"
+msgstr "הסתרת סמן עם ההקלדה"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "הסתרת סמן עם ההקלדה"
@@ -2348,7 +2366,7 @@ msgstr "אין חלונות תואמים"
 msgid "Drag Down To Close"
 msgstr "גרירה למטה לסגירה"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -4183,6 +4201,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland קרס"
+
+#~ msgid "Inactivity duration (seconds):"
+#~ msgstr "משך העדר פעילות (שניות):"
 
 #~ msgid "Split Horizontally"
 #~ msgstr "פיצול אופקי"

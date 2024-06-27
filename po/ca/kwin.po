@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-24 00:39+0000\n"
+"POT-Creation-Date: 2024-06-27 00:40+0000\n"
 "PO-Revision-Date: 2024-06-15 11:35+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1720,14 +1720,30 @@ msgstr "Distància:"
 msgid "Window Close Animation"
 msgstr "Animació de tancament de les finestres"
 
-#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
-#: plugins/hidecursor/hidecursor_config.ui:9
+#: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
-msgid "Inactivity duration (seconds):"
-msgstr "Durada de la inactivitat (segons):"
+msgctxt "@item:inmenu never hide cursor on inactivity"
+msgid "Never"
+msgstr ""
+
+#: plugins/hidecursor/hidecursor_config.cpp:58
+#: plugins/hidecursor/hidecursor_config.cpp:62
+#, fuzzy, kde-format
+#| msgid " milliseconds"
+msgid "%1 second"
+msgid_plural "%1 seconds"
+msgstr[0] " mil·lisegons"
+msgstr[1] " mil·lisegons"
+
+#. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
+#: plugins/hidecursor/hidecursor_config.ui:17
+#, fuzzy, kde-format
+#| msgid "Hide cursor on typing"
+msgid "Hide cursor on inactivity:"
+msgstr "Oculta el cursor en teclejar"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "Oculta el cursor en teclejar"
@@ -2367,7 +2383,7 @@ msgstr "No coincideix amb cap finestra"
 msgid "Drag Down To Close"
 msgstr "Arrossegueu cap avall per a tancar"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
@@ -4213,6 +4229,9 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "L'Xwayland ha fallat"
+
+#~ msgid "Inactivity duration (seconds):"
+#~ msgstr "Durada de la inactivitat (segons):"
 
 #~ msgid "Split Horizontally"
 #~ msgstr "Divideix horitzontalment"
