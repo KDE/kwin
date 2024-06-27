@@ -16,7 +16,6 @@ class EffectsFilterProxyModel : public QSortFilterProxyModel
     Q_OBJECT
     Q_PROPERTY(QAbstractItemModel *sourceModel READ sourceModel WRITE setSourceModel)
     Q_PROPERTY(QString query READ query WRITE setQuery NOTIFY queryChanged)
-    Q_PROPERTY(bool excludeInternal READ excludeInternal WRITE setExcludeInternal NOTIFY excludeInternalChanged)
     Q_PROPERTY(bool excludeUnsupported READ excludeUnsupported WRITE setExcludeUnsupported NOTIFY excludeUnsupportedChanged)
 
 public:
@@ -26,15 +25,11 @@ public:
     QString query() const;
     void setQuery(const QString &query);
 
-    bool excludeInternal() const;
-    void setExcludeInternal(bool exclude);
-
     bool excludeUnsupported() const;
     void setExcludeUnsupported(bool exclude);
 
 Q_SIGNALS:
     void queryChanged();
-    void excludeInternalChanged();
     void excludeUnsupportedChanged();
 
 protected:
@@ -42,7 +37,6 @@ protected:
 
 private:
     QString m_query;
-    bool m_excludeInternal = true;
     bool m_excludeUnsupported = true;
 
     Q_DISABLE_COPY(EffectsFilterProxyModel)

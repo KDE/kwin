@@ -79,14 +79,6 @@ ScrollViewKCM {
 
                     onToggled: searchModel.excludeUnsupported = checked
                 }
-
-                QQC2.MenuItem {
-                    checkable: true
-                    checked: searchModel.excludeInternal
-                    text: i18n("Exclude internal effects")
-
-                    onToggled: searchModel.excludeInternal = checked
-                }
             }
         }
     }
