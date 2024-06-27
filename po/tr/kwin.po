@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-18 02:37+0000\n"
+"POT-Creation-Date: 2024-06-27 02:33+0000\n"
 "PO-Revision-Date: 2024-06-20 13:56+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1713,7 +1713,7 @@ msgid "Inactivity duration (seconds):"
 msgstr "Hareketsizlik süresi (saniye):"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:26
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "Yazarken imleci gizle"
@@ -2351,7 +2351,7 @@ msgstr "Eşleşen pencere yok"
 msgid "Drag Down To Close"
 msgstr "Kapatmak için Aşağı Sürükle"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

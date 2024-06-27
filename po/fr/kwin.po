@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-18 02:37+0000\n"
+"POT-Creation-Date: 2024-06-27 02:33+0000\n"
 "PO-Revision-Date: 2024-05-22 09:08+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
@@ -1746,7 +1746,7 @@ msgid "Inactivity duration (seconds):"
 msgstr "Durée d'inactivité (secondes) :"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
-#: plugins/hidecursor/hidecursor_config.ui:23
+#: plugins/hidecursor/hidecursor_config.ui:26
 #, kde-format
 msgid "Hide cursor on typing"
 msgstr "Masquer le pointeur lors de la saisie"
@@ -2394,7 +2394,7 @@ msgstr "Aucune correspondance de fenêtres"
 msgid "Drag Down To Close"
 msgstr "Faire glisser vers le bas pour fermer"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:450
+#: plugins/private/qml/WindowHeapDelegate.qml:457
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
