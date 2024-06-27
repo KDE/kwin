@@ -31,6 +31,7 @@ public:
 
     void pointerEvent(MouseEvent *event) override;
     void keyEvent(KeyEvent *event) override;
+    void tabletToolEvent(TabletEvent *event) override;
 
 private:
     void showCursor();
