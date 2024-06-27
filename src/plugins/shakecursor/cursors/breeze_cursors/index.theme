@@ -1,3 +1,25 @@
 [Icon Theme]
 Name=Breeze
+Name[ar]=نسيم
+Name[bg]=Breeze
+Name[ca]=Brisa
+Name[cs]=Breeze
+Name[hu]=Breeze
+Name[ia]=Breeze(Brisa)
+Name[ka]=Breeze
+Name[sl]=Sapica
+Name[tr]=Esinti
+Name[uk]=Breeze
+Name[x-test]=xxBreezexx
 Comment=Breeze by the KDE VDG
+Comment[ar]=نسيم من مجموعة تصميم كِيدِي
+Comment[bg]=Breeze от KDE VDG
+Comment[ca]=Brisa, creat pel VDG del KDE
+Comment[cs]=Breeze od KDE VDG
+Comment[hu]=Breeze a KDE VDG-től
+Comment[ia]=Breeze (Brisa) per le KDE VDG
+Comment[ka]=Breeze KDE VDG-სგან
+Comment[sl]=Sapica od KDE VDG
+Comment[tr]=KDE VDG tarafından Esinti
+Comment[uk]=Breeze, автори — KDE VDG
+Comment[x-test]=xxBreeze by the KDE VDGxx
