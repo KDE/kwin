@@ -8,7 +8,6 @@
 */
 #include "debug_console.h"
 #include "compositor.h"
-#include "core/graphicsbufferview.h"
 #include "core/inputdevice.h"
 #include "effect/effecthandler.h"
 #include "input_event.h"
@@ -20,7 +19,6 @@
 #include "platformsupport/scenes/opengl/openglbackend.h"
 #include "scene/workspacescene.h"
 #include "utils/filedescriptor.h"
-#include "utils/subsurfacemonitor.h"
 #include "wayland/abstract_data_source.h"
 #include "wayland/clientconnection.h"
 #include "wayland/datacontrolsource_v1.h"
@@ -28,7 +26,6 @@
 #include "wayland/display.h"
 #include "wayland/primaryselectionsource_v1.h"
 #include "wayland/seat.h"
-#include "wayland/subcompositor.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
 #include "waylandwindow.h"
@@ -606,7 +603,6 @@ DebugConsole::DebugConsole()
     m_ui->windowsView->header()->setSortIndicatorShown(true);
     m_ui->windowsView->setItemDelegate(new DebugConsoleDelegate(this));
 
-    m_ui->surfacesView->setModel(new SurfaceTreeModel(this));
     m_ui->clipboardContent->setModel(new DataSourceModel(this));
     m_ui->primaryContent->setModel(new DataSourceModel(this));
     m_ui->inputDevicesView->setModel(new InputDeviceModel(this));
@@ -616,9 +612,10 @@ DebugConsole::DebugConsole()
     m_ui->tabWidget->setTabIcon(1, QIcon::fromTheme(QStringLiteral("view-list-tree")));
 
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
-        m_ui->tabWidget->setTabEnabled(1, false);
-        m_ui->tabWidget->setTabEnabled(2, false);
-        m_ui->tabWidget->setTabEnabled(6, false);
+        m_ui->tabWidget->setTabEnabled(1, false); // Input Events
+        m_ui->tabWidget->setTabEnabled(2, false); // Input Devices
+        m_ui->tabWidget->setTabEnabled(4, false); // Keyboard
+        m_ui->tabWidget->setTabEnabled(5, false); // Clipboard
         setWindowFlags(Qt::X11BypassWindowManagerHint);
     }
 
@@ -1331,156 +1328,6 @@ X11Window *DebugConsoleModel::x11Window(const QModelIndex &index) const
 X11Window *DebugConsoleModel::unmanaged(const QModelIndex &index) const
 {
     return windowForIndex(index, m_unmanageds, s_x11UnmanagedId);
-}
-
-/////////////////////////////////////// SurfaceTreeModel
-SurfaceTreeModel::SurfaceTreeModel(QObject *parent)
-    : QAbstractItemModel(parent)
-{
-    // TODO: it would be nice to not have to reset the model on each change
-    auto reset = [this] {
-        beginResetModel();
-        endResetModel();
-    };
-
-    auto watchSubsurfaces = [this, reset](Window *c) {
-        if (!c->surface()) {
-            return;
-        }
-        auto monitor = new SubSurfaceMonitor(c->surface(), this);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceAdded, this, reset);
-        connect(monitor, &SubSurfaceMonitor::subSurfaceRemoved, this, reset);
-        connect(c, &QObject::destroyed, monitor, &QObject::deleteLater);
-    };
-
-    for (auto c : workspace()->windows()) {
-        watchSubsurfaces(c);
-    }
-    connect(workspace(), &Workspace::windowAdded, this, [reset, watchSubsurfaces](Window *c) {
-        watchSubsurfaces(c);
-        reset();
-    });
-    connect(workspace(), &Workspace::windowRemoved, this, reset);
-}
-
-SurfaceTreeModel::~SurfaceTreeModel() = default;
-
-int SurfaceTreeModel::columnCount(const QModelIndex &parent) const
-{
-    return 1;
-}
-
-int SurfaceTreeModel::rowCount(const QModelIndex &parent) const
-{
-    if (parent.isValid()) {
-        if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(parent.internalPointer())) {
-            return surface->below().count() + surface->above().count();
-        }
-        return 0;
-    }
-    // toplevel are all windows
-    return workspace()->windows().count();
-}
-
-QModelIndex SurfaceTreeModel::index(int row, int column, const QModelIndex &parent) const
-{
-    if (column != 0) {
-        // invalid column
-        return QModelIndex();
-    }
-
-    if (parent.isValid()) {
-        if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(parent.internalPointer())) {
-            int reference = 0;
-            const auto &below = surface->below();
-            if (row < reference + below.count()) {
-                return createIndex(row, column, below.at(row - reference)->surface());
-            }
-            reference += below.count();
-
-            const auto &above = surface->above();
-            if (row < reference + above.count()) {
-                return createIndex(row, column, above.at(row - reference)->surface());
-            }
-        }
-        return QModelIndex();
-    }
-    // a window
-    const auto &allClients = workspace()->windows();
-    if (row < allClients.count()) {
-        // references a client
-        return createIndex(row, column, allClients.at(row)->surface());
-    }
-    // not found
-    return QModelIndex();
-}
-
-QModelIndex SurfaceTreeModel::parent(const QModelIndex &child) const
-{
-    if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(child.internalPointer())) {
-        const auto &subsurface = surface->subSurface();
-        if (!subsurface) {
-            // doesn't reference a subsurface, this is a top-level window
-            return QModelIndex();
-        }
-        SurfaceInterface *parent = subsurface->parentSurface();
-        if (!parent) {
-            // something is wrong
-            return QModelIndex();
-        }
-        // is the parent a subsurface itself?
-        if (parent->subSurface()) {
-            auto grandParent = parent->subSurface()->parentSurface();
-            if (!grandParent) {
-                // something is wrong
-                return QModelIndex();
-            }
-            int row = 0;
-            const auto &below = grandParent->below();
-            for (int i = 0; i < below.count(); i++) {
-                if (below.at(i) == parent->subSurface()) {
-                    return createIndex(row + i, 0, parent);
-                }
-            }
-            row += below.count();
-            const auto &above = grandParent->above();
-            for (int i = 0; i < above.count(); i++) {
-                if (above.at(i) == parent->subSurface()) {
-                    return createIndex(row + i, 0, parent);
-                }
-            }
-            return QModelIndex();
-        }
-        // not a subsurface, thus it's a true window
-        const auto &allClients = workspace()->windows();
-        for (int row = 0; row < allClients.count(); row++) {
-            if (allClients.at(row)->surface() == parent) {
-                return createIndex(row, 0, parent);
-            }
-        }
-    }
-    return QModelIndex();
-}
-
-QVariant SurfaceTreeModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid()) {
-        return QVariant();
-    }
-    if (SurfaceInterface *surface = static_cast<SurfaceInterface *>(index.internalPointer())) {
-        if (role == Qt::DisplayRole || role == Qt::ToolTipRole) {
-            return QStringLiteral("%1 (%2) - %3").arg(surface->client()->executablePath()).arg(surface->client()->processId()).arg(surface->id());
-        } else if (role == Qt::DecorationRole) {
-            if (surface->buffer()) {
-                const GraphicsBufferView view(surface->buffer());
-                if (const QImage *image = view.image()) {
-                    return image->scaled(QSize(64, 64), Qt::KeepAspectRatio);
-                }
-            }
-            return QImage();
-        }
-    }
-    return QVariant();
 }
 
 InputDeviceModel::InputDeviceModel(QObject *parent)

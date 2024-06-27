@@ -54,16 +54,6 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="surfaces">
-      <attribute name="title">
-       <string>Surfaces</string>
-      </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
-       <item>
-        <widget class="QTreeView" name="surfacesView"/>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="input">
       <attribute name="title">
        <string>Input Events</string>
