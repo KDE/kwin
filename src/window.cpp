@@ -3915,7 +3915,7 @@ void Window::checkWorkspacePosition(QRectF oldGeometry, const VirtualDesktop *ol
         newGeom.setSize(constrainFrameSize(newGeom.size()));
     }
 
-    moveResize(newGeom);
+    moveResize(m_rules.checkGeometry(newGeom));
 }
 
 void Window::checkOffscreenPosition(QRectF *geom, const QRectF &screenArea)
