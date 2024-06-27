@@ -121,7 +121,6 @@ private:
 
     struct
     {
-        QString text = QString();
         qint32 cursor = 0;
         std::vector<std::pair<quint32, quint32>> highlightRanges;
     } preedit;

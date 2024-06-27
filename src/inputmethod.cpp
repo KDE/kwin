@@ -708,8 +708,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     }
     auto t3 = waylandServer()->seat()->textInputV3();
     if (t3 && t3->isEnabled()) {
-        preedit.text = text;
-        if (!preedit.text.isEmpty()) {
+        if (!text.isEmpty()) {
             quint32 cursor = 0, cursorEnd = 0;
             if (preedit.cursor > 0) {
                 cursor = cursorEnd = preedit.cursor;
@@ -735,7 +734,7 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
                 }
             }
 
-            t3->sendPreEditString(preedit.text, cursor, cursorEnd);
+            t3->sendPreEditString(text, cursor, cursorEnd);
         }
         t3->done();
     }
@@ -966,7 +965,6 @@ bool InputMethod::isAvailable() const
 
 void InputMethod::resetPendingPreedit()
 {
-    preedit.text = QString();
     preedit.cursor = 0;
     preedit.highlightRanges.clear();
 }
