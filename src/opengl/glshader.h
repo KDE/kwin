@@ -50,6 +50,7 @@ public:
     bool setUniform(const char *name, const QVector2D &value);
     bool setUniform(const char *name, const QVector3D &value);
     bool setUniform(const char *name, const QVector4D &value);
+    bool setUniform(const char *name, const QMatrix3x3 &value);
     bool setUniform(const char *name, const QMatrix4x4 &value);
     bool setUniform(const char *name, const QColor &color);
 
