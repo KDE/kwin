@@ -3,7 +3,7 @@
 # Lukáš Tinkl <lukas@kde.org>, 2010, 2012.
 # Jan Holíček <jan.holicek@gmail.com>, 2010.
 # Vít Pelčák <vit@pelcak.org>, 2011, 2012, 2019, 2023.
-# SPDX-FileCopyrightText: 2024 Vit Pelcak <vpelcak@suse.cz>
+# SPDX-FileCopyrightText: 2024 Vit Pelcak <vit@pelcak.org>
 #
 msgid ""
 msgstr ""
