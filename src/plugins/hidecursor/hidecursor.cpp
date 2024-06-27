@@ -63,6 +63,14 @@ void HideCursorEffect::pointerEvent(MouseEvent *event)
     }
 }
 
+void HideCursorEffect::tabletToolEvent(TabletEvent *event)
+{
+    showCursor();
+    if (m_inactivityDuration > 0) {
+        m_inactivityTimer.start(m_inactivityDuration);
+    }
+}
+
 void HideCursorEffect::keyEvent(KeyEvent *event)
 {
     if (m_hideOnTyping && event->type() == QEvent::KeyPress) {
