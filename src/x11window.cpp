@@ -4975,6 +4975,9 @@ void X11Window::damageNotifyEvent()
 
 void X11Window::discardWindowPixmap()
 {
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        return;
+    }
     if (auto item = surfaceItem()) {
         item->discardPixmap();
     }
@@ -4982,6 +4985,9 @@ void X11Window::discardWindowPixmap()
 
 void X11Window::updateWindowPixmap()
 {
+    if (kwinApp()->operationMode() != Application::OperationModeX11) {
+        return;
+    }
     if (auto item = surfaceItem()) {
         item->updatePixmap();
     }
