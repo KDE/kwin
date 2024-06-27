@@ -4431,7 +4431,16 @@ void X11Window::updateServerGeometry()
             // THOMAS - yes, but gtk+ clients will not resize without ...
             sendSyntheticConfigureNotify();
         }
-        updateShape();
+
+        // TODO: This is not required on wayland, keep it until we support Xorg session.
+        if (is_shape) {
+            if (!isDecorated()) {
+                xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING,
+                                  XCB_SHAPE_SK_BOUNDING, frameId(), m_wrapper.x(), m_wrapper.y(), window());
+            }
+        }
+
+        updateInputShape();
         updateInputWindow();
     } else {
         m_frame.move(Xcb::toXNative(m_bufferGeometry.topLeft()));
