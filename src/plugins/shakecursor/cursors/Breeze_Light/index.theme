@@ -1,6 +1,7 @@
 [Icon Theme]
 Name=Breeze Light
 Name[ar]=نسيم فاتح
+Name[bg]=Breeze Светъл
 Name[ca]=Brisa clara
 Name[es]=Brisa claro
 Name[hu]=Breeze Light
@@ -8,8 +9,10 @@ Name[ia]=Breeze Light (Brisa Ligier)
 Name[ka]=Breeze ღია
 Name[sl]=Sapica svetla
 Name[tr]=Esinti Açık
+Name[zh_CN]=Breeze 微风浅色
 Comment=Breeze Light by the KDE VDG
 Comment[ar]=نسيم فاتح من مجموعة تصميم كِيدِي
+Comment[bg]=Breeze Светъл от KDE VDG
 Comment[ca]=Brisa clara, creat pel VDG del KDE
 Comment[es]=Brisa claro, por KDE VDG
 Comment[hu]=Breeze Light a KDE VDG-től
@@ -17,3 +20,4 @@ Comment[ia]=Breeze (Brisa) Ligier per KDE VDG
 Comment[ka]=Breeze-ის ღია ვარიანტი, KDE VDG-სგან
 Comment[sl]=Sapica svetla od KDE SVG
 Comment[tr]=KDE VDG tarafından Esinti Açık
+Comment[zh_CN]=Breeze 微风浅色主题，由 KDE VDG (视觉设计团队) 设计制作
