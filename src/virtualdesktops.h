@@ -62,6 +62,7 @@ public:
 Q_SIGNALS:
     void nameChanged();
     void x11DesktopNumberChanged();
+
     /**
      * Emitted just before the desktop gets destroyed.
      */
@@ -87,19 +88,23 @@ public:
     VirtualDesktopGrid();
     ~VirtualDesktopGrid();
     void update(const QSize &size, const QList<VirtualDesktop *> &desktops);
+
     /**
      * @returns The coords of desktop @a id in grid units.
      */
     QPoint gridCoords(uint id) const;
+
     /**
      * @returns The coords of desktop @a vd in grid units.
      */
     QPoint gridCoords(VirtualDesktop *vd) const;
+
     /**
      * @returns The desktop at the point @a coords or 0 if no desktop exists at that
      * point. @a coords is to be in grid units.
      */
     VirtualDesktop *at(const QPoint &coords) const;
+
     int width() const;
     int height() const;
     const QSize &size() const;
@@ -130,57 +135,68 @@ private:
 class KWIN_EXPORT VirtualDesktopManager : public QObject
 {
     Q_OBJECT
+
     /**
      * The number of virtual desktops currently available.
      * The ids of the virtual desktops are in the range [1, VirtualDesktopManager::maximum()].
      */
     Q_PROPERTY(uint count READ count WRITE setCount NOTIFY countChanged)
+
     /**
      * The id of the virtual desktop which is currently in use.
      */
     Q_PROPERTY(uint current READ current WRITE setCurrent NOTIFY currentChanged)
+
     /**
      * Whether navigation in the desktop layout wraps around at the borders.
      */
     Q_PROPERTY(bool navigationWrappingAround READ isNavigationWrappingAround WRITE setNavigationWrappingAround NOTIFY navigationWrappingAroundChanged)
 public:
     ~VirtualDesktopManager() override;
+
     /**
      * @internal, for X11 case
      */
     void setRootInfo(NETRootInfo *info);
+
     /**
      * @internal, for Wayland case
      */
     void setVirtualDesktopManagement(PlasmaVirtualDesktopManagementInterface *management);
+
     /**
      * @internal
      */
     void setConfig(KSharedConfig::Ptr config);
+
     /**
      * @returns Total number of desktops currently in existence.
      * @see setCount
      * @see countChanged
      */
     uint count() const;
+
     /**
      * @returns the number of rows the layout has.
      * @see setRows
      * @see rowsChanged
      */
     uint rows() const;
+
     /**
      * @returns The ID of the current desktop.
      * @see setCurrent
      * @see currentChanged
      */
     uint current() const;
+
     /**
      * @returns The current desktop
      * @see setCurrent
      * @see currentChanged
      */
     VirtualDesktop *currentDesktop() const;
+
     /**
      * Moves to the desktop through the algorithm described by Direction.
      * @param wrap If @c true wraps around to the other side of the layout
@@ -218,26 +234,31 @@ public:
      * the layout if @a wrap is set. If @a desktop is @c null use the current one.
      */
     VirtualDesktop *above(VirtualDesktop *desktop, bool wrap = true) const;
+
     /**
      * @returns The desktop to the right of desktop @a desktop. Wraps around to the
      * left of the layout if @a wrap is set. If @a desktop is @c null use the current one.
      */
     VirtualDesktop *toRight(VirtualDesktop *desktop, bool wrap = true) const;
+
     /**
      * @returns The desktop below desktop @a desktop. Wraps around to the top of the
      * layout if @a wrap is set. If @a desktop is @c null use the current one.
      */
     VirtualDesktop *below(VirtualDesktop *desktop, bool wrap = true) const;
+
     /**
      * @returns The desktop to the left of desktop @a desktop. Wraps around to the
      * right of the layout if @a wrap is set. If @a desktop is @c null use the current one.
      */
     VirtualDesktop *toLeft(VirtualDesktop *desktop, bool wrap = true) const;
+
     /**
      * @returns The desktop after the desktop @a desktop. Wraps around to the first
      * desktop if @a wrap is set. If @a desktop is @c null use the current desktop.
      */
     VirtualDesktop *next(VirtualDesktop *desktop = nullptr, bool wrap = true) const;
+
     /**
      * @returns The desktop in front of the desktop @a desktop. Wraps around to the
      * last desktop if @a wrap is set. If @a desktop is @c null use the current desktop.
@@ -312,6 +333,7 @@ public Q_SLOTS:
      * @see desktopRemoved
      */
     void setCount(uint count);
+
     /**
      * Set the current desktop to @a current.
      * @returns True on success, false otherwise.
@@ -320,6 +342,7 @@ public Q_SLOTS:
      * @see moveTo
      */
     bool setCurrent(uint current);
+
     /**
      * Set the current desktop to @a current.
      * @returns True on success, false otherwise.
@@ -328,24 +351,29 @@ public Q_SLOTS:
      * @see moveTo
      */
     bool setCurrent(VirtualDesktop *current);
+
     /**
      * Updates the layout to a new number of rows. The number of columns will be calculated accordingly
      */
     void setRows(uint rows);
+
     /**
      * Called from within setCount() to ensure the desktop layout is still valid.
      */
     void updateLayout();
+
     /**
      * @param enabled wrapping around borders for navigation in desktop layout
      * @see isNavigationWrappingAround
      * @see navigationWrappingAroundChanged
      */
     void setNavigationWrappingAround(bool enabled);
+
     /**
      * Loads number of desktops and names from configuration file
      */
     void load();
+
     /**
      * Saves number of desktops and names to configuration file
      */
@@ -402,6 +430,7 @@ Q_SIGNALS:
      * @param rows The new number of rows in the layout
      */
     void layoutChanged(int columns, int rows);
+
     /**
      * Signal emitted whenever the navigationWrappingAround property changes.
      */
@@ -414,26 +443,32 @@ private Q_SLOTS:
      * DO NOT CALL DIRECTLY! ONLY TO BE USED FROM AN ACTION!
      */
     void slotSwitchTo();
+
     /**
      * Slot for switch to next desktop action.
      */
     void slotNext();
+
     /**
      * Slot for switch to previous desktop action.
      */
     void slotPrevious();
+
     /**
      * Slot for switch to right desktop action.
      */
     void slotRight();
+
     /**
      * Slot for switch to left desktop action.
      */
     void slotLeft();
+
     /**
      * Slot for switch to desktop above action.
      */
     void slotUp();
+
     /**
      * Slot for switch to desktop below action.
      */
@@ -450,10 +485,12 @@ private:
      * @returns A default name for the given @p desktop
      */
     QString defaultName(int desktop) const;
+
     /**
      * Creates all the global keyboard shortcuts for "Switch To Desktop n" actions.
      */
     void initSwitchToShortcuts();
+
     /**
      * Creates an action and connects it to the @p slot in this Manager. This method is
      * meant to be used for the case that an additional information needs to be stored in
@@ -465,6 +502,7 @@ private:
      * @param slot The slot to invoke when the action is triggered
      */
     QAction *addAction(const QString &name, const KLocalizedString &label, uint value, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
+
     /**
      * Creates an action and connects it to the @p slot in this Manager.
      * Overloaded method for the case that no additional value needs to be passed to the action.
