@@ -330,6 +330,12 @@ bool GLShader::setUniform(const char *name, const QVector4D &value)
     return setUniform(location, value);
 }
 
+bool GLShader::setUniform(const char *name, const QMatrix3x3 &value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
 bool GLShader::setUniform(const char *name, const QMatrix4x4 &value)
 {
     const int location = uniformLocation(name);

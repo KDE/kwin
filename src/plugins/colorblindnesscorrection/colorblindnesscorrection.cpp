@@ -45,30 +45,55 @@ void ColorBlindnessCorrectionEffect::loadData()
 {
     ensureResources();
 
+    QMatrix3x3 defectMatrix;
     QString fragPath;
     switch (m_mode) {
     case Deuteranopia:
-        fragPath = QStringLiteral(":/effects/colorblindnesscorrection/shaders/Deutranopia.frag");
+        defectMatrix(0, 0) = 1.0;
+        defectMatrix(1, 0) = 0.494207;
+        defectMatrix(2, 0) = 0.0;
+        defectMatrix(0, 1) = 0.0;
+        defectMatrix(1, 1) = 0.0;
+        defectMatrix(2, 1) = 0.0;
+        defectMatrix(0, 2) = 0.0;
+        defectMatrix(1, 2) = 1.24827;
+        defectMatrix(2, 2) = 1.0;
         break;
     case Tritanopia:
-        fragPath = QStringLiteral(":/effects/colorblindnesscorrection/shaders/Tritanopia.frag");
+        defectMatrix(0, 0) = 1.0;
+        defectMatrix(1, 0) = 0.0;
+        defectMatrix(2, 0) = -0.395913;
+        defectMatrix(0, 1) = 0.0;
+        defectMatrix(1, 1) = 1.0;
+        defectMatrix(2, 1) = 0.801109;
+        defectMatrix(0, 2) = 0.0;
+        defectMatrix(1, 2) = 0.0;
+        defectMatrix(2, 2) = 0.0;
         break;
     case Protanopia: // Most common, use it as fallback
     default:
-        fragPath = QStringLiteral(":/effects/colorblindnesscorrection/shaders/Protanopia.frag");
+        defectMatrix(0, 0) = 0.0;
+        defectMatrix(1, 0) = 0.0;
+        defectMatrix(2, 0) = 0.0;
+        defectMatrix(0, 1) = 2.02344;
+        defectMatrix(1, 1) = 1.0;
+        defectMatrix(2, 1) = 0.0;
+        defectMatrix(0, 2) = -2.52581;
+        defectMatrix(1, 2) = 0.0;
+        defectMatrix(2, 2) = 1.0;
         break;
     }
 
-    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), fragPath);
+    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/colorblindnesscorrection/shaders/colorblindesscorrection.frag"));
 
     if (!m_shader->isValid()) {
         qCCritical(KWIN_COLORBLINDNESS_CORRECTION) << "Failed to load the shader!";
         return;
     }
 
-    if (ShaderBinder binder{m_shader.get()}; !m_shader->setUniform("intensity", m_intensity)) {
-        qCWarning(KWIN_COLORBLINDNESS_CORRECTION) << "Failed to set intensity";
-    }
+    ShaderBinder binder{m_shader.get()};
+    m_shader->setUniform("intensity", m_intensity);
+    m_shader->setUniform("defectMatrix", defectMatrix);
 
     for (const auto windows = effects->stackingOrder(); EffectWindow * w : windows) {
         correctColor(w);
