@@ -104,6 +104,9 @@ OpenGlContext::OpenGlContext(bool EGL)
 
 OpenGlContext::~OpenGlContext()
 {
+    if (s_currentContext == this) {
+        s_currentContext = nullptr;
+    }
 }
 
 bool OpenGlContext::checkTimerQuerySupport() const
