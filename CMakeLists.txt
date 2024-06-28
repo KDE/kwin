@@ -207,6 +207,11 @@ set_package_properties(Wayland PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for building KWin with Wayland support"
 )
+if (Wayland_VERSION VERSION_GREATER_EQUAL 1.23)
+    set(HAVE_WL_DISPLAY_SET_DEFAULT_MAX_BUFFER_SIZE 1)
+else()
+    set(HAVE_WL_DISPLAY_SET_DEFAULT_MAX_BUFFER_SIZE 0)
+endif()
 
 find_package(WaylandProtocols 1.34)
 set_package_properties(WaylandProtocols PROPERTIES

@@ -188,10 +188,24 @@ public:
     }
 };
 
+static size_t mibToBytes(size_t mib)
+{
+    return mib * (size_t(1) << 20);
+}
+
+static size_t defaultMaxBufferSize()
+{
+    if (int hint = qEnvironmentVariableIntValue("KWIN_WAYLAND_DEFAULT_MAX_CONNECTION_BUFFER_SIZE"); hint > 0) {
+        return hint;
+    }
+    return mibToBytes(1);
+}
+
 WaylandServer::WaylandServer(QObject *parent)
     : QObject(parent)
     , m_display(new KWinDisplay(this))
 {
+    m_display->setDefaultMaxBufferSize(defaultMaxBufferSize());
 }
 
 WaylandServer::~WaylandServer()
