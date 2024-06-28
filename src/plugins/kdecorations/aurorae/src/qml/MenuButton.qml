@@ -7,10 +7,14 @@ import QtQuick
 import org.kde.kwin.decoration
 import org.kde.kirigami 2.20 as Kirigami
 
-DecorationButton {
-    property bool closeOnDoubleClick: decorationSettings.closeOnDoubleClickOnMenu
+Item {
     id: menuButton
-    buttonType: DecorationOptions.DecorationButtonMenu
+    property int buttonType: DecorationOptions.DecorationButtonMenu
+    property bool hovered: false
+    property bool pressed: false
+    property bool toggled: false
+    property bool closeOnDoubleClick: decorationSettings.closeOnDoubleClickOnMenu
+
     Kirigami.Icon {
         anchors.fill: parent
         source: decoration.client.icon
@@ -53,7 +57,7 @@ DecorationButton {
             }
             parent.pressed = false;
         }
-        onClicked: {
+        onClicked: (mouse) => {
             // for right clicks we show the menu instantly
             // and if the option is disabled we always show menu directly
             if (!menuButton.closeOnDoubleClick || mouse.button == Qt.RightButton) {
