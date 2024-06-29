@@ -1688,16 +1688,16 @@ msgstr ""
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " 毫秒"
+msgstr[0] ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "键盘输入时隐藏光标"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -4168,9 +4168,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Surfaces"
-#~ msgstr "表面"
-
-#~ msgid "Inactivity duration (seconds):"
-#~ msgstr "闲置持续时间 (秒)："
