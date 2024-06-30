@@ -4645,11 +4645,7 @@ void X11Window::maximize(MaximizeMode mode)
 
     case MaximizeFull: {
         moveResize(clientArea);
-        if (options->electricBorderMaximize()) {
-            updateQuickTileMode(QuickTileFlag::Maximize);
-        } else {
-            updateQuickTileMode(QuickTileFlag::None);
-        }
+        updateQuickTileMode(QuickTileFlag::None);
         info->setState(NET::Max, NET::Max);
         break;
     }
