@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2024-02-27 07:45\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -68,10 +68,8 @@ msgstr "Наладжванне фільтра"
 msgid "Exclude unsupported effects"
 msgstr "Выключыць эфекты, якія не падтрымліваюцца"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "Выключыць унутраныя эфекты"
+#~ msgid "Exclude internal effects"
+#~ msgstr "Выключыць унутраныя эфекты"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "Атрымаць новыя эфекты працоўнага стала..."

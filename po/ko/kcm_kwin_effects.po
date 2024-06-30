@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2023-07-23 21:05+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -63,10 +63,8 @@ msgstr "필터 설정"
 msgid "Exclude unsupported effects"
 msgstr "지원하지 않는 데스크톱 효과 제외"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "내부 효과 제외"
+#~ msgid "Exclude internal effects"
+#~ msgstr "내부 효과 제외"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "새 데스크톱 효과 다운로드..."

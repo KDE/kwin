@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2020-02-08 15:54+0100\n"
 "Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
@@ -65,10 +65,8 @@ msgstr "Indstil filter"
 msgid "Exclude unsupported effects"
 msgstr "Udelad ikke-understøttede effekter"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "Udelad interne effekter"
+#~ msgid "Exclude internal effects"
+#~ msgstr "Udelad interne effekter"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "Hent nye skrivebordseffekter..."

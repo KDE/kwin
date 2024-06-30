@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-28 00:40+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2024-06-27 07:51+0300\n"
 "Last-Translator: Fracture dept <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -61,17 +61,17 @@ msgstr "- Виведення вимкнено"
 msgid "- Output dimmed"
 msgstr "- Виведення притлумлено"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:522
+#: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "Press right control to ungrab input"
 msgstr "Натисніть праву клавішу Ctrl для скасування захоплення введення"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:522
+#: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "Press right control key to grab input"
 msgstr "Натисніть праву клавішу Ctrl для захоплення введення"
 
-#: backends/x11/windowed/x11_windowed_backend.cpp:523
+#: backends/x11/windowed/x11_windowed_backend.cpp:512
 #, kde-format
 msgid "KDE Wayland Compositor"
 msgstr "Засіб композиції KDE для Wayland"
@@ -718,210 +718,228 @@ msgstr "Чи є пальцем"
 msgid "Tablet Pad Ring"
 msgstr "Кільце панелі планшета"
 
-#: debug_console.cpp:794
+#: debug_console.cpp:622
+#, kde-format
+msgctxt "@label"
+msgid "Effects"
+msgstr ""
+
+#: debug_console.cpp:796
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Немає кнопок миші"
 
-#: debug_console.cpp:798
+#: debug_console.cpp:800
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "ліва"
 
-#: debug_console.cpp:801
+#: debug_console.cpp:803
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "права"
 
-#: debug_console.cpp:804
+#: debug_console.cpp:806
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "середня"
 
-#: debug_console.cpp:807
+#: debug_console.cpp:809
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "назад"
 
-#: debug_console.cpp:810
+#: debug_console.cpp:812
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "вперед"
 
-#: debug_console.cpp:813
+#: debug_console.cpp:815
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "додаткова 1"
 
-#: debug_console.cpp:816
+#: debug_console.cpp:818
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "додаткова 2"
 
-#: debug_console.cpp:819
+#: debug_console.cpp:821
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "додаткова 3"
 
-#: debug_console.cpp:822
+#: debug_console.cpp:824
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "додаткова 4"
 
-#: debug_console.cpp:825
+#: debug_console.cpp:827
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "додаткова 5"
 
-#: debug_console.cpp:828
+#: debug_console.cpp:830
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "додаткова 6"
 
-#: debug_console.cpp:831
+#: debug_console.cpp:833
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "додаткова 7"
 
-#: debug_console.cpp:834
+#: debug_console.cpp:836
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "додаткова 8"
 
-#: debug_console.cpp:837
+#: debug_console.cpp:839
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "додаткова 9"
 
-#: debug_console.cpp:840
+#: debug_console.cpp:842
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "додаткова 10"
 
-#: debug_console.cpp:843
+#: debug_console.cpp:845
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "додаткова 11"
 
-#: debug_console.cpp:846
+#: debug_console.cpp:848
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "додаткова 12"
 
-#: debug_console.cpp:849
+#: debug_console.cpp:851
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "додаткова 13"
 
-#: debug_console.cpp:852
+#: debug_console.cpp:854
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "додаткова 14"
 
-#: debug_console.cpp:855
+#: debug_console.cpp:857
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "додаткова 15"
 
-#: debug_console.cpp:858
+#: debug_console.cpp:860
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "додаткова 16"
 
-#: debug_console.cpp:861
+#: debug_console.cpp:863
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "додаткова 17"
 
-#: debug_console.cpp:864
+#: debug_console.cpp:866
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "додаткова 18"
 
-#: debug_console.cpp:867
+#: debug_console.cpp:869
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "додаткова 19"
 
-#: debug_console.cpp:870
+#: debug_console.cpp:872
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "додаткова 20"
 
-#: debug_console.cpp:873
+#: debug_console.cpp:875
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "додаткова 21"
 
-#: debug_console.cpp:876
+#: debug_console.cpp:878
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "додаткова 22"
 
-#: debug_console.cpp:879
+#: debug_console.cpp:881
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "додаткова 23"
 
-#: debug_console.cpp:882
+#: debug_console.cpp:884
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "додаткова 24"
 
-#: debug_console.cpp:885
+#: debug_console.cpp:887
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "завдання"
 
-#: debug_console.cpp:1237
+#: debug_console.cpp:1239
 #, kde-format
 msgid "X11 Windows"
 msgstr "Вікна X11"
 
-#: debug_console.cpp:1239
+#: debug_console.cpp:1241
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Некеровані вікна X11"
 
-#: debug_console.cpp:1241
+#: debug_console.cpp:1243
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Вікна Wayland"
 
-#: debug_console.cpp:1243
+#: debug_console.cpp:1245
 #, kde-format
 msgid "Internal Windows"
 msgstr "Внутрішні вікна"
+
+#: debug_console.cpp:1585 debug_console.cpp:1599
+#, kde-format
+msgctxt "@action:button unload an effect"
+msgid "Unload"
+msgstr ""
+
+#: debug_console.cpp:1587 debug_console.cpp:1601
+#, kde-format
+msgctxt "@action:button load an effect"
+msgid "Load"
+msgstr ""
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32

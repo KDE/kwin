@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2023-08-12 00:09-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -66,10 +66,8 @@ msgstr "Configurar o filtro"
 msgid "Exclude unsupported effects"
 msgstr "Excluir os efeitos sem suporte"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "Excluir os efeitos internos"
+#~ msgid "Exclude internal effects"
+#~ msgstr "Excluir os efeitos internos"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "Baixar novos efeitos da área de trabalho..."

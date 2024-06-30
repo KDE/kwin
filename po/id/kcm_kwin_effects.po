@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2019-10-15 07:11+0700\n"
 "Last-Translator: Wantoyo <wantoyek@gmail.com>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -64,10 +64,8 @@ msgstr "Konfigurasikan Filter"
 msgid "Exclude unsupported effects"
 msgstr "Kecualikan efek yang tak didukung"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "Kecualikan efek internal"
+#~ msgid "Exclude internal effects"
+#~ msgstr "Kecualikan efek internal"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "Dapatkan Efek Desktop Baru..."

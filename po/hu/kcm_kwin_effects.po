@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2024-01-05 11:46+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -63,10 +63,8 @@ msgstr "Szűrőbeállítás"
 msgid "Exclude unsupported effects"
 msgstr "Nem támogatott effektusok kizárása"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "Belső effektusok kizárása"
+#~ msgid "Exclude internal effects"
+#~ msgstr "Belső effektusok kizárása"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "Új asztali effektusok letöltése…"

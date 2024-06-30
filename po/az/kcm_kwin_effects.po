@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2022-07-03 13:56+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -65,10 +65,8 @@ msgstr "Çeşidləmə qaydaları"
 msgid "Exclude unsupported effects"
 msgstr "Dəstəklənməyən effektləri gizlətmək"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "Daxili effektləri gizlətmək"
+#~ msgid "Exclude internal effects"
+#~ msgstr "Daxili effektləri gizlətmək"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "Yeni İş masası Effektləri Almaq..."

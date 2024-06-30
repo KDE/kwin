@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2023-06-08 12:06+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -62,10 +62,8 @@ msgstr "مرشح الضبط"
 msgid "Exclude unsupported effects"
 msgstr "استبعد التأثير غير المدعومة"
 
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
-msgstr "استبعد التأثيرات الداخلية"
+#~ msgid "Exclude internal effects"
+#~ msgstr "استبعد التأثيرات الداخلية"
 
 #~ msgid "Get New Desktop Effects..."
 #~ msgstr "احصل على تأثيرات جديدة..."

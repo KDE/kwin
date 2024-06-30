@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-12-07 01:42+0000\n"
+"POT-Creation-Date: 2024-06-30 00:40+0000\n"
 "PO-Revision-Date: 2019-12-12 22:25+0000\n"
 "Last-Translator: Vivek KJ Pazhedath <vivekkj2004@gmail.com>\n"
 "Language-Team: Swathanthra|സ്വതന്ത്ര Malayalam|മലയാളം Computing|കമ്പ്യൂട്ടിങ്ങ് <smc."
@@ -58,11 +58,6 @@ msgstr ""
 #: ui/main.qml:78
 #, kde-format
 msgid "Exclude unsupported effects"
-msgstr ""
-
-#: ui/main.qml:86
-#, kde-format
-msgid "Exclude internal effects"
 msgstr ""
 
 #~ msgctxt "NAME OF TRANSLATORS"
