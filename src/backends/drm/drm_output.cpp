@@ -236,7 +236,7 @@ static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DR
 
 Output::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::BrightnessControl;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }
@@ -260,9 +260,6 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->isInternal()) {
         // TODO only set this if an orientation sensor is available?
         capabilities |= Capability::AutoRotation;
-    }
-    if (m_brightnessDevice || m_state.highDynamicRange) {
-        capabilities |= Capability::BrightnessControl;
     }
     return capabilities;
 }
@@ -417,7 +414,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
 
-    updateInformation();
     if (m_brightnessDevice) {
         if (m_state.highDynamicRange) {
             m_brightnessDevice->setBrightness(1);
@@ -449,7 +445,6 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
             device->setBrightness(m_state.brightness);
         }
     }
-    updateInformation();
 }
 
 void DrmOutput::revertQueuedChanges()
@@ -504,7 +499,7 @@ QVector3D DrmOutput::effectiveChannelFactors() const
     QVector3D adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(m_state.colorDescription.containerColorimetry()) * m_channelFactors;
     // normalize red to be the original brightness value again
     adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
-    if (m_state.highDynamicRange) {
+    if (m_state.highDynamicRange || !m_brightnessDevice) {
         // enforce a minimum of 25 nits for the reference luminance
         constexpr double minLuminance = 25;
         const double brightnessFactor = (m_state.brightness * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
