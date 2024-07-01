@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-27 15:40+0300\n"
+"PO-Revision-Date: 2024-06-30 18:09+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -57,12 +57,12 @@ msgstr "KDE Wayland Bileşikleştiricisi %1"
 #: backends/wayland/wayland_output.cpp:284
 #, kde-format
 msgid "- Output disabled"
-msgstr "— Çıktı devre dışı"
+msgstr "- Çıktı devre dışı"
 
 #: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output dimmed"
-msgstr "— Çıktı karartıldı"
+msgstr "- Çıktı karartıldı"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
@@ -723,7 +723,7 @@ msgstr "Tablet Pedi Halkası"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Efektler"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -934,13 +934,13 @@ msgstr "İçsel Pencereler"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Yüklemeyi Boşalt"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Yükle"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32

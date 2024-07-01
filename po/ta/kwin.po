@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-16 17:49+0530\n"
+"PO-Revision-Date: 2024-06-30 13:36+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -1714,23 +1714,21 @@ msgstr "சாளரங்களை மூடும்போது"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "ஒருபோதும் வேண்டாம்"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " மில்லிநொடிகள்"
-msgstr[1] " மில்லிநொடிகள்"
+msgstr[0] "%1 நொடி"
+msgstr[1] "%1 நொடி"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "தட்டச்சிடும்போது சுட்டிக்குறியை மறை"
+msgstr "ஒன்றும் செய்யாதபோது சுட்டிக்குறியை மறைப்பது:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24

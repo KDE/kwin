@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-28 16:51+0200\n"
+"PO-Revision-Date: 2024-06-30 09:00+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -721,7 +721,7 @@ msgstr "Tablojda Panelringo"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Efektoj"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -932,13 +932,13 @@ msgstr "Internaj Fenestroj"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Malŝargi"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Ŝargi"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32

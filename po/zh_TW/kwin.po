@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-20 02:06+0900\n"
+"PO-Revision-Date: 2024-06-30 11:58+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -723,7 +723,7 @@ msgstr "繪圖板觸控環"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "效果"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -934,13 +934,13 @@ msgstr "內部視窗"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "取消載入"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "載入"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1713,22 +1713,20 @@ msgstr "視窗關閉動畫"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "永不"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " 毫秒"
+msgstr[0] "%1 秒"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "打字時隱藏游標"
+msgstr "無動作時隱藏游標："
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24

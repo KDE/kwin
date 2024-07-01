@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-27 18:40+0200\n"
+"PO-Revision-Date: 2024-06-30 16:34+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -718,7 +718,7 @@ msgstr "Рамка на таблетна подложка"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Ефекти"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -929,13 +929,13 @@ msgstr "Вътрешни прозорци"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Премахване на ефект"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Зареждане на ефект"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
