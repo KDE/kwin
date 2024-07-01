@@ -3121,7 +3121,11 @@ ScreenEdges *Workspace::screenEdges() const
 
 TileManager *Workspace::tileManager(Output *output)
 {
-    return m_tileManagers.at(output).get();
+    if (auto search = m_tileManagers.find(output); search != m_tileManagers.end()) {
+        return search->second.get();
+    } else {
+        return nullptr;
+    }
 }
 
 #if KWIN_BUILD_TABBOX
