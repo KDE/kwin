@@ -236,7 +236,7 @@ static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DR
 
 Output::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::BrightnessControl;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }
@@ -260,9 +260,6 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->isInternal()) {
         // TODO only set this if an orientation sensor is available?
         capabilities |= Capability::AutoRotation;
-    }
-    if (m_brightnessDevice || m_state.highDynamicRange) {
-        capabilities |= Capability::BrightnessControl;
     }
     return capabilities;
 }
@@ -450,7 +447,6 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
             device->setBrightness(m_state.brightness);
         }
     }
-    updateInformation();
 }
 
 void DrmOutput::revertQueuedChanges()
