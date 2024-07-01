@@ -124,7 +124,7 @@ Name[uk]=Скидання графіки
 Name[vi]=Đặt lại đồ hoạ
 Name[x-test]=xxGraphics Resetxx
 Name[zh_CN]=图形功能重置
-Name[zh_TW]=圖形重置
+Name[zh_TW]=圖形重設
 Comment=A graphics reset event occurred
 Comment[ar]=حدث عملية إعادة ضبط الرسوميات
 Comment[az]=Qrafik sistemdə qəza baş verdi
@@ -179,7 +179,7 @@ Comment[uk]=Сталася подія відновлення початково�
 Comment[vi]=Một sự kiện đặt lại đồ hoạ đã xảy ra
 Comment[x-test]=xxA graphics reset event occurredxx
 Comment[zh_CN]=发生了一次图形功能重置事件
-Comment[zh_TW]=發生了圖形重置事件
+Comment[zh_TW]=發生了圖形重設事件
 Action=Popup
 
 [Event/xwaylandcrash]
