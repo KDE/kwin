@@ -55,6 +55,7 @@ public:
     Output *createVirtualOutput(const QString &name, const QSize &size, double scale) override;
     void removeVirtualOutput(Output *output) override;
 
+    void setPrimaryGpu(DrmGpu *gpu);
     DrmGpu *primaryGpu() const;
     DrmGpu *findGpu(dev_t deviceId) const;
     size_t gpuCount() const;

@@ -343,6 +343,14 @@ void DrmBackend::removeVirtualOutput(Output *output)
     Q_EMIT outputsQueried();
 }
 
+void DrmBackend::setPrimaryGpu(DrmGpu *gpu)
+{
+    auto it = std::ranges::find(m_gpus, gpu, &std::unique_ptr<DrmGpu>::get);
+    if (it != m_gpus.end() && it != m_gpus.begin()) {
+        std::swap(*m_gpus.begin(), *it);
+    }
+}
+
 DrmGpu *DrmBackend::primaryGpu() const
 {
     return m_gpus.empty() ? nullptr : m_gpus.front().get();

@@ -52,17 +52,44 @@ EglGbmBackend::~EglGbmBackend()
 bool EglGbmBackend::initializeEgl()
 {
     initClientExtensions();
-    auto display = m_backend->primaryGpu()->eglDisplay();
 
-    // Use eglGetPlatformDisplayEXT() to get the display pointer
-    // if the implementation supports it.
-    if (!display) {
-        display = createEglDisplay(m_backend->primaryGpu());
-        if (!display) {
+    bool success = false;
+    // only do this when initializing compositing the first time
+    if (!m_backend->sceneEglGlobalShareContext()) {
+        const auto &gpus = m_backend->gpus();
+        for (auto it = gpus.begin(); it != gpus.end(); it++) {
+            const auto &gpu = *it;
+            auto display = gpu->eglDisplay();
+            if (!display) {
+                display = createEglDisplay(m_backend->primaryGpu());
+                if (!display) {
+                    continue;
+                }
+            }
+            setEglDisplay(display);
+            if (!createContext(EGL_NO_CONFIG_KHR)) {
+                continue;
+            }
+            if (m_context->isSoftwareRenderer()) {
+                // try other GPUs
+                destroyGlobalShareContext();
+                continue;
+            }
+            m_backend->setPrimaryGpu(gpu.get());
+            success = true;
+            break;
+        }
+    }
+    if (!success) {
+        // fall back to whatever context we get on the primary GPU
+        if (!m_backend->primaryGpu()->eglDisplay()) {
+            return false;
+        }
+        setEglDisplay(m_backend->primaryGpu()->eglDisplay());
+        if (!createContext(EGL_NO_CONFIG_KHR)) {
             return false;
         }
     }
-    setEglDisplay(display);
     return true;
 }
 
@@ -85,17 +112,7 @@ void EglGbmBackend::init()
         setFailed("Could not initialize egl");
         return;
     }
-
-    if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
-        return;
-    }
     initWayland();
-}
-
-bool EglGbmBackend::initRenderingContext()
-{
-    return createContext(EGL_NO_CONFIG_KHR) && makeCurrent();
 }
 
 EglDisplay *EglGbmBackend::displayForGpu(DrmGpu *gpu)

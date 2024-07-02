@@ -63,7 +63,6 @@ public:
 
 private:
     bool initializeEgl();
-    bool initRenderingContext();
     EglDisplay *createEglDisplay(DrmGpu *gpu) const;
 
     DrmBackend *m_backend;
