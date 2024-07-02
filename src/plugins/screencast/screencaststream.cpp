@@ -127,6 +127,8 @@ void ScreenCastStream::onStreamStateChanged(pw_stream_state old, pw_stream_state
             Q_EMIT ready(nodeId());
         }
         m_pendingFrame.stop();
+        m_pendingDamage = QRegion();
+        m_pendingContents = Contents();
         m_source->pause();
         break;
     case PW_STREAM_STATE_STREAMING:
@@ -297,7 +299,7 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
     , m_resolution(source->textureSize())
 {
     connect(source, &ScreenCastSource::frame, this, [this](const QRegion &damage) {
-        recordFrame(damage, Content::Video);
+        scheduleRecord(damage, Content::Video);
     });
     connect(source, &ScreenCastSource::closed, this, &ScreenCastStream::close);
 
@@ -321,7 +323,9 @@ ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<Pip
 
     m_pendingFrame.setSingleShot(true);
     connect(&m_pendingFrame, &QTimer::timeout, this, [this] {
-        recordFrame(m_pendingDamage, m_pendingContents);
+        record(m_pendingDamage, m_pendingContents);
+        m_pendingDamage = QRegion();
+        m_pendingContents = Contents();
     });
 }
 
@@ -417,7 +421,7 @@ bool ScreenCastStream::createStream()
     case ScreencastV1Interface::Metadata:
         m_cursor.changedConnection = connect(Cursors::self(), &Cursors::currentCursorChanged, this, &ScreenCastStream::invalidateCursor);
         m_cursor.positionChangedConnection = connect(Cursors::self(), &Cursors::positionChanged, this, [this] {
-            recordFrame({}, Content::Cursor);
+            scheduleRecord({}, Content::Cursor);
         });
         break;
     }
@@ -450,7 +454,7 @@ void ScreenCastStream::close()
     Q_EMIT closed();
 }
 
-void ScreenCastStream::recordFrame(const QRegion &damage, Contents contents)
+void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
 {
     Q_ASSERT(!m_closed);
 
@@ -469,6 +473,12 @@ void ScreenCastStream::recordFrame(const QRegion &damage, Contents contents)
         }
     }
 
+    if (m_pendingFrame.isActive()) {
+        m_pendingDamage += damage;
+        m_pendingContents |= contents;
+        return;
+    }
+
     if (m_videoFormat.max_framerate.num != 0 && m_lastSent.has_value()) {
         const auto now = std::chrono::steady_clock::now();
         const auto frameInterval = std::chrono::milliseconds(1000 * m_videoFormat.max_framerate.denom / m_videoFormat.max_framerate.num);
@@ -476,16 +486,16 @@ void ScreenCastStream::recordFrame(const QRegion &damage, Contents contents)
         if (lastSentAgo < frameInterval) {
             m_pendingDamage += damage;
             m_pendingContents |= contents;
-            if (!m_pendingFrame.isActive()) {
-                m_pendingFrame.start(frameInterval - lastSentAgo);
-            }
+            m_pendingFrame.start(frameInterval - lastSentAgo);
             return;
         }
     }
 
-    m_pendingDamage = {};
-    m_pendingContents = {};
+    record(damage, contents);
+}
 
+void ScreenCastStream::record(const QRegion &damage, Contents contents)
+{
     AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
     if (!backend) {
         return;
