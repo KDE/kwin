@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_egl_layer.h"
+#include "core/colorpipeline.h"
 #include "core/iccprofile.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
@@ -54,7 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     // as the hardware cursor is more important than an incorrectly blended cursor edge
 
     m_scanoutBuffer.reset();
-    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->channelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement(), m_pipeline->output()->brightness());
+    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->effectiveChannelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
@@ -90,12 +91,21 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || (m_pipeline->output()->highDynamicRange() && m_pipeline->output()->brightness() != 1) || m_pipeline->iccProfile()) {
-        // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
+    if (m_pipeline->iccProfile()) {
+        // TODO make the icc profile output a color pipeline too?
         return false;
     }
-    const auto &targetColor = m_pipeline->colorDescription();
-    if (color.containerColorimetry() != targetColor.containerColorimetry() || color.transferFunction() != targetColor.transferFunction()) {
+    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->colorDescription());
+    if (m_pipeline->output()->needsColormanagement()) {
+        // with color management enabled, the factors have to be applied in linear space
+        // the pipeline will optimize out the unnecessary transformations
+        pipeline.addTransferFunction(m_pipeline->colorDescription().transferFunction(), m_pipeline->colorDescription().referenceLuminance());
+    }
+    pipeline.addMultiplier(m_pipeline->output()->effectiveChannelFactors());
+    if (m_pipeline->output()->needsColormanagement()) {
+        pipeline.addInverseTransferFunction(m_pipeline->colorDescription().transferFunction(), m_pipeline->colorDescription().referenceLuminance());
+    }
+    if (!pipeline.isIdentity()) {
         return false;
     }
     // kernel documentation says that

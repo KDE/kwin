@@ -56,7 +56,7 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement, double brightness);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement);
     bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
     bool doesSurfaceFit(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const;
@@ -102,7 +102,6 @@ private:
         ColorDescription intermediaryColorDescription = ColorDescription::sRGB;
         QVector3D channelFactors = {1, 1, 1};
         double brightness = 1.0;
-        QVector3D adaptedChannelFactors = {1, 1, 1};
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
 

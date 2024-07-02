@@ -44,6 +44,7 @@ target_sources(kwin PRIVATE
     compositor_wayland.cpp
     core/colorlut.cpp
     core/colorlut3d.cpp
+    core/colorpipeline.cpp
     core/colorpipelinestage.cpp
     core/colorspace.cpp
     core/colortransformation.cpp
@@ -547,6 +548,7 @@ install(FILES
 install(FILES
     core/colorlut.h
     core/colorlut3d.h
+    core/colorpipeline.h
     core/colorpipelinestage.h
     core/colorspace.h
     core/colortransformation.h

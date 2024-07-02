@@ -102,6 +102,7 @@ public:
 
     auto operator<=>(const TransferFunction &) const = default;
 
+    bool isRelative() const;
     double encodedToNits(double encoded, double referenceLuminance) const;
     double nitsToEncoded(double nits, double referenceLuminance) const;
     QVector3D encodedToNits(const QVector3D &encoded, double referenceLuminance) const;

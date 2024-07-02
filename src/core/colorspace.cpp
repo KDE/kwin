@@ -367,4 +367,18 @@ QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits, double referenc
 {
     return QVector3D(nitsToEncoded(nits.x(), referenceLuminance), nitsToEncoded(nits.y(), referenceLuminance), nitsToEncoded(nits.z(), referenceLuminance));
 }
+
+bool TransferFunction::isRelative() const
+{
+    switch (type) {
+    case TransferFunction::gamma22:
+    case TransferFunction::sRGB:
+        return true;
+    case TransferFunction::linear:
+    case TransferFunction::PerceptualQuantizer:
+    case TransferFunction::scRGB:
+        return false;
+    }
+    Q_UNREACHABLE();
+}
 }

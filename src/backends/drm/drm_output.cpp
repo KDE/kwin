@@ -493,9 +493,19 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
     return true;
 }
 
-QVector3D DrmOutput::channelFactors() const
+QVector3D DrmOutput::effectiveChannelFactors() const
 {
-    return m_channelFactors;
+    QVector3D adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(m_state.colorDescription.containerColorimetry()) * m_channelFactors;
+    // normalize red to be the original brightness value again
+    adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
+    if (m_state.highDynamicRange) {
+        // enforce a minimum of 25 nits for the reference luminance
+        constexpr double minLuminance = 25;
+        const double brightnessFactor = (m_state.brightness * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
+        return adaptedChannelFactors * brightnessFactor;
+    } else {
+        return adaptedChannelFactors;
+    }
 }
 
 bool DrmOutput::needsColormanagement() const

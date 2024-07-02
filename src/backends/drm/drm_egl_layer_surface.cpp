@@ -74,7 +74,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement, double brightness)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -96,17 +96,12 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     m_surface->currentSlot = slot;
 
     if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors
-        || m_surface->colormanagementEnabled != enableColormanagement || m_surface->iccProfile != iccProfile
-        || m_surface->brightness != brightness) {
+        || m_surface->colormanagementEnabled != enableColormanagement || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
         m_surface->colormanagementEnabled = enableColormanagement;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
-        m_surface->adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(colorDescription.containerColorimetry()) * channelFactors;
-        // normalize red to be the original brightness value again
-        m_surface->adaptedChannelFactors *= channelFactors.x() / m_surface->adaptedChannelFactors.x();
         m_surface->iccProfile = iccProfile;
-        m_surface->brightness = brightness;
         if (iccProfile) {
             if (!m_surface->iccShader) {
                 m_surface->iccShader = std::make_unique<IccShader>();
@@ -188,16 +183,12 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
         if (m_surface->iccShader) {
-            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.referenceLuminance(), m_surface->adaptedChannelFactors);
+            m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription.referenceLuminance(), m_surface->channelFactors);
         } else {
-            // enforce a 25 nits minimum sdr brightness
-            constexpr double minBrightness = 25;
-            const double referenceLuminance = m_surface->intermediaryColorDescription.referenceLuminance();
-            const double brightnessFactor = (m_surface->brightness * (1 - (minBrightness / referenceLuminance))) + (minBrightness / referenceLuminance);
             QMatrix4x4 ctm;
-            ctm(0, 0) = m_surface->adaptedChannelFactors.x() * brightnessFactor;
-            ctm(1, 1) = m_surface->adaptedChannelFactors.y() * brightnessFactor;
-            ctm(2, 2) = m_surface->adaptedChannelFactors.z() * brightnessFactor;
+            ctm(0, 0) = m_surface->channelFactors.x();
+            ctm(1, 1) = m_surface->channelFactors.y();
+            ctm(2, 2) = m_surface->channelFactors.z();
             binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
             binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, m_surface->intermediaryColorDescription.transferFunction().type);
             binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, m_surface->targetColorDescription.transferFunction().type);

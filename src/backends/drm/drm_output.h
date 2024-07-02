@@ -58,7 +58,10 @@ public:
     void leaseEnded();
 
     bool setChannelFactors(const QVector3D &rgb) override;
-    QVector3D channelFactors() const;
+    /**
+     * channel factors adapted to the target color space + brightness setting multiplied in
+     */
+    QVector3D effectiveChannelFactors() const;
     bool needsColormanagement() const;
 
     void updateConnectorProperties();
