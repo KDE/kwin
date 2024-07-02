@@ -38,7 +38,7 @@ namespace KWin
 static const bool s_disableTripleBuffering = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING") == 1;
 
 DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
-    : DrmAbstractOutput(conn->gpu())
+    : m_gpu(conn->gpu())
     , m_pipeline(conn->pipeline())
     , m_connector(conn)
 {
@@ -158,7 +158,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         return true;
     }
     if (!active) {
-        gpu()->waitIdle();
+        m_gpu->waitIdle();
     }
     m_pipeline->setActive(active);
     if (DrmPipeline::commitPipelines({m_pipeline}, active ? DrmPipeline::CommitMode::TestAllowModeset : DrmPipeline::CommitMode::CommitModeset) == DrmPipeline::Error::None) {
@@ -242,7 +242,7 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->vrrCapable.isValid() && m_connector->vrrCapable.value()) {
         capabilities |= Capability::Vrr;
     }
-    if (gpu()->asyncPageflipSupported()) {
+    if (m_gpu->asyncPageflipSupported()) {
         capabilities |= Capability::Tearing;
     }
     if (m_connector->broadcastRGB.isValid()) {
@@ -285,7 +285,7 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
-    const bool needsModeset = gpu()->needsModeset();
+    const bool needsModeset = m_gpu->needsModeset();
     bool success;
     if (needsModeset) {
         m_pipeline->setPresentationMode(PresentationMode::VSync);

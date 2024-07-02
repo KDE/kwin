@@ -19,8 +19,8 @@
 namespace KWin
 {
 
-DrmVirtualOutput::DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale)
-    : DrmAbstractOutput(gpu)
+DrmVirtualOutput::DrmVirtualOutput(DrmBackend *backend, const QString &name, const QSize &size, qreal scale)
+    : m_backend(backend)
     , m_vsyncMonitor(SoftwareVsyncMonitor::create())
 {
     connect(m_vsyncMonitor.get(), &VsyncMonitor::vblankOccurred, this, &DrmVirtualOutput::vblank);
@@ -81,7 +81,7 @@ DrmOutputLayer *DrmVirtualOutput::cursorLayer() const
 
 void DrmVirtualOutput::recreateSurface()
 {
-    m_layer = m_gpu->platform()->renderBackend()->createLayer(this);
+    m_layer = m_backend->renderBackend()->createLayer(this);
 }
 
 }

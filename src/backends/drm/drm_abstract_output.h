@@ -14,7 +14,6 @@ namespace KWin
 {
 
 class DrmBackend;
-class DrmGpu;
 class DrmOutputLayer;
 class OutputFrame;
 
@@ -22,10 +21,9 @@ class DrmAbstractOutput : public Output
 {
     Q_OBJECT
 public:
-    DrmAbstractOutput(DrmGpu *gpu);
+    explicit DrmAbstractOutput();
 
     RenderLoop *renderLoop() const override;
-    DrmGpu *gpu() const;
 
     virtual bool present(const std::shared_ptr<OutputFrame> &frame) = 0;
     virtual DrmOutputLayer *primaryLayer() const = 0;
@@ -37,7 +35,6 @@ protected:
     friend class DrmGpu;
 
     std::unique_ptr<RenderLoop> m_renderLoop;
-    DrmGpu *const m_gpu;
 };
 
 }

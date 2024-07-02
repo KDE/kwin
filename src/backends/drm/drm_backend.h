@@ -93,6 +93,7 @@ private:
 
     const QStringList m_explicitGpus;
     std::vector<std::unique_ptr<DrmGpu>> m_gpus;
+    QList<DrmVirtualOutput *> m_virtualOutputs;
     DrmRenderBackend *m_renderBackend = nullptr;
 };
 
