@@ -3948,48 +3948,48 @@ QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
     switch (gravity) {
     case XCB_GRAVITY_NORTH_WEST: // move down right
     default:
-        dx = borderLeft();
-        dy = borderTop();
+        dx = Xcb::nativeRound(borderLeft());
+        dy = Xcb::nativeRound(borderTop());
         break;
     case XCB_GRAVITY_NORTH: // move right
         dx = 0;
-        dy = borderTop();
+        dy = Xcb::nativeRound(borderTop());
         break;
     case XCB_GRAVITY_NORTH_EAST: // move down left
-        dx = -borderRight();
-        dy = borderTop();
+        dx = -Xcb::nativeRound(borderRight());
+        dy = Xcb::nativeRound(borderTop());
         break;
     case XCB_GRAVITY_WEST: // move right
         dx = borderLeft();
         dy = 0;
         break;
     case XCB_GRAVITY_CENTER:
-        dx = (borderLeft() - borderRight()) / 2;
-        dy = (borderTop() - borderBottom()) / 2;
+        dx = Xcb::fromXNative((int(Xcb::toXNative(borderLeft())) - int(Xcb::toXNative(borderRight()))) / 2);
+        dy = Xcb::fromXNative((int(Xcb::toXNative(borderTop())) - int(Xcb::toXNative(borderBottom()))) / 2);
         break;
     case XCB_GRAVITY_STATIC: // don't move
         dx = 0;
         dy = 0;
         break;
     case XCB_GRAVITY_EAST: // move left
-        dx = -borderRight();
+        dx = -Xcb::nativeRound(borderRight());
         dy = 0;
         break;
     case XCB_GRAVITY_SOUTH_WEST: // move up right
-        dx = borderLeft();
-        dy = -borderBottom();
+        dx = Xcb::nativeRound(borderLeft());
+        dy = -Xcb::nativeRound(borderBottom());
         break;
     case XCB_GRAVITY_SOUTH: // move up
         dx = 0;
-        dy = -borderBottom();
+        dy = -Xcb::nativeRound(borderBottom());
         break;
     case XCB_GRAVITY_SOUTH_EAST: // move up left
-        dx = -borderRight();
-        dy = -borderBottom();
+        dx = -Xcb::nativeRound(borderRight());
+        dy = -Xcb::nativeRound(borderBottom());
         break;
     }
 
-    return QPoint(dx, dy);
+    return QPointF(dx, dy);
 }
 
 const QPointF X11Window::calculateGravitation(bool invert) const
@@ -3997,8 +3997,8 @@ const QPointF X11Window::calculateGravitation(bool invert) const
     const QPointF adjustment = gravityAdjustment(m_geometryHints.windowGravity());
 
     // translate from client movement to frame movement
-    const qreal dx = adjustment.x() - borderLeft();
-    const qreal dy = adjustment.y() - borderTop();
+    const qreal dx = adjustment.x() - Xcb::nativeRound(borderLeft());
+    const qreal dy = adjustment.y() - Xcb::nativeRound(borderTop());
 
     if (!invert) {
         return QPointF(x() + dx, y() + dy);
