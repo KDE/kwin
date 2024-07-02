@@ -61,6 +61,3 @@ msgstr "过滤条件"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支持的特效"
-
-#~ msgid "Exclude internal effects"
-#~ msgstr "排除内建特效"
