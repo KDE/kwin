@@ -217,20 +217,16 @@ void GlideEffect::windowAdded(EffectWindow *w)
 
 void GlideEffect::windowClosed(EffectWindow *w)
 {
-    if (effects->activeFullScreenEffect()) {
-        return;
-    }
-
-    if (!isGlideWindow(w)) {
-        return;
-    }
-
-    if (!w->isVisible() || w->skipsCloseAnimation()) {
-        return;
-    }
-
     const void *closeGrab = w->data(WindowClosedGrabRole).value<void *>();
     if (closeGrab && closeGrab != this) {
+        return;
+    }
+    if (effects->activeFullScreenEffect() || !isGlideWindow(w) || !w->isVisible() || w->skipsCloseAnimation()) {
+        const auto it = m_animations.find(w);
+        if (it != m_animations.end()) {
+            unredirect(w);
+            m_animations.erase(it);
+        }
         return;
     }
 
