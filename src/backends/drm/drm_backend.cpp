@@ -15,6 +15,7 @@
 #include "core/session.h"
 #include "drm_egl_backend.h"
 #include "drm_gpu.h"
+#include "drm_layer.h"
 #include "drm_logging.h"
 #include "drm_output.h"
 #include "drm_pipeline.h"
@@ -296,8 +297,11 @@ void DrmBackend::sceneInitialized()
     if (m_outputs.isEmpty()) {
         updateOutputs();
     } else {
-        for (const auto &gpu : std::as_const(m_gpus)) {
+        for (const auto &gpu : m_gpus) {
             gpu->recreateSurfaces();
+        }
+        for (const auto &virt : std::as_const(m_virtualOutputs)) {
+            virt->recreateSurface();
         }
     }
 }
@@ -322,9 +326,11 @@ QString DrmBackend::supportInformation() const
 
 Output *DrmBackend::createVirtualOutput(const QString &name, const QSize &size, double scale)
 {
-    auto output = primaryGpu()->createVirtualOutput(name, size * scale, scale);
+    const auto ret = new DrmVirtualOutput(this, name, size, scale);
+    m_virtualOutputs.push_back(ret);
+    addOutput(ret);
     Q_EMIT outputsQueried();
-    return output;
+    return ret;
 }
 
 void DrmBackend::removeVirtualOutput(Output *output)
@@ -333,7 +339,7 @@ void DrmBackend::removeVirtualOutput(Output *output)
     if (!virtualOutput) {
         return;
     }
-    primaryGpu()->removeVirtualOutput(virtualOutput);
+    removeOutput(virtualOutput);
     Q_EMIT outputsQueried();
 }
 
@@ -397,11 +403,8 @@ bool DrmBackend::applyOutputChanges(const OutputConfiguration &config)
         }
     }
     // only then apply changes to the virtual outputs
-    for (const auto &gpu : std::as_const(m_gpus)) {
-        const auto &outputs = gpu->virtualOutputs();
-        for (const auto &output : outputs) {
-            output->applyChanges(config);
-        }
+    for (const auto &output : std::as_const(m_virtualOutputs)) {
+        output->applyChanges(config);
     }
     return true;
 }
@@ -418,8 +421,11 @@ DrmRenderBackend *DrmBackend::renderBackend() const
 
 void DrmBackend::releaseBuffers()
 {
-    for (const auto &gpu : std::as_const(m_gpus)) {
+    for (const auto &gpu : m_gpus) {
         gpu->releaseBuffers();
+    }
+    for (const auto &virt : std::as_const(m_virtualOutputs)) {
+        virt->primaryLayer()->releaseBuffers();
     }
 }
 

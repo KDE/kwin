@@ -90,7 +90,6 @@ public:
     clockid_t presentationClock() const;
     QSize cursorSize() const;
 
-    QList<DrmVirtualOutput *> virtualOutputs() const;
     QList<DrmOutput *> drmOutputs() const;
     const QList<DrmPipeline *> pipelines() const;
 
@@ -98,9 +97,6 @@ public:
 
     bool updateOutputs();
     void removeOutputs();
-
-    DrmVirtualOutput *createVirtualOutput(const QString &name, const QSize &size, double scale);
-    void removeVirtualOutput(DrmVirtualOutput *output);
 
     DrmPipeline::Error testPendingConfiguration();
     bool needsModeset() const;
@@ -156,7 +152,6 @@ private:
     QList<DrmPipeline *> m_pipelines;
 
     QList<DrmOutput *> m_drmOutputs;
-    QList<DrmVirtualOutput *> m_virtualOutputs;
 
     std::unique_ptr<QSocketNotifier> m_socketNotifier;
     QSize m_cursorSize;

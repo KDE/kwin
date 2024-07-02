@@ -26,7 +26,7 @@ class DrmVirtualOutput : public DrmAbstractOutput
     Q_OBJECT
 
 public:
-    DrmVirtualOutput(const QString &name, DrmGpu *gpu, const QSize &size, qreal scale);
+    explicit DrmVirtualOutput(DrmBackend *backend, const QString &name, const QSize &size, qreal scale);
     ~DrmVirtualOutput() override;
 
     bool present(const std::shared_ptr<OutputFrame> &frame) override;
@@ -38,6 +38,7 @@ private:
     void vblank(std::chrono::nanoseconds timestamp);
     void setDpmsMode(DpmsMode mode) override;
 
+    DrmBackend *const m_backend;
     std::shared_ptr<DrmOutputLayer> m_layer;
     std::shared_ptr<OutputFrame> m_frame;
 
