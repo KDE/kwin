@@ -45,7 +45,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
 {
     m_pipeline->setOutput(this);
     m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
-    if (m_gpu->atomicModeSetting() && !s_disableTripleBuffering) {
+    if (m_gpu->atomicModeSetting() && !s_disableTripleBuffering && !m_gpu->isNVidia()) {
         m_renderLoop->setMaxPendingFrameCount(2);
     }
 
