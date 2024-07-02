@@ -312,7 +312,19 @@ bool DrmGpu::updateOutputs()
         }
     }
 
+    // try to apply mode changes triggered above
     DrmPipeline::Error err = testPendingConfiguration();
+    if (err == DrmPipeline::Error::None) {
+        for (const auto &pipeline : std::as_const(m_pipelines)) {
+            pipeline->applyPendingChanges();
+        }
+    } else {
+        for (const auto &pipeline : std::as_const(m_pipelines)) {
+            pipeline->revertPendingChanges();
+        }
+        // try again, with the mode changes reverted
+        err = testPendingConfiguration();
+    }
     if (err == DrmPipeline::Error::None) {
         for (const auto &pipeline : std::as_const(m_pipelines)) {
             pipeline->applyPendingChanges();
