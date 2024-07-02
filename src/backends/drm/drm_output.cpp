@@ -217,13 +217,6 @@ void DrmOutput::updateConnectorProperties()
         if (currentMode != m_pipeline->mode()) {
             // DrmConnector::findCurrentMode might fail
             m_pipeline->setMode(currentMode ? currentMode : m_pipeline->connector()->modes().constFirst());
-            if (m_gpu->testPendingConfiguration() == DrmPipeline::Error::None) {
-                m_pipeline->applyPendingChanges();
-                m_renderLoop->setRefreshRate(m_pipeline->mode()->refreshRate());
-            } else {
-                qCWarning(KWIN_DRM) << "Setting changed mode failed!";
-                m_pipeline->revertPendingChanges();
-            }
         }
     }
 
@@ -231,7 +224,6 @@ void DrmOutput::updateConnectorProperties()
     if (!next.currentMode) {
         // some mode needs to be set
         next.currentMode = next.modes.constFirst();
-        m_renderLoop->setRefreshRate(next.currentMode->refreshRate());
         m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(next.currentMode));
         m_pipeline->applyPendingChanges();
     }
