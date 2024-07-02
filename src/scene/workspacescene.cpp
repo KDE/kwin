@@ -60,6 +60,7 @@
 #include "core/renderloop.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "input.h"
 #include "internalwindow.h"
 #include "scene/decorationitem.h"
 #include "scene/dndiconitem.h"
@@ -69,6 +70,7 @@
 #include "scene/surfaceitem.h"
 #include "scene/windowitem.h"
 #include "shadow.h"
+#include "tablet_input.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -110,12 +112,14 @@ WorkspaceScene::~WorkspaceScene()
 
 void WorkspaceScene::createDndIconItem()
 {
+    qDebug() << "createDndIconItem()";
     DragAndDropIcon *dragIcon = waylandServer()->seat()->dragIcon();
     if (!dragIcon) {
         return;
     }
     m_dndIcon = std::make_unique<DragAndDropIconItem>(dragIcon, m_overlayItem.get());
     if (waylandServer()->seat()->isDragPointer()) {
+        qDebug() << "is drag pointer";
         auto updatePosition = [this]() {
             const auto pointerPos = waylandServer()->seat()->pointerPos();
             m_dndIcon->setPosition(pointerPos);
@@ -125,6 +129,7 @@ void WorkspaceScene::createDndIconItem()
         updatePosition();
         connect(waylandServer()->seat(), &SeatInterface::pointerPosChanged, m_dndIcon.get(), updatePosition);
     } else if (waylandServer()->seat()->isDragTouch()) {
+        qDebug() << "is drag touch";
         auto updatePosition = [this]() {
             const auto touchPos = waylandServer()->seat()->firstTouchPointPosition();
             m_dndIcon->setPosition(touchPos);
@@ -133,6 +138,16 @@ void WorkspaceScene::createDndIconItem()
 
         updatePosition();
         connect(waylandServer()->seat(), &SeatInterface::touchMoved, m_dndIcon.get(), updatePosition);
+    } else if (true) { // TODO tablet condition
+        qDebug() << "is drag tablet";
+        auto updatePosition = [this]() {
+            const auto tabletPos = input()->tablet()->position();
+            m_dndIcon->setPosition(tabletPos);
+            m_dndIcon->setOutput(workspace()->outputAt(tabletPos));
+        };
+
+        updatePosition();
+        connect(waylandServer()->seat(), &SeatInterface::touchMoved, m_dndIcon.get(), updatePosition); // TODO tablet signal
     }
 }
 

@@ -2578,6 +2578,43 @@ public:
 
         return true;
     }
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
+
+        if (!seat->isDragTablet()) {
+            return false;
+        }
+
+        if (event->type() == QEvent::TabletMove) {
+            seat->notifyPenMotion(event->timestamp(), event->globalPosF());
+
+            const auto pos = input()->globalPointer();
+
+            if (seat->xdgTopleveldrag()) {
+                dragToplevel(pos, seat->xdgTopleveldrag());
+            }
+
+            seat->notifyPointerMotion(pos);
+
+            Window *dragTarget = pickDragTarget(pos);
+            if (dragTarget) {
+                // TODO: consider decorations
+                if (dragTarget->surface() != seat->dragSurface()) {
+                    seat->setDragTarget(dropHandler(dragTarget), dragTarget->surface(), dragTarget->inputTransformation());
+                }
+            } else {
+                // no window at that place, if we have a surface we need to reset
+                seat->setDragTarget(nullptr, nullptr);
+                m_dragTarget = nullptr;
+            }
+        } else if (event->type() == QEvent::TabletRelease) {
+            seat->notifyPenUp(event->timestamp());
+        }
+
+        return true;
+    }
 
 private:
     void raiseDragTarget()

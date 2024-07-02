@@ -125,12 +125,20 @@ public:
     };
     Touch globalTouch;
 
+    // Tablet related members
+    struct Tablet
+    {
+        quint32 id;
+    };
+    Tablet globalTablet;
+
     struct Drag
     {
         enum class Mode {
             None,
             Pointer,
             Touch,
+            Tablet
         };
         Mode mode = Mode::None;
         AbstractDataSource *source = nullptr;

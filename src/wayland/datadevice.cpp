@@ -84,6 +84,7 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
                                                         wl_resource *iconResource,
                                                         uint32_t serial)
 {
+    qDebug() << "DataDeviceInterfacePrivate::data_device_start_drag" << sourceResource << originResource << iconResource << serial;
     SurfaceInterface *focusSurface = SurfaceInterface::get(originResource);
     DataSourceInterface *dataSource = nullptr;
     if (sourceResource) {
@@ -91,12 +92,15 @@ void DataDeviceInterfacePrivate::data_device_start_drag(Resource *resource,
     }
 
     const bool pointerGrab = seat->hasImplicitPointerGrab(serial) && seat->focusedPointerSurface() == focusSurface;
+    qDebug() << "pointerGrab" << pointerGrab;
     if (!pointerGrab) {
         // Client doesn't have pointer grab.
         const bool touchGrab = seat->hasImplicitTouchGrab(serial) && seat->focusedTouchSurface() == focusSurface;
+        qDebug() << "touchGrab" << touchGrab;
         if (!touchGrab) {
             // Client neither has pointer nor touch grab. No drag start allowed.
-            return;
+            // return;
+            // TODO tablet handling
         }
     }
 
@@ -238,6 +242,7 @@ static DataDeviceManagerInterface::DnDAction chooseDndAction(AbstractDataSource 
 
 void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 serial)
 {
+    qDebug() << "update drag target" << surface << serial;
     if (d->drag.surface == surface) {
         return;
     }
@@ -298,6 +303,11 @@ void DataDeviceInterface::updateDragTarget(SurfaceInterface *surface, quint32 se
                 return;
             }
             const QPointF pos = d->seat->dragSurfaceTransformation().map(globalPosition);
+            d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        });
+    } else if (d->seat->isDragTablet()) {
+        d->drag.posConnection = connect(d->seat, &SeatInterface::penMoved, this, [this] {
+            const QPointF pos = d->seat->dragSurfaceTransformation().map(d->seat->pointerPos());
             d->send_motion(d->seat->timestamp().count(), wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
         });
     }

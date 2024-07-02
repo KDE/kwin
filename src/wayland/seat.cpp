@@ -14,6 +14,7 @@
 #include "datasource.h"
 #include "display.h"
 #include "display_p.h"
+#include "input.h"
 #include "keyboard.h"
 #include "keyboard_p.h"
 #include "pointer.h"
@@ -25,6 +26,7 @@
 #include "relativepointer_v1_p.h"
 #include "seat_p.h"
 #include "surface.h"
+#include "tablet_input.h"
 #include "textinput_v1_p.h"
 #include "textinput_v2_p.h"
 #include "textinput_v3_p.h"
@@ -182,6 +184,7 @@ AbstractDropHandler *SeatInterface::dropHandlerForSurface(SurfaceInterface *surf
 
 void SeatInterface::cancelDrag()
 {
+    // TODO tablet cancel drag
     if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
         // cancel the drag, don't drop. serial does not matter
         d->cancelDrag();
@@ -255,6 +258,7 @@ void SeatInterfacePrivate::registerPrimarySelectionDevice(PrimarySelectionDevice
 
 void SeatInterfacePrivate::cancelDrag()
 {
+    qDebug() << "cancel drag";
     QObject::disconnect(drag.dragSourceDestroyConnection);
     if (drag.source) {
         drag.source->dndCancelled();
@@ -279,6 +283,7 @@ bool SeatInterfacePrivate::dragInhibitsPointer(SurfaceInterface *surface) const
 
 void SeatInterfacePrivate::endDrag()
 {
+    qDebug() << "end drag";
     QObject::disconnect(drag.dragSourceDestroyConnection);
 
     AbstractDropHandler *dragTargetDevice = drag.target.data();
@@ -500,6 +505,7 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
                                   const QPointF &globalPosition,
                                   const QMatrix4x4 &inputTransformation)
 {
+    qDebug() << "set drag target w global pos" << dropTarget << surface << globalPosition << inputTransformation << (int)d->drag.mode << input()->tablet()->position();
     if (surface == d->drag.surface) {
         // no change
         return;
@@ -519,6 +525,9 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         notifyPointerFrame();
     } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && d->globalTouch.focus.firstTouchPos != globalPosition) {
         notifyTouchMotion(d->globalTouch.ids.first(), globalPosition);
+    } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Tablet) {
+        qDebug() << "tablet position" << input()->tablet()->position() << "global position" << globalPosition;
+        // TODO tablet notify?
     }
 
     if (d->drag.target) {
@@ -536,8 +545,12 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
 
 void SeatInterface::setDragTarget(AbstractDropHandler *target, SurfaceInterface *surface, const QMatrix4x4 &inputTransformation)
 {
+    qDebug() << "set drag target wo global pos" << target << surface << inputTransformation << (int)d->drag.mode;
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
         setDragTarget(target, surface, pointerPos(), inputTransformation);
+    } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Tablet) {
+        setDragTarget(target, surface, input()->tablet()->position(), inputTransformation);
+        qDebug() << "set drag target w tablet position" << input()->tablet()->position();
     } else {
         Q_ASSERT(d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch);
         setDragTarget(target, surface, d->globalTouch.focus.firstTouchPos, inputTransformation);
@@ -693,7 +706,7 @@ void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, 
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
         // ignore
         return;
-    }
+    } // TODO tablet?
     d->pointer->sendAxis(orientation, delta, deltaV120, source, direction);
 }
 
@@ -719,7 +732,7 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
         if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
             // ignore
             return;
-        }
+        } // TODO tablet?
     } else {
         const quint32 currentButtonSerial = pointerButtonSerial(button);
         d->updatePointerButtonSerial(button, serial);
@@ -728,7 +741,7 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
             if (d->drag.dragImplicitGrabSerial != currentButtonSerial) {
                 // not our drag button - ignore
                 return;
-            }
+            } // TODO tablet?
 
             SurfaceInterface *focusedSurface = focusedPointerSurface();
             if (focusedSurface && !d->dragInhibitsPointer(focusedSurface)) {
@@ -1184,6 +1197,26 @@ bool SeatInterface::hasImplicitTouchGrab(quint32 serial) const
     return d->globalTouch.ids.key(serial, -1) != -1;
 }
 
+void SeatInterface::notifyPenMotion(quint32 serial, const QPointF &globalPos)
+{
+    Q_EMIT penMoved(serial, globalPos);
+}
+
+void SeatInterface::notifyPenDown(quint32 serial, const QPointF &globalPos)
+{
+}
+
+void SeatInterface::notifyPenUp(quint32 serial)
+{
+    qDebug() << "pen up" << (int)d->drag.mode << d->drag.dragImplicitGrabSerial << serial;
+    if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Tablet) {
+        // TODO check dragImplicitGrabSerial
+        // the drag has been upped
+        qDebug() << "end drag";
+        d->endDrag();
+    }
+}
+
 bool SeatInterface::isDrag() const
 {
     return d->drag.mode != SeatInterfacePrivate::Drag::Mode::None;
@@ -1197,6 +1230,11 @@ bool SeatInterface::isDragPointer() const
 bool SeatInterface::isDragTouch() const
 {
     return d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch;
+}
+
+bool SeatInterface::isDragTablet() const
+{
+    return d->drag.mode == SeatInterfacePrivate::Drag::Mode::Tablet;
 }
 
 bool SeatInterface::hasImplicitPointerGrab(quint32 serial) const
@@ -1352,9 +1390,11 @@ void SeatInterface::setPrimarySelection(AbstractDataSource *selection)
 
 void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *originSurface, int dragSerial, DragAndDropIcon *dragIcon)
 {
+    qDebug() << "start drag" << dragSource << originSurface << dragSerial << dragIcon;
     if (d->drag.mode != SeatInterfacePrivate::Drag::Mode::None) {
-        return;
+        // return;
     }
+    qDebug() << "tablet position" << input()->tablet()->position() << "global position" << pointerPos();
 
     if (hasImplicitPointerGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Pointer;
@@ -1362,9 +1402,14 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
     } else if (hasImplicitTouchGrab(dragSerial)) {
         d->drag.mode = SeatInterfacePrivate::Drag::Mode::Touch;
         d->drag.transformation = d->globalTouch.focus.transformation;
+    } else if (true) { // TODO tablet check implicit grab
+        d->drag.mode = SeatInterfacePrivate::Drag::Mode::Tablet;
+        d->globalTablet.id = dragSerial;
+        qDebug() << "drag mode" << (int)d->drag.mode;
+        // TODO tablet set transformation
     } else {
         // no implicit grab, abort drag
-        return;
+        // return;
     }
 
     d->drag.dragImplicitGrabSerial = dragSerial;

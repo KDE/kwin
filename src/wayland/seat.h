@@ -167,12 +167,21 @@ public:
      * @returns whether the drag'n'drop is operated through the pointer device
      * @see isDrag
      * @see isDragTouch
+     * @see isDragTablet
      */
     bool isDragPointer() const;
     /**
      * @returns whether the drag'n'drop is operated through the touch device
      * @see isDrag
      * @see isDragPointer
+     * @see isDragTablet
+     */
+    bool isDragTablet() const;
+    /**
+     * @returns whether the drag'n'drop is operated through a drawing tablet
+     * @see isDrag
+     * @see isDragPointer
+     * @see isDragTouch
      */
     bool isDragTouch() const;
     /**
@@ -580,6 +589,13 @@ public:
     ///@}
 
     /**
+     * @name Tablet related methods.
+     */
+    void notifyPenDown(quint32 serial, const QPointF &globalPosition);
+    void notifyPenMotion(quint32 serial, const QPointF &globalPosition);
+    void notifyPenUp(quint32 serial);
+
+    /**
      * @name Text input related methods.
      */
     ///@{
@@ -667,6 +683,7 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void pointerPosChanged(const QPointF &pos);
     void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
+    void penMoved(quint32 serial, const QPointF &globalPosition);
     void timestampChanged();
 
     /**
