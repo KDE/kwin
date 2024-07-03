@@ -51,8 +51,9 @@ protected:
 class DrmAtomicCommit : public DrmCommit
 {
 public:
-    DrmAtomicCommit(const QList<DrmPipeline *> &pipelines);
-    DrmAtomicCommit(const DrmAtomicCommit &copy) = default;
+    explicit DrmAtomicCommit(DrmGpu *gpu);
+    explicit DrmAtomicCommit(const QList<DrmPipeline *> &pipelines);
+    explicit DrmAtomicCommit(const DrmAtomicCommit &copy) = default;
 
     void addProperty(const DrmProperty &prop, uint64_t value);
     template<typename T>

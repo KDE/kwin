@@ -49,6 +49,23 @@ bool DrmCrtc::updateProperties()
     degammaLut.update(props);
     degammaLutSize.update(props);
 
+    if (!postBlendingPipeline) {
+        DrmAbstractColorOp *next = nullptr;
+        if (gammaLut.isValid() && gammaLutSize.isValid() && gammaLutSize.value() > 0) {
+            m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &gammaLut, gammaLutSize.value()));
+            next = m_postBlendingColorOps.back().get();
+        }
+        if (ctm.isValid()) {
+            m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
+            next = m_postBlendingColorOps.back().get();
+        }
+        if (degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
+            m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &degammaLut, degammaLutSize.value()));
+            next = m_postBlendingColorOps.back().get();
+        }
+        postBlendingPipeline = next;
+    }
+
     const bool ret = !gpu()->atomicModeSetting() || (modeId.isValid() && active.isValid());
     if (!ret) {
         qCWarning(KWIN_DRM) << "Failed to update the basic crtc properties. modeId:" << modeId.isValid() << "active:" << active.isValid();

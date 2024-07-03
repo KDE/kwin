@@ -212,15 +212,15 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     if (m_pending.crtc->vrrEnabled.isValid()) {
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
-    if (m_pending.crtc->gammaLut.isValid()) {
-        commit->addBlob(m_pending.crtc->gammaLut, m_pending.gamma ? m_pending.gamma->blob() : nullptr);
-    } else if (m_pending.gamma) {
-        return Error::InvalidArguments;
-    }
-    if (m_pending.crtc->ctm.isValid()) {
-        commit->addBlob(m_pending.crtc->ctm, m_pending.ctm);
-    } else if (m_pending.ctm) {
-        return Error::InvalidArguments;
+
+    if (!m_pending.crtc->postBlendingPipeline) {
+        if (!m_pending.crtcColorPipeline.isIdentity()) {
+            return Error::InvalidArguments;
+        }
+    } else {
+        if (!m_pending.crtc->postBlendingPipeline->matchPipeline(commit, m_pending.crtcColorPipeline)) {
+            return Error::InvalidArguments;
+        }
     }
 
     if (!m_primaryLayer->checkTestBuffer()) {
@@ -480,20 +480,6 @@ QHash<uint32_t, QList<uint64_t>> DrmPipeline::formats(DrmPlane::TypeIndex planeT
     Q_UNREACHABLE();
 }
 
-bool DrmPipeline::hasCTM() const
-{
-    return gpu()->atomicModeSetting() && m_pending.crtc && m_pending.crtc->ctm.isValid();
-}
-
-bool DrmPipeline::hasGammaRamp() const
-{
-    if (gpu()->atomicModeSetting()) {
-        return m_pending.crtc && m_pending.crtc->gammaLut.isValid();
-    } else {
-        return m_pending.crtc && m_pending.crtc->gammaRampSize() > 0;
-    }
-}
-
 bool DrmPipeline::pruneModifier()
 {
     const DmaBufAttributes *dmabufAttributes = m_primaryLayer->currentBuffer() ? m_primaryLayer->currentBuffer()->buffer()->dmabufAttributes() : nullptr;
@@ -537,30 +523,6 @@ bool DrmPipeline::modesetPresentPending() const
 void DrmPipeline::resetModesetPresentPending()
 {
     m_modesetPresentPending = false;
-}
-
-DrmGammaRamp::DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation)
-    : m_lut(transformation, crtc->gammaRampSize())
-{
-    if (crtc->gpu()->atomicModeSetting()) {
-        QList<drm_color_lut> atomicLut(m_lut.size());
-        for (uint32_t i = 0; i < m_lut.size(); i++) {
-            atomicLut[i].red = m_lut.red()[i];
-            atomicLut[i].green = m_lut.green()[i];
-            atomicLut[i].blue = m_lut.blue()[i];
-        }
-        m_blob = DrmBlob::create(crtc->gpu(), atomicLut.data(), sizeof(drm_color_lut) * atomicLut.size());
-    }
-}
-
-const ColorLUT &DrmGammaRamp::lut() const
-{
-    return m_lut;
-}
-
-std::shared_ptr<DrmBlob> DrmGammaRamp::blob() const
-{
-    return m_blob;
 }
 
 DrmCrtc *DrmPipeline::crtc() const
@@ -625,9 +587,6 @@ const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
 
 void DrmPipeline::setCrtc(DrmCrtc *crtc)
 {
-    if (crtc && m_pending.crtc && crtc->gammaRampSize() != m_pending.crtc->gammaRampSize() && m_pending.colorTransformation) {
-        m_pending.gamma = std::make_shared<DrmGammaRamp>(crtc, m_pending.colorTransformation);
-    }
     m_pending.crtc = crtc;
     if (crtc) {
         m_pending.formats = crtc->primaryPlane() ? crtc->primaryPlane()->formats() : legacyFormats;
@@ -672,39 +631,9 @@ void DrmPipeline::setRgbRange(Output::RgbRange range)
     m_pending.rgbRange = range;
 }
 
-void DrmPipeline::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
+void DrmPipeline::setCrtcColorPipeline(const ColorPipeline &pipeline)
 {
-    m_pending.colorTransformation = transformation;
-    if (transformation) {
-        m_pending.gamma = std::make_shared<DrmGammaRamp>(m_pending.crtc, transformation);
-    } else {
-        m_pending.gamma.reset();
-    }
-}
-
-static uint64_t doubleToFixed(double value)
-{
-    // ctm values are in S31.32 sign-magnitude format
-    uint64_t ret = std::abs(value) * (1ull << 32);
-    if (value < 0) {
-        ret |= 1ull << 63;
-    }
-    return ret;
-}
-
-void DrmPipeline::setCTM(const QMatrix3x3 &ctm)
-{
-    if (ctm.isIdentity()) {
-        m_pending.ctm.reset();
-    } else {
-        drm_color_ctm blob = {
-            .matrix = {
-                doubleToFixed(ctm(0, 0)), doubleToFixed(ctm(1, 0)), doubleToFixed(ctm(2, 0)),
-                doubleToFixed(ctm(0, 1)), doubleToFixed(ctm(1, 1)), doubleToFixed(ctm(2, 1)),
-                doubleToFixed(ctm(0, 2)), doubleToFixed(ctm(1, 2)), doubleToFixed(ctm(2, 2))},
-        };
-        m_pending.ctm = DrmBlob::create(gpu(), &blob, sizeof(blob));
-    }
+    m_pending.crtcColorPipeline = pipeline;
 }
 
 void DrmPipeline::setColorDescription(const ColorDescription &description)

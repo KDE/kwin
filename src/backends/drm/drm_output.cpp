@@ -345,8 +345,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     }
     if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::sRGB) {
         // remove unused gamma ramp and ctm, if present
-        m_pipeline->setGammaRamp(nullptr);
-        m_pipeline->setCTM(QMatrix3x3{});
+        m_pipeline->setCrtcColorPipeline(ColorPipeline{});
     }
     return true;
 }
@@ -458,36 +457,17 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
     if (!m_pipeline->activePending()) {
         return false;
     }
+    ColorPipeline pipeline{ValueRange{}};
     const auto inOutputSpace = m_state.colorDescription.transferFunction().nitsToEncoded(rgb, 1);
-    if (m_pipeline->hasCTM()) {
-        QMatrix3x3 ctm;
-        ctm(0, 0) = inOutputSpace.x();
-        ctm(1, 1) = inOutputSpace.y();
-        ctm(2, 2) = inOutputSpace.z();
-        m_pipeline->setCTM(ctm);
-        m_pipeline->setGammaRamp(nullptr);
-        if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
-            m_pipeline->applyPendingChanges();
-            m_channelFactorsNeedShaderFallback = false;
-            return true;
-        } else {
-            m_pipeline->setCTM(QMatrix3x3());
-            m_pipeline->applyPendingChanges();
-        }
-    }
-    if (m_pipeline->hasGammaRamp()) {
-        auto lut = ColorTransformation::createScalingTransform(inOutputSpace);
-        if (lut) {
-            m_pipeline->setGammaRamp(std::move(lut));
-            if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
-                m_pipeline->applyPendingChanges();
-                m_channelFactorsNeedShaderFallback = false;
-                return true;
-            } else {
-                m_pipeline->setGammaRamp(nullptr);
-                m_pipeline->applyPendingChanges();
-            }
-        }
+    pipeline.addMultiplier(inOutputSpace);
+    m_pipeline->setCrtcColorPipeline(pipeline);
+    if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
+        m_pipeline->applyPendingChanges();
+        m_channelFactorsNeedShaderFallback = false;
+        return true;
+    } else {
+        m_pipeline->setCrtcColorPipeline(ColorPipeline{});
+        m_pipeline->applyPendingChanges();
     }
     m_channelFactorsNeedShaderFallback = m_channelFactors != QVector3D{1, 1, 1};
     return true;

@@ -17,6 +17,7 @@
 #include <xf86drmMode.h>
 
 #include "core/colorlut.h"
+#include "core/colorpipeline.h"
 #include "core/colorspace.h"
 #include "core/output.h"
 #include "core/renderloop_p.h"
@@ -30,24 +31,10 @@ namespace KWin
 class DrmGpu;
 class DrmConnector;
 class DrmCrtc;
-class GammaRamp;
 class DrmConnectorMode;
 class DrmPipelineLayer;
 class DrmCommitThread;
 class OutputFrame;
-
-class DrmGammaRamp
-{
-public:
-    DrmGammaRamp(DrmCrtc *crtc, const std::shared_ptr<ColorTransformation> &transformation);
-
-    const ColorLUT &lut() const;
-    std::shared_ptr<DrmBlob> blob() const;
-
-private:
-    const ColorLUT m_lut;
-    std::shared_ptr<DrmBlob> m_blob;
-};
 
 class DrmPipeline
 {
@@ -90,8 +77,6 @@ public:
     void resetModesetPresentPending();
 
     QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
-    bool hasCTM() const;
-    bool hasGammaRamp() const;
     bool pruneModifier();
 
     void setOutput(DrmOutput *output);
@@ -121,8 +106,7 @@ public:
     void setPresentationMode(PresentationMode mode);
     void setOverscan(uint32_t overscan);
     void setRgbRange(Output::RgbRange range);
-    void setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
-    void setCTM(const QMatrix3x3 &ctm);
+    void setCrtcColorPipeline(const ColorPipeline &pipeline);
     void setContentType(DrmConnector::DrmContentType type);
     void setColorDescription(const ColorDescription &description);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
@@ -167,7 +151,7 @@ private:
 
     bool m_modesetPresentPending = false;
     bool m_didLegacyScanoutHack = false;
-    std::shared_ptr<DrmGammaRamp> m_currentLegacyGamma;
+    ColorPipeline m_currentLegacyGamma;
 
     struct State
     {
@@ -181,9 +165,7 @@ private:
         uint32_t overscan = 0;
         Output::RgbRange rgbRange = Output::RgbRange::Automatic;
         PresentationMode presentationMode = PresentationMode::VSync;
-        std::shared_ptr<ColorTransformation> colorTransformation;
-        std::shared_ptr<DrmGammaRamp> gamma;
-        std::shared_ptr<DrmBlob> ctm;
+        ColorPipeline crtcColorPipeline;
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<IccProfile> iccProfile;

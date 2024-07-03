@@ -8,6 +8,7 @@
 */
 #pragma once
 
+#include "drm_colorop.h"
 #include "drm_object.h"
 
 #include <QPoint>
@@ -25,7 +26,7 @@ class DrmPlane;
 class DrmCrtc : public DrmObject
 {
 public:
-    DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
+    explicit DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
 
     void disable(DrmAtomicCommit *commit) override;
     bool updateProperties() override;
@@ -49,12 +50,16 @@ public:
     DrmProperty degammaLut;
     DrmProperty degammaLutSize;
 
+    DrmAbstractColorOp *postBlendingPipeline = nullptr;
+
 private:
     DrmUniquePtr<drmModeCrtc> m_crtc;
     std::shared_ptr<DrmFramebuffer> m_currentBuffer;
     int m_pipeIndex;
     DrmPlane *m_primaryPlane;
     DrmPlane *m_cursorPlane;
+
+    std::vector<std::unique_ptr<DrmAbstractColorOp>> m_postBlendingColorOps;
 };
 
 }

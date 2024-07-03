@@ -140,7 +140,7 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
                 return err;
             }
         }
-        if (m_pending.gamma != m_currentLegacyGamma) {
+        if (m_pending.crtcColorPipeline != m_currentLegacyGamma) {
             if (Error err = setLegacyGamma(); err != Error::None) {
                 return err;
             }
@@ -159,13 +159,31 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
 
 DrmPipeline::Error DrmPipeline::setLegacyGamma()
 {
-    if (m_pending.gamma) {
-        if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.gamma->lut().size(), m_pending.gamma->lut().red(), m_pending.gamma->lut().green(), m_pending.gamma->lut().blue()) != 0) {
-            qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
-            return errnoToError();
-        }
-        m_currentLegacyGamma = m_pending.gamma;
+    if (m_pending.crtcColorPipeline.ops.size() > 1) {
+        return DrmPipeline::Error::InvalidArguments;
     }
+    QVector3D factors(1, 1, 1);
+    if (m_pending.crtcColorPipeline.ops.size() == 1) {
+        auto mult = std::get_if<ColorMultiplier>(&m_pending.crtcColorPipeline.ops.front().operation);
+        if (!mult) {
+            return DrmPipeline::Error::InvalidArguments;
+        }
+        factors = mult->factors;
+    }
+    QList<uint16_t> red(m_pending.crtc->gammaRampSize());
+    QList<uint16_t> green(m_pending.crtc->gammaRampSize());
+    QList<uint16_t> blue(m_pending.crtc->gammaRampSize());
+    for (int i = 0; i < m_pending.crtc->gammaRampSize(); i++) {
+        const double relative = i / double(m_pending.crtc->gammaRampSize() - 1) * std::numeric_limits<uint16_t>::max();
+        red[i] = std::round(relative * factors.x());
+        green[i] = std::round(relative * factors.y());
+        blue[i] = std::round(relative * factors.z());
+    }
+    if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.crtc->gammaRampSize(), red.data(), green.data(), blue.data()) != 0) {
+        qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
+        return errnoToError();
+    }
+    m_currentLegacyGamma = m_pending.crtcColorPipeline;
     return DrmPipeline::Error::None;
 }
 
