@@ -172,7 +172,7 @@ Item {
             width: cell.width
             maximumLineCount: 1
             anchors.top: parent.bottom
-            anchors.topMargin: Kirigami.Units.largeSpacing
+            anchors.topMargin: Kirigami.Units.smallSpacing
             anchors.horizontalCenter: parent.horizontalCenter
             elide: Text.ElideRight
             text: thumb.window.caption
@@ -182,8 +182,8 @@ Item {
             verticalAlignment: Text.AlignVCenter
             background: Rectangle {
                 anchors.centerIn: parent
-                height: parent.contentHeight + Kirigami.Units.gridUnit
-                width: parent.contentWidth + Kirigami.Units.gridUnit
+                height: parent.contentHeight + Kirigami.Units.smallSpacing
+                width: parent.contentWidth + Kirigami.Units.smallSpacing
                 color: Kirigami.Theme.backgroundColor
                 radius: Kirigami.Units.cornerRadius
             }
