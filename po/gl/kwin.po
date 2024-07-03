@@ -21,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-27 20:56+0200\n"
+"POT-Creation-Date: 2024-07-03 00:40+0000\n"
+"PO-Revision-Date: 2024-07-02 17:42+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -728,7 +728,7 @@ msgstr "Anel de panel de tableta"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Efectos"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -939,13 +939,13 @@ msgstr "Xanelas internas"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Descargar"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Cargar"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -2438,12 +2438,12 @@ msgstr "Non foi posíbel atopar a saída"
 msgid "Invalid region"
 msgstr "Rexión non válida"
 
-#: plugins/screencast/screencaststream.cpp:346
+#: plugins/screencast/screencaststream.cpp:350
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "A emisión de pantalla require composición de OpenGL."
 
-#: plugins/screencast/screencaststream.cpp:354
+#: plugins/screencast/screencaststream.cpp:358
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Non se puido crear o fluxo de PipeWire"

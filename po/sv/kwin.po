@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-21 10:59+0200\n"
+"POT-Creation-Date: 2024-07-03 00:40+0000\n"
+"PO-Revision-Date: 2024-07-02 21:41+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -719,7 +719,7 @@ msgstr "Ritplattering"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Effekter"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -930,13 +930,13 @@ msgstr "Interna fönster"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Lossa"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Lasta"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1717,23 +1717,21 @@ msgstr "Animering när fönster stängs"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " millisekunder"
-msgstr[1] " millisekunder"
+msgstr[0] "%1 sekund"
+msgstr[1] "%1 sekunder"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "Dölj markören när du skriver"
+msgstr "Dölj markören vid inaktivitet:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -2423,12 +2421,12 @@ msgstr "Kunde inte hitta utmatning"
 msgid "Invalid region"
 msgstr "Ogiltigt område"
 
-#: plugins/screencast/screencaststream.cpp:346
+#: plugins/screencast/screencaststream.cpp:350
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "OpenGL sammansättning krävs för skärmsändning"
 
-#: plugins/screencast/screencaststream.cpp:354
+#: plugins/screencast/screencaststream.cpp:358
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Misslyckades skapa PipeWire-ström"

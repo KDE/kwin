@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2024-06-28 14:01+0200\n"
+"POT-Creation-Date: 2024-07-03 00:40+0000\n"
+"PO-Revision-Date: 2024-07-01 11:17+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -744,7 +744,7 @@ msgstr "Bouton central de la tablette "
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Effets"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -955,13 +955,13 @@ msgstr "Fenêtres internes"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Décharger"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Charger"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -2469,12 +2469,12 @@ msgstr "Impossible de trouver une sortie"
 msgid "Invalid region"
 msgstr "Région non valable"
 
-#: plugins/screencast/screencaststream.cpp:346
+#: plugins/screencast/screencaststream.cpp:350
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Un compositeur OpenGL est nécessaire pour la recopie d'écran"
 
-#: plugins/screencast/screencaststream.cpp:354
+#: plugins/screencast/screencaststream.cpp:358
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Impossible de créer un flux « PipeWire »"

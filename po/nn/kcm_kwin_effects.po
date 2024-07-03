@@ -64,6 +64,3 @@ msgstr "Set opp filter"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Utelat effektar som ikkje er støtta"
-
-#~ msgid "Exclude internal effects"
-#~ msgstr "Utelat interne effektar"
