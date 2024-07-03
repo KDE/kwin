@@ -753,46 +753,48 @@ void VirtualDesktopManager::initShortcuts()
     addAction(QStringLiteral("Switch One Desktop Down"), i18n("Switch One Desktop Down"), QKeySequence(Qt::CTRL | Qt::META | Qt::Key_Down), &VirtualDesktopManager::slotDown);
 
     // Gestures
-    // These connections decide which desktop to end on after gesture ends
-    connect(m_swipeGestureReleasedX.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedX);
-    connect(m_swipeGestureReleasedY.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedY);
+    if (KSharedConfig::openConfig(QStringLiteral("kwinrc"))->group("Gestures").readEntry("SwipeHorizontal", true)) {
+        // These connections decide which desktop to end on after gesture ends
+        connect(m_swipeGestureReleasedX.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedX);
+        connect(m_swipeGestureReleasedY.get(), &QAction::triggered, this, &VirtualDesktopManager::gestureReleasedY);
 
-    const auto left = [this](qreal cb) {
-        if (grid().width() > 1) {
-            m_currentDesktopOffset.setX(cb);
-            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
-        }
-    };
-    const auto right = [this](qreal cb) {
-        if (grid().width() > 1) {
-            m_currentDesktopOffset.setX(-cb);
-            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
-        }
-    };
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedX.get(), left);
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedX.get(), right);
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
-        if (grid().height() > 1) {
-            m_currentDesktopOffset.setY(-cb);
-            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
-        }
-    });
-    input()->registerTouchpadSwipeShortcut(SwipeDirection::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
-        if (grid().height() > 1) {
-            m_currentDesktopOffset.setY(cb);
-            Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
-        }
-    });
-    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
-    input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
+        const auto left = [this](qreal cb) {
+            if (grid().width() > 1) {
+                m_currentDesktopOffset.setX(cb);
+                Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
+            }
+        };
+        const auto right = [this](qreal cb) {
+            if (grid().width() > 1) {
+                m_currentDesktopOffset.setX(-cb);
+                Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
+            }
+        };
+        input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+        input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
+        input()->registerTouchpadSwipeShortcut(SwipeDirection::Left, 4, m_swipeGestureReleasedX.get(), left);
+        input()->registerTouchpadSwipeShortcut(SwipeDirection::Right, 4, m_swipeGestureReleasedX.get(), right);
+        input()->registerTouchpadSwipeShortcut(SwipeDirection::Down, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+            if (grid().height() > 1) {
+                m_currentDesktopOffset.setY(-cb);
+                Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
+            }
+        });
+        input()->registerTouchpadSwipeShortcut(SwipeDirection::Up, 3, m_swipeGestureReleasedY.get(), [this](qreal cb) {
+            if (grid().height() > 1) {
+                m_currentDesktopOffset.setY(cb);
+                Q_EMIT currentChanging(currentDesktop(), m_currentDesktopOffset);
+            }
+        });
+        input()->registerTouchscreenSwipeShortcut(SwipeDirection::Left, 3, m_swipeGestureReleasedX.get(), left);
+        input()->registerTouchscreenSwipeShortcut(SwipeDirection::Right, 3, m_swipeGestureReleasedX.get(), right);
 
-    // axis events
-    input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisDown,
-                                  findChild<QAction *>(QStringLiteral("Switch to Next Desktop")));
-    input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisUp,
-                                  findChild<QAction *>(QStringLiteral("Switch to Previous Desktop")));
+        // axis events
+        input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisDown,
+                                      findChild<QAction *>(QStringLiteral("Switch to Next Desktop")));
+        input()->registerAxisShortcut(Qt::MetaModifier | Qt::AltModifier, PointerAxisUp,
+                                      findChild<QAction *>(QStringLiteral("Switch to Previous Desktop")));
+    }
 }
 
 void VirtualDesktopManager::gestureReleasedY()

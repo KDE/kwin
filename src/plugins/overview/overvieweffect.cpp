@@ -32,78 +32,81 @@ OverviewEffect::OverviewEffect()
     , m_gridBorder(new EffectTogglableTouchBorder(m_gridState))
     , m_shutdownTimer(new QTimer(this))
 {
-    auto gesture = new EffectTogglableGesture(m_overviewState);
-    gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
+    if (KSharedConfig::openConfig(QStringLiteral("kwinrc"))->group("Gestures").readEntry("SwipeVertical", true)) {
 
-    auto transitionGesture = new EffectTogglableGesture(m_transitionState);
-    transitionGesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
-    transitionGesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
-    m_transitionState->stop();
+        auto gesture = new EffectTogglableGesture(m_overviewState);
+        gesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
+        gesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
 
-    auto gridGesture = new EffectTogglableGesture(m_gridState);
-    gridGesture->addTouchpadSwipeGesture(SwipeDirection::Down, 4);
-    gridGesture->addTouchscreenSwipeGesture(SwipeDirection::Down, 3);
+        auto transitionGesture = new EffectTogglableGesture(m_transitionState);
+        transitionGesture->addTouchpadSwipeGesture(SwipeDirection::Up, 4);
+        transitionGesture->addTouchscreenSwipeGesture(SwipeDirection::Up, 3);
+        m_transitionState->stop();
 
-    connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
-    connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);
+        auto gridGesture = new EffectTogglableGesture(m_gridState);
+        gridGesture->addTouchpadSwipeGesture(SwipeDirection::Down, 4);
+        gridGesture->addTouchscreenSwipeGesture(SwipeDirection::Down, 3);
 
-    connect(m_overviewState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
-        if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
-            m_searchText = QString();
-            setRunning(true);
-            m_gridState->stop();
-        }
-        if (status == EffectTogglableState::Status::Active) {
-            m_transitionState->deactivate();
-        }
-        if (status == EffectTogglableState::Status::Inactive || status == EffectTogglableState::Status::Deactivating) {
-            m_transitionState->stop();
-        }
-        if (status == EffectTogglableState::Status::Inactive) {
-            m_gridState->deactivate();
-            deactivate();
-        }
-    });
+        connect(m_overviewState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::overviewGestureInProgressChanged);
+        connect(m_overviewState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::overviewPartialActivationFactorChanged);
 
-    connect(m_transitionState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
-        if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
-            m_overviewState->stop();
-        }
-        if (status == EffectTogglableState::Status::Inactive) {
-            m_overviewState->activate();
-        }
-        if (status == EffectTogglableState::Status::Active) {
-            m_gridState->activate();
-        }
-        if (status == EffectTogglableState::Status::Inactive || status == EffectTogglableState::Status::Deactivating) {
-            m_gridState->stop();
-        }
-    });
+        connect(m_overviewState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
+            if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
+                m_searchText = QString();
+                setRunning(true);
+                m_gridState->stop();
+            }
+            if (status == EffectTogglableState::Status::Active) {
+                m_transitionState->deactivate();
+            }
+            if (status == EffectTogglableState::Status::Inactive || status == EffectTogglableState::Status::Deactivating) {
+                m_transitionState->stop();
+            }
+            if (status == EffectTogglableState::Status::Inactive) {
+                m_gridState->deactivate();
+                deactivate();
+            }
+        });
 
-    connect(m_gridState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
-        if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
-            m_searchText = QString();
-            setRunning(true);
-            m_overviewState->stop();
-        }
-        if (status == EffectTogglableState::Status::Inactive) {
-            m_overviewState->deactivate();
-            deactivate();
-        }
-        if (status == EffectTogglableState::Status::Active) {
-            m_transitionState->activate();
-        }
-        if (status == EffectTogglableState::Status::Inactive || status == EffectTogglableState::Status::Deactivating) {
-            m_transitionState->stop();
-        }
-    });
+        connect(m_transitionState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
+            if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
+                m_overviewState->stop();
+            }
+            if (status == EffectTogglableState::Status::Inactive) {
+                m_overviewState->activate();
+            }
+            if (status == EffectTogglableState::Status::Active) {
+                m_gridState->activate();
+            }
+            if (status == EffectTogglableState::Status::Inactive || status == EffectTogglableState::Status::Deactivating) {
+                m_gridState->stop();
+            }
+        });
 
-    connect(m_transitionState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::transitionGestureInProgressChanged);
-    connect(m_transitionState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::transitionPartialActivationFactorChanged);
+        connect(m_gridState, &EffectTogglableState::statusChanged, this, [this](EffectTogglableState::Status status) {
+            if (status == EffectTogglableState::Status::Activating || status == EffectTogglableState::Status::Active) {
+                m_searchText = QString();
+                setRunning(true);
+                m_overviewState->stop();
+            }
+            if (status == EffectTogglableState::Status::Inactive) {
+                m_overviewState->deactivate();
+                deactivate();
+            }
+            if (status == EffectTogglableState::Status::Active) {
+                m_transitionState->activate();
+            }
+            if (status == EffectTogglableState::Status::Inactive || status == EffectTogglableState::Status::Deactivating) {
+                m_transitionState->stop();
+            }
+        });
 
-    connect(m_gridState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::gridGestureInProgressChanged);
-    connect(m_gridState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::gridPartialActivationFactorChanged);
+        connect(m_transitionState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::transitionGestureInProgressChanged);
+        connect(m_transitionState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::transitionPartialActivationFactorChanged);
+
+        connect(m_gridState, &EffectTogglableState::inProgressChanged, this, &OverviewEffect::gridGestureInProgressChanged);
+        connect(m_gridState, &EffectTogglableState::partialActivationFactorChanged, this, &OverviewEffect::gridPartialActivationFactorChanged);
+    }
 
     connect(effects, &EffectsHandler::desktopChanging, this, [this](VirtualDesktop *old, QPointF desktopOffset, EffectWindow *with) {
         m_desktopOffset = desktopOffset;
