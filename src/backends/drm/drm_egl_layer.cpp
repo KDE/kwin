@@ -55,6 +55,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     // as the hardware cursor is more important than an incorrectly blended cursor edge
 
     m_scanoutBuffer.reset();
+    m_colorPipeline = ColorPipeline{};
     return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->effectiveChannelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
 }
 
@@ -105,9 +106,7 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (m_pipeline->output()->needsColormanagement()) {
         pipeline.addInverseTransferFunction(m_pipeline->colorDescription().transferFunction(), m_pipeline->colorDescription().referenceLuminance());
     }
-    if (!pipeline.isIdentity()) {
-        return false;
-    }
+    m_colorPipeline = pipeline;
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
     // so we need to make sure that doesn't cause a difference vs the composited result
@@ -156,5 +155,10 @@ QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedDrmFormats() const
 std::optional<QSize> EglGbmLayer::fixedSize() const
 {
     return m_type == DrmPlane::TypeIndex::Cursor ? std::make_optional(m_pipeline->gpu()->cursorSize()) : std::nullopt;
+}
+
+const ColorPipeline &EglGbmLayer::colorPipeline() const
+{
+    return m_colorPipeline;
 }
 }

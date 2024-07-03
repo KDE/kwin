@@ -36,4 +36,9 @@ DrmPipelineLayer::DrmPipelineLayer(DrmPipeline *pipeline, DrmPlane::TypeIndex ty
     , m_type(type)
 {
 }
+
+const ColorPipeline &DrmPipelineLayer::colorPipeline() const
+{
+    return m_colorPipeline;
+}
 }

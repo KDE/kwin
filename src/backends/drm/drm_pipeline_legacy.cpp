@@ -102,6 +102,11 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
         drmModeSetCursor(gpu()->fd(), m_pending.crtc->id(), 0, 0, 0);
     }
     if (activePending()) {
+        if (!m_primaryLayer->colorPipeline().isIdentity() || !m_cursorLayer->colorPipeline().isIdentity()) {
+            // while it's technically possible to set CRTC color management properties,
+            // it may result in glitches
+            return DrmPipeline::Error::InvalidArguments;
+        }
         const bool shouldEnableVrr = m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync;
         if (m_pending.crtc->vrrEnabled.isValid() && !m_pending.crtc->vrrEnabled.setPropertyLegacy(shouldEnableVrr)) {
             qCWarning(KWIN_DRM) << "Setting vrr failed!" << strerror(errno);

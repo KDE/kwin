@@ -213,12 +213,20 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
+    if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
+        return DrmPipeline::Error::InvalidArguments;
+    }
+    if (!m_pending.crtcColorPipeline.isIdentity() && !m_primaryLayer->colorPipeline().isIdentity()) {
+        // TODO merge the pipelines instead?
+        return DrmPipeline::Error::InvalidArguments;
+    }
+    const auto &colorPipeline = m_pending.crtcColorPipeline.isIdentity() ? m_primaryLayer->colorPipeline() : m_pending.crtcColorPipeline;
     if (!m_pending.crtc->postBlendingPipeline) {
-        if (!m_pending.crtcColorPipeline.isIdentity()) {
+        if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
         }
     } else {
-        if (!m_pending.crtc->postBlendingPipeline->matchPipeline(commit, m_pending.crtcColorPipeline)) {
+        if (!m_pending.crtc->postBlendingPipeline->matchPipeline(commit, colorPipeline)) {
             return Error::InvalidArguments;
         }
     }

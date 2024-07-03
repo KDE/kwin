@@ -37,11 +37,13 @@ public:
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
     std::optional<QSize> fixedSize() const override;
+    const ColorPipeline &colorPipeline() const override;
 
 private:
     bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
+    ColorPipeline m_colorPipeline;
 
     EglGbmLayerSurface m_surface;
 };
