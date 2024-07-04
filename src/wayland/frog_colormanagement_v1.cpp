@@ -50,18 +50,18 @@ FrogColorManagementSurfaceV1::~FrogColorManagementSurfaceV1()
     }
 }
 
-static QtWaylandServer::frog_color_managed_surface::transfer_function kwinToFrogTransferFunction(NamedTransferFunction tf)
+static QtWaylandServer::frog_color_managed_surface::transfer_function kwinToFrogTransferFunction(TransferFunction tf)
 {
-    switch (tf) {
-    case NamedTransferFunction::sRGB:
+    switch (tf.type) {
+    case TransferFunction::sRGB:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_srgb;
-    case NamedTransferFunction::gamma22:
+    case TransferFunction::gamma22:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_gamma_22;
-    case NamedTransferFunction::PerceptualQuantizer:
+    case TransferFunction::PerceptualQuantizer:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_st2084_pq;
-    case NamedTransferFunction::scRGB:
+    case TransferFunction::scRGB:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_scrgb_linear;
-    case NamedTransferFunction::linear:
+    case TransferFunction::linear:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_scrgb_linear;
     }
     return QtWaylandServer::frog_color_managed_surface::transfer_function_undefined;
@@ -91,13 +91,13 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_transfer
     case transfer_function_undefined:
     case transfer_function_srgb:
     case transfer_function_gamma_22:
-        m_transferFunction = NamedTransferFunction::gamma22;
+        m_transferFunction = TransferFunction::gamma22;
         break;
     case transfer_function_st2084_pq:
-        m_transferFunction = NamedTransferFunction::PerceptualQuantizer;
+        m_transferFunction = TransferFunction::PerceptualQuantizer;
         break;
     case transfer_function_scrgb_linear:
-        m_transferFunction = NamedTransferFunction::scRGB;
+        m_transferFunction = TransferFunction::scRGB;
         break;
     }
     updateColorDescription();

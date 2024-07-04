@@ -198,19 +198,19 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, NamedTransferFunction::gamma22, 100, 0, 100, 100);
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction::gamma22, 100, 0, 100, 100);
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
     : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
     : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
 {
 }
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
     : m_containerColorimetry(containerColorimetry)
     , m_masteringColorimetry(masteringColorimetry)
     , m_transferFunction(tf)
@@ -222,7 +222,7 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Name
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, NamedTransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
     : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, masteringColorimetry, sdrColorimetry)
 {
 }
@@ -242,7 +242,7 @@ const Colorimetry &ColorDescription::sdrColorimetry() const
     return m_sdrColorimetry;
 }
 
-NamedTransferFunction ColorDescription::transferFunction() const
+TransferFunction ColorDescription::transferFunction() const
 {
     return m_transferFunction;
 }
@@ -312,53 +312,59 @@ static float pqToNits(float pq)
     return 10000.0f * std::pow(num / den, m1_inv);
 }
 
-static QVector3D clamp(const QVector3D &vect, float min = 0, float max = 1)
-{
-    return QVector3D(std::clamp(vect.x(), min, max), std::clamp(vect.y(), min, max), std::clamp(vect.z(), min, max));
-}
-
-QVector3D ColorDescription::encodedToNits(const QVector3D &nits, NamedTransferFunction tf, double referenceLuminance)
-{
-    switch (tf) {
-    case NamedTransferFunction::sRGB:
-        return referenceLuminance * QVector3D(srgbToLinear(nits.x()), srgbToLinear(nits.y()), srgbToLinear(nits.z()));
-    case NamedTransferFunction::gamma22:
-        return referenceLuminance * QVector3D(std::pow(nits.x(), 2.2), std::pow(nits.y(), 2.2), std::pow(nits.z(), 2.2));
-    case NamedTransferFunction::linear:
-        return nits;
-    case NamedTransferFunction::scRGB:
-        return nits * 80.0f;
-    case NamedTransferFunction::PerceptualQuantizer:
-        return QVector3D(pqToNits(nits.x()), pqToNits(nits.y()), pqToNits(nits.z()));
-    }
-    Q_UNREACHABLE();
-}
-
-QVector3D ColorDescription::nitsToEncoded(const QVector3D &rgb, NamedTransferFunction tf, double referenceLuminance)
-{
-    switch (tf) {
-    case NamedTransferFunction::sRGB: {
-        const auto clamped = clamp(rgb / referenceLuminance);
-        return QVector3D(linearToSRGB(clamped.x()), linearToSRGB(clamped.y()), linearToSRGB(clamped.z()));
-    }
-    case NamedTransferFunction::gamma22: {
-        const auto clamped = clamp(rgb / referenceLuminance);
-        return QVector3D(std::pow(clamped.x(), 1 / 2.2), std::pow(clamped.y(), 1 / 2.2), std::pow(clamped.z(), 1 / 2.2));
-    }
-    case NamedTransferFunction::linear:
-        return rgb;
-    case NamedTransferFunction::scRGB:
-        return rgb / 80.0f;
-    case NamedTransferFunction::PerceptualQuantizer:
-        return QVector3D(nitsToPQ(rgb.x()), nitsToPQ(rgb.y()), nitsToPQ(rgb.z()));
-    }
-    Q_UNREACHABLE();
-}
-
 QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
 {
-    rgb = encodedToNits(rgb, m_transferFunction, m_referenceLuminance);
+    rgb = m_transferFunction.encodedToNits(rgb, m_referenceLuminance);
     rgb = m_containerColorimetry.toOther(dst.containerColorimetry()) * rgb;
-    return nitsToEncoded(rgb, dst.transferFunction(), dst.referenceLuminance());
+    return dst.transferFunction().nitsToEncoded(rgb, dst.referenceLuminance());
+}
+
+TransferFunction::TransferFunction(Type tf)
+    : type(tf)
+{
+}
+
+double TransferFunction::encodedToNits(double encoded, double referenceLuminance) const
+{
+    switch (type) {
+    case TransferFunction::sRGB:
+        return referenceLuminance * srgbToLinear(encoded);
+    case TransferFunction::gamma22:
+        return referenceLuminance * std::pow(encoded, 2.2);
+    case TransferFunction::linear:
+        return encoded;
+    case TransferFunction::scRGB:
+        return encoded * 80.0f;
+    case TransferFunction::PerceptualQuantizer:
+        return pqToNits(encoded);
+    }
+    Q_UNREACHABLE();
+}
+
+QVector3D TransferFunction::encodedToNits(const QVector3D &encoded, double referenceLuminance) const
+{
+    return QVector3D(encodedToNits(encoded.x(), referenceLuminance), encodedToNits(encoded.y(), referenceLuminance), encodedToNits(encoded.z(), referenceLuminance));
+}
+
+double TransferFunction::nitsToEncoded(double nits, double referenceLuminance) const
+{
+    switch (type) {
+    case TransferFunction::sRGB:
+        return linearToSRGB(std::clamp(nits / referenceLuminance, 0.0, 1.0));
+    case TransferFunction::gamma22:
+        return std::pow(std::clamp(nits / referenceLuminance, 0.0, 1.0), 1.0 / 2.2);
+    case TransferFunction::linear:
+        return nits;
+    case TransferFunction::scRGB:
+        return nits / 80.0f;
+    case TransferFunction::PerceptualQuantizer:
+        return nitsToPQ(nits);
+    }
+    Q_UNREACHABLE();
+}
+
+QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits, double referenceLuminance) const
+{
+    return QVector3D(nitsToEncoded(nits.x(), referenceLuminance), nitsToEncoded(nits.y(), referenceLuminance), nitsToEncoded(nits.z(), referenceLuminance));
 }
 }

@@ -63,7 +63,7 @@ void ColorDevicePrivate::recalculateFactors()
                                               blackbodyColor[blackBodyColorIndex + 5],
                                               blendFactor);
         // the values in the blackbodyColor array are "gamma corrected", but we need a linear value
-        temperatureFactors = ColorDescription::encodedToNits(QVector3D(xWhitePoint, yWhitePoint, zWhitePoint), NamedTransferFunction::gamma22, 1);
+        temperatureFactors = TransferFunction(TransferFunction::gamma22).encodedToNits(QVector3D(xWhitePoint, yWhitePoint, zWhitePoint), 1);
     }
     simpleTransformation = brightnessFactors * temperatureFactors;
 }

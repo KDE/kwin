@@ -359,7 +359,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const auto iccProfile = props->iccProfile.value_or(m_state.iccProfile);
     if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
         const double brightness = iccProfile->brightness().value_or(200);
-        return ColorDescription(iccProfile->colorimetry(), NamedTransferFunction::gamma22, brightness, 0, brightness, brightness);
+        return ColorDescription(iccProfile->colorimetry(), TransferFunction::gamma22, brightness, 0, brightness, brightness);
     }
     const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
     const bool driverSupportsHdr = m_connector->colorspace.isValid() && m_connector->hdrMetadata.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC));
@@ -371,7 +371,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const Colorimetry masteringColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709);
     const Colorimetry sdrColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)) : Colorimetry::fromName(NamedColorimetry::BT709);
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
-    const NamedTransferFunction transferFunction = effectiveHdr ? NamedTransferFunction::PerceptualQuantizer : NamedTransferFunction::gamma22;
+    const TransferFunction transferFunction = effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22;
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()) : 0;
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
     const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200;
@@ -458,12 +458,12 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
     if (!m_pipeline->activePending()) {
         return false;
     }
-    const auto inGamma22 = ColorDescription::nitsToEncoded(rgb, NamedTransferFunction::gamma22, 1);
+    const auto inOutputSpace = m_state.colorDescription.transferFunction().nitsToEncoded(rgb, 1);
     if (m_pipeline->hasCTM()) {
         QMatrix3x3 ctm;
-        ctm(0, 0) = inGamma22.x();
-        ctm(1, 1) = inGamma22.y();
-        ctm(2, 2) = inGamma22.z();
+        ctm(0, 0) = inOutputSpace.x();
+        ctm(1, 1) = inOutputSpace.y();
+        ctm(2, 2) = inOutputSpace.z();
         m_pipeline->setCTM(ctm);
         m_pipeline->setGammaRamp(nullptr);
         if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
@@ -476,7 +476,7 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
         }
     }
     if (m_pipeline->hasGammaRamp()) {
-        auto lut = ColorTransformation::createScalingTransform(inGamma22);
+        auto lut = ColorTransformation::createScalingTransform(inOutputSpace);
         if (lut) {
             m_pipeline->setGammaRamp(std::move(lut));
             if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {

@@ -46,7 +46,7 @@ bool X11Output::setChannelFactors(const QVector3D &rgb)
     if (m_crtc == XCB_NONE) {
         return true;
     }
-    auto transformation = ColorTransformation::createScalingTransform(ColorDescription::nitsToEncoded(rgb, NamedTransferFunction::gamma22, 1));
+    auto transformation = ColorTransformation::createScalingTransform(m_state.colorDescription.transferFunction().nitsToEncoded(rgb, 1));
     if (!transformation) {
         return false;
     }

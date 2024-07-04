@@ -69,7 +69,7 @@ private:
     void xx_image_description_creator_params_v2_set_max_fall(Resource *resource, uint32_t max_fall) override;
 
     std::optional<Colorimetry> m_colorimetry;
-    std::optional<NamedTransferFunction> m_transferFunction;
+    std::optional<TransferFunction> m_transferFunction;
     std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxPeakBrightness;
 };

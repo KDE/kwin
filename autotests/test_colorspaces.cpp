@@ -39,24 +39,24 @@ static const double s_resolution10bit = std::pow(1.0 / 2.0, 10);
 void TestColorspaces::roundtripConversion_data()
 {
     QTest::addColumn<NamedColorimetry>("srcColorimetry");
-    QTest::addColumn<NamedTransferFunction>("srcTransferFunction");
+    QTest::addColumn<TransferFunction::Type>("srcTransferFunction");
     QTest::addColumn<NamedColorimetry>("dstColorimetry");
-    QTest::addColumn<NamedTransferFunction>("dstTransferFunction");
+    QTest::addColumn<TransferFunction::Type>("dstTransferFunction");
     QTest::addColumn<double>("requiredAccuracy");
 
-    QTest::addRow("BT709 (sRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::sRGB << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
-    QTest::addRow("BT709 (gamma 2.2) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::gamma22 << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
-    QTest::addRow("BT709 (scRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::scRGB << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
-    QTest::addRow("BT709 (linear) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::linear << NamedColorimetry::BT2020 << NamedTransferFunction::linear << s_resolution10bit;
-    QTest::addRow("BT709 (PQ) <-> BT2020 (linear)") << NamedColorimetry::BT709 << NamedTransferFunction::PerceptualQuantizer << NamedColorimetry::BT2020 << NamedTransferFunction::linear << 3 * s_resolution10bit;
+    QTest::addRow("BT709 (sRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << TransferFunction::sRGB << NamedColorimetry::BT2020 << TransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (gamma 2.2) <-> BT2020 (linear)") << NamedColorimetry::BT709 << TransferFunction::gamma22 << NamedColorimetry::BT2020 << TransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (scRGB) <-> BT2020 (linear)") << NamedColorimetry::BT709 << TransferFunction::scRGB << NamedColorimetry::BT2020 << TransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (linear) <-> BT2020 (linear)") << NamedColorimetry::BT709 << TransferFunction::linear << NamedColorimetry::BT2020 << TransferFunction::linear << s_resolution10bit;
+    QTest::addRow("BT709 (PQ) <-> BT2020 (linear)") << NamedColorimetry::BT709 << TransferFunction::PerceptualQuantizer << NamedColorimetry::BT2020 << TransferFunction::linear << 3 * s_resolution10bit;
 }
 
 void TestColorspaces::roundtripConversion()
 {
     QFETCH(NamedColorimetry, srcColorimetry);
-    QFETCH(NamedTransferFunction, srcTransferFunction);
+    QFETCH(TransferFunction::Type, srcTransferFunction);
     QFETCH(NamedColorimetry, dstColorimetry);
-    QFETCH(NamedTransferFunction, dstTransferFunction);
+    QFETCH(TransferFunction::Type, dstTransferFunction);
     QFETCH(double, requiredAccuracy);
 
     const auto src = ColorDescription(srcColorimetry, srcTransferFunction, 100, 0, 100, 100);

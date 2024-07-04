@@ -144,7 +144,7 @@ private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
-    std::shared_ptr<DrmBlob> createHdrMetadata(NamedTransferFunction transferFunction) const;
+    std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction transferFunction) const;
 
     // legacy only
     Error presentLegacy(const std::shared_ptr<OutputFrame> &frame);

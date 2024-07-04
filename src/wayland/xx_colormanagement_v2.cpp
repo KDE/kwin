@@ -148,7 +148,7 @@ void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_create(R
         wl_resource_post_error(resource->handle, error::error_incomplete_set, "colorimetry or transfer function missing");
         return;
     }
-    if (m_transferFunction != NamedTransferFunction::PerceptualQuantizer && (m_maxAverageLuminance || m_maxPeakBrightness)) {
+    if (m_transferFunction != TransferFunction::PerceptualQuantizer && (m_maxAverageLuminance || m_maxPeakBrightness)) {
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
@@ -166,10 +166,10 @@ void XXColorParametricCreatorV2::xx_image_description_creator_params_v2_set_tf_n
     case XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_SRGB:
     case XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_BT709:
     case XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_GAMMA22:
-        m_transferFunction = NamedTransferFunction::gamma22;
+        m_transferFunction = TransferFunction::gamma22;
         return;
     case XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_ST2084_PQ:
-        m_transferFunction = NamedTransferFunction::PerceptualQuantizer;
+        m_transferFunction = TransferFunction::PerceptualQuantizer;
         return;
     default:
         // TODO add more transfer functions
@@ -257,18 +257,18 @@ void XXImageDescriptionV2::xx_image_description_v2_destroy(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-static uint32_t kwinTFtoProtoTF(NamedTransferFunction tf)
+static uint32_t kwinTFtoProtoTF(TransferFunction tf)
 {
-    switch (tf) {
-    case NamedTransferFunction::sRGB:
+    switch (tf.type) {
+    case TransferFunction::sRGB:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_SRGB;
-    case NamedTransferFunction::linear:
+    case TransferFunction::linear:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_LINEAR;
-    case NamedTransferFunction::PerceptualQuantizer:
+    case TransferFunction::PerceptualQuantizer:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_ST2084_PQ;
-    case NamedTransferFunction::scRGB:
+    case TransferFunction::scRGB:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_LINEAR;
-    case NamedTransferFunction::gamma22:
+    case TransferFunction::gamma22:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_GAMMA22;
     }
     Q_UNREACHABLE();

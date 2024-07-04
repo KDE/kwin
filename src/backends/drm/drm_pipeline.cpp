@@ -310,7 +310,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     }
     if (m_connector->hdrMetadata.isValid()) {
         commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.colorDescription.transferFunction()));
-    } else if (m_pending.colorDescription.transferFunction() != NamedTransferFunction::gamma22) {
+    } else if (m_pending.colorDescription.transferFunction() != TransferFunction::gamma22) {
         return false;
     }
     if (m_pending.colorDescription.containerColorimetry() == NamedColorimetry::BT2020) {
@@ -724,9 +724,9 @@ void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
     }
 }
 
-std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(NamedTransferFunction transferFunction) const
+std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction transferFunction) const
 {
-    if (transferFunction != NamedTransferFunction::PerceptualQuantizer) {
+    if (transferFunction != TransferFunction::PerceptualQuantizer) {
         // for sRGB / gamma 2.2, don't send any metadata, to ensure the non-HDR experience stays the same
         return nullptr;
     }

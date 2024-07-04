@@ -115,7 +115,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             m_surface->iccShader.reset();
         }
         if (enableColormanagement) {
-            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), NamedTransferFunction::linear,
+            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), TransferFunction::linear,
                                                                        colorDescription.referenceLuminance(), colorDescription.minLuminance(),
                                                                        colorDescription.maxAverageLuminance(), colorDescription.maxHdrLuminance(),
                                                                        colorDescription.containerColorimetry(), colorDescription.sdrColorimetry());
@@ -199,8 +199,8 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
             ctm(1, 1) = m_surface->adaptedChannelFactors.y() * brightnessFactor;
             ctm(2, 2) = m_surface->adaptedChannelFactors.z() * brightnessFactor;
             binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
-            binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(m_surface->intermediaryColorDescription.transferFunction()));
-            binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(m_surface->targetColorDescription.transferFunction()));
+            binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, m_surface->intermediaryColorDescription.transferFunction().type);
+            binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, m_surface->targetColorDescription.transferFunction().type);
             binder.shader()->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, m_surface->intermediaryColorDescription.referenceLuminance());
             binder.shader()->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, m_surface->intermediaryColorDescription.referenceLuminance());
             binder.shader()->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, m_surface->intermediaryColorDescription.maxHdrLuminance().value_or(800));

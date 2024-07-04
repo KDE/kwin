@@ -457,8 +457,8 @@ bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
 {
     const auto &srcColorimetry = src.containerColorimetry() == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.containerColorimetry();
     return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry()))
-        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, int(src.transferFunction()))
-        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, int(dst.transferFunction()))
+        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, src.transferFunction().type)
+        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type)
         && setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance())
         && setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance())
         && setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
