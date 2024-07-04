@@ -60,6 +60,3 @@ msgstr "Nastavení filtru"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Vyjmout nepodporované efekty"
-
-#~ msgid "Exclude internal effects"
-#~ msgstr "Vyjmout interní efekty"
