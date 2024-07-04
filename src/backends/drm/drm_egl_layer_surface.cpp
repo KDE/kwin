@@ -110,7 +110,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
             m_surface->iccShader.reset();
         }
         if (enableColormanagement) {
-            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), TransferFunction::linear,
+            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), TransferFunction::gamma22,
                                                                        colorDescription.referenceLuminance(), colorDescription.minLuminance(),
                                                                        colorDescription.maxAverageLuminance(), colorDescription.maxHdrLuminance(),
                                                                        colorDescription.containerColorimetry(), colorDescription.sdrColorimetry());
