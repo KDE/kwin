@@ -60,11 +60,7 @@ static void doGrabTexture(GLTexture *texture, QImage *target)
         context->glReadnPixels(0, 0, size.width(), size.height(), closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
         GLFramebuffer::popFramebuffer();
     } else {
-        if (context->openglVersion() >= Version(4, 5)) {
-            glGetnTexImage(texture->target(), 0, closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
-        } else {
-            glGetTexImage(texture->target(), 0, closestGLType(target->format()), GL_UNSIGNED_BYTE, target->bits());
-        }
+        context->glGetnTexImage(texture->target(), 0, closestGLType(target->format()), GL_UNSIGNED_BYTE, target->sizeInBytes(), target->bits());
     }
 
     if (invertNeededAndSupported) {

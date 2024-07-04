@@ -31,6 +31,8 @@ class GLPlatform;
 using glGetGraphicsResetStatus_func = GLenum (*)();
 using glReadnPixels_func = void (*)(GLint x, GLint y, GLsizei width, GLsizei height,
                                     GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
+using glGetnTexImage_func = void (*)(GLenum target, GLint level, GLenum format, GLenum type,
+                                     GLsizei bufSize, void *pixels);
 using glGetnUniformfv_func = void (*)(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
 class KWIN_EXPORT OpenGlContext
@@ -79,6 +81,7 @@ public:
 
     GLenum checkGraphicsResetStatus();
     void glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLsizei bufSize, GLvoid *data);
+    void glGetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels);
     void glGetnUniformfv(GLuint program, GLint location, GLsizei bufSize, GLfloat *params);
 
     void pushFramebuffer(GLFramebuffer *fbo);
@@ -124,6 +127,7 @@ protected:
     const std::unique_ptr<GLPlatform> m_glPlatform;
     glGetGraphicsResetStatus_func m_glGetGraphicsResetStatus = nullptr;
     glReadnPixels_func m_glReadnPixels = nullptr;
+    glGetnTexImage_func m_glGetnTexImage = nullptr;
     glGetnUniformfv_func m_glGetnUniformfv = nullptr;
     ShaderManager *m_shaderManager = nullptr;
     GLVertexBuffer *m_streamingBuffer = nullptr;
