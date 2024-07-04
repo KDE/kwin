@@ -17,6 +17,7 @@
 #include <QFileInfo>
 #include <QLoggingCategory>
 #include <QProcess>
+#include <QStandardPaths>
 // KF
 #include <KApplicationTrader>
 
@@ -35,7 +36,11 @@ static QStringList fetchProcessServiceField(const QString &executablePath, const
         if (splitCommandList.isEmpty()) {
             return false;
         }
-        return QFileInfo(splitCommandList.first()).canonicalFilePath() == executablePath;
+        const auto foundExecutable = QStandardPaths::findExecutable(splitCommandList.first());
+        if (foundExecutable.isEmpty()) {
+            return false;
+        }
+        return QFileInfo(foundExecutable).canonicalFilePath() == executablePath;
     });
 
     if (servicesFound.isEmpty()) {
