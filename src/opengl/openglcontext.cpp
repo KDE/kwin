@@ -334,6 +334,7 @@ void OpenGlContext::glResolveFunctions(const std::function<resolveFuncPtr(const 
         // See https://www.opengl.org/registry/specs/ARB/robustness.txt
         m_glGetGraphicsResetStatus = (glGetGraphicsResetStatus_func)resolveFunction("glGetGraphicsResetStatusARB");
         m_glReadnPixels = (glReadnPixels_func)resolveFunction("glReadnPixelsARB");
+        m_glGetnTexImage = (glGetnTexImage_func)resolveFunction("glGetnTexImageARB");
         m_glGetnUniformfv = (glGetnUniformfv_func)resolveFunction("glGetnUniformfvARB");
     } else if (robustContext && haveExtRobustness) {
         // See https://www.khronos.org/registry/gles/extensions/EXT/EXT_robustness.txt
@@ -431,6 +432,15 @@ void OpenGlContext::glReadnPixels(GLint x, GLint y, GLsizei width, GLsizei heigh
         m_glReadnPixels(x, y, width, height, format, type, bufSize, data);
     } else {
         glReadPixels(x, y, width, height, format, type, data);
+    }
+}
+
+void OpenGlContext::glGetnTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLsizei bufSize, void *pixels)
+{
+    if (m_glGetnTexImage) {
+        m_glGetnTexImage(target, level, format, type, bufSize, pixels);
+    } else {
+        glGetTexImage(target, level, format, type, pixels);
     }
 }
 
