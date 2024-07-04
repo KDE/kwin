@@ -46,6 +46,7 @@ public:
     int uniformLocation(const char *name);
 
     bool setUniform(const char *name, float value);
+    bool setUniform(const char *name, double value);
     bool setUniform(const char *name, int value);
     bool setUniform(const char *name, const QVector2D &value);
     bool setUniform(const char *name, const QVector3D &value);
@@ -55,6 +56,7 @@ public:
     bool setUniform(const char *name, const QColor &color);
 
     bool setUniform(int location, float value);
+    bool setUniform(int location, double value);
     bool setUniform(int location, int value);
     bool setUniform(int location, int xValue, int yValue, int zValue);
     bool setUniform(int location, const QVector2D &value);

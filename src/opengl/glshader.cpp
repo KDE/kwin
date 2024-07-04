@@ -307,6 +307,12 @@ bool GLShader::setUniform(const char *name, float value)
     return setUniform(location, value);
 }
 
+bool GLShader::setUniform(const char *name, double value)
+{
+    const int location = uniformLocation(name);
+    return setUniform(location, value);
+}
+
 bool GLShader::setUniform(const char *name, int value)
 {
     const int location = uniformLocation(name);
@@ -350,6 +356,14 @@ bool GLShader::setUniform(const char *name, const QColor &color)
 }
 
 bool GLShader::setUniform(int location, float value)
+{
+    if (location >= 0) {
+        glUniform1f(location, value);
+    }
+    return (location >= 0);
+}
+
+bool GLShader::setUniform(int location, double value)
 {
     if (location >= 0) {
         glUniform1f(location, value);
