@@ -12,7 +12,7 @@ DisableFormat: true
 
 # Style for C++
 Language: Cpp
-Standard: c++17
+Standard: c++20
 
 # base is WebKit coding style: https://webkit.org/code-style-guidelines/
 # below are only things set that diverge from this style!
