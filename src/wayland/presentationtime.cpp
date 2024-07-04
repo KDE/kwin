@@ -14,7 +14,7 @@ namespace KWin
 
 PresentationTime::PresentationTime(Display *display, QObject *parent)
     : QObject(parent)
-    , QtWaylandServer::wp_presentation(*display, 1)
+    , QtWaylandServer::wp_presentation(*display, 2)
 {
 }
 
@@ -69,7 +69,6 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
     const uint32_t tvNsec = (timestamp - secs).count();
 
     const bool adaptiveSync = mode == PresentationMode::AdaptiveSync || mode == PresentationMode::AdaptiveAsync;
-    const uint32_t refreshDuration = adaptiveSync ? 0 : refreshCycleDuration.count();
     uint32_t flags = WP_PRESENTATION_FEEDBACK_KIND_HW_CLOCK | WP_PRESENTATION_FEEDBACK_KIND_HW_COMPLETION;
     if (mode == PresentationMode::VSync || mode == PresentationMode::AdaptiveSync) {
         flags |= WP_PRESENTATION_FEEDBACK_KIND_VSYNC;
@@ -78,6 +77,12 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
     wl_resource *resource;
     wl_resource *tmp;
     wl_resource_for_each_safe (resource, tmp, &resources) {
+        // TODO with adaptive sync, send an estimation of the current actual refresh rate?
+        uint32_t refreshDuration = refreshCycleDuration.count();
+        if (adaptiveSync && wl_resource_get_version(resource) == 1) {
+            // version 1 requires sending zero when the refresh rate isn't stable
+            refreshDuration = 0;
+        }
         wp_presentation_feedback_send_presented(resource, tvSecHi, tvSecLo, tvNsec, refreshDuration, 0, 0, flags);
         wl_resource_destroy(resource);
     }
