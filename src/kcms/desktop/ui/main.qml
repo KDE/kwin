@@ -65,6 +65,10 @@ KCM.ScrollViewKCM {
             down: false  // Disable press effect
             hoverEnabled: false
 
+            // use alternating background colors to visually connect list items'
+            // left and right side content elements
+            Kirigami.Theme.useAlternateBackgroundColor: true
+
             contentItem: RowLayout {
                 QQC2.TextField {
                     id: nameField
@@ -135,7 +139,7 @@ KCM.ScrollViewKCM {
 
                 DelegateButton {
                     enabled: model && !model.IsMissing && desktopsList.count !== 1
-                    icon.name: "edit-delete"
+                    icon.name: "edit-delete-remove-symbolic"
                     text: i18nc("@info:tooltip", "Remove")
                     onClicked: kcm.desktopsModel.removeDesktop(model.Id)
                 }
