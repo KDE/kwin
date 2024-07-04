@@ -15,6 +15,7 @@
 #include "core/session.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_colorop.h"
 #include "drm_commit.h"
 #include "drm_commit_thread.h"
 #include "drm_connector.h"
@@ -213,18 +214,20 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
-    if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
-        return DrmPipeline::Error::InvalidArguments;
+    // TODO also support CRTC pipeline offloading, for when the plane offloading doesn't work!
+    if (m_pending.crtc->primaryPlane()->colorPipeline) {
+        if (!m_pending.crtc->primaryPlane()->colorPipeline->matchPipeline(commit, m_primaryLayer->colorPipeline())) {
+            return Error::InvalidArguments;
+        }
+    } else if (!m_primaryLayer->colorPipeline().isIdentity()) {
+        return Error::InvalidArguments;
     }
-    const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
     if (!m_pending.crtc->postBlendingPipeline) {
-        if (!colorPipeline.isIdentity()) {
+        if (!m_pending.crtcColorPipeline.isIdentity()) {
             return Error::InvalidArguments;
         }
-    } else {
-        if (!m_pending.crtc->postBlendingPipeline->matchPipeline(commit, colorPipeline)) {
-            return Error::InvalidArguments;
-        }
+    } else if (!m_pending.crtc->postBlendingPipeline->matchPipeline(commit, m_pending.crtcColorPipeline)) {
+        return Error::InvalidArguments;
     }
 
     if (!m_primaryLayer->checkTestBuffer()) {

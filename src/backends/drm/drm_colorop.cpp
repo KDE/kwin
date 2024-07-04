@@ -264,4 +264,203 @@ void LegacyMatrixColorOp::bypass(DrmAtomicCommit *commit)
     commit->addBlob(*m_prop, nullptr);
 }
 
+DrmMatrixColorOp3x4::DrmMatrixColorOp3x4(DrmAbstractColorOp *next, DrmProperty *prop)
+    : DrmAbstractColorOp(next, false)
+    , m_prop(prop)
+{
+}
+
+bool DrmMatrixColorOp3x4::canBeUsedFor(const ColorOp &op)
+{
+    // this isn't necessarily true, but let's keep things simple for now
+    if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
+        return matrix->mat(3, 0) == 0
+            && matrix->mat(3, 1) == 0
+            && matrix->mat(3, 2) == 0
+            && matrix->mat(3, 3) == 1;
+    } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
+        return true;
+    }
+    return false;
+}
+
+// not in my libdrm yet afaict
+struct drm_color_ctm_3x4_replacement
+{
+    uint64_t matrix[3 * 4];
+};
+
+void DrmMatrixColorOp3x4::program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale)
+{
+    QMatrix4x4 mat;
+    mat.scale(1.0 / inputScale.scale);
+    mat.translate(-inputScale.offset, -inputScale.offset, -inputScale.offset);
+    for (const auto &op : ops) {
+        if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
+            mat *= matrix->mat;
+        } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+            mat.scale(mult->factors);
+        } else {
+            Q_UNREACHABLE();
+        }
+    }
+    mat.translate(outputScale.offset, outputScale.offset, outputScale.offset);
+    mat.scale(outputScale.scale);
+    drm_color_ctm_3x4_replacement data = {
+        .matrix = {
+            doubleToFixed(mat(0, 0)), doubleToFixed(mat(0, 1)), doubleToFixed(mat(0, 2)), doubleToFixed(mat(0, 3)), //
+            doubleToFixed(mat(1, 0)), doubleToFixed(mat(1, 1)), doubleToFixed(mat(1, 2)), doubleToFixed(mat(1, 3)), //
+            doubleToFixed(mat(2, 0)), doubleToFixed(mat(2, 1)), doubleToFixed(mat(2, 2)), doubleToFixed(mat(2, 3)), //
+        },
+    };
+    commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), &data, sizeof(data)));
+}
+
+void DrmMatrixColorOp3x4::bypass(DrmAtomicCommit *commit)
+{
+    commit->addBlob(*m_prop, nullptr);
+}
+
+DrmMultiplierColorOp::DrmMultiplierColorOp(DrmAbstractColorOp *next, DrmProperty *prop)
+    : DrmAbstractColorOp(next, false)
+    , m_prop(prop)
+{
+}
+
+bool DrmMultiplierColorOp::canBeUsedFor(const ColorOp &op)
+{
+    if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+        return mult->factors.x() == mult->factors.y() && mult->factors.x() == mult->factors.z();
+    }
+    return false;
+}
+
+void DrmMultiplierColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale)
+{
+    double factor = 1;
+    for (const auto &op : ops) {
+        factor *= std::get_if<ColorMultiplier>(&op.operation)->factors.x();
+    }
+    commit->addProperty(*m_prop, doubleToFixed(factor));
+}
+
+void DrmMultiplierColorOp::bypass(DrmAtomicCommit *commit)
+{
+    commit->addProperty(*m_prop, doubleToFixed(1));
+}
+
+DrmDivisorColorOp::DrmDivisorColorOp(DrmAbstractColorOp *next, DrmProperty *prop)
+    : DrmAbstractColorOp(next, false)
+    , m_prop(prop)
+{
+}
+
+bool DrmDivisorColorOp::canBeUsedFor(const ColorOp &op)
+{
+    if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+        if (mult->factors.x() == 0) {
+            return false;
+        }
+        const double divisor = 1.0 / mult->factors.x();
+        return std::abs(divisor - std::round(divisor)) < 0.001 && mult->factors.x() == mult->factors.y() && mult->factors.x() == mult->factors.z();
+    }
+    return false;
+}
+
+void DrmDivisorColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale)
+{
+    double divisor = 1;
+    for (const auto &op : ops) {
+        divisor /= std::get_if<ColorMultiplier>(&op.operation)->factors.x();
+    }
+    commit->addProperty(*m_prop, std::round(divisor));
+}
+
+void DrmDivisorColorOp::bypass(DrmAtomicCommit *commit)
+{
+    commit->addProperty(*m_prop, 1);
+}
+
+NvPlaneGammaTf::NvPlaneGammaTf(DrmAbstractColorOp *next, DrmEnumProperty<NvDrmTransferFunction> *prop, bool degamma)
+    : DrmAbstractColorOp(next, true)
+    , m_prop(prop)
+    , m_degamma(degamma)
+{
+}
+
+bool NvPlaneGammaTf::canBeUsedFor(const ColorOp &op)
+{
+    if (auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
+        if (!m_degamma) {
+            return false;
+        }
+        // FIXME what's the exact conversion here? The following LUT can't represent 10k!
+        // if (tf->tf == TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000)) {
+        //     return m_prop->hasEnum(NvDrmTransferFunction::PQ);
+        // }
+    } else if (auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
+        if (m_degamma) {
+            return false;
+        }
+        // FIXME what's the exact conversion here? The following LUT can't represent 10k!
+        // if (tf->tf == TransferFunction(TransferFunction::PerceptualQuantizer, 0, 10'000)) {
+        //     return m_prop->hasEnum(NvDrmTransferFunction::PQ);
+        // }
+    }
+    return false;
+}
+
+void NvPlaneGammaTf::program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale)
+{
+    commit->addEnum(*m_prop, NvDrmTransferFunction::PQ);
+}
+
+void NvPlaneGammaTf::bypass(DrmAtomicCommit *commit)
+{
+    commit->addEnum(*m_prop, NvDrmTransferFunction::Default);
+}
+
+NvTMOLUT::NvTMOLUT(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize)
+    : DrmAbstractColorOp(next, true)
+    , m_prop(prop)
+    , m_maxSize(maxSize)
+    , m_components(m_maxSize)
+{
+}
+
+bool NvTMOLUT::canBeUsedFor(const ColorOp &op)
+{
+    if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+        return mult->factors.y() == 1 && mult->factors.z() == 1;
+    }
+    return false;
+}
+
+void NvTMOLUT::program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale)
+{
+    for (uint32_t i = 0; i < m_maxSize; i++) {
+        const double input = i / double(m_maxSize - 1);
+        const double scaledInput = input / inputScale.scale - inputScale.offset;
+        double output = scaledInput;
+        for (const auto &op : ops) {
+            if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+                output *= mult->factors.x();
+            } else {
+                Q_UNREACHABLE();
+            }
+        }
+        m_components[i] = {
+            .red = uint16_t(std::round(std::clamp((output + outputScale.offset) * outputScale.scale, 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
+            .green = std::numeric_limits<uint16_t>::max(),
+            .blue = std::numeric_limits<uint16_t>::max(),
+            .reserved = 0,
+        };
+    }
+    commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), m_components.data(), sizeof(drm_color_lut) * m_components.size()));
+}
+
+void NvTMOLUT::bypass(DrmAtomicCommit *commit)
+{
+    commit->addBlob(*m_prop, nullptr);
+}
 }

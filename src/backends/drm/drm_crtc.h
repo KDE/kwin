@@ -8,8 +8,8 @@
 */
 #pragma once
 
-#include "drm_colorop.h"
 #include "drm_object.h"
+#include "drm_plane.h"
 
 #include <QPoint>
 #include <memory>
@@ -21,12 +21,13 @@ class DrmBackend;
 class DrmFramebuffer;
 class GammaRamp;
 class DrmGpu;
-class DrmPlane;
+class DrmAbstractColorOp;
 
 class DrmCrtc : public DrmObject
 {
 public:
     explicit DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryPlane, DrmPlane *cursorPlane);
+    ~DrmCrtc();
 
     void disable(DrmAtomicCommit *commit) override;
     bool updateProperties() override;
@@ -49,6 +50,12 @@ public:
     DrmProperty ctm;
     DrmProperty degammaLut;
     DrmProperty degammaLutSize;
+
+    // NVidia specific properties
+    DrmProperty nvRegammaDivisor;
+    DrmEnumProperty<NvDrmTransferFunction> nvRegammaTF;
+    DrmProperty nvRegammaLut;
+    DrmProperty nvRegammaLutSize;
 
     DrmAbstractColorOp *postBlendingPipeline = nullptr;
 

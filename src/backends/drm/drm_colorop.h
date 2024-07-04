@@ -8,6 +8,7 @@
 */
 #pragma once
 #include "core/colorpipeline.h"
+#include "drm_plane.h"
 
 #include <drm.h>
 #include <memory>
@@ -78,4 +79,74 @@ private:
     DrmProperty *const m_prop;
 };
 
+class DrmMatrixColorOp3x4 : public DrmAbstractColorOp
+{
+public:
+    explicit DrmMatrixColorOp3x4(DrmAbstractColorOp *next, DrmProperty *prop);
+
+    bool canBeUsedFor(const ColorOp &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmProperty *const m_prop;
+};
+
+class DrmMultiplierColorOp : public DrmAbstractColorOp
+{
+public:
+    explicit DrmMultiplierColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
+
+    bool canBeUsedFor(const ColorOp &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmProperty *const m_prop;
+};
+
+class DrmDivisorColorOp : public DrmAbstractColorOp
+{
+public:
+    explicit DrmDivisorColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
+
+    bool canBeUsedFor(const ColorOp &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmProperty *const m_prop;
+};
+
+class NvPlaneGammaTf : public DrmAbstractColorOp
+{
+public:
+    explicit NvPlaneGammaTf(DrmAbstractColorOp *next, DrmEnumProperty<NvDrmTransferFunction> *prop, bool degamma);
+
+    bool canBeUsedFor(const ColorOp &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmEnumProperty<NvDrmTransferFunction> *const m_prop;
+    const bool m_degamma;
+};
+
+/**
+ * Special LUT that only applies to the first component
+ */
+class NvTMOLUT : public DrmAbstractColorOp
+{
+public:
+    explicit NvTMOLUT(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize);
+
+    bool canBeUsedFor(const ColorOp &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmProperty *const m_prop;
+    const uint32_t m_maxSize;
+    QList<drm_color_lut> m_components;
+};
 }

@@ -9,6 +9,7 @@
 #include "drm_crtc.h"
 #include "drm_backend.h"
 #include "drm_buffer.h"
+#include "drm_colorop.h"
 #include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_output.h"
@@ -27,10 +28,22 @@ DrmCrtc::DrmCrtc(DrmGpu *gpu, uint32_t crtcId, int pipeIndex, DrmPlane *primaryP
     , ctm(this, QByteArrayLiteral("CTM"))
     , degammaLut(this, QByteArrayLiteral("DEGAMMA_LUT"))
     , degammaLutSize(this, QByteArrayLiteral("DEGAMMA_LUT_SIZE"))
+    , nvRegammaDivisor(this, QByteArrayLiteral("NV_CRTC_REGAMMA_DIVISOR"))
+    , nvRegammaTF(this, QByteArrayLiteral("NV_CRTC_REGAMMA_TF"), {
+                                                                     QByteArrayLiteral("Default"),
+                                                                     QByteArrayLiteral("Linear"),
+                                                                     QByteArrayLiteral("PQ (Perceptual Quantizer)"),
+                                                                 })
+    , nvRegammaLut(this, QByteArrayLiteral("NV_CRTC_REGAMMA_LUT"))
+    , nvRegammaLutSize(this, QByteArrayLiteral("NV_CRTC_REGAMMA_LUT_SIZE"))
     , m_crtc(drmModeGetCrtc(gpu->fd(), crtcId))
     , m_pipeIndex(pipeIndex)
     , m_primaryPlane(primaryPlane)
     , m_cursorPlane(cursorPlane)
+{
+}
+
+DrmCrtc::~DrmCrtc()
 {
 }
 
@@ -48,20 +61,40 @@ bool DrmCrtc::updateProperties()
     ctm.update(props);
     degammaLut.update(props);
     degammaLutSize.update(props);
+    nvRegammaDivisor.update(props);
+    nvRegammaTF.update(props);
+    nvRegammaLut.update(props);
+    nvRegammaLutSize.update(props);
 
     if (!postBlendingPipeline) {
         DrmAbstractColorOp *next = nullptr;
-        if (gammaLut.isValid() && gammaLutSize.isValid() && gammaLutSize.value() > 0) {
-            m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &gammaLut, gammaLutSize.value()));
-            next = m_postBlendingColorOps.back().get();
-        }
-        if (ctm.isValid()) {
-            m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
-            next = m_postBlendingColorOps.back().get();
-        }
-        if (degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
-            m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &degammaLut, degammaLutSize.value()));
-            next = m_postBlendingColorOps.back().get();
+        if (nvRegammaDivisor.isValid()) {
+            // use the NVidia specific properties only
+            if (nvRegammaLut.isValid() && nvRegammaLutSize.isValid() && nvRegammaLutSize.value() > 0) {
+                m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &nvRegammaLut, nvRegammaLutSize.value()));
+                next = m_postBlendingColorOps.back().get();
+            }
+            if (nvRegammaTF.isValid()) {
+                m_postBlendingColorOps.push_back(std::make_unique<NvPlaneGammaTf>(next, &nvRegammaTF, false));
+                next = m_postBlendingColorOps.back().get();
+            }
+            if (nvRegammaDivisor.isValid()) {
+                m_postBlendingColorOps.push_back(std::make_unique<DrmDivisorColorOp>(next, &nvRegammaDivisor));
+                next = m_postBlendingColorOps.back().get();
+            }
+        } else {
+            if (gammaLut.isValid() && gammaLutSize.isValid() && gammaLutSize.value() > 0) {
+                m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &gammaLut, gammaLutSize.value()));
+                next = m_postBlendingColorOps.back().get();
+            }
+            if (ctm.isValid()) {
+                m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
+                next = m_postBlendingColorOps.back().get();
+            }
+            if (degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
+                m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &degammaLut, degammaLutSize.value()));
+                next = m_postBlendingColorOps.back().get();
+            }
         }
         postBlendingPipeline = next;
     }

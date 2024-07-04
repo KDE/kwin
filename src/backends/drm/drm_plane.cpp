@@ -12,6 +12,7 @@
 #include "config-kwin.h"
 
 #include "drm_buffer.h"
+#include "drm_colorop.h"
 #include "drm_commit.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
@@ -66,6 +67,24 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
     , vmHotspotX(this, QByteArrayLiteral("HOTSPOT_X"))
     , vmHotspotY(this, QByteArrayLiteral("HOTSPOT_Y"))
     , inFenceFd(this, QByteArrayLiteral("IN_FENCE_FD"))
+    , nvDegammaTF(this, QByteArrayLiteral("NV_PLANE_DEGAMMA_TF"), {
+                                                                      QByteArrayLiteral("Default"),
+                                                                      QByteArrayLiteral("Linear"),
+                                                                      QByteArrayLiteral("PQ (Perceptual Quantizer)"),
+                                                                  })
+    , nvDegammaLut(this, QByteArrayLiteral("NV_PLANE_DEGAMMA_LUT"))
+    , nvDegammaSize(this, QByteArrayLiteral("NV_PLANE_DEGAMMA_LUT_SIZE"))
+    , nvDegammaMultiplier(this, QByteArrayLiteral("NV_PLANE_DEGAMMA_MULTIPLIER"))
+    , nvCSC0CTM(this, QByteArrayLiteral("NV_PLANE_LMS_CTM"))
+    , nvCSC1CTM(this, QByteArrayLiteral("NV_PLANE_LMS_TO_ITP_CTM"))
+    , nvTMOLut(this, QByteArrayLiteral("NV_PLANE_TMO_LUT"))
+    , nvTMOLutSize(this, QByteArrayLiteral("NV_PLANE_TMO_LUT_SIZE"))
+    , nvCSC2CTM(this, QByteArrayLiteral("NV_PLANE_ITP_TO_LMS_CTM"))
+    , nvCSC3CTM(this, QByteArrayLiteral("NV_PLANE_BLEND_CTM"))
+{
+}
+
+DrmPlane::~DrmPlane()
 {
 }
 
@@ -98,6 +117,19 @@ bool DrmPlane::updateProperties()
     vmHotspotY.update(props);
     inFenceFd.update(props);
 
+    nvDegammaTF.update(props);
+    nvDegammaLut.update(props);
+    nvDegammaSize.update(props);
+    nvDegammaMultiplier.update(props);
+
+    nvCSC0CTM.update(props);
+    // fixed lut: linear -> PQ in between here
+    nvCSC1CTM.update(props);
+    nvTMOLut.update(props);
+    nvTMOLutSize.update(props);
+    nvCSC2CTM.update(props);
+    nvCSC3CTM.update(props);
+
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
         qCWarning(KWIN_DRM) << "Failed to update the basic plane properties";
@@ -105,6 +137,44 @@ bool DrmPlane::updateProperties()
     }
 
     m_possibleCrtcs = p->possible_crtcs;
+
+    if (!colorPipeline) {
+        DrmAbstractColorOp *next = nullptr;
+        if (nvCSC3CTM.isValid()) {
+            m_colorOps.push_back(std::make_unique<DrmMatrixColorOp3x4>(next, &nvCSC3CTM));
+            next = m_colorOps.back().get();
+        }
+        // FIXME fixed lut: PQ -> linear in between here
+        // if (nvCSC2CTM.isValid()) {
+        //     m_colorOps.push_back(std::make_unique<DrmMatrixColorOp3x4>(next, &nvCSC2CTM));
+        //     next = m_colorOps.back().get();
+        // }
+        // if (nvTMOLut.isValid() && nvTMOLutSize.isValid() && nvTMOLutSize.value() > 0) {
+        //     m_colorOps.push_back(std::make_unique<NvTMOLUT>(next, &nvTMOLut, nvTMOLutSize.value()));
+        //     next = m_colorOps.back().get();
+        // }
+        // if (nvCSC1CTM.isValid()) {
+        //     m_colorOps.push_back(std::make_unique<DrmMatrixColorOp3x4>(next, &nvCSC1CTM));
+        //     next = m_colorOps.back().get();
+        // }
+        // FIXME fixed lut: linear -> PQ in between here
+        if (nvCSC0CTM.isValid()) {
+            m_colorOps.push_back(std::make_unique<DrmMatrixColorOp3x4>(next, &nvCSC0CTM));
+            next = m_colorOps.back().get();
+        }
+        if (nvDegammaMultiplier.isValid()) {
+            m_colorOps.push_back(std::make_unique<DrmMultiplierColorOp>(next, &nvDegammaMultiplier));
+            next = m_colorOps.back().get();
+        }
+        if (nvDegammaLut.isValid() && nvDegammaSize.isValid() && nvDegammaSize.value() > 0) {
+            m_colorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &nvDegammaLut, nvDegammaSize.value()));
+            next = m_colorOps.back().get();
+        }
+        if (nvDegammaTF.isValid()) {
+            m_colorOps.push_back(std::make_unique<NvPlaneGammaTf>(next, &nvDegammaTF, true));
+            next = m_colorOps.back().get();
+        }
+    }
 
     // read formats from blob if available and if modifiers are supported, and from the plane object if not
     m_supportedFormats.clear();

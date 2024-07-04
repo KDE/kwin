@@ -23,12 +23,20 @@ namespace KWin
 
 class DrmFramebuffer;
 class DrmCrtc;
+class DrmAbstractColorOp;
+
+enum class NvDrmTransferFunction {
+    Default,
+    Linear,
+    PQ,
+};
 
 class DrmPlane : public DrmObject
 {
     Q_GADGET
 public:
-    DrmPlane(DrmGpu *gpu, uint32_t planeId);
+    explicit DrmPlane(DrmGpu *gpu, uint32_t planeId);
+    ~DrmPlane();
 
     bool updateProperties() override;
     void disable(DrmAtomicCommit *commit) override;
@@ -95,11 +103,26 @@ public:
     DrmProperty vmHotspotY;
     DrmProperty inFenceFd;
 
+    // NVidia specific properties
+    DrmEnumProperty<NvDrmTransferFunction> nvDegammaTF;
+    DrmProperty nvDegammaLut;
+    DrmProperty nvDegammaSize;
+    DrmProperty nvDegammaMultiplier;
+    DrmProperty nvCSC0CTM;
+    DrmProperty nvCSC1CTM;
+    DrmProperty nvTMOLut;
+    DrmProperty nvTMOLutSize;
+    DrmProperty nvCSC2CTM;
+    DrmProperty nvCSC3CTM;
+
+    DrmAbstractColorOp *colorPipeline = nullptr;
+
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
 
     QHash<uint32_t, QList<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;
+    std::vector<std::unique_ptr<DrmAbstractColorOp>> m_colorOps;
 };
 
 }
