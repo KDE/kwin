@@ -720,13 +720,15 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
         return;
     }
     m_cursor.visible = true;
-    const auto position = m_source->mapFromGlobal(cursor->pos()) * m_cursor.scale;
+
+    const qreal scale = m_source->devicePixelRatio();
+    const auto position = m_source->mapFromGlobal(cursor->pos()) * scale;
 
     spaMetaCursor->id = 1;
     spaMetaCursor->position.x = position.x();
     spaMetaCursor->position.y = position.y();
-    spaMetaCursor->hotspot.x = cursor->hotspot().x() * m_cursor.scale;
-    spaMetaCursor->hotspot.y = cursor->hotspot().y() * m_cursor.scale;
+    spaMetaCursor->hotspot.x = cursor->hotspot().x() * scale;
+    spaMetaCursor->hotspot.y = cursor->hotspot().y() * scale;
     spaMetaCursor->bitmap_offset = 0;
 
     if (!m_cursor.invalid) {
@@ -736,7 +738,7 @@ void ScreenCastStream::addCursorMetadata(spa_buffer *spaBuffer, Cursor *cursor)
     m_cursor.invalid = false;
     spaMetaCursor->bitmap_offset = sizeof(struct spa_meta_cursor);
 
-    const QSize targetSize = (cursor->rect().size() * m_cursor.scale).toSize();
+    const QSize targetSize = (cursor->rect().size() * scale).toSize();
 
     struct spa_meta_bitmap *spaMetaBitmap = SPA_MEMBER(spaMetaCursor,
                                                        spaMetaCursor->bitmap_offset,
@@ -771,12 +773,11 @@ QRegion ScreenCastStream::addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cu
         return damage;
     }
 
-    const QRectF cursorRect = scaledRect(m_source->mapFromGlobal(cursor->geometry()), m_cursor.scale);
+    const QRectF cursorRect = scaledRect(m_source->mapFromGlobal(cursor->geometry()), m_source->devicePixelRatio());
     if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
         QPainter painter(memfd->view.image());
-        const auto position = m_source->mapFromGlobal(cursor->pos() - cursor->hotspot()) * m_cursor.scale;
         const PlatformCursorImage cursorImage = kwinApp()->cursorImage();
-        painter.drawImage(QRect{position.toPoint(), cursorImage.image().size()}, cursorImage.image());
+        painter.drawImage(cursorRect, cursorImage.image());
     } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
         if (m_cursor.invalid) {
             m_cursor.invalid = false;
@@ -816,10 +817,9 @@ QRegion ScreenCastStream::addCursorEmbedded(ScreenCastBuffer *buffer, Cursor *cu
     return damage;
 }
 
-void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale)
+void ScreenCastStream::setCursorMode(ScreencastV1Interface::CursorMode mode)
 {
     m_cursor.mode = mode;
-    m_cursor.scale = scale;
 }
 
 std::optional<ScreenCastDmaBufTextureParams> ScreenCastStream::testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers)

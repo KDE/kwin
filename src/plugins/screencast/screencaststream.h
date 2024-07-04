@@ -68,7 +68,7 @@ public:
 
     void scheduleRecord(const QRegion &damage, Contents contents = Content::Video);
 
-    void setCursorMode(ScreencastV1Interface::CursorMode mode, qreal scale);
+    void setCursorMode(ScreencastV1Interface::CursorMode mode);
 
 public Q_SLOTS:
     void invalidateCursor();
@@ -121,7 +121,6 @@ private:
     {
         ScreencastV1Interface::CursorMode mode = ScreencastV1Interface::Hidden;
         const QSize bitmapSize = QSize(256, 256);
-        qreal scale = 1;
         QRectF lastRect;
         std::unique_ptr<GLTexture> texture;
         bool visible = false;

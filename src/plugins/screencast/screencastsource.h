@@ -27,6 +27,7 @@ public:
     virtual uint refreshRate() const = 0;
     virtual quint32 drmFormat() const = 0;
     virtual QSize textureSize() const = 0;
+    virtual qreal devicePixelRatio() const = 0;
 
     virtual void render(GLFramebuffer *target) = 0;
     virtual void render(QImage *target) = 0;

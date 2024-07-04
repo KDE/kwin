@@ -47,6 +47,11 @@ QSize OutputScreenCastSource::textureSize() const
     return m_output->pixelSize();
 }
 
+qreal OutputScreenCastSource::devicePixelRatio() const
+{
+    return m_output->scale();
+}
+
 void OutputScreenCastSource::render(QImage *target)
 {
     const auto [outputTexture, colorDescription] = Compositor::self()->scene()->textureForOutput(m_output);

@@ -39,6 +39,7 @@ public:
 
     quint32 drmFormat() const override;
     QSize textureSize() const override;
+    qreal devicePixelRatio() const override;
     uint refreshRate() const override;
 
     void render(GLFramebuffer *target) override;

@@ -61,6 +61,11 @@ QSize RegionScreenCastSource::textureSize() const
     return m_region.size() * m_scale;
 }
 
+qreal RegionScreenCastSource::devicePixelRatio() const
+{
+    return m_scale;
+}
+
 quint32 RegionScreenCastSource::drmFormat() const
 {
     return DRM_FORMAT_ARGB8888;
