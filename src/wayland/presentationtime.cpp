@@ -14,7 +14,7 @@ namespace KWin
 
 PresentationTime::PresentationTime(Display *display, QObject *parent)
     : QObject(parent)
-    , QtWaylandServer::wp_presentation(*display, 1)
+    , QtWaylandServer::wp_presentation(*display, 2)
 {
 }
 
@@ -78,7 +78,13 @@ void PresentationTimeFeedback::presented(std::chrono::nanoseconds refreshCycleDu
     wl_resource *resource;
     wl_resource *tmp;
     wl_resource_for_each_safe (resource, tmp, &resources) {
-        wp_presentation_feedback_send_presented(resource, tvSecHi, tvSecLo, tvNsec, refreshDuration, 0, 0, flags);
+        uint32_t realFlags = flags;
+        uint32_t realRefreshDuration = refreshDuration;
+        if (wl_resource_get_version(resource) >= 2 && (mode == PresentationMode::AdaptiveSync || mode == PresentationMode::AdaptiveAsync)) {
+            // TODO it might be better to send an estimation for the current refresh rate instead?
+            realRefreshDuration = refreshCycleDuration.count();
+        }
+        wp_presentation_feedback_send_presented(resource, tvSecHi, tvSecLo, tvNsec, realRefreshDuration, 0, 0, realFlags);
         wl_resource_destroy(resource);
     }
 }
