@@ -499,13 +499,12 @@ void Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPl
 
 void Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
-    Q_ASSERT(area.isValid());
-
+    const auto screenArea = workspace()->clientArea(PlacementArea, c, Cursors::self()->mouse()->pos());
     QRectF geom = c->frameGeometry();
     geom.moveCenter(Cursors::self()->mouse()->pos());
     c->move(geom.topLeft().toPoint());
-    c->moveResize(c->keepInArea(c->moveResizeGeometry(), area)); // make sure it's kept inside workarea
-    cascadeIfCovering(c, area);
+    c->moveResize(c->keepInArea(c->moveResizeGeometry(), screenArea));
+    cascadeIfCovering(c, screenArea);
 }
 
 void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy nextPlacement)
