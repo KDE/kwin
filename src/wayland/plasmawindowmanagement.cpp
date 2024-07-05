@@ -506,7 +506,11 @@ void PlasmaWindowInterfacePrivate::org_kde_plasma_window_get_icon(Resource *reso
 {
     QThreadPool::globalInstance()->start([fd, icon = m_icon]() {
         QFile file;
-        file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle);
+        if (!file.open(fd, QIODevice::WriteOnly, QFileDevice::AutoCloseHandle)) {
+            close(fd);
+            qCWarning(KWIN_CORE) << Q_FUNC_INFO << "failed to open file:" << file.errorString();
+            return;
+        }
         QDataStream ds(&file);
         ds << icon;
         file.close();
