@@ -481,9 +481,9 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
     // TODO this doesn't allow using only a CTM for night light offloading
     // maybe relax correctness in that case and apply night light in non-linear space?
     ColorPipeline pipeline{ValueRange{}};
-    pipeline.addTransferFunction(m_state.colorDescription.transferFunction(), m_state.colorDescription.referenceLuminance());
+    pipeline.addTransferFunction(m_state.colorDescription.transferFunction());
     pipeline.addMultiplier(rgb);
-    pipeline.addInverseTransferFunction(m_state.colorDescription.transferFunction(), m_state.colorDescription.referenceLuminance());
+    pipeline.addInverseTransferFunction(m_state.colorDescription.transferFunction());
     m_pipeline->setCrtcColorPipeline(pipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();

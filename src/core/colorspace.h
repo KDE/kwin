@@ -94,21 +94,32 @@ public:
         sRGB = 0,
         linear = 1,
         PerceptualQuantizer = 2,
-        scRGB = 3,
-        gamma22 = 4,
+        gamma22 = 3,
     };
-
     TransferFunction(Type tf);
+    explicit TransferFunction(Type tf, double minLuminance, double maxLuminance);
 
     auto operator<=>(const TransferFunction &) const = default;
 
     bool isRelative() const;
-    double encodedToNits(double encoded, double referenceLuminance) const;
-    double nitsToEncoded(double nits, double referenceLuminance) const;
-    QVector3D encodedToNits(const QVector3D &encoded, double referenceLuminance) const;
-    QVector3D nitsToEncoded(const QVector3D &nits, double referenceLuminance) const;
+    double encodedToNits(double encoded) const;
+    double nitsToEncoded(double nits) const;
+    QVector3D encodedToNits(const QVector3D &encoded) const;
+    QVector3D nitsToEncoded(const QVector3D &nits) const;
 
     Type type;
+    /**
+     * the luminance at encoded value zero
+     */
+    double minLuminance;
+    /**
+     * the luminance at encoded value 1
+     */
+    double maxLuminance;
+
+    static double defaultMinLuminanceFor(Type type);
+    static double defaultMaxLuminanceFor(Type type);
+    static double defaultReferenceLuminanceFor(Type type);
 };
 
 /**

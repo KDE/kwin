@@ -90,6 +90,8 @@ public:
 
     enum class Vec2Uniform {
         Offset,
+        SourceTransferFunctionParams,
+        DestinationTransferFunctionParams,
         Vec2UniformCount
     };
 

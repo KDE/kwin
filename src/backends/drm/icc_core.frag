@@ -29,8 +29,6 @@ uniform sampler3D Csampler;
 uniform int Asize;
 uniform sampler2D Asampler;
 
-uniform float referenceLuminance;
-
 vec3 sample1DLut(in vec3 srcColor, in sampler2D lut, in int lutSize) {
     float lutOffset = 0.5 / float(lutSize);
     float lutScale = 1.0 - lutOffset * 2.0;
@@ -43,10 +41,7 @@ vec3 sample1DLut(in vec3 srcColor, in sampler2D lut, in int lutSize) {
 void main()
 {
     vec4 tex = texture(src, texcoord0);
-    tex = encodingToNits(tex, sourceNamedTransferFunction,referenceLuminance);
-    tex.rgb /= max(tex.a, 0.001);
-    tex.rgb /= referenceLuminance;
-    tex.rgb = (toXYZD50 * vec4(tex.rgb, 1.0)).rgb;
+    tex = sourceEncodingToNitsInDestinationColorspace(tex) / destinationReferenceLuminance;
     if (Bsize > 0) {
         tex.rgb = sample1DLut(tex.rgb, Bsampler, Bsize);
     }

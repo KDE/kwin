@@ -43,8 +43,6 @@ private:
     struct Locations
     {
         int src;
-        int sourceNamedTransferFunction;
-        int referenceLuminance;
         int toXYZD50;
         int bsize;
         int bsampler;

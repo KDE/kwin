@@ -145,9 +145,9 @@ void LegacyLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp>
         QVector3D output(scaledInput, scaledInput, scaledInput);
         for (const auto &op : operations) {
             if (auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
-                output = tf->tf.encodedToNits(output, tf->referenceLuminance);
+                output = tf->tf.encodedToNits(output);
             } else if (auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
-                output = tf->tf.nitsToEncoded(output, tf->referenceLuminance);
+                output = tf->tf.nitsToEncoded(output);
             } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
                 output *= mult->factors;
             } else {
