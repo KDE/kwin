@@ -144,6 +144,12 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool defaultMapToWorkspace READ defaultMapToWorkspace CONSTANT)
     Q_PROPERTY(bool mapToWorkspace READ isMapToWorkspace WRITE setMapToWorkspace NOTIFY mapToWorkspaceChanged)
 
+    Q_PROPERTY(bool supportsPressureRange READ supportsPressureRange NOTIFY supportsPressureRangeChanged)
+    Q_PROPERTY(double pressureRangeMin READ pressureRangeMin WRITE setPressureRangeMin NOTIFY pressureRangeMinChanged)
+    Q_PROPERTY(double pressureRangeMax READ pressureRangeMax WRITE setPressureRangeMax NOTIFY pressureRangeMaxChanged)
+    Q_PROPERTY(double defaultPressureRangeMin READ defaultPressureRangeMin CONSTANT)
+    Q_PROPERTY(double defaultPressureRangeMax READ defaultPressureRangeMax CONSTANT)
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
@@ -645,6 +651,15 @@ public:
 
     void setMapToWorkspace(bool mapToWorkspace);
 
+    bool supportsPressureRange() const;
+    void setSupportsPressureRange(bool supported);
+    double pressureRangeMin() const;
+    void setPressureRangeMin(double value);
+    double pressureRangeMax() const;
+    void setPressureRangeMax(double value);
+    double defaultPressureRangeMin() const;
+    double defaultPressureRangeMax() const;
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -671,6 +686,9 @@ Q_SIGNALS:
     void clickMethodChanged();
     void outputAreaChanged();
     void mapToWorkspaceChanged();
+    void supportsPressureRangeChanged();
+    void pressureRangeMinChanged();
+    void pressureRangeMaxChanged();
 
 private:
     template<typename T>
@@ -759,6 +777,12 @@ private:
     LEDs m_leds;
     QRectF m_outputArea = QRectF(0, 0, 1, 1);
     bool m_mapToWorkspace = false;
+
+    bool m_supportsPressureRange;
+    double m_pressureRangeMin;
+    double m_pressureRangeMax;
+    double m_defaultPressureRangeMin;
+    double m_defaultPressureRangeMax;
 };
 
 }

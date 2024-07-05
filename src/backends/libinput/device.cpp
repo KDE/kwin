@@ -99,7 +99,9 @@ enum class ConfigKey {
     Calibration,
     OutputName,
     OutputArea,
-    MapToWorkspace
+    MapToWorkspace,
+    PressureRangeMin,
+    PressureRangeMax
 };
 
 struct ConfigDataBase
@@ -208,6 +210,8 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::OutputName, std::make_shared<ConfigData<QString>>(QByteArrayLiteral("OutputName"), &Device::setOutputName, &Device::defaultOutputName)},
     {ConfigKey::OutputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("OutputArea"), &Device::setOutputArea, &Device::defaultOutputArea)},
     {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
+    {ConfigKey::PressureRangeMin, std::make_shared<ConfigData<double>>(QByteArrayLiteral("PressureRangeMin"), &Device::setPressureRangeMin, &Device::defaultPressureRangeMin)},
+    {ConfigKey::PressureRangeMax, std::make_shared<ConfigData<double>>(QByteArrayLiteral("PressureRangeMax"), &Device::setPressureRangeMax, &Device::defaultPressureRangeMax)},
 };
 
 namespace
@@ -327,6 +331,11 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
     , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
     , m_clickMethod(libinput_device_config_click_get_method(m_device))
+    , m_supportsPressureRange(false)
+    , m_pressureRangeMin(0.0)
+    , m_pressureRangeMax(1.0)
+    , m_defaultPressureRangeMin(0.0)
+    , m_defaultPressureRangeMax(1.0)
 {
     libinput_device_ref(m_device);
     libinput_device_set_user_data(m_device, this);
@@ -721,6 +730,57 @@ void Device::setMapToWorkspace(bool mapToWorkspace)
         writeEntry(ConfigKey::MapToWorkspace, m_mapToWorkspace);
         Q_EMIT mapToWorkspaceChanged();
     }
+}
+
+bool Device::supportsPressureRange() const
+{
+    return m_supportsPressureRange;
+}
+
+void Device::setSupportsPressureRange(const bool supported)
+{
+    if (m_supportsPressureRange != supported) {
+        m_supportsPressureRange = supported;
+        Q_EMIT supportsPressureRangeChanged();
+    }
+}
+
+double Device::pressureRangeMin() const
+{
+    return m_pressureRangeMin;
+}
+
+void Device::setPressureRangeMin(const double value)
+{
+    if (m_pressureRangeMin != value) {
+        m_pressureRangeMin = value;
+        writeEntry(ConfigKey::PressureRangeMin, m_pressureRangeMin);
+        Q_EMIT pressureRangeMinChanged();
+    }
+}
+
+double Device::pressureRangeMax() const
+{
+    return m_pressureRangeMax;
+}
+
+void Device::setPressureRangeMax(const double value)
+{
+    if (m_pressureRangeMax != value) {
+        m_pressureRangeMax = value;
+        writeEntry(ConfigKey::PressureRangeMax, m_pressureRangeMax);
+        Q_EMIT pressureRangeMaxChanged();
+    }
+}
+
+double Device::defaultPressureRangeMin() const
+{
+    return m_defaultPressureRangeMin;
+}
+
+double Device::defaultPressureRangeMax() const
+{
+    return m_defaultPressureRangeMax;
 }
 }
 }
