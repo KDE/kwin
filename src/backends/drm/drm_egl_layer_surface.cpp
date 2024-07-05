@@ -185,16 +185,12 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         if (m_surface->iccShader) {
             m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, m_surface->channelFactors);
         } else {
+            binder.shader()->setColorspaceUniforms(m_surface->intermediaryColorDescription, m_surface->targetColorDescription);
             QMatrix4x4 ctm;
             ctm(0, 0) = m_surface->channelFactors.x();
             ctm(1, 1) = m_surface->channelFactors.y();
             ctm(2, 2) = m_surface->channelFactors.z();
             binder.shader()->setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, ctm);
-            binder.shader()->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, m_surface->intermediaryColorDescription.transferFunction().type);
-            binder.shader()->setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, m_surface->targetColorDescription.transferFunction().type);
-            binder.shader()->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, m_surface->intermediaryColorDescription.referenceLuminance());
-            binder.shader()->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, m_surface->intermediaryColorDescription.referenceLuminance());
-            binder.shader()->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, m_surface->intermediaryColorDescription.maxHdrLuminance().value_or(800));
         }
         QMatrix4x4 mat;
         mat.scale(1, -1);

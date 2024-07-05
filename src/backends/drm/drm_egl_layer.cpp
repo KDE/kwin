@@ -100,11 +100,11 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (m_pipeline->output()->needsColormanagement()) {
         // with color management enabled, the factors have to be applied in linear space
         // the pipeline will optimize out the unnecessary transformations
-        pipeline.addTransferFunction(m_pipeline->colorDescription().transferFunction(), m_pipeline->colorDescription().referenceLuminance());
+        pipeline.addTransferFunction(m_pipeline->colorDescription().transferFunction());
     }
     pipeline.addMultiplier(m_pipeline->output()->effectiveChannelFactors());
     if (m_pipeline->output()->needsColormanagement()) {
-        pipeline.addInverseTransferFunction(m_pipeline->colorDescription().transferFunction(), m_pipeline->colorDescription().referenceLuminance());
+        pipeline.addInverseTransferFunction(m_pipeline->colorDescription().transferFunction());
     }
     m_colorPipeline = pipeline;
     // kernel documentation says that

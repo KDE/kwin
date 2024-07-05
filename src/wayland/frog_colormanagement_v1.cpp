@@ -59,8 +59,6 @@ static QtWaylandServer::frog_color_managed_surface::transfer_function kwinToFrog
         return QtWaylandServer::frog_color_managed_surface::transfer_function_gamma_22;
     case TransferFunction::PerceptualQuantizer:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_st2084_pq;
-    case TransferFunction::scRGB:
-        return QtWaylandServer::frog_color_managed_surface::transfer_function_scrgb_linear;
     case TransferFunction::linear:
         return QtWaylandServer::frog_color_managed_surface::transfer_function_scrgb_linear;
     }
@@ -97,7 +95,7 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_transfer
         m_transferFunction = TransferFunction::PerceptualQuantizer;
         break;
     case transfer_function_scrgb_linear:
-        m_transferFunction = TransferFunction::scRGB;
+        m_transferFunction = TransferFunction(TransferFunction::linear, 0.0, 80.0);
         break;
     }
     updateColorDescription();

@@ -458,7 +458,7 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
         return false;
     }
     ColorPipeline pipeline{ValueRange{}};
-    const auto inOutputSpace = m_state.colorDescription.transferFunction().nitsToEncoded(rgb, 1);
+    const auto inOutputSpace = TransferFunction(m_state.colorDescription.transferFunction().type, 0, 1).nitsToEncoded(rgb);
     pipeline.addMultiplier(inOutputSpace);
     m_pipeline->setCrtcColorPipeline(pipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {

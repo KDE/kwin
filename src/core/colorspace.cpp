@@ -198,7 +198,7 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction::gamma22, 100, 0, 100, 100);
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction::gamma22, TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
     : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
@@ -267,105 +267,135 @@ std::optional<double> ColorDescription::maxHdrLuminance() const
     return m_maxHdrLuminance;
 }
 
-static float srgbToLinear(float sRGB)
-{
-    if (sRGB < 0.04045) {
-        return std::max(sRGB / 12.92, 0.0);
-    } else {
-        return std::clamp(std::pow((sRGB + 0.055) / 1.055, 12.0 / 5.0), 0.0, 1.0);
-    }
-}
-
-static float linearToSRGB(float linear)
-{
-    if (linear < 0.0031308) {
-        return std::max(linear / 12.92, 0.0);
-    } else {
-        return std::clamp(std::pow(linear, 5.0 / 12.0) * 1.055 - 0.055, 0.0, 1.0);
-    }
-}
-
-static float nitsToPQ(float nits)
-{
-    const float normalized = std::clamp(nits / 10000.0f, 0.0f, 1.0f);
-    const float c1 = 0.8359375;
-    const float c2 = 18.8515625;
-    const float c3 = 18.6875;
-    const float m1 = 0.1593017578125;
-    const float m2 = 78.84375;
-    const float powed = std::pow(normalized, m1);
-    const float num = c1 + c2 * powed;
-    const float denum = 1 + c3 * powed;
-    return std::pow(num / denum, m2);
-}
-
-static float pqToNits(float pq)
-{
-    const float c1 = 0.8359375;
-    const float c2 = 18.8515625;
-    const float c3 = 18.6875;
-    const float m1_inv = 1.0 / 0.1593017578125;
-    const float m2_inv = 1.0 / 78.84375;
-    const float powed = std::pow(pq, m2_inv);
-    const float num = std::max(powed - c1, 0.0f);
-    const float den = c2 - c3 * powed;
-    return 10000.0f * std::pow(num / den, m1_inv);
-}
-
 QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
 {
-    rgb = m_transferFunction.encodedToNits(rgb, m_referenceLuminance);
+    rgb = m_transferFunction.encodedToNits(rgb);
+    rgb *= dst.referenceLuminance() / m_referenceLuminance;
     rgb = m_containerColorimetry.toOther(dst.containerColorimetry()) * rgb;
-    return dst.transferFunction().nitsToEncoded(rgb, dst.referenceLuminance());
+    return dst.transferFunction().nitsToEncoded(rgb);
+}
+
+double TransferFunction::defaultMinLuminanceFor(Type type)
+{
+    switch (type) {
+    case Type::sRGB:
+    case Type::gamma22:
+        return 0.01;
+    case Type::linear:
+        return 0;
+    case Type::PerceptualQuantizer:
+        return 0.005;
+    }
+    Q_UNREACHABLE();
+}
+
+double TransferFunction::defaultMaxLuminanceFor(Type type)
+{
+    switch (type) {
+    case Type::sRGB:
+    case Type::gamma22:
+        return 100;
+    case Type::linear:
+        return 1;
+    case Type::PerceptualQuantizer:
+        return 10'000;
+    }
+    Q_UNREACHABLE();
+}
+
+double TransferFunction::defaultReferenceLuminanceFor(Type type)
+{
+    switch (type) {
+    case Type::PerceptualQuantizer:
+        return 203;
+    case Type::linear:
+        return 80;
+    case Type::sRGB:
+    case Type::gamma22:
+        return 100;
+    }
+    Q_UNREACHABLE();
 }
 
 TransferFunction::TransferFunction(Type tf)
+    : TransferFunction(tf, defaultMinLuminanceFor(tf), defaultMaxLuminanceFor(tf))
+{
+}
+
+TransferFunction::TransferFunction(Type tf, double minLuminance, double maxLuminance)
     : type(tf)
+    , minLuminance(minLuminance)
+    , maxLuminance(maxLuminance)
 {
 }
 
-double TransferFunction::encodedToNits(double encoded, double referenceLuminance) const
+double TransferFunction::encodedToNits(double encoded) const
 {
     switch (type) {
-    case TransferFunction::sRGB:
-        return referenceLuminance * srgbToLinear(encoded);
+    case TransferFunction::sRGB: {
+        if (encoded < 0.04045) {
+            return std::max(encoded / 12.92, 0.0) * (maxLuminance - minLuminance) + minLuminance;
+        } else {
+            return std::clamp(std::pow((encoded + 0.055) / 1.055, 12.0 / 5.0), 0.0, 1.0) * (maxLuminance - minLuminance) + minLuminance;
+        }
+    }
     case TransferFunction::gamma22:
-        return referenceLuminance * std::pow(encoded, 2.2);
+        return std::pow(encoded, 2.2) * (maxLuminance - minLuminance) + minLuminance;
     case TransferFunction::linear:
-        return encoded;
-    case TransferFunction::scRGB:
-        return encoded * 80.0f;
-    case TransferFunction::PerceptualQuantizer:
-        return pqToNits(encoded);
+        return encoded * (maxLuminance - minLuminance) + minLuminance;
+    case TransferFunction::PerceptualQuantizer: {
+        const double c1 = 0.8359375;
+        const double c2 = 18.8515625;
+        const double c3 = 18.6875;
+        const double m1_inv = 1.0 / 0.1593017578125;
+        const double m2_inv = 1.0 / 78.84375;
+        const double powed = std::pow(encoded, m2_inv);
+        const double num = std::max(powed - c1, 0.0);
+        const double den = c2 - c3 * powed;
+        return std::pow(num / den, m1_inv) * (maxLuminance - minLuminance) + minLuminance;
+    }
     }
     Q_UNREACHABLE();
 }
 
-QVector3D TransferFunction::encodedToNits(const QVector3D &encoded, double referenceLuminance) const
+QVector3D TransferFunction::encodedToNits(const QVector3D &encoded) const
 {
-    return QVector3D(encodedToNits(encoded.x(), referenceLuminance), encodedToNits(encoded.y(), referenceLuminance), encodedToNits(encoded.z(), referenceLuminance));
+    return QVector3D(encodedToNits(encoded.x()), encodedToNits(encoded.y()), encodedToNits(encoded.z()));
 }
 
-double TransferFunction::nitsToEncoded(double nits, double referenceLuminance) const
+double TransferFunction::nitsToEncoded(double nits) const
 {
+    const double normalized = (nits - minLuminance) / (maxLuminance - minLuminance);
     switch (type) {
-    case TransferFunction::sRGB:
-        return linearToSRGB(std::clamp(nits / referenceLuminance, 0.0, 1.0));
+    case TransferFunction::sRGB: {
+        if (normalized < 0.0031308) {
+            return std::max(normalized / 12.92, 0.0);
+        } else {
+            return std::clamp(std::pow(normalized, 5.0 / 12.0) * 1.055 - 0.055, 0.0, 1.0);
+        }
+    }
     case TransferFunction::gamma22:
-        return std::pow(std::clamp(nits / referenceLuminance, 0.0, 1.0), 1.0 / 2.2);
+        return std::pow(std::clamp(normalized, 0.0, 1.0), 1.0 / 2.2);
     case TransferFunction::linear:
-        return nits;
-    case TransferFunction::scRGB:
-        return nits / 80.0f;
-    case TransferFunction::PerceptualQuantizer:
-        return nitsToPQ(nits);
+        return normalized;
+    case TransferFunction::PerceptualQuantizer: {
+        const double c1 = 0.8359375;
+        const double c2 = 18.8515625;
+        const double c3 = 18.6875;
+        const double m1 = 0.1593017578125;
+        const double m2 = 78.84375;
+        const double powed = std::pow(std::clamp(normalized, 0.0, 1.0), m1);
+        const double num = c1 + c2 * powed;
+        const double denum = 1 + c3 * powed;
+        return std::pow(num / denum, m2);
+    }
     }
     Q_UNREACHABLE();
 }
 
-QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits, double referenceLuminance) const
+QVector3D TransferFunction::nitsToEncoded(const QVector3D &nits) const
 {
-    return QVector3D(nitsToEncoded(nits.x(), referenceLuminance), nitsToEncoded(nits.y(), referenceLuminance), nitsToEncoded(nits.z(), referenceLuminance));
+    return QVector3D(nitsToEncoded(nits.x()), nitsToEncoded(nits.y()), nitsToEncoded(nits.z()));
 }
 
 bool TransferFunction::isRelative() const
@@ -376,7 +406,6 @@ bool TransferFunction::isRelative() const
         return true;
     case TransferFunction::linear:
     case TransferFunction::PerceptualQuantizer:
-    case TransferFunction::scRGB:
         return false;
     }
     Q_UNREACHABLE();

@@ -266,8 +266,6 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_LINEAR;
     case TransferFunction::PerceptualQuantizer:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_ST2084_PQ;
-    case TransferFunction::scRGB:
-        return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_LINEAR;
     case TransferFunction::gamma22:
         return xx_color_manager_v2_transfer_function::XX_COLOR_MANAGER_V2_TRANSFER_FUNCTION_GAMMA22;
     }

@@ -45,24 +45,33 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     // first, only check if the pipeline can be programmed in the first place
     // don't calculate LUTs just yet
     std::optional<ColorOp> initialOp;
-    double valueScaling = 1;
-    if (!pipeline.ops.empty() && needsLimitedRange(pipeline.ops.front()) && pipeline.ops.front().input.max > 1) {
-        valueScaling = 1.0 / pipeline.ops.front().input.max;
-        initialOp = ColorOp{
-            .input = pipeline.ops.front().input,
-            .operation = ColorMultiplier{valueScaling},
-            .output = ValueRange{
-                .min = pipeline.ops.front().input.min * valueScaling,
-                .max = 1.0,
-            },
-        };
-        while (currentOp && !currentOp->canBeUsedFor(*initialOp)) {
+    Scaling scaling;
+    if (!pipeline.ops.empty() && needsLimitedRange(pipeline.ops.front())) {
+        const auto firstOp = pipeline.ops.front();
+        if (firstOp.input.min < 0 || firstOp.input.min > 1 || firstOp.input.max > 1 || (firstOp.input.max - firstOp.input.min < 0.5)) {
+            scaling.offset = -pipeline.ops.front().input.min;
+            scaling.scale = 1.0 / (pipeline.ops.front().input.max - pipeline.ops.front().input.min);
+            QMatrix4x4 mat;
+            mat.translate(scaling.offset, scaling.offset, scaling.offset);
+            mat.scale(scaling.scale);
+            initialOp = ColorOp{
+                .input = pipeline.ops.front().input,
+                .operation = ColorMatrix{mat},
+                .output = ValueRange{
+                    .min = 0,
+                    .max = 1.0,
+                },
+            };
+        }
+        if (initialOp) {
+            while (currentOp && !currentOp->canBeUsedFor(*initialOp)) {
+                currentOp = currentOp->next();
+            }
+            if (!currentOp) {
+                return false;
+            }
             currentOp = currentOp->next();
         }
-        if (!currentOp) {
-            return false;
-        }
-        currentOp = currentOp->next();
     }
     for (auto it = pipeline.ops.begin(); it != pipeline.ops.end(); it++) {
         while (currentOp && !currentOp->canBeUsedFor(*it)) {
@@ -82,7 +91,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
             currentOp->bypass(m_cache.get());
             currentOp = currentOp->next();
         }
-        currentOp->program(m_cache.get(), *initialOp, 1, 1);
+        currentOp->program(m_cache.get(), *initialOp, scaling, scaling);
         currentOp = currentOp->next();
     }
     for (auto it = pipeline.ops.begin(); it != pipeline.ops.end(); it++) {
@@ -91,19 +100,23 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
             currentOp = currentOp->next();
         }
         if (it == pipeline.ops.end() - 1) {
-            // this is the last op, we need to un-do the factor
+            // this is the last op, we need to un-do the scaling and translation
             // this assumes that the output is always limited range
-            currentOp->program(m_cache.get(), *it, valueScaling, 1.0);
-            valueScaling = 1.0;
+            currentOp->program(m_cache.get(), *it, scaling, Scaling{});
+            scaling = {};
         } else if (needsLimitedRange(*it) || needsLimitedRange(*(it + 1))) {
             // this op can only output limited range or the next op needs a limited range input,
             // adjust the factor to make it happen
-            currentOp->program(m_cache.get(), *it, valueScaling, 1.0 / it->output.max);
-            valueScaling = 1.0 / it->output.max;
+            Scaling newScaling{
+                .offset = -it->output.min,
+                .scale = 1.0 / (it->output.max - it->output.min),
+            };
+            currentOp->program(m_cache.get(), *it, scaling, newScaling);
+            scaling = newScaling;
         } else {
             // this and the next op are both fine with extended range, set the factor to 1.0 to use all the resolution we can get
-            currentOp->program(m_cache.get(), *it, valueScaling, 1.0);
-            valueScaling = 1.0;
+            currentOp->program(m_cache.get(), *it, scaling, Scaling{});
+            scaling = {};
         }
         currentOp = currentOp->next();
     }
@@ -136,12 +149,13 @@ bool LegacyLutColorOp::canBeUsedFor(const ColorOp &op)
     return false;
 }
 
-void LegacyLutColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, double inputScale, double outputScale)
+void LegacyLutColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, Scaling inputScale, Scaling outputScale)
 {
     if (auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
         for (uint32_t i = 0; i < m_maxSize; i++) {
-            const double nits = tf->tf.encodedToNits(i / double(m_maxSize - 1) / inputScale, tf->referenceLuminance);
-            const uint16_t output = std::round(std::clamp(nits * outputScale, 0.0, 1.0) * std::numeric_limits<uint16_t>::max());
+            const double input = i / double(m_maxSize - 1);
+            const double nits = tf->tf.encodedToNits(input / inputScale.scale - inputScale.offset);
+            const uint16_t output = std::round(std::clamp((nits + outputScale.offset) * outputScale.scale, 0.0, 1.0) * std::numeric_limits<uint16_t>::max());
             m_components[i] = {
                 .red = output,
                 .green = output,
@@ -152,8 +166,9 @@ void LegacyLutColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, doubl
         commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), m_components.data(), sizeof(drm_color_lut) * m_components.size()));
     } else if (auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
         for (uint32_t i = 0; i < m_maxSize; i++) {
-            const double nits = tf->tf.nitsToEncoded(i / double(m_maxSize - 1) / inputScale, tf->referenceLuminance);
-            const uint16_t output = std::round(std::clamp(nits * outputScale, 0.0, 1.0) * std::numeric_limits<uint16_t>::max());
+            const double input = i / double(m_maxSize - 1);
+            const double encoded = tf->tf.nitsToEncoded(input / inputScale.scale - inputScale.offset);
+            const uint16_t output = std::round(std::clamp((encoded + outputScale.offset) * outputScale.scale, 0.0, 1.0) * std::numeric_limits<uint16_t>::max());
             m_components[i] = {
                 .red = output,
                 .green = output,
@@ -164,10 +179,13 @@ void LegacyLutColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, doubl
         commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), m_components.data(), sizeof(drm_color_lut) * m_components.size()));
     } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
         for (uint32_t i = 0; i < m_maxSize; i++) {
+            const double input = i / double(m_maxSize - 1);
+            const double nits = input / inputScale.scale - inputScale.offset;
+            const double output = (nits + outputScale.offset) * outputScale.scale;
             m_components[i] = {
-                .red = uint16_t(std::round(std::clamp(mult->factors.x() * outputScale / inputScale * i / double(m_maxSize - 1), 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
-                .green = uint16_t(std::round(std::clamp(mult->factors.y() * outputScale / inputScale * i / double(m_maxSize - 1), 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
-                .blue = uint16_t(std::round(std::clamp(mult->factors.z() * outputScale / inputScale * i / double(m_maxSize - 1), 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
+                .red = uint16_t(std::round(std::clamp(mult->factors.x() * output, 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
+                .green = uint16_t(std::round(std::clamp(mult->factors.y() * output, 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
+                .blue = uint16_t(std::round(std::clamp(mult->factors.z() * output, 0.0, 1.0) * std::numeric_limits<uint16_t>::max())),
                 .reserved = 0,
             };
         }
@@ -215,11 +233,15 @@ static uint64_t doubleToFixed(double value)
     return ret;
 }
 
-void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, double inputScale, double outputScale)
+void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, Scaling inputScale, Scaling outputScale)
 {
     if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
-        QMatrix4x4 scaled = matrix->mat;
-        scaled.scale(outputScale / inputScale);
+        QMatrix4x4 scaled;
+        scaled.scale(1.0 / inputScale.scale);
+        scaled.translate(-inputScale.offset, -inputScale.offset, -inputScale.offset);
+        scaled *= matrix->mat;
+        scaled.translate(outputScale.offset, outputScale.offset, outputScale.offset);
+        scaled.scale(outputScale.scale);
         drm_color_ctm data = {
             .matrix = {
                 doubleToFixed(scaled(0, 0)), doubleToFixed(scaled(0, 1)), doubleToFixed(scaled(0, 2)), //
@@ -230,7 +252,10 @@ void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, const ColorOp &op, do
         commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), &data, sizeof(data)));
     } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
         QVector3D scaled = mult->factors;
-        scaled *= outputScale / inputScale;
+        scaled /= inputScale.scale;
+        scaled -= QVector3D(-inputScale.offset, -inputScale.offset, -inputScale.offset);
+        scaled *= outputScale.scale;
+        scaled += QVector3D(outputScale.offset, outputScale.offset, outputScale.offset);
         drm_color_ctm data = {
             .matrix = {
                 doubleToFixed(scaled.x()), doubleToFixed(0), doubleToFixed(0), //

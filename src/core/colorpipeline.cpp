@@ -15,17 +15,17 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
     ColorPipeline ret(ValueRange{
-        .min = from.transferFunction().nitsToEncoded(range1.min, from.referenceLuminance()),
-        .max = from.transferFunction().nitsToEncoded(range1.max, from.referenceLuminance()),
+        .min = from.transferFunction().nitsToEncoded(range1.min),
+        .max = from.transferFunction().nitsToEncoded(range1.max),
     });
-    ret.addTransferFunction(from.transferFunction(), from.referenceLuminance());
+    ret.addTransferFunction(from.transferFunction());
     ret.addMultiplier(to.referenceLuminance() / from.referenceLuminance());
 
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
     ret.addMatrix(from.containerColorimetry().toOther(to.containerColorimetry()), ret.currentOutputRange());
 
-    ret.addInverseTransferFunction(to.transferFunction(), to.referenceLuminance());
+    ret.addInverseTransferFunction(to.transferFunction());
     return ret;
 }
 
@@ -77,11 +77,13 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
             return;
         } else if (factors.x() == factors.y() && factors.y() == factors.z()) {
             if (const auto tf = std::get_if<ColorTransferFunction>(lastOp); tf && tf->tf.isRelative()) {
-                tf->referenceLuminance *= factors.x();
+                tf->tf.minLuminance *= factors.x();
+                tf->tf.maxLuminance *= factors.x();
                 ops.back().output = output;
                 return;
             } else if (const auto tf = std::get_if<InverseColorTransferFunction>(lastOp); tf && tf->tf.isRelative()) {
-                tf->referenceLuminance /= factors.x();
+                tf->tf.minLuminance /= factors.x();
+                tf->tf.maxLuminance /= factors.x();
                 ops.back().output = output;
                 return;
             }
@@ -94,59 +96,71 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
     });
 }
 
-void ColorPipeline::addTransferFunction(TransferFunction tf, double referenceLuminance)
+void ColorPipeline::addTransferFunction(TransferFunction tf)
 {
-    if (tf == TransferFunction::linear) {
-        return;
-    }
     if (!ops.empty()) {
         if (const auto otherTf = std::get_if<InverseColorTransferFunction>(&ops.back().operation)) {
             if (otherTf->tf == tf) {
-                const double reference = otherTf->referenceLuminance;
                 ops.erase(ops.end() - 1);
-                addMultiplier(referenceLuminance / reference);
+                return;
+            } else if (otherTf->tf.type == tf.type && otherTf->tf.minLuminance == 0 && tf.minLuminance == 0) {
+                const auto other = otherTf->tf;
+                ops.erase(ops.end() - 1);
+                addMultiplier(tf.maxLuminance / other.maxLuminance);
                 return;
             }
         }
     }
-    if (tf == TransferFunction::scRGB) {
-        addMultiplier(80.0);
+    if (tf == TransferFunction::linear) {
+        QMatrix4x4 mat;
+        mat.translate(-tf.minLuminance, -tf.minLuminance, -tf.minLuminance);
+        mat.scale(1.0 / (tf.maxLuminance - tf.minLuminance));
+        addMatrix(mat, ValueRange{
+                           .min = (mat * QVector3D(currentOutputRange().min, 0, 0)).x(),
+                           .max = (mat * QVector3D(currentOutputRange().max, 0, 0)).x(),
+                       });
     } else {
         ops.push_back(ColorOp{
             .input = currentOutputRange(),
-            .operation = ColorTransferFunction(tf, referenceLuminance),
+            .operation = ColorTransferFunction(tf),
             .output = ValueRange{
-                .min = tf.encodedToNits(currentOutputRange().min, referenceLuminance),
-                .max = tf.encodedToNits(currentOutputRange().max, referenceLuminance),
+                .min = tf.encodedToNits(currentOutputRange().min),
+                .max = tf.encodedToNits(currentOutputRange().max),
             },
         });
     }
 }
 
-void ColorPipeline::addInverseTransferFunction(TransferFunction tf, double referenceLuminance)
+void ColorPipeline::addInverseTransferFunction(TransferFunction tf)
 {
-    if (tf == TransferFunction::linear) {
-        return;
-    }
     if (!ops.empty()) {
         if (const auto otherTf = std::get_if<ColorTransferFunction>(&ops.back().operation)) {
             if (otherTf->tf == tf) {
-                const double reference = otherTf->referenceLuminance;
                 ops.erase(ops.end() - 1);
-                addMultiplier(reference / referenceLuminance);
+                return;
+            } else if (otherTf->tf.type == tf.type && otherTf->tf.minLuminance == 0 && tf.minLuminance == 0) {
+                const auto other = otherTf->tf;
+                ops.erase(ops.end() - 1);
+                addMultiplier(other.maxLuminance / tf.maxLuminance);
                 return;
             }
         }
     }
-    if (tf == TransferFunction::scRGB) {
-        addMultiplier(1.0 / 80.0);
+    if (tf == TransferFunction::linear) {
+        QMatrix4x4 mat;
+        mat.scale(tf.maxLuminance - tf.minLuminance);
+        mat.translate(tf.minLuminance, tf.minLuminance, tf.minLuminance);
+        addMatrix(mat, ValueRange{
+                           .min = (mat * QVector3D(currentOutputRange().min, 0, 0)).x(),
+                           .max = (mat * QVector3D(currentOutputRange().max, 0, 0)).x(),
+                       });
     } else {
         ops.push_back(ColorOp{
             .input = currentOutputRange(),
-            .operation = InverseColorTransferFunction(tf, referenceLuminance),
+            .operation = InverseColorTransferFunction(tf),
             .output = ValueRange{
-                .min = tf.nitsToEncoded(currentOutputRange().min, referenceLuminance),
-                .max = tf.nitsToEncoded(currentOutputRange().max, referenceLuminance),
+                .min = tf.nitsToEncoded(currentOutputRange().min),
+                .max = tf.nitsToEncoded(currentOutputRange().max),
             },
         });
     }
@@ -190,6 +204,15 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
             return;
         }
     }
+    const bool pureScaling = mat(0, 1) == 0 && mat(0, 2) == 0 && mat(0, 3) == 0 //
+        && mat(1, 0) == 0 && mat(1, 2) == 0 && mat(1, 3) == 0 //
+        && mat(2, 0) == 0 && mat(2, 1) == 0 && mat(2, 3) == 0 //
+        && mat(3, 0) == 0 && mat(3, 1) == 0 && mat(3, 2) == 0 && mat(3, 3) == 1;
+    if (pureScaling) {
+        // pure scaling, this can be simplified
+        addMultiplier(QVector3D(mat(0, 0), mat(1, 1), mat(2, 2)));
+        return;
+    }
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
         .operation = ColorMatrix(mat),
@@ -209,9 +232,9 @@ void ColorPipeline::add(const ColorOp &op)
     } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
         addMultiplier(mult->factors);
     } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
-        addTransferFunction(tf->tf, tf->referenceLuminance);
+        addTransferFunction(tf->tf);
     } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
-        addInverseTransferFunction(tf->tf, tf->referenceLuminance);
+        addInverseTransferFunction(tf->tf);
     }
 }
 
@@ -234,23 +257,21 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
         } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
             ret *= mult->factors;
         } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
-            ret = tf->tf.encodedToNits(ret, tf->referenceLuminance);
+            ret = tf->tf.encodedToNits(ret);
         } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
-            ret = tf->tf.nitsToEncoded(ret, tf->referenceLuminance);
+            ret = tf->tf.nitsToEncoded(ret);
         }
     }
     return ret;
 }
 
-ColorTransferFunction::ColorTransferFunction(TransferFunction tf, double referenceLLuminance)
+ColorTransferFunction::ColorTransferFunction(TransferFunction tf)
     : tf(tf)
-    , referenceLuminance(referenceLLuminance)
 {
 }
 
-InverseColorTransferFunction::InverseColorTransferFunction(TransferFunction tf, double referenceLLuminance)
+InverseColorTransferFunction::InverseColorTransferFunction(TransferFunction tf)
     : tf(tf)
-    , referenceLuminance(referenceLLuminance)
 {
 }
 

@@ -22,8 +22,6 @@ IccShader::IccShader()
 {
     m_locations = {
         .src = m_shader->uniformLocation("src"),
-        .sourceNamedTransferFunction = m_shader->uniformLocation("sourceNamedTransferFunction"),
-        .referenceLuminance = m_shader->uniformLocation("referenceLuminance"),
         .toXYZD50 = m_shader->uniformLocation("toXYZD50"),
         .bsize = m_shader->uniformLocation("Bsize"),
         .bsampler = m_shader->uniformLocation("Bsampler"),
@@ -156,8 +154,11 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const Co
     nightColor(1, 1) = channelFactors.y();
     nightColor(2, 2) = channelFactors.z();
     m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50 * nightColor);
-    m_shader->setUniform(m_locations.sourceNamedTransferFunction, inputColor.transferFunction().type);
-    m_shader->setUniform(m_locations.referenceLuminance, inputColor.referenceLuminance());
+    m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor.transferFunction().type);
+    m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor.transferFunction().minLuminance, inputColor.transferFunction().maxLuminance - inputColor.transferFunction().minLuminance));
+    m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor.referenceLuminance());
+    m_shader->setUniform(GLShader::FloatUniform::DestinationReferenceLuminance, inputColor.referenceLuminance());
+    m_shader->setUniform(GLShader::FloatUniform::MaxDestinationLuminance, inputColor.referenceLuminance());
 
     glActiveTexture(GL_TEXTURE1);
     if (m_B) {

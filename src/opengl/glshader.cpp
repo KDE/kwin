@@ -219,6 +219,8 @@ void GLShader::resolveLocations()
     m_matrix4Locations[Mat4Uniform::ColorimetryTransformation] = uniformLocation("colorimetryTransform");
 
     m_vec2Locations[Vec2Uniform::Offset] = uniformLocation("offset");
+    m_vec2Locations[Vec2Uniform::SourceTransferFunctionParams] = uniformLocation("sourceTransferFunctionParams");
+    m_vec2Locations[Vec2Uniform::DestinationTransferFunctionParams] = uniformLocation("destinationTransferFunctionParams");
 
     m_vec3Locations[Vec3Uniform::PrimaryBrightness] = uniformLocation("primaryBrightness");
 
@@ -470,10 +472,12 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
 bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst)
 {
     const auto &srcColorimetry = src.containerColorimetry() == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.containerColorimetry();
-    return setUniform(GLShader::Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry()))
-        && setUniform(GLShader::IntUniform::SourceNamedTransferFunction, src.transferFunction().type)
-        && setUniform(GLShader::IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type)
+    return setUniform(Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry()))
+        && setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type)
+        && setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance))
         && setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance())
+        && setUniform(IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type)
+        && setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance))
         && setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance())
         && setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
 }

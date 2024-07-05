@@ -25,23 +25,21 @@ public:
 class KWIN_EXPORT ColorTransferFunction
 {
 public:
-    explicit ColorTransferFunction(TransferFunction tf, double referenceLuminance);
+    explicit ColorTransferFunction(TransferFunction tf);
 
     bool operator==(const ColorTransferFunction &) const = default;
 
     TransferFunction tf;
-    double referenceLuminance;
 };
 
 class KWIN_EXPORT InverseColorTransferFunction
 {
 public:
-    explicit InverseColorTransferFunction(TransferFunction tf, double referenceLuminance);
+    explicit InverseColorTransferFunction(TransferFunction tf);
 
     bool operator==(const InverseColorTransferFunction &) const = default;
 
     TransferFunction tf;
-    double referenceLuminance;
 };
 
 class KWIN_EXPORT ColorMatrix
@@ -92,8 +90,8 @@ public:
 
     void addMultiplier(double factor);
     void addMultiplier(const QVector3D &factors);
-    void addTransferFunction(TransferFunction tf, double referenceLuminance);
-    void addInverseTransferFunction(TransferFunction tf, double referenceLuminance);
+    void addTransferFunction(TransferFunction tf);
+    void addInverseTransferFunction(TransferFunction tf);
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
     void add(const ColorOp &op);
 
