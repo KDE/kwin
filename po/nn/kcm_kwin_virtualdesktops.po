@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-07-05 00:40+0000\n"
 "PO-Revision-Date: 2024-05-08 19:50+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -64,25 +64,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Legg til skrivebord"
 
-#: ui/main.qml:118
+#: ui/main.qml:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Endra namn"
 
-#: ui/main.qml:130
+#: ui/main.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Stadfest nytt namn"
 
-#: ui/main.qml:139
+#: ui/main.qml:143
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Fjern"
 
-#: ui/main.qml:172
+#: ui/main.qml:176
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -91,37 +91,37 @@ msgstr ""
 "Virtuelle skrivebord er endra utanfrå (utanfor dette "
 "innstillingsprogrammet). Viss du lagrar, vil du overskriva desse endringane."
 
-#: ui/main.qml:188
+#: ui/main.qml:192
 #, kde-format
 msgid "Row %1"
 msgstr "Rad %1"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Options:"
 msgstr "Val:"
 
-#: ui/main.qml:204
+#: ui/main.qml:208
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Navigering går rundt"
 
-#: ui/main.qml:222
+#: ui/main.qml:226
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Vis animasjon ved byte:"
 
-#: ui/main.qml:273
+#: ui/main.qml:277
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Vis skjermmeldingar ved byte:"
 
-#: ui/main.qml:292
+#: ui/main.qml:296
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:316
+#: ui/main.qml:320
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Vis skrivebordoppsett-indikatorar"

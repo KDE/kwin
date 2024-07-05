@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-03 00:40+0000\n"
+"POT-Creation-Date: 2024-07-05 00:40+0000\n"
 "PO-Revision-Date: 2024-07-02 17:42+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -2428,12 +2428,12 @@ msgstr "Non foi posíbel conectar o contexto de PipeWire"
 msgid "Could not find window id %1"
 msgstr "Non foi posíbel atopar o identificador de xanela %1"
 
-#: plugins/screencast/screencastmanager.cpp:87
+#: plugins/screencast/screencastmanager.cpp:81
 #, kde-format
 msgid "Could not find output"
 msgstr "Non foi posíbel atopar a saída"
 
-#: plugins/screencast/screencastmanager.cpp:110
+#: plugins/screencast/screencastmanager.cpp:104
 #, kde-format
 msgid "Invalid region"
 msgstr "Rexión non válida"

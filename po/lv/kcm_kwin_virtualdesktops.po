@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-07-05 00:40+0000\n"
 "PO-Revision-Date: 2024-05-25 14:41+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -70,25 +70,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Pievienot darbvirsmu"
 
-#: ui/main.qml:118
+#: ui/main.qml:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Pārsaukt"
 
-#: ui/main.qml:130
+#: ui/main.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Apstiprināt jauno nosaukumu"
 
-#: ui/main.qml:139
+#: ui/main.qml:143
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Noņemt"
 
-#: ui/main.qml:172
+#: ui/main.qml:176
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -97,37 +97,37 @@ msgstr ""
 "Virtuālās darbvirsmas ir mainītas ārpus šīs programmas iestatījumiem. Šo "
 "iestatījumu saglabāšana pārrakstīs izmaiņas."
 
-#: ui/main.qml:188
+#: ui/main.qml:192
 #, kde-format
 msgid "Row %1"
 msgstr "Rinda %1"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Options:"
 msgstr "Opcijas:"
 
-#: ui/main.qml:204
+#: ui/main.qml:208
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Darbvirsmas navigācija iet uz riņķi"
 
-#: ui/main.qml:222
+#: ui/main.qml:226
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Pārslēdzoties rādīt animāciju:"
 
-#: ui/main.qml:273
+#: ui/main.qml:277
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Pārslēdzoties virs programmām rādīt lodziņu:"
 
-#: ui/main.qml:292
+#: ui/main.qml:296
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:316
+#: ui/main.qml:320
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Rādīt darbvirsmas izkārtojuma indikatorus"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-07-05 00:40+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -61,62 +61,62 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "添加桌面"
 
-#: ui/main.qml:118
+#: ui/main.qml:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "重命名"
 
-#: ui/main.qml:130
+#: ui/main.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "确认新名称"
 
-#: ui/main.qml:139
+#: ui/main.qml:143
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "移除"
 
-#: ui/main.qml:172
+#: ui/main.qml:176
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr "虚拟桌面已在此设置程序外部进行了更改。现在保存将覆盖之前的更改。"
 
-#: ui/main.qml:188
+#: ui/main.qml:192
 #, kde-format
 msgid "Row %1"
 msgstr "行 %1"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Options:"
 msgstr "选项："
 
-#: ui/main.qml:204
+#: ui/main.qml:208
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "循环切换"
 
-#: ui/main.qml:222
+#: ui/main.qml:226
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "切换时显示动画："
 
-#: ui/main.qml:273
+#: ui/main.qml:277
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "切换时显示屏幕提示："
 
-#: ui/main.qml:292
+#: ui/main.qml:296
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 毫秒"
 
-#: ui/main.qml:316
+#: ui/main.qml:320
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "显示桌面布局指示图"

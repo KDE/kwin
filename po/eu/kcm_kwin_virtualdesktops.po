@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-12 00:40+0000\n"
+"POT-Creation-Date: 2024-07-05 00:40+0000\n"
 "PO-Revision-Date: 2024-04-27 21:36+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -69,25 +69,25 @@ msgctxt "@action:button"
 msgid "Add Desktop"
 msgstr "Gehitu mahaigaina"
 
-#: ui/main.qml:118
+#: ui/main.qml:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
 msgstr "Berrizendatu"
 
-#: ui/main.qml:130
+#: ui/main.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
 msgstr "Berretsi izen berria"
 
-#: ui/main.qml:139
+#: ui/main.qml:143
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
 msgstr "Kendu"
 
-#: ui/main.qml:172
+#: ui/main.qml:176
 #, kde-format
 msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
@@ -96,37 +96,37 @@ msgstr ""
 "Alegiazko mahaigainak aldatu egin dira ezarpen aplikazio honetatik kanpo. "
 "Orain gordetzeak aldaketak gainidatziko ditu."
 
-#: ui/main.qml:188
+#: ui/main.qml:192
 #, kde-format
 msgid "Row %1"
 msgstr "%1 errendaka"
 
-#: ui/main.qml:202
+#: ui/main.qml:206
 #, kde-format
 msgid "Options:"
 msgstr "Aukerak:"
 
-#: ui/main.qml:204
+#: ui/main.qml:208
 #, kde-format
 msgid "Navigation wraps around"
 msgstr "Nabigazio zirkularra"
 
-#: ui/main.qml:222
+#: ui/main.qml:226
 #, kde-format
 msgid "Show animation when switching:"
 msgstr "Erakutsi animazioa aldatzean:"
 
-#: ui/main.qml:273
+#: ui/main.qml:277
 #, kde-format
 msgid "Show on-screen display when switching:"
 msgstr "Erakutsi pantailan azalpena aldatzean:"
 
-#: ui/main.qml:292
+#: ui/main.qml:296
 #, kde-format
 msgid "%1 ms"
 msgstr "%1 ms"
 
-#: ui/main.qml:316
+#: ui/main.qml:320
 #, kde-format
 msgid "Show desktop layout indicators"
 msgstr "Erakutsi mahaigain-diseinuaren adierazleak"
