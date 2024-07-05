@@ -67,6 +67,11 @@ public:
         OverlayLayer,
     };
 
+    enum AnchorRect {
+        AnchorFullArea = 0,
+        AnchorWorkArea = 1,
+    };
+
     LayerSurfaceV1Interface(LayerShellV1Interface *shell,
                             SurfaceInterface *surface,
                             OutputInterface *output,
@@ -92,6 +97,11 @@ public:
      * have been specified, the center of the screen is assumed to be the anchor point.
      */
     Qt::Edges anchor() const;
+
+    /**
+     * Returns the anchor rectangle relative to which the surface will be positioned.
+     */
+    AnchorRect anchorRect() const;
 
     /**
      * Returns the desired size for this layer shell surface, in the surface-local coordinates.
@@ -143,8 +153,6 @@ public:
      */
     int exclusiveZone() const;
 
-    bool accomodateExclusiveZones() const;
-
     /**
      * If the exclusive zone is positive, this function returns the corresponding exclusive
      * anchor edge, otherwise returns a Qt::Edge() value.
@@ -183,9 +191,9 @@ Q_SIGNALS:
     void acceptsFocusChanged();
     void layerChanged();
     void anchorChanged();
+    void anchorRectChanged();
     void desiredSizeChanged();
     void exclusiveZoneChanged();
-    void accomodateExclusiveZonesChanged();
     void marginsChanged();
 
 private:

@@ -180,6 +180,9 @@
         wallpaper or lock screen might set their exclusive zone to -1, so that
         they stretch below or over the panel.
 
+        Since version 6, setting the exclusive zone to -1 would generate the
+        'invalid_exclusive_zone' protocol error.
+
         The default value is 0.
 
         Exclusive zone is double-buffered, see wl_surface.commit.
@@ -304,6 +307,7 @@
       <entry name="invalid_anchor" value="2" summary="anchor bitfield is invalid"/>
       <entry name="invalid_exclusive_edge" value="4" summary="exclusive edge is invalid given the surface anchors"/>
       <entry name="invalid_exclusive_zone" value="5" summary="exclusive zone value is invalid"/>
+      <entry name="invalid_anchor_rect" value="6" summary="anchor rect value is invalid"/>
     </enum>
 
     <enum name="anchor" bitfield="true">
@@ -342,12 +346,29 @@
 
     <!-- Version 6 additions -->
 
-    <request name="set_accomodate_exclusive_zones" since="6">
-      <description summary="set whether accomodate exclusive zones of other surfaces">
-        Asks for this surface to not be automatically moved and resized according
-        to exclusive zones claimed by other surfaces.
+    <enum name="anchor_rect">
+      <entry name="full_area" value="0" summary="the full area anchor rect">
+        <description summary="the full area anchor rect">
+          Place the layer_surface_v1 relative to the full output area.
+        </description>
+      </entry>
+      <entry name="work_area" value="1" summary="the work area anchor rect">
+        <description summary="the work area anchor rect">
+          Place the layer_surface_v1 relative to the output area while taking
+          the exclusive zone of other surfaces into account.
+        </description>
+      </entry>
+    </enum>
+
+    <request name="set_anchor_rect" since="6">
+      <description summary="set the anchor rect">
+        Set the anchor rectangle relative to which the anchors are applied.
+
+        By default, the layer_surface_v1 is anchored to the 'work_area'.
+
+        Anchor rect is double-buffered, see wl_surface.commit.
       </description>
-      <arg name="accomodate" type="uint"/>
+      <arg name="rect" type="uint" enum="anchor_rect"/>
     </request>
   </interface>
 </protocol>

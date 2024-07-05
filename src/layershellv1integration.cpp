@@ -77,10 +77,13 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         QRect bounds;
-        if (!shellSurface->accomodateExclusiveZones()) {
+        switch (shellSurface->anchorRect()) {
+        case LayerSurfaceV1Interface::AnchorFullArea:
             bounds = window->desiredOutput()->geometry();
-        } else {
+            break;
+        case LayerSurfaceV1Interface::AnchorWorkArea:
             bounds = *workArea;
+            break;
         }
 
         QRect geometry(QPoint(0, 0), shellSurface->desiredSize());

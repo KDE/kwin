@@ -43,10 +43,10 @@ class LayerSurfaceV1Commit : public SurfaceAttachedState<LayerSurfaceV1Commit>
 public:
     std::optional<LayerSurfaceV1Interface::Layer> layer;
     std::optional<Qt::Edges> anchor;
+    std::optional<LayerSurfaceV1Interface::AnchorRect> anchorRect;
     std::optional<QMargins> margins;
     std::optional<QSize> desiredSize;
     std::optional<int> exclusiveZone;
-    std::optional<bool> accomodateExclusiveZones;
     std::optional<Qt::Edge> exclusiveEdge;
     std::optional<quint32> acknowledgedConfigure;
     std::optional<bool> acceptsFocus;
@@ -57,11 +57,11 @@ struct LayerSurfaceV1State
     QQueue<quint32> serials;
     LayerSurfaceV1Interface::Layer layer = LayerSurfaceV1Interface::BottomLayer;
     Qt::Edges anchor;
+    LayerSurfaceV1Interface::AnchorRect anchorRect = LayerSurfaceV1Interface::AnchorWorkArea;
     QMargins margins;
     QSize desiredSize = QSize(0, 0);
     int exclusiveZone = 0;
     Qt::Edge exclusiveEdge = Qt::Edge();
-    bool accomodateExclusiveZones = true;
     bool acceptsFocus = false;
     bool configured = false;
     bool closed = false;
@@ -88,13 +88,13 @@ protected:
     void zwlr_layer_surface_v1_set_anchor(Resource *resource, uint32_t anchor) override;
     void zwlr_layer_surface_v1_set_exclusive_edge(Resource *resource, uint32_t edge) override;
     void zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone) override;
-    void zwlr_layer_surface_v1_set_accomodate_exclusive_zones(Resource *resource, uint32_t accomodates) override;
     void zwlr_layer_surface_v1_set_margin(Resource *resource, int32_t top, int32_t right, int32_t bottom, int32_t left) override;
     void zwlr_layer_surface_v1_set_keyboard_interactivity(Resource *resource, uint32_t keyboard_interactivity) override;
     void zwlr_layer_surface_v1_get_popup(Resource *resource, struct ::wl_resource *popup) override;
     void zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial) override;
     void zwlr_layer_surface_v1_destroy(Resource *resource) override;
     void zwlr_layer_surface_v1_set_layer(Resource *resource, uint32_t layer) override;
+    void zwlr_layer_surface_v1_set_anchor_rect(Resource *resource, uint32_t rect) override;
 };
 
 LayerShellV1InterfacePrivate::LayerShellV1InterfacePrivate(LayerShellV1Interface *q, Display *display)
@@ -227,16 +227,11 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_edge(Re
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_exclusive_zone(Resource *resource, int32_t zone)
 {
-    if (resource->version() >= ZWLR_LAYER_SURFACE_V1_SET_ACCOMODATE_EXCLUSIVE_ZONES_SINCE_VERSION && zone < 0) {
+    if (resource->version() >= ZWLR_LAYER_SURFACE_V1_SET_ANCHOR_RECT_SINCE_VERSION && zone < 0) {
         wl_resource_post_error(resource->handle, error_invalid_exclusive_zone, "Invalid exclusive zone: %d", zone);
     } else {
         pending->exclusiveZone = zone;
     }
-}
-
-void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_accomodate_exclusive_zones(Resource *, uint32_t accomodates)
-{
-    pending.accomodateExclusiveZones = bool(accomodates);
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_margin(Resource *, int32_t top, int32_t right, int32_t bottom, int32_t left)
@@ -291,6 +286,15 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_layer(Resource *r
         return;
     }
     pending->layer = LayerSurfaceV1Interface::Layer(layer);
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_anchor_rect(Resource *resource, uint32_t rect)
+{
+    if (Q_UNLIKELY(rect > LayerSurfaceV1Interface::AnchorWorkArea)) {
+        wl_resource_post_error(resource->handle, error_invalid_anchor_rect, "invalid anchor rect %d", rect);
+        return;
+    }
+    pending.anchorRect = LayerSurfaceV1Interface::AnchorRect(rect);
 }
 
 void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
@@ -374,8 +378,15 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (commit->exclusiveEdge.has_value()) {
         state.exclusiveEdge = commit->exclusiveEdge.value();
     }
-    if (commit->accomodateExclusiveZones.has_value()) {
-        state.accomodateExclusiveZones = commit->accomodateExclusiveZones.value();
+
+    if (resource()->version() < ZWLR_LAYER_SURFACE_V1_SET_ANCHOR_RECT_SINCE_VERSION) {
+        if (state.exclusiveZone == -1) {
+            state.anchorRect = LayerSurfaceV1Interface::AnchorFullArea;
+        } else {
+            state.anchorRect = LayerSurfaceV1Interface::AnchorWorkArea;
+        }
+    } else if (commit->anchorRect.has_value()) {
+        state.anchorRect = commit->anchorRect.value();
     }
 
     if (commit->acceptsFocus.has_value()) {
@@ -397,8 +408,8 @@ void LayerSurfaceV1InterfacePrivate::apply(LayerSurfaceV1Commit *commit)
     if (previous.exclusiveZone != state.exclusiveZone) {
         Q_EMIT q->exclusiveZoneChanged();
     }
-    if (previous.accomodateExclusiveZones != state.accomodateExclusiveZones) {
-        Q_EMIT q->accomodateExclusiveZonesChanged();
+    if (previous.anchorRect != state.anchorRect) {
+        Q_EMIT q->anchorRectChanged();
     }
     if (previous.margins != state.margins) {
         Q_EMIT q->marginsChanged();
@@ -447,6 +458,11 @@ Qt::Edges LayerSurfaceV1Interface::anchor() const
     return d->state.anchor;
 }
 
+LayerSurfaceV1Interface::AnchorRect LayerSurfaceV1Interface::anchorRect() const
+{
+    return d->state.anchorRect;
+}
+
 QSize LayerSurfaceV1Interface::desiredSize() const
 {
     return d->state.desiredSize;
@@ -490,11 +506,6 @@ int LayerSurfaceV1Interface::bottomMargin() const
 int LayerSurfaceV1Interface::exclusiveZone() const
 {
     return d->state.exclusiveZone;
-}
-
-bool LayerSurfaceV1Interface::accomodateExclusiveZones() const
-{
-    return d->state.accomodateExclusiveZones || d->state.exclusiveZone == -1;
 }
 
 Qt::Edge LayerSurfaceV1Interface::exclusiveEdge() const
