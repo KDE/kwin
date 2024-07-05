@@ -11,7 +11,6 @@ kcoreaddons_add_plugin(screenshot SOURCES ${screenshot_SOURCES} INSTALL_NAMESPAC
 target_link_libraries(screenshot PRIVATE
     kwin
 
-    KF6::Service
     KF6::I18n
 
     Qt::DBus

@@ -12,7 +12,6 @@
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"
-#include "utils/serviceutils.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -145,8 +144,6 @@ static const QString s_dbusServiceName = QStringLiteral("org.kde.KWin.ScreenShot
 static const QString s_dbusInterface = QStringLiteral("org.kde.KWin.ScreenShot2");
 static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/ScreenShot2");
 
-static const QString s_errorNotAuthorized = QStringLiteral("org.kde.KWin.ScreenShot2.Error.NoAuthorized");
-static const QString s_errorNotAuthorizedMessage = QStringLiteral("The process is not authorized to take a screenshot");
 static const QString s_errorCancelled = QStringLiteral("org.kde.KWin.ScreenShot2.Error.Cancelled");
 static const QString s_errorCancelledMessage = QStringLiteral("Screenshot got cancelled");
 static const QString s_errorInvalidWindow = QStringLiteral("org.kde.KWin.ScreenShot2.Error.InvalidWindow");
@@ -242,30 +239,9 @@ std::optional<pid_t> ScreenShotDBusInterface2::determineCallerPid() const
     }
 }
 
-bool ScreenShotDBusInterface2::checkPermissions(std::optional<pid_t> pid) const
-{
-    static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_SCREENSHOT_NO_PERMISSION_CHECKS") == 1;
-    if (permissionCheckDisabled) {
-        return true;
-    }
-    if (!pid.has_value()) {
-        return false;
-    }
-    const auto interfaces = KWin::fetchRestrictedDBusInterfacesFromPid(*pid);
-    if (!interfaces.contains(s_dbusInterface)) {
-        sendErrorReply(s_errorNotAuthorized, s_errorNotAuthorizedMessage);
-        return false;
-    }
-    return true;
-}
-
 QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &options,
                                                           QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions(determineCallerPid())) {
-        return QVariantMap();
-    }
-
     Window *window = workspace()->activeWindow();
     if (!window) {
         sendErrorReply(s_errorNoActiveWindow, s_errorNoActiveWindowMessage);
@@ -289,10 +265,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
                                                     const QVariantMap &options,
                                                     QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions(determineCallerPid())) {
-        return QVariantMap();
-    }
-
     Window *window = workspace()->findWindow(QUuid(handle));
     if (!window) {
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
@@ -317,9 +289,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
                                                   QDBusUnixFileDescriptor pipe)
 {
     const auto pid = determineCallerPid();
-    if (!checkPermissions(pid)) {
-        return QVariantMap();
-    }
 
     const Rect area(x, y, width, height);
     if (area.isEmpty()) {
@@ -345,9 +314,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
                                                     QDBusUnixFileDescriptor pipe)
 {
     const auto pid = determineCallerPid();
-    if (!checkPermissions(pid)) {
-        return QVariantMap();
-    }
 
     LogicalOutput *screen = workspace()->findOutput(name);
     if (!screen) {
@@ -372,9 +338,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
                                                           QDBusUnixFileDescriptor pipe)
 {
     const auto pid = determineCallerPid();
-    if (!checkPermissions(pid)) {
-        return QVariantMap();
-    }
 
     LogicalOutput *screen = workspace()->activeOutput();
     if (!screen) {
@@ -452,9 +415,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
 QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &options, QDBusUnixFileDescriptor pipe)
 {
     const auto pid = determineCallerPid();
-    if (!checkPermissions(pid)) {
-        return QVariantMap();
-    }
 
     const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
