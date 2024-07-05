@@ -484,6 +484,11 @@ void Connection::processEvents()
 #endif
                 const qreal pressure = event->device()->pressureCurve().valueForProgress(tte->pressure());
 
+                if (libinput_tablet_tool_config_pressure_range_is_available(tte->tool())) {
+                    tte->device()->setSupportsPressureRange(true);
+                    libinput_tablet_tool_config_pressure_range_set(tte->tool(), tte->device()->pressureRangeMin(), tte->device()->pressureRangeMax());
+                }
+
                 Q_EMIT event->device()->tabletToolEvent(tabletEventType,
                                                         globalPos, pressure,
                                                         tte->xTilt(), tte->yTilt(), tte->rotation(), tte->distance(),
