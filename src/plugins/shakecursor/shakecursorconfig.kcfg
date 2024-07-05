@@ -9,7 +9,7 @@
             <default>1000</default>
         </entry>
         <entry name="Sensitivity" type="Double">
-            <default>4</default>
+            <default>3</default>
         </entry>
         <entry name="Magnification" type="Double">
             <default>3</default>
