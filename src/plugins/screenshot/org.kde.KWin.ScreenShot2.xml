@@ -27,10 +27,7 @@
             @options: Optional vardict with screenshot options
             @pipe: The pipe file descriptor where the screenshot will be written
 
-            Take a screenshot of the specified window. The application that
-            requests the screenshot must have the org.kde.KWin.ScreenShot2
-            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop
-            file entry.
+            Take a screenshot of the specified window.
 
             Available @options include:
 
@@ -75,10 +72,7 @@
             @options: Optional vardict with screenshot options
             @pipe: The pipe file descriptor where the screenshot will be written
 
-            Take a screenshot of the active window. The application that
-            requests the screenshot must have the org.kde.KWin.ScreenShot2
-            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop
-            file entry.
+            Take a screenshot of the active window.
 
             Supported since version 2.
 
@@ -128,10 +122,7 @@
             @options: Optional vardict with screenshot options
             @pipe: The pipe file descriptor where the screenshot will be written
 
-            Take a screenshot of the specified rectangular area. The application
-            that requests the screenshot must have the org.kde.KWin.ScreenShot2
-            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
-            entry.
+            Take a screenshot of the specified rectangular area.
 
             Available @options include:
 
@@ -174,10 +165,7 @@
             @options: Optional vardict with screenshot options
             @pipe: The pipe file descriptor where the screenshot will be written
 
-            Take a screenshot of the specified monitor. The application that
-            requests the screenshot must have the org.kde.KWin.ScreenShot2
-            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
-            entry.
+            Take a screenshot of the specified monitor.
 
             Available @options include:
 
@@ -218,10 +206,7 @@
             @options: Optional vardict with screenshot options
             @pipe: The pipe file descriptor where the screenshot will be written
 
-            Take a screenshot of the active monitor. The application that
-            requests the screenshot must have the org.kde.KWin.ScreenShot2
-            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
-            entry.
+            Take a screenshot of the active monitor.
 
             Supported since version 2.
 
@@ -317,10 +302,7 @@
             @options: Optional vardict with screenshot options
             @pipe: The pipe file descriptor where the screenshot will be written
 
-            Take a screenshot of the workspace, i.e. all screens united. The
-            application that requests the screenshot must have the org.kde.KWin.ScreenShot2
-            interface listed in the X-KDE-DBUS-Restricted-Interfaces desktop file
-            entry.
+            Take a screenshot of the workspace, i.e. all screens united.
 
             Supported since version 3.
 

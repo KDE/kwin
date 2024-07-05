@@ -12,7 +12,6 @@
 #include "screenshot2adaptor.h"
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"
-#include "utils/serviceutils.h"
 
 #include <KLocalizedString>
 
@@ -131,8 +130,6 @@ static const QString s_dbusServiceName = QStringLiteral("org.kde.KWin.ScreenShot
 static const QString s_dbusInterface = QStringLiteral("org.kde.KWin.ScreenShot2");
 static const QString s_dbusObjectPath = QStringLiteral("/org/kde/KWin/ScreenShot2");
 
-static const QString s_errorNotAuthorized = QStringLiteral("org.kde.KWin.ScreenShot2.Error.NoAuthorized");
-static const QString s_errorNotAuthorizedMessage = QStringLiteral("The process is not authorized to take a screenshot");
 static const QString s_errorCancelled = QStringLiteral("org.kde.KWin.ScreenShot2.Error.Cancelled");
 static const QString s_errorCancelledMessage = QStringLiteral("Screenshot got cancelled");
 static const QString s_errorInvalidWindow = QStringLiteral("org.kde.KWin.ScreenShot2.Error.InvalidWindow");
@@ -328,39 +325,9 @@ int ScreenShotDBusInterface2::version() const
     return 4;
 }
 
-bool ScreenShotDBusInterface2::checkPermissions() const
-{
-    if (!calledFromDBus()) {
-        return false;
-    }
-
-    static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_SCREENSHOT_NO_PERMISSION_CHECKS") == 1;
-    if (permissionCheckDisabled) {
-        return true;
-    }
-
-    const QDBusReply<uint> reply = connection().interface()->servicePid(message().service());
-    if (reply.isValid()) {
-        const uint pid = reply.value();
-        const auto interfaces = KWin::fetchRestrictedDBusInterfacesFromPid(pid);
-        if (!interfaces.contains(s_dbusInterface)) {
-            sendErrorReply(s_errorNotAuthorized, s_errorNotAuthorizedMessage);
-            return false;
-        }
-    } else {
-        return false;
-    }
-
-    return true;
-}
-
 QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &options,
                                                           QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
-        return QVariantMap();
-    }
-
     EffectWindow *window = effects->activeWindow();
     if (!window) {
         sendErrorReply(s_errorInvalidWindow, s_errorInvalidWindowMessage);
@@ -384,10 +351,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
                                                     const QVariantMap &options,
                                                     QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
-        return QVariantMap();
-    }
-
     EffectWindow *window = effects->findWindow(QUuid(handle));
     if (!window) {
         bool ok;
@@ -420,10 +383,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
                                                   const QVariantMap &options,
                                                   QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
-        return QVariantMap();
-    }
-
     const QRect area(x, y, width, height);
     if (area.isEmpty()) {
         sendErrorReply(s_errorInvalidArea, s_errorInvalidAreaMessage);
@@ -447,10 +406,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
                                                     const QVariantMap &options,
                                                     QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
-        return QVariantMap();
-    }
-
     Output *screen = effects->findScreen(name);
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
@@ -473,10 +428,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
 QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &options,
                                                           QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
-        return QVariantMap();
-    }
-
     Output *screen = effects->activeScreen();
     if (!screen) {
         sendErrorReply(s_errorInvalidScreen, s_errorInvalidScreenMessage);
@@ -551,10 +502,6 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
 
 QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &options, QDBusUnixFileDescriptor pipe)
 {
-    if (!checkPermissions()) {
-        return QVariantMap();
-    }
-
     const int fileDescriptor = fcntl(pipe.fileDescriptor(), F_DUPFD_CLOEXEC, 0);
     if (fileDescriptor == -1) {
         sendErrorReply(s_errorFileDescriptor, s_errorFileDescriptorMessage);

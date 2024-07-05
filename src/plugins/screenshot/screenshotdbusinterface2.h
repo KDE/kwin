@@ -24,9 +24,6 @@ class ScreenShotSource2;
 /**
  * The ScreenshotDBusInterface2 class provides a d-bus api to take screenshots. This implements
  * the org.kde.KWin.ScreenShot2 interface.
- *
- * An application that requests a screenshot must have "org.kde.KWin.ScreenShot2" listed in its
- * X-KDE-DBUS-Restricted-Interfaces desktop file field.
  */
 class ScreenShotDBusInterface2 : public QObject, public QDBusContext
 {
@@ -62,7 +59,6 @@ private:
     void takeScreenShot(EffectWindow *window, ScreenShotFlags flags, ScreenShotSinkPipe2 *sink);
 
     void bind(ScreenShotSinkPipe2 *sink, ScreenShotSource2 *source);
-    bool checkPermissions() const;
 
     ScreenShotEffect *m_effect;
 };
