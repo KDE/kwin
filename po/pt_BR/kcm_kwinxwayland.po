@@ -3,29 +3,24 @@
 #
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2023.
 # SPDX-FileCopyrightText: 2023 Geraldo Simiao <geraldosimiao@fedoraproject.org>
+# SPDX-FileCopyrightText: 2024 Igor Moreira Padua <igormoreiraa@vivaldi.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2023-10-20 00:38-0300\n"
-"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"PO-Revision-Date: 2024-07-04 11:45-0300\n"
+"Last-Translator: Igor Moreira Padua <igormoreiraa@vivaldi.net>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #: ui/main.qml:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "Legacy X11 apps require the ability to read keystrokes typed in other "
-#| "apps for features that are activated using global keyboard shortcuts. "
-#| "This is disabled by default for security reasons. If you need to use such "
-#| "apps, you can choose your preferred balance of security and functionality "
-#| "here."
+#, kde-format
 msgid ""
 "Some legacy X11 apps require the ability to read keystrokes typed in other "
 "apps for certain features, such as handling global keyboard shortcuts. This "
@@ -34,11 +29,13 @@ msgid ""
 "need to use such apps, you can choose your preferred balance of security and "
 "functionality here."
 msgstr ""
-"Aplicativos X11 legados requerem a capacidade de ler as teclas digitadas em "
-"outros aplicativos para recursos que são ativados usando atalhos de teclado "
-"globais. Isso é desativado por padrão por motivos de segurança. Se você "
-"precisa usar esses aplicativos, pode escolher o seu equilíbrio preferido "
-"entre segurança e funcionalidade aqui."
+"Algumas aplicativos X11 legados requerem a capacidade de ler as teclas "
+"digitadas em outros aplicativos para certos recursos, como a manipulação de "
+"atalhos de teclado globais. Isto é permitido por padrão. No entanto, outros "
+"recursos podem exigir a capacidade de ler todos as teclas, e isso é "
+"desativado por padrão por motivos de segurança. Se você precisa usar esses "
+"aplicativos, pode escolher o seu equilíbrio preferido entre segurança e "
+"funcionalidade aqui."
 
 #: ui/main.qml:48
 #, kde-format
@@ -53,19 +50,17 @@ msgid "Never"
 msgstr "Nunca"
 
 #: ui/main.qml:55
-#, fuzzy, kde-format
-#| msgid "Only Meta, Control, Alt, and Shift keys"
+#, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Apenas teclas Meta, Control, Alt e Shift."
 
 #: ui/main.qml:61
-#, fuzzy, kde-format
-#| msgid "All keys, but only while Meta, Ctrl, Alt, or Shift keys are pressed"
+#, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr ""
-"Todas as teclas, mas apenas enquanto as teclas Meta, Ctrl, Alt ou Shift "
-"estiverem pressionadas."
+"Como acima, mais qualquer tecla digitada enquanto as teclas Ctrl, Alt ou  "
+"Meta estiverem pressionadas."
 
 #: ui/main.qml:68
 #, kde-format
@@ -75,7 +70,7 @@ msgstr "Sempre"
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "Incluir também os botões do mouse"
 
 #: ui/main.qml:89
 #, kde-format
