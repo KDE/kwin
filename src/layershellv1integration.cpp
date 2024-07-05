@@ -63,24 +63,6 @@ void LayerShellV1Integration::destroyWindow(LayerSurfaceV1Interface *shellSurfac
     }
 }
 
-static void adjustWorkArea(const LayerSurfaceV1Interface *shellSurface, QRect *workArea)
-{
-    switch (shellSurface->exclusiveEdge()) {
-    case Qt::LeftEdge:
-        workArea->adjust(shellSurface->leftMargin() + shellSurface->exclusiveZone(), 0, 0, 0);
-        break;
-    case Qt::RightEdge:
-        workArea->adjust(0, 0, -shellSurface->rightMargin() - shellSurface->exclusiveZone(), 0);
-        break;
-    case Qt::TopEdge:
-        workArea->adjust(0, shellSurface->topMargin() + shellSurface->exclusiveZone(), 0, 0);
-        break;
-    case Qt::BottomEdge:
-        workArea->adjust(0, 0, 0, -shellSurface->bottomMargin() - shellSurface->exclusiveZone());
-        break;
-    }
-}
-
 static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *workArea,
                            LayerSurfaceV1Interface::Layer layer, bool exclusive)
 {
@@ -157,7 +139,40 @@ static void rearrangeLayer(const QList<LayerShellV1Window *> &windows, QRect *wo
         }
 
         if (exclusive && shellSurface->exclusiveZone() > 0) {
-            adjustWorkArea(shellSurface, workArea);
+            switch (shellSurface->exclusiveEdge()) {
+            case Qt::LeftEdge: {
+                const int exclusiveLeft = bounds.x() + shellSurface->leftMargin() + shellSurface->exclusiveZone();
+                const int workAreaLeft = workArea->left();
+                if (workAreaLeft < exclusiveLeft) {
+                    workArea->adjust(exclusiveLeft - workAreaLeft, 0, 0, 0);
+                }
+                break;
+            }
+            case Qt::RightEdge: {
+                const int exclusiveRight = bounds.x() + bounds.width() - shellSurface->rightMargin() - shellSurface->exclusiveZone();
+                const int workAreaRight = workArea->x() + workArea->width();
+                if (exclusiveRight < workAreaRight) {
+                    workArea->adjust(0, 0, exclusiveRight - workAreaRight, 0);
+                }
+                break;
+            }
+            case Qt::TopEdge: {
+                const int exclusiveTop = bounds.y() + shellSurface->topMargin() + shellSurface->exclusiveZone();
+                const int workAreaTop = workArea->y();
+                if (workAreaTop < exclusiveTop) {
+                    workArea->adjust(0, exclusiveTop - workAreaTop, 0, 0);
+                }
+                break;
+            }
+            case Qt::BottomEdge: {
+                const int exclusiveBottom = bounds.y() + bounds.height() - shellSurface->bottomMargin() - shellSurface->exclusiveZone();
+                const int workAreaBottom = workArea->y() + workArea->height();
+                if (exclusiveBottom < workAreaBottom) {
+                    workArea->adjust(0, 0, 0, exclusiveBottom - workAreaBottom);
+                }
+                break;
+            }
+            }
         }
     }
 }
