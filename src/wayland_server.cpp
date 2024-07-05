@@ -22,7 +22,6 @@
 #include "main.h"
 #include "options.h"
 #include "utils/kernel.h"
-#include "utils/serviceutils.h"
 #include "virtualdesktops.h"
 #include "wayland/alphamodifier_v1.h"
 #include "wayland/appmenu.h"
@@ -118,21 +117,14 @@ public:
     {
     }
 
-    QStringList fetchRequestedInterfaces(ClientConnection *client) const
-    {
-        if (!client->securityContextAppId().isEmpty()) {
-            return KWin::fetchRequestedInterfacesForDesktopId(client->securityContextAppId());
-        }
-        return KWin::fetchRequestedInterfaces(client->executablePath());
-    }
-
-    const QSet<QByteArray> interfacesBlackList = {
+    const QSet<QByteArray> restrictedInterfaces = {
         QByteArrayLiteral("org_kde_plasma_window_management"),
         QByteArrayLiteral("org_kde_kwin_fake_input"),
         QByteArrayLiteral("org_kde_kwin_keystate"),
         QByteArrayLiteral("zkde_screencast_unstable_v1"),
         QByteArrayLiteral("org_kde_plasma_activation_feedback"),
         QByteArrayLiteral("kde_lockscreen_overlay_v1"),
+        QByteArrayLiteral("wp_security_context_manager_v1"),
     };
 
     const QSet<QByteArray> inputmethodInterfaces = {"zwp_input_panel_v1", "zwp_input_method_v1"};
@@ -141,18 +133,8 @@ public:
         QByteArrayLiteral("xwayland_shell_v1"),
     };
 
-    QSet<QString> m_reported;
-
     bool allowInterface(ClientConnection *client, const QByteArray &interfaceName) override
     {
-        if (!client->securityContextAppId().isEmpty() && interfaceName == QByteArrayLiteral("wp_security_context_manager_v1")) {
-            return false;
-        }
-
-        if (client->processId() == getpid()) {
-            return true;
-        }
-
         if (client != waylandServer()->inputMethodConnection() && inputmethodInterfaces.contains(interfaceName)) {
             return false;
         }
@@ -161,34 +143,10 @@ public:
             return false;
         }
 
-        if (!interfacesBlackList.contains(interfaceName)) {
-            return true;
+        if (!client->securityContextAppId().isEmpty()) {
+            return !restrictedInterfaces.contains(interfaceName);
         }
 
-        static bool permissionCheckDisabled = qEnvironmentVariableIntValue("KWIN_WAYLAND_NO_PERMISSION_CHECKS") == 1;
-        if (!permissionCheckDisabled) {
-            if (client->executablePath().isEmpty()) {
-                qCDebug(KWIN_CORE) << "Could not identify process with pid" << client->processId();
-                return false;
-            }
-            auto requestedInterfaces = client->property("requestedInterfaces");
-            if (requestedInterfaces.isNull()) {
-                requestedInterfaces = fetchRequestedInterfaces(client);
-                client->setProperty("requestedInterfaces", requestedInterfaces);
-            }
-            if (!requestedInterfaces.toStringList().contains(QString::fromUtf8(interfaceName))) {
-                if (KWIN_CORE().isDebugEnabled()) {
-                    const QString id = client->executablePath() + QLatin1Char('|') + QString::fromUtf8(interfaceName);
-                    if (!m_reported.contains(id)) {
-                        m_reported.insert(id);
-                        qCDebug(KWIN_CORE) << "Interface" << interfaceName << "not in X-KDE-Wayland-Interfaces of" << client->executablePath();
-                    }
-                }
-                return false;
-            }
-        }
-
-        qCDebug(KWIN_CORE) << "authorized" << client->executablePath() << interfaceName;
         return true;
     }
 };
