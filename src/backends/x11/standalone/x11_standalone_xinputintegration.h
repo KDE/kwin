@@ -17,7 +17,6 @@ namespace KWin
 {
 
 class XInputEventFilter;
-class XKeyPressReleaseEventFilter;
 class X11Cursor;
 
 class XInputIntegration : public QObject
@@ -50,8 +49,6 @@ private:
     ::Display *m_x11Display;
 
     std::unique_ptr<XInputEventFilter> m_xiEventFilter;
-    std::unique_ptr<XKeyPressReleaseEventFilter> m_keyPressFilter;
-    std::unique_ptr<XKeyPressReleaseEventFilter> m_keyReleaseFilter;
 };
 
 }

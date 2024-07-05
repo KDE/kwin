@@ -10,16 +10,13 @@
 #include "core/outputbackend.h"
 #include "ge_event_mem_mover.h"
 #include "gestures.h"
-#include "keyboard_input.h"
 #include "main.h"
-#include "pointer_input.h"
 #include "screenedge.h"
 #include "x11_standalone_cursor.h"
 #include "x11_standalone_logging.h"
 
 #include "effect/globals.h"
 #include "effect/xcb.h"
-#include "input.h"
 #include "workspace.h"
 #include "x11eventfilter.h"
 
@@ -49,60 +46,6 @@ public:
     {
         GeEventMemMover ge(event);
         switch (ge->event_type) {
-        case XI_RawKeyPress: {
-            auto re = reinterpret_cast<xXIRawEvent *>(event);
-            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyPressed, std::chrono::milliseconds(re->time));
-            break;
-        }
-        case XI_RawKeyRelease: {
-            auto re = reinterpret_cast<xXIRawEvent *>(event);
-            input()->keyboard()->processKey(re->detail - 8, InputRedirection::KeyboardKeyReleased, std::chrono::milliseconds(re->time));
-            break;
-        }
-        case XI_RawButtonPress: {
-            auto e = reinterpret_cast<xXIRawEvent *>(event);
-            switch (e->detail) {
-            // TODO: this currently ignores left handed settings, for current usage not needed
-            // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
-            case XCB_BUTTON_INDEX_1:
-                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_2:
-                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_3:
-                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonPressed, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_4:
-            case XCB_BUTTON_INDEX_5:
-                // vertical axis, ignore on press
-                break;
-                // TODO: further buttons, horizontal scrolling?
-            }
-        } break;
-        case XI_RawButtonRelease: {
-            auto e = reinterpret_cast<xXIRawEvent *>(event);
-            switch (e->detail) {
-            // TODO: this currently ignores left handed settings, for current usage not needed
-            // if we want to use also for global mouse shortcuts, this needs to reflect state correctly
-            case XCB_BUTTON_INDEX_1:
-                input()->pointer()->processButton(BTN_LEFT, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_2:
-                input()->pointer()->processButton(BTN_MIDDLE, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_3:
-                input()->pointer()->processButton(BTN_RIGHT, InputRedirection::PointerButtonReleased, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_4:
-                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, 120, 1, InputRedirection::PointerAxisSourceWheel, std::chrono::milliseconds(e->time));
-                break;
-            case XCB_BUTTON_INDEX_5:
-                input()->pointer()->processAxis(InputRedirection::PointerAxisVertical, -120, 1, InputRedirection::PointerAxisSourceWheel, std::chrono::milliseconds(e->time));
-                break;
-                // TODO: further buttons, horizontal scrolling?
-            }
-        } break;
         case XI_RawMotion: {
             if (m_x11Cursor) {
                 m_x11Cursor->notifyCursorPosChanged();
@@ -172,30 +115,6 @@ private:
     QHash<uint32_t, QPointF> m_lastTouchPositions;
 };
 
-class XKeyPressReleaseEventFilter : public X11EventFilter
-{
-public:
-    XKeyPressReleaseEventFilter(uint32_t type)
-        : X11EventFilter(type)
-    {
-    }
-    ~XKeyPressReleaseEventFilter() override = default;
-
-    bool event(xcb_generic_event_t *event) override
-    {
-        xcb_key_press_event_t *ke = reinterpret_cast<xcb_key_press_event_t *>(event);
-        if (ke->event == ke->root) {
-            const uint8_t eventType = event->response_type & ~0x80;
-            if (eventType == XCB_KEY_PRESS) {
-                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyPressed, std::chrono::milliseconds(ke->time));
-            } else {
-                input()->keyboard()->processKey(ke->detail - 8, InputRedirection::KeyboardKeyReleased, std::chrono::milliseconds(ke->time));
-            }
-        }
-        return false;
-    }
-};
-
 XInputIntegration::XInputIntegration(::Display *display, QObject *parent)
     : QObject(parent)
     , m_x11Display(display)
@@ -247,13 +166,6 @@ void XInputIntegration::startListening()
     memset(mask1, 0, sizeof(mask1));
 
     XISetMask(mask1, XI_RawMotion);
-    XISetMask(mask1, XI_RawButtonPress);
-    XISetMask(mask1, XI_RawButtonRelease);
-    if (m_majorVersion >= 2 && m_minorVersion >= 1) {
-        // we need to listen to all events, which is only available with XInput 2.1
-        XISetMask(mask1, XI_RawKeyPress);
-        XISetMask(mask1, XI_RawKeyRelease);
-    }
     if (m_majorVersion >= 2 && m_minorVersion >= 2) {
         // touch events since 2.2
         XISetMask(mask1, XI_TouchBegin);
@@ -270,8 +182,6 @@ void XInputIntegration::startListening()
     m_xiEventFilter = std::make_unique<XInputEventFilter>(m_xiOpcode);
     m_xiEventFilter->setCursor(m_x11Cursor);
     m_xiEventFilter->setDisplay(display());
-    m_keyPressFilter = std::make_unique<XKeyPressReleaseEventFilter>(XCB_KEY_PRESS);
-    m_keyReleaseFilter = std::make_unique<XKeyPressReleaseEventFilter>(XCB_KEY_RELEASE);
 }
 
 }

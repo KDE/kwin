@@ -24,7 +24,6 @@
 #include "x11_standalone_xinputintegration.h"
 #endif
 #include "core/renderloop.h"
-#include "keyboard_input.h"
 #include "opengl/egldisplay.h"
 #include "options.h"
 #include "utils/c_ptr.h"
@@ -189,10 +188,6 @@ std::unique_ptr<Cursor> X11StandaloneBackend::createPlatformCursor()
     auto c = std::make_unique<X11Cursor>(m_xinputIntegration != nullptr);
     if (m_xinputIntegration) {
         m_xinputIntegration->setCursor(c.get());
-        // we know we have xkb already
-        auto xkb = input()->keyboard()->xkb();
-        xkb->setConfig(kwinApp()->kxkbConfig());
-        xkb->reconfigure();
     }
     return c;
 #else
