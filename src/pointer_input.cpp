@@ -266,6 +266,10 @@ void PointerInputRedirection::processMotionInternal(const QPointF &pos, const QP
 void PointerInputRedirection::processButton(uint32_t button, InputRedirection::PointerButtonState state, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+
     QEvent::Type type;
     switch (state) {
     case InputRedirection::PointerButtonReleased:
@@ -288,11 +292,6 @@ void PointerInputRedirection::processButton(uint32_t button, InputRedirection::P
     event.setNativeButton(button);
 
     input()->processSpies(std::bind(&InputEventSpy::pointerEvent, std::placeholders::_1, &event));
-
-    if (!inited()) {
-        return;
-    }
-
     input()->processFilters(std::bind(&InputEventFilter::pointerEvent, std::placeholders::_1, &event, button));
 
     if (state == InputRedirection::PointerButtonReleased) {
@@ -304,6 +303,10 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
                                           InputRedirection::PointerAxisSource source, std::chrono::microseconds time, InputDevice *device)
 {
     input()->setLastInputHandler(this);
+    if (!inited()) {
+        return;
+    }
+
     update();
 
     Q_EMIT input()->pointerAxisChanged(axis, delta);
@@ -314,10 +317,6 @@ void PointerInputRedirection::processAxis(InputRedirection::PointerAxis axis, qr
     wheelEvent.setModifiersRelevantForGlobalShortcuts(input()->modifiersRelevantForGlobalShortcuts());
 
     input()->processSpies(std::bind(&InputEventSpy::wheelEvent, std::placeholders::_1, &wheelEvent));
-
-    if (!inited()) {
-        return;
-    }
     input()->processFilters(std::bind(&InputEventFilter::wheelEvent, std::placeholders::_1, &wheelEvent));
 }
 

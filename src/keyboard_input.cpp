@@ -223,6 +223,11 @@ void KeyboardInputRedirection::update()
 
 void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
+    input()->setLastInputHandler(this);
+    if (!m_inited) {
+        return;
+    }
+
     QEvent::Type type;
     bool autoRepeat = false;
     switch (state) {
@@ -258,10 +263,6 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     event.setModifiersRelevantForGlobalShortcuts(globalShortcutsModifiers);
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
-    if (!m_inited) {
-        return;
-    }
-    input()->setLastInputHandler(this);
     m_input->processFilters(std::bind(&InputEventFilter::keyEvent, std::placeholders::_1, &event));
 
     m_xkb->forwardModifiers();
