@@ -85,6 +85,8 @@ private:
 
     QVector3D m_channelFactors = {1, 1, 1};
     bool m_channelFactorsNeedShaderFallback = false;
+
+    PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
 };
 
 }
