@@ -100,9 +100,10 @@ GraphicsBufferAllocator *VirtualQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-void VirtualQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool VirtualQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     static_cast<VirtualOutput *>(output)->present(frame);
+    return true;
 }
 
 VirtualQPainterLayer *VirtualQPainterBackend::primaryLayer(Output *output)

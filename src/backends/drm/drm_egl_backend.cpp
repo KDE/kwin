@@ -141,9 +141,16 @@ DrmDevice *EglGbmBackend::drmDevice() const
     return gpu()->drmDevice();
 }
 
-void EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    static_cast<DrmAbstractOutput *>(output)->present(frame);
+    return static_cast<DrmAbstractOutput *>(output)->present(frame);
+}
+
+void EglGbmBackend::repairPresentation(Output *output)
+{
+    // read back drm properties, most likely our info is out of date somehow
+    // or we need a modeset
+    QTimer::singleShot(0, m_backend, &DrmBackend::updateOutputs);
 }
 
 OutputLayer *EglGbmBackend::primaryLayer(Output *output)

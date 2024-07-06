@@ -302,18 +302,12 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
             err = m_pipeline->present(frame);
         }
         success = err == DrmPipeline::Error::None;
-        if (err == DrmPipeline::Error::InvalidArguments) {
-            QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
-        }
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
     if (success) {
         Q_EMIT outputChange(frame->damage());
-        return true;
-    } else if (!needsModeset) {
-        qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
     }
-    return false;
+    return success;
 }
 
 DrmConnector *DrmOutput::connector() const
