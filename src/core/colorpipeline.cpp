@@ -152,9 +152,25 @@ void ColorPipeline::addInverseTransferFunction(TransferFunction tf, double refer
     }
 }
 
+static bool isFuzzyIdentity(const QMatrix4x4 &mat)
+{
+    // matrix calculations with floating point numbers can result in very small errors
+    // -> ignore them, as that just causes inefficiencies and more rounding errors
+    constexpr float maxResolution = 0.0000001;
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            const float targetValue = i == j ? 1 : 0;
+            if (std::abs(mat(i, j) - targetValue) > maxResolution) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
 {
-    if (mat.isIdentity()) {
+    if (isFuzzyIdentity(mat)) {
         return;
     }
     if (!ops.empty()) {
