@@ -85,6 +85,7 @@ public:
 
     std::optional<std::chrono::steady_clock::time_point> targetPageflipTime() const;
     bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
+    bool isTearing() const;
 
 private:
     bool doCommit(uint32_t flags);

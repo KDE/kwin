@@ -117,6 +117,12 @@ DrmLease *DrmOutput::lease() const
 
 bool DrmOutput::updateCursorLayer()
 {
+    const bool tearingDesired = m_desiredPresentationMode == PresentationMode::Async || m_desiredPresentationMode == PresentationMode::AdaptiveAsync;
+    if (m_pipeline->gpu()->atomicModeSetting() && tearingDesired && m_pipeline->cursorLayer() && m_pipeline->cursorLayer()->isEnabled()) {
+        // The kernel rejects async commits that change anything but the primary plane FB_ID
+        // This disables the hardware cursor, so it doesn't interfere with that
+        return false;
+    }
     return m_pipeline->updateCursor();
 }
 
@@ -287,6 +293,7 @@ void DrmOutput::updateDpmsMode(DpmsMode dpmsMode)
 
 bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
 {
+    m_desiredPresentationMode = frame->presentationMode();
     const bool needsModeset = m_gpu->needsModeset();
     bool success;
     if (needsModeset) {
