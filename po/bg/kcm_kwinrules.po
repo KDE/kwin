@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-05-13 00:39+0000\n"
-"PO-Revision-Date: 2024-03-06 10:49+0100\n"
+"PO-Revision-Date: 2024-07-05 15:58+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.05.1\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -829,12 +829,12 @@ msgstr "Правила на KWin (* .kwinrule)"
 #: ui/main.qml:29
 #, kde-format
 msgid "Add New…"
-msgstr "Добавяне на ново..."
+msgstr "Добавяне на ново…"
 
 #: ui/main.qml:35
 #, kde-format
 msgid "Import…"
-msgstr "Импортиране..."
+msgstr "Импортиране…"
 
 #: ui/main.qml:40
 #, kde-format
@@ -844,7 +844,7 @@ msgstr "Анулиране на експортирането"
 #: ui/main.qml:40
 #, kde-format
 msgid "Export…"
-msgstr "Експортиране..."
+msgstr "Експортиране…"
 
 #: ui/main.qml:88
 #, kde-format
@@ -855,7 +855,7 @@ msgstr "Понастоящем няма зададени правила за к�
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
-msgstr "Щракнете върху бутона<interface> Добавяне на нов... </interface>"
+msgstr "Щракнете върху бутона<interface> Добавяне на нов… </interface>"
 
 #: ui/main.qml:97
 #, kde-format

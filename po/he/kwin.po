@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
+"POT-Creation-Date: 2024-07-06 00:40+0000\n"
 "PO-Revision-Date: 2024-06-30 08:55+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2420,7 +2420,7 @@ msgstr "לא ניתן למצוא את מזהה החלון %1"
 msgid "Could not find output"
 msgstr "לא ניתן למצוא פלט"
 
-#: plugins/screencast/screencastmanager.cpp:104
+#: plugins/screencast/screencastmanager.cpp:100
 #, kde-format
 msgid "Invalid region"
 msgstr "אזור שגוי"

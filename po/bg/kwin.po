@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-06-30 16:34+0200\n"
+"POT-Creation-Date: 2024-07-06 00:40+0000\n"
+"PO-Revision-Date: 2024-07-05 15:58+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
 "Language: bg\n"
@@ -2423,7 +2423,7 @@ msgstr "Неуспешно намиране на  идентификатор н�
 msgid "Could not find output"
 msgstr "Не може да намери изход"
 
-#: plugins/screencast/screencastmanager.cpp:104
+#: plugins/screencast/screencastmanager.cpp:100
 #, kde-format
 msgid "Invalid region"
 msgstr "Невалиден регион"
@@ -2567,7 +2567,7 @@ msgstr "Отстъп:"
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout…"
-msgstr "Зареждане на оформление..."
+msgstr "Зареждане на оформление…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -3702,17 +3702,17 @@ msgstr "&Без заглавна лента и рамка"
 #: useractions.cpp:258
 #, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Задаване клавишни комбинации на прозорец..."
+msgstr "Задаване клавишни комбинации на прозорец…"
 
 #: useractions.cpp:264
 #, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Конфигуриране на &специални настройки на прозореца..."
+msgstr "Конфигуриране на &специални настройки на прозореца…"
 
 #: useractions.cpp:269
 #, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Конфигуриране на специални настройки на &приложение..."
+msgstr "Конфигуриране на специални настройки на &приложение…"
 
 #: useractions.cpp:275
 #, kde-format
