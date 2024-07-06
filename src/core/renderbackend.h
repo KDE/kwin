@@ -96,6 +96,9 @@ public:
     std::chrono::nanoseconds refreshDuration() const;
     std::chrono::nanoseconds predictedRenderTime() const;
 
+    void setDirectScanout(bool b);
+    bool isDirectScanout() const;
+
 private:
     std::optional<RenderTimeSpan> queryRenderTime() const;
 
@@ -109,6 +112,7 @@ private:
     QRegion m_damage;
     std::vector<std::unique_ptr<RenderTimeQuery>> m_renderTimeQueries;
     bool m_presented = false;
+    bool m_directScanout = false;
 };
 
 /**
@@ -128,7 +132,7 @@ public:
 
     virtual OutputLayer *primaryLayer(Output *output) = 0;
     virtual OutputLayer *cursorLayer(Output *output);
-    virtual void present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
+    virtual bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) = 0;
 
     virtual DrmDevice *drmDevice() const;
 

@@ -51,28 +51,6 @@ DrmPipeline::~DrmPipeline()
     }
 }
 
-bool DrmPipeline::testScanout(const std::shared_ptr<OutputFrame> &frame)
-{
-    if (gpu()->needsModeset()) {
-        return false;
-    }
-    if (gpu()->atomicModeSetting()) {
-        return DrmPipeline::commitPipelinesAtomic({this}, CommitMode::Test, frame, {}) == Error::None;
-    } else {
-        if (m_primaryLayer->currentBuffer()->buffer()->size() != m_pending.mode->size()) {
-            // scaling isn't supported with the legacy API
-            return false;
-        }
-        // no other way to test than to do it.
-        // As we only have a maximum of one test per scanout cycle, this is fine
-        const bool ret = presentLegacy(frame) == Error::None;
-        if (ret) {
-            m_didLegacyScanoutHack = true;
-        }
-        return ret;
-    }
-}
-
 DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &frame)
 {
     Q_ASSERT(m_pending.crtc);
@@ -93,11 +71,6 @@ DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &fram
         m_commitThread->addCommit(std::move(primaryPlaneUpdate));
         return Error::None;
     } else {
-        if (m_didLegacyScanoutHack) {
-            // already presented
-            m_didLegacyScanoutHack = false;
-            return Error::None;
-        }
         return presentLegacy(frame);
     }
 }

@@ -147,6 +147,16 @@ std::chrono::nanoseconds OutputFrame::predictedRenderTime() const
     return m_predictedRenderTime;
 }
 
+void OutputFrame::setDirectScanout(bool b)
+{
+    m_directScanout = b;
+}
+
+bool OutputFrame::isDirectScanout() const
+{
+    return m_directScanout;
+}
+
 RenderBackend::RenderBackend(QObject *parent)
     : QObject(parent)
 {

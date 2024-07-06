@@ -178,10 +178,11 @@ GraphicsBufferAllocator *WaylandQPainterBackend::graphicsBufferAllocator() const
     return m_allocator.get();
 }
 
-void WaylandQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool WaylandQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
     static_cast<WaylandOutput *>(output)->setPendingFrame(frame);
+    return true;
 }
 
 OutputLayer *WaylandQPainterBackend::primaryLayer(Output *output)

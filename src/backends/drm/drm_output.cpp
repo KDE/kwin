@@ -291,6 +291,11 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     const bool needsModeset = m_gpu->needsModeset();
     bool success;
     if (needsModeset) {
+        if (frame->isDirectScanout()) {
+            // don't do modesets with direct scanout, it might lead to locking
+            // the hardware to some buffer format we can't switch away from
+            return false;
+        }
         m_pipeline->setPresentationMode(PresentationMode::VSync);
         m_pipeline->setContentType(DrmConnector::DrmContentType::Graphics);
         success = m_pipeline->maybeModeset(frame);
@@ -303,7 +308,7 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
             err = m_pipeline->present(frame);
         }
         success = err == DrmPipeline::Error::None;
-        if (err == DrmPipeline::Error::InvalidArguments) {
+        if (!frame->isDirectScanout() && err == DrmPipeline::Error::InvalidArguments) {
             QTimer::singleShot(0, m_gpu->platform(), &DrmBackend::updateOutputs);
         }
     }

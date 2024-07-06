@@ -265,11 +265,12 @@ void X11WindowedEglBackend::init()
     }
 }
 
-void X11WindowedEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool X11WindowedEglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_outputs[output].primaryLayer->present();
     Q_EMIT static_cast<X11WindowedOutput *>(output)->outputChange(frame->damage());
     static_cast<X11WindowedOutput *>(output)->framePending(frame);
+    return true;
 }
 
 OutputLayer *X11WindowedEglBackend::primaryLayer(Output *output)

@@ -37,9 +37,9 @@ DrmDevice *DrmQPainterBackend::drmDevice() const
     return m_backend->primaryGpu()->drmDevice();
 }
 
-void DrmQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool DrmQPainterBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
-    static_cast<DrmAbstractOutput *>(output)->present(frame);
+    return static_cast<DrmAbstractOutput *>(output)->present(frame);
 }
 
 OutputLayer *DrmQPainterBackend::primaryLayer(Output *output)
