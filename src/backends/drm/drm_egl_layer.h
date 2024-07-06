@@ -40,7 +40,7 @@ public:
     const ColorPipeline &colorPipeline() const override;
 
 private:
-    bool doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame) override;
+    bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
     ColorPipeline m_colorPipeline;

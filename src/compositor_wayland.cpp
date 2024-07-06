@@ -312,6 +312,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
 
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
+    bool directScanout = false;
 
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
@@ -347,7 +348,16 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             }
             if (scanoutPossible) {
                 primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
-                directScanout = primaryLayer->attemptScanout(scanoutCandidates.front(), frame);
+                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
+                if (directScanout) {
+                    // if present works, we don't want to touch the frame object again afterwards,
+                    // so end the time query here instead of later
+                    totalTimeQuery->end();
+                    frame->addRenderTimeQuery(std::move(totalTimeQuery));
+                    totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
+
+                    directScanout &= m_backend->present(output, frame);
+                }
             }
         } else {
             primaryLayer->notifyNoScanoutCandidate();
@@ -366,11 +376,17 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         }
 
         postPaintPass(superLayer);
-        totalTimeQuery->end();
-        frame->addRenderTimeQuery(std::move(totalTimeQuery));
+        if (!directScanout) {
+            totalTimeQuery->end();
+            frame->addRenderTimeQuery(std::move(totalTimeQuery));
+        }
     }
 
-    m_backend->present(output, frame);
+    if (!directScanout) {
+        if (!m_backend->present(output, frame)) {
+            m_backend->repairPresentation(output);
+        }
+    }
 
     framePass(superLayer, frame.get());
 

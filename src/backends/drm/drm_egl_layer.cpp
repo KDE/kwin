@@ -86,11 +86,16 @@ ColorDescription EglGbmLayer::colorDescription() const
     return m_surface.colorDescription();
 }
 
-bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
     if (directScanoutDisabled) {
+        return false;
+    }
+    if (m_pipeline->gpu()->needsModeset()) {
+        // don't do direct scanout with modeset, it might lead to locking
+        // the hardware to some buffer format we can't switch away from
         return false;
     }
     if (m_pipeline->output()->colorProfileSource() == Output::ColorProfileSource::ICC && !m_pipeline->output()->highDynamicRange() && m_pipeline->iccProfile()) {
@@ -119,13 +124,10 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
         return false;
     }
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
-    if (m_scanoutBuffer && m_pipeline->testScanout(frame)) {
+    if (m_scanoutBuffer) {
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
-        return true;
-    } else {
-        m_scanoutBuffer.reset();
-        return false;
     }
+    return m_scanoutBuffer != nullptr;
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayer::currentBuffer() const
