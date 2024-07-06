@@ -724,6 +724,11 @@ void RulesModel::populateRuleList()
                          RulePolicy::ForceRule, RuleItem::Boolean,
                          i18n("Adaptive Sync"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("monitor-symbolic")));
+
+    addRule(new RuleItem(QLatin1String("tearing"),
+                         RulePolicy::ForceRule, RuleItem::Boolean,
+                         i18n("Allow Tearing"), i18n("Appearance & Fixes"),
+                         QIcon::fromTheme("monitor-symbolic")));
 }
 
 const QHash<QString, QString> RulesModel::x11PropertyHash()
