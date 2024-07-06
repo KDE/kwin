@@ -57,7 +57,6 @@ public:
      * if the test fails, there is a guarantee for no lasting changes
      */
     Error present(const std::shared_ptr<OutputFrame> &frame);
-    bool testScanout(const std::shared_ptr<OutputFrame> &frame);
     bool maybeModeset(const std::shared_ptr<OutputFrame> &frame);
     void forceLegacyModeset();
 
@@ -151,7 +150,6 @@ private:
     DrmConnector *m_connector = nullptr;
 
     bool m_modesetPresentPending = false;
-    bool m_didLegacyScanoutHack = false;
     ColorPipeline m_currentLegacyGamma;
 
     struct State

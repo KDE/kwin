@@ -192,6 +192,10 @@ std::unique_ptr<SurfaceTexture> RenderBackend::createSurfaceTextureWayland(Surfa
     return nullptr;
 }
 
+void RenderBackend::repairPresentation(Output *output)
+{
+}
+
 } // namespace KWin
 
 #include "moc_renderbackend.cpp"
