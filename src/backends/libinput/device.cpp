@@ -17,6 +17,7 @@
 #include "mousebuttons.h"
 #include "pointer_input.h"
 
+#include <QCryptographicHash>
 #include <QDBusArgument>
 #include <QDBusConnection>
 #include <QDBusMetaType>
@@ -359,6 +360,9 @@ Device::Device(libinput_device *device, QObject *parent)
         libinput_device_config_calibration_set_matrix(m_device, matrix);
         m_calibrationMatrix = m_defaultCalibrationMatrix;
     }
+
+    libinput_device_group *group = libinput_device_get_device_group(device);
+    m_deviceGroupId = QCryptographicHash::hash(QString::asprintf("%p", group).toLatin1(), QCryptographicHash::Sha1).toBase64();
 
     qDBusRegisterMetaType<QMatrix4x4>();
 

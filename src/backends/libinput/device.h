@@ -143,6 +143,7 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(QRectF outputArea READ outputArea WRITE setOutputArea NOTIFY outputAreaChanged)
     Q_PROPERTY(bool defaultMapToWorkspace READ defaultMapToWorkspace CONSTANT)
     Q_PROPERTY(bool mapToWorkspace READ isMapToWorkspace WRITE setMapToWorkspace NOTIFY mapToWorkspaceChanged)
+    Q_PROPERTY(QString deviceGroupId READ deviceGroupId CONSTANT)
 
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
@@ -645,6 +646,11 @@ public:
 
     void setMapToWorkspace(bool mapToWorkspace);
 
+    QString deviceGroupId() const
+    {
+        return m_deviceGroupId;
+    }
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -759,6 +765,7 @@ private:
     LEDs m_leds;
     QRectF m_outputArea = QRectF(0, 0, 1, 1);
     bool m_mapToWorkspace = false;
+    QString m_deviceGroupId;
 };
 
 }
