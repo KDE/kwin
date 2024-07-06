@@ -1004,6 +1004,7 @@ public:
     virtual void setFullScreen(bool set);
 
     bool wantsAdaptiveSync() const;
+    bool wantsTearing(bool tearingRequested) const;
 
     QRectF geometryRestore() const;
     void setGeometryRestore(const QRectF &rect);

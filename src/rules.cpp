@@ -76,6 +76,7 @@ Rules::Rules()
     , disableglobalshortcutsrule(UnusedForceRule)
     , desktopfilerule(UnusedSetRule)
     , adaptivesyncrule(UnusedForceRule)
+    , tearingrule(UnusedForceRule)
 {
 }
 
@@ -160,6 +161,7 @@ void Rules::readFromSettings(const RuleSettings *settings)
     READ_SET_RULE(desktopfile);
     READ_FORCE_RULE(layer, );
     READ_FORCE_RULE(adaptivesync, );
+    READ_FORCE_RULE(tearing, );
 }
 
 #undef READ_MATCH_STRING
@@ -255,43 +257,44 @@ void Rules::write(RuleSettings *settings) const
 // returns true if it doesn't affect anything
 bool Rules::isEmpty() const
 {
-    return (placementrule == UnusedForceRule
-            && positionrule == UnusedSetRule
-            && sizerule == UnusedSetRule
-            && minsizerule == UnusedForceRule
-            && maxsizerule == UnusedForceRule
-            && opacityactiverule == UnusedForceRule
-            && opacityinactiverule == UnusedForceRule
-            && ignoregeometryrule == UnusedSetRule
-            && desktopsrule == UnusedSetRule
-            && screenrule == UnusedSetRule
-            && activityrule == UnusedSetRule
-            && maximizevertrule == UnusedSetRule
-            && maximizehorizrule == UnusedSetRule
-            && minimizerule == UnusedSetRule
-            && shaderule == UnusedSetRule
-            && skiptaskbarrule == UnusedSetRule
-            && skippagerrule == UnusedSetRule
-            && skipswitcherrule == UnusedSetRule
-            && aboverule == UnusedSetRule
-            && belowrule == UnusedSetRule
-            && fullscreenrule == UnusedSetRule
-            && noborderrule == UnusedSetRule
-            && decocolorrule == UnusedForceRule
-            && blockcompositingrule == UnusedForceRule
-            && fsplevelrule == UnusedForceRule
-            && fpplevelrule == UnusedForceRule
-            && acceptfocusrule == UnusedForceRule
-            && closeablerule == UnusedForceRule
-            && autogrouprule == UnusedForceRule
-            && autogroupfgrule == UnusedForceRule
-            && autogroupidrule == UnusedForceRule
-            && strictgeometryrule == UnusedForceRule
-            && shortcutrule == UnusedSetRule
-            && disableglobalshortcutsrule == UnusedForceRule
-            && desktopfilerule == UnusedSetRule
-            && layerrule == UnusedForceRule
-            && adaptivesyncrule == UnusedForceRule);
+    return placementrule == UnusedForceRule
+        && positionrule == UnusedSetRule
+        && sizerule == UnusedSetRule
+        && minsizerule == UnusedForceRule
+        && maxsizerule == UnusedForceRule
+        && opacityactiverule == UnusedForceRule
+        && opacityinactiverule == UnusedForceRule
+        && ignoregeometryrule == UnusedSetRule
+        && desktopsrule == UnusedSetRule
+        && screenrule == UnusedSetRule
+        && activityrule == UnusedSetRule
+        && maximizevertrule == UnusedSetRule
+        && maximizehorizrule == UnusedSetRule
+        && minimizerule == UnusedSetRule
+        && shaderule == UnusedSetRule
+        && skiptaskbarrule == UnusedSetRule
+        && skippagerrule == UnusedSetRule
+        && skipswitcherrule == UnusedSetRule
+        && aboverule == UnusedSetRule
+        && belowrule == UnusedSetRule
+        && fullscreenrule == UnusedSetRule
+        && noborderrule == UnusedSetRule
+        && decocolorrule == UnusedForceRule
+        && blockcompositingrule == UnusedForceRule
+        && fsplevelrule == UnusedForceRule
+        && fpplevelrule == UnusedForceRule
+        && acceptfocusrule == UnusedForceRule
+        && closeablerule == UnusedForceRule
+        && autogrouprule == UnusedForceRule
+        && autogroupfgrule == UnusedForceRule
+        && autogroupidrule == UnusedForceRule
+        && strictgeometryrule == UnusedForceRule
+        && shortcutrule == UnusedSetRule
+        && disableglobalshortcutsrule == UnusedForceRule
+        && desktopfilerule == UnusedSetRule
+        && layerrule == UnusedForceRule
+        && adaptivesyncrule == UnusedForceRule
+        && tearingrule == UnusedForceRule;
 }
 
 Rules::ForceRule Rules::convertForceRule(int v)
@@ -686,6 +689,7 @@ APPLY_RULE(shortcut, Shortcut, QString)
 APPLY_FORCE_RULE(disableglobalshortcuts, DisableGlobalShortcuts, bool)
 APPLY_RULE(desktopfile, DesktopFile, QString)
 APPLY_FORCE_RULE(adaptivesync, AdaptiveSync, bool)
+APPLY_FORCE_RULE(tearing, Tearing, bool)
 
 #undef APPLY_RULE
 #undef APPLY_FORCE_RULE
@@ -745,6 +749,7 @@ bool Rules::discardUsed(bool withdrawn)
     DISCARD_USED_SET_RULE(desktopfile);
     DISCARD_USED_FORCE_RULE(layer);
     DISCARD_USED_FORCE_RULE(adaptivesync);
+    DISCARD_USED_FORCE_RULE(tearing);
 
     return changed;
 }
@@ -893,6 +898,7 @@ CHECK_FORCE_RULE(DisableGlobalShortcuts, bool)
 CHECK_RULE(DesktopFile, QString)
 CHECK_FORCE_RULE(Layer, Layer)
 CHECK_FORCE_RULE(AdaptiveSync, bool)
+CHECK_FORCE_RULE(Tearing, bool)
 
 #undef CHECK_RULE
 #undef CHECK_FORCE_RULE

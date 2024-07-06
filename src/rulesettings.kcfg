@@ -450,5 +450,14 @@
       <label>AdaptiveSync rule type</label>
       <default code="true">Rules::UnusedForceRule</default>
     </entry>
+
+    <entry name="tearing" type="Bool">
+      <label>Allow Tearing</label>
+      <default>true</default>
+    </entry>
+    <entry name="tearingrule" type="Int">
+      <label>Tearing rule type</label>
+      <default code="true">Rules::UnusedForceRule</default>
+    </entry>
   </group>
 </kcfg>
