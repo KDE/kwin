@@ -78,6 +78,7 @@ public:
     QString checkDesktopFile(QString desktopFile, bool init = false) const;
     Layer checkLayer(Layer layer) const;
     bool checkAdaptiveSync(bool adaptivesync) const;
+    bool checkTearing(bool requestsTearing) const;
 
 private:
     MaximizeMode checkMaximizeVert(MaximizeMode mode, bool init) const;
@@ -189,6 +190,7 @@ public:
     bool applyDesktopFile(QString &desktopFile, bool init) const;
     bool applyLayer(enum Layer &layer) const;
     bool applyAdaptiveSync(bool &adaptivesync) const;
+    bool applyTearing(bool &tearing) const;
 
 private:
 #endif
@@ -295,6 +297,8 @@ private:
     SetRule desktopfilerule;
     bool adaptivesync;
     ForceRule adaptivesyncrule;
+    bool tearing;
+    ForceRule tearingrule;
     friend QDebug &operator<<(QDebug &stream, const Rules *);
 };
 

@@ -4027,6 +4027,11 @@ bool Window::wantsAdaptiveSync() const
     return rules()->checkAdaptiveSync(isFullScreen());
 }
 
+bool Window::wantsTearing(bool tearingRequested) const
+{
+    return rules()->checkTearing(tearingRequested);
+}
+
 /**
  * Returns @c true if the Window can be minimized; otherwise @c false.
  *
