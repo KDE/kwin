@@ -59,6 +59,7 @@ private:
     std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commitsToDelete;
     bool m_vrr = false;
+    bool m_tearing = false;
     std::chrono::nanoseconds m_safetyMargin{0};
 };
 

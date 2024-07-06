@@ -62,8 +62,8 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
     addProperty(plane->fbId, buffer ? buffer->framebufferId() : 0);
     m_buffers[plane] = buffer;
     m_frames[plane] = frame;
-    // atomic commits with IN_FENCE_FD fail with NVidia
-    if (plane->inFenceFd.isValid() && !plane->gpu()->isNVidia()) {
+    // atomic commits with IN_FENCE_FD fail with NVidia and (as of kernel 6.9) with tearing
+    if (plane->inFenceFd.isValid() && !plane->gpu()->isNVidia() && !isTearing()) {
         addProperty(plane->inFenceFd, buffer ? buffer->syncFd().get() : -1);
     }
     m_planes.emplace(plane);
@@ -89,7 +89,11 @@ void DrmAtomicCommit::setPresentationMode(PresentationMode mode)
 
 bool DrmAtomicCommit::test()
 {
-    return doCommit(DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK);
+    uint32_t flags = DRM_MODE_ATOMIC_TEST_ONLY | DRM_MODE_ATOMIC_NONBLOCK;
+    if (isTearing()) {
+        flags |= DRM_MODE_PAGE_FLIP_ASYNC;
+    }
+    return doCommit(flags);
 }
 
 bool DrmAtomicCommit::testAllowModeset()
@@ -99,7 +103,11 @@ bool DrmAtomicCommit::testAllowModeset()
 
 bool DrmAtomicCommit::commit()
 {
-    return doCommit(DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT);
+    uint32_t flags = DRM_MODE_ATOMIC_NONBLOCK | DRM_MODE_PAGE_FLIP_EVENT;
+    if (isTearing()) {
+        flags |= DRM_MODE_PAGE_FLIP_ASYNC;
+    }
+    return doCommit(flags);
 }
 
 bool DrmAtomicCommit::commitModeset()
@@ -233,6 +241,11 @@ bool DrmAtomicCommit::isReadyFor(std::chrono::steady_clock::time_point pageflipT
 {
     static constexpr auto s_pageflipSlop = 500us;
     return (!m_targetPageflipTime || pageflipTarget + s_pageflipSlop >= *m_targetPageflipTime) && areBuffersReadable();
+}
+
+bool DrmAtomicCommit::isTearing() const
+{
+    return m_mode == PresentationMode::Async || m_mode == PresentationMode::AdaptiveAsync;
 }
 
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)
