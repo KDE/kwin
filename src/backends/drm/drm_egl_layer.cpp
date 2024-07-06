@@ -85,7 +85,7 @@ ColorDescription EglGbmLayer::colorDescription() const
     return m_surface.colorDescription();
 }
 
-bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -122,13 +122,10 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
         return false;
     }
     m_scanoutBuffer = m_pipeline->gpu()->importBuffer(buffer, FileDescriptor{});
-    if (m_scanoutBuffer && m_pipeline->testScanout(frame)) {
+    if (m_scanoutBuffer) {
         m_surface.forgetDamage(); // TODO: Use absolute frame sequence numbers for indexing the DamageJournal. It's more flexible and less error-prone
-        return true;
-    } else {
-        m_scanoutBuffer.reset();
-        return false;
     }
+    return m_scanoutBuffer != nullptr;
 }
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayer::currentBuffer() const

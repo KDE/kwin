@@ -386,7 +386,7 @@ void EglBackend::endFrame(const QRegion &renderedRegion, const QRegion &damagedR
     m_lastRenderedRegion = renderedRegion;
 }
 
-void EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
+bool EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &frame)
 {
     m_frame = frame;
     // Start the software vsync monitor. There is no any reliable way to determine when
@@ -409,6 +409,7 @@ void EglBackend::present(Output *output, const std::shared_ptr<OutputFrame> &fra
     if (overlayWindow() && overlayWindow()->window()) { // show the window only after the first pass,
         overlayWindow()->show(); // since that pass may take long
     }
+    return true;
 }
 
 void EglBackend::presentSurface(EGLSurface surface, const QRegion &damage, const QRect &screenGeometry)

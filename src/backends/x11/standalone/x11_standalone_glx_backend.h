@@ -85,7 +85,7 @@ public:
     std::unique_ptr<SurfaceTexture> createSurfaceTextureX11(SurfacePixmapX11 *pixmap) override;
     OutputLayerBeginFrameInfo doBeginFrame();
     void endFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame);
-    void present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
+    bool present(Output *output, const std::shared_ptr<OutputFrame> &frame) override;
     bool makeCurrent() override;
     void doneCurrent() override;
     OpenGlContext *openglContext() const override;

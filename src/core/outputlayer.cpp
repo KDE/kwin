@@ -62,12 +62,12 @@ bool OutputLayer::needsRepaint() const
     return !m_repaints.isEmpty();
 }
 
-bool OutputLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame)
+bool OutputLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame)
 {
     return false;
 }
 
-bool OutputLayer::attemptScanout(SurfaceItem *surfaceItem, const std::shared_ptr<OutputFrame> &frame)
+bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::shared_ptr<OutputFrame> &frame)
 {
     SurfaceItemWayland *wayland = qobject_cast<SurfaceItemWayland *>(surfaceItem);
     if (!wayland || !wayland->surface()) {
@@ -91,7 +91,7 @@ bool OutputLayer::attemptScanout(SurfaceItem *surfaceItem, const std::shared_ptr
     m_bufferTransform = surfaceItem->bufferTransform();
     const auto desiredTransform = m_output ? m_output->transform() : OutputTransform::Kind::Normal;
     m_offloadTransform = m_bufferTransform.combine(desiredTransform.inverted());
-    const bool ret = doAttemptScanout(buffer, surfaceItem->colorDescription(), frame);
+    const bool ret = doImportScanoutBuffer(buffer, surfaceItem->colorDescription(), frame);
     if (ret) {
         surfaceItem->resetDamage();
         // ensure the pixmap is updated when direct scanout ends
