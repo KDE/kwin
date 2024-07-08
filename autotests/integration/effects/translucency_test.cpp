@@ -130,6 +130,9 @@ void TranslucencyTest::testMoveAfterDesktopChange()
     QCOMPARE(window->window(), windowId);
     QVERIFY(window->isDecorated());
 
+    QMetaObject::invokeMethod(window, "setReadyForPainting");
+    QVERIFY(window->readyForPainting());
+
     QCOMPARE(windowAddedSpy.count(), 1);
     QVERIFY(!m_translucencyEffect->isActive());
     // let's send the window to desktop 2
