@@ -382,3 +382,9 @@ bool TransferFunction::isRelative() const
     Q_UNREACHABLE();
 }
 }
+
+QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
+{
+    debug << "TransferFunction(" << tf.type << ")";
+    return debug;
+}

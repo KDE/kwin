@@ -170,3 +170,5 @@ private:
     std::optional<double> m_maxHdrLuminance;
 };
 }
+
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);

@@ -100,3 +100,5 @@ public:
     std::vector<ColorOp> ops;
 };
 }
+
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline);

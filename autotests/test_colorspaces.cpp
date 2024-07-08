@@ -6,6 +6,7 @@
 
 #include <QTest>
 
+#include "core/colorpipeline.h"
 #include "core/colorspace.h"
 
 using namespace KWin;
@@ -21,6 +22,8 @@ private Q_SLOTS:
     void roundtripConversion_data();
     void roundtripConversion();
     void nonNormalizedPrimaries();
+    void testIdentityTransformation_data();
+    void testIdentityTransformation();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -83,6 +86,34 @@ void TestColorspaces::nonNormalizedPrimaries()
     QCOMPARE_LE(std::abs(1 - convertedWhite.x()), s_resolution10bit);
     QCOMPARE_LE(std::abs(1 - convertedWhite.y()), s_resolution10bit);
     QCOMPARE_LE(std::abs(1 - convertedWhite.z()), s_resolution10bit);
+}
+
+void TestColorspaces::testIdentityTransformation_data()
+{
+    QTest::addColumn<NamedColorimetry>("colorimetry");
+    QTest::addColumn<TransferFunction::Type>("transferFunction");
+
+    QTest::addRow("BT709 (sRGB)") << NamedColorimetry::BT709 << TransferFunction::sRGB;
+    QTest::addRow("BT709 (gamma22)") << NamedColorimetry::BT709 << TransferFunction::gamma22;
+    QTest::addRow("BT709 (PQ)") << NamedColorimetry::BT709 << TransferFunction::PerceptualQuantizer;
+    QTest::addRow("BT709 (linear)") << NamedColorimetry::BT709 << TransferFunction::linear;
+    QTest::addRow("BT2020 (sRGB)") << NamedColorimetry::BT2020 << TransferFunction::sRGB;
+    QTest::addRow("BT2020 (gamma22)") << NamedColorimetry::BT2020 << TransferFunction::gamma22;
+    QTest::addRow("BT2020 (PQ)") << NamedColorimetry::BT2020 << TransferFunction::PerceptualQuantizer;
+    QTest::addRow("BT2020 (linear)") << NamedColorimetry::BT2020 << TransferFunction::linear;
+}
+
+void TestColorspaces::testIdentityTransformation()
+{
+    QFETCH(NamedColorimetry, colorimetry);
+    QFETCH(TransferFunction::Type, transferFunction);
+    const ColorDescription color(colorimetry, transferFunction, 100, 0, 100, 100);
+
+    const auto pipeline = ColorPipeline::create(color, color);
+    if (!pipeline.isIdentity()) {
+        qWarning() << pipeline;
+    }
+    QVERIFY(pipeline.isIdentity());
 }
 
 QTEST_MAIN(TestColorspaces)

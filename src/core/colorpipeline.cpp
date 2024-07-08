@@ -252,3 +252,21 @@ ColorMultiplier::ColorMultiplier(double factor)
 {
 }
 }
+
+QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
+{
+    debug << "ColorPipeline(";
+    for (const auto &op : pipeline.ops) {
+        if (auto tf = std::get_if<KWin::ColorTransferFunction>(&op.operation)) {
+            debug << tf->tf;
+        } else if (auto tf = std::get_if<KWin::InverseColorTransferFunction>(&op.operation)) {
+            debug << "inverse" << tf->tf;
+        } else if (auto mat = std::get_if<KWin::ColorMatrix>(&op.operation)) {
+            debug << mat->mat;
+        } else if (auto mult = std::get_if<KWin::ColorMultiplier>(&op.operation)) {
+            debug << mult->factors;
+        }
+    }
+    debug << ")";
+    return debug;
+}
