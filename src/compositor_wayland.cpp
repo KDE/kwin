@@ -401,11 +401,19 @@ void WaylandCompositor::addOutput(Output *output)
             }
             QRectF nativeCursorRect = output->transform().map(scaledRect(outputLocalRect, output->scale()), output->pixelSize());
             QSize bufferSize(std::ceil(nativeCursorRect.width()), std::ceil(nativeCursorRect.height()));
-            if (const auto fixedSize = outputLayer->fixedSize()) {
-                if (fixedSize->width() < bufferSize.width() || fixedSize->height() < bufferSize.height()) {
+            const auto recommendedSizes = outputLayer->recommendedSizes();
+            if (!recommendedSizes.empty()) {
+                auto bigEnough = recommendedSizes | std::views::filter([bufferSize](const auto &size) {
+                    return size.width() >= bufferSize.width() && size.height() >= bufferSize.height();
+                });
+                const auto it = std::ranges::min_element(bigEnough, [](const auto &left, const auto &right) {
+                    return left.width() * left.height() < right.width() * right.height();
+                });
+                if (it == bigEnough.end()) {
+                    // no size found, this most likely won't work
                     return false;
                 }
-                bufferSize = *fixedSize;
+                bufferSize = *it;
                 nativeCursorRect = output->transform().map(QRectF(outputLocalRect.topLeft() * output->scale(), bufferSize), output->pixelSize());
             }
             outputLayer->setHotspot(output->transform().map(cursor->hotspot() * output->scale(), bufferSize));

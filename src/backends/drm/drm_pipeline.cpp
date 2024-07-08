@@ -509,6 +509,27 @@ bool DrmPipeline::pruneModifier()
     }
 }
 
+QList<QSize> DrmPipeline::recommendedSizes(DrmPlane::TypeIndex planeType) const
+{
+    switch (planeType) {
+    case DrmPlane::TypeIndex::Primary:
+        if (m_pending.crtc && m_pending.crtc->primaryPlane()) {
+            return m_pending.crtc->primaryPlane()->recommendedSizes();
+        } else {
+            return QList<QSize>{};
+        }
+    case DrmPlane::TypeIndex::Cursor:
+        if (m_pending.crtc && m_pending.crtc->cursorPlane()) {
+            return m_pending.crtc->cursorPlane()->recommendedSizes();
+        } else {
+            return QList<QSize>{gpu()->cursorSize()};
+        }
+    case DrmPlane::TypeIndex::Overlay:
+        return QList<QSize>{};
+    }
+    Q_UNREACHABLE();
+}
+
 bool DrmPipeline::needsModeset() const
 {
     return m_pending.needsModeset;

@@ -77,6 +77,7 @@ public:
 
     QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
     bool pruneModifier();
+    QList<QSize> recommendedSizes(DrmPlane::TypeIndex planeType) const;
 
     void setOutput(DrmOutput *output);
     DrmOutput *output() const;

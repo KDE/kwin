@@ -152,9 +152,9 @@ QHash<uint32_t, QList<uint64_t>> EglGbmLayer::supportedDrmFormats() const
     return m_pipeline->formats(m_type);
 }
 
-std::optional<QSize> EglGbmLayer::fixedSize() const
+QList<QSize> EglGbmLayer::recommendedSizes() const
 {
-    return m_type == DrmPlane::TypeIndex::Cursor ? std::make_optional(m_pipeline->gpu()->cursorSize()) : std::nullopt;
+    return m_pipeline->recommendedSizes(m_type);
 }
 
 const ColorPipeline &EglGbmLayer::colorPipeline() const

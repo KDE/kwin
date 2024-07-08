@@ -43,6 +43,8 @@ public:
 
     void set(DrmAtomicCommit *commit, const QRect &src, const QRect &dst);
 
+    QList<QSize> recommendedSizes() const;
+
     enum class TypeIndex : uint64_t {
         Overlay = 0,
         Primary = 1,
@@ -94,12 +96,14 @@ public:
     DrmProperty vmHotspotX;
     DrmProperty vmHotspotY;
     DrmProperty inFenceFd;
+    DrmProperty sizeHints;
 
 private:
     std::shared_ptr<DrmFramebuffer> m_current;
 
     QHash<uint32_t, QList<uint64_t>> m_supportedFormats;
     uint32_t m_possibleCrtcs;
+    QList<QSize> m_sizeHints;
 };
 
 }

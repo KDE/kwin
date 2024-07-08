@@ -36,7 +36,7 @@ public:
     void releaseBuffers() override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
-    std::optional<QSize> fixedSize() const override;
+    QList<QSize> recommendedSizes() const override;
     const ColorPipeline &colorPipeline() const override;
 
 private:

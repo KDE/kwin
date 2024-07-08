@@ -37,9 +37,9 @@ void OutputLayer::setHotspot(const QPointF &hotspot)
     m_hotspot = hotspot;
 }
 
-std::optional<QSize> OutputLayer::fixedSize() const
+QList<QSize> OutputLayer::recommendedSizes() const
 {
-    return std::nullopt;
+    return {};
 }
 
 QRegion OutputLayer::repaints() const

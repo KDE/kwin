@@ -42,10 +42,10 @@ public:
     void setHotspot(const QPointF &hotspot);
 
     /**
-     * For most drm drivers, the buffer used for the cursor has to have a fixed size.
-     * If such a fixed size is required by the backend, this function should return it
+     * For some layers it can be beneficial to use specific sizes only.
+     * This returns those specific sizes, if present
      */
-    virtual std::optional<QSize> fixedSize() const;
+    virtual QList<QSize> recommendedSizes() const;
 
     QRegion repaints() const;
     void resetRepaints();
