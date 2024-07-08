@@ -546,7 +546,8 @@ public:
         ScreenInversion,
         Blur,
         Contrast,
-        HighlightWindows
+        HighlightWindows,
+        SystemBell,
     };
 
     /**

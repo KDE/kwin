@@ -1,0 +1,12 @@
+{
+    "KPlugin": {
+        "Category": "Accessibility",
+        "Description": "Provides the bell",
+        "EnabledByDefault": true,
+        "License": "GPL",
+        "Name": "System Bell"
+    },
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
