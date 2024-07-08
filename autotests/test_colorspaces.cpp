@@ -24,6 +24,7 @@ private Q_SLOTS:
     void nonNormalizedPrimaries();
     void testIdentityTransformation_data();
     void testIdentityTransformation();
+    void testColorPipeline();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -114,6 +115,22 @@ void TestColorspaces::testIdentityTransformation()
         qWarning() << pipeline;
     }
     QVERIFY(pipeline.isIdentity());
+}
+
+void TestColorspaces::testColorPipeline()
+{
+    const ColorDescription from(NamedColorimetry::BT709, TransferFunction::gamma22, 100, 0, 100, 100);
+    const ColorDescription to(NamedColorimetry::BT2020, TransferFunction::PerceptualQuantizer, 500, 0, 500, 500);
+
+    const auto pipeline = ColorPipeline::create(from, to);
+    QVERIFY(compareVectors(pipeline.evaluate(QVector3D(0, 0, 0)), QVector3D(0.044, 0.044, 0.044), s_resolution10bit));
+    QVERIFY(compareVectors(pipeline.evaluate(QVector3D(0.5, 0.5, 0.5)), QVector3D(0.517, 0.517, 0.517), s_resolution10bit));
+    QVERIFY(compareVectors(pipeline.evaluate(QVector3D(1, 1, 1)), QVector3D(0.677, 0.677, 0.677), s_resolution10bit));
+
+    const auto inversePipeline = ColorPipeline::create(to, from);
+    QVERIFY(compareVectors(inversePipeline.evaluate(QVector3D(0.044, 0.044, 0.044)), QVector3D(0, 0, 0), s_resolution10bit));
+    QVERIFY(compareVectors(inversePipeline.evaluate(QVector3D(0.517, 0.517, 0.517)), QVector3D(0.5, 0.5, 0.5), s_resolution10bit));
+    QVERIFY(compareVectors(inversePipeline.evaluate(QVector3D(0.677, 0.677, 0.677)), QVector3D(1, 1, 1), s_resolution10bit));
 }
 
 QTEST_MAIN(TestColorspaces)
