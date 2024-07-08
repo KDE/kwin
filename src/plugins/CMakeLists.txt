@@ -113,6 +113,10 @@ add_subdirectory(windowview)
 add_subdirectory(wobblywindows)
 add_subdirectory(zoom)
 
+if (KWIN_BUILD_NOTIFICATIONS)
+    add_subdirectory(keynotification)
+endif()
+
 if (KWIN_BUILD_DECORATIONS)
     add_subdirectory(kdecorations)
 endif()
