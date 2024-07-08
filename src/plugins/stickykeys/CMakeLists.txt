@@ -14,5 +14,8 @@ target_sources(StickyKeysPlugin PRIVATE
     main.cpp
     stickykeys.cpp
 )
-target_link_libraries(StickyKeysPlugin PRIVATE kwin KF6::WindowSystem XKB::XKB)
+target_link_libraries(StickyKeysPlugin PRIVATE kwin KF6::WindowSystem KF6::I18n XKB::XKB)
 
+if (KWIN_BUILD_NOTIFICATIONS)
+    target_link_libraries(StickyKeysPlugin PRIVATE KF6::Notifications)
+endif()

@@ -32,4 +32,5 @@ private:
     QMap<int, KeyState> m_keyStates;
     QList<int> m_modifiers = {Qt::Key_Shift, Qt::Key_Control, Qt::Key_Alt, Qt::Key_AltGr, Qt::Key_Meta};
     bool m_lockKeys = false;
+    bool m_showNotificationForLockedKeys = false;
 };

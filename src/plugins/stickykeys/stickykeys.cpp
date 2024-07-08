@@ -8,6 +8,25 @@
 #include "keyboard_input.h"
 #include "xkb.h"
 
+#include <KLazyLocalizedString>
+#if KWIN_BUILD_NOTIFICATIONS
+#include <KNotification>
+#endif
+
+struct Modifier
+{
+    Qt::Key key;
+    KLazyLocalizedString lockedText;
+};
+
+static const std::array<Modifier, 5> modifiers = {
+    Modifier{Qt::Key_Shift, kli18n("The Shift key has been locked and is now active for all of the following keypresses.")},
+    Modifier{Qt::Key_Control, kli18n("The Control key has been locked and is now active for all of the following keypresses.")},
+    Modifier{Qt::Key_Alt, kli18n("The Alt key has been locked and is now active for all of the following keypresses.")},
+    Modifier{Qt::Key_Meta, kli18n("The Meta key has been locked and is now active for all of the following keypresses.")},
+    Modifier{Qt::Key_AltGr, kli18n("The AltGr key has been locked and is now active for all of the following keypresses.")},
+};
+
 StickyKeysFilter::StickyKeysFilter()
     : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
@@ -46,6 +65,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
     KWin::input()->uninstallInputEventFilter(this);
 
     m_lockKeys = group.readEntry<bool>("StickyKeysLatch", true);
+    m_showNotificationForLockedKeys = group.readEntry<bool>("kNotifyModifiers", false);
 
     if (!m_lockKeys) {
         // locking keys is deactivated, unlock all locked keys
@@ -89,6 +109,22 @@ bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
                 else if (keyState.value() == Latched && m_lockKeys) {
                     keyState.value() = Locked;
                     KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(event->key())), true);
+
+                    if (m_showNotificationForLockedKeys) {
+#if KWIN_BUILD_NOTIFICATIONS
+                        KNotification *noti = new KNotification("modifierkey-locked");
+                        noti->setComponentName("kaccess");
+
+                        for (const auto mod : modifiers) {
+                            if (mod.key == event->key()) {
+                                noti->setText(mod.lockedText.toString());
+                                break;
+                            }
+                        }
+
+                        noti->sendEvent();
+#endif
+                    }
                 }
                 // A locked modifier was pressed, unlock it
                 else if (keyState.value() == Locked && m_lockKeys) {
