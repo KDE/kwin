@@ -1786,10 +1786,10 @@ void PointerInputTest::testMoveCursor()
     Test::pointerButtonPressed(BTN_LEFT, timestamp++);
     QVERIFY(window->isInteractiveMove());
 
-    const PlatformCursorImage sizeAllCursor = loadReferenceThemeCursor(Qt::SizeAllCursor);
-    QVERIFY(!sizeAllCursor.isNull());
-    QCOMPARE(kwinApp()->cursorImage().image(), sizeAllCursor.image());
-    QCOMPARE(kwinApp()->cursorImage().hotSpot(), sizeAllCursor.hotSpot());
+    const PlatformCursorImage moveCursor = loadReferenceThemeCursor(Qt::ClosedHandCursor);
+    QVERIFY(!moveCursor.isNull());
+    QCOMPARE(kwinApp()->cursorImage().image(), moveCursor.image());
+    QCOMPARE(kwinApp()->cursorImage().hotSpot(), moveCursor.hotSpot());
 
     // finish moving the window
     Test::keyboardKeyReleased(KEY_LEFTMETA, timestamp++);
