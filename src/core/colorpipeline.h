@@ -88,6 +88,7 @@ public:
     bool isIdentity() const;
     bool operator==(const ColorPipeline &other) const = default;
     const ValueRange &currentOutputRange() const;
+    QVector3D evaluate(const QVector3D &input) const;
 
     void addMultiplier(double factor);
     void addMultiplier(const QVector3D &factors);

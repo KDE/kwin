@@ -225,6 +225,23 @@ ColorPipeline ColorPipeline::merge(const ColorPipeline &onTop)
     return ret;
 }
 
+QVector3D ColorPipeline::evaluate(const QVector3D &input) const
+{
+    QVector3D ret = input;
+    for (const auto &op : ops) {
+        if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
+            ret = mat->mat * ret;
+        } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+            ret *= mult->factors;
+        } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
+            ret = tf->tf.encodedToNits(ret, tf->referenceLuminance);
+        } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
+            ret = tf->tf.nitsToEncoded(ret, tf->referenceLuminance);
+        }
+    }
+    return ret;
+}
+
 ColorTransferFunction::ColorTransferFunction(TransferFunction tf, double referenceLLuminance)
     : tf(tf)
     , referenceLuminance(referenceLLuminance)
