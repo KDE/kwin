@@ -789,6 +789,8 @@ void Options::loadConfig()
             previews = HiddenPreviewsAlways;
         }
         setHiddenPreviews(previews);
+    } else {
+        setHiddenPreviews(HiddenPreviewsNever);
     }
 
     auto interfaceToKey = [](OpenGLPlatformInterface interface) {
