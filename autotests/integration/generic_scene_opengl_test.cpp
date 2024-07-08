@@ -61,7 +61,7 @@ void GenericSceneOpenGLTest::initTestCase()
     config->sync();
     kwinApp()->setConfig(config);
 
-    qputenv("XCURSOR_THEME", QByteArrayLiteral("DMZ-White"));
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("breeze_cursors"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
     qputenv("KWIN_COMPOSE", m_envVariable);
 

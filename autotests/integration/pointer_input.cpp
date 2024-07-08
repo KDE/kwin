@@ -122,12 +122,7 @@ void PointerInputTest::initTestCase()
 
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
-    if (!QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("icons/DMZ-White/index.theme")).isEmpty()) {
-        qputenv("XCURSOR_THEME", QByteArrayLiteral("DMZ-White"));
-    } else {
-        // might be vanilla-dmz (e.g. Arch, FreeBSD)
-        qputenv("XCURSOR_THEME", QByteArrayLiteral("Vanilla-DMZ"));
-    }
+    qputenv("XCURSOR_THEME", QByteArrayLiteral("breeze_cursors"));
     qputenv("XCURSOR_SIZE", QByteArrayLiteral("24"));
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
