@@ -369,7 +369,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
 {
     QImage image;
 
-    if (effects->isOpenGLCompositing()) {
+    if (OpenGlContext *context = effects->openglContext()) {
         const auto screenGeometry = m_paintedScreen ? m_paintedScreen->geometry() : effects->virtualScreenGeometry();
         const QSize nativeSize = renderTarget.transform().map(
             snapToPixelGrid(scaledRect(geometry, devicePixelRatio))
@@ -397,8 +397,8 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
             target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
             GLFramebuffer::pushFramebuffer(&target);
         }
-        glReadPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
-                     GL_UNSIGNED_BYTE, static_cast<GLvoid *>(image.bits()));
+        context->glReadnPixels(0, 0, nativeSize.width(), nativeSize.height(), GL_RGBA,
+                               GL_UNSIGNED_BYTE, image.sizeInBytes(), image.bits());
         GLFramebuffer::popFramebuffer();
         convertFromGLImage(image, nativeSize.width(), nativeSize.height(), renderTarget.transform());
     }
