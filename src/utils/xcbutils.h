@@ -604,22 +604,22 @@ public:
     {
     }
 
-    inline QRectF rect()
+    inline QRect rect()
     {
         const xcb_get_geometry_reply_t *geometry = data();
         if (!geometry) {
             return QRect();
         }
-        return QRectF(Xcb::fromXNative(geometry->x), Xcb::fromXNative(geometry->y), Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
+        return QRect(geometry->x, geometry->y, geometry->width, geometry->height);
     }
 
-    inline QSizeF size()
+    inline QSize size()
     {
         const xcb_get_geometry_reply_t *geometry = data();
         if (!geometry) {
             return QSize();
         }
-        return QSizeF(Xcb::fromXNative(geometry->width), Xcb::fromXNative(geometry->height));
+        return QSize(geometry->width, geometry->height);
     }
 };
 

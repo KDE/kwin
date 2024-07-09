@@ -538,9 +538,9 @@ bool X11Window::track(xcb_window_t w)
     m_client.reset(w, false);
 
     Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
-    m_bufferGeometry = geo.rect();
-    m_frameGeometry = geo.rect();
-    m_clientGeometry = geo.rect();
+    m_bufferGeometry = Xcb::fromXNative(geo.rect());
+    m_frameGeometry = Xcb::fromXNative(geo.rect());
+    m_clientGeometry = Xcb::fromXNative(geo.rect());
     checkOutput();
     m_visual = attr->visual;
     bit_depth = geo->depth;
@@ -805,7 +805,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         setOnActivities(activitiesList);
     }
 
-    QRectF geom = session ? session->geometry : windowGeometry.rect();
+    QRectF geom = session ? session->geometry : Xcb::fromXNative(windowGeometry.rect());
     bool placementDone = false;
 
     QRectF area;
