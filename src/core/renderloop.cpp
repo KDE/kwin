@@ -250,6 +250,9 @@ std::chrono::nanoseconds RenderLoop::nextPresentationTimestamp() const
 
 void RenderLoop::setPresentationMode(PresentationMode mode)
 {
+    if (mode != d->presentationMode) {
+        qCDebug(KWIN_CORE) << "Changed presentation mode to" << mode;
+    }
     d->presentationMode = mode;
 }
 
