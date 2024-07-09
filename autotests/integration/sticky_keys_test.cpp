@@ -191,7 +191,7 @@ void StickyKeysTest::testLock()
     Test::keyboardKeyPressed(KEY_LEFTCTRL, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[0], 4); // verify that Ctrl is depressed
-    QCOMPARE(modifierSpy.first()[2], 0); // verify that Ctrl is locked
+    QCOMPARE(modifierSpy.first()[2], 0); // verify that Ctrl is not locked
 
     Test::keyboardKeyReleased(KEY_LEFTCTRL, ++timestamp);
 }
