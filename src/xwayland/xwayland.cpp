@@ -19,7 +19,6 @@
 #include "xwldrophandler.h"
 
 #include "core/output.h"
-#include "input_event_spy.h"
 #include "keyboard_input.h"
 #include "main_wayland.h"
 #include "utils/common.h"
@@ -82,32 +81,32 @@ bool XrandrEventFilter::event(xcb_generic_event_t *event)
     return false;
 }
 
-class XwaylandInputSpy : public QObject, public KWin::InputEventSpy
+class XwaylandInputFilter : public QObject, public KWin::InputEventFilter
 {
 public:
-    XwaylandInputSpy()
+    XwaylandInputFilter()
+        : KWin::InputEventFilter(InputFilterOrder::XWayland)
     {
         connect(waylandServer()->seat(), &SeatInterface::focusedKeyboardSurfaceAboutToChange,
                 this, [this](SurfaceInterface *newSurface) {
-                    auto keyboard = waylandServer()->seat()->keyboard();
-                    if (!newSurface) {
-                        return;
-                    }
+            auto keyboard = waylandServer()->seat()->keyboard();
+            if (!newSurface) {
+                return;
+            }
 
-                    if (waylandServer()->xWaylandConnection() == newSurface->client()) {
-                        // Since this is a spy but the keyboard interface gets its normal sendKey calls through filters,
-                        // there can be a mismatch in both states.
-                        // This loop makes sure all key press events are reset before we switch back to the
-                        // Xwayland client and the state is correctly restored.
-                        for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
-                            if (it.value() == KeyboardKeyState::Pressed) {
-                                keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
-                            }
-                        }
-                        m_modifiers = {};
-                        m_states.clear();
+            if (waylandServer()->xWaylandConnection() == newSurface->client()) {
+                // Since this is in the filter chain some key events may have been filtered out
+                // This loop makes sure all key press events are reset before we switch back to the
+                // Xwayland client and the state is correctly restored.
+                for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
+                    if (it.value() == KeyboardKeyState::Pressed) {
+                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
                     }
-                });
+                }
+                m_modifiers = {};
+                m_states.clear();
+            }
+        });
     }
 
     void setMode(XwaylandEavesdropsMode mode, bool eavesdropsMouse)
@@ -368,35 +367,33 @@ public:
         }
     }
 
-    void keyEvent(KWin::KeyEvent *event) override
+    bool keyEvent(KWin::KeyEvent *event) override
     {
+        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+        if (!xwaylandClient) {
+            return false;
+        }
         if (event->isAutoRepeat()) {
-            return;
+            return false;
         }
 
-        Window *window = workspace()->activeWindow();
-        if (!m_filterKey || !m_filterKey(event->key(), event->modifiers()) || (window && window->isLockScreen())) {
-            return;
+        if (!m_filterKey || !m_filterKey(event->key(), event->modifiers())) {
+            return false;
         }
 
         auto keyboard = waylandServer()->seat()->keyboard();
         auto surface = keyboard->focusedSurface();
-        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
-
-        if (!xwaylandClient) {
-            return;
-        }
 
         if (surface) {
             ClientConnection *client = surface->client();
             if (xwaylandClient == client) {
-                return;
+                return false;
             }
         }
 
         KeyboardKeyState state{event->type() == QEvent::KeyPress};
         if (!updateKey(event->nativeScanCode(), state)) {
-            return;
+            return false;
         }
 
         auto xkb = input()->keyboard()->xkb();
@@ -421,7 +418,7 @@ public:
             changed = true;
         }
         if (!changed) {
-            return;
+            return false;
         }
 
         keyboard->sendModifiers(xkb->modifierState().depressed,
@@ -429,31 +426,36 @@ public:
                                 xkb->modifierState().locked,
                                 xkb->currentLayout(),
                                 xwaylandClient);
+        return false;
     }
 
-    void pointerEvent(KWin::MouseEvent *event) override
+    bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override
     {
-        Window *window = workspace()->activeWindow();
-        if (!m_filterMouse || (window && window->isLockScreen())) {
-            return;
+
+        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
+        if (!xwaylandClient) {
+            return false;
+        }
+        if (!m_filterMouse) {
+            return false;
         }
         if (event->type() != QEvent::MouseButtonPress && event->type() != QEvent::MouseButtonRelease) {
-            return;
+            return false;
         }
 
         auto pointer = waylandServer()->seat()->pointer();
         auto surface = pointer->focusedSurface();
-        ClientConnection *xwaylandClient = waylandServer()->xWaylandConnection();
 
         if (surface) {
             ClientConnection *client = surface->client();
             if (xwaylandClient && xwaylandClient == client) {
-                return;
+                return false;
             }
         }
 
         PointerButtonState state{event->type() == QEvent::MouseButtonPress};
         pointer->sendButton(event->nativeButton(), state, xwaylandClient);
+        return false;
     }
 
     bool updateKey(quint32 key, KeyboardKeyState state)
@@ -583,7 +585,7 @@ void Xwayland::handleXwaylandFinished()
     m_compositingManagerSelectionOwner.reset();
     m_windowManagerSelectionOwner.reset();
 
-    m_inputSpy.reset();
+    m_inputFilter.reset();
     disconnect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
     disconnect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
 
@@ -632,20 +634,19 @@ void Xwayland::refreshEavesdropping()
     }
 
     const bool enabled = options->xwaylandEavesdrops() != None;
-    if (enabled == bool(m_inputSpy)) {
-        if (m_inputSpy) {
-            m_inputSpy->setMode(options->xwaylandEavesdrops(), options->xwaylandEavesdropsMouse());
+    if (enabled == bool(m_inputFilter)) {
+        if (m_inputFilter) {
+            m_inputFilter->setMode(options->xwaylandEavesdrops(), options->xwaylandEavesdropsMouse());
         }
         return;
     }
 
     if (enabled) {
-        m_inputSpy = std::make_unique<XwaylandInputSpy>();
-        input()->installInputEventSpy(m_inputSpy.get());
-        m_inputSpy->setMode(options->xwaylandEavesdrops(), options->xwaylandEavesdropsMouse());
+        m_inputFilter = std::make_unique<XwaylandInputFilter>();
+        m_inputFilter->setMode(options->xwaylandEavesdrops(), options->xwaylandEavesdropsMouse());
+        input()->installInputEventFilter(m_inputFilter.get());
     } else {
-        input()->uninstallInputEventSpy(m_inputSpy.get());
-        m_inputSpy.reset();
+        m_inputFilter.reset();
     }
 }
 

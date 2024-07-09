@@ -1666,6 +1666,7 @@ public:
             workspace()->tabbox()->keyPress(event->modifiers() | event->key());
         } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
+            return false;
         }
         return true;
     }

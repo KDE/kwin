@@ -56,6 +56,7 @@ private Q_SLOTS:
     void onlyModifier();
     void letterWithModifier();
     void testWaylandWindowHasFocus();
+    void tabBox();
 
 private:
     QList<KeyAction> recievedX11EventsForInput(const QList<KeyAction> &keyEventsIn);
@@ -230,6 +231,41 @@ void X11KeyReadTest::testWaylandWindowHasFocus()
     QCOMPARE(modifierSpy.last()[1], 0);
     QCOMPARE(modifierSpy.last()[2], 0);
     QCOMPARE(modifierSpy.last()[3], 0);
+}
+
+void X11KeyReadTest::tabBox()
+{
+    // Note this test will fail if you forget to use dbus-run-session!
+#if KWIN_BUILD_TABBOX
+    QList<KeyAction> keyEvents = {
+        {State::Press, KEY_LEFTALT},
+        {State::Press, KEY_TAB},
+        {State::Release, KEY_TAB},
+        {State::Press, KEY_TAB},
+        {State::Release, KEY_TAB},
+        {State::Release, KEY_LEFTALT},
+    };
+    auto received = recievedX11EventsForInput(keyEvents);
+
+    QList<KeyAction> expected;
+    QFETCH_GLOBAL(XwaylandEavesdropsMode, operatingMode);
+    switch (operatingMode) {
+    case XwaylandEavesdropsMode::None:
+        expected = {};
+        break;
+    // even though tab is a regular key whilst holding alt, the tab switcher should be grabbing
+    case XwaylandEavesdropsMode::AllKeysWithModifier:
+    case XwaylandEavesdropsMode::NonCharacterKeys:
+    case XwaylandEavesdropsMode::All:
+        expected = {
+            {State::Press, KEY_LEFTALT},
+            {State::Release, KEY_LEFTALT},
+        };
+        break;
+    }
+
+    QCOMPARE(received, expected);
+#endif
 }
 
 class X11EventRecorder :

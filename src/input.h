@@ -381,6 +381,7 @@ enum Order {
     Popup,
     Decoration,
     WindowAction,
+    XWayland,
     InternalWindow,
     InputMethod,
     Forward,
