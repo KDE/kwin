@@ -107,6 +107,7 @@ private Q_SLOTS:
     void testModal();
     void testCloseModal();
     void testCloseInactiveModal();
+    void testClosePopupOnParentUnmapped();
 };
 
 void TestXdgShellWindow::testXdgPopupReactive_data()
@@ -2320,6 +2321,30 @@ void TestXdgShellWindow::testCloseInactiveModal()
     Test::flushWaylandConnection();
     QVERIFY(childClosedSpy.wait());
     QCOMPARE(workspace()->activeWindow(), otherWindow);
+}
+
+void TestXdgShellWindow::testClosePopupOnParentUnmapped()
+{
+    // This test verifies that a popup window will be closed when the parent window is closed.
+
+    std::unique_ptr<KWayland::Client::Surface> parentSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> parentToplevel = Test::createXdgToplevelSurface(parentSurface.get());
+    Window *parent = Test::renderAndWaitForShown(parentSurface.get(), QSize(200, 200), Qt::cyan);
+    QVERIFY(parent);
+
+    std::unique_ptr<Test::XdgPositioner> positioner = Test::createXdgPositioner();
+    positioner->set_size(10, 10);
+    positioner->set_anchor_rect(10, 10, 10, 10);
+
+    std::unique_ptr<KWayland::Client::Surface> childSurface = Test::createSurface();
+    std::unique_ptr<Test::XdgPopup> popup = Test::createXdgPopupSurface(childSurface.get(), parentToplevel->xdgSurface(), positioner.get());
+    Window *child = Test::renderAndWaitForShown(childSurface.get(), QSize(10, 10), Qt::cyan);
+    QVERIFY(child);
+
+    QSignalSpy childClosedSpy(child, &Window::closed);
+    parentToplevel.reset();
+    parentSurface.reset();
+    QVERIFY(childClosedSpy.wait());
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindow)
