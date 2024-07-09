@@ -1269,7 +1269,9 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     const auto added = outputsSet - oldOutputsSet;
     for (Output *output : added) {
         output->ref();
-        m_tileManagers[output] = std::make_unique<TileManager>(output);
+        for (VirtualDesktop *desktop : VirtualDesktopManager::self()->allDesktops()) {
+            m_tileManagers[output][desktop] = std::make_unique<TileManager>(desktop, output);
+        }
         connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
         connect(output, &Output::wakeUp, this, &Workspace::maybeDestroyDpmsFilter);
         if (output->dpmsMode() != Output::DpmsMode::On) {
@@ -1284,41 +1286,43 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
         Q_EMIT outputRemoved(output);
-        auto tileManager = std::move(m_tileManagers[output]);
-        m_tileManagers.erase(output);
+        for (VirtualDesktop *desktop : VirtualDesktopManager::self()->allDesktops()) {
+            auto tileManager = std::move(m_tileManagers[output][desktop]);
+            m_tileManagers.erase(output);
 
-        // Evacuate windows from the defunct custom tile tree.
-        tileManager->rootTile()->visitDescendants([](const Tile *child) {
-            const QList<Window *> windows = child->windows();
-            for (Window *window : windows) {
-                window->setTile(nullptr);
-            }
-        });
+            // Evacuate windows from the defunct custom tile tree.
+            tileManager->rootTile()->visitDescendants([](const Tile *child) {
+                const QList<Window *> windows = child->windows();
+                for (Window *window : windows) {
+                    window->setTile(nullptr);
+                }
+            });
 
-        // Migrate windows from the defunct quick tile to a quick tile tree on another output.
-        static constexpr QuickTileMode quickTileModes[] = {
-            QuickTileFlag::Left,
-            QuickTileFlag::Right,
-            QuickTileFlag::Top,
-            QuickTileFlag::Bottom,
-            QuickTileFlag::Top | QuickTileFlag::Left,
-            QuickTileFlag::Top | QuickTileFlag::Right,
-            QuickTileFlag::Bottom | QuickTileFlag::Left,
-            QuickTileFlag::Bottom | QuickTileFlag::Right,
-        };
+            // Migrate windows from the defunct quick tile to a quick tile tree on another output.
+            static constexpr QuickTileMode quickTileModes[] = {
+                QuickTileFlag::Left,
+                QuickTileFlag::Right,
+                QuickTileFlag::Top,
+                QuickTileFlag::Bottom,
+                QuickTileFlag::Top | QuickTileFlag::Left,
+                QuickTileFlag::Top | QuickTileFlag::Right,
+                QuickTileFlag::Bottom | QuickTileFlag::Left,
+                QuickTileFlag::Bottom | QuickTileFlag::Right,
+            };
 
-        for (const QuickTileMode &quickTileMode : quickTileModes) {
-            Tile *quickTile = tileManager->quickTile(quickTileMode);
-            const QList<Window *> windows = quickTile->windows();
-            if (windows.isEmpty()) {
-                continue;
-            }
+            for (const QuickTileMode &quickTileMode : quickTileModes) {
+                Tile *quickTile = tileManager->quickTile(quickTileMode);
+                const QList<Window *> windows = quickTile->windows();
+                if (windows.isEmpty()) {
+                    continue;
+                }
 
-            Output *bestOutput = outputAt(output->geometry().center());
-            Tile *bestTile = m_tileManagers[bestOutput]->quickTile(quickTileMode);
+                Output *bestOutput = outputAt(output->geometry().center());
+                Tile *bestTile = m_tileManagers[bestOutput][desktop]->quickTile(quickTileMode);
 
-            for (Window *window : windows) {
-                window->setTile(bestTile);
+                for (Window *window : windows) {
+                    window->setTile(bestTile);
+                }
             }
         }
     }
@@ -1398,11 +1402,19 @@ void Workspace::slotDesktopAdded(VirtualDesktop *desktop)
 {
     m_focusChain->addDesktop(desktop);
     m_placement->reinitCascading();
+
+    for (Output *output : std::as_const(m_outputs)) {
+        m_tileManagers[output][desktop] = std::make_unique<TileManager>(desktop, output);
+    }
     rearrange();
 }
 
 void Workspace::slotDesktopRemoved(VirtualDesktop *desktop)
 {
+    for (Output *output : std::as_const(m_outputs)) {
+        m_tileManagers[output].erase(desktop);
+    }
+
     for (auto it = m_windows.constBegin(); it != m_windows.constEnd(); ++it) {
         if (!(*it)->desktops().contains(desktop)) {
             continue;
@@ -3055,11 +3067,14 @@ ScreenEdges *Workspace::screenEdges() const
 
 TileManager *Workspace::tileManager(Output *output)
 {
-    if (auto search = m_tileManagers.find(output); search != m_tileManagers.end()) {
-        return search->second.get();
-    } else {
-        return nullptr;
+    if (auto searchOutput = m_tileManagers.find(output); searchOutput != m_tileManagers.end()) {
+        /// return searchOutput->second[VirtualDesktopManager::self()->currentDesktop()].get();
+        if (auto searchDesktop = searchOutput->second.find(VirtualDesktopManager::self()->currentDesktop()); searchDesktop != searchOutput->second.end()) {
+            return searchDesktop->second.get();
+        }
     }
+
+    return nullptr;
 }
 
 #if KWIN_BUILD_TABBOX
