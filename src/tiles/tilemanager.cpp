@@ -53,10 +53,11 @@ QDebug operator<<(QDebug debug, const TileManager *tileManager)
     return debug;
 }
 
-TileManager::TileManager(Output *parent)
+TileManager::TileManager(VirtualDesktop *desktop, Output *parent)
     : QObject(parent)
     , m_output(parent)
     , m_tileModel(new TileModel(this))
+    , m_desktop(desktop)
 {
     m_saveTimer = std::make_unique<QTimer>(this);
     m_saveTimer->setSingleShot(true);

@@ -30,6 +30,7 @@ namespace KWin
 class Output;
 class Tile;
 class TileModel;
+class VirtualDesktop;
 
 /**
  * Custom tiling zones management per output.
@@ -41,7 +42,7 @@ class KWIN_EXPORT TileManager : public QObject
     Q_PROPERTY(TileModel *model READ model CONSTANT)
 
 public:
-    explicit TileManager(Output *parent = nullptr);
+    explicit TileManager(VirtualDesktop *desktop, Output *parent = nullptr);
     ~TileManager() override;
 
     bool tearingDown() const;
@@ -71,6 +72,7 @@ private:
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
     std::unique_ptr<TileModel> m_tileModel = nullptr;
+    VirtualDesktop *m_desktop = nullptr;
     bool m_tearingDown = false;
     friend class CustomTile;
 };

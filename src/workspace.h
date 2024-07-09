@@ -758,7 +758,7 @@ private:
 
     PlaceholderOutput *m_placeholderOutput = nullptr;
     std::unique_ptr<PlaceholderInputEventFilter> m_placeholderFilter;
-    std::map<Output *, std::unique_ptr<TileManager>> m_tileManagers;
+    std::map<Output *, std::map<VirtualDesktop *, std::unique_ptr<TileManager>>> m_tileManagers;
     std::unique_ptr<OutputConfigurationStore> m_outputConfigStore;
     std::unique_ptr<LidSwitchTracker> m_lidSwitchTracker;
     std::unique_ptr<OrientationSensor> m_orientationSensor;
