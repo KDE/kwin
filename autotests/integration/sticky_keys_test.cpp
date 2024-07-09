@@ -37,6 +37,8 @@ private Q_SLOTS:
     void testStick_data();
     void testLock();
     void testLock_data();
+    void testMouse();
+    void testMouse_data();
     void testDisableTwoKeys();
 };
 
@@ -279,6 +281,61 @@ void StickyKeysTest::testDisableTwoKeys()
     QVERIFY(!modifierSpy.wait(10));
     Test::keyboardKeyReleased(KEY_A, ++timestamp);
     QVERIFY(!modifierSpy.wait(10));
+}
+
+void StickyKeysTest::testMouse_data()
+{
+    QTest::addColumn<int>("modifierKey");
+    QTest::addColumn<int>("expectedMods");
+
+    QTest::addRow("Shift") << KEY_LEFTSHIFT << 1;
+    QTest::addRow("Ctrl") << KEY_LEFTCTRL << 4;
+    QTest::addRow("Alt") << KEY_LEFTALT << 8;
+    QTest::addRow("AltGr") << KEY_RIGHTALT << 128;
+}
+
+void StickyKeysTest::testMouse()
+{
+    QFETCH(int, modifierKey);
+    QFETCH(int, expectedMods);
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+    Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
+    QVERIFY(waylandWindow);
+
+    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    QVERIFY(modifierSpy.wait());
+    modifierSpy.clear();
+
+    quint32 timestamp = 0;
+
+    // press mod to latch it
+    Test::keyboardKeyPressed(modifierKey, ++timestamp);
+    QVERIFY(modifierSpy.wait());
+    // arguments are: quint32 depressed, quint32 latched, quint32 locked, quint32 group
+    QCOMPARE(modifierSpy.first()[0], expectedMods); // verify that mod is depressed
+    QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is latched
+
+    modifierSpy.clear();
+    // release mod, the modifier should still be latched
+    Test::keyboardKeyReleased(modifierKey, ++timestamp);
+    QVERIFY(modifierSpy.wait());
+    QCOMPARE(modifierSpy.first()[0], 0); // verify that mod is not depressed
+    QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is still latched
+
+    // press and release a mouse button, this unlatches the modifier
+    modifierSpy.clear();
+    Test::pointerButtonPressed(BTN_LEFT, ++timestamp);
+    QVERIFY(!modifierSpy.wait(10));
+    Test::pointerButtonReleased(BTN_LEFT, ++timestamp);
+    QVERIFY(modifierSpy.wait());
+    QCOMPARE(modifierSpy.first()[0], 0); // verify that mod is not depressed
+    QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is not latched any more
 }
 }
 

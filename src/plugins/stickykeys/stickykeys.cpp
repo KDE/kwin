@@ -9,6 +9,8 @@
 #include "keyboard_input.h"
 #include "xkb.h"
 
+#include <QTimer>
+
 #include <KLazyLocalizedString>
 #if KWIN_BUILD_NOTIFICATIONS
 #include <KNotification>
@@ -181,6 +183,31 @@ void StickyKeysFilter::disableStickyKeys()
     }
 
     KWin::input()->uninstallInputEventFilter(this);
+}
+
+bool StickyKeysFilter::pointerButton(KWin::PointerButtonEvent *event)
+{
+    if (event->state == KWin::PointerButtonState::Released) {
+        // unlatch all unlocked modifiers
+        for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
+
+            if (it->second == Locked) {
+                continue;
+            }
+
+            it->second = KeyState::None;
+
+            KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+
+            // We need to delay the modifier update until the client received the mouse event, otherwise
+            // the updated modifiers arrive before the mouse event and e.g. Ctrl+Click won't work
+            QTimer::singleShot(0, this, [] {
+                KWin::input()->keyboard()->xkb()->forwardModifiers();
+            });
+        }
+    }
+
+    return false;
 }
 
 #include "moc_stickykeys.cpp"

@@ -18,6 +18,7 @@ public:
     explicit StickyKeysFilter();
 
     bool keyboardKey(KWin::KeyboardKeyEvent *event) override;
+    bool pointerButton(KWin::PointerButtonEvent *event) override;
 
     enum KeyState {
         None,
