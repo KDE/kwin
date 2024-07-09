@@ -56,7 +56,7 @@ public:
     EglGbmLayerSurface(DrmGpu *gpu, EglGbmBackend *eglBackend, BufferTarget target = BufferTarget::Normal, FormatOption formatOption = FormatOption::PreferAlpha);
     ~EglGbmLayerSurface();
 
-    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement);
+    std::optional<OutputLayerBeginFrameInfo> startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile);
     bool endRendering(const QRegion &damagedRegion, OutputFrame *frame);
 
     bool doesSurfaceFit(const QSize &size, const QHash<uint32_t, QList<uint64_t>> &formats) const;
@@ -95,7 +95,7 @@ private:
         BufferTarget bufferTarget;
 
         // for color management
-        bool colormanagementEnabled = false;
+        bool needsShadowBuffer = false;
         std::shared_ptr<EglSwapchain> shadowSwapchain;
         std::shared_ptr<EglSwapchainSlot> currentShadowSlot;
         ColorDescription targetColorDescription = ColorDescription::sRGB;

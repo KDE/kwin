@@ -74,7 +74,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, bool enableColormanagement)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -95,10 +95,9 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     slot->framebuffer()->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
 
-    if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors
-        || m_surface->colormanagementEnabled != enableColormanagement || m_surface->iccProfile != iccProfile) {
+    if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
-        m_surface->colormanagementEnabled = enableColormanagement;
+        m_surface->needsShadowBuffer = channelFactors != QVector3D(1, 1, 1) || m_surface->iccProfile || colorDescription.transferFunction().type != TransferFunction::gamma22;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
         m_surface->iccProfile = iccProfile;
@@ -109,8 +108,9 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         } else {
             m_surface->iccShader.reset();
         }
-        if (enableColormanagement) {
-            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), TransferFunction::gamma22,
+        if (m_surface->needsShadowBuffer) {
+            const double maxLuminance = colorDescription.maxHdrLuminance().value_or(colorDescription.referenceLuminance());
+            m_surface->intermediaryColorDescription = ColorDescription(colorDescription.containerColorimetry(), TransferFunction(TransferFunction::gamma22, 0, maxLuminance),
                                                                        colorDescription.referenceLuminance(), colorDescription.minLuminance(),
                                                                        colorDescription.maxAverageLuminance(), colorDescription.maxHdrLuminance(),
                                                                        colorDescription.containerColorimetry(), colorDescription.sdrColorimetry());
@@ -122,29 +122,31 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     const QRegion repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), infiniteRegion()) : infiniteRegion();
     m_surface->compositingTimeQuery = std::make_unique<GLRenderTimeQuery>(m_surface->context);
     m_surface->compositingTimeQuery->begin();
-    if (enableColormanagement) {
+    if (m_surface->needsShadowBuffer) {
         if (!m_surface->shadowSwapchain || m_surface->shadowSwapchain->size() != m_surface->gbmSwapchain->size()) {
             const auto formats = m_eglBackend->eglDisplayObject()->nonExternalOnlySupportedDrmFormats();
             const auto createSwapchain = [&formats, this](bool requireAlpha) {
-                for (auto it = formats.begin(); it != formats.end(); it++) {
-                    const auto info = FormatInfo::get(it.key());
-                    if (!info || info->bitsPerColor != 16 || !info->floatingPoint) {
-                        continue;
-                    }
-                    if (requireAlpha && info->alphaBits == 0) {
-                        continue;
-                    }
-                    auto mods = it.value();
-                    if (m_eglBackend->gpu()->isAmdgpu() && qEnvironmentVariableIntValue("KWIN_DRM_NO_DCC_WORKAROUND") == 0) {
-                        // using modifiers with DCC here causes glitches on amdgpu: https://gitlab.freedesktop.org/mesa/mesa/-/issues/10875
-                        if (!mods.contains(DRM_FORMAT_MOD_LINEAR)) {
+                for (const uint32_t bitsPerColor : {10, 16, 8}) {
+                    for (auto it = formats.begin(); it != formats.end(); it++) {
+                        const auto info = FormatInfo::get(it.key());
+                        if (!info || info->bitsPerColor != bitsPerColor) {
                             continue;
                         }
-                        mods = {DRM_FORMAT_MOD_LINEAR};
-                    }
-                    m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), it.key(), mods);
-                    if (m_surface->shadowSwapchain) {
-                        break;
+                        if (requireAlpha && info->alphaBits == 0) {
+                            continue;
+                        }
+                        auto mods = it.value();
+                        if (info->floatingPoint && m_eglBackend->gpu()->isAmdgpu() && qEnvironmentVariableIntValue("KWIN_DRM_NO_DCC_WORKAROUND") == 0) {
+                            // using modifiers with DCC here causes glitches on amdgpu: https://gitlab.freedesktop.org/mesa/mesa/-/issues/10875
+                            if (!mods.contains(DRM_FORMAT_MOD_LINEAR)) {
+                                continue;
+                            }
+                            mods = {DRM_FORMAT_MOD_LINEAR};
+                        }
+                        m_surface->shadowSwapchain = EglSwapchain::create(m_eglBackend->drmDevice()->allocator(), m_eglBackend->openglContext(), m_surface->gbmSwapchain->size(), it.key(), mods);
+                        if (m_surface->shadowSwapchain) {
+                            return;
+                        }
                     }
                 }
             };
@@ -170,7 +172,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->shadowSwapchain.reset();
         m_surface->currentShadowSlot.reset();
         return OutputLayerBeginFrameInfo{
-            .renderTarget = RenderTarget(m_surface->currentSlot->framebuffer()),
+            .renderTarget = RenderTarget(m_surface->currentSlot->framebuffer(), m_surface->intermediaryColorDescription),
             .repaint = repaint,
         };
     }
@@ -178,7 +180,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame *frame)
 {
-    if (m_surface->colormanagementEnabled) {
+    if (m_surface->needsShadowBuffer) {
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);

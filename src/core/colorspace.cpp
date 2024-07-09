@@ -275,6 +275,11 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) co
     return dst.transferFunction().nitsToEncoded(rgb);
 }
 
+ColorDescription ColorDescription::withTransferFunction(const TransferFunction &func) const
+{
+    return ColorDescription(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
+}
+
 double TransferFunction::defaultMinLuminanceFor(Type type)
 {
     switch (type) {
@@ -410,10 +415,19 @@ bool TransferFunction::isRelative() const
     }
     Q_UNREACHABLE();
 }
+
+TransferFunction TransferFunction::relativeScaledTo(double referenceLuminance) const
+{
+    if (isRelative()) {
+        return TransferFunction(type, minLuminance * referenceLuminance / maxLuminance, referenceLuminance);
+    } else {
+        return *this;
+    }
+}
 }
 
 QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
 {
-    debug << "TransferFunction(" << tf.type << ")";
+    debug << "TransferFunction(" << tf.type << ", [" << tf.minLuminance << "," << tf.maxLuminance << "] )";
     return debug;
 }

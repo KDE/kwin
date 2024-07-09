@@ -216,11 +216,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
         return DrmPipeline::Error::InvalidArguments;
     }
-    if (!m_pending.crtcColorPipeline.isIdentity() && !m_primaryLayer->colorPipeline().isIdentity()) {
-        // TODO merge the pipelines instead?
-        return DrmPipeline::Error::InvalidArguments;
-    }
-    const auto &colorPipeline = m_pending.crtcColorPipeline.isIdentity() ? m_primaryLayer->colorPipeline() : m_pending.crtcColorPipeline;
+    const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
@@ -339,9 +335,6 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
 
     commit->addProperty(m_pending.crtc->active, 1);
     commit->addBlob(m_pending.crtc->modeId, m_pending.mode->blob());
-    if (m_pending.crtc->degammaLut.isValid()) {
-        commit->addBlob(m_pending.crtc->degammaLut, nullptr);
-    }
 
     const auto primary = m_pending.crtc->primaryPlane();
     commit->addProperty(primary->crtcId, m_pending.crtc->id());

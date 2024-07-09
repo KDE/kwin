@@ -238,7 +238,7 @@ void ColorPipeline::add(const ColorOp &op)
     }
 }
 
-ColorPipeline ColorPipeline::merge(const ColorPipeline &onTop)
+ColorPipeline ColorPipeline::merged(const ColorPipeline &onTop) const
 {
     ColorPipeline ret{inputRange};
     ret.ops = ops;
