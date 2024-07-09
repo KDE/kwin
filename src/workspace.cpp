@@ -460,16 +460,13 @@ Workspace::~Workspace()
 #endif
 
     if (waylandServer()) {
-        const QList<Window *> waylandWindows = waylandServer()->windows();
-        for (Window *window : waylandWindows) {
-            window->destroyWindow();
+        while (!waylandServer()->windows().isEmpty()) {
+            waylandServer()->windows()[0]->destroyWindow();
         }
     }
 
-    // We need a shadow copy because windows get removed as we go through them.
-    const QList<Window *> windows = m_windows;
-    for (Window *window : windows) {
-        window->destroyWindow();
+    while (!m_windows.isEmpty()) {
+        m_windows[0]->destroyWindow();
     }
 
     m_rulebook.reset();
