@@ -4415,13 +4415,19 @@ void X11Window::configure(const QRect &nativeFrame, const QRect &nativeWrapper, 
             m_frame.setGeometry(nativeFrame);
         }
         if (!isShade()) {
+            const bool resized = m_client.size() != nativeClient.size();
             if (m_wrapper.geometry() != nativeWrapper) {
                 m_wrapper.setGeometry(nativeWrapper);
             }
             if (m_client.geometry() != nativeClient) {
                 m_client.setGeometry(nativeClient);
             }
-            sendSyntheticConfigureNotify();
+
+            // A synthetic configure notify event has to be sent if the client window is not
+            // resized to let the client know about the new position. See ICCCM 4.1.5.
+            if (!resized) {
+                sendSyntheticConfigureNotify();
+            }
         }
 
         // TODO: This is not required on wayland, keep it until we support Xorg session.
