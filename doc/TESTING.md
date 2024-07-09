@@ -18,14 +18,29 @@ emulation. This gives the tests a stable base removing variance introduced by di
 Users of non-Mesa drivers (e.g. proprietary NVIDIA driver) need to ensure that Mesa is also installed. If your system
 uses libglvnd this should work out of the box, if not you might need to tune LD_LIBRARY_PATH.
 
-# Running the test suite
+# Preventing side effects
+To prevent side effects with the running session it is recommended to run tests
+in a dedicated dbus session. This can be achieved by prefixing the test command 
+with `dbus-run-session`, as shown in the examples below.
+
+# Running tests
+Tests are more likely to succeed when run from ssh, as the environment is
+further isolated from the user's session. For example:
+
+```bash
+ssh localhost
+```
+
+Then, run the tests as described below.
+
+## Running the test suite
 The test suite can be run from the build directory. Best is to do:
 
     cd path/to/build/directory
-    xvfb-run ctest
+    dbus-run-session xvfb-run ctest
 
-# Running individual tests
-All tests executables are created in the directory "bin" in the build directory. Each test can be executed by just starting it from within the test directory. To prevent side effects with the running session it is recommended to start a dedicated dbus session:
+## Running individual tests
+All tests executables are created in the directory "bin" in the build directory. Each test can be executed by just starting it from within the test directory:
 
     cd path/to/build/directory/bin
     dbus-run-session ./testFoo
