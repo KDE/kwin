@@ -1642,15 +1642,7 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         }
     }
 
-    if (m_requestedMaximizeMode == MaximizeFull) {
-        if (options->electricBorderMaximize()) {
-            updateQuickTileMode(QuickTileFlag::Maximize);
-        } else {
-            updateQuickTileMode(QuickTileFlag::None);
-        }
-    } else {
-        updateQuickTileMode(QuickTileFlag::None);
-    }
+    updateQuickTileMode(QuickTileFlag::None);
 
     moveResize(geometry);
 

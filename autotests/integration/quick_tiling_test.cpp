@@ -6,7 +6,6 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-#include "effect/globals.h"
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
@@ -179,8 +178,12 @@ void QuickTilingTest::testQuickTiling()
 
     // at this point the geometry did not yet change
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
-    // but requested quick tile mode already changed, proper quickTileMode not yet
-    QCOMPARE(window->requestedQuickTileMode(), mode);
+    // Manually maximized window is always without a tile
+    if (mode == QuickTileFlag::Maximize) {
+        QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
+    } else {
+        QCOMPARE(window->requestedQuickTileMode(), mode);
+    }
     // Actual quickTileMOde didn't change yet
     QCOMPARE(window->quickTileMode(), oldQuickTileMode);
 
@@ -196,19 +199,28 @@ void QuickTilingTest::testQuickTiling()
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
     QCOMPARE(window->frameGeometry(), expectedGeometry);
-    QCOMPARE(quickTileChangedSpy.count(), 1);
-    QCOMPARE(window->quickTileMode(), mode);
+    if (mode == QuickTileFlag::Maximize) {
+        QCOMPARE(quickTileChangedSpy.count(), 0);
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    } else {
+        QCOMPARE(quickTileChangedSpy.count(), 1);
+        QCOMPARE(window->quickTileMode(), mode);
+    }
 
     // send window to other screen
     QList<Output *> outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
     window->sendToOutput(outputs[1]);
     QCOMPARE(window->output(), outputs[1]);
-    // quick tile should not be changed
-    QCOMPARE(window->quickTileMode(), mode);
+    if (mode == QuickTileFlag::Maximize) {
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    } else {
+        // quick tile should not be changed
+        QCOMPARE(window->quickTileMode(), mode);
+    }
     QTEST(window->frameGeometry(), "secondScreen");
     Tile *tile = workspace()->tileManager(outputs[1])->quickTile(mode);
-    QCOMPARE(window->tile(), tile);
+    QCOMPARE(window->tile(), mode == QuickTileFlag::Maximize ? nullptr : tile);
 
     // now try to toggle again
     window->setQuickTileMode(mode, true);
@@ -218,8 +230,13 @@ void QuickTilingTest::testQuickTiling()
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
-    QVERIFY(quickTileChangedSpy.wait());
-    QCOMPARE(quickTileChangedSpy.count(), 2);
+    if (mode == QuickTileFlag::Maximize) {
+        QVERIFY(!quickTileChangedSpy.wait());
+        QCOMPARE(quickTileChangedSpy.count(), 0);
+    } else {
+        QVERIFY(quickTileChangedSpy.wait());
+        QCOMPARE(quickTileChangedSpy.count(), 2);
+    }
     QTEST(window->quickTileMode(), "expectedModeAfterToggle");
 }
 
@@ -265,8 +282,8 @@ void QuickTilingTest::testQuickMaximizing()
 
     // at this point the geometry did not yet change
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
-    // but requested quick tile mode already changed
-    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::Maximize);
+    // Manually maximized window is always without a tile
+    QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->quickTileMode(), oldQuickTileMode);
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
 
@@ -281,14 +298,15 @@ void QuickTilingTest::testQuickMaximizing()
 
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
-    QCOMPARE(quickTileChangedSpy.count(), 1);
-    QCOMPARE(window->quickTileMode(), QuickTileFlag::Maximize);
+    QCOMPARE(quickTileChangedSpy.count(), 0);
+    QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
 
     // window is now set to maximised
     QCOMPARE(maximizeChangedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QCOMPARE(window->tile(), nullptr);
 
     // go back to quick tile none
     QFETCH(QuickTileMode, mode);
@@ -308,7 +326,7 @@ void QuickTilingTest::testQuickMaximizing()
 
     QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(frameGeometryChangedSpy.count(), 2);
-    QCOMPARE(quickTileChangedSpy.count(), 2);
+    QCOMPARE(quickTileChangedSpy.count(), 0);
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
     QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
@@ -620,10 +638,15 @@ void QuickTilingTest::testX11QuickTiling()
     const QRectF origGeo = window->frameGeometry();
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
-    QCOMPARE(window->quickTileMode(), mode);
+    if (mode == QuickTileFlag::Maximize) {
+        QCOMPARE(quickTileChangedSpy.count(), 0);
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+    } else {
+        QCOMPARE(quickTileChangedSpy.count(), 1);
+        QCOMPARE(window->quickTileMode(), mode);
+    }
     QTEST(window->frameGeometry(), "expectedGeometry");
     QCOMPARE(window->geometryRestore(), origGeo);
-    QCOMPARE(quickTileChangedSpy.count(), 1);
 
     // quick tile to same edge again should also act like send to screen
     // if screen is on the same edge
@@ -706,9 +729,14 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QFETCH(QuickTileMode, mode);
     window->setQuickTileMode(mode, true);
-    QCOMPARE(window->quickTileMode(), mode);
+    if (mode == QuickTileFlag::Maximize) {
+        QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
+        QCOMPARE(quickTileChangedSpy.count(), 0);
+    } else {
+        QCOMPARE(window->quickTileMode(), mode);
+        QCOMPARE(quickTileChangedSpy.count(), 1);
+    }
     QTEST(window->frameGeometry(), "expectedGeometry");
-    QCOMPARE(quickTileChangedSpy.count(), 1);
 
     // and destroy the window again
     xcb_unmap_window(c.get(), windowId);
