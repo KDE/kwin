@@ -216,11 +216,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
         return DrmPipeline::Error::InvalidArguments;
     }
-    if (!m_pending.crtcColorPipeline.isIdentity() && !m_primaryLayer->colorPipeline().isIdentity()) {
-        // TODO merge the pipelines instead?
-        return DrmPipeline::Error::InvalidArguments;
-    }
-    const auto &colorPipeline = m_pending.crtcColorPipeline.isIdentity() ? m_primaryLayer->colorPipeline() : m_pending.crtcColorPipeline;
+    const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
@@ -324,7 +320,7 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
     }
     if (m_connector->hdrMetadata.isValid()) {
         commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.colorDescription.transferFunction()));
-    } else if (m_pending.colorDescription.transferFunction() != TransferFunction::gamma22) {
+    } else if (m_pending.colorDescription.transferFunction().type != TransferFunction::gamma22) {
         return false;
     }
     if (m_pending.colorDescription.containerColorimetry() == NamedColorimetry::BT2020) {
@@ -680,14 +676,12 @@ void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
 
 void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
 {
-    if (m_pending.iccProfile != profile) {
-        m_pending.iccProfile = profile;
-    }
+    m_pending.iccProfile = profile;
 }
 
 std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction transferFunction) const
 {
-    if (transferFunction != TransferFunction::PerceptualQuantizer) {
+    if (transferFunction.type != TransferFunction::PerceptualQuantizer) {
         // for sRGB / gamma 2.2, don't send any metadata, to ensure the non-HDR experience stays the same
         return nullptr;
     }

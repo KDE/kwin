@@ -53,7 +53,7 @@ private:
     void updateColorDescription();
 
     const QPointer<SurfaceInterface> m_surface;
-    TransferFunction m_transferFunction = TransferFunction::sRGB;
+    TransferFunction m_transferFunction{TransferFunction::sRGB};
     NamedColorimetry m_containerColorimetry = NamedColorimetry::BT709;
     std::optional<Colorimetry> m_masteringColorimetry;
     std::optional<double> m_maxAverageLuminance;

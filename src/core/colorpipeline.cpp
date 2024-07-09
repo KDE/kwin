@@ -106,7 +106,7 @@ void ColorPipeline::addTransferFunction(TransferFunction tf)
             }
         }
     }
-    if (tf == TransferFunction::linear) {
+    if (tf.type == TransferFunction::linear) {
         QMatrix4x4 mat;
         mat.translate(tf.minLuminance, tf.minLuminance, tf.minLuminance);
         mat.scale(tf.maxLuminance - tf.minLuminance);
@@ -136,7 +136,7 @@ void ColorPipeline::addInverseTransferFunction(TransferFunction tf)
             }
         }
     }
-    if (tf == TransferFunction::linear) {
+    if (tf.type == TransferFunction::linear) {
         QMatrix4x4 mat;
         mat.scale(1.0 / (tf.maxLuminance - tf.minLuminance));
         mat.translate(-tf.minLuminance, -tf.minLuminance, -tf.minLuminance);
@@ -242,7 +242,7 @@ void ColorPipeline::add(const ColorOp &op)
     }
 }
 
-ColorPipeline ColorPipeline::merge(const ColorPipeline &onTop)
+ColorPipeline ColorPipeline::merged(const ColorPipeline &onTop) const
 {
     ColorPipeline ret{inputRange};
     ret.ops = ops;

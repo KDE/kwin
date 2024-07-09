@@ -62,14 +62,21 @@ public:
      * channel factors adapted to the target color space + brightness setting multiplied in
      */
     QVector3D effectiveChannelFactors() const;
-    bool needsColormanagement() const;
-
     void updateConnectorProperties();
+
+    /**
+     * @returns the color description / encoding that the buffers passed to the CRTC need to have, without a color pipeline to change it
+     */
+    const ColorDescription &scanoutColorDescription() const;
+    /**
+     * @returns whether or not the renderer should apply channel factors
+     */
+    bool needsChannelFactorFallback() const;
 
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-    bool doSetChannelFactors(const QVector3D &rgb);
+    void tryKmsColorOffloading();
     ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
@@ -86,6 +93,7 @@ private:
 
     QVector3D m_channelFactors = {1, 1, 1};
     bool m_channelFactorsNeedShaderFallback = false;
+    ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
 };
 
 }

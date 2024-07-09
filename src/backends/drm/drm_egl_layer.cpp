@@ -56,7 +56,8 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
 
     m_scanoutBuffer.reset();
     m_colorPipeline = ColorPipeline{};
-    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->colorDescription(), m_pipeline->output()->effectiveChannelFactors(), m_pipeline->iccProfile(), m_pipeline->output()->needsColormanagement());
+    return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->output()->scanoutColorDescription(),
+                                    m_pipeline->output()->needsChannelFactorFallback() ? m_pipeline->output()->effectiveChannelFactors() : QVector3D(1, 1, 1), m_pipeline->iccProfile());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
@@ -96,15 +97,11 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
         // TODO make the icc profile output a color pipeline too?
         return false;
     }
-    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->colorDescription());
-    if (m_pipeline->output()->needsColormanagement()) {
-        // with color management enabled, the factors have to be applied in linear space
-        // the pipeline will optimize out the unnecessary transformations
-        pipeline.addTransferFunction(m_pipeline->colorDescription().transferFunction());
-    }
-    pipeline.addMultiplier(m_pipeline->output()->effectiveChannelFactors());
-    if (m_pipeline->output()->needsColormanagement()) {
-        pipeline.addInverseTransferFunction(m_pipeline->colorDescription().transferFunction());
+    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription());
+    if (m_pipeline->output()->needsChannelFactorFallback()) {
+        pipeline.addTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
+        pipeline.addMultiplier(m_pipeline->output()->effectiveChannelFactors());
+        pipeline.addInverseTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
     }
     m_colorPipeline = pipeline;
     // kernel documentation says that

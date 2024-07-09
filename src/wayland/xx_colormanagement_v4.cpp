@@ -178,7 +178,7 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_create(R
         wl_resource_post_error(resource->handle, error::error_incomplete_set, "colorimetry or transfer function missing");
         return;
     }
-    if (m_transferFunction != TransferFunction::PerceptualQuantizer && (m_maxCll || m_maxFall)) {
+    if (m_transferFunction->type != TransferFunction::PerceptualQuantizer && (m_maxCll || m_maxFall)) {
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
@@ -198,10 +198,10 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_tf_n
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_SRGB:
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_BT709:
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_GAMMA22:
-        m_transferFunction = TransferFunction::gamma22;
+        m_transferFunction = TransferFunction(TransferFunction::gamma22);
         return;
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_ST2084_PQ:
-        m_transferFunction = TransferFunction::PerceptualQuantizer;
+        m_transferFunction = TransferFunction(TransferFunction::PerceptualQuantizer);
         return;
     default:
         // TODO add more transfer functions

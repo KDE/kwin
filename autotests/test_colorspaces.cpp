@@ -63,8 +63,8 @@ void TestColorspaces::roundtripConversion()
     QFETCH(TransferFunction::Type, dstTransferFunction);
     QFETCH(double, requiredAccuracy);
 
-    const auto src = ColorDescription(srcColorimetry, srcTransferFunction, 100, 0, 100, 100);
-    const auto dst = ColorDescription(dstColorimetry, dstTransferFunction, 100, 0, 100, 100);
+    const auto src = ColorDescription(srcColorimetry, TransferFunction(srcTransferFunction), 100, 0, 100, 100);
+    const auto dst = ColorDescription(dstColorimetry, TransferFunction(dstTransferFunction), 100, 0, 100, 100);
 
     const QVector3D red(1, 0, 0);
     const QVector3D green(0, 1, 0);
@@ -108,7 +108,7 @@ void TestColorspaces::testIdentityTransformation()
 {
     QFETCH(NamedColorimetry, colorimetry);
     QFETCH(TransferFunction::Type, transferFunction);
-    const ColorDescription color(colorimetry, transferFunction, 100, 0, 100, 100);
+    const ColorDescription color(colorimetry, TransferFunction(transferFunction), 100, 0, 100, 100);
 
     const auto pipeline = ColorPipeline::create(color, color);
     if (!pipeline.isIdentity()) {
@@ -125,13 +125,13 @@ void TestColorspaces::testColorPipeline_data()
     QTest::addColumn<QVector3D>("dstGray");
     QTest::addColumn<QVector3D>("dstWhite");
 
-    QTest::addRow("sRGB -> rec.2020") << ColorDescription(NamedColorimetry::BT709, TransferFunction::Type::gamma22, TransferFunction::defaultReferenceLuminanceFor(TransferFunction::Type::gamma22), 0, std::nullopt, std::nullopt)
-                                      << ColorDescription(NamedColorimetry::BT2020, TransferFunction::Type::PerceptualQuantizer, 500, 0, std::nullopt, std::nullopt)
+    QTest::addRow("sRGB -> rec.2020") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
+                                      << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 500, 0, std::nullopt, std::nullopt)
                                       << QVector3D(0.044, 0.044, 0.044)
                                       << QVector3D(0.517, 0.517, 0.517)
                                       << QVector3D(0.677, 0.677, 0.677);
-    QTest::addRow("sRGB -> scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction::Type::gamma22, TransferFunction::defaultReferenceLuminanceFor(TransferFunction::Type::gamma22), 0, std::nullopt, std::nullopt)
-                                   << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::Type::linear, 0, 80), 80, 0, std::nullopt, std::nullopt)
+    QTest::addRow("sRGB -> scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
+                                   << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, std::nullopt, std::nullopt)
                                    << QVector3D(0.0001, 0.0001, 0.0001)
                                    << QVector3D(0.2177376408240310, 0.2177376408240310, 0.2177376408240310)
                                    << QVector3D(1, 1, 1);

@@ -96,12 +96,13 @@ public:
         PerceptualQuantizer = 2,
         gamma22 = 3,
     };
-    TransferFunction(Type tf);
+    explicit TransferFunction(Type tf);
     explicit TransferFunction(Type tf, double minLuminance, double maxLuminance);
 
     auto operator<=>(const TransferFunction &) const = default;
 
     bool isRelative() const;
+    TransferFunction relativeScaledTo(double referenceLuminance) const;
     double encodedToNits(double encoded) const;
     double nitsToEncoded(double nits) const;
     QVector3D encodedToNits(const QVector3D &encoded) const;
@@ -164,6 +165,7 @@ public:
     bool operator==(const ColorDescription &other) const = default;
 
     QVector3D mapTo(QVector3D rgb, const ColorDescription &other) const;
+    ColorDescription withTransferFunction(const TransferFunction &func) const;
 
     /**
      * This color description describes display-referred sRGB, with a gamma22 transfer function

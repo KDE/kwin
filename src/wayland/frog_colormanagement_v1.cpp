@@ -89,10 +89,10 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_transfer
     case transfer_function_undefined:
     case transfer_function_srgb:
     case transfer_function_gamma_22:
-        m_transferFunction = TransferFunction::gamma22;
+        m_transferFunction = TransferFunction(TransferFunction::gamma22);
         break;
     case transfer_function_st2084_pq:
-        m_transferFunction = TransferFunction::PerceptualQuantizer;
+        m_transferFunction = TransferFunction(TransferFunction::PerceptualQuantizer);
         break;
     case transfer_function_scrgb_linear:
         m_transferFunction = TransferFunction(TransferFunction::linear, 0.0, 80.0);

@@ -198,7 +198,7 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction::gamma22, TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
     : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
@@ -273,6 +273,11 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) co
     rgb *= dst.referenceLuminance() / m_referenceLuminance;
     rgb = m_containerColorimetry.toOther(dst.containerColorimetry()) * rgb;
     return dst.transferFunction().nitsToEncoded(rgb);
+}
+
+ColorDescription ColorDescription::withTransferFunction(const TransferFunction &func) const
+{
+    return ColorDescription(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
 }
 
 double TransferFunction::defaultMinLuminanceFor(Type type)
@@ -410,10 +415,19 @@ bool TransferFunction::isRelative() const
     }
     Q_UNREACHABLE();
 }
+
+TransferFunction TransferFunction::relativeScaledTo(double referenceLuminance) const
+{
+    if (isRelative()) {
+        return TransferFunction(type, minLuminance * referenceLuminance / maxLuminance, referenceLuminance);
+    } else {
+        return *this;
+    }
+}
 }
 
 QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
 {
-    debug << "TransferFunction(" << tf.type << ")";
+    debug << "TransferFunction(" << tf.type << ", [" << tf.minLuminance << "," << tf.maxLuminance << "] )";
     return debug;
 }

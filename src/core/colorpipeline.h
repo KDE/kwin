@@ -81,7 +81,7 @@ public:
 
     static ColorPipeline create(const ColorDescription &from, const ColorDescription &to);
 
-    ColorPipeline merge(const ColorPipeline &onTop);
+    ColorPipeline merged(const ColorPipeline &onTop) const;
 
     bool isIdentity() const;
     bool operator==(const ColorPipeline &other) const = default;
