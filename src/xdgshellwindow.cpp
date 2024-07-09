@@ -1788,10 +1788,7 @@ XdgSurfaceConfigure *XdgPopupWindow::sendRoleConfigure() const
     surface()->setPreferredBufferTransform(preferredBufferTransform());
     surface()->setPreferredColorDescription(preferredColorDescription());
 
-    const QPointF parentPosition = transientFor()->framePosToClientPos(transientFor()->pos());
-    const QPointF popupPosition = moveResizeGeometry().topLeft() - parentPosition;
-
-    const quint32 serial = m_shellSurface->sendConfigure(QRect(popupPosition.toPoint(), moveResizeGeometry().size().toSize()));
+    const quint32 serial = m_shellSurface->sendConfigure(m_relativePlacement.toRect());
 
     XdgSurfaceConfigure *configureEvent = new XdgSurfaceConfigure();
     configureEvent->bounds = moveResizeGeometry();
