@@ -605,7 +605,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     // From this place on, manage() must not return false
     blockGeometryUpdates();
 
-    embedClient(w, attr->visual, attr->colormap, windowGeometry->depth);
+    embedClient(w, attr->visual, attr->colormap, windowGeometry.rect(), windowGeometry->depth);
 
     m_visual = attr->visual;
     bit_depth = windowGeometry->depth;
@@ -1194,12 +1194,13 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
 }
 
 // Called only from manage()
-void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, uint8_t depth)
+void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colormap_t colormap, const QRect &nativeGeometry, uint8_t depth)
 {
     Q_ASSERT(m_client == XCB_WINDOW_NONE);
     Q_ASSERT(frameId() == XCB_WINDOW_NONE);
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
-    m_client.reset(w, false);
+
+    m_client.reset(w, false, nativeGeometry);
 
     const uint32_t zero_value = 0;
 

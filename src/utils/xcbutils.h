@@ -1632,7 +1632,7 @@ public:
      * object or when reset is called again. If @p destroy is @c false the window will not
      * be destroyed. It is then the responsibility of the caller to destroy the window.
      */
-    void reset(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true);
+    void reset(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true, const QRect &geometry = QRect());
     /**
      * @returns @c true if a window is managed, @c false otherwise.
      */
@@ -1777,11 +1777,12 @@ inline xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass
     return w;
 }
 
-inline void Window::reset(xcb_window_t window, bool shouldDestroy)
+inline void Window::reset(xcb_window_t window, bool shouldDestroy, const QRect &geometry)
 {
     destroy();
     m_window = window;
     m_destroy = shouldDestroy;
+    m_geometry = geometry;
 }
 
 inline void Window::setGeometry(const QRect &geometry)
