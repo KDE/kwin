@@ -11,6 +11,7 @@
 
 #include <drm.h>
 #include <memory>
+#include <span>
 
 namespace KWin
 {
@@ -22,7 +23,7 @@ class DrmAtomicCommit;
 class DrmAbstractColorOp
 {
 public:
-    explicit DrmAbstractColorOp(DrmAbstractColorOp *next);
+    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, bool normalized);
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
@@ -32,13 +33,18 @@ public:
         double offset = 0;
         double scale = 1;
     };
-    virtual void program(DrmAtomicCommit *commit, const ColorOp &op, Scaling inputScale, Scaling outputScale) = 0;
+    virtual void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) = 0;
     virtual void bypass(DrmAtomicCommit *commit) = 0;
 
     DrmAbstractColorOp *next() const;
+    /**
+     * @returns if this operation is limited to a range of [0; 1] for input or output values
+     */
+    bool isNormalized() const;
 
 protected:
     DrmAbstractColorOp *m_next = nullptr;
+    const bool m_normalized;
 
     std::optional<ColorPipeline> m_cachedPipeline;
     std::unique_ptr<DrmAtomicCommit> m_cache;
@@ -50,7 +56,7 @@ public:
     explicit LegacyLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize);
 
     bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, const ColorOp &op, Scaling inputScale, Scaling outputScale) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> opsop, Scaling inputScale, Scaling outputScale) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
@@ -65,7 +71,7 @@ public:
     explicit LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
 
     bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, const ColorOp &op, Scaling inputScale, Scaling outputScale) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> ops, Scaling inputScale, Scaling outputScale) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
