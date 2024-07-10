@@ -89,6 +89,11 @@ Output *TileManager::output() const
     return m_output;
 }
 
+VirtualDesktop *TileManager::desktop() const
+{
+    return m_desktop;
+}
+
 Tile *TileManager::bestTileForPosition(const QPointF &pos)
 {
     const auto tiles = m_rootTile->descendants();

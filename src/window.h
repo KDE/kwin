@@ -1794,6 +1794,7 @@ protected:
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
     QPointer<Tile> m_tile;
+    std::map<VirtualDesktop *, Tile *> m_tiles;
 
     // electric border/quick tiling
     QuickTileMode m_electricMode = QuickTileFlag::None;

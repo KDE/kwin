@@ -90,6 +90,25 @@ Window::Window()
         }
     });
 
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
+        Q_UNUSED(previous)
+        auto search = m_tiles.find(current);
+        Tile *newTile = search == m_tiles.end() ? nullptr : search->second;
+        if (newTile != m_tile) {
+            QuickTileMode oldTileMode = quickTileMode();
+            m_tile = newTile;
+            Q_EMIT tileChanged(newTile);
+            if (quickTileMode() != oldTileMode) {
+                Q_EMIT quickTileModeChanged();
+            }
+        }
+    });
+
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopRemoved, this, [this](VirtualDesktop *desktop) {
+        // Tiles will be deleted by The corresponding tilemanager deletions
+        m_tiles.erase(desktop);
+    });
+
     connect(Workspace::self()->applicationMenu(), &ApplicationMenu::applicationMenuEnabledChanged, this, [this] {
         Q_EMIT hasApplicationMenuChanged(hasApplicationMenu());
     });
@@ -98,7 +117,7 @@ Window::Window()
 
 Window::~Window()
 {
-    Q_ASSERT(!m_tile);
+    Q_ASSERT(!m_tiles.empty());
 }
 
 void Window::ref()
@@ -3598,25 +3617,31 @@ QuickTileMode Window::requestedQuickTileMode() const
 
 void Window::setTile(Tile *tile)
 {
-    if (m_tile == tile) {
+    VirtualDesktop *desktop = tile->desktop();
+    auto search = m_tiles.find(desktop);
+    Tile *oldTile = search == m_tiles.end() ? nullptr : search->second;
+
+    if (tile == oldTile) {
         return;
     }
 
-    Tile *oldTile = m_tile;
     QuickTileMode oldTileMode = quickTileMode();
 
-    m_tile = tile;
+    m_tiles[desktop] = tile;
 
-    if (m_tile) {
+    if (tile) {
         Q_ASSERT(!isDeleted());
-        m_tile->addWindow(this);
+        tile->addWindow(this);
     }
 
     if (oldTile) {
         oldTile->removeWindow(this);
     }
 
-    Q_EMIT tileChanged(tile);
+    if (desktop == VirtualDesktopManager::self()->currentDesktop()) {
+        m_tile = tile;
+        Q_EMIT tileChanged(tile);
+    }
 
     if (oldTileMode != quickTileMode()) {
         Q_EMIT quickTileModeChanged();
