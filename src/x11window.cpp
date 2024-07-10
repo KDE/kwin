@@ -3003,7 +3003,7 @@ bool X11Window::belongsToSameApplication(const Window *other, SameApplicationChe
 
 QSizeF X11Window::resizeIncrements() const
 {
-    return m_geometryHints.resizeIncrements();
+    return Xcb::fromXNative(m_geometryHints.resizeIncrements());
 }
 
 Xcb::StringProperty X11Window::fetchApplicationMenuServiceName() const
@@ -3711,13 +3711,13 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         return QSizeF(w, h);
     }
 
-    qreal width_inc = m_geometryHints.resizeIncrements().width();
-    qreal height_inc = m_geometryHints.resizeIncrements().height();
-    qreal basew_inc = m_geometryHints.baseSize().width();
-    qreal baseh_inc = m_geometryHints.baseSize().height();
+    qreal width_inc = Xcb::fromXNative(m_geometryHints.resizeIncrements()).width();
+    qreal height_inc = Xcb::fromXNative(m_geometryHints.resizeIncrements()).height();
+    qreal basew_inc = Xcb::fromXNative(m_geometryHints.baseSize()).width();
+    qreal baseh_inc = Xcb::fromXNative(m_geometryHints.baseSize()).height();
     if (!m_geometryHints.hasBaseSize()) {
-        basew_inc = m_geometryHints.minSize().width();
-        baseh_inc = m_geometryHints.minSize().height();
+        basew_inc = Xcb::fromXNative(m_geometryHints.minSize()).width();
+        baseh_inc = Xcb::fromXNative(m_geometryHints.minSize()).height();
     }
 
     w = std::floor((w - basew_inc) / width_inc) * width_inc + basew_inc;
@@ -3746,7 +3746,7 @@ QSizeF X11Window::constrainClientSize(const QSizeF &size, SizeMode mode) const
         // According to ICCCM 4.1.2.3 PMinSize should be a fallback for PBaseSize for size increments,
         // but not for aspect ratio. Since this code comes from FVWM, handles both at the same time,
         // and I have no idea how it works, let's hope nobody relies on that.
-        const QSizeF baseSize = m_geometryHints.baseSize();
+        const QSizeF baseSize = Xcb::fromXNative(m_geometryHints.baseSize());
         w -= baseSize.width();
         h -= baseSize.height();
         qreal max_width = max_size.width() - baseSize.width();
@@ -3881,12 +3881,12 @@ void X11Window::getWmNormalHints()
 
 QSizeF X11Window::minSize() const
 {
-    return rules()->checkMinSize(m_geometryHints.minSize());
+    return rules()->checkMinSize(Xcb::fromXNative(m_geometryHints.minSize()));
 }
 
 QSizeF X11Window::maxSize() const
 {
-    return rules()->checkMaxSize(m_geometryHints.maxSize());
+    return rules()->checkMaxSize(Xcb::fromXNative(m_geometryHints.maxSize()));
 }
 
 QSizeF X11Window::basicUnit() const
@@ -3895,7 +3895,7 @@ QSizeF X11Window::basicUnit() const
     if (!isX11Mode) {
         return QSize(1, 1);
     }
-    return m_geometryHints.resizeIncrements();
+    return Xcb::fromXNative(m_geometryHints.resizeIncrements());
 }
 
 /**

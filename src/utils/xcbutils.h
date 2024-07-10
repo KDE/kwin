@@ -1012,38 +1012,35 @@ public:
     {
         return testFlag(NormalHints::SizeHints::WindowGravity);
     }
-    QSizeF maxSize() const
+    QSize maxSize() const
     {
         if (!hasMaxSize()) {
             return QSize(INT_MAX, INT_MAX);
         }
-        const QSize size(std::max(m_sizeHints->maxWidth, 1), std::max(m_sizeHints->maxHeight, 1));
-        return fromXNative(size);
+        return QSize(std::max(m_sizeHints->maxWidth, 1), std::max(m_sizeHints->maxHeight, 1));
     }
-    QSizeF minSize() const
+    QSize minSize() const
     {
         if (!hasMinSize()) {
             // according to ICCCM 4.1.23 base size should be used as a fallback
             return baseSize();
         }
-        const QSize size(m_sizeHints->minWidth, m_sizeHints->minHeight);
-        return fromXNative(size);
+        return QSize(m_sizeHints->minWidth, m_sizeHints->minHeight);
     }
-    QSizeF baseSize() const
+    QSize baseSize() const
     {
         // Note: not using minSize as fallback
         if (!hasBaseSize()) {
             return QSize(0, 0);
         }
-        const QSize size(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
-        return fromXNative(size);
+        return QSize(m_sizeHints->baseWidth, m_sizeHints->baseHeight);
     }
-    QSizeF resizeIncrements() const
+    QSize resizeIncrements() const
     {
         if (!hasResizeIncrements()) {
-            return fromXNative(QSize(1, 1));
+            return QSize(1, 1);
         }
-        return Xcb::fromXNative(QSize(std::max(m_sizeHints->widthInc, 1), std::max(m_sizeHints->heightInc, 1)));
+        return QSize(std::max(m_sizeHints->widthInc, 1), std::max(m_sizeHints->heightInc, 1));
     }
     xcb_gravity_t windowGravity() const
     {
