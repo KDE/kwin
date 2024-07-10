@@ -102,9 +102,11 @@ std::optional<QImage> ScreencastingTest::oneFrameAndClose(Test::ScreencastingStr
         Q_ASSERT(false);
     });
     connect(stream, &Test::ScreencastingStreamV1::closed, qGuiApp, [&pwStream] {
+        qDebug() << "stream closed";
         pwStream.setActive(false);
     });
     connect(stream, &Test::ScreencastingStreamV1::created, qGuiApp, [&pwStream](quint32 nodeId) {
+        qDebug() << "stream ready" << nodeId;
         pwStream.createStream(nodeId, 0);
     });
 
