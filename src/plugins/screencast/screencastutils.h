@@ -41,6 +41,10 @@ static GLenum closestGLType(QImage::Format format)
 
 static void doGrabTexture(GLTexture *texture, QImage *target)
 {
+    if (texture->size() != target->size()) {
+        return;
+    }
+
     const auto context = OpenGlContext::currentContext();
     const QSize size = texture->size();
     const bool invertNeeded = context->isOpenGLES() ^ (texture->contentTransform() != OutputTransform::FlipY);
