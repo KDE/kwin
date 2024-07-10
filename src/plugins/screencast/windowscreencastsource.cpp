@@ -53,7 +53,7 @@ QSize WindowScreenCastSource::textureSize() const
 
 void WindowScreenCastSource::render(QImage *target)
 {
-    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, textureSize());
+    const auto offscreenTexture = GLTexture::allocate(GL_RGBA8, target->size());
     if (!offscreenTexture) {
         return;
     }
