@@ -335,6 +335,13 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
 
+        if (activeWindow && activeWindow->surfaceItem()) {
+            const auto &color = activeWindow->surfaceItem()->colorDescription();
+            if (color.maxHdrLuminance() && *color.maxHdrLuminance() > color.referenceLuminance()) {
+                frame->setDesiredHdrHeadroom(*color.maxHdrLuminance() / color.referenceLuminance());
+            }
+        }
+
         bool directScanout = false;
         const uint32_t planeCount = 1;
         if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {

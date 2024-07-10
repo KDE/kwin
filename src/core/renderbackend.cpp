@@ -147,6 +147,16 @@ std::chrono::nanoseconds OutputFrame::predictedRenderTime() const
     return m_predictedRenderTime;
 }
 
+double OutputFrame::desiredHdrHeadroom() const
+{
+    return m_desiredHdrHeadroom;
+}
+
+void OutputFrame::setDesiredHdrHeadroom(double edr)
+{
+    m_desiredHdrHeadroom = edr;
+}
+
 OutputLayer *RenderBackend::cursorLayer(Output *output)
 {
     return nullptr;
