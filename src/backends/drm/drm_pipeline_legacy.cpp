@@ -164,25 +164,27 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
 
 DrmPipeline::Error DrmPipeline::setLegacyGamma()
 {
-    if (m_pending.crtcColorPipeline.ops.size() > 1) {
-        return DrmPipeline::Error::InvalidArguments;
-    }
-    QVector3D factors(1, 1, 1);
-    if (m_pending.crtcColorPipeline.ops.size() == 1) {
-        auto mult = std::get_if<ColorMultiplier>(&m_pending.crtcColorPipeline.ops.front().operation);
-        if (!mult) {
-            return DrmPipeline::Error::InvalidArguments;
-        }
-        factors = mult->factors;
-    }
     QList<uint16_t> red(m_pending.crtc->gammaRampSize());
     QList<uint16_t> green(m_pending.crtc->gammaRampSize());
     QList<uint16_t> blue(m_pending.crtc->gammaRampSize());
     for (int i = 0; i < m_pending.crtc->gammaRampSize(); i++) {
-        const double relative = i / double(m_pending.crtc->gammaRampSize() - 1) * std::numeric_limits<uint16_t>::max();
-        red[i] = std::round(relative * factors.x());
-        green[i] = std::round(relative * factors.y());
-        blue[i] = std::round(relative * factors.z());
+        const double input = i / double(m_pending.crtc->gammaRampSize() - 1);
+        QVector3D output = QVector3D(input, input, input);
+        for (const auto &op : m_pending.crtcColorPipeline.ops) {
+            if (auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
+                output = tf->tf.encodedToNits(output, tf->referenceLuminance);
+            } else if (auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
+                output = tf->tf.nitsToEncoded(output, tf->referenceLuminance);
+            } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
+                output *= mult->factors;
+            } else {
+                // not supported
+                return Error::InvalidArguments;
+            }
+        }
+        red[i] = std::clamp(output.x(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();
+        green[i] = std::clamp(output.y(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();
+        blue[i] = std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max();
     }
     if (drmModeCrtcSetGamma(gpu()->fd(), m_pending.crtc->id(), m_pending.crtc->gammaRampSize(), red.data(), green.data(), blue.data()) != 0) {
         qCWarning(KWIN_DRM) << "Setting gamma failed!" << strerror(errno);
