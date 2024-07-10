@@ -313,6 +313,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
     bool directScanout = false;
+    std::optional<double> desiredArtificalHdrHeadroom;
 
     // brightness animations should be skipped when
     // - the output is new, and we didn't have the output configuration applied yet
@@ -338,6 +339,28 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         primaryLayer->resetRepaints();
         prePaintPass(superLayer, &surfaceDamage);
         frame->setDamage(surfaceDamage);
+
+        // slowly adjust the artificial HDR headroom for the next frame
+        // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
+        if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->artificialHdrHeadroom() && output->isInternal() && output->colorProfileSource() != Output::ColorProfileSource::ICC) {
+            const auto desiredHdrHeadroom = superLayer->delegate()->desiredHdrHeadroom();
+            // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
+            constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+            // the higher this is, the more likely the user is to notice the change in backlight brightness
+            // at the same time, if it's too low, it takes ages until the user sees the HDR effect
+            constexpr double changePerSecond = 0.5;
+            // to restrict HDR videos from using all the battery and burning your eyes
+            // TODO make it a setting, and/or dependent on the power management state?
+            constexpr double maxHdrHeadroom = 3.0;
+            // = the headroom at 100% backlight
+            const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + *output->currentBrightness());
+            desiredArtificalHdrHeadroom = std::clamp(desiredHdrHeadroom, 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
+            const double changePerFrame = changePerSecond * double(frame->refreshDuration().count()) / 1'000'000'000;
+            const double newHeadroom = std::clamp(*desiredArtificalHdrHeadroom, output->artificialHdrHeadroom() - changePerFrame, output->artificialHdrHeadroom() + changePerFrame);
+            frame->setArtificialHdrHeadroom(newHeadroom);
+        } else {
+            frame->setArtificialHdrHeadroom(1);
+        }
 
         Window *const activeWindow = workspace()->activeWindow();
         SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
@@ -405,7 +428,8 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
 
     framePass(superLayer, frame.get());
 
-    if (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001) {
+    if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001)
+        || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
     }

@@ -795,6 +795,11 @@ std::optional<double> Output::currentBrightness() const
     return m_state.currentBrightness;
 }
 
+double Output::artificialHdrHeadroom() const
+{
+    return m_state.artificialHdrHeadroom;
+}
+
 BrightnessDevice *Output::brightnessDevice() const
 {
     return m_brightnessDevice;

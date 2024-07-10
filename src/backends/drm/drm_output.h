@@ -81,7 +81,7 @@ private:
     Capabilities computeCapabilities() const;
     void updateInformation();
     void setBrightnessDevice(BrightnessDevice *device) override;
-    void updateBrightness(double newBrightness);
+    void updateBrightness(double newBrightness, double newArtificialHdrHeadroom);
     void setScanoutColorDescription(const ColorDescription &description);
 
     QList<std::shared_ptr<OutputMode>> getModes() const;

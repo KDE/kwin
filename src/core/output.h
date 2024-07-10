@@ -366,6 +366,7 @@ public:
 
     double brightnessSetting() const;
     std::optional<double> currentBrightness() const;
+    double artificialHdrHeadroom() const;
 
     const ColorDescription &colorDescription() const;
 
@@ -493,6 +494,8 @@ protected:
         /// the actually applied brightness level
         std::optional<double> currentBrightness;
         bool allowSdrSoftwareBrightness = true;
+        /// how much HDR headroom is created by increasing the backlight beyond the user setting
+        double artificialHdrHeadroom = 1.0;
     };
 
     void setInformation(const Information &information);
