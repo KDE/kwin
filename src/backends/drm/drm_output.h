@@ -81,6 +81,7 @@ private:
     Capabilities computeCapabilities() const;
     void updateInformation();
     void setBrightnessDevice(BrightnessDevice *device) override;
+    double effectiveBrightness() const;
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
@@ -95,6 +96,7 @@ private:
     bool m_channelFactorsNeedShaderFallback = false;
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
+    double m_artificialHdrHeadroom = 1;
 };
 
 }

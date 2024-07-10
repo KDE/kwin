@@ -37,4 +37,9 @@ QList<SurfaceItem *> RenderLayerDelegate::scanoutCandidates(ssize_t maxCount) co
     return {};
 }
 
+double RenderLayerDelegate::desiredHdrHeadroom() const
+{
+    return 1;
+}
+
 } // namespace KWin

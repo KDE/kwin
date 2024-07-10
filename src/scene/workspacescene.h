@@ -54,6 +54,7 @@ public:
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
     void frame(SceneDelegate *delegate, OutputFrame *frame) override;
+    double desiredHdrHeadroom() const override;
 
     virtual bool makeOpenGLContextCurrent();
     virtual void doneOpenGLContextCurrent();
