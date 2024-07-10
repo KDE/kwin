@@ -117,7 +117,7 @@ Window::Window()
 
 Window::~Window()
 {
-    Q_ASSERT(!m_tiles.empty());
+    Q_ASSERT(!m_tile);
 }
 
 void Window::ref()
@@ -3727,6 +3727,7 @@ void Window::sendToOutput(Output *newOutput)
     const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
+    m_tiles.clear();
     if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::Custom)) {
         setTile(nullptr);
     } else {
