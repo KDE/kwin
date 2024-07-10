@@ -53,6 +53,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
             if (it->second == KeyState::Locked) {
                 it->second = KeyState::None;
                 KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+                KWin::input()->keyboard()->xkb()->forwardModifiers();
             }
         }
     }
@@ -60,11 +61,12 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
     if (group.readEntry<bool>("StickyKeys", false)) {
         KWin::input()->prependInputEventFilter(this);
     } else {
-        // sticky keys are deactivated, unlatch all latched keys
+        // sticky keys are deactivated, unlatch all latched/locked keys
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {
             if (it->second != KeyState::None) {
                 it->second = KeyState::None;
                 KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(it->first)), false);
+                KWin::input()->keyboard()->xkb()->forwardModifiers();
             }
         }
     }
