@@ -2168,15 +2168,20 @@ void X11WindowTest::testFullscreenLayerWithActiveWaylandWindow()
     QVERIFY(window->isFullScreen());
     workspace()->slotWindowFullScreen();
     QVERIFY(!window->isFullScreen());
+
     // and fullscreen through X API
-    NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
-    info.setState(NET::FullScreen, NET::FullScreen);
-    NETRootInfo rootInfo(c.get(), NET::Properties());
-    rootInfo.setActiveWindow(windowId, NET::FromApplication, XCB_CURRENT_TIME, XCB_WINDOW_NONE);
-    xcb_flush(c.get());
-    QTRY_VERIFY(window->isFullScreen());
-    QCOMPARE(workspace()->stackingOrder().last(), window);
-    QCOMPARE(workspace()->stackingOrder().last(), window);
+    {
+        Xcb::sync(); // sync so NETWinInfo fetches the correct current state
+
+        NETWinInfo info(c.get(), windowId, kwinApp()->x11RootWindow(), NET::Properties(), NET::Properties2());
+        info.setState(NET::FullScreen, NET::FullScreen);
+        NETRootInfo rootInfo(c.get(), NET::Properties());
+        rootInfo.setActiveWindow(windowId, NET::FromApplication, XCB_CURRENT_TIME, XCB_WINDOW_NONE);
+        xcb_flush(c.get());
+        QTRY_VERIFY(window->isFullScreen());
+        QCOMPARE(workspace()->stackingOrder().last(), window);
+        QCOMPARE(workspace()->stackingOrder().last(), window);
+    }
 
     // activate wayland window again
     workspace()->activateWindow(waylandWindow);
