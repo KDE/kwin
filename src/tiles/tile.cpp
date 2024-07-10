@@ -51,6 +51,11 @@ Tile::~Tile()
     }
 }
 
+VirtualDesktop *Tile::desktop() const
+{
+    return m_tiling->desktop();
+}
+
 bool Tile::supportsResizeGravity(Gravity gravity)
 {
     if (!m_parentTile) {

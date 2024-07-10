@@ -10,6 +10,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include "virtualdesktops.h"
 #include <kwin_export.h>
 #include <utils/common.h>
 
@@ -47,6 +48,7 @@ public:
     explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     ~Tile();
 
+    VirtualDesktop *desktop() const;
     void setGeometryFromWindow(const QRectF &geom);
     void setGeometryFromAbsolute(const QRectF &geom);
     virtual void setRelativeGeometry(const QRectF &geom);

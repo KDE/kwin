@@ -48,6 +48,7 @@ public:
     bool tearingDown() const;
 
     Output *output() const;
+    VirtualDesktop *desktop() const;
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
