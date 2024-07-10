@@ -3617,7 +3617,7 @@ QuickTileMode Window::requestedQuickTileMode() const
 
 void Window::setTile(Tile *tile)
 {
-    VirtualDesktop *desktop = tile->desktop();
+    VirtualDesktop *desktop = tile ? tile->desktop() : VirtualDesktopManager::self()->currentDesktop();
     auto search = m_tiles.find(desktop);
     Tile *oldTile = search == m_tiles.end() ? nullptr : search->second;
 
