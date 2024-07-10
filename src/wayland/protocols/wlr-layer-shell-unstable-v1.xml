@@ -338,5 +338,11 @@
       </description>
       <arg name="edge" type="uint"/>
     </request>
+
+    <request name="set_parent_of">
+      <description summary="assign this layer_surface as an xdg_toplevel parent">
+      </description>
+      <arg name="toplevel" type="object" interface="xdg_toplevel" />
+    </request>
   </interface>
 </protocol>

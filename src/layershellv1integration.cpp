@@ -37,7 +37,9 @@ void LayerShellV1Integration::createWindow(LayerSurfaceV1Interface *shellSurface
         shellSurface->sendClosed();
         return;
     }
-
+    connect(shellSurface, &LayerSurfaceV1Interface::childAdded, this, [shellSurface](KWin::XdgToplevelInterface *child) {
+        Q_EMIT waylandServer()->layerShellTransientChanged(shellSurface->surface(), child);
+    });
     Q_EMIT windowCreated(new LayerShellV1Window(shellSurface, output, this));
 }
 

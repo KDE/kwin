@@ -446,7 +446,7 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     connect(shellSurface, &XdgToplevelInterface::minimizeRequested,
             this, &XdgToplevelWindow::handleMinimizeRequested);
     connect(shellSurface, &XdgToplevelInterface::parentXdgToplevelChanged,
-            this, &XdgToplevelWindow::handleTransientForChanged);
+            this, &XdgToplevelWindow::handleXdgToplevelParentChanged);
     connect(shellSurface, &XdgToplevelInterface::initializeRequested,
             this, &XdgToplevelWindow::initialize);
     connect(shellSurface, &XdgToplevelInterface::aboutToBeDestroyed,
@@ -464,6 +464,8 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
 
     connect(waylandServer(), &WaylandServer::foreignTransientChanged,
             this, &XdgToplevelWindow::handleForeignTransientForChanged);
+
+    connect(waylandServer(), &WaylandServer::layerShellTransientChanged, this, &XdgToplevelWindow::handleLayerShellTransientForChanged);
 }
 
 XdgToplevelWindow::~XdgToplevelWindow()
@@ -1141,15 +1143,9 @@ void XdgToplevelWindow::handleMinimizeRequested()
     setMinimized(true);
 }
 
-void XdgToplevelWindow::handleTransientForChanged()
+void XdgToplevelWindow::handleTransientForChanged(SurfaceInterface *transientForSurface)
 {
-    SurfaceInterface *transientForSurface = nullptr;
-    if (XdgToplevelInterface *parentToplevel = m_shellSurface->parentXdgToplevel()) {
-        transientForSurface = parentToplevel->surface();
-    }
-    if (!transientForSurface) {
-        transientForSurface = waylandServer()->findForeignTransientForSurface(surface());
-    }
+
     Window *transientForWindow = waylandServer()->findWindow(transientForSurface);
     if (transientForWindow != transientFor()) {
         if (transientFor()) {
@@ -1163,10 +1159,22 @@ void XdgToplevelWindow::handleTransientForChanged()
     m_isTransient = transientForWindow;
 }
 
+void XdgToplevelWindow::handleXdgToplevelParentChanged()
+{
+    handleTransientForChanged(m_shellSurface->parentXdgToplevel()->surface());
+}
+
+void XdgToplevelWindow::handleLayerShellTransientForChanged(SurfaceInterface *parent, XdgToplevelInterface *child)
+{
+    if (surface() == child->surface()) {
+        handleTransientForChanged(parent);
+    }
+}
+
 void XdgToplevelWindow::handleForeignTransientForChanged(SurfaceInterface *child)
 {
     if (surface() == child) {
-        handleTransientForChanged();
+        handleTransientForChanged(waylandServer()->findForeignTransientForSurface(child));
     }
 }
 

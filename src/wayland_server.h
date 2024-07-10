@@ -51,6 +51,7 @@ class TearingControlManagerV1Interface;
 class XwaylandShellV1Interface;
 class OutputOrderV1Interface;
 class XdgDialogWmV1Interface;
+class XdgToplevelInterface;
 
 class Window;
 class Output;
@@ -225,6 +226,7 @@ Q_SIGNALS:
     void windowRemoved(KWin::Window *);
     void initialized();
     void foreignTransientChanged(KWin::SurfaceInterface *child);
+    void layerShellTransientChanged(KWin::SurfaceInterface *parent, KWin::XdgToplevelInterface *child);
     void lockStateChanged();
 
 private:

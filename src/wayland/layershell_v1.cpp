@@ -9,6 +9,7 @@
 #include "output.h"
 #include "surface.h"
 #include "utils/common.h"
+#include "xdgshell.h"
 #include "xdgshell_p.h"
 
 #include <QPointer>
@@ -92,6 +93,7 @@ protected:
     void zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial) override;
     void zwlr_layer_surface_v1_destroy(Resource *resource) override;
     void zwlr_layer_surface_v1_set_layer(Resource *resource, uint32_t layer) override;
+    void zwlr_layer_surface_v1_set_parent_of(Resource *resource, struct ::wl_resource *toplevel) override;
 };
 
 LayerShellV1InterfacePrivate::LayerShellV1InterfacePrivate(LayerShellV1Interface *q, Display *display)
@@ -249,6 +251,12 @@ void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_get_popup(Resource *r
     }
 
     popupPrivate->parentSurface = surface;
+}
+
+void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_set_parent_of(Resource *resource, struct ::wl_resource *toplevel_resource)
+{
+    XdgToplevelInterface *toplevel = XdgToplevelInterface::get(toplevel_resource);
+    Q_EMIT q->childAdded(toplevel);
 }
 
 void LayerSurfaceV1InterfacePrivate::zwlr_layer_surface_v1_ack_configure(Resource *resource, uint32_t serial)

@@ -194,8 +194,10 @@ private:
     void handleFullscreenRequested(OutputInterface *output);
     void handleUnfullscreenRequested();
     void handleMinimizeRequested();
-    void handleTransientForChanged();
+    void handleTransientForChanged(SurfaceInterface *transientFor);
+    void handleXdgToplevelParentChanged();
     void handleForeignTransientForChanged(SurfaceInterface *child);
+    void handleLayerShellTransientForChanged(SurfaceInterface *parent, XdgToplevelInterface *child);
     void handlePingTimeout(quint32 serial);
     void handlePingDelayed(quint32 serial);
     void handlePongReceived(quint32 serial);

@@ -18,6 +18,7 @@ class LayerSurfaceV1InterfacePrivate;
 class OutputInterface;
 class SurfaceInterface;
 class SurfaceRole;
+class XdgToplevelInterface;
 
 /**
  * The LayerShellV1Interface compositor extension allows to create desktop shell surfaces.
@@ -184,6 +185,7 @@ Q_SIGNALS:
     void desiredSizeChanged();
     void exclusiveZoneChanged();
     void marginsChanged();
+    void childAdded(XdgToplevelInterface *toplevel);
 
 private:
     std::unique_ptr<LayerSurfaceV1InterfacePrivate> d;
