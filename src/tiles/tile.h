@@ -48,6 +48,7 @@ public:
     explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     ~Tile();
 
+    inline bool isActive() const;
     VirtualDesktop *desktop() const;
     void setGeometryFromWindow(const QRectF &geom);
     void setGeometryFromAbsolute(const QRectF &geom);

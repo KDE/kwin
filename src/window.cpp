@@ -721,6 +721,21 @@ void Window::setDesktops(QList<VirtualDesktop *> desktops)
         return;
     }
 
+    // Remove this window from tilemanagers of all desktops it's not anymore in
+    QList<VirtualDesktop *> oldDesktops = m_desktops;
+    if (!desktops.isEmpty()) {
+        // Empty means all of them
+        if (oldDesktops.isEmpty()) {
+            oldDesktops = VirtualDesktopManager::self()->allDesktops();
+        }
+        for (VirtualDesktop *desktop : std::as_const(desktops)) {
+            oldDesktops.removeAll(desktop);
+        }
+        for (VirtualDesktop *desktop : std::as_const(oldDesktops)) {
+            workspace()->tileManager(output(), desktop)->forgetWindow(this);
+        }
+    }
+
     m_desktops = desktops;
 
     if (windowManagementInterface()) {
@@ -3617,7 +3632,7 @@ void Window::setTile(Tile *tile)
         m_tile->addWindow(this);
     }
 
-    if (oldTile) {
+    if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
         oldTile->removeWindow(this);
     }
 
@@ -3707,6 +3722,7 @@ void Window::sendToOutput(Output *newOutput)
     const QRectF oldScreenArea = workspace()->clientArea(MaximizeArea, this, moveResizeOutput());
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
+    workspace()->tileManager(output())->forgetWindow(this);
     if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::Custom)) {
         setTile(nullptr);
     } else {

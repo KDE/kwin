@@ -3068,8 +3068,18 @@ ScreenEdges *Workspace::screenEdges() const
 TileManager *Workspace::tileManager(Output *output)
 {
     if (auto searchOutput = m_tileManagers.find(output); searchOutput != m_tileManagers.end()) {
-        /// return searchOutput->second[VirtualDesktopManager::self()->currentDesktop()].get();
         if (auto searchDesktop = searchOutput->second.find(VirtualDesktopManager::self()->currentDesktop()); searchDesktop != searchOutput->second.end()) {
+            return searchDesktop->second.get();
+        }
+    }
+
+    return nullptr;
+}
+
+TileManager *Workspace::tileManager(Output *output, VirtualDesktop *desktop)
+{
+    if (auto searchOutput = m_tileManagers.find(output); searchOutput != m_tileManagers.end()) {
+        if (auto searchDesktop = searchOutput->second.find(desktop); searchDesktop != searchOutput->second.end()) {
             return searchDesktop->second.get();
         }
     }

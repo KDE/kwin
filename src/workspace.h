@@ -260,9 +260,14 @@ public:
     SessionManager *sessionManager() const;
 
     /**
-     * @returns the TileManager associated to a given output
+     * @returns the TileManager associated to a given output and the current desktop
      */
     TileManager *tileManager(Output *output);
+
+    /**
+     * @returns the TileManager associated to a given output and the given desktop
+     */
+    TileManager *tileManager(Output *output, VirtualDesktop *desktop);
 
 public:
     QPoint cascadeOffset(const QRectF &area) const;
