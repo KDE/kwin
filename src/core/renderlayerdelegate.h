@@ -61,6 +61,8 @@ public:
      */
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
 
+    virtual double desiredHdrHeadroom() const;
+
 private:
     RenderLayer *m_layer = nullptr;
 };
