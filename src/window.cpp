@@ -97,6 +97,9 @@ Window::Window()
         if (newTile != m_tile) {
             QuickTileMode oldTileMode = quickTileMode();
             m_tile = newTile;
+            if (newTile) {
+                moveResize(newTile->windowGeometry());
+            }
             Q_EMIT tileChanged(newTile);
             if (quickTileMode() != oldTileMode) {
                 Q_EMIT quickTileModeChanged();
