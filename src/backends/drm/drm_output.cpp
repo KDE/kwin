@@ -314,6 +314,34 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     if (success) {
         Q_EMIT outputChange(frame->damage());
     }
+    // slowly adjust m_artificialHdrHeadroom for the next frame
+    // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
+    if (!highDynamicRange() && m_brightnessDevice && isInternal() && frame->desiredHdrHeadroom() && !m_pipeline->iccProfile()) {
+        // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
+        constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+        // the higher this is, the more likely the user is to notice the change in backlight brightness
+        // at the same time, if it's too low, it takes ages until the user sees the HDR effect
+        constexpr double changePerSecond = 0.5;
+        // to restrict HDR videos from using all the battery and burning your eyes
+        // TODO make it a setting, and/or dependent on the power management state?
+        constexpr double maxHdrHeadroom = 3.0;
+        // = the headroom at 100% backlight
+        const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + m_state.brightness);
+        const double desiredHeadroom = std::clamp(*frame->desiredHdrHeadroom(), 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
+        const double changePerFrame = changePerSecond * double(frame->refreshDuration().count()) / 1'000'000'000;
+        const double newHeadroom = std::clamp(desiredHeadroom, m_artificialHdrHeadroom - changePerFrame, m_artificialHdrHeadroom + changePerFrame);
+        if (newHeadroom != m_artificialHdrHeadroom) {
+            m_artificialHdrHeadroom = newHeadroom;
+            const double newBrightness = effectiveBrightness();
+            State newState = m_state;
+            newState.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
+            setState(newState);
+            m_pipeline->setColorDescription(newState.colorDescription);
+            m_brightnessDevice->setBrightness(newBrightness);
+            m_renderLoop->scheduleRepaint();
+            m_scanoutColorDescription = newState.colorDescription;
+        }
+    }
     return success;
 }
 
@@ -376,9 +404,9 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const Colorimetry sdrColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)) : Colorimetry::fromName(NamedColorimetry::BT709);
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
-    const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200;
-    const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : maxPeakBrightness;
-    const auto transferFunction = TransferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22}.relativeScaledTo(referenceLuminance);
+    const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * m_artificialHdrHeadroom;
+    const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : 200;
+    const auto transferFunction = TransferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22}.relativeScaledTo(referenceLuminance * m_artificialHdrHeadroom);
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()) : transferFunction.minLuminance;
     return ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
@@ -422,8 +450,11 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
         if (m_state.highDynamicRange) {
             m_brightnessDevice->setBrightness(1);
         } else {
-            m_brightnessDevice->setBrightness(m_state.brightness);
+            m_brightnessDevice->setBrightness(effectiveBrightness());
         }
+    }
+    if (m_state.highDynamicRange || !m_brightnessDevice) {
+        m_artificialHdrHeadroom = 1.0;
     }
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
@@ -445,11 +476,19 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
         if (m_state.highDynamicRange) {
             device->setBrightness(1);
         } else {
-            device->setBrightness(m_state.brightness);
+            device->setBrightness(effectiveBrightness());
         }
         // reset the brightness factors
         tryKmsColorOffloading();
+    } else {
+        m_artificialHdrHeadroom = 1;
     }
+}
+
+double DrmOutput::effectiveBrightness() const
+{
+    constexpr double minLuminance = 0.04;
+    return (minLuminance + m_state.brightness) * m_artificialHdrHeadroom - minLuminance;
 }
 
 void DrmOutput::revertQueuedChanges()
