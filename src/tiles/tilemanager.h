@@ -55,6 +55,7 @@ public:
     CustomTile *rootTile() const;
     KWin::Tile *quickTile(QuickTileMode mode) const;
 
+    void forgetWindow(Window *window);
     TileModel *model() const;
 
 Q_SIGNALS:

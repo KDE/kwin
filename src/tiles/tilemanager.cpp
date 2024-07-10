@@ -11,6 +11,7 @@
 #include "core/output.h"
 #include "quicktile.h"
 #include "virtualdesktops.h"
+#include "window.h"
 #include "workspace.h"
 
 #include <KConfigGroup>
@@ -92,6 +93,19 @@ Output *TileManager::output() const
 VirtualDesktop *TileManager::desktop() const
 {
     return m_desktop;
+}
+
+void TileManager::forgetWindow(Window *window)
+{
+    if (!window) {
+        return;
+    }
+    for (Tile *tile : m_rootTile->descendants()) {
+        tile->removeWindow(window);
+    }
+    for (Tile *tile : m_quickRootTile->descendants()) {
+        tile->removeWindow(window);
+    }
 }
 
 Tile *TileManager::bestTileForPosition(const QPointF &pos)
