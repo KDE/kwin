@@ -533,8 +533,22 @@ private:
      */
     QList<VirtualDesktop *> addDesktops(uint count);
 
+    /**
+     * The list of virtual desktops.
+     *
+     * This QList stores pointers to VirtualDesktop objects representing the virtual desktops in the system.
+     * Each VirtualDesktop object represents a single virtual desktop and contains information about it.
+     */
     QList<VirtualDesktop *> m_desktops;
+
+    /**
+     * Pointer to the current virtual desktop.
+     *
+     * This member variable holds a weak reference to the current virtual desktop.
+     * It is used to keep track of the currently active virtual desktop.
+     */
     QPointer<VirtualDesktop> m_current;
+
     quint32 m_rows = 2;
     bool m_navigationWrapsAround;
     VirtualDesktopGrid m_grid;
