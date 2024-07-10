@@ -492,6 +492,7 @@ void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
     }
 
     record(damage, contents);
+    record(damage, contents);
 }
 
 void ScreenCastStream::record(const QRegion &damage, Contents contents)
