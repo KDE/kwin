@@ -339,10 +339,18 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         return false;
     }
     Q_EMIT outputChange(frame->damage());
+
+    bool needsBrightnessUpdate = false;
+    if (const auto artificialHeadroom = frame->artificialHdrHeadroom()) {
+        m_artificialHdrHeadroom = *artificialHeadroom;
+        needsBrightnessUpdate = true;
+    }
     if (frame->brightness() && (!m_currentBrightness || *m_currentBrightness != *frame->brightness())) {
         m_currentBrightness = *frame->brightness();
+        needsBrightnessUpdate = true;
+    }
+    if (needsBrightnessUpdate) {
         updateBrightness();
-        m_renderLoop->scheduleRepaint();
     }
     return true;
 }
@@ -405,9 +413,9 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const Colorimetry sdrColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)) : Colorimetry::fromName(NamedColorimetry::BT709);
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
-    const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200;
-    const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : maxPeakBrightness;
-    const auto transferFunction = TransferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22}.relativeScaledTo(referenceLuminance);
+    const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200 * m_artificialHdrHeadroom;
+    const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : 200;
+    const auto transferFunction = TransferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22}.relativeScaledTo(referenceLuminance * m_artificialHdrHeadroom);
     // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
@@ -479,13 +487,16 @@ void DrmOutput::updateBrightness()
         if (m_state.highDynamicRange) {
             m_brightnessDevice->setBrightness(1);
         } else {
-            m_brightnessDevice->setBrightness(m_currentBrightness.value_or(m_state.brightness));
+            constexpr double minLuminance = 0.04;
+            const double effectiveBrightness = (minLuminance + m_currentBrightness.value_or(m_state.brightness)) * m_artificialHdrHeadroom - minLuminance;
+            m_brightnessDevice->setBrightness(effectiveBrightness);
         }
     }
     State next = m_state;
     next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
     setState(next);
     tryKmsColorOffloading();
+    m_renderLoop->scheduleRepaint();
 }
 
 void DrmOutput::revertQueuedChanges()
@@ -582,6 +593,11 @@ const ColorDescription &DrmOutput::scanoutColorDescription() const
 std::optional<double> DrmOutput::currentBrightness() const
 {
     return m_currentBrightness;
+}
+
+std::optional<double> DrmOutput::artificialHdrHeadroom() const
+{
+    return m_artificialHdrHeadroom;
 }
 }
 

@@ -369,6 +369,7 @@ public:
     virtual void setBrightnessDevice(BrightnessDevice *device);
 
     virtual std::optional<double> currentBrightness() const;
+    virtual std::optional<double> artificialHdrHeadroom() const;
 
 Q_SIGNALS:
     /**

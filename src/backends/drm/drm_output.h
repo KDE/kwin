@@ -74,6 +74,7 @@ public:
     bool needsChannelFactorFallback() const;
 
     std::optional<double> currentBrightness() const override;
+    std::optional<double> artificialHdrHeadroom() const override;
 
 private:
     bool setDrmDpmsMode(DpmsMode mode);
@@ -100,6 +101,7 @@ private:
     bool m_channelFactorsNeedShaderFallback = false;
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
     PresentationMode m_desiredPresentationMode = PresentationMode::VSync;
+    double m_artificialHdrHeadroom = 1;
 };
 
 }

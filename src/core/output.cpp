@@ -799,6 +799,11 @@ std::optional<double> Output::currentBrightness() const
 {
     return std::nullopt;
 }
+
+std::optional<double> Output::artificialHdrHeadroom() const
+{
+    return std::nullopt;
+}
 } // namespace KWin
 
 #include "moc_output.cpp"
