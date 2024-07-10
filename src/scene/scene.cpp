@@ -44,6 +44,11 @@ void SceneDelegate::paint(const RenderTarget &renderTarget, const QRegion &regio
     m_scene->paint(renderTarget, region == infiniteRegion() ? infiniteRegion() : region.translated(viewport().topLeft()));
 }
 
+double SceneDelegate::desiredHdrHeadroom() const
+{
+    return m_scene->desiredHdrHeadroom();
+}
+
 void SceneDelegate::frame(OutputFrame *frame)
 {
     m_scene->frame(this, frame);
@@ -141,6 +146,11 @@ QList<SurfaceItem *> Scene::scanoutCandidates(ssize_t maxCount) const
 
 void Scene::frame(SceneDelegate *delegate, OutputFrame *frame)
 {
+}
+
+double Scene::desiredHdrHeadroom() const
+{
+    return 1;
 }
 
 } // namespace KWin

@@ -339,6 +339,28 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         prePaintPass(superLayer, &surfaceDamage);
         frame->setDamage(surfaceDamage);
 
+        // slowly adjust the artificial HDR headroom for the next frame
+        // note that this is only done for internal displays, because external displays usually apply slow animations to brightness changes
+        if (!output->highDynamicRange() && output->brightnessDevice() && output->currentBrightness() && output->artificialHdrHeadroom() && output->isInternal() && output->colorProfileSource() != Output::ColorProfileSource::ICC) {
+            const auto desiredHdrHeadroom = superLayer->delegate()->desiredHdrHeadroom();
+            // just a rough estimate from the Framework 13 laptop. The less accurate this is, the more the screen will flicker during backlight changes
+            constexpr double relativeLuminanceAtZeroBrightness = 0.04;
+            // the higher this is, the more likely the user is to notice the change in backlight brightness
+            // at the same time, if it's too low, it takes ages until the user sees the HDR effect
+            constexpr double changePerSecond = 0.5;
+            // to restrict HDR videos from using all the battery and burning your eyes
+            // TODO make it a setting, and/or dependent on the power management state?
+            constexpr double maxHdrHeadroom = 3.0;
+            // = the headroom at 100% backlight
+            const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + *output->currentBrightness());
+            const double desiredHeadroom = std::clamp(desiredHdrHeadroom, 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
+            const double changePerFrame = changePerSecond * double(frame->refreshDuration().count()) / 1'000'000'000;
+            const double newHeadroom = std::clamp(desiredHeadroom, output->artificialHdrHeadroom() - changePerFrame, output->artificialHdrHeadroom() + changePerFrame);
+            frame->setArtificialHdrHeadroom(newHeadroom);
+        } else {
+            frame->setArtificialHdrHeadroom(1);
+        }
+
         Window *const activeWindow = workspace()->activeWindow();
         SurfaceItem *const activeFullscreenItem = activeWindow && activeWindow->isFullScreen() && activeWindow->isOnOutput(output) ? activeWindow->surfaceItem() : nullptr;
         frame->setContentType(activeWindow && activeFullscreenItem ? activeFullscreenItem->contentType() : ContentType::None);

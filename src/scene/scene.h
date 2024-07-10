@@ -34,6 +34,7 @@ public:
     QRegion prePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
+    double desiredHdrHeadroom() const override;
 
 private:
     Scene *m_scene;
@@ -86,6 +87,7 @@ public:
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;
     virtual void frame(SceneDelegate *delegate, OutputFrame *frame);
+    virtual double desiredHdrHeadroom() const;
 
 Q_SIGNALS:
     void delegateRemoved(SceneDelegate *delegate);
