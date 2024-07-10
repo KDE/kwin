@@ -7,6 +7,7 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+set(PROJECT_DEP_VERSION "6.1.1")
 set(QT_MIN_VERSION "6.6.0")
 set(KF6_MIN_VERSION "6.2.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.82")
@@ -111,14 +112,14 @@ set_package_properties(Threads PROPERTIES
     TYPE REQUIRED
 )
 
-find_package(KWayland ${PROJECT_VERSION} CONFIG)
+find_package(KWayland ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(KWayland PROPERTIES
     PURPOSE "Required to build wayland platform plugin and tests"
     TYPE REQUIRED
 )
 
 # optional frameworks
-find_package(PlasmaActivities ${PROJECT_VERSION} CONFIG)
+find_package(PlasmaActivities ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(PlasmaActivities PROPERTIES
     PURPOSE "Enable building of KWin with kactivities support"
     TYPE OPTIONAL
@@ -138,14 +139,14 @@ set_package_properties(KF6Kirigami PROPERTIES
     PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
 )
-find_package(Plasma ${PROJECT_VERSION} CONFIG)
+find_package(Plasma ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(Plasma PROPERTIES
     DESCRIPTION "A QtQuick based components set"
     PURPOSE "Required at runtime for several QML effects"
     TYPE RUNTIME
 )
 
-find_package(KDecoration2 ${PROJECT_VERSION} CONFIG)
+find_package(KDecoration2 ${PROJECT_DEP_VERSION} CONFIG)
 set_package_properties(KDecoration2 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Required for server side decoration support"
