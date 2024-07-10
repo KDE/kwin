@@ -601,9 +601,11 @@ void VirtualDesktopManager::setCount(uint count)
 
     if (!s_loadingDesktopSettings) {
         save();
-    }
-    for (auto vd : std::as_const(newDesktops)) {
-        Q_EMIT desktopAdded(vd);
+
+        // Only when !s_loadingDesktopSettings as we don't want desktopAdded with a desktop without id
+        for (auto vd : std::as_const(newDesktops)) {
+            Q_EMIT desktopAdded(vd);
+        }
     }
     Q_EMIT countChanged(oldCount, m_desktops.count());
 }
@@ -682,6 +684,7 @@ void VirtualDesktopManager::load()
             Q_ASSERT(sId.isEmpty() || m_desktops[i - 1]->id() == sId);
         }
 
+        Q_EMIT desktopAdded(m_desktops[i - 1]);
         // TODO: update desktop focus chain, why?
         //         m_desktopFocusChain.value()[i-1] = i;
     }

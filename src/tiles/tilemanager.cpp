@@ -249,6 +249,7 @@ void TileManager::readSettings()
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     qreal padding = cg.readEntry("padding", 4);
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
+    cg = KConfigGroup(&cg, m_desktop->id());
 
     auto createDefaultSetup = [this]() {
         Q_ASSERT(m_rootTile->childCount() == 0);
@@ -263,6 +264,7 @@ void TileManager::readSettings()
 
     QJsonParseError error;
     const auto tiles = cg.readEntry("tiles", QByteArray());
+    qWarning() << "AAAAAAAAA" << tiles << m_desktop->id();
     if (tiles.isEmpty()) {
         qCDebug(KWIN_CORE) << "Empty tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":"
                            << "Creating default setup";
@@ -343,6 +345,7 @@ void TileManager::saveSettings()
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     cg.writeEntry("padding", m_rootTile->padding());
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
+    cg = KConfigGroup(&cg, m_desktop->id());
     cg.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
     cg.sync(); // FIXME: less frequent?
 }
