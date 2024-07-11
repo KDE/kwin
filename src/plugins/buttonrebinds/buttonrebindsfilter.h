@@ -68,6 +68,9 @@ public:
     {
         quint32 button;
     };
+    struct DisabledButton
+    {
+    };
 
     explicit ButtonRebindsFilter();
     bool pointerEvent(KWin::MouseEvent *event, quint32 nativeButton) override;
@@ -83,7 +86,7 @@ private:
     bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);
 
     InputDevice m_inputDevice;
-    std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton>>, LastType> m_actions;
+    std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton, DisabledButton>>, LastType> m_actions;
     KConfigWatcher::Ptr m_configWatcher;
     std::optional<KWin::TabletToolId> m_tabletTool;
 };

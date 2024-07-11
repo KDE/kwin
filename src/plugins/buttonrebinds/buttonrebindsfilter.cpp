@@ -224,16 +224,26 @@ bool ButtonRebindsFilter::tabletToolButtonEvent(uint button, bool pressed, const
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
 {
-    if (entry.size() != 2) {
+    if (entry.empty()) {
         qCWarning(KWIN_BUTTONREBINDS) << "Failed to rebind to" << entry;
         return;
     }
     if (entry.first() == QLatin1String("Key")) {
+        if (entry.size() != 2) {
+            qCWarning(KWIN_BUTTONREBINDS) << "Invalid key" << entry;
+            return;
+        }
+
         const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
         if (!keys.isEmpty()) {
             m_actions.at(type).insert(trigger, keys);
         }
     } else if (entry.first() == QLatin1String("MouseButton")) {
+        if (entry.size() != 2) {
+            qCWarning(KWIN_BUTTONREBINDS) << "Invalid mouse button" << entry;
+            return;
+        }
+
         bool ok = false;
         const MouseButton mb{entry.last().toUInt(&ok)};
         if (ok) {
@@ -242,6 +252,12 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
     } else if (entry.first() == QLatin1String("TabletToolButton")) {
+        if (entry.size() != 2) {
+            qCWarning(KWIN_BUTTONREBINDS)
+                << "Invalid tablet tool button" << entry;
+            return;
+        }
+
         bool ok = false;
         const TabletToolButton tb{entry.last().toUInt(&ok)};
         if (ok) {
@@ -249,6 +265,8 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
+    } else if (entry.first() == QLatin1String("Disabled")) {
+        m_actions.at(type).insert(trigger, DisabledButton{});
     }
 }
 
@@ -268,6 +286,10 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     }
     if (const auto tb = std::get_if<TabletToolButton>(&action)) {
         return sendTabletToolButton(tb->button, pressed, timestamp);
+    }
+    if (std::get_if<DisabledButton>(&action)) {
+        // Intentional, we don't want to anything to anybody
+        return true;
     }
     return false;
 }
