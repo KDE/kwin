@@ -726,7 +726,7 @@ void Window::setDesktops(QList<VirtualDesktop *> desktops)
     if (!desktops.isEmpty()) {
         // Empty means all of them
         if (oldDesktops.isEmpty()) {
-            oldDesktops = VirtualDesktopManager::self()->allDesktops();
+            oldDesktops = VirtualDesktopManager::self()->desktops();
         }
         for (VirtualDesktop *desktop : std::as_const(desktops)) {
             oldDesktops.removeAll(desktop);
@@ -3648,10 +3648,10 @@ void Window::setTile(Tile *tile)
         moveResize(geometryRestore());
     }
 
-    /*if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
+    if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
         // If we set a null tile on the
         oldTile->removeWindow(this);
-    }*/
+    }
 
     Q_EMIT tileChanged(tile);
 

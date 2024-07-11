@@ -1269,7 +1269,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     const auto added = outputsSet - oldOutputsSet;
     for (Output *output : added) {
         output->ref();
-        for (VirtualDesktop *desktop : VirtualDesktopManager::self()->allDesktops()) {
+        for (VirtualDesktop *desktop : VirtualDesktopManager::self()->desktops()) {
             m_tileManagers[output][desktop] = std::make_unique<TileManager>(desktop, output);
         }
         connect(output, &Output::aboutToTurnOff, this, &Workspace::createDpmsFilter);
@@ -1286,7 +1286,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     const auto removed = oldOutputsSet - outputsSet;
     for (Output *output : removed) {
         Q_EMIT outputRemoved(output);
-        for (VirtualDesktop *desktop : VirtualDesktopManager::self()->allDesktops()) {
+        for (VirtualDesktop *desktop : VirtualDesktopManager::self()->desktops()) {
             auto tileManager = std::move(m_tileManagers[output][desktop]);
             m_tileManagers.erase(output);
 

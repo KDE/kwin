@@ -415,11 +415,6 @@ VirtualDesktop *VirtualDesktopManager::desktopForId(const QString &id) const
     return nullptr;
 }
 
-QList<VirtualDesktop *> VirtualDesktopManager::allDesktops() const
-{
-    return m_desktops;
-}
-
 VirtualDesktop *VirtualDesktopManager::createVirtualDesktop(uint position, const QString &name)
 {
     // too many, can't insert new ones

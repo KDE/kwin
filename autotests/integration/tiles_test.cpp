@@ -32,6 +32,7 @@ private Q_SLOTS:
     void testWindowInteraction();
     void testAssignedTileDeletion();
     void resizeTileFromWindow();
+    void testPerDesktopTiles();
 
 private:
     void createSampleLayout();
@@ -407,6 +408,140 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(bottomLeftTile->windowGeometry(), QRect(4, 526, 518, 494));
     QCOMPARE(leftTile->windowGeometry(), QRect(4, 4, 518, 1016));
     QCOMPARE(middleTile->windowGeometry(), QRect(526, 4, 432, 1016));
+}
+
+void TilesTest::testPerDesktopTiles()
+{
+    std::unique_ptr<KWayland::Client::Surface> rootSurface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> root(Test::createXdgToplevelSurface(rootSurface.get()));
+
+    QSignalSpy surfaceConfigureRequestedSpy(root->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QSignalSpy toplevelConfigureRequestedSpy(root.get(), &Test::XdgToplevel::configureRequested);
+
+    VirtualDesktop *oldCurrentDesk = VirtualDesktopManager::self()->currentDesktop();
+
+    // Create a window
+    auto window = Test::renderAndWaitForShown(rootSurface.get(), QSize(100, 100), Qt::cyan);
+    QVERIFY(window);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    QVERIFY(frameGeometryChangedSpy.isValid());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 1);
+    root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+    QCOMPARE(window->desktops().count(), 1u);
+    QCOMPARE(oldCurrentDesk, window->desktops().first());
+
+    QSignalSpy interactiveMoveResizeStartedSpy(window, &Window::interactiveMoveResizeStarted);
+    QVERIFY(interactiveMoveResizeStartedSpy.isValid());
+    QSignalSpy moveResizedChangedSpy(window, &Window::moveResizedChanged);
+    QVERIFY(moveResizedChangedSpy.isValid());
+    QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
+    QVERIFY(interactiveMoveResizeFinishedSpy.isValid());
+
+    // Resize to set a geometryRestore
+    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
+    QCOMPARE(window->isInteractiveMove(), false);
+    QCOMPARE(window->isInteractiveResize(), false);
+    workspace()->slotWindowResize();
+    QCOMPARE(workspace()->moveResizeWindow(), window);
+    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
+    QCOMPARE(moveResizedChangedSpy.count(), 1);
+    QCOMPARE(window->isInteractiveResize(), true);
+    QCOMPARE(window->geometryRestore(), QRect());
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
+    Test::XdgToplevel::States states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
+    QPoint cursorPos = window->frameGeometry().bottomRight().toPoint();
+    input()->pointer()->warp(cursorPos + QPoint(8, 0));
+    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
+
+    // The client should receive a configure event with the new size.
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
+    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
+    QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(108, 100));
+    Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    QCOMPARE(window->geometryRestore(), QRectF(0, 0, 108, 100));
+
+    // Set a tile
+    auto leftTileDesk1 = qobject_cast<CustomTile *>(m_tileManager->rootTile()->childTiles().first());
+    QCOMPARE(leftTileDesk1->manager(), m_tileManager);
+    QVERIFY(leftTileDesk1->isActive());
+    QVERIFY(leftTileDesk1);
+    leftTileDesk1->setRelativeGeometry({0, 0, 0.4, 1});
+    QCOMPARE(leftTileDesk1->windowGeometry(), QRectF(4, 4, 506, 1016));
+
+    window->setTile(leftTileDesk1);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
+
+    root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+    QCOMPARE(toplevelConfigureRequestedSpy.last().first().value<QSize>(), leftTileDesk1->windowGeometry().toRect().size());
+    Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRect(4, 4, 506, 1016));
+
+    // Add a desktop
+    VirtualDesktopManager::self()->setCount(2);
+    // Send window on all desktops
+    window->setDesktops({});
+    // Changing number of desktops doesn't change the current tilemanager
+    QCOMPARE(m_tileManager, workspace()->tileManager(m_output));
+    QCOMPARE(m_tileManager->desktop(), oldCurrentDesk);
+
+    // We have a new current desktop
+    VirtualDesktopManager::self()->setCurrent(2);
+    VirtualDesktop *newCurrentDesk = VirtualDesktopManager::self()->currentDesktop();
+    TileManager *currentManager = workspace()->tileManager(m_output);
+    QVERIFY(newCurrentDesk != oldCurrentDesk);
+    QVERIFY(m_tileManager != currentManager);
+    QCOMPARE(currentManager, workspace()->tileManager(m_output, newCurrentDesk));
+    QCOMPARE(currentManager->desktop(), newCurrentDesk);
+
+    // The window lost its tile
+    QCOMPARE(window->tile(), nullptr);
+    // The window geometry got restored
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 4);
+
+    root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+    Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 100));
+
+    /*
+        auto rightTileDesk2 = qobject_cast<CustomTile *>(currentManager->rootTile()->childTiles().second());
+        QCOMPARE(rightTileDesk2->manager(), currentManager);
+        QVERIFY(rightTileDesk2->isActive());
+        QVERIFY(rightTileDesk2);
+        rightTileDesk2->setRelativeGeometry({0, 0, 0.4, 1});
+        QCOMPARE(rightTileDesk2->windowGeometry(), QRectF(4, 4, 506, 1016));
+
+        window->setTile(rightTileDesk2);
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+        QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
+
+        root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+
+        QCOMPARE(toplevelConfigureRequestedSpy.last().first().value<QSize>(), rightTileDesk2->windowGeometry().toRect().size());
+        Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
+        QVERIFY(frameGeometryChangedSpy.wait());
+        QCOMPARE(window->frameGeometry(), QRect(4, 4, 506, 1016));
+    */
 }
 }
 
