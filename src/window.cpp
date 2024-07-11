@@ -735,7 +735,10 @@ void Window::setDesktops(QList<VirtualDesktop *> desktops)
             oldDesktops.removeAll(desktop);
         }
         for (VirtualDesktop *desktop : std::as_const(oldDesktops)) {
-            workspace()->tileManager(output(), desktop)->forgetWindow(this);
+            TileManager *tileManager = workspace()->tileManager(output(), desktop);
+            if (tileManager) {
+                tileManager->forgetWindow(this);
+            }
         }
     }
 
@@ -3586,6 +3589,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         // Custom tiles need to be untiled immediately
         if (oldMode == QuickTileFlag::Custom) {
             setTile(nullptr);
+            workspace()->tileManager(output())->forgetWindow(this);
             return;
         }
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
@@ -3647,9 +3651,10 @@ void Window::setTile(Tile *tile)
         moveResize(geometryRestore());
     }
 
-    if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
+    /*if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
+        // If we set a null tile on the
         oldTile->removeWindow(this);
-    }
+    }*/
 
     Q_EMIT tileChanged(tile);
 
