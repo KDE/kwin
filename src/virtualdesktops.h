@@ -285,8 +285,6 @@ public:
      */
     VirtualDesktop *desktopForId(const QString &id) const;
 
-    QList<VirtualDesktop *> allDesktops() const;
-
     /**
      * Create a new virtual desktop at the requested position.
      * The difference with setCount is that setCount always adds new desktops at the end of the chain. The Id is automatically generated.

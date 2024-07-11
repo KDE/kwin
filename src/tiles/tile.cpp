@@ -322,6 +322,7 @@ void Tile::addWindow(Window *window)
     if (isActive()) {
         window->moveResize(windowGeometry());
     }
+
     m_windows.append(window);
     Q_EMIT windowAdded(window);
     Q_EMIT windowsChanged();
