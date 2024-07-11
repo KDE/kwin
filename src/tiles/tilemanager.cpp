@@ -264,7 +264,6 @@ void TileManager::readSettings()
 
     QJsonParseError error;
     const auto tiles = cg.readEntry("tiles", QByteArray());
-    qWarning() << "AAAAAAAAA" << tiles << m_desktop->id();
     if (tiles.isEmpty()) {
         qCDebug(KWIN_CORE) << "Empty tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":"
                            << "Creating default setup";
