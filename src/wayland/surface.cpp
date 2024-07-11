@@ -25,7 +25,7 @@
 #include "surface_p.h"
 #include "transaction.h"
 #include "utils/resource.h"
-#include "xx_colormanagement_v2.h"
+#include "xx_colormanagement_v3.h"
 
 #include <wayland-server.h>
 // std
