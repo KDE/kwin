@@ -316,6 +316,9 @@ void Tile::addWindow(Window *window)
         return;
     }
 
+    // only a single tile per manager is allowed
+    m_tiling->forgetWindow(window);
+
     if (isActive()) {
         window->moveResize(windowGeometry());
     }
