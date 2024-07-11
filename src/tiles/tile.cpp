@@ -31,12 +31,14 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
-        Q_UNUSED(previous)
         if (current == desktop()) {
             for (auto *w : std::as_const(m_windows)) {
                 w->setTile(this);
                 w->moveResize(windowGeometry());
             }
+            Q_EMIT activeChanged(true);
+        } else if (previous == desktop()) {
+            Q_EMIT activeChanged(false);
         }
     });
 }
