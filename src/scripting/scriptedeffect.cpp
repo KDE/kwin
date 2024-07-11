@@ -165,10 +165,10 @@ ScriptedEffect *ScriptedEffect::create(const KPluginMetaData &effect)
         return nullptr;
     }
 
-    return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering"), 0), effect.value(QStringLiteral("X-KWin-Exclusive-Category")));
+    return ScriptedEffect::create(name, scriptFile, effect.value(QStringLiteral("X-KDE-Ordering"), 0), effect.value(QStringLiteral("X-KWin-Exclusive-Category")), effect.value(QStringLiteral("X-KDE-BlocksDirectScanout"), true));
 }
 
-ScriptedEffect *ScriptedEffect::create(const QString &effectName, const QString &pathToScript, int chainPosition, const QString &exclusiveCategory)
+ScriptedEffect *ScriptedEffect::create(const QString &effectName, const QString &pathToScript, int chainPosition, const QString &exclusiveCategory, bool blocksDirectScanout)
 {
     ScriptedEffect *effect = new ScriptedEffect();
     effect->m_exclusiveCategory = exclusiveCategory;
@@ -177,6 +177,7 @@ ScriptedEffect *ScriptedEffect::create(const QString &effectName, const QString 
         return nullptr;
     }
     effect->m_chainPosition = chainPosition;
+    effect->m_blocksDirectScanout = blocksDirectScanout;
 
     return effect;
 }
@@ -304,6 +305,11 @@ QString ScriptedEffect::pluginId() const
 bool ScriptedEffect::isActiveFullScreenEffect() const
 {
     return effects->activeFullScreenEffect() == this;
+}
+
+bool ScriptedEffect::blocksDirectScanout() const
+{
+    return m_blocksDirectScanout;
 }
 
 QList<int> ScriptedEffect::touchEdgesForAction(const QString &action) const
