@@ -3625,11 +3625,23 @@ void Window::setTile(Tile *tile)
     Tile *oldTile = m_tile;
     QuickTileMode oldTileMode = quickTileMode();
 
+    if (oldTile) {
+        disconnect(oldTile, &Tile::activeChanged, this, nullptr);
+    }
+
     m_tile = tile;
 
     if (m_tile) {
         Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
+        connect(m_tile, &Tile::activeChanged, this, [this](bool active) {
+            if (!active) {
+                setTile(nullptr);
+            }
+        });
+    } else if (m_desktops.isEmpty() || m_desktops.contains(VirtualDesktopManager::self()->currentDesktop())) {
+        // Resize the window only if we are actually showing it
+        moveResize(geometryRestore());
     }
 
     if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {

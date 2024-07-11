@@ -139,6 +139,7 @@ public:
     }
 
 Q_SIGNALS:
+    void activeChanged(bool active);
     void relativeGeometryChanged();
     void absoluteGeometryChanged();
     void windowGeometryChanged();
