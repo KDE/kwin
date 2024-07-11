@@ -84,7 +84,14 @@ private:
     void xx_image_description_creator_params_v4_set_luminances(Resource *resource, uint32_t min_lum, uint32_t max_lum, uint32_t reference_lum) override;
 
     std::optional<Colorimetry> m_colorimetry;
-    std::optional<TransferFunction> m_transferFunction;
+    std::optional<TransferFunction::Type> m_transferFunctionType;
+    struct Luminances
+    {
+        double min;
+        double max;
+        double reference;
+    };
+    std::optional<Luminances> m_transferFunctionLuminances;
 
     // mastering display information
     std::optional<Colorimetry> m_masteringColorimetry;

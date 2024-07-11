@@ -25,6 +25,7 @@ void XXColorManagerV4::xx_color_manager_v4_bind_resource(Resource *resource)
     send_supported_feature(resource->handle, feature::feature_extended_target_volume);
     send_supported_feature(resource->handle, feature::feature_set_mastering_display_primaries);
     send_supported_feature(resource->handle, feature::feature_set_primaries);
+    send_supported_feature(resource->handle, feature::feature_set_luminances);
 
     send_supported_primaries_named(resource->handle, primaries::primaries_srgb);
     send_supported_primaries_named(resource->handle, primaries::primaries_bt2020);
@@ -32,8 +33,9 @@ void XXColorManagerV4::xx_color_manager_v4_bind_resource(Resource *resource)
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_bt709);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_gamma22);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_srgb);
+    send_supported_tf_named(resource->handle, transfer_function::transfer_function_ext_srgb);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_st2084_pq);
-    // TODO scRGB?
+    send_supported_tf_named(resource->handle, transfer_function::transfer_function_linear);
 
     send_supported_intent(resource->handle, render_intent::render_intent_perceptual);
     send_supported_intent(resource->handle, render_intent::render_intent_relative);
@@ -174,23 +176,30 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_destroy_
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_create(Resource *resource, uint32_t image_description)
 {
-    if (!m_colorimetry || !m_transferFunction) {
+    if (!m_colorimetry || !m_transferFunctionType) {
         wl_resource_post_error(resource->handle, error::error_incomplete_set, "colorimetry or transfer function missing");
         return;
     }
-    if (m_transferFunction->type != TransferFunction::PerceptualQuantizer && (m_maxCll || m_maxFall)) {
+    if (m_transferFunctionType != TransferFunction::PerceptualQuantizer && (m_maxCll || m_maxFall)) {
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
     const std::optional<double> maxFrameAverageLuminance = m_maxFall ? m_maxFall : m_maxMasteringLuminance;
     const std::optional<double> maxHdrLuminance = m_maxCll ? m_maxCll : m_maxMasteringLuminance;
-    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, 100, m_minMasteringLuminance.value_or(0), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
+    TransferFunction func{*m_transferFunctionType};
+    double referenceLuminance = TransferFunction::defaultReferenceLuminanceFor(func.type);
+    if (m_transferFunctionLuminances) {
+        func.minLuminance = m_transferFunctionLuminances->min;
+        func.maxLuminance = m_transferFunctionLuminances->max;
+        referenceLuminance = m_transferFunctionLuminances->reference;
+    }
+    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(0), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
     wl_resource_destroy(resource->handle);
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_tf_named(Resource *resource, uint32_t tf)
 {
-    if (m_transferFunction) {
+    if (m_transferFunctionType) {
         wl_resource_post_error(resource->handle, error::error_already_set, "transfer function is already set");
         return;
     }
@@ -198,10 +207,13 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_tf_n
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_SRGB:
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_BT709:
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_GAMMA22:
-        m_transferFunction = TransferFunction(TransferFunction::gamma22);
+        m_transferFunctionType = TransferFunction::gamma22;
         return;
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_ST2084_PQ:
-        m_transferFunction = TransferFunction(TransferFunction::PerceptualQuantizer);
+        m_transferFunctionType = TransferFunction::PerceptualQuantizer;
+        return;
+    case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_LINEAR:
+        m_transferFunctionType = TransferFunction::linear;
         return;
     default:
         // TODO add more transfer functions
@@ -253,7 +265,11 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_prim
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_luminances(Resource *resource, uint32_t min_lum, uint32_t max_lum, uint32_t reference_lum)
 {
-    wl_resource_post_error(resource->handle, error::error_unsupported_feature, "set_luminances isn't supported yet");
+    m_transferFunctionLuminances = Luminances{
+        .min = min_lum / 10'000.0,
+        .max = double(max_lum),
+        .reference = double(reference_lum),
+    };
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_mastering_display_primaries(Resource *resource, int32_t r_x, int32_t r_y, int32_t g_x, int32_t g_y, int32_t b_x, int32_t b_y, int32_t w_x, int32_t w_y)
@@ -350,6 +366,7 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
                                                 round(c.green().x()), round(c.green().y()),
                                                 round(c.blue().x()), round(c.blue().y()),
                                                 round(c.white().x()), round(c.white().y()));
+    xx_image_description_info_v4_send_luminances(resource, std::round(m_description.transferFunction().minLuminance * 10'000), std::round(m_description.transferFunction().maxLuminance), std::round(m_description.referenceLuminance()));
     xx_image_description_info_v4_send_target_luminance(resource, m_description.minLuminance(), m_description.maxHdrLuminance().value_or(800));
     xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description.transferFunction()));
     xx_image_description_info_v4_send_done(resource);
