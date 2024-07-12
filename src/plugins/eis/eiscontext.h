@@ -24,24 +24,40 @@ struct EisClient;
 class EisContext
 {
 public:
-    EisContext(EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities, int cookie, const QString &dbusService);
+    EisContext(EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities);
     ~EisContext();
 
-    int addClient();
     void updateScreens();
     void updateKeymap();
 
-    const int cookie;
-    const QString dbusService;
+protected:
+    eis *m_eisContext;
 
 private:
     void handleEvents();
 
     EisBackend *m_backend;
-    eis *m_eisContext;
     QFlags<eis_device_capability> m_allowedCapabilities;
     QSocketNotifier m_socketNotifier;
     std::vector<std::unique_ptr<EisClient>> m_clients;
 };
 
+class DbusEisContext : public EisContext
+{
+public:
+    DbusEisContext(EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities, int cookie, const QString &dbusService);
+
+    int addClient();
+
+    const int cookie;
+    const QString dbusService;
+};
+
+class XWaylandEisContext : public EisContext
+{
+public:
+    XWaylandEisContext(EisBackend *backend);
+
+    const QByteArray socketName;
+};
 }

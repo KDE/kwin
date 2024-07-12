@@ -14,7 +14,7 @@
 #include "input.h"
 #include "keyboard_input.h"
 #include "keyboard_layout.h"
-#include "main.h"
+#include "main_wayland.h"
 #include "workspace.h"
 #include "xkb.h"
 
@@ -26,6 +26,8 @@
 
 #include <libeis.h>
 
+#include <fcntl.h>
+
 #include <ranges>
 
 namespace KWin
@@ -34,11 +36,21 @@ namespace KWin
 EisBackend::EisBackend(QObject *parent)
     : KWin::InputBackend(parent)
     , m_serviceWatcher(new QDBusServiceWatcher(this))
+
 {
+#if HAVE_XWAYLAND_ENABLE_EI_PORTAL
+    m_xWaylandContext = std::make_unique<XWaylandEisContext>(this);
+    FileDescriptor fd(open(m_xWaylandContext->socketName.constData(), O_PATH | O_CLOEXEC));
+    unlink(m_xWaylandContext->socketName.constData());
+    auto appWayland = static_cast<ApplicationWayland *>(kwinApp());
+    appWayland->addExtraXWaylandEnvrionmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd.get()));
+    appWayland->passFdToXwayland(std::move(fd));
+#endif
+
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());
     m_serviceWatcher->setWatchMode(QDBusServiceWatcher::WatchForUnregistration);
     connect(m_serviceWatcher, &QDBusServiceWatcher::serviceUnregistered, this, [this](const QString &service) {
-        std::erase_if(m_contexts, [&service](const std::unique_ptr<EisContext> &context) {
+        std::erase_if(m_contexts, [&service](const std::unique_ptr<DbusEisContext> &context) {
             return context->dbusService == service;
         });
         m_serviceWatcher->removeWatchedService(service);
@@ -92,14 +104,14 @@ QDBusUnixFileDescriptor EisBackend::connectToEIS(const int &capabilities, int &c
     const QString dbusService = message().service();
     static int s_cookie = 0;
     cookie = ++s_cookie;
-    m_contexts.push_back(std::make_unique<EisContext>(this, eisCapabilities, cookie, dbusService));
+    m_contexts.push_back(std::make_unique<DbusEisContext>(this, eisCapabilities, cookie, dbusService));
     m_serviceWatcher->addWatchedService(dbusService);
     return QDBusUnixFileDescriptor(m_contexts.back()->addClient());
 }
 
 void EisBackend::disconnect(int cookie)
 {
-    auto it = std::ranges::find(m_contexts, cookie, [](const std::unique_ptr<EisContext> &context) {
+    auto it = std::ranges::find(m_contexts, cookie, [](const std::unique_ptr<DbusEisContext> &context) {
         return context->cookie;
     });
     if (it != std::ranges::end(m_contexts)) {

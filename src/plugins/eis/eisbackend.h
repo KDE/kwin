@@ -24,7 +24,8 @@ class QDBusServiceWatcher;
 
 namespace KWin
 {
-class EisContext;
+class DbusEisContext;
+class XWaylandEisContext;
 
 class EisBackend : public KWin::InputBackend, public QDBusContext
 {
@@ -46,7 +47,8 @@ public:
 private:
     QDBusServiceWatcher *m_serviceWatcher;
     RamFile m_keymapFile;
-    std::vector<std::unique_ptr<EisContext>> m_contexts;
+    std::unique_ptr<XWaylandEisContext> m_xWaylandContext;
+    std::vector<std::unique_ptr<DbusEisContext>> m_contexts;
 };
 
 }

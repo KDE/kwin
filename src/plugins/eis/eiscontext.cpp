@@ -52,15 +52,33 @@ public:
     std::unique_ptr<EisDevice> keyboard;
 };
 
-EisContext::EisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities, int cookie, const QString &dbusService)
-    : cookie(cookie)
+DbusEisContext::DbusEisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities, int cookie, const QString &dbusService)
+    : EisContext(backend, allowedCapabilities)
+    , cookie(cookie)
     , dbusService(dbusService)
-    , m_backend(backend)
-    , m_eisContext(eis_new(this))
-    , m_allowedCapabilities(allowedCapabilities)
-    , m_socketNotifier(eis_get_fd(m_eisContext), QSocketNotifier::Read)
 {
     eis_setup_backend_fd(m_eisContext);
+}
+
+int DbusEisContext::addClient()
+{
+    return eis_backend_fd_add_client(m_eisContext);
+}
+
+XWaylandEisContext::XWaylandEisContext(KWin::EisBackend *backend)
+    : EisContext(backend, {EIS_DEVICE_CAP_POINTER | EIS_DEVICE_CAP_POINTER_ABSOLUTE | EIS_DEVICE_CAP_KEYBOARD | EIS_DEVICE_CAP_TOUCH | EIS_DEVICE_CAP_SCROLL | EIS_DEVICE_CAP_BUTTON})
+    , socketName(qgetenv("XDG_RUNTIME_DIR") + QByteArrayLiteral("/kwin-xwayland-eis-socket.") + QByteArray::number(getpid()))
+{
+    eis_setup_backend_socket(m_eisContext, socketName.constData());
+}
+
+EisContext::EisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities)
+    : m_eisContext(eis_new(this))
+    , m_backend(backend)
+    , m_allowedCapabilities(allowedCapabilities)
+    , m_socketNotifier(eis_get_fd(m_eisContext), QSocketNotifier::Read)
+
+{
     eis_log_set_priority(m_eisContext, EIS_LOG_PRIORITY_DEBUG);
     eis_log_set_handler(m_eisContext, eis_log_handler);
     QObject::connect(&m_socketNotifier, &QSocketNotifier::activated, [this] {
@@ -99,11 +117,6 @@ void EisContext::updateKeymap()
             client->keyboard->changeDevice(m_backend->createKeyboard(client->seat));
         }
     }
-}
-
-int EisContext::addClient()
-{
-    return eis_backend_fd_add_client(m_eisContext);
 }
 
 static std::chrono::microseconds currentTime()
