@@ -174,7 +174,7 @@ void QuickTilingTest::testQuickTiling()
     QFETCH(QuickTileMode, mode);
     QFETCH(QRectF, expectedGeometry);
     const QuickTileMode oldQuickTileMode = window->quickTileMode();
-    window->setQuickTileMode(mode, true);
+    window->handleQuickTileShortcut(mode);
 
     // at this point the geometry did not yet change
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
@@ -223,7 +223,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(window->tile(), mode == QuickTileFlag::Maximize ? nullptr : tile);
 
     // now try to toggle again
-    window->setQuickTileMode(mode, true);
+    window->handleQuickTileShortcut(mode);
     QTEST(window->requestedQuickTileMode(), "expectedModeAfterToggle");
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
@@ -278,7 +278,7 @@ void QuickTilingTest::testQuickMaximizing()
     QSignalSpy maximizeChangedSpy(window, &Window::maximizedChanged);
 
     const QuickTileMode oldQuickTileMode = window->quickTileMode();
-    window->setQuickTileMode(QuickTileFlag::Maximize, true);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Maximize);
 
     // at this point the geometry did not yet change
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
@@ -310,7 +310,7 @@ void QuickTilingTest::testQuickMaximizing()
 
     // go back to quick tile none
     QFETCH(QuickTileMode, mode);
-    window->setQuickTileMode(mode, true);
+    window->setQuickTileModeAtCurrentPosition(mode);
     QCOMPARE(window->requestedQuickTileMode(), QuickTileMode(QuickTileFlag::None));
     // geometry not yet changed
     QCOMPARE(window->frameGeometry(), QRect(0, 0, 1280, 1024));
@@ -637,7 +637,7 @@ void QuickTilingTest::testX11QuickTiling()
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     const QRectF origGeo = window->frameGeometry();
     QFETCH(QuickTileMode, mode);
-    window->setQuickTileMode(mode, true);
+    window->handleQuickTileShortcut(mode);
     if (mode == QuickTileFlag::Maximize) {
         QCOMPARE(quickTileChangedSpy.count(), 0);
         QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
@@ -652,7 +652,7 @@ void QuickTilingTest::testX11QuickTiling()
     // if screen is on the same edge
     const auto outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
-    window->setQuickTileMode(mode, true);
+    window->handleQuickTileShortcut(mode);
     QFETCH(int, screenId);
     QCOMPARE(window->output(), outputs[screenId]);
     QTEST(window->quickTileMode(), "modeAfterToggle");
@@ -728,7 +728,7 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
     // now quick tile
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QFETCH(QuickTileMode, mode);
-    window->setQuickTileMode(mode, true);
+    window->setQuickTileModeAtCurrentPosition(mode);
     if (mode == QuickTileFlag::Maximize) {
         QCOMPARE(window->quickTileMode(), QuickTileFlag::None);
         QCOMPARE(quickTileChangedSpy.count(), 0);

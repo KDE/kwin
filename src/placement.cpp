@@ -872,7 +872,7 @@ void Workspace::quickTileWindow(QuickTileMode mode)
         m_quickTileCombineTimer->stop();
     }
 
-    m_activeWindow->setQuickTileMode(mode, true);
+    m_activeWindow->handleQuickTileShortcut(mode);
 }
 
 qreal Workspace::packPositionLeft(const Window *window, qreal oldX, bool leftEdge) const
