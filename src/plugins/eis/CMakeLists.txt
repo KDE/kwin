@@ -7,14 +7,14 @@ ecm_qt_declare_logging_category(eis
     HEADER libeis_logging.h
     IDENTIFIER KWIN_EIS
     CATEGORY_NAME kwin_libeis
-    DEFAULT_SEVERITY Debug
+    DEFAULT_SEVERITY Warning
 )
 
 ecm_qt_declare_logging_category(eis
     HEADER inputcapture_logging.h
     IDENTIFIER KWIN_INPUTCAPTURE
     CATEGORY_NAME kwin_inputcapture
-    DEFAULT_SEVERITY Debug
+    DEFAULT_SEVERITY Warning
 )
 
 target_sources(eis PRIVATE
