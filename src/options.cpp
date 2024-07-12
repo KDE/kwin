@@ -56,6 +56,7 @@ Options::Options(QObject *parent)
     , m_xwaylandMaxCrashCount(Options::defaultXwaylandMaxCrashCount())
     , m_xwaylandEavesdrops(Options::defaultXwaylandEavesdrops())
     , m_xwaylandEavesdropsMouse(Options::defaultXwaylandEavesdropsMouse())
+    , m_xwaylandEiSocket(Options::defaultXwaylandEiSocket())
     , m_compositingMode(Options::defaultCompositingMode())
     , m_useCompositing(Options::defaultUseCompositing())
     , m_hiddenPreviews(Options::defaultHiddenPreviews())
@@ -164,6 +165,15 @@ void Options::setXwaylandEavesdropsMouse(bool eavesdropsMouse)
     }
     m_xwaylandEavesdropsMouse = eavesdropsMouse;
     Q_EMIT xwaylandEavesdropsChanged();
+}
+
+void Options::setXWaylandEiSocket(bool eiSocket)
+{
+    if (m_xwaylandEiSocket == eiSocket) {
+        return;
+    }
+    m_xwaylandEiSocket = eiSocket;
+    Q_EMIT xwaylandEiSocketChanged();
 }
 
 void Options::setClickRaise(bool clickRaise)
@@ -825,6 +835,7 @@ void Options::syncFromKcfgc()
     setXwaylandMaxCrashCount(m_settings->xwaylandMaxCrashCount());
     setXwaylandEavesdrops(XwaylandEavesdropsMode(m_settings->xwaylandEavesdrops()));
     setXwaylandEavesdropsMouse(m_settings->xwaylandEavesdropsMouse());
+    setXWaylandEiSocket(m_settings->xwaylandEiSocket());
     setPlacement(m_settings->placement());
     setAutoRaise(m_settings->autoRaise());
     setAutoRaiseInterval(m_settings->autoRaiseInterval());

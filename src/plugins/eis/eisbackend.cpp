@@ -39,10 +39,12 @@ EisBackend::EisBackend(QObject *parent)
 
 {
 #if HAVE_XWAYLAND_ENABLE_EI_PORTAL
-    m_xWaylandContext = std::make_unique<XWaylandEisContext>(this);
-    int fd = open(m_xWaylandContext->socketName.constData(), O_PATH);
-    unlink(m_xWaylandContext->socketName.constData());
-    static_cast<ApplicationWayland *>(kwinApp())->addExtraXWaylandEnvrionmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd));
+    if (options->xwaylandEiSocket()) {
+        m_xWaylandContext = std::make_unique<XWaylandEisContext>(this);
+        int fd = open(m_xWaylandContext->socketName.constData(), O_PATH);
+        unlink(m_xWaylandContext->socketName.constData());
+        static_cast<ApplicationWayland *>(kwinApp())->addExtraXWaylandEnvrionmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd));
+    }
 #endif
 
     m_serviceWatcher->setConnection(QDBusConnection::sessionBus());

@@ -40,6 +40,7 @@ KCM.SimpleKCM {
         }
 
         Kirigami.FormLayout {
+            id: eavesdropLayout
             Layout.leftMargin: Kirigami.Units.gridUnit
             Layout.rightMargin: Kirigami.Units.gridUnit
 
@@ -88,6 +89,21 @@ KCM.SimpleKCM {
             type: Kirigami.MessageType.Warning
             text: i18n("Note that using this setting will reduce system security to that of the X11 session by permitting malicious software to steal passwords and spy on the text that you type. Make sure you understand and accept this risk.")
             visible: always.checked
+        }
+
+        Kirigami.Separator {
+            Layout.fillWidth: true
+            Layout.leftMargin: Kirigami.Units.gridUnit
+            Layout.rightMargin: Kirigami.Units.gridUnit
+        }
+
+        Kirigami.FormLayout {
+            twinFormLayouts: eavesdropLayout
+            QQC2.CheckBox {
+                Kirigami.FormData.label: i18n("Allow input emulation without asking (requires restart to take effect):")
+                checked: kcm.settings.xwaylandEiSocket
+                onToggled: kcm.settings.xwaylandEiSocket = checked
+            }
         }
     }
 }
