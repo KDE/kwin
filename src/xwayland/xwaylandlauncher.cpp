@@ -176,9 +176,6 @@ bool XwaylandLauncher::start()
     fdsToPass << wmfd->fds[1].get();
 
     arguments << QStringLiteral("-rootless");
-#if HAVE_XWAYLAND_ENABLE_EI_PORTAL
-    arguments << QStringLiteral("-enable-ei-portal");
-#endif
 
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
