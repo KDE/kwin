@@ -42,6 +42,10 @@ public:
     {
         m_xwaylandXauthority = xauthority;
     }
+    void addExtraXWaylandEnvrionmentVariable(const QString &variable, const QString &value)
+    {
+        m_xwaylandExtraEnvironment.insert(variable, value);
+    }
     XwaylandInterface *xwayland() const override;
 #endif
     void setApplicationsToStart(const QStringList &applications)
@@ -75,6 +79,7 @@ private:
     QList<int> m_xwaylandListenFds;
     QString m_xwaylandDisplay;
     QString m_xwaylandXauthority;
+    QMap<QString, QString> m_xwaylandExtraEnvironment;
 #endif
     KConfigWatcher::Ptr m_settingsWatcher;
 };
