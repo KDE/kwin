@@ -1085,13 +1085,9 @@ public:
     Tile *tile() const;
     void setTile(Tile *tile);
 
-    /**
-     * Sets the quick tile mode ("snap") of this window.
-     * This will also handle preserving and restoring of window geometry as necessary.
-     * @param mode The tile mode (left/right) to give this window.
-     * @param keyboard Defines whether to take keyboard cursor into account.
-     */
-    void setQuickTileMode(QuickTileMode mode, bool keyboard = false);
+    void handleQuickTileShortcut(QuickTileMode mode);
+    void setQuickTileModeAtCurrentPosition(QuickTileMode mode);
+    void setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint);
     QuickTileMode quickTileMode() const;
     QuickTileMode requestedQuickTileMode() const;
 

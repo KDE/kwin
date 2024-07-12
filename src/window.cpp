@@ -1221,7 +1221,7 @@ bool Window::startInteractiveMoveResize()
     }
 
     if (isInteractiveResize() && m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
-        setQuickTileMode(QuickTileFlag::None);
+        setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
     }
 
     updateElectricGeometryRestore();
@@ -1246,7 +1246,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
             setMaximize(m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeVertical, m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeHorizontal);
             setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
         } else if (m_interactiveMoveResize.initialQuickTileMode) {
-            setQuickTileMode(m_interactiveMoveResize.initialQuickTileMode, true);
+            setQuickTileMode(m_interactiveMoveResize.initialQuickTileMode, m_interactiveMoveResize.initialGeometry.center());
             setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
         }
     } else if (moveResizeOutput() != interactiveMoveResizeStartOutput()) {
@@ -1257,10 +1257,10 @@ void Window::finishInteractiveMoveResize(bool cancel)
     }
 
     if (isElectricBorderMaximizing()) {
-        setQuickTileMode(electricBorderMode());
+        setQuickTileMode(electricBorderMode(), m_interactiveMoveResize.anchor);
         setElectricBorderMaximizing(false);
     } else if (wasMove && (input()->keyboardModifiers() & Qt::ShiftModifier)) {
-        setQuickTileMode(QuickTileFlag::Custom);
+        setQuickTileMode(QuickTileFlag::Custom, m_interactiveMoveResize.anchor);
     }
     setElectricBorderMode(QuickTileMode(QuickTileFlag::None));
     workspace()->outline()->hide();
@@ -1402,7 +1402,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global)
                         }
                     }
                 } else if (quickTileMode() != QuickTileMode(QuickTileFlag::None)) {
-                    setQuickTileMode(QuickTileFlag::None);
+                    setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
                     return;
                 }
             }
@@ -3446,64 +3446,13 @@ QRectF Window::quickTileGeometryRestore() const
     }
 }
 
-void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
+void Window::handleQuickTileShortcut(QuickTileMode mode)
 {
-    // Only allow quick tile on a regular window.
-    if (!isResizable()) {
-        return;
-    }
-    if (isAppletPopup()) {
-        return;
-    }
-
-    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
-
-    const QuickTileMode oldMode = requestedQuickTileMode();
-    QPointF whichScreen = keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos();
-
-    if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        if (requestedMaximizeMode() == MaximizeFull) {
-            m_requestedQuickTileMode = QuickTileFlag::None;
-            setMaximize(false, false);
-        } else {
-            QRectF effectiveGeometryRestore = quickTileGeometryRestore();
-            m_requestedQuickTileMode = QuickTileFlag::Maximize;
-            setMaximize(true, true);
-            setGeometryRestore(effectiveGeometryRestore);
-        }
-        doSetQuickTileMode();
-        return;
-    }
-
-    // sanitize the mode, ie. simplify "invalid" combinations
-    if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Horizontal)) {
-        mode &= ~QuickTileMode(QuickTileFlag::Horizontal);
-    }
-    if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical)) {
-        mode &= ~QuickTileMode(QuickTileFlag::Vertical);
-    }
-
-    // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
-    if (requestedMaximizeMode() != MaximizeRestore) {
-        if (mode != QuickTileMode(QuickTileFlag::None)) {
-            m_requestedQuickTileMode = QuickTileFlag::None;
-            setMaximize(false, false);
-            moveResize(quickTileGeometry(mode, keyboard ? moveResizeGeometry().center() : Cursors::self()->mouse()->pos()));
-            // Store the mode change
-            m_requestedQuickTileMode = mode;
-        } else {
-            m_requestedQuickTileMode = mode;
-            setMaximize(false, false);
-        }
-
-        doSetQuickTileMode();
-
-        return;
-    }
-
-    if (mode != QuickTileMode(QuickTileFlag::None)) {
+    QPointF tileAtPoint = moveResizeGeometry().center();
+    if (mode != QuickTileFlag::None) {
         // If trying to tile to the side that the window is already tiled to move the window to the next
         // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
+        const QuickTileMode oldMode = requestedQuickTileMode();
         if (oldMode == mode) {
             Output *currentOutput = moveResizeOutput();
             Output *nextOutput = currentOutput;
@@ -3528,7 +3477,7 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             } else {
                 // Move to other screen
                 moveResize(geometryRestore().translated(nextOutput->geometry().topLeft() - currentOutput->geometry().topLeft()));
-                whichScreen = nextOutput->geometry().center();
+                tileAtPoint = nextOutput->geometry().center();
 
                 // Swap sides
                 if (shiftHorizontal) {
@@ -3543,12 +3492,61 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
         }
-        m_requestedQuickTileMode = mode;
+    }
+    setQuickTileMode(mode, tileAtPoint);
+}
+
+void Window::setQuickTileModeAtCurrentPosition(QuickTileMode mode)
+{
+    setQuickTileMode(mode, m_moveResizeGeometry.center());
+}
+
+void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
+{
+    // Only allow quick tile on a regular window.
+    if (!isResizable()) {
+        return;
+    }
+    if (isAppletPopup()) {
+        return;
+    }
+
+    workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
+
+    const QuickTileMode oldMode = requestedQuickTileMode();
+
+    if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
+        if (requestedMaximizeMode() == MaximizeFull) {
+            m_requestedQuickTileMode = QuickTileFlag::None;
+            setMaximize(false, false);
+        } else {
+            QRectF effectiveGeometryRestore = quickTileGeometryRestore();
+            m_requestedQuickTileMode = QuickTileFlag::Maximize;
+            setMaximize(true, true);
+            setGeometryRestore(effectiveGeometryRestore);
+        }
+        doSetQuickTileMode();
+        return;
+    }
+
+    // sanitize the mode, ie. simplify "invalid" combinations
+    if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Horizontal)) {
+        mode &= ~QuickTileMode(QuickTileFlag::Horizontal);
+    }
+    if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical)) {
+        mode &= ~QuickTileMode(QuickTileFlag::Vertical);
+    }
+    m_requestedQuickTileMode = mode;
+
+    // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
+    if (requestedMaximizeMode() != MaximizeRestore) {
+        m_requestedQuickTileMode = QuickTileFlag::None;
+        setMaximize(false, false);
+        setQuickTileMode(mode, tileAtPoint);
+        return;
     }
 
     if (mode == QuickTileMode(QuickTileFlag::None)) {
-        m_requestedQuickTileMode = QuickTileFlag::None;
-
         QRectF geometry = moveResizeGeometry();
         if (geometryRestore().isValid()) {
             geometry = geometryRestore();
@@ -3567,12 +3565,11 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
         }
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
         // Custom tileMode is the only one that gets immediately assigned without a roundtrip
-        m_requestedQuickTileMode = mode;
-        setTile(workspace()->tileManager(workspace()->outputAt(whichScreen))->bestTileForPosition(whichScreen));
+        setTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
         // Don't go into setTileMode as custom tiles don't go trough configure events
         return;
     } else {
-        Tile *newTile = workspace()->tileManager(workspace()->outputAt(whichScreen))->quickTile(m_requestedQuickTileMode);
+        Tile *newTile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(m_requestedQuickTileMode);
         if (newTile) {
             moveResize(newTile->absoluteGeometry());
         } else if (tile()) {
