@@ -73,6 +73,8 @@ private Q_SLOTS:
     void testShortcut();
     void testScript_data();
     void testScript();
+    void testPerDesktopTiles_data();
+    void testPerDesktopTiles();
 
 private:
     KWayland::Client::ConnectionThread *m_connection = nullptr;
@@ -922,6 +924,105 @@ void QuickTilingTest::testScript()
     QCOMPARE(window->frameGeometry(), expectedGeometry);
 }
 
+void QuickTilingTest::testPerDesktopTiles_data()
+{
+    QTest::addColumn<QuickTileMode>("modeDesk1");
+    QTest::addColumn<QRectF>("expectedGeometryDesk1");
+    QTest::addColumn<QuickTileMode>("modeDesk2");
+    QTest::addColumn<QRectF>("expectedGeometryDesk2");
+
+#define FLAG(name) QuickTileMode(QuickTileFlag::name)
+    QTest::newRow("topToTop") << FLAG(Top) << QRectF(0, 0, 1280, 512) << FLAG(Top) << QRectF(0, 0, 1280, 500);
+
+    QTest::newRow("leftToTop") << FLAG(Left) << QRectF(0, 0, 640, 1024) << FLAG(Top) << QRectF(0, 0, 1280, 500);
+#undef FLAG
+}
+
+void QuickTilingTest::testPerDesktopTiles()
+{
+    // Add a desktop
+    VirtualDesktopManager::self()->setCount(2);
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    QVERIFY(surface != nullptr);
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    QVERIFY(shellSurface != nullptr);
+
+    // Map the window.
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(window);
+    // Window is on all desktops
+    window->setDesktops({});
+    QCOMPARE(workspace()->activeWindow(), window);
+    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+
+    // We have to receive a configure event when the window becomes active.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
+
+    QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+
+    QFETCH(QuickTileMode, modeDesk1);
+    QFETCH(QRectF, expectedGeometryDesk1);
+    QFETCH(QuickTileMode, modeDesk2);
+    QFETCH(QRectF, expectedGeometryDesk2);
+    window->setQuickTileMode(modeDesk1, true);
+
+    // new geometry
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometryDesk1.size());
+
+    // render
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), expectedGeometryDesk1.size().toSize(), Qt::red);
+
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 1);
+    QCOMPARE(window->frameGeometry(), expectedGeometryDesk1);
+    QCOMPARE(quickTileChangedSpy.count(), 1);
+    QCOMPARE(window->quickTileMode(), modeDesk1);
+
+    // Switch current virtual desktop
+    VirtualDesktopManager::self()->setCurrent(2);
+
+    // Resize the quick tile to the new expected geometry
+    TileManager *manager = workspace()->tileManager(window->output());
+    manager->quickTile(modeDesk2)->setGeometryFromWindow(expectedGeometryDesk2);
+
+    // new geometry
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
+    // render
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), QSize(100, 50), Qt::red);
+
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 2);
+    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(quickTileChangedSpy.count(), 2);
+    QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+    // Assign a new tile for desktop 2
+    window->setQuickTileMode(modeDesk2, true);
+    // new geometry
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
+
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometryDesk2.size());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), expectedGeometryDesk2.size().toSize(), Qt::red);
+
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(frameGeometryChangedSpy.count(), 3);
+    QCOMPARE(window->frameGeometry(), expectedGeometryDesk2);
+    QCOMPARE(quickTileChangedSpy.count(), 3);
+    QCOMPARE(window->quickTileMode(), modeDesk2);
+}
 }
 
 WAYLANDTEST_MAIN(KWin::QuickTilingTest)
