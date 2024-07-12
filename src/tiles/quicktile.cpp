@@ -237,6 +237,11 @@ void QuickRootTile::tryReset()
     }
 }
 
+QList<Tile *> QuickRootTile::quickTiles() const
+{
+    return {m_leftVerticalTile.get(), m_rightVerticalTile.get(), m_topHorizontalTile.get(), m_bottomHorizontalTile.get(), m_topLeftTile.get(), m_topRightTile.get(), m_bottomLeftTile.get(), m_bottomRightTile.get()};
+}
+
 } // namespace KWin
 
 #include "moc_quicktile.cpp"
