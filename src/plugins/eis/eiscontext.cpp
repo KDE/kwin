@@ -9,6 +9,11 @@
 #include "eisdevice.h"
 #include "libeis_logging.h"
 
+#include "main.h"
+#include "wayland_server.h"
+#include "xwayland/xwayland.h"
+#include "xwayland/xwaylandlauncher.h"
+
 namespace KWin
 {
 
@@ -67,9 +72,14 @@ int DbusEisContext::addClient()
 
 XWaylandEisContext::XWaylandEisContext(KWin::EisBackend *backend)
     : EisContext(backend, {EIS_DEVICE_CAP_POINTER | EIS_DEVICE_CAP_POINTER_ABSOLUTE | EIS_DEVICE_CAP_KEYBOARD | EIS_DEVICE_CAP_TOUCH | EIS_DEVICE_CAP_SCROLL | EIS_DEVICE_CAP_BUTTON})
-    , socketName(qgetenv("XDG_RUNTIME_DIR") + QByteArrayLiteral("/kwin-xwayland-eis-socket.") + QByteArray::number(getpid()))
+    , socketName(QByteArrayLiteral("kwin-xwayland-eis-socket.") + QByteArray::number(getpid()))
 {
     eis_setup_backend_socket(m_eisContext, socketName.constData());
+}
+
+bool XWaylandEisContext::allowClient(eis_client *client)
+{
+    return eis_client_get_pid(client) == static_cast<Xwl::Xwayland *>(kwinApp()->xwayland())->xwaylandLauncher()->process()->processId();
 }
 
 EisContext::EisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities)
@@ -139,6 +149,10 @@ void EisContext::handleEvents()
             const char *clientName = eis_client_get_name(client);
             if (!eis_client_is_sender(client)) {
                 qCDebug(KWIN_EIS) << "disconnecting receiving client" << clientName;
+                eis_client_disconnect(client);
+                break;
+            }
+            if (!allowClient(client)) {
                 eis_client_disconnect(client);
                 break;
             }

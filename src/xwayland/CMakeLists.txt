@@ -16,6 +16,8 @@ add_library(KWinXwaylandServerModule OBJECT
     xwldrophandler.cpp
     xwaylandlauncher.cpp
 )
+set_target_properties(KWinXwaylandServerModule PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 target_link_libraries(KWinXwaylandServerModule PUBLIC kwin Qt::Concurrent KF6::I18n KWinXwaylandCommon XCB::XCB XCB::RANDR XCB::XFIXES XCB::COMPOSITE XKB::XKB)
 if(TARGET KF6::Notifications)
     target_link_libraries(KWinXwaylandServerModule PUBLIC KF6::Notifications)
