@@ -25,13 +25,15 @@ class EisContext
 {
 public:
     EisContext(EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities);
-    ~EisContext();
+    virtual ~EisContext();
 
     void updateScreens();
     void updateKeymap();
 
 protected:
     eis *m_eisContext;
+    void connectToClient(eis_client *client);
+    virtual void connectionRequested(eis_client *client) = 0;
 
 private:
     void handleEvents();
@@ -51,13 +53,8 @@ public:
 
     const int cookie;
     const QString dbusService;
-};
 
-class XWaylandEisContext : public EisContext
-{
-public:
-    XWaylandEisContext(EisBackend *backend);
-
-    const QByteArray socketName;
+private:
+    void connectionRequested(eis_client *client) override;
 };
 }

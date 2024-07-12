@@ -17,5 +17,8 @@
         <entry name="XwaylandEavesdropsMouse" type="Bool">
             <default>false</default>
         </entry>
+        <entry name="XwaylandEisNoPrompt" type="Bool">
+            <default>false</default>
+        </entry>
     </group>
 </kcfg>

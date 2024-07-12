@@ -26,6 +26,7 @@ target_sources(eis PRIVATE
     eisinputcapture.cpp
     eisinputcapturemanager.cpp
     eisinputcapturefilter.cpp
+    xwaylandeiscontext.cpp
 )
 
-target_link_libraries(eis PRIVATE kwin Libeis::Libeis XKB::XKB)
+target_link_libraries(eis PRIVATE kwin KF6::WidgetsAddons KF6::I18n Libeis::Libeis XKB::XKB)
