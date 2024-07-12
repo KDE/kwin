@@ -192,7 +192,7 @@ bool XwaylandLauncher::start()
     arguments << QStringLiteral("-rootless");
     arguments << QStringLiteral("-wm") << QString::number(fd);
 #if HAVE_XWAYLAND_ENABLE_EI_PORTAL
-    arguments << QStringLiteral("-enable-ei-portal");
+    // arguments << QStringLiteral("-enable-ei-portal");
 #endif
 
     m_xwaylandProcess = new QProcess(this);
