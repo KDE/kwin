@@ -357,6 +357,7 @@ void Tile::insertChild(int position, Tile *item)
             if (isActive()) {
                 w->setTile(tile);
             } else {
+                // If not active, we can't setTile
                 removeWindow(w);
                 tile->addWindow(w);
             }
