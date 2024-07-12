@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "effect/globals.h"
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -3592,7 +3593,11 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
         }
     } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
         // Custom tileMode is the only one that gets immediately assigned without a roundtrip
-        setTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
+        m_requestedQuickTileMode = mode;
+        Output *output = workspace()->outputAt(whichScreen);
+        if (!m_tile || m_tile->desktop() != VirtualDesktopManager::self()->currentDesktop() || m_tile->manager()->output() != output || m_tile->quickTileMode() != QuickTileMode(QuickTileFlag::Custom)) {
+            setTile(workspace()->tileManager(output)->bestTileForPosition(whichScreen));
+        }
         // Don't go into setTileMode as custom tiles don't go trough configure events
         return;
     } else {
@@ -3634,14 +3639,17 @@ void Window::setTile(Tile *tile)
     }
 
     m_tile = tile;
-
     if (m_tile) {
         Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
-        connect(m_tile, &Tile::activeChanged, this, [this](bool active) {
+        connect(m_tile, &Tile::activeChanged, this, [this, tile](bool active) {
             if (!active) {
-                setTile(nullptr);
-                moveResize(geometryRestore());
+                // FIXME HACK
+                if (m_requestedQuickTileMode != QuickTileMode(QuickTileFlag::Custom)) {
+                    setQuickTileMode(QuickTileFlag::None);
+                }
+                // setTile(nullptr);
+                // moveResize(geometryRestore());
             }
         });
     }

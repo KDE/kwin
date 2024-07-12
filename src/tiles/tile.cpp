@@ -36,10 +36,11 @@ Tile::Tile(TileManager *tiling, Tile *parent)
                 // Do this only here in desktop change and not in settile to cause
                 // the least amount of behavior change
                 if (w->quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-                    w->setGeometryRestore(w->moveResizeGeometry());
+                    //  w->setGeometryRestore(w->moveResizeGeometry());
                 }
+                w->setQuickTileMode(quickTileMode());
                 w->setTile(this);
-                w->moveResize(windowGeometry());
+                // w->moveResize(windowGeometry());
             }
             Q_EMIT activeChanged(true);
         } else if (previous == desktop()) {
@@ -317,17 +318,16 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
+    if (isActive()) {
+        window->moveResize(windowGeometry());
+    }
+
     if (m_windows.contains(window)) {
         return;
     }
 
     // only a single tile per manager is allowed
     m_tiling->forgetWindow(window);
-
-    if (isActive()) {
-        window->moveResize(windowGeometry());
-    }
-
     m_windows.append(window);
     Q_EMIT windowAdded(window);
     Q_EMIT windowsChanged();
