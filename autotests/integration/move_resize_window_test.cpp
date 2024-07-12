@@ -819,7 +819,7 @@ void MoveResizeWindowTest::testCancelInteractiveMoveResize()
     if (maximizeMode) {
         window->setMaximize(maximizeMode & MaximizeMode::MaximizeVertical, maximizeMode & MaximizeMode::MaximizeHorizontal);
     } else {
-        window->setQuickTileMode(quickTileMode, true);
+        window->setQuickTileModeAtCurrentPosition(quickTileMode);
     }
     if (quickTileMode == QuickTileFlag::Maximize) {
         QCOMPARE(window->requestedQuickTileMode(), QuickTileFlag::None);

@@ -491,7 +491,7 @@ void OutputChangesTest::testQuickTiledWindowRestoredAfterEnablingOutput()
     // Move the window to the right monitor and tile it to the right.
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(QPointF(1280 + 50, 100));
-    window->setQuickTileMode(QuickTileFlag::Right, true);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Right);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), QSize(1280 / 2, 1024));
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
@@ -587,7 +587,7 @@ void OutputChangesTest::testCustomTiledWindowRestoredAfterEnablingOutput()
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
     window->move(customTileGeom.topLeft() + QPointF(50, 50));
     const auto geomBeforeTiling = window->moveResizeGeometry();
-    window->setQuickTileMode(QuickTileFlag::Custom, true);
+    window->setQuickTileModeAtCurrentPosition(QuickTileFlag::Custom);
 
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).value<QSize>(), customTileGeom.size().toSize());
