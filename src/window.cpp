@@ -722,8 +722,8 @@ void Window::setDesktops(QList<VirtualDesktop *> desktops)
     }
 
     // Remove this window from tilemanagers of all desktops it's not anymore in
-    QList<VirtualDesktop *> oldDesktops = m_desktops;
     if (!desktops.isEmpty()) {
+        QList<VirtualDesktop *> oldDesktops = m_desktops;
         // Empty means all of them
         if (oldDesktops.isEmpty()) {
             oldDesktops = VirtualDesktopManager::self()->desktops();
@@ -3647,7 +3647,7 @@ void Window::setTile(Tile *tile)
     }
 
     if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
-        // If we set a null tile on the
+        // If we change to a null tile on the current desktop, consider it forgotten
         oldTile->removeWindow(this);
     }
 

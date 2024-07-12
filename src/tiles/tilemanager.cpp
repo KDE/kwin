@@ -103,7 +103,7 @@ void TileManager::forgetWindow(Window *window)
     for (Tile *tile : m_rootTile->descendants()) {
         tile->removeWindow(window);
     }
-    for (Tile *tile : m_quickRootTile->descendants()) {
+    for (Tile *tile : m_quickRootTile->quickTiles()) {
         tile->removeWindow(window);
     }
 }

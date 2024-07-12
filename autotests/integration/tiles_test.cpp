@@ -440,37 +440,8 @@ void TilesTest::testPerDesktopTiles()
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &Window::interactiveMoveResizeFinished);
     QVERIFY(interactiveMoveResizeFinishedSpy.isValid());
 
-    // Resize to set a geometryRestore
-    QCOMPARE(workspace()->moveResizeWindow(), nullptr);
-    QCOMPARE(window->isInteractiveMove(), false);
-    QCOMPARE(window->isInteractiveResize(), false);
-    workspace()->slotWindowResize();
-    QCOMPARE(workspace()->moveResizeWindow(), window);
-    QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
-    QCOMPARE(moveResizedChangedSpy.count(), 1);
-    QCOMPARE(window->isInteractiveResize(), true);
-    QCOMPARE(window->geometryRestore(), QRect());
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
-    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
-    Test::XdgToplevel::States states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
-    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
-    QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    QPoint cursorPos = window->frameGeometry().bottomRight().toPoint();
-    input()->pointer()->warp(cursorPos + QPoint(8, 0));
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
-    QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
-
-    // The client should receive a configure event with the new size.
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
-    states = toplevelConfigureRequestedSpy.last().at(1).value<Test::XdgToplevel::States>();
-    QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
-    QVERIFY(states.testFlag(Test::XdgToplevel::State::Resizing));
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(108, 100));
-    Test::render(rootSurface.get(), toplevelConfigureRequestedSpy.last().first().value<QSize>(), Qt::blue);
-    QCOMPARE(window->geometryRestore(), QRectF(0, 0, 108, 100));
+    // Sets a geometryRestore
+    window->setGeometryRestore(window->moveResizeGeometry());
 
     // Set a tile
     auto leftTileDesk1 = qobject_cast<CustomTile *>(m_tileManager->rootTile()->childTiles().first());
@@ -482,8 +453,8 @@ void TilesTest::testPerDesktopTiles()
 
     window->setTile(leftTileDesk1);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
 
     root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
 
@@ -513,8 +484,8 @@ void TilesTest::testPerDesktopTiles()
     QCOMPARE(window->tile(), nullptr);
     // The window geometry got restored
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
-    QCOMPARE(toplevelConfigureRequestedSpy.count(), 4);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
 
     root->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
 

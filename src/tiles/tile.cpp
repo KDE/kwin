@@ -33,6 +33,11 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
         if (current == desktop()) {
             for (auto *w : std::as_const(m_windows)) {
+                // Do this only here in desktop change and not in settile to cause
+                // the least amount of behavior change
+                if (w->quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+                    w->setGeometryRestore(w->moveResizeGeometry());
+                }
                 w->setTile(this);
                 w->moveResize(windowGeometry());
             }
