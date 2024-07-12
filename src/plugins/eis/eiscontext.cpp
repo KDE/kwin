@@ -67,11 +67,9 @@ int DbusEisContext::addClient()
     return eis_backend_fd_add_client(m_eisContext);
 }
 
-XWaylandEisContext::XWaylandEisContext(KWin::EisBackend *backend)
-    : EisContext(backend, {EIS_DEVICE_CAP_POINTER | EIS_DEVICE_CAP_POINTER_ABSOLUTE | EIS_DEVICE_CAP_KEYBOARD | EIS_DEVICE_CAP_TOUCH | EIS_DEVICE_CAP_SCROLL | EIS_DEVICE_CAP_BUTTON})
-    , socketName(qgetenv("XDG_RUNTIME_DIR") + QByteArrayLiteral("/kwin-xwayland-eis-socket.") + QByteArray::number(getpid()))
+void DbusEisContext::connectionRequested(eis_client *client)
 {
-    eis_setup_backend_socket(m_eisContext, socketName.constData());
+    connectToClient(client);
 }
 
 EisContext::EisContext(KWin::EisBackend *backend, QFlags<eis_device_capability> allowedCapabilities)
@@ -120,6 +118,25 @@ void EisContext::updateKeymap()
     }
 }
 
+void EisContext::connectToClient(eis_client *client)
+{
+    eis_client_connect(client);
+
+    const char *clientName = eis_client_get_name(client);
+
+    auto seat = eis_client_new_seat(client, QByteArrayLiteral(" seat").prepend(clientName));
+    constexpr std::array allCapabilities{EIS_DEVICE_CAP_POINTER, EIS_DEVICE_CAP_POINTER_ABSOLUTE, EIS_DEVICE_CAP_KEYBOARD, EIS_DEVICE_CAP_TOUCH, EIS_DEVICE_CAP_SCROLL, EIS_DEVICE_CAP_BUTTON};
+    for (auto capability : allCapabilities) {
+        if (m_allowedCapabilities & capability) {
+            eis_seat_configure_capability(seat, capability);
+        }
+    }
+    eis_seat_add(seat);
+
+    m_clients.emplace_back(std::make_unique<EisClient>(client, seat));
+    qCDebug(KWIN_EIS) << "New eis client" << clientName;
+}
+
 static std::chrono::microseconds currentTime()
 {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
@@ -143,19 +160,7 @@ void EisContext::handleEvents()
                 eis_client_disconnect(client);
                 break;
             }
-            eis_client_connect(client);
-
-            auto seat = eis_client_new_seat(client, QByteArrayLiteral(" seat").prepend(clientName));
-            constexpr std::array allCapabilities{EIS_DEVICE_CAP_POINTER, EIS_DEVICE_CAP_POINTER_ABSOLUTE, EIS_DEVICE_CAP_KEYBOARD, EIS_DEVICE_CAP_TOUCH, EIS_DEVICE_CAP_SCROLL, EIS_DEVICE_CAP_BUTTON};
-            for (auto capability : allCapabilities) {
-                if (m_allowedCapabilities & capability) {
-                    eis_seat_configure_capability(seat, capability);
-                }
-            }
-
-            eis_seat_add(seat);
-            m_clients.emplace_back(std::make_unique<EisClient>(client, seat));
-            qCDebug(KWIN_EIS) << "New eis client" << clientName;
+            connectionRequested(client);
             break;
         }
         case EIS_EVENT_CLIENT_DISCONNECT: {
