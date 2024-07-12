@@ -11,6 +11,7 @@
 #pragma once
 
 #include <QList>
+#include <QMap>
 #include <QObject>
 #include <QProcess>
 #include <QSocketNotifier>
@@ -55,6 +56,8 @@ public:
      * This is to be used in conjuction with kwin_wayland_wrapper
      */
     void setXauthority(const QString &xauthority);
+
+    void setExtraEnvironmentVariables(const QMap<QString, QString> &extraEnvironment);
 
     void enable();
     void disable();
@@ -102,6 +105,7 @@ private:
     QList<int> m_listenFds;
     QString m_displayName;
     QString m_xAuthority;
+    QMap<QString, QString> m_extraEnvironment;
 
     bool m_enabled = false;
     int m_crashCount = 0;
