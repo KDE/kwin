@@ -245,6 +245,17 @@ void TextInputV3InterfacePrivate::done()
     }
 }
 
+void TextInputV3InterfacePrivate::sendLanguage()
+{
+    if (!surface) {
+        return;
+    }
+    const QList<Resource *> textInputs = textInputsForClient(surface->client());
+    for (auto resource : textInputs) {
+        send_language(resource->handle, language);
+    }
+}
+
 QList<TextInputV3InterfacePrivate::Resource *> TextInputV3InterfacePrivate::textInputsForClient(ClientConnection *client) const
 {
     return resourceMap().values(client->client());
@@ -489,6 +500,16 @@ bool TextInputV3Interface::isEnabled() const
 bool TextInputV3Interface::clientSupportsTextInput(ClientConnection *client) const
 {
     return client && d->resourceMap().contains(*client);
+}
+
+void TextInputV3Interface::setLanguage(const QString &languageTag)
+{
+    if (d->language == languageTag) {
+        // not changed
+        return;
+    }
+    d->language = languageTag;
+    d->sendLanguage();
 }
 }
 

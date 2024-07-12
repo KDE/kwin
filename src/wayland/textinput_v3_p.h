@@ -41,6 +41,7 @@ public:
     void commitString(const QString &text);
     void deleteSurroundingText(quint32 beforeLength, quint32 afterLength);
     void done();
+    void sendLanguage();
 
     void updateEnabled();
 
@@ -67,6 +68,8 @@ public:
     QString preeditText;
     quint32 preeditCursorBegin = 0;
     quint32 preeditCursorEnd = 0;
+
+    QString language;
 
     struct
     {

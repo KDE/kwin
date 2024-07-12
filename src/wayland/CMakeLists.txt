@@ -80,7 +80,7 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME text-input-unstable-v2
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
-    PROTOCOL ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/text-input-unstable-v3.xml
     BASENAME text-input-unstable-v3
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml

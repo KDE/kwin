@@ -647,6 +647,10 @@ void InputMethod::setLanguage(uint32_t serial, const QString &language)
     if (t2 && t2->isEnabled()) {
         t2->setLanguage(language);
     }
+    auto t3 = waylandServer()->seat()->textInputV3();
+    if (t3 && t3->isEnabled()) {
+        t3->setLanguage(language);
+    }
 }
 
 void InputMethod::setTextDirection(uint32_t serial, Qt::LayoutDirection direction)

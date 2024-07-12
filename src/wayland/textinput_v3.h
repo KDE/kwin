@@ -154,6 +154,11 @@ public:
      */
     bool clientSupportsTextInput(ClientConnection *client) const;
 
+    /**
+     * Sets the language of the input text. The @p languageTag is a RFC-3066 format language tag.
+     */
+    void setLanguage(const QString &languageTag);
+
 Q_SIGNALS:
 
     /**
