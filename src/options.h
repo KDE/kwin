@@ -246,6 +246,10 @@ public:
     {
         return m_xwaylandEavesdropsMouse;
     }
+    bool xwaylandEisNoPrompt() const
+    {
+        return m_xwaylandEisNoPrompt;
+    }
 
     /**
      * Whether clicking on a window raises it in FocusFollowsMouse
@@ -637,6 +641,7 @@ public:
     void setXwaylandMaxCrashCount(int maxCrashCount);
     void setXwaylandEavesdrops(XwaylandEavesdropsMode mode);
     void setXwaylandEavesdropsMouse(bool eavesdropsMouse);
+    void setXWaylandEisNoPrompt(bool doNotPrompt);
     void setNextFocusPrefersMouse(bool nextFocusPrefersMouse);
     void setClickRaise(bool clickRaise);
     void setAutoRaise(bool autoRaise);
@@ -785,6 +790,10 @@ public:
     {
         return false;
     }
+    static bool defaultXwaylandEisNoPrompt()
+    {
+        return false;
+    }
     static ActivationDesktopPolicy defaultActivationDesktopPolicy()
     {
         return ActivationDesktopPolicy::SwitchToOtherDesktop;
@@ -804,6 +813,7 @@ Q_SIGNALS:
     void xwaylandMaxCrashCountChanged();
     void xwaylandEavesdropsChanged();
     void xwaylandEavesdropsMouseChanged();
+    void xwaylandEisNoPromptChanged();
     void nextFocusPrefersMouseChanged();
     void clickRaiseChanged();
     void autoRaiseChanged();
@@ -883,6 +893,7 @@ private:
     int m_xwaylandMaxCrashCount;
     XwaylandEavesdropsMode m_xwaylandEavesdrops;
     bool m_xwaylandEavesdropsMouse;
+    bool m_xwaylandEisNoPrompt;
 
     CompositingType m_compositingMode;
     WindowOperation OpTitlebarDblClick;

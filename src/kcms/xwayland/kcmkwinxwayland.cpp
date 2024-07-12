@@ -10,6 +10,10 @@
 #include <KDesktopFile>
 #include <KLocalizedString>
 #include <KPluginFactory>
+
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall>
 #include <QKeySequence>
 
 #include <kwinxwaylanddata.h>
@@ -23,6 +27,24 @@ KcmXwayland::KcmXwayland(QObject *parent, const KPluginMetaData &metaData)
 {
     registerSettings(m_settings);
     qmlRegisterAnonymousType<KWinXwaylandSettings>("org.kde.kwin.kwinxwaylandsettings", 1);
+}
+
+void KcmXwayland::logout() const
+{
+    auto method = QDBusMessage::createMethodCall(QStringLiteral("org.kde.LogoutPrompt"),
+                                                 QStringLiteral("/LogoutPrompt"),
+                                                 QStringLiteral("org.kde.LogoutPrompt"),
+                                                 QStringLiteral("promptLogout"));
+    QDBusConnection::sessionBus().asyncCall(method);
+}
+
+void KcmXwayland::save()
+{
+    bool modifiedXwaylandEis = m_settings->xwaylandEisNoPromptItem()->isSaveNeeded();
+    KQuickManagedConfigModule::save();
+    if (modifiedXwaylandEis) {
+        Q_EMIT showLogoutMessage();
+    }
 }
 
 KcmXwayland::~KcmXwayland() = default;

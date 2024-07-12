@@ -18,5 +18,6 @@ target_link_libraries(kcm_kwinxwayland PRIVATE
     KF6::I18n
     KF6::KCMUtils
     KF6::KCMUtilsQuick
+    Qt::DBus
     Wayland::Client
 )

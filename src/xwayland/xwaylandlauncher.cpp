@@ -177,6 +177,12 @@ bool XwaylandLauncher::start()
 
     arguments << QStringLiteral("-rootless");
 
+#if HAVE_XWAYLAND_ENABLE_EI_PORTAL
+    if (!options->xwaylandEisNoPrompt()) {
+        arguments << QStringLiteral("-enable-ei-portal");
+    }
+#endif
+
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
 
     env.insert("WAYLAND_SOCKET", QByteArray::number(waylandSocket.get()));

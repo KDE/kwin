@@ -5,4 +5,5 @@ DefaultValueGetters=true
 GenerateProperties=true
 ParentInConstructor=true
 Notifiers=true
+ItemAccessors=true
 GlobalEnums=true

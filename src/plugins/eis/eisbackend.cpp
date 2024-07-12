@@ -27,6 +27,7 @@
 #include <libeis.h>
 
 #include <fcntl.h>
+#include <unistd.h>
 
 #include <ranges>
 
@@ -45,16 +46,18 @@ EisBackend::EisBackend(QObject *parent)
     , m_serviceWatcher(new QDBusServiceWatcher(this))
 {
 #if HAVE_XWAYLAND_ENABLE_EI_PORTAL
-    // Unfortunately there is no way to pass a connected socket fd to libei like WAYLAND_SOCKET
-    // in libwayland so we are resorting to this hack
-    // https://gitlab.freedesktop.org/libinput/libei/-/issues/63
-    m_xWaylandContext = std::make_unique<XWaylandEisContext>(this);
-    FileDescriptor fd(open(m_xWaylandContext->socketName.constData(), O_PATH | O_CLOEXEC));
-    unlink(m_xWaylandContext->socketName.constData());
-    if (QByteArray(kwinApp()->metaObject()->className()) == typeName(KWin::ApplicationWayland)) {
-        auto appWayland = static_cast<ApplicationWayland *>(kwinApp());
-        appWayland->addExtraXWaylandEnvrionmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd.get()));
-        appWayland->passFdToXwayland(std::move(fd));
+    if (options->xwaylandEisNoPrompt()) {
+        // Unfortunately there is no way to pass a connected socket fd to libei like WAYLAND_SOCKET
+        // in libwayland so we are resorting to this hack
+        // https://gitlab.freedesktop.org/libinput/libei/-/issues/63
+        m_xWaylandContext = std::make_unique<XWaylandEisContext>(this);
+        FileDescriptor fd(open(m_xWaylandContext->socketName.constData(), O_PATH | O_CLOEXEC));
+        unlink(m_xWaylandContext->socketName.constData());
+        if (QByteArray(kwinApp()->metaObject()->className()) == typeName(KWin::ApplicationWayland)) {
+            auto appWayland = static_cast<ApplicationWayland *>(kwinApp());
+            appWayland->addExtraXWaylandEnvrionmentVariable(QStringLiteral("LIBEI_SOCKET"), QStringLiteral("/proc/self/fd/%1").arg(fd.get()));
+            appWayland->passFdToXwayland(std::move(fd));
+        }
     }
 #endif
 
