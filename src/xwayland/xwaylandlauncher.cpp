@@ -72,6 +72,11 @@ void XwaylandLauncher::setXauthority(const QString &xauthority)
     m_xAuthority = xauthority;
 }
 
+void XwaylandLauncher::addEnvironmentVariables(const QMap<QString, QString> &extraEnvironment)
+{
+    m_extraEnvironment.insert(extraEnvironment);
+}
+
 void XwaylandLauncher::enable()
 {
     if (m_enabled) {
@@ -174,6 +179,10 @@ bool XwaylandLauncher::start()
 
     if (qEnvironmentVariableIntValue("KWIN_XWAYLAND_DEBUG") == 1) {
         env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
+    }
+
+    for (const auto &[variable, value] : m_extraEnvironment.asKeyValueRange()) {
+        env.insert(variable, value);
     }
 
     m_xwaylandProcess = new QProcess(this);
