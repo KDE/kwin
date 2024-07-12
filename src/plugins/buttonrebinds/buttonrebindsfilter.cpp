@@ -248,13 +248,20 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
             m_actions.at(type).insert(trigger, keys);
         }
     } else if (entry.first() == QLatin1String("MouseButton")) {
-        if (entry.size() != 2) {
+        if (entry.size() < 2) {
             qCWarning(KWIN_BUTTONREBINDS) << "Invalid mouse button" << entry;
             return;
         }
 
         bool ok = false;
-        const MouseButton mb{entry.last().toUInt(&ok)};
+        MouseButton mb{entry[1].toUInt(&ok), {}};
+
+        // Last bit is the keyboard mods
+        if (entry.size() == 3) {
+            const auto keyboardModsRaw = entry.last().toInt(&ok);
+            mb.modifiers = Qt::KeyboardModifiers{keyboardModsRaw};
+        }
+
         if (ok) {
             m_actions.at(type).insert(trigger, mb);
         } else {
@@ -294,6 +301,7 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
         if (pressed && type != Pointer) {
             sendMousePosition(m_tabletCursorPos, timestamp);
         }
+        sendKeyModifiers(mb->modifiers, pressed, timestamp);
         return sendMouseButton(mb->button, pressed, timestamp);
     }
     if (const auto tb = std::get_if<TabletToolButton>(&action)) {
@@ -381,6 +389,33 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     }
 
     sendKey(keyCode.value());
+    return true;
+}
+
+bool ButtonRebindsFilter::sendKeyModifiers(const Qt::KeyboardModifiers &modifiers, bool pressed, std::chrono::microseconds time)
+{
+    if (modifiers == Qt::NoModifier) {
+        return false;
+    }
+
+    auto sendKey = [this, pressed, time](xkb_keycode_t key) {
+        auto state = pressed ? KWin::InputRedirection::KeyboardKeyPressed : KWin::InputRedirection::KeyboardKeyReleased;
+        Q_EMIT m_inputDevice.keyChanged(key, state, time, &m_inputDevice);
+    };
+
+    if (modifiers.testFlag(Qt::ShiftModifier)) {
+        sendKey(KEY_LEFTSHIFT);
+    }
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        sendKey(KEY_LEFTCTRL);
+    }
+    if (modifiers.testFlag(Qt::AltModifier)) {
+        sendKey(KEY_LEFTALT);
+    }
+    if (modifiers.testFlag(Qt::MetaModifier)) {
+        sendKey(KEY_LEFTMETA);
+    }
+
     return true;
 }
 

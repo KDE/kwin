@@ -67,6 +67,7 @@ public:
     struct MouseButton
     {
         quint32 button;
+        Qt::KeyboardModifiers modifiers;
     };
     struct DisabledButton
     {
@@ -83,6 +84,7 @@ private:
     void insert(TriggerType type, const Trigger &trigger, const QStringList &action);
     bool send(TriggerType type, const Trigger &trigger, bool pressed, std::chrono::microseconds timestamp);
     bool sendKeySequence(const QKeySequence &sequence, bool pressed, std::chrono::microseconds time);
+    bool sendKeyModifiers(const Qt::KeyboardModifiers &modifiers, bool pressed, std::chrono::microseconds time);
     bool sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time);
     bool sendMousePosition(QPointF position, std::chrono::microseconds time);
     bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);

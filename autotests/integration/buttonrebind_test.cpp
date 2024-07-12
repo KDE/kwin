@@ -37,6 +37,9 @@ private Q_SLOTS:
     void testMouse_data();
     void testMouse();
 
+    void testMouseKeyboardMod_data();
+    void testMouseKeyboardMod();
+
     void testDisabled();
 
     // NOTE: Mouse buttons are not tested because those are used in the other tests
@@ -155,6 +158,67 @@ void TestButtonRebind::testMouse()
     QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), mouseButton);
 
     Test::pointerButtonReleased(0x119, timestamp++);
+}
+
+void TestButtonRebind::testMouseKeyboardMod_data()
+{
+    QTest::addColumn<Qt::KeyboardModifiers>("modifiers");
+    QTest::addColumn<QList<quint32>>("expectedKeys");
+
+    QTest::newRow("single ctrl") << Qt::KeyboardModifiers(Qt::ControlModifier) << QList<quint32>{KEY_LEFTCTRL};
+    QTest::newRow("single alt") << Qt::KeyboardModifiers(Qt::AltModifier) << QList<quint32>{KEY_LEFTALT};
+    QTest::newRow("single shift") << Qt::KeyboardModifiers(Qt::ShiftModifier) << QList<quint32>{KEY_LEFTSHIFT};
+
+    // We have to test Meta with another key, because it will most likely trigger KWin to do some window operation.
+    QTest::newRow("meta + alt") << Qt::KeyboardModifiers(Qt::MetaModifier | Qt::AltModifier) << QList<quint32>{KEY_LEFTALT, KEY_LEFTMETA};
+
+    QTest::newRow("ctrl + alt + shift + meta") << Qt::KeyboardModifiers(Qt::ControlModifier | Qt::AltModifier | Qt::ShiftModifier | Qt::MetaModifier) << QList<quint32>{KEY_LEFTSHIFT, KEY_LEFTCTRL, KEY_LEFTALT, KEY_LEFTMETA};
+}
+
+void TestButtonRebind::testMouseKeyboardMod()
+{
+    QFETCH(Qt::KeyboardModifiers, modifiers);
+
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletTool")).group(QStringLiteral("Virtual Tablet Tool 1"));
+    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{"MouseButton", QString::number(BTN_LEFT), QString::number(modifiers.toInt())}, KConfig::Notify);
+    buttonGroup.sync();
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy keyboardEnteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy keyboardKeyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    QVERIFY(keyboardEnteredSpy.wait());
+
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy pointerEnteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy pointerButtonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+
+    const QRectF startGeometry = window->frameGeometry();
+
+    input()->pointer()->warp(startGeometry.center());
+    QVERIFY(pointerEnteredSpy.wait());
+
+    // Send the tablet button event so it can be processed by the filter
+    Test::tabletToolButtonPressed(BTN_STYLUS, timestamp++);
+
+    // The keyboard modifier is sent first
+    QVERIFY(keyboardKeyChangedSpy.wait());
+
+    QFETCH(QList<quint32>, expectedKeys);
+    QCOMPARE(keyboardKeyChangedSpy.count(), expectedKeys.count());
+    for (int i = 0; i < keyboardKeyChangedSpy.count(); i++) {
+        QCOMPARE(keyboardKeyChangedSpy.at(i).at(0).value<quint32>(), expectedKeys.at(i));
+        QCOMPARE(keyboardKeyChangedSpy.at(i).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
+    }
+
+    // Then the mouse button is
+    QCOMPARE(pointerButtonChangedSpy.count(), 1);
+    QCOMPARE(pointerButtonChangedSpy.at(0).at(2).value<qint32>(), BTN_LEFT);
+
+    Test::tabletToolButtonReleased(BTN_STYLUS, timestamp++);
 }
 
 void TestButtonRebind::testDisabled()
