@@ -48,7 +48,8 @@ option(KWIN_BUILD_KCMS "Enable building of KWin configuration modules." ON)
 option(KWIN_BUILD_NOTIFICATIONS "Enable building of KWin with knotifications support" ON)
 option(KWIN_BUILD_SCREENLOCKER "Enable building of KWin lockscreen functionality" ON)
 option(KWIN_BUILD_TABBOX "Enable building of KWin Tabbox functionality" ON)
-option(KWIN_BUILD_X11 "Enable building kwin_x11 and Xwayland support" ON)
+option(KWIN_BUILD_X11 "Enable building X11 common code and Xwayland support" ON)
+option(KWIN_BUILD_X11_BACKEND "Enable building kwin_x11" ON)
 option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
 
@@ -281,6 +282,8 @@ if (KWIN_BUILD_X11)
 
     # for kwin internal things
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
+else()
+    set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building kwin_x11" FORCE)
 endif()
 
 find_package(Libinput 1.19)
@@ -493,7 +496,11 @@ configure_package_config_file(KWinDBusInterfaceConfig.cmake.in
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KWinDBusInterfaceConfig.cmake
     DESTINATION ${CMAKECONFIG_INSTALL_DIR})
 
-ecm_install_configured_files(INPUT plasma-kwin_x11.service.in plasma-kwin_wayland.service.in @ONLY
+ecm_install_configured_files(INPUT plasma-kwin_wayland.service.in @ONLY
             DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
+if (KWIN_BUILD_X11_BACKEND)
+    ecm_install_configured_files(INPUT plasma-kwin_x11.service.in @ONLY
+                DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
+endif()
 
 ki18n_install(po)
