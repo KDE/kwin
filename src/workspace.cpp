@@ -1605,7 +1605,7 @@ void Workspace::focusToNull()
 
 bool Workspace::breaksShowingDesktop(Window *window) const
 {
-    return !(window->isUnmanaged() || window->isDock() || window->isDesktop() || window->belongsToDesktop());
+    return !(window->isUnmanaged() || window->isDock() || window->isDesktop() || window->belongsToDesktop() || window->isInputMethod());
 }
 
 void Workspace::setShowingDesktop(bool showing, bool animated)
