@@ -42,6 +42,17 @@ QuickRootTile::QuickRootTile(TileManager *tiling, Tile *parentItem)
     m_topRightTile = createTile(QRectF(0.5, 0, 0.5, 0.5), QuickTileFlag::Top | QuickTileFlag::Right);
     m_bottomLeftTile = createTile(QRectF(0, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Left);
     m_bottomRightTile = createTile(QRectF(0.5, 0.5, 0.5, 0.5), QuickTileFlag::Bottom | QuickTileFlag::Right);
+
+    // All the tiles are direct children of the root
+    insertChild(childTiles().count(), m_leftVerticalTile.get());
+    insertChild(childTiles().count(), m_rightVerticalTile.get());
+    insertChild(childTiles().count(), m_topHorizontalTile.get());
+    insertChild(childTiles().count(), m_bottomHorizontalTile.get());
+
+    insertChild(childTiles().count(), m_topLeftTile.get());
+    insertChild(childTiles().count(), m_topRightTile.get());
+    insertChild(childTiles().count(), m_bottomLeftTile.get());
+    insertChild(childTiles().count(), m_bottomRightTile.get());
 }
 
 QuickRootTile::~QuickRootTile()
@@ -235,11 +246,6 @@ void QuickRootTile::tryReset()
     if (m_topHorizontalTile->windows().isEmpty() && m_bottomHorizontalTile->windows().isEmpty()) {
         setVerticalSplit(0.5);
     }
-}
-
-QList<Tile *> QuickRootTile::quickTiles() const
-{
-    return {m_leftVerticalTile.get(), m_rightVerticalTile.get(), m_topHorizontalTile.get(), m_bottomHorizontalTile.get(), m_topLeftTile.get(), m_topRightTile.get(), m_bottomLeftTile.get(), m_bottomRightTile.get()};
 }
 
 } // namespace KWin

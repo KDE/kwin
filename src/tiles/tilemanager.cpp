@@ -103,7 +103,7 @@ void TileManager::forgetWindow(Window *window)
     for (Tile *tile : m_rootTile->descendants()) {
         tile->removeWindow(window);
     }
-    for (Tile *tile : m_quickRootTile->quickTiles()) {
+    for (Tile *tile : m_quickRootTile->descendants()) {
         tile->removeWindow(window);
     }
 }
@@ -146,6 +146,16 @@ CustomTile *TileManager::rootTile() const
 Tile *TileManager::quickTile(QuickTileMode mode) const
 {
     return m_quickRootTile->tileForMode(mode);
+}
+
+Tile *TileManager::windowOwner(Window *window) const
+{
+    Tile *owner = m_rootTile->windowOwner(window);
+    if (owner) {
+        return owner;
+    }
+
+    return m_quickRootTile->windowOwner(window);
 }
 
 TileModel *TileManager::model() const

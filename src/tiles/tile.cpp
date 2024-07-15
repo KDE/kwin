@@ -29,24 +29,6 @@ Tile::Tile(TileManager *tiling, Tile *parent)
     if (m_parentTile) {
         m_padding = m_parentTile->padding();
     }
-    connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
-        if (current == desktop()) {
-            for (auto *w : std::as_const(m_windows)) {
-                // Do this only here in desktop change and not in settile to cause
-                // the least amount of behavior change
-                if (w->quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-                    //  w->setGeometryRestore(w->moveResizeGeometry());
-                }
-                w->setQuickTileMode(quickTileMode());
-                w->setTile(this);
-                // w->moveResize(windowGeometry());
-            }
-            Q_EMIT activeChanged(true);
-        } else if (previous == desktop()) {
-            Q_EMIT activeChanged(false);
-        }
-    });
 }
 
 Tile::~Tile()
@@ -340,6 +322,22 @@ void Tile::removeWindow(Window *window)
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
     }
+}
+
+Tile *Tile::windowOwner(Window *window)
+{
+    auto search = std::find(m_windows.begin(), m_windows.end(), window);
+    if (search != m_windows.end()) {
+        return this;
+    }
+
+    for (Tile *tile : m_children) {
+        Tile *owner = tile->windowOwner(window);
+        if (owner) {
+            return owner;
+        }
+    }
+    return nullptr;
 }
 
 QList<KWin::Window *> Tile::windows() const

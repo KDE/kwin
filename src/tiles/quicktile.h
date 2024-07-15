@@ -32,9 +32,6 @@ public:
     qreal verticalSplit() const;
     void setVerticalSplit(qreal split);
 
-    // FIXME: make descendants virtual and reimplement as that instead?
-    QList<Tile *> quickTiles() const;
-
 private:
     void relayoutToFit(Tile *tile);
     void tryReset();

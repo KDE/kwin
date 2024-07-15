@@ -1955,6 +1955,19 @@ void Window::setupWindowManagementInterface()
         sendToOutput(output->handle());
     });
 
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
+        Tile *owner = workspace()->tileManager(output(), current)->windowOwner(this);
+        if (owner) {
+            setQuickTileMode(owner->quickTileMode(), true);
+        } else if (m_tile && m_tile->quickTileMode() == QuickTileFlag::Custom) {
+            // Custom is not double buffered, so the tile gets set immediately
+            setTile(nullptr);
+            moveResize(geometryRestore());
+        } else {
+            setQuickTileMode(QuickTileFlag::None, true);
+        }
+    });
+
     m_windowManagementInterface = w;
 }
 
@@ -3595,7 +3608,10 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
         // Custom tileMode is the only one that gets immediately assigned without a roundtrip
         m_requestedQuickTileMode = mode;
         Output *output = workspace()->outputAt(whichScreen);
-        if (!m_tile || m_tile->desktop() != VirtualDesktopManager::self()->currentDesktop() || m_tile->manager()->output() != output || m_tile->quickTileMode() != QuickTileMode(QuickTileFlag::Custom)) {
+        Tile *owner = workspace()->tileManager(output)->windowOwner(this);
+        if (owner) {
+            setTile(owner);
+        } else {
             setTile(workspace()->tileManager(output)->bestTileForPosition(whichScreen));
         }
         // Don't go into setTileMode as custom tiles don't go trough configure events
@@ -3642,16 +3658,6 @@ void Window::setTile(Tile *tile)
     if (m_tile) {
         Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
-        connect(m_tile, &Tile::activeChanged, this, [this, tile](bool active) {
-            if (!active) {
-                // FIXME HACK
-                if (m_requestedQuickTileMode != QuickTileMode(QuickTileFlag::Custom)) {
-                    setQuickTileMode(QuickTileFlag::None);
-                }
-                // setTile(nullptr);
-                // moveResize(geometryRestore());
-            }
-        });
     }
 
     if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
