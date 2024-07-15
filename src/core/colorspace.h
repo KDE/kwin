@@ -43,6 +43,16 @@ public:
 
     static QMatrix4x4 calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
+    /**
+     * @returns roughly the whitepoint for the daylight spectrum over 5000K
+     *          and blackbody spectrum below 5000K, with some interpolation in between
+     */
+    static QVector2D daylightWhitepoint(double temperature);
+    /**
+     * D65 whitepoint for sRGB
+     */
+    static constexpr QVector2D D65 = QVector2D{0.3127, 0.3290};
+
     explicit Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white);
     explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
@@ -153,6 +163,8 @@ public:
     bool operator==(const ColorDescription &other) const = default;
 
     QVector3D mapTo(QVector3D rgb, const ColorDescription &other) const;
+
+    ColorDescription adaptedTo(QVector2D whitePoint) const;
 
     /**
      * This color description describes display-referred sRGB, with a gamma22 transfer function

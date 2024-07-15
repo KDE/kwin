@@ -42,6 +42,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     : m_gpu(conn->gpu())
     , m_pipeline(conn->pipeline())
     , m_connector(conn)
+    , m_whitePoint(Colorimetry::D65)
 {
     m_pipeline->setOutput(this);
     if (m_gpu->atomicModeSetting() && !s_disableTripleBuffering) {
@@ -168,7 +169,7 @@ bool DrmOutput::setDrmDpmsMode(DpmsMode mode)
         if (active) {
             m_renderLoop->uninhibit();
             m_renderLoop->scheduleRepaint();
-            doSetChannelFactors(m_channelFactors);
+            tryKmsOffloading();
         } else {
             m_renderLoop->inhibit();
         }
@@ -337,7 +338,7 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setOverscan(props->overscan.value_or(m_pipeline->overscan()));
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
-    m_pipeline->setColorDescription(createColorDescription(props));
+    m_pipeline->setColorDescription(createColorDescription(props).adaptedTo(m_whitePoint));
     if (bt2020 || hdr) {
         // ICC profiles don't support HDR (yet)
         m_pipeline->setIccProfile(nullptr);
@@ -407,6 +408,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
     next.colorDescription = m_pipeline->colorDescription();
+    next.originalColorDescription = createColorDescription(props);
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightness = props->brightness.value_or(m_state.brightness);
@@ -430,7 +432,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     m_renderLoop->scheduleRepaint();
 
     // re-set the CTM and/or gamma lut, if necessary
-    doSetChannelFactors(m_channelFactors);
+    tryKmsOffloading();
 
     Q_EMIT changed();
 }
@@ -462,53 +464,58 @@ DrmOutputLayer *DrmOutput::cursorLayer() const
     return m_pipeline->cursorLayer();
 }
 
-bool DrmOutput::setChannelFactors(const QVector3D &rgb)
+void DrmOutput::setWhitepoint(const QVector2D &whitePoint)
 {
-    return m_channelFactors == rgb || doSetChannelFactors(rgb);
+    if (m_whitePoint == whitePoint) {
+        return;
+    }
+    m_whitePoint = whitePoint;
+    State next = m_state;
+    next.colorDescription = next.originalColorDescription.adaptedTo(whitePoint);
+    setState(next);
+    tryKmsOffloading();
 }
 
-bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
+void DrmOutput::tryKmsOffloading()
 {
-    m_renderLoop->scheduleRepaint();
-    m_channelFactors = rgb;
     if (m_state.wideColorGamut || m_state.highDynamicRange || m_state.colorProfileSource != ColorProfileSource::sRGB) {
         // the shader "fallback" is always active
-        return true;
+        return;
     }
     if (!m_pipeline->activePending()) {
-        return false;
+        return;
     }
     // TODO this doesn't allow using only a CTM for night light offloading
     // maybe relax correctness in that case and apply night light in non-linear space?
+    const QVector3D channelFactors = effectiveChannelFactors();
     ColorPipeline pipeline{ValueRange{}};
     pipeline.addTransferFunction(m_state.colorDescription.transferFunction(), m_state.colorDescription.referenceLuminance());
-    pipeline.addMultiplier(rgb);
+    pipeline.addMultiplier(channelFactors);
     pipeline.addInverseTransferFunction(m_state.colorDescription.transferFunction(), m_state.colorDescription.referenceLuminance());
     m_pipeline->setCrtcColorPipeline(pipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
         m_channelFactorsNeedShaderFallback = false;
-        return true;
+        return;
     } else {
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
     }
-    m_channelFactorsNeedShaderFallback = m_channelFactors != QVector3D{1, 1, 1};
-    return true;
+    m_channelFactorsNeedShaderFallback = (QVector3D(1, 1, 1) - channelFactors).length() > 0.0001;
 }
 
 QVector3D DrmOutput::effectiveChannelFactors() const
 {
-    QVector3D adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(m_state.colorDescription.containerColorimetry()) * m_channelFactors;
-    // normalize red to be the original brightness value again
-    adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
+    QVector3D channelFactors = m_state.originalColorDescription.containerColorimetry().fromXYZ() * Colorimetry::xyToXYZ(m_whitePoint);
+    // normalize to the biggest component, otherwise there can be values > 1
+    channelFactors /= std::max(channelFactors.x(), std::max(channelFactors.y(), channelFactors.z()));
     if (m_state.highDynamicRange || !m_brightnessDevice) {
         // enforce a minimum of 25 nits for the reference luminance
         constexpr double minLuminance = 25;
         const double brightnessFactor = (m_state.brightness * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
-        return adaptedChannelFactors * brightnessFactor;
+        return channelFactors * brightnessFactor;
     } else {
-        return adaptedChannelFactors;
+        return channelFactors;
     }
 }
 

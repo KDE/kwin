@@ -41,14 +41,19 @@ void X11Output::setXineramaNumber(int number)
     m_xineramaNumber = number;
 }
 
-bool X11Output::setChannelFactors(const QVector3D &rgb)
+void X11Output::setWhitepoint(const QVector2D &whitePoint)
 {
     if (m_crtc == XCB_NONE) {
-        return true;
+        return;
     }
+    const auto &sRGB = Colorimetry::fromName(NamedColorimetry::BT709);
+    QVector3D channelFactors = sRGB.fromXYZ() * Colorimetry::xyToXYZ(whitePoint);
+    // normalize to the biggest component, otherwise there can be values > 1
+    channelFactors /= std::max(channelFactors.x(), std::max(channelFactors.y(), channelFactors.z()));
+
     ColorPipeline pipeline;
     pipeline.addTransferFunction(TransferFunction::gamma22, 1);
-    pipeline.addMultiplier(rgb);
+    pipeline.addMultiplier(channelFactors);
     pipeline.addInverseTransferFunction(TransferFunction::gamma22, 1);
     std::vector<uint16_t> red(m_gammaRampSize);
     std::vector<uint16_t> green(m_gammaRampSize);
@@ -61,7 +66,6 @@ bool X11Output::setChannelFactors(const QVector3D &rgb)
         green[i] = std::round(std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
     }
     xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, m_gammaRampSize, red.data(), green.data(), blue.data());
-    return true;
 }
 
 void X11Output::setCrtc(xcb_randr_crtc_t crtc)

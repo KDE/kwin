@@ -347,8 +347,6 @@ public:
      */
     QByteArray mstPath() const;
 
-    virtual bool setChannelFactors(const QVector3D &rgb);
-
     virtual bool updateCursorLayer();
 
     std::optional<double> maxPeakBrightness() const;
@@ -367,6 +365,8 @@ public:
 
     BrightnessDevice *brightnessDevice() const;
     virtual void setBrightnessDevice(BrightnessDevice *device);
+
+    virtual void setWhitepoint(const QVector2D &whitePoint);
 
 Q_SIGNALS:
     /**
@@ -478,6 +478,8 @@ protected:
         std::shared_ptr<IccProfile> iccProfile;
         ColorProfileSource colorProfileSource = ColorProfileSource::sRGB;
         ColorDescription colorDescription = ColorDescription::sRGB;
+        // = colorDescription without whitepoint or brightness adjustments
+        ColorDescription originalColorDescription = ColorDescription::sRGB;
         std::optional<double> maxPeakBrightnessOverride;
         std::optional<double> maxAverageBrightnessOverride;
         std::optional<double> minBrightnessOverride;

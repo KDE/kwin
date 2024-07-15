@@ -685,11 +685,6 @@ Output::RgbRange Output::rgbRange() const
     return m_state.rgbRange;
 }
 
-bool Output::setChannelFactors(const QVector3D &rgb)
-{
-    return false;
-}
-
 OutputTransform Output::panelOrientation() const
 {
     return m_information.panelOrientation;
@@ -802,6 +797,10 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
     if (device) {
         device->setOutput(this);
     }
+}
+
+void Output::setWhitepoint(const QVector2D &whitePoint)
+{
 }
 } // namespace KWin
 

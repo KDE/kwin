@@ -57,7 +57,7 @@ public:
     void leased(DrmLease *lease);
     void leaseEnded();
 
-    bool setChannelFactors(const QVector3D &rgb) override;
+    void setWhitepoint(const QVector2D &whitePoint) override;
     /**
      * channel factors adapted to the target color space + brightness setting multiplied in
      */
@@ -69,7 +69,7 @@ public:
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
-    bool doSetChannelFactors(const QVector3D &rgb);
+    void tryKmsOffloading();
     ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
@@ -84,7 +84,7 @@ private:
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;
 
-    QVector3D m_channelFactors = {1, 1, 1};
+    QVector2D m_whitePoint;
     bool m_channelFactorsNeedShaderFallback = false;
 };
 

@@ -22,42 +22,10 @@ namespace KWin
 class ColorDevicePrivate
 {
 public:
-    void recalculateFactors();
-
     Output *output;
     QTimer *updateTimer;
     uint temperature = 6500;
-
-    QVector3D temperatureFactors = QVector3D(1, 1, 1);
 };
-
-static qreal interpolate(qreal a, qreal b, qreal blendFactor)
-{
-    return (1 - blendFactor) * a + blendFactor * b;
-}
-
-void ColorDevicePrivate::recalculateFactors()
-{
-    if (temperature == 6500) {
-        temperatureFactors = QVector3D(1, 1, 1);
-    } else {
-        // Note that cmsWhitePointFromTemp() returns a slightly green-ish white point.
-        const int blackBodyColorIndex = ((temperature - 1000) / 100) * 3;
-        const qreal blendFactor = (temperature % 100) / 100.0;
-
-        const qreal xWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 0],
-                                              blackbodyColor[blackBodyColorIndex + 3],
-                                              blendFactor);
-        const qreal yWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 1],
-                                              blackbodyColor[blackBodyColorIndex + 4],
-                                              blendFactor);
-        const qreal zWhitePoint = interpolate(blackbodyColor[blackBodyColorIndex + 2],
-                                              blackbodyColor[blackBodyColorIndex + 5],
-                                              blendFactor);
-        // the values in the blackbodyColor array are "gamma corrected", but we need a linear value
-        temperatureFactors = TransferFunction(TransferFunction::gamma22).encodedToNits(QVector3D(xWhitePoint, yWhitePoint, zWhitePoint), 1);
-    }
-}
 
 ColorDevice::ColorDevice(Output *output, QObject *parent)
     : QObject(parent)
@@ -101,8 +69,7 @@ void ColorDevice::setTemperature(uint temperature)
 
 void ColorDevice::update()
 {
-    d->recalculateFactors();
-    d->output->setChannelFactors(d->temperatureFactors);
+    d->output->setWhitepoint(Colorimetry::daylightWhitepoint(d->temperature));
 }
 
 void ColorDevice::scheduleUpdate()

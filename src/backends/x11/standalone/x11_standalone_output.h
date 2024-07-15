@@ -39,7 +39,7 @@ public:
     int xineramaNumber() const;
     void setXineramaNumber(int number);
 
-    bool setChannelFactors(const QVector3D &rgb) override;
+    void setWhitepoint(const QVector2D &whitePoint) override;
 
 private:
     void setCrtc(xcb_randr_crtc_t crtc);

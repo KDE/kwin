@@ -4,6 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorspace.h"
+#include "3rdparty/colortemperature.h"
 
 #include <qassert.h>
 
@@ -75,6 +76,19 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
     return inverseBradford * adaptation * bradford;
 }
 
+QVector2D Colorimetry::daylightWhitepoint(double temperature)
+{
+    temperature = std::clamp(temperature, 1000.0, 25000.0);
+    // Note that cmsWhitePointFromTemp() returns a slightly green-ish white point.
+    const int blackBodyColorIndex = std::clamp<int>(std::floor(temperature - 1000) / 100, 0, s_blackbodyColor.size() - 1);
+    const double blendFactor = std::fmod(temperature, 100) / 100.0;
+
+    // the values in the blackbodyColor array are "gamma corrected", but we need a linear value
+    const QVector3D gammaCorrected = s_blackbodyColor[blackBodyColorIndex] * (1 - blendFactor) + s_blackbodyColor[blackBodyColorIndex + 1] * blendFactor;
+    const QVector3D temperatureFactors = TransferFunction(TransferFunction::gamma22).encodedToNits(gammaCorrected, 1);
+    return Colorimetry::xyzToXY(Colorimetry::fromName(NamedColorimetry::BT709).toXYZ() * temperatureFactors);
+}
+
 static QVector3D normalizeToY1(const QVector3D &vect)
 {
     return vect.y() == 0 ? vect : QVector3D(vect.x() / vect.y(), 1, vect.z() / vect.y());
@@ -134,6 +148,9 @@ QMatrix4x4 Colorimetry::toOther(const Colorimetry &other) const
 
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
 {
+    if (m_white == newWhitepoint) {
+        return *this;
+    }
     const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint);
     return Colorimetry{
         xyzToXY(mat * xyToXYZ(red())),
@@ -177,14 +194,14 @@ static const Colorimetry BT709 = Colorimetry{
     QVector2D{0.64, 0.33},
     QVector2D{0.30, 0.60},
     QVector2D{0.15, 0.06},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::D65,
 };
 
 static const Colorimetry BT2020 = Colorimetry{
     QVector2D{0.708, 0.292},
     QVector2D{0.170, 0.797},
     QVector2D{0.131, 0.046},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::D65,
 };
 
 const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
@@ -317,6 +334,15 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) co
     rgb = m_transferFunction.encodedToNits(rgb, m_referenceLuminance);
     rgb = m_containerColorimetry.toOther(dst.containerColorimetry()) * rgb;
     return dst.transferFunction().nitsToEncoded(rgb, dst.referenceLuminance());
+}
+
+ColorDescription ColorDescription::adaptedTo(QVector2D whitePoint) const
+{
+    if (m_masteringColorimetry) {
+        return ColorDescription(m_containerColorimetry.adaptedTo(whitePoint), m_transferFunction, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry->adaptedTo(whitePoint), m_sdrColorimetry);
+    } else {
+        return ColorDescription(m_containerColorimetry.adaptedTo(whitePoint), m_transferFunction, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, std::nullopt, m_sdrColorimetry);
+    }
 }
 
 TransferFunction::TransferFunction(Type tf)
