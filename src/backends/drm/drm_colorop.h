@@ -11,6 +11,7 @@
 
 #include <drm.h>
 #include <memory>
+#include <span>
 
 namespace KWin
 {
@@ -27,7 +28,7 @@ public:
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
     virtual bool canBeUsedFor(const ColorOp &op) = 0;
-    virtual void program(DrmAtomicCommit *commit, const ColorOp &op, double inputScale, double outputScale) = 0;
+    virtual void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) = 0;
     virtual void bypass(DrmAtomicCommit *commit) = 0;
 
     DrmAbstractColorOp *next() const;
@@ -45,7 +46,7 @@ public:
     explicit LegacyLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize);
 
     bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, const ColorOp &op, double inputScale, double outputScale) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
@@ -60,7 +61,7 @@ public:
     explicit LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
 
     bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, const ColorOp &op, double inputScale, double outputScale) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
