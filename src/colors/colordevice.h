@@ -34,16 +34,6 @@ public:
     Output *output() const;
 
     /**
-     * Returns the current color brightness on this device, in percent.
-     */
-    uint brightness() const;
-
-    /**
-     * Sets the color brightness on this device to @a brightness, in percent.
-     */
-    void setBrightness(uint brightness);
-
-    /**
      * Returns the current color temperature on this device, in Kelvins.
      */
     uint temperature() const;
