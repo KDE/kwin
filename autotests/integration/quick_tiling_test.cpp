@@ -942,6 +942,7 @@ void QuickTilingTest::testPerDesktopTiles()
 {
     // Add a desktop
     VirtualDesktopManager::self()->setCount(2);
+    VirtualDesktopManager::self()->setCurrent(1);
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     QVERIFY(surface != nullptr);

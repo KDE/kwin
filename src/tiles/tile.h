@@ -112,6 +112,7 @@ public:
 
     void addWindow(Window *window);
     void removeWindow(Window *window);
+    Tile *windowOwner(Window *window);
     QList<KWin::Window *> windows() const;
 
     int row() const;

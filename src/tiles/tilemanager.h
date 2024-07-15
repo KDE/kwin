@@ -54,6 +54,10 @@ public:
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
     CustomTile *rootTile() const;
     KWin::Tile *quickTile(QuickTileMode mode) const;
+    /**
+     * Returns the tile that is managing the gien window, if any
+     */
+    KWin::Tile *windowOwner(Window *window) const;
 
     void forgetWindow(Window *window);
     TileModel *model() const;
