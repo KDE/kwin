@@ -478,9 +478,12 @@ bool DrmOutput::doSetChannelFactors(const QVector3D &rgb)
     if (!m_pipeline->activePending()) {
         return false;
     }
+    // TODO this doesn't allow using only a CTM for night light offloading
+    // maybe relax correctness in that case and apply night light in non-linear space?
     ColorPipeline pipeline{ValueRange{}};
-    const auto inOutputSpace = m_state.colorDescription.transferFunction().nitsToEncoded(rgb, 1);
-    pipeline.addMultiplier(inOutputSpace);
+    pipeline.addTransferFunction(m_state.colorDescription.transferFunction(), m_state.colorDescription.referenceLuminance());
+    pipeline.addMultiplier(rgb);
+    pipeline.addInverseTransferFunction(m_state.colorDescription.transferFunction(), m_state.colorDescription.referenceLuminance());
     m_pipeline->setCrtcColorPipeline(pipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();

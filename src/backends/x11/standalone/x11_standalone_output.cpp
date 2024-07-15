@@ -8,6 +8,7 @@
 */
 #include "x11_standalone_output.h"
 #include "core/colorlut.h"
+#include "core/colorpipeline.h"
 #include "core/colortransformation.h"
 #include "main.h"
 #include "x11_standalone_backend.h"
@@ -46,12 +47,21 @@ bool X11Output::setChannelFactors(const QVector3D &rgb)
     if (m_crtc == XCB_NONE) {
         return true;
     }
-    auto transformation = ColorTransformation::createScalingTransform(m_state.colorDescription.transferFunction().nitsToEncoded(rgb, 1));
-    if (!transformation) {
-        return false;
+    ColorPipeline pipeline;
+    pipeline.addTransferFunction(TransferFunction::gamma22, 1);
+    pipeline.addMultiplier(rgb);
+    pipeline.addInverseTransferFunction(TransferFunction::gamma22, 1);
+    std::vector<uint16_t> red(m_gammaRampSize);
+    std::vector<uint16_t> green(m_gammaRampSize);
+    std::vector<uint16_t> blue(m_gammaRampSize);
+    for (uint16_t i = 0; i < m_gammaRampSize; i++) {
+        const double input = i / double(m_gammaRampSize - 1);
+        const QVector3D output = pipeline.evaluate(QVector3D(input, input, input));
+        red[i] = std::round(std::clamp(output.x(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
+        red[i] = std::round(std::clamp(output.y(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
+        green[i] = std::round(std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
     }
-    ColorLUT lut(std::move(transformation), m_gammaRampSize);
-    xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, lut.size(), lut.red(), lut.green(), lut.blue());
+    xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, m_gammaRampSize, red.data(), green.data(), blue.data());
     return true;
 }
 
