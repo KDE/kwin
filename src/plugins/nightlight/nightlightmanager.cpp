@@ -264,12 +264,8 @@ void NightLightManager::readConfig()
     // fixed timings
     QTime morning = QTime::fromString(settings->morningBeginFixed(), "hhmm");
     QTime evening = QTime::fromString(settings->eveningBeginFixed(), "hhmm");
-    if (morning >= evening) {
-        morning = QTime(6, 0);
-        evening = QTime(18, 0);
-    }
 
-    const int dayDuration = morning.msecsTo(evening);
+    const int dayDuration = morning < evening ? morning.msecsTo(evening) : (MSC_DAY - evening.msecsTo(morning));
     const int nightDuration = MSC_DAY - dayDuration;
     const int maximumTransitionDuration = std::min(dayDuration, nightDuration);
 
