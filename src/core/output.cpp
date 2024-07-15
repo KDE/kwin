@@ -690,11 +690,6 @@ bool Output::setChannelFactors(const QVector3D &rgb)
     return false;
 }
 
-bool Output::setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation)
-{
-    return false;
-}
-
 OutputTransform Output::panelOrientation() const
 {
     return m_information.panelOrientation;

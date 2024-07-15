@@ -347,7 +347,6 @@ public:
      */
     QByteArray mstPath() const;
 
-    virtual bool setGammaRamp(const std::shared_ptr<ColorTransformation> &transformation);
     virtual bool setChannelFactors(const QVector3D &rgb);
 
     virtual bool updateCursorLayer();
