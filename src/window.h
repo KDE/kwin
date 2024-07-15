@@ -1129,7 +1129,7 @@ public:
     }
     uint32_t interactiveMoveResizeCount() const;
 
-    void updateInteractiveMoveResize(const QPointF &global);
+    void updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModifiers modifiers);
     /**
      * Ends move resize when all pointer buttons are up again.
      */
@@ -1591,6 +1591,10 @@ protected:
     {
         m_interactiveMoveResize.anchor = anchor;
     }
+    void setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers modifiers)
+    {
+        m_interactiveMoveResize.modifiers = modifiers;
+    }
     /**
      * @returns whether the move resize mode is unrestricted.
      */
@@ -1816,6 +1820,7 @@ protected:
         bool enabled = false;
         bool unrestricted = false;
         QPointF anchor;
+        Qt::KeyboardModifiers modifiers;
         QPointF offset;
         QRectF initialGeometry;
         QRectF initialGeometryRestore;

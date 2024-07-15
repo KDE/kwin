@@ -128,19 +128,19 @@ void MoveResizeWindowTest::testMove()
     // send some key events, not going through input redirection
     const QPointF cursorPos = Cursors::self()->mouse()->pos();
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QEXPECT_FAIL("", "First event is ignored", Continue);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     interactiveMoveResizeSteppedSpy.clear();
 
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(16, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
 
     window->keyPressEvent(Qt::Key_Down | Qt::ALT);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
     QCOMPARE(window->frameGeometry(), QRect(16, 32, 100, 50));
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(16, 32));
@@ -220,7 +220,7 @@ void MoveResizeWindowTest::testResize()
     // Trigger a change.
     const QPointF cursorPos = Cursors::self()->mouse()->pos();
     window->keyPressEvent(Qt::Key_Right);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
 
     // The client should receive a configure event with the new size.
@@ -242,7 +242,7 @@ void MoveResizeWindowTest::testResize()
 
     // Go down.
     window->keyPressEvent(Qt::Key_Down);
-    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos());
+    window->updateInteractiveMoveResize(Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
 
     // The client should receive another configure event.

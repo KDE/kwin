@@ -344,7 +344,7 @@ void TestXdgShellWindowRules::testPositionApply()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
-    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
@@ -393,7 +393,7 @@ void TestXdgShellWindowRules::testPositionRemember()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
-    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
@@ -485,7 +485,7 @@ void TestXdgShellWindowRules::testPositionApplyNow()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
-    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
     QCOMPARE(m_window->pos(), QPoint(50, 42));
@@ -613,7 +613,7 @@ void TestXdgShellWindowRules::testSizeApply()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
-    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
     QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 4);
@@ -710,7 +710,7 @@ void TestXdgShellWindowRules::testSizeRemember()
 
     const QPointF cursorPos = KWin::Cursors::self()->mouse()->pos();
     m_window->keyPressEvent(Qt::Key_Right);
-    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos());
+    m_window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
     QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 4);

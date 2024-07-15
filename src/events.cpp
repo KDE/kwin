@@ -1180,14 +1180,14 @@ bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
         const QPointF delta(QPointF(x, y) - offset);
         if (delta.manhattanLength() >= QApplication::startDragDistance()) {
             if (startInteractiveMoveResize()) {
-                updateInteractiveMoveResize(QPointF(x_root, y_root));
+                updateInteractiveMoveResize(QPointF(x_root, y_root), x11ToQtKeyboardModifiers(state));
             } else {
                 setInteractiveMoveResizePointerButtonDown(false);
             }
             updateCursor();
         }
     } else {
-        updateInteractiveMoveResize(QPointF(x_root, y_root));
+        updateInteractiveMoveResize(QPointF(x_root, y_root), x11ToQtKeyboardModifiers(state));
 
         if (isInteractiveMove()) {
             workspace()->screenEdges()->check(QPoint(x_root, y_root), QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
@@ -1329,6 +1329,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
             }
             setInteractiveMoveResizePointerButtonDown(true);
             setInteractiveMoveResizeAnchor(QPointF(x_root, y_root));
+            setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
             setInteractiveMoveOffset(QPointF(qreal(x_root - x()) / width(), qreal(y_root - y()) / height())); // map from global
             setUnrestrictedInteractiveMoveResize(false);
             setInteractiveMoveResizeGravity(convert[direction]);

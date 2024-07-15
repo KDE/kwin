@@ -1259,7 +1259,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     if (isElectricBorderMaximizing()) {
         setQuickTileMode(electricBorderMode());
         setElectricBorderMaximizing(false);
-    } else if (wasMove && (input()->keyboardModifiers() & Qt::ShiftModifier)) {
+    } else if (wasMove && (m_interactiveMoveResize.modifiers & Qt::ShiftModifier)) {
         setQuickTileMode(QuickTileFlag::Custom);
     }
     setElectricBorderMode(QuickTileMode(QuickTileFlag::None));
@@ -1351,9 +1351,10 @@ void Window::stopDelayedInteractiveMoveResize()
     m_interactiveMoveResize.delayedTimer = nullptr;
 }
 
-void Window::updateInteractiveMoveResize(const QPointF &global)
+void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModifiers modifiers)
 {
     setInteractiveMoveResizeAnchor(global);
+    setInteractiveMoveResizeModifiers(modifiers);
 
     // ShadeHover or ShadeActive, ShadeNormal was already avoided above
     const Gravity gravity = interactiveMoveResizeGravity();
@@ -1412,7 +1413,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global)
         }
 
         if (!isRequestedFullScreen()) {
-            if (input()->keyboardModifiers() & Qt::ShiftModifier) {
+            if (modifiers & Qt::ShiftModifier) {
                 resetQuickTilingMaximizationZones();
                 const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
                 if (r.isEmpty()) {
@@ -2117,6 +2118,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         setInteractiveMoveResizeGravity(Gravity::None);
         setInteractiveMoveResizePointerButtonDown(true);
         setInteractiveMoveResizeAnchor(globalPos);
+        setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
         setInteractiveMoveOffset(QPointF(qreal(globalPos.x() - x()) / width(), qreal(globalPos.y() - y()) / height())); // map from global
         setUnrestrictedInteractiveMoveResize((cmd == Options::MouseActivateRaiseAndUnrestrictedMove
                                               || cmd == Options::MouseUnrestrictedMove));
@@ -2136,6 +2138,7 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         }
         setInteractiveMoveResizePointerButtonDown(true);
         setInteractiveMoveResizeAnchor(globalPos);
+        setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
         const QPointF moveOffset = QPointF(globalPos.x() - x(), globalPos.y() - y()); // map from global
         setInteractiveMoveOffset(QPointF(moveOffset.x() / width(), moveOffset.y() / height()));
         int x = moveOffset.x(), y = moveOffset.y();
@@ -2695,7 +2698,7 @@ void Window::processDecorationMove(const QPointF &localPos, const QPointF &globa
             const QPointF delta(localPos - offset);
             if (delta.manhattanLength() >= QApplication::startDragDistance()) {
                 if (startInteractiveMoveResize()) {
-                    updateInteractiveMoveResize(globalPos);
+                    updateInteractiveMoveResize(globalPos, input()->keyboardModifiers());
                 } else {
                     setInteractiveMoveResizePointerButtonDown(false);
                 }
@@ -2775,6 +2778,7 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
         setInteractiveMoveResizeGravity(mouseGravity());
         setInteractiveMoveResizePointerButtonDown(true);
         setInteractiveMoveResizeAnchor(globalPos);
+        setInteractiveMoveResizeModifiers(Qt::KeyboardModifiers());
         setInteractiveMoveOffset(QPointF(qreal(localPos.x()) / width(), qreal(localPos.y()) / height()));
         setUnrestrictedInteractiveMoveResize(false);
         startDelayedInteractiveMoveResize();

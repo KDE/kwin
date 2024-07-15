@@ -603,7 +603,7 @@ public:
         }
         switch (event->type()) {
         case QEvent::MouseMove:
-            window->updateInteractiveMoveResize(event->screenPos());
+            window->updateInteractiveMoveResize(event->screenPos(), input()->keyboardModifiers());
             break;
         case QEvent::MouseButtonRelease:
             if (event->buttons() == Qt::NoButton) {
@@ -631,7 +631,7 @@ public:
         }
         if (window->isInteractiveMove() || window->isInteractiveResize()) {
             // only update if mode didn't end
-            window->updateInteractiveMoveResize(input()->globalPointer());
+            window->updateInteractiveMoveResize(input()->globalPointer(), input()->keyboardModifiers());
         }
         return true;
     }
@@ -656,7 +656,7 @@ public:
             m_set = true;
         }
         if (m_id == id) {
-            window->updateInteractiveMoveResize(pos);
+            window->updateInteractiveMoveResize(pos, input()->keyboardModifiers());
         }
         return true;
     }
@@ -685,7 +685,7 @@ public:
         }
         switch (event->type()) {
         case QEvent::TabletMove:
-            window->updateInteractiveMoveResize(event->globalPosF());
+            window->updateInteractiveMoveResize(event->globalPosF(), input()->keyboardModifiers());
             break;
         case QEvent::TabletRelease:
             window->endInteractiveMoveResize();

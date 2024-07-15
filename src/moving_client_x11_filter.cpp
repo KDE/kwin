@@ -39,7 +39,7 @@ bool MovingClientX11Filter::event(xcb_generic_event_t *event)
         client->keyPressEvent(keyQt, keyEvent->time);
         if (client->isInteractiveMove() || client->isInteractiveResize()) {
             const QPointF global = QPointF(Xcb::fromXNative(keyEvent->root_x), Xcb::fromXNative(keyEvent->root_y));
-            client->updateInteractiveMoveResize(global);
+            client->updateInteractiveMoveResize(global, x11ToQtKeyboardModifiers(keyEvent->state));
         }
         return true;
     }
@@ -47,7 +47,7 @@ bool MovingClientX11Filter::event(xcb_generic_event_t *event)
         if (client->isInteractiveMove() || client->isInteractiveResize()) {
             auto *keyEvent = reinterpret_cast<xcb_key_release_event_t *>(event);
             const QPointF global = QPointF(Xcb::fromXNative(keyEvent->root_x), Xcb::fromXNative(keyEvent->root_y));
-            client->updateInteractiveMoveResize(global);
+            client->updateInteractiveMoveResize(global, x11ToQtKeyboardModifiers(keyEvent->state));
         }
         return true;
     }
