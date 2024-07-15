@@ -16,7 +16,6 @@
 #include <chrono>
 #include <xf86drmMode.h>
 
-#include "core/colorlut.h"
 #include "core/colorpipeline.h"
 #include "core/colorspace.h"
 #include "core/output.h"

@@ -7,7 +7,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "x11_standalone_output.h"
-#include "core/colorlut.h"
 #include "core/colorpipeline.h"
 #include "core/colortransformation.h"
 #include "main.h"

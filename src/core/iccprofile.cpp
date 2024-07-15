@@ -4,7 +4,6 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "iccprofile.h"
-#include "colorlut.h"
 #include "colorlut3d.h"
 #include "colorpipelinestage.h"
 #include "colortransformation.h"
