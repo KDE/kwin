@@ -1361,6 +1361,9 @@ void Workspace::maybeDestroyDpmsFilter()
 
 void Workspace::assignBrightnessDevices()
 {
+    if (!waylandServer()) {
+        return;
+    }
     QList<Output *> candidates = m_outputs;
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
