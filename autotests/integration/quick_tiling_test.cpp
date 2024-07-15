@@ -933,8 +933,9 @@ void QuickTilingTest::testPerDesktopTiles_data()
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
     QTest::newRow("topToTop") << FLAG(Top) << QRectF(0, 0, 1280, 512) << FLAG(Top) << QRectF(0, 0, 1280, 500);
-
     QTest::newRow("leftToTop") << FLAG(Left) << QRectF(0, 0, 640, 1024) << FLAG(Top) << QRectF(0, 0, 1280, 500);
+    QTest::newRow("leftToRight") << FLAG(Left) << QRectF(0, 0, 640, 1024) << FLAG(Right) << QRectF(640, 0, 640, 500);
+    QTest::newRow("rightToBottom") << FLAG(Right) << QRectF(640, 0, 640, 1024) << FLAG(Bottom) << QRectF(0, 512, 1280, 600);
 #undef FLAG
 }
 
