@@ -609,7 +609,6 @@ DebugConsole::DebugConsole()
     m_ui->inputDevicesView->setItemDelegate(new DebugConsoleDelegate(this));
     m_ui->quitButton->setIcon(QIcon::fromTheme(QStringLiteral("application-exit")));
     m_ui->tabWidget->setTabIcon(0, QIcon::fromTheme(QStringLiteral("view-list-tree")));
-    m_ui->tabWidget->setTabIcon(1, QIcon::fromTheme(QStringLiteral("view-list-tree")));
 
     if (kwinApp()->operationMode() == Application::OperationMode::OperationModeX11) {
         m_ui->tabWidget->setTabEnabled(1, false); // Input Events
@@ -624,15 +623,15 @@ DebugConsole::DebugConsole()
     connect(m_ui->quitButton, &QAbstractButton::clicked, this, &DebugConsole::deleteLater);
     connect(m_ui->tabWidget, &QTabWidget::currentChanged, this, [this](int index) {
         // delay creation of input event filter until the tab is selected
-        if (index == 2 && !m_inputFilter) {
+        if (index == m_ui->tabWidget->indexOf(m_ui->input) && !m_inputFilter) {
             m_inputFilter = std::make_unique<DebugConsoleFilter>(m_ui->inputTextEdit);
             input()->installInputEventSpy(m_inputFilter.get());
         }
-        if (index == 5) {
+        if (index == m_ui->tabWidget->indexOf(m_ui->keyboard)) {
             updateKeyboardTab();
             connect(input(), &InputRedirection::keyStateChanged, this, &DebugConsole::updateKeyboardTab);
         }
-        if (index == 6) {
+        if (index == m_ui->tabWidget->indexOf(m_ui->clipboard)) {
             static_cast<DataSourceModel *>(m_ui->clipboardContent->model())->setSource(waylandServer()->seat()->selection());
             m_ui->clipboardSource->setText(sourceString(waylandServer()->seat()->selection()));
             connect(waylandServer()->seat(), &SeatInterface::selectionChanged, this, [this](AbstractDataSource *source) {
