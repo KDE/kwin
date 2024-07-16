@@ -279,12 +279,8 @@ void NightLightManager::readConfig()
     // fixed timings
     QTime mrB = QTime::fromString(s->morningBeginFixed(), "hhmm");
     QTime evB = QTime::fromString(s->eveningBeginFixed(), "hhmm");
-    if (mrB >= evB) {
-        mrB = QTime(6, 0);
-        evB = QTime(18, 0);
-    }
 
-    int diffME = mrB.msecsTo(evB);
+    int diffME = std::abs(mrB.msecsTo(evB));
     int diffMin = std::min(diffME, MSC_DAY - diffME);
 
     int trTime = s->transitionTime() * 1000 * 60;
