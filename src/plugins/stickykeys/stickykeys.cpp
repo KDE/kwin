@@ -108,6 +108,7 @@ bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
                 // A latched modifier was pressed, lock it
                 else if (keyState.value() == Latched && m_lockKeys) {
                     keyState.value() = Locked;
+                    KWin::input()->keyboard()->xkb()->setModifierLatched(keyToModifier(static_cast<Qt::Key>(event->key())), false);
                     KWin::input()->keyboard()->xkb()->setModifierLocked(keyToModifier(static_cast<Qt::Key>(event->key())), true);
 
                     if (m_showNotificationForLockedKeys) {
