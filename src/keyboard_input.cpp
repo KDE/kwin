@@ -103,7 +103,11 @@ public:
         if (event->isAutoRepeat()) {
             return;
         }
-        const Qt::KeyboardModifiers mods = event->modifiers();
+
+        // QKeyEvent::modifiers differs from the superclass QInputEvent::modifiers
+        // QKeyEvent tries to special case an old QtXCB behaviour and assumes modifiers aren't processed at
+        // the time of the release and inverts the logic. This is not the case for kwin
+        const Qt::KeyboardModifiers mods = event->QInputEvent::modifiers();
         if (mods == m_modifiers) {
             return;
         }

@@ -29,6 +29,7 @@
 #include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
+#include "wayland/abstract_data_source.h"
 #include "wayland/xdgtopleveldrag_v1.h"
 #if KWIN_BUILD_X11
 #include "x11window.h"
@@ -2386,6 +2387,16 @@ class DragAndDropInputFilter : public QObject, public InputEventFilter
 public:
     DragAndDropInputFilter()
     {
+        connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, []() {
+            AbstractDataSource *dragSource = waylandServer()->seat()->dragSource();
+            Q_ASSERT(dragSource);
+            dragSource->setKeyboardModifiers(input()->keyboardModifiers());
+
+            connect(input(), &InputRedirection::keyboardModifiersChanged, dragSource, [dragSource](Qt::KeyboardModifiers mods) {
+                dragSource->setKeyboardModifiers(mods);
+            });
+        });
+
         m_raiseTimer.setSingleShot(true);
         m_raiseTimer.setInterval(1000);
         connect(&m_raiseTimer, &QTimer::timeout, this, &DragAndDropInputFilter::raiseDragTarget);

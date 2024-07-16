@@ -97,16 +97,25 @@ public:
         return nullptr;
     };
 
+    /**
+     * Called from kwin core code, this updates the keyboard modifiers currently pressed
+     * which can be used to determine the best DND action
+     */
+    void setKeyboardModifiers(Qt::KeyboardModifiers heldModifiers);
+    Qt::KeyboardModifiers keyboardModifiers() const;
+
 Q_SIGNALS:
     void aboutToBeDestroyed();
 
     void mimeTypeOffered(const QString &);
     void supportedDragAndDropActionsChanged();
+    void keyboardModifiersChanged();
 
 protected:
     explicit AbstractDataSource(QObject *parent = nullptr);
 
 private:
+    Qt::KeyboardModifiers m_heldModifiers;
     bool m_dndCancelled = false;
     bool m_dndDropped = false;
 };

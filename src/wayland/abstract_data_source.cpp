@@ -14,6 +14,19 @@ AbstractDataSource::AbstractDataSource(QObject *parent)
 {
 }
 
+void AbstractDataSource::setKeyboardModifiers(Qt::KeyboardModifiers heldModifiers)
+{
+    if (m_heldModifiers == heldModifiers) {
+        return;
+    }
+    m_heldModifiers = heldModifiers;
+    Q_EMIT keyboardModifiersChanged();
+}
+
+Qt::KeyboardModifiers AbstractDataSource::keyboardModifiers() const
+{
+    return m_heldModifiers;
+}
 } // namespace KWin
 
 #include "moc_abstract_data_source.cpp"
