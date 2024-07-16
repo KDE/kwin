@@ -17,7 +17,7 @@
 namespace KWin
 {
 
-static const quint32 s_version = 1;
+static const quint32 s_version = 5;
 
 class KeyStateInterfacePrivate : public QtWaylandServer::org_kde_kwin_keystate
 {
@@ -34,6 +34,24 @@ public:
         send_stateChanged(resource->handle, key_capslock, leds & LED::CapsLock ? state_locked : state_unlocked);
         send_stateChanged(resource->handle, key_numlock, leds & LED::NumLock ? state_locked : state_unlocked);
         send_stateChanged(resource->handle, key_scrolllock, leds & LED::ScrollLock ? state_locked : state_unlocked);
+
+        auto sendModifier = [this, resource](key k, Xkb::Modifier mod) {
+            if (input()->keyboard()->xkb()->lockedModifiers().testFlag(mod)) {
+                send_stateChanged(resource->handle, k, state_locked);
+            } else if (input()->keyboard()->xkb()->latchedModifiers().testFlag(mod)) {
+                send_stateChanged(resource->handle, k, state_latched);
+            } else if (input()->keyboard()->xkb()->depressedModifiers().testFlag(mod)) {
+                send_stateChanged(resource->handle, k, state_pressed);
+            } else {
+                send_stateChanged(resource->handle, k, state_unlocked);
+            }
+        };
+
+        sendModifier(key_alt, Xkb::Mod1);
+        sendModifier(key_shift, Xkb::Shift);
+        sendModifier(key_control, Xkb::Control);
+        sendModifier(key_meta, Xkb::Mod4);
+        sendModifier(key_altgr, Xkb::Mod5);
     }
 };
 
@@ -42,6 +60,13 @@ KeyStateInterface::KeyStateInterface(Display *display, QObject *parent)
     , d(new KeyStateInterfacePrivate(display))
 {
     connect(input()->keyboard(), &KeyboardInputRedirection::ledsChanged, this, [this]() {
+        const auto resources = d->resourceMap();
+        for (const auto &resource : resources) {
+            d->org_kde_kwin_keystate_fetchStates(resource);
+        }
+    });
+
+    connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
         const auto resources = d->resourceMap();
         for (const auto &resource : resources) {
             d->org_kde_kwin_keystate_fetchStates(resource);

@@ -1047,6 +1047,63 @@ void Xkb::setModifierLatched(KWin::Xkb::Modifier mod, bool latched)
     }
 }
 
+Xkb::Modifiers Xkb::depressedModifiers() const
+{
+    Xkb::Modifiers result;
+
+    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+        result |= Modifier::Mod1;
+    } else if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+        result |= Modifier::Control;
+    } else if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+        result |= Modifier::Shift;
+    } else if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+        result |= Modifier::Mod4;
+    } else if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_DEPRESSED) == 1) {
+        result |= Modifier::Mod5;
+    }
+
+    return result;
+}
+
+Xkb::Modifiers Xkb::latchedModifiers() const
+{
+    Xkb::Modifiers result;
+
+    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LATCHED) == 1) {
+        result |= Modifier::Mod1;
+    } else if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_LATCHED) == 1) {
+        result |= Modifier::Control;
+    } else if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_LATCHED) == 1) {
+        result |= Modifier::Shift;
+    } else if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_LATCHED) == 1) {
+        result |= Modifier::Mod4;
+    } else if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_LATCHED) == 1) {
+        result |= Modifier::Mod5;
+    }
+
+    return result;
+}
+
+Xkb::Modifiers Xkb::lockedModifiers() const
+{
+    Xkb::Modifiers result;
+
+    if (xkb_state_mod_index_is_active(m_state, m_altModifier, XKB_STATE_MODS_LOCKED) == 1) {
+        result |= Modifier::Mod1;
+    } else if (xkb_state_mod_index_is_active(m_state, m_controlModifier, XKB_STATE_MODS_LOCKED) == 1) {
+        result |= Modifier::Control;
+    } else if (xkb_state_mod_index_is_active(m_state, m_shiftModifier, XKB_STATE_MODS_LOCKED) == 1) {
+        result |= Modifier::Shift;
+    } else if (xkb_state_mod_index_is_active(m_state, m_metaModifier, XKB_STATE_MODS_LOCKED) == 1) {
+        result |= Modifier::Mod4;
+    } else if (xkb_state_mod_index_is_active(m_state, m_mod5Modifier, XKB_STATE_MODS_LOCKED) == 1) {
+        result |= Modifier::Mod5;
+    }
+
+    return result;
+}
+
 void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
 {
     xkb_mod_index_t modifier = XKB_MOD_INVALID;
