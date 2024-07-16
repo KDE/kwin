@@ -35,6 +35,7 @@ void XwlDataSource::setMimeTypes(const QStringList &mimeTypes)
 void XwlDataSource::accept(const QString &mimeType)
 {
     m_accepted = !mimeType.isEmpty();
+    Q_EMIT acceptedChanged();
 }
 
 DataDeviceManagerInterface::DnDActions XwlDataSource::supportedDragAndDropActions() const
@@ -56,6 +57,7 @@ DataDeviceManagerInterface::DnDAction XwlDataSource::selectedDndAction() const
 void XwlDataSource::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
     m_dndAction = action;
+    Q_EMIT dndActionChanged();
 }
 
 bool XwlDataSource::isAccepted() const

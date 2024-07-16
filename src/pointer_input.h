@@ -244,6 +244,7 @@ private:
     void updateDecoration();
     void updateDecorationCursor();
     void updateMoveResize();
+    void updateDragCursor();
 
     void handleFocusedSurfaceChanged();
 
@@ -255,6 +256,7 @@ private:
     std::unique_ptr<ShapeCursorSource> m_fallbackCursor;
     std::unique_ptr<ShapeCursorSource> m_moveResizeCursor;
     std::unique_ptr<ShapeCursorSource> m_windowSelectionCursor;
+    std::unique_ptr<ShapeCursorSource> m_dragCursor;
 
     struct
     {

@@ -110,6 +110,8 @@ Q_SIGNALS:
     void mimeTypeOffered(const QString &);
     void supportedDragAndDropActionsChanged();
     void keyboardModifiersChanged();
+    void dndActionChanged();
+    void acceptedChanged();
 
 protected:
     explicit AbstractDataSource(QObject *parent = nullptr);

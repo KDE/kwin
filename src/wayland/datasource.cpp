@@ -91,6 +91,7 @@ void DataSourceInterface::accept(const QString &mimeType)
 {
     d->send_target(mimeType);
     d->isAccepted = !mimeType.isNull();
+    Q_EMIT acceptedChanged();
 }
 
 void DataSourceInterface::requestData(const QString &mimeType, qint32 fd)
@@ -148,6 +149,7 @@ void DataSourceInterface::dndFinished()
 void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
     d->selectedDndAction = action;
+    Q_EMIT dndActionChanged();
 
     if (d->resource()->version() < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
         return;
@@ -186,11 +188,6 @@ wl_client *DataSourceInterface::client() const
 bool DataSourceInterface::isAccepted() const
 {
     return d->isAccepted;
-}
-
-void DataSourceInterface::setAccepted(bool accepted)
-{
-    d->isAccepted = accepted;
 }
 
 XdgToplevelDragV1Interface *DataSourceInterface::xdgToplevelDrag() const
