@@ -103,7 +103,6 @@ void Tile::setGeometryFromAbsolute(const QRectF &geom)
                          (geom.y() - outGeom.y()) / outGeom.height(),
                          geom.width() / outGeom.width(),
                          geom.height() / outGeom.height());
-
     setRelativeGeometry(relGeom);
 }
 
