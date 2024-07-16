@@ -526,6 +526,9 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
         surfaceInputTransformation.scale(surface->scaleOverride());
         d->drag.surface = surface;
         d->drag.transformation = surfaceInputTransformation;
+        if (d->dragInhibitsPointer(surface)) {
+            notifyPointerLeave();
+        }
         d->drag.target->updateDragTarget(surface, serial);
     } else {
         d->drag.surface = nullptr;
@@ -1384,6 +1387,9 @@ void SeatInterface::startDrag(AbstractDataSource *dragSource, SurfaceInterface *
         d->drag.target = d->dataDevicesForSurface(originSurface)[0];
     }
     if (d->drag.target) {
+        if (d->dragInhibitsPointer(originSurface)) {
+            notifyPointerLeave();
+        }
         d->drag.target->updateDragTarget(originSurface, display()->nextSerial());
     }
     Q_EMIT dragStarted();
