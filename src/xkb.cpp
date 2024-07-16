@@ -757,7 +757,9 @@ void Xkb::updateKey(uint32_t key, InputRedirection::KeyboardKeyState state)
         return;
     }
     const auto sym = toKeysym(key);
+    qWarning() << "before" << xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
     xkb_state_update_key(m_state, key + EVDEV_OFFSET, static_cast<xkb_key_direction>(state));
+    qWarning() << "after" << xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
     if (m_compose.state) {
         if (state == InputRedirection::KeyboardKeyPressed) {
             xkb_compose_state_feed(m_compose.state, sym);
