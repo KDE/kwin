@@ -22,6 +22,7 @@
 #include "mousebuttons.h"
 #include "osd.h"
 #include "screenedge.h"
+#include "wayland/abstract_data_source.h"
 #include "wayland/display.h"
 #include "wayland/pointer.h"
 #include "wayland/pointerconstraints_v1.h"
@@ -965,6 +966,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_decoration.cursor = std::make_unique<ShapeCursorSource>();
     m_serverCursor.surface = std::make_unique<SurfaceCursorSource>();
     m_serverCursor.shape = std::make_unique<ShapeCursorSource>();
+    m_dragCursor = std::make_unique<ShapeCursorSource>();
 
 #if KWIN_BUILD_SCREENLOCKER
     if (kwinApp()->supportsLockScreen()) {
@@ -989,6 +991,7 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
     m_windowSelectionCursor->setTheme(m_waylandImage.theme());
     m_decoration.cursor->setTheme(m_waylandImage.theme());
     m_serverCursor.shape->setTheme(m_waylandImage.theme());
+    m_dragCursor->setTheme(m_waylandImage.theme());
 
     connect(&m_waylandImage, &WaylandCursorImage::themeChanged, this, [this] {
         m_effectsCursor->setTheme(m_waylandImage.theme());
@@ -997,6 +1000,13 @@ CursorImage::CursorImage(PointerInputRedirection *parent)
         m_windowSelectionCursor->setTheme(m_waylandImage.theme());
         m_decoration.cursor->setTheme(m_waylandImage.theme());
         m_serverCursor.shape->setTheme(m_waylandImage.theme());
+        m_dragCursor->setTheme(m_waylandImage.theme());
+    });
+
+    connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, [this]() {
+        m_dragCursor->setShape(Qt::ForbiddenCursor);
+        connect(waylandServer()->seat()->dragSource(), &AbstractDataSource::dndActionChanged, this, &CursorImage::updateDragCursor);
+        reevaluteSource();
     });
 
     PointerInterface *pointer = waylandServer()->seat()->pointer();
@@ -1072,6 +1082,29 @@ void CursorImage::updateMoveResize()
 {
     if (Window *window = workspace()->moveResizeWindow()) {
         m_moveResizeCursor->setShape(window->cursor().name());
+    }
+    reevaluteSource();
+}
+
+void CursorImage::updateDragCursor()
+{
+    if (auto dragSource = waylandServer()->seat()->dragSource()) {
+        switch (dragSource->selectedDndAction()) {
+        case DataDeviceManagerInterface::DnDAction::None:
+            m_dragCursor->setShape(Qt::ClosedHandCursor);
+            break;
+        case DataDeviceManagerInterface::DnDAction::Copy:
+            m_dragCursor->setShape(Qt::DragCopyCursor);
+            break;
+        case DataDeviceManagerInterface::DnDAction::Move:
+            m_dragCursor->setShape(Qt::DragMoveCursor);
+            break;
+        case DataDeviceManagerInterface::DnDAction::Ask:
+            m_dragCursor->setShape(Qt::WaitCursor); // DAVE
+            break;
+        }
+    } else {
+        m_dragCursor->setShape(Qt::ForbiddenCursor);
     }
     reevaluteSource();
 }
@@ -1163,6 +1196,10 @@ void CursorImage::reevaluteSource()
 {
     if (waylandServer()->isScreenLocked()) {
         setSource(m_serverCursor.cursor);
+        return;
+    }
+    if (waylandServer()->seat()->isDrag()) {
+        setSource(m_dragCursor.get());
         return;
     }
     if (input()->isSelectingWindow()) {

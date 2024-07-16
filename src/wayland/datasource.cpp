@@ -148,6 +148,7 @@ void DataSourceInterface::dndFinished()
 void DataSourceInterface::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
     d->selectedDndAction = action;
+    Q_EMIT dndActionChanged();
 
     if (d->resource()->version() < WL_DATA_SOURCE_ACTION_SINCE_VERSION) {
         return;

@@ -56,6 +56,7 @@ DataDeviceManagerInterface::DnDAction XwlDataSource::selectedDndAction() const
 void XwlDataSource::dndAction(DataDeviceManagerInterface::DnDAction action)
 {
     m_dndAction = action;
+    Q_EMIT dndActionChanged();
 }
 
 bool XwlDataSource::isAccepted() const
