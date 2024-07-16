@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-14 00:39+0000\n"
+"POT-Creation-Date: 2024-07-16 00:40+0000\n"
 "PO-Revision-Date: 2024-06-30 13:36+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -712,224 +712,224 @@ msgstr ""
 msgid "Tablet Pad Ring"
 msgstr ""
 
-#: debug_console.cpp:622
+#: debug_console.cpp:621
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr ""
 
-#: debug_console.cpp:796
+#: debug_console.cpp:795
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "சுட்டி பட்டன் ஏதுமில்லை"
 
-#: debug_console.cpp:800
+#: debug_console.cpp:799
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "இடது"
 
-#: debug_console.cpp:803
+#: debug_console.cpp:802
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "வலது"
 
-#: debug_console.cpp:806
+#: debug_console.cpp:805
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "நடு"
 
-#: debug_console.cpp:809
+#: debug_console.cpp:808
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "பின்னே"
 
-#: debug_console.cpp:812
+#: debug_console.cpp:811
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "முன்னே"
 
-#: debug_console.cpp:815
+#: debug_console.cpp:814
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "கூடுதல் 1"
 
-#: debug_console.cpp:818
+#: debug_console.cpp:817
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "கூடுதல் 2"
 
-#: debug_console.cpp:821
+#: debug_console.cpp:820
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "கூடுதல் 3"
 
-#: debug_console.cpp:824
+#: debug_console.cpp:823
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "கூடுதல் 4"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:826
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "கூடுதல் 5"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:829
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "கூடுதல் 6"
 
-#: debug_console.cpp:833
+#: debug_console.cpp:832
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "கூடுதல் 7"
 
-#: debug_console.cpp:836
+#: debug_console.cpp:835
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "கூடுதல் 8"
 
-#: debug_console.cpp:839
+#: debug_console.cpp:838
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "கூடுதல் 9"
 
-#: debug_console.cpp:842
+#: debug_console.cpp:841
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "கூடுதல் 10"
 
-#: debug_console.cpp:845
+#: debug_console.cpp:844
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "கூடுதல் 11"
 
-#: debug_console.cpp:848
+#: debug_console.cpp:847
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "கூடுதல் 12"
 
-#: debug_console.cpp:851
+#: debug_console.cpp:850
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "கூடுதல் 13"
 
-#: debug_console.cpp:854
+#: debug_console.cpp:853
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "கூடுதல் 14"
 
-#: debug_console.cpp:857
+#: debug_console.cpp:856
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "கூடுதல் 15"
 
-#: debug_console.cpp:860
+#: debug_console.cpp:859
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "கூடுதல் 16"
 
-#: debug_console.cpp:863
+#: debug_console.cpp:862
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "கூடுதல் 17"
 
-#: debug_console.cpp:866
+#: debug_console.cpp:865
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "கூடுதல் 18"
 
-#: debug_console.cpp:869
+#: debug_console.cpp:868
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "கூடுதல் 19"
 
-#: debug_console.cpp:872
+#: debug_console.cpp:871
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "கூடுதல் 20"
 
-#: debug_console.cpp:875
+#: debug_console.cpp:874
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "கூடுதல் 21"
 
-#: debug_console.cpp:878
+#: debug_console.cpp:877
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "கூடுதல் 22"
 
-#: debug_console.cpp:881
+#: debug_console.cpp:880
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "கூடுதல் 23"
 
-#: debug_console.cpp:884
+#: debug_console.cpp:883
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "கூடுதல் 24"
 
-#: debug_console.cpp:887
+#: debug_console.cpp:886
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "பணி"
 
-#: debug_console.cpp:1239
+#: debug_console.cpp:1238
 #, kde-format
 msgid "X11 Windows"
 msgstr "X11 சாளரங்கள்"
 
-#: debug_console.cpp:1241
+#: debug_console.cpp:1240
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "நிர்வகிக்கப்படாத‍ X11 சாளரங்கள்"
 
-#: debug_console.cpp:1243
+#: debug_console.cpp:1242
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Wayland சாளரங்கள்"
 
-#: debug_console.cpp:1245
+#: debug_console.cpp:1244
 #, kde-format
 msgid "Internal Windows"
 msgstr "உள்ளக சாளரங்கள்"
 
-#: debug_console.cpp:1585 debug_console.cpp:1599
+#: debug_console.cpp:1584 debug_console.cpp:1598
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr ""
 
-#: debug_console.cpp:1587 debug_console.cpp:1601
+#: debug_console.cpp:1586 debug_console.cpp:1600
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -2258,7 +2258,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "இரவு நிறமாற்றத்தை இடைநிறுத்து/தொடர்"
 
-#: plugins/nightlight/nightlightmanager.cpp:439
+#: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "நிறவெப்பநிலையின் முன்னோட்டம்"
@@ -4182,7 +4182,7 @@ msgstr "கீழுள்ள பணிமேடைக்கு தாவு"
 msgid "Switch to Desktop %1"
 msgstr "பணிமேடை %1-க்கு தாவு"
 
-#: window.cpp:3095
+#: window.cpp:3099
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

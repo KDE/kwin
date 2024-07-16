@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1684772 $
+# Version: $Revision: 1684852 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-14 00:39+0000\n"
+"POT-Creation-Date: 2024-07-16 00:40+0000\n"
 "PO-Revision-Date: 2024-07-14 13:46+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -719,224 +719,224 @@ msgstr "jestPalcem"
 msgid "Tablet Pad Ring"
 msgstr "Pierścień deski tabletu"
 
-#: debug_console.cpp:622
+#: debug_console.cpp:621
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
 msgstr "Efekty"
 
-#: debug_console.cpp:796
+#: debug_console.cpp:795
 #, kde-format
 msgid "No Mouse Buttons"
 msgstr "Brak przycisków myszy"
 
-#: debug_console.cpp:800
+#: debug_console.cpp:799
 #, kde-format
 msgctxt "Mouse Button"
 msgid "left"
 msgstr "lewy"
 
-#: debug_console.cpp:803
+#: debug_console.cpp:802
 #, kde-format
 msgctxt "Mouse Button"
 msgid "right"
 msgstr "prawy"
 
-#: debug_console.cpp:806
+#: debug_console.cpp:805
 #, kde-format
 msgctxt "Mouse Button"
 msgid "middle"
 msgstr "środkowy"
 
-#: debug_console.cpp:809
+#: debug_console.cpp:808
 #, kde-format
 msgctxt "Mouse Button"
 msgid "back"
 msgstr "wstecz"
 
-#: debug_console.cpp:812
+#: debug_console.cpp:811
 #, kde-format
 msgctxt "Mouse Button"
 msgid "forward"
 msgstr "naprzód"
 
-#: debug_console.cpp:815
+#: debug_console.cpp:814
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 1"
 msgstr "ekstra 1"
 
-#: debug_console.cpp:818
+#: debug_console.cpp:817
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 2"
 msgstr "ekstra 2"
 
-#: debug_console.cpp:821
+#: debug_console.cpp:820
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 3"
 msgstr "ekstra 3"
 
-#: debug_console.cpp:824
+#: debug_console.cpp:823
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 4"
 msgstr "ekstra 4"
 
-#: debug_console.cpp:827
+#: debug_console.cpp:826
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 5"
 msgstr "ekstra 5"
 
-#: debug_console.cpp:830
+#: debug_console.cpp:829
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 6"
 msgstr "ekstra 6"
 
-#: debug_console.cpp:833
+#: debug_console.cpp:832
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 7"
 msgstr "ekstra 7"
 
-#: debug_console.cpp:836
+#: debug_console.cpp:835
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 8"
 msgstr "ekstra 8"
 
-#: debug_console.cpp:839
+#: debug_console.cpp:838
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 9"
 msgstr "ekstra 9"
 
-#: debug_console.cpp:842
+#: debug_console.cpp:841
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 10"
 msgstr "ekstra 10"
 
-#: debug_console.cpp:845
+#: debug_console.cpp:844
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 11"
 msgstr "ekstra 11"
 
-#: debug_console.cpp:848
+#: debug_console.cpp:847
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 12"
 msgstr "ekstra 12"
 
-#: debug_console.cpp:851
+#: debug_console.cpp:850
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 13"
 msgstr "ekstra 13"
 
-#: debug_console.cpp:854
+#: debug_console.cpp:853
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 14"
 msgstr "ekstra 14"
 
-#: debug_console.cpp:857
+#: debug_console.cpp:856
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 15"
 msgstr "ekstra 15"
 
-#: debug_console.cpp:860
+#: debug_console.cpp:859
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 16"
 msgstr "ekstra 16"
 
-#: debug_console.cpp:863
+#: debug_console.cpp:862
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 17"
 msgstr "ekstra 17"
 
-#: debug_console.cpp:866
+#: debug_console.cpp:865
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 18"
 msgstr "ekstra 18"
 
-#: debug_console.cpp:869
+#: debug_console.cpp:868
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 19"
 msgstr "ekstra 19"
 
-#: debug_console.cpp:872
+#: debug_console.cpp:871
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 20"
 msgstr "ekstra 20"
 
-#: debug_console.cpp:875
+#: debug_console.cpp:874
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 21"
 msgstr "ekstra 21"
 
-#: debug_console.cpp:878
+#: debug_console.cpp:877
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 22"
 msgstr "ekstra 22"
 
-#: debug_console.cpp:881
+#: debug_console.cpp:880
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 23"
 msgstr "ekstra 23"
 
-#: debug_console.cpp:884
+#: debug_console.cpp:883
 #, kde-format
 msgctxt "Mouse Button"
 msgid "extra 24"
 msgstr "ekstra 24"
 
-#: debug_console.cpp:887
+#: debug_console.cpp:886
 #, kde-format
 msgctxt "Mouse Button"
 msgid "task"
 msgstr "zadanie"
 
-#: debug_console.cpp:1239
+#: debug_console.cpp:1238
 #, kde-format
 msgid "X11 Windows"
 msgstr "Okna X11"
 
-#: debug_console.cpp:1241
+#: debug_console.cpp:1240
 #, kde-format
 msgid "X11 Unmanaged Windows"
 msgstr "Niezarządzane okna X11"
 
-#: debug_console.cpp:1243
+#: debug_console.cpp:1242
 #, kde-format
 msgid "Wayland Windows"
 msgstr "Okna Waylanda"
 
-#: debug_console.cpp:1245
+#: debug_console.cpp:1244
 #, kde-format
 msgid "Internal Windows"
 msgstr "Wewnętrzne okna"
 
-#: debug_console.cpp:1585 debug_console.cpp:1599
+#: debug_console.cpp:1584 debug_console.cpp:1598
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
 msgstr "Wyłącz"
 
-#: debug_console.cpp:1587 debug_console.cpp:1601
+#: debug_console.cpp:1586 debug_console.cpp:1600
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
@@ -2278,7 +2278,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Wycofaj/przywróć nocne barwy"
 
-#: plugins/nightlight/nightlightmanager.cpp:439
+#: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Podgląd temperatury kolorów"
@@ -4198,7 +4198,7 @@ msgstr "Przełącz jeden pulpit niżej"
 msgid "Switch to Desktop %1"
 msgstr "Przełącz na pulpit %1"
 
-#: window.cpp:3095
+#: window.cpp:3099
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
