@@ -95,6 +95,15 @@ Window::Window()
         Q_EMIT hasApplicationMenuChanged(hasApplicationMenu());
     });
     connect(&m_offscreenFramecallbackTimer, &QTimer::timeout, this, &Window::maybeSendFrameCallback);
+
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
+        Tile *owner = workspace()->tileManager(output(), current)->windowOwner(this);
+        if (owner) {
+            setQuickTileMode(owner->quickTileMode(), true);
+        } else if (quickTileMode() != QuickTileFlag::None) {
+            setQuickTileMode(QuickTileFlag::None, true);
+        }
+    });
 }
 
 Window::~Window()
@@ -1958,19 +1967,6 @@ void Window::setupWindowManagementInterface()
         sendToOutput(output->handle());
     });
 
-    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
-        Tile *owner = workspace()->tileManager(output(), current)->windowOwner(this);
-        if (owner) {
-            setQuickTileMode(owner->quickTileMode(), true);
-        } else if (m_tile && m_tile->quickTileMode() == QuickTileFlag::Custom) {
-            // Custom is not double buffered, so the tile gets set immediately
-            setTile(nullptr);
-            moveResize(geometryRestore());
-        } else {
-            setQuickTileMode(QuickTileFlag::None, true);
-        }
-    });
-
     m_windowManagementInterface = w;
 }
 
@@ -3564,7 +3560,10 @@ void Window::setQuickTileMode(QuickTileMode mode, bool keyboard)
             nextOutput = candidateOutput;
 
             if (nextOutput == currentOutput) {
-                mode = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
+                if (!m_tile || m_tile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
+                    // Toggle if neither mode, output or desktop changed
+                    mode = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
+                }
             } else {
                 // Move to other screen
                 moveResize(geometryRestore().translated(nextOutput->geometry().topLeft() - currentOutput->geometry().topLeft()));
@@ -3656,7 +3655,15 @@ void Window::setTile(Tile *tile)
         disconnect(oldTile, &Tile::activeChanged, this, nullptr);
     }
 
+    // Costom tiles are not buffered
+    if (tile && tile->quickTileMode() == QuickTileFlag::Custom) {
+        m_requestedQuickTileMode = QuickTileFlag::Custom;
+    } else if (!tile && oldTile && oldTile->quickTileMode() == QuickTileFlag::Custom) {
+        m_requestedQuickTileMode = QuickTileFlag::None;
+    }
+
     m_tile = tile;
+
     if (m_tile) {
         Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
