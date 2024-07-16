@@ -40,16 +40,18 @@ class KWIN_EXPORT Xkb : public QObject
     Q_OBJECT
 public:
     enum Modifier {
-        NoModifier,
-        Shift,
-        Lock,
-        Control,
-        Mod1,
-        Mod2,
-        Mod3,
-        Mod4,
-        Mod5,
+        NoModifier = 0,
+        Shift = 1 << 0,
+        Lock = 1 << 1,
+        Control = 1 << 2,
+        Mod1 = 1 << 3,
+        Num = 1 << 4,
+        Mod3 = 1 << 5,
+        Mod4 = 1 << 6,
+        Mod5 = 1 << 7,
     };
+    Q_ENUM(Modifier)
+    Q_DECLARE_FLAGS(Modifiers, Modifier)
 
     Xkb(bool followLocale1 = false);
     ~Xkb() override;
@@ -77,6 +79,10 @@ public:
 
     void setModifierLatched(KWin::Xkb::Modifier mod, bool latched);
     void setModifierLocked(KWin::Xkb::Modifier mod, bool locked);
+
+    Modifiers depressedModifiers() const;
+    Modifiers latchedModifiers() const;
+    Modifiers lockedModifiers() const;
 
     LEDs leds() const
     {
@@ -188,3 +194,5 @@ inline Qt::KeyboardModifiers Xkb::modifiers() const
 }
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(KWin::Xkb::Modifiers)
