@@ -114,7 +114,7 @@ void StickyKeysTest::testStick()
     QCOMPARE(modifierSpy.first()[1], expectedMods); // verify that mod is latched
 
     modifierSpy.clear();
-    // release mod, the modified should still be latched
+    // release mod, the modifier should still be latched
     Test::keyboardKeyReleased(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[0], 0); // verify that mod is not depressed
@@ -165,7 +165,7 @@ void StickyKeysTest::testLock()
     QCOMPARE(modifierSpy.first()[1], 4); // verify that Ctrl is latched
 
     modifierSpy.clear();
-    // release Ctrl, the modified should still be latched
+    // release Ctrl, the modifier should still be latched
     Test::keyboardKeyReleased(KEY_LEFTCTRL, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[0], 0); // verify that Ctrl is not depressed
