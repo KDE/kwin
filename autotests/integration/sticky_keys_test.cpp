@@ -191,7 +191,7 @@ void StickyKeysTest::testLock()
     Test::keyboardKeyPressed(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[0], expectedMods); // verify that mod is depressed
-    // TODO should it be latched?
+    QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is unlatched
     QCOMPARE(modifierSpy.first()[2], expectedMods); // verify that mod is locked
 
     // release mod, modifier should still be locked
@@ -212,6 +212,7 @@ void StickyKeysTest::testLock()
     Test::keyboardKeyPressed(modifierKey, ++timestamp);
     QVERIFY(modifierSpy.wait());
     QCOMPARE(modifierSpy.first()[0], expectedMods); // verify that mod is depressed
+    QCOMPARE(modifierSpy.first()[1], 0); // verify that mod is unlatched
     QCOMPARE(modifierSpy.first()[2], 0); // verify that mod is not locked
 
     Test::keyboardKeyReleased(modifierKey, ++timestamp);

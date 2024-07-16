@@ -1086,7 +1086,7 @@ void Xkb::setModifierLocked(KWin::Xkb::Modifier mod, bool locked)
         if (mask.size() > modifier) {
             mask[modifier] = locked;
             m_modifierState.locked = mask.to_ulong();
-            xkb_state_update_mask(m_state, m_modifierState.depressed, m_modifierState.locked, m_modifierState.locked, 0, 0, m_currentLayout);
+            xkb_state_update_mask(m_state, m_modifierState.depressed, m_modifierState.latched, m_modifierState.locked, 0, 0, m_currentLayout);
             m_modifierState.locked = xkb_state_serialize_mods(m_state, xkb_state_component(XKB_STATE_MODS_LOCKED));
         }
     }
