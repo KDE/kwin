@@ -8,6 +8,7 @@
 
 #include "config-kwin.h"
 
+#include <pthread.h>
 #include <sched.h>
 
 namespace KWin
@@ -19,7 +20,7 @@ void gainRealTime()
     const int minPriority = sched_get_priority_min(SCHED_RR);
     sched_param sp;
     sp.sched_priority = minPriority;
-    sched_setscheduler(0, SCHED_RR | SCHED_RESET_ON_FORK, &sp);
+    pthread_setschedparam(pthread_self(), SCHED_RR | SCHED_RESET_ON_FORK, &sp);
 #endif
 }
 
