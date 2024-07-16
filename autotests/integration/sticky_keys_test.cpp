@@ -179,6 +179,12 @@ void StickyKeysTest::testLock()
     // TODO should it be latched?
     QCOMPARE(modifierSpy.first()[2], 4); // verify that Ctrl is locked
 
+    // release Ctrl, modifier should still be locked
+    modifierSpy.clear();
+    Test::keyboardKeyReleased(KEY_LEFTCTRL, ++timestamp);
+    QVERIFY(modifierSpy.wait());
+    // TODO
+
     // press and release a letter, this does not unlock the modifier
     modifierSpy.clear();
     Test::keyboardKeyPressed(KEY_A, ++timestamp);
