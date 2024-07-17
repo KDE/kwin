@@ -697,7 +697,7 @@ bool Device::supportsOutputArea() const
 
 QRectF Device::defaultOutputArea() const
 {
-    return QRectF(0, 0, 1, 1);
+    return m_identityRect;
 }
 
 QRectF Device::outputArea() const
@@ -720,6 +720,29 @@ void Device::setMapToWorkspace(bool mapToWorkspace)
         m_mapToWorkspace = mapToWorkspace;
         writeEntry(ConfigKey::MapToWorkspace, m_mapToWorkspace);
         Q_EMIT mapToWorkspaceChanged();
+    }
+}
+
+QRectF Device::inputArea() const
+{
+    return m_outputArea;
+}
+
+void Device::setInputArea(const QRectF &inputArea)
+{
+    if (m_inputArea != inputArea) {
+        m_inputArea = inputArea;
+
+        libinput_config_area_rectangle rect{
+            .x1 = m_inputArea.topLeft().x(),
+            .y1 = m_inputArea.topLeft().y(),
+            .x2 = m_inputArea.bottomRight().x(),
+            .y2 = m_inputArea.bottomRight().y(),
+        };
+        libinput_device_config_area_set_rectangle(m_device, &rect);
+
+        writeEntry(ConfigKey::MapToWorkspace, m_inputArea);
+        Q_EMIT inputAreaChanged();
     }
 }
 }

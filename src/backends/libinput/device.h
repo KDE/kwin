@@ -144,6 +144,8 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(bool defaultMapToWorkspace READ defaultMapToWorkspace CONSTANT)
     Q_PROPERTY(bool mapToWorkspace READ isMapToWorkspace WRITE setMapToWorkspace NOTIFY mapToWorkspaceChanged)
 
+    Q_PROPERTY(QRectF inputArea READ inputArea WRITE setInputArea NOTIFY inputAreaChanged)
+
 public:
     explicit Device(libinput_device *device, QObject *parent = nullptr);
     ~Device() override;
@@ -645,6 +647,9 @@ public:
 
     void setMapToWorkspace(bool mapToWorkspace);
 
+    QRectF inputArea() const;
+    void setInputArea(const QRectF &inputArea);
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -671,6 +676,7 @@ Q_SIGNALS:
     void clickMethodChanged();
     void outputAreaChanged();
     void mapToWorkspaceChanged();
+    void inputAreaChanged();
 
 private:
     template<typename T>
@@ -757,8 +763,11 @@ private:
     enum libinput_config_click_method m_clickMethod;
 
     LEDs m_leds;
-    QRectF m_outputArea = QRectF(0, 0, 1, 1);
+    QRectF m_outputArea = m_identityRect;
     bool m_mapToWorkspace = false;
+    QRectF m_inputArea = m_identityRect;
+
+    const QRectF m_identityRect = QRectF(0, 0, 1, 1);
 };
 
 }
