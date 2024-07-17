@@ -28,7 +28,6 @@ public:
     explicit RenderLoopPrivate(RenderLoop *q, Output *output);
 
     void dispatch();
-    void invalidate();
 
     void delayScheduleRepaint();
     void scheduleNextRepaint();
