@@ -61,7 +61,7 @@ namespace KWin
 static const int DISTANCE_RESET = 30;
 
 // How large the touch target of the area recognizing touch gestures is
-static const int TOUCH_TARGET = 3;
+static const int TOUCH_TARGET = 8;
 
 // How far the user needs to swipe before triggering an action.
 static const int MINIMUM_DELTA = 44;
