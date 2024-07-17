@@ -168,6 +168,9 @@ class KWIN_EXPORT Device : public InputDevice
     Q_PROPERTY(QString defaultPressureCurve READ defaultPressureCurve CONSTANT)
     Q_PROPERTY(QString pressureCurve READ serializedPressureCurve WRITE setPressureCurve NOTIFY pressureCurveChanged)
     Q_PROPERTY(quint32 tabletPadButtonCount READ tabletPadButtonCount CONSTANT)
+    Q_PROPERTY(bool supportsInputArea READ supportsInputArea CONSTANT)
+    Q_PROPERTY(QRectF defaultInputArea READ defaultInputArea CONSTANT)
+    Q_PROPERTY(QRectF inputArea READ inputArea WRITE setInputArea NOTIFY inputAreaChanged)
 
     Q_PROPERTY(bool supportsPressureRange READ supportsPressureRange NOTIFY supportsPressureRangeChanged)
     Q_PROPERTY(double pressureRangeMin READ pressureRangeMin WRITE setPressureRangeMin NOTIFY pressureRangeMinChanged)
@@ -702,6 +705,11 @@ public:
     double defaultPressureRangeMin() const;
     double defaultPressureRangeMax() const;
 
+    bool supportsInputArea() const;
+    QRectF inputArea() const;
+    void setInputArea(const QRectF &inputArea);
+    QRectF defaultInputArea() const;
+
     /**
      * Gets the Device for @p native. @c null if there is no Device for @p native.
      */
@@ -732,6 +740,7 @@ Q_SIGNALS:
     void supportsPressureRangeChanged();
     void pressureRangeMinChanged();
     void pressureRangeMaxChanged();
+    void inputAreaChanged();
 
 private:
     template<typename T>
@@ -821,7 +830,7 @@ private:
     enum libinput_config_click_method m_clickMethod;
 
     LEDs m_leds;
-    QRectF m_outputArea = QRectF(0, 0, 1, 1);
+    QRectF m_outputArea;
     bool m_mapToWorkspace = false;
     QString m_deviceGroupId;
 
@@ -830,6 +839,8 @@ private:
     double m_pressureRangeMax;
     double m_defaultPressureRangeMin;
     double m_defaultPressureRangeMax;
+
+    QRectF m_inputArea;
 };
 
 }

@@ -1057,3 +1057,10 @@ const char *udev_device_get_property_value(struct udev_device *udev_device,
 {
     return "";
 }
+
+libinput_config_status
+libinput_device_config_area_set_rectangle(struct libinput_device *device,
+                                          const struct libinput_config_area_rectangle *rect)
+{
+    return LIBINPUT_CONFIG_STATUS_UNSUPPORTED;
+}

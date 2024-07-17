@@ -54,6 +54,7 @@ namespace KWin
 {
 namespace LibInput
 {
+static const QRectF s_identityRect = QRectF(0, 0, 1, 1);
 
 TabletTool::TabletTool(libinput_tablet_tool *handle)
     : m_handle(libinput_tablet_tool_ref(handle))
@@ -177,6 +178,7 @@ enum class ConfigKey {
     TabletToolPressureCurve,
     TabletToolPressureRangeMin,
     TabletToolPressureRangeMax,
+    InputArea,
 };
 
 struct ConfigDataBase
@@ -288,6 +290,7 @@ static const QMap<ConfigKey, std::shared_ptr<ConfigDataBase>> s_configData{
     {ConfigKey::MapToWorkspace, std::make_shared<ConfigData<bool>>(QByteArrayLiteral("MapToWorkspace"), &Device::setMapToWorkspace, &Device::defaultMapToWorkspace)},
     {ConfigKey::TabletToolPressureRangeMin, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMin"), &Device::setPressureRangeMin, &Device::defaultPressureRangeMin)},
     {ConfigKey::TabletToolPressureRangeMax, std::make_shared<ConfigData<double>>(QByteArrayLiteral("TabletToolPressureRangeMax"), &Device::setPressureRangeMax, &Device::defaultPressureRangeMax)},
+    {ConfigKey::InputArea, std::make_shared<ConfigData<QRectF>>(QByteArrayLiteral("InputArea"), &Device::setInputArea, &Device::defaultInputArea)},
 };
 
 namespace
@@ -410,11 +413,13 @@ Device::Device(libinput_device *device, QObject *parent)
     , m_supportedClickMethods(libinput_device_config_click_get_methods(m_device))
     , m_defaultClickMethod(libinput_device_config_click_get_default_method(m_device))
     , m_clickMethod(libinput_device_config_click_get_method(m_device))
+    , m_outputArea(s_identityRect)
     , m_supportsPressureRange(false)
     , m_pressureRangeMin(0.0)
     , m_pressureRangeMax(1.0)
     , m_defaultPressureRangeMin(0.0)
     , m_defaultPressureRangeMax(1.0)
+    , m_inputArea(s_identityRect)
 {
     libinput_device_ref(m_device);
     libinput_device_set_user_data(m_device, this);
@@ -446,6 +451,18 @@ Device::Device(libinput_device *device, QObject *parent)
                        m_defaultCalibrationMatrix(1, 2)};
         libinput_device_config_calibration_set_matrix(m_device, matrix);
         m_calibrationMatrix = m_defaultCalibrationMatrix;
+    }
+
+    if (supportsInputArea() && m_inputArea != defaultInputArea()) {
+#if HAVE_LIBINPUT_INPUT_AREA
+        const libinput_config_area_rectangle rect{
+            .x1 = m_inputArea.topLeft().x(),
+            .y1 = m_inputArea.topLeft().y(),
+            .x2 = m_inputArea.bottomRight().x(),
+            .y2 = m_inputArea.bottomRight().y(),
+        };
+        libinput_device_config_area_set_rectangle(m_device, &rect);
+#endif
     }
 
     libinput_device_group *group = libinput_device_get_device_group(device);
@@ -869,7 +886,7 @@ bool Device::supportsOutputArea() const
 
 QRectF Device::defaultOutputArea() const
 {
-    return QRectF(0, 0, 1, 1);
+    return s_identityRect;
 }
 
 QRectF Device::outputArea() const
@@ -944,6 +961,45 @@ double Device::defaultPressureRangeMin() const
 double Device::defaultPressureRangeMax() const
 {
     return m_defaultPressureRangeMax;
+}
+
+bool Device::supportsInputArea() const
+{
+#if HAVE_LIBINPUT_INPUT_AREA
+    return true;
+#else
+    return false;
+#endif
+}
+
+QRectF Device::inputArea() const
+{
+    return m_inputArea;
+}
+
+void Device::setInputArea(const QRectF &inputArea)
+{
+    if (m_inputArea != inputArea) {
+        m_inputArea = inputArea;
+
+#if HAVE_LIBINPUT_INPUT_AREA
+        const libinput_config_area_rectangle rect{
+            .x1 = m_inputArea.topLeft().x(),
+            .y1 = m_inputArea.topLeft().y(),
+            .x2 = m_inputArea.bottomRight().x(),
+            .y2 = m_inputArea.bottomRight().y(),
+        };
+        libinput_device_config_area_set_rectangle(m_device, &rect);
+#endif
+
+        writeEntry(ConfigKey::InputArea, m_inputArea);
+        Q_EMIT inputAreaChanged();
+    }
+}
+
+QRectF Device::defaultInputArea() const
+{
+    return s_identityRect;
 }
 }
 }
