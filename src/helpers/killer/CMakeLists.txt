@@ -17,6 +17,12 @@ target_link_libraries(kwin_killer_helper
     Qt::Widgets
 )
 
+ecm_qt_declare_logging_category(kwin_killer_helper
+    HEADER debug.h
+    IDENTIFIER KWIN_KILLER
+    CATEGORY_NAME org.kde.kwin.killer
+)
+
 install(TARGETS kwin_killer_helper DESTINATION ${KDE_INSTALL_LIBEXECDIR})
 
 configure_file(org.kde.kwin.killer.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kwin.killer.desktop @ONLY)

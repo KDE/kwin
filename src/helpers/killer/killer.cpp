@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2003 Lubos Lunak <l.lunak@kde.org>
     SPDX-FileCopyrightText: 2023 Kai Uwe Broulik <kde@broulik.de>
+    SPDX-FileCopyrightText: 2024 Harald Sitter <sitter@kde.org>
 
     SPDX-License-Identifier: MIT
 
@@ -16,7 +17,11 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDebug>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QProcess>
+#include <QStandardPaths>
 #include <QWaylandClientExtensionTemplate>
 #include <QWindow>
 
@@ -29,7 +34,62 @@
 #include <csignal>
 #include <memory>
 
+#include "debug.h"
 #include "qwayland-xdg-foreign-unstable-v2.h"
+
+namespace
+{
+#if defined(Q_OS_LINUX)
+std::optional<QString> exeOf(pid_t pid)
+{
+    const QFileInfo info(QStringLiteral("/proc/%1/exe").arg(QString::number(pid)));
+    auto baseName = QFileInfo(info.canonicalFilePath()).baseName(); // not const to allow move return
+    if (baseName.isEmpty()) {
+        qCWarning(KWIN_KILLER) << "Failed to resolve exe of pid" << pid;
+        return std::nullopt;
+    }
+    return baseName;
+}
+
+std::optional<QString> bootId()
+{
+    QFile file(QStringLiteral("/proc/sys/kernel/random/boot_id"));
+    if (!file.open(QFile::ReadOnly)) {
+        qCWarning(KWIN_KILLER) << "Failed to read /proc/sys/kernel/random/boot_id" << file.errorString();
+        return std::nullopt;
+    }
+    return QString::fromUtf8(file.readAll().simplified().replace('-', QByteArrayView()));
+}
+
+void writeApplicationNotResponding(pid_t pid)
+{
+    const QString dirPath = QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation) + QLatin1String("/drkonqi/application-not-responding/");
+    QDir dir(dirPath);
+    if (!dir.exists()) {
+        if (!dir.mkpath(dirPath)) {
+            qCWarning(KWIN_KILLER) << "Failed to create ApplicationNotResponding path" << dirPath;
+            return;
+        }
+    }
+    // $exe.$bootid.$pid.$time_at_time_of_crash.ini
+    const auto optionalExe = exeOf(pid);
+    if (!optionalExe) {
+        return;
+    }
+    const auto optionalBootId = bootId();
+    if (!optionalBootId) {
+        return;
+    }
+    const QString anrPath = dirPath + QStringLiteral("/%1.%2.%3.%4.json").arg(optionalExe.value(), optionalBootId.value(), QString::number(pid), QString::number(QDateTime::currentMSecsSinceEpoch()));
+    QFile file(anrPath);
+    if (!file.open(QFile::NewOnly)) {
+        qCWarning(KWIN_KILLER) << "Failed to create ApplicationNotResponding file" << anrPath << file.error() << file.errorString();
+        return;
+    }
+    // No content for now, simply close it once created
+}
+#endif // Q_OS_LINUX
+} // namespace
 
 class XdgImported : public QtWayland::zxdg_imported_v2
 {
@@ -198,12 +258,22 @@ int main(int argc, char *argv[])
 
     QObject::connect(dialog, &QDialog::finished, &app, [pid, hostname, isLocal](int result) {
         if (result == KMessageBox::PrimaryAction) {
+#if defined(Q_OS_LINUX)
+            writeApplicationNotResponding(pid);
+#endif
             if (!isLocal) {
                 QStringList lst;
                 lst << hostname << QStringLiteral("kill") << QString::number(pid);
                 QProcess::startDetached(QStringLiteral("xon"), lst);
             } else {
+                // First try to abort so KCrash (or other handlers) and/or coredumpd can kick in and record the malfunction.
+                // This specifically allows application authors to notice that something is broken.
+                if (::kill(pid, SIGABRT) == 0) {
+                    return;
+                }
+                // If that did not work send a kill. Kill cannot be ignored and always terminates.
                 if (::kill(pid, SIGKILL) && errno == EPERM) {
+                    // If killing failed on permissions try again with the polkit helper.
                     KAuth::Action killer(QStringLiteral("org.kde.ksysguard.processlisthelper.sendsignal"));
                     killer.setHelperId(QStringLiteral("org.kde.ksysguard.processlisthelper"));
                     killer.addArgument(QStringLiteral("pid0"), pid);
