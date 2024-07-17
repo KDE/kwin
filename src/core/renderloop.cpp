@@ -177,13 +177,6 @@ void RenderLoopPrivate::dispatch()
     pendingRepaint = false;
 }
 
-void RenderLoopPrivate::invalidate()
-{
-    pendingReschedule = false;
-    pendingFrameCount = 0;
-    compositeTimer.stop();
-}
-
 RenderLoop::RenderLoop(Output *output)
     : d(std::make_unique<RenderLoopPrivate>(this, output))
 {

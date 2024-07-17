@@ -10,7 +10,6 @@
 #include "core/outputbackend.h"
 #include "core/outputlayer.h"
 #include "core/overlaywindow.h"
-#include "core/renderloop_p.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/glplatform.h"
@@ -79,11 +78,6 @@ EglBackend::EglBackend(::Display *display, X11StandaloneBackend *backend)
 
 EglBackend::~EglBackend()
 {
-    // No completion events will be received for in-flight frames, this may lock the
-    // render loop. We need to ensure that the render loop is back to its initial state
-    // if the render backend is about to be destroyed.
-    RenderLoopPrivate::get(m_backend->renderLoop())->invalidate();
-
     m_query.reset();
 
     if (isFailed() && m_overlayWindow) {
