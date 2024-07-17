@@ -525,6 +525,14 @@ private:
      */
     void pruneDesktops(uint count);
 
+    /**
+     * Adds a specified number of virtual desktops to the desktop manager.
+     *
+     * @param count The number of virtual desktops to add.
+     * @return A QList of pointers to the newly added virtual desktops.
+     */
+    QList<VirtualDesktop *> addDesktops(uint count);
+
     QList<VirtualDesktop *> m_desktops;
     QPointer<VirtualDesktop> m_current;
     quint32 m_rows = 2;

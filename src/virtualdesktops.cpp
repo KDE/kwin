@@ -555,27 +555,8 @@ void VirtualDesktopManager::setCount(uint count)
         // If the count is being reduced, remove the extra desktops
         pruneDesktops(count);
     } else {
-        while (uint(m_desktops.count()) < count) {
-            auto vd = new VirtualDesktop(this);
-            const int x11Number = m_desktops.count() + 1;
-            vd->setX11DesktopNumber(x11Number);
-            vd->setName(defaultName(x11Number));
-            if (!s_loadingDesktopSettings) {
-                vd->setId(generateDesktopId());
-            }
-            m_desktops << vd;
-            newDesktops << vd;
-#if KWIN_BUILD_X11
-            connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
-                if (m_rootInfo) {
-                    m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-                }
-            });
-            if (m_rootInfo) {
-                m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
-            }
-#endif
-        }
+        // If the count is being increased, add the new desktops
+        newDesktops = addDesktops(count - m_desktops.count());
     }
 
     if (!m_current) {
@@ -611,6 +592,41 @@ void VirtualDesktopManager::pruneDesktops(uint count)
         Q_EMIT desktopRemoved(desktop);
         desktop->deleteLater();
     }
+}
+
+QList<VirtualDesktop *> VirtualDesktopManager::addDesktops(uint count)
+{
+    QList<VirtualDesktop *> newDesktops;
+
+    for (uint i = 0; i < count; ++i) {
+        auto vd = new VirtualDesktop(this);
+        const int x11Number = m_desktops.count() + 1;
+        vd->setX11DesktopNumber(x11Number);
+        vd->setName(defaultName(x11Number));
+
+        if (!s_loadingDesktopSettings) {
+            vd->setId(generateDesktopId());
+        }
+
+        m_desktops << vd;
+        newDesktops << vd;
+
+#if KWIN_BUILD_X11
+        connect(vd, &VirtualDesktop::nameChanged, this, [this, vd]() {
+            if (m_rootInfo) {
+                // Update the desktop name in the root info
+                m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
+            }
+        });
+
+        if (m_rootInfo) {
+            // Update the desktop name in the root info
+            m_rootInfo->setDesktopName(vd->x11DesktopNumber(), vd->name().toUtf8().data());
+        }
+#endif
+    }
+
+    return newDesktops;
 }
 
 uint VirtualDesktopManager::rows() const
