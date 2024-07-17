@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-16 00:40+0000\n"
+"POT-Creation-Date: 2024-07-17 00:40+0000\n"
 "PO-Revision-Date: 2011-07-11 12:17+0530\n"
 "Last-Translator: Shankar Prasad <svenkate@redhat.com>\n"
 "Language-Team: Kannada <kde-l10n-kn@kde.org>\n"
@@ -1229,22 +1229,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:2020
+#: input.cpp:2021
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2099
+#: input.cpp:2100
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr ""
 
-#: input.cpp:2099
+#: input.cpp:2100
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3186
+#: input.cpp:3197
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -1872,6 +1872,76 @@ msgstr ""
 #, kde-format
 msgid "Animate buttons"
 msgstr "ಗುಂಡಿಗಳನ್ನು ಸಜೀವನಗೊಳಿಸು"
+
+#: plugins/keynotification/keynotification.cpp:37
+#, kde-format
+msgid "The Caps Lock key has been activated"
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:41
+#, kde-format
+msgid "The Caps Lock key is now inactive"
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:45
+#, kde-format
+msgid "The Num Lock key has been activated"
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:49
+#, kde-format
+msgid "The Num Lock key is now inactive"
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:53
+#, kde-format
+msgid "The Scroll Lock key has been activated"
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:57
+#, kde-format
+msgid "The Scroll Lock key is now inactive"
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:70
+#, kde-format
+msgid "The Shift key is now active."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:74
+#, kde-format
+msgid "The Shift key is now inactive."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:78
+#, kde-format
+msgid "The Control key is now active."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:82
+#, kde-format
+msgid "The Control key is now inactive."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:86
+#, kde-format
+msgid "The Alt key is now active."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:90
+#, kde-format
+msgid "The Alt key is now inactive."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:94
+#, kde-format
+msgid "The Meta key is now active."
+msgstr ""
+
+#: plugins/keynotification/keynotification.cpp:98
+#, kde-format
+msgid "The Meta key is now inactive."
+msgstr ""
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, fuzzy, kde-format
@@ -2566,6 +2636,36 @@ msgstr ""
 #| msgid "Wo&bble when moving"
 msgid "Slide desktop background"
 msgstr "ಸ್ಥಳಾಂತರಿಸುವಾಗ ಬದಲಾಯಿಸುವಾಗ ಕುಲುಕಾಡು(&b)"
+
+#: plugins/stickykeys/stickykeys.cpp:23
+msgid ""
+"The Shift key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+
+#: plugins/stickykeys/stickykeys.cpp:24
+msgid ""
+"The Control key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+
+#: plugins/stickykeys/stickykeys.cpp:25
+msgid ""
+"The Alt key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+
+#: plugins/stickykeys/stickykeys.cpp:26
+msgid ""
+"The Meta key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
+
+#: plugins/stickykeys/stickykeys.cpp:27
+msgid ""
+"The AltGr key has been locked and is now active for all of the following "
+"keypresses."
+msgstr ""
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
