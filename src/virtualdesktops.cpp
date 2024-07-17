@@ -552,17 +552,8 @@ void VirtualDesktopManager::setCount(uint count)
     const uint oldCount = m_desktops.count();
     // this explicit check makes it more readable
     if ((uint)m_desktops.count() > count) {
-        const auto desktopsToRemove = m_desktops.mid(count);
-        m_desktops.resize(count);
-        if (m_current && desktopsToRemove.contains(m_current)) {
-            VirtualDesktop *oldCurrent = m_current;
-            m_current = m_desktops.last();
-            Q_EMIT currentChanged(oldCurrent, m_current);
-        }
-        for (auto desktop : desktopsToRemove) {
-            Q_EMIT desktopRemoved(desktop);
-            desktop->deleteLater();
-        }
+        // If the count is being reduced, remove the extra desktops
+        pruneDesktops(count);
     } else {
         while (uint(m_desktops.count()) < count) {
             auto vd = new VirtualDesktop(this);
@@ -601,6 +592,25 @@ void VirtualDesktopManager::setCount(uint count)
         Q_EMIT desktopAdded(vd);
     }
     Q_EMIT countChanged(oldCount, m_desktops.count());
+}
+
+void VirtualDesktopManager::pruneDesktops(uint count)
+{
+    const auto desktopsToRemove = m_desktops.mid(count);
+    m_desktops.resize(count);
+
+    if (m_current && desktopsToRemove.contains(m_current)) {
+        // If the current desktop is being removed, update the current desktop
+        VirtualDesktop *oldCurrent = m_current;
+        m_current = m_desktops.last();
+        Q_EMIT currentChanged(oldCurrent, m_current);
+    }
+
+    for (auto desktop : desktopsToRemove) {
+        // Delete the removed desktops
+        Q_EMIT desktopRemoved(desktop);
+        desktop->deleteLater();
+    }
 }
 
 uint VirtualDesktopManager::rows() const

@@ -513,6 +513,18 @@ private:
      */
     QAction *addAction(const QString &name, const QString &label, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
 
+    /**
+     * Removes excess desktops from the virtual desktop manager.
+     *
+     * This function removes excess desktops from the virtual desktop manager, keeping only the specified number of desktops.
+     * If the current desktop is among the desktops being removed, the current desktop is updated to the last remaining desktop.
+     * The `currentChanged` signal is emitted to notify listeners of the change.
+     * Removed desktops are deleted using `deleteLater()`.
+     *
+     * @param count The number of desktops to keep.
+     */
+    void pruneDesktops(uint count);
+
     QList<VirtualDesktop *> m_desktops;
     QPointer<VirtualDesktop> m_current;
     quint32 m_rows = 2;
