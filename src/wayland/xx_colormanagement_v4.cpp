@@ -178,11 +178,13 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_create(R
         wl_resource_post_error(resource->handle, error::error_incomplete_set, "colorimetry or transfer function missing");
         return;
     }
-    if (m_transferFunction != TransferFunction::PerceptualQuantizer && (m_maxAverageLuminance || m_maxPeakBrightness)) {
+    if (m_transferFunction != TransferFunction::PerceptualQuantizer && (m_maxCll || m_maxFall)) {
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
-    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, m_maxAverageLuminance.value_or(100), 0, m_maxAverageLuminance.value_or(100), m_maxPeakBrightness.value_or(100)));
+    const std::optional<double> maxFrameAverageLuminance = m_maxFall ? m_maxFall : m_maxMasteringLuminance;
+    const std::optional<double> maxHdrLuminance = m_maxCll ? m_maxCll : m_maxMasteringLuminance;
+    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, *m_transferFunction, 100, m_minMasteringLuminance.value_or(0), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
     wl_resource_destroy(resource->handle);
 }
 
@@ -245,7 +247,8 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_prim
         QVector2D(r_x / 10'000.0, r_y / 10'000.0),
         QVector2D(g_x / 10'000.0, g_y / 10'000.0),
         QVector2D(b_x / 10'000.0, b_y / 10'000.0),
-        QVector2D(w_x / 10'000.0, w_y / 10'000.0)};
+        QVector2D(w_x / 10'000.0, w_y / 10'000.0),
+    };
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_luminances(Resource *resource, uint32_t min_lum, uint32_t max_lum, uint32_t reference_lum)
@@ -255,22 +258,50 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_lumi
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_mastering_display_primaries(Resource *resource, int32_t r_x, int32_t r_y, int32_t g_x, int32_t g_y, int32_t b_x, int32_t b_y, int32_t w_x, int32_t w_y)
 {
-    // ignored (at least for now)
+    if (m_masteringColorimetry) {
+        wl_resource_post_error(resource->handle, error::error_already_set, "mastering display primaries are already set");
+        return;
+    }
+    m_masteringColorimetry = Colorimetry{
+        QVector2D(r_x / 10'000.0, r_y / 10'000.0),
+        QVector2D(g_x / 10'000.0, g_y / 10'000.0),
+        QVector2D(b_x / 10'000.0, b_y / 10'000.0),
+        QVector2D(w_x / 10'000.0, w_y / 10'000.0),
+    };
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_mastering_luminance(Resource *resource, uint32_t min_lum, uint32_t max_lum)
 {
-    // ignored (at least for now)
+    if (m_minMasteringLuminance) {
+        wl_resource_post_error(resource->handle, error::error_already_set, "mastering luminance is already set");
+        return;
+    }
+    m_minMasteringLuminance = min_lum / 10'000.0;
+    if (max_lum > 0) {
+        m_maxMasteringLuminance = max_lum;
+    }
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_max_cll(Resource *resource, uint32_t max_cll)
 {
-    m_maxPeakBrightness = max_cll;
+    if (m_maxCll) {
+        wl_resource_post_error(resource->handle, error::error_already_set, "max_cll is already set");
+        return;
+    }
+    if (max_cll > 0) {
+        m_maxCll = max_cll;
+    }
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_max_fall(Resource *resource, uint32_t max_fall)
 {
-    m_maxAverageLuminance = max_fall;
+    if (m_maxFall) {
+        wl_resource_post_error(resource->handle, error::error_already_set, "max_fall is already set");
+        return;
+    }
+    if (max_fall) {
+        m_maxFall = max_fall;
+    }
 }
 
 XXImageDescriptionV4::XXImageDescriptionV4(wl_client *client, uint32_t id, uint32_t version, const ColorDescription &color)
@@ -321,6 +352,7 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
                                                 round(c.green().x()), round(c.green().y()),
                                                 round(c.blue().x()), round(c.blue().y()),
                                                 round(c.white().x()), round(c.white().y()));
+    xx_image_description_info_v4_send_target_luminance(resource, m_description.minLuminance(), m_description.maxHdrLuminance().value_or(800));
     xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description.transferFunction()));
     xx_image_description_info_v4_send_done(resource);
     wl_resource_destroy(resource);

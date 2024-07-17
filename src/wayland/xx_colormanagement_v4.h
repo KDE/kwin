@@ -85,8 +85,13 @@ private:
 
     std::optional<Colorimetry> m_colorimetry;
     std::optional<TransferFunction> m_transferFunction;
-    std::optional<double> m_maxAverageLuminance;
-    std::optional<double> m_maxPeakBrightness;
+
+    // mastering display information
+    std::optional<Colorimetry> m_masteringColorimetry;
+    std::optional<double> m_minMasteringLuminance;
+    std::optional<double> m_maxMasteringLuminance;
+    std::optional<double> m_maxCll;
+    std::optional<double> m_maxFall;
 };
 
 class XXImageDescriptionV4 : private QtWaylandServer::xx_image_description_v4
