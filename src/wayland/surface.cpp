@@ -25,7 +25,7 @@
 #include "surface_p.h"
 #include "transaction.h"
 #include "utils/resource.h"
-#include "xx_colormanagement_v3.h"
+#include "xx_colormanagement_v4.h"
 
 #include <wayland-server.h>
 // std
@@ -1116,8 +1116,8 @@ void SurfaceInterface::setPreferredColorDescription(const ColorDescription &desc
     if (d->frogColorManagement) {
         d->frogColorManagement->setPreferredColorDescription(descr);
     }
-    if (d->xxColorSurface) {
-        d->xxColorSurface->setPreferredColorDescription(descr);
+    for (const auto feedbackSurface : std::as_const(d->xxColorFeedbacks)) {
+        feedbackSurface->setPreferredColorDescription(descr);
     }
     for (auto child : std::as_const(d->current->subsurface.below)) {
         child->surface()->setPreferredColorDescription(descr);

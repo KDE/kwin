@@ -60,7 +60,7 @@ class XdgPopupWindow;
 class XdgSurfaceWindow;
 class XdgToplevelWindow;
 class PresentationTime;
-class XXColorManagerV3;
+class XXColorManagerV4;
 class LinuxDrmSyncObjV1Interface;
 class RenderBackend;
 
@@ -288,7 +288,7 @@ private:
     QHash<Output *, OutputDeviceV2Interface *> m_waylandOutputDevices;
     DrmLeaseManagerV1 *m_leaseManager = nullptr;
     OutputOrderV1Interface *m_outputOrder = nullptr;
-    XXColorManagerV3 *m_xxColorManager = nullptr;
+    XXColorManagerV4 *m_xxColorManager = nullptr;
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
     ExternalBrightnessV1 *m_externalBrightness = nullptr;
     KWIN_SINGLETON(WaylandServer)

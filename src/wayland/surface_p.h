@@ -27,7 +27,8 @@ class TearingControlV1Interface;
 class FractionalScaleV1Interface;
 class FrogColorManagementSurfaceV1;
 class PresentationTimeFeedback;
-class XXColorSurfaceV3;
+class XXColorSurfaceV4;
+class XXColorFeedbackSurfaceV4;
 class LinuxDrmSyncObjSurfaceV1;
 
 struct SurfaceState
@@ -176,7 +177,8 @@ public:
     ClientConnection *client = nullptr;
     TearingControlV1Interface *tearing = nullptr;
     FrogColorManagementSurfaceV1 *frogColorManagement = nullptr;
-    XXColorSurfaceV3 *xxColorSurface = nullptr;
+    XXColorSurfaceV4 *xxColorSurface = nullptr;
+    QList<XXColorFeedbackSurfaceV4 *> xxColorFeedbacks;
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
 
     struct
