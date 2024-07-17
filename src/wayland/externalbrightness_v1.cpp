@@ -60,7 +60,8 @@ ExternalBrightnessDeviceV1::~ExternalBrightnessDeviceV1()
 
 void ExternalBrightnessDeviceV1::setBrightness(double brightness)
 {
-    const uint32_t val = std::clamp<int64_t>(std::round(brightness * m_maxBrightness), 0, m_maxBrightness);
+    const uint32_t minBrightness = m_internal ? 1 : 0; // some laptop screens turn off at brightness 0
+    const uint32_t val = std::round(std::lerp(minBrightness, m_maxBrightness, std::clamp(brightness, 0.0, 1.0)));
     send_requested_brightness(val);
 }
 
