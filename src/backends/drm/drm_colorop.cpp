@@ -11,6 +11,8 @@
 #include "drm_commit.h"
 #include "drm_object.h"
 
+#include <ranges>
+
 namespace KWin
 {
 
@@ -202,9 +204,10 @@ static uint64_t doubleToFixed(double value)
 
 void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale)
 {
+    // NOTE that matrix operations have to be added in reverse order to get the correct result!
     QMatrix4x4 result;
-    result.scale(1.0 / inputScale);
-    for (const auto &op : operations) {
+    result.scale(outputScale);
+    for (const auto &op : operations | std::views::reverse) {
         if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
             result *= matrix->mat;
         } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
@@ -213,6 +216,7 @@ void LegacyMatrixColorOp::program(DrmAtomicCommit *commit, std::span<const Color
             Q_UNREACHABLE();
         }
     }
+    result.scale(1.0 / inputScale);
     drm_color_ctm data = {
         .matrix = {
             doubleToFixed(result(0, 0)), doubleToFixed(result(0, 1)), doubleToFixed(result(0, 2)), //
