@@ -41,6 +41,9 @@ FocusScope {
     property real overviewVal: 0
     property real gridVal: 0
 
+    // when the current window is fulscreen, we don't want to ever show the panel
+    property bool currentWindowIsFullScreen: false
+
     states: [
         State {
             name: "initial"
@@ -672,6 +675,25 @@ FocusScope {
 
                         opacity: 1 - downGestureProgress
                         onDownGestureTriggered: window.closeWindow()
+
+                        Connections {
+                            target: window
+                            function onActiveChanged() {
+                                if (window.active) {
+                                    container.currentWindowIsFullScreen = window.fullScreen;
+                                }
+                            }
+                            function onFullScreenChanged() {
+                                if (window.active) {
+                                    container.currentWindowIsFullScreen = window.fullScreen;
+                                }
+                            }
+                        }
+                        Component.onCompleted: {
+                            if (window.active) {
+                                container.currentWindowIsFullScreen = window.fullScreen;
+                            }
+                        }
                         TapHandler {
                             acceptedPointerTypes: PointerDevice.Generic | PointerDevice.Pen
                             acceptedButtons: Qt.MiddleButton | Qt.RightButton
@@ -768,7 +790,7 @@ FocusScope {
 
         KWinComponents.WindowThumbnail {
             id: windowThumbnail
-            visible: !model.window.hidden && opacity > 0
+            visible: !model.window.hidden && opacity > 0 && !currentWindowIsFullScreen
             wId: model.window.internalId
             x: model.window.x - targetScreen.geometry.x
             y: model.window.y - targetScreen.geometry.y
