@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1684863 $
+# Version: $Revision: 1684925 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-16 02:25+0000\n"
+"POT-Creation-Date: 2024-07-17 02:28+0000\n"
 "PO-Revision-Date: 2024-05-26 11:13+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2251,7 +2251,7 @@ msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Wycofaj/przywróć nocne barwy"
 
-#: plugins/nightlight/nightlightmanager.cpp:460
+#: plugins/nightlight/nightlightmanager.cpp:456
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Podgląd temperatury kolorów"
