@@ -1646,12 +1646,9 @@ public:
      */
     void create(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values);
     /**
-     * Frees the existing window and starts to manage the new @p window.
-     * If @p destroy is @c true the new managed window will be destroyed together with this
-     * object or when reset is called again. If @p destroy is @c false the window will not
-     * be destroyed. It is then the responsibility of the caller to destroy the window.
+     * Frees the existing window.
      */
-    void reset(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true, const QRect &geometry = QRect());
+    void reset();
     /**
      * Wraps the Window around the window with the specified @p windowId and @p geometry.
      *
@@ -1823,12 +1820,12 @@ inline xcb_window_t Window::doCreate(uint8_t depth, xcb_window_t parent, const Q
     return w;
 }
 
-inline void Window::reset(xcb_window_t window, bool shouldDestroy, const QRect &geometry)
+inline void Window::reset()
 {
     destroy();
-    m_window = window;
-    m_destroy = shouldDestroy;
-    m_geometry = geometry;
+    m_window = XCB_WINDOW_NONE;
+    m_destroy = true;
+    m_geometry = QRect();
 }
 
 inline void Window::wrap(xcb_window_t windowId, const QRect &geometry)
