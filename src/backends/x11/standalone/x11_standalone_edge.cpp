@@ -24,8 +24,6 @@ namespace KWin
 
 WindowBasedEdge::WindowBasedEdge(ScreenEdges *parent)
     : Edge(parent)
-    , m_window(XCB_WINDOW_NONE)
-    , m_approachWindow(XCB_WINDOW_NONE)
 {
 }
 

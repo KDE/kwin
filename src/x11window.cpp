@@ -1551,7 +1551,7 @@ void X11Window::updateShape()
     Q_EMIT shapeChanged();
 }
 
-static Xcb::Window shape_helper_window(XCB_WINDOW_NONE);
+static Xcb::Window shape_helper_window;
 
 void X11Window::cleanupX11()
 {

@@ -1569,18 +1569,9 @@ class Window
 {
 public:
     /**
-     * Takes over responsibility of @p window. If @p window is not provided an invalid Window is
-     * created. Use @ref create to set an xcb_window_t later on.
-     *
-     * If @p destroy is @c true the window will be destroyed together with this object, if @c false
-     * the window will be kept around. This is useful if you are not interested in the RAII capabilities
-     * but still want to use a window like an object.
-     *
-     * @param window The window to manage.
-     * @param destroy Whether the window should be destroyed together with the object.
-     * @see reset
+     * Creates an invalid Window.
      */
-    Window(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true);
+    Window();
     /**
      * Creates an xcb_window_t and manages it. It's a convenient method to create a window with
      * depth, class and visual being copied from parent and border being @c 0.
@@ -1739,9 +1730,9 @@ private:
     QRect m_geometry;
 };
 
-inline Window::Window(xcb_window_t window, bool destroy)
-    : m_window(window)
-    , m_destroy(destroy)
+inline Window::Window()
+    : m_window(XCB_WINDOW_NONE)
+    , m_destroy(true)
 {
 }
 
