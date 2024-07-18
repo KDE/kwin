@@ -293,6 +293,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
 
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
+        auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
         renderLoop->beginPaint();
 
         QRegion surfaceDamage = primaryLayer->repaints();
@@ -340,6 +341,8 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         }
 
         postPaintPass(superLayer);
+        totalTimeQuery->end();
+        frame->addRenderTimeQuery(std::move(totalTimeQuery));
     }
 
     m_backend->present(output, frame);
