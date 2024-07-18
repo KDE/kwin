@@ -1600,6 +1600,20 @@ public:
      * @param parent The parent window
      */
     Window(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    /**
+     * Creates a new window for which the responsibility is taken over. If a window had been managed
+     * before it is freed.
+     *
+     * Border is @c 0.
+     * @param depth The depth for the window to be created
+     * @param geometry The geometry for the window to be created
+     * @param windowClass The window class
+     * @param visual The visual of the window to be created
+     * @param mask The mask for the values
+     * @param values The values to be passed to xcb_create_window
+     * @param parent The parent window
+     */
+    Window(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values);
     Window(const Window &other) = delete;
     ~Window();
 
@@ -1626,6 +1640,20 @@ public:
      * @param parent The parent window
      */
     void create(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    /**
+     * Creates a new window for which the responsibility is taken over. If a window had been managed
+     * before it is freed.
+     *
+     * Border is @c 0.
+     * @param depth The depth for the window to be created
+     * @param geometry The geometry for the window to be created
+     * @param windowClass The window class
+     * @param visual The visual of the window to be created
+     * @param mask The mask for the values
+     * @param values The values to be passed to xcb_create_window
+     * @param parent The parent window
+     */
+    void create(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values);
     /**
      * Frees the existing window and starts to manage the new @p window.
      * If @p destroy is @c true the new managed window will be destroyed together with this
@@ -1704,7 +1732,7 @@ public:
     operator xcb_window_t() const;
 
 private:
-    xcb_window_t doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask = 0, const uint32_t *values = nullptr, xcb_window_t parent = rootWindow());
+    xcb_window_t doCreate(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values);
     void destroy();
     xcb_window_t m_window;
     bool m_destroy;
@@ -1718,13 +1746,19 @@ inline Window::Window(xcb_window_t window, bool destroy)
 }
 
 inline Window::Window(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
-    : m_window(doCreate(geometry, XCB_COPY_FROM_PARENT, mask, values, parent))
+    : m_window(doCreate(XCB_COPY_FROM_PARENT, parent, geometry, XCB_COPY_FROM_PARENT, XCB_COPY_FROM_PARENT, mask, values))
     , m_destroy(true)
 {
 }
 
 inline Window::Window(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
-    : m_window(doCreate(geometry, windowClass, mask, values, parent))
+    : m_window(doCreate(XCB_COPY_FROM_PARENT, parent, geometry, windowClass, XCB_COPY_FROM_PARENT, mask, values))
+    , m_destroy(true)
+{
+}
+
+inline Window::Window(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values)
+    : m_window(doCreate(depth, parent, geometry, windowClass, visual, mask, values))
     , m_destroy(true)
 {
 }
@@ -1756,24 +1790,38 @@ inline Window::operator xcb_window_t() const
 inline void Window::create(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
 {
     destroy();
-    m_window = doCreate(geometry, windowClass, mask, values, parent);
+    m_window = doCreate(XCB_COPY_FROM_PARENT, parent, geometry, windowClass, XCB_COPY_FROM_PARENT, mask, values);
 }
 
 inline void Window::create(const QRect &geometry, uint32_t mask, const uint32_t *values, xcb_window_t parent)
 {
-    create(geometry, XCB_COPY_FROM_PARENT, mask, values, parent);
+    destroy();
+    m_window = doCreate(XCB_COPY_FROM_PARENT, parent, geometry, XCB_COPY_FROM_PARENT, XCB_COPY_FROM_PARENT, mask, values);
 }
 
-inline xcb_window_t Window::doCreate(const QRect &geometry, uint16_t windowClass, uint32_t mask, const uint32_t *values, xcb_window_t parent)
+inline void Window::create(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values)
+{
+    destroy();
+    m_window = doCreate(depth, parent, geometry, windowClass, visual, mask, values);
+}
+
+inline xcb_window_t Window::doCreate(uint8_t depth, xcb_window_t parent, const QRect &geometry, uint16_t windowClass, xcb_visualid_t visual, uint32_t mask, const uint32_t *values)
 {
     m_geometry = geometry;
     xcb_window_t w = xcb_generate_id(connection());
-    xcb_create_window(connection(), XCB_COPY_FROM_PARENT, w, parent,
+    xcb_create_window(connection(),
+                      depth,
+                      w,
+                      parent,
                       m_geometry.x(),
                       m_geometry.y(),
                       m_geometry.width(),
                       m_geometry.height(),
-                      0, windowClass, XCB_COPY_FROM_PARENT, mask, values);
+                      0,
+                      windowClass,
+                      visual,
+                      mask,
+                      values);
     return w;
 }
 
