@@ -185,31 +185,31 @@ private:
     qreal m_maxScale = 1.0;
 };
 
-class ExpoCell : public QObject
+class ExpoCell : public QQuickItem
 {
     Q_OBJECT
     Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
-    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled NOTIFY enabledChanged)
+    Q_PROPERTY(QQuickItem *contentItem READ contentItem WRITE setContentItem NOTIFY contentItemChanged)
+    Q_PROPERTY(qreal progress READ progress WRITE setProgress NOTIFY progressChanged)
     Q_PROPERTY(int naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
     Q_PROPERTY(int naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
     Q_PROPERTY(int naturalWidth READ naturalWidth WRITE setNaturalWidth NOTIFY naturalWidthChanged)
     Q_PROPERTY(int naturalHeight READ naturalHeight WRITE setNaturalHeight NOTIFY naturalHeightChanged)
-    Q_PROPERTY(int x READ x NOTIFY xChanged)
-    Q_PROPERTY(int y READ y NOTIFY yChanged)
-    Q_PROPERTY(int width READ width NOTIFY widthChanged)
-    Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(QString persistentKey READ persistentKey WRITE setPersistentKey NOTIFY persistentKeyChanged)
     Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
 
 public:
-    explicit ExpoCell(QObject *parent = nullptr);
+    explicit ExpoCell(QQuickItem *parent = nullptr);
     ~ExpoCell() override;
-
-    bool isEnabled() const;
-    void setEnabled(bool enabled);
 
     ExpoLayout *layout() const;
     void setLayout(ExpoLayout *layout);
+
+    QQuickItem *contentItem() const;
+    void setContentItem(QQuickItem *item);
+
+    qreal progress() const;
+    void setProgress(qreal progress);
 
     int naturalX() const;
     void setNaturalX(int x);
@@ -226,18 +226,6 @@ public:
     QRect naturalRect() const;
     QMargins margins() const;
 
-    int x() const;
-    void setX(int x);
-
-    int y() const;
-    void setY(int y);
-
-    int width() const;
-    void setWidth(int width);
-
-    int height() const;
-    void setHeight(int height);
-
     QString persistentKey() const;
     void setPersistentKey(const QString &key);
 
@@ -249,31 +237,26 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void layoutChanged();
-    void enabledChanged();
+    void contentItemChanged();
+    void progressChanged();
     void naturalXChanged();
     void naturalYChanged();
     void naturalWidthChanged();
     void naturalHeightChanged();
-    void xChanged();
-    void yChanged();
-    void widthChanged();
-    void heightChanged();
     void persistentKeyChanged();
     void bottomMarginChanged();
 
 private:
+    inline void updateContentItemGeometry();
     QString m_persistentKey;
-    bool m_enabled = true;
     int m_naturalX = 0;
     int m_naturalY = 0;
     int m_naturalWidth = 0;
     int m_naturalHeight = 0;
     QMargins m_margins;
-    std::optional<int> m_x;
-    std::optional<int> m_y;
-    std::optional<int> m_width;
-    std::optional<int> m_height;
     QPointer<ExpoLayout> m_layout;
+    QPointer<QQuickItem> m_contentItem;
+    qreal m_progress = 1.0;
 };
 
 /**

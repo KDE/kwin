@@ -11,9 +11,20 @@
 #include <deque>
 #include <tuple>
 
-ExpoCell::ExpoCell(QObject *parent)
-    : QObject(parent)
+ExpoCell::ExpoCell(QQuickItem *parent)
+    : QQuickItem(parent)
 {
+    connect(this, &ExpoCell::visibleChanged, this, [this]() {
+        if (isVisible()) {
+            if (m_layout) {
+                m_layout->addCell(this);
+            }
+        } else {
+            if (m_layout) {
+                m_layout->removeCell(this);
+            }
+        }
+    });
 }
 
 ExpoCell::~ExpoCell()
@@ -35,32 +46,61 @@ void ExpoCell::setLayout(ExpoLayout *layout)
         m_layout->removeCell(this);
     }
     m_layout = layout;
-    if (m_layout && m_enabled) {
+    if (m_layout && isVisible()) {
         m_layout->addCell(this);
     }
+    updateContentItemGeometry();
     Q_EMIT layoutChanged();
 }
 
-bool ExpoCell::isEnabled() const
+void ExpoCell::updateContentItemGeometry()
 {
-    return m_enabled;
+    if (!m_contentItem) {
+        return;
+    }
+    const QPointF &pos = mapToScene(QPointF());
+
+    m_contentItem->setX(pos.x() * m_progress + m_naturalX * (1.0 - m_progress));
+    m_contentItem->setY(pos.y() * m_progress + m_naturalY * (1.0 - m_progress));
+    m_contentItem->setSize({width() * m_progress + m_naturalWidth * (1.0 - m_progress),
+                            height() * m_progress + m_naturalHeight * (1.0 - m_progress)});
 }
 
-void ExpoCell::setEnabled(bool enabled)
+QQuickItem *ExpoCell::contentItem() const
 {
-    if (m_enabled != enabled) {
-        m_enabled = enabled;
-        if (enabled) {
-            if (m_layout) {
-                m_layout->addCell(this);
-            }
-        } else {
-            if (m_layout) {
-                m_layout->removeCell(this);
-            }
-        }
-        Q_EMIT enabledChanged();
+    return m_contentItem;
+}
+
+void ExpoCell::setContentItem(QQuickItem *item)
+{
+    if (m_contentItem == item) {
+        return;
     }
+
+    m_contentItem = item;
+    /* if (item) {
+         item->setParentItem(this);
+     }*/
+    updateContentItemGeometry();
+
+    Q_EMIT contentItemChanged();
+}
+
+qreal ExpoCell::progress() const
+{
+    return m_progress;
+}
+
+void ExpoCell::setProgress(qreal progress)
+{
+    if (m_progress == progress) {
+        return;
+    }
+
+    m_progress = progress;
+    updateContentItemGeometry();
+
+    Q_EMIT progressChanged();
 }
 
 void ExpoCell::update()
@@ -134,58 +174,6 @@ QRect ExpoCell::naturalRect() const
 QMargins ExpoCell::margins() const
 {
     return m_margins;
-}
-
-int ExpoCell::x() const
-{
-    return m_x.value_or(0);
-}
-
-void ExpoCell::setX(int x)
-{
-    if (m_x != x) {
-        m_x = x;
-        Q_EMIT xChanged();
-    }
-}
-
-int ExpoCell::y() const
-{
-    return m_y.value_or(0);
-}
-
-void ExpoCell::setY(int y)
-{
-    if (m_y != y) {
-        m_y = y;
-        Q_EMIT yChanged();
-    }
-}
-
-int ExpoCell::width() const
-{
-    return m_width.value_or(0);
-}
-
-void ExpoCell::setWidth(int width)
-{
-    if (m_width != width) {
-        m_width = width;
-        Q_EMIT widthChanged();
-    }
-}
-
-int ExpoCell::height() const
-{
-    return m_height.value_or(0);
-}
-
-void ExpoCell::setHeight(int height)
-{
-    if (m_height != height) {
-        m_height = height;
-        Q_EMIT heightChanged();
-    }
 }
 
 QString ExpoCell::persistentKey() const

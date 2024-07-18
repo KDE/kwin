@@ -643,7 +643,28 @@ FocusScope {
                                     ~KWinComponents.WindowFilterModel.Notification &
                                     ~KWinComponents.WindowFilterModel.CriticalNotification
                     }
-                    delegate: WindowHeapDelegate {
+                    delegate: ExpoCell {
+                        id: thumb
+                        required property QtObject window
+                        property bool animationEnabled
+                        layout: heap.layout
+                        naturalX: thumb.window.x
+                        naturalY: thumb.window.y
+                        naturalWidth: thumb.window.width
+                        naturalHeight: thumb.window.height
+                        persistentKey: thumb.window.internalId
+                        progress: overviewVal
+                        contentItem: Rectangle {
+                            PC3.Label {
+                                text: thumb.window.caption
+                            }
+                            parent: container
+                            color: "red"
+                            opacity: 0.8
+                        }
+                    }
+
+                    /*WindowHeapDelegate {
                         windowHeap: heap
 
                         // This is preferable over using gestureInProgress values since gridVal and
@@ -688,7 +709,7 @@ FocusScope {
                             }
                         }
                     }
-
+*/
                     MouseArea {
                         anchors.fill: parent
                         z: -1
