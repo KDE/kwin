@@ -543,6 +543,7 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
 
 void VirtualDesktopManager::setCount(uint count)
 {
+    // Ensure the count is within the valid range
     count = std::clamp<uint>(count, 1, VirtualDesktopManager::maximum());
     if (count == uint(m_desktops.count())) {
         // nothing to change
@@ -550,7 +551,6 @@ void VirtualDesktopManager::setCount(uint count)
     }
     QList<VirtualDesktop *> newDesktops;
     const uint oldCount = m_desktops.count();
-    // this explicit check makes it more readable
     if ((uint)m_desktops.count() > count) {
         // If the count is being reduced, remove the extra desktops
         pruneDesktops(count);
@@ -560,6 +560,7 @@ void VirtualDesktopManager::setCount(uint count)
     }
 
     if (!m_current) {
+        // If there is no current desktop, set the first desktop as the current one
         m_current = m_desktops.at(0);
     }
 
