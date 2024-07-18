@@ -231,9 +231,14 @@ void EisContext::handleEvents()
             const bool press = eis_event_button_get_is_press(event);
             qCDebug(KWIN_EIS) << device->name() << "button" << button << press;
             if (press) {
-                device->pressedButtons.push_back(button);
+                if (device->pressedButtons.contains(button)) {
+                    continue;
+                }
+                device->pressedButtons.insert(button);
             } else {
-                std::erase(device->pressedButtons, button);
+                if (!device->pressedButtons.remove(button)) {
+                    continue;
+                }
             }
             Q_EMIT device->pointerButtonChanged(button, press ? InputRedirection::PointerButtonPressed : InputRedirection::PointerButtonReleased, currentTime(), device);
             break;
@@ -285,9 +290,14 @@ void EisContext::handleEvents()
             const bool press = eis_event_keyboard_get_key_is_press(event);
             qCDebug(KWIN_EIS) << device->name() << "key" << key << press;
             if (press) {
-                device->pressedButtons.push_back(key);
+                if (device->pressedKeys.contains(key)) {
+                    continue;
+                }
+                device->pressedKeys.insert(key);
             } else {
-                std::erase(device->pressedButtons, key);
+                if (!device->pressedKeys.remove(key)) {
+                    continue;
+                }
             }
             Q_EMIT device->keyChanged(key, press ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, currentTime(), device);
             break;

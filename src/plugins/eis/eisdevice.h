@@ -26,8 +26,8 @@ public:
     }
     void changeDevice(eis_device *device);
 
-    std::vector<quint32> pressedButtons;
-    std::vector<quint32> pressedKeys;
+    QSet<quint32> pressedButtons;
+    QSet<quint32> pressedKeys;
     std::vector<int> activeTouches;
 
     QString sysName() const override;
