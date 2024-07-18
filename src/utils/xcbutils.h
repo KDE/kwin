@@ -1976,16 +1976,6 @@ static inline void lowerWindow(xcb_window_t window)
     xcb_configure_window(connection(), window, XCB_CONFIG_WINDOW_STACK_MODE, values);
 }
 
-static inline WindowId createInputWindow(const QRect &geometry, uint32_t mask, const uint32_t *values)
-{
-    WindowId window = xcb_generate_id(connection());
-    xcb_create_window(connection(), 0, window, rootWindow(),
-                      geometry.x(), geometry.y(), geometry.width(), geometry.height(),
-                      0, XCB_WINDOW_CLASS_INPUT_ONLY,
-                      XCB_COPY_FROM_PARENT, mask, values);
-    return window;
-}
-
 static inline void restackWindows(const QList<xcb_window_t> &windows)
 {
     if (windows.count() < 2) {

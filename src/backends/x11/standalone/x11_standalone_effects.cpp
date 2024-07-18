@@ -73,7 +73,7 @@ void EffectsHandlerX11::doStartMouseInterception(Qt::CursorShape shape)
         const uint32_t values[] = {
             true,
             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION};
-        m_mouseInterceptionWindow.reset(Xcb::createInputWindow(geo, mask, values));
+        m_mouseInterceptionWindow.create(geo, XCB_WINDOW_CLASS_INPUT_ONLY, mask, values);
         defineCursor(shape);
     } else {
         defineCursor(shape);
