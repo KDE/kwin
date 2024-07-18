@@ -1225,18 +1225,8 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
         | XCB_CW_COLORMAP
         | XCB_CW_CURSOR;
 
-    // Create the frame window
-    xcb_window_t frame = xcb_generate_id(conn);
-    xcb_create_window(conn, depth, frame, kwinApp()->x11RootWindow(), 0, 0, 1, 1, 0,
-                      XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
-    m_frame.reset(frame);
-
-    // Create the wrapper window
-    xcb_window_t wrapperId = xcb_generate_id(conn);
-    xcb_create_window(conn, depth, wrapperId, frame, 0, 0, 1, 1, 0,
-                      XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
-    m_wrapper.reset(wrapperId);
-
+    m_frame.create(depth, kwinApp()->x11RootWindow(), QRect(0, 0, 1, 1), XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
+    m_wrapper.create(depth, m_frame, QRect(0, 0, 1, 1), XCB_WINDOW_CLASS_INPUT_OUTPUT, visualid, cw_mask, cw_values);
     m_client.reparent(m_wrapper);
 
     // We could specify the event masks when we create the windows, but the original
