@@ -57,8 +57,8 @@ bool X11Output::setChannelFactors(const QVector3D &rgb)
         const double input = i / double(m_gammaRampSize - 1);
         const QVector3D output = pipeline.evaluate(QVector3D(input, input, input));
         red[i] = std::round(std::clamp(output.x(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
-        red[i] = std::round(std::clamp(output.y(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
-        green[i] = std::round(std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
+        green[i] = std::round(std::clamp(output.y(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
+        blue[i] = std::round(std::clamp(output.z(), 0.0f, 1.0f) * std::numeric_limits<uint16_t>::max());
     }
     xcb_randr_set_crtc_gamma(kwinApp()->x11Connection(), m_crtc, m_gammaRampSize, red.data(), green.data(), blue.data());
     return true;
