@@ -322,7 +322,9 @@ void XdgSurfaceWindow::installPlasmaShellSurface(PlasmaShellSurfaceInterface *sh
     m_plasmaShellSurface = shellSurface;
 
     auto updatePosition = [this, shellSurface] {
-        move(shellSurface->position());
+        if (!isInteractiveMoveResize()) {
+            move(shellSurface->position());
+        }
     };
     auto showUnderCursor = [this] {
         // Wait for the first commit
