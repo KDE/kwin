@@ -1653,6 +1653,13 @@ public:
      */
     void reset(xcb_window_t window = XCB_WINDOW_NONE, bool destroy = true, const QRect &geometry = QRect());
     /**
+     * Wraps the Window around the window with the specified @p windowId and @p geometry.
+     *
+     * The Window does not take the ownership of the window handle, it's the responsibility of the
+     * caller to release it at the appropriate time.
+     */
+    void wrap(xcb_window_t windowId, const QRect &geometry);
+    /**
      * @returns @c true if a window is managed, @c false otherwise.
      */
     bool isValid() const;
@@ -1821,6 +1828,14 @@ inline void Window::reset(xcb_window_t window, bool shouldDestroy, const QRect &
     destroy();
     m_window = window;
     m_destroy = shouldDestroy;
+    m_geometry = geometry;
+}
+
+inline void Window::wrap(xcb_window_t windowId, const QRect &geometry)
+{
+    destroy();
+    m_window = windowId;
+    m_destroy = true;
     m_geometry = geometry;
 }
 

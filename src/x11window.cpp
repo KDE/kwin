@@ -533,9 +533,9 @@ bool X11Window::track(xcb_window_t w)
 
     m_unmanaged = true;
 
-    m_frame.reset(w, false);
-    m_wrapper.reset(w, false);
-    m_client.reset(w, false);
+    m_frame.wrap(w, geo.rect());
+    m_wrapper.wrap(w, geo.rect());
+    m_client.wrap(w, geo.rect());
 
     Xcb::selectInput(w, attr->your_event_mask | XCB_EVENT_MASK_STRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE);
     m_bufferGeometry = Xcb::fromXNative(geo.rect());
@@ -1200,7 +1200,7 @@ void X11Window::embedClient(xcb_window_t w, xcb_visualid_t visualid, xcb_colorma
     Q_ASSERT(frameId() == XCB_WINDOW_NONE);
     Q_ASSERT(m_wrapper == XCB_WINDOW_NONE);
 
-    m_client.reset(w, false, nativeGeometry);
+    m_client.wrap(w, nativeGeometry);
 
     const uint32_t zero_value = 0;
 
