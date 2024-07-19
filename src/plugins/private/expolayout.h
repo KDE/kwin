@@ -8,6 +8,7 @@
 #pragma once
 
 #include <QList>
+#include <QMatrix4x4>
 #include <QObject>
 #include <QQuickItem>
 #include <QRect>
@@ -105,6 +106,7 @@ public:
     void setReady();
 
     Q_INVOKABLE void forceLayout();
+    Q_INVOKABLE void updateCellsMapping();
 
 protected:
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
@@ -190,7 +192,7 @@ class ExpoCell : public QQuickItem
     Q_OBJECT
     Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
     Q_PROPERTY(QQuickItem *contentItem READ contentItem WRITE setContentItem NOTIFY contentItemChanged)
-    Q_PROPERTY(qreal progress READ progress WRITE setProgress NOTIFY progressChanged)
+    Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor WRITE setPartialActivationFactor NOTIFY partialActivationFactorChanged)
     Q_PROPERTY(int naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
     Q_PROPERTY(int naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
     Q_PROPERTY(int naturalWidth READ naturalWidth WRITE setNaturalWidth NOTIFY naturalWidthChanged)
@@ -208,8 +210,10 @@ public:
     QQuickItem *contentItem() const;
     void setContentItem(QQuickItem *item);
 
-    qreal progress() const;
-    void setProgress(qreal progress);
+    void updateContentItemGeometry();
+
+    qreal partialActivationFactor() const;
+    void setPartialActivationFactor(qreal factor);
 
     int naturalX() const;
     void setNaturalX(int x);
@@ -238,7 +242,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     void layoutChanged();
     void contentItemChanged();
-    void progressChanged();
+    void partialActivationFactorChanged();
     void naturalXChanged();
     void naturalYChanged();
     void naturalWidthChanged();
@@ -247,7 +251,6 @@ Q_SIGNALS:
     void bottomMarginChanged();
 
 private:
-    inline void updateContentItemGeometry();
     QString m_persistentKey;
     int m_naturalX = 0;
     int m_naturalY = 0;
@@ -256,7 +259,7 @@ private:
     QMargins m_margins;
     QPointer<ExpoLayout> m_layout;
     QPointer<QQuickItem> m_contentItem;
-    qreal m_progress = 1.0;
+    qreal m_partialActivationFactor = 1.0;
 };
 
 /**

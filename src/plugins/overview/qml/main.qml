@@ -453,6 +453,9 @@ FocusScope {
                 property real deltaColumn: column - allDesktopHeaps.currentBackgroundItem.column - deltaX
                 property real deltaRow: row - allDesktopHeaps.currentBackgroundItem.row - deltaY
 
+                onDeltaColumnChanged: heap.layout.updateCellsMapping()
+                onDeltaRowChanged: heap.layout.updateCellsMapping()
+
                 Behavior on deltaColumn {
                     enabled: overviewVal > 0 && !container.desktopJustCreated
                     NumberAnimation {
@@ -499,6 +502,7 @@ FocusScope {
                     // Initially places transition desktops in a grid around the current one,
                     // and moves them slighly to avoid overlapping the UI
                     Translate {
+                        id: desktopTranslation
                         x: minX * 0.5 * overviewVal + deltaColumn * width * (1 - gridVal)
                         y: minY * 0.5 * overviewVal + deltaRow * height * (1 - gridVal)
                     }
@@ -643,24 +647,52 @@ FocusScope {
                                     ~KWinComponents.WindowFilterModel.Notification &
                                     ~KWinComponents.WindowFilterModel.CriticalNotification
                     }
-                    delegate: ExpoCell {
-                        id: thumb
-                        required property QtObject window
-                        property bool animationEnabled
+                    delegate: WindowHeapDelegate2 {
+                        windowHeap: heap
                         layout: heap.layout
-                        naturalX: thumb.window.x
-                        naturalY: thumb.window.y
-                        naturalWidth: thumb.window.width
-                        naturalHeight: thumb.window.height
-                        persistentKey: thumb.window.internalId
-                        progress: overviewVal
-                        contentItem: Rectangle {
-                            PC3.Label {
-                                text: thumb.window.caption
+                        naturalX: window.x + desktopTranslation.x
+                        naturalY: window.y + desktopTranslation.y
+                        partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
+                        contentItemParent: gridVal > 0 ? mainBackground : container
+
+                        // This is preferable over using gestureInProgress values since gridVal and
+                        // overviewVal are animated even after the gesture ends, and since the partial
+                        // activation factor follows those two values, this results in a more
+                        // fluent animation.
+                        gestureInProgress: !Number.isInteger(gridVal) || !Number.isInteger(overviewVal)
+
+                        targetScale: {
+                            if (!container.anyDesktopBar) return targetScale;
+                            if (overviewVal != 1) return targetScale;
+                            let coordinate = container.verticalDesktopBar ? 'x' : 'y'
+                            if (!activeDragHandler.active) {
+                                return targetScale; // leave it alone, so it won't affect transitions before they start
                             }
-                            parent: container
-                            color: "red"
-                            opacity: 0.8
+                            var localPressPosition = activeDragHandler.centroid.scenePressPosition[coordinate] - heap.layout.Kirigami.ScenePosition[coordinate];
+                            if (localPressPosition === 0) {
+                                return 0.1;
+                            } else {
+                                var localPosition = activeDragHandler.centroid.scenePosition[coordinate] - heap.layout.Kirigami.ScenePosition[coordinate];
+                                return Math.max(0.1, Math.min(localPosition / localPressPosition, 1));
+                            }
+                        }
+
+                        opacity: 1 - downGestureProgress
+                        onDownGestureTriggered: window.closeWindow()
+                        TapHandler {
+                            acceptedPointerTypes: PointerDevice.Generic | PointerDevice.Pen
+                            acceptedButtons: Qt.MiddleButton | Qt.RightButton
+                            onTapped: (eventPoint, button) => {
+                                if (button === Qt.MiddleButton) {
+                                    window.closeWindow();
+                                } else if (button === Qt.RightButton) {
+                                    if (window.desktops.length > 0) {
+                                        window.desktops = [];
+                                    } else {
+                                        window.desktops = [mainBackground.desktop];
+                                    }
+                                }
+                            }
                         }
                     }
 

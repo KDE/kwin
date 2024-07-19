@@ -11,11 +11,13 @@
 #include <deque>
 #include <tuple>
 
+#include <QSGTransformNode>
+
 ExpoCell::ExpoCell(QQuickItem *parent)
     : QQuickItem(parent)
 {
-    connect(this, &ExpoCell::visibleChanged, this, [this]() {
-        if (isVisible()) {
+    connect(this, &ExpoCell::enabledChanged, this, [this]() {
+        if (isEnabled()) {
             if (m_layout) {
                 m_layout->addCell(this);
             }
@@ -25,6 +27,15 @@ ExpoCell::ExpoCell(QQuickItem *parent)
             }
         }
     });
+
+    QQuickItem *ancestor = this;
+    while (ancestor) {
+        connect(ancestor, &QQuickItem::xChanged, this, &ExpoCell::updateContentItemGeometry);
+        connect(ancestor, &QQuickItem::yChanged, this, &ExpoCell::updateContentItemGeometry);
+        connect(ancestor, &QQuickItem::widthChanged, this, &ExpoCell::updateContentItemGeometry);
+        connect(ancestor, &QQuickItem::heightChanged, this, &ExpoCell::updateContentItemGeometry);
+        ancestor = ancestor->parentItem();
+    }
 }
 
 ExpoCell::~ExpoCell()
@@ -60,10 +71,10 @@ void ExpoCell::updateContentItemGeometry()
     }
     const QPointF &pos = mapToScene(QPointF());
 
-    m_contentItem->setX(pos.x() * m_progress + m_naturalX * (1.0 - m_progress));
-    m_contentItem->setY(pos.y() * m_progress + m_naturalY * (1.0 - m_progress));
-    m_contentItem->setSize({width() * m_progress + m_naturalWidth * (1.0 - m_progress),
-                            height() * m_progress + m_naturalHeight * (1.0 - m_progress)});
+    m_contentItem->setX(pos.x() * m_partialActivationFactor + m_naturalX * (1.0 - m_partialActivationFactor));
+    m_contentItem->setY(pos.y() * m_partialActivationFactor + m_naturalY * (1.0 - m_partialActivationFactor));
+    m_contentItem->setSize({width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
+                            height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)});
 }
 
 QQuickItem *ExpoCell::contentItem() const
@@ -81,26 +92,27 @@ void ExpoCell::setContentItem(QQuickItem *item)
     /* if (item) {
          item->setParentItem(this);
      }*/
+
     updateContentItemGeometry();
 
     Q_EMIT contentItemChanged();
 }
 
-qreal ExpoCell::progress() const
+qreal ExpoCell::partialActivationFactor() const
 {
-    return m_progress;
+    return m_partialActivationFactor;
 }
 
-void ExpoCell::setProgress(qreal progress)
+void ExpoCell::setPartialActivationFactor(qreal factor)
 {
-    if (m_progress == progress) {
+    if (m_partialActivationFactor == factor) {
         return;
     }
 
-    m_progress = progress;
+    m_partialActivationFactor = factor;
     updateContentItemGeometry();
 
-    Q_EMIT progressChanged();
+    Q_EMIT partialActivationFactorChanged();
 }
 
 void ExpoCell::update()
@@ -239,6 +251,13 @@ void ExpoLayout::setReady()
 void ExpoLayout::forceLayout()
 {
     updatePolish();
+}
+
+void ExpoLayout::updateCellsMapping()
+{
+    for (ExpoCell *cell : m_cells) {
+        cell->updateContentItemGeometry();
+    }
 }
 
 void ExpoLayout::addCell(ExpoCell *cell)
