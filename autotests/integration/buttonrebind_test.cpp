@@ -36,6 +36,8 @@ private Q_SLOTS:
     void testMouse_data();
     void testMouse();
 
+    void testDisabled();
+
 private:
     quint32 timestamp = 1;
 };
@@ -144,6 +146,35 @@ void TestButtonRebind::testMouse()
 
     QCOMPARE(buttonChangedSpy.count(), 1);
     QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), mouseButton);
+
+    Test::pointerButtonReleased(0x119, timestamp++);
+}
+
+void TestButtonRebind::testDisabled()
+{
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
+    buttonGroup.writeEntry("ExtraButton7", QStringList{"Disabled"}, KConfig::Notify);
+    buttonGroup.sync();
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+
+    const QRectF startGeometry = window->frameGeometry();
+    input()->pointer()->warp(startGeometry.center());
+
+    QVERIFY(enteredSpy.wait());
+
+    // 0x119 is Qt::ExtraButton7
+    Test::pointerButtonPressed(0x119, timestamp++);
+
+    // Qt::ExtraButton7 should not have been emitted if this button is disabled
+    QVERIFY(!buttonChangedSpy.wait(std::chrono::milliseconds(100)));
+    QCOMPARE(buttonChangedSpy.count(), 0);
 
     Test::pointerButtonReleased(0x119, timestamp++);
 }
