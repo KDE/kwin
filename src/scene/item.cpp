@@ -245,7 +245,13 @@ QRegion Item::mapToScene(const QRegion &region) const
     if (region.isEmpty()) {
         return QRegion();
     }
-    return m_itemToSceneTransform.map(region);
+
+    QRegion ret;
+    for (const QRect &rect : region) {
+        ret |= m_itemToSceneTransform.mapRect(QRectF(rect)).toAlignedRect();
+    }
+
+    return ret;
 }
 
 QRectF Item::mapToScene(const QRectF &rect) const
