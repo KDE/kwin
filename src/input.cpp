@@ -577,16 +577,18 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        QKeyEvent keyEvent(event->state == KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
-                           event->key,
-                           event->modifiers,
-                           event->nativeScanCode,
-                           event->nativeVirtualKey,
-                           0,
-                           event->text,
-                           event->state == KeyboardKeyState::Repeated);
-        keyEvent.setAccepted(false);
-        effects->grabbedKeyboardEvent(&keyEvent);
+        if (!passToInputMethod(event)) {
+            QKeyEvent keyEvent(event->state == KeyboardKeyState::Released ? QEvent::KeyRelease : QEvent::KeyPress,
+                            event->key,
+                            event->modifiers,
+                            event->nativeScanCode,
+                            event->nativeVirtualKey,
+                            0,
+                            event->text,
+                            event->state == KeyboardKeyState::Repeated);
+            keyEvent.setAccepted(false);
+            effects->grabbedKeyboardEvent(&keyEvent);
+        }
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override

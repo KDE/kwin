@@ -10,6 +10,7 @@
 
 #include "config-kwin.h"
 
+#include "effect/effecthandler.h"
 #include "input.h"
 #include "input_event.h"
 #include "inputpanelv1window.h"
@@ -22,6 +23,8 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+
+#include "internalinputmethodcontext.h"
 #include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
@@ -88,6 +91,8 @@ static std::vector<quint32> textToKey(const QString &text)
 
 InputMethod::InputMethod()
 {
+    m_internalContext = new InternalInputMethodContext(this);
+
     m_enabled = kwinApp()->config()->group(QStringLiteral("Wayland")).readEntry("VirtualKeyboardEnabled", true);
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
@@ -152,6 +157,12 @@ void InputMethod::init()
         connect(textInputV3, &TextInputV3Interface::enabledChanged, this, &InputMethod::textInputInterfaceV3EnabledChanged);
         connect(textInputV3, &TextInputV3Interface::enableRequested, this, &InputMethod::textInputInterfaceV3EnableRequested);
 
+        connect(m_internalContext, &InternalInputMethodContext::surroundingTextChanged, this, &InputMethod::surroundingTextChanged);
+        connect(m_internalContext, &InternalInputMethodContext::contentTypeChanged, this, &InputMethod::contentTypeChanged);
+        connect(m_internalContext, &InternalInputMethodContext::enabledChanged, this, &InputMethod::refreshActive);
+        connect(m_internalContext, &InternalInputMethodContext::showInputPanelRequested, this, &InputMethod::show);
+        connect(m_internalContext, &InternalInputMethodContext::hideInputPanelRequested, this, &InputMethod::hide);
+
         connect(input()->keyboard()->xkb(), &Xkb::modifierStateChanged, this, [this]() {
             m_hasPendingModifiers = true;
         });
@@ -206,8 +217,28 @@ void InputMethod::refreshActive()
             active = true;
         }
     }
-
+    if (m_internalContext->isEnabled()) {
+        active = true;
+    }
     setActive(active);
+}
+
+void InputMethod::forwardKeyToEffects(bool pressed, int keyCode, int keySym)
+{
+    if (!input()->keyboard()) {
+        return;
+    }
+    auto xkb = input()->keyboard()->xkb();
+
+    QKeyEvent event(pressed ? QEvent::KeyPress : QEvent::KeyRelease,
+                    xkb->toQtKey(keySym, keyCode, Qt::KeyboardModifiers()),
+                    xkb->modifiers(),
+                    keyCode,
+                    keySym,
+                    0,
+                    xkb->toString(keySym));
+    waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
+    effects->grabbedKeyboardEvent(&event);
 }
 
 void InputMethod::commitPendingText()
@@ -311,7 +342,9 @@ void InputMethod::handleFocusedSurfaceChanged()
 
     const auto client = focusedSurface ? focusedSurface->client() : nullptr;
     bool ret = seat->textInputV2()->clientSupportsTextInput(client)
-            || seat->textInputV3()->clientSupportsTextInput(client);
+            || seat->textInputV3()->clientSupportsTextInput(client)
+            || m_internalContext->isEnabled();
+
     if (ret != m_activeClientSupportsTextInput) {
         m_activeClientSupportsTextInput = ret;
         Q_EMIT activeClientSupportsTextInputChanged();
@@ -332,6 +365,10 @@ void InputMethod::surroundingTextChanged()
     }
     if (t3 && t3->isEnabled()) {
         inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
+        return;
+    }
+    if (m_internalContext->isEnabled()) {
+        inputContext->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
         return;
     }
 }
@@ -557,6 +594,12 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
         return;
     }
 
+    if (effects && effects->hasKeyboardGrab()) {
+        const int keyCode = keysymToKeycode(sym);
+        forwardKeyToEffects(pressed, keyCode, sym);
+        return;
+    }
+
     KeyboardKeyState state;
     if (pressed) {
         state = KeyboardKeyState::Pressed;
@@ -584,6 +627,9 @@ void InputMethod::commitString(qint32 serial, const QString &text)
         t3->commitString(text);
         t3->done();
         return;
+    } else if (m_internalContext->isEnabled()) {
+        m_internalContext->handlePreeditText({}, 0, 0);
+        m_internalContext->handleCommitString(text);
     } else {
         // The application has no way of communicating with the input method.
         // So instead, try to convert what we get from the input method into
@@ -641,6 +687,9 @@ void InputMethod::deleteSurroundingText(int32_t index, uint32_t length)
     if (t3 && t3->isEnabled()) {
         t3->deleteSurroundingText(before, after);
         t3->done();
+    }
+    if (internalContext()->isEnabled()) {
+        internalContext()->handleDeleteSurroundingText(before, after);
     }
 }
 
@@ -758,11 +807,24 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
         }
         t3->done();
     }
+    if (m_internalContext->isEnabled()) {
+        m_internalContext->handlePreeditText(text, preedit.cursor, preedit.cursor);
+    }
     resetPendingPreedit();
 }
 
-void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
+void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pressed)
 {
+    if (!input()->keyboard()) {
+        return;
+    }
+    if (effects && effects->hasKeyboardGrab()) {
+        Xkb *xkb = input()->keyboard()->xkb();
+        const xkb_keysym_t keySym = xkb->toKeysym(keyCode);
+        forwardKeyToEffects(pressed, keyCode, keySym);
+        return;
+    }
+
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
                                                pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
 }
@@ -813,6 +875,9 @@ void InputMethod::adoptInputMethodContext()
     } else if (t3 && t3->isEnabled()) {
         inputContext->sendSurroundingText(t3->surroundingText(), t3->surroundingTextCursorPosition(), t3->surroundingTextSelectionAnchor());
         inputContext->sendContentType(t3->contentHints(), t3->contentPurpose());
+    } else if (m_internalContext->isEnabled()) {
+        inputContext->sendSurroundingText(m_internalContext->surroundingText(), m_internalContext->cursorPosition(), m_internalContext->anchorPosition());
+        inputContext->sendContentType(TextInputContentHint::Latin, TextInputContentPurpose::Normal);
     } else {
         // When we have neither text-input-v2 nor text-input-v3 we can only send
         // fake key events, not more complex text. So ask the input method to

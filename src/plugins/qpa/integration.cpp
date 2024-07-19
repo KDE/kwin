@@ -12,9 +12,12 @@
 #include "backingstore.h"
 #include "clipboard.h"
 #include "eglplatformcontext.h"
+#include "inputmethod.h"
+#include "internalinputmethodcontext.h"
 #include "logging.h"
 #include "offscreensurface.h"
 #include "screen.h"
+#include "wayland_server.h"
 #include "window.h"
 
 #include "core/output.h"
@@ -227,6 +230,14 @@ void Integration::handleOutputDisabled(Output *output)
 QPlatformNativeInterface *Integration::nativeInterface() const
 {
     return m_nativeInterface.get();
+}
+
+QPlatformInputContext *Integration::inputContext() const
+{
+    if (!kwinApp()->inputMethod()) { // for some unit tests
+        return nullptr;
+    }
+    return kwinApp()->inputMethod()->internalContext();
 }
 
 QPlatformServices *Integration::services() const
