@@ -4420,6 +4420,14 @@ void Window::setPreferredColorDescription(const ColorDescription &description)
     }
 }
 
+void Window::closeWindowWithTransients()
+{
+    for (auto transient : std::as_const(m_transients)) {
+        transient->closeWindowWithTransients();
+    }
+    closeWindow();
+}
+
 void Window::doSetPreferredColorDescription()
 {
 }

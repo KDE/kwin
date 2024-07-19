@@ -463,7 +463,7 @@ Item {
             PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
             Accessible.name: text
 
-            onClicked: thumb.window.closeWindow();
+            onClicked: thumb.window.closeWindowWithTransients();
         }
     }
 

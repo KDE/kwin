@@ -1334,7 +1334,15 @@ public:
     void setPreferredColorDescription(const ColorDescription &description);
 
 public Q_SLOTS:
+    /**
+     * Send a request to the client to close the window.
+     * It may not be immediate or successful.
+     */
     virtual void closeWindow() = 0;
+    /**
+     * Similar to closeWindow but a close is sent recursively to transient children first
+     */
+    void closeWindowWithTransients();
 
 protected Q_SLOTS:
     void setReadyForPainting();
