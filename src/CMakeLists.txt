@@ -110,6 +110,7 @@ target_sources(kwin PRIVATE
     inputmethod.cpp
     inputpanelv1integration.cpp
     inputpanelv1window.cpp
+    internalinputmethodcontext.cpp
     internalwindow.cpp
     keyboard_input.cpp
     keyboard_layout.cpp
