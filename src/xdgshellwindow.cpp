@@ -1723,6 +1723,7 @@ bool XdgPopupWindow::hasPopupGrab() const
 void XdgPopupWindow::popupDone()
 {
     m_shellSurface->sendPopupDone();
+    destroyWindow();
 }
 
 bool XdgPopupWindow::isPopupWindow() const
