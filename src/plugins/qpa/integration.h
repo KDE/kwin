@@ -44,6 +44,8 @@ public:
     QPlatformOpenGLContext *createPlatformOpenGLContext(QOpenGLContext *context) const override;
     QPlatformAccessibility *accessibility() const override;
     QPlatformNativeInterface *nativeInterface() const override;
+    QPlatformInputContext *inputContext() const override;
+
     QPlatformServices *services() const override;
     QPlatformClipboard *clipboard() const override;
     void initialize() override;

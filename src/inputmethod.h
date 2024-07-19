@@ -29,6 +29,7 @@ namespace KWin
 class Window;
 class InputPanelV1Window;
 class InputMethodGrabV1;
+class InternalInputMethodContext;
 
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
@@ -72,6 +73,12 @@ public:
     void forceActivate();
 
     void commitPendingText();
+
+    // for use by the QPA
+    InternalInputMethodContext *internalContext() const
+    {
+        return m_internalContext;
+    }
 
 Q_SIGNALS:
     void panelChanged();
@@ -121,6 +128,7 @@ private:
     bool touchEventTriggered() const;
     void resetPendingPreedit();
     void refreshActive();
+    void forwardKeyToEffects(bool pressed, int keyCode, int keySym);
 
     // buffered till the preedit text is set
     struct
@@ -144,6 +152,7 @@ private:
     uint m_inputMethodCrashes = 0;
     QString m_inputMethodCommand;
 
+    InternalInputMethodContext *m_internalContext = nullptr;
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
