@@ -49,6 +49,17 @@
 namespace KWin
 {
 
+class InternalInputMethod : public QObject
+{
+    Q_OBJECT
+public:
+    InternalInputMethod(InputMethod *parent)
+        : QObject(parent)
+        , m_parent(parent)
+    {
+    }
+};
+
 static std::vector<quint32> textToKey(const QString &text)
 {
     if (text.isEmpty()) {

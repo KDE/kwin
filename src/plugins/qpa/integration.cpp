@@ -219,6 +219,10 @@ QPlatformNativeInterface *Integration::nativeInterface() const
     return m_nativeInterface.get();
 }
 
+QPlatformInputContext *Integration::inputContext() const
+{
+}
+
 QPlatformServices *Integration::services() const
 {
     return m_services.get();

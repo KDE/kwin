@@ -222,6 +222,8 @@ public:
 
     void setRenderBackend(RenderBackend *backend);
 
+    InternalInputContext *m_inputContext;
+
 Q_SIGNALS:
     void windowAdded(KWin::Window *);
     void windowRemoved(KWin::Window *);
