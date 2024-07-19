@@ -205,6 +205,15 @@ bool ButtonRebindsFilter::pointerEvent(KWin::MouseEvent *event, quint32 nativeBu
     return send(Pointer, {{}, event->button()}, event->type() == QEvent::MouseButtonPress, event->timestamp());
 }
 
+bool ButtonRebindsFilter::tabletToolEvent(KWin::TabletEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+    m_tabletCursorPos = event->position();
+    return false;
+}
+
 bool ButtonRebindsFilter::tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
     if (RebindScope::isRebinding()) {
@@ -282,6 +291,9 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
         return sendKeySequence(*seq, pressed, timestamp);
     }
     if (const auto mb = std::get_if<MouseButton>(&action)) {
+        if (pressed && type != Pointer) {
+            sendMousePosition(m_tabletCursorPos, timestamp);
+        }
         return sendMouseButton(mb->button, pressed, timestamp);
     }
     if (const auto tb = std::get_if<TabletToolButton>(&action)) {
@@ -376,6 +388,13 @@ bool ButtonRebindsFilter::sendMouseButton(quint32 button, bool pressed, std::chr
 {
     RebindScope scope;
     Q_EMIT m_inputDevice.pointerButtonChanged(button, KWin::InputRedirection::PointerButtonState(pressed), time, &m_inputDevice);
+    return true;
+}
+
+bool ButtonRebindsFilter::sendMousePosition(QPointF position, std::chrono::microseconds time)
+{
+    RebindScope scope;
+    Q_EMIT m_inputDevice.pointerMotionAbsolute(position, time, &m_inputDevice);
     return true;
 }
 

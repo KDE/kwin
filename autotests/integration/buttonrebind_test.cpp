@@ -9,6 +9,7 @@
 #include "kwin_wayland_test.h"
 
 #include "pointer_input.h"
+#include "tablet_input.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -41,6 +42,8 @@ private Q_SLOTS:
     // NOTE: Mouse buttons are not tested because those are used in the other tests
     void testBindingTabletPad();
     void testBindingTabletTool();
+
+    void testMouseTabletCursorSync();
 
 private:
     quint32 timestamp = 1;
@@ -236,6 +239,45 @@ void TestButtonRebind::testBindingTabletTool()
     QCOMPARE(keyChangedSpy.at(0).at(0), KEY_A);
 
     Test::tabletToolButtonReleased(BTN_STYLUS, timestamp++);
+}
+
+void TestButtonRebind::testMouseTabletCursorSync()
+{
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletTool")).group(QStringLiteral("Virtual Tablet Tool 1"));
+    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{"MouseButton", QString::number(BTN_LEFT)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+
+    const QRectF startGeometry = window->frameGeometry();
+
+    // Move the mouse cursor to (25, 25)
+    input()->pointer()->warp(startGeometry.topLeft() + QPointF{25.f, 25.5f});
+    QVERIFY(enteredSpy.wait());
+
+    // Move the tablet cursor to (10,10)
+    Test::tabletToolEvent(InputRedirection::Proximity, startGeometry.topLeft() + QPointF{10.f, 10.f}, 1.0, 0, 0, 0, false, false, timestamp++);
+
+    // Verify they are not starting in the same place
+    QVERIFY(input()->pointer()->pos() != input()->tablet()->position());
+
+    // Send the tablet button event so it can be processed by the filter
+    Test::tabletToolButtonPressed(BTN_STYLUS, timestamp++);
+
+    QVERIFY(buttonChangedSpy.wait());
+    QCOMPARE(buttonChangedSpy.count(), 1);
+    QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), BTN_LEFT);
+
+    Test::tabletToolButtonReleased(BTN_STYLUS, timestamp++);
+
+    // Verify that by using the mouse button binding, the mouse cursor was moved to the tablet cursor position
+    QVERIFY(input()->pointer()->pos() == input()->tablet()->position());
 }
 
 WAYLANDTEST_MAIN(TestButtonRebind)
