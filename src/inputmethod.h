@@ -29,7 +29,7 @@ namespace KWin
 class Window;
 class InputPanelV1Window;
 class InputMethodGrabV1;
-
+class InternalInputMethodContext;
 class InputDevice;
 
 /**
@@ -75,6 +75,11 @@ public:
 
     void commitPendingText();
 
+    // for use by the QPA
+    InternalInputMethodContext *internalContext() const
+    {
+        return m_internalContext;
+    }
     // keyboard used for key events sent from the input method
     InputDevice *inputMethodKeyboard() const
     {
@@ -152,6 +157,7 @@ private:
     uint m_inputMethodCrashes = 0;
     QString m_inputMethodCommand;
 
+    InternalInputMethodContext *m_internalContext = nullptr;
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
