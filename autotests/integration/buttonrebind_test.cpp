@@ -13,6 +13,7 @@
 #include "workspace.h"
 
 #include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/pointer.h>
 #include <KWayland/Client/seat.h>
 #include <linux/input-event-codes.h>
 
@@ -32,6 +33,9 @@ private Q_SLOTS:
     void testKey_data();
     void testKey();
 
+    void testMouse_data();
+    void testMouse();
+
 private:
     quint32 timestamp = 1;
 };
@@ -39,7 +43,7 @@ private:
 void TestButtonRebind::init()
 {
     QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
-    QVERIFY(Test::waitForWaylandKeyboard());
+    QVERIFY(Test::waitForWaylandPointer());
 }
 
 void TestButtonRebind::cleanup()
@@ -101,6 +105,46 @@ void TestButtonRebind::testKey()
         QCOMPARE(keyChangedSpy.at(i).at(0).value<quint32>(), expectedKeys.at(i));
         QCOMPARE(keyChangedSpy.at(i).at(1).value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
     }
+    Test::pointerButtonReleased(0x119, timestamp++);
+}
+
+void TestButtonRebind::testMouse_data()
+{
+    QTest::addColumn<int>("mouseButton");
+
+    QTest::newRow("left button") << BTN_LEFT;
+    QTest::newRow("middle button") << BTN_MIDDLE;
+    QTest::newRow("right button") << BTN_RIGHT;
+}
+
+void TestButtonRebind::testMouse()
+{
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
+    QFETCH(int, mouseButton);
+    buttonGroup.writeEntry("ExtraButton7", QStringList{"MouseButton", QString::number(mouseButton)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy buttonChangedSpy(pointer.get(), &KWayland::Client::Pointer::buttonStateChanged);
+
+    const QRectF startGeometry = window->frameGeometry();
+    input()->pointer()->warp(startGeometry.center());
+
+    QVERIFY(enteredSpy.wait());
+
+    // 0x119 is Qt::ExtraButton7
+    Test::pointerButtonPressed(0x119, timestamp++);
+
+    QVERIFY(buttonChangedSpy.wait());
+
+    QCOMPARE(buttonChangedSpy.count(), 1);
+    QCOMPARE(buttonChangedSpy.at(0).at(2).value<qint32>(), mouseButton);
+
     Test::pointerButtonReleased(0x119, timestamp++);
 }
 
