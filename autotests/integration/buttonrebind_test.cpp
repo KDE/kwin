@@ -38,6 +38,10 @@ private Q_SLOTS:
 
     void testDisabled();
 
+    // NOTE: Mouse buttons are not tested because those are used in the other tests
+    void testBindingTabletPad();
+    void testBindingTabletTool();
+
 private:
     quint32 timestamp = 1;
 };
@@ -177,6 +181,61 @@ void TestButtonRebind::testDisabled()
     QCOMPARE(buttonChangedSpy.count(), 0);
 
     Test::pointerButtonReleased(0x119, timestamp++);
+}
+
+void TestButtonRebind::testBindingTabletPad()
+{
+    const QKeySequence sequence(Qt::Key_A);
+
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Tablet")).group(QStringLiteral("Virtual Tablet Pad 1"));
+    buttonGroup.writeEntry("1", QStringList{"Key", sequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    QVERIFY(enteredSpy.wait());
+
+    Test::tabletPadButtonPressed(1, timestamp++);
+
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 1);
+    QCOMPARE(keyChangedSpy.at(0).at(0), KEY_A);
+
+    Test::tabletPadButtonReleased(1, timestamp++);
+}
+
+void TestButtonRebind::testBindingTabletTool()
+{
+    const QKeySequence sequence(Qt::Key_A);
+
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletTool")).group(QStringLiteral("Virtual Tablet Tool 1"));
+    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{"Key", sequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    QVERIFY(enteredSpy.wait());
+
+    const QRectF startGeometry = window->frameGeometry();
+    Test::tabletToolEvent(InputRedirection::Tip, startGeometry.center(), 1.0, 0, 0, 0, true, false, timestamp++);
+
+    Test::tabletToolButtonPressed(BTN_STYLUS, timestamp++);
+
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 1);
+    QCOMPARE(keyChangedSpy.at(0).at(0), KEY_A);
+
+    Test::tabletToolButtonReleased(BTN_STYLUS, timestamp++);
 }
 
 WAYLANDTEST_MAIN(TestButtonRebind)
