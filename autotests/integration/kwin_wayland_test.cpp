@@ -133,9 +133,19 @@ void WaylandTestApplication::createVirtualInputDevices()
     m_virtualTouch->setName(QStringLiteral("Virtual Touch 1"));
     m_virtualTouch->setTouch(true);
 
+    m_virtualTabletPad = std::make_unique<Test::VirtualInputDevice>();
+    m_virtualTabletPad->setName(QStringLiteral("Virtual Tablet Pad 1"));
+    m_virtualTabletPad->setTabletPad(true);
+
+    m_virtualTabletTool = std::make_unique<Test::VirtualInputDevice>();
+    m_virtualTabletTool->setName(QStringLiteral("Virtual Tablet Tool 1"));
+    m_virtualTabletTool->setTabletTool(true);
+
     input()->addInputDevice(m_virtualPointer.get());
     input()->addInputDevice(m_virtualTouch.get());
     input()->addInputDevice(m_virtualKeyboard.get());
+    input()->addInputDevice(m_virtualTabletPad.get());
+    input()->addInputDevice(m_virtualTabletTool.get());
 }
 
 void WaylandTestApplication::destroyVirtualInputDevices()
@@ -148,6 +158,12 @@ void WaylandTestApplication::destroyVirtualInputDevices()
     }
     if (m_virtualKeyboard) {
         input()->removeInputDevice(m_virtualKeyboard.get());
+    }
+    if (m_virtualTabletPad) {
+        input()->removeInputDevice(m_virtualTabletPad.get());
+    }
+    if (m_virtualTabletTool) {
+        input()->removeInputDevice(m_virtualTabletTool.get());
     }
 }
 
@@ -213,6 +229,16 @@ Test::VirtualInputDevice *WaylandTestApplication::virtualKeyboard() const
 Test::VirtualInputDevice *WaylandTestApplication::virtualTouch() const
 {
     return m_virtualTouch.get();
+}
+
+Test::VirtualInputDevice *WaylandTestApplication::virtualTabletPad() const
+{
+    return m_virtualTabletPad.get();
+}
+
+Test::VirtualInputDevice *WaylandTestApplication::virtualTabletTool() const
+{
+    return m_virtualTabletTool.get();
 }
 
 #if KWIN_BUILD_X11

@@ -103,6 +103,8 @@ public:
     Test::VirtualInputDevice *virtualPointer() const;
     Test::VirtualInputDevice *virtualKeyboard() const;
     Test::VirtualInputDevice *virtualTouch() const;
+    Test::VirtualInputDevice *virtualTabletPad() const;
+    Test::VirtualInputDevice *virtualTabletTool() const;
 #if KWIN_BUILD_X11
     XwaylandInterface *xwayland() const override;
 #endif
@@ -126,6 +128,8 @@ private:
     std::unique_ptr<Test::VirtualInputDevice> m_virtualPointer;
     std::unique_ptr<Test::VirtualInputDevice> m_virtualKeyboard;
     std::unique_ptr<Test::VirtualInputDevice> m_virtualTouch;
+    std::unique_ptr<Test::VirtualInputDevice> m_virtualTabletPad;
+    std::unique_ptr<Test::VirtualInputDevice> m_virtualTabletTool;
 };
 
 namespace Test
@@ -609,6 +613,8 @@ public:
     void setKeyboard(bool set);
     void setTouch(bool set);
     void setLidSwitch(bool set);
+    void setTabletPad(bool set);
+    void setTabletTool(bool set);
     void setName(const QString &name);
 
     QString sysName() const override;
@@ -635,6 +641,8 @@ private:
     bool m_keyboard = false;
     bool m_touch = false;
     bool m_lidSwitch = false;
+    bool m_tabletPad = false;
+    bool m_tabletTool = false;
 };
 
 void keyboardKeyPressed(quint32 key, quint32 time);
@@ -655,6 +663,13 @@ void touchCancel();
 void touchDown(qint32 id, const QPointF &pos, quint32 time);
 void touchMotion(qint32 id, const QPointF &pos, quint32 time);
 void touchUp(qint32 id, quint32 time);
+void tabletPadButtonPressed(quint32 button, quint32 time);
+void tabletPadButtonReleased(quint32 button, quint32 time);
+void tabletToolButtonPressed(quint32 button, quint32 time);
+void tabletToolButtonReleased(quint32 button, quint32 time);
+void tabletToolEvent(InputRedirection::TabletEventType type, const QPointF &pos,
+                     qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
+                     bool tipNear, quint32 time);
 
 /**
  * Creates a Wayland Connection in a dedicated thread and creates various
