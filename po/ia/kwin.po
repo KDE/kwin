@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-19 00:40+0000\n"
-"PO-Revision-Date: 2024-07-01 11:02+0200\n"
+"PO-Revision-Date: 2024-07-19 14:35+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -1860,72 +1860,72 @@ msgstr "Buttones animate"
 #: plugins/keynotification/keynotification.cpp:37
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Le clave de Caps Lock ha essite activate"
 
 #: plugins/keynotification/keynotification.cpp:41
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Le clave de Caps Lock es  ora inactive"
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Le clave de Num Lock (Bloco Numeric) ha essite activate"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Le clave de Num Lock es  ora inactive"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Le clave de Scroll Lock (Bloco de Rolo) ha essite activate"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Le clave de Scroll Lock (bloco de Rolo) es  ora inactive"
 
 #: plugins/keynotification/keynotification.cpp:70
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Le clave de Shift es ora active"
 
 #: plugins/keynotification/keynotification.cpp:74
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Le clave Shift es ora inactive."
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Le clave de Controlo es ora active."
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Le clave de Controlo es ora inactive."
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Le clave Alt es ora active."
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Le clave Alt es ora inactive"
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Le clave Meta es ora active."
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Le clave Meta es ora inactive."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2590,30 +2590,40 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Le clave de Shift ha essite blocate e ora es active pro tote le sequente "
+"claves de pressar (keypresses)."
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Le clave de Controlo ha essite blocate e es ora active pro tote le sequente "
+"claves de pressar (keypresses)."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Le clave de Alt ha essite blocate e es ora active pro tote le sequente "
+"claves de pressar (keypresses)."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Le clave Meta ha essite blocate e es ora active pro tote le sequente claves "
+"de pressar (keypresses)."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Le clave de AltGr ha essite blocate e es ora active pro tote le sequente "
+"claves de pressar (keypresses)."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50

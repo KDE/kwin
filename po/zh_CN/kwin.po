@@ -1834,72 +1834,72 @@ msgstr "按钮动效"
 #: plugins/keynotification/keynotification.cpp:37
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Caps Lock 键已激活"
 
 #: plugins/keynotification/keynotification.cpp:41
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Caps Lock 键已取消激活"
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Num Lock 键已激活"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Num Lock 键已取消激活"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Scroll Lock 键已激活"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Scroll Lock 键已取消激活"
 
 #: plugins/keynotification/keynotification.cpp:70
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Shift 键已激活。"
 
 #: plugins/keynotification/keynotification.cpp:74
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Shift 键已取消激活。"
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Ctrl 键已激活。"
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Ctrl 键已取消激活。"
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Alt 键已激活。"
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Alt 键已取消激活。"
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Meta 键已激活。"
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Meta 键已取消激活。"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2561,31 +2561,31 @@ msgstr "幻灯片桌面背景"
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Shift 键已锁定，它将在后续按下所有按键时始终保持激活状态。"
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Ctrl 键已锁定，它将在后续按下所有按键时始终保持激活状态。"
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Alt 键已锁定，它将在后续按下所有按键时始终保持激活状态。"
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Meta 键已锁定，它将在后续按下所有按键时始终保持激活状态。"
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "AltGr 键已锁定，它将在后续按下所有按键时始终保持激活状态。"
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
