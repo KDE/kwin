@@ -28,6 +28,7 @@ class RulesModel : public QAbstractListModel
 
     Q_PROPERTY(QString description READ description WRITE setDescription NOTIFY descriptionChanged)
     Q_PROPERTY(QStringList warningMessages READ warningMessages NOTIFY warningMessagesChanged)
+    Q_PROPERTY(QString conditionsSection READ conditionsSection CONSTANT)
 
 public:
     enum RulesRole {
@@ -88,6 +89,8 @@ private:
 
     QString defaultDescription() const;
     void processSuggestion(const QString &key, const QVariant &value);
+    QString conditionsSection() const;
+    int conditionsCount() const;
 
     bool wmclassWarning() const;
     bool geometryWarning() const;
