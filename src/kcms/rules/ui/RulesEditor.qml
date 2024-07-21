@@ -16,6 +16,12 @@ import org.kde.kcms.kwinrules
 KCM.ScrollViewKCM {
     id: rulesEditor
 
+    enum FilterMode {
+        Properties = 0, // Only window properties that can get modified by the rule
+        Conditions, // Only conditions to match a window
+        Suggestions // All properties that have a suggested value
+    }
+
     title: kcm.rulesModel.description
 
     view: ListView {
@@ -23,7 +29,11 @@ KCM.ScrollViewKCM {
         clip: true
 
         model: enabledRulesModel
+
         delegate: RuleItemDelegate {
+            Kirigami.Theme.inherit: model.section !== kcm.rulesModel.conditionsSection
+            Kirigami.Theme.colorSet: Kirigami.Theme.Window
+
             ListView.onAdd: {
                 // Try to position the new added item into the visible view
                 // FIXME: It only works when moving towards the end of the list
@@ -35,6 +45,20 @@ KCM.ScrollViewKCM {
             delegate: Kirigami.ListSectionHeader {
                 width: ListView.view.width
                 label: section
+
+                Kirigami.Theme.inherit: section !== kcm.rulesModel.conditionsSection
+                Kirigami.Theme.colorSet: Kirigami.Theme.Window
+
+                QQC2.ToolButton {
+                    visible: section === kcm.rulesModel.conditionsSection
+                    text : i18n("Add Condition...")
+                    icon.name: "list-add"
+
+                    onClicked: {
+                        overlayModel.mode = RulesEditor.FilterMode.Conditions;
+                        propertySheet.visible = true;
+                    }
+                }
             }
         }
 
@@ -47,6 +71,42 @@ KCM.ScrollViewKCM {
             NumberAnimation { property: "y"; duration: Kirigami.Units.longDuration }
         }
 
+        // Necessary to get correct updates after the items are created
+        onCountChanged: enabledRulesModel.conditionsCountChanged()
+
+        // Background for the Window Matching Conditions section
+        Rectangle {
+            id: conditionsBackground
+
+            parent: rulesView.contentItem
+            anchors {
+                left: parent.left
+                right: parent.right
+                top: parent.top
+            }
+
+            Kirigami.Theme.inherit: false
+            Kirigami.Theme.colorSet: Kirigami.Theme.Window
+            color: Kirigami.Theme.backgroundColor
+            z: -1
+
+            height: {
+                const lastConditionItem =  rulesView.itemAtIndex(enabledRulesModel.conditionsCount - 1);
+                if (!lastConditionItem) {
+                    return 0;
+                }
+                return lastConditionItem.y + lastConditionItem.height;
+            }
+
+            Kirigami.Separator {
+                anchors {
+                    top: parent.bottom
+                    left: parent.left
+                    right: parent.right
+                }
+            }
+        }
+
         // We need to center on the free space below contentItem, not the full
         // ListView. This invisible item helps make that positioning work no
         // matter the window height
@@ -57,7 +117,7 @@ KCM.ScrollViewKCM {
                 top: parent.contentItem.bottom
                 bottom: parent.bottom
             }
-            visible: rulesView.count <= 4
+            visible: rulesView.count <= enabledRulesModel.conditionsCount
 
             Kirigami.PlaceholderMessage {
                 id: hintArea
@@ -88,6 +148,7 @@ KCM.ScrollViewKCM {
             text: i18n("Add Property...")
             icon.name: "list-add"
             onClicked: {
+                overlayModel.mode = RulesEditor.FilterMode.Properties;
                 propertySheet.visible = true;
             }
         }
@@ -100,7 +161,6 @@ KCM.ScrollViewKCM {
             icon.name: "edit-find"
             enabled: !propertySheet.visible && !errorDialog.visible
             onClicked: {
-                overlayModel.onlySuggestions = true;
                 kcm.rulesModel.detectWindowProperties(Math.max(delaySpin.value * 1000,
                                                                Kirigami.Units.shortDuration));
             }
@@ -136,7 +196,7 @@ KCM.ScrollViewKCM {
             if (errorDialog.visible) {
                 return;
             }
-            overlayModel.onlySuggestions = true;
+            overlayModel.mode = RulesEditor.FilterMode.Suggestions;
             propertySheet.visible = true;
         }
         function onShowErrorMessage(title, message) {
@@ -171,7 +231,17 @@ KCM.ScrollViewKCM {
     Kirigami.OverlaySheet {
         id: propertySheet
 
-        title: i18n("Add property to the rule")
+        title: {
+            switch (overlayModel.mode) {
+            case RulesEditor.FilterMode.Suggestions:
+                return i18n("Add detected properties or conditions");
+            case RulesEditor.FilterMode.Conditions:
+                return i18n("Add condition to the rule");
+            case RulesEditor.FilterMode.Properties:
+            default:
+                return i18n("Add property to the rule");
+            }
+        }
 
         footer: Kirigami.SearchField {
             id: searchField
@@ -253,7 +323,6 @@ KCM.ScrollViewKCM {
                     model.enabled = true;
                     if (model.suggested != null) {
                         model.value = model.suggested;
-                        model.suggested = null;
                     }
                 }
             }
@@ -263,10 +332,16 @@ KCM.ScrollViewKCM {
                 width: parent.width - (Kirigami.Units.largeSpacing * 4)
                 visible: overlayModel.count === 0
                 text: {
+                    const isConditionMode = (overlayModel.mode === RulesEditor.FilterMode.Conditions);
+
                     if (searchField.text.length === 0) {
-                        return i18nc("@info:placeholder", "No properties left to add");
+                        return (isConditionMode) ? i18nc("@info:placeholder", "No conditions left to add")
+                                                 : i18nc("@info:placeholder", "No properties left to add");
                     }
-                    return i18nc("@info:placeholder %1 is a filter text introduced by the user", "No properties match \"%1\"", searchField.text);
+
+                    return (isConditionMode)
+                        ? i18nc("@info:placeholder %1 is a filter text introduced by the user", "No conditions match \"%1\"", searchField.text)
+                        : i18nc("@info:placeholder %1 is a filter text introduced by the user", "No properties match \"%1\"", searchField.text);
                 }
             }
         }
@@ -275,8 +350,6 @@ KCM.ScrollViewKCM {
             searchField.text = "";
             if (visible) {
                 searchField.forceActiveFocus();
-            } else {
-                overlayModel.onlySuggestions = false;
             }
         }
     }
@@ -307,6 +380,17 @@ KCM.ScrollViewKCM {
 
     KSortFilterProxyModel {
         id: enabledRulesModel
+
+        readonly property int conditionsCount: {
+            for (let row = 0; row < count; row++) {
+                if (data(index(row, 0), RulesModel.SectionRole) !== kcm.rulesModel.conditionsSection) {
+                    return row;
+                }
+            }
+            return count;
+        }
+        onModelReset: conditionsCountChanged()
+
         sourceModel: kcm.rulesModel
         filterRowCallback: (source_row, source_parent) => {
             const index = sourceModel.index(source_row, 0, source_parent);
@@ -318,8 +402,8 @@ KCM.ScrollViewKCM {
         id: overlayModel
         sourceModel: kcm.rulesModel
 
-        property bool onlySuggestions: false
-        onOnlySuggestionsChanged: {
+        property int mode: RulesEditor.FilterMode.Properties
+        onModeChanged: {
             invalidateFilter();
         }
 
@@ -327,15 +411,29 @@ KCM.ScrollViewKCM {
         filterRowCallback: (source_row, source_parent) => {
             const index = sourceModel.index(source_row, 0, source_parent);
 
-            const hasSuggestion = sourceModel.data(index, RulesModel.SuggestedValueRole) != null;
-            const isOptional = sourceModel.data(index, RulesModel.SelectableRole);
-            const isEnabled = sourceModel.data(index, RulesModel.EnabledRole);
+            // Mode filter
+            const suggestedValue = sourceModel.data(index, RulesModel.SuggestedValueRole);
+            if (mode === RulesEditor.FilterMode.Suggestions) {
+                if (suggestedValue == null) {
+                    return false;
+                }
+            } else {
+                // Reject properties already added unless they have a different suggested value
+                const isOptional = sourceModel.data(index, RulesModel.SelectableRole);
+                const isEnabled = sourceModel.data(index, RulesModel.EnabledRole);
+                const value = sourceModel.data(index, RulesModel.ValueRole);
+                if ((isEnabled || !isOptional) && (suggestedValue === value || suggestedValue == null)) {
+                    return false;
+                }
 
-            const showItem = hasSuggestion || (!onlySuggestions && isOptional && !isEnabled);
-
-            if (!showItem) {
-                return false;
+                // Reject properties that doesn't match the mode
+                const isCondition = sourceModel.data(index, RulesModel.SectionRole) == kcm.rulesModel.conditionsSection;
+                if (isCondition !== (mode === RulesEditor.FilterMode.Conditions)) {
+                    return false;
+                }
             }
+
+            // Text filter
             if (filterString.length > 0) {
                 return sourceModel.data(index, RulesModel.NameRole).toLowerCase().includes(filterString)
             }

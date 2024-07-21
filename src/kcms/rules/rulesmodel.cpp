@@ -311,6 +311,12 @@ bool RulesModel::opacityWarning() const
     return lowOpacityActive || lowOpacityInactive;
 }
 
+QString RulesModel::conditionsSection() const
+{
+    static const QString sectionName = i18n("Window matching");
+    return sectionName;
+}
+
 RuleSettings *RulesModel::settings() const
 {
     return m_settings;
@@ -385,7 +391,7 @@ void RulesModel::populateRuleList()
     // Rule description
     auto description = addRule(new RuleItem(QLatin1String("description"),
                                             RulePolicy::NoPolicy, RuleItem::String,
-                                            i18n("Description"), i18n("Window matching"),
+                                            i18n("Description"), conditionsSection(),
                                             QIcon::fromTheme("entry-edit")));
     description->setFlag(RuleItem::AlwaysEnabled);
     description->setFlag(RuleItem::AffectsDescription);
@@ -393,7 +399,7 @@ void RulesModel::populateRuleList()
     // Window matching
     auto wmclass = addRule(new RuleItem(QLatin1String("wmclass"),
                                         RulePolicy::StringMatch, RuleItem::String,
-                                        i18n("Window class (application)"), i18n("Window matching"),
+                                        i18n("Window class (application)"), conditionsSection(),
                                         QIcon::fromTheme("window")));
     wmclass->setFlag(RuleItem::AlwaysEnabled);
     wmclass->setFlag(RuleItem::AffectsDescription);
@@ -401,20 +407,20 @@ void RulesModel::populateRuleList()
 
     auto wmclasscomplete = addRule(new RuleItem(QLatin1String("wmclasscomplete"),
                                                 RulePolicy::NoPolicy, RuleItem::Boolean,
-                                                i18n("Match whole window class"), i18n("Window matching"),
+                                                i18n("Match whole window class"), conditionsSection(),
                                                 QIcon::fromTheme("window")));
     wmclasscomplete->setFlag(RuleItem::AlwaysEnabled);
 
     // Helper item to store the detected whole window class when detecting properties
     auto wmclasshelper = addRule(new RuleItem(QLatin1String("wmclasshelper"),
                                               RulePolicy::NoPolicy, RuleItem::String,
-                                              i18n("Whole window class"), i18n("Window matching"),
+                                              i18n("Whole window class"), conditionsSection(),
                                               QIcon::fromTheme("window")));
     wmclasshelper->setFlag(RuleItem::SuggestionOnly);
 
     auto types = addRule(new RuleItem(QLatin1String("types"),
                                       RulePolicy::NoPolicy, RuleItem::NetTypes,
-                                      i18n("Window types"), i18n("Window matching"),
+                                      i18n("Window types"), conditionsSection(),
                                       QIcon::fromTheme("window-duplicate")));
     types->setOptionsData(windowTypesModelData());
     types->setFlag(RuleItem::AlwaysEnabled);
@@ -422,18 +428,18 @@ void RulesModel::populateRuleList()
 
     addRule(new RuleItem(QLatin1String("windowrole"),
                          RulePolicy::StringMatch, RuleItem::String,
-                         i18n("Window role"), i18n("Window matching"),
+                         i18n("Window role"), conditionsSection(),
                          QIcon::fromTheme("dialog-object-properties")));
 
     auto title = addRule(new RuleItem(QLatin1String("title"),
                                       RulePolicy::StringMatch, RuleItem::String,
-                                      i18n("Window title"), i18n("Window matching"),
+                                      i18n("Window title"), conditionsSection(),
                                       QIcon::fromTheme("edit-comment")));
     title->setFlag(RuleItem::AffectsDescription);
 
     addRule(new RuleItem(QLatin1String("clientmachine"),
                          RulePolicy::StringMatch, RuleItem::String,
-                         i18n("Machine (hostname)"), i18n("Window matching"),
+                         i18n("Machine (hostname)"), conditionsSection(),
                          QIcon::fromTheme("computer")));
 
     // Size & Position
