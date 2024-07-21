@@ -42,6 +42,7 @@
 #if KWIN_BUILD_NOTIFICATIONS
 #include <KLocalizedString>
 #include <KNotification>
+#include <QAnimationDriver>
 #endif
 
 #include <QQuickWindow>
@@ -50,6 +51,49 @@
 
 namespace KWin
 {
+
+class AnimationDriver : public QAnimationDriver
+{
+public:
+    AnimationDriver(QObject *parent = nullptr)
+        : QAnimationDriver(parent)
+    {
+    }
+
+    void doAdvance(RenderLoop *renderLoop) {
+        if (!isRunning()) {
+            return;
+        }
+        m_nextTime = renderLoop->nextPresentationTimestamp();
+        advance();
+    }
+
+    void start() override
+    {
+        qDebug() << "start";
+        m_offset = std::chrono::steady_clock::now().time_since_epoch();
+        m_nextTime = m_offset;
+        QAnimationDriver::start();
+    }
+
+    void stop() override
+    {
+        qDebug() << "stop";
+        m_offset = {};
+        m_nextTime = {};
+        QAnimationDriver::stop();
+    }
+
+    qint64 elapsed() const override
+    {
+        return std::chrono::duration_cast<std::chrono::milliseconds>(m_nextTime - m_offset).count();
+    }
+
+private:
+    std::chrono::nanoseconds m_nextTime = {};
+    std::chrono::nanoseconds m_offset = {};
+};
+
 
 Compositor *Compositor::create(QObject *parent)
 {
@@ -67,9 +111,13 @@ Compositor *Compositor::self()
 
 Compositor::Compositor(QObject *workspace)
     : QObject(workspace)
+    , m_QtQuickAnimationDriver(new AnimationDriver(this))
 {
     // register DBus
     new CompositorDBusInterface(this);
+
+    m_QtQuickAnimationDriver->install();
+
     FTraceLogger::create();
 }
 
@@ -581,6 +629,7 @@ void Compositor::composite(RenderLoop *renderLoop)
         reinitialize();
         return;
     }
+    m_QtQuickAnimationDriver->doAdvance(renderLoop);
 
     Output *output = findOutput(renderLoop);
     const auto primaryView = m_primaryViews[renderLoop].get();
@@ -936,8 +985,12 @@ void Compositor::composite(RenderLoop *renderLoop)
         output->repairPresentation();
     }
 
-    if ((frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
-        || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001)) {
+    const bool forceRepaintForBrightness = (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting() * output->dimming()) > 0.001)
+        || (desiredArtificalHdrHeadroom && frame->artificialHdrHeadroom() && std::abs(*frame->artificialHdrHeadroom() - *desiredArtificalHdrHeadroom) > 0.001);
+
+    const bool forceRepaintForOffscreenAnimations = m_QtQuickAnimationDriver->isRunning();
+
+    if (forceRepaintForBrightness || forceRepaintForOffscreenAnimations) {
         // we're currently running an animation to change the brightness
         renderLoop->scheduleRepaint();
     }
@@ -953,6 +1006,8 @@ void Compositor::addOutput(Output *output)
     connect(output, &Output::outputLayersChanged, this, [this, output]() {
         assignOutputLayers(output);
     });
+
+
 }
 
 void Compositor::removeOutput(Output *output)
