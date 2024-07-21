@@ -257,6 +257,18 @@ KCM.ScrollViewKCM {
                     }
                 }
             }
+
+            Kirigami.PlaceholderMessage {
+                anchors.centerIn: parent
+                width: parent.width - (Kirigami.Units.largeSpacing * 4)
+                visible: overlayModel.count === 0
+                text: {
+                    if (searchField.text.length === 0) {
+                        return i18nc("@info:placeholder", "No properties left to add");
+                    }
+                    return i18nc("@info:placeholder %1 is a filter text introduced by the user", "No properties match \"%1\"", searchField.text);
+                }
+            }
         }
 
         onVisibleChanged: {
