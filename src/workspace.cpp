@@ -15,6 +15,7 @@
 #include "opengl/glplatform.h"
 // kwin
 #include "core/output.h"
+#include "qabstractanimation.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -98,7 +99,47 @@ X11EventFilter *X11EventFilterContainer::filter() const
     return m_filter;
 }
 
+class AnimationDriver : public QAnimationDriver
+{
+public:
+    AnimationDriver(QObject *parent = nullptr)
+        : QAnimationDriver(parent)
+    {
+    }
+
+    void advance() override
+    {
+        if (!isRunning()) {return;}
+        advanceAnimation();
+    }
+
+    void start() override
+    {
+        qDebug() << "start";
+        m_timer.restart();
+        QAnimationDriver::start();
+    }
+
+    void stop() override
+    {
+        qDebug() << "stop";
+        m_timer.restart();
+        QAnimationDriver::stop();
+    }
+
+    qint64 elapsed() const override
+    {
+        return m_timer.elapsed();
+    }
+
+private:
+    QElapsedTimer m_timer;
+};
+
 Workspace *Workspace::_self = nullptr;
+
+
+
 
 Workspace::Workspace()
     : QObject(nullptr)
@@ -284,6 +325,22 @@ void Workspace::init()
 #if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked, this, &Workspace::slotEndInteractiveMoveResize);
 #endif
+
+    // setup animation driver
+    auto animationDriver = new AnimationDriver(this);
+    animationDriver->install();
+    auto setupAnimationDriver = [this, animationDriver]() {
+        // find the highest refresh output
+        for (auto output : m_outputs) {
+            connect(output->renderLoop(), &RenderLoop::framePresented, this, [animationDriver]() {
+                // this seems wasteful in a multi-screen case
+                // but all we're doing is bumping properties, rendering is still vsynced
+                animationDriver->advance();
+            });
+        }
+    };
+    // TODO Dave redo every time outputs change
+    setupAnimationDriver();
 }
 
 QString Workspace::outputLayoutId() const
