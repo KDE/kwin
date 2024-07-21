@@ -15,6 +15,7 @@
 #include "opengl/glplatform.h"
 // kwin
 #include "core/output.h"
+#include "qabstractanimation.h"
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
@@ -283,6 +284,30 @@ void Workspace::init()
 #if KWIN_BUILD_SCREENLOCKER
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::locked, this, &Workspace::slotEndInteractiveMoveResize);
 #endif
+
+    // setup animation driver
+    auto animationDriver = new QAnimationDriver(this);
+    animationDriver->install();
+    auto setupAnimationDriver = [this, animationDriver]() {
+        // find the highest refresh output
+        auto fastestRefreshRate = -1;
+        Output *fastestOutput = nullptr;
+        for (auto output : m_outputs) {
+            auto refreshRate = output->refreshRate();
+            if (refreshRate > fastestRefreshRate) {
+                fastestRefreshRate = refreshRate;
+                fastestOutput = output;
+            }
+        }
+        if (!fastestOutput) {
+            return;
+        }
+        connect(fastestOutput->renderLoop(), &RenderLoop::framePresented, this, [animationDriver]() {
+            animationDriver->advance();
+            // we could update elapsed here to be more accurate? not sure it helps anything
+        });
+    };
+    setupAnimationDriver();
 }
 
 QString Workspace::getPlacementTrackerHash()
