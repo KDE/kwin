@@ -85,12 +85,10 @@ KCM.ScrollViewKCM {
 
     footer:  RowLayout {
         QQC2.Button {
-            text: checked ? i18n("Close") : i18n("Add Property...")
-            icon.name: checked ? "dialog-close" : "list-add"
-            checkable: true
-            checked: propertySheet.visible
-            onToggled: {
-                propertySheet.visible = checked;
+            text: i18n("Add Property...")
+            icon.name: "list-add"
+            onClicked: {
+                propertySheet.visible = true;
             }
         }
         Item {
