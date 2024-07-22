@@ -307,13 +307,25 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         }
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
-    if (success) {
-        Q_EMIT outputChange(frame->damage());
-        return true;
-    } else if (!needsModeset) {
-        qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
+    if (!success) {
+        if (!needsModeset) {
+            qCWarning(KWIN_DRM) << "Presentation failed!" << strerror(errno);
+        }
+        return false;
     }
-    return false;
+    Q_EMIT outputChange(frame->damage());
+    if (m_currentBrightness && m_currentBrightness != m_state.brightness) {
+        constexpr double changePerSecond = 2;
+        const double maxChangePerFrame = changePerSecond * 1'000.0 / m_state.currentMode->refreshRate();
+        // brightness perception is non-linear, gamma 2.2 encoding *roughly* represents that
+        const double current = std::pow(*m_currentBrightness, 1.0 / 2.2);
+        m_currentBrightness = std::pow(std::clamp(std::pow(m_state.brightness, 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2);
+        if (m_brightnessDevice) {
+            m_brightnessDevice->setBrightness(*m_currentBrightness);
+        }
+        m_renderLoop->scheduleRepaint();
+    }
+    return true;
 }
 
 DrmConnector *DrmOutput::connector() const
@@ -416,10 +428,15 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
 
-    if (m_brightnessDevice) {
-        if (m_state.highDynamicRange) {
-            m_brightnessDevice->setBrightness(1);
-        } else {
+    // we should skip brightness animations when
+    // - the output is new, and we didn't have the output configuration applied yet
+    // - there's not enough steps to do a smooth animation
+    // - the brightness device is external, most of them do an animation on their own
+    if (!m_currentBrightness
+        || (m_brightnessDevice && !m_state.highDynamicRange && m_brightnessDevice->brightnessSteps() < 10)
+        || (m_brightnessDevice && !m_state.highDynamicRange && !m_brightnessDevice->isInternal())) {
+        m_currentBrightness = m_state.brightness;
+        if (m_brightnessDevice && !m_state.highDynamicRange) {
             m_brightnessDevice->setBrightness(m_state.brightness);
         }
     }
@@ -444,6 +461,7 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
             device->setBrightness(1);
         } else {
             device->setBrightness(m_state.brightness);
+            m_currentBrightness = m_state.brightness;
         }
         // reset the brightness factors
         tryKmsColorOffloading();
@@ -523,7 +541,7 @@ QVector3D DrmOutput::effectiveChannelFactors() const
     if (m_state.highDynamicRange || !m_brightnessDevice) {
         // enforce a minimum of 25 nits for the reference luminance
         constexpr double minLuminance = 25;
-        const double brightnessFactor = (m_state.brightness * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
+        const double brightnessFactor = (m_currentBrightness.value_or(m_state.brightness) * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
         return adaptedChannelFactors * brightnessFactor;
     } else {
         return adaptedChannelFactors;

@@ -91,6 +91,7 @@ private:
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;
 
+    std::optional<double> m_currentBrightness;
     QVector3D m_channelFactors = {1, 1, 1};
     bool m_channelFactorsNeedShaderFallback = false;
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;
