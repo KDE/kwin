@@ -147,11 +147,6 @@ std::chrono::nanoseconds OutputFrame::predictedRenderTime() const
     return m_predictedRenderTime;
 }
 
-RenderBackend::RenderBackend(QObject *parent)
-    : QObject(parent)
-{
-}
-
 OutputLayer *RenderBackend::cursorLayer(Output *output)
 {
     return nullptr;

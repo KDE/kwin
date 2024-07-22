@@ -119,8 +119,6 @@ class KWIN_EXPORT RenderBackend : public QObject
     Q_OBJECT
 
 public:
-    explicit RenderBackend(QObject *parent = nullptr);
-
     virtual CompositingType compositingType() const = 0;
     virtual OverlayWindow *overlayWindow() const;
 
