@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1684925 $
+# Version: $Revision: 1685228 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-17 02:28+0000\n"
-"PO-Revision-Date: 2024-05-26 11:13+0200\n"
+"PO-Revision-Date: 2024-07-21 06:45+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -2758,12 +2758,12 @@ msgstr "Pomijaj z&minimalizowane okna"
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr "Brak pasujących"
+msgstr "Żadne nie pasuje"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Windows"
-msgstr "Bez okien"
+msgstr "Nie ma żadnych okien"
 
 #: plugins/windowview/qml/main.qml:122
 #, kde-format
