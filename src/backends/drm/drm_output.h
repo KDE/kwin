@@ -73,6 +73,8 @@ public:
      */
     bool needsChannelFactorFallback() const;
 
+    std::optional<double> currentBrightness() const override;
+
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
@@ -81,6 +83,8 @@ private:
     Capabilities computeCapabilities() const;
     void updateInformation();
     void setBrightnessDevice(BrightnessDevice *device) override;
+    void updateBrightness();
+    void setScanoutColordescription(const ColorDescription &description);
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
@@ -91,6 +95,7 @@ private:
     QTimer m_turnOffTimer;
     DrmLease *m_lease = nullptr;
 
+    std::optional<double> m_currentBrightness;
     QVector3D m_channelFactors = {1, 1, 1};
     bool m_channelFactorsNeedShaderFallback = false;
     ColorDescription m_scanoutColorDescription = ColorDescription::sRGB;

@@ -368,6 +368,8 @@ public:
     BrightnessDevice *brightnessDevice() const;
     virtual void setBrightnessDevice(BrightnessDevice *device);
 
+    virtual std::optional<double> currentBrightness() const;
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the geometry of this output has changed.

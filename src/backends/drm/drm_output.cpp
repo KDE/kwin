@@ -335,10 +335,16 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         success = err == DrmPipeline::Error::None;
     }
     m_renderLoop->setPresentationMode(m_pipeline->presentationMode());
-    if (success) {
-        Q_EMIT outputChange(frame->damage());
+    if (!success) {
+        return false;
     }
-    return success;
+    Q_EMIT outputChange(frame->damage());
+    if (frame->brightness() && (!m_currentBrightness || *m_currentBrightness != *frame->brightness())) {
+        m_currentBrightness = *frame->brightness();
+        updateBrightness();
+        m_renderLoop->scheduleRepaint();
+    }
+    return true;
 }
 
 DrmConnector *DrmOutput::connector() const
@@ -406,7 +412,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
 
-    const double brightnessFactor = !m_brightnessDevice || effectiveHdr ? props->brightness.value_or(m_state.brightness) : 1.0;
+    const double brightnessFactor = !m_brightnessDevice || effectiveHdr ? m_currentBrightness.value_or(m_state.brightness) : 1.0;
     const double effectiveReferenceLuminance = 25 + (referenceLuminance - 25) * brightnessFactor;
     return ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
@@ -446,14 +452,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
 
-    if (m_brightnessDevice) {
-        if (m_state.highDynamicRange) {
-            m_brightnessDevice->setBrightness(1);
-        } else {
-            m_brightnessDevice->setBrightness(m_state.brightness);
-        }
-    }
-
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset(nullptr);
     }
@@ -469,14 +467,21 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
 void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 {
     Output::setBrightnessDevice(device);
-    if (device) {
+    if (device && !m_state.highDynamicRange) {
+        m_currentBrightness = m_state.brightness;
+    }
+    updateBrightness();
+}
+
+void DrmOutput::updateBrightness()
+{
+    if (m_brightnessDevice) {
         if (m_state.highDynamicRange) {
-            device->setBrightness(1);
+            m_brightnessDevice->setBrightness(1);
         } else {
-            device->setBrightness(m_state.brightness);
+            m_brightnessDevice->setBrightness(m_currentBrightness.value_or(m_state.brightness));
         }
     }
-    // reset the brightness factors
     State next = m_state;
     next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
     setState(next);
@@ -511,13 +516,13 @@ void DrmOutput::tryKmsColorOffloading()
 {
     if (m_state.colorProfileSource == ColorProfileSource::ICC && m_state.iccProfile) {
         // offloading color operations doesn't make sense when we have to apply the icc shader anyways
-        m_scanoutColorDescription = colorDescription();
+        setScanoutColordescription(colorDescription());
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
         m_channelFactorsNeedShaderFallback = true;
         return;
     }
-    if (!m_pipeline->activePending()) {
+    if (!m_pipeline->activePending() || !primaryLayer()) {
         return;
     }
     // TODO this doesn't allow using only a CTM for night light offloading
@@ -532,15 +537,28 @@ void DrmOutput::tryKmsColorOffloading()
     m_pipeline->setCrtcColorPipeline(colorPipeline);
     if (DrmPipeline::commitPipelines({m_pipeline}, DrmPipeline::CommitMode::Test) == DrmPipeline::Error::None) {
         m_pipeline->applyPendingChanges();
-        m_scanoutColorDescription = optimal;
+        setScanoutColordescription(optimal);
         m_channelFactorsNeedShaderFallback = false;
     } else {
         // fall back to using a shadow buffer for doing blending in gamma 2.2 and the channel factors
         m_pipeline->revertPendingChanges();
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
-        m_scanoutColorDescription = colorDescription();
+        setScanoutColordescription(colorDescription());
         m_channelFactorsNeedShaderFallback = (channelFactors - QVector3D(1, 1, 1)).lengthSquared() > 0.0001;
+    }
+}
+
+void DrmOutput::setScanoutColordescription(const ColorDescription &description)
+{
+    if (m_scanoutColorDescription != description) {
+        m_scanoutColorDescription = description;
+        if (primaryLayer()) {
+            primaryLayer()->addRepaint(infiniteRegion());
+        }
+        if (cursorLayer()) {
+            cursorLayer()->addRepaint(infiniteRegion());
+        }
     }
 }
 
@@ -559,6 +577,11 @@ QVector3D DrmOutput::adaptedChannelFactors() const
 const ColorDescription &DrmOutput::scanoutColorDescription() const
 {
     return m_scanoutColorDescription;
+}
+
+std::optional<double> DrmOutput::currentBrightness() const
+{
+    return m_currentBrightness;
 }
 }
 

@@ -794,6 +794,11 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
 {
     m_brightnessDevice = device;
 }
+
+std::optional<double> Output::currentBrightness() const
+{
+    return std::nullopt;
+}
 } // namespace KWin
 
 #include "moc_output.cpp"
