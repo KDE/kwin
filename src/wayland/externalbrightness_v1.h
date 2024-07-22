@@ -51,6 +51,7 @@ public:
 
     bool isInternal() const override;
     QByteArray edidBeginning() const override;
+    int brightnessSteps() const override;
 
 private:
     void kde_external_brightness_device_v1_destroy_resource(Resource *resource) override;

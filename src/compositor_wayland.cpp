@@ -8,6 +8,7 @@
 */
 
 #include "compositor_wayland.h"
+#include "core/brightnessdevice.h"
 #include "core/graphicsbufferview.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
@@ -34,7 +35,6 @@
 #include <KNotification>
 #endif
 #include <KLocalizedString>
-
 #include <QQuickWindow>
 
 namespace KWin
@@ -314,6 +314,22 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
     bool directScanout = false;
 
+    // brightness animations should be skipped when
+    // - the output is new, and we didn't have the output configuration applied yet
+    // - there's not enough steps to do a smooth animation
+    // - the brightness device is external, most of them do an animation on their own
+    if (!output->currentBrightness().has_value()
+        || (!output->highDynamicRange() && output->brightnessDevice() && !output->isInternal())
+        || (!output->highDynamicRange() && output->brightnessDevice() && output->brightnessDevice()->brightnessSteps() < 5)) {
+        frame->setBrightness(output->brightnessSetting());
+    } else {
+        constexpr double changePerSecond = 3;
+        const double maxChangePerFrame = changePerSecond * 1'000.0 / renderLoop->refreshRate();
+        // brightness perception is non-linear, gamma 2.2 encoding *roughly* represents that
+        const double current = std::pow(*output->currentBrightness(), 1.0 / 2.2);
+        frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
+    }
+
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
         renderLoop->beginPaint();
@@ -388,6 +404,11 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     }
 
     framePass(superLayer, frame.get());
+
+    if (frame->brightness() && std::abs(*frame->brightness() - output->brightnessSetting()) > 0.001) {
+        // we're currently running an animation to change the brightness
+        renderLoop->scheduleRepaint();
+    }
 
     // TODO: move this into the cursor layer
     const auto frameTime = std::chrono::duration_cast<std::chrono::milliseconds>(output->renderLoop()->lastPresentationTimestamp());

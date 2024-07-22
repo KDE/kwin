@@ -27,6 +27,7 @@ public:
     Output *output() const;
     virtual bool isInternal() const = 0;
     virtual QByteArray edidBeginning() const = 0;
+    virtual int brightnessSteps() const = 0;
 
 private:
     Output *m_output = nullptr;

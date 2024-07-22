@@ -361,7 +361,8 @@ public:
     double sdrGamutWideness() const;
     ColorProfileSource colorProfileSource() const;
 
-    double brightness() const;
+    double brightnessSetting() const;
+    std::optional<double> currentBrightness() const;
 
     const ColorDescription &colorDescription() const;
 
@@ -483,7 +484,10 @@ protected:
         std::optional<double> minBrightnessOverride;
         double sdrGamutWideness = 0;
         VrrPolicy vrrPolicy = VrrPolicy::Automatic;
-        double brightness = 1.0;
+        /// the desired brightness level as set by the user
+        double brightnessSetting = 1.0;
+        /// the actually applied brightness level
+        std::optional<double> currentBrightness;
     };
 
     void setInformation(const Information &information);

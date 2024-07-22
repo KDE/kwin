@@ -75,6 +75,11 @@ QByteArray ExternalBrightnessDeviceV1::edidBeginning() const
     return m_edidBeginning;
 }
 
+int ExternalBrightnessDeviceV1::brightnessSteps() const
+{
+    return m_maxBrightness - (m_internal ? 1 : 0);
+}
+
 void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_destroy_resource(Resource *resource)
 {
     delete this;

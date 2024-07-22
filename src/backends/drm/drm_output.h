@@ -77,10 +77,12 @@ private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
     void tryKmsColorOffloading();
-    ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const;
+    ColorDescription createColorDescription(const std::shared_ptr<OutputChangeSet> &props, double brightness) const;
     Capabilities computeCapabilities() const;
     void updateInformation();
     void setBrightnessDevice(BrightnessDevice *device) override;
+    void updateBrightness(double newBrightness);
+    void setScanoutColorDescription(const ColorDescription &description);
 
     QList<std::shared_ptr<OutputMode>> getModes() const;
 
