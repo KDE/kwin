@@ -591,7 +591,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
 
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
 
-    QRectF possibleGeo = window->frameGeometry();
+    QRectF possibleGeo = window->moveResizeGeometry();
     bool noOverlap = false;
 
     // cascade until confirmed no total overlap or not enough space to cascade
