@@ -178,10 +178,9 @@ Item {
                             id: dropArea
                             anchors.fill: parent
                             onEntered: (drag) => {
-                                print("ENTERED")
                                 drag.accepted = true;
                             }
-                            onDropped: drop => { print("DROPPED")
+                            onDropped: drop => {
                                 drop.accepted = true;
                                 // dragging a KWin::Window
                                 if (drag.source.desktops.length === 0 || drag.source.desktops.indexOf(delegate.desktop) !== -1) {

@@ -193,16 +193,20 @@ class ExpoCell : public QQuickItem
     Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
     Q_PROPERTY(QQuickItem *contentItem READ contentItem WRITE setContentItem NOTIFY contentItemChanged)
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor WRITE setPartialActivationFactor NOTIFY partialActivationFactorChanged)
-    Q_PROPERTY(int naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
-    Q_PROPERTY(int naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
-    Q_PROPERTY(int naturalWidth READ naturalWidth WRITE setNaturalWidth NOTIFY naturalWidthChanged)
-    Q_PROPERTY(int naturalHeight READ naturalHeight WRITE setNaturalHeight NOTIFY naturalHeightChanged)
+    Q_PROPERTY(qreal offsetX READ offsetX WRITE setOffsetX NOTIFY offsetXChanged)
+    Q_PROPERTY(qreal offsetY READ offsetY WRITE setOffsetY NOTIFY offsetYChanged)
+    Q_PROPERTY(qreal naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
+    Q_PROPERTY(qreal naturalY READ naturalY WRITE setNaturalY NOTIFY naturalYChanged)
+    Q_PROPERTY(qreal naturalWidth READ naturalWidth WRITE setNaturalWidth NOTIFY naturalWidthChanged)
+    Q_PROPERTY(qreal naturalHeight READ naturalHeight WRITE setNaturalHeight NOTIFY naturalHeightChanged)
     Q_PROPERTY(QString persistentKey READ persistentKey WRITE setPersistentKey NOTIFY persistentKeyChanged)
-    Q_PROPERTY(int bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
+    Q_PROPERTY(qreal bottomMargin READ bottomMargin WRITE setBottomMargin NOTIFY bottomMarginChanged)
 
 public:
     explicit ExpoCell(QQuickItem *parent = nullptr);
     ~ExpoCell() override;
+
+    void componentComplete();
 
     ExpoLayout *layout() const;
     void setLayout(ExpoLayout *layout);
@@ -215,26 +219,36 @@ public:
     qreal partialActivationFactor() const;
     void setPartialActivationFactor(qreal factor);
 
-    int naturalX() const;
-    void setNaturalX(int x);
+    qreal offsetX() const;
+    void setOffsetX(qreal x);
 
-    int naturalY() const;
-    void setNaturalY(int y);
+    qreal offsetY() const;
+    void setOffsetY(qreal y);
 
-    int naturalWidth() const;
-    void setNaturalWidth(int width);
+    qreal naturalX() const;
+    void setNaturalX(qreal x);
 
-    int naturalHeight() const;
-    void setNaturalHeight(int height);
+    qreal naturalY() const;
+    void setNaturalY(qreal y);
 
-    QRect naturalRect() const;
-    QMargins margins() const;
+    qreal naturalWidth() const;
+    void setNaturalWidth(qreal width);
+
+    qreal naturalHeight() const;
+    void setNaturalHeight(qreal height);
+
+    QRectF naturalRect() const;
+    QMarginsF margins() const;
 
     QString persistentKey() const;
     void setPersistentKey(const QString &key);
 
-    int bottomMargin() const;
-    void setBottomMargin(int margin);
+    qreal bottomMargin() const;
+    void setBottomMargin(qreal margin);
+
+protected:
+    void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
+    void updatePolish() override;
 
 public Q_SLOTS:
     void update();
@@ -243,6 +257,8 @@ Q_SIGNALS:
     void layoutChanged();
     void contentItemChanged();
     void partialActivationFactorChanged();
+    void offsetXChanged();
+    void offsetYChanged();
     void naturalXChanged();
     void naturalYChanged();
     void naturalWidthChanged();
@@ -252,11 +268,13 @@ Q_SIGNALS:
 
 private:
     QString m_persistentKey;
-    int m_naturalX = 0;
-    int m_naturalY = 0;
-    int m_naturalWidth = 0;
-    int m_naturalHeight = 0;
-    QMargins m_margins;
+    qreal m_offsetX = 0;
+    qreal m_offsetY = 0;
+    qreal m_naturalX = 0;
+    qreal m_naturalY = 0;
+    qreal m_naturalWidth = 0;
+    qreal m_naturalHeight = 0;
+    QMarginsF m_margins;
     QPointer<ExpoLayout> m_layout;
     QPointer<QQuickItem> m_contentItem;
     qreal m_partialActivationFactor = 1.0;

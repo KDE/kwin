@@ -650,8 +650,8 @@ FocusScope {
                     delegate: WindowHeapDelegate2 {
                         windowHeap: heap
                         layout: heap.layout
-                        naturalX: window.x + desktopTranslation.x
-                        naturalY: window.y + desktopTranslation.y
+                        offsetX: gridVal > 0 ? 0 : mainBackground.deltaColumn * container.width * (1 - gridVal)
+                        offsetY: gridVal > 0 ? 0 : mainBackground.deltaRow * container.height * (1 - gridVal)
                         partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
                         contentItemParent: gridVal > 0 ? mainBackground : container
 

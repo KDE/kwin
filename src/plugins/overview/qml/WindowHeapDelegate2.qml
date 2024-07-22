@@ -81,20 +81,15 @@ property string substate
     contentItem: Item {
         parent: contentItemParent
         visible: opacity > 0
-        z: (activeDragHandler.active || returning.running) ? 1000
+        z: (activeDragHandler.active || returnAnimation.running) ? 1000
             : thumb.window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
-        NumberAnimation {
-            id: returning
-            duration: thumb.windowHeap.animationDuration
-            properties: "x, y, width, height"
-            easing.type: Easing.InOutCubic
-        }
         KWinComponents.WindowThumbnail {
             id: thumbSource
             wId: thumb.window.internalId
             width: parent.width
             height: parent.height
+            scale: targetScale
 
             Drag.proposedAction: Qt.MoveAction
             Drag.supportedActions: Qt.MoveAction
@@ -112,8 +107,7 @@ property string substate
                 thumb.windowHeap.saveDND(thumb.window.internalId, oldGlobalRect);
             }
             function restoreDND(oldGlobalRect: rect) {
-                thumb.substate = "reparenting";
-
+return
                 const newGlobalRect = mapFromItem(null, oldGlobalRect);
 
                 x = newGlobalRect.x;
@@ -142,6 +136,23 @@ property string substate
                 anchors.fill: parent
                 acceptedButtons: Qt.NoButton
                 cursorShape: thumb.activeDragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+            }
+            ParallelAnimation {
+                id: returnAnimation
+                NumberAnimation {
+                    target: thumbSource
+                    properties: "x,y"
+                    to: 0
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+                NumberAnimation {
+                    target: thumbSource
+                    properties: "scale"
+                    to: 1
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
             }
         }
 
@@ -227,6 +238,7 @@ property string substate
                     thumb.activeDragHandler = this;
                     thumb.substate = "drag";
                 } else {
+                    returnAnimation.restart();
                     thumbSource.saveDND();
 
                     var action = thumbSource.Drag.drop();

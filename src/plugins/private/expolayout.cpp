@@ -30,10 +30,10 @@ ExpoCell::ExpoCell(QQuickItem *parent)
 
     QQuickItem *ancestor = this;
     while (ancestor) {
-        connect(ancestor, &QQuickItem::xChanged, this, &ExpoCell::updateContentItemGeometry);
-        connect(ancestor, &QQuickItem::yChanged, this, &ExpoCell::updateContentItemGeometry);
-        connect(ancestor, &QQuickItem::widthChanged, this, &ExpoCell::updateContentItemGeometry);
-        connect(ancestor, &QQuickItem::heightChanged, this, &ExpoCell::updateContentItemGeometry);
+        connect(ancestor, &QQuickItem::xChanged, this, &ExpoCell::polish);
+        connect(ancestor, &QQuickItem::yChanged, this, &ExpoCell::polish);
+        connect(ancestor, &QQuickItem::widthChanged, this, &ExpoCell::polish);
+        connect(ancestor, &QQuickItem::heightChanged, this, &ExpoCell::polish);
         ancestor = ancestor->parentItem();
     }
 }
@@ -41,6 +41,12 @@ ExpoCell::ExpoCell(QQuickItem *parent)
 ExpoCell::~ExpoCell()
 {
     setLayout(nullptr);
+}
+
+void ExpoCell::componentComplete()
+{
+    QQuickItem::componentComplete();
+    polish();
 }
 
 ExpoLayout *ExpoCell::layout() const
@@ -60,21 +66,8 @@ void ExpoCell::setLayout(ExpoLayout *layout)
     if (m_layout && isVisible()) {
         m_layout->addCell(this);
     }
-    updateContentItemGeometry();
+    polish();
     Q_EMIT layoutChanged();
-}
-
-void ExpoCell::updateContentItemGeometry()
-{
-    if (!m_contentItem) {
-        return;
-    }
-    const QPointF &pos = mapToScene(QPointF());
-
-    m_contentItem->setX(pos.x() * m_partialActivationFactor + m_naturalX * (1.0 - m_partialActivationFactor));
-    m_contentItem->setY(pos.y() * m_partialActivationFactor + m_naturalY * (1.0 - m_partialActivationFactor));
-    m_contentItem->setSize({width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
-                            height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)});
 }
 
 QQuickItem *ExpoCell::contentItem() const
@@ -89,12 +82,8 @@ void ExpoCell::setContentItem(QQuickItem *item)
     }
 
     m_contentItem = item;
-    /* if (item) {
-         item->setParentItem(this);
-     }*/
 
-    updateContentItemGeometry();
-
+    polish();
     Q_EMIT contentItemChanged();
 }
 
@@ -110,7 +99,8 @@ void ExpoCell::setPartialActivationFactor(qreal factor)
     }
 
     m_partialActivationFactor = factor;
-    updateContentItemGeometry();
+    // Since this in anuimation controller we want it to have immediate effect
+    updatePolish();
 
     Q_EMIT partialActivationFactorChanged();
 }
@@ -122,26 +112,55 @@ void ExpoCell::update()
     }
 }
 
-int ExpoCell::naturalX() const
+qreal ExpoCell::offsetX() const
+{
+    return m_offsetX;
+}
+
+void ExpoCell::setOffsetX(qreal x)
+{
+    if (m_offsetX != x) {
+        m_offsetX = x;
+        polish();
+        Q_EMIT offsetXChanged();
+    }
+}
+
+qreal ExpoCell::offsetY() const
+{
+    return m_offsetY;
+}
+
+void ExpoCell::setOffsetY(qreal y)
+{
+    if (m_offsetY != y) {
+        m_offsetY = y;
+        polish();
+        Q_EMIT offsetYChanged();
+    }
+}
+
+qreal ExpoCell::naturalX() const
 {
     return m_naturalX;
 }
 
-void ExpoCell::setNaturalX(int x)
+void ExpoCell::setNaturalX(qreal x)
 {
     if (m_naturalX != x) {
         m_naturalX = x;
         update();
+        polish();
         Q_EMIT naturalXChanged();
     }
 }
 
-int ExpoCell::naturalY() const
+qreal ExpoCell::naturalY() const
 {
     return m_naturalY;
 }
 
-void ExpoCell::setNaturalY(int y)
+void ExpoCell::setNaturalY(qreal y)
 {
     if (m_naturalY != y) {
         m_naturalY = y;
@@ -150,40 +169,42 @@ void ExpoCell::setNaturalY(int y)
     }
 }
 
-int ExpoCell::naturalWidth() const
+qreal ExpoCell::naturalWidth() const
 {
     return m_naturalWidth;
 }
 
-void ExpoCell::setNaturalWidth(int width)
+void ExpoCell::setNaturalWidth(qreal width)
 {
     if (m_naturalWidth != width) {
         m_naturalWidth = width;
         update();
+        polish();
         Q_EMIT naturalWidthChanged();
     }
 }
 
-int ExpoCell::naturalHeight() const
+qreal ExpoCell::naturalHeight() const
 {
     return m_naturalHeight;
 }
 
-void ExpoCell::setNaturalHeight(int height)
+void ExpoCell::setNaturalHeight(qreal height)
 {
     if (m_naturalHeight != height) {
         m_naturalHeight = height;
         update();
+        polish();
         Q_EMIT naturalHeightChanged();
     }
 }
 
-QRect ExpoCell::naturalRect() const
+QRectF ExpoCell::naturalRect() const
 {
-    return QRect(naturalX(), naturalY(), naturalWidth(), naturalHeight());
+    return QRectF(m_naturalX, m_naturalY, m_naturalWidth, m_naturalHeight);
 }
 
-QMargins ExpoCell::margins() const
+QMarginsF ExpoCell::margins() const
 {
     return m_margins;
 }
@@ -202,18 +223,37 @@ void ExpoCell::setPersistentKey(const QString &key)
     }
 }
 
-int ExpoCell::bottomMargin() const
+qreal ExpoCell::bottomMargin() const
 {
     return m_margins.bottom();
 }
 
-void ExpoCell::setBottomMargin(int margin)
+void ExpoCell::setBottomMargin(qreal margin)
 {
     if (m_margins.bottom() != margin) {
         m_margins.setBottom(margin);
         update();
         Q_EMIT bottomMarginChanged();
     }
+}
+
+void ExpoCell::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
+{
+    polish();
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
+}
+
+void ExpoCell::updatePolish()
+{
+    if (!m_contentItem) {
+        return;
+    }
+    const QPointF &pos = mapToItem(m_contentItem->parentItem(), QPointF());
+
+    m_contentItem->setX(pos.x() * m_partialActivationFactor + m_naturalX * (1.0 - m_partialActivationFactor) + m_offsetX);
+    m_contentItem->setY(pos.y() * m_partialActivationFactor + m_naturalY * (1.0 - m_partialActivationFactor) + m_offsetY);
+    m_contentItem->setSize({width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
+                            height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)});
 }
 
 ExpoLayout::ExpoLayout(QQuickItem *parent)
@@ -256,7 +296,7 @@ void ExpoLayout::forceLayout()
 void ExpoLayout::updateCellsMapping()
 {
     for (ExpoCell *cell : m_cells) {
-        cell->updateContentItemGeometry();
+        cell->polish();
     }
 }
 
@@ -315,9 +355,9 @@ void ExpoLayout::updatePolish()
 
     QList<QRectF> windowSizes;
     for (ExpoCell *cell : std::as_const(m_cells)) {
-        const QMargins &margins = cell->margins();
+        const QMarginsF &margins = cell->margins();
         const QMarginsF scaledMargins(margins.left() / scale, margins.top() / scale, margins.right() / scale, margins.bottom() / scale);
-        windowSizes.emplace_back(cell->naturalRect().toRectF().marginsAdded(scaledMargins));
+        windowSizes.emplace_back(cell->naturalRect().marginsAdded(scaledMargins));
     }
     auto windowLayouts = ExpoLayout::layout(area, windowSizes);
     for (int i = 0; i < windowLayouts.size(); ++i) {
