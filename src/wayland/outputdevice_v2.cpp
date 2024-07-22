@@ -838,7 +838,7 @@ void OutputDeviceV2Interface::updateColorProfileSource()
 
 void OutputDeviceV2Interface::updateBrightness()
 {
-    const uint32_t newBrightness = std::round(d->m_handle->brightness() * 10'000);
+    const uint32_t newBrightness = std::round(d->m_handle->brightnessSetting() * 10'000);
     if (d->m_brightness != newBrightness) {
         d->m_brightness = newBrightness;
         const auto clientResources = d->resourceMap();

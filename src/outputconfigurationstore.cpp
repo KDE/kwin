@@ -233,7 +233,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .maxAverageBrightnessOverride = changeSet->maxAverageBrightnessOverride.value_or(output->maxAverageBrightnessOverride()),
                 .minBrightnessOverride = changeSet->minBrightnessOverride.value_or(output->minBrightnessOverride()),
                 .sdrGamutWideness = changeSet->sdrGamutWideness.value_or(output->sdrGamutWideness()),
-                .brightness = changeSet->brightness.value_or(output->brightness()),
+                .brightness = changeSet->brightness.value_or(output->brightnessSetting()),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
@@ -275,7 +275,7 @@ void OutputConfigurationStore::storeConfig(const QList<Output *> &allOutputs, bo
                 .maxAverageBrightnessOverride = output->maxAverageBrightnessOverride(),
                 .minBrightnessOverride = output->minBrightnessOverride(),
                 .sdrGamutWideness = output->sdrGamutWideness(),
-                .brightness = output->brightness(),
+                .brightness = output->brightnessSetting(),
             };
             *outputIt = SetupState{
                 .outputIndex = *outputIndex,
