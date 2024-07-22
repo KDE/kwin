@@ -202,7 +202,8 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
         // but resend selection to mimic normal event flow upon cancel and not confuse the client
         // See https://github.com/swaywm/wlr-protocols/issues/92
-        if (dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty")) && currentSelection) {
+        const bool isKlipperEmptyReplacement = dataDevice->selection() && dataDevice->selection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"));
+        if (isKlipperEmptyReplacement && currentSelection && !currentSelection->mimeTypes().isEmpty()) {
             dataDevice->selection()->cancel();
             dataDevice->sendSelection(currentSelection);
             return;
@@ -215,8 +216,8 @@ void SeatInterfacePrivate::registerDataControlDevice(DataControlDeviceV1Interfac
         // If the mimetype x-kde-onlyReplaceEmpty is set, and we've had another update in the meantime, do nothing
         // but resend selection to mimic normal event flow upon cancel and not confuse the client
         // See https://github.com/swaywm/wlr-protocols/issues/92
-        if (dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"))
-            && currentPrimarySelection) {
+        const bool isKlipperEmptyReplacement = dataDevice->primarySelection() && dataDevice->primarySelection()->mimeTypes().contains(QLatin1String("application/x-kde-onlyReplaceEmpty"));
+        if (isKlipperEmptyReplacement && currentPrimarySelection && !currentPrimarySelection->mimeTypes().isEmpty()) {
             dataDevice->primarySelection()->cancel();
             dataDevice->sendPrimarySelection(currentPrimarySelection);
             return;
