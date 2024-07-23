@@ -239,7 +239,7 @@ void ExpoCell::setBottomMargin(qreal margin)
 
 void ExpoCell::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
-    polish();
+    updatePolish();
     QQuickItem::geometryChange(newGeometry, oldGeometry);
 }
 

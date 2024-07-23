@@ -27,7 +27,7 @@ ExpoCell {
     property bool gestureInProgress: effect.gestureInProgress
     // Where the internal contentItem will be parented to
     property Item contentItemParent: this
-property string substate
+
     // no desktops is a special value which means "All Desktops"
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
     readonly property bool initialHidden: window.minimized || !presentOnCurrentDesktop
@@ -108,6 +108,7 @@ property string substate
     }
 
     contentItem: Item {
+        id: mainContent
         parent: contentItemParent
         visible: opacity > 0
         z: (activeDragHandler.active || returnAnimation.running) ? 1000
@@ -116,9 +117,16 @@ property string substate
         KWinComponents.WindowThumbnail {
             id: thumbSource
             wId: thumb.window.internalId
-            width: parent.width
-            height: parent.height
             scale: targetScale
+
+            Binding on width {
+                value: mainContent.width
+                when: !returnAnimation.active
+            }
+            Binding on height {
+                value: mainContent.height
+                when: !returnAnimation.active
+            }
 
             Drag.proposedAction: Qt.MoveAction
             Drag.supportedActions: Qt.MoveAction
@@ -136,15 +144,14 @@ property string substate
                 thumb.windowHeap.saveDND(thumb.window.internalId, oldGlobalRect);
             }
             function restoreDND(oldGlobalRect: rect) {
-return
                 const newGlobalRect = mapFromItem(null, oldGlobalRect);
-
+                // Disable the bindings
+                returnAnimation.active = true;
                 x = newGlobalRect.x;
                 y = newGlobalRect.y;
                 width = newGlobalRect.width;
                 height = newGlobalRect.height;
-
-                thumb.substate = "normal";
+                returnAnimation.restart();
             }
             function deleteDND() {
                 thumb.windowHeap.deleteDND(thumb.window.internalId);
@@ -168,6 +175,8 @@ return
             }
             ParallelAnimation {
                 id: returnAnimation
+                property bool active: false
+                onRunningChanged: active = running
                 NumberAnimation {
                     target: thumbSource
                     properties: "x,y"
@@ -177,7 +186,22 @@ return
                 }
                 NumberAnimation {
                     target: thumbSource
-                    properties: "scale"
+                    property: "width"
+                    from: thumbSource.width
+                    to: mainContent.width
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+                NumberAnimation {
+                    target: thumbSource
+                    property: "height"
+                    to: mainContent.height
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+                NumberAnimation {
+                    target: thumbSource
+                    property: "scale"
                     to: 1
                     duration: thumb.windowHeap.animationDuration
                     easing.type: Easing.InOutCubic
@@ -199,7 +223,7 @@ return
             width: Kirigami.Units.iconSizes.large
             height: Kirigami.Units.iconSizes.large
             opacity: partialActivationFactor
-            scale: Math.min(1.0, thumb.contentItem.width / Math.max(0.01, thumb.width))
+            scale: Math.min(1.0, mainContent.width / Math.max(0.01, thumb.width))
             source: thumb.window.icon
             anchors.horizontalCenter: thumbSource.horizontalCenter
             anchors.verticalCenter: thumbSource.bottom
@@ -244,20 +268,15 @@ return
             }
             onPressedChanged: {
                 if (pressed) {
-                    var saved = Qt.point(thumbSource.x, thumbSource.y);
                     thumbSource.Drag.active = true;
-                    thumb.substate = "pressed";
-                    thumbSource.x = saved.x;
-                    thumbSource.y = saved.y;
                 } else if (!thumb.activeDragHandler.active) {
                     thumbSource.Drag.active = false;
-                    thumb.substate = "normal";
                 }
             }
         }
 
         component DragManager : DragHandler {
-            target: null
+            target: thumbSource
             grabPermissions: PointerHandler.CanTakeOverFromAnything
             // This does not work when moving pointer fast and pressing along the way
             // See also QTBUG-105903, QTBUG-105904
@@ -267,10 +286,9 @@ return
                 thumb.windowHeap.dragActive = active;
                 if (active) {
                     thumb.activeDragHandler = this;
-                    thumb.substate = "drag";
                 } else {
-                    returnAnimation.restart();
                     thumbSource.saveDND();
+                    returnAnimation.restart();
 
                     var action = thumbSource.Drag.drop();
                     if (action === Qt.MoveAction) {
@@ -279,7 +297,6 @@ return
                         if (typeof thumbSource !== "undefined") {
                             // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
                             thumbSource.deleteDND();
-                            thumb.substate = "normal";
                         }
                         return;
                     }
@@ -290,7 +307,6 @@ return
                     if (typeof thumbSource !== "undefined") {
                         // else, return to normal without reparenting
                         thumbSource.deleteDND();
-                        thumb.substate = "normal";
                     }
                 }
             }
@@ -299,7 +315,6 @@ return
         DragManager {
             id: dragHandler
             acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
-            target: thumbSource
         }
 
         DragManager {
