@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-13 00:39+0000\n"
+"POT-Creation-Date: 2024-07-23 00:40+0000\n"
 "PO-Revision-Date: 2024-05-27 07:59+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -820,78 +820,78 @@ msgstr "Atlasīt datni"
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin noteikumi (*.kwinrule)"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, kde-format
 msgid "Add New…"
 msgstr "Pievienot jaunu…"
 
-#: ui/main.qml:35
+#: ui/main.qml:34
 #, kde-format
 msgid "Import…"
 msgstr "Importēt…"
 
-#: ui/main.qml:40
+#: ui/main.qml:39
 #, kde-format
 msgid "Cancel Export"
 msgstr "Atcelt eksportu"
 
-#: ui/main.qml:40
+#: ui/main.qml:39
 #, kde-format
 msgid "Export…"
 msgstr "Eksportēt…"
 
-#: ui/main.qml:88
+#: ui/main.qml:87
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr "Šobrīd nav iestatīti noteikumi atsevišķiem logiem"
 
-#: ui/main.qml:89
+#: ui/main.qml:88
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr "Spiediet uz  <interface>Pievienot jaunu…</interface>, lai pievienotu"
 
-#: ui/main.qml:97
+#: ui/main.qml:96
 #, kde-format
 msgid "Select the rules to export"
 msgstr "Atlasiet eksportējamos noteikumus"
 
-#: ui/main.qml:101
+#: ui/main.qml:100
 #, kde-format
 msgid "Unselect All"
 msgstr "Noņemt atlasi visam"
 
-#: ui/main.qml:101
+#: ui/main.qml:100
 #, kde-format
 msgid "Select All"
 msgstr "Atlasīt visus"
 
-#: ui/main.qml:115
+#: ui/main.qml:114
 #, kde-format
 msgid "Save Rules"
 msgstr "Saglabāt noteikumus"
 
-#: ui/main.qml:196
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "Rediģēt"
 
-#: ui/main.qml:202
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr "Dublēt"
 
-#: ui/main.qml:208
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "Dzēst"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr "Importēt noteikumus"
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, kde-format
 msgid "Export Rules"
 msgstr "Eksportēt noteikumus"
@@ -931,25 +931,20 @@ msgstr ""
 
 #: ui/RulesEditor.qml:88
 #, kde-format
-msgid "Close"
-msgstr "Aizvērt"
-
-#: ui/RulesEditor.qml:88
-#, kde-format
 msgid "Add Property..."
 msgstr "Pievienot īpašību..."
 
-#: ui/RulesEditor.qml:101
+#: ui/RulesEditor.qml:99
 #, kde-format
 msgid "Detect Window Properties"
 msgstr "Noteikt loga īpašības"
 
-#: ui/RulesEditor.qml:117 ui/RulesEditor.qml:124
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:122
 #, kde-format
 msgid "Instantly"
 msgstr "Tūlītēji"
 
-#: ui/RulesEditor.qml:118 ui/RulesEditor.qml:129
+#: ui/RulesEditor.qml:116 ui/RulesEditor.qml:127
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
@@ -957,33 +952,47 @@ msgstr[0] "Pēc %1 sekundes"
 msgstr[1] "Pēc %1 sekundēm"
 msgstr[2] "Pēc %1 sekundēm"
 
-#: ui/RulesEditor.qml:176
+#: ui/RulesEditor.qml:174
 #, kde-format
 msgid "Add property to the rule"
 msgstr "Noteikumam pievienot īpašību"
 
-#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:267
+#, fuzzy, kde-format
+#| msgid "No window properties changed"
+msgctxt "@info:placeholder"
+msgid "No properties left to add"
+msgstr "Logu īpašības nav mainītas"
+
+#: ui/RulesEditor.qml:269
+#, fuzzy, kde-format
+#| msgid "No window properties changed"
+msgctxt "@info:placeholder %1 is a filter text introduced by the user"
+msgid "No properties match \"%1\""
+msgstr "Logu īpašības nav mainītas"
+
+#: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr "Jā"
 
-#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:290 ui/ValueEditor.qml:60
 #, kde-format
 msgid "No"
 msgstr "Nē"
 
-#: ui/RulesEditor.qml:281 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:292 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr "%1 %"
 
-#: ui/RulesEditor.qml:283
+#: ui/RulesEditor.qml:294
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr "(%1, %2)"
 
-#: ui/RulesEditor.qml:285
+#: ui/RulesEditor.qml:296
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -994,6 +1003,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "×"
+
+#~ msgid "Close"
+#~ msgstr "Aizvērt"
 
 #, fuzzy
 #~| msgid "Window &type"

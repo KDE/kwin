@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-05-13 00:39+0000\n"
+"POT-Creation-Date: 2024-07-23 00:40+0000\n"
 "PO-Revision-Date: 2013-10-04 02:07+0600\n"
 "Last-Translator: Sairan Kikkarin <sairan@computer.org>\n"
 "Language-Team: Kazakh <kde-i18n-doc@kde.org>\n"
@@ -791,82 +791,82 @@ msgstr ""
 msgid "KWin Rules (*.kwinrule)"
 msgstr "KWin ереже (*.kwinrule)"
 
-#: ui/main.qml:29
+#: ui/main.qml:28
 #, fuzzy, kde-format
 #| msgid "&New..."
 msgid "Add New…"
 msgstr "&Жаңа..."
 
-#: ui/main.qml:35
+#: ui/main.qml:34
 #, fuzzy, kde-format
 #| msgid "&Import"
 msgid "Import…"
 msgstr "&Импорт"
 
-#: ui/main.qml:40
+#: ui/main.qml:39
 #, fuzzy, kde-format
 #| msgid "&Export"
 msgid "Cancel Export"
 msgstr "&Экспорт"
 
-#: ui/main.qml:40
+#: ui/main.qml:39
 #, fuzzy, kde-format
 #| msgid "&Export"
 msgid "Export…"
 msgstr "&Экспорт"
 
-#: ui/main.qml:88
+#: ui/main.qml:87
 #, kde-format
 msgid "No rules for specific windows are currently set"
 msgstr ""
 
-#: ui/main.qml:89
+#: ui/main.qml:88
 #, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
 
-#: ui/main.qml:97
+#: ui/main.qml:96
 #, kde-format
 msgid "Select the rules to export"
 msgstr ""
 
-#: ui/main.qml:101
+#: ui/main.qml:100
 #, kde-format
 msgid "Unselect All"
 msgstr ""
 
-#: ui/main.qml:101
+#: ui/main.qml:100
 #, kde-format
 msgid "Select All"
 msgstr ""
 
-#: ui/main.qml:115
+#: ui/main.qml:114
 #, kde-format
 msgid "Save Rules"
 msgstr ""
 
-#: ui/main.qml:196
+#: ui/main.qml:195
 #, kde-format
 msgid "Edit"
 msgstr "Өңдеу"
 
-#: ui/main.qml:202
+#: ui/main.qml:201
 #, kde-format
 msgid "Duplicate"
 msgstr ""
 
-#: ui/main.qml:208
+#: ui/main.qml:207
 #, kde-format
 msgid "Delete"
 msgstr "Өшіру"
 
-#: ui/main.qml:240
+#: ui/main.qml:239
 #, kde-format
 msgid "Import Rules"
 msgstr "Ережені импорттау"
 
-#: ui/main.qml:252
+#: ui/main.qml:251
 #, fuzzy, kde-format
 #| msgid "Export Rule"
 msgid "Export Rules"
@@ -904,62 +904,70 @@ msgstr ""
 
 #: ui/RulesEditor.qml:88
 #, fuzzy, kde-format
-#| msgid "&Closeable"
-msgid "Close"
-msgstr "&Жабылу мүмкіндігі"
-
-#: ui/RulesEditor.qml:88
-#, fuzzy, kde-format
 #| msgid "&New..."
 msgid "Add Property..."
 msgstr "&Жаңа..."
 
-#: ui/RulesEditor.qml:101
+#: ui/RulesEditor.qml:99
 #, fuzzy, kde-format
 #| msgid "&Detect Window Properties"
 msgid "Detect Window Properties"
 msgstr "Терезе қасиеттерін &байқау"
 
-#: ui/RulesEditor.qml:117 ui/RulesEditor.qml:124
+#: ui/RulesEditor.qml:115 ui/RulesEditor.qml:122
 #, kde-format
 msgid "Instantly"
 msgstr ""
 
-#: ui/RulesEditor.qml:118 ui/RulesEditor.qml:129
+#: ui/RulesEditor.qml:116 ui/RulesEditor.qml:127
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
 msgstr[0] ""
 
-#: ui/RulesEditor.qml:176
+#: ui/RulesEditor.qml:174
 #, kde-format
 msgid "Add property to the rule"
 msgstr ""
 
-#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:54
+#: ui/RulesEditor.qml:267
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgctxt "@info:placeholder"
+msgid "No properties left to add"
+msgstr "Терезе қасиеттерін &байқау"
+
+#: ui/RulesEditor.qml:269
+#, fuzzy, kde-format
+#| msgid "&Detect Window Properties"
+msgctxt "@info:placeholder %1 is a filter text introduced by the user"
+msgid "No properties match \"%1\""
+msgstr "Терезе қасиеттерін &байқау"
+
+#: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
 msgid "Yes"
 msgstr ""
 
-#: ui/RulesEditor.qml:279 ui/ValueEditor.qml:60
+#: ui/RulesEditor.qml:290 ui/ValueEditor.qml:60
 #, fuzzy, kde-format
 #| msgctxt "no focus stealing prevention"
 #| msgid "None"
 msgid "No"
 msgstr "Жоқ"
 
-#: ui/RulesEditor.qml:281 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
+#: ui/RulesEditor.qml:292 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
 msgstr ""
 
-#: ui/RulesEditor.qml:283
+#: ui/RulesEditor.qml:294
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
 msgstr ""
 
-#: ui/RulesEditor.qml:285
+#: ui/RulesEditor.qml:296
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
@@ -970,6 +978,11 @@ msgstr ""
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr ""
+
+#, fuzzy
+#~| msgid "&Closeable"
+#~ msgid "Close"
+#~ msgstr "&Жабылу мүмкіндігі"
 
 #, fuzzy
 #~| msgid "Window &type"

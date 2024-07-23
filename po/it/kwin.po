@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-19 00:40+0000\n"
-"PO-Revision-Date: 2024-06-15 13:45+0200\n"
+"PO-Revision-Date: 2024-07-17 14:05+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.05.1\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -720,7 +720,7 @@ msgstr "Anello tablet"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Effetti"
 
 #: debug_console.cpp:795
 #, kde-format
@@ -931,13 +931,13 @@ msgstr "Finestre interne"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Scarica"
 
 #: debug_console.cpp:1586 debug_console.cpp:1600
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Carica"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1736,23 +1736,21 @@ msgstr "Animazione di chiusura della finestra"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Mai"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " millisecondi"
-msgstr[1] " millisecondi"
+msgstr[0] "%1 secondo"
+msgstr[1] "%1 secondi"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "Nascondi il puntatore durante la digitazione"
+msgstr "Nascondi il puntatore in caso di inattività:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -1877,72 +1875,72 @@ msgstr "Pulsanti animati"
 #: plugins/keynotification/keynotification.cpp:37
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Il tasto Bloc Maiusc è stato attivato"
 
 #: plugins/keynotification/keynotification.cpp:41
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Il tasto Bloc Maiusc è ora inattivo"
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Il tasto Bloc Num è stato attivato"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Il tasto Bloc Num è ora inattivo"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Il tasto Bloc Scorr è stato attivato"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Il tasto Bloc Scorr è ora inattivo"
 
 #: plugins/keynotification/keynotification.cpp:70
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Il tasto Shift è ora attivo."
 
 #: plugins/keynotification/keynotification.cpp:74
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Il tasto Shift è ora inattivo."
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Il tasto Ctrl è ora attivo."
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Il tasto Ctrl è ora inattivo."
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Il tasto Alt è ora attivo."
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Il tasto Alt è ora inattivo."
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Il tasto Meta è ora attivo."
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Il tasto Meta è ora inattivo."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2611,30 +2609,40 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Il tasto Shift è stato bloccato ed è adesso attivo per tutte le immissioni "
+"successive."
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Il tasto Ctrl è stato bloccato ed è adesso attivo per tutte le immissioni "
+"successive."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Il tasto Alt è stato bloccato ed è ora attivo per tutte le immissioni "
+"successive."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Il tasto Meta è stato bloccato ed è adesso attivo per tutte le immissioni "
+"successive."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Il tasto AltGr è stato bloccato ed è ora attivo per tutte le immissioni "
+"successive."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
