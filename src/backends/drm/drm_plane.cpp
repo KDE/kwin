@@ -19,6 +19,7 @@
 
 #include <drm_fourcc.h>
 #include <ranges>
+#include <span>
 
 namespace KWin
 {
