@@ -65,10 +65,6 @@ property string substate
 
     property bool isReady: width !== 0 && height !== 0
 
-    function restoreDND(oldGlobalRect: rect) {
-        thumbSource.restoreDND(oldGlobalRect);
-    }
-
     enabled: !thumb.activeHidden
     partialActivationFactor: effect.partialActivationFactor
     naturalX: thumb.window.x
@@ -130,25 +126,6 @@ property string substate
 
             onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
             onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
-
-            function saveDND() {
-                const oldGlobalRect = mapToItem(null, 0, 0, width, height);
-                thumb.windowHeap.saveDND(thumb.window.internalId, oldGlobalRect);
-            }
-            function restoreDND(oldGlobalRect: rect) {
-return
-                const newGlobalRect = mapFromItem(null, oldGlobalRect);
-
-                x = newGlobalRect.x;
-                y = newGlobalRect.y;
-                width = newGlobalRect.width;
-                height = newGlobalRect.height;
-
-                thumb.substate = "normal";
-            }
-            function deleteDND() {
-                thumb.windowHeap.deleteDND(thumb.window.internalId);
-            }
 
             // Not using FrameSvg hover element intentionally for stylistic reasons
             Rectangle {
@@ -270,7 +247,6 @@ return
                     thumb.substate = "drag";
                 } else {
                     returnAnimation.restart();
-                    thumbSource.saveDND();
 
                     var action = thumbSource.Drag.drop();
                     if (action === Qt.MoveAction) {
@@ -278,7 +254,6 @@ return
                         // another virtual desktop (not another screen).
                         if (typeof thumbSource !== "undefined") {
                             // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
-                            thumbSource.deleteDND();
                             thumb.substate = "normal";
                         }
                         return;
@@ -289,7 +264,6 @@ return
 
                     if (typeof thumbSource !== "undefined") {
                         // else, return to normal without reparenting
-                        thumbSource.deleteDND();
                         thumb.substate = "normal";
                     }
                 }

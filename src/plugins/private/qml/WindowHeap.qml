@@ -55,21 +55,6 @@ FocusScope {
         activated();
     }
 
-    property var dndManagerStore: ({})
-
-    function saveDND(key: int, rect: rect) {
-        dndManagerStore[key] = rect;
-    }
-    function containsDND(key: int): bool {
-        return key in dndManagerStore;
-    }
-    function restoreDND(key: int): rect {
-        return dndManagerStore[key];
-    }
-    function deleteDND(key: int) {
-        delete dndManagerStore[key];
-    }
-
     KWinComponents.WindowThumbnail {
         id: otherScreenThumbnail
         z: 2
@@ -146,17 +131,9 @@ FocusScope {
 
             onObjectAdded: (index, object) => {
                 object.parent = expoLayout
-                var key = object.window.internalId;
-                if (heap.containsDND(key)) {
-                    expoLayout.forceLayout();
-                    var oldGlobalRect = heap.restoreDND(key);
-                    object.restoreDND(oldGlobalRect);
-                    heap.deleteDND(key);
-                } else if (heap.effectiveOrganized) {
-                    // New window has opened in the middle of a running effect.
-                    // Make sure it is positioned before enabling its animations.
-                    expoLayout.forceLayout();
-                }
+                // New window has opened in the middle of a running effect.
+                // Make sure it is positioned before enabling its animations.
+                expoLayout.forceLayout();
                 object.animationEnabled = true;
             }
         }
