@@ -649,11 +649,12 @@ FocusScope {
                     }
                     delegate: WindowHeapDelegate {
                         windowHeap: heap
-                        offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal) + dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0
-                        offsetY: mainBackground.deltaRow * container.height * (1 - gridVal)+ dragHandler.active ? (dragHandler.centroid.pressPosition.y - dragHandler.centroid.position.y) : 0
+                        offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal) + (dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0)
+                        offsetY: mainBackground.deltaRow * container.height * (1 - gridVal) + (dragHandler.active ? (dragHandler.centroid.pressPosition.y - dragHandler.centroid.position.y) : 0)
 
                         partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
-                        contentItemParent: container
+                        // Parent switch needed for the option "organize windows in gridview"  to work correctly
+                        contentItemParent: container.gridVal > 0 ? mainBackground : container
 
                         // This is preferable over using gestureInProgress values since gridVal and
                         // overviewVal are animated even after the gesture ends, and since the partial
