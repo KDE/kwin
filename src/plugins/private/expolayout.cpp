@@ -377,10 +377,18 @@ void ExpoLayout::updatePolish()
 
         QRectF rect = cell->naturalRect();
         moveToFit(rect, target);
-        cell->setX(rect.x());
-        cell->setY(rect.y());
-        cell->setWidth(rect.width());
-        cell->setHeight(rect.height());
+        if (m_ready) {
+            // Use setProperty so the QML side can animate with Behavior
+            cell->setProperty("x", rect.x());
+            cell->setProperty("y", rect.y());
+            cell->setProperty("width", rect.width());
+            cell->setProperty("height", rect.height());
+        } else {
+            cell->setX(rect.x());
+            cell->setY(rect.y());
+            cell->setWidth(rect.width());
+            cell->setHeight(rect.height());
+        }
     }
     setReady();
 }
