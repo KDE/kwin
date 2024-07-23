@@ -227,7 +227,7 @@ void TestButtonRebind::testBindingTabletTool()
     QVERIFY(enteredSpy.wait());
 
     const QRectF startGeometry = window->frameGeometry();
-    Test::tabletToolEvent(InputRedirection::Tip, startGeometry.center(), 1.0, 0, 0, 0, true, false, timestamp++);
+    Test::tabletToolEvent(InputRedirection::Proximity, startGeometry.center(), 1.0, 0, 0, 0, false, false, timestamp++);
 
     Test::tabletToolButtonPressed(BTN_STYLUS, timestamp++);
 
