@@ -25,8 +25,6 @@ qt6_add_qml_module(overview
         qml/DesktopBar.qml
         qml/DesktopView.qml
         qml/main.qml
-        #TODO
-        qml/WindowHeapDelegate2.qml
 )
 
 target_link_libraries(overview PRIVATE

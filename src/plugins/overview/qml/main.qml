@@ -647,7 +647,7 @@ FocusScope {
                                     ~KWinComponents.WindowFilterModel.Notification &
                                     ~KWinComponents.WindowFilterModel.CriticalNotification
                     }
-                    delegate: WindowHeapDelegate2 {
+                    delegate: WindowHeapDelegate {
                         windowHeap: heap
                         layout: heap.layout
                         offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal) + dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0
