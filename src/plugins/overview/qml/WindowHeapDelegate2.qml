@@ -169,10 +169,12 @@ return
             id: icon
             width: Kirigami.Units.iconSizes.large
             height: Kirigami.Units.iconSizes.large
+            opacity: partialActivationFactor
+            scale: Math.min(1.0, thumb.contentItem.width / Math.max(0.01, thumb.width))
             source: thumb.window.icon
             anchors.horizontalCenter: thumbSource.horizontalCenter
-            anchors.bottom: thumbSource.bottom
-            anchors.bottomMargin: -Math.round(height / 4)
+            anchors.verticalCenter: thumbSource.bottom
+            anchors.verticalCenterOffset: -Math.round(height / 4) * scale
             visible: !thumb.activeHidden && !activeDragHandler.active
             PC3.Label {
                 id: caption

@@ -248,12 +248,18 @@ void ExpoCell::updatePolish()
     if (!m_contentItem) {
         return;
     }
-    const QPointF &pos = mapToItem(m_contentItem->parentItem(), QPointF());
 
-    m_contentItem->setX(pos.x() * m_partialActivationFactor + m_naturalX * (1.0 - m_partialActivationFactor) + m_offsetX);
-    m_contentItem->setY(pos.y() * m_partialActivationFactor + m_naturalY * (1.0 - m_partialActivationFactor) + m_offsetY);
-    m_contentItem->setSize({width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
-                            height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)});
+    QRectF rect = mapRectToItem(m_contentItem->parentItem(), boundingRect());
+
+    rect = {
+        rect.x() * m_partialActivationFactor + (m_naturalX + m_offsetX) * (1.0 - m_partialActivationFactor),
+        rect.y() * m_partialActivationFactor + (m_naturalY + m_offsetY) * (1.0 - m_partialActivationFactor),
+        rect.width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
+        rect.height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)};
+
+    m_contentItem->setX(rect.x());
+    m_contentItem->setY(rect.y());
+    m_contentItem->setSize(rect.size());
 }
 
 ExpoLayout::ExpoLayout(QQuickItem *parent)
