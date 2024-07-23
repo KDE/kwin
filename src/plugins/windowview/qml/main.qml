@@ -202,6 +202,7 @@ Item {
                 id: delegate
                 windowHeap: heap
                 partialActivationFactor: container.organized ? 1 : 0
+                contentItemParent: container
                 Behavior on partialActivationFactor {
                     SequentialAnimation {
                         PropertyAction {

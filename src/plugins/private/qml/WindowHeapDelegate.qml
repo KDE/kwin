@@ -69,6 +69,7 @@ ExpoCell {
         thumbSource.restoreDND(oldGlobalRect);
     }
 
+    layout: windowHeap.layout
     enabled: !thumb.activeHidden
     partialActivationFactor: effect.partialActivationFactor
     naturalX: thumb.window.x

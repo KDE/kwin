@@ -649,7 +649,6 @@ FocusScope {
                     }
                     delegate: WindowHeapDelegate {
                         windowHeap: heap
-                        layout: heap.layout
                         offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal) + dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0
                         offsetY: mainBackground.deltaRow * container.height * (1 - gridVal)+ dragHandler.active ? (dragHandler.centroid.pressPosition.y - dragHandler.centroid.position.y) : 0
 
