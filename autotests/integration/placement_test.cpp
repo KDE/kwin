@@ -46,6 +46,8 @@ private Q_SLOTS:
     void testCascadeIfCoveringIgnoreNonCovering();
     void testCascadeIfCoveringIgnoreOutOfArea();
     void testCascadeIfCoveringIgnoreAlreadyCovered();
+    void testTitlebarOnScreen_data();
+    void testTitlebarOnScreen();
 
 private:
     void setPlacementPolicy(PlacementPolicy policy);
@@ -531,6 +533,38 @@ void TestPlacement::testCascadeIfCoveringIgnoreAlreadyCovered()
     QVERIFY(Test::waitForWindowClosed(window2));
     shellSurface1.reset();
     QVERIFY(Test::waitForWindowClosed(window1));
+}
+
+void TestPlacement::testTitlebarOnScreen_data()
+{
+    QTest::addColumn<PlacementPolicy>("placementMode");
+    QTest::addRow("PlacementRandom") << PlacementPolicy::PlacementRandom;
+    QTest::addRow("PlacementSmart") << PlacementPolicy::PlacementSmart;
+    QTest::addRow("PlacementCentered") << PlacementPolicy::PlacementCentered;
+    QTest::addRow("PlacementZeroCornered") << PlacementPolicy::PlacementZeroCornered;
+    QTest::addRow("PlacementUnderMouse") << PlacementPolicy::PlacementUnderMouse;
+    QTest::addRow("PlacementMaximizing") << PlacementPolicy::PlacementMaximizing;
+}
+
+void TestPlacement::testTitlebarOnScreen()
+{
+    // this test verifies that windows that are bigger than the screen
+    // still get placed with their title bar on the screen
+
+    QFETCH(PlacementPolicy, placementMode);
+    setPlacementPolicy(PlacementPolicy(placementMode));
+
+    KWin::input()->pointer()->warp(QPoint(200, 0));
+    QCOMPARE(KWin::Cursors::self()->mouse()->pos(), QPoint(200, 0));
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(100, workspace()->outputs().front()->geometry().height() + 100), Qt::red);
+    QVERIFY(window);
+    QCOMPARE(window->frameGeometry().y(), 0);
+
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
 }
 
 WAYLANDTEST_MAIN(TestPlacement)
