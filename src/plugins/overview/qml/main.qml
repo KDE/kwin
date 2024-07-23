@@ -650,8 +650,9 @@ FocusScope {
                     delegate: WindowHeapDelegate2 {
                         windowHeap: heap
                         layout: heap.layout
-                        offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal)
-                        offsetY: mainBackground.deltaRow * container.height * (1 - gridVal)
+                        offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal) + dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0
+                        offsetY: mainBackground.deltaRow * container.height * (1 - gridVal)+ dragHandler.active ? (dragHandler.centroid.pressPosition.y - dragHandler.centroid.position.y) : 0
+
                         partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
                         contentItemParent: container
 
