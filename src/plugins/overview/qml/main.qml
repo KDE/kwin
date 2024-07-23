@@ -367,6 +367,7 @@ FocusScope {
     Item {
         id: desktopGrid
         anchors.fill: parent
+        property var dndManagerStore: ({})
 
         ColumnLayout {
             x: Math.round(parent.width / 2) + Math.round(parent.width / 8)
@@ -631,6 +632,7 @@ FocusScope {
                     animationDuration: effect.animationDuration
                     animationEnabled:  (gridVal !== 0 || mainBackground.current) && organized
                     organized: container.state !== "initial"
+                    dndManagerStore: desktopGrid.dndManagerStore
                     Keys.priority: Keys.AfterItem
                     Keys.forwardTo: [searchResults, searchField]
                     model: KWinComponents.WindowFilterModel {
