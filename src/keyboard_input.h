@@ -63,6 +63,8 @@ Q_SIGNALS:
     void ledsChanged(KWin::LEDs);
 
 private:
+    Window *pickFocus() const;
+
     InputRedirection *m_input;
     bool m_inited = false;
     const std::unique_ptr<Xkb> m_xkb;

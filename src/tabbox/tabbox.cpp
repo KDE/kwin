@@ -884,6 +884,10 @@ bool TabBox::toggleMode(TabBoxMode mode)
         return false;
     }
     m_noModifierGrab = m_tabGrab = true;
+
+    input()->keyboard()->update();
+    input()->pointer()->setEnableConstraints(false);
+
     setMode(mode);
     reset();
     show();
@@ -897,6 +901,10 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
     }
     m_tabGrab = true;
     m_noModifierGrab = false;
+
+    input()->keyboard()->update();
+    input()->pointer()->setEnableConstraints(false);
+
     setMode(mode);
     reset();
     return true;
@@ -1092,9 +1100,11 @@ void TabBox::close(bool abort)
         removeTabBoxGrab();
     }
     hide(abort);
-    input()->pointer()->setEnableConstraints(true);
     m_tabGrab = false;
     m_noModifierGrab = false;
+
+    input()->keyboard()->update();
+    input()->pointer()->setEnableConstraints(true);
 }
 
 void TabBox::accept(bool closeTabBox)

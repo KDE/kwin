@@ -16,6 +16,8 @@
 #include "workspace.h"
 
 #include <KConfigGroup>
+#include <KWayland/Client/keyboard.h>
+#include <KWayland/Client/seat.h>
 #include <KWayland/Client/surface.h>
 
 #include <linux/input.h>
@@ -35,6 +37,7 @@ private Q_SLOTS:
     void testMoveForward();
     void testMoveBackward();
     void testCapsLock();
+    void testKeyboardFocus();
 };
 
 void TabBoxTest::initTestCase()
@@ -59,7 +62,7 @@ void TabBoxTest::initTestCase()
 
 void TabBoxTest::init()
 {
-    QVERIFY(Test::setupWaylandConnection());
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::input()->pointer()->warp(QPoint(640, 512));
 }
@@ -246,6 +249,46 @@ void TabBoxTest::testMoveBackward()
     QVERIFY(Test::waitForWindowClosed(c2));
     surface1.reset();
     QVERIFY(Test::waitForWindowClosed(c1));
+}
+
+void TabBoxTest::testKeyboardFocus()
+{
+    // This test verifies that the keyboard focus will be withdrawn from the currently activated
+    // window when the task switcher is active and restored once the task switcher is dismissed.
+
+    QVERIFY(Test::waitForWaylandKeyboard());
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy leftSpy(keyboard.get(), &KWayland::Client::Keyboard::left);
+
+    // add a window
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    // the keyboard focus will be moved to the surface after it's mapped
+    QVERIFY(enteredSpy.wait());
+
+    QSignalSpy tabboxAddedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxAdded);
+    QSignalSpy tabboxClosedSpy(workspace()->tabbox(), &TabBox::TabBox::tabBoxClosed);
+
+    // press alt+tab
+    quint32 timestamp = 0;
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    Test::keyboardKeyPressed(KEY_TAB, timestamp++);
+    Test::keyboardKeyReleased(KEY_TAB, timestamp++);
+    QVERIFY(tabboxAddedSpy.wait());
+
+    // the surface should have no keyboard focus anymore because tabbox grabs input
+    QCOMPARE(leftSpy.count(), 1);
+
+    // release alt
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QCOMPARE(tabboxClosedSpy.count(), 1);
+
+    // the surface should regain keyboard focus after the tabbox is dismissed
+    QVERIFY(enteredSpy.wait());
 }
 
 WAYLANDTEST_MAIN(TabBoxTest)

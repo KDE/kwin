@@ -1657,9 +1657,6 @@ public:
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        auto seat = waylandServer()->seat();
-        seat->setFocusedKeyboardSurface(nullptr);
-        input()->pointer()->setEnableConstraints(false);
         // pass the key event to the seat, so that it has a proper model of the currently hold keys
         // this is important for combinations like alt+shift to ensure that shift is not considered pressed
         passToWaylandServer(event);
@@ -1668,10 +1665,6 @@ public:
             workspace()->tabbox()->keyPress(event->modifiers() | event->key());
         } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
-            // update keyboard facus if the tabbox no longer grabs keys
-            if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
-                input()->keyboard()->update();
-            }
         }
         return true;
     }

@@ -26,6 +26,9 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include <KScreenLocker/KsldApp>
 #endif
+#if KWIN_BUILD_TABBOX
+#include "tabbox/tabbox.h"
+#endif
 // Frameworks
 #include <KGlobalAccel>
 // Qt
@@ -184,14 +187,8 @@ void KeyboardInputRedirection::reconfigure()
     }
 }
 
-void KeyboardInputRedirection::update()
+Window *KeyboardInputRedirection::pickFocus() const
 {
-    if (!m_inited) {
-        return;
-    }
-    auto seat = waylandServer()->seat();
-    // TODO: this needs better integration
-    Window *found = nullptr;
     if (waylandServer()->isScreenLocked()) {
         const QList<Window *> &stacking = Workspace::self()->stackingOrder();
         if (!stacking.isEmpty()) {
@@ -209,13 +206,33 @@ void KeyboardInputRedirection::update()
                 if (!t->readyForPainting()) {
                     continue;
                 }
-                found = t;
-                break;
+                return t;
             } while (it != stacking.begin());
         }
-    } else if (!input()->isSelectingWindow()) {
-        found = workspace()->activeWindow();
     }
+
+    if (input()->isSelectingWindow()) {
+        return nullptr;
+    }
+
+#if KWIN_BUILD_TABBOX
+    if (workspace()->tabbox()->isGrabbed()) {
+        return nullptr;
+    }
+#endif
+
+    return workspace()->activeWindow();
+}
+
+void KeyboardInputRedirection::update()
+{
+    if (!m_inited) {
+        return;
+    }
+    auto seat = waylandServer()->seat();
+
+    // TODO: this needs better integration
+    Window *found = pickFocus();
     if (found && found->surface()) {
         if (found->surface() != seat->focusedKeyboardSurface()) {
             seat->setFocusedKeyboardSurface(found->surface());
