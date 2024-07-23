@@ -832,8 +832,12 @@ void DrmGpu::releaseBuffers()
         crtc->releaseCurrentBuffer();
     }
     for (const auto &pipeline : std::as_const(m_pipelines)) {
-        pipeline->primaryLayer()->releaseBuffers();
-        pipeline->cursorLayer()->releaseBuffers();
+        if (DrmPipelineLayer *layer = pipeline->primaryLayer()) {
+            layer->releaseBuffers();
+        }
+        if (DrmPipelineLayer *layer = pipeline->cursorLayer()) {
+            layer->releaseBuffers();
+        }
     }
     for (const auto &output : std::as_const(m_virtualOutputs)) {
         output->primaryLayer()->releaseBuffers();
