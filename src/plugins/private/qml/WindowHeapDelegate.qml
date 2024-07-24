@@ -112,6 +112,7 @@ ExpoCell {
         id: mainContent
         parent: contentItemParent
         visible: opacity > 0
+        opacity: 1 - downGestureProgress
         z: (activeDragHandler.active || returnAnimation.running) ? 1000
             : thumb.window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
@@ -215,7 +216,6 @@ ExpoCell {
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
             text: i18nd("kwin", "Drag Down To Close")
-            opacity: thumbSource.opacity
             visible: !thumb.activeHidden && touchDragHandler.active
         }
 
