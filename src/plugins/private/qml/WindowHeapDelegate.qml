@@ -120,14 +120,16 @@ ExpoCell {
             id: thumbSource
             wId: thumb.window.internalId
             scale: targetScale
+            width: mainContent.width
+            height: mainContent.height
 
             Binding on width {
                 value: mainContent.width
-                when: !returnAnimation.active
+                when: !returnAnimation.running
             }
             Binding on height {
                 value: mainContent.height
-                when: !returnAnimation.active
+                when: !returnAnimation.running
             }
 
             Drag.proposedAction: Qt.MoveAction
@@ -147,8 +149,6 @@ ExpoCell {
             }
             function restoreDND(oldGlobalRect: rect) {
                 const newGlobalRect = mapFromItem(null, oldGlobalRect);
-                // Disable the bindings
-                returnAnimation.active = true;
                 x = newGlobalRect.x;
                 y = newGlobalRect.y;
                 width = newGlobalRect.width;
@@ -177,8 +177,6 @@ ExpoCell {
             }
             ParallelAnimation {
                 id: returnAnimation
-                property bool active: false
-                onRunningChanged: active = running
                 NumberAnimation {
                     target: thumbSource
                     properties: "x,y"
@@ -229,7 +227,7 @@ ExpoCell {
             anchors.horizontalCenter: thumbSource.horizontalCenter
             anchors.verticalCenter: thumbSource.bottom
             anchors.verticalCenterOffset: -Math.round(height / 4) * scale
-            visible: !thumb.activeHidden && !activeDragHandler.active
+            visible: !thumb.activeHidden && !activeDragHandler.active && !returnAnimation.running
             PC3.Label {
                 id: caption
                 visible: thumb.windowTitleVisible
@@ -349,7 +347,7 @@ ExpoCell {
                 top: thumbSource.top
                 margins: Kirigami.Units.smallSpacing
             }
-            active: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active
+            active: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active && !returnAnimation.running
 
             sourceComponent: PC3.Button {
                 text: i18ndc("kwin", "@info:tooltip as in: 'close this window'", "Close window")
