@@ -187,7 +187,6 @@ ExpoCell {
                 NumberAnimation {
                     target: thumbSource
                     property: "width"
-                    from: thumbSource.width
                     to: mainContent.width
                     duration: thumb.windowHeap.animationDuration
                     easing.type: Easing.InOutCubic
@@ -293,6 +292,7 @@ ExpoCell {
                 if (active) {
                     thumb.activeDragHandler = this;
                 } else {
+                    returnAnimation.active = true;
                     thumbSource.saveDND();
                     returnAnimation.restart();
 
