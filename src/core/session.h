@@ -55,6 +55,11 @@ public:
     virtual bool isActive() const = 0;
 
     /**
+     * Returns @c true if the session is about to go to sleep; otherwise returns @c false.
+     */
+    virtual bool isSleeping() const = 0;
+
+    /**
      * Returns the capabilities supported by the session.
      */
     virtual Capabilities capabilities() const = 0;
@@ -87,6 +92,10 @@ public:
     virtual void switchTo(uint terminal) = 0;
 
 Q_SIGNALS:
+    /**
+     * This signal is emitted when the session is about to go to suspend.
+     */
+    void aboutToSuspend();
     /**
      * This signal is emitted when the session is resuming from suspend.
      */

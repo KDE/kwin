@@ -23,6 +23,11 @@ bool NoopSession::isActive() const
     return true;
 }
 
+bool NoopSession::isSleeping() const
+{
+    return false;
+}
+
 NoopSession::Capabilities NoopSession::capabilities() const
 {
     return Capabilities();

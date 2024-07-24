@@ -20,6 +20,7 @@ public:
     ~NoopSession() override;
 
     bool isActive() const override;
+    bool isSleeping() const override;
     Capabilities capabilities() const override;
     QString seat() const override;
     uint terminal() const override;

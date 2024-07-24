@@ -22,6 +22,7 @@ public:
     ~LogindSession() override;
 
     bool isActive() const override;
+    bool isSleeping() const override;
     Capabilities capabilities() const override;
     QString seat() const override;
     uint terminal() const override;
@@ -46,6 +47,7 @@ private:
     QString m_seatPath;
     uint m_terminal = 0;
     bool m_isActive = false;
+    bool m_isSleeping = false;
 };
 
 } // namespace KWin

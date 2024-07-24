@@ -145,6 +145,11 @@ bool ConsoleKitSession::isActive() const
     return m_isActive;
 }
 
+bool ConsoleKitSession::isSleeping() const
+{
+    return m_isSleeping;
+}
+
 ConsoleKitSession::Capabilities ConsoleKitSession::capabilities() const
 {
     return Capability::SwitchTerminal;
@@ -343,7 +348,11 @@ void ConsoleKitSession::handlePropertiesChanged(const QString &interfaceName, co
 
 void ConsoleKitSession::handlePrepareForSleep(bool sleep)
 {
-    if (!sleep) {
+    m_isSleeping = sleep;
+
+    if (sleep) {
+        Q_EMIT aboutToSuspend();
+    } else {
         Q_EMIT awoke();
     }
 }
