@@ -79,9 +79,11 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
                 // also don't switch back if render times are just barely enough for double buffering
                 pageflipsInAdvance = 2;
                 doubleBufferingCounter = 0;
+                expectedCompositingTime = vblankInterval;
             } else {
                 doubleBufferingCounter++;
                 pageflipsInAdvance = 2;
+                expectedCompositingTime = vblankInterval;
             }
         }
 
