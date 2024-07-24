@@ -642,6 +642,8 @@ private:
 
     void updateOutputConfiguration();
     void updateOutputs(const std::optional<QList<Output *>> &outputOrder = std::nullopt);
+    void emitConnectedOutputNotification();
+
     void createDpmsFilter();
     void maybeDestroyDpmsFilter();
     void assignBrightnessDevices();
@@ -670,6 +672,9 @@ private:
     QList<Output *> m_outputs;
     Output *m_activeOutput = nullptr;
     QList<Output *> m_outputOrder;
+    // Connected output UUIDs, regardless of whether they are enabled or configured.
+    // Used for playing an (un)plug sound.
+    QList<QUuid> m_connectedOutputs;
 
     Window *m_activeWindow;
     Window *m_lastActiveWindow;
