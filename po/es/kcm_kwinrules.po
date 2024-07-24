@@ -1,5 +1,4 @@
 # Translation of kcmkwinrules to Spanish
-# translation of kcmkwinrules.po to Spanish
 # Miguel Revilla Rodríguez <yo@miguelrevilla.com>, 2004.
 # Pablo de Vicente <p.devicente@wanadoo.es>, 2004.
 # Juan Manuel Garcia Molina <juanma@superiodico.net>, 2005.
@@ -14,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-23 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 18:38+0100\n"
+"PO-Revision-Date: 2024-07-23 18:27+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -22,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "com>\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.05.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:228
@@ -962,18 +961,16 @@ msgid "Add property to the rule"
 msgstr "Añadir propiedad a la regla"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "No se ha cambiado ninguna propiedad de la ventana"
+msgstr "No quedan propiedades para añadir"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "No se ha cambiado ninguna propiedad de la ventana"
+msgstr "Ninguna propiedad coincide con «%1»"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format

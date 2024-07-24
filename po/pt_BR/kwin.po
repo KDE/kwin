@@ -13,20 +13,21 @@
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2018, 2019, 2020.
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023.
 # Thiago Masato Costa Sueto <herzenschein@gmail.com>, 2020, 2021.
+# SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-19 00:40+0000\n"
-"PO-Revision-Date: 2023-02-24 16:25-0300\n"
-"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
-"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"PO-Revision-Date: 2024-07-23 20:19-0300\n"
+"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -103,6 +104,11 @@ msgid ""
 "meanwhile upgraded to a stable driver,<br>you can reset this protection but "
 "<b>be aware that this might result in an immediate crash!</b></p>"
 msgstr ""
+"<b>O compositor OpenGL (padrão) já travou o KWin no passado.</b><br>Isso "
+"provavelmente foi causado por um erro de driver.<p>Se você acha que já "
+"atualizou para um driver estável,<br>você pode redefinir esta proteção,"
+"<b>mas tenha em mente que isso pode resultar em um travamento imediato!</b></"
+"p>"
 
 #: compositor_x11.cpp:563
 #, kde-format
@@ -1102,7 +1108,7 @@ msgstr "Gerenciador de janelas"
 #: helpers/killer/killer.cpp:79
 #, kde-format
 msgid "PID of the application to terminate"
-msgstr "PID do aplicativo a terminar"
+msgstr "PID do aplicativo a encerrar"
 
 #: helpers/killer/killer.cpp:79
 #, kde-format
@@ -1122,7 +1128,7 @@ msgstr "hostname"
 #: helpers/killer/killer.cpp:83
 #, kde-format
 msgid "Caption of the window to be terminated"
-msgstr "Título da janela a terminar"
+msgstr "Título da janela a ser fechada"
 
 #: helpers/killer/killer.cpp:83
 #, kde-format
@@ -1132,7 +1138,7 @@ msgstr "caption"
 #: helpers/killer/killer.cpp:85
 #, kde-format
 msgid "Name of the application to be terminated"
-msgstr "Nome do aplicativo a terminar"
+msgstr "Nome do aplicativo a ser encerrado"
 
 #: helpers/killer/killer.cpp:85
 #, kde-format
@@ -1176,6 +1182,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> não está respondendo. Você quer encerrar "
+"esta aplicação?</para>"
 
 #: helpers/killer/killer.cpp:151
 #, kde-kuit-format
@@ -1184,6 +1192,8 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" de <application>%2</application> não está respondendo. Você "
+"quer encerrar esta aplicação?</para>"
 
 #: helpers/killer/killer.cpp:154
 #, fuzzy, kde-kuit-format
@@ -1578,7 +1588,7 @@ msgstr ""
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopia (vermelho fraco)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
@@ -2423,14 +2433,14 @@ msgstr "Desconhecido"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Alternar entre visão geral e visualização em grade"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Alternar entre visualização em grade e visão geral"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, fuzzy, kde-format
@@ -2469,7 +2479,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Alternar entre visão geral e visualização em grade"
 
 #: plugins/overview/overvieweffect.cpp:143
 #, fuzzy, kde-format
