@@ -12,12 +12,6 @@
 "use strict";
 
 var logoutEffect = {
-    inDuration: animationTime(800),
-    outDuration: animationTime(400),
-    loadConfig: function () {
-        logoutEffect.inDuration = animationTime(800);
-        logoutEffect.outDuration = animationTime(400);
-    },
     isLogoutWindow: function (window) {
         if (window.windowClass === "ksmserver-logout-greeter ksmserver-logout-greeter") {
             return true;
@@ -35,7 +29,7 @@ var logoutEffect = {
         }
         window.inAnimation = animate({
             window: window,
-            duration: logoutEffect.inDuration,
+            duration: animationTime(800),
             type: Effect.Opacity,
             from: 0.0,
             to: 1.0
@@ -52,14 +46,13 @@ var logoutEffect = {
         }
         window.outAnimation = animate({
             window: window,
-            duration: logoutEffect.outDuration,
+            duration: animationTime(400),
             type: Effect.Opacity,
             from: 1.0,
             to: 0.0
         });
     },
     init: function () {
-        logoutEffect.loadConfig();
         effects.windowAdded.connect(logoutEffect.opened);
         effects.windowClosed.connect(logoutEffect.closed);
     }
