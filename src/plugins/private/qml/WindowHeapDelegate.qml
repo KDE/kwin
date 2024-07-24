@@ -215,6 +215,13 @@ ExpoCell {
             verticalAlignment: Text.AlignVCenter
             text: i18nd("kwin", "Drag Down To Close")
             visible: !thumb.activeHidden && touchDragHandler.active
+            background: Rectangle {
+                anchors.centerIn: parent
+                height: parent.contentHeight + Kirigami.Units.smallSpacing
+                width: parent.contentWidth + Kirigami.Units.smallSpacing
+                color: Kirigami.Theme.backgroundColor
+                radius: Kirigami.Units.cornerRadius
+            }
         }
 
         Kirigami.Icon {
