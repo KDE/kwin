@@ -57,6 +57,7 @@ public:
     void sendKey(quint32 key, KeyboardKeyState state);
     void sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client);
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
+    void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client);
 
 private:
     void setFocusedSurface(SurfaceInterface *surface, quint32 serial);

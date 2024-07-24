@@ -104,6 +104,7 @@ public:
                                 keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
                             }
                         }
+                        m_modifiers = {};
                         m_states.clear();
                     }
                 });
@@ -399,12 +400,35 @@ public:
         }
 
         auto xkb = input()->keyboard()->xkb();
+
+        keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient);
+
+        bool changed = false;
+        if (m_modifiers.depressed != xkb->modifierState().depressed) {
+            m_modifiers.depressed = xkb->modifierState().depressed;
+            changed = true;
+        }
+        if (m_modifiers.latched != xkb->modifierState().latched) {
+            m_modifiers.latched = xkb->modifierState().latched;
+            changed = true;
+        }
+        if (m_modifiers.locked != xkb->modifierState().locked) {
+            m_modifiers.locked = xkb->modifierState().locked;
+            changed = true;
+        }
+        if (m_modifiers.group != xkb->currentLayout()) {
+            m_modifiers.group = xkb->currentLayout();
+            changed = true;
+        }
+        if (!changed) {
+            return;
+        }
+
         keyboard->sendModifiers(xkb->modifierState().depressed,
                                 xkb->modifierState().latched,
                                 xkb->modifierState().locked,
-                                xkb->currentLayout());
-
-        keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient);
+                                xkb->currentLayout(),
+                                xwaylandClient);
     }
 
     void pointerEvent(KWin::MouseEvent *event) override
@@ -447,6 +471,13 @@ public:
     }
 
     QHash<quint32, KeyboardKeyState> m_states;
+    struct Modifiers
+    {
+        quint32 depressed = 0;
+        quint32 latched = 0;
+        quint32 locked = 0;
+        quint32 group = 0;
+    } m_modifiers;
     std::function<bool(int key, Qt::KeyboardModifiers)> m_filterKey;
     bool m_filterMouse = false;
 };

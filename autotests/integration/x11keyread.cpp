@@ -6,6 +6,8 @@
 
  SPDX-License-Identifier: GPL-2.0-or-later
 */
+#include "KWayland/Client/keyboard.h"
+#include "KWayland/Client/seat.h"
 #include "kwin_wayland_test.h"
 
 #include "input.h"
@@ -53,6 +55,7 @@ private Q_SLOTS:
     void testSimpleLetter();
     void onlyModifier();
     void letterWithModifier();
+    void testWaylandWindowHasFocus();
 
 private:
     QList<KeyAction> recievedX11EventsForInput(const QList<KeyAction> &keyEventsIn);
@@ -91,10 +94,14 @@ void X11KeyReadTest::init()
     options->setXwaylandEavesdrops(operatingMode);
     workspace()->setActiveOutput(QPoint(640, 512));
     KWin::input()->pointer()->warp(QPoint(640, 512));
+
+    QVERIFY(Test::setupWaylandConnection(Test::AdditionalWaylandInterface::Seat));
+    QVERIFY(Test::waitForWaylandKeyboard());
 }
 
 void X11KeyReadTest::cleanup()
 {
+    Test::destroyWaylandConnection();
 }
 
 void X11KeyReadTest::testSimpleLetter()
@@ -174,6 +181,55 @@ void X11KeyReadTest::letterWithModifier()
         break;
     }
     QCOMPARE(received, expected);
+}
+
+void X11KeyReadTest::testWaylandWindowHasFocus()
+{
+    // A wayland window should be unaffected
+    int timestamp = 0;
+
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy modifierSpy(keyboard.get(), &KWayland::Client::Keyboard::modifiersChanged);
+    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+
+    Window *waylandWindow = Test::renderAndWaitForShown(surface.get(), QSize(10, 10), Qt::blue);
+    QVERIFY(waylandWindow->isActive());
+    modifierSpy.wait(); // initial modifiers
+    modifierSpy.clear();
+
+    Test::keyboardKeyPressed(KEY_LEFTALT, timestamp++);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.last()[0], KEY_LEFTALT);
+    QCOMPARE(keyChangedSpy.last()[1].value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
+
+    QCOMPARE(modifierSpy.count(), 1);
+    QCOMPARE(modifierSpy.last()[0], 8);
+    QCOMPARE(modifierSpy.last()[1], 0);
+    QCOMPARE(modifierSpy.last()[2], 0);
+    QCOMPARE(modifierSpy.last()[3], 0);
+
+    Test::keyboardKeyPressed(KEY_G, timestamp++);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.last()[0], KEY_G);
+    QCOMPARE(keyChangedSpy.last()[1].value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Pressed);
+
+    Test::keyboardKeyReleased(KEY_G, timestamp++);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.last()[0], KEY_G);
+    QCOMPARE(keyChangedSpy.last()[1].value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
+
+    Test::keyboardKeyReleased(KEY_LEFTALT, timestamp++);
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.last()[0], KEY_LEFTALT);
+    QCOMPARE(keyChangedSpy.last()[1].value<KWayland::Client::Keyboard::KeyState>(), KWayland::Client::Keyboard::KeyState::Released);
+
+    QCOMPARE(modifierSpy.count(), 2);
+    QCOMPARE(modifierSpy.last()[0], 0);
+    QCOMPARE(modifierSpy.last()[1], 0);
+    QCOMPARE(modifierSpy.last()[2], 0);
+    QCOMPARE(modifierSpy.last()[3], 0);
 }
 
 class X11EventRecorder :

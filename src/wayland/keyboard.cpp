@@ -237,6 +237,15 @@ void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint3
     }
 }
 
+void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client)
+{
+    const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
+    const quint32 serial = d->seat->display()->nextSerial();
+    for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
+        d->send_modifiers(keyboardResource->handle, serial, depressed, latched, locked, group);
+    }
+}
+
 void KeyboardInterface::setRepeatInfo(qint32 charactersPerSecond, qint32 delay)
 {
     d->keyRepeat.charactersPerSecond = std::max(charactersPerSecond, 0);
