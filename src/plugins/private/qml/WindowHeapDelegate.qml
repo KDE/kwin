@@ -72,8 +72,8 @@ ExpoCell {
     layout: windowHeap.layout
     enabled: !thumb.activeHidden
     partialActivationFactor: effect.partialActivationFactor
-    naturalX: thumb.window.x
-    naturalY: thumb.window.y
+    naturalX: thumb.window.x - thumb.window.output.geometry.x
+    naturalY: thumb.window.y - thumb.window.output.geometry.y
     naturalWidth: thumb.window.width
     naturalHeight: thumb.window.height
     persistentKey: thumb.window.internalId
@@ -125,11 +125,11 @@ ExpoCell {
 
             Binding on width {
                 value: mainContent.width
-                when: !returnAnimation.running
+                when: !returnAnimation.active
             }
             Binding on height {
                 value: mainContent.height
-                when: !returnAnimation.running
+                when: !returnAnimation.active
             }
 
             Drag.proposedAction: Qt.MoveAction
@@ -149,6 +149,8 @@ ExpoCell {
             }
             function restoreDND(oldGlobalRect: rect) {
                 const newGlobalRect = mapFromItem(null, oldGlobalRect);
+                // Disable bindings
+                returnAnimation.active = true;
                 x = newGlobalRect.x;
                 y = newGlobalRect.y;
                 width = newGlobalRect.width;
@@ -177,6 +179,8 @@ ExpoCell {
             }
             ParallelAnimation {
                 id: returnAnimation
+                property bool active: false
+                onRunningChanged: active = running
                 NumberAnimation {
                     target: thumbSource
                     properties: "x,y"
