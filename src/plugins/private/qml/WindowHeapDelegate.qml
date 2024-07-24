@@ -292,7 +292,6 @@ ExpoCell {
                 if (active) {
                     thumb.activeDragHandler = this;
                 } else {
-                    returnAnimation.active = true;
                     thumbSource.saveDND();
                     returnAnimation.restart();
 
