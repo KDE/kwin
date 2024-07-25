@@ -3651,10 +3651,6 @@ void Window::setTile(Tile *tile)
     Tile *oldTile = m_tile;
     QuickTileMode oldTileMode = quickTileMode();
 
-    if (oldTile) {
-        disconnect(oldTile, &Tile::activeChanged, this, nullptr);
-    }
-
     // Costom tiles are not buffered
     if (tile && tile->quickTileMode() == QuickTileFlag::Custom) {
         m_requestedQuickTileMode = QuickTileFlag::Custom;
