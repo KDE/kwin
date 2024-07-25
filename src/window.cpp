@@ -95,6 +95,15 @@ Window::Window()
         Q_EMIT hasApplicationMenuChanged(hasApplicationMenu());
     });
     connect(&m_offscreenFramecallbackTimer, &QTimer::timeout, this, &Window::maybeSendFrameCallback);
+
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
+        Tile *owner = workspace()->tileManager(output(), current)->windowOwner(this);
+        if (owner) {
+            setQuickTileMode(owner->quickTileMode(), true);
+        } else if (quickTileMode() != QuickTileFlag::None) {
+            setQuickTileMode(QuickTileFlag::None, true);
+        }
+    });
 }
 
 Window::~Window()
