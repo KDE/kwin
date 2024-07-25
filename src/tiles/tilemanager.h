@@ -50,6 +50,11 @@ public:
     Output *output() const;
     VirtualDesktop *desktop() const;
 
+    /**
+     * True when the associated virtual desktop is the current one
+     */
+    bool isActive() const;
+
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
     CustomTile *rootTile() const;
@@ -63,6 +68,7 @@ public:
     TileModel *model() const;
 
 Q_SIGNALS:
+    void activeChanged(bool active);
     void tileRemoved(KWin::Tile *tile);
 
 private:

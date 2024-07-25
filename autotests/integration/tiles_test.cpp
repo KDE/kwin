@@ -446,7 +446,7 @@ void TilesTest::testPerDesktopTiles()
     // Set a tile
     auto leftTileDesk1 = qobject_cast<CustomTile *>(m_tileManager->rootTile()->childTiles().first());
     QCOMPARE(leftTileDesk1->manager(), m_tileManager);
-    QVERIFY(leftTileDesk1->isActive());
+    QVERIFY(leftTileDesk1->manager()->isActive());
     QVERIFY(leftTileDesk1);
     leftTileDesk1->setRelativeGeometry({0, 0, 0.4, 1});
     QCOMPARE(leftTileDesk1->windowGeometry(), QRectF(4, 4, 506, 1016));
@@ -495,7 +495,7 @@ void TilesTest::testPerDesktopTiles()
 
     auto rightTileDesk2 = qobject_cast<CustomTile *>(currentManager->rootTile()->childTiles()[1]);
     QCOMPARE(rightTileDesk2->manager(), currentManager);
-    QVERIFY(rightTileDesk2->isActive());
+    QVERIFY(rightTileDesk2->manager()->isActive());
     QVERIFY(rightTileDesk2);
     rightTileDesk2->setRelativeGeometry({0, 0, 0.4, 1});
     QCOMPARE(rightTileDesk2->windowGeometry(), QRectF(322, 4, 636, 1016));

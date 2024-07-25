@@ -44,17 +44,12 @@ Tile::~Tile()
     if (m_tiling->tearingDown()) {
         return;
     }
-    if (isActive()) {
+    if (m_tiling->isActive()) {
         for (auto *w : std::as_const(m_windows)) {
             Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
             w->setTile(tile);
         }
     }
-}
-
-bool Tile::isActive() const
-{
-    return m_tiling->desktop() == VirtualDesktopManager::self()->currentDesktop();
 }
 
 VirtualDesktop *Tile::desktop() const
@@ -122,7 +117,7 @@ void Tile::setRelativeGeometry(const QRectF &geom)
     Q_EMIT absoluteGeometryChanged();
     Q_EMIT windowGeometryChanged();
 
-    if (isActive()) {
+    if (m_tiling->isActive()) {
         for (auto *w : std::as_const(m_windows)) {
             w->moveResize(windowGeometry());
         }
@@ -200,7 +195,7 @@ void Tile::setPadding(qreal padding)
     for (auto *t : std::as_const(m_children)) {
         t->setPadding(padding);
     }
-    if (isActive()) {
+    if (m_tiling->isActive()) {
         for (auto *w : std::as_const(m_windows)) {
             w->moveResize(windowGeometry());
         }
@@ -299,7 +294,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
-    if (isActive()) {
+    if (m_tiling->isActive()) {
         window->moveResize(windowGeometry());
     }
 
@@ -356,7 +351,7 @@ void Tile::insertChild(int position, Tile *item)
         Q_EMIT isLayoutChanged(true);
         for (auto *w : std::as_const(m_windows)) {
             Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
-            if (isActive()) {
+            if (m_tiling->isActive()) {
                 w->setTile(tile);
             } else {
                 // If not active, we can't setTile

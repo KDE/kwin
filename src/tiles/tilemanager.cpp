@@ -73,6 +73,14 @@ TileManager::TileManager(VirtualDesktop *desktop, Output *parent)
     m_quickRootTile = std::make_unique<QuickRootTile>(this);
 
     readSettings();
+
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
+        if (m_desktop == previous) {
+            Q_EMIT activeChanged(false);
+        } else if (m_desktop == current) {
+            Q_EMIT activeChanged(true);
+        }
+    });
 }
 
 TileManager::~TileManager()
@@ -93,6 +101,11 @@ Output *TileManager::output() const
 VirtualDesktop *TileManager::desktop() const
 {
     return m_desktop;
+}
+
+bool TileManager::isActive() const
+{
+    return m_desktop == VirtualDesktopManager::self()->currentDesktop();
 }
 
 void TileManager::forgetWindow(Window *window)
