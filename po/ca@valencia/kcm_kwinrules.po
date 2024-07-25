@@ -5,7 +5,7 @@
 #
 # Sebastià Pla i Sanz <sps@sastia.com>, 2004, 2005, 2006.
 # Albert Astals Cid <aacid@kde.org>, 2005.
-# Josep M. Ferrer <txemaq@gmail.com>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024.
+# SPDX-FileCopyrightText: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Josep M. Ferrer <txemaq@gmail.com>
 # Antoni Bella Pérez <antonibella5@yahoo.com>, 2012, 2013, 2014, 2015, 2017, 2020.
 # Empar Montoro Martín <montoro_mde@gva.es>, 2019.
 msgid ""
@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-23 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 12:34+0100\n"
+"PO-Revision-Date: 2024-07-23 10:16+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 24.05.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -961,18 +961,16 @@ msgid "Add property to the rule"
 msgstr "Afig una propietat a la regla"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "No han canviat les propietats de les finestres"
+msgstr "No queden propietats per a afegir"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "No han canviat les propietats de les finestres"
+msgstr "Cap propietat coincidix amb «%1»"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
@@ -1006,6 +1004,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Close"
-#~ msgstr "Tanca"

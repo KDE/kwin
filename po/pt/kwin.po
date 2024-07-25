@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-19 00:40+0000\n"
+"POT-Creation-Date: 2024-07-25 00:40+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -1102,83 +1102,83 @@ msgstr "Área de Transferência"
 msgid "Primary Selection"
 msgstr "Selecção Principal"
 
-#: helpers/killer/killer.cpp:74
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Window Manager"
 msgstr "Gestor de Janelas"
 
-#: helpers/killer/killer.cpp:79
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "O PID da aplicação a terminar"
 
-#: helpers/killer/killer.cpp:79
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:141
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "O nome da máquina onde a aplicação está a correr"
 
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:141
 #, kde-format
 msgid "hostname"
 msgstr "hostname"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "O título da janela a terminar"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:143
 #, kde-format
 msgid "caption"
 msgstr "caption"
 
-#: helpers/killer/killer.cpp:85
+#: helpers/killer/killer.cpp:145
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "O nome da aplicação a terminar"
 
-#: helpers/killer/killer.cpp:85
+#: helpers/killer/killer.cpp:145
 #, kde-format
 msgid "name"
 msgstr "name"
 
-#: helpers/killer/killer.cpp:87
+#: helpers/killer/killer.cpp:147
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "O ID do recurso que pertence à aplicação"
 
-#: helpers/killer/killer.cpp:87
+#: helpers/killer/killer.cpp:147
 #, kde-format
 msgid "id"
 msgstr "id"
 
-#: helpers/killer/killer.cpp:89
+#: helpers/killer/killer.cpp:149
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "A hora da acção do utilizador que provocou o encerramento"
 
-#: helpers/killer/killer.cpp:89
+#: helpers/killer/killer.cpp:149
 #, kde-format
 msgid "time"
 msgstr "time"
 
-#: helpers/killer/killer.cpp:91
+#: helpers/killer/killer.cpp:151
 #, kde-format
 msgid "KWin helper utility"
 msgstr "Utilitário do KWin"
 
-#: helpers/killer/killer.cpp:127
+#: helpers/killer/killer.cpp:187
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr ""
 "Este utilitário auxiliar não foi concebido para ser chamado directamente."
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:209
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1186,7 +1186,7 @@ msgid ""
 "terminate this application?</para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:151
+#: helpers/killer/killer.cpp:211
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1194,7 +1194,7 @@ msgid ""
 "to terminate this application?</para>"
 msgstr ""
 
-#: helpers/killer/killer.cpp:154
+#: helpers/killer/killer.cpp:214
 #, fuzzy, kde-kuit-format
 #| msgctxt "@info"
 #| msgid ""
@@ -1210,21 +1210,21 @@ msgstr ""
 "aplicação irá fechar todas as suas janelas-filhas. Todos os dados por gravar "
 "perder-se-ão.</warning></para>"
 
-#: helpers/killer/killer.cpp:156
+#: helpers/killer/killer.cpp:216
 #, fuzzy, kde-format
 #| msgid "&Terminate Application %1"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Terminar a Aplicação %1"
 
-#: helpers/killer/killer.cpp:157
+#: helpers/killer/killer.cpp:217
 #, fuzzy, kde-format
 #| msgid "Wait Longer"
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Esperar um Pouco"
 
-#: helpers/killer/killer.cpp:165
+#: helpers/killer/killer.cpp:225
 #, fuzzy, kde-format
 #| msgctxt "Application is not responding, appended to window title"
 #| msgid "(Not Responding)"
@@ -1232,13 +1232,13 @@ msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "(Não Responde)"
 
-#: helpers/killer/killer.cpp:181
+#: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr ""
 
-#: helpers/killer/killer.cpp:183
+#: helpers/killer/killer.cpp:243
 #, fuzzy, kde-format
 #| msgid "hostname"
 msgctxt "@info"

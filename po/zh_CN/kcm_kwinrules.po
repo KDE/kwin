@@ -916,18 +916,16 @@ msgid "Add property to the rule"
 msgstr "添加属性到规则"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "没有更改窗口属性"
+msgstr ""
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "没有更改窗口属性"
+msgstr ""
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
@@ -961,6 +959,3 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
-
-#~ msgid "Close"
-#~ msgstr "关闭"

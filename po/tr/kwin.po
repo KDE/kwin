@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-19 00:40+0000\n"
+"POT-Creation-Date: 2024-07-25 00:40+0000\n"
 "PO-Revision-Date: 2024-07-17 14:05+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -1093,82 +1093,82 @@ msgstr "Pano"
 msgid "Primary Selection"
 msgstr "Birincil Seçim"
 
-#: helpers/killer/killer.cpp:74
+#: helpers/killer/killer.cpp:134
 #, kde-format
 msgid "Window Manager"
 msgstr "Pencere Yöneticisi"
 
-#: helpers/killer/killer.cpp:79
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "PID of the application to terminate"
 msgstr "Sonlandırılacak uygulamanın süreç numarası"
 
-#: helpers/killer/killer.cpp:79
+#: helpers/killer/killer.cpp:139
 #, kde-format
 msgid "pid"
 msgstr "pid"
 
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:141
 #, kde-format
 msgid "Hostname on which the application is running"
 msgstr "Uygulamanın çalıştığı makinenin adı"
 
-#: helpers/killer/killer.cpp:81
+#: helpers/killer/killer.cpp:141
 #, kde-format
 msgid "hostname"
 msgstr "makine adı"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:143
 #, kde-format
 msgid "Caption of the window to be terminated"
 msgstr "Sonlandırılacak pencerenin başlığı"
 
-#: helpers/killer/killer.cpp:83
+#: helpers/killer/killer.cpp:143
 #, kde-format
 msgid "caption"
 msgstr "başlık"
 
-#: helpers/killer/killer.cpp:85
+#: helpers/killer/killer.cpp:145
 #, kde-format
 msgid "Name of the application to be terminated"
 msgstr "Sonlandırılacak uygulamanın adı"
 
-#: helpers/killer/killer.cpp:85
+#: helpers/killer/killer.cpp:145
 #, kde-format
 msgid "name"
 msgstr "ad"
 
-#: helpers/killer/killer.cpp:87
+#: helpers/killer/killer.cpp:147
 #, kde-format
 msgid "ID of resource belonging to the application"
 msgstr "Uygulamanın ait olduğu kaynağın kimliği"
 
-#: helpers/killer/killer.cpp:87
+#: helpers/killer/killer.cpp:147
 #, kde-format
 msgid "id"
 msgstr "kimlik"
 
-#: helpers/killer/killer.cpp:89
+#: helpers/killer/killer.cpp:149
 #, kde-format
 msgid "Time of user action causing termination"
 msgstr "Sonlandırma için kullanıcı davranışı süresi"
 
-#: helpers/killer/killer.cpp:89
+#: helpers/killer/killer.cpp:149
 #, kde-format
 msgid "time"
 msgstr "zaman"
 
-#: helpers/killer/killer.cpp:91
+#: helpers/killer/killer.cpp:151
 #, kde-format
 msgid "KWin helper utility"
 msgstr "KWin yardımcı izlencesi"
 
-#: helpers/killer/killer.cpp:127
+#: helpers/killer/killer.cpp:187
 #, kde-format
 msgid "This helper utility is not supposed to be called directly."
 msgstr "Bu izlence, doğrudan çağrılmayı desteklemiyor."
 
-#: helpers/killer/killer.cpp:149
+#: helpers/killer/killer.cpp:209
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1178,7 +1178,7 @@ msgstr ""
 "<para><application>%1</application> yanıt vermiyor. Bu uygulamayı "
 "sonlandırmak istiyor musunuz?</para>"
 
-#: helpers/killer/killer.cpp:151
+#: helpers/killer/killer.cpp:211
 #, kde-kuit-format
 msgctxt "@info \"window title\" of application name is not responding."
 msgid ""
@@ -1188,7 +1188,7 @@ msgstr ""
 "<para><application>%2</application> uygulamasının “%1” penceresi yanıt "
 "vermiyor. Bu uygulamayı sonlandırmak istiyor musunuz?</para>"
 
-#: helpers/killer/killer.cpp:154
+#: helpers/killer/killer.cpp:214
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -1199,31 +1199,31 @@ msgstr ""
 "pencerelerin kapanmasına neden olacaktır. Kaydedilmemiş tüm veri kaybolur.</"
 "emphasis></para>"
 
-#: helpers/killer/killer.cpp:156
+#: helpers/killer/killer.cpp:216
 #, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Sonlandır: %1"
 
-#: helpers/killer/killer.cpp:157
+#: helpers/killer/killer.cpp:217
 #, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Biraz Daha &Bekle"
 
-#: helpers/killer/killer.cpp:165
+#: helpers/killer/killer.cpp:225
 #, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
 msgstr "Yanıt Vermiyor"
 
-#: helpers/killer/killer.cpp:181
+#: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
 msgstr "Süreç kimliği: %1"
 
-#: helpers/killer/killer.cpp:183
+#: helpers/killer/killer.cpp:243
 #, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
