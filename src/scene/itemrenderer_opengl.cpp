@@ -405,6 +405,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         }
     }
     if (shader) {
+        glActiveTexture(GL_TEXTURE0);
+        shader->setUniform("converter", 0);
         ShaderManager::instance()->popShader();
     }
 
