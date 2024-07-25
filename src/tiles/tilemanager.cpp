@@ -77,32 +77,8 @@ TileManager::TileManager(VirtualDesktop *desktop, Output *parent)
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged, this, [this](VirtualDesktop *previous, VirtualDesktop *current) {
         if (m_desktop == previous) {
             Q_EMIT activeChanged(false);
-            for (Tile *tile : m_rootTile->descendants()) {
-                for (Window *window : tile->windows()) {
-                    if (window->tile() == tile) {
-                        window->setQuickTileMode(QuickTileFlag::None, true);
-                    }
-                }
-            }
-            for (Tile *tile : m_quickRootTile->descendants()) {
-                for (Window *window : tile->windows()) {
-                    if (window->tile() == tile) {
-                        window->setQuickTileMode(QuickTileFlag::None, true);
-                    }
-                }
-            }
         } else if (m_desktop == current) {
             Q_EMIT activeChanged(true);
-            for (Tile *tile : m_rootTile->descendants()) {
-                for (Window *window : tile->windows()) {
-                    window->setQuickTileMode(tile->quickTileMode(), true);
-                }
-            }
-            for (Tile *tile : m_quickRootTile->descendants()) {
-                for (Window *window : tile->windows()) {
-                    window->setQuickTileMode(tile->quickTileMode(), true);
-                }
-            }
         }
     });
 }
