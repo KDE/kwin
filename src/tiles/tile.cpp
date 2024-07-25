@@ -305,6 +305,9 @@ void Tile::addWindow(Window *window)
     // only a single tile per manager is allowed
     m_tiling->forgetWindow(window);
     m_windows.append(window);
+    connect(window, &Window::closed, this, [this, window]() {
+        removeWindow(window);
+    });
     Q_EMIT windowAdded(window);
     Q_EMIT windowsChanged();
 }
