@@ -87,7 +87,17 @@ void RenderLoopPrivate::scheduleRepaint(std::chrono::nanoseconds lastTargetTimes
             }
         }
 
-        nextPresentationTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
+        if (compositeTimer.isActive()) {
+            // we already scheduled this frame, but we got a new timestamp
+            // which might require starting to composite earlier than we planned
+            // It's important here that we do not change the targeted vblank interval,
+            // otherwise with a pessimistic compositing time estimation we might
+            // unnecessarily drop frames
+            const uint32_t intervalsSinceLastTimestamp = std::max<int32_t>(std::round((nextPresentationTimestamp - lastPresentationTimestamp).count() / double(vblankInterval.count())), 0);
+            nextPresentationTimestamp = lastPresentationTimestamp + intervalsSinceLastTimestamp * vblankInterval;
+        } else {
+            nextPresentationTimestamp = lastPresentationTimestamp + std::max(pageflipsSince + pageflipsInAdvance, pageflipsSinceLastToTarget + 1) * vblankInterval;
+        }
     } else {
         wasTripleBuffering = false;
         doubleBufferingCounter = 0;
