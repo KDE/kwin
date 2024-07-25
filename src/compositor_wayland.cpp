@@ -8,6 +8,7 @@
 */
 
 #include "compositor_wayland.h"
+#include "core/graphicsbufferview.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
@@ -272,6 +273,25 @@ static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
     }
 }
 
+static bool checkForBlackBackground(SurfaceItem *background)
+{
+    if (!background->pixmap()
+        || !background->pixmap()->buffer()
+        || !background->pixmap()->buffer()->shmAttributes()
+        || background->pixmap()->buffer()->shmAttributes()->size != QSize(1, 1)) {
+        return false;
+    }
+    const GraphicsBufferView view(background->pixmap()->buffer());
+    if (!view.image()) {
+        return false;
+    }
+    const QRgb rgb = view.image()->pixel(0, 0);
+    const QVector3D encoded(qRed(rgb) / 255.0, qGreen(rgb) / 255.0, qBlue(rgb) / 255.0);
+    const QVector3D nits = background->colorDescription().mapTo(encoded, ColorDescription(NamedColorimetry::BT709, TransferFunction::linear, 100, 0, std::nullopt, std::nullopt));
+    // below 0.1 nits, it shouldn't be noticeable that we replace it with black
+    return nits.lengthSquared() <= (0.1 * 0.1);
+}
+
 void WaylandCompositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -316,14 +336,18 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         }
 
         bool directScanout = false;
-        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(1); !scanoutCandidates.isEmpty()) {
+        const uint32_t planeCount = 1;
+        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
             const auto sublayers = superLayer->sublayers();
-            const bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+            bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
                 return sublayer->isVisible();
             });
+            if (scanoutCandidates.size() > planeCount) {
+                scanoutPossible &= checkForBlackBackground(scanoutCandidates.back());
+            }
             if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates[0]->size()), output->modeSize()));
-                directScanout = primaryLayer->attemptScanout(scanoutCandidates[0], frame);
+                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
+                directScanout = primaryLayer->attemptScanout(scanoutCandidates.front(), frame);
             }
         } else {
             primaryLayer->notifyNoScanoutCandidate();
