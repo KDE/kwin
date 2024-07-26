@@ -8,7 +8,9 @@
 */
 #pragma once
 // KWin
+#include "core/output.h"
 #include "effect/globals.h"
+#include "workspace.h"
 #include <kwin_export.h>
 // Qt includes
 #include <QAction>
@@ -29,7 +31,9 @@ namespace KWin
 {
 
 class Options;
+class Output;
 class PlasmaVirtualDesktopManagementInterface;
+class Workspace;
 
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
@@ -37,6 +41,7 @@ class KWIN_EXPORT VirtualDesktop : public QObject
     Q_PROPERTY(QString id READ id CONSTANT)
     Q_PROPERTY(uint x11DesktopNumber READ x11DesktopNumber NOTIFY x11DesktopNumberChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(Output *output READ output WRITE setOutput NOTIFY outputChanged)
 public:
     explicit VirtualDesktop(QObject *parent = nullptr);
     ~VirtualDesktop() override;
@@ -53,6 +58,12 @@ public:
         return m_name;
     }
 
+    void setPreferredOutput(QString preferredOutput);
+    QString preferredOutput() const
+    {
+        return m_preferredOutput;
+    }
+
     void setX11DesktopNumber(uint number);
     uint x11DesktopNumber() const
     {
@@ -61,6 +72,7 @@ public:
 
 Q_SIGNALS:
     void nameChanged();
+    void outputChanged();
     void x11DesktopNumberChanged();
 
     /**
@@ -71,6 +83,12 @@ Q_SIGNALS:
 private:
     QString m_id;
     QString m_name;
+
+    /**
+     * The serial number of the Output this VirtualDesktop prefers to be on, if it is connected.
+     */
+    QString m_preferredOutput;
+
     int m_x11DesktopNumber = 0;
 };
 
@@ -85,7 +103,7 @@ private:
 class VirtualDesktopGrid
 {
 public:
-    VirtualDesktopGrid();
+    VirtualDesktopGrid(Output *output);
     ~VirtualDesktopGrid();
     void update(const QSize &size, const QList<VirtualDesktop *> &desktops);
 
@@ -110,6 +128,7 @@ public:
     const QSize &size() const;
 
 private:
+    Output *m_output = nullptr;
     QSize m_size;
     QList<QList<VirtualDesktop *>> m_grid;
 };
@@ -152,6 +171,8 @@ class KWIN_EXPORT VirtualDesktopManager : public QObject
      */
     Q_PROPERTY(bool navigationWrappingAround READ isNavigationWrappingAround WRITE setNavigationWrappingAround NOTIFY navigationWrappingAroundChanged)
 public:
+    VirtualDesktopManager(QObject *parent, Workspace *workspace);
+
     ~VirtualDesktopManager() override;
 
     /**
@@ -322,6 +343,8 @@ public Q_SLOTS:
      * It is the callers responsibility to either check the numberOfDesktops or connect to the
      * countChanged signal.
      *
+     * TODO: Doc changes.
+     *
      * In case the @ref current desktop is on a desktop higher than the new count, the current desktop
      * is changed to be the new desktop with highest id. In that situation the signal desktopRemoved
      * is emitted.
@@ -332,7 +355,7 @@ public Q_SLOTS:
      * @see desktopCreated
      * @see desktopRemoved
      */
-    void setCount(uint count);
+    void setCount(uint count, Output *output);
 
     /**
      * Set the current desktop to @a current.
@@ -513,6 +536,9 @@ private:
      */
     QAction *addAction(const QString &name, const QString &label, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
 
+    // TODO: Doc comment
+    QList<VirtualDesktop *> desktopsForOutput(Output *output) const;
+
     /**
      * Removes excess desktops from the virtual desktop manager.
      *
@@ -523,15 +549,22 @@ private:
      *
      * @param count The number of desktops to keep.
      */
-    void pruneDesktops(uint count);
+    void pruneDesktops(uint count, Output *output);
+
+    // TODO: Doc comment
+    void setCountForOutput(uint count, Output *output);
+
+    // TODO: Doc comment
+    void setGlobalCount(uint count);
 
     /**
      * Adds a specified number of virtual desktops to the desktop manager.
      *
      * @param count The number of virtual desktops to add.
+     * @param output Optional output to add the desktops to.
      * @return A QList of pointers to the newly added virtual desktops.
      */
-    QList<VirtualDesktop *> addDesktops(uint count);
+    QList<VirtualDesktop *> addDesktops(uint count, Output *output);
 
     /**
      * The list of virtual desktops.
@@ -551,7 +584,10 @@ private:
 
     quint32 m_rows = 2;
     bool m_navigationWrapsAround;
+
     VirtualDesktopGrid m_grid;
+    // QList<VirtualDesktopGrid> m_grids;
+
     // TODO: QPointer
 #if KWIN_BUILD_X11
     NETRootInfo *m_rootInfo;
@@ -562,6 +598,9 @@ private:
     std::unique_ptr<QAction> m_swipeGestureReleasedY;
     std::unique_ptr<QAction> m_swipeGestureReleasedX;
     QPointF m_currentDesktopOffset = QPointF(0, 0);
+
+    // TODO: Doc comment
+    Workspace *const m_workspace;
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
 };

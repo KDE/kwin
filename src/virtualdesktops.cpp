@@ -135,10 +135,11 @@ void VirtualDesktop::setName(const QString &name)
     Q_EMIT nameChanged();
 }
 
-VirtualDesktopGrid::VirtualDesktopGrid()
+VirtualDesktopGrid::VirtualDesktopGrid(Output *output)
     : m_size(1, 2) // Default to tow rows
     , m_grid(QList<QList<VirtualDesktop *>>{QList<VirtualDesktop *>{}, QList<VirtualDesktop *>{}})
 {
+    m_output = output;
 }
 
 VirtualDesktopGrid::~VirtualDesktopGrid() = default;
@@ -195,7 +196,7 @@ VirtualDesktop *VirtualDesktopGrid::at(const QPoint &coords) const
 
 KWIN_SINGLETON_FACTORY_VARIABLE(VirtualDesktopManager, s_manager)
 
-VirtualDesktopManager::VirtualDesktopManager(QObject *parent)
+VirtualDesktopManager::VirtualDesktopManager(QObject *parent, Workspace *workspace)
     : QObject(parent)
     , m_navigationWrapsAround(false)
 #if KWIN_BUILD_X11
@@ -203,6 +204,7 @@ VirtualDesktopManager::VirtualDesktopManager(QObject *parent)
 #endif
     , m_swipeGestureReleasedY(new QAction(this))
     , m_swipeGestureReleasedX(new QAction(this))
+    , m_workspace(workspace)
 {
 }
 
@@ -541,11 +543,59 @@ bool VirtualDesktopManager::setCurrent(VirtualDesktop *newDesktop)
     return true;
 }
 
-void VirtualDesktopManager::setCount(uint count)
+void VirtualDesktopManager::setCount(uint count, Output *output = nullptr)
 {
     // Clamp the count to ensure it is within the valid range
     count = std::clamp<uint>(count, 1, VirtualDesktopManager::maximum());
 
+    // if (output) {
+    //     setCountForOutput(count, output);
+    // } else {
+    //     setGlobalCount(count);
+    // }
+
+    QList<VirtualDesktop *> desktops = output ? desktopsForOutput(output) : m_desktops;
+
+    if (count == uint(desktops.count())) {
+        // If the count is the same as the current number of desktops, nothing needs to be changed
+        return;
+    }
+
+    QList<VirtualDesktop *> newDesktops;
+    const uint oldCount = desktops.count();
+
+    if (oldCount > count) {
+        // If the count is being reduced, remove the extra desktops
+        pruneDesktops(count, output);
+    } else {
+        // If the count is being increased, add new desktops
+        newDesktops = addDesktops(count - oldCount, output);
+    }
+}
+
+void VirtualDesktopManager::setCountForOutput(uint count, Output *output)
+{
+    QList<VirtualDesktop *> desktops = desktopsForOutput(output);
+
+    if (count == uint(desktops.count())) {
+        // If the count is the same as the current number of desktops, nothing needs to be changed
+        return;
+    }
+}
+
+QList<VirtualDesktop *> VirtualDesktopManager::desktopsForOutput(Output *output) const
+{
+    QList<VirtualDesktop *> desktops;
+    for (auto desktop : std::as_const(m_desktops)) {
+        if (desktop->output() == output) {
+            desktops << desktop;
+        }
+    }
+    return desktops;
+}
+
+void VirtualDesktopManager::setGlobalCount(uint count)
+{
     if (count == uint(m_desktops.count())) {
         // If the count is the same as the current number of desktops, nothing needs to be changed
         return;
@@ -556,10 +606,10 @@ void VirtualDesktopManager::setCount(uint count)
 
     if ((uint)m_desktops.count() > count) {
         // If the count is being reduced, remove the extra desktops
-        pruneDesktops(count);
+        pruneDesktops(count, nullptr);
     } else {
         // If the count is being increased, add new desktops
-        newDesktops = addDesktops(count - m_desktops.count());
+        newDesktops = addDesktops(count - m_desktops.count(), nullptr);
     }
 
     if (!m_current) {
@@ -585,26 +635,29 @@ void VirtualDesktopManager::setCount(uint count)
     Q_EMIT countChanged(oldCount, m_desktops.count());
 }
 
-void VirtualDesktopManager::pruneDesktops(uint count)
+void VirtualDesktopManager::pruneDesktops(uint count, Output *output = nullptr)
 {
-    const auto desktopsToRemove = m_desktops.mid(count);
-    m_desktops.resize(count);
+    QList<VirtualDesktop *> desktops = output ? desktopsForOutput(output) : m_desktops;
+    QList<VirtualDesktop *> desktopsToRemove = desktops.mid(count);
+    desktops.resize(count);
 
     if (m_current && desktopsToRemove.contains(m_current)) {
         // If the current desktop is being removed, update the current desktop
         VirtualDesktop *oldCurrent = m_current;
-        m_current = m_desktops.last();
+        m_current = desktops.last();
         Q_EMIT currentChanged(oldCurrent, m_current);
     }
 
     for (auto desktop : desktopsToRemove) {
+        // Remove from the global list
+        m_desktops.removeAll(desktop);
         // Delete the removed desktops
         Q_EMIT desktopRemoved(desktop);
         desktop->deleteLater();
     }
 }
 
-QList<VirtualDesktop *> VirtualDesktopManager::addDesktops(uint count)
+QList<VirtualDesktop *> VirtualDesktopManager::addDesktops(uint count, Output *output = nullptr)
 {
     QList<VirtualDesktop *> newDesktops;
 
@@ -616,6 +669,10 @@ QList<VirtualDesktop *> VirtualDesktopManager::addDesktops(uint count)
 
         if (!s_loadingDesktopSettings) {
             vd->setId(generateDesktopId());
+        }
+
+        if (output) {
+            vd->setOutput(output);
         }
 
         m_desktops << vd;
@@ -692,35 +749,62 @@ void VirtualDesktopManager::load()
         return;
     }
 
-    KConfigGroup group(m_config, QStringLiteral("Desktops"));
-    const int n = group.readEntry("Number", 1);
-    setCount(n);
+    //     KConfigGroup group(m_config, QStringLiteral("Desktops"));
+    //     const int numberOfSavedVirtualDesktops = group.readEntry("Number", 1);
+    //     setCount(numberOfSavedVirtualDesktops);
 
-    for (int i = 1; i <= n; i++) {
+    //     for (int i = 1; i <= numberOfSavedVirtualDesktops; i++) {
+    //         QString s = group.readEntry(QStringLiteral("Name_%1").arg(i), i18n("Desktop %1", i));
+    // #if KWIN_BUILD_X11
+    //         if (m_rootInfo) {
+    //             m_rootInfo->setDesktopName(i, s.toUtf8().data());
+    //         }
+    // #endif
+    //         m_desktops[i - 1]->setName(s);
+
+    //         const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
+
+    //         if (m_desktops[i - 1]->id().isEmpty()) {
+    //             m_desktops[i - 1]->setId(sId.isEmpty() ? generateDesktopId() : sId);
+    //         } else {
+    //             Q_ASSERT(sId.isEmpty() || m_desktops[i - 1]->id() == sId);
+    //         }
+
+    //         // TODO: update desktop focus chain, why?
+    //         //         m_desktopFocusChain.value()[i-1] = i;
+    //     }
+
+    //     int rows = group.readEntry<int>("Rows", 2);
+    //     m_rows = std::clamp(rows, 1, numberOfSavedVirtualDesktops);
+
+    //     s_loadingDesktopSettings = false;
+
+    KConfigGroup group(m_config, QStringLiteral("Desktops"));
+    const int numberOfSavedVirtualDesktops = group.readEntry("Number", 1);
+    QList<VirtualDesktop *> savedDesktops;
+
+    for (int i = 1; i <= numberOfSavedVirtualDesktops; i++) {
         QString s = group.readEntry(QStringLiteral("Name_%1").arg(i), i18n("Desktop %1", i));
 #if KWIN_BUILD_X11
         if (m_rootInfo) {
             m_rootInfo->setDesktopName(i, s.toUtf8().data());
         }
 #endif
-        m_desktops[i - 1]->setName(s);
+        VirtualDesktop *vd = new VirtualDesktop(this);
+        vd->setName(s);
 
         const QString sId = group.readEntry(QStringLiteral("Id_%1").arg(i), QString());
+        vd->setId(sId.isEmpty() ? generateDesktopId() : sId);
 
-        if (m_desktops[i - 1]->id().isEmpty()) {
-            m_desktops[i - 1]->setId(sId.isEmpty() ? generateDesktopId() : sId);
-        } else {
-            Q_ASSERT(sId.isEmpty() || m_desktops[i - 1]->id() == sId);
+        QString outputId = group.readEntry(QStringLiteral("Output_%1").arg(i), QString());
+        if (outputId.isEmpty()) {
+            // If a preferred output was not found, the desktop will be assigned to the first output.
+            outputId = m_workspace->outputs().first()->serialNumber();
         }
+        vd->setPreferredOutput(outputId);
 
-        // TODO: update desktop focus chain, why?
-        //         m_desktopFocusChain.value()[i-1] = i;
+        savedDesktops << vd;
     }
-
-    int rows = group.readEntry<int>("Rows", 2);
-    m_rows = std::clamp(rows, 1, n);
-
-    s_loadingDesktopSettings = false;
 }
 
 void VirtualDesktopManager::save()
@@ -736,6 +820,7 @@ void VirtualDesktopManager::save()
     for (int i = count() + 1; group.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
         group.deleteEntry(QStringLiteral("Id_%1").arg(i));
         group.deleteEntry(QStringLiteral("Name_%1").arg(i));
+        group.deleteEntry(QStringLiteral("Output_%1").arg(i));
     }
 
     group.writeEntry("Number", count());
@@ -762,6 +847,14 @@ void VirtualDesktopManager::save()
             }
         }
         group.writeEntry(QStringLiteral("Id_%1").arg(position), desktop->id());
+
+        Output *output = desktop->output();
+
+        if (output) {
+            group.writeEntry(QStringLiteral("Output_%1").arg(position), output->serialNumber());
+        } else {
+            group.deleteEntry(QStringLiteral("Output_%1").arg(position));
+        }
     }
 
     group.writeEntry("Rows", m_rows);
