@@ -932,6 +932,15 @@ void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDes
     // Restore the focus on this desktop
     --block_focus;
 
+    for (Window *window : std::as_const(m_windows)) {
+        Tile *owner = workspace()->tileManager(window->output(), newDesktop)->windowOwner(window);
+        if (owner) {
+            window->setQuickTileMode(owner->quickTileMode(), true);
+        } else if (window->quickTileMode() != QuickTileFlag::None) {
+            window->setQuickTileMode(QuickTileFlag::None, true);
+        }
+    }
+
     activateWindowOnNewDesktop(newDesktop);
     Q_EMIT currentDesktopChanged(oldDesktop, m_moveResizeWindow);
 }
