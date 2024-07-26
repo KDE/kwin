@@ -919,13 +919,13 @@ msgstr "添加属性到规则"
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr ""
+msgstr "没有可以继续添加的属性"
 
 #: ui/RulesEditor.qml:269
 #, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr ""
+msgstr "没有匹配“%1”的属性"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
