@@ -9,6 +9,7 @@
 
 #include "xdgactivationv1.h"
 #include "effect/effecthandler.h"
+#include "main.h"
 #include "utils/common.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
@@ -23,6 +24,12 @@
 
 namespace KWin
 {
+
+static bool disrespect_activation_tokens()
+{
+    static const bool result = kwinApp()->operationMode() != Application::OperationMode::OperationModeX11;
+    return result;
+}
 
 static bool isPrivilegedInWindowManagement(const ClientConnection *client)
 {
@@ -73,7 +80,7 @@ XdgActivationV1Integration::XdgActivationV1Integration(XdgActivationV1Interface 
         Workspace *ws = Workspace::self();
         Q_ASSERT(client); // Should always be available as it's coming straight from the wayland implementation
         const bool isPrivileged = isPrivilegedInWindowManagement(client);
-        if (!isPrivileged && ws->activeWindow() && ws->activeWindow()->surface() != surface) {
+        if (!isPrivileged && ws->activeWindow() && ws->activeWindow()->surface() != surface && !disrespect_activation_tokens()) {
             qCWarning(KWIN_CORE) << "Cannot grant a token to" << client;
             return QStringLiteral("not-granted-666");
         }
@@ -131,7 +138,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
 
     auto ownerWindow = waylandServer()->findWindow(m_currentActivationToken->surface);
     qCDebug(KWIN_CORE) << "activating" << window << surface << "on behalf of" << m_currentActivationToken->surface << "into" << ownerWindow;
-    if (!ws->activeWindow() || ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || m_currentActivationToken->isPrivileged) {
+    if (!ws->activeWindow() || ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || m_currentActivationToken->isPrivileged || disrespect_activation_tokens()) {
         ws->activateWindow(window);
     } else {
         qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << (ownerWindow ? ownerWindow->desktopFileName() : "null")
