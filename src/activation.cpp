@@ -557,6 +557,10 @@ void Workspace::gotFocusIn(const Window *window)
 
 void Workspace::setShouldGetFocus(Window *window)
 {
+    if (m_activeWindow == window) {
+        // the matching focusIn event will never arrive
+        return;
+    }
     should_get_focus.append(window);
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
