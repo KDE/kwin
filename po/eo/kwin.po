@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-25 00:40+0000\n"
-"PO-Revision-Date: 2024-07-20 17:03+0200\n"
+"PO-Revision-Date: 2024-07-27 14:20+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -2588,30 +2588,40 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"La Majuskliga klavo estis ŝlosita kaj nun estas aktiva por ĉiuj el la "
+"sekvontaj klavpremoj."
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"La Stir-klavo estis ŝlosita kaj nun estas aktiva por ĉiuj el la sekvontaj "
+"klavpremoj."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"La Alt-klavo estis ŝlosita kaj nun estas aktiva por ĉiuj el la sekvontaj "
+"klavpremoj."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"La Meta-klavo estis ŝlosita kaj nun estas aktiva por ĉiuj el la sekvontaj "
+"klavpremoj."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"La AltGr-klavo estis ŝlosita kaj nun estas aktiva por ĉiuj el la sekvontaj "
+"klavpremoj."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-25 00:40+0000\n"
-"PO-Revision-Date: 2024-07-06 02:00+0300\n"
+"PO-Revision-Date: 2024-07-27 19:23+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -1862,72 +1862,72 @@ msgstr "Animuoti mygtukus"
 #: plugins/keynotification/keynotification.cpp:37
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Aktyvintas didžiųjų raidžių klavišas"
 
 #: plugins/keynotification/keynotification.cpp:41
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Dabar didžiųjų raidžių klavišas yra pasyvus"
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Aktyvintas skaitmenų klaviatūros klavišas"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Dabar skaitmenų klaviatūros klavišas yra pasyvus"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Aktyvintas slinkties klavišas"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Dabar slinkties klavišas yra pasyvus"
 
 #: plugins/keynotification/keynotification.cpp:70
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Dabar Lyg2 klavišas yra aktyvus."
 
 #: plugins/keynotification/keynotification.cpp:74
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Dabar Lyg2 klavišas yra pasyvus."
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Dabar Vald klavišas yra aktyvus."
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Dabar Vald klavišas yra pasyvus."
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Dabar Alt klavišas yra aktyvus."
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Dabar Alt klavišas yra pasyvus."
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Dabar Meta klavišas yra aktyvus."
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Dabar Meta klavišas yra pasyvus."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2599,30 +2599,40 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Lyg2 klavišas užrakintas ir dabar yra aktyvus bet kokiems sekantiems klavišų "
+"paspaudimams."
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Vald klavišas užrakintas ir dabar yra aktyvus bet kokiems sekantiems klavišų "
+"paspaudimams."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Alt klavišas užrakintas ir dabar yra aktyvus bet kokiems sekantiems klavišų "
+"paspaudimams."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Meta klavišas užrakintas ir dabar yra aktyvus bet kokiems sekantiems klavišų "
+"paspaudimams."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"AltGr klavišas užrakintas ir dabar yra aktyvus bet kokiems sekantiems "
+"klavišų paspaudimams."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50

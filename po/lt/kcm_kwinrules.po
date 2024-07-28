@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-23 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 23:34+0200\n"
+"PO-Revision-Date: 2024-07-27 19:03+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -960,18 +960,16 @@ msgid "Add property to the rule"
 msgstr "Pridėti savybę į taisyklę"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Nepasikeitė jokios lango savybės"
+msgstr "Nebeliko savybių, kurias galima būtų pridėti"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Nepasikeitė jokios lango savybės"
+msgstr "Jokios savybės neatitinka „%1“"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
