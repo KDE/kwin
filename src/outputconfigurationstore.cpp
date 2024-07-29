@@ -527,8 +527,9 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
 
 double OutputConfigurationStore::chooseScale(Output *output, OutputMode *mode) const
 {
-    if (output->physicalSize().height() <= 0) {
-        // invalid size, can't do anything with this
+    if (output->physicalSize().height() < 3 || output->physicalSize().width() < 3) {
+        // A screen less than 3mm wide or tall doesn't make any sense; these are
+        // all caused by the screen mis-reporting its size.
         return 1.0;
     }
     const double outputDpi = mode->size().height() / (output->physicalSize().height() / 25.4);
