@@ -386,9 +386,14 @@ class KWIN_EXPORT Window : public QObject
 
     /**
      * The Caption of the Window. Read from WM_NAME property together with a suffix for hostname and shortcut.
-     * To read only the caption as provided by WM_NAME, use the getter with an additional @c false value.
+     * To read only the caption as provided by WM_NAME, use @c captionNormal.
      */
     Q_PROPERTY(QString caption READ caption NOTIFY captionChanged)
+
+    /**
+     * The Caption of the Window. Read from WM_NAME property.
+     */
+    Q_PROPERTY(QString captionNormal READ captionNormal NOTIFY captionNormalChanged)
 
     /**
      * Minimum size as specified in WM_NORMAL_HINTS
