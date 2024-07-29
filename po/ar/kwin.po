@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-25 00:40+0000\n"
-"PO-Revision-Date: 2024-06-26 18:25+0400\n"
+"PO-Revision-Date: 2024-07-28 12:36+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -711,7 +711,7 @@ msgstr "حلقة اللوحي"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "التّأثيرات"
 
 #: debug_console.cpp:795
 #, kde-format
@@ -922,13 +922,13 @@ msgstr "نوافذ داخلية"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "أفرغ"
 
 #: debug_console.cpp:1586 debug_console.cpp:1600
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "حمّل"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1704,27 +1704,25 @@ msgstr "حركات غلق النوافذ"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "البتة"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " م.ث"
-msgstr[1] " م.ث"
-msgstr[2] " م.ث"
-msgstr[3] " م.ث"
-msgstr[4] " م.ث"
-msgstr[5] " م.ث"
+msgstr[0] "صفر ثانية"
+msgstr[1] "ثانية واحدة"
+msgstr[2] "ثانيتين"
+msgstr[3] "%1 ثواني"
+msgstr[4] "%1 ثانية"
+msgstr[5] "%1 ثانية"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "أخفِ المؤشّر عند الكتابة"
+msgstr "أخفِ المؤشّر عند عدم النشاط:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -1847,72 +1845,72 @@ msgstr "أزرار التحريك"
 #: plugins/keynotification/keynotification.cpp:37
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "نشط مفتاح Caps Lock"
 
 #: plugins/keynotification/keynotification.cpp:41
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "المفتاح Caps Lock هو الآن خامل"
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "نشط مفتاح Caps Lock"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "المفتاح Num Lock هو الآن خامل"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "نشط مفتاح Scroll Lock"
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr " المفتاح Scroll Lock هو الآن خامل"
 
 #: plugins/keynotification/keynotification.cpp:70
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr " المفتاح Shift مفعّل الآن."
 
 #: plugins/keynotification/keynotification.cpp:74
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr " المفتاح Shift هو الآن خامل."
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr " المفتاح Control هو الآن نشط."
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr " المفتاح Control هو الآن خامل."
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr " المفتاح Alt مفعّل الآن."
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr " المفتاح Alt هو الآن خامل."
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr " المفتاح Meta مفعّل الآن."
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr " المفتاح Meta هو الآن خامل."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2579,31 +2577,31 @@ msgstr "تمرير خلفية سطح المكتب"
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "أُقفل المفتاح Shift و هو الآن مفعّل لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "تم إقفال المفتاح Control و هو الآن نشط لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "أُقفل المفتاح Alt و هو الآن مفعّل لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "أُقفل المفتاح Meta و هو الآن مفعّل لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "أُقفل المفتاح AltGr و هو الآن مفعّل لكلّ ضغطات المفاتيح التالية."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50

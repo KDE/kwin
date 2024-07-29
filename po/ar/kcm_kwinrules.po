@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-23 00:40+0000\n"
-"PO-Revision-Date: 2024-03-30 11:07+0400\n"
+"PO-Revision-Date: 2024-07-28 12:37+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -18,6 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -949,18 +950,16 @@ msgid "Add property to the rule"
 msgstr "أضف خاصية للقاعدة"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "لم يغير أي من خواص النافذة"
+msgstr "لم تبق أي خاصية لتضاف"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "لم يغير أي من خواص النافذة"
+msgstr "لا توجد خصائص تطابق \"%1\""
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
