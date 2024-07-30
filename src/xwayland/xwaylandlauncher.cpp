@@ -77,6 +77,14 @@ void XwaylandLauncher::addEnvironmentVariables(const QMap<QString, QString> &ext
     m_extraEnvironment.insert(extraEnvironment);
 }
 
+void XwaylandLauncher::passFileDescriptors(std::vector<FileDescriptor> &&fds)
+{
+    m_fdsToPreserve.reserve(m_fdsToPreserve.size() + fds.size());
+    for (auto & fd : fds) {
+        m_fdsToPreserve.emplace_back(std::move(fd));
+    }
+}
+
 void XwaylandLauncher::enable()
 {
     if (m_enabled) {
@@ -185,6 +193,10 @@ bool XwaylandLauncher::start()
         env.insert(variable, value);
     }
 
+    for (const auto &fd : m_fdsToPreserve) {
+        fdsToPass.push_back(fd.get());
+    }
+
     m_xwaylandProcess = new QProcess(this);
     m_xwaylandProcess->setProgram(QStandardPaths::findExecutable("Xwayland"));
     m_xwaylandProcess->setArguments(arguments);
@@ -204,6 +216,7 @@ bool XwaylandLauncher::start()
             }
         }
     });
+
     connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &XwaylandLauncher::handleXwaylandError);
     connect(m_xwaylandProcess, &QProcess::finished, this, &XwaylandLauncher::handleXwaylandFinished);
 

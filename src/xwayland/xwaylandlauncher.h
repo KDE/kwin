@@ -61,6 +61,8 @@ public:
 
     void addEnvironmentVariables(const QMap<QString, QString> &extraEnvironment);
 
+    void passFileDescriptors(std::vector<FileDescriptor> &&fds);
+
     void enable();
     void disable();
     bool start();
@@ -107,6 +109,7 @@ private:
     QString m_displayName;
     QString m_xAuthority;
     QMap<QString, QString> m_extraEnvironment;
+    std::vector<FileDescriptor> m_fdsToPreserve;
 
     bool m_enabled = false;
     int m_crashCount = 0;

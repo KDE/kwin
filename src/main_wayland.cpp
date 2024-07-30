@@ -163,6 +163,7 @@ void ApplicationWayland::performStartup()
         m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);
         m_xwayland->xwaylandLauncher()->setXauthority(m_xwaylandXauthority);
         m_xwayland->xwaylandLauncher()->addEnvironmentVariables(m_xwaylandExtraEnvironment);
+        m_xwayland->xwaylandLauncher()->passFileDescriptors(std::move(m_xwaylandFds));
         m_xwayland->init();
         connect(m_xwayland.get(), &Xwl::Xwayland::started, this, &ApplicationWayland::applyXwaylandScale);
     }
