@@ -5,6 +5,7 @@
 */
 
 #include "stickykeys.h"
+#include "effect/effecthandler.h"
 #include "keyboard_input.h"
 #include "xkb.h"
 
@@ -67,6 +68,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
     m_lockKeys = group.readEntry<bool>("StickyKeysLatch", true);
     m_showNotificationForLockedKeys = group.readEntry<bool>("kNotifyModifiers", false);
     m_disableOnTwoKeys = group.readEntry<bool>("StickyKeysAutoOff", false);
+    m_ringBell = group.readEntry<bool>("StickyKeysBeep", false);
 
     if (!m_lockKeys) {
         // locking keys is deactivated, unlock all locked keys
@@ -104,6 +106,12 @@ bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
         }
 
         auto keyState = m_keyStates.find(event->key());
+
+        if (m_ringBell && event->type() == QEvent::KeyRelease) {
+            if (auto effect = KWin::effects->provides(KWin::Effect::SystemBell)) {
+                effect->perform(KWin::Effect::SystemBell, {});
+            }
+        }
 
         if (keyState != m_keyStates.end()) {
             if (event->type() == QKeyEvent::KeyPress) {

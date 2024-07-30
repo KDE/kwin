@@ -36,4 +36,5 @@ private:
     bool m_showNotificationForLockedKeys = false;
     bool m_disableOnTwoKeys = false;
     QSet<int> m_pressedModifiers;
+    bool m_ringBell = false;
 };
