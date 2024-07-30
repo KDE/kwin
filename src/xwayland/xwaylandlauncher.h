@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include "utils/filedescriptor.h"
+
 #include <QList>
 #include <QMap>
 #include <QObject>
@@ -59,6 +61,8 @@ public:
 
     void setExtraEnvironmentVariables(const QMap<QString, QString> &extraEnvironment);
 
+    void setFDsToPassToXwayland(std::vector<FileDescriptor> &&fds);
+
     void enable();
     void disable();
     bool start();
@@ -106,6 +110,7 @@ private:
     QString m_displayName;
     QString m_xAuthority;
     QMap<QString, QString> m_extraEnvironment;
+    std::vector<FileDescriptor> m_fdsToPreserve;
 
     bool m_enabled = false;
     int m_crashCount = 0;

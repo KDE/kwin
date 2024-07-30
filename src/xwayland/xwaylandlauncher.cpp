@@ -34,6 +34,8 @@
 // system
 #include <cerrno>
 #include <cstring>
+#include <fcntl.h>
+#include <ranges>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -72,6 +74,11 @@ void XwaylandLauncher::setXauthority(const QString &xauthority)
 void XwaylandLauncher::setExtraEnvironmentVariables(const QMap<QString, QString> &extraEnvironment)
 {
     m_extraEnvironment = extraEnvironment;
+}
+
+void XwaylandLauncher::setFDsToPassToXwayland(std::vector<FileDescriptor> &&fds)
+{
+    m_fdsToPreserve = std::move(fds);
 }
 
 void XwaylandLauncher::enable()
@@ -208,6 +215,13 @@ bool XwaylandLauncher::start()
     }
     m_xwaylandProcess->setProcessEnvironment(env);
     m_xwaylandProcess->setArguments(arguments);
+    m_xwaylandProcess->setChildProcessModifier([this] {
+        for (const auto &fd : m_fdsToPreserve) {
+            int flags = fcntl(fd.get(), F_GETFD);
+            fcntl(fd.get(), F_SETFD, flags & ~FD_CLOEXEC);
+        }
+    });
+
     connect(m_xwaylandProcess, &QProcess::errorOccurred, this, &XwaylandLauncher::handleXwaylandError);
     connect(m_xwaylandProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &XwaylandLauncher::handleXwaylandFinished);
