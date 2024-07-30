@@ -697,52 +697,6 @@ FocusScope {
                         }
                     }
 
-                    /*WindowHeapDelegate {
-                        windowHeap: heap
-
-                        // This is preferable over using gestureInProgress values since gridVal and
-                        // overviewVal are animated even after the gesture ends, and since the partial
-                        // activation factor follows those two values, this results in a more
-                        // fluent animation.
-                        gestureInProgress: !Number.isInteger(gridVal) || !Number.isInteger(overviewVal)
-
-                        partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
-
-                        targetScale: {
-                            if (!container.anyDesktopBar) return targetScale;
-                            if (overviewVal != 1) return targetScale;
-                            let coordinate = container.verticalDesktopBar ? 'x' : 'y'
-                            if (!activeDragHandler.active) {
-                                return targetScale; // leave it alone, so it won't affect transitions before they start
-                            }
-                            var localPressPosition = activeDragHandler.centroid.scenePressPosition[coordinate] - heap.layout.Kirigami.ScenePosition[coordinate];
-                            if (localPressPosition === 0) {
-                                return 0.1;
-                            } else {
-                                var localPosition = activeDragHandler.centroid.scenePosition[coordinate] - heap.layout.Kirigami.ScenePosition[coordinate];
-                                return Math.max(0.1, Math.min(localPosition / localPressPosition, 1));
-                            }
-                        }
-
-                        opacity: 1 - downGestureProgress
-                        onDownGestureTriggered: window.closeWindow()
-                        TapHandler {
-                            acceptedPointerTypes: PointerDevice.Generic | PointerDevice.Pen
-                            acceptedButtons: Qt.MiddleButton | Qt.RightButton
-                            onTapped: (eventPoint, button) => {
-                                if (button === Qt.MiddleButton) {
-                                    window.closeWindow();
-                                } else if (button === Qt.RightButton) {
-                                    if (window.desktops.length > 0) {
-                                        window.desktops = [];
-                                    } else {
-                                        window.desktops = [mainBackground.desktop];
-                                    }
-                                }
-                            }
-                        }
-                    }
-*/
                     MouseArea {
                         anchors.fill: parent
                         z: -1
