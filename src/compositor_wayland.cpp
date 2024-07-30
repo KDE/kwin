@@ -12,6 +12,7 @@
 #include "core/outputbackend.h"
 #include "core/renderbackend.h"
 #include "core/renderlayer.h"
+#include "cursorsource.h"
 #include "effect/effecthandler.h"
 #include "ftrace.h"
 #include "main.h"
@@ -354,7 +355,9 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     if (!Cursors::self()->isCursorHidden()) {
         Cursor *cursor = Cursors::self()->currentCursor();
         if (cursor->geometry().intersects(output->geometry())) {
-            cursor->markAsRendered(frameTime);
+            if (CursorSource *source = cursor->source()) {
+                source->frame(frameTime);
+            }
         }
     }
 }

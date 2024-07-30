@@ -161,8 +161,6 @@ public:
      */
     bool isOnOutput(Output *output) const;
 
-    void markAsRendered(std::chrono::milliseconds timestamp);
-
 Q_SIGNALS:
     void posChanged(const QPointF &pos);
     void mouseChanged(const QPointF &pos, const QPointF &oldpos,
@@ -178,7 +176,6 @@ Q_SIGNALS:
      */
     void cursorChanged();
     void themeChanged();
-    void rendered(std::chrono::milliseconds timestamp);
 
 protected:
     /**

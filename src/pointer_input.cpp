@@ -106,7 +106,6 @@ void PointerInputRedirection::init()
         }
     });
 
-    connect(Cursors::self()->mouse(), &Cursor::rendered, m_cursor, &CursorImage::markAsRendered);
     connect(m_cursor, &CursorImage::changed, Cursors::self()->mouse(), [this] {
         Cursors::self()->mouse()->setSource(m_cursor->source());
         m_cursor->updateCursorOutputs(m_pos);
@@ -1017,17 +1016,6 @@ void CursorImage::updateCursorOutputs(const QPointF &pos)
             const QRectF cursorGeometry(pos - m_currentSource->hotspot(), m_currentSource->size());
             cursorSurface->setOutputs(waylandServer()->display()->outputsIntersecting(cursorGeometry.toAlignedRect()),
                                       waylandServer()->display()->largestIntersectingOutput(cursorGeometry.toAlignedRect()));
-        }
-    }
-}
-
-void CursorImage::markAsRendered(std::chrono::milliseconds timestamp)
-{
-    if (m_currentSource == m_serverCursor.surface.get()) {
-        if (auto cursorSurface = m_serverCursor.surface->surface()) {
-            cursorSurface->traverseTree([&timestamp](SurfaceInterface *surface) {
-                surface->frameRendered(timestamp.count());
-            });
         }
     }
 }

@@ -218,11 +218,6 @@ void Cursor::setPos(const QPointF &pos)
     doSetPos();
 }
 
-void Cursor::markAsRendered(std::chrono::milliseconds timestamp)
-{
-    Q_EMIT rendered(timestamp);
-}
-
 #if KWIN_BUILD_X11
 xcb_cursor_t Cursor::x11Cursor(CursorShape shape)
 {

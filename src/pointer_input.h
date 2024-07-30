@@ -234,7 +234,6 @@ public:
     void setSource(CursorSource *source);
 
     void updateCursorOutputs(const QPointF &pos);
-    void markAsRendered(std::chrono::milliseconds timestamp);
 
 Q_SIGNALS:
     void changed();
