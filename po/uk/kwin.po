@@ -2552,12 +2552,12 @@ msgstr "Закрити"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr "Розділити горизонтально"
+msgstr "Розділити вертикально"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr "Розділити вертикально"
+msgstr "Розділити горизонтально"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
