@@ -63,7 +63,7 @@ void BasicEGLSurfaceTextureWayland::update(const QRegion &region)
 bool BasicEGLSurfaceTextureWayland::loadShmTexture(GraphicsBuffer *buffer)
 {
     const GraphicsBufferView view(buffer);
-    if (Q_UNLIKELY(!view.image())) {
+    if (Q_UNLIKELY(view.isNull())) {
         return false;
     }
 
@@ -92,7 +92,7 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, con
     }
 
     const GraphicsBufferView view(buffer);
-    if (Q_UNLIKELY(!view.image())) {
+    if (Q_UNLIKELY(view.isNull())) {
         return;
     }
 

@@ -214,8 +214,8 @@ static QImage shadowTileForBuffer(GraphicsBuffer *buffer)
 {
     if (buffer) {
         const GraphicsBufferView view(buffer);
-        if (const QImage *image = view.image()) {
-            return image->copy();
+        if (!view.isNull()) {
+            return view.image()->copy();
         }
     }
     return QImage();

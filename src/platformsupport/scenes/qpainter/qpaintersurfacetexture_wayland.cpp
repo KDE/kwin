@@ -21,7 +21,7 @@ QPainterSurfaceTextureWayland::QPainterSurfaceTextureWayland(QPainterBackend *ba
 bool QPainterSurfaceTextureWayland::create()
 {
     const GraphicsBufferView view(m_pixmap->buffer());
-    if (Q_LIKELY(view.image())) {
+    if (Q_LIKELY(!view.isNull())) {
         // The buffer data is copied as the buffer interface returns a QImage
         // which doesn't own the data of the underlying wl_shm_buffer object.
         m_image = view.image()->copy();
@@ -32,7 +32,7 @@ bool QPainterSurfaceTextureWayland::create()
 void QPainterSurfaceTextureWayland::update(const QRegion &region)
 {
     const GraphicsBufferView view(m_pixmap->buffer());
-    if (Q_UNLIKELY(!view.image())) {
+    if (Q_UNLIKELY(view.isNull())) {
         return;
     }
 
