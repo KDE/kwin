@@ -2,72 +2,73 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Martin Schlander <mschlander@opensuse.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2020, 2022.
 # scootergrisen, 2019.
+# SPDX-FileCopyrightText: 2024 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-25 00:40+0000\n"
-"PO-Revision-Date: 2022-05-14 17:24+0200\n"
-"Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
+"PO-Revision-Date: 2024-07-25 12:29+0200\n"
+"Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 20.04.2\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Erik Kjær Pedersen"
+msgstr "Erik Kjær Pedersen,Rasmus Rosendahl-Kaa"
 
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "erik@binghamton.edu"
+msgstr "erik@binghamton.edu,Rasmus@Rosendahl-kaa.name"
 
 #: backends/wayland/wayland_output.cpp:275
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Tryk på højre kontrol for at frigøre markøren"
 
 #: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Tryk på højre kontrol for at gribe markøren"
 
 #: backends/wayland/wayland_output.cpp:281
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "KDE Wayland-kompositør %1"
 
 #: backends/wayland/wayland_output.cpp:284
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- Output slået fra"
 
 #: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- Output dæmpet"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Tryk på højre kontrol for at frigøre input"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Tryk på højre kontrol for at gribe input"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:512
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "KDE Wayland-kompositør"
 
 #: compositor_wayland.cpp:279 compositor_x11.cpp:447
 #, kde-format
@@ -80,14 +81,7 @@ msgid "Suspend Compositing"
 msgstr "Suspendér compositing"
 
 #: compositor_x11.cpp:556
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -98,8 +92,7 @@ msgstr ""
 "</b><br>Dette skyldtes sandsynligvis en fejl i driveren.<p>Hvis du tror at "
 "du i mellemtiden har opgraderet til en stabil driver,<br>kan du nulstille "
 "denne beskyttelse, men<b>vær opmærksom på at dette kan medføre et "
-"øjeblikkeligt sammenbrud!</b></p><p>Alternativt kan overveje at bruge "
-"XRender-motoren i stedet.</p>"
+"øjeblikkeligt sammenbrud!</b></p>"
 
 #: compositor_x11.cpp:563
 #, kde-format
@@ -107,10 +100,9 @@ msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Påkrævede X-udvidelser (XComposite og XDamage) er ikke tilgængelige."
 
 #: compositor_x11.cpp:566
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "GLX/OpenGL og XRender/XFixes er ikke tilgængelige."
+msgstr "GLX/OpenGL er ikke tilgængelige."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -722,7 +714,7 @@ msgstr "Tablet pad-ring"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Effekter"
 
 #: debug_console.cpp:795
 #, kde-format
@@ -910,10 +902,9 @@ msgid "task"
 msgstr "opgave"
 
 #: debug_console.cpp:1238
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Vinduer"
+msgstr "X11-vinduer"
 
 #: debug_console.cpp:1240
 #, kde-format
@@ -934,13 +925,13 @@ msgstr "Interne vinduer"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Udlæs"
 
 #: debug_console.cpp:1586 debug_console.cpp:1600
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Indlæs"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1091,7 +1082,7 @@ msgstr "Udklipsholder"
 #: debug_console.ui:481
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "Primær makering"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1175,6 +1166,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> svarer ikke. Vil du prøve at afslutte "
+"applikationen?</para>"
 
 #: helpers/killer/killer.cpp:211
 #, kde-kuit-format
@@ -1183,74 +1176,63 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" af <application>%2</application> svarer ikke. Vil du prøve at "
+"afslutte denne applikation?</para>"
 
 #: helpers/killer/killer.cpp:214
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<para>Do you want to terminate this application?</"
-#| "para><para><warning>Terminating the application will close all of its "
-#| "child windows. Any unsaved data will be lost.</warning></para>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<para>Vil du afslutte dette program?</para><para><warning>Afslutning af "
-"programmet vil lukke alle dets undervinduer. Alle ikke gemte data vil gå "
-"tabt.</warning></para>"
+"<para><emphasis strong='true'>Afslutning af denne applikation vil lukke alle "
+"dens vindue. Alt ugemt data vil gå tabt.</emphasis></para>"
 
 #: helpers/killer/killer.cpp:216
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Afslut"
+msgstr "&Afslut %1"
 
 #: helpers/killer/killer.cpp:217
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Vent længere"
+msgstr "&Vent længere"
 
 #: helpers/killer/killer.cpp:225
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Svarer ikke)"
+msgstr "Svarer ikke"
 
 #: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "Proces-ID: %1"
 
 #: helpers/killer/killer.cpp:243
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "værtsnavn"
+msgstr "Vværtsnavn: %1"
 
 #: input.cpp:2021
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Flyt tabletten til næste output"
 
 #: input.cpp:2100
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Tablet moved to %1"
-msgstr "Tablet-tilstand"
+msgstr "Tablet flyttet til %1"
 
 #: input.cpp:2100
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tabletter skiftede output"
 
 #: input.cpp:3197
 #, kde-format
@@ -1337,11 +1319,9 @@ msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
 #: main.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Meget enorm"
+msgstr "Xaver Hugl"
 
 #: main.cpp:216
 #, kde-format
@@ -1411,6 +1391,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Wayland-socket, der skal bruges for indkommende forbindelser. Dette kan "
+"kombineres med -- socket for at navngive den"
 
 #: main_wayland.cpp:342
 #, kde-format
@@ -1418,21 +1400,23 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"XWayland-socket, der skal bruges for XWaylands indkommende forbindelser. "
+"Dette kan sættes flere gange"
 
 #: main_wayland.cpp:346
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
-msgstr ""
+msgstr "Navnet på xwayland-skærmen der er blevet forudindstillet"
 
 #: main_wayland.cpp:350
 #, kde-format
 msgid "Name of the xauthority file "
-msgstr ""
+msgstr "Navnet på xauthority-filen "
 
 #: main_wayland.cpp:354
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
-msgstr ""
+msgstr "Afslutter denne instans så den kan genstartes af kwin_wayland_wrapper."
 
 #: main_wayland.cpp:356
 #, kde-format
@@ -1444,6 +1428,7 @@ msgstr "Render igennem drm-knude."
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
+"Uddrag lokalitetsinformation fra locale1 i stedet for brugerens konfiguration"
 
 #: main_wayland.cpp:383
 #, kde-format
@@ -1520,11 +1505,9 @@ msgstr "Styrke på sløring:"
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
-msgstr "Højre"
+msgstr "Lys"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurStrong)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseStrong)
@@ -1542,63 +1525,60 @@ msgstr "Styrke på støj:"
 #: plugins/colorblindnesscorrection/ui/main.qml:32
 #, kde-format
 msgid "Red"
-msgstr ""
+msgstr "Rød"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:33
 #, kde-format
 msgid "Green"
-msgstr ""
+msgstr "Grøn"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:34
 #, kde-format
 msgid "Blue"
-msgstr ""
+msgstr "Blå"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:35
 #, kde-format
 msgid "Purple"
-msgstr ""
+msgstr "Lilla"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:71
 #, kde-format
 msgctxt "@label"
 msgid "Mode:"
-msgstr ""
+msgstr "Tilstand:"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:76
 #, kde-format
 msgctxt "@option"
 msgid "Protanopia (red weak)"
-msgstr ""
+msgstr "Protanopi (rød-svag)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:77
 #, kde-format
 msgctxt "@option"
 msgid "Deuteranopia (green weak)"
-msgstr ""
+msgstr "Deuteranopi (grøn-svag)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:78
 #, kde-format
 msgctxt "@option"
 msgid "Tritanopia (blue-yellow)"
-msgstr ""
+msgstr "Tritanopi (blå-gul)"
 
 #: plugins/colorblindnesscorrection/ui/main.qml:85
 #, kde-format
 msgctxt "@label"
 msgid "Intensity:"
-msgstr ""
+msgstr "Intensitet:"
 
 #: plugins/colorpicker/colorpicker.cpp:108
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Vælg vinduet der skal tvangslukkes med venstreklik eller Retur.\n"
+"Vælg en placering for farvevalg med venstreklik eller Retur.\n"
 "Esc eller højreklik for at annullere."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
@@ -1621,39 +1601,34 @@ msgstr "Dokker og paneler"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "&Skriveborde"
+msgstr "Skrivebord"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Hold over"
+msgstr "Hold over vinduer"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "By window group"
-msgstr "Vinduesrolle"
+msgstr "Efter vinduesrolle"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "Fuldskærm"
+msgstr "Fuldskærmsvinduer"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "billedtekst"
+msgstr "Varighed:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
@@ -1672,18 +1647,16 @@ msgstr " millisekunder"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Vinduesplacering"
+msgstr "Animation af åbning af vindue"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "Rotation"
+msgstr "Rotationskant:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1697,9 +1670,7 @@ msgstr "Øverst"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "Højre"
 
@@ -1715,19 +1686,16 @@ msgstr "Nederst"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "Venstre"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "Rotation"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "Rotation"
+msgstr "Rotationvinkel:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
@@ -1738,37 +1706,35 @@ msgstr "Afstand:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
-#, fuzzy, kde-format
-#| msgid "Window position"
+#, kde-format
 msgid "Window Close Animation"
-msgstr "Vinduesplacering"
+msgstr "Animation af lukning af vindue"
 
 #: plugins/hidecursor/hidecursor_config.cpp:56
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " millisekunder"
-msgstr[1] " millisekunder"
+msgstr[0] "%1 sekund"
+msgstr[1] "%1 sekunder"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "Skjul markør ved inaktivitet:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Skjul markør når der skrives"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1822,24 +1788,21 @@ msgid "Very Huge"
 msgstr "Meget enorm"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Ænd&r størrelse"
+msgstr "Overdimensioneret"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgid "Buttons"
+#, kde-format
 msgid "Button size:"
-msgstr "Knapper"
+msgstr "Knapstørrelse:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Config Dialog"
-msgstr "Dialog"
+msgstr "Konfigurationsdialog"
 
 #. i18n: ectx: property (title), widget (KButtonGroup, titleAlign)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:23
@@ -1865,10 +1828,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_coloredBorder)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:56
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgid "Colored window border"
-msgstr "Luk vindue"
+msgstr "Farvede vinduekanter"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -1889,72 +1851,72 @@ msgstr "Animér knapper"
 #: plugins/keynotification/keynotification.cpp:37
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Caps lock-tasten er blevet aktiveret"
 
 #: plugins/keynotification/keynotification.cpp:41
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Caps Lock er nu inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:45
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Num Lock-tasten er blevet aktiveret"
 
 #: plugins/keynotification/keynotification.cpp:49
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Num Lock er nu inaktiv,"
 
 #: plugins/keynotification/keynotification.cpp:53
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Scroll Lock-tasten er blevet aktiveret."
 
 #: plugins/keynotification/keynotification.cpp:57
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Scroll Lock er nu inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:70
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Skift-tasten er nu aktiv."
 
 #: plugins/keynotification/keynotification.cpp:74
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Skift-tasten er nu inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:78
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Ctrl-tast er nu aktiv"
 
 #: plugins/keynotification/keynotification.cpp:82
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Ctrl-tast er nu inaktiv"
 
 #: plugins/keynotification/keynotification.cpp:86
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Alt-tasten er nu aktiv."
 
 #: plugins/keynotification/keynotification.cpp:90
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Alt-tasten er nu inaktiv."
 
 #: plugins/keynotification/keynotification.cpp:94
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Meta-tasten er nu aktiv."
 
 #: plugins/keynotification/keynotification.cpp:98
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Meta-tasten er nu inaktiv."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2055,38 +2017,37 @@ msgstr "Luk kørende vindue på %1"
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "(U)minimér kørende vinduer på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "Maksimér/gendan kørende vinduer på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr ""
+msgstr "Slå fuldskærm til/fra for kørende vinduer på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "Tilføj/fjern skygge for kørende vinduer på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "Slå hold over andre til/fra for kørende vinduer på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "Slå hold under andre til/fra for kørende vinduer på %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Aktivér vindue (%1)"
+msgstr "Aktivér kørende vindue på %1"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
@@ -2129,11 +2090,9 @@ msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Højre"
+msgstr "&Højde:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
@@ -2142,25 +2101,19 @@ msgid "Toggle Mouse Click Effect"
 msgstr "Slå museklik-effekt til/fra"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Venstre"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Midterknap"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "Højre"
@@ -2173,31 +2126,27 @@ msgstr "Basale indstillinger"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Ingen museknapper"
+msgstr "Farve af venstre museknap:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Ingen museknapper"
+msgstr "Farve af midter museknap:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Ingen museknapper"
+msgstr "Farve af højre museknap:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgid "Ad&vanced"
+#, kde-format
 msgid "Advanced Settings"
-msgstr "&Avanceret"
+msgstr "Avanceret indstillinger"
 
 #. i18n: ectx: property (title), widget (QGroupBox, rings)
 #: plugins/mouseclick/mouseclick_config.ui:97
@@ -2215,9 +2164,7 @@ msgstr "Linjebredde:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
 msgstr " pixel"
 
@@ -2241,11 +2188,9 @@ msgstr "Radius på ring:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Fingerantal"
+msgstr "Antal ringe:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2261,10 +2206,9 @@ msgstr "Skrifttype:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Vis skrivebord"
+msgstr "Vis tekst:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2286,8 +2230,8 @@ msgstr "Ryd musemærker"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "pixel"
+msgstr[1] "pixels"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2310,17 +2254,15 @@ msgstr "&Farve:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Tegn med musen ved at holde Skift+Meta-tasterne og flytte musen."
+msgstr "Tegn med musen ved at holde ændringstasterne og flytte musen"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Ændringstaster"
+msgstr "Ændringstast til fri tegning:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2328,9 +2270,7 @@ msgstr "Ændringstaster"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2350,9 +2290,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Skift"
 
@@ -2362,50 +2300,41 @@ msgstr "Skift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Ændringstaster"
+msgstr "Ændringstast til piltegning:"
 
 #: plugins/nightlight/nightlightmanager.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Natfarver til"
+msgstr "Natfarver suspenderet"
 
 #: plugins/nightlight/nightlightmanager.cpp:59
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Natfarver til"
+msgstr "Natfarver genoptaget"
 
 #: plugins/nightlight/nightlightmanager.cpp:80
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Suspendér/gendan nattelys"
 
 #: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Forhåndsvisningaf farvetemperatur"
 
 #: plugins/outputlocator/outputlocator.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
 msgstr "Ukendt"
@@ -2414,244 +2343,213 @@ msgstr "Ukendt"
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Cyklus gennem overblik og gittervisning"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Cyklus gennem gittervisning og overblik"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
-msgstr "Slå intvertér-effekt til/fra"
+msgstr "Slå overblik til/fra"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
-msgstr "Slå intvertér-effekt til/fra"
+msgstr "Slå gittervisning til/fra"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Minimér vindue"
+msgstr "Ignorér minimerede vinduer:"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Organisér vinduer i gittervisningen:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Søgeresultater inkluderer filtrerede vinduer:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Cyklus gennem overblik og gittervisning"
 
 #: plugins/overview/overvieweffect.cpp:143
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Overview is the name of a Kwin effect"
 msgid "Toggle Overview"
-msgstr "Slå intvertér-effekt til/fra"
+msgstr "Slå overblik til/fra"
 
 #: plugins/overview/overvieweffect.cpp:151
-#, fuzzy, kde-format
-#| msgid "Toggle Invert Effect"
+#, kde-format
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
-msgstr "Slå intvertér-effekt til/fra"
+msgstr "Slå gittervisning til/fra"
 
 #: plugins/overview/qml/DesktopBar.qml:165
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Flyt til &skrivebord"
+msgstr "Slet virtuelt skrivebord"
 
 #: plugins/overview/qml/DesktopBar.qml:262
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "&Nyt skrivebord"
+msgstr "Tilføj virtuelt skrivebord"
 
 #: plugins/overview/qml/main.qml:381
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Flyt til &skrivebord"
+msgstr "Ingen andre virtuelle skriveborde at vise"
 
 #: plugins/overview/qml/main.qml:387
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "&Nyt skrivebord"
+msgstr "Tilføj virtuelt skrivebord"
 
 #: plugins/overview/qml/main.qml:394
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Indstil layouts..."
+msgstr "Konfigurér virtuelle skriveborde…"
 
 #: plugins/overview/qml/main.qml:739
-#, fuzzy, kde-format
-#| msgid "X11 Unmanaged Windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
-msgstr "X11 ikke-håndterede vinduer"
+msgstr "Ingen matchende vinduer"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:155
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Træk ned for at lukke"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:457
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Luk vindue"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Vinduesrolle"
+msgstr "Skala for vindueåbning:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Window role"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Vinduesrolle"
+msgstr "Skala for vinduelukning:"
 
 #: plugins/screencast/pipewirecore.cpp:63
 #: plugins/screencast/pipewirecore.cpp:92
 #, kde-format
 msgid "Failed to start main PipeWire loop"
-msgstr ""
+msgstr "Kunne ikke starte hoved-PipeWire-løkke"
 
 #: plugins/screencast/pipewirecore.cpp:79
 #, kde-format
 msgid "Failed to create PipeWire context"
-msgstr ""
+msgstr "Kunne ikke oprette PipeWire-kontekst"
 
 #: plugins/screencast/pipewirecore.cpp:86
 #, kde-format
 msgid "Failed to connect PipeWire context"
-msgstr ""
+msgstr "Kunne ikke tilslutte PipeWire-kontekst"
 
 #: plugins/screencast/screencastmanager.cpp:45
-#, fuzzy, kde-format
-#| msgid "Close running window on %1"
+#, kde-format
 msgid "Could not find window id %1"
-msgstr "Luk kørende vindue på %1"
+msgstr "Kunne ikke finde vindue-id %1"
 
 #: plugins/screencast/screencastmanager.cpp:81
 #, kde-format
 msgid "Could not find output"
-msgstr ""
+msgstr "Kunne ikke finde udgang"
 
 #: plugins/screencast/screencastmanager.cpp:100
 #, kde-format
 msgid "Invalid region"
-msgstr ""
+msgstr "Ugyldig region"
 
 #: plugins/screencast/screencaststream.cpp:350
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Ingen kørende OpenGL-kompositør"
+msgstr "OpenGL-compositing er nødvendigt for skærmcasting"
 
 #: plugins/screencast/screencaststream.cpp:358
 #, kde-format
 msgid "Failed to create PipeWire stream"
-msgstr ""
+msgstr "Kunne ikke starte PipeWire-stream"
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:525
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select window to screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Vælg vinduet der skal tvangslukkes med venstreklik eller Retur.\n"
+"Vælg vinduet til skærmbillede med venstreklik eller Retur.\n"
 "Esc eller højreklik for at annullere."
 
 #: plugins/screenshot/screenshotdbusinterface2.cpp:543
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Vælg vinduet der skal tvangslukkes med venstreklik eller Retur.\n"
+"Lav skærmbillede med venstreklik eller Retur.\n"
 "Esc eller højreklik for at annullere."
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Denne effekt er ikke et benchmark"
 
 #: plugins/showfps/qml/main.qml:110
-#, fuzzy, kde-format
-#| msgctxt "A mouse pointer motion event"
-#| msgid "Pointer Motion"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Duration"
-msgstr "Bevægelser af pegeredskab"
+msgstr "Malingsvarighed"
 
 #: plugins/showfps/qml/main.qml:162
-#, fuzzy, kde-format
-#| msgid "Ring Count:"
+#, kde-format
 msgctxt "@label"
 msgid "Paint Amount"
-msgstr "Antal ringe:"
+msgstr "Malingsmængde"
 
 #: plugins/showfps/qml/main.qml:175
-#, fuzzy, kde-format
-#| msgid "Current Layout:"
+#, kde-format
 msgctxt "@label"
 msgid "Current FPS"
-msgstr "Nuværende layout:"
+msgstr "Nuværende FPS"
 
 #: plugins/showfps/qml/main.qml:184
-#, fuzzy, kde-format
-#| msgid "Maximum &width:"
+#, kde-format
 msgctxt "@label"
 msgid "Maximum FPS"
-msgstr "Maksimal &bredde:"
+msgstr "Maksimal FPS"
 
 #: plugins/showpaint/showpaint.cpp:42 plugins/showpaint/showpaint_config.cpp:37
-#, fuzzy, kde-format
-#| msgid "Toggle Floating"
+#, kde-format
 msgid "Toggle Show Paint"
-msgstr "Slå flydning til/fra"
+msgstr "Slå vis maling til/fra"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_Gaps)
 #: plugins/slide/slide_config.ui:17
@@ -2661,56 +2559,53 @@ msgstr "Afstand mellem skriveborde"
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Vandret"
+msgstr "Vandret:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Lodret"
+msgstr "Lodret:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
-#, fuzzy, kde-format
-#| msgid "Slide when grouping"
+#, kde-format
 msgid "Slide desktop background"
-msgstr "Glid under gruppering"
+msgstr "Glid skrivebordsbaggrund"
 
 #: plugins/stickykeys/stickykeys.cpp:23
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Skift-tasten er blevet låst og er nu aktiv for alle følgende tastetryk."
 
 #: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Ctrl-tasten er blevet låst og er nu aktiv for alle følgende tastetryk."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Alt-tasten er blevet låst og er nu aktiv for alle følgende tastetryk."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Meta-tasten er blevet låst og er nu aktiv for alle følgende tastetryk."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"AltGr-tasten er blevet låst og er nu aktiv for alle følgende tastetryk."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -2740,10 +2635,9 @@ msgstr " pixel"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity"
+#, kde-format
 msgid "&Opacity:"
-msgstr "&Ugennemsigtighed"
+msgstr "&Opacitet:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -2755,46 +2649,43 @@ msgstr " %"
 #: plugins/tileseditor/tileseditoreffect.cpp:32
 #, kde-format
 msgid "Toggle Tiles Editor"
-msgstr ""
+msgstr "Slå tile-editor til/fra"
 
 #: plugins/tileseditor/qml/main.qml:151
 #, kde-format
 msgid "Padding:"
-msgstr ""
+msgstr "Polstring:"
 
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout…"
-msgstr ""
+msgstr "Indlæs layout…"
 
 #: plugins/tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Luk"
+msgstr "Luk"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Split venstre/højre"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Split top/bund"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
-#, fuzzy, kde-format
-#| msgctxt "Floating layout, windows aren't tiled at all"
-#| msgid "Floating"
+#, kde-format
 msgid "Add Floating Tile"
-msgstr "Flydende"
+msgstr "Tilføj svævende tile"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Slet"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -2806,21 +2697,19 @@ msgstr "Sporing af musen"
 #: plugins/trackmouse/trackmouse_config.ui:26
 #, kde-format
 msgid "Trigger effect with:"
-msgstr ""
+msgstr "Udløs effekt med:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_KeyboardShortcut)
 #: plugins/trackmouse/trackmouse_config.ui:33
-#, fuzzy, kde-format
-#| msgid "Keyboard"
+#, kde-format
 msgid "Keyboard shortcut:"
-msgstr "Tastatur"
+msgstr "Tastaturgenvej:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Ændringstaster"
+msgstr "Ændringstaster:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2850,10 +2739,9 @@ msgstr "Ugennemsigtig"
 
 #. i18n: ectx: property (text), widget (QLabel, dialogs_label)
 #: plugins/translucency/package/contents/ui/config.ui:137
-#, fuzzy, kde-format
-#| msgid "Dialog"
+#, kde-format
 msgid "Dialogs:"
-msgstr "Dialog"
+msgstr "Dialoger:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
@@ -2865,24 +2753,21 @@ msgstr "Gennemsigtig"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menu"
+#, kde-format
 msgid "Menus:"
-msgstr "Menu"
+msgstr "Menuer:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Flyt vindue"
+msgstr "Flytter vinduer:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Interne vinduer"
+msgstr "Inaktive vinduer:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2936,9 +2821,7 @@ msgstr "En kommaadskilt liste over vinduesklasser"
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
 msgstr "Alt"
 
@@ -2962,10 +2845,9 @@ msgstr "Slå prænsentér vinduer til/fra (aktuelt skrivebord)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:49
 #: plugins/windowview/windowvieweffect.cpp:57
-#, fuzzy, kde-format
-#| msgid "Keep Window on All Desktops"
+#, kde-format
 msgid "Toggle Present Windows (All desktops)"
-msgstr "Hold vindue på alle skriveborde"
+msgstr "Slå præsentér vinduer til/fra (alle skriveborde)"
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:56
 #: plugins/windowview/windowvieweffect.cpp:66
@@ -2975,41 +2857,36 @@ msgstr "Slå præsentér vinduer til/fra (vinduesklasse) "
 
 #: plugins/windowview/kcm/windowvieweffectkcm.cpp:62
 #: plugins/windowview/windowvieweffect.cpp:75
-#, fuzzy, kde-format
-#| msgid "Toggle Present Windows (Current desktop)"
+#, kde-format
 msgid "Toggle Present Windows (Window class on current desktop)"
-msgstr "Slå prænsentér vinduer til/fra (aktuelt skrivebord)"
+msgstr "Slå prænsentér vinduer til/fra (vinduesklasser på aktuelle skrivebord)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_IgnoreMinimized)
 #: plugins/windowview/kcm/windowvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore &minimized windows"
-msgstr "Minimér vindue"
+msgstr "Ignorér &minimerede vinduer"
 
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Ingen matches"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Vinduer"
+msgstr "Ingen vinduer"
 
 #: plugins/windowview/qml/main.qml:122
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Filter windows…"
-msgstr "Interne vinduer"
+msgstr "Filtrér vinduer…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgid "Ad&vanced"
+#, kde-format
 msgid "Advanced"
-msgstr "&Avanceret"
+msgstr "Avanceret"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: plugins/wobblywindows/wobblywindows_config.ui:26
@@ -3025,11 +2902,9 @@ msgstr "Træ&k:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: plugins/wobblywindows/wobblywindows_config.ui:81
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "&Move factor:"
-msgstr "Tablet-tilstand"
+msgstr "&Flyttefaktor:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_MoveWobble)
 #: plugins/wobblywindows/wobblywindows_config.ui:155
@@ -3068,16 +2943,14 @@ msgid "More"
 msgstr "Mere"
 
 #: plugins/zoom/zoom.cpp:69
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Zoomed Area to Left"
-msgstr "Vindue ét skrivebord til venstre"
+msgstr "Flyt zommede område til venstre"
 
 #: plugins/zoom/zoom.cpp:76
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Zoomed Area to Right"
-msgstr "Vindue ét skrivebord til højre"
+msgstr "Flyt zommede område til højre"
 
 #: plugins/zoom/zoom.cpp:83
 #, kde-format
@@ -3090,40 +2963,34 @@ msgid "Move Zoomed Area Downwards"
 msgstr "Flyt zoomet område nedad"
 
 #: plugins/zoom/zoom.cpp:98 plugins/zoom/zoom_config.cpp:98
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Move Mouse to Focus"
-msgstr "Ingen museknapper"
+msgstr "Flyt mus til fokus"
 
 #: plugins/zoom/zoom.cpp:105 plugins/zoom/zoom_config.cpp:105
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Mouse to Center"
-msgstr "Flyt vindue til gruppe"
+msgstr "Flyt mus til centrum"
 
 #: plugins/zoom/zoom_config.cpp:70
-#, fuzzy, kde-format
-#| msgid "Move Window Left"
+#, kde-format
 msgid "Move Left"
-msgstr "Flyt vindue til venstre"
+msgstr "Flyt til venstre"
 
 #: plugins/zoom/zoom_config.cpp:77
-#, fuzzy, kde-format
-#| msgid "Move Window Right"
+#, kde-format
 msgid "Move Right"
-msgstr "Fly vindue til højre"
+msgstr "Fly til højre"
 
 #: plugins/zoom/zoom_config.cpp:84
-#, fuzzy, kde-format
-#| msgid "&Move"
+#, kde-format
 msgid "Move Up"
-msgstr "&Flyt"
+msgstr "Flyt op"
 
 #: plugins/zoom/zoom_config.cpp:91
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Down"
-msgstr "Flyt vindue"
+msgstr "Flyt ned"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3140,16 +3007,13 @@ msgstr "Zoom-faktor:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:66
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#, kde-format
 msgid ""
 "Enable tracking of the focused location. This needs QAccessible to be "
 "enabled per application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
 "Aktivér følgning af placeringen i fokus. Dette kræver at QAccessible skal "
-"være aktiveret pr. program (\"export QT_ACCESSIBILITY=1\")."
+"være aktiveret pr. program (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableFocusTracking)
 #: plugins/zoom/zoom_config.ui:69
@@ -3159,23 +3023,19 @@ msgstr "Aktivér fokusfølgning"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "Enable tracking of the focused location. This needs QAccessible to be "
-#| "enabled per application (\"export QT_ACCESSIBILITY=1\")."
+#, kde-format
 msgid ""
 "Enable tracking of the text cursor. This needs QAccessible to be enabled per "
 "application (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 msgstr ""
-"Aktivér følgning af placeringen i fokus. Dette kræver at QAccessible skal "
-"være aktiveret pr. program (\"export QT_ACCESSIBILITY=1\")."
+"Aktivér følgning af tekstmarkøren. Dette kræver at QAccessible skal være "
+"aktiveret pr. program (\"export QT_LINUX_ACCESSIBILITY_ALWAYS_ON=1\")."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_EnableTextCaretTracking)
 #: plugins/zoom/zoom_config.ui:79
-#, fuzzy, kde-format
-#| msgid "Enable Focus Tracking"
+#, kde-format
 msgid "Enable Text Cursor Tracking"
-msgstr "Aktivér fokusfølgning"
+msgstr "Aktivér tekstmarkørsporing"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/zoom/zoom_config.ui:86
@@ -3191,9 +3051,7 @@ msgstr "Musemarkørens synlighed."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
 msgstr "Skalér"
 
@@ -3217,10 +3075,9 @@ msgstr "Følg bevægelse af musen."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:125
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Proportional"
-msgstr "Position"
+msgstr "Proportional"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
@@ -3236,10 +3093,9 @@ msgstr "Push"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
-#, fuzzy, kde-format
-#| msgid "Tiling Disabled"
+#, kde-format
 msgid "Disabled"
-msgstr "Fliseudlægning deaktiveret"
+msgstr "Deaktiveret"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/zoom/zoom_config.ui:148
@@ -3251,31 +3107,31 @@ msgstr "Musefølgning:"
 #: rulebooksettingsbase.kcfg:9
 #, kde-format
 msgid "Total rules count (legacy)"
-msgstr ""
+msgstr "Total antal af regler (ældre)"
 
 #. i18n: ectx: label, entry (ruleGroupList), group (General)
 #: rulebooksettingsbase.kcfg:13
 #, kde-format
 msgid "Ordered list of rules groups"
-msgstr ""
+msgstr "Sorteret liste af regelgrupper"
 
 #. i18n: ectx: label, entry (description), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:10
 #, kde-format
 msgid "Rule description"
-msgstr ""
+msgstr "Regelbeskrivelse"
 
 #. i18n: ectx: label, entry (descriptionLegacy), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:13
 #, kde-format
 msgid "Rule description (legacy)"
-msgstr ""
+msgstr "Regelbeskrivelse (ældre)"
 
 #. i18n: ectx: label, entry (DeleteRule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:16
 #, kde-format
 msgid "Delete this rule (for use in imports)"
-msgstr ""
+msgstr "Slet denne regel (for brug i import)"
 
 #. i18n: ectx: label, entry (wmclass), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:20
@@ -3287,7 +3143,7 @@ msgstr "Vinduesklasse (program)"
 #: rulesettings.kcfg:23
 #, kde-format
 msgid "Window class string match type"
-msgstr ""
+msgstr "Type af vinduesklassestreng-match"
 
 #. i18n: ectx: label, entry (wmclasscomplete), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:29
@@ -3305,7 +3161,7 @@ msgstr "Vinduesrolle"
 #: rulesettings.kcfg:37
 #, kde-format
 msgid "Window role string match type"
-msgstr ""
+msgstr "Type af vinduesrollestreng-match"
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
@@ -3317,7 +3173,7 @@ msgstr "Vinduestitel"
 #: rulesettings.kcfg:47
 #, kde-format
 msgid "Window title string match type"
-msgstr ""
+msgstr "Type af vinduestitlestreng-match"
 
 #. i18n: ectx: label, entry (clientmachine), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:54
@@ -3329,26 +3185,25 @@ msgstr "Maskine (værtsnavn)"
 #: rulesettings.kcfg:57
 #, kde-format
 msgid "Machine string match type"
-msgstr ""
+msgstr "Type af maskinestreng-match"
 
 #. i18n: ectx: label, entry (types), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:64
 #, kde-format
 msgid "Window types that match"
-msgstr ""
+msgstr "Vinduestyper, der matcher"
 
 #. i18n: ectx: label, entry (placement), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:69
 #, kde-format
 msgid "Initial placement"
-msgstr ""
+msgstr "Indledningsvis placering"
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:74
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "&Fuldskærm"
+msgstr "Type af indledningsvis placering-regel"
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
@@ -3358,10 +3213,9 @@ msgstr "Vinduesplacering"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
-#, fuzzy, kde-format
-#| msgid "Window to Screen 0"
+#, kde-format
 msgid "Window position rule type"
-msgstr "Vindue til skærm 0"
+msgstr "Type af vinduesplaceringsregel"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
@@ -3373,94 +3227,91 @@ msgstr "Vinduesstørrelse"
 #: rulesettings.kcfg:93
 #, kde-format
 msgid "Window size rule type"
-msgstr ""
+msgstr "Type af vinduestørrelsesregel"
 
 #. i18n: ectx: label, entry (minsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:100
 #, kde-format
 msgid "Window minimum size"
-msgstr ""
+msgstr "Minimumstørrelse af vindue"
 
 #. i18n: ectx: label, entry (minsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:104
 #, kde-format
 msgid "Window minimum size rule type"
-msgstr ""
+msgstr "Type af minimumstørrelse af vindue-regel"
 
 #. i18n: ectx: label, entry (maxsize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:109
 #, kde-format
 msgid "Window maximum size"
-msgstr ""
+msgstr "Maksimumstørrelse af vindue"
 
 #. i18n: ectx: label, entry (maxsizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:113
 #, kde-format
 msgid "Window maximum size rule type"
-msgstr ""
+msgstr "Type af maksimumstørrelse af vindue-regel"
 
 #. i18n: ectx: label, entry (opacityactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:118
-#, fuzzy, kde-format
-#| msgid "Active Modifiers"
+#, kde-format
 msgid "Active opacity"
-msgstr "Aktive ændringstaster"
+msgstr "Aktive opacitet"
 
 #. i18n: ectx: label, entry (opacityactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:124
 #, kde-format
 msgid "Active opacity rule type"
-msgstr ""
+msgstr "Type af aktiv opacitetsregel"
 
 #. i18n: ectx: label, entry (opacityinactive), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:129
 #, kde-format
 msgid "Inactive opacity"
-msgstr ""
+msgstr "Inaktiv opacitet"
 
 #. i18n: ectx: label, entry (opacityinactiverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:135
 #, kde-format
 msgid "Inactive opacity rule type"
-msgstr ""
+msgstr "Type af inaktiv opacitetsregel"
 
 #. i18n: ectx: label, entry (ignoregeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:140
 #, kde-format
 msgid "Ignore requested geometry"
-msgstr ""
+msgstr "Ignorér anmodet geometri"
 
 #. i18n: ectx: label, entry (ignoregeometryrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:144
 #, kde-format
 msgid "Ignore requested geometry rule type"
-msgstr ""
+msgstr "Type af ignorér anmodet geometri-regel"
 
 #. i18n: ectx: label, entry (desktops), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:151
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop 2"
+#, kde-format
 msgid "List of Desktop Ids"
-msgstr "Skift til skrivebord 2"
+msgstr "Liste af skrivebordsID'er"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "Behold over andre"
+msgstr "Type af skrivebordsID'er-regel"
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
 #, kde-format
 msgid "Screen number"
-msgstr ""
+msgstr "Skærmnummer"
 
 #. i18n: ectx: label, entry (screenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:166
 #, kde-format
 msgid "Screen number rule type"
-msgstr ""
+msgstr "Type af skærmnummer-regel"
 
 #. i18n: ectx: label, entry (activity), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:173
@@ -3472,99 +3323,91 @@ msgstr "Aktivitet"
 #: rulesettings.kcfg:176
 #, kde-format
 msgid "Activity rule type"
-msgstr ""
+msgstr "Type af aktivitetsregel"
 
 #. i18n: ectx: label, entry (maximizevert), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:183
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "Maksimér vindue lodret"
+msgstr "Maksimér lodret"
 
 #. i18n: ectx: label, entry (maximizevertrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:187
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Maximized vertically rule type"
-msgstr "Maksimér vindue lodret"
+msgstr "Type af maksimér lodret-regel"
 
 #. i18n: ectx: label, entry (maximizehoriz), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:194
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "Maksimér vindue vandret"
+msgstr "Maksimér vandret"
 
 #. i18n: ectx: label, entry (maximizehorizrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:198
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Maximized horizontally rule type"
-msgstr "Maksimér vindue vandret"
+msgstr "Type af maksimér vandret-regel"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgid "Minimized"
-msgstr "Minimér"
+msgstr "Minimeret"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
 #, kde-format
 msgid "Minimized rule type"
-msgstr ""
+msgstr "Type af minimeret-regel"
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
-#, fuzzy, kde-format
-#| msgid "&Shade"
+#, kde-format
 msgid "Shaded"
-msgstr "&Rul ind"
+msgstr "Skygget"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:220
 #, kde-format
 msgid "Shaded rule type"
-msgstr ""
+msgstr "Type af skygget-regel"
 
 #. i18n: ectx: label, entry (skiptaskbar), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:227
 #, kde-format
 msgid "Skip taskbar"
-msgstr ""
+msgstr "Skip opgavelinje"
 
 #. i18n: ectx: label, entry (skiptaskbarrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:231
 #, kde-format
 msgid "Skip taskbar rule type"
-msgstr ""
+msgstr "Type af skip opgavelinje-regel"
 
 #. i18n: ectx: label, entry (skippager), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:238
 #, kde-format
 msgid "Skip pager"
-msgstr ""
+msgstr "Skip skrivebordsvælger"
 
 #. i18n: ectx: label, entry (skippagerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:242
 #, kde-format
 msgid "Skip pager rule type"
-msgstr ""
+msgstr "Type af skip skrivebordsvælger-regel"
 
 #. i18n: ectx: label, entry (skipswitcher), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:249
-#, fuzzy, kde-format
-#| msgctxt "A hardware switch"
-#| msgid "Switch"
+#, kde-format
 msgid "Skip switcher"
-msgstr "Kontakt"
+msgstr "Skip skifter"
 
 #. i18n: ectx: label, entry (skipswitcherrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:253
 #, kde-format
 msgid "Skip switcher rule type"
-msgstr ""
+msgstr "Type af skip skifter-regel"
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
@@ -3574,10 +3417,9 @@ msgstr "Hold over"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above rule type"
-msgstr "Behold over andre"
+msgstr "Type af hold over andre-regel"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:271
@@ -3587,10 +3429,9 @@ msgstr "Hold under"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:275
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below rule type"
-msgstr "Hold under andre"
+msgstr "Type af hold under andre-regel"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
@@ -3600,59 +3441,57 @@ msgstr "Fuldskærm"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen rule type"
-msgstr "&Fuldskærm"
+msgstr "Type af fuldskærmsregel"
 
 #. i18n: ectx: label, entry (noborder), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:293
 #, kde-format
 msgid "No titlebar and frame"
-msgstr ""
+msgstr "Ingen titellinje og ramme"
 
 #. i18n: ectx: label, entry (noborderrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:297
 #, kde-format
 msgid "No titlebar rule type"
-msgstr ""
+msgstr "Type af ingen titlelinje-regel"
 
 #. i18n: ectx: label, entry (decocolor), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:304
 #, kde-format
 msgid "Titlebar color and scheme"
-msgstr ""
+msgstr "Farve og ordning af titellinje"
 
 #. i18n: ectx: label, entry (decocolorrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:307
 #, kde-format
 msgid "Titlebar color rule type"
-msgstr ""
+msgstr "Type af titlelinjefarve-regel"
 
 #. i18n: ectx: label, entry (blockcompositing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:312
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgid "Block Compositing"
-msgstr "Suspendér compositing"
+msgstr "Blokér compositing"
 
 #. i18n: ectx: label, entry (blockcompositingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:316
 #, kde-format
 msgid "Block Compositing rule type"
-msgstr ""
+msgstr "Type af blokér compositing-regel"
 
 #. i18n: ectx: label, entry (fsplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:321
 #, kde-format
 msgid "Focus stealing prevention"
-msgstr ""
+msgstr "Forhindring af stjålet fokus"
 
 #. i18n: ectx: label, entry (fsplevelrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:327
 #, kde-format
 msgid "Focus stealing prevention rule type"
-msgstr ""
+msgstr "Type af forhindring af stjålet fokus-regel"
 
 #. i18n: ectx: label, entry (fpplevel), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:332
@@ -3664,68 +3503,67 @@ msgstr "Beskyttelse af fokus"
 #: rulesettings.kcfg:338
 #, kde-format
 msgid "Focus protection rule type"
-msgstr ""
+msgstr "Type af fokusbeskyttelsesregel"
 
 #. i18n: ectx: label, entry (acceptfocus), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:343
 #, kde-format
 msgid "Accept Focus"
-msgstr ""
+msgstr "Acceptér fokus"
 
 #. i18n: ectx: label, entry (acceptfocusrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:347
 #, kde-format
 msgid "Accept Focus rule type"
-msgstr ""
+msgstr "Type af acceptér fokus-regel"
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:352
-#, fuzzy, kde-format
-#| msgid "Close"
+#, kde-format
 msgid "Closeable"
-msgstr "Luk"
+msgstr "Lukbart"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:356
 #, kde-format
 msgid "Closeable rule type"
-msgstr ""
+msgstr "Type af lukbartregel"
 
 #. i18n: ectx: label, entry (autogroup), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:361
 #, kde-format
 msgid "Autogroup with identical"
-msgstr ""
+msgstr "Gruppér automatisk med identiske"
 
 #. i18n: ectx: label, entry (autogrouprule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:365
 #, kde-format
 msgid "Autogroup with identical rule type"
-msgstr ""
+msgstr "Type af gruppér automatisk med identiske-regel"
 
 #. i18n: ectx: label, entry (autogroupfg), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:370
 #, kde-format
 msgid "Autogroup in foreground"
-msgstr ""
+msgstr "Gruppér automatisk i forgrund"
 
 #. i18n: ectx: label, entry (autogroupfgrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:374
 #, kde-format
 msgid "Autogroup in foreground rule type"
-msgstr ""
+msgstr "Type af gruppér automatisk i forgrund-regel"
 
 #. i18n: ectx: label, entry (autogroupid), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:379
 #, kde-format
 msgid "Autogroup by ID"
-msgstr ""
+msgstr "Gruppér automatisk efter ID"
 
 #. i18n: ectx: label, entry (autogroupidrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:382
 #, kde-format
 msgid "Autogroup by ID rule type"
-msgstr ""
+msgstr "Type af gruppér automatisk efter ID-regel"
 
 #. i18n: ectx: label, entry (strictgeometry), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:387
@@ -3737,7 +3575,7 @@ msgstr "Adlyd begrænsninger af geometri"
 #: rulesettings.kcfg:391
 #, kde-format
 msgid "Obey geometry restrictions rule type"
-msgstr ""
+msgstr "Type af adlyd geometriske restriktioner-regel"
 
 #. i18n: ectx: label, entry (shortcut), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:396
@@ -3749,7 +3587,7 @@ msgstr "Genvej"
 #: rulesettings.kcfg:399
 #, kde-format
 msgid "Shortcut rule type"
-msgstr ""
+msgstr "Type af genvejsregel"
 
 #. i18n: ectx: label, entry (disableglobalshortcuts), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:406
@@ -3761,7 +3599,7 @@ msgstr "Ignorér globale genveje"
 #: rulesettings.kcfg:410
 #, kde-format
 msgid "Ignore global shortcuts rule type"
-msgstr ""
+msgstr "Type af ignorér globale genveje-regel"
 
 #. i18n: ectx: label, entry (desktopfile), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:415
@@ -3773,33 +3611,31 @@ msgstr "Navn på desktop-fil"
 #: rulesettings.kcfg:418
 #, kde-format
 msgid "Desktop file name rule type"
-msgstr ""
+msgstr "Type af navn af skrivebordsfil-regel"
 
 #. i18n: ectx: label, entry (layer), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:425
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Lag"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Layer rule type"
-msgstr "Behold over andre"
+msgstr "Type af lagsregel"
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptivSynkronisering"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Behold over andre"
+msgstr "Type af AdaptivSynkronisering-regel"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3819,18 +3655,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Følgende applikationer lukkede ikke:\n"
+"%1"
 
 #: sm.cpp:480
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Annullér log ud"
 
 #: sm.cpp:481
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Log ud alligevel"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3839,11 +3677,10 @@ msgid "Show Desktop"
 msgstr "Vis skrivebord"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Vinduer"
+msgstr "Ingen åbne vinduer"
 
 #: tabbox/tabbox.cpp:354
 msgid "Walk Through Windows"
@@ -3946,25 +3783,22 @@ msgstr "&Rul ind"
 #: useractions.cpp:250
 #, kde-format
 msgid "&No Titlebar and Frame"
-msgstr ""
+msgstr "&Ingen titellinje og ramme"
 
 #: useractions.cpp:258
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "Angiv vinduesgen&vej..."
+msgstr "Angiv vinduesgen&vej…"
 
 #: useractions.cpp:264
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Specielle &vinduesindstillinger..."
+msgstr "Konfigurér specielle &vinduesindstillinger…"
 
 #: useractions.cpp:269
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Specielle &programindstillinger..."
+msgstr "Konfigurér s&pecielle programindstillinger…"
 
 #: useractions.cpp:275
 #, kde-format
@@ -4012,10 +3846,9 @@ msgid "Show in &Activities"
 msgstr "Vis i &aktiviteter"
 
 #: useractions.cpp:477
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Flyt til &skrivebord"
+msgstr "Flyt &til nuværende skrivebord"
 
 #: useractions.cpp:487 useractions.cpp:546
 #, kde-format
@@ -4029,26 +3862,21 @@ msgid "&New Desktop"
 msgstr "&Nyt skrivebord"
 
 #: useractions.cpp:580 useractions.cpp:710
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
+#, kde-format
 msgid "Move to %1"
-msgstr "Tablet-tilstand"
+msgstr "Flyt til %1"
 
 #: useractions.cpp:593
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "&Nyt skrivebord"
+msgstr "Tilføj til &nyt skrivebord"
 
 #: useractions.cpp:605
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Flyt til &skrivebord"
+msgstr "Flyt til nyt skrivebord"
 
 #: useractions.cpp:636
 #, kde-format
@@ -4141,10 +3969,9 @@ msgid "Make Window Fullscreen"
 msgstr "Gør vindue til fuld skærm"
 
 #: useractions.cpp:937
-#, fuzzy, kde-format
-#| msgid "Hide Window Border"
+#, kde-format
 msgid "Toggle Window Titlebar and Frame"
-msgstr "Skjul vindueskant"
+msgstr "Slå vinduestitellinje og -ramme til/fra"
 
 #: useractions.cpp:939
 #, kde-format
@@ -4167,10 +3994,9 @@ msgid "Setup Window Shortcut"
 msgstr "Opsætning af vinduesgenveje"
 
 #: useractions.cpp:947
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Flyt vindue til gruppe"
+msgstr "Flyt vindue til centrummet"
 
 #: useractions.cpp:949
 #, kde-format
@@ -4193,28 +4019,24 @@ msgid "Move Window Down"
 msgstr "Flyt vindue nedad"
 
 #: useractions.cpp:957
-#, fuzzy, kde-format
-#| msgid "Maximize Window Horizontally"
+#, kde-format
 msgid "Expand Window Horizontally"
-msgstr "Maksimér vindue vandret"
+msgstr "Udvid vindue vandret"
 
 #: useractions.cpp:959
-#, fuzzy, kde-format
-#| msgid "Maximize Window Vertically"
+#, kde-format
 msgid "Expand Window Vertically"
-msgstr "Maksimér vindue lodret"
+msgstr "Udvid vindue lodret"
 
 #: useractions.cpp:961
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Gør vindue mindre vandret og pak"
+msgstr "Gør vindue mindre vandret"
 
 #: useractions.cpp:963
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Gør vindue mindre lodret og pak"
+msgstr "Gør vindue mindre lodret"
 
 #: useractions.cpp:965
 #, kde-format
@@ -4277,14 +4099,12 @@ msgid "Switch to Window to the Left"
 msgstr "Skift til vinduet til venstre"
 
 #: useractions.cpp:989
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Forøg ugennemsigtighed af aktivt vindue med 5%"
 
 #: useractions.cpp:991
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Formindsk ugennemsigtighed af aktivt vindue med 5%"
 
@@ -4329,46 +4149,39 @@ msgid "Window One Desktop Down"
 msgstr "Vindue ét skrivebord nedad"
 
 #: useractions.cpp:1019
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Vindue til skærm %1"
+msgstr "Flyt vindue til skærm %1"
 
 #: useractions.cpp:1026
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Vindue til næste skærm"
+msgstr "Flyt vindue til næste skærm"
 
 #: useractions.cpp:1028
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Vindue til forrige skærm"
+msgstr "Flyt vindue til forrige skærm"
 
 #: useractions.cpp:1030
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Right"
+#, kde-format
 msgid "Move Window One Screen to the Right"
-msgstr "Vindue ét skrivebord til højre"
+msgstr "Flyt vindue én skærm til højre"
 
 #: useractions.cpp:1032
-#, fuzzy, kde-format
-#| msgid "Window One Desktop to the Left"
+#, kde-format
 msgid "Move Window One Screen to the Left"
-msgstr "Vindue ét skrivebord til venstre"
+msgstr "Flyt vindue én skærm til venstre"
 
 #: useractions.cpp:1034
-#, fuzzy, kde-format
-#| msgid "Window to Screen 2"
+#, kde-format
 msgid "Move Window One Screen Up"
-msgstr "Vindue til skærm 2"
+msgstr "Flyt vindue én skærm op"
 
 #: useractions.cpp:1036
-#, fuzzy, kde-format
-#| msgid "Window One Desktop Down"
+#, kde-format
 msgid "Move Window One Screen Down"
-msgstr "Vindue ét skrivebord nedad"
+msgstr "Flyt vindue én skærm nedad"
 
 #: useractions.cpp:1040
 #, kde-format
@@ -4386,34 +4199,29 @@ msgid "Switch to Previous Screen"
 msgstr "Skift til forrige skærm"
 
 #: useractions.cpp:1049
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Right"
+#, kde-format
 msgid "Switch to Screen to the Right"
-msgstr "Skift til vinduet til højre"
+msgstr "Skift til skærmen til højre"
 
 #: useractions.cpp:1051
-#, fuzzy, kde-format
-#| msgid "Switch to Window to the Left"
+#, kde-format
 msgid "Switch to Screen to the Left"
-msgstr "Skift til vinduet til venstre"
+msgstr "Skift til skærmen til venstre"
 
 #: useractions.cpp:1053
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Skift til skærm 0"
+msgstr "Skift til skærmen ovenfor"
 
 #: useractions.cpp:1055
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Skift til skærm 0"
+msgstr "Skift til skærmen nedenfor"
 
 #: useractions.cpp:1058
-#, fuzzy, kde-format
-#| msgid "Move to &Desktop"
+#, kde-format
 msgid "Peek at Desktop"
-msgstr "Flyt til &skrivebord"
+msgstr "Forhåndsvisning af skrivebord"
 
 #: useractions.cpp:1061
 #, kde-format
@@ -4477,18 +4285,7 @@ msgid "(Not Responding)"
 msgstr "(Svarer ikke)"
 
 #: workspace.cpp:1588
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "https://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like https://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4503,7 +4300,7 @@ msgid ""
 msgstr ""
 "Information til KWin-support:\n"
 "Følgende information bør bruges når du spørger om hjælp f.eks. på https://"
-"forum.kde.org.\n"
+"discuss.kde.org.\n"
 "Det giver information om den aktuelt kørende instans, hvilke indstillinger "
 "der bruges, \n"
 "hvilken OpenGL-driver og hvilke effekter der kører.\n"
@@ -4515,7 +4312,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Xwayland har brudt ned"
 
 #~ msgid "Surfaces"
 #~ msgstr "Overflader"

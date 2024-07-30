@@ -6,20 +6,21 @@
 # Erik Kjær Pedersen <erik@binghamton.edu>, 2002, 2003, 2004, 2005, 2006.
 # Erik K. Pedersen <erik@binghamton.edu>, 2005.
 # Martin Schlander <mschlander@opensuse.org>, 2008, 2009, 2010, 2011, 2012, 2013, 2015, 2020.
+# SPDX-FileCopyrightText: 2024 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-08 00:40+0000\n"
-"PO-Revision-Date: 2020-02-08 15:20+0100\n"
-"Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
+"PO-Revision-Date: 2024-07-25 12:53+0200\n"
+"Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "00\n"
-"X-Generator: Lokalize 18.12.3\n"
+"X-Generator: Lokalize 24.05.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
@@ -435,23 +436,21 @@ msgstr "&Afskygning af vinduer:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:32
-#, fuzzy, kde-format
-#| msgid ""
-#| "If Shade Hover is enabled, a shaded window will un-shade automatically "
-#| "when the mouse pointer has been over the title bar for some time."
+#, kde-format
 msgid ""
 "<html><head/><body><p>If this option is enabled, a shaded window will "
 "unshade automatically when the mouse pointer has been over the titlebar for "
 "some time.</p></body></html>"
 msgstr ""
-"Hvis 'Skygsvævning' er slået til, vil et skygget vindue automatisk komme "
-"frem når musemarkøren har været over titellinjen et stykke tid."
+"<html><head/><body><p>Hvis denne indstilling er slået til, vil skyggen på et "
+"vindue automatisk fjernes, når markøren har været over titelinjen i noget "
+"tid.</p></body></html>"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_ShadeHover)
 #: advanced.ui:35
 #, kde-format
 msgid "On titlebar hover after:"
-msgstr ""
+msgstr "Når musen er over titelbaren i:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_ShadeHoverInterval)
 #: advanced.ui:42
@@ -479,31 +478,7 @@ msgstr "Vindues&placering:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_Placement)
 #: advanced.ui:76
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
-#| "stealing caused by unexpected activation of new windows. (Note: This "
-#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
-#| "Mouse focus policies.)\n"
-#| "<ul>\n"
-#| "<li><em>None:</em> Prevention is turned off and new windows always become "
-#| "activated.</li>\n"
-#| "<li><em>Low:</em> Prevention is enabled; when some window does not have "
-#| "support for the underlying mechanism and KWin cannot reliably decide "
-#| "whether to activate the window or not, it will be activated. This setting "
-#| "may have both worse and better results than the medium level, depending "
-#| "on the applications.</li>\n"
-#| "<li><em>Medium:</em> Prevention is enabled.</li>\n"
-#| "<li><em>High:</em> New windows get activated only if no window is "
-#| "currently active or if they belong to the currently active application. "
-#| "This setting is probably not really usable when not using mouse focus "
-#| "policy.</li>\n"
-#| "<li><em>Extreme:</em> All windows must be explicitly activated by the "
-#| "user.</li>\n"
-#| "</ul></p>\n"
-#| "<p>Windows that are prevented from stealing focus are marked as demanding "
-#| "attention, which by default means their taskbar entry will be "
-#| "highlighted. This can be changed in the Notifications control module.</p>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>The placement policy determines where a new window "
 "will appear on the desktop.</p><ul style=\"margin-top: 0px; margin-bottom: "
@@ -529,30 +504,29 @@ msgid ""
 "\"><span style=\" font-style:italic;\">Under mouse</span> will place the "
 "window under the pointer</li></ul></body></html>"
 msgstr ""
-"<p>Dette angiver hvor meget KWin vil forsøge at forhindre at fokus mistes på "
-"uønsket måde på grund af at nye vinduer uventet bliver aktive. (Bemærk: "
-"Denne funktion virker ikke med Fokus under mus eller Fokus strengt under mus "
-"fokuspolitikkerne.)\n"
-"<ul>\n"
-"<li><em>Ingen:</em> Forhindring er slået fra og nye vinduer bliver altid "
-"aktive.</li>\n"
-"<li><em>Lav:</em> Forhindring er aktiveret; når et vindue  ikke har "
-"understøttelse af den underliggende mekanisme og KWin ikke kan finde ud af "
-"om det skal være aktivt eller ej, vil det blive aktiveret. Denne indstilling "
-"kan have både værre og bedre resultater end mellemniveau afhængigt af "
-"programmerne.</li>\n"
-"<li><em>Mellem:</em> Forhindring er aktiv.</li>\n"
-"<li><em>Høj:</em> Nye vinduer bliver kun aktive hvis ingen vinduer er aktive "
-"for øjeblikket eller hvis de tilhører det program der er aktivt for "
-"øjeblikket. Denne indstilling er formodentlig ikke rigtig brugbar uden brug "
-"af musens fokuspolitik.</li>\n"
-"<li><em>Ekstrem:</em> Alle vinduer skal eksplicit aktiveres af brugeren.</"
-"li>\n"
-"</ul></p>\n"
-"<p>Vinduer der er forhindret i at stjæle fokus bliver markerede som krævende "
-"opmærksomhed, hvilket som standard betyder at deres opgavelinjes indgang "
-"bliver fremhævet. Dette kan blive ændret i kontrolmodulet for "
-"bekendtgørelser.</p>"
+"<html><head/><body><p>Placeringspolitikken bestemmer hvor et nyt vindue vil "
+"vises på skrivebordet.</p><ul style=\"margin-top: 0px; margin-bottom: 0px; "
+"margin-left: 0px; margin-right: 0px; -qt-list-indent: 1;\"><li style=\" "
+"margin-top:12px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Smart</span> vil prøve at minimere, at vinduer overlapper</li><li style="
+"\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Maksimér</span> vil prøve at maksimere hvert vindue, så det fylder hele "
+"skærmen. Dette kan være brugbart for, selektivt, at påvirke placeringen af "
+"nogle vindue ved brug af vinduespecifikke indstillinger .</li><li style="
+"\"margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-"
+"block-indent:0; text-indent:0px;\"><span style=\" font-style:italic;"
+"\">Random </span> vil bruge en tilfældig placering</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Centreret</"
+"span> vil placere vinduet centralt</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Nul-hjørnet</span> vil "
+"placere vinduet i det øverste venstre hjørne</li><li style=\" margin-"
+"top:0px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Under "
+"musen</span> vil placere vinduet under markøren</li></ul></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:80
@@ -598,6 +572,8 @@ msgid ""
 "windows are allowed to do so. This will override the window placement mode "
 "defined above."
 msgstr ""
+"Hvis slået til, vil apps, der kan huske placeringen af deres vinduer, gøre "
+"det. Dette vil tilsidesætte vindueplaceringenstilstanden defineret ovenfor."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_AllowKDEAppsToRememberWindowPositions)
 #: advanced.ui:116
@@ -605,18 +581,20 @@ msgstr ""
 msgid ""
 "Allow apps to remember the positions of their own windows, if they support it"
 msgstr ""
+"Tillad apps at huske placeringen af deres egne vinduer, hvis de understøtter "
+"det"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyLabel)
 #: advanced.ui:123
 #, kde-format
 msgid "Virtual Desktop behavior:"
-msgstr ""
+msgstr "Opførsel af virtuelle skrivebord:"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDesktopPolicyDescriptionLabel)
 #: advanced.ui:133
 #, kde-format
 msgid "When activating a window on a different Virtual Desktop:"
-msgstr ""
+msgstr "Når der aktiveres et vindue på en et andet virtuelt skrivebord:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:140
@@ -630,18 +608,25 @@ msgid ""
 "Virtual Desktop</span> will cause the window to jump to the active Virtual "
 "Desktop. </p></body></html>"
 msgstr ""
+"<html><head/><body><p>Denne indstilling kontrollerer hvad der sker, når et "
+"åbent vindue placeret på et virtuelt skrivebord, der ikke er det nuværende, "
+"er aktiveret. </p><p><span style=\" font-style:italic;\">Skift til det "
+"virtuelle skrivebord</span> vil skifte til det virtuelle skrivebord, hvor "
+"vinduet er i øjeblikket placeret. </p><p><span style=\" font-style:italic;"
+"\">Bring vindue til nuværende virtuelt skrivebord</span> vil få vinduet til "
+"at hoppe til det aktive virtuelle skrivebord. </p></body></html>"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:144
 #, kde-format
 msgid "Switch to that Virtual Desktop"
-msgstr ""
+msgstr "Skift til det virtuelle skrivebord"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ActivationDesktopPolicy)
 #: advanced.ui:149
 #, kde-format
 msgid "Bring window to current Virtual Desktop"
-msgstr ""
+msgstr "Bring vinduet til nuværende virtuelle skrivebord"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyLabel)
 #: focus.ui:22
@@ -717,31 +702,7 @@ msgstr "Forhindring af at fokus &stjæles:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_FocusStealingPreventionLevel)
 #: focus.ui:114
-#, fuzzy, kde-format
-#| msgid ""
-#| "<p>This option specifies how much KWin will try to prevent unwanted focus "
-#| "stealing caused by unexpected activation of new windows. (Note: This "
-#| "feature does not work with the Focus Under Mouse or Focus Strictly Under "
-#| "Mouse focus policies.)\n"
-#| "<ul>\n"
-#| "<li><em>None:</em> Prevention is turned off and new windows always become "
-#| "activated.</li>\n"
-#| "<li><em>Low:</em> Prevention is enabled; when some window does not have "
-#| "support for the underlying mechanism and KWin cannot reliably decide "
-#| "whether to activate the window or not, it will be activated. This setting "
-#| "may have both worse and better results than the medium level, depending "
-#| "on the applications.</li>\n"
-#| "<li><em>Medium:</em> Prevention is enabled.</li>\n"
-#| "<li><em>High:</em> New windows get activated only if no window is "
-#| "currently active or if they belong to the currently active application. "
-#| "This setting is probably not really usable when not using mouse focus "
-#| "policy.</li>\n"
-#| "<li><em>Extreme:</em> All windows must be explicitly activated by the "
-#| "user.</li>\n"
-#| "</ul></p>\n"
-#| "<p>Windows that are prevented from stealing focus are marked as demanding "
-#| "attention, which by default means their taskbar entry will be "
-#| "highlighted. This can be changed in the Notifications control module.</p>"
+#, kde-format
 msgid ""
 "<html><head/><body><p>This option specifies how much KWin will try to "
 "prevent unwanted focus stealing caused by unexpected activation of new "
@@ -774,30 +735,32 @@ msgid ""
 "by default means their taskbar entry will be highlighted. This can be "
 "changed in the Notifications control module.</p></body></html>"
 msgstr ""
-"<p>Dette angiver hvor meget KWin vil forsøge at forhindre at fokus mistes på "
-"uønsket måde på grund af at nye vinduer uventet bliver aktive. (Bemærk: "
-"Denne funktion virker ikke med Fokus under mus eller Fokus strengt under mus "
-"fokuspolitikkerne.)\n"
-"<ul>\n"
-"<li><em>Ingen:</em> Forhindring er slået fra og nye vinduer bliver altid "
-"aktive.</li>\n"
-"<li><em>Lav:</em> Forhindring er aktiveret; når et vindue  ikke har "
-"understøttelse af den underliggende mekanisme og KWin ikke kan finde ud af "
-"om det skal være aktivt eller ej, vil det blive aktiveret. Denne indstilling "
-"kan have både værre og bedre resultater end mellemniveau afhængigt af "
-"programmerne.</li>\n"
-"<li><em>Mellem:</em> Forhindring er aktiv.</li>\n"
-"<li><em>Høj:</em> Nye vinduer bliver kun aktive hvis ingen vinduer er aktive "
-"for øjeblikket eller hvis de tilhører det program der er aktivt for "
-"øjeblikket. Denne indstilling er formodentlig ikke rigtig brugbar uden brug "
-"af musens fokuspolitik.</li>\n"
-"<li><em>Ekstrem:</em> Alle vinduer skal eksplicit aktiveres af brugeren.</"
-"li>\n"
-"</ul></p>\n"
-"<p>Vinduer der er forhindret i at stjæle fokus bliver markerede som krævende "
-"opmærksomhed, hvilket som standard betyder at deres opgavelinjes indgang "
-"bliver fremhævet. Dette kan blive ændret i kontrolmodulet for "
-"bekendtgørelser.</p>"
+"<html><head/><body><p>Denne indstilling påvirker hvor meget KWin vil prøve "
+"at forhindre, at uventet aktivering af nye vinduer stjæler opmærksomhed. "
+"(Note: Denne indstilling virker ikke med <span style=\" font-style:italic;"
+"\">Fokus under musen</span>eller <span style=\" font-style:italic;\">Fokusér "
+"udelukkende under musen</span> fokuspolitikkerne.) </p><ul style=\"margin-"
+"top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; -qt-list-"
+"indent: 1;\"><li style=\" margin-top:12px; margin-bottom:0px; margin-"
+"left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span "
+"style=\" font-style:italic;\">Ingen:</span>Forhindring er slået fra, og nye "
+"vinduer vil altid blive aktiveret.</li><li style=\" margin-top:0px; margin-"
+"bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-"
+"indent:0px;\"><span style=\" font-style:italic;\">Lavt:</span> Forhindring "
+"er slået til; når nogle vinduer ikke understøtter underliggende mekanismer "
+"og KWin ikke pålideligt kan beslutte om, hvorvidt vinduet skal aktiveres, "
+"vil det ikke blive aktiveret. Denne indstilling kan har både dårligere og "
+"bedre resultater end medium-niveaet, afhængigt at applikationerne.</li><li "
+"style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-"
+"right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-style:"
+"italic;\">Medium:</span> Forhindring er slået fra.</li><li style=\" margin-"
+"top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-"
+"indent:0; text-indent:0px;\"><span style=\" font-style:italic;\">Højt:</"
+"span> Alle vinduer skal blive eksplicit aktiveret af brugeren.</li></ul><p> "
+"Vinduer, der forhindes i at stjæle fokus er markeret som at kræve "
+"opmærksomhed, hvilket som udgangspunk betyder, at deres opgavelinje er "
+"fremhævet. Dette kan ændres i bekændtgørelseskontrol-modulet.</p></body></"
+"html>"
 
 #. i18n: Focus Stealing Prevention Level
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_BorderSnapZone)
@@ -895,16 +858,13 @@ msgstr "Opførsel ved flere skærme:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:203
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, focus operations are limited only to the "
-#| "active Xinerama screen"
+#, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
 "Når denne indstilling er aktiveret, er fokusoperationer begrænset til kun "
-"den aktive Xinerama-skærm"
+"den aktive skærm"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:206
@@ -914,10 +874,9 @@ msgstr "&Separat skærmfokus"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
 #: focus.ui:219
-#, fuzzy, kde-format
-#| msgid "Window &activation policy:"
+#, kde-format
 msgid "Window activation policy description"
-msgstr "Politik for vindues&aktivering:"
+msgstr "Beskrivelse af politik for vindues aktivering:"
 
 #: main.cpp:79
 #, kde-format
@@ -990,7 +949,7 @@ msgstr "Maksimér"
 #: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
 #, kde-format
 msgid "Vertically maximize"
-msgstr ""
+msgstr "Maksimér vertikalt"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1000,7 +959,7 @@ msgstr ""
 #: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
 #, kde-format
 msgid "Horizontally maximize"
-msgstr ""
+msgstr "Maksimér vandret"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
@@ -1224,30 +1183,17 @@ msgid "Only when overlapping"
 msgstr "Kun ved overlap"
 
 #: windows.cpp:92
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>Click To Focus</b><br>\n"
-#| "A window becomes active when you click into it.<br><br>\n"
-#| "This behaviour is common on other operating systems and<br>\n"
-#| "likely what you want."
+#, kde-format
 msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<b>Klik for fokus</b><br>\n"
-"Et vindue bliver aktivt når du klikker i det.<br><br>\n"
-"Denne opførsel er almindelig på andre styresystemer og er<br>\n"
-"sandsynligvis det du ønsker."
+"<em>Klik for fokus:</em> Et vindue bliver aktivt når du klikker i det.Denne "
+"opførsel er almindelig på andre styresystemer og ersandsynligvis det du "
+"ønsker."
 
 #: windows.cpp:95
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>Click To Focus - Mouse Precedence</b><br>\n"
-#| "This is mostly the same as <i>Click To Focus</i><br><br>\n"
-#| "If an active window has to be chosen by the system<br>\n"
-#| "(eg. because the currently active one was closed) <br>\n"
-#| "the window under the mouse is the preferred candidate.<br><br>\n"
-#| "Unusual, but possible variant of <i>Click To Focus</i>."
+#, kde-format
 msgid ""
 "<em>Click to focus (mouse precedence):</em> Mostly the same as <em>Click to "
 "focus</em>. If an active window has to be chosen by the system (eg. because "
@@ -1255,68 +1201,41 @@ msgid ""
 "preferred candidate. Unusual, but possible variant of <em>Click to focus</"
 "em>."
 msgstr ""
-"<b>Klik for fokus - musen har forrang</b><br>\n"
-"Dette er næsten det samme som <i>Klik for fokus</i><br><br>\n"
-"Hvis et aktivt vindue skal vælges af systemet<br>\n"
-"(f.eks. fordi det aktuelt aktive vindue blev lukket), <br>\n"
-"er vinduet under musen den foretrukne kandidat.<br><br>\n"
-"Usædvanlig, men mulig variant af <i>Klik for fokus</i>."
+"<em>Klik for fokus (musen har forrang):</em> Dette er næsten det samme som "
+"<em>Klik for fokus</em>Hvis et aktivt vindue skal vælges af systemet(f.eks. "
+"fordi det aktuelt aktive vindue blev lukket), er vinduet under musen den "
+"foretrukne kandidat. Usædvanlig, men mulig variant af <em>Klik for fokus</"
+"em>."
 
 #: windows.cpp:98
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>Focus Follows Mouse</b><br>\n"
-#| "Moving the mouse onto a window will activate it.<br><br>\n"
-#| "Eg. windows randomly appearing under the mouse will not gain the focus."
-#| "<br>\n"
-#| "Focus stealing prevention takes place as usual.<br><br>\n"
-#| "Think as <i>Click To Focus</i> just without having to actually click."
+#, kde-format
 msgid ""
 "<em>Focus follows mouse:</em> Moving the mouse onto a window will activate "
 "it. Eg. windows randomly appearing under the mouse will not gain the focus. "
 "<em>Focus stealing prevention</em> takes place as usual. Think as <em>Click "
 "to focus</em> just without having to actually click."
 msgstr ""
-"<b>Fokus følger musen</b><br>\n"
-"Flytning af musen over på et vindue vil aktivere det.<br><br>\n"
-"For eksempel vil vinduer der vilkårligt dukker frem under musen ikke få "
-"fokus.<br>\n"
-"Forhindring af at fokus stjæles, finder sted som normalt.<br><br>\n"
-"Tænk <i>Klik for fokus</i> blot uden at du faktisk behøver klikke."
+"<em>Fokus følger musen:</em> Flytning af musen over på et vindue vil "
+"aktivere det. For eksempel vil vinduer der vilkårligt dukker frem under "
+"musen ikke få fokus. <em>Forhindring af at fokus stjæles</em>, finder sted "
+"som normalt. Tænk <em> Klik for fokus</em> blot uden at du faktisk behøver "
+"klikke."
 
 #: windows.cpp:101
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>Focus Follows Mouse - Mouse Precedence</b><br>\n"
-#| "This is mostly the same as <i>Focus Follows Mouse</i><br><br>\n"
-#| "If an active window has to be chosen by the system<br>\n"
-#| "(eg. because the currently active one was closed) <br>\n"
-#| "the window under the mouse is the preferred candidate.<br><br>\n"
-#| "Choose this, if you want a hover controlled focus."
+#, kde-format
 msgid ""
 "This is mostly the same as <em>Focus follows mouse</em>. If an active window "
 "has to be chosen by the system (eg. because the currently active one was "
 "closed) the window under the mouse is the preferred candidate. Choose this, "
 "if you want a hover controlled focus."
 msgstr ""
-"<b>Fokus følger mus - musen har forrang</b><br>\n"
-"Dette er næsten det samme som <i>Fokus følger musen</i><br><br>\n"
-"Hvis et aktivt vindue skal vælges af systemet<br>\n"
-"(f.eks. fordi det aktuelt aktive vindue blev lukket) <br>\n"
-"er vinduet under musen den foretrukne kandidat.<br><br>\n"
-"Vælg dette hvis du vil have fokus kontrolleret af hvad musen er over."
+"Dette er næsten det samme som <em>Fokus følger musen</em>Hvis et aktivt "
+"vindue skal vælges af systemet(f.eks. fordi det aktuelt aktive vindue blev "
+"lukket)er vinduet under musen den foretrukne kandidat.Vælg dette hvis du vil "
+"have fokus kontrolleret af hvad musen er over."
 
 #: windows.cpp:104
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>Focus Under Mouse</b><br>\n"
-#| "The focus always remains on the window under the mouse.<br><br>\n"
-#| "\n"
-#| "Notice:<br>\n"
-#| "<b>Focus stealing prevention</b> and the <b>tabbox (\"Alt+Tab\")</b><br>\n"
-#| "contradict the policy and <b>will not work</b>.<br><br>\n"
-#| "You very likely want to use<br>\n"
-#| "<i>Focus Follows Mouse - Mouse Precedence</i> instead!"
+#, kde-format
 msgid ""
 "<em>Focus under mouse:</em> The focus always remains on the window under the "
 "mouse.<br/><strong>Warning:</strong> <em>Focus stealing prevention</em> and "
@@ -1324,30 +1243,14 @@ msgid ""
 "not work. You very likely want to use <em>Focus follows mouse (mouse "
 "precedence)</em> instead!"
 msgstr ""
-"<b>Fokus under musen</b><br>\n"
-"Fokus forbliver altid på vinduet under musen.<br><br>\n"
-"\n"
-"Bemærk:<br>\n"
-"<b>Forhindring af at fokus stjæles</b> og <b>tab-boksen (\"Alt+Tab\")</"
-"b><br>\n"
-"er i modstrid med politikken og <b>vil ikke virke</b>.<br><br>\n"
-"Du vil sikkert hellere bruge<br>\n"
-"<i>Fokus følger musen - musen har forrang</i> i stedet for!"
+"<em>Fokus under musen:</em> Fokus forbliver altid på vinduet under musen.<br/"
+"><strong>Bemærk:</strong> <em>Forhindring af at fokus stjæles</em> og "
+"<em>tab-boksen (\"Alt+Tab\")</em> er i modstrid med aktiveringspolitikken og "
+"vil ikke virke. Du vil sikkert hellere bruge<em>Fokus følger musen  (musen "
+"har forrang)</em> i stedet for!"
 
 #: windows.cpp:107
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>Focus Strictly Under Mouse</b><br>\n"
-#| "The focus is always on the window under the mouse - in doubt nowhere -"
-#| "<br>\n"
-#| "very much like the focus behaviour in an unmanaged legacy X11 environment."
-#| "<br><br>\n"
-#| "\n"
-#| "Notice:<br>\n"
-#| "<b>Focus stealing prevention</b> and the <b>tabbox (\"Alt+Tab\")</b><br>\n"
-#| "contradict the policy and <b>will not work</b>.<br><br>\n"
-#| "You very likely want to use<br>\n"
-#| "<i>Focus Follows Mouse - Mouse Precedence</i> instead!"
+#, kde-format
 msgid ""
 "<em>Focus strictly under mouse:</em> The focus is always on the window under "
 "the mouse (in doubt nowhere) very much like the focus behavior in an "
@@ -1356,17 +1259,12 @@ msgid ""
 "activation policy and will not work. You very likely want to use <em>Focus "
 "follows mouse (mouse precedence)</em> instead!"
 msgstr ""
-"<b>Fokus strengt under musen</b><br>\n"
-"Fokus er altid på vinduet under musen - i tvivlstilfælde er fokus ingen "
-"steder -<br>\n"
-"Meget lig fokusopførslen i et gammelt ikke-håndteret X11-miljø.<br><br>\n"
-"\n"
-"Bemærk:<br>\n"
-"<b>Forhindring af at fokus stjæles</b> og <b>tab-boksen (\"Alt+Tab\")</"
-"b><br>\n"
-"er i modstrid med politikken og <b>vil ikke virke</b>.<br><br>\n"
-"Du vil sikkert hellere bruge<br>\n"
-"<i>Fokus følger musen - musen har forrang</i> i stedet for!"
+"<em>Fokus strengt under musen:</em>Fokus er altid på vinduet under musen (i "
+"tvivlstilfælde er fokus ingen steder) meget lig fokusopførslen i et gammelt "
+"ikke-håndteret X11-miljø.<br/><strong>Bemærk:</strong> <em>Forhindring af at "
+"fokus stjæles</em> og <em>tab-boksen (\"Alt+Tab\")</em>er i modstrid med "
+"aktiveringspolitikken og vil ikke virke.Du vil sikkert hellere bruge "
+"<em>Fokus følger musen (musen har forrang)</em> i stedet for!"
 
 #~ msgid "&Special windows:"
 #~ msgstr "&Specielle vinduer:"

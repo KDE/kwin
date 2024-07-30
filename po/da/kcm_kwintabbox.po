@@ -2,27 +2,26 @@
 # This file is distributed under the same license as the PACKAGE package.
 #
 # Martin Schlander <mschlander@opensuse.org>, 2009, 2010, 2011, 2012, 2019.
+# SPDX-FileCopyrightText: 2024 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2019-05-07 13:22+0100\n"
-"Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
-"Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
+"PO-Revision-Date: 2024-07-14 20:40+0200\n"
+"Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
+"Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 24.05.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: layoutpreview.cpp:127
-#, fuzzy, kde-format
-#| msgctxt "An example Desktop Name"
-#| msgid "Desktop 1"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Skrivebord 1"
+msgstr "Vis skrivebord"
 
 #: layoutpreview.cpp:157
 #, kde-format
@@ -41,10 +40,9 @@ msgid "Alternative"
 msgstr "Alternativ"
 
 #: main.cpp:69
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switchers…"
-msgstr "Hent nye opgaveskiftere..."
+msgstr "Hent nye opgaveskiftere…"
 
 #: main.cpp:83
 #, kde-format
@@ -62,10 +60,9 @@ msgstr "Indhold"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Show Desktop\" entry"
-msgstr "Inkludér \"Vis skrivebordet\"-ikon"
+msgstr "Inkludér \"Vis skrivebordet\"-indgang"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -89,7 +86,7 @@ msgstr "Kun et vindue pr. program"
 #: main.ui:78
 #, kde-format
 msgid "Order minimized windows after unminimized windows"
-msgstr ""
+msgstr "Sortér minimerede vinduer efter ikke-minimerede vinduer"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: main.ui:88
@@ -248,16 +245,14 @@ msgid "Walk Through Windows (Reverse)"
 msgstr "Gå gennem vinduer (baglæns)"
 
 #: shortcutsettings.cpp:134
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr "Gå gennem vinduer, alternativ"
+msgstr "Gå gennem vinduer af nuværende applikation"
 
 #: shortcutsettings.cpp:135
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr "Gå gennem vinduer, alternativ (baglæns)"
+msgstr "Gå gennem vinduer af nuværende applikation (baglæns)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
@@ -270,16 +265,14 @@ msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Gå gennem vinduer, alternativ (baglæns)"
 
 #: shortcutsettings.cpp:139
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr "Gå gennem vinduer, alternativ"
+msgstr "Gå gennem vinduer af nuvrende applikation, alternativ"
 
 #: shortcutsettings.cpp:140
-#, fuzzy, kde-format
-#| msgid "Walk Through Windows Alternative (Reverse)"
+#, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr "Gå gennem vinduer, alternativ (baglæns)"
+msgstr "Gå gennem vinduer af nuvrende applikation, alternativ (baglæns)"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"

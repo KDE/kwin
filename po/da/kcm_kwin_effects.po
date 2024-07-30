@@ -1,21 +1,22 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the kwin package.
 #
 # Martin Schlander <mschlander@opensuse.org>, 2019, 2020.
+# SPDX-FileCopyrightText: 2024 rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>
 msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-06-30 00:40+0000\n"
-"PO-Revision-Date: 2020-02-08 15:54+0100\n"
-"Last-Translator: Martin Schlander <mschlander@opensuse.org>\n"
+"PO-Revision-Date: 2024-07-14 20:32+0200\n"
+"Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 18.12.3\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: ui/Effect.qml:97
 #, kde-format
@@ -33,18 +34,16 @@ msgid "Show/Hide Video"
 msgstr "Vis/skjul video"
 
 #: ui/Effect.qml:136
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Configure..."
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Configure…"
-msgstr "Indstil..."
+msgstr "Indstil…"
 
 #: ui/main.qml:25
 #, kde-format
 msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
-msgstr ""
+msgstr "Få nye…"
 
 #: ui/main.qml:44
 #, kde-format
