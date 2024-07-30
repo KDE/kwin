@@ -21,7 +21,11 @@
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
 #endif
+#include "rules.h"
+#include "useractions.h"
 #include "virtualdesktops.h"
+#include "waylandwindow.h"
+#include "window.h"
 
 #if KWIN_BUILD_X11
 #include "atoms.h"
@@ -32,12 +36,8 @@
 #endif
 
 #include <KLocalizedString>
-#include <kstringhandler.h>
-
-#include "rules.h"
-#include "useractions.h"
-#include "window.h"
 #include <QDebug>
+#include <kstringhandler.h>
 
 namespace KWin
 {
@@ -232,6 +232,13 @@ void Workspace::setActiveWindow(Window *window)
     StackingUpdatesBlocker blocker(this);
     ++m_setActiveWindowRecursion;
     updateFocusMousePosition(Cursors::self()->mouse()->pos());
+
+    if (qobject_cast<WaylandWindow *>(window)) {
+        // focusIn events only arrive for X11 windows, Wayland windows don't use such a mechanism
+        // and so X11 windows could wrongly get stuck in the list
+        should_get_focus.clear();
+    }
+
     if (m_activeWindow != nullptr) {
         // note that this may call setActiveWindow( NULL ), therefore the recursion counter
         m_activeWindow->setActive(false);
@@ -557,10 +564,6 @@ void Workspace::gotFocusIn(const Window *window)
 
 void Workspace::setShouldGetFocus(Window *window)
 {
-    if (m_activeWindow == window) {
-        // the matching focusIn event will never arrive
-        return;
-    }
     should_get_focus.append(window);
     updateStackingOrder(); // e.g. fullscreens have different layer when active/not-active
 }
