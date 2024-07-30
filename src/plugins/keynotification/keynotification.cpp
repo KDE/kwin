@@ -5,6 +5,7 @@
 */
 
 #include "keynotification.h"
+#include "effect/effecthandler.h"
 #include "keyboard_input.h"
 #include "xkb.h"
 
@@ -32,6 +33,12 @@ KeyNotificationPlugin::KeyNotificationPlugin()
 
 void KeyNotificationPlugin::ledsChanged(LEDs leds)
 {
+    if (m_useBellWhenLocksChange) {
+        if (auto effect = effects->provides(Effect::SystemBell)) {
+            effect->perform(Effect::SystemBell, {});
+        }
+    }
+
     if (m_enabled) {
         if (!m_currentLEDs.testFlag(LED::CapsLock) && leds.testFlag(LED::CapsLock)) {
             sendNotification("lockkey-locked", i18n("The Caps Lock key has been activated"));
@@ -113,6 +120,7 @@ void KeyNotificationPlugin::sendNotification(const QString &eventId, const QStri
 void KeyNotificationPlugin::loadConfig(const KConfigGroup &group)
 {
     m_enabled = group.readEntry("kNotifyModifiers", false);
+    m_useBellWhenLocksChange = group.readEntry("ToggleKeysBeep", false);
 }
 }
 

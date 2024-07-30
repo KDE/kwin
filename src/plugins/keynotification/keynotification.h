@@ -30,5 +30,6 @@ private:
     bool m_enabled = false;
     KWin::LEDs m_currentLEDs;
     Qt::KeyboardModifiers m_currentModifiers;
+    bool m_useBellWhenLocksChange = false;
 };
 }
