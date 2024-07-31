@@ -1105,7 +1105,7 @@ void Xkb::setSeat(SeatInterface *seat)
     m_seat = QPointer<SeatInterface>(seat);
 }
 
-std::optional<int> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
+std::optional<std::pair<int, int>> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
 {
     auto layout = xkb_state_serialize_layout(m_state, XKB_STATE_LAYOUT_EFFECTIVE);
     const xkb_keycode_t max = xkb_keymap_max_keycode(m_keymap);
@@ -1116,7 +1116,7 @@ std::optional<int> Xkb::keycodeFromKeysym(xkb_keysym_t keysym)
             uint num_syms = xkb_keymap_key_get_syms_by_level(m_keymap, keycode, layout, currentLevel, &syms);
             for (uint sym = 0; sym < num_syms; sym++) {
                 if (syms[sym] == keysym) {
-                    return {keycode - EVDEV_OFFSET};
+                    return {{keycode - EVDEV_OFFSET, currentLevel}};
                 }
             }
         }

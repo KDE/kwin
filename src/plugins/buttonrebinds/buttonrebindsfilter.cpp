@@ -362,10 +362,12 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
     }
     // KKeyServer returns upper case syms, lower it to not confuse modifiers handling
     std::optional<int> keyCode;
+    std::optional<int> level;
     for (int sym : syms) {
         auto code = KWin::input()->keyboard()->xkb()->keycodeFromKeysym(sym);
         if (code) {
-            keyCode = code;
+            keyCode = code->first;
+            level = code->second;
             break;
         }
     }
@@ -376,7 +378,7 @@ bool ButtonRebindsFilter::sendKeySequence(const QKeySequence &keys, bool pressed
 
     RebindScope scope;
 
-    if (key & Qt::ShiftModifier) {
+    if (key & Qt::ShiftModifier || level == 1) {
         sendKey(KEY_LEFTSHIFT);
     }
     if (key & Qt::ControlModifier) {

@@ -71,7 +71,7 @@ static std::vector<quint32> textToKey(const QString &text)
     for (xkb_keysym_t sym : syms) {
         auto code = input()->keyboard()->xkb()->keycodeFromKeysym(sym);
         if (code) {
-            keyCode = code;
+            keyCode = code->first;
             break;
         }
     }

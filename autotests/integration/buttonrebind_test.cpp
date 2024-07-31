@@ -89,6 +89,7 @@ void TestButtonRebind::testKey_data()
     QTest::newRow("delete") << QKeySequence(Qt::Key_Delete) << QList<quint32>{KEY_DELETE};
     QTest::newRow("keypad delete") << QKeySequence(Qt::KeypadModifier | Qt::Key_Delete) << QList<quint32>{KEY_KPDOT};
     QTest::newRow("keypad enter") << QKeySequence(Qt::KeypadModifier | Qt::Key_Enter) << QList<quint32>{KEY_KPENTER};
+    QTest::newRow("exclamation mark") << QKeySequence(Qt::Key_Exclam) << QList<quint32>{KEY_LEFTSHIFT, KEY_1};
 }
 
 void TestButtonRebind::testKey()
