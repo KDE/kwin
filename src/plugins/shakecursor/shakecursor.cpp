@@ -144,7 +144,7 @@ void ShakeCursorEffect::magnify(qreal magnification)
         if (!m_cursorItem) {
             effects->hideCursor();
 
-            const qreal maxScale = ShakeCursorConfig::magnification() + 4 * ShakeCursorConfig::overMagnification();
+            const qreal maxScale = ShakeCursorConfig::magnification() + 8 * ShakeCursorConfig::overMagnification();
             const KXcursorTheme originalTheme = input()->pointer()->cursorTheme();
             if (m_cursorTheme.name() != originalTheme.name() || m_cursorTheme.size() != originalTheme.size() || m_cursorTheme.devicePixelRatio() != maxScale) {
                 m_cursorTheme = KXcursorTheme(originalTheme.name(), originalTheme.size(), maxScale);
