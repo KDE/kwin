@@ -268,8 +268,8 @@ int GestureEvent::fingerCount() const
 
 QPointF GestureEvent::delta() const
 {
-    return QPointF(libinput_event_gesture_get_dx(m_gestureEvent),
-                   libinput_event_gesture_get_dy(m_gestureEvent));
+    return QPointF(libinput_event_gesture_get_dx_unaccelerated(m_gestureEvent),
+                   libinput_event_gesture_get_dy_unaccelerated(m_gestureEvent));
 }
 
 bool GestureEvent::isCancelled() const

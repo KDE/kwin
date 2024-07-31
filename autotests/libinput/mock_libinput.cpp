@@ -486,6 +486,16 @@ double libinput_event_gesture_get_dy(struct libinput_event_gesture *event)
     return 0.0;
 }
 
+double libinput_event_gesture_get_dx_unaccelerated(struct libinput_event_gesture *event)
+{
+    return libinput_event_gesture_get_dx(event);
+}
+
+double libinput_event_gesture_get_dy_unaccelerated(struct libinput_event_gesture *event)
+{
+    return libinput_event_gesture_get_dy(event);
+}
+
 double libinput_event_gesture_get_scale(struct libinput_event_gesture *event)
 {
     switch (event->type) {
