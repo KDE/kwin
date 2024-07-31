@@ -1296,6 +1296,10 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     for (Output *output : removed) {
         Q_EMIT outputRemoved(output);
         for (VirtualDesktop *desktop : VirtualDesktopManager::self()->desktops()) {
+            // FIXME: this shouldn't be needed
+            if (!m_tileManagers.contains(output)) {
+                continue;
+            }
             auto tileManager = std::move(m_tileManagers[output][desktop]);
             m_tileManagers.erase(output);
 
