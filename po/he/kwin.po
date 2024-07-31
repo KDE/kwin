@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-25 00:40+0000\n"
+"POT-Creation-Date: 2024-07-31 00:42+0000\n"
 "PO-Revision-Date: 2024-07-17 09:17+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -1853,72 +1853,72 @@ msgstr ""
 msgid "Animate buttons"
 msgstr "הנפשת כפתורים"
 
-#: plugins/keynotification/keynotification.cpp:37
+#: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
 msgstr "מקש ה־Caps Lock הופעל"
 
-#: plugins/keynotification/keynotification.cpp:41
+#: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
 msgstr "מקש ה־Caps Lock אינו פעיל עוד"
 
-#: plugins/keynotification/keynotification.cpp:45
+#: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
 msgstr "מקש ה־Num Lock הופעל"
 
-#: plugins/keynotification/keynotification.cpp:49
+#: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
 msgstr "מקש ה־Num Lock אינו פעיל עוד"
 
-#: plugins/keynotification/keynotification.cpp:53
+#: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
 msgstr "מקש ה־Scroll Lock הופעל"
 
-#: plugins/keynotification/keynotification.cpp:57
+#: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
 msgstr "מקש ה־Scroll Lock אינו פעיל עוד"
 
-#: plugins/keynotification/keynotification.cpp:70
+#: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
 msgstr "מקש ה־Shift פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:74
+#: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
 msgstr "מקש ה־Shift לא פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:78
+#: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
 msgstr "מקש ה־Control פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:82
+#: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
 msgstr "מקש ה־Control לא פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:86
+#: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
 msgstr "מקש ה־Alt פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:90
+#: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
 msgstr "מקש ה־Alt לא פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:94
+#: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
 msgstr "מקש ה־Meta פעיל עכשיו."
 
-#: plugins/keynotification/keynotification.cpp:98
+#: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
 msgstr "מקש ה־Meta לא פעיל עכשיו."
@@ -2582,31 +2582,31 @@ msgstr "אנכי:"
 msgid "Slide desktop background"
 msgstr "החלקת רקע שולחן העבודה"
 
-#: plugins/stickykeys/stickykeys.cpp:23
+#: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Shift ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Control ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Alt ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "מקש ה־Meta ננעל ועכשיו פעיל לכל לחיצות המקשים הבאות."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

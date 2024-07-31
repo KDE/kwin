@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1685456 2024-07-25 01:12:53Z scripty $
+# $Id: kwin.po 1685977 2024-07-31 01:15:53Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-25 00:40+0000\n"
+"POT-Creation-Date: 2024-07-31 00:42+0000\n"
 "PO-Revision-Date: 2024-07-17 04:50+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1869,72 +1869,72 @@ msgstr ""
 msgid "Animate buttons"
 msgstr "Animiraj gumbe"
 
-#: plugins/keynotification/keynotification.cpp:37
+#: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
 msgstr "Aktivirana je bila tipka Caps Lock"
 
-#: plugins/keynotification/keynotification.cpp:41
+#: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
 msgstr "Tipka Caps Lock je zdaj neaktivna"
 
-#: plugins/keynotification/keynotification.cpp:45
+#: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
 msgstr "Aktivirana je bila tipka Num Lock"
 
-#: plugins/keynotification/keynotification.cpp:49
+#: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
 msgstr "Tipka Num Lock je zdaj neaktivna"
 
-#: plugins/keynotification/keynotification.cpp:53
+#: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
 msgstr "Aktivirana je bila tipka Scroll Lock"
 
-#: plugins/keynotification/keynotification.cpp:57
+#: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
 msgstr "Tipka Scroll Lock je zdaj neaktivna"
 
-#: plugins/keynotification/keynotification.cpp:70
+#: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
 msgstr "Tipka Shift je zdaj aktivna."
 
-#: plugins/keynotification/keynotification.cpp:74
+#: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
 msgstr "Tipka Shift je zdaj neaktivna."
 
-#: plugins/keynotification/keynotification.cpp:78
+#: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
 msgstr "Tipka Control je zdaj aktivna."
 
-#: plugins/keynotification/keynotification.cpp:82
+#: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
 msgstr "Tipka Control je zdaj neaktivna."
 
-#: plugins/keynotification/keynotification.cpp:86
+#: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
 msgstr "Tipka Alt je zdaj aktivna."
 
-#: plugins/keynotification/keynotification.cpp:90
+#: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
 msgstr "Tipka Alt je zdaj neaktivna."
 
-#: plugins/keynotification/keynotification.cpp:94
+#: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
 msgstr "Tipka Meta je zdaj aktivna."
 
-#: plugins/keynotification/keynotification.cpp:98
+#: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
 msgstr "Tipka Meta je zdaj neaktivna."
@@ -2598,7 +2598,7 @@ msgstr "Navpična:"
 msgid "Slide desktop background"
 msgstr "Pomakni ozadje namizja"
 
-#: plugins/stickykeys/stickykeys.cpp:23
+#: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2606,7 +2606,7 @@ msgstr ""
 "Tipka Shift je bila zaklenjena in je zdaj aktivna za vse naslednje pritiske "
 "tipk."
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2614,7 +2614,7 @@ msgstr ""
 "Tipka Control je bila zaklenjena in je zdaj aktivna za vse naslednje "
 "pritiske tipk."
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2622,7 +2622,7 @@ msgstr ""
 "Tipka Alt je bila zaklenjena in je zdaj aktivna za vse naslednje pritiske "
 "tipk."
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2630,7 +2630,7 @@ msgstr ""
 "Tipka Meta je bila zaklenjena in je zdaj aktivna za vse naslednje pritiske "
 "tipk."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

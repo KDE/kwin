@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-25 00:40+0000\n"
+"POT-Creation-Date: 2024-07-31 00:42+0000\n"
 "PO-Revision-Date: 2024-07-17 05:46+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1846,72 +1846,72 @@ msgstr ""
 msgid "Animate buttons"
 msgstr "ღილაკების ანიმაცია"
 
-#: plugins/keynotification/keynotification.cpp:37
+#: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
 msgstr "ღილაკი CapsLock ახლა აქტიურია"
 
-#: plugins/keynotification/keynotification.cpp:41
+#: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
 msgstr "ღილაკი CapsLock ახლა არააქტიურია"
 
-#: plugins/keynotification/keynotification.cpp:45
+#: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
 msgstr "ღილაკი NumLock ახლა აქტიურია"
 
-#: plugins/keynotification/keynotification.cpp:49
+#: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
 msgstr "ღილაკი NumLock ახლა არააქტიურია"
 
-#: plugins/keynotification/keynotification.cpp:53
+#: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
 msgstr "ღილაკი ScrollLock ახლა აქტიურია"
 
-#: plugins/keynotification/keynotification.cpp:57
+#: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
 msgstr "ღილაკი ScrollLock ახლა araაქტიურია"
 
-#: plugins/keynotification/keynotification.cpp:70
+#: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
 msgstr "ღილაკი Shift ახლა აქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:74
+#: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
 msgstr "ღილაკი Shift ახლა არააქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:78
+#: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
 msgstr "ღილაკი Control ახლა აქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:82
+#: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
 msgstr "ღილაკი Control ახლა არააქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:86
+#: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
 msgstr "ღილაკი Alt ახლა აქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:90
+#: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
 msgstr "ღილაკი Alt ახლა არააქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:94
+#: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
 msgstr "ღილაკი Meta ახლა აქტიურია."
 
-#: plugins/keynotification/keynotification.cpp:98
+#: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
 msgstr "ღილაკი Meta ახლა არააქტიურია."
@@ -2573,7 +2573,7 @@ msgstr "ვერტიკალური:"
 msgid "Slide desktop background"
 msgstr "გაუსვით ეკრანის ფონს"
 
-#: plugins/stickykeys/stickykeys.cpp:23
+#: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
@@ -2581,7 +2581,7 @@ msgstr ""
 "ღილაკი Shift დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
@@ -2589,7 +2589,7 @@ msgstr ""
 "ღილაკი Control დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
@@ -2597,7 +2597,7 @@ msgstr ""
 "ღილაკი Alt დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
@@ -2605,7 +2605,7 @@ msgstr ""
 "ღილაკი Meta დაბლოკილია და ახლა აქტიურია ყველა შემდეგი ღილაკების "
 "მიმდევრობისთვის."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

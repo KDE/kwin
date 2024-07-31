@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-25 00:40+0000\n"
+"POT-Creation-Date: 2024-07-31 00:42+0000\n"
 "PO-Revision-Date: 2024-07-23 21:53+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -1843,72 +1843,72 @@ msgstr "如果您希望按鈕在滑鼠上經過時有淡入和淡出的效果，
 msgid "Animate buttons"
 msgstr "按鈕動畫效果"
 
-#: plugins/keynotification/keynotification.cpp:37
+#: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
 msgstr "大寫鎖定鍵已開始作用"
 
-#: plugins/keynotification/keynotification.cpp:41
+#: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
 msgstr "大寫鎖定鍵已不在作用中"
 
-#: plugins/keynotification/keynotification.cpp:45
+#: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
 msgstr "數字鎖定鍵已開始作用"
 
-#: plugins/keynotification/keynotification.cpp:49
+#: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
 msgstr "數字鎖定鍵已不在作用中"
 
-#: plugins/keynotification/keynotification.cpp:53
+#: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
 msgstr "捲軸鎖定鍵已開始作用"
 
-#: plugins/keynotification/keynotification.cpp:57
+#: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
 msgstr "捲軸鎖定鍵已不在作用中"
 
-#: plugins/keynotification/keynotification.cpp:70
+#: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
 msgstr "Shift 按鍵目前作用中。"
 
-#: plugins/keynotification/keynotification.cpp:74
+#: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
 msgstr "Shift 按鍵目前沒有作用。"
 
-#: plugins/keynotification/keynotification.cpp:78
+#: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
 msgstr "Ctrl 按鍵目前作用中。"
 
-#: plugins/keynotification/keynotification.cpp:82
+#: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
 msgstr "Ctrl 按鍵目前沒有作用。"
 
-#: plugins/keynotification/keynotification.cpp:86
+#: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
 msgstr "Alt 按鍵目前作用中。"
 
-#: plugins/keynotification/keynotification.cpp:90
+#: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
 msgstr "Alt 按鍵目前沒有作用。"
 
-#: plugins/keynotification/keynotification.cpp:94
+#: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
 msgstr "Meta 按鍵目前作用中。"
 
-#: plugins/keynotification/keynotification.cpp:98
+#: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
 msgstr "Meta 按鍵目前沒有作用。"
@@ -2569,31 +2569,31 @@ msgstr "垂直："
 msgid "Slide desktop background"
 msgstr "滑動桌面背景"
 
-#: plugins/stickykeys/stickykeys.cpp:23
+#: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Shift 鍵已鎖定並會對所有接著按下的按鍵產生作用。"
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Ctrl 鍵已鎖定並會對所有接著按下的按鍵產生作用。"
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Alt 鍵已鎖定並會對所有接著按下的按鍵產生作用。"
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Meta 鍵已鎖定並會對所有接著按下的按鍵產生作用。"
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."

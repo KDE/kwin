@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-25 00:40+0000\n"
+"POT-Creation-Date: 2024-07-31 00:42+0000\n"
 "PO-Revision-Date: 2024-07-24 13:18+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1856,72 +1856,72 @@ msgstr ""
 msgid "Animate buttons"
 msgstr "Анимация за бутоните"
 
-#: plugins/keynotification/keynotification.cpp:37
+#: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
 msgstr "Клавишът Caps Lock е активиран"
 
-#: plugins/keynotification/keynotification.cpp:41
+#: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
 msgstr "Клавишът Caps Lock сега е неактивен"
 
-#: plugins/keynotification/keynotification.cpp:45
+#: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
 msgstr "Клавишът Num Lock е активиран"
 
-#: plugins/keynotification/keynotification.cpp:49
+#: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
 msgstr "Клавишът Num Lock сега е неактивен"
 
-#: plugins/keynotification/keynotification.cpp:53
+#: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
 msgstr "Клавишът Scroll Lock е активиран"
 
-#: plugins/keynotification/keynotification.cpp:57
+#: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
 msgstr "Клавишът Scroll Lock сега е неактивен"
 
-#: plugins/keynotification/keynotification.cpp:70
+#: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
 msgstr "Клавишът Shift е активен."
 
-#: plugins/keynotification/keynotification.cpp:74
+#: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
 msgstr "Клавишът Shift е неактивен."
 
-#: plugins/keynotification/keynotification.cpp:78
+#: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
 msgstr "Клавишът Ctrl е активен."
 
-#: plugins/keynotification/keynotification.cpp:82
+#: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
 msgstr "Клавишът Ctrl е неактивен."
 
-#: plugins/keynotification/keynotification.cpp:86
+#: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
 msgstr "Клавишът Alt е активен."
 
-#: plugins/keynotification/keynotification.cpp:90
+#: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
 msgstr "Клавишът Alt е неактивен."
 
-#: plugins/keynotification/keynotification.cpp:94
+#: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
 msgstr "Клавишът Meta е активен."
 
-#: plugins/keynotification/keynotification.cpp:98
+#: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
 msgstr "Клавишът Meta е неактивен."
@@ -2585,31 +2585,31 @@ msgstr "Вертикално:"
 msgid "Slide desktop background"
 msgstr "Сменяне на фона на работния плот"
 
-#: plugins/stickykeys/stickykeys.cpp:23
+#: plugins/stickykeys/stickykeys.cpp:24
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Shift е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:24
+#: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Ctrl е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:25
+#: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Alt е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:26
+#: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr "Клавишът Meta е натиснат и е активен за всички последващи клавиши."
 
-#: plugins/stickykeys/stickykeys.cpp:27
+#: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
