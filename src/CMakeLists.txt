@@ -206,7 +206,9 @@ target_sources(kwin PRIVATE
     tiles/tilemanager.cpp
     touch_input.cpp
     useractions.cpp
+    utils/svgcursorreader.cpp
     utils/version.cpp
+    utils/xcursorreader.cpp
     virtualdesktops.cpp
     virtualdesktopsdbustypes.cpp
     virtualkeyboard_dbus.cpp
@@ -234,8 +236,9 @@ target_link_libraries(kwin
 
     PRIVATE
         Qt::Concurrent
-        Qt::Sensors
         Qt::GuiPrivate
+        Qt::Sensors
+        Qt::Svg
 
         KF6::ColorScheme
         KF6::ConfigGui

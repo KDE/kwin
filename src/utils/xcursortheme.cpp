@@ -4,15 +4,15 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "xcursortheme.h"
-#include "3rdparty/xcursor.h"
+#include "utils/xcursortheme.h"
+#include "utils/svgcursorreader.h"
+#include "utils/xcursorreader.h"
 
 #include <KConfig>
 #include <KConfigGroup>
 #include <KShell>
 
 #include <QDir>
-#include <QFile>
 #include <QSet>
 #include <QSharedData>
 #include <QStack>
@@ -29,14 +29,27 @@ public:
     std::chrono::milliseconds delay;
 };
 
+struct KXcursorThemeXEntryInfo
+{
+    QString path;
+};
+
+struct KXcursorThemeSvgEntryInfo
+{
+    QString path;
+};
+
+using KXcursorThemeEntryInfo = std::variant<KXcursorThemeXEntryInfo,
+                                            KXcursorThemeSvgEntryInfo>;
+
 class KXcursorThemeEntry
 {
 public:
-    explicit KXcursorThemeEntry(const QString &filePath);
+    explicit KXcursorThemeEntry(const KXcursorThemeEntryInfo &info);
 
     void load(int size, qreal devicePixelRatio);
 
-    QString filePath;
+    KXcursorThemeEntryInfo info;
     QList<KXcursorSprite> sprites;
 };
 
@@ -47,7 +60,8 @@ public:
     KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio);
 
     void discover(const QStringList &searchPaths);
-    void discoverCursors(const QString &packagePath);
+    void discoverXCursors(const QString &packagePath);
+    void discoverSvgCursors(const QString &packagePath);
 
     QString name;
     int size = 0;
@@ -111,65 +125,25 @@ KXcursorThemePrivate::KXcursorThemePrivate(const QString &themeName, int size, q
 {
 }
 
-static QList<KXcursorSprite> loadCursor(const QString &filePath, int desiredSize, qreal devicePixelRatio)
-{
-    QFile file(filePath);
-    if (!file.open(QFile::ReadOnly)) {
-        return {};
-    }
-
-    XcursorFile reader {
-        .closure = &file,
-        .read = [](XcursorFile *file, uint8_t *buffer, int len) -> int {
-            QFile *device = static_cast<QFile *>(file->closure);
-            return device->read(reinterpret_cast<char *>(buffer), len);
-        },
-        .skip = [](XcursorFile *file, long offset) -> XcursorBool {
-            QFile *device = static_cast<QFile *>(file->closure);
-            return device->skip(offset) != -1;
-        },
-        .seek = [](XcursorFile *file, long offset) -> XcursorBool {
-            QFile *device = static_cast<QFile *>(file->closure);
-            return device->seek(offset);
-        },
-    };
-
-    XcursorImages *images = XcursorXcFileLoadImages(&reader, desiredSize * devicePixelRatio);
-    if (!images) {
-        return {};
-    }
-
-    QList<KXcursorSprite> sprites;
-    for (int i = 0; i < images->nimage; ++i) {
-        const XcursorImage *nativeCursorImage = images->images[i];
-        const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / desiredSize);
-        const QPoint hotspot(nativeCursorImage->xhot, nativeCursorImage->yhot);
-        const std::chrono::milliseconds delay(nativeCursorImage->delay);
-
-        QImage data(nativeCursorImage->width, nativeCursorImage->height, QImage::Format_ARGB32_Premultiplied);
-        data.setDevicePixelRatio(scale);
-        memcpy(data.bits(), nativeCursorImage->pixels, data.sizeInBytes());
-
-        sprites.append(KXcursorSprite(data, hotspot / scale, delay));
-    }
-
-    XcursorImagesDestroy(images);
-    return sprites;
-}
-
-KXcursorThemeEntry::KXcursorThemeEntry(const QString &filePath)
-    : filePath(filePath)
+KXcursorThemeEntry::KXcursorThemeEntry(const KXcursorThemeEntryInfo &info)
+    : info(info)
 {
 }
 
 void KXcursorThemeEntry::load(int size, qreal devicePixelRatio)
 {
-    if (sprites.isEmpty()) {
-        sprites = loadCursor(filePath, size, devicePixelRatio);
+    if (!sprites.isEmpty()) {
+        return;
+    }
+
+    if (const auto raster = std::get_if<KXcursorThemeXEntryInfo>(&info)) {
+        sprites = XCursorReader::load(raster->path, size, devicePixelRatio);
+    } else if (const auto svg = std::get_if<KXcursorThemeSvgEntryInfo>(&info)) {
+        sprites = SvgCursorReader::load(svg->path, size, devicePixelRatio);
     }
 }
 
-void KXcursorThemePrivate::discoverCursors(const QString &packagePath)
+void KXcursorThemePrivate::discoverXCursors(const QString &packagePath)
 {
     const QDir dir(packagePath);
     QFileInfoList entries = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
@@ -191,7 +165,37 @@ void KXcursorThemePrivate::discoverCursors(const QString &packagePath)
                 }
             }
         }
-        registry.insert(shape, std::make_shared<KXcursorThemeEntry>(entry.absoluteFilePath()));
+        registry.insert(shape, std::make_shared<KXcursorThemeEntry>(KXcursorThemeXEntryInfo{
+            .path = entry.absoluteFilePath(),
+        }));
+    }
+}
+
+void KXcursorThemePrivate::discoverSvgCursors(const QString &packagePath)
+{
+    const QDir dir(packagePath);
+    QFileInfoList entries = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    std::partition(entries.begin(), entries.end(), [](const QFileInfo &fileInfo) {
+        return !fileInfo.isSymLink();
+    });
+
+    for (const QFileInfo &entry : std::as_const(entries)) {
+        const QByteArray shape = QFile::encodeName(entry.fileName());
+        if (registry.contains(shape)) {
+            continue;
+        }
+        if (entry.isSymLink()) {
+            const QFileInfo symLinkInfo(entry.symLinkTarget());
+            if (symLinkInfo.absolutePath() == entry.absolutePath()) {
+                if (auto alias = registry.value(QFile::encodeName(symLinkInfo.fileName()))) {
+                    registry.insert(shape, alias);
+                    continue;
+                }
+            }
+        }
+        registry.insert(shape, std::make_shared<KXcursorThemeEntry>(KXcursorThemeSvgEntryInfo{
+            .path = entry.absoluteFilePath(),
+        }));
     }
 }
 
@@ -240,7 +244,11 @@ void KXcursorThemePrivate::discover(const QStringList &searchPaths)
             if (!dir.exists()) {
                 continue;
             }
-            discoverCursors(dir.filePath(QStringLiteral("cursors")));
+            if (const QDir package = dir.filePath(QLatin1String("cursors_scalable")); package.exists()) {
+                discoverSvgCursors(package.path());
+            } else if (const QDir package = dir.filePath(QLatin1String("cursors")); package.exists()) {
+                discoverXCursors(package.path());
+            }
             if (inherits.isEmpty()) {
                 const KConfig config(dir.filePath(QStringLiteral("index.theme")), KConfig::NoGlobals);
                 inherits << KConfigGroup(&config, QStringLiteral("Icon Theme")).readEntry("Inherits", QStringList());
