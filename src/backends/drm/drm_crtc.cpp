@@ -59,7 +59,7 @@ bool DrmCrtc::updateProperties()
             m_postBlendingColorOps.push_back(std::make_unique<LegacyMatrixColorOp>(next, &ctm));
             next = m_postBlendingColorOps.back().get();
         }
-        if (degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
+        if (!gpu()->isI915() && degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
             m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &degammaLut, degammaLutSize.value()));
             next = m_postBlendingColorOps.back().get();
         }
