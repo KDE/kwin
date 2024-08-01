@@ -18,6 +18,7 @@ namespace KWin
 
 PopupInputFilter::PopupInputFilter()
     : QObject()
+    , InputEventFilter(InputFilterOrder::Popup)
 {
     connect(workspace(), &Workspace::windowAdded, this, &PopupInputFilter::handleWindowAdded);
 }

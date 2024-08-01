@@ -8,7 +8,8 @@
 #include "keyboard_input.h"
 
 BounceKeysFilter::BounceKeysFilter()
-    : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
+    : KWin::InputEventFilter(KWin::InputFilterOrder::BounceKeys)
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
     const QLatin1String groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
@@ -24,7 +25,7 @@ void BounceKeysFilter::loadConfig(const KConfigGroup &group)
     KWin::input()->uninstallInputEventFilter(this);
 
     if (group.readEntry<bool>("BounceKeys", false)) {
-        KWin::input()->prependInputEventFilter(this);
+        KWin::input()->installInputEventFilter(this);
 
         m_delay = std::chrono::milliseconds(group.readEntry<int>("BounceKeysDelay", 500));
     } else {

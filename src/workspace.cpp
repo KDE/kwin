@@ -1235,7 +1235,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         if (!m_placeholderOutput) {
             m_placeholderOutput = new PlaceholderOutput(QSize(1920, 1080), 1);
             m_placeholderFilter = std::make_unique<PlaceholderInputEventFilter>();
-            input()->prependInputEventFilter(m_placeholderFilter.get());
+            input()->installInputEventFilter(m_placeholderFilter.get());
         }
         m_outputs.append(m_placeholderOutput);
     } else {
@@ -1345,7 +1345,7 @@ void Workspace::createDpmsFilter()
 {
     if (!m_dpmsFilter) {
         m_dpmsFilter = std::make_unique<DpmsInputEventFilter>();
-        input()->prependInputEventFilter(m_dpmsFilter.get());
+        input()->installInputEventFilter(m_dpmsFilter.get());
     }
 }
 

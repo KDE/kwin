@@ -23,7 +23,7 @@ namespace KWin
 {
 
 DpmsInputEventFilter::DpmsInputEventFilter()
-    : InputEventFilter()
+    : InputEventFilter(InputFilterOrder::Dpms)
 {
     KSharedConfig::Ptr kwinSettings = kwinApp()->config();
     m_enableDoubleTap = kwinSettings->group(QStringLiteral("Wayland")).readEntry<bool>("DoubleTapWakeup", true);

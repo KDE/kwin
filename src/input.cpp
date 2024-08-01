@@ -101,13 +101,21 @@ static PointerAxisSource kwinAxisSourceToKWaylandAxisSource(InputRedirection::Po
     }
 }
 
-InputEventFilter::InputEventFilter() = default;
+InputEventFilter::InputEventFilter(InputFilterOrder::Order weight)
+    : m_weight(weight)
+{
+}
 
 InputEventFilter::~InputEventFilter()
 {
     if (input()) {
         input()->uninstallInputEventFilter(this);
     }
+}
+
+int InputEventFilter::weight() const
+{
+    return m_weight;
 }
 
 bool InputEventFilter::pointerEvent(MouseEvent *event, quint32 nativeButton)
@@ -281,6 +289,10 @@ bool InputEventFilter::passToInputMethod(QKeyEvent *event)
 class VirtualTerminalFilter : public InputEventFilter
 {
 public:
+    VirtualTerminalFilter()
+        : InputEventFilter(InputFilterOrder::VirtualTerminal)
+    {
+    }
     bool keyEvent(KeyEvent *event) override
     {
         // really on press and not on release? X11 switches on press.
@@ -298,6 +310,10 @@ public:
 class LockScreenFilter : public InputEventFilter
 {
 public:
+    LockScreenFilter()
+        : InputEventFilter(InputFilterOrder::LockScreen)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!waylandServer()->isScreenLocked()) {
@@ -511,6 +527,10 @@ private:
 class EffectsFilter : public InputEventFilter
 {
 public:
+    EffectsFilter()
+        : InputEventFilter(InputFilterOrder::Effects)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!effects) {
@@ -596,6 +616,10 @@ public:
 class MoveResizeFilter : public InputEventFilter
 {
 public:
+    MoveResizeFilter()
+        : InputEventFilter(InputFilterOrder::InteractiveMoveResize)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         Window *window = workspace()->moveResizeWindow();
@@ -706,6 +730,10 @@ private:
 class WindowSelectorFilter : public InputEventFilter
 {
 public:
+    WindowSelectorFilter()
+        : InputEventFilter(InputFilterOrder::WindowSelector)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!m_active) {
@@ -873,6 +901,7 @@ class GlobalShortcutFilter : public InputEventFilter
 {
 public:
     GlobalShortcutFilter()
+        : InputEventFilter(InputFilterOrder::GlobalShortcut)
     {
         m_powerDown.setSingleShot(true);
         m_powerDown.setInterval(1000);
@@ -1181,6 +1210,11 @@ std::pair<bool, bool> performWindowWheelAction(QWheelEvent *event, Window *windo
 
 class InternalWindowEventFilter : public InputEventFilter
 {
+public:
+    InternalWindowEventFilter()
+        : InputEventFilter(InputFilterOrder::InternalWindow)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (!input()->pointer()->focus() || !input()->pointer()->focus()->isInternal()) {
@@ -1387,6 +1421,10 @@ private:
 class DecorationEventFilter : public InputEventFilter
 {
 public:
+    DecorationEventFilter()
+        : InputEventFilter(InputFilterOrder::Decoration)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         auto decoration = input()->pointer()->decoration();
@@ -1603,6 +1641,10 @@ private:
 class TabBoxInputFilter : public InputEventFilter
 {
 public:
+    TabBoxInputFilter()
+        : InputEventFilter(InputFilterOrder::TabBox)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 button) override
     {
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
@@ -1646,6 +1688,10 @@ public:
 class ScreenEdgeInputFilter : public InputEventFilter
 {
 public:
+    ScreenEdgeInputFilter()
+        : InputEventFilter(InputFilterOrder::ScreenEdge)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         workspace()->screenEdges()->isEntered(event);
@@ -1702,6 +1748,10 @@ private:
 class WindowActionInputFilter : public InputEventFilter
 {
 public:
+    WindowActionInputFilter()
+        : InputEventFilter(InputFilterOrder::WindowAction)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         if (event->type() != QEvent::MouseButtonPress) {
@@ -1771,6 +1821,10 @@ public:
 class InputKeyboardFilter : public InputEventFilter
 {
 public:
+    InputKeyboardFilter()
+        : InputEventFilter(InputFilterOrder::InputMethod)
+    {
+    }
     bool keyEvent(KeyEvent *event) override
     {
         return passToInputMethod(event);
@@ -1783,6 +1837,10 @@ public:
 class ForwardInputFilter : public InputEventFilter
 {
 public:
+    ForwardInputFilter()
+        : InputEventFilter(InputFilterOrder::Forward)
+    {
+    }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         auto seat = waylandServer()->seat();
@@ -2008,6 +2066,7 @@ class TabletInputFilter : public QObject, public InputEventFilter
 {
 public:
     TabletInputFilter()
+        : InputEventFilter(InputFilterOrder::Tablet)
     {
         const auto devices = input()->devices();
         for (InputDevice *device : devices) {
@@ -2386,6 +2445,7 @@ class DragAndDropInputFilter : public QObject, public InputEventFilter
     Q_OBJECT
 public:
     DragAndDropInputFilter()
+        : InputEventFilter(InputFilterOrder::DragAndDrop)
     {
         connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, []() {
             AbstractDataSource *dragSource = waylandServer()->seat()->dragSource();
@@ -2693,13 +2753,11 @@ InputRedirection::~InputRedirection()
 void InputRedirection::installInputEventFilter(InputEventFilter *filter)
 {
     Q_ASSERT(!m_filters.contains(filter));
-    m_filters << filter;
-}
 
-void InputRedirection::prependInputEventFilter(InputEventFilter *filter)
-{
-    Q_ASSERT(!m_filters.contains(filter));
-    m_filters.prepend(filter);
+    auto it = std::lower_bound(m_filters.begin(), m_filters.end(), filter, [](InputEventFilter *a, InputEventFilter *b) {
+        return a->weight() < b->weight();
+    });
+    m_filters.insert(it, filter);
 }
 
 void InputRedirection::uninstallInputEventFilter(InputEventFilter *filter)

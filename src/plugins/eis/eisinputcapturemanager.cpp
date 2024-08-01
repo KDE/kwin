@@ -174,7 +174,7 @@ void EisInputCaptureManager::barrierHit(KWin::EisInputCapture *capture, const QP
     }
     m_activeCapture = capture;
     capture->activate(position);
-    input()->prependInputEventFilter(m_inputFilter.get());
+    input()->installInputEventFilter(m_inputFilter.get());
     // Even though the input events are filtered out the cursor is updated on screen which looks weird
     Cursors::self()->hideCursor();
 }

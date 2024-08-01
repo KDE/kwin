@@ -29,7 +29,8 @@ static const std::array<Modifier, 5> modifiers = {
 };
 
 StickyKeysFilter::StickyKeysFilter()
-    : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
+    : KWin::InputEventFilter(KWin::InputFilterOrder::StickyKeys)
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
 {
     const QLatin1String groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
@@ -82,7 +83,7 @@ void StickyKeysFilter::loadConfig(const KConfigGroup &group)
     }
 
     if (group.readEntry<bool>("StickyKeys", false)) {
-        KWin::input()->prependInputEventFilter(this);
+        KWin::input()->installInputEventFilter(this);
     } else {
         // sticky keys are deactivated, unlatch all latched/locked keys
         for (auto it = m_keyStates.keyValueBegin(); it != m_keyStates.keyValueEnd(); ++it) {

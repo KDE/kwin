@@ -16,7 +16,8 @@
 namespace KWin
 {
 EisInputCaptureFilter::EisInputCaptureFilter(EisInputCaptureManager *manager)
-    : m_manager(manager)
+    : InputEventFilter(InputFilterOrder::EisInput)
+    , m_manager(manager)
 {
 }
 

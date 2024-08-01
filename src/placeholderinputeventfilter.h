@@ -16,6 +16,7 @@ namespace KWin
 class PlaceholderInputEventFilter : public InputEventFilter
 {
 public:
+    PlaceholderInputEventFilter();
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override;
     bool wheelEvent(WheelEvent *event) override;
     bool keyEvent(KeyEvent *event) override;

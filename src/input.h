@@ -136,14 +136,7 @@ public:
     bool supportsPointerWarping() const;
     void warpPointer(const QPointF &pos);
 
-    /**
-     * Adds the @p filter to the list of event filters and makes it the first
-     * event filter in processing.
-     *
-     * Note: the event filter will get events before the lock screen can get them, thus
-     * this is a security relevant method.
-     */
-    void prependInputEventFilter(InputEventFilter *filter);
+    void installInputEventFilter(InputEventFilter *filter);
     void uninstallInputEventFilter(InputEventFilter *filter);
 
     /**
@@ -311,7 +304,6 @@ private:
     void setupTouchpadShortcuts();
     void setupWorkspace();
     void setupInputFilters();
-    void installInputEventFilter(InputEventFilter *filter);
     void updateLeds(LEDs leds);
     void updateAvailableInputDevices();
     KeyboardInputRedirection *m_keyboard;
@@ -367,6 +359,35 @@ private:
     friend class ForwardInputFilter;
 };
 
+namespace InputFilterOrder
+{
+enum Order {
+    PlaceholderOutput,
+    Dpms,
+    ButtonRebind,
+    BounceKeys,
+    StickyKeys,
+    EisInput,
+
+    VirtualTerminal,
+    LockScreen,
+    ScreenEdge,
+    DragAndDrop,
+    WindowSelector,
+    TabBox,
+    GlobalShortcut,
+    Effects,
+    InteractiveMoveResize,
+    Popup,
+    Decoration,
+    WindowAction,
+    InternalWindow,
+    InputMethod,
+    Forward,
+    Tablet
+};
+}
+
 /**
  * Base class for filtering input events inside InputRedirection.
  *
@@ -389,9 +410,22 @@ private:
 class KWIN_EXPORT InputEventFilter
 {
 public:
-    InputEventFilter();
+    /**
+     * Construct and install the InputEventFilter
+     * @param weight The position in the input chain, lower values come first.
+     * @note the filter is not installed automatically
+     */
+    InputEventFilter(InputFilterOrder::Order weight);
+    /**
+     * @brief ~InputEventFilter
+     * This will uninstall the event filter if needed
+     */
     virtual ~InputEventFilter();
 
+    /**
+     * The position in the input chain, lower values come first.
+     */
+    int weight() const;
     /**
      * Event filter for pointer events which can be described by a QMouseEvent.
      *
@@ -451,6 +485,9 @@ public:
 protected:
     void passToWaylandServer(QKeyEvent *event);
     bool passToInputMethod(QKeyEvent *event);
+
+private:
+    int m_weight = 0;
 };
 
 class KWIN_EXPORT InputDeviceHandler : public QObject
