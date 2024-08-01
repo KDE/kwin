@@ -2,9 +2,29 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Provides the bell",
+        "Description[ca@valencia]": "Proporciona el timbre",
+        "Description[ca]": "Proporciona el timbre",
+        "Description[ia]": "Forni le campana",
+        "Description[ka]": "მოგაწოდებთ ზარს",
+        "Description[nl]": "Levert de bel",
+        "Description[sl]": "Zagotavlja zvonec",
+        "Description[sv]": "Tillhandahåller alarmet",
+        "Description[tr]": "Zili çalar",
+        "Description[uk]": "Надає сигнал",
+        "Description[x-test]": "xxProvides the bellxx",
         "EnabledByDefault": true,
         "License": "GPL",
-        "Name": "System Bell"
+        "Name": "System Bell",
+        "Name[ca@valencia]": "Timbre del sistema",
+        "Name[ca]": "Timbre del sistema",
+        "Name[ia]": "Campana de systema",
+        "Name[ka]": "სისტემური ზარი",
+        "Name[nl]": "Systeembel",
+        "Name[sl]": "Sistemski zvonec",
+        "Name[sv]": "Systemalarm",
+        "Name[tr]": "Sistem Zili",
+        "Name[uk]": "Системний дзвінок",
+        "Name[x-test]": "xxSystem Bellxx"
     },
     "org.kde.kwin.effect": {
         "internal": true
