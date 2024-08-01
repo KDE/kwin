@@ -343,17 +343,6 @@
 <varlistentry>
 <term
 ><guilabel
->La finestra activa segueix el ratolí</guilabel
-></term>
-<listitem>
-<para
->Quan aquesta opció està activada, la pantalla activa (p. ex. a on apareixen les noves finestres) és la pantalla amb el punter del ratolí. Quan està desactivada, la pantalla activa és la pantalla amb la finestra enfocada. </para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term
-><guilabel
 >Separa el focus de cada pantalla</guilabel
 ></term>
 <listitem>
