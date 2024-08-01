@@ -645,9 +645,9 @@
 ><para
 >Per a <guilabel
 >Aplica ara</guilabel
->, si la regla no té altres atributs establerts, la regla s'eliminarà després de l'avaluació, mentre que <guilabel
+>, si la regla no té altres atributs establerts, la regla se suprimeix després de l'avaluació, mentre que <guilabel
 >Força temporalment</guilabel
->, la regla s'eliminarà després que se surti de l'última finestra afectada.</para
+>, la regla se suprimirà després que se surti de l'última finestra afectada.</para
 ></warning>
 </para>
 </sect1>
