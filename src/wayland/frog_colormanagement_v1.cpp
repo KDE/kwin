@@ -83,6 +83,11 @@ void FrogColorManagementSurfaceV1::setPreferredColorDescription(const ColorDescr
                             std::round(colorDescription.maxHdrLuminance().value_or(0)),
                             std::round(colorDescription.minLuminance() / 0.0001),
                             std::round(colorDescription.maxAverageLuminance().value_or(0)));
+
+    // update the reference luminance on the color description to match the updated preferred color description
+    SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(m_surface);
+    priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, priv->preferredColorDescription.value_or(ColorDescription::sRGB).referenceLuminance(), 0, m_maxAverageLuminance, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
+    priv->pending->colorDescriptionIsSet = true;
 }
 
 void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_known_transfer_function(Resource *resource, uint32_t transfer_function)
