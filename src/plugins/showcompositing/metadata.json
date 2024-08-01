@@ -1,0 +1,9 @@
+{
+    "KPlugin": {
+        "Category": "Tools",
+        "Description": "Display if compositing is active",
+        "EnabledByDefault": false,
+        "License": "GPL",
+        "Name": "Show Compositing"
+    }
+}
