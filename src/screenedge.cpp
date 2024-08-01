@@ -244,7 +244,7 @@ bool Edge::activatesForPointer() const
     // Most actions do not handle drag and drop properly yet
     // but at least allow "show desktop" and "application launcher".
     if (waylandServer() && waylandServer()->seat()->isDragPointer()) {
-        if (!m_edges->isDesktopSwitching() && m_action != ElectricActionShowDesktop && m_action != ElectricActionApplicationLauncher) {
+        if (!m_edges->isDesktopSwitching() && m_action != ElectricActionNone && m_action != ElectricActionShowDesktop && m_action != ElectricActionApplicationLauncher) {
             return false;
         }
         // Don't activate edge when a mouse button is pressed, except when
