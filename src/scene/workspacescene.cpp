@@ -151,12 +151,15 @@ Item *WorkspaceScene::overlayItem() const
     return m_overlayItem.get();
 }
 
-static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount)
+static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
 {
     const QList<Item *> children = item->sortedChildItems();
     for (const auto &child : children | std::views::reverse) {
-        if (child->z() >= 0 && child->isVisible()) {
-            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount)) {
+        if (child->z() < 0) {
+            break;
+        }
+        if (child->isVisible() && !occluded.contains(child->mapToScene(child->boundingRect()).toAlignedRect())) {
+            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
             }
         }
@@ -165,9 +168,13 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
         return false;
     }
     candidates.push_back(item);
+    occluded += item->mapToScene(item->opaque());
     for (const auto &child : children | std::views::reverse) {
-        if (child->z() < 0 && child->isVisible()) {
-            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount)) {
+        if (child->z() >= 0) {
+            continue;
+        }
+        if (child->isVisible() && !occluded.contains(child->mapToScene(child->boundingRect()).toAlignedRect())) {
+            if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
             }
         }
@@ -192,7 +199,8 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                 if (!windowItem->surfaceItem()) {
                     continue;
                 }
-                if (!addCandidates(windowItem->surfaceItem(), ret, maxCount)) {
+                QRegion occlusion;
+                if (!addCandidates(windowItem->surfaceItem(), ret, maxCount, occlusion)) {
                     return {};
                 }
                 return ret;
