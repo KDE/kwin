@@ -189,16 +189,25 @@ WaylandInputDevice::WaylandInputDevice(KWayland::Client::Touch *touch, WaylandSe
         Q_EMIT touchFrame(this);
     });
     connect(touch, &Touch::sequenceStarted, this, [this](TouchPoint *tp) {
-        Q_EMIT touchDown(tp->id(), tp->position(), std::chrono::milliseconds(tp->time()), this);
+        auto o = m_seat->backend()->findOutput(tp->surface());
+        Q_ASSERT(o);
+        const QPointF position = o->geometry().topLeft() + tp->position();
+        Q_EMIT touchDown(tp->id(), position, std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointAdded, this, [this](TouchPoint *tp) {
-        Q_EMIT touchDown(tp->id(), tp->position(), std::chrono::milliseconds(tp->time()), this);
+        auto o = m_seat->backend()->findOutput(tp->surface());
+        Q_ASSERT(o);
+        const QPointF position = o->geometry().topLeft() + tp->position();
+        Q_EMIT touchDown(tp->id(), position, std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointRemoved, this, [this](TouchPoint *tp) {
         Q_EMIT touchUp(tp->id(), std::chrono::milliseconds(tp->time()), this);
     });
     connect(touch, &Touch::pointMoved, this, [this](TouchPoint *tp) {
-        Q_EMIT touchMotion(tp->id(), tp->position(), std::chrono::milliseconds(tp->time()), this);
+        auto o = m_seat->backend()->findOutput(tp->surface());
+        Q_ASSERT(o);
+        const QPointF position = o->geometry().topLeft() + tp->position();
+        Q_EMIT touchMotion(tp->id(), position, std::chrono::milliseconds(tp->time()), this);
     });
 }
 
