@@ -158,10 +158,14 @@ void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
     for (const auto &[plane, buffer] : m_buffers) {
         plane->setCurrentBuffer(buffer);
     }
+    std::unordered_set<OutputFrame *> uniqueFrames;
     for (const auto &[plane, frame] : m_frames) {
         if (frame) {
-            frame->presented(timestamp, m_mode);
+            uniqueFrames.emplace(frame.get());
         }
+    }
+    for (const auto frame : uniqueFrames) {
+        frame->presented(timestamp, m_mode);
     }
     m_frames.clear();
     for (const auto pipeline : std::as_const(m_pipelines)) {
