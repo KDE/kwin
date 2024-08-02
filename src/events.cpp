@@ -1284,7 +1284,6 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
         updateCursor();
     } else if (direction == NET::Move || (direction >= NET::TopLeft && direction <= NET::Left)) {
         if (isInteractiveMoveResize()) {
-            // the user's already doing something, ignore the request
             return;
         }
         if (waylandServer()) {
