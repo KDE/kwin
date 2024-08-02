@@ -258,21 +258,6 @@ void WaylandCompositor::stop()
     Q_EMIT compositingToggled(false);
 }
 
-static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
-{
-    const double widthScale = bufferSize.width() / double(modeSize.width());
-    const double heightScale = bufferSize.height() / double(modeSize.height());
-    if (widthScale > heightScale) {
-        const QSize size = (bufferSize / widthScale).toSize();
-        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
-        return QRect(QPoint(0, yOffset), size);
-    } else {
-        const QSize size = (bufferSize / heightScale).toSize();
-        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
-        return QRect(QPoint(xOffset, 0), size);
-    }
-}
-
 static bool checkForBlackBackground(SurfaceItem *background)
 {
     if (!background->pixmap()
@@ -346,7 +331,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
                 scanoutPossible &= checkForBlackBackground(scanoutCandidates.back());
             }
             if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
+                primaryLayer->setTargetRect(output->transform().map(scaledRect(QRectF(scanoutCandidates.front()->position(), scanoutCandidates.front()->size()), output->scale()), output->modeSize()).toRect());
                 directScanout = primaryLayer->attemptScanout(scanoutCandidates.front(), frame);
             }
         } else {
