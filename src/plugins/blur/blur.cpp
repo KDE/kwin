@@ -401,12 +401,12 @@ QRegion BlurEffect::blurRegion(EffectWindow *w) const
             if (content->isEmpty()) {
                 // An empty region means that the blur effect should be enabled
                 // for the whole window.
-                region = w->rect().toRect();
+                region = w->contentsRect().toRect();
             } else {
-                if (frame.has_value()) {
-                    region = frame.value();
-                }
-                region += content->translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
+                region = content->translated(w->contentsRect().topLeft().toPoint()) & w->decorationInnerRect().toRect();
+            }
+            if (frame.has_value()) {
+                region += frame.value();
             }
         } else if (frame.has_value()) {
             region = frame.value();
