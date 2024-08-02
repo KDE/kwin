@@ -289,22 +289,25 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     }
 
     Output *output = findOutput(renderLoop);
-    OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    QList<OutputLayer *> layers{m_backend->primaryLayer(output)};
+    if (OutputLayer *overlayLayer = m_backend->overlayLayer(output)) {
+        layers.push_back(overlayLayer);
+    }
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
-    superLayer->setOutputLayer(primaryLayer);
+    superLayer->setOutputLayer(layers.front());
 
     renderLoop->prepareNewFrame();
     auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
     bool directScanout = false;
 
-    if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
+    if (layers.front()->needsRepaint() || superLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
         renderLoop->beginPaint();
 
-        QRegion surfaceDamage = primaryLayer->repaints();
-        primaryLayer->resetRepaints();
+        QRegion surfaceDamage = layers.front()->repaints();
+        layers.front()->resetRepaints();
         prePaintPass(superLayer, &surfaceDamage);
         frame->setDamage(surfaceDamage);
 
@@ -322,41 +325,54 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         }
 
         bool directScanout = false;
-        const uint32_t planeCount = 1;
-        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
-            const auto sublayers = superLayer->sublayers();
-            bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
-                return sublayer->isVisible();
-            });
-            if (scanoutCandidates.size() > planeCount) {
-                scanoutPossible &= checkForBlackBackground(scanoutCandidates.back());
-            }
-            if (scanoutPossible) {
-                primaryLayer->setTargetRect(output->transform().map(scaledRect(QRectF(scanoutCandidates.front()->position(), scanoutCandidates.front()->size()), output->scale()), output->modeSize()).toRect());
-                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
-                if (directScanout) {
+        const auto sublayers = superLayer->sublayers();
+        bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
+            return sublayer->isVisible();
+        });
+        if (scanoutPossible) {
+            const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(layers.size() + 1);
+            const bool blackBackground = !scanoutCandidates.empty() && checkForBlackBackground(scanoutCandidates.back());
+            if (!scanoutCandidates.empty() && (blackBackground || scanoutCandidates.size() <= layers.size())) {
+                auto realCandidates = scanoutCandidates | std::views::reverse | std::views::drop(blackBackground ? 1 : 0);
+                for (uint32_t layer = 0; layer < realCandidates.size() && scanoutPossible; layer++) {
+                    const auto candidate = realCandidates[layer];
+                    layers[layer]->setEnabled(true);
+                    const QRectF outputLocalLogical = candidate->mapToScene(candidate->rect()).translated(-output->geometryF().topLeft());
+                    layers[layer]->setTargetRect(output->transform().map(scaledRect(outputLocalLogical, output->scale()), output->modeSize()).toRect());
+                    scanoutPossible = layers[layer]->importScanoutBuffer(candidate, frame);
+                }
+                if (scanoutPossible) {
+                    for (ssize_t layer = realCandidates.size(); layer < layers.size(); layer++) {
+                        layers[layer]->setEnabled(false);
+                        layers[layer]->notifyNoScanoutCandidate();
+                    }
+
                     // if present works, we don't want to touch the frame object again afterwards,
                     // so end the time query here instead of later
                     totalTimeQuery->end();
                     frame->addRenderTimeQuery(std::move(totalTimeQuery));
                     totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();
 
-                    directScanout &= m_backend->present(output, frame);
+                    directScanout = m_backend->present(output, frame);
                 }
             }
         } else {
-            primaryLayer->notifyNoScanoutCandidate();
+            std::ranges::for_each(layers, &OutputLayer::notifyNoScanoutCandidate);
         }
 
         if (!directScanout) {
-            primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
-            if (auto beginInfo = primaryLayer->beginFrame()) {
+            for (const auto &layer : layers | std::views::drop(1)) {
+                layer->setEnabled(false);
+            }
+            layers.front()->setEnabled(true);
+            layers.front()->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
+            if (auto beginInfo = layers.front()->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
                 const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
 
                 paintPass(superLayer, renderTarget, bufferDamage);
-                primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
+                layers.front()->endFrame(bufferDamage, surfaceDamage, frame.get());
             }
         }
 
