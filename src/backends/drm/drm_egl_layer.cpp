@@ -90,7 +90,10 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || (m_pipeline->output()->highDynamicRange() && m_pipeline->output()->brightness() != 1) || m_pipeline->iccProfile()) {
+    if (m_pipeline->output()->colorProfileSource() == Output::ColorProfileSource::ICC && !m_pipeline->output()->highDynamicRange() && m_pipeline->iccProfile()) {
+        return false;
+    }
+    if (m_pipeline->output()->channelFactors() != QVector3D(1, 1, 1) || (m_pipeline->output()->highDynamicRange() && m_pipeline->output()->brightness() != 1)) {
         // TODO use GAMMA_LUT, CTM and DEGAMMA_LUT to allow direct scanout with HDR
         return false;
     }
