@@ -151,22 +151,6 @@ Item *WorkspaceScene::overlayItem() const
     return m_overlayItem.get();
 }
 
-static SurfaceItem *findTopMostSurface(SurfaceItem *item)
-{
-    if (!item->isVisible()) {
-        return nullptr;
-    }
-    const QList<Item *> children = item->sortedChildItems();
-    for (const auto &child : children | std::views::reverse) {
-        if (child->z() >= 0) {
-            if (auto item = findTopMostSurface(static_cast<SurfaceItem *>(child))) {
-                return item;
-            }
-        }
-    }
-    return item;
-}
-
 static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount)
 {
     const QList<Item *> children = item->sortedChildItems();
