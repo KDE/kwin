@@ -66,6 +66,7 @@ private Q_SLOTS:
     void testFakeEventFallback();
     void testOverlayPositioning_data();
     void testOverlayPositioning();
+    void testV3AutoCommit();
 
 private:
     void touchNow()
@@ -799,6 +800,124 @@ void InputMethodTest::testOverlayPositioning()
     QVERIFY(Test::waitForWindowClosed(window));
 
     Test::inputMethod()->setMode(Test::MockInputMethod::Mode::TopLevel);
+}
+
+void InputMethodTest::testV3AutoCommit()
+{
+    Test::inputMethod()->setMode(Test::MockInputMethod::Mode::Overlay);
+
+    // Create an xdg_toplevel surface and wait for the compositor to catch up.
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(1280, 1024), Qt::red);
+    QVERIFY(window);
+    QVERIFY(window->isActive());
+
+    auto textInputV3 = std::make_unique<Test::TextInputV3>();
+    textInputV3->init(Test::waylandTextInputManagerV3()->get_text_input(*(Test::waylandSeat())));
+    textInputV3->enable();
+
+    QSignalSpy textInputPreeditSpy(textInputV3.get(), &Test::TextInputV3::preeditString);
+    QSignalSpy textInputCommitTextSpy(textInputV3.get(), &Test::TextInputV3::commitString);
+
+    QSignalSpy inputMethodActiveSpy(kwinApp()->inputMethod(), &InputMethod::activeChanged);
+    QSignalSpy inputMethodActivateSpy(Test::inputMethod(), &Test::MockInputMethod::activate);
+    // just enabling the text-input should not show it but rather on commit
+    QVERIFY(!kwinApp()->inputMethod()->isActive());
+    textInputV3->commit();
+    QVERIFY(inputMethodActiveSpy.count() || inputMethodActiveSpy.wait());
+    QVERIFY(kwinApp()->inputMethod()->isActive());
+    QVERIFY(inputMethodActivateSpy.wait());
+    auto context = Test::inputMethod()->context();
+
+    zwp_input_method_context_v1_preedit_string(context, 1, "preedit1", "commit1");
+    QVERIFY(textInputPreeditSpy.wait());
+    QVERIFY(textInputCommitTextSpy.count() == 0);
+
+    // ******************
+    // Non-grabbing key press
+    int timestamp = 0;
+    Test::keyboardKeyPressed(KEY_A, timestamp++);
+    Test::keyboardKeyReleased(KEY_A, timestamp++);
+    QVERIFY(textInputCommitTextSpy.wait());
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit1");
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
+
+    // ******************
+    // Grabbing key press
+    zwp_input_method_context_v1_grab_keyboard(context);
+    textInputV3->commit();
+    zwp_input_method_context_v1_preedit_string(context, 1, "preedit2", "commit2");
+
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit2"));
+
+    // a key does nothing, it will go to the input method
+    Test::keyboardKeyPressed(KEY_B, timestamp++);
+    Test::keyboardKeyReleased(KEY_B, timestamp++);
+    QVERIFY(!textInputCommitTextSpy.wait());
+
+    // then the input method forwards the key
+    zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Pressed));
+    zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Released));
+
+    QVERIFY(textInputCommitTextSpy.wait());
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit2");
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
+
+    // **************
+    // Mouse clicks
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    textInputV3->disable();
+    textInputV3->enable();
+    const QList<Window *> windows = workspace()->windows();
+    auto it = std::find_if(windows.begin(), windows.end(), [](Window *w) {
+        return w->isInputMethod();
+    });
+    QVERIFY(it != windows.end());
+    auto textInputWindow = *it;
+
+    textInputV3->commit();
+    zwp_input_method_context_v1_preedit_string(context, 1, "preedit3", "commit3");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit3"));
+
+    // mouse clicks on a VK does not submit
+    Test::pointerMotion(textInputWindow->frameGeometry().center(), timestamp++);
+    Test::pointerButtonPressed(1, timestamp++);
+    Test::pointerButtonReleased(1, timestamp++);
+    QVERIFY(!textInputCommitTextSpy.wait(20));
+
+    // mouse clicks on our main window submits the string
+    Test::pointerMotion(window->frameGeometry().center(), timestamp++);
+    Test::pointerButtonPressed(1, timestamp++);
+    Test::pointerButtonReleased(1, timestamp++);
+
+    QVERIFY(textInputCommitTextSpy.wait());
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit3");
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
+
+    // *****************
+    // Change focus
+    textInputV3->commit();
+    zwp_input_method_context_v1_preedit_string(context, 1, "preedit4", "commit4");
+    QVERIFY(textInputPreeditSpy.wait());
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit4"));
+
+    std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
+    Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(1280, 1024), Qt::blue);
+    QVERIFY(window2->isActive());
+
+    // these variables refer to the old window
+    QVERIFY(textInputCommitTextSpy.wait());
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit4");
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
+
+    shellSurface.reset();
+    QVERIFY(Test::waitForWindowClosed(window));
+    shellSurface2.reset();
+    QVERIFY(Test::waitForWindowClosed(window2));
 }
 
 WAYLANDTEST_MAIN(InputMethodTest)

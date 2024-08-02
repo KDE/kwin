@@ -158,11 +158,16 @@ public:
 
 Q_SIGNALS:
     void preeditString(const QString &text, int cursor_begin, int cursor_end);
+    void commitString(const QString &text);
 
 protected:
     void zwp_text_input_v3_preedit_string(const QString &text, int32_t cursor_begin, int32_t cursor_end) override
     {
         Q_EMIT preeditString(text, cursor_begin, cursor_end);
+    }
+    void zwp_text_input_v3_commit_string(const QString &text) override
+    {
+        Q_EMIT commitString(text);
     }
 };
 
