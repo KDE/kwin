@@ -92,7 +92,7 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
     if (directScanoutDisabled) {
         return false;
     }
-    if (m_pipeline->iccProfile()) {
+    if (m_pipeline->output()->colorProfileSource() == Output::ColorProfileSource::ICC && !m_pipeline->output()->highDynamicRange() && m_pipeline->iccProfile()) {
         // TODO make the icc profile output a color pipeline too?
         return false;
     }
