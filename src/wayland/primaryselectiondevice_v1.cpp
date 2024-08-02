@@ -62,7 +62,7 @@ void PrimarySelectionDeviceV1InterfacePrivate::zwp_primary_selection_device_v1_s
     }
     selection = dataSource;
     if (selection) {
-        Q_EMIT q->selectionChanged(selection);
+        Q_EMIT q->selectionChanged(selection, serial);
     }
 }
 

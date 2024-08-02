@@ -10,6 +10,7 @@
 #include "kwin_wayland_test.h"
 
 #include "core/output.h"
+#include "wayland/display.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "window.h"
@@ -19,6 +20,8 @@
 #include <QProcess>
 #include <QProcessEnvironment>
 #include <QSignalSpy>
+
+#include <linux/input-event-codes.h>
 
 using namespace KWin;
 
@@ -111,6 +114,10 @@ void XwaylandSelectionsTest::testSync()
         workspace()->activateWindow(copyWindow);
     }
     QCOMPARE(workspace()->activeWindow(), copyWindow);
+    // Wait until the window has a surface so we can pass input to it
+    QTRY_VERIFY(copyWindow->surface());
+    Test::keyboardKeyPressed(KEY_C, waylandServer()->display()->nextSerial());
+    Test::keyboardKeyReleased(KEY_C, waylandServer()->display()->nextSerial());
     clipboardChangedSpy.wait();
 
     // start the paste process

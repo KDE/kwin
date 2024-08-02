@@ -173,7 +173,7 @@ void TestDataDevice::testCreate()
 
     // this will probably fail, we need to make a selection client side
     QVERIFY(!m_seatInterface->selection());
-    m_seatInterface->setSelection(deviceInterface->selection());
+    m_seatInterface->setSelection(deviceInterface->selection(), m_display->nextSerial());
     QCOMPARE(m_seatInterface->selection(), deviceInterface->selection());
 
     // and destroy
@@ -402,13 +402,13 @@ void TestDataDevice::testSetSelection()
     QCOMPARE(dataOffer->offeredMimeTypes().last().name(), QStringLiteral("text/html"));
 
     // now clear the selection
-    dataDevice->clearSelection(1);
+    dataDevice->clearSelection(2);
     QVERIFY(selectionChangedSpy.wait());
     QCOMPARE(selectionChangedSpy.count(), 2);
     QVERIFY(!deviceInterface->selection());
 
     // set another selection
-    dataDevice->setSelection(2, dataSource.get());
+    dataDevice->setSelection(3, dataSource.get());
     QVERIFY(selectionChangedSpy.wait());
     // now unbind the dataDevice
     QSignalSpy unboundSpy(deviceInterface, &QObject::destroyed);
@@ -509,14 +509,14 @@ void TestDataDevice::testReplaceSource()
     QVERIFY(dataSource2->isValid());
     dataSource2->offer(QStringLiteral("text/plain"));
     QSignalSpy sourceCancelled2Spy(dataSource2.get(), &KWayland::Client::DataSource::cancelled);
-    dataDevice->setSelection(1, dataSource2.get());
+    dataDevice->setSelection(2, dataSource2.get());
     QCOMPARE(selectionOfferedSpy.count(), 1);
     QVERIFY(sourceCancelledSpy.wait());
     QCOMPARE(selectionOfferedSpy.count(), 2);
     QVERIFY(sourceCancelled2Spy.isEmpty());
 
     // replace the data source with itself, ensure that it did not get cancelled
-    dataDevice->setSelection(1, dataSource2.get());
+    dataDevice->setSelection(3, dataSource2.get());
     QVERIFY(!sourceCancelled2Spy.wait(500));
     QCOMPARE(selectionOfferedSpy.count(), 2);
     QVERIFY(sourceCancelled2Spy.isEmpty());
@@ -527,7 +527,7 @@ void TestDataDevice::testReplaceSource()
     std::unique_ptr<KWayland::Client::DataSource> dataSource3(m_dataDeviceManager->createDataSource());
     QVERIFY(dataSource3->isValid());
     dataSource3->offer(QStringLiteral("text/plain"));
-    dataDevice2->setSelection(1, dataSource3.get());
+    dataDevice2->setSelection(4, dataSource3.get());
     QVERIFY(sourceCancelled2Spy.wait());
 
     // try to crash by first destroying dataSource3 and setting a new DataSource
@@ -535,7 +535,7 @@ void TestDataDevice::testReplaceSource()
     QVERIFY(dataSource4->isValid());
     dataSource4->offer(QStringLiteral("text/plain"));
     dataSource3.reset();
-    dataDevice2->setSelection(1, dataSource4.get());
+    dataDevice2->setSelection(5, dataSource4.get());
     QVERIFY(selectionOfferedSpy.wait());
 
     auto dataOffer = selectionOfferedSpy.last()[0].value<KWayland::Client::DataOffer *>();

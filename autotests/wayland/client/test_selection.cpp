@@ -234,7 +234,7 @@ void SelectionTest::testClearOnEnter()
     m_client2.dataDevice->setSelection(keyboardEnteredClient2Spy.first().first().value<quint32>(), dataSource2.get());
     QVERIFY(selectionOfferedClient2Spy.wait());
     // and clear
-    m_client2.dataDevice->clearSelection(keyboardEnteredClient2Spy.first().first().value<quint32>());
+    m_client2.dataDevice->clearSelection(keyboardEnteredClient2Spy.first().first().value<quint32>() + 1);
     QVERIFY(selectionClearedClient2Spy.wait());
 
     // now pass focus to first surface

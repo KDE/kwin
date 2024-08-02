@@ -645,10 +645,10 @@ public:
      * @see selection
      * @see selectionChanged
      */
-    void setSelection(AbstractDataSource *selection);
+    void setSelection(AbstractDataSource *selection, quint32 serial);
 
     AbstractDataSource *primarySelection() const;
-    void setPrimarySelection(AbstractDataSource *selection);
+    void setPrimarySelection(AbstractDataSource *selection, quint32 serial);
 
     void startDrag(AbstractDataSource *source, SurfaceInterface *sourceSurface, int dragSerial = -1, DragAndDropIcon *dragIcon = nullptr);
 

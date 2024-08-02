@@ -257,7 +257,7 @@ void DataControlInterfaceTest::testCopyToControl()
     QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::selection);
 
     std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setSelection(testSelection.get());
+    m_seat->setSelection(testSelection.get(), m_display->nextSerial());
 
     // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
     selectionSpy.wait();
@@ -283,7 +283,7 @@ void DataControlInterfaceTest::testCopyToControlPrimarySelection()
     QSignalSpy selectionSpy(dataControlDevice.get(), &DataControlDevice::primary_selection);
 
     std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setPrimarySelection(testSelection.get());
+    m_seat->setPrimarySelection(testSelection.get(), m_display->nextSerial());
 
     // selection will be sent after we've been sent a new offer object and the mimes have been sent to that object
     selectionSpy.wait();
@@ -353,7 +353,7 @@ void DataControlInterfaceTest::testKlipperCase()
 
     // Client A has a data source
     std::unique_ptr<TestDataSource> testSelection(new TestDataSource);
-    m_seat->setSelection(testSelection.get());
+    m_seat->setSelection(testSelection.get(), m_display->nextSerial());
 
     // klipper gets it
     selectionSpy.wait();
@@ -366,7 +366,7 @@ void DataControlInterfaceTest::testKlipperCase()
 
     // Client A sets something else
     std::unique_ptr<TestDataSource> testSelection2(new TestDataSource);
-    m_seat->setSelection(testSelection2.get());
+    m_seat->setSelection(testSelection2.get(), m_display->nextSerial());
 
     // Meanwhile klipper updates with the old content
     std::unique_ptr<DataControlSource> source(new DataControlSource);

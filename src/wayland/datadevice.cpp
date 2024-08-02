@@ -140,7 +140,7 @@ void DataDeviceInterfacePrivate::data_device_set_selection(Resource *resource, w
         selection->cancel();
     }
     selection = dataSource;
-    Q_EMIT q->selectionChanged(selection);
+    Q_EMIT q->selectionChanged(selection, serial);
 }
 
 void DataDeviceInterfacePrivate::data_device_release(QtWaylandServer::wl_data_device::Resource *resource)

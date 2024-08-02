@@ -21,7 +21,7 @@ public:
 
 protected:
     void paintEvent(QPaintEvent *event) override;
-    void focusInEvent(QFocusEvent *event) override;
+    void keyPressEvent(QKeyEvent *) override;
 };
 
 Window::Window()
@@ -37,13 +37,9 @@ void Window::paintEvent(QPaintEvent *event)
     p.fillRect(0, 0, width(), height(), Qt::red);
 }
 
-void Window::focusInEvent(QFocusEvent *event)
+void Window::keyPressEvent(QKeyEvent *event)
 {
-    QRasterWindow::focusInEvent(event);
-    // TODO: make it work without singleshot
-    QTimer::singleShot(100, [] {
-        qApp->clipboard()->setText(QStringLiteral("test"));
-    });
+    qApp->clipboard()->setText(QStringLiteral("test"));
 }
 
 int main(int argc, char *argv[])

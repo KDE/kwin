@@ -1571,7 +1571,7 @@ void TestWaylandSeat::testSelection()
     std::unique_ptr<KWayland::Client::DataSource> ds(ddm->createDataSource());
     QVERIFY(ds->isValid());
     ds->offer(QStringLiteral("text/plain"));
-    dd1->setSelection(0, ds.get());
+    dd1->setSelection(m_display->nextSerial(), ds.get());
     QVERIFY(selectionSpy.wait());
     QCOMPARE(selectionSpy.count(), 1);
     auto ddi = m_seatInterface->selection();
@@ -1581,7 +1581,7 @@ void TestWaylandSeat::testSelection()
     QCOMPARE(df->offeredMimeTypes().first().name(), QStringLiteral("text/plain"));
 
     // try to clear
-    dd1->setSelection(0);
+    dd1->setSelection(m_display->nextSerial());
     QVERIFY(selectionClearedSpy.wait());
     QCOMPARE(selectionClearedSpy.count(), 1);
     QCOMPARE(selectionSpy.count(), 1);
@@ -1594,30 +1594,30 @@ void TestWaylandSeat::testSelection()
     QCoreApplication::processEvents();
 
     // try to set Selection
-    dd1->setSelection(0, ds.get());
+    dd1->setSelection(m_display->nextSerial(), ds.get());
     wl_display_flush(m_connection->display());
     QCoreApplication::processEvents();
     QCoreApplication::processEvents();
     QCOMPARE(selectionSpy.count(), 1);
 
     // let's unset the selection on the seat
-    m_seatInterface->setSelection(nullptr);
+    m_seatInterface->setSelection(nullptr, m_display->nextSerial());
     // and pass focus back on our surface
     m_seatInterface->setFocusedKeyboardSurface(serverSurface);
     // we don't have a selection, so it should not send a selection
     QVERIFY(sync());
     QCOMPARE(selectionSpy.count(), 1);
     // now let's set it manually
-    m_seatInterface->setSelection(ddi);
+    m_seatInterface->setSelection(ddi, m_display->nextSerial());
     QCOMPARE(m_seatInterface->selection(), ddi);
     QVERIFY(selectionSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);
     // setting the same again should not change
-    m_seatInterface->setSelection(ddi);
+    m_seatInterface->setSelection(ddi, m_display->nextSerial());
     QVERIFY(sync());
     QCOMPARE(selectionSpy.count(), 2);
     // now clear it manually
-    m_seatInterface->setSelection(nullptr);
+    m_seatInterface->setSelection(nullptr, m_display->nextSerial());
     QVERIFY(selectionClearedSpy.wait());
     QCOMPARE(selectionSpy.count(), 2);
 
@@ -1627,10 +1627,10 @@ void TestWaylandSeat::testSelection()
     std::unique_ptr<KWayland::Client::DataSource> ds2(ddm->createDataSource());
     QVERIFY(ds2->isValid());
     ds2->offer(QStringLiteral("text/plain"));
-    dd2->setSelection(0, ds2.get());
+    dd2->setSelection(m_display->nextSerial(), ds2.get());
     QVERIFY(selectionSpy.wait());
     QSignalSpy cancelledSpy(ds2.get(), &KWayland::Client::DataSource::cancelled);
-    m_seatInterface->setSelection(ddi);
+    m_seatInterface->setSelection(ddi, m_display->nextSerial());
     QVERIFY(cancelledSpy.wait());
 }
 
@@ -1680,7 +1680,7 @@ void TestWaylandSeat::testDataDeviceForKeyboardSurface()
     QVERIFY(ddiCreatedSpy.wait());
     auto ddi = ddiCreatedSpy.first().first().value<DataDeviceInterface *>();
     QVERIFY(ddi);
-    m_seatInterface->setSelection(ddi->selection());
+    m_seatInterface->setSelection(ddi->selection(), m_display->nextSerial());
 
     // switch to other client
     // create a surface and pass it keyboard focus

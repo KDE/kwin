@@ -28,6 +28,7 @@ class TextInputV1Interface;
 class TextInputV2Interface;
 class TextInputV3Interface;
 class PrimarySelectionDeviceV1Interface;
+class PrimarySelectionSourceV1Interface;
 class DragAndDropIcon;
 
 class SeatInterfacePrivate : public QtWaylandServer::wl_seat
@@ -68,7 +69,9 @@ public:
 
     // the last thing copied into the clipboard content
     AbstractDataSource *currentSelection = nullptr;
+    quint32 currentSelectionSerial = 0;
     AbstractDataSource *currentPrimarySelection = nullptr;
+    quint32 currentPrimarySelectionSerial = 0;
 
     // Pointer related members
     struct Pointer
@@ -151,8 +154,8 @@ protected:
     void seat_release(Resource *resource) override;
 
 private:
-    void updateSelection(DataDeviceInterface *dataDevice);
-    void updatePrimarySelection(PrimarySelectionDeviceV1Interface *primarySelectionDevice);
+    void updateSelection(DataSourceInterface *dataSource, quint32 serial);
+    void updatePrimarySelection(PrimarySelectionSourceV1Interface *dataSource, quint32);
 };
 
 } // namespace KWin

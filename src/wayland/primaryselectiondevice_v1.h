@@ -45,7 +45,7 @@ public:
     wl_client *client() const;
 
 Q_SIGNALS:
-    void selectionChanged(KWin::PrimarySelectionSourceV1Interface *);
+    void selectionChanged(KWin::PrimarySelectionSourceV1Interface *, quint32 serial);
 
 private:
     friend class PrimarySelectionDeviceManagerV1InterfacePrivate;
