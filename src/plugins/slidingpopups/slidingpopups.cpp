@@ -12,6 +12,7 @@
 #include "slidingpopupsconfig.h"
 
 #include "effect/effecthandler.h"
+#include "scene/windowitem.h"
 #include "wayland/display.h"
 #include "wayland/slide.h"
 #include "wayland/surface.h"
@@ -107,13 +108,8 @@ void SlidingPopupsEffect::reconfigure(ReconfigureFlags flags)
     m_slideOutDuration = std::chrono::milliseconds(
         static_cast<int>(animationTime(SlidingPopupsConfig::slideOutTime() != 0 ? std::chrono::milliseconds(SlidingPopupsConfig::slideOutTime()) : 200ms)));
 
-    auto animationIt = m_animations.begin();
-    while (animationIt != m_animations.end()) {
-        const auto duration = ((*animationIt).kind == AnimationKind::In)
-            ? m_slideInDuration
-            : m_slideOutDuration;
-        (*animationIt).timeLine.setDuration(duration);
-        ++animationIt;
+    for (auto &[window, animation] : m_animations) {
+        animation.timeLine.setDuration(animation.kind == AnimationKind::In ? m_slideInDuration : m_slideOutDuration);
     }
 
     auto dataIt = m_animationsData.begin();
@@ -132,7 +128,7 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
         return;
     }
 
-    (*animationIt).timeLine.advance(presentTime);
+    animationIt->second.timeLine.advance(presentTime);
     data.setTransformed();
 
     effects->prePaintWindow(w, data, presentTime);
@@ -140,8 +136,8 @@ void SlidingPopupsEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &da
 
 void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    auto animationIt = m_animations.constFind(w);
-    if (animationIt == m_animations.constEnd()) {
+    auto animationIt = m_animations.find(w);
+    if (animationIt == m_animations.end()) {
         effects->paintWindow(renderTarget, viewport, w, mask, region, data);
         return;
     }
@@ -152,7 +148,7 @@ void SlidingPopupsEffect::paintWindow(const RenderTarget &renderTarget, const Re
     const QRectF screenRect = effects->clientArea(FullScreenArea, w->screen(), effects->currentDesktop());
     int splitPoint = 0;
     const QRectF geo = w->expandedGeometry();
-    const qreal t = (*animationIt).timeLine.value();
+    const qreal t = animationIt->second.timeLine.value();
 
     switch (animData.location) {
     case Location::Left:
@@ -197,7 +193,7 @@ void SlidingPopupsEffect::postPaintWindow(EffectWindow *w)
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
         effects->addRepaint(w->expandedGeometry());
-        if ((*animationIt).timeLine.done()) {
+        if (animationIt->second.timeLine.done()) {
             if (!w->isDeleted()) {
                 w->setData(WindowForceBackgroundContrastRole, QVariant());
                 w->setData(WindowForceBlurRole, QVariant());
@@ -292,7 +288,7 @@ void SlidingPopupsEffect::slotPropertyNotify(EffectWindow *w, long atom)
         if (w->data(WindowClosedGrabRole).value<void *>() == this) {
             w->setData(WindowClosedGrabRole, QVariant());
         }
-        m_animations.remove(w);
+        m_animations.erase(w);
         m_animationsData.remove(w);
         return;
     }
@@ -531,6 +527,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration((*dataIt).slideInDuration);
     animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (Out) was active and it had shorter duration,
     // at this point, the timeline can end up in the "done" state. Thus, we have
@@ -586,12 +583,10 @@ void SlidingPopupsEffect::slideOut(EffectWindow *w)
 
 void SlidingPopupsEffect::stopAnimations()
 {
-    for (auto it = m_animations.constBegin(); it != m_animations.constEnd(); ++it) {
-        EffectWindow *w = it.key();
-
-        if (!w->isDeleted()) {
-            w->setData(WindowForceBackgroundContrastRole, QVariant());
-            w->setData(WindowForceBlurRole, QVariant());
+    for (const auto &[window, animation] : m_animations) {
+        if (!window->isDeleted()) {
+            window->setData(WindowForceBackgroundContrastRole, QVariant());
+            window->setData(WindowForceBlurRole, QVariant());
         }
     }
 
@@ -600,7 +595,12 @@ void SlidingPopupsEffect::stopAnimations()
 
 bool SlidingPopupsEffect::isActive() const
 {
-    return !m_animations.isEmpty();
+    return !m_animations.empty();
+}
+
+bool SlidingPopupsEffect::blocksDirectScanout() const
+{
+    return false;
 }
 
 } // namespace

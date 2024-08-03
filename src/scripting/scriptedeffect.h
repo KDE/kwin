@@ -80,7 +80,7 @@ public:
     }
     QString activeConfig() const;
     void setActiveConfig(const QString &name);
-    static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition, const QString &exclusiveCategory, bool blocksDirectScanout);
+    static ScriptedEffect *create(const QString &effectName, const QString &pathToScript, int chainPosition, const QString &exclusiveCategory);
     static ScriptedEffect *create(const KPluginMetaData &effect);
     static bool supported();
     ~ScriptedEffect() override;
@@ -182,7 +182,6 @@ public:
 
     QString pluginId() const;
     bool isActiveFullScreenEffect() const;
-    bool blocksDirectScanout() const override;
 
 public Q_SLOTS:
     bool borderActivated(ElectricBorder border) override;
@@ -223,6 +222,5 @@ private:
     Effect *m_activeFullScreenEffect = nullptr;
     std::map<uint, std::unique_ptr<GLShader>> m_shaders;
     uint m_nextShaderId{1u};
-    bool m_blocksDirectScanout = true;
 };
 }

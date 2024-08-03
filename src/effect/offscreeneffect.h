@@ -72,6 +72,8 @@ protected:
      */
     void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
+    bool blocksDirectScanout() const override;
+
 private Q_SLOTS:
     void handleWindowDamaged(EffectWindow *window);
     void handleWindowDeleted(EffectWindow *window);
@@ -120,6 +122,8 @@ public:
      * @since 5.25
      **/
     void setShader(EffectWindow *window, GLShader *shader);
+
+    bool blocksDirectScanout() const override;
 
     static bool supported();
 

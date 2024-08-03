@@ -19,6 +19,7 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/windowitem.h"
 
 // Qt
 #include <QMatrix4x4>
@@ -79,7 +80,7 @@ void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
 {
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
-        (*animationIt).timeLine.advance(presentTime);
+        animationIt->second.timeLine.advance(presentTime);
         data.setTransformed();
     }
 
@@ -88,13 +89,13 @@ void GlideEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std:
 
 void GlideEffect::apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads)
 {
-    auto animationIt = m_animations.constFind(window);
-    if (animationIt == m_animations.constEnd()) {
+    auto animationIt = m_animations.find(window);
+    if (animationIt == m_animations.end()) {
         return;
     }
 
     const GlideParams params = window->isDeleted() ? m_outParams : m_inParams;
-    const qreal t = (*animationIt).timeLine.value();
+    const qreal t = animationIt->second.timeLine.value();
 
     const QRectF rect = window->expandedGeometry().translated(-window->pos());
     const float fovY = std::tan(qDegreesToRadians(60.0f) / 2);
@@ -162,8 +163,8 @@ void GlideEffect::postPaintWindow(EffectWindow *w)
     if (auto animationIt = m_animations.find(w); animationIt != m_animations.end()) {
         w->addRepaintFull();
 
-        if ((*animationIt).timeLine.done()) {
-            unredirect(animationIt.key());
+        if (animationIt->second.timeLine.done()) {
+            unredirect(animationIt->first);
             animationIt = m_animations.erase(animationIt);
         } else {
             ++animationIt;
@@ -175,7 +176,7 @@ void GlideEffect::postPaintWindow(EffectWindow *w)
 
 bool GlideEffect::isActive() const
 {
-    return !m_animations.isEmpty();
+    return !m_animations.empty();
 }
 
 bool GlideEffect::supported()
@@ -210,6 +211,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration(m_duration);
     animation.timeLine.setEasingCurve(QEasingCurve::InCurve);
+    animation.effect = ItemEffect(w->windowItem());
 
     redirect(w);
     effects->addRepaintFull();
@@ -255,7 +257,7 @@ void GlideEffect::windowDataChanged(EffectWindow *w, int role)
 
     auto animationIt = m_animations.find(w);
     if (animationIt != m_animations.end()) {
-        unredirect(animationIt.key());
+        unredirect(animationIt->first);
         m_animations.erase(animationIt);
     }
 }
@@ -299,6 +301,11 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
 
     return w->isNormalWindow()
         || w->isDialog();
+}
+
+bool GlideEffect::blocksDirectScanout() const
+{
+    return false;
 }
 
 } // namespace KWin

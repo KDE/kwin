@@ -15,6 +15,9 @@
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
 #include "opengl/glplatform.h"
+#include "scene/decorationitem.h"
+#include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 #include "wayland/blur.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
@@ -263,6 +266,12 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
         BlurEffectData &data = m_windows[w];
         data.content = content;
         data.frame = frame;
+        if (content) {
+            data.surfaceEffect = ItemEffect(w->windowItem()->surfaceItem());
+        }
+        if (frame) {
+            data.surfaceEffect = ItemEffect(w->windowItem()->decorationItem());
+        }
     } else {
         if (auto it = m_windows.find(w); it != m_windows.end()) {
             effects->makeOpenGLContextCurrent();
