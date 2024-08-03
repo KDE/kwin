@@ -7,6 +7,7 @@
         "Description[es]": "Proporciona el timbre del sistema",
         "Description[he]": "מספק את הפעמון",
         "Description[ia]": "Forni le campana",
+        "Description[it]": "Fornisce la campanella",
         "Description[ka]": "მოგაწოდებთ ზარს",
         "Description[nl]": "Levert de bel",
         "Description[nn]": "Gjev tilgang til systembjølla",
@@ -15,6 +16,7 @@
         "Description[tr]": "Zili çalar",
         "Description[uk]": "Надає сигнал",
         "Description[x-test]": "xxProvides the bellxx",
+        "Description[zh_CN]": "提供系统提示",
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "System Bell",
@@ -23,6 +25,7 @@
         "Name[es]": "Timbre del sistema",
         "Name[he]": "פעמון מערכת",
         "Name[ia]": "Campana de systema",
+        "Name[it]": "Campanella di sistema",
         "Name[ka]": "სისტემური ზარი",
         "Name[nl]": "Systeembel",
         "Name[nn]": "Systembjølle",
@@ -30,7 +33,8 @@
         "Name[sv]": "Systemalarm",
         "Name[tr]": "Sistem Zili",
         "Name[uk]": "Системний дзвінок",
-        "Name[x-test]": "xxSystem Bellxx"
+        "Name[x-test]": "xxSystem Bellxx",
+        "Name[zh_CN]": "系统提示"
     },
     "org.kde.kwin.effect": {
         "internal": true
