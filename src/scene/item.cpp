@@ -12,6 +12,34 @@
 namespace KWin
 {
 
+ItemEffect::ItemEffect(Item *item)
+    : m_item(item)
+{
+    item->addEffect();
+}
+
+ItemEffect::ItemEffect(ItemEffect &&move)
+    : m_item(std::exchange(move.m_item, nullptr))
+{
+}
+
+ItemEffect::ItemEffect()
+{
+}
+
+ItemEffect::~ItemEffect()
+{
+    if (m_item) {
+        m_item->removeEffect();
+    }
+}
+
+ItemEffect &ItemEffect::operator=(ItemEffect &&move)
+{
+    std::swap(m_item, move.m_item);
+    return *this;
+}
+
 Item::Item(Item *parent)
 {
     setParentItem(parent);
@@ -514,6 +542,22 @@ PresentationModeHint Item::presentationHint() const
 void Item::setPresentationHint(PresentationModeHint hint)
 {
     m_presentationHint = hint;
+}
+
+bool Item::hasEffects() const
+{
+    return m_effectCount != 0;
+}
+
+void Item::addEffect()
+{
+    m_effectCount++;
+}
+
+void Item::removeEffect()
+{
+    Q_ASSERT(m_effectCount > 0);
+    m_effectCount--;
 }
 
 } // namespace KWin

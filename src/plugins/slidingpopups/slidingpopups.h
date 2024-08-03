@@ -16,6 +16,7 @@
 #include "effect/effect.h"
 #include "effect/effectwindow.h"
 #include "effect/timeline.h"
+#include "scene/item.h"
 
 namespace KWin
 {
@@ -49,6 +50,7 @@ public:
     int slideOutDuration() const;
 
     bool eventFilter(QObject *watched, QEvent *event) override;
+    bool blocksDirectScanout() const override;
 
 private Q_SLOTS:
     void slotWindowAdded(EffectWindow *w);
@@ -91,8 +93,9 @@ private:
         EffectWindowVisibleRef visibleRef;
         AnimationKind kind;
         TimeLine timeLine;
+        ItemEffect windowEffect;
     };
-    QHash<EffectWindow *, Animation> m_animations;
+    std::unordered_map<EffectWindow *, Animation> m_animations;
 
     enum class Location {
         Left,
