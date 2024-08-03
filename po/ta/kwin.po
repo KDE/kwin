@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-02 00:41+0000\n"
+"POT-Creation-Date: 2024-08-03 00:41+0000\n"
 "PO-Revision-Date: 2024-06-30 13:36+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -73,7 +73,7 @@ msgstr "உள்ளீட்டை கைபற்ற வலது Ctrl வி�
 msgid "KDE Wayland Compositor"
 msgstr "கே.டீ.யீ. Wayland சாளரநிரல்"
 
-#: compositor_wayland.cpp:280 compositor_x11.cpp:447
+#: compositor_wayland.cpp:300 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "வரைகலை முறிவடைந்து மீட்டமைக்கப்பட்டதால் பணிமேடை அசைவூட்டங்கள் மீள்துவக்கப்பட்டன"
@@ -1222,22 +1222,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "புரவன் பெயர்: %1"
 
-#: input.cpp:2080
+#: input.cpp:2109
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "வரைபலகையை அடுத்த திரைக்கு நகர்த்து"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட்டது"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
-#: input.cpp:3255
+#: input.cpp:3284
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"

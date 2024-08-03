@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-02 00:41+0000\n"
+"POT-Creation-Date: 2024-08-03 00:41+0000\n"
 "PO-Revision-Date: 2024-07-22 19:41+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -84,7 +84,7 @@ msgstr "Prema a tecla de control dereita para agarrar a entrada"
 msgid "KDE Wayland Compositor"
 msgstr "Compositor de Wayland de KDE"
 
-#: compositor_wayland.cpp:280 compositor_x11.cpp:447
+#: compositor_wayland.cpp:300 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Os efectos do escritorio reiniciáronse debido a un reinicio gráfico"
@@ -1236,22 +1236,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Servidor: %1"
 
-#: input.cpp:2080
+#: input.cpp:2109
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mover a tableta á seguinte saída"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "A tableta moveuse a %1"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "As tabletas cambiaron de saída"
 
-#: input.cpp:3255
+#: input.cpp:3284
 #, kde-format
 msgid "Touchpad"
 msgstr "Área táctil"

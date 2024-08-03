@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-02 00:41+0000\n"
+"POT-Creation-Date: 2024-08-03 00:41+0000\n"
 "PO-Revision-Date: 2024-02-17 15:10+0100\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -72,7 +72,7 @@ msgstr "오른쪽 Ctrl 키를 누르면 입력을 잡음"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 컴포지터"
 
-#: compositor_wayland.cpp:280 compositor_x11.cpp:447
+#: compositor_wayland.cpp:300 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "그래픽 초기화로 인하여 데스크톱 효과가 다시 시작됨"
@@ -1220,22 +1220,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "호스트 이름: %1"
 
-#: input.cpp:2080
+#: input.cpp:2109
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "다음 출력으로 태블릿 이동"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "%1(으)로 태블릿 이동됨"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "태블릿에서 출력 변경됨"
 
-#: input.cpp:3255
+#: input.cpp:3284
 #, kde-format
 msgid "Touchpad"
 msgstr "터치패드"

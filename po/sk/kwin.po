@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-02 00:41+0000\n"
+"POT-Creation-Date: 2024-08-03 00:41+0000\n"
 "PO-Revision-Date: 2023-12-02 20:09+0100\n"
 "Last-Translator: Matej Mrenica <matejm98mthw@gmail.com>\n"
 "Language-Team: Slovak <kde-i18n-doc@kde.org>\n"
@@ -81,7 +81,7 @@ msgstr "Stlačením pravého klávesu Control zachytíte vstup"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Compositor"
 
-#: compositor_wayland.cpp:280 compositor_x11.cpp:447
+#: compositor_wayland.cpp:300 compositor_x11.cpp:447
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Efekty plochy boli reštartované kvôli grafickému vynulovaniu"
@@ -1231,22 +1231,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Názov hostiteľa: %1"
 
-#: input.cpp:2080
+#: input.cpp:2109
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Presun tabletu na ďalší výstup"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet presunutý na %1"
 
-#: input.cpp:2159
+#: input.cpp:2188
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablety si prehodili výstupy"
 
-#: input.cpp:3255
+#: input.cpp:3284
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
