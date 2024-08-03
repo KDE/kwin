@@ -11,6 +11,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
+#include "scene/windowitem.h"
 
 namespace KWin
 {
@@ -34,6 +35,7 @@ public:
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
     QMetaObject::Connection m_windowDamagedConnection;
+    ItemEffect m_windowEffect;
 };
 
 class OffscreenEffectPrivate
@@ -65,7 +67,7 @@ void OffscreenEffect::redirect(EffectWindow *window)
     }
     offscreenData = std::make_unique<OffscreenData>();
     offscreenData->setVertexSnappingMode(d->vertexSnappingMode);
-
+    offscreenData->m_windowEffect = ItemEffect(window->windowItem());
     offscreenData->m_windowDamagedConnection =
         connect(window, &EffectWindow::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
 
@@ -274,6 +276,11 @@ void OffscreenEffect::setVertexSnappingMode(RenderGeometry::VertexSnappingMode m
     }
 }
 
+bool OffscreenEffect::blocksDirectScanout() const
+{
+    return false;
+}
+
 class CrossFadeWindowData : public OffscreenData
 {
 public:
@@ -356,6 +363,7 @@ void CrossFadeEffect::redirect(EffectWindow *window)
         return;
     }
     offscreenData = std::make_unique<CrossFadeWindowData>();
+    offscreenData->m_windowEffect = ItemEffect(window->windowItem());
 
     // Avoid including blur and contrast effects. During a normal painting cycle they
     // won't be included, but since we call effects->drawWindow() outside usual compositing
@@ -391,6 +399,11 @@ void CrossFadeEffect::setShader(EffectWindow *window, GLShader *shader)
     if (const auto it = d->windows.find(window); it != d->windows.end()) {
         it->second->setShader(shader);
     }
+}
+
+bool CrossFadeEffect::blocksDirectScanout() const
+{
+    return false;
 }
 
 } // namespace KWin

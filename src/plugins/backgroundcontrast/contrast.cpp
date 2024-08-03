@@ -13,6 +13,8 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/surfaceitem.h"
+#include "scene/windowitem.h"
 #include "wayland/contrast.h"
 #include "wayland/display.h"
 #include "wayland/surface.h"
@@ -174,6 +176,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
         Data &data = m_windowData[w];
         data.colorMatrix = matrix;
         data.contrastRegion = region;
+        data.surfaceEffect = ItemEffect(w->windowItem()->surfaceItem());
     } else {
         if (auto it = m_windowData.find(w); it != m_windowData.end()) {
             effects->makeOpenGLContextCurrent();

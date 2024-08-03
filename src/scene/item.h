@@ -24,6 +24,23 @@ class SceneDelegate;
 class Scene;
 class SyncReleasePoint;
 class DrmDevice;
+class Item;
+
+class KWIN_EXPORT ItemEffect
+{
+public:
+    explicit ItemEffect(Item *item);
+    explicit ItemEffect(const ItemEffect &copy);
+    explicit ItemEffect(ItemEffect &&move);
+    explicit ItemEffect();
+    ~ItemEffect();
+
+    ItemEffect &operator=(const ItemEffect &copy) = default;
+    ItemEffect &operator=(ItemEffect &&move) = default;
+
+private:
+    QPointer<Item> m_item;
+};
 
 /**
  * The Item class is the base class for items in the scene.
@@ -115,6 +132,10 @@ public:
     const ColorDescription &colorDescription() const;
     PresentationModeHint presentationHint() const;
 
+    bool hasEffects() const;
+    void addEffect();
+    void removeEffect();
+
 Q_SIGNALS:
     void childAdded(Item *item);
     /**
@@ -170,6 +191,7 @@ private:
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     ColorDescription m_colorDescription = ColorDescription::sRGB;
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
+    int m_effectCount = 0;
 };
 
 } // namespace KWin

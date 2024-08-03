@@ -12,6 +12,7 @@
 #include "slidingpopupsconfig.h"
 
 #include "effect/effecthandler.h"
+#include "scene/windowitem.h"
 #include "wayland/display.h"
 #include "wayland/slide.h"
 #include "wayland/surface.h"
@@ -531,6 +532,7 @@ void SlidingPopupsEffect::slideIn(EffectWindow *w)
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration((*dataIt).slideInDuration);
     animation.timeLine.setEasingCurve(QEasingCurve::OutCubic);
+    animation.windowEffect = ItemEffect(w->windowItem());
 
     // If the opposite animation (Out) was active and it had shorter duration,
     // at this point, the timeline can end up in the "done" state. Thus, we have
@@ -601,6 +603,11 @@ void SlidingPopupsEffect::stopAnimations()
 bool SlidingPopupsEffect::isActive() const
 {
     return !m_animations.isEmpty();
+}
+
+bool SlidingPopupsEffect::blocksDirectScanout() const
+{
+    return false;
 }
 
 } // namespace

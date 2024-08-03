@@ -177,7 +177,7 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
             }
         }
     }
-    if (candidates.size() >= maxCount) {
+    if (candidates.size() >= maxCount || item->hasEffects()) {
         return false;
     }
     candidates.push_back(item);
@@ -202,7 +202,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
             WindowItem *windowItem = stacking_order[i];
             Window *window = windowItem->window();
             if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
-                if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen()) {
+                if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen() || window->windowItem()->hasEffects()) {
                     return {};
                 }
                 if (!windowItem->surfaceItem()) {

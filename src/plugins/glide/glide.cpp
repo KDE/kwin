@@ -19,6 +19,7 @@
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
 #include "effect/effecthandler.h"
+#include "scene/windowitem.h"
 
 // Qt
 #include <QMatrix4x4>
@@ -210,6 +211,7 @@ void GlideEffect::windowAdded(EffectWindow *w)
     animation.timeLine.setDirection(TimeLine::Forward);
     animation.timeLine.setDuration(m_duration);
     animation.timeLine.setEasingCurve(QEasingCurve::InCurve);
+    animation.effect = ItemEffect(w->windowItem());
 
     redirect(w);
     effects->addRepaintFull();
@@ -299,6 +301,11 @@ bool GlideEffect::isGlideWindow(EffectWindow *w) const
 
     return w->isNormalWindow()
         || w->isDialog();
+}
+
+bool GlideEffect::blocksDirectScanout() const
+{
+    return false;
 }
 
 } // namespace KWin

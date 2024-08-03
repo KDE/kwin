@@ -10,6 +10,7 @@
 #include "effect/effect.h"
 #include "opengl/glplatform.h"
 #include "opengl/glutils.h"
+#include "scene/item.h"
 
 #include <QList>
 #include <QVector2D>
@@ -75,6 +76,7 @@ private:
         QRegion contrastRegion;
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> fbo;
+        ItemEffect surfaceEffect;
     };
     std::unordered_map<const EffectWindow *, Data> m_windowData;
     static ContrastManagerInterface *s_contrastManager;

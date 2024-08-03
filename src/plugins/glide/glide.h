@@ -16,6 +16,7 @@
 #include "effect/effectwindow.h"
 #include "effect/offscreeneffect.h"
 #include "effect/timeline.h"
+#include "scene/item.h"
 
 namespace KWin
 {
@@ -24,6 +25,7 @@ struct GlideAnimation
 {
     EffectWindowDeletedRef deletedRef;
     TimeLine timeLine;
+    ItemEffect effect;
 };
 
 class GlideEffect : public OffscreenEffect
@@ -68,6 +70,7 @@ public:
     qreal outRotationAngle() const;
     qreal outDistance() const;
     qreal outOpacity() const;
+    bool blocksDirectScanout() const;
 
 protected:
     void apply(EffectWindow *window, int mask, WindowPaintData &data, WindowQuadList &quads) override;
