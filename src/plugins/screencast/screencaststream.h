@@ -97,6 +97,7 @@ private:
     spa_pod *buildFormat(struct spa_pod_builder *b, enum spa_video_format format, struct spa_rectangle *resolution,
                          struct spa_fraction *defaultFramerate, struct spa_fraction *minFramerate, struct spa_fraction *maxFramerate,
                          const QList<uint64_t> &modifiers, quint32 modifiersFlags);
+    pw_buffer *dequeueBuffer();
     void record(const QRegion &damage, Contents contents);
 
     std::optional<ScreenCastDmaBufTextureParams> testCreateDmaBuf(const QSize &size, quint32 format, const QList<uint64_t> &modifiers);
@@ -137,6 +138,7 @@ private:
     QRegion m_pendingDamage;
     QTimer m_pendingFrame;
     Contents m_pendingContents = Content::None;
+    QList<pw_buffer *> m_dequeuedBuffers;
 };
 
 } // namespace KWin

@@ -14,6 +14,7 @@
 #include "cursor.h"
 #include "kwinscreencast_logging.h"
 #include "main.h"
+#include "opengl/eglnativefence.h"
 #include "opengl/glplatform.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
@@ -31,6 +32,7 @@
 
 #include <libdrm/drm_fourcc.h>
 #include <spa/buffer/meta.h>
+#include <spa/pod/dynamic.h>
 
 namespace KWin
 {
@@ -150,44 +152,69 @@ static const int videoDamageRegionCount = 16;
 void ScreenCastStream::newStreamParams()
 {
     qCDebug(KWIN_SCREENCAST) << objectName() << "announcing stream params. with dmabuf:" << m_dmabufParams.has_value();
-    uint8_t paramsBuffer[1024];
-    spa_pod_builder pod_builder = SPA_POD_BUILDER_INIT(paramsBuffer, sizeof(paramsBuffer));
     const int buffertypes = m_dmabufParams ? (1 << SPA_DATA_DmaBuf) : (1 << SPA_DATA_MemFd);
     const int bpp = m_videoFormat.format == SPA_VIDEO_FORMAT_RGB || m_videoFormat.format == SPA_VIDEO_FORMAT_BGR ? 3 : 4;
     const int stride = SPA_ROUND_UP_N(m_resolution.width() * bpp, 4);
 
+    struct spa_pod_dynamic_builder pod_builder;
     struct spa_pod_frame f;
-    spa_pod_builder_push_object(&pod_builder, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
-    spa_pod_builder_add(&pod_builder,
+    spa_pod_dynamic_builder_init(&pod_builder, nullptr, 0, 1024);
+
+    QVarLengthArray<const spa_pod *> params;
+
+    // Buffer parameters for explicit sync. It requires two extra blocks to hold acquire and
+    // release syncobjs.
+    if (m_dmabufParams) {
+        spa_pod_builder_push_object(&pod_builder.b, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
+        spa_pod_builder_add(&pod_builder.b,
+                            SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(3, 2, 4),
+                            SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes),
+                            SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(m_dmabufParams->planeCount + 2), 0);
+        spa_pod_builder_prop(&pod_builder.b, SPA_PARAM_BUFFERS_metaType, SPA_POD_PROP_FLAG_MANDATORY);
+        spa_pod_builder_int(&pod_builder.b, 1 << SPA_META_SyncTimeline);
+        params.append((spa_pod *)spa_pod_builder_pop(&pod_builder.b, &f));
+    }
+
+    // Fallback buffer parameters for DmaBuf with implicit sync or MemFd
+    spa_pod_builder_push_object(&pod_builder.b, &f, SPA_TYPE_OBJECT_ParamBuffers, SPA_PARAM_Buffers);
+    spa_pod_builder_add(&pod_builder.b,
                         SPA_PARAM_BUFFERS_buffers, SPA_POD_CHOICE_RANGE_Int(3, 2, 4),
                         SPA_PARAM_BUFFERS_dataType, SPA_POD_CHOICE_FLAGS_Int(buffertypes), 0);
     if (!m_dmabufParams) {
-        spa_pod_builder_add(&pod_builder,
+        spa_pod_builder_add(&pod_builder.b,
                             SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(1),
                             SPA_PARAM_BUFFERS_size, SPA_POD_Int(stride * m_resolution.height()),
                             SPA_PARAM_BUFFERS_stride, SPA_POD_Int(stride),
                             SPA_PARAM_BUFFERS_align, SPA_POD_Int(16), 0);
     } else {
-        spa_pod_builder_add(&pod_builder,
+        spa_pod_builder_add(&pod_builder.b,
                             SPA_PARAM_BUFFERS_blocks, SPA_POD_Int(m_dmabufParams->planeCount), 0);
     }
-    spa_pod *bufferPod = (spa_pod *)spa_pod_builder_pop(&pod_builder, &f);
+    params.append((spa_pod *)spa_pod_builder_pop(&pod_builder.b, &f));
 
-    QVarLengthArray<const spa_pod *> params = {
-        bufferPod,
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+    // Metadata parameters
+    params.append(
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder.b,
                                               SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                               SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Cursor),
-                                              SPA_PARAM_META_size, SPA_POD_Int(CURSOR_META_SIZE(m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))),
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_PARAM_META_size, SPA_POD_Int(CURSOR_META_SIZE(m_cursor.bitmapSize.width(), m_cursor.bitmapSize.height()))));
+    params.append(
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder.b,
                                               SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                               SPA_PARAM_META_type, SPA_POD_Id(SPA_META_VideoDamage),
-                                              SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(sizeof(struct spa_meta_region) * videoDamageRegionCount, sizeof(struct spa_meta_region) * 1, sizeof(struct spa_meta_region) * videoDamageRegionCount)),
-        (spa_pod *)spa_pod_builder_add_object(&pod_builder,
+                                              SPA_PARAM_META_size, SPA_POD_CHOICE_RANGE_Int(sizeof(struct spa_meta_region) * videoDamageRegionCount, sizeof(struct spa_meta_region) * 1, sizeof(struct spa_meta_region) * videoDamageRegionCount)));
+    params.append(
+        (spa_pod *)spa_pod_builder_add_object(&pod_builder.b,
                                               SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
                                               SPA_PARAM_META_type, SPA_POD_Id(SPA_META_Header),
-                                              SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))),
-    };
+                                              SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_header))));
+    if (m_dmabufParams) {
+        params.append(
+            (spa_pod *)spa_pod_builder_add_object(&pod_builder.b,
+                                                  SPA_TYPE_OBJECT_ParamMeta, SPA_PARAM_Meta,
+                                                  SPA_PARAM_META_type, SPA_POD_Id(SPA_META_SyncTimeline),
+                                                  SPA_PARAM_META_size, SPA_POD_Int(sizeof(struct spa_meta_sync_timeline))));
+    }
 
     pw_stream_update_params(m_pwStream, params.data(), params.count());
 }
@@ -286,6 +313,8 @@ void ScreenCastStream::onStreamRemoveBuffer(pw_buffer *pwBuffer)
         delete buffer;
         pwBuffer->user_data = nullptr;
     }
+
+    m_dequeuedBuffers.removeOne(pwBuffer);
 }
 
 ScreenCastStream::ScreenCastStream(ScreenCastSource *source, std::shared_ptr<PipeWireCore> pwCore, QObject *parent)
@@ -490,6 +519,57 @@ void ScreenCastStream::scheduleRecord(const QRegion &damage, Contents contents)
     record(damage, contents);
 }
 
+pw_buffer *ScreenCastStream::dequeueBuffer()
+{
+    const auto isBufferUsable = [](pw_buffer *pwBuffer) {
+        const spa_buffer *spaBuffer = pwBuffer->buffer;
+        const spa_data *spaData = spaBuffer->datas;
+
+        if (spaData[0].type != SPA_DATA_DmaBuf) {
+            return true;
+        }
+
+        auto dmabuf = static_cast<DmaBufScreenCastBuffer *>(pwBuffer->user_data);
+        if (dmabuf && dmabuf->synctimeline) {
+            spa_meta_sync_timeline *synctmeta =
+                static_cast<spa_meta_sync_timeline *>(spa_buffer_find_meta_data(spaBuffer,
+                                                                                SPA_META_SyncTimeline,
+                                                                                sizeof(spa_meta_sync_timeline)));
+            return dmabuf->synctimeline->isMaterialized(synctmeta->release_point);
+        }
+
+        return true;
+    };
+
+    // First, search the list of already dequeued buffers
+    auto foundBuffer = std::find_if(m_dequeuedBuffers.begin(), m_dequeuedBuffers.end(), isBufferUsable);
+    if (foundBuffer != m_dequeuedBuffers.end()) {
+        pw_buffer *pwBuffer = *foundBuffer;
+        m_dequeuedBuffers.erase(foundBuffer);
+        return pwBuffer;
+    }
+
+    // If we do not have a usable dequeued buffer, fetch a new one from the stream
+    pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
+    if (!pwBuffer) {
+        return nullptr;
+    }
+
+    if (!pwBuffer->user_data) {
+        qCWarning(KWIN_SCREENCAST) << objectName() << "Received stream buffer that does not contain user data";
+        corruptHeader(pwBuffer->buffer);
+        pw_stream_queue_buffer(m_pwStream, pwBuffer);
+        return nullptr;
+    }
+
+    if (!isBufferUsable(pwBuffer)) {
+        m_dequeuedBuffers.append(pwBuffer);
+        return nullptr;
+    }
+
+    return pwBuffer;
+}
+
 void ScreenCastStream::record(const QRegion &damage, Contents contents)
 {
     AbstractEglBackend *backend = qobject_cast<AbstractEglBackend *>(Compositor::self()->backend());
@@ -497,7 +577,7 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
         return;
     }
 
-    struct pw_buffer *pwBuffer = pw_stream_dequeue_buffer(m_pwStream);
+    struct pw_buffer *pwBuffer = dequeueBuffer();
     if (!pwBuffer) {
         return;
     }
@@ -506,12 +586,6 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
     struct spa_data *spa_data = spa_buffer->datas;
 
     ScreenCastBuffer *buffer = static_cast<ScreenCastBuffer *>(pwBuffer->user_data);
-    if (!buffer) {
-        qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to record frame: invalid buffer type";
-        corruptHeader(spa_buffer);
-        pw_stream_queue_buffer(m_pwStream, pwBuffer);
-        return;
-    }
 
     Contents effectiveContents = contents;
     if (m_cursor.mode != ScreencastV1Interface::Hidden) {
@@ -524,10 +598,23 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
     EglContext *context = backend->openglContext();
     context->makeCurrent();
 
+    spa_meta_sync_timeline *synctmeta = nullptr;
+
     if (effectiveContents & Content::Video) {
         if (auto memfd = dynamic_cast<MemFdScreenCastBuffer *>(buffer)) {
             m_source->render(memfd->view.image());
         } else if (auto dmabuf = dynamic_cast<DmaBufScreenCastBuffer *>(buffer)) {
+            if (dmabuf->synctimeline) {
+                synctmeta = static_cast<spa_meta_sync_timeline *>(spa_buffer_find_meta_data(spa_buffer,
+                                                                                            SPA_META_SyncTimeline,
+                                                                                            sizeof(spa_meta_sync_timeline)));
+                FileDescriptor syncFileFd = dmabuf->synctimeline->exportSyncFile(synctmeta->release_point);
+                EGLNativeFence fence = EGLNativeFence::importFence(backend->eglDisplayObject(), std::move(syncFileFd));
+                if (fence.waitSync() != EGL_TRUE) {
+                    qCWarning(KWIN_SCREENCAST) << objectName() << "Failed to wait on a fence, recording may be corrupted";
+                }
+            }
+
             m_source->render(dmabuf->framebuffer.get());
         }
     }
@@ -547,11 +634,21 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
         }
     }
 
-    // Implicit sync is broken on Nvidia and with llvmpipe
-    if (context->glPlatform()->isNvidia() || context->isSoftwareRenderer()) {
-        glFinish();
+    if (synctmeta) {
+        EGLNativeFence fence(backend->eglDisplayObject());
+
+        synctmeta->acquire_point = synctmeta->release_point + 1;
+        synctmeta->release_point = synctmeta->acquire_point + 1;
+
+        auto dmabuf = static_cast<DmaBufScreenCastBuffer *>(buffer);
+        dmabuf->synctimeline->moveInto(synctmeta->acquire_point, fence.takeFileDescriptor());
     } else {
-        glFlush();
+        // Implicit sync is broken on Nvidia and with llvmpipe
+        if (context->glPlatform()->isNvidia() || context->isSoftwareRenderer()) {
+            glFinish();
+        } else {
+            glFlush();
+        }
     }
 
     addDamage(spa_buffer, effectiveDamage);

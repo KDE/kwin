@@ -7,6 +7,7 @@
 #pragma once
 
 #include "core/graphicsbufferview.h"
+#include "core/syncobjtimeline.h"
 
 #include <pipewire/pipewire.h>
 
@@ -35,9 +36,10 @@ public:
 
     std::shared_ptr<GLTexture> texture;
     std::unique_ptr<GLFramebuffer> framebuffer;
+    std::unique_ptr<SyncTimeline> synctimeline;
 
 private:
-    DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer);
+    DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline);
 };
 
 class MemFdScreenCastBuffer : public ScreenCastBuffer

@@ -24,10 +24,11 @@ ScreenCastBuffer::~ScreenCastBuffer()
     m_buffer->drop();
 }
 
-DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer)
+DmaBufScreenCastBuffer::DmaBufScreenCastBuffer(GraphicsBuffer *buffer, std::shared_ptr<GLTexture> &&texture, std::unique_ptr<GLFramebuffer> &&framebuffer, std::unique_ptr<SyncTimeline> &&synctimeline)
     : ScreenCastBuffer(buffer)
     , texture(std::move(texture))
     , framebuffer(std::move(framebuffer))
+    , synctimeline(std::move(synctimeline))
 {
 }
 
@@ -49,7 +50,8 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         return nullptr;
     }
 
-    if (pwBuffer->buffer->n_datas != uint32_t(attrs->planeCount)) {
+    const void *syncTimelineMeta = spa_buffer_find_meta_data(pwBuffer->buffer, SPA_META_SyncTimeline, sizeof(spa_meta_sync_timeline));
+    if (pwBuffer->buffer->n_datas != uint32_t(attrs->planeCount + (syncTimelineMeta ? 2 : 0))) {
         buffer->drop();
         return nullptr;
     }
@@ -82,7 +84,30 @@ DmaBufScreenCastBuffer *DmaBufScreenCastBuffer::create(pw_buffer *pwBuffer, cons
         spaData[i].chunk->flags = SPA_CHUNK_FLAG_NONE;
     };
 
-    return new DmaBufScreenCastBuffer(buffer, std::move(texture), std::move(framebuffer));
+    std::unique_ptr<SyncTimeline> synctimeline;
+    if (syncTimelineMeta) {
+        synctimeline = std::make_unique<SyncTimeline>(backend->drmDevice()->fileDescriptor());
+        const FileDescriptor &syncobjfd = synctimeline->fileDescriptor();
+        if (!syncobjfd.isValid()) {
+            buffer->drop();
+            return nullptr;
+        }
+
+        // Signal the first timeline point, so the very first recording can proceed.
+        synctimeline->signal(0);
+
+        spa_data &acquireData = spaData[attrs->planeCount];
+        acquireData.type = SPA_DATA_SyncObj;
+        acquireData.flags = SPA_DATA_FLAG_READABLE;
+        acquireData.fd = syncobjfd.get();
+
+        spa_data &releaseData = spaData[attrs->planeCount + 1];
+        releaseData.type = SPA_DATA_SyncObj;
+        releaseData.flags = SPA_DATA_FLAG_READABLE;
+        releaseData.fd = syncobjfd.get();
+    }
+
+    return new DmaBufScreenCastBuffer(buffer, std::move(texture), std::move(framebuffer), std::move(synctimeline));
 }
 
 MemFdScreenCastBuffer::MemFdScreenCastBuffer(GraphicsBuffer *buffer, GraphicsBufferView &&view)

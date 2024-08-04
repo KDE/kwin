@@ -399,7 +399,7 @@ if (NOT libdisplayinfo_FOUND)
 endif()
 add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
 
-pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.65)
+pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=1.2.0)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
 
 if (KWIN_BUILD_NOTIFICATIONS)
