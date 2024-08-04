@@ -18,7 +18,7 @@
 namespace KWin
 {
 
-ShakeCursorItem::ShakeCursorItem(const KXcursorTheme &theme, Item *parent)
+ShakeCursorItem::ShakeCursorItem(const CursorTheme &theme, Item *parent)
     : Item(parent)
 {
     m_source = std::make_unique<ShapeCursorSource>();
@@ -145,9 +145,9 @@ void ShakeCursorEffect::magnify(qreal magnification)
             effects->hideCursor();
 
             const qreal maxScale = ShakeCursorConfig::magnification() + 8 * ShakeCursorConfig::overMagnification();
-            const KXcursorTheme originalTheme = input()->pointer()->cursorTheme();
+            const CursorTheme originalTheme = input()->pointer()->cursorTheme();
             if (m_cursorTheme.name() != originalTheme.name() || m_cursorTheme.size() != originalTheme.size() || m_cursorTheme.devicePixelRatio() != maxScale) {
-                m_cursorTheme = KXcursorTheme(originalTheme.name(), originalTheme.size(), maxScale);
+                m_cursorTheme = CursorTheme(originalTheme.name(), originalTheme.size(), maxScale);
             }
 
             m_cursorItem = std::make_unique<ShakeCursorItem>(m_cursorTheme, effects->scene()->overlayItem());

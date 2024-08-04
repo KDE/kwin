@@ -65,12 +65,12 @@ void ShapeCursorSource::setShape(Qt::CursorShape shape)
     setShape(CursorShape(shape).name());
 }
 
-KXcursorTheme ShapeCursorSource::theme() const
+CursorTheme ShapeCursorSource::theme() const
 {
     return m_theme;
 }
 
-void ShapeCursorSource::setTheme(const KXcursorTheme &theme)
+void ShapeCursorSource::setTheme(const CursorTheme &theme)
 {
     if (m_theme != theme) {
         m_theme = theme;
@@ -109,7 +109,7 @@ void ShapeCursorSource::selectSprite(int index)
     if (m_currentSprite == index) {
         return;
     }
-    const KXcursorSprite &sprite = m_sprites[index];
+    const CursorSprite &sprite = m_sprites[index];
     m_currentSprite = index;
     m_image = sprite.data();
     m_size = QSizeF(m_image.size()) / m_image.devicePixelRatio();

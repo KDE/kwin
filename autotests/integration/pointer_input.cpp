@@ -14,7 +14,7 @@
 #include "effect/effecthandler.h"
 #include "options.h"
 #include "pointer_input.h"
-#include "utils/xcursortheme.h"
+#include "utils/cursortheme.h"
 #include "virtualdesktops.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
@@ -42,7 +42,7 @@ static PlatformCursorImage loadReferenceThemeCursor(const QByteArray &name)
 {
     const Cursor *pointerCursor = Cursors::self()->mouse();
 
-    const KXcursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), kwinApp()->devicePixelRatio());
+    const CursorTheme theme(pointerCursor->themeName(), pointerCursor->themeSize(), kwinApp()->devicePixelRatio());
     if (theme.isEmpty()) {
         return PlatformCursorImage();
     }

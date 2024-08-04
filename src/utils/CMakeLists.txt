@@ -1,5 +1,6 @@
 target_sources(kwin PRIVATE
     common.cpp
+    cursortheme.cpp
     drm_format_helper.cpp
     edid.cpp
     filedescriptor.cpp
@@ -10,7 +11,6 @@ target_sources(kwin PRIVATE
     subsurfacemonitor.cpp
     udev.cpp
     vsyncmonitor.cpp
-    xcursortheme.cpp
 )
 if (KWIN_BUILD_X11)
     target_sources(kwin PRIVATE xcbutils.cpp)

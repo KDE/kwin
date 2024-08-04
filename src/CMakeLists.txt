@@ -586,6 +586,7 @@ install(FILES
 install(FILES
     utils/c_ptr.h
     utils/common.h
+    utils/cursortheme.h
     utils/damagejournal.h
     utils/drm_format_helper.h
     utils/edid.h
@@ -604,7 +605,6 @@ install(FILES
     utils/version.h
     utils/vsyncmonitor.h
     utils/xcbutils.h
-    utils/xcursortheme.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/utils COMPONENT Devel)
 
 install(FILES

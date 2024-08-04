@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "utils/xcursortheme.h"
+#include "utils/cursortheme.h"
 
 #include <QImage>
 #include <QObject>
@@ -58,17 +58,17 @@ public:
     void setShape(const QByteArray &shape);
     void setShape(Qt::CursorShape shape);
 
-    KXcursorTheme theme() const;
-    void setTheme(const KXcursorTheme &theme);
+    CursorTheme theme() const;
+    void setTheme(const CursorTheme &theme);
 
 private:
     void refresh();
     void selectNextSprite();
     void selectSprite(int index);
 
-    KXcursorTheme m_theme;
+    CursorTheme m_theme;
     QByteArray m_shape;
-    QList<KXcursorSprite> m_sprites;
+    QList<CursorSprite> m_sprites;
     QTimer m_delayTimer;
     QImage m_image;
     int m_currentSprite = -1;

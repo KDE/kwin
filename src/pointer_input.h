@@ -12,7 +12,7 @@
 
 #include "cursor.h"
 #include "input.h"
-#include "utils/xcursortheme.h"
+#include "utils/cursortheme.h"
 
 #include <QElapsedTimer>
 #include <QObject>
@@ -48,7 +48,7 @@ public:
 
     void init() override;
 
-    KXcursorTheme cursorTheme() const; // TODO: Make it a Cursor property
+    CursorTheme cursorTheme() const; // TODO: Make it a Cursor property
 
     void updateAfterScreenChange();
     bool supportsWarping() const;
@@ -206,7 +206,7 @@ class WaylandCursorImage : public QObject
 public:
     explicit WaylandCursorImage(QObject *parent = nullptr);
 
-    KXcursorTheme theme() const;
+    CursorTheme theme() const;
 
 Q_SIGNALS:
     void themeChanged();
@@ -214,7 +214,7 @@ Q_SIGNALS:
 private:
     void updateCursorTheme();
 
-    KXcursorTheme m_cursorTheme;
+    CursorTheme m_cursorTheme;
 };
 
 class CursorImage : public QObject
@@ -229,7 +229,7 @@ public:
     void setWindowSelectionCursor(const QByteArray &shape);
     void removeWindowSelectionCursor();
 
-    KXcursorTheme theme() const;
+    CursorTheme theme() const;
     CursorSource *source() const;
     void setSource(CursorSource *source);
 

@@ -79,7 +79,7 @@ PointerInputRedirection::PointerInputRedirection(InputRedirection *parent)
 
 PointerInputRedirection::~PointerInputRedirection() = default;
 
-KXcursorTheme PointerInputRedirection::cursorTheme() const
+CursorTheme PointerInputRedirection::cursorTheme() const
 {
     return m_cursor->theme();
 }
@@ -1112,7 +1112,7 @@ WaylandCursorImage::WaylandCursorImage(QObject *parent)
     connect(workspace(), &Workspace::outputsChanged, this, &WaylandCursorImage::updateCursorTheme);
 }
 
-KXcursorTheme WaylandCursorImage::theme() const
+CursorTheme WaylandCursorImage::theme() const
 {
     return m_cursorTheme;
 }
@@ -1129,14 +1129,14 @@ void WaylandCursorImage::updateCursorTheme()
         }
     }
 
-    m_cursorTheme = KXcursorTheme(pointerCursor->themeName(), pointerCursor->themeSize(), targetDevicePixelRatio);
+    m_cursorTheme = CursorTheme(pointerCursor->themeName(), pointerCursor->themeSize(), targetDevicePixelRatio);
     if (m_cursorTheme.isEmpty()) {
         qCWarning(KWIN_CORE) << "Failed to load cursor theme" << pointerCursor->themeName();
-        m_cursorTheme = KXcursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
+        m_cursorTheme = CursorTheme(Cursor::defaultThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
 
         if (m_cursorTheme.isEmpty()) {
             qCWarning(KWIN_CORE) << "Failed to load cursor theme" << Cursor::defaultThemeName();
-            m_cursorTheme = KXcursorTheme(Cursor::fallbackThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
+            m_cursorTheme = CursorTheme(Cursor::fallbackThemeName(), Cursor::defaultThemeSize(), targetDevicePixelRatio);
         }
     }
 
@@ -1191,7 +1191,7 @@ void CursorImage::setSource(CursorSource *source)
     Q_EMIT changed();
 }
 
-KXcursorTheme CursorImage::theme() const
+CursorTheme CursorImage::theme() const
 {
     return m_waylandImage.theme();
 }

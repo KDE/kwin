@@ -10,7 +10,7 @@
 #include "input_event_spy.h"
 #include "plugins/shakecursor/shakedetector.h"
 #include "scene/cursoritem.h"
-#include "utils/xcursortheme.h"
+#include "utils/cursortheme.h"
 
 #include <QTimer>
 #include <QVariantAnimation>
@@ -27,7 +27,7 @@ class ShakeCursorItem : public Item
     Q_OBJECT
 
 public:
-    ShakeCursorItem(const KXcursorTheme &theme, Item *parent);
+    ShakeCursorItem(const CursorTheme &theme, Item *parent);
 
 private:
     void refresh();
@@ -63,7 +63,7 @@ private:
 
     Cursor *m_cursor;
     std::unique_ptr<ShakeCursorItem> m_cursorItem;
-    KXcursorTheme m_cursorTheme;
+    CursorTheme m_cursorTheme;
     qreal m_targetMagnification = 1.0;
     qreal m_currentMagnification = 1.0;
 };

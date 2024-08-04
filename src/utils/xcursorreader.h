@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "utils/xcursortheme.h"
+#include "utils/cursortheme.h"
 
 namespace KWin
 {
@@ -14,7 +14,7 @@ namespace KWin
 class XCursorReader
 {
 public:
-    static QList<KXcursorSprite> load(const QString &filePath, int desiredSize, qreal devicePixelRatio);
+    static QList<CursorSprite> load(const QString &filePath, int desiredSize, qreal devicePixelRatio);
 };
 
 } // namespace KWin

@@ -4,7 +4,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "utils/xcursortheme.h"
+#include "utils/cursortheme.h"
 #include "utils/svgcursorreader.h"
 #include "utils/xcursorreader.h"
 
@@ -21,7 +21,7 @@
 namespace KWin
 {
 
-class KXcursorSpritePrivate : public QSharedData
+class CursorSpritePrivate : public QSharedData
 {
 public:
     QImage data;
@@ -29,35 +29,35 @@ public:
     std::chrono::milliseconds delay;
 };
 
-struct KXcursorThemeXEntryInfo
+struct CursorThemeXEntryInfo
 {
     QString path;
 };
 
-struct KXcursorThemeSvgEntryInfo
+struct CursorThemeSvgEntryInfo
 {
     QString path;
 };
 
-using KXcursorThemeEntryInfo = std::variant<KXcursorThemeXEntryInfo,
-                                            KXcursorThemeSvgEntryInfo>;
+using CursorThemeEntryInfo = std::variant<CursorThemeXEntryInfo,
+                                          CursorThemeSvgEntryInfo>;
 
-class KXcursorThemeEntry
+class CursorThemeEntry
 {
 public:
-    explicit KXcursorThemeEntry(const KXcursorThemeEntryInfo &info);
+    explicit CursorThemeEntry(const CursorThemeEntryInfo &info);
 
     void load(int size, qreal devicePixelRatio);
 
-    KXcursorThemeEntryInfo info;
-    QList<KXcursorSprite> sprites;
+    CursorThemeEntryInfo info;
+    QList<CursorSprite> sprites;
 };
 
-class KXcursorThemePrivate : public QSharedData
+class CursorThemePrivate : public QSharedData
 {
 public:
-    KXcursorThemePrivate();
-    KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio);
+    CursorThemePrivate();
+    CursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio);
 
     void discover(const QStringList &searchPaths);
     void discoverXCursors(const QString &packagePath);
@@ -67,83 +67,82 @@ public:
     int size = 0;
     qreal devicePixelRatio = 0;
 
-    QHash<QByteArray, std::shared_ptr<KXcursorThemeEntry>> registry;
+    QHash<QByteArray, std::shared_ptr<CursorThemeEntry>> registry;
 };
 
-KXcursorSprite::KXcursorSprite()
-    : d(new KXcursorSpritePrivate)
+CursorSprite::CursorSprite()
+    : d(new CursorSpritePrivate)
 {
 }
 
-KXcursorSprite::KXcursorSprite(const KXcursorSprite &other)
+CursorSprite::CursorSprite(const CursorSprite &other)
     : d(other.d)
 {
 }
 
-KXcursorSprite::~KXcursorSprite()
+CursorSprite::~CursorSprite()
 {
 }
 
-KXcursorSprite &KXcursorSprite::operator=(const KXcursorSprite &other)
+CursorSprite &CursorSprite::operator=(const CursorSprite &other)
 {
     d = other.d;
     return *this;
 }
 
-KXcursorSprite::KXcursorSprite(const QImage &data, const QPoint &hotspot,
-                               const std::chrono::milliseconds &delay)
-    : d(new KXcursorSpritePrivate)
+CursorSprite::CursorSprite(const QImage &data, const QPoint &hotspot, const std::chrono::milliseconds &delay)
+    : d(new CursorSpritePrivate)
 {
     d->data = data;
     d->hotspot = hotspot;
     d->delay = delay;
 }
 
-QImage KXcursorSprite::data() const
+QImage CursorSprite::data() const
 {
     return d->data;
 }
 
-QPoint KXcursorSprite::hotspot() const
+QPoint CursorSprite::hotspot() const
 {
     return d->hotspot;
 }
 
-std::chrono::milliseconds KXcursorSprite::delay() const
+std::chrono::milliseconds CursorSprite::delay() const
 {
     return d->delay;
 }
 
-KXcursorThemePrivate::KXcursorThemePrivate()
+CursorThemePrivate::CursorThemePrivate()
 {
 }
 
-KXcursorThemePrivate::KXcursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio)
+CursorThemePrivate::CursorThemePrivate(const QString &themeName, int size, qreal devicePixelRatio)
     : name(themeName)
     , size(size)
     , devicePixelRatio(devicePixelRatio)
 {
 }
 
-KXcursorThemeEntry::KXcursorThemeEntry(const KXcursorThemeEntryInfo &info)
+CursorThemeEntry::CursorThemeEntry(const CursorThemeEntryInfo &info)
     : info(info)
 {
 }
 
-void KXcursorThemeEntry::load(int size, qreal devicePixelRatio)
+void CursorThemeEntry::load(int size, qreal devicePixelRatio)
 {
     if (!sprites.isEmpty()) {
         return;
     }
 
-    if (const auto raster = std::get_if<KXcursorThemeXEntryInfo>(&info)) {
+    if (const auto raster = std::get_if<CursorThemeXEntryInfo>(&info)) {
         sprites = XCursorReader::load(raster->path, size, devicePixelRatio);
-    } else if (const auto svg = std::get_if<KXcursorThemeSvgEntryInfo>(&info)) {
+    } else if (const auto svg = std::get_if<CursorThemeSvgEntryInfo>(&info)) {
         sprites = SvgCursorReader::load(svg->path, size, devicePixelRatio);
     }
 }
 
-void KXcursorThemePrivate::discoverXCursors(const QString &packagePath)
+void CursorThemePrivate::discoverXCursors(const QString &packagePath)
 {
     const QDir dir(packagePath);
     QFileInfoList entries = dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot);
@@ -165,13 +164,13 @@ void KXcursorThemePrivate::discoverXCursors(const QString &packagePath)
                 }
             }
         }
-        registry.insert(shape, std::make_shared<KXcursorThemeEntry>(KXcursorThemeXEntryInfo{
+        registry.insert(shape, std::make_shared<CursorThemeEntry>(CursorThemeXEntryInfo{
             .path = entry.absoluteFilePath(),
         }));
     }
 }
 
-void KXcursorThemePrivate::discoverSvgCursors(const QString &packagePath)
+void CursorThemePrivate::discoverSvgCursors(const QString &packagePath)
 {
     const QDir dir(packagePath);
     QFileInfoList entries = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
@@ -193,7 +192,7 @@ void KXcursorThemePrivate::discoverSvgCursors(const QString &packagePath)
                 }
             }
         }
-        registry.insert(shape, std::make_shared<KXcursorThemeEntry>(KXcursorThemeSvgEntryInfo{
+        registry.insert(shape, std::make_shared<CursorThemeEntry>(CursorThemeSvgEntryInfo{
             .path = entry.absoluteFilePath(),
         }));
     }
@@ -222,7 +221,7 @@ static QStringList defaultSearchPaths()
     return paths;
 }
 
-void KXcursorThemePrivate::discover(const QStringList &searchPaths)
+void CursorThemePrivate::discover(const QStringList &searchPaths)
 {
     const QStringList paths = !searchPaths.isEmpty() ? searchPaths : defaultSearchPaths();
 
@@ -262,69 +261,69 @@ void KXcursorThemePrivate::discover(const QStringList &searchPaths)
     }
 }
 
-KXcursorTheme::KXcursorTheme()
-    : d(new KXcursorThemePrivate)
+CursorTheme::CursorTheme()
+    : d(new CursorThemePrivate)
 {
 }
 
-KXcursorTheme::KXcursorTheme(const QString &themeName, int size, qreal devicePixelRatio, const QStringList &searchPaths)
-    : d(new KXcursorThemePrivate(themeName, size, devicePixelRatio))
+CursorTheme::CursorTheme(const QString &themeName, int size, qreal devicePixelRatio, const QStringList &searchPaths)
+    : d(new CursorThemePrivate(themeName, size, devicePixelRatio))
 {
     d->discover(searchPaths);
 }
 
-KXcursorTheme::KXcursorTheme(const KXcursorTheme &other)
+CursorTheme::CursorTheme(const CursorTheme &other)
     : d(other.d)
 {
 }
 
-KXcursorTheme::~KXcursorTheme()
+CursorTheme::~CursorTheme()
 {
 }
 
-KXcursorTheme &KXcursorTheme::operator=(const KXcursorTheme &other)
+CursorTheme &CursorTheme::operator=(const CursorTheme &other)
 {
     d = other.d;
     return *this;
 }
 
-bool KXcursorTheme::operator==(const KXcursorTheme &other)
+bool CursorTheme::operator==(const CursorTheme &other)
 {
     return d == other.d;
 }
 
-bool KXcursorTheme::operator!=(const KXcursorTheme &other)
+bool CursorTheme::operator!=(const CursorTheme &other)
 {
     return !(*this == other);
 }
 
-QString KXcursorTheme::name() const
+QString CursorTheme::name() const
 {
     return d->name;
 }
 
-int KXcursorTheme::size() const
+int CursorTheme::size() const
 {
     return d->size;
 }
 
-qreal KXcursorTheme::devicePixelRatio() const
+qreal CursorTheme::devicePixelRatio() const
 {
     return d->devicePixelRatio;
 }
 
-bool KXcursorTheme::isEmpty() const
+bool CursorTheme::isEmpty() const
 {
     return d->registry.isEmpty();
 }
 
-QList<KXcursorSprite> KXcursorTheme::shape(const QByteArray &name) const
+QList<CursorSprite> CursorTheme::shape(const QByteArray &name) const
 {
     if (auto entry = d->registry.value(name)) {
         entry->load(d->size, d->devicePixelRatio);
         return entry->sprites;
     }
-    return QList<KXcursorSprite>();
+    return QList<CursorSprite>();
 }
 
 } // namespace KWin

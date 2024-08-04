@@ -12,7 +12,7 @@
 namespace KWin
 {
 
-QList<KXcursorSprite> XCursorReader::load(const QString &filePath, int desiredSize, qreal devicePixelRatio)
+QList<CursorSprite> XCursorReader::load(const QString &filePath, int desiredSize, qreal devicePixelRatio)
 {
     QFile file(filePath);
     if (!file.open(QFile::ReadOnly)) {
@@ -40,7 +40,7 @@ QList<KXcursorSprite> XCursorReader::load(const QString &filePath, int desiredSi
         return {};
     }
 
-    QList<KXcursorSprite> sprites;
+    QList<CursorSprite> sprites;
     for (int i = 0; i < images->nimage; ++i) {
         const XcursorImage *nativeCursorImage = images->images[i];
         const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / desiredSize);
@@ -51,7 +51,7 @@ QList<KXcursorSprite> XCursorReader::load(const QString &filePath, int desiredSi
         data.setDevicePixelRatio(scale);
         memcpy(data.bits(), nativeCursorImage->pixels, data.sizeInBytes());
 
-        sprites.append(KXcursorSprite(data, hotspot / scale, delay));
+        sprites.append(CursorSprite(data, hotspot / scale, delay));
     }
 
     XcursorImagesDestroy(images);

@@ -102,7 +102,7 @@ std::optional<SvgCursorMetaData> SvgCursorMetaData::parse(const QString &filePat
     };
 }
 
-QList<KXcursorSprite> SvgCursorReader::load(const QString &containerPath, int desiredSize, qreal devicePixelRatio)
+QList<CursorSprite> SvgCursorReader::load(const QString &containerPath, int desiredSize, qreal devicePixelRatio)
 {
     const QDir containerDir(containerPath);
 
@@ -115,7 +115,7 @@ QList<KXcursorSprite> SvgCursorReader::load(const QString &containerPath, int de
 
     const qreal scale = desiredSize / 24.0;
 
-    QList<KXcursorSprite> sprites;
+    QList<CursorSprite> sprites;
     for (const SvgCursorMetaDataEntry &entry : metadata->entries) {
         const QString filePath = containerDir.filePath(entry.fileName);
 
@@ -134,7 +134,7 @@ QList<KXcursorSprite> SvgCursorReader::load(const QString &containerPath, int de
         renderer.render(&painter, bounds);
         painter.end();
 
-        sprites.append(KXcursorSprite(image, (entry.hotspot * scale).toPoint(), entry.delay));
+        sprites.append(CursorSprite(image, (entry.hotspot * scale).toPoint(), entry.delay));
     }
 
     return sprites;
