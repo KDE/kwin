@@ -86,6 +86,23 @@ SyncTimeline::SyncTimeline(int drmFd, uint32_t handle)
 {
 }
 
+SyncTimeline::SyncTimeline(int drmFd)
+    : m_drmFd(drmFd)
+{
+    drmSyncobjCreate(m_drmFd, 0, &m_handle);
+}
+
+const FileDescriptor &SyncTimeline::fileDescriptor()
+{
+    if (!m_fileDescriptor.isValid()) {
+        int fd = -1;
+        drmSyncobjHandleToFD(m_drmFd, m_handle, &fd);
+        m_fileDescriptor = FileDescriptor(fd);
+    }
+
+    return m_fileDescriptor;
+}
+
 SyncTimeline::~SyncTimeline()
 {
     drmSyncobjDestroy(m_drmFd, m_handle);
@@ -115,5 +132,28 @@ void SyncTimeline::moveInto(uint64_t timelinePoint, const FileDescriptor &fd)
     drmSyncobjImportSyncFile(m_drmFd, tempHandle, fd.get());
     drmSyncobjTransfer(m_drmFd, m_handle, timelinePoint, tempHandle, 0, 0);
     drmSyncobjDestroy(m_drmFd, tempHandle);
+}
+
+FileDescriptor SyncTimeline::exportSyncFile(uint64_t timelinePoint)
+{
+    uint32_t tempHandle = 0;
+    int syncFileFd = -1;
+    drmSyncobjCreate(m_drmFd, 0, &tempHandle);
+    drmSyncobjTransfer(m_drmFd, tempHandle, 0, m_handle, timelinePoint, 0);
+    drmSyncobjExportSyncFile(m_drmFd, tempHandle, &syncFileFd);
+    drmSyncobjDestroy(m_drmFd, tempHandle);
+    return FileDescriptor(syncFileFd);
+}
+
+bool SyncTimeline::isMaterialized(uint64_t timelinePoint)
+{
+    return (drmSyncobjTimelineWait(m_drmFd,
+                                   &m_handle,
+                                   &timelinePoint,
+                                   1,
+                                   0,
+                                   DRM_SYNCOBJ_WAIT_FLAGS_WAIT_AVAILABLE,
+                                   nullptr)
+            == 0);
 }
 }

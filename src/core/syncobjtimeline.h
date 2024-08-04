@@ -43,6 +43,7 @@ class KWIN_EXPORT SyncTimeline
 {
 public:
     explicit SyncTimeline(int drmFd, uint32_t handle);
+    explicit SyncTimeline(int drmFd);
     ~SyncTimeline();
 
     /**
@@ -50,11 +51,15 @@ public:
      */
     FileDescriptor eventFd(uint64_t timelinePoint) const;
 
+    const FileDescriptor &fileDescriptor();
     void signal(uint64_t timelinePoint);
     void moveInto(uint64_t timelinePoint, const FileDescriptor &fd);
+    FileDescriptor exportSyncFile(uint64_t timelinePoint);
+    bool isMaterialized(uint64_t timelinePoint);
 
 private:
     const int32_t m_drmFd;
-    const uint32_t m_handle;
+    uint32_t m_handle = 0;
+    FileDescriptor m_fileDescriptor;
 };
 }
