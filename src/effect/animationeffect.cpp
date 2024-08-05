@@ -13,6 +13,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
+#include "scene/windowitem.h"
 
 #include <QDateTime>
 #include <QTimer>
@@ -263,6 +264,7 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     animation.timeLine.setEasingCurve(curve);
     animation.timeLine.setSourceRedirectMode(TimeLine::RedirectMode::Strict);
     animation.timeLine.setTargetRedirectMode(TimeLine::RedirectMode::Relaxed);
+    animation.itemEffect = ItemEffect(w->windowItem());
 
     animation.terminationFlags = TerminateAtSource;
     if (!keepAtTarget) {
