@@ -50,7 +50,7 @@ quint64 AnimationEffectPrivate::m_animCounter = 0;
 
 AnimationEffect::AnimationEffect()
     : CrossFadeEffect()
-    , d_ptr(std::make_unique<AnimationEffectPrivate>())
+    , d(std::make_unique<AnimationEffectPrivate>())
 {
     if (!s_clock.isValid()) {
         s_clock.start();
@@ -62,7 +62,6 @@ AnimationEffect::AnimationEffect()
 
 AnimationEffect::~AnimationEffect()
 {
-    Q_D(AnimationEffect);
     if (d->m_isInitialized) {
         disconnect(effects, &EffectsHandler::windowDeleted, this, &AnimationEffect::_windowDeleted);
     }
@@ -71,7 +70,6 @@ AnimationEffect::~AnimationEffect()
 
 void AnimationEffect::init()
 {
-    Q_D(AnimationEffect);
     if (d->m_isInitialized) {
         return; // not more than once, please
     }
@@ -86,7 +84,6 @@ void AnimationEffect::init()
 
 bool AnimationEffect::isActive() const
 {
-    Q_D(const AnimationEffect);
     return !d->m_animations.empty() && !effects->isScreenLocked();
 }
 
@@ -219,7 +216,6 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
     const bool waitAtSource = from.isValid();
     validate(a, meta, &from, &to, w);
 
-    Q_D(AnimationEffect);
     if (!d->m_isInitialized) {
         init(); // needs to ensure the window gets removed if deleted in the same event cycle
     }
@@ -293,7 +289,6 @@ quint64 AnimationEffect::p_animate(EffectWindow *w, Attribute a, uint meta, int 
 
 bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemainingTime)
 {
-    Q_D(AnimationEffect);
     if (animationId == d->m_justEndedAnimation) {
         return false; // this is just ending, do not try to retarget it
     }
@@ -322,8 +317,6 @@ bool AnimationEffect::retarget(quint64 animationId, FPx2 newTarget, int newRemai
 
 bool AnimationEffect::freezeInTime(quint64 animationId, qint64 frozenTime)
 {
-    Q_D(AnimationEffect);
-
     if (animationId == d->m_justEndedAnimation) {
         return false; // this is just ending, do not try to retarget it
     }
@@ -345,7 +338,6 @@ bool AnimationEffect::freezeInTime(quint64 animationId, qint64 frozenTime)
 
 bool AnimationEffect::redirect(quint64 animationId, Direction direction, TerminationFlags terminationFlags)
 {
-    Q_D(AnimationEffect);
     if (animationId == d->m_justEndedAnimation) {
         return false;
     }
@@ -372,8 +364,6 @@ bool AnimationEffect::redirect(quint64 animationId, Direction direction, Termina
 
 bool AnimationEffect::complete(quint64 animationId)
 {
-    Q_D(AnimationEffect);
-
     if (animationId == d->m_justEndedAnimation) {
         return false;
     }
@@ -393,7 +383,6 @@ bool AnimationEffect::complete(quint64 animationId)
 
 bool AnimationEffect::cancel(quint64 animationId)
 {
-    Q_D(AnimationEffect);
     if (animationId == d->m_justEndedAnimation) {
         return true; // this is just ending, do not try to cancel it but fake success
     }
@@ -475,7 +464,6 @@ QRect AnimationEffect::clipRect(const QRect &geo, const AniData &anim) const
 
 void AnimationEffect::prePaintWindow(EffectWindow *w, WindowPrePaintData &data, std::chrono::milliseconds presentTime)
 {
-    Q_D(AnimationEffect);
     auto entry = d->m_animations.find(w);
     if (entry != d->m_animations.end()) {
         auto &[window, pair] = *entry;
@@ -512,7 +500,6 @@ static inline float geometryCompensation(int flags, float v)
 
 void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const RenderViewport &viewport, EffectWindow *w, int mask, QRegion region, WindowPaintData &data)
 {
-    Q_D(AnimationEffect);
     auto it = d->m_animations.find(w);
     if (it == d->m_animations.end()) {
         effects->paintWindow(renderTarget, viewport, w, mask, region, data);
@@ -642,7 +629,6 @@ void AnimationEffect::paintWindow(const RenderTarget &renderTarget, const Render
 
 void AnimationEffect::postPaintScreen()
 {
-    Q_D(AnimationEffect);
     d->m_animationsTouched = false;
     bool damageDirty = false;
     std::vector<EffectWindowDeletedRef> zombies;
@@ -796,7 +782,6 @@ void AnimationEffect::setMetaData(MetaType type, uint value, uint &meta)
 
 void AnimationEffect::triggerRepaint()
 {
-    Q_D(AnimationEffect);
     for (auto &[window, pair] : d->m_animations) {
         pair.second = QRect();
     }
@@ -830,7 +815,6 @@ static float fixOvershoot(float f, const AniData &d, short int dir, float s = 1.
 
 void AnimationEffect::updateLayerRepaints()
 {
-    Q_D(AnimationEffect);
     d->m_needSceneRepaint = false;
     for (auto &[window, pair] : d->m_animations) {
         auto &[data, rect] = pair;
@@ -945,7 +929,6 @@ void AnimationEffect::updateLayerRepaints()
 
 void AnimationEffect::_windowExpandedGeometryChanged(KWin::EffectWindow *w)
 {
-    Q_D(AnimationEffect);
     const auto entry = d->m_animations.find(w);
     if (entry != d->m_animations.end()) {
         auto &[data, rect] = entry->second;
@@ -959,8 +942,6 @@ void AnimationEffect::_windowExpandedGeometryChanged(KWin::EffectWindow *w)
 
 void AnimationEffect::_windowClosed(EffectWindow *w)
 {
-    Q_D(AnimationEffect);
-
     auto it = d->m_animations.find(w);
     if (it == d->m_animations.end()) {
         return;
@@ -975,13 +956,11 @@ void AnimationEffect::_windowClosed(EffectWindow *w)
 
 void AnimationEffect::_windowDeleted(EffectWindow *w)
 {
-    Q_D(AnimationEffect);
     d->m_animations.erase(w);
 }
 
 QString AnimationEffect::debug(const QString &parameter) const
 {
-    Q_D(const AnimationEffect);
     QString dbg;
     if (d->m_animations.empty()) {
         dbg = QStringLiteral("No window is animated");
@@ -1003,7 +982,6 @@ QString AnimationEffect::debug(const QString &parameter) const
 
 const AnimationEffect::AniMap &AnimationEffect::state() const
 {
-    Q_D(const AnimationEffect);
     return d->m_animations;
 }
 
