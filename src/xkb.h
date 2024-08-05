@@ -116,7 +116,10 @@ public:
     void setSeat(SeatInterface *seat);
     QByteArray keymapContents() const;
 
-    std::optional<int> keycodeFromKeysym(xkb_keysym_t keysym);
+    /**
+     * Returns a pair of <keycode, level> for the given keysym.
+     */
+    std::optional<std::pair<int, int>> keycodeFromKeysym(xkb_keysym_t keysym);
 
     /**
      * Returns list of candidate keysyms corresponding to the given Qt key.
