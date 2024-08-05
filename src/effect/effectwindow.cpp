@@ -344,11 +344,6 @@ QSizeF EffectWindow::basicUnit() const
     return QSize(1, 1);
 }
 
-QRectF EffectWindow::decorationInnerRect() const
-{
-    return d->m_window->rect() - d->m_window->frameMargins();
-}
-
 KDecoration2::Decoration *EffectWindow::decoration() const
 {
     return d->m_window->decoration();

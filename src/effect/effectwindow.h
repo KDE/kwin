@@ -222,11 +222,6 @@ class KWIN_EXPORT EffectWindow : public QObject
      * Geometry of the actual window contents inside the whole (including decorations) window.
      */
     Q_PROPERTY(QRectF contentsRect READ contentsRect)
-    /**
-     * Geometry of the transparent rect in the decoration.
-     * May be different from contentsRect if the decoration is extended into the client area.
-     */
-    Q_PROPERTY(QRectF decorationInnerRect READ decorationInnerRect)
     Q_PROPERTY(bool hasDecoration READ hasDecoration)
     Q_PROPERTY(QStringList activities READ activities)
     Q_PROPERTY(bool onCurrentActivity READ isOnCurrentActivity)
@@ -423,12 +418,6 @@ public:
      * Geometry of the actual window contents inside the whole (including decorations) window.
      */
     QRectF contentsRect() const;
-    /**
-     * Geometry of the transparent rect in the decoration.
-     * May be different from contentsRect() if the decoration is extended into the client area.
-     * @since 4.5
-     */
-    QRectF decorationInnerRect() const;
     bool hasDecoration() const;
     bool decorationHasAlpha() const;
     /**
