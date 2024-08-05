@@ -13,6 +13,7 @@
 #include "effect/animationeffect.h"
 #include "effect/effectwindow.h"
 #include "effect/timeline.h"
+#include "scene/item.h"
 
 #include <QEasingCurve>
 
@@ -64,6 +65,7 @@ public:
     EffectWindowVisibleRef visibleRef;
     AnimationEffect::TerminationFlags terminationFlags;
     GLShader *shader{nullptr};
+    ItemEffect itemEffect;
 };
 
 } // namespace
