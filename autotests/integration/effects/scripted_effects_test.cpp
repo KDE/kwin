@@ -273,11 +273,11 @@ void ScriptedEffectsTest::testAnimations()
     QCOMPARE(workspace()->activeWindow(), c);
 
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), c->effectWindow());
-        const auto &animationsForWindow = state.first().first;
-        QCOMPARE(animationsForWindow.count(), animationCount);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(c->effectWindow()));
+        const auto &animationsForWindow = state.at(c->effectWindow()).first;
+        QCOMPARE(animationsForWindow.size(), animationCount);
         QCOMPARE(animationsForWindow[0].timeLine.duration(), 100ms);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.4));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
@@ -299,10 +299,10 @@ void ScriptedEffectsTest::testAnimations()
 
     c->setMinimized(true);
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        const auto &animationsForWindow = state.first().first;
-        QCOMPARE(animationsForWindow.count(), animationCount);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        const auto &animationsForWindow = state.at(c->effectWindow()).first;
+        QCOMPARE(animationsForWindow.size(), animationCount);
         QCOMPARE(animationsForWindow[0].timeLine.duration(), 200ms);
         QCOMPARE(animationsForWindow[0].to, FPx2(1.5));
         QCOMPARE(animationsForWindow[0].attribute, AnimationEffect::Scale);
@@ -318,8 +318,8 @@ void ScriptedEffectsTest::testAnimations()
     }
     c->setMinimized(false);
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 0);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 0);
     }
 }
 
@@ -440,7 +440,7 @@ void ScriptedEffectsTest::testKeepAlive()
     QCOMPARE(workspace()->activeWindow(), c);
 
     // no active animations at the beginning
-    QCOMPARE(effect->state().count(), 0);
+    QCOMPARE(effect->state().size(), 0);
 
     // trigger windowClosed signal
     QSignalSpy deletedRemovedSpy(workspace(), &Workspace::deletedRemoved);
@@ -448,21 +448,21 @@ void ScriptedEffectsTest::testKeepAlive()
     QVERIFY(effectOutputSpy.count() == 1 || effectOutputSpy.wait());
 
     if (keepAlive) {
-        QCOMPARE(effect->state().count(), 1);
+        QCOMPARE(effect->state().size(), 1);
         QCOMPARE(deletedRemovedSpy.count(), 0);
 
         QTest::qWait(500);
-        QCOMPARE(effect->state().count(), 1);
+        QCOMPARE(effect->state().size(), 1);
         QCOMPARE(deletedRemovedSpy.count(), 0);
 
         QTest::qWait(500 + 100); // 100ms is extra safety margin
         QCOMPARE(deletedRemovedSpy.count(), 1);
-        QCOMPARE(effect->state().count(), 0);
+        QCOMPARE(effect->state().size(), 0);
     } else {
         // the test effect doesn't keep the window alive, so it should be
         // removed immediately
         QVERIFY(deletedRemovedSpy.count() == 1 || deletedRemovedSpy.wait(100)); // 100ms is less than duration of the animation
-        QCOMPARE(effect->state().count(), 0);
+        QCOMPARE(effect->state().size(), 0);
     }
 }
 
@@ -629,11 +629,11 @@ void ScriptedEffectsTest::testRedirect()
     // initially, the test animation is at the source position
 
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(window->effectWindow()));
+        const auto &animations = state.at(window->effectWindow()).first;
+        QCOMPARE(animations.size(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Forward);
         QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
     }
@@ -650,11 +650,11 @@ void ScriptedEffectsTest::testRedirect()
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
 
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(window->effectWindow()));
+        const auto &animations = state.at(window->effectWindow()).first;
+        QCOMPARE(animations.size(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
         QVERIFY(around(animations[0].timeLine.elapsed(), 1000ms - 250ms, 50ms));
     }
@@ -665,14 +665,14 @@ void ScriptedEffectsTest::testRedirect()
 
     QFETCH(bool, shouldTerminate);
     if (shouldTerminate) {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 0);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 0);
     } else {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(window->effectWindow()));
+        const auto &animations = state.at(window->effectWindow()).first;
+        QCOMPARE(animations.size(), 1);
         QCOMPARE(animations[0].timeLine.direction(), TimeLine::Backward);
         QCOMPARE(animations[0].timeLine.elapsed(), 1000ms);
         QCOMPARE(animations[0].timeLine.value(), 0.0);
@@ -704,11 +704,11 @@ void ScriptedEffectsTest::testComplete()
 
     // initially, the test animation should be at the start position
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(window->effectWindow()));
+        const auto &animations = state.at(window->effectWindow()).first;
+        QCOMPARE(animations.size(), 1);
         QVERIFY(around(animations[0].timeLine.elapsed(), 0ms, 50ms));
         QVERIFY(!animations[0].timeLine.done());
     }
@@ -717,11 +717,11 @@ void ScriptedEffectsTest::testComplete()
     QTest::qWait(250);
 
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(window->effectWindow()));
+        const auto &animations = state.at(window->effectWindow()).first;
+        QCOMPARE(animations.size(), 1);
         QVERIFY(around(animations[0].timeLine.elapsed(), 250ms, 50ms));
         QVERIFY(!animations[0].timeLine.done());
     }
@@ -736,11 +736,11 @@ void ScriptedEffectsTest::testComplete()
     QCOMPARE(effectOutputSpy.first().first(), QStringLiteral("ok"));
 
     {
-        const auto state = effect->state();
-        QCOMPARE(state.count(), 1);
-        QCOMPARE(state.firstKey(), window->effectWindow());
-        const QList<AniData> animations = state.first().first;
-        QCOMPARE(animations.count(), 1);
+        const auto &state = effect->state();
+        QCOMPARE(state.size(), 1);
+        QVERIFY(state.contains(window->effectWindow()));
+        const auto &animations = state.at(window->effectWindow()).first;
+        QCOMPARE(animations.size(), 1);
         QCOMPARE(animations[0].timeLine.elapsed(), 1000ms);
         QVERIFY(animations[0].timeLine.done());
     }
