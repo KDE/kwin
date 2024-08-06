@@ -206,7 +206,7 @@ public:
     explicit ExpoCell(QQuickItem *parent = nullptr);
     ~ExpoCell() override;
 
-    void componentComplete();
+    void componentComplete() override;
 
     ExpoLayout *layout() const;
     void setLayout(ExpoLayout *layout);
