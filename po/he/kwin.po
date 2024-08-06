@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-03 00:41+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2024-07-17 09:17+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -2522,6 +2522,13 @@ msgid ""
 msgstr ""
 "צילום המסך בלחיצה שמאלית או enter.\n"
 "Escape או לחיצה ימנית לביטול."
+
+#: plugins/showcompositing/qml/main.qml:12
+#, fuzzy, kde-format
+#| msgid "Block Compositing"
+msgctxt "@label"
+msgid "Compositing"
+msgstr "חסימת ניהול חלונאי"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format

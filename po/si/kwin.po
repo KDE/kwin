@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-03 00:41+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -2581,6 +2581,13 @@ msgid ""
 "Create screen shot with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
+
+#: plugins/showcompositing/qml/main.qml:12
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgctxt "@label"
+msgid "Compositing"
+msgstr "බැඳීම නවතන්න"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format

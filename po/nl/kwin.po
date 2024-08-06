@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-03 00:41+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2024-07-17 10:49+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -2541,6 +2541,13 @@ msgid ""
 msgstr ""
 "Schermafdruk maken met links klikken of Enter.\n"
 "Escape of rechts klikken om te annuleren."
+
+#: plugins/showcompositing/qml/main.qml:12
+#, fuzzy, kde-format
+#| msgid "Block Compositing"
+msgctxt "@label"
+msgid "Compositing"
+msgstr "Compositing blokkeren"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format

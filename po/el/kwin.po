@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-03 00:41+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2685,6 +2685,13 @@ msgid ""
 msgstr ""
 "Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
 "Esc ή δεξί κλικ για ακύρωση."
+
+#: plugins/showcompositing/qml/main.qml:12
+#, fuzzy, kde-format
+#| msgid "Suspend Compositing"
+msgctxt "@label"
+msgid "Compositing"
+msgstr "Αναστολή σύνθεσης"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, fuzzy, kde-format

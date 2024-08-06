@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-03 00:41+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2024-06-30 13:36+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -2515,6 +2515,13 @@ msgid ""
 msgstr ""
 "படமெடுக்க இடது க்ளிக்கை அல்லது enter விசையை பயன்படுத்துங்கள்.\n"
 "கைவிட escape விசையை அல்லது வலது க்ளிக்கை பயன்படுத்துங்கள்."
+
+#: plugins/showcompositing/qml/main.qml:12
+#, fuzzy, kde-format
+#| msgid "Block Compositing"
+msgctxt "@label"
+msgid "Compositing"
+msgstr "சாளரநிரலைத் தடு"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format

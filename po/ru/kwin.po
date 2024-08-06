@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-03 00:41+0000\n"
+"POT-Creation-Date: 2024-08-06 00:40+0000\n"
 "PO-Revision-Date: 2024-05-28 11:00+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -2565,6 +2565,13 @@ msgstr ""
 "Щёлкните левой кнопкой мыши или нажмите Enter, чтобы\n"
 "сделать снимок экрана. Для отмены нажмите Esc или правую\n"
 "кнопку мыши."
+
+#: plugins/showcompositing/qml/main.qml:12
+#, fuzzy, kde-format
+#| msgid "Block Compositing"
+msgctxt "@label"
+msgid "Compositing"
+msgstr "Не применять графические эффекты"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
