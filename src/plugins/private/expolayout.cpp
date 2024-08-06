@@ -16,8 +16,8 @@
 ExpoCell::ExpoCell(QQuickItem *parent)
     : QQuickItem(parent)
 {
-    connect(this, &ExpoCell::enabledChanged, this, [this]() {
-        if (isEnabled()) {
+    connect(this, &ExpoCell::visibleChanged, this, [this]() {
+        if (isVisible()) {
             if (m_layout) {
                 m_layout->addCell(this);
             }
@@ -25,6 +25,9 @@ ExpoCell::ExpoCell(QQuickItem *parent)
             if (m_layout) {
                 m_layout->removeCell(this);
             }
+        }
+        if (m_contentItem) {
+            m_contentItem->setVisible(isVisible());
         }
     });
 
@@ -82,6 +85,7 @@ void ExpoCell::setContentItem(QQuickItem *item)
     }
 
     m_contentItem = item;
+    m_contentItem->setVisible(isVisible());
 
     polish();
     Q_EMIT contentItemChanged();
@@ -100,7 +104,7 @@ void ExpoCell::setPartialActivationFactor(qreal factor)
 
     m_partialActivationFactor = factor;
     // Since this in anuimation controller we want it to have immediate effect
-    updatePolish();
+    updateContentItemGeometry();
 
     Q_EMIT partialActivationFactorChanged();
 }
@@ -239,11 +243,11 @@ void ExpoCell::setBottomMargin(qreal margin)
 
 void ExpoCell::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
-    updatePolish();
+    updateContentItemGeometry();
     QQuickItem::geometryChange(newGeometry, oldGeometry);
 }
 
-void ExpoCell::updatePolish()
+void ExpoCell::updateContentItemGeometry()
 {
     if (!m_contentItem) {
         return;

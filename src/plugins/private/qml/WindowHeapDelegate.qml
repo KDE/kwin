@@ -70,7 +70,7 @@ ExpoCell {
     }
 
     layout: windowHeap.layout
-    enabled: !thumb.activeHidden
+    visible: !thumb.activeHidden
     partialActivationFactor: effect.partialActivationFactor
     naturalX: thumb.window.x - thumb.window.output.geometry.x
     naturalY: thumb.window.y - thumb.window.output.geometry.y
@@ -111,7 +111,7 @@ ExpoCell {
     contentItem: Item {
         id: mainContent
         parent: contentItemParent
-        visible: opacity > 0
+        visible: opacity > 0 && (!activeHidden || !initialHidden)
         opacity: 1 - downGestureProgress
         z: (activeDragHandler.active || returnAnimation.running) ? 1000
             : thumb.window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)

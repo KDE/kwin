@@ -214,8 +214,6 @@ public:
     QQuickItem *contentItem() const;
     void setContentItem(QQuickItem *item);
 
-    void updateContentItemGeometry();
-
     qreal partialActivationFactor() const;
     void setPartialActivationFactor(qreal factor);
 
@@ -248,7 +246,6 @@ public:
 
 protected:
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
-    void updatePolish() override;
 
 public Q_SLOTS:
     void update();
@@ -267,6 +264,8 @@ Q_SIGNALS:
     void bottomMarginChanged();
 
 private:
+    void updateContentItemGeometry();
+
     QString m_persistentKey;
     qreal m_offsetX = 0;
     qreal m_offsetY = 0;
