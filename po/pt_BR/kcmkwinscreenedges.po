@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-07-26 22:56-0300\n"
+"PO-Revision-Date: 2024-08-05 13:57-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
@@ -249,6 +249,11 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"Aqui você pode habilitar ou desabilitar a barreira de canto virtual entre "
+"telas. A barreira impede que o cursor se mova para outra tela quando ele já "
+"estiver tocando em um canto da tela. Isso facilita o acionamento de "
+"elementos da interface do usuário, como botões de fechar janelas "
+"maximizadas, ao usar várias telas."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
@@ -273,6 +278,11 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"Aqui você pode definir o tamanho da barreira de borda entre telas "
+"diferentes. A barreira adiciona uma distância extra que você tem que mover "
+"seu ponteiro antes que ele cruze a borda para a outra tela. Isso torna mais "
+"fácil acessar elementos da interface do usuário como painéis do Plasma que "
+"estão localizados em uma borda entre telas."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303

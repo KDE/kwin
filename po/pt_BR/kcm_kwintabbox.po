@@ -5,20 +5,21 @@
 # Luiz Fernando Ranghetti <elchevive@opensuse.org>, 2009, 2010, 2012, 2016, 2017, 2018, 2021, 2022.
 # André Marcelo Alvarenga <alvarenga@kde.org>, 2009, 2010, 2011, 2012, 2014, 2015, 2019.
 # Marcus Gama <marcus.gama@gmail.com>, 2012.
+# SPDX-FileCopyrightText: 2024 Geraldo Simiao <geraldosimiao@fedoraproject.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-29 00:39+0000\n"
-"PO-Revision-Date: 2022-07-13 11:55-0300\n"
-"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
-"Language-Team: Portuguese <kde-i18n-pt_BR@kde.org>\n"
+"PO-Revision-Date: 2024-08-05 13:58-0300\n"
+"Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: layoutpreview.cpp:127
 #, kde-format
@@ -42,8 +43,7 @@ msgid "Alternative"
 msgstr "Alternativo"
 
 #: main.cpp:69
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers..."
+#, kde-format
 msgid "Get New Task Switchers…"
 msgstr "Baixar novo seletor de tarefas..."
 
@@ -63,10 +63,9 @@ msgstr "Conteúdo"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Show Desktop\" entry"
-msgstr "Incluir ícone \"Mostrar área de trabalho\""
+msgstr "Incluir \"Mostrar área de trabalho\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
@@ -242,42 +241,42 @@ msgstr "Mostrar a janela selecionada"
 #: shortcutsettings.cpp:132
 #, kde-format
 msgid "Walk Through Windows"
-msgstr ""
+msgstr "Passear pelas janelas"
 
 #: shortcutsettings.cpp:133
 #, kde-format
 msgid "Walk Through Windows (Reverse)"
-msgstr ""
+msgstr "Passear pelas janelas (sentido inverso)"
 
 #: shortcutsettings.cpp:134
 #, kde-format
 msgid "Walk Through Windows of Current Application"
-msgstr ""
+msgstr "Passear pelas janelas do aplicativo atual"
 
 #: shortcutsettings.cpp:135
 #, kde-format
 msgid "Walk Through Windows of Current Application (Reverse)"
-msgstr ""
+msgstr "Passear pelas janelas do aplicativo atual (reverso)"
 
 #: shortcutsettings.cpp:137
 #, kde-format
 msgid "Walk Through Windows Alternative"
-msgstr ""
+msgstr "Passear pelas janelas alternativo"
 
 #: shortcutsettings.cpp:138
 #, kde-format
 msgid "Walk Through Windows Alternative (Reverse)"
-msgstr ""
+msgstr "Passear pelas janelas alternativo (reverso)"
 
 #: shortcutsettings.cpp:139
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative"
-msgstr ""
+msgstr "Passear pelas janelas do aplicativo atual alternativo"
 
 #: shortcutsettings.cpp:140
 #, kde-format
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
-msgstr ""
+msgstr "Passear pelas janelas do aplicativo atual alternativo (reverso)"
 
 #~ msgid "KWin"
 #~ msgstr "KWin"
