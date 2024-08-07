@@ -637,7 +637,7 @@ private:
 
     void closeActivePopup();
     void updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop);
-    void activateWindowOnNewDesktop(VirtualDesktop *desktop);
+    void activateWindowOnDesktop(VirtualDesktop *desktop);
     Window *findWindowToActivateOnDesktop(VirtualDesktop *desktop);
     void removeWindow(Window *window);
     QString getPlacementTrackerHash();
