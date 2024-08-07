@@ -11,18 +11,15 @@
 #include <deque>
 #include <tuple>
 
-#include <QSGTransformNode>
 
 ExpoCell::ExpoCell(QQuickItem *parent)
     : QQuickItem(parent)
 {
     connect(this, &ExpoCell::visibleChanged, this, [this]() {
-        if (isVisible()) {
-            if (m_layout) {
+        if (m_layout) {
+            if (isVisible()) {
                 m_layout->addCell(this);
-            }
-        } else {
-            if (m_layout) {
+            } else {
                 m_layout->removeCell(this);
             }
         }
@@ -31,6 +28,8 @@ ExpoCell::ExpoCell(QQuickItem *parent)
         }
     });
 
+    // This only works for a static visual tree hierarchy.
+    // TODO: Make it work with reparenting or warn if any parent in the tree changes?
     QQuickItem *ancestor = this;
     while (ancestor) {
         connect(ancestor, &QQuickItem::xChanged, this, &ExpoCell::polish);
@@ -85,7 +84,10 @@ void ExpoCell::setContentItem(QQuickItem *item)
     }
 
     m_contentItem = item;
-    m_contentItem->setVisible(isVisible());
+
+    if (m_contentItem) {
+        m_contentItem->setVisible(isVisible());
+    }
 
     polish();
     Q_EMIT contentItemChanged();
@@ -103,7 +105,7 @@ void ExpoCell::setPartialActivationFactor(qreal factor)
     }
 
     m_partialActivationFactor = factor;
-    // Since this in anuimation controller we want it to have immediate effect
+    // Since this is an animation controller we want it to have immediate effect
     updateContentItemGeometry();
 
     Q_EMIT partialActivationFactorChanged();

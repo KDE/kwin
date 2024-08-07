@@ -80,28 +80,28 @@ ExpoCell {
     bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
 
     Behavior on x {
-        enabled: isReady
+        enabled: thumb.isReady
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
     Behavior on y {
-        enabled: isReady
+        enabled: thumb.isReady
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
     Behavior on width {
-        enabled: isReady
+        enabled: thumb.isReady
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
     Behavior on height {
-        enabled: isReady
+        enabled: thumb.isReady
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
