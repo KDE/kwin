@@ -82,7 +82,7 @@ TrackMouseEffect::~TrackMouseEffect()
 
 void TrackMouseEffect::reconfigure(ReconfigureFlags)
 {
-    const bool active = bool(m_modifiers);
+    const bool needMouseEventsOld = needMouseEvents();
     m_modifiers = Qt::KeyboardModifiers();
     TrackMouseConfig::self()->read();
     if (TrackMouseConfig::shift()) {
@@ -97,10 +97,10 @@ void TrackMouseEffect::reconfigure(ReconfigureFlags)
     if (TrackMouseConfig::meta()) {
         m_modifiers |= Qt::MetaModifier;
     }
-    const bool newActive = bool(m_modifiers);
-    if (newActive && !active) {
+    const bool needMouseEventsNew = needMouseEvents();
+    if (needMouseEventsNew && !needMouseEventsOld) {
         connect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
-    } else if (!newActive && active) {
+    } else if (!needMouseEventsNew && needMouseEventsOld) {
         disconnect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
     }
 }
@@ -116,6 +116,7 @@ void TrackMouseEffect::prePaintScreen(ScreenPrePaintData &data, std::chrono::mil
 
 void TrackMouseEffect::toggle()
 {
+    const bool needMouseEventsOld = needMouseEvents();
     switch (m_state) {
     case State::ActivatedByModifiers:
         m_state = State::ActivatedByShortcut;
@@ -134,6 +135,12 @@ void TrackMouseEffect::toggle()
         break;
     }
 
+    const bool needMouseEventsNew = needMouseEvents();
+    if (needMouseEventsNew && !needMouseEventsOld) {
+        connect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
+    } else if (!needMouseEventsNew && needMouseEventsOld) {
+        disconnect(effects, &EffectsHandler::mouseChanged, this, &TrackMouseEffect::slotMouseChanged);
+    }
     if (m_state == State::Inactive) {
         m_rotatingArcsItem.reset();
     } else {
@@ -182,6 +189,11 @@ void TrackMouseEffect::slotMouseChanged(const QPointF &, const QPointF &,
 bool TrackMouseEffect::isActive() const
 {
     return m_state != State::Inactive;
+}
+
+bool TrackMouseEffect::needMouseEvents() const
+{
+    return m_state != State::Inactive || m_modifiers;
 }
 
 } // namespace

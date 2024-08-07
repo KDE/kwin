@@ -66,6 +66,7 @@ private:
     float m_angle = 0;
     Qt::KeyboardModifiers m_modifiers;
     std::unique_ptr<RotatingArcsItem> m_rotatingArcsItem;
+    bool needMouseEvents() const;
 };
 
 } // namespace
