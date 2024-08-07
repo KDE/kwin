@@ -562,9 +562,9 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
                 if (m_window->desktops().contains(desktop)) {
-                    m_window->leaveDesktop(desktop);
+                    Workspace::self()->removeWindowFromDesktop(m_window, desktop);
                 } else {
-                    m_window->enterDesktop(desktop);
+                    Workspace::self()->addWindowToDesktop(m_window, desktop);
                 }
             }
         });
@@ -581,7 +581,7 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
         QAction *action = m_multipleDesktopsMenu->addAction(name);
         connect(action, &QAction::triggered, this, [this, desktop]() {
             if (m_window) {
-                m_window->setDesktops({desktop});
+                Workspace::self()->sendWindowToDesktops(m_window, {desktop}, false);
             }
         });
     }
@@ -597,7 +597,7 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
         }
         VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
         if (desktop) {
-            m_window->enterDesktop(desktop);
+            Workspace::self()->addWindowToDesktop(m_window, desktop);
         }
     });
     action->setEnabled(allowNewDesktops);
@@ -609,7 +609,7 @@ void UserActionsMenu::multipleDesktopsPopupAboutToShow()
         }
         VirtualDesktop *desktop = vds->createVirtualDesktop(vds->count());
         if (desktop) {
-            m_window->setDesktops({desktop});
+            Workspace::self()->sendWindowToDesktops(m_window, {desktop}, false);
         }
     });
     action->setEnabled(allowNewDesktops);
