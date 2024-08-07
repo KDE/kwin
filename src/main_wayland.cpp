@@ -289,8 +289,6 @@ int main(int argc, char *argv[])
     // reset QT_QPA_PLATFORM so we don't propagate it to our children (e.g. apps launched from the overview effect)
     qunsetenv("QT_QPA_PLATFORM");
 
-    KCrash::initialize();
-
     KSignalHandler::self()->watchSignal(SIGTERM);
     KSignalHandler::self()->watchSignal(SIGINT);
     KSignalHandler::self()->watchSignal(SIGHUP);
@@ -298,6 +296,8 @@ int main(int argc, char *argv[])
                      &a, &QCoreApplication::exit);
 
     KWin::Application::createAboutData();
+
+    KCrash::initialize();
 
 #if KWIN_BUILD_X11
     QCommandLineOption xwaylandOption(QStringLiteral("xwayland"),
