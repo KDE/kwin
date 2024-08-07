@@ -192,6 +192,7 @@ class ExpoCell : public QQuickItem
     Q_PROPERTY(ExpoLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
     Q_PROPERTY(QQuickItem *contentItem READ contentItem WRITE setContentItem NOTIFY contentItemChanged)
     Q_PROPERTY(qreal partialActivationFactor READ partialActivationFactor WRITE setPartialActivationFactor NOTIFY partialActivationFactorChanged)
+    Q_PROPERTY(bool shouldLayout READ shouldLayout WRITE setShouldLayout NOTIFY shouldLayoutChanged)
     Q_PROPERTY(qreal offsetX READ offsetX WRITE setOffsetX NOTIFY offsetXChanged)
     Q_PROPERTY(qreal offsetY READ offsetY WRITE setOffsetY NOTIFY offsetYChanged)
     Q_PROPERTY(qreal naturalX READ naturalX WRITE setNaturalX NOTIFY naturalXChanged)
@@ -209,6 +210,9 @@ public:
 
     ExpoLayout *layout() const;
     void setLayout(ExpoLayout *layout);
+
+    bool shouldLayout() const;
+    void setShouldLayout(bool layout);
 
     QQuickItem *contentItem() const;
     void setContentItem(QQuickItem *item);
@@ -248,6 +252,7 @@ protected:
 
 Q_SIGNALS:
     void layoutChanged();
+    void shouldLayoutChanged();
     void contentItemChanged();
     void partialActivationFactorChanged();
     void offsetXChanged();
@@ -274,6 +279,7 @@ private:
     QPointer<ExpoLayout> m_layout;
     QPointer<QQuickItem> m_contentItem;
     qreal m_partialActivationFactor = 1.0;
+    bool m_shouldLayout = true;
 };
 
 /**

@@ -16,13 +16,6 @@ ExpoCell::ExpoCell(QQuickItem *parent)
     : QQuickItem(parent)
 {
     connect(this, &ExpoCell::visibleChanged, this, [this]() {
-        if (m_layout) {
-            if (isVisible()) {
-                m_layout->addCell(this);
-            } else {
-                m_layout->removeCell(this);
-            }
-        }
         if (m_contentItem) {
             m_contentItem->setVisible(isVisible());
         }
@@ -65,11 +58,35 @@ void ExpoCell::setLayout(ExpoLayout *layout)
         m_layout->removeCell(this);
     }
     m_layout = layout;
-    if (m_layout && isVisible()) {
+    if (m_layout && m_shouldLayout) {
         m_layout->addCell(this);
     }
     polish();
     Q_EMIT layoutChanged();
+}
+
+bool ExpoCell::shouldLayout() const
+{
+    return m_shouldLayout;
+}
+
+void ExpoCell::setShouldLayout(bool shouldLayout)
+{
+    if (shouldLayout == m_shouldLayout) {
+        return;
+    }
+
+    m_shouldLayout = shouldLayout;
+
+    if (m_layout) {
+        if (m_shouldLayout) {
+            m_layout->addCell(this);
+        } else {
+            m_layout->removeCell(this);
+        }
+    }
+
+    Q_EMIT shouldLayoutChanged();
 }
 
 QQuickItem *ExpoCell::contentItem() const

@@ -70,7 +70,7 @@ ExpoCell {
     }
 
     layout: windowHeap.layout
-    visible: !thumb.activeHidden
+    shouldLayout: !thumb.activeHidden
     partialActivationFactor: effect.partialActivationFactor
     naturalX: thumb.window.x - thumb.window.output.geometry.x
     naturalY: thumb.window.y - thumb.window.output.geometry.y
