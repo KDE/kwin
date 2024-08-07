@@ -1443,6 +1443,26 @@ void Workspace::selectWmInputEventMask()
 }
 #endif
 
+void Workspace::addWindowToDesktop(Window *window, VirtualDesktop *desktop)
+{
+    auto desktops = window->desktops();
+    if (desktops.contains(desktop)) {
+        return;
+    }
+    desktops.append(desktop);
+    sendWindowToDesktops(window, desktops, false);
+}
+
+void Workspace::removeWindowFromDesktop(Window *window, VirtualDesktop *desktop)
+{
+    auto desktops = window->desktops();
+    if (!desktops.contains(desktop)) {
+        return;
+    }
+    desktops.removeOne(desktop);
+    sendWindowToDesktops(window, desktops, false);
+}
+
 /**
  * Sends window \a window to desktop \a desk.
  *
