@@ -62,6 +62,9 @@ private:
         ActivatedByShortcut,
         Inactive
     };
+
+    bool needMouseEvents() const;
+
     State m_state = State::Inactive;
     float m_angle = 0;
     Qt::KeyboardModifiers m_modifiers;
