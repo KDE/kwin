@@ -41,7 +41,7 @@ ExpoCell::~ExpoCell()
 void ExpoCell::componentComplete()
 {
     QQuickItem::componentComplete();
-    polish();
+    updateContentItemGeometry();
 }
 
 ExpoLayout *ExpoCell::layout() const
@@ -61,7 +61,7 @@ void ExpoCell::setLayout(ExpoLayout *layout)
     if (m_layout && m_shouldLayout) {
         m_layout->addCell(this);
     }
-    polish();
+    updateContentItemGeometry();
     Q_EMIT layoutChanged();
 }
 
@@ -106,7 +106,7 @@ void ExpoCell::setContentItem(QQuickItem *item)
         m_contentItem->setVisible(isVisible());
     }
 
-    polish();
+    updateContentItemGeometry();
     Q_EMIT contentItemChanged();
 }
 
@@ -144,7 +144,7 @@ void ExpoCell::setOffsetX(qreal x)
 {
     if (m_offsetX != x) {
         m_offsetX = x;
-        polish();
+        updateContentItemGeometry();
         Q_EMIT offsetXChanged();
     }
 }
@@ -158,7 +158,7 @@ void ExpoCell::setOffsetY(qreal y)
 {
     if (m_offsetY != y) {
         m_offsetY = y;
-        polish();
+        updateContentItemGeometry();
         Q_EMIT offsetYChanged();
     }
 }
@@ -173,7 +173,7 @@ void ExpoCell::setNaturalX(qreal x)
     if (m_naturalX != x) {
         m_naturalX = x;
         updateLayout();
-        polish();
+        updateContentItemGeometry();
         Q_EMIT naturalXChanged();
     }
 }
@@ -202,7 +202,7 @@ void ExpoCell::setNaturalWidth(qreal width)
     if (m_naturalWidth != width) {
         m_naturalWidth = width;
         updateLayout();
-        polish();
+        updateContentItemGeometry();
         Q_EMIT naturalWidthChanged();
     }
 }
@@ -217,7 +217,7 @@ void ExpoCell::setNaturalHeight(qreal height)
     if (m_naturalHeight != height) {
         m_naturalHeight = height;
         updateLayout();
-        polish();
+        updateContentItemGeometry();
         Q_EMIT naturalHeightChanged();
     }
 }
