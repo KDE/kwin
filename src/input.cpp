@@ -2399,7 +2399,13 @@ public:
             return nullptr;
         }
 
+        // NOTE: tablet may be nullptr when the device is removed (see ::removeDevice) but events from the tool
+        // may still happen.
         auto tablet = static_cast<TabletV2Interface *>(tabletPadId.data);
+        if (!tablet) {
+            return nullptr;
+        }
+
         SurfaceInterface *surface = window->surface();
         auto pad = tablet->pad();
         if (!pad) {
