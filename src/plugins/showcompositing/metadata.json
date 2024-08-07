@@ -2,8 +2,32 @@
     "KPlugin": {
         "Category": "Tools",
         "Description": "Display if compositing is active",
+        "Description[ca]": "Mostra si la composició està activa",
+        "Description[es]": "Mostrar si la composición está activa",
+        "Description[eu]": "Azaldu konposatzea aktibo dagoen",
+        "Description[he]": "להציג אם ניהול חלונאי פעיל",
+        "Description[ka]": "ჩვენება, თუ კომპოზიცია ჩართულია",
+        "Description[nl]": "Tonen indien samenstellen actief is",
+        "Description[pt_BR]": "Exibir se a composição está ativa",
+        "Description[sl]": "Prikaži, če je upravljalnik skladnje aktiven",
+        "Description[sv]": "Visa om sammansättning är aktiv",
+        "Description[tr]": "Bileşikleştirme etkinse görüntüle",
+        "Description[uk]": "Показувати, чи активною є композиція",
+        "Description[x-test]": "xxDisplay if compositing is activexx",
         "EnabledByDefault": false,
         "License": "GPL",
-        "Name": "Show Compositing"
+        "Name": "Show Compositing",
+        "Name[ca]": "Mostra la composició",
+        "Name[es]": "Mostrar composición",
+        "Name[eu]": "Erakutsi konposatzea",
+        "Name[he]": "הצגת ניהול חלונאי",
+        "Name[ka]": "კომპოზიციის ჩვენება",
+        "Name[nl]": "Opstellen tonen",
+        "Name[pt_BR]": "Mostrar composição",
+        "Name[sl]": "Prikaži Upravljalnik skladnje",
+        "Name[sv]": "Visa sammansättning",
+        "Name[tr]": "Bileşikleştirmeyi Göster",
+        "Name[uk]": "Показувати композицію",
+        "Name[x-test]": "xxShow Compositingxx"
     }
 }
