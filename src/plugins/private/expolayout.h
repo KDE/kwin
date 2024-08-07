@@ -246,9 +246,6 @@ public:
 protected:
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
 
-public Q_SLOTS:
-    void update();
-
 Q_SIGNALS:
     void layoutChanged();
     void contentItemChanged();
@@ -264,6 +261,7 @@ Q_SIGNALS:
 
 private:
     void updateContentItemGeometry();
+    void updateLayout();
 
     QString m_persistentKey;
     qreal m_offsetX = 0;

@@ -111,7 +111,7 @@ void ExpoCell::setPartialActivationFactor(qreal factor)
     Q_EMIT partialActivationFactorChanged();
 }
 
-void ExpoCell::update()
+void ExpoCell::updateLayout()
 {
     if (m_layout) {
         m_layout->polish();
@@ -155,7 +155,7 @@ void ExpoCell::setNaturalX(qreal x)
 {
     if (m_naturalX != x) {
         m_naturalX = x;
-        update();
+        updateLayout();
         polish();
         Q_EMIT naturalXChanged();
     }
@@ -170,7 +170,7 @@ void ExpoCell::setNaturalY(qreal y)
 {
     if (m_naturalY != y) {
         m_naturalY = y;
-        update();
+        updateLayout();
         Q_EMIT naturalYChanged();
     }
 }
@@ -184,7 +184,7 @@ void ExpoCell::setNaturalWidth(qreal width)
 {
     if (m_naturalWidth != width) {
         m_naturalWidth = width;
-        update();
+        updateLayout();
         polish();
         Q_EMIT naturalWidthChanged();
     }
@@ -199,7 +199,7 @@ void ExpoCell::setNaturalHeight(qreal height)
 {
     if (m_naturalHeight != height) {
         m_naturalHeight = height;
-        update();
+        updateLayout();
         polish();
         Q_EMIT naturalHeightChanged();
     }
@@ -224,7 +224,7 @@ void ExpoCell::setPersistentKey(const QString &key)
 {
     if (m_persistentKey != key) {
         m_persistentKey = key;
-        update();
+        updateLayout();
         Q_EMIT persistentKeyChanged();
     }
 }
