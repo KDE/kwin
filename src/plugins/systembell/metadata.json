@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Provides the bell",
+        "Description[bg]": "Предоставя системна сигнализация",
         "Description[ca@valencia]": "Proporciona el timbre",
         "Description[ca]": "Proporciona el timbre",
         "Description[eo]": "Provizas la pepon",
@@ -26,6 +27,7 @@
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "System Bell",
+        "Name[bg]": "Системна сигнализация",
         "Name[ca@valencia]": "Timbre del sistema",
         "Name[ca]": "Timbre del sistema",
         "Name[eo]": "Sistempepo",

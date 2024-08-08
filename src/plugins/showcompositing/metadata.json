@@ -2,6 +2,8 @@
     "KPlugin": {
         "Category": "Tools",
         "Description": "Display if compositing is active",
+        "Description[bg]": "Показване, ако композирането е активно",
+        "Description[ca@valencia]": "Mostra si la composició està activa",
         "Description[ca]": "Mostra si la composició està activa",
         "Description[es]": "Mostrar si la composición está activa",
         "Description[eu]": "Azaldu konposatzea aktibo dagoen",
@@ -17,6 +19,8 @@
         "EnabledByDefault": false,
         "License": "GPL",
         "Name": "Show Compositing",
+        "Name[bg]": "Показване на визуални ефекти",
+        "Name[ca@valencia]": "Mostra la composició",
         "Name[ca]": "Mostra la composició",
         "Name[es]": "Mostrar composición",
         "Name[eu]": "Erakutsi konposatzea",
