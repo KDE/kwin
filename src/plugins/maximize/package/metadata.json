@@ -44,6 +44,7 @@
         "Description[nn]": "Vindaugsanimasjon i samband med bruk av maksimering/gjenoppretting",
         "Description[pl]": "Okna są gładko skalowane przy maksymalizacji i przy powrocie z niej",
         "Description[pt]": "Animação para uma janela ao maximizar-se/repor-se da maximização",
+        "Description[pt_BR]": "Animação para uma janela indo para maximizar/restaurar a partir da maximização",
         "Description[ro]": "Animație pentru o fereastră ce trece la maximizare/restabilire din maximizare",
         "Description[ru]": "Анимация для окна, которое будет максимизировано/восстановит размер после максимизации",
         "Description[sk]": "Animácia pre okno, ktoré sa maximalizuje/obnoví z maximalizácie",

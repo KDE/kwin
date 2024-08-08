@@ -43,6 +43,7 @@
         "Description[nn]": "Fjern fargemetting på vindauge på program som ikkje lenger reagerer",
         "Description[pl]": "Odbarwia okna nieodpowiadających (zawieszonych) aplikacji",
         "Description[pt]": "Reduzir a saturação das janelas bloqueadas (sem resposta)",
+        "Description[pt_BR]": "Desaturar janelas de aplicativos que não respondem (congelados)",
         "Description[ro]": "Desaturează ferestrele aplicațiilor ce nu răspund (înghețate)",
         "Description[ru]": "Обесцвечивание окон приложений, не отвечающих на запросы",
         "Description[sk]": "Desaturácia okien nereagujúcich (zmrazených) aplikácií",

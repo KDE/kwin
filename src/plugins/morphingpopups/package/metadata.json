@@ -40,6 +40,7 @@
         "Description[nn]": "Krysstoningsanimasjon når hjelpebobler eller varslingar endrar form",
         "Description[pl]": "Efekt zmiany kształtu podpowiedzi i powiadomień przy zmianie ich geometrii",
         "Description[pt]": "Animações desvanecidas quando as dicas ou notificações mudam de tamanho",
+        "Description[pt_BR]": "Animação 'cross fade' quando as dicas de ferramentas ou notificações alteram sua geometria",
         "Description[ru]": "При изменении формы всплывающих подсказок или уведомлений они плавно растягиваются или сжимаются",
         "Description[sk]": "Animácia krížového prelínania, keď sa zmení geometria nápovedy k nástrojom alebo oznámení",
         "Description[sl]": "Animacija navzkrižnega preliva, ko se orodnim namigom ali obvestilom spremeni geometrija",
