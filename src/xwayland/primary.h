@@ -55,7 +55,6 @@ private:
     QMetaObject::Connection m_checkConnection;
 
     Q_DISABLE_COPY(Primary)
-    bool m_waitingForTargets = false;
     std::unique_ptr<XwlDataSource> m_primarySelectionSource;
 };
 
