@@ -54,7 +54,9 @@
 // Qt
 #include <QCommandLineParser>
 #include <QQuickWindow>
+#if KWIN_BUILD_X11
 #include <private/qtx11extras_p.h>
+#endif
 #include <qplatformdefs.h>
 
 #include <cerrno>
