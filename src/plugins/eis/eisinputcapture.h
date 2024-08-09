@@ -40,6 +40,7 @@ public:
     eis_device *absoluteDevice() const;
 
     void activate(const QPointF &position);
+    void deactivate();
 
     Q_INVOKABLE QDBusUnixFileDescriptor connectToEIS();
     Q_INVOKABLE void enable(const QList<QPair<QPoint, QPoint>> &barriers);
@@ -53,7 +54,6 @@ Q_SIGNALS:
 private:
     void handleEvents();
     void createDevice();
-    void deactivate();
 
     EisInputCaptureManager *m_manager;
     QList<EisInputCaptureBarrier> m_barriers;

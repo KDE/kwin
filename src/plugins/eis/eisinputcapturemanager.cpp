@@ -59,7 +59,7 @@ public:
     void keyEvent(KWin::KeyEvent *event) override
     {
         if (manager->activeCapture() && event->key() == Qt::Key_Escape && event->modifiers() == (Qt::ControlModifier | Qt::ShiftModifier)) {
-            manager->activeCapture()->disable();
+            manager->activeCapture()->deactivate();
         }
     }
 
