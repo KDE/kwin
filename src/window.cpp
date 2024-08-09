@@ -3652,6 +3652,21 @@ void Window::setTile(Tile *tile)
     if (m_tile) {
         Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
+        if (m_requestedQuickTileMode & (QuickTileFlag::Left | QuickTileFlag::Right | QuickTileFlag::Top | QuickTileFlag::Bottom)) {
+            for (KWin::VirtualDesktop *desktop : VirtualDesktopManager::self()->desktops()) {
+                TileManager *manager = workspace()->tileManager(output(), desktop);
+                Tile *oldOwner = manager->windowOwner(this);
+                if (!oldOwner || oldOwner->quickTileMode() != m_requestedQuickTileMode) {
+                    manager->forgetWindow(this);
+                    manager->quickTile(m_requestedQuickTileMode)->addWindow(this);
+                }
+            }
+        }
+    } else if (oldTile && oldTile->quickTileMode() & (QuickTileFlag::Left | QuickTileFlag::Right | QuickTileFlag::Top | QuickTileFlag::Bottom)) {
+        for (KWin::VirtualDesktop *desktop : VirtualDesktopManager::self()->desktops()) {
+            TileManager *manager = workspace()->tileManager(output(), desktop);
+            manager->forgetWindow(this);
+        }
     }
 
     if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
