@@ -223,6 +223,7 @@ void QuickRootTile::setVerticalSplit(qreal split)
 
 void QuickRootTile::tryReset()
 {
+    qWarning() << "RESTORING?";
     if (!m_topLeftTile->windows().isEmpty()) {
         return;
     }
@@ -239,6 +240,22 @@ void QuickRootTile::tryReset()
         return;
     }
 
+    if (!m_leftVerticalTile->windows().isEmpty()) {
+        return;
+    }
+
+    if (!m_rightVerticalTile->windows().isEmpty()) {
+        return;
+    }
+
+    if (!m_topHorizontalTile->windows().isEmpty()) {
+        return;
+    }
+
+    if (!m_bottomHorizontalTile->windows().isEmpty()) {
+        return;
+    }
+    qWarning() << "RESTORING THE SPLIT";
     if (m_leftVerticalTile->windows().isEmpty() && m_rightVerticalTile->windows().isEmpty()) {
         setHorizontalSplit(0.5);
     }
