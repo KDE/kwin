@@ -128,11 +128,21 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_hdr_metadata(R
                                                                                uint32_t max_display_mastering_luminance, uint32_t min_display_mastering_luminance,
                                                                                uint32_t max_cll, uint32_t max_fall)
 {
-    if (max_fall > 0) {
+    // max_display_mastering_luminance and max_cll more or less have the same meaning in practice
+    // it seems that max_cll, if set, is more accurate, so prefer it
+    if (max_cll != 0) {
+        m_maxPeakBrightness = max_cll;
+    } else if (max_display_mastering_luminance != 0) {
+        m_maxPeakBrightness = max_display_mastering_luminance;
+    }
+    if (max_fall != 0 && (!m_maxPeakBrightness || max_fall <= *m_maxPeakBrightness)) {
         m_maxAverageLuminance = max_fall;
     }
-    if (max_cll > 0) {
-        m_maxPeakBrightness = max_cll;
+    const double minLuminance = min_display_mastering_luminance / 10'000.0;
+    if ((!m_maxPeakBrightness && !m_maxAverageLuminance)
+        || (m_maxPeakBrightness && minLuminance < *m_maxPeakBrightness)
+        || (m_maxAverageLuminance && minLuminance < *m_maxAverageLuminance)) {
+        m_minMasteringLuminance = minLuminance;
     }
     if (mastering_display_primary_red_x > 0 && mastering_display_primary_red_y > 0 && mastering_display_primary_green_x > 0 && mastering_display_primary_green_y > 0 && mastering_display_primary_blue_x > 0 && mastering_display_primary_blue_y > 0 && mastering_white_point_x > 0 && mastering_white_point_y > 0) {
         m_masteringColorimetry = Colorimetry{
@@ -163,7 +173,7 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
         if (!m_transferFunction.isRelative()) {
             referenceLuminance = priv->preferredColorDescription.value_or(ColorDescription::sRGB).referenceLuminance();
         }
-        priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, referenceLuminance, 0, m_maxAverageLuminance, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
+        priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, referenceLuminance, m_minMasteringLuminance.value_or(m_transferFunction.minLuminance), m_maxAverageLuminance, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
         priv->pending->colorDescriptionIsSet = true;
     }
 }
