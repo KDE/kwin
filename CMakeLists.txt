@@ -285,6 +285,13 @@ if (KWIN_BUILD_X11)
 
     # for kwin internal things
     set(HAVE_X11_XCB ${X11_XCB_FOUND})
+
+    find_package(X11)
+    set_package_properties(X11 PROPERTIES
+        DESCRIPTION "X11 libraries"
+        URL "https://www.x.org"
+        TYPE REQUIRED
+    )
 else()
     set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building kwin_x11" FORCE)
 endif()
@@ -322,12 +329,6 @@ endif()
 pkg_check_modules(Libxcvt IMPORTED_TARGET libxcvt>=0.1.1 REQUIRED)
 add_feature_info(Libxcvt Libxcvt_FOUND "Required for generating modes in the drm backend")
 
-find_package(X11)
-set_package_properties(X11 PROPERTIES
-    DESCRIPTION "X11 libraries"
-    URL "https://www.x.org"
-    TYPE REQUIRED
-)
 add_feature_info("XInput" X11_Xi_FOUND "Required for poll-free mouse cursor updates")
 set(HAVE_X11_XINPUT ${X11_Xinput_FOUND})
 
