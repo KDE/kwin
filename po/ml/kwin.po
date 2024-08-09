@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-06 00:40+0000\n"
+"POT-Creation-Date: 2024-08-09 00:40+0000\n"
 "PO-Revision-Date: 2008-07-08 18:58+0530\n"
 "Last-Translator: \n"
 "Language-Team: SMC <smc.org.in>\n"
@@ -1240,7 +1240,7 @@ msgid ""
 "Escape or right click to cancel."
 msgstr ""
 
-#: main.cpp:193 plugins/invert/invert_config.cpp:35
+#: main.cpp:195 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1255,67 +1255,67 @@ msgstr ""
 msgid "KWin"
 msgstr "ക്വിന്‍"
 
-#: main.cpp:195 main.cpp:219
+#: main.cpp:197 main.cpp:221
 #, kde-format
 msgid "KDE window manager"
 msgstr "കെഡിഇ ജാലക കാര്യസ്ഥന്‍"
 
-#: main.cpp:197
+#: main.cpp:199
 #, fuzzy, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2005, കെഡിഇ ഡവലപ്പര്‍മാര്‍"
 
-#: main.cpp:199
+#: main.cpp:201
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "മത്തിയാസ് എട്രിക്"
 
-#: main.cpp:200
+#: main.cpp:202
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "ക്രിസ്റ്റ്യന്‍ റ്റിബിര്‍നാ"
 
-#: main.cpp:201
+#: main.cpp:203
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "ഡാനിയേല്‍ എം ഡ്യൂലേ"
 
-#: main.cpp:202
+#: main.cpp:204
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "ലുബോസ് ലുനാക്"
 
-#: main.cpp:203
+#: main.cpp:205
 #, kde-format
 msgid "Martin Flöser"
 msgstr ""
 
-#: main.cpp:204
+#: main.cpp:206
 #, kde-format
 msgid "David Edmundson"
 msgstr ""
 
-#: main.cpp:205
+#: main.cpp:207
 #, kde-format
 msgid "Roman Gilg"
 msgstr ""
 
-#: main.cpp:206
+#: main.cpp:208
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr ""
 
-#: main.cpp:207
+#: main.cpp:209
 #, fuzzy, kde-format
 msgid "Xaver Hugl"
 msgstr "വലുത്"
 
-#: main.cpp:216
+#: main.cpp:218
 #, kde-format
 msgid "Disable configuration options"
 msgstr "ക്രമീകരിക്കുവാനുള്ള ഉപാധികള്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
 
-#: main.cpp:217
+#: main.cpp:219
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "ക്വിനില്‍ ഏറ്റവും ഒടുവിലായി n തവണ തകര്‍ച്ച സംഭവിച്ചു എന്നു സൂചിപ്പിക്കുന്നു"

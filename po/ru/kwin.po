@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-06 00:40+0000\n"
+"POT-Creation-Date: 2024-08-09 00:40+0000\n"
 "PO-Revision-Date: 2024-05-28 11:00+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -1288,7 +1288,7 @@ msgstr ""
 "мыши или наведите на него курсор и нажмите Enter. Для отмены\n"
 "нажмите Esc или правую кнопку мыши."
 
-#: main.cpp:193 plugins/invert/invert_config.cpp:35
+#: main.cpp:195 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1303,67 +1303,67 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:195 main.cpp:219
+#: main.cpp:197 main.cpp:221
 #, kde-format
 msgid "KDE window manager"
 msgstr "Диспетчер окон KDE"
 
-#: main.cpp:197
+#: main.cpp:199
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "© Разработчики KDE, 1999–2019"
 
-#: main.cpp:199
+#: main.cpp:201
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:200
+#: main.cpp:202
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:201
+#: main.cpp:203
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:202
+#: main.cpp:204
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:203
+#: main.cpp:205
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:204
+#: main.cpp:206
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:205
+#: main.cpp:207
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:206
+#: main.cpp:208
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Влад Загородний"
 
-#: main.cpp:207
+#: main.cpp:209
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:216
+#: main.cpp:218
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Отключить параметры конфигурации"
 
-#: main.cpp:217
+#: main.cpp:219
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Показывает, что сбои KWin происходили n раз"
