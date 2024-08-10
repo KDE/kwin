@@ -97,7 +97,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
     if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
-        m_surface->needsShadowBuffer = channelFactors != QVector3D(1, 1, 1) || m_surface->iccProfile || colorDescription.transferFunction().type != TransferFunction::gamma22;
+        m_surface->needsShadowBuffer = channelFactors != QVector3D(1, 1, 1) || iccProfile || colorDescription.transferFunction().type != TransferFunction::gamma22;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
         m_surface->iccProfile = iccProfile;

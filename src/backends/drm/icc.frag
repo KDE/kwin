@@ -38,7 +38,10 @@ vec3 sample1DLut(vec3 input, sampler2D lut, int lutSize) {
 void main()
 {
     vec4 tex = texture2D(src, texcoord0);
-    tex = sourceEncodingToNitsInDestinationColorspace(tex) / destinationReferenceLuminance;
+    tex = encodingToNits(tex, sourceNamedTransferFunction, sourceTransferFunctionParams.x, sourceTransferFunctionParams.y);
+    tex.rgb /= max(tex.a, 0.001);
+    tex.rgb /= destinationReferenceLuminance;
+    tex.rgb = (toXYZD50 * vec4(tex.rgb, 1.0)).rgb;
     if (Bsize > 0) {
         tex.rgb = sample1DLut(tex.rgb, Bsampler, Bsize);
     }
