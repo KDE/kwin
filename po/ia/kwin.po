@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-09 00:40+0000\n"
+"POT-Creation-Date: 2024-08-10 00:43+0000\n"
 "PO-Revision-Date: 2024-07-19 14:35+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1581,7 +1581,7 @@ msgctxt "@label"
 msgid "Intensity:"
 msgstr "Intensitate:"
 
-#: plugins/colorpicker/colorpicker.cpp:108
+#: plugins/colorpicker/colorpicker.cpp:107
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
