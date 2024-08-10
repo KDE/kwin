@@ -1368,17 +1368,30 @@ void Workspace::assignBrightnessDevices()
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
-        for (auto it = candidates.begin(); it != candidates.end(); it++) {
-            Output *output = *it;
+        const auto it = std::ranges::find_if(candidates, [device](Output *output) {
             if (output->isInternal() != device->isInternal()) {
-                continue;
+                return false;
             }
-            if (!output->isInternal() && (!output->edid().isValid() || device->edidBeginning().isEmpty() || !output->edid().raw().startsWith(device->edidBeginning()))) {
-                continue;
+            if (output->isInternal()) {
+                return true;
+            } else {
+                return output->edid().isValid() && !device->edidBeginning().isEmpty() && output->edid().raw().startsWith(device->edidBeginning());
+            }
+        });
+        Output *const oldOutput = device->output();
+        if (it != candidates.end()) {
+            Output *const output = *it;
+            if (oldOutput && oldOutput != output) {
+                oldOutput->setBrightnessDevice(nullptr);
             }
             output->setBrightnessDevice(device);
+            device->setOutput(output);
             candidates.erase(it);
-            break;
+        } else if (oldOutput) {
+            device->setOutput(nullptr);
+            if (oldOutput->brightnessDevice() == device) {
+                oldOutput->setBrightnessDevice(nullptr);
+            }
         }
     }
 }

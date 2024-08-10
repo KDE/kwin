@@ -792,16 +792,7 @@ BrightnessDevice *Output::brightnessDevice() const
 
 void Output::setBrightnessDevice(BrightnessDevice *device)
 {
-    if (m_brightnessDevice == device) {
-        return;
-    }
-    if (m_brightnessDevice) {
-        m_brightnessDevice->setOutput(nullptr);
-    }
     m_brightnessDevice = device;
-    if (device) {
-        device->setOutput(this);
-    }
 }
 } // namespace KWin
 
