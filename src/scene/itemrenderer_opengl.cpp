@@ -195,7 +195,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
-                    .coordinateType = NormalizedCoordinates,
+                    .coordinateType = UnnormalizedCoordinates,
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),

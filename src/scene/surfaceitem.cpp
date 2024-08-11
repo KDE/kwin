@@ -255,10 +255,10 @@ WindowQuadList SurfaceItem::buildQuads() const
         const QPointF bufferBottomRight = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.right() * xScale, rect.bottom() * yScale), sourceBox.size()));
         const QPointF bufferBottomLeft = snapToPixelGridF(m_bufferSourceBox.topLeft() + m_surfaceToBufferTransform.map(QPointF(rect.left() * xScale, rect.bottom() * yScale), sourceBox.size()));
 
-        quad[0] = WindowVertex(rect.topLeft(), QPointF{bufferTopLeft.x() / m_bufferSize.width(), bufferTopLeft.y() / m_bufferSize.height()});
-        quad[1] = WindowVertex(rect.topRight(), QPointF{bufferTopRight.x() / m_bufferSize.width(), bufferTopRight.y() / m_bufferSize.height()});
-        quad[2] = WindowVertex(rect.bottomRight(), QPointF{bufferBottomRight.x() / m_bufferSize.width(), bufferBottomRight.y() / m_bufferSize.height()});
-        quad[3] = WindowVertex(rect.bottomLeft(), QPointF{bufferBottomLeft.x() / m_bufferSize.width(), bufferBottomLeft.y() / m_bufferSize.height()});
+        quad[0] = WindowVertex(rect.topLeft(), bufferTopLeft);
+        quad[1] = WindowVertex(rect.topRight(), bufferTopRight);
+        quad[2] = WindowVertex(rect.bottomRight(), bufferBottomRight);
+        quad[3] = WindowVertex(rect.bottomLeft(), bufferBottomLeft);
 
         quads << quad;
     }
