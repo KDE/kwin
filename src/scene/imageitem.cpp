@@ -24,6 +24,7 @@ QImage ImageItem::image() const
 void ImageItem::setImage(const QImage &image)
 {
     m_image = image;
+    discardQuads();
 }
 
 ImageItemOpenGL::ImageItemOpenGL(Item *parent)
@@ -68,11 +69,13 @@ WindowQuadList ImageItemOpenGL::buildQuads() const
         return WindowQuadList{};
     }
 
+    const QRectF imageRect = m_image.rect();
+
     WindowQuad quad;
-    quad[0] = WindowVertex(geometry.topLeft(), QPointF(0, 0));
-    quad[1] = WindowVertex(geometry.topRight(), QPointF(1, 0));
-    quad[2] = WindowVertex(geometry.bottomRight(), QPointF(1, 1));
-    quad[3] = WindowVertex(geometry.bottomLeft(), QPointF(0, 1));
+    quad[0] = WindowVertex(geometry.topLeft(), imageRect.topLeft());
+    quad[1] = WindowVertex(geometry.topRight(), imageRect.topRight());
+    quad[2] = WindowVertex(geometry.bottomRight(), imageRect.bottomRight());
+    quad[3] = WindowVertex(geometry.bottomLeft(), imageRect.bottomLeft());
 
     WindowQuadList ret;
     ret.append(quad);
