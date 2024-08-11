@@ -163,7 +163,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
-                .coordinateType = UnnormalizedCoordinates,
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
@@ -178,7 +177,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = true,
-                .coordinateType = UnnormalizedCoordinates,
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
@@ -195,7 +193,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .transformMatrix = context->transformStack.top(),
                     .opacity = context->opacityStack.top(),
                     .hasAlpha = pixmap->hasAlphaChannel(),
-                    .coordinateType = UnnormalizedCoordinates,
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
@@ -210,7 +207,6 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .transformMatrix = context->transformStack.top(),
                 .opacity = context->opacityStack.top(),
                 .hasAlpha = imageItem->image().hasAlphaChannel(),
-                .coordinateType = UnnormalizedCoordinates,
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
@@ -312,7 +308,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         } else {
             texture = std::get<OpenGLSurfaceContents>(renderNode.texture).planes.constFirst().get();
         }
-        renderNode.geometry.postProcessTextureCoordinates(texture->matrix(renderNode.coordinateType));
+        renderNode.geometry.postProcessTextureCoordinates(texture->matrix(UnnormalizedCoordinates));
 
         renderNode.geometry.copy(map->subspan(v));
         v += renderNode.geometry.count();

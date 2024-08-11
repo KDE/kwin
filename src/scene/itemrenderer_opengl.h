@@ -29,7 +29,6 @@ public:
         int vertexCount = 0;
         qreal opacity = 1;
         bool hasAlpha = false;
-        TextureCoordinateType coordinateType = UnnormalizedCoordinates;
         ColorDescription colorDescription;
         RenderingIntent renderingIntent;
         std::shared_ptr<SyncReleasePoint> bufferReleasePoint;
