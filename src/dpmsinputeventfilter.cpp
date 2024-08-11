@@ -12,6 +12,7 @@
 #include "core/session.h"
 #include "input_event.h"
 #include "main.h"
+#include "utils/keys.h"
 #include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
@@ -54,23 +55,7 @@ bool DpmsInputEventFilter::wheelEvent(WheelEvent *event)
 
 bool DpmsInputEventFilter::keyEvent(KeyEvent *event)
 {
-    static constexpr std::array s_mediaKeys = {
-        Qt::Key::Key_MediaLast,
-        Qt::Key::Key_MediaNext,
-        Qt::Key::Key_MediaPause,
-        Qt::Key::Key_MediaPlay,
-        Qt::Key::Key_MediaPrevious,
-        Qt::Key::Key_MediaRecord,
-        Qt::Key::Key_MediaStop,
-        Qt::Key::Key_MediaTogglePlayPause,
-        Qt::Key::Key_VolumeUp,
-        Qt::Key::Key_VolumeDown,
-        Qt::Key::Key_VolumeMute,
-        Qt::Key::Key_MicVolumeUp,
-        Qt::Key::Key_MicVolumeDown,
-        Qt::Key::Key_MicMute,
-    };
-    if (std::ranges::find(s_mediaKeys, event->key()) != s_mediaKeys.end()) {
+    if (isMediaKey(event->key())) {
         // don't wake up the screens for media or volume keys
         return false;
     }

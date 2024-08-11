@@ -8,6 +8,8 @@
 */
 
 #include "placeholderinputeventfilter.h"
+#include "input_event.h"
+#include "utils/keys.h"
 
 namespace KWin
 {
@@ -29,7 +31,7 @@ bool PlaceholderInputEventFilter::wheelEvent(WheelEvent *event)
 
 bool PlaceholderInputEventFilter::keyEvent(KeyEvent *event)
 {
-    return true;
+    return !isMediaKey(event->key());
 }
 
 bool PlaceholderInputEventFilter::touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time)
