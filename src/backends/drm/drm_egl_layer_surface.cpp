@@ -193,7 +193,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         if (m_surface->iccShader) {
             m_surface->iccShader->setUniforms(m_surface->iccProfile, m_surface->intermediaryColorDescription, m_surface->channelFactors);
         } else {
-            binder.shader()->setColorspaceUniforms(m_surface->intermediaryColorDescription, m_surface->targetColorDescription);
+            binder.shader()->setColorspaceUniforms(m_surface->intermediaryColorDescription, m_surface->targetColorDescription, RenderingIntent::RelativeColorimetric);
             QMatrix4x4 ctm;
             ctm(0, 0) = m_surface->channelFactors.x();
             ctm(1, 1) = m_surface->channelFactors.y();

@@ -11,7 +11,7 @@
 namespace KWin
 {
 
-ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to)
+ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
     ColorPipeline ret(ValueRange{
@@ -23,7 +23,7 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
 
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.containerColorimetry().toOther(to.containerColorimetry()), ret.currentOutputRange());
+    ret.addMatrix(from.containerColorimetry().toOther(to.containerColorimetry(), intent), ret.currentOutputRange());
 
     ret.addInverseTransferFunction(to.transferFunction());
     return ret;

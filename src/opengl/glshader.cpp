@@ -469,10 +469,10 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     }
 }
 
-bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst)
+bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
 {
-    const auto &srcColorimetry = src.containerColorimetry() == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.containerColorimetry();
-    return setUniform(Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry()))
+    const auto &srcColorimetry = intent == RenderingIntent::Perceptual && src.containerColorimetry() == NamedColorimetry::BT709 ? dst.sdrColorimetry() : src.containerColorimetry();
+    return setUniform(Mat4Uniform::ColorimetryTransformation, srcColorimetry.toOther(dst.containerColorimetry(), intent))
         && setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type)
         && setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance))
         && setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance())

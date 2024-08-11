@@ -491,9 +491,19 @@ const ColorDescription &Item::colorDescription() const
     return m_colorDescription;
 }
 
+RenderingIntent Item::renderingIntent() const
+{
+    return m_renderingIntent;
+}
+
 void Item::setColorDescription(const ColorDescription &description)
 {
     m_colorDescription = description;
+}
+
+void Item::setRenderingIntent(RenderingIntent intent)
+{
+    m_renderingIntent = intent;
 }
 
 PresentationModeHint Item::presentationHint() const

@@ -239,7 +239,7 @@ void StartupFeedbackEffect::paintScreen(const RenderTarget &renderTarget, const 
         QMatrix4x4 mvp = viewport.projectionMatrix();
         mvp.translate(pixelGeometry.x(), pixelGeometry.y());
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);
-        shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
+        shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
         texture->render(pixelGeometry.size());
         ShaderManager::instance()->popShader();
         glDisable(GL_BLEND);

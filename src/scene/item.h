@@ -113,6 +113,7 @@ public:
     WindowQuadList quads() const;
     virtual void preprocess();
     const ColorDescription &colorDescription() const;
+    RenderingIntent renderingIntent() const;
     PresentationModeHint presentationHint() const;
 
 Q_SIGNALS:
@@ -136,6 +137,7 @@ protected:
     virtual WindowQuadList buildQuads() const;
     void discardQuads();
     void setColorDescription(const ColorDescription &description);
+    void setRenderingIntent(RenderingIntent intent);
     void setPresentationHint(PresentationModeHint hint);
     void setScene(Scene *scene);
 
@@ -169,6 +171,7 @@ private:
     mutable std::optional<WindowQuadList> m_quads;
     mutable std::optional<QList<Item *>> m_sortedChildItems;
     ColorDescription m_colorDescription = ColorDescription::sRGB;
+    RenderingIntent m_renderingIntent = RenderingIntent::Perceptual;
     PresentationModeHint m_presentationHint = PresentationModeHint::VSync;
 };
 

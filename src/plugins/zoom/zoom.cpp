@@ -399,7 +399,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
         matrix.translate(offscreen.viewport.x() * scale, offscreen.viewport.y() * scale);
 
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, viewport.projectionMatrix() * matrix);
-        shader->setColorspaceUniforms(offscreen.color, renderTarget.colorDescription());
+        shader->setColorspaceUniforms(offscreen.color, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
         offscreen.texture->render(offscreen.viewport.size() * scale);
     }
@@ -423,7 +423,7 @@ void ZoomEffect::paintScreen(const RenderTarget &renderTarget, const RenderViewp
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             auto s = ShaderManager::instance()->pushShader(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-            s->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
+            s->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
             QMatrix4x4 mvp = viewport.projectionMatrix();
             mvp.translate(p.x() * scale, p.y() * scale);
             s->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mvp);

@@ -39,7 +39,8 @@ void XXColorManagerV4::xx_color_manager_v4_bind_resource(Resource *resource)
 
     send_supported_intent(resource->handle, render_intent::render_intent_perceptual);
     send_supported_intent(resource->handle, render_intent::render_intent_relative);
-    // TODO implement the other rendering intents
+    send_supported_intent(resource->handle, render_intent::render_intent_absolute);
+    // TODO implement saturation and relative bpc intents
 }
 
 void XXColorManagerV4::xx_color_manager_v4_destroy(Resource *resource)
@@ -143,15 +144,36 @@ void XXColorSurfaceV4::xx_color_management_surface_v4_destroy(Resource *resource
     wl_resource_destroy(resource->handle);
 }
 
+static std::optional<RenderingIntent> waylandToKwinIntent(uint32_t intent)
+{
+    switch (intent) {
+    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_perceptual:
+        return RenderingIntent::Perceptual;
+    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_relative:
+        return RenderingIntent::RelativeColorimetric;
+    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_absolute:
+        return RenderingIntent::AbsoluteColorimetric;
+    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_saturation:
+    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_relative_bpc:
+        return std::nullopt;
+    }
+    return std::nullopt;
+}
+
 void XXColorSurfaceV4::xx_color_management_surface_v4_set_image_description(Resource *resource, struct ::wl_resource *image_description, uint32_t render_intent)
 {
     if (!m_surface) {
         return;
     }
+    const std::optional<RenderingIntent> intent = waylandToKwinIntent(render_intent);
+    if (!intent) {
+        wl_resource_post_error(resource->handle, XX_COLOR_MANAGER_V4_ERROR_UNSUPPORTED_FEATURE, "rendering intent is not supported");
+        return;
+    }
     const auto priv = SurfaceInterfacePrivate::get(m_surface);
     priv->pending->colorDescription = XXImageDescriptionV4::get(image_description)->description();
+    priv->pending->renderingIntent = *intent;
     priv->pending->colorDescriptionIsSet = true;
-    // TODO render_intent
 }
 
 void XXColorSurfaceV4::xx_color_management_surface_v4_unset_image_description(Resource *resource)

@@ -126,10 +126,16 @@ const QMatrix4x4 &Colorimetry::fromXYZ() const
     return m_fromXYZ;
 }
 
-QMatrix4x4 Colorimetry::toOther(const Colorimetry &other) const
+QMatrix4x4 Colorimetry::toOther(const Colorimetry &other, RenderingIntent intent) const
 {
-    // rendering intent is relative colorimetric, so adapt to the different whitepoint
-    return other.fromXYZ() * chromaticAdaptationMatrix(this->white(), other.white()) * toXYZ();
+    switch (intent) {
+    case RenderingIntent::Perceptual:
+    case RenderingIntent::RelativeColorimetric:
+        return other.fromXYZ() * chromaticAdaptationMatrix(this->white(), other.white()) * toXYZ();
+    case RenderingIntent::AbsoluteColorimetric:
+        return other.fromXYZ() * toXYZ();
+    }
+    Q_UNREACHABLE();
 }
 
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
@@ -267,11 +273,11 @@ std::optional<double> ColorDescription::maxHdrLuminance() const
     return m_maxHdrLuminance;
 }
 
-QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst) const
+QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst, RenderingIntent intent) const
 {
     rgb = m_transferFunction.encodedToNits(rgb);
     rgb *= dst.referenceLuminance() / m_referenceLuminance;
-    rgb = m_containerColorimetry.toOther(dst.containerColorimetry()) * rgb;
+    rgb = m_containerColorimetry.toOther(dst.containerColorimetry(), intent) * rgb;
     return dst.transferFunction().nitsToEncoded(rgb);
 }
 

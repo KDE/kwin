@@ -165,6 +165,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
                 .colorDescription = item->colorDescription(),
+                .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
             });
         }
@@ -179,6 +180,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = true,
                 .coordinateType = UnnormalizedCoordinates,
                 .colorDescription = item->colorDescription(),
+                .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
             });
         }
@@ -195,6 +197,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .hasAlpha = pixmap->hasAlphaChannel(),
                     .coordinateType = NormalizedCoordinates,
                     .colorDescription = item->colorDescription(),
+                    .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
                 });
             }
@@ -209,6 +212,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .hasAlpha = imageItem->image().hasAlphaChannel(),
                 .coordinateType = NormalizedCoordinates,
                 .colorDescription = item->colorDescription(),
+                .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
             });
         }
@@ -369,7 +373,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, modulate(renderNode.opacity, data.brightness()));
         }
         if (traits & ShaderTrait::TransformColorspace) {
-            shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription());
+            shader->setColorspaceUniforms(renderNode.colorDescription, renderTarget.colorDescription(), renderNode.renderingIntent);
         }
 
         if (std::holds_alternative<GLTexture *>(renderNode.texture)) {

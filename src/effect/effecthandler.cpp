@@ -1501,7 +1501,7 @@ void EffectsHandler::renderOffscreenQuickView(const RenderTarget &renderTarget, 
         if (a != 1.0) {
             shader->setUniform(GLShader::Vec4Uniform::ModulationConstant, QVector4D(a, a, a, a));
         }
-        shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
+        shader->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
 
         const bool alphaBlending = w->hasAlphaChannel() || (a != 1.0);
         if (alphaBlending) {

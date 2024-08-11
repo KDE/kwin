@@ -72,7 +72,7 @@ void ShowPaintEffect::paintGL(const RenderTarget &renderTarget, const QMatrix4x4
     vbo->reset();
     ShaderBinder binder(ShaderTrait::UniformColor | ShaderTrait::TransformColorspace);
     binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projection);
-    binder.shader()->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription());
+    binder.shader()->setColorspaceUniforms(ColorDescription::sRGB, renderTarget.colorDescription(), RenderingIntent::Perceptual);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     QColor color = s_colors[m_colorIndex];

@@ -1107,6 +1107,11 @@ const ColorDescription &SurfaceInterface::colorDescription() const
     return d->current->colorDescription;
 }
 
+RenderingIntent SurfaceInterface::renderingIntent() const
+{
+    return d->current->renderingIntent;
+}
+
 void SurfaceInterface::setPreferredColorDescription(const ColorDescription &descr)
 {
     if (d->preferredColorDescription == descr) {

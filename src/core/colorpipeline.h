@@ -79,7 +79,7 @@ public:
     explicit ColorPipeline();
     explicit ColorPipeline(const ValueRange &inputRange);
 
-    static ColorPipeline create(const ColorDescription &from, const ColorDescription &to);
+    static ColorPipeline create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
 

@@ -31,6 +31,7 @@ public:
         bool hasAlpha = false;
         TextureCoordinateType coordinateType = UnnormalizedCoordinates;
         ColorDescription colorDescription;
+        RenderingIntent renderingIntent;
         std::shared_ptr<SyncReleasePoint> bufferReleasePoint;
     };
 

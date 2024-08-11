@@ -14,6 +14,22 @@
 namespace KWin
 {
 
+/**
+ * rendering intents describe how colors should be mapped between different color spaces
+ */
+enum class RenderingIntent {
+    /* "vendor specific", preserves the overall color appearance */
+    Perceptual,
+    /* "vendor specific", maps saturated colors to be saturated in the target color space too */
+    // TODO Saturation,
+    /* colorimetric mapping between color spaces, with whitepoint adaptation */
+    RelativeColorimetric,
+    /* colorimetric mapping between color spaces, without whitepoint adaptation */
+    AbsoluteColorimetric,
+    /* colorimetric mapping between color spaces, with whitepoint adaptation and black point compensation */
+    // TODO RelativeColorimetricWithBPC,
+};
+
 enum class NamedColorimetry {
     BT709,
     BT2020,
@@ -56,9 +72,8 @@ public:
     const QMatrix4x4 &fromXYZ() const;
     /**
      * @returns a matrix that transforms from linear RGB in this colorimetry to linear RGB in the other colorimetry
-     * the rendering intent is relative colorimetric
      */
-    QMatrix4x4 toOther(const Colorimetry &colorimetry) const;
+    QMatrix4x4 toOther(const Colorimetry &colorimetry, RenderingIntent intent) const;
     bool operator==(const Colorimetry &other) const;
     bool operator==(NamedColorimetry name) const;
     /**
@@ -164,7 +179,7 @@ public:
 
     bool operator==(const ColorDescription &other) const = default;
 
-    QVector3D mapTo(QVector3D rgb, const ColorDescription &other) const;
+    QVector3D mapTo(QVector3D rgb, const ColorDescription &other, RenderingIntent intent) const;
     ColorDescription withTransferFunction(const TransferFunction &func) const;
 
     /**

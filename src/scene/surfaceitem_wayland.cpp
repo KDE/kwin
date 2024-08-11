@@ -201,6 +201,7 @@ void SurfaceItemWayland::freeze()
 void SurfaceItemWayland::handleColorDescriptionChanged()
 {
     setColorDescription(m_surface->colorDescription());
+    setRenderingIntent(m_surface->renderingIntent());
 }
 
 void SurfaceItemWayland::handlePresentationModeHintChanged()

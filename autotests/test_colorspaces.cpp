@@ -70,11 +70,16 @@ void TestColorspaces::roundtripConversion()
     const QVector3D green(0, 1, 0);
     const QVector3D blue(0, 0, 1);
     const QVector3D white(1, 1, 1);
-
-    QVERIFY(compareVectors(dst.mapTo(src.mapTo(red, dst), src), red, requiredAccuracy));
-    QVERIFY(compareVectors(dst.mapTo(src.mapTo(green, dst), src), green, requiredAccuracy));
-    QVERIFY(compareVectors(dst.mapTo(src.mapTo(blue, dst), src), blue, requiredAccuracy));
-    QVERIFY(compareVectors(dst.mapTo(src.mapTo(white, dst), src), white, requiredAccuracy));
+    constexpr std::array renderingIntents = {
+        RenderingIntent::RelativeColorimetric,
+        RenderingIntent::AbsoluteColorimetric,
+    };
+    for (const RenderingIntent intent : renderingIntents) {
+        QVERIFY(compareVectors(dst.mapTo(src.mapTo(red, dst, intent), src, intent), red, requiredAccuracy));
+        QVERIFY(compareVectors(dst.mapTo(src.mapTo(green, dst, intent), src, intent), green, requiredAccuracy));
+        QVERIFY(compareVectors(dst.mapTo(src.mapTo(blue, dst, intent), src, intent), blue, requiredAccuracy));
+        QVERIFY(compareVectors(dst.mapTo(src.mapTo(white, dst, intent), src, intent), white, requiredAccuracy));
+    }
 }
 
 void TestColorspaces::nonNormalizedPrimaries()
@@ -83,7 +88,7 @@ void TestColorspaces::nonNormalizedPrimaries()
     const auto from = Colorimetry::fromName(NamedColorimetry::BT709);
     const auto to = Colorimetry(Colorimetry::xyToXYZ(from.red()) * 2, Colorimetry::xyToXYZ(from.green()) * 2, Colorimetry::xyToXYZ(from.blue()) * 2, Colorimetry::xyToXYZ(from.white()) * 2);
 
-    const auto convertedWhite = from.toOther(to) * QVector3D(1, 1, 1);
+    const auto convertedWhite = from.toOther(to, RenderingIntent::RelativeColorimetric) * QVector3D(1, 1, 1);
     QCOMPARE_LE(std::abs(1 - convertedWhite.x()), s_resolution10bit);
     QCOMPARE_LE(std::abs(1 - convertedWhite.y()), s_resolution10bit);
     QCOMPARE_LE(std::abs(1 - convertedWhite.z()), s_resolution10bit);
@@ -110,11 +115,18 @@ void TestColorspaces::testIdentityTransformation()
     QFETCH(TransferFunction::Type, transferFunction);
     const ColorDescription color(colorimetry, TransferFunction(transferFunction), 100, 0, 100, 100);
 
-    const auto pipeline = ColorPipeline::create(color, color);
-    if (!pipeline.isIdentity()) {
-        qWarning() << pipeline;
+    constexpr std::array renderingIntents = {
+        RenderingIntent::Perceptual,
+        RenderingIntent::RelativeColorimetric,
+        RenderingIntent::AbsoluteColorimetric,
+    };
+    for (const RenderingIntent intent : renderingIntents) {
+        const auto pipeline = ColorPipeline::create(color, color, intent);
+        if (!pipeline.isIdentity()) {
+            qWarning() << pipeline;
+        }
+        QVERIFY(pipeline.isIdentity());
     }
-    QVERIFY(pipeline.isIdentity());
 }
 
 void TestColorspaces::testColorPipeline_data()
@@ -124,17 +136,22 @@ void TestColorspaces::testColorPipeline_data()
     QTest::addColumn<QVector3D>("dstBlack");
     QTest::addColumn<QVector3D>("dstGray");
     QTest::addColumn<QVector3D>("dstWhite");
+    QTest::addColumn<RenderingIntent>("intent");
 
-    QTest::addRow("sRGB -> rec.2020") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
-                                      << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 500, 0, std::nullopt, std::nullopt)
-                                      << QVector3D(0.044, 0.044, 0.044)
-                                      << QVector3D(0.517, 0.517, 0.517)
-                                      << QVector3D(0.677, 0.677, 0.677);
-    QTest::addRow("sRGB -> scRGB") << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
-                                   << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, std::nullopt, std::nullopt)
-                                   << QVector3D(0.0001, 0.0001, 0.0001)
-                                   << QVector3D(0.2177376408240310, 0.2177376408240310, 0.2177376408240310)
-                                   << QVector3D(1, 1, 1);
+    QTest::addRow("sRGB -> rec.2020 relative colorimetric")
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer), 500, 0, std::nullopt, std::nullopt)
+        << QVector3D(0.044, 0.044, 0.044)
+        << QVector3D(0.517, 0.517, 0.517)
+        << QVector3D(0.677, 0.677, 0.677)
+        << RenderingIntent::RelativeColorimetric;
+    QTest::addRow("sRGB -> scRGB relative colorimetric")
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, std::nullopt, std::nullopt)
+        << QVector3D(0.0001, 0.0001, 0.0001)
+        << QVector3D(0.2177376408240310, 0.2177376408240310, 0.2177376408240310)
+        << QVector3D(1, 1, 1)
+        << RenderingIntent::RelativeColorimetric;
 }
 
 void TestColorspaces::testColorPipeline()
@@ -144,13 +161,14 @@ void TestColorspaces::testColorPipeline()
     QFETCH(QVector3D, dstBlack);
     QFETCH(QVector3D, dstGray);
     QFETCH(QVector3D, dstWhite);
+    QFETCH(RenderingIntent, intent);
 
-    const auto pipeline = ColorPipeline::create(srcColor, dstColor);
+    const auto pipeline = ColorPipeline::create(srcColor, dstColor, intent);
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D(0, 0, 0)), dstBlack, s_resolution10bit));
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D(0.5, 0.5, 0.5)), dstGray, s_resolution10bit));
     QVERIFY(compareVectors(pipeline.evaluate(QVector3D(1, 1, 1)), dstWhite, s_resolution10bit));
 
-    const auto inversePipeline = ColorPipeline::create(dstColor, srcColor);
+    const auto inversePipeline = ColorPipeline::create(dstColor, srcColor, intent);
     QVERIFY(compareVectors(inversePipeline.evaluate(dstBlack), QVector3D(0, 0, 0), s_resolution10bit));
     QVERIFY(compareVectors(inversePipeline.evaluate(dstGray), QVector3D(0.5, 0.5, 0.5), s_resolution10bit));
     QVERIFY(compareVectors(inversePipeline.evaluate(dstWhite), QVector3D(1, 1, 1), s_resolution10bit));

@@ -138,7 +138,7 @@ public:
     bool setUniform(ColorUniform uniform, const QVector4D &value);
     bool setUniform(ColorUniform uniform, const QColor &value);
 
-    bool setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst);
+    bool setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent);
 
 protected:
     GLShader(unsigned int flags = NoFlags);

@@ -491,7 +491,7 @@ void DrmOutput::tryKmsColorOffloading()
     const QVector3D channelFactors = effectiveChannelFactors();
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
     const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
-    ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription());
+    ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
     colorPipeline.addTransferFunction(colorDescription().transferFunction());
     colorPipeline.addMultiplier(channelFactors);
     colorPipeline.addInverseTransferFunction(colorDescription().transferFunction());
@@ -517,7 +517,7 @@ bool DrmOutput::needsChannelFactorFallback() const
 
 QVector3D DrmOutput::effectiveChannelFactors() const
 {
-    QVector3D adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(m_state.colorDescription.containerColorimetry()) * m_channelFactors;
+    QVector3D adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(m_state.colorDescription.containerColorimetry(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
     // normalize red to be the original brightness value again
     adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
     if (m_state.highDynamicRange || !m_brightnessDevice) {

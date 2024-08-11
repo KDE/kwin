@@ -86,7 +86,7 @@ ColorDescription EglGbmLayer::colorDescription() const
     return m_surface.colorDescription();
 }
 
-bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, const std::shared_ptr<OutputFrame> &frame)
+bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
 {
     static bool valid;
     static const bool directScanoutDisabled = qEnvironmentVariableIntValue("KWIN_DRM_NO_DIRECT_SCANOUT", &valid) == 1 && valid;
@@ -97,7 +97,7 @@ bool EglGbmLayer::doAttemptScanout(GraphicsBuffer *buffer, const ColorDescriptio
         // TODO make the icc profile output a color pipeline too?
         return false;
     }
-    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription());
+    ColorPipeline pipeline = ColorPipeline::create(color, m_pipeline->output()->scanoutColorDescription(), intent);
     if (m_pipeline->output()->needsChannelFactorFallback()) {
         pipeline.addTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
         pipeline.addMultiplier(m_pipeline->output()->effectiveChannelFactors());

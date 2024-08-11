@@ -340,6 +340,7 @@ public:
     void setLastTransaction(Transaction *transaction);
 
     const ColorDescription &colorDescription() const;
+    RenderingIntent renderingIntent() const;
 
     void setPreferredColorDescription(const ColorDescription &descr);
 
