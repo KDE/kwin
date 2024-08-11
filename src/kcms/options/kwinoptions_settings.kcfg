@@ -311,6 +311,7 @@
           <choice name="Minimize"></choice>
           <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
           <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
     </entry>
@@ -327,6 +328,7 @@
           <choice name="Minimize"></choice>
           <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
           <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
     </entry>
@@ -343,6 +345,7 @@
           <choice name="Minimize"></choice>
           <choice name="DecreaseOpacity" value="Decrease Opacity"></choice>
           <choice name="IncreaseOpactiy" value="Increase Opacity"></choice>
+          <choice name="OperationsMenu" value="Operations menu"></choice>
           <choice name="Nothing"></choice>
       </choices>
     </entry>

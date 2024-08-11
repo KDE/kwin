@@ -329,6 +329,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Show actions menu</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -399,6 +404,11 @@
           </item>
           <item>
            <property name="text">
+            <string>Show actions menu</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
             <string>Do nothing</string>
            </property>
           </item>
@@ -465,6 +475,11 @@
           <item>
            <property name="text">
             <string>Increase opacity</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Show actions menu</string>
            </property>
           </item>
           <item>
