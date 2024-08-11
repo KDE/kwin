@@ -128,8 +128,6 @@ public:
      */
     static QList<xkb_keysym_t> keysymsFromQtKey(int keyQt);
 
-    void setFollowLocale1(bool follow);
-
 public Q_SLOTS:
     void reconfigure();
 
