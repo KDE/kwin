@@ -453,7 +453,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .referenceLuminance = existingData.referenceLuminance.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
-            .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
+            .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::EDID),
             .brightness = existingData.brightness.value_or(1.0),
         };
         if (enable) {
