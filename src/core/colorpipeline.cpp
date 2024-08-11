@@ -23,7 +23,7 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
 
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.containerColorimetry().toOther(to.containerColorimetry(), intent), ret.currentOutputRange());
+    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange());
 
     ret.addInverseTransferFunction(to.transferFunction());
     return ret;

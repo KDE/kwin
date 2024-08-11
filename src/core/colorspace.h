@@ -70,10 +70,6 @@ public:
      * @returns a matrix that transforms from the XYZ representation to the linear RGB representation of colors in this colorimetry
      */
     const QMatrix4x4 &fromXYZ() const;
-    /**
-     * @returns a matrix that transforms from linear RGB in this colorimetry to linear RGB in the other colorimetry
-     */
-    QMatrix4x4 toOther(const Colorimetry &colorimetry, RenderingIntent intent) const;
     bool operator==(const Colorimetry &other) const;
     bool operator==(NamedColorimetry name) const;
     /**
@@ -179,8 +175,13 @@ public:
 
     bool operator==(const ColorDescription &other) const = default;
 
-    QVector3D mapTo(QVector3D rgb, const ColorDescription &other, RenderingIntent intent) const;
     ColorDescription withTransferFunction(const TransferFunction &func) const;
+
+    /**
+     * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one
+     */
+    QMatrix4x4 toOther(const ColorDescription &other, RenderingIntent intent) const;
+    QVector3D mapTo(QVector3D rgb, const ColorDescription &other, RenderingIntent intent) const;
 
     /**
      * This color description describes display-referred sRGB, with a gamma22 transfer function

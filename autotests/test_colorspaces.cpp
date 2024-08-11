@@ -85,8 +85,8 @@ void TestColorspaces::roundtripConversion()
 void TestColorspaces::nonNormalizedPrimaries()
 {
     // this test ensures that non-normalized primaries don't mess up the transformations between color spaces
-    const auto from = Colorimetry::fromName(NamedColorimetry::BT709);
-    const auto to = Colorimetry(Colorimetry::xyToXYZ(from.red()) * 2, Colorimetry::xyToXYZ(from.green()) * 2, Colorimetry::xyToXYZ(from.blue()) * 2, Colorimetry::xyToXYZ(from.white()) * 2);
+    const auto &from = ColorDescription::sRGB;
+    const ColorDescription to(Colorimetry(Colorimetry::xyToXYZ(from.containerColorimetry().red()) * 2, Colorimetry::xyToXYZ(from.containerColorimetry().green()) * 2, Colorimetry::xyToXYZ(from.containerColorimetry().blue()) * 2, Colorimetry::xyToXYZ(from.containerColorimetry().white()) * 2), from.transferFunction(), from.referenceLuminance(), from.minLuminance(), from.maxAverageLuminance(), from.maxHdrLuminance());
 
     const auto convertedWhite = from.toOther(to, RenderingIntent::RelativeColorimetric) * QVector3D(1, 1, 1);
     QCOMPARE_LE(std::abs(1 - convertedWhite.x()), s_resolution10bit);

@@ -517,7 +517,7 @@ bool DrmOutput::needsChannelFactorFallback() const
 
 QVector3D DrmOutput::effectiveChannelFactors() const
 {
-    QVector3D adaptedChannelFactors = Colorimetry::fromName(NamedColorimetry::BT709).toOther(m_state.colorDescription.containerColorimetry(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(colorDescription(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
     // normalize red to be the original brightness value again
     adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
     if (m_state.highDynamicRange || !m_brightnessDevice) {

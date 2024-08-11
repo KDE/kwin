@@ -126,18 +126,6 @@ const QMatrix4x4 &Colorimetry::fromXYZ() const
     return m_fromXYZ;
 }
 
-QMatrix4x4 Colorimetry::toOther(const Colorimetry &other, RenderingIntent intent) const
-{
-    switch (intent) {
-    case RenderingIntent::Perceptual:
-    case RenderingIntent::RelativeColorimetric:
-        return other.fromXYZ() * chromaticAdaptationMatrix(this->white(), other.white()) * toXYZ();
-    case RenderingIntent::AbsoluteColorimetric:
-        return other.fromXYZ() * toXYZ();
-    }
-    Q_UNREACHABLE();
-}
-
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
 {
     const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint);
@@ -273,11 +261,26 @@ std::optional<double> ColorDescription::maxHdrLuminance() const
     return m_maxHdrLuminance;
 }
 
+QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingIntent intent) const
+{
+    switch (intent) {
+    case RenderingIntent::Perceptual: {
+        const Colorimetry &srcContainer = containerColorimetry() == NamedColorimetry::BT709 ? other.sdrColorimetry() : containerColorimetry();
+        return other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(srcContainer.white(), other.containerColorimetry().white()) * srcContainer.toXYZ();
+    }
+    case RenderingIntent::RelativeColorimetric:
+        return other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(containerColorimetry().white(), other.containerColorimetry().white()) * containerColorimetry().toXYZ();
+    case RenderingIntent::AbsoluteColorimetric:
+        return other.containerColorimetry().fromXYZ() * containerColorimetry().toXYZ();
+    }
+    Q_UNREACHABLE();
+}
+
 QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst, RenderingIntent intent) const
 {
     rgb = m_transferFunction.encodedToNits(rgb);
     rgb *= dst.referenceLuminance() / m_referenceLuminance;
-    rgb = m_containerColorimetry.toOther(dst.containerColorimetry(), intent) * rgb;
+    rgb = toOther(dst, intent) * rgb;
     return dst.transferFunction().nitsToEncoded(rgb);
 }
 
