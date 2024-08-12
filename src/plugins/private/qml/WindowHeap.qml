@@ -136,6 +136,7 @@ FocusScope {
 
             delegate: WindowHeapDelegate {
                 windowHeap: heap
+                layout: expoLayout
             }
 
             onObjectRemoved: (index, object) => {

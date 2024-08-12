@@ -1,6 +1,7 @@
 /*
     SPDX-FileCopyrightText: 2021 Vlad Zahorodnii <vlad.zahorodnii@kde.org>
     SPDX-FileCopyrightText: 2022 ivan tkachenko <me@ratijas.tk>
+    SPDX-FileCopyrightText: 2024 Marco Martin <mart@kde.org>
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
@@ -15,7 +16,7 @@ import org.kde.plasma.components 3.0 as PC3
 import org.kde.plasma.extras as PlasmaExtras
 import org.kde.ksvg 1.0 as KSvg
 
-Item {
+ExpoCell {
     id: thumb
 
     required property QtObject window
@@ -23,8 +24,9 @@ Item {
     required property Item windowHeap
 
     readonly property bool selected: windowHeap.selectedIndex === index
-    property real partialActivationFactor: effect.partialActivationFactor
     property bool gestureInProgress: effect.gestureInProgress
+    // Where the internal contentItem will be parented to
+    property Item contentItemParent: this
 
     // no desktops is a special value which means "All Desktops"
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
@@ -61,125 +63,161 @@ Item {
     readonly property alias downGestureProgress: touchDragHandler.downGestureProgress
     signal downGestureTriggered()
 
-    // "normal" | "pressed" | "drag" | "reparenting"
-    property string substate: "normal"
-
-    state: {
-        if (thumb.gestureInProgress) {
-            return "partial";
-        }
-        if (thumb.partialActivationFactor > 0.5 && (cell.isReady || activeHidden)) {
-            return activeHidden ? "active-hidden" : `active-${substate}`;
-        }
-        return initialHidden ? "initial-hidden" : "initial";
-    }
-
-    visible: opacity > 0
-    z: (activeDragHandler.active || returning.running) ? 1000
-        : window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
+    property bool isReady: width !== 0 && height !== 0
 
     function restoreDND(oldGlobalRect: rect) {
         thumbSource.restoreDND(oldGlobalRect);
     }
 
-    component TweenBehavior : Behavior {
-        enabled: thumb.state === "active-normal" && thumb.windowHeap.animationEnabled && thumb.animationEnabled && !thumb.activeDragHandler.active
+    layout: windowHeap.layout
+    shouldLayout: !thumb.activeHidden
+    partialActivationFactor: effect.partialActivationFactor
+    naturalX: thumb.window.x - thumb.window.output.geometry.x
+    naturalY: thumb.window.y - thumb.window.output.geometry.y
+    naturalWidth: thumb.window.width
+    naturalHeight: thumb.window.height
+    persistentKey: thumb.window.internalId
+    bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
+
+    Behavior on x {
+        enabled: thumb.isReady
+        NumberAnimation {
+            duration: thumb.windowHeap.animationDuration
+            easing.type: Easing.InOutCubic
+        }
+    }
+    Behavior on y {
+        enabled: thumb.isReady
+        NumberAnimation {
+            duration: thumb.windowHeap.animationDuration
+            easing.type: Easing.InOutCubic
+        }
+    }
+    Behavior on width {
+        enabled: thumb.isReady
+        NumberAnimation {
+            duration: thumb.windowHeap.animationDuration
+            easing.type: Easing.InOutCubic
+        }
+    }
+    Behavior on height {
+        enabled: thumb.isReady
         NumberAnimation {
             duration: thumb.windowHeap.animationDuration
             easing.type: Easing.InOutCubic
         }
     }
 
-    TweenBehavior on x {}
-    TweenBehavior on y {}
-    TweenBehavior on width {}
-    TweenBehavior on height {}
+    contentItem: Item {
+        id: mainContent
+        parent: contentItemParent
+        visible: opacity > 0 && (!activeHidden || !initialHidden)
+        opacity: (1 - downGestureProgress) * (initialHidden ? partialActivationFactor : 1)
+        z: (activeDragHandler.active || returnAnimation.running) ? 1000
+            : thumb.window.stackingOrder * (presentOnCurrentDesktop ? 1 : 0.001)
 
-    KWinComponents.WindowThumbnail {
-        id: thumbSource
-        wId: thumb.window.internalId
+        KWinComponents.WindowThumbnail {
+            id: thumbSource
+            wId: thumb.window.internalId
+            scale: targetScale
+            width: mainContent.width
+            height: mainContent.height
 
-        Drag.proposedAction: Qt.MoveAction
-        Drag.supportedActions: Qt.MoveAction
-        Drag.source: thumb.window
-        Drag.hotSpot: Qt.point(
-            thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
-            thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale)
-        Drag.keys: ["kwin-window"]
+            Binding on width {
+                value: mainContent.width
+                when: !returnAnimation.active
+            }
+            Binding on height {
+                value: mainContent.height
+                when: !returnAnimation.active
+            }
 
-        onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
-        onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
+            Drag.proposedAction: Qt.MoveAction
+            Drag.supportedActions: Qt.MoveAction
+            Drag.source: thumb.window
+            Drag.hotSpot: Qt.point(
+                thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
+                thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale)
+            Drag.keys: ["kwin-window"]
 
-        function saveDND() {
-            const oldGlobalRect = mapToItem(null, 0, 0, width, height);
-            thumb.windowHeap.saveDND(thumb.window.internalId, oldGlobalRect);
+            onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
+            onYChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
+
+            function saveDND() {
+                const oldGlobalRect = mapToItem(null, 0, 0, width, height);
+                thumb.windowHeap.saveDND(thumb.window.internalId, oldGlobalRect);
+            }
+            function restoreDND(oldGlobalRect: rect) {
+                const newGlobalRect = mapFromItem(null, oldGlobalRect);
+                // Disable bindings
+                returnAnimation.active = true;
+                x = newGlobalRect.x;
+                y = newGlobalRect.y;
+                width = newGlobalRect.width;
+                height = newGlobalRect.height;
+                returnAnimation.restart();
+            }
+            function deleteDND() {
+                thumb.windowHeap.deleteDND(thumb.window.internalId);
+            }
+
+            // Not using FrameSvg hover element intentionally for stylistic reasons
+            Rectangle {
+                border.width: Kirigami.Units.largeSpacing
+                border.color: Kirigami.Theme.highlightColor
+                anchors.fill: parent
+                anchors.margins: -border.width
+                radius: Kirigami.Units.cornerRadius
+                color: "transparent"
+                visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || (thumb.selected && Window.window.activeFocusItem)) && windowHeap.effectiveOrganized
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.NoButton
+                cursorShape: thumb.activeDragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
+            }
+            ParallelAnimation {
+                id: returnAnimation
+                property bool active: false
+                onRunningChanged: active = running
+                NumberAnimation {
+                    target: thumbSource
+                    properties: "x,y"
+                    to: 0
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+                NumberAnimation {
+                    target: thumbSource
+                    property: "width"
+                    to: mainContent.width
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+                NumberAnimation {
+                    target: thumbSource
+                    property: "height"
+                    to: mainContent.height
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+                NumberAnimation {
+                    target: thumbSource
+                    property: "scale"
+                    to: 1
+                    duration: thumb.windowHeap.animationDuration
+                    easing.type: Easing.InOutCubic
+                }
+            }
         }
-        function restoreDND(oldGlobalRect: rect) {
-            thumb.substate = "reparenting";
 
-            const newGlobalRect = mapFromItem(null, oldGlobalRect);
-
-            x = newGlobalRect.x;
-            y = newGlobalRect.y;
-            width = newGlobalRect.width;
-            height = newGlobalRect.height;
-
-            thumb.substate = "normal";
-        }
-        function deleteDND() {
-            thumb.windowHeap.deleteDND(thumb.window.internalId);
-        }
-
-        // Not using FrameSvg hover element intentionally for stylistic reasons
-        Rectangle {
-            border.width: Kirigami.Units.largeSpacing
-            border.color: Kirigami.Theme.highlightColor
-            anchors.fill: parent
-            anchors.margins: -border.width
-            radius: Kirigami.Units.cornerRadius
-            color: "transparent"
-            visible: !thumb.windowHeap.dragActive && (hoverHandler.hovered || (thumb.selected && Window.window.activeFocusItem)) && windowHeap.effectiveOrganized
-        }
-
-        MouseArea {
-            anchors.fill: parent
-            acceptedButtons: Qt.NoButton
-            cursorShape: thumb.activeDragHandler.active ? Qt.ClosedHandCursor : Qt.ArrowCursor
-        }
-    }
-
-    PC3.Label {
-        anchors.fill: thumbSource
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-        text: i18nd("kwin", "Drag Down To Close")
-        opacity: thumbSource.opacity
-        visible: !thumb.activeHidden && touchDragHandler.active
-    }
-
-    Kirigami.Icon {
-        id: icon
-        width: Kirigami.Units.iconSizes.large
-        height: Kirigami.Units.iconSizes.large
-        source: thumb.window.icon
-        anchors.horizontalCenter: thumbSource.horizontalCenter
-        anchors.bottom: thumbSource.bottom
-        anchors.bottomMargin: -Math.round(height / 4)
-        visible: !thumb.activeHidden && !activeDragHandler.active
         PC3.Label {
-            id: caption
-            visible: thumb.windowTitleVisible
-            width: cell.width
-            maximumLineCount: 1
-            anchors.top: parent.bottom
-            anchors.topMargin: Kirigami.Units.smallSpacing
-            anchors.horizontalCenter: parent.horizontalCenter
-            elide: Text.ElideRight
-            text: thumb.window.caption
-            color: Kirigami.Theme.textColor
-            textFormat: Text.PlainText
+            anchors.fill: thumbSource
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
+            text: i18nd("kwin", "Drag Down To Close")
+            visible: !thumb.activeHidden && touchDragHandler.active
             background: Rectangle {
                 anchors.centerIn: parent
                 height: parent.contentHeight + Kirigami.Units.smallSpacing
@@ -188,288 +226,157 @@ Item {
                 radius: Kirigami.Units.cornerRadius
             }
         }
-    }
 
-    ExpoCell {
-        id: cell
-        layout: windowHeap.layout
-        enabled: !thumb.activeHidden
-        naturalX: thumb.window.x
-        naturalY: thumb.window.y
-        naturalWidth: thumb.window.width
-        naturalHeight: thumb.window.height
-        persistentKey: thumb.window.internalId
-        bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
-        property bool isReady: width !== 0 && height !== 0
-    }
-
-    states: [
-        State {
-            name: "initial"
-            PropertyChanges {
-                target: thumb
-                x: thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)
-                y: thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)
-                width: thumb.window.width
-                height: thumb.window.height
-            }
-            PropertyChanges {
-                target: thumbSource
-                x: 0
-                y: 0
-                width: thumb.window.width
-                height: thumb.window.height
-            }
-            PropertyChanges {
-                target: icon
-                opacity: 0
-            }
-            PropertyChanges {
-                target: closeButton
-                opacity: 0
-            }
-        },
-        State {
-            name: "partial"
-            PropertyChanges {
-                target: thumb
-                x: (thumb.window.x - targetScreen.geometry.x - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.x : 0)) * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + (thumb.activeHidden ? 0 : cell.x * thumb.partialActivationFactor)
-                y: (thumb.window.y - targetScreen.geometry.y - (thumb.windowHeap.absolutePositioning ?  windowHeap.layout.Kirigami.ScenePosition.y : 0)) * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + (thumb.activeHidden ? 0 : cell.y * thumb.partialActivationFactor)
-                width: thumb.window.width * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + cell.width * (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
-                height: thumb.window.height * (thumb.activeHidden ? 1 : 1 - thumb.partialActivationFactor) + cell.height * (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
-                opacity: thumb.initialHidden
-                    ? (thumb.activeHidden ? 0 : thumb.partialActivationFactor)
-                    : (thumb.activeHidden ? 1 - thumb.partialActivationFactor : 1)
-            }
-            PropertyChanges {
-                target: thumbSource
-                x: 0
-                y: 0
+        Kirigami.Icon {
+            id: icon
+            width: Kirigami.Units.iconSizes.large
+            height: Kirigami.Units.iconSizes.large
+            opacity: partialActivationFactor
+            scale: Math.min(1.0, mainContent.width / Math.max(0.01, thumb.width))
+            source: thumb.window.icon
+            anchors.horizontalCenter: thumbSource.horizontalCenter
+            anchors.verticalCenter: thumbSource.bottom
+            anchors.verticalCenterOffset: -Math.round(height / 4) * scale
+            visible: !thumb.activeHidden && !activeDragHandler.active && !returnAnimation.running
+            PC3.Label {
+                id: caption
+                visible: thumb.windowTitleVisible
                 width: thumb.width
-                height: thumb.height
-            }
-            PropertyChanges {
-                target: icon
-                opacity: thumb.partialActivationFactor
-            }
-            PropertyChanges {
-                target: closeButton
-                opacity: thumb.partialActivationFactor
-            }
-        },
-        State {
-            name: "initial-hidden"
-            extend: "initial"
-            PropertyChanges {
-                target: thumb
-                opacity: 0
-            }
-            PropertyChanges {
-                target: icon
-                opacity: 0
-            }
-            PropertyChanges {
-                target: closeButton
-                opacity: 0
-            }
-        },
-        State {
-            name: "active-hidden"
-            extend: "initial-hidden"
-        },
-        State {
-            // this state is never directly used without a substate
-            name: "active"
-            PropertyChanges {
-                target: thumb
-                x: cell.x
-                y: cell.y
-                width: cell.width
-                height: cell.height
-            }
-            PropertyChanges {
-                target: icon
-                opacity: 1
-            }
-            PropertyChanges {
-                target: closeButton
-                opacity: 1
-            }
-        },
-        State {
-            name: "active-normal"
-            extend: "active"
-            PropertyChanges {
-                target: thumbSource
-                x: 0
-                y: 0
-                width: thumb.width
-                height: thumb.height
-            }
-        },
-        State {
-            name: "active-pressed"
-            extend: "active"
-            PropertyChanges {
-                target: thumbSource
-                width: thumb.width
-                height: thumb.height
-            }
-        },
-        State {
-            name: "active-drag"
-            extend: "active"
-            PropertyChanges {
-                target: thumbSource
-                x: -thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale +
-                        thumb.activeDragHandler.centroid.position.x
-                y: -thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale +
-                        thumb.activeDragHandler.centroid.position.y
-                width: thumb.width * thumb.targetScale
-                height: thumb.height * thumb.targetScale
-            }
-        },
-        State {
-            name: "active-reparenting"
-            extend: "active"
-        }
-    ]
-
-    transitions: [
-        Transition {
-            id: returning
-            from: "active-drag, active-reparenting"
-            to: "active-normal"
-            enabled: thumb.windowHeap.animationEnabled
-            NumberAnimation {
-                duration: thumb.windowHeap.animationDuration
-                properties: "x, y, width, height"
-                easing.type: Easing.InOutCubic
+                maximumLineCount: 1
+                anchors.top: parent.bottom
+                anchors.topMargin: Kirigami.Units.smallSpacing
+                anchors.horizontalCenter: parent.horizontalCenter
+                elide: Text.ElideRight
+                text: thumb.window.caption
+                color: Kirigami.Theme.textColor
+                textFormat: Text.PlainText
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                background: Rectangle {
+                    anchors.centerIn: parent
+                    height: parent.contentHeight + Kirigami.Units.smallSpacing
+                    width: parent.contentWidth + Kirigami.Units.smallSpacing
+                    color: Kirigami.Theme.backgroundColor
+                    radius: Kirigami.Units.cornerRadius
+                }
             }
         }
-    ]
 
-    HoverHandler {
-        id: hoverHandler
-        onHoveredChanged: if (hovered !== selected) {
-            thumb.windowHeap.resetSelected();
-        }
-    }
-
-    TapHandler {
-        acceptedButtons: Qt.LeftButton
-        onTapped: {
-            KWinComponents.Workspace.activeWindow = thumb.window;
-            thumb.windowHeap.activated();
-        }
-        onPressedChanged: {
-            if (pressed) {
-                var saved = Qt.point(thumbSource.x, thumbSource.y);
-                thumbSource.Drag.active = true;
-                thumb.substate = "pressed";
-                thumbSource.x = saved.x;
-                thumbSource.y = saved.y;
-            } else if (!thumb.activeDragHandler.active) {
-                thumbSource.Drag.active = false;
-                thumb.substate = "normal";
+        HoverHandler {
+            id: hoverHandler
+            onHoveredChanged: if (hovered !== selected) {
+                thumb.windowHeap.resetSelected();
             }
         }
-    }
 
-    component DragManager : DragHandler {
-        target: null
-        grabPermissions: PointerHandler.CanTakeOverFromAnything
-        // This does not work when moving pointer fast and pressing along the way
-        // See also QTBUG-105903, QTBUG-105904
-        // enabled: thumb.state !== "active-normal"
+        TapHandler {
+            acceptedButtons: Qt.LeftButton
+            onTapped: {
+                KWinComponents.Workspace.activeWindow = thumb.window;
+                thumb.windowHeap.activated();
+            }
+            onPressedChanged: {
+                if (pressed) {
+                    thumbSource.Drag.active = true;
+                } else if (!thumb.activeDragHandler.active) {
+                    thumbSource.Drag.active = false;
+                }
+            }
+        }
 
-        onActiveChanged: {
-            thumb.windowHeap.dragActive = active;
-            if (active) {
-                thumb.activeDragHandler = this;
-                thumb.substate = "drag";
-            } else {
-                thumbSource.saveDND();
+        component DragManager : DragHandler {
+            target: thumbSource
+            grabPermissions: PointerHandler.CanTakeOverFromAnything
+            // This does not work when moving pointer fast and pressing along the way
+            // See also QTBUG-105903, QTBUG-105904
+            // enabled: thumb.state !== "active-normal"
 
-                var action = thumbSource.Drag.drop();
-                if (action === Qt.MoveAction) {
-                    // This whole component is in the process of being destroyed due to drop onto
-                    // another virtual desktop (not another screen).
-                    if (typeof thumbSource !== "undefined") {
-                        // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
-                        thumbSource.deleteDND();
-                        thumb.substate = "normal";
+            onActiveChanged: {
+                thumb.windowHeap.dragActive = active;
+                if (active) {
+                    thumb.activeDragHandler = this;
+                } else {
+                    thumbSource.saveDND();
+                    returnAnimation.restart();
+
+                    var action = thumbSource.Drag.drop();
+                    if (action === Qt.MoveAction) {
+                        // This whole component is in the process of being destroyed due to drop onto
+                        // another virtual desktop (not another screen).
+                        if (typeof thumbSource !== "undefined") {
+                            // Except the case when it was dropped on the same desktop which it's already on, so let's return to normal state anyway.
+                            thumbSource.deleteDND();
+                        }
+                        return;
                     }
-                    return;
-                }
 
-                var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
-                effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
+                    var globalPos = targetScreen.mapToGlobal(centroid.scenePosition);
+                    effect.checkItemDroppedOutOfScreen(globalPos, thumbSource);
 
-                if (typeof thumbSource !== "undefined") {
-                    // else, return to normal without reparenting
-                    thumbSource.deleteDND();
-                    thumb.substate = "normal";
+                    if (typeof thumbSource !== "undefined") {
+                        // else, return to normal without reparenting
+                        thumbSource.deleteDND();
+                    }
                 }
             }
         }
-    }
 
-    DragManager {
-        id: dragHandler
-        acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
-    }
-
-    DragManager {
-        id: touchDragHandler
-        acceptedDevices: PointerDevice.TouchScreen
-        readonly property double downGestureProgress: {
-            if (!active) {
-                return 0.0;
-            }
-
-            const startDistance = thumb.windowHeap.Kirigami.ScenePosition.y + thumb.windowHeap.height - centroid.scenePressPosition.y;
-            const localPosition = thumb.windowHeap.Kirigami.ScenePosition.y + thumb.windowHeap.height - centroid.scenePosition.y;
-            return 1 - Math.min(localPosition/startDistance, 1);
+        DragManager {
+            id: dragHandler
+            acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad | PointerDevice.Stylus
         }
 
-        onActiveChanged: {
-            if (!active) {
-                if (downGestureProgress > 0.6) {
-                    thumb.downGestureTriggered();
+        DragManager {
+            id: touchDragHandler
+            acceptedDevices: PointerDevice.TouchScreen
+            readonly property double downGestureProgress: {
+                if (!active) {
+                    return 0.0;
+                }
+
+                const startDistance = thumb.windowHeap.Kirigami.ScenePosition.y + thumb.windowHeap.height - centroid.scenePressPosition.y;
+                const localPosition = thumb.windowHeap.Kirigami.ScenePosition.y + thumb.windowHeap.height - centroid.scenePosition.y;
+                return 1 - Math.min(localPosition/startDistance, 1);
+            }
+
+            onActiveChanged: {
+                if (!active) {
+                    if (downGestureProgress > 0.6) {
+                        thumb.downGestureTriggered();
+                    }
                 }
             }
         }
-    }
 
-    Loader {
-        id: closeButton
-        LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
+        Loader {
+            id: closeButton
+            LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
 
-        anchors {
-            right: thumbSource.right
-            top: thumbSource.top
-            margins: Kirigami.Units.smallSpacing
+            anchors {
+                right: thumbSource.right
+                top: thumbSource.top
+                margins: Kirigami.Units.smallSpacing
+            }
+            active: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active && !returnAnimation.running
+
+            sourceComponent: PC3.Button {
+                text: i18ndc("kwin", "@info:tooltip as in: 'close this window'", "Close window")
+                icon.name: "window-close"
+                display: PC3.AbstractButton.IconOnly
+
+                PC3.ToolTip.text: text
+                PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
+                PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
+                Accessible.name: text
+
+                onClicked: thumb.window.closeWindow();
+            }
         }
-        active: thumb.closeButtonVisible && (hoverHandler.hovered || Kirigami.Settings.tabletMode || Kirigami.Settings.hasTransientTouchInput) && thumb.window.closeable && !thumb.activeDragHandler.active
 
-        sourceComponent: PC3.Button {
-            text: i18ndc("kwin", "@info:tooltip as in: 'close this window'", "Close window")
-            icon.name: "window-close"
-            display: PC3.AbstractButton.IconOnly
-
-            PC3.ToolTip.text: text
-            PC3.ToolTip.visible: hovered && display === PC3.AbstractButton.IconOnly
-            PC3.ToolTip.delay: Kirigami.Units.toolTipDelay
-            Accessible.name: text
-
-            onClicked: thumb.window.closeWindow();
-        }
-    }
-
-    Component.onDestruction: {
-        if (selected) {
-            windowHeap.resetSelected();
+        Component.onDestruction: {
+            if (selected) {
+                windowHeap.resetSelected();
+            }
         }
     }
 }

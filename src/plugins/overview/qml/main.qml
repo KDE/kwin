@@ -453,6 +453,9 @@ FocusScope {
                 property real deltaColumn: column - allDesktopHeaps.currentBackgroundItem.column - deltaX
                 property real deltaRow: row - allDesktopHeaps.currentBackgroundItem.row - deltaY
 
+                onDeltaColumnChanged: heap.layout.updateCellsMapping()
+                onDeltaRowChanged: heap.layout.updateCellsMapping()
+
                 Behavior on deltaColumn {
                     enabled: overviewVal > 0 && !container.desktopJustCreated
                     NumberAnimation {
@@ -499,6 +502,7 @@ FocusScope {
                     // Initially places transition desktops in a grid around the current one,
                     // and moves them slighly to avoid overlapping the UI
                     Translate {
+                        id: desktopTranslation
                         x: minX * 0.5 * overviewVal + deltaColumn * width * (1 - gridVal)
                         y: minY * 0.5 * overviewVal + deltaRow * height * (1 - gridVal)
                     }
@@ -645,14 +649,18 @@ FocusScope {
                     }
                     delegate: WindowHeapDelegate {
                         windowHeap: heap
+                        offsetX: mainBackground.deltaColumn * container.width * (1 - gridVal) + (dragHandler.active ? (dragHandler.centroid.pressPosition.x - dragHandler.centroid.position.x) : 0)
+                        offsetY: mainBackground.deltaRow * container.height * (1 - gridVal) + (dragHandler.active ? (dragHandler.centroid.pressPosition.y - dragHandler.centroid.position.y) : 0)
+
+                        partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
+                        // Parent switch needed for the option "organize windows in gridview"  to work correctly
+                        contentItemParent: container.gridVal > 0 ? mainBackground : container
 
                         // This is preferable over using gestureInProgress values since gridVal and
                         // overviewVal are animated even after the gesture ends, and since the partial
                         // activation factor follows those two values, this results in a more
                         // fluent animation.
                         gestureInProgress: !Number.isInteger(gridVal) || !Number.isInteger(overviewVal)
-
-                        partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
 
                         targetScale: {
                             if (!container.anyDesktopBar) return targetScale;

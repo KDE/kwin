@@ -11,14 +11,37 @@
 #include <deque>
 #include <tuple>
 
-ExpoCell::ExpoCell(QObject *parent)
-    : QObject(parent)
+
+ExpoCell::ExpoCell(QQuickItem *parent)
+    : QQuickItem(parent)
 {
+    connect(this, &ExpoCell::visibleChanged, this, [this]() {
+        if (m_contentItem) {
+            m_contentItem->setVisible(isVisible());
+        }
+    });
+
+    // This only works for a static visual tree hierarchy.
+    // TODO: Make it work with reparenting or warn if any parent in the tree changes?
+    QQuickItem *ancestor = this;
+    while (ancestor) {
+        connect(ancestor, &QQuickItem::xChanged, this, &ExpoCell::polish);
+        connect(ancestor, &QQuickItem::yChanged, this, &ExpoCell::polish);
+        connect(ancestor, &QQuickItem::widthChanged, this, &ExpoCell::polish);
+        connect(ancestor, &QQuickItem::heightChanged, this, &ExpoCell::polish);
+        ancestor = ancestor->parentItem();
+    }
 }
 
 ExpoCell::~ExpoCell()
 {
     setLayout(nullptr);
+}
+
+void ExpoCell::componentComplete()
+{
+    QQuickItem::componentComplete();
+    updateContentItemGeometry();
 }
 
 ExpoLayout *ExpoCell::layout() const
@@ -35,157 +58,175 @@ void ExpoCell::setLayout(ExpoLayout *layout)
         m_layout->removeCell(this);
     }
     m_layout = layout;
-    if (m_layout && m_enabled) {
+    if (m_layout && m_shouldLayout) {
         m_layout->addCell(this);
     }
+    updateContentItemGeometry();
     Q_EMIT layoutChanged();
 }
 
-bool ExpoCell::isEnabled() const
+bool ExpoCell::shouldLayout() const
 {
-    return m_enabled;
+    return m_shouldLayout;
 }
 
-void ExpoCell::setEnabled(bool enabled)
+void ExpoCell::setShouldLayout(bool shouldLayout)
 {
-    if (m_enabled != enabled) {
-        m_enabled = enabled;
-        if (enabled) {
-            if (m_layout) {
-                m_layout->addCell(this);
-            }
-        } else {
-            if (m_layout) {
-                m_layout->removeCell(this);
-            }
-        }
-        Q_EMIT enabledChanged();
+    if (shouldLayout == m_shouldLayout) {
+        return;
     }
+
+    m_shouldLayout = shouldLayout;
+
+    if (m_layout) {
+        if (m_shouldLayout) {
+            m_layout->addCell(this);
+        } else {
+            m_layout->removeCell(this);
+        }
+    }
+
+    Q_EMIT shouldLayoutChanged();
 }
 
-void ExpoCell::update()
+QQuickItem *ExpoCell::contentItem() const
+{
+    return m_contentItem;
+}
+
+void ExpoCell::setContentItem(QQuickItem *item)
+{
+    if (m_contentItem == item) {
+        return;
+    }
+
+    m_contentItem = item;
+
+    if (m_contentItem) {
+        m_contentItem->setVisible(isVisible());
+    }
+
+    updateContentItemGeometry();
+    Q_EMIT contentItemChanged();
+}
+
+qreal ExpoCell::partialActivationFactor() const
+{
+    return m_partialActivationFactor;
+}
+
+void ExpoCell::setPartialActivationFactor(qreal factor)
+{
+    if (m_partialActivationFactor == factor) {
+        return;
+    }
+
+    m_partialActivationFactor = factor;
+    // Since this is an animation controller we want it to have immediate effect
+    updateContentItemGeometry();
+
+    Q_EMIT partialActivationFactorChanged();
+}
+
+void ExpoCell::updateLayout()
 {
     if (m_layout) {
         m_layout->polish();
     }
 }
 
-int ExpoCell::naturalX() const
+qreal ExpoCell::offsetX() const
+{
+    return m_offsetX;
+}
+
+void ExpoCell::setOffsetX(qreal x)
+{
+    if (m_offsetX != x) {
+        m_offsetX = x;
+        updateContentItemGeometry();
+        Q_EMIT offsetXChanged();
+    }
+}
+
+qreal ExpoCell::offsetY() const
+{
+    return m_offsetY;
+}
+
+void ExpoCell::setOffsetY(qreal y)
+{
+    if (m_offsetY != y) {
+        m_offsetY = y;
+        updateContentItemGeometry();
+        Q_EMIT offsetYChanged();
+    }
+}
+
+qreal ExpoCell::naturalX() const
 {
     return m_naturalX;
 }
 
-void ExpoCell::setNaturalX(int x)
+void ExpoCell::setNaturalX(qreal x)
 {
     if (m_naturalX != x) {
         m_naturalX = x;
-        update();
+        updateLayout();
         Q_EMIT naturalXChanged();
     }
 }
 
-int ExpoCell::naturalY() const
+qreal ExpoCell::naturalY() const
 {
     return m_naturalY;
 }
 
-void ExpoCell::setNaturalY(int y)
+void ExpoCell::setNaturalY(qreal y)
 {
     if (m_naturalY != y) {
         m_naturalY = y;
-        update();
+        updateLayout();
         Q_EMIT naturalYChanged();
     }
 }
 
-int ExpoCell::naturalWidth() const
+qreal ExpoCell::naturalWidth() const
 {
     return m_naturalWidth;
 }
 
-void ExpoCell::setNaturalWidth(int width)
+void ExpoCell::setNaturalWidth(qreal width)
 {
     if (m_naturalWidth != width) {
         m_naturalWidth = width;
-        update();
+        updateLayout();
         Q_EMIT naturalWidthChanged();
     }
 }
 
-int ExpoCell::naturalHeight() const
+qreal ExpoCell::naturalHeight() const
 {
     return m_naturalHeight;
 }
 
-void ExpoCell::setNaturalHeight(int height)
+void ExpoCell::setNaturalHeight(qreal height)
 {
     if (m_naturalHeight != height) {
         m_naturalHeight = height;
-        update();
+        updateLayout();
         Q_EMIT naturalHeightChanged();
     }
 }
 
-QRect ExpoCell::naturalRect() const
+QRectF ExpoCell::naturalRect() const
 {
-    return QRect(naturalX(), naturalY(), naturalWidth(), naturalHeight());
+    return QRectF(m_naturalX, m_naturalY, m_naturalWidth, m_naturalHeight);
 }
 
-QMargins ExpoCell::margins() const
+QMarginsF ExpoCell::margins() const
 {
     return m_margins;
-}
-
-int ExpoCell::x() const
-{
-    return m_x.value_or(0);
-}
-
-void ExpoCell::setX(int x)
-{
-    if (m_x != x) {
-        m_x = x;
-        Q_EMIT xChanged();
-    }
-}
-
-int ExpoCell::y() const
-{
-    return m_y.value_or(0);
-}
-
-void ExpoCell::setY(int y)
-{
-    if (m_y != y) {
-        m_y = y;
-        Q_EMIT yChanged();
-    }
-}
-
-int ExpoCell::width() const
-{
-    return m_width.value_or(0);
-}
-
-void ExpoCell::setWidth(int width)
-{
-    if (m_width != width) {
-        m_width = width;
-        Q_EMIT widthChanged();
-    }
-}
-
-int ExpoCell::height() const
-{
-    return m_height.value_or(0);
-}
-
-void ExpoCell::setHeight(int height)
-{
-    if (m_height != height) {
-        m_height = height;
-        Q_EMIT heightChanged();
-    }
 }
 
 QString ExpoCell::persistentKey() const
@@ -197,23 +238,48 @@ void ExpoCell::setPersistentKey(const QString &key)
 {
     if (m_persistentKey != key) {
         m_persistentKey = key;
-        update();
+        updateLayout();
         Q_EMIT persistentKeyChanged();
     }
 }
 
-int ExpoCell::bottomMargin() const
+qreal ExpoCell::bottomMargin() const
 {
     return m_margins.bottom();
 }
 
-void ExpoCell::setBottomMargin(int margin)
+void ExpoCell::setBottomMargin(qreal margin)
 {
     if (m_margins.bottom() != margin) {
         m_margins.setBottom(margin);
         update();
         Q_EMIT bottomMarginChanged();
     }
+}
+
+void ExpoCell::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
+{
+    updateContentItemGeometry();
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
+}
+
+void ExpoCell::updateContentItemGeometry()
+{
+    if (!m_contentItem) {
+        return;
+    }
+
+    QRectF rect = mapRectToItem(m_contentItem->parentItem(), boundingRect());
+
+    rect = {
+        rect.x() * m_partialActivationFactor + (m_naturalX + m_offsetX) * (1.0 - m_partialActivationFactor),
+        rect.y() * m_partialActivationFactor + (m_naturalY + m_offsetY) * (1.0 - m_partialActivationFactor),
+        rect.width() * m_partialActivationFactor + m_naturalWidth * (1.0 - m_partialActivationFactor),
+        rect.height() * m_partialActivationFactor + m_naturalHeight * (1.0 - m_partialActivationFactor)};
+
+    m_contentItem->setX(rect.x());
+    m_contentItem->setY(rect.y());
+    m_contentItem->setSize(rect.size());
 }
 
 ExpoLayout::ExpoLayout(QQuickItem *parent)
@@ -251,6 +317,13 @@ void ExpoLayout::setReady()
 void ExpoLayout::forceLayout()
 {
     updatePolish();
+}
+
+void ExpoLayout::updateCellsMapping()
+{
+    for (ExpoCell *cell : m_cells) {
+        cell->polish();
+    }
 }
 
 void ExpoLayout::addCell(ExpoCell *cell)
@@ -308,9 +381,9 @@ void ExpoLayout::updatePolish()
 
     QList<QRectF> windowSizes;
     for (ExpoCell *cell : std::as_const(m_cells)) {
-        const QMargins &margins = cell->margins();
+        const QMarginsF &margins = cell->margins();
         const QMarginsF scaledMargins(margins.left() / scale, margins.top() / scale, margins.right() / scale, margins.bottom() / scale);
-        windowSizes.emplace_back(cell->naturalRect().toRectF().marginsAdded(scaledMargins));
+        windowSizes.emplace_back(cell->naturalRect().marginsAdded(scaledMargins));
     }
     auto windowLayouts = ExpoLayout::layout(area, windowSizes);
     for (int i = 0; i < windowLayouts.size(); ++i) {
@@ -324,10 +397,18 @@ void ExpoLayout::updatePolish()
 
         QRectF rect = cell->naturalRect();
         moveToFit(rect, target);
-        cell->setX(rect.x());
-        cell->setY(rect.y());
-        cell->setWidth(rect.width());
-        cell->setHeight(rect.height());
+        if (m_ready) {
+            // Use setProperty so the QML side can animate with Behavior
+            cell->setProperty("x", rect.x());
+            cell->setProperty("y", rect.y());
+            cell->setProperty("width", rect.width());
+            cell->setProperty("height", rect.height());
+        } else {
+            cell->setX(rect.x());
+            cell->setY(rect.y());
+            cell->setWidth(rect.width());
+            cell->setHeight(rect.height());
+        }
     }
     setReady();
 }

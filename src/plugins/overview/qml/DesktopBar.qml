@@ -177,7 +177,9 @@ Item {
                         DropArea {
                             id: dropArea
                             anchors.fill: parent
-
+                            onEntered: (drag) => {
+                                drag.accepted = true;
+                            }
                             onDropped: drop => {
                                 drop.accepted = true;
                                 // dragging a KWin::Window
