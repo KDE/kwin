@@ -374,12 +374,12 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     const Colorimetry masteringColorimetry = (effectiveWcg || colorSource == ColorProfileSource::EDID) ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709);
     const Colorimetry sdrColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT709).interpolateGamutTo(nativeColorimetry, props->sdrGamutWideness.value_or(m_state.sdrGamutWideness)) : Colorimetry::fromName(NamedColorimetry::BT709);
     // TODO the EDID can contain a gamma value, use that when available and colorSource == ColorProfileSource::EDID
-    const TransferFunction transferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22};
-    const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()) : 0;
     const double maxAverageBrightness = effectiveHdr ? props->maxAverageBrightnessOverride.value_or(m_state.maxAverageBrightnessOverride).value_or(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(m_state.referenceLuminance)) : 200;
     const double maxPeakBrightness = effectiveHdr ? props->maxPeakBrightnessOverride.value_or(m_state.maxPeakBrightnessOverride).value_or(m_connector->edid()->desiredMaxLuminance().value_or(800)) : 200;
     const double referenceLuminance = effectiveHdr ? props->referenceLuminance.value_or(m_state.referenceLuminance) : maxPeakBrightness;
-    return ColorDescription(containerColorimetry, transferFunction.relativeScaledTo(referenceLuminance), referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
+    const auto transferFunction = TransferFunction{effectiveHdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22}.relativeScaledTo(referenceLuminance);
+    const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(m_connector->edid()->desiredMinLuminance()) : transferFunction.minLuminance;
+    return ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
