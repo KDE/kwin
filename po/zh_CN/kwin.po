@@ -2499,11 +2499,10 @@ msgstr ""
 "点击右键或按 Esc 键取消。"
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "阻止显示特效合成"
+msgstr "显示特效合成"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
