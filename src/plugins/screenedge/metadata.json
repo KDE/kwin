@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Appearance",
-        "Description": "Highlights a screen edge when approaching",
+        "Description": "Highlights screen edges and corners that trigger actions when touched as the cursor approaches them",
         "Description[ar]": "يُبرِز حافة الشاشة عند الاقتراب منها",
         "Description[az]": "Ekranın kənarlarına yaxınlaşdıqda onları vurğulayaraq seçir",
         "Description[be]": "Падсвятляе край экрана пры набліжэнні да яго",
@@ -48,7 +48,7 @@
         "Description[zh_TW]": "接近一個螢幕邊緣時突顯它",
         "EnabledByDefault": true,
         "License": "GPL",
-        "Name": "Screen Edge",
+        "Name": "Highlight Screen Edges and Hot Corners",
         "Name[ar]": "حافّة الشّاشة",
         "Name[az]": "Ekran kənarı",
         "Name[be]": "Край экрана",
