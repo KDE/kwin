@@ -35,7 +35,8 @@
 namespace KWin
 {
 
-static const bool s_disableTripleBuffering = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING") == 1;
+static bool s_disableTripleBufferingSet = false;
+static const bool s_disableTripleBuffering = qEnvironmentVariableIntValue("KWIN_DRM_DISABLE_TRIPLE_BUFFERING", &s_disableTripleBufferingSet) == 1;
 
 DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     : DrmAbstractOutput(conn->gpu())
@@ -43,7 +44,7 @@ DrmOutput::DrmOutput(const std::shared_ptr<DrmConnector> &conn)
     , m_connector(conn)
 {
     m_pipeline->setOutput(this);
-    if (m_gpu->atomicModeSetting() && !s_disableTripleBuffering && !m_gpu->isNVidia()) {
+    if (m_gpu->atomicModeSetting() && ((!s_disableTripleBufferingSet && !m_gpu->isNVidia()) || (s_disableTripleBufferingSet && !s_disableTripleBuffering))) {
         m_renderLoop->setMaxPendingFrameCount(2);
     }
 
