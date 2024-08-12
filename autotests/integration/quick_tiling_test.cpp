@@ -936,7 +936,7 @@ void QuickTilingTest::testPerDesktopTiles_data()
     QTest::newRow("topToTop") << FLAG(Top) << QRectF(0, 0, 1280, 512) << QRectF(0, 0, 1280, 500) << FLAG(Top) << QRectF(0, 0, 1280, 500);
     QTest::newRow("leftToLeft") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 600, 1024) << FLAG(Left) << QRectF(0, 0, 600, 1024);
     QTest::newRow("leftToTop") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 650, 1024) << FLAG(Top) << QRectF(0, 0, 1280, 500);
-    QTest::newRow("leftToRight") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 660, 1024) << FLAG(Right) << QRectF(640, 0, 640, 1024);
+    QTest::newRow("leftToRight") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 660, 1024) << FLAG(Right) << QRectF(660, 0, 620, 1024);
     QTest::newRow("rightToBottom") << FLAG(Right) << QRectF(640, 0, 640, 1024) << QRectF(630, 0, 650, 1024) << FLAG(Bottom) << QRectF(0, 512, 1280, 600);
 #undef FLAG
 }

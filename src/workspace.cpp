@@ -933,9 +933,12 @@ void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDes
     --block_focus;
 
     for (Window *window : std::as_const(m_windows)) {
-        Tile *owner = workspace()->tileManager(window->output(), newDesktop)->windowOwner(window);
-        if (owner) {
-            window->setQuickTileMode(owner->quickTileMode(), true);
+        Tile *oldOwner = workspace()->tileManager(window->output(), newDesktop)->windowOwner(window);
+        Tile *newOwner = workspace()->tileManager(window->output(), newDesktop)->windowOwner(window);
+        if (oldOwner && newOwner && oldOwner->quickTileMode() == newOwner->quickTileMode()) {
+            window->setTile(newOwner);
+        } else if (newOwner) {
+            window->setQuickTileMode(newOwner->quickTileMode(), true);
         } else if (window->quickTileMode() != QuickTileFlag::None) {
             window->setQuickTileMode(QuickTileFlag::None, true);
         }
