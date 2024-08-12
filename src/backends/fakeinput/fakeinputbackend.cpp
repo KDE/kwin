@@ -26,7 +26,6 @@ public:
     FakeInputBackend *q;
     Display *display;
     std::map<Resource *, std::unique_ptr<FakeInputDevice>> devices;
-    static QList<quint32> touchIds;
 
 protected:
     void org_kde_kwin_fake_input_bind_resource(Resource *resource) override;
@@ -44,8 +43,6 @@ protected:
     void org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state) override;
     void org_kde_kwin_fake_input_destroy(Resource *resource) override;
 };
-
-QList<quint32> FakeInputBackendPrivate::touchIds = QList<quint32>();
 
 FakeInputBackendPrivate::FakeInputBackendPrivate(FakeInputBackend *q, Display *display)
     : q(q)
@@ -178,11 +175,10 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_down(Resource *resou
     if (!device->isAuthenticated()) {
         return;
     }
-    if (touchIds.contains(id)) {
+    if (device->activeTouches.contains(id)) {
         return;
     }
-    touchIds << id;
-    device->activeTouches.push_back(id);
+    device->activeTouches.insert(id);
     Q_EMIT device->touchDown(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)), currentTime(), device);
 }
 
@@ -192,7 +188,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_motion(Resource *res
     if (!device->isAuthenticated()) {
         return;
     }
-    if (!touchIds.contains(id)) {
+    if (!device->activeTouches.contains(id)) {
         return;
     }
     Q_EMIT device->touchMotion(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)), currentTime(), device);
@@ -204,11 +200,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_up(Resource *resourc
     if (!device->isAuthenticated()) {
         return;
     }
-    if (!touchIds.contains(id)) {
-        return;
-    }
-    touchIds.removeOne(id);
-    if (device->activeTouches.removeAll(id)) {
+    if (device->activeTouches.remove(id)) {
         Q_EMIT device->touchUp(id, currentTime(), device);
     }
 }
@@ -219,7 +211,6 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_cancel(Resource *res
     if (!device->isAuthenticated()) {
         return;
     }
-    touchIds.clear();
     device->activeTouches.clear();
     Q_EMIT device->touchCanceled(device);
 }

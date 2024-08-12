@@ -43,7 +43,7 @@ public:
 
     QSet<quint32> pressedButtons;
     QSet<quint32> pressedKeys;
-    QList<quint32> activeTouches;
+    QSet<quint32> activeTouches;
 
 private:
     QString m_name;
