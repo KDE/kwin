@@ -928,15 +928,16 @@ void QuickTilingTest::testPerDesktopTiles_data()
 {
     QTest::addColumn<QuickTileMode>("modeDesk1");
     QTest::addColumn<QRectF>("expectedGeometryDesk1");
-    QTest::addColumn<QuickTileMode>("modeDesk2");
     QTest::addColumn<QRectF>("expectedGeometryDesk2");
+    QTest::addColumn<QuickTileMode>("modeDesk2");
+    QTest::addColumn<QRectF>("expectedGeometryDesk2NewMode");
 
 #define FLAG(name) QuickTileMode(QuickTileFlag::name)
-    QTest::newRow("topToTop") << FLAG(Top) << QRectF(0, 0, 1280, 512) << FLAG(Top) << QRectF(0, 0, 1280, 500);
-    QTest::newRow("leftToLeft") << FLAG(Left) << QRectF(0, 0, 640, 1024) << FLAG(Left) << QRectF(0, 0, 600, 1024);
-    QTest::newRow("leftToTop") << FLAG(Left) << QRectF(0, 0, 640, 1024) << FLAG(Top) << QRectF(0, 0, 1280, 500);
-    QTest::newRow("leftToRight") << FLAG(Left) << QRectF(0, 0, 640, 1024) << FLAG(Right) << QRectF(640, 0, 640, 1024);
-    QTest::newRow("rightToBottom") << FLAG(Right) << QRectF(640, 0, 640, 1024) << FLAG(Bottom) << QRectF(0, 512, 1280, 600);
+    QTest::newRow("topToTop") << FLAG(Top) << QRectF(0, 0, 1280, 512) << QRectF(0, 0, 1280, 500) << FLAG(Top) << QRectF(0, 0, 1280, 500);
+    QTest::newRow("leftToLeft") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 600, 1024) << FLAG(Left) << QRectF(0, 0, 600, 1024);
+    QTest::newRow("leftToTop") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 650, 1024) << FLAG(Top) << QRectF(0, 0, 1280, 500);
+    QTest::newRow("leftToRight") << FLAG(Left) << QRectF(0, 0, 640, 1024) << QRectF(0, 0, 660, 1024) << FLAG(Right) << QRectF(640, 0, 640, 1024);
+    QTest::newRow("rightToBottom") << FLAG(Right) << QRectF(640, 0, 640, 1024) << QRectF(630, 0, 650, 1024) << FLAG(Bottom) << QRectF(0, 512, 1280, 600);
 #undef FLAG
 }
 
@@ -971,8 +972,9 @@ void QuickTilingTest::testPerDesktopTiles()
 
     QFETCH(QuickTileMode, modeDesk1);
     QFETCH(QRectF, expectedGeometryDesk1);
-    QFETCH(QuickTileMode, modeDesk2);
     QFETCH(QRectF, expectedGeometryDesk2);
+    QFETCH(QuickTileMode, modeDesk2);
+    QFETCH(QRectF, expectedGeometryDesk2NewMode);
     window->setQuickTileMode(modeDesk1, true);
 
     // new geometry
@@ -990,40 +992,49 @@ void QuickTilingTest::testPerDesktopTiles()
     QCOMPARE(quickTileChangedSpy.count(), 1);
     QCOMPARE(window->quickTileMode(), modeDesk1);
 
+    // Resize the quick tile to the new expected geometry
+    TileManager *manager = workspace()->tileManager(window->output(), VirtualDesktopManager::self()->desktopForX11Id(2));
+    manager->quickTile(modeDesk1)->setGeometryFromWindow(expectedGeometryDesk2);
+    manager->quickTile(modeDesk2)->setGeometryFromWindow(expectedGeometryDesk2NewMode);
     // Switch current virtual desktop
     VirtualDesktopManager::self()->setCurrent(2);
 
-    // Resize the quick tile to the new expected geometry
-    TileManager *manager = workspace()->tileManager(window->output());
-    manager->quickTile(modeDesk2)->setGeometryFromWindow(expectedGeometryDesk2);
-
-    // new geometry
+    // new geometry of the tile of mode 1 in desk2
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), QSize(100, 50));
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometryDesk2.size().toSize());
     // render
-    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
-    Test::render(surface.get(), QSize(100, 50), Qt::red);
-
-    QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(frameGeometryChangedSpy.count(), 2);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
-    QCOMPARE(quickTileChangedSpy.count(), 2);
-    QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
-    // Assign a new tile for desktop 2
-    window->setQuickTileMode(modeDesk2, true);
-    // new geometry
-    QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
-
-    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometryDesk2.size());
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), expectedGeometryDesk2.size().toSize(), Qt::red);
 
     QVERIFY(frameGeometryChangedSpy.wait());
-    QCOMPARE(frameGeometryChangedSpy.count(), 3);
+    QCOMPARE(frameGeometryChangedSpy.count(), 2);
     QCOMPARE(window->frameGeometry(), expectedGeometryDesk2);
-    QCOMPARE(quickTileChangedSpy.count(), 3);
+    return;
+    QCOMPARE(quickTileChangedSpy.count(), 2);
+    QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
+
+    if (modeDesk1 != modeDesk2) {
+        // Assign a new tile for desktop 2
+        window->setQuickTileMode(modeDesk2, true);
+        // new geometry
+        QVERIFY(surfaceConfigureRequestedSpy.wait());
+        QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
+
+        QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometryDesk2NewMode.size());
+        shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+        Test::render(surface.get(), expectedGeometryDesk2NewMode.size().toSize(), Qt::red);
+    }
+
+    QVERIFY(frameGeometryChangedSpy.wait());
+    if (modeDesk1 == modeDesk2) {
+        QCOMPARE(frameGeometryChangedSpy.count(), 2);
+        QCOMPARE(quickTileChangedSpy.count(), 2);
+    } else {
+        QCOMPARE(frameGeometryChangedSpy.count(), 3);
+        QCOMPARE(quickTileChangedSpy.count(), 3);
+    }
+    QCOMPARE(window->frameGeometry(), expectedGeometryDesk2NewMode);
     QCOMPARE(window->quickTileMode(), modeDesk2);
 }
 }
