@@ -16,21 +16,23 @@
 namespace KWin
 {
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> brightness)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_bToATag(std::move(bToATag))
     , m_vcgt(vcgt)
-    , m_brightness(brightness)
+    , m_minBrightness(minBrightness)
+    , m_maxBrightness(maxBrightness)
 {
 }
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> brightness)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_inverseEOTF(inverseEOTF)
     , m_vcgt(vcgt)
-    , m_brightness(brightness)
+    , m_minBrightness(minBrightness)
+    , m_maxBrightness(maxBrightness)
 {
 }
 
@@ -39,9 +41,14 @@ IccProfile::~IccProfile()
     cmsCloseProfile(m_handle);
 }
 
-std::optional<double> IccProfile::brightness() const
+std::optional<double> IccProfile::minBrightness() const
 {
-    return m_brightness;
+    return m_minBrightness;
+}
+
+std::optional<double> IccProfile::maxBrightness() const
+{
+    return m_maxBrightness;
 }
 
 const Colorimetry &IccProfile::colorimetry() const
@@ -317,11 +324,16 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         return nullptr;
     }
 
-    std::optional<double> brightness;
+    std::optional<double> minBrightness;
+    std::optional<double> maxBrightness;
     if (cmsCIEXYZ *luminance = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigLuminanceTag))) {
         // for some reason, lcms exposes the luminance as a XYZ triple...
         // only Y is non-zero, and it's the brightness in nits
-        brightness = luminance->Y;
+        maxBrightness = luminance->Y;
+        cmsCIEXYZ blackPoint;
+        if (cmsDetectDestinationBlackPoint(&blackPoint, handle, INTENT_RELATIVE_COLORIMETRIC, 0)) {
+            minBrightness = blackPoint.Y * luminance->Y;
+        }
     }
 
     BToATagData lutData;
@@ -333,7 +345,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         // lut based profile, with relative colorimetric intent supported
         auto data = parseBToATag(handle, cmsSigBToA1Tag);
         if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, brightness);
+            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness);
         } else {
             qCWarning(KWIN_CORE, "Parsing BToA1 tag failed");
             return nullptr;
@@ -343,7 +355,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         // lut based profile, with perceptual intent. The ICC docs say to use this as a fallback
         auto data = parseBToATag(handle, cmsSigBToA0Tag);
         if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, brightness);
+            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness);
         } else {
             qCWarning(KWIN_CORE, "Parsing BToA0 tag failed");
             return nullptr;
@@ -366,7 +378,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
     std::vector<std::unique_ptr<ColorPipelineStage>> stages;
     stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves)));
     const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), inverseEOTF, vcgt, brightness);
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), inverseEOTF, vcgt, minBrightness, maxBrightness);
 }
 
 }
