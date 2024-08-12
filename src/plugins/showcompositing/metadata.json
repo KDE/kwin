@@ -20,6 +20,7 @@
         "Description[tr]": "Bileşikleştirme etkinse görüntüle",
         "Description[uk]": "Показувати, чи активною є композиція",
         "Description[x-test]": "xxDisplay if compositing is activexx",
+        "Description[zh_CN]": "在显示特效合成处于活动状态时显示",
         "Description[zh_TW]": "顯示合成器是否已啟用",
         "EnabledByDefault": false,
         "License": "GPL",
@@ -42,6 +43,7 @@
         "Name[tr]": "Bileşikleştirmeyi Göster",
         "Name[uk]": "Показувати композицію",
         "Name[x-test]": "xxShow Compositingxx",
+        "Name[zh_CN]": "显示特效合成活动指示器",
         "Name[zh_TW]": "顯示合成器狀態"
     }
 }
