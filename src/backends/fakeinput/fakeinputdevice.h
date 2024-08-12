@@ -8,6 +8,8 @@
 
 #include "core/inputdevice.h"
 
+#include <QSet>
+
 namespace KWin
 {
 
@@ -38,6 +40,10 @@ public:
 
     void setAuthenticated(bool authenticated);
     bool isAuthenticated() const;
+
+    QSet<quint32> pressedButtons;
+    QSet<quint32> pressedKeys;
+    QList<quint32> activeTouches;
 
 private:
     QString m_name;

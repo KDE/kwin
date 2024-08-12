@@ -68,11 +68,22 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy(Resource *resource
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_destroy_resource(Resource *resource)
 {
     auto it = devices.find(resource);
-    if (it != devices.end()) {
-        const auto [resource, device] = std::move(*it);
-        devices.erase(it);
-        Q_EMIT q->deviceRemoved(device.get());
+    if (it == devices.end()) {
+        return;
     }
+
+    const auto [r, device] = std::move(*it);
+    for (const auto button : device->pressedButtons) {
+        Q_EMIT device->pointerButtonChanged(button, InputRedirection::PointerButtonReleased, currentTime(), device.get());
+    }
+    for (const auto key : device->pressedKeys) {
+        Q_EMIT device->keyChanged(key, InputRedirection::KeyboardKeyReleased, currentTime(), device.get());
+    }
+    if (!device->activeTouches.empty()) {
+        Q_EMIT device->touchCanceled(device.get());
+    }
+    devices.erase(it);
+    Q_EMIT q->deviceRemoved(device.get());
 }
 
 FakeInputDevice *FakeInputBackendPrivate::findDevice(Resource *resource)
@@ -117,9 +128,16 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_button(Resource *resource,
     switch (state) {
     case WL_POINTER_BUTTON_STATE_PRESSED:
         nativeState = InputRedirection::PointerButtonPressed;
+        if (device->pressedButtons.contains(button)) {
+            return;
+        }
+        device->pressedButtons.insert(button);
         break;
     case WL_POINTER_BUTTON_STATE_RELEASED:
         nativeState = InputRedirection::PointerButtonReleased;
+        if (!device->pressedButtons.remove(button)) {
+            return;
+        }
         break;
     default:
         return;
@@ -164,6 +182,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_down(Resource *resou
         return;
     }
     touchIds << id;
+    device->activeTouches.push_back(id);
     Q_EMIT device->touchDown(id, QPointF(wl_fixed_to_double(x), wl_fixed_to_double(y)), currentTime(), device);
 }
 
@@ -189,7 +208,9 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_up(Resource *resourc
         return;
     }
     touchIds.removeOne(id);
-    Q_EMIT device->touchUp(id, currentTime(), device);
+    if (device->activeTouches.removeAll(id)) {
+        Q_EMIT device->touchUp(id, currentTime(), device);
+    }
 }
 
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_cancel(Resource *resource)
@@ -199,6 +220,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_touch_cancel(Resource *res
         return;
     }
     touchIds.clear();
+    device->activeTouches.clear();
     Q_EMIT device->touchCanceled(device);
 }
 
@@ -222,7 +244,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_pointer_motion_absolute(Re
     Q_EMIT device->pointerFrame(device);
 }
 
-void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t button, uint32_t state)
+void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *resource, uint32_t key, uint32_t state)
 {
     FakeInputDevice *device = findDevice(resource);
     if (!device->isAuthenticated()) {
@@ -233,9 +255,16 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
     switch (state) {
     case WL_KEYBOARD_KEY_STATE_PRESSED:
         nativeState = InputRedirection::KeyboardKeyPressed;
+        if (device->pressedKeys.contains(key)) {
+            return;
+        }
+        device->pressedKeys.insert(key);
         break;
 
     case WL_KEYBOARD_KEY_STATE_RELEASED:
+        if (!device->pressedKeys.remove(key)) {
+            return;
+        }
         nativeState = InputRedirection::KeyboardKeyReleased;
         break;
 
@@ -243,7 +272,7 @@ void FakeInputBackendPrivate::org_kde_kwin_fake_input_keyboard_key(Resource *res
         return;
     }
 
-    Q_EMIT device->keyChanged(button, nativeState, currentTime(), device);
+    Q_EMIT device->keyChanged(key, nativeState, currentTime(), device);
 }
 
 FakeInputBackend::FakeInputBackend(Display *display)
