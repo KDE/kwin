@@ -314,14 +314,15 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         return false;
     }
     Q_EMIT outputChange(frame->damage());
-    if (m_currentBrightness && m_currentBrightness != m_state.brightness) {
-        constexpr double changePerSecond = 2;
-        const double maxChangePerFrame = changePerSecond * 1'000.0 / m_state.currentMode->refreshRate();
-        // brightness perception is non-linear, gamma 2.2 encoding *roughly* represents that
-        const double current = std::pow(*m_currentBrightness, 1.0 / 2.2);
-        m_currentBrightness = std::pow(std::clamp(std::pow(m_state.brightness, 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2);
-        if (m_brightnessDevice) {
-            m_brightnessDevice->setBrightness(*m_currentBrightness);
+    if (frame->brightness() && (!m_currentBrightness || *m_currentBrightness != *frame->brightness())) {
+        m_currentBrightness = *frame->brightness();
+        if (highDynamicRange()) {
+            tryKmsColorOffloading();
+            if (m_brightnessDevice) {
+                m_brightnessDevice->setBrightness(1);
+            }
+        } else if (m_brightnessDevice) {
+            m_brightnessDevice->setBrightness(*frame->brightness());
         }
         m_renderLoop->scheduleRepaint();
     }
@@ -427,19 +428,6 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
-
-    // we should skip brightness animations when
-    // - the output is new, and we didn't have the output configuration applied yet
-    // - there's not enough steps to do a smooth animation
-    // - the brightness device is external, most of them do an animation on their own
-    if (!m_currentBrightness
-        || (m_brightnessDevice && !m_state.highDynamicRange && m_brightnessDevice->brightnessSteps() < 10)
-        || (m_brightnessDevice && !m_state.highDynamicRange && !m_brightnessDevice->isInternal())) {
-        m_currentBrightness = m_state.brightness;
-        if (m_brightnessDevice && !m_state.highDynamicRange) {
-            m_brightnessDevice->setBrightness(m_state.brightness);
-        }
-    }
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset(nullptr);
@@ -551,6 +539,11 @@ QVector3D DrmOutput::effectiveChannelFactors() const
 const ColorDescription &DrmOutput::scanoutColorDescription() const
 {
     return m_scanoutColorDescription;
+}
+
+std::optional<double> DrmOutput::currentBrightness() const
+{
+    return m_currentBrightness;
 }
 }
 

@@ -73,6 +73,8 @@ public:
      */
     bool needsChannelFactorFallback() const;
 
+    std::optional<double> currentBrightness() const override;
+
 private:
     bool setDrmDpmsMode(DpmsMode mode);
     void setDpmsMode(DpmsMode mode) override;
