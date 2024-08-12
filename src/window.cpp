@@ -3657,7 +3657,6 @@ void Window::setTile(Tile *tile)
                 TileManager *manager = workspace()->tileManager(output(), desktop);
                 Tile *oldOwner = manager->windowOwner(this);
                 if (!oldOwner || oldOwner->quickTileMode() != m_requestedQuickTileMode) {
-                    manager->forgetWindow(this);
                     manager->quickTile(m_requestedQuickTileMode)->addWindow(this);
                 }
             }
