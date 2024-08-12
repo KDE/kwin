@@ -20,6 +20,7 @@ public:
     double max = 1;
 
     bool operator==(const ValueRange &) const = default;
+    ValueRange operator*(double mult) const;
 };
 
 class KWIN_EXPORT ColorTransferFunction

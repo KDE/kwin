@@ -11,6 +11,14 @@
 namespace KWin
 {
 
+ValueRange ValueRange::operator*(double mult) const
+{
+    return ValueRange{
+        .min = min * mult,
+        .max = max * mult,
+    };
+}
+
 ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
@@ -19,11 +27,10 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
         .max = from.transferFunction().nitsToEncoded(range1.max),
     });
     ret.addTransferFunction(from.transferFunction());
-    ret.addMultiplier(to.referenceLuminance() / from.referenceLuminance());
 
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
-    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange());
+    ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()));
 
     ret.addInverseTransferFunction(to.transferFunction());
     return ret;

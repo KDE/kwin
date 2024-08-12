@@ -326,15 +326,36 @@ std::optional<double> ColorDescription::maxHdrLuminance() const
 
 QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingIntent intent) const
 {
+    QMatrix4x4 luminanceBefore;
+    QMatrix4x4 luminanceAfter;
+    if (intent == RenderingIntent::Perceptual || intent == RenderingIntent::RelativeColorimetricWithBPC) {
+        // add black point compensation: black and reference white from the source color space
+        // should both be mapped to black and reference white in the destination color space
+
+        // before color conversions, map [src min, src ref] to [0, 1]
+        luminanceBefore.scale(1.0 / (referenceLuminance() - minLuminance()));
+        luminanceBefore.translate(-minLuminance(), -minLuminance(), -minLuminance());
+        // afterwards, map [0, 1] again to [dst min, dst ref]
+        luminanceAfter.translate(other.minLuminance(), other.minLuminance(), other.minLuminance());
+        luminanceAfter.scale(other.referenceLuminance() - other.minLuminance());
+    } else {
+        // map only the reference luminance
+        luminanceBefore.scale(other.referenceLuminance() / referenceLuminance());
+    }
     switch (intent) {
     case RenderingIntent::Perceptual: {
         const Colorimetry &srcContainer = containerColorimetry() == NamedColorimetry::BT709 ? other.sdrColorimetry() : containerColorimetry();
-        return other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(srcContainer.white(), other.containerColorimetry().white()) * srcContainer.toXYZ();
+        return luminanceAfter * other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(srcContainer.white(), other.containerColorimetry().white()) * srcContainer.toXYZ() * luminanceBefore;
     }
-    case RenderingIntent::RelativeColorimetric:
-        return other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(containerColorimetry().white(), other.containerColorimetry().white()) * containerColorimetry().toXYZ();
-    case RenderingIntent::AbsoluteColorimetric:
-        return other.containerColorimetry().fromXYZ() * containerColorimetry().toXYZ();
+    case RenderingIntent::RelativeColorimetric: {
+        return luminanceAfter * other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(containerColorimetry().white(), other.containerColorimetry().white()) * containerColorimetry().toXYZ() * luminanceBefore;
+    }
+    case RenderingIntent::RelativeColorimetricWithBPC: {
+        return luminanceAfter * other.containerColorimetry().fromXYZ() * Colorimetry::chromaticAdaptationMatrix(containerColorimetry().white(), other.containerColorimetry().white()) * containerColorimetry().toXYZ() * luminanceBefore;
+    }
+    case RenderingIntent::AbsoluteColorimetric: {
+        return luminanceAfter * other.containerColorimetry().fromXYZ() * containerColorimetry().toXYZ() * luminanceBefore;
+    }
     }
     Q_UNREACHABLE();
 }
@@ -342,7 +363,6 @@ QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingInt
 QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst, RenderingIntent intent) const
 {
     rgb = m_transferFunction.encodedToNits(rgb);
-    rgb *= dst.referenceLuminance() / m_referenceLuminance;
     rgb = toOther(dst, intent) * rgb;
     return dst.transferFunction().nitsToEncoded(rgb);
 }

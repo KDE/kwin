@@ -94,7 +94,6 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction, float luminanceOffse
 
 vec4 sourceEncodingToNitsInDestinationColorspace(vec4 color) {
     color = encodingToNits(color, sourceNamedTransferFunction, sourceTransferFunctionParams.x, sourceTransferFunctionParams.y);
-    color.rgb = color.rgb * (destinationReferenceLuminance / sourceReferenceLuminance);
     color.rgb = (colorimetryTransform * vec4(color.rgb, 1.0)).rgb;
     return vec4(doTonemapping(color.rgb, maxDestinationLuminance), color.a);
 }

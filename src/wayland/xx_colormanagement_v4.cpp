@@ -46,7 +46,8 @@ void XXColorManagerV4::xx_color_manager_v4_bind_resource(Resource *resource)
     send_supported_intent(resource->handle, render_intent::render_intent_perceptual);
     send_supported_intent(resource->handle, render_intent::render_intent_relative);
     send_supported_intent(resource->handle, render_intent::render_intent_absolute);
-    // TODO implement saturation and relative bpc intents
+    send_supported_intent(resource->handle, render_intent::render_intent_relative_bpc);
+    // TODO implement saturation intent
 }
 
 void XXColorManagerV4::xx_color_manager_v4_destroy(Resource *resource)
