@@ -50,8 +50,9 @@ endif()
 
 function(ecm_add_qtwayland_server_protocol_kde target)
     # Parse arguments
+    set(options PRIVATE_CODE)
     set(oneValueArgs PROTOCOL BASENAME PREFIX)
-    cmake_parse_arguments(ARGS "" "${oneValueArgs}" "" ${ARGN})
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "" ${ARGN})
 
     if(ARGS_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Unknown keywords given to ecm_add_qtwayland_server_protocol_kde(): \"${ARGS_UNPARSED_ARGUMENTS}\"")
@@ -59,11 +60,15 @@ function(ecm_add_qtwayland_server_protocol_kde target)
 
     set(_prefix "${ARGS_PREFIX}")
 
+    if(ARGS_PRIVATE_CODE)
+        set(_private_code_option PRIVATE_CODE)
+    endif()
 
     find_package(WaylandScanner REQUIRED QUIET)
     ecm_add_wayland_server_protocol(${target}
                                     PROTOCOL ${ARGS_PROTOCOL}
-                                    BASENAME ${ARGS_BASENAME})
+                                    BASENAME ${ARGS_BASENAME}
+                                    ${_private_code_option})
 
     get_filename_component(_infile ${ARGS_PROTOCOL} ABSOLUTE)
     set(_header "${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-${ARGS_BASENAME}.h")
