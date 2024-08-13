@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-10 00:43+0000\n"
+"POT-Creation-Date: 2024-08-13 00:40+0000\n"
 "PO-Revision-Date: 2024-06-11 08:11\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -2422,7 +2422,7 @@ msgstr "Пераключэнне рэжыму ў выглядзе сеткі"
 msgid "Delete Virtual Desktop"
 msgstr "Выдаліць віртуальны працоўны стол"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:264
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Дадаць віртуальны працоўны стол"
@@ -2445,18 +2445,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Наладжванне віртуальных працоўных сталоў…"
 
-#: plugins/overview/qml/main.qml:739
+#: plugins/overview/qml/main.qml:747
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Няма адпаведных акон"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:219
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Перацягнуць уніз, каб закрыць"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:457
+#: plugins/private/qml/WindowHeapDelegate.qml:363
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-10 00:43+0000\n"
+"POT-Creation-Date: 2024-08-13 00:40+0000\n"
 "PO-Revision-Date: 2007-12-20 11:35+0100\n"
 "Last-Translator: Børre Gaup <boerre@skolelinux.no>\n"
 "Language-Team: Northern Sami <l10n-no@lister.huftis.org>\n"
@@ -2379,7 +2379,7 @@ msgstr "Lokte dahje vuolit láse"
 msgid "Delete Virtual Desktop"
 msgstr ""
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:264
 #, fuzzy, kde-format
 msgid "Add Virtual Desktop"
 msgstr "&Buot čállinbevddiide"
@@ -2402,18 +2402,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "&Buot čállinbevddiide"
 
-#: plugins/overview/qml/main.qml:739
+#: plugins/overview/qml/main.qml:747
 #, fuzzy, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Sirdde láse"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:219
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:457
+#: plugins/private/qml/WindowHeapDelegate.qml:363
 #, fuzzy, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

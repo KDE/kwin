@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-10 00:43+0000\n"
+"POT-Creation-Date: 2024-08-13 00:40+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -2480,7 +2480,7 @@ msgstr "Scoránaigh an Mhaisíocht Inbhéartaithe"
 msgid "Delete Virtual Desktop"
 msgstr "Bog Go &Deasc"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:264
 #, fuzzy, kde-format
 #| msgctxt "Create a new desktop and move there the window"
 #| msgid "&New Desktop"
@@ -2509,19 +2509,19 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Cumraigh Oibriú na bhFuinn&eog..."
 
-#: plugins/overview/qml/main.qml:739
+#: plugins/overview/qml/main.qml:747
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Fuinneoga ag bogadh:"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:219
 #, kde-format
 msgid "Drag Down To Close"
 msgstr ""
 
-#: plugins/private/qml/WindowHeapDelegate.qml:457
+#: plugins/private/qml/WindowHeapDelegate.qml:363
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgctxt "@info:tooltip as in: 'close this window'"

@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1687324 $
+# Version: $Revision: 1687602 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-10 00:43+0000\n"
+"POT-Creation-Date: 2024-08-13 00:40+0000\n"
 "PO-Revision-Date: 2024-08-10 12:42+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -2425,7 +2425,7 @@ msgstr "Przestaw na widok siatki"
 msgid "Delete Virtual Desktop"
 msgstr "Usuń pulpit wirtualny"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:264
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Dodaj wirtualny pulpit"
@@ -2448,18 +2448,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Ustawienia pulpitów wirtualnych..."
 
-#: plugins/overview/qml/main.qml:739
+#: plugins/overview/qml/main.qml:747
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Żadne okno nie odpowiada"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:219
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Przeciągnij w dół, aby zamknąć"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:457
+#: plugins/private/qml/WindowHeapDelegate.qml:363
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"

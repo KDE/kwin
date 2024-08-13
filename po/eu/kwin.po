@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-10 00:43+0000\n"
+"POT-Creation-Date: 2024-08-13 00:40+0000\n"
 "PO-Revision-Date: 2024-08-06 11:40+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -2422,7 +2422,7 @@ msgstr "Txandakatu Sarera ikuspegia"
 msgid "Delete Virtual Desktop"
 msgstr "Ezabatu alegiazko mahaigaina"
 
-#: plugins/overview/qml/DesktopBar.qml:262
+#: plugins/overview/qml/DesktopBar.qml:264
 #, kde-format
 msgid "Add Virtual Desktop"
 msgstr "Gehitu alegiazko mahaigaina"
@@ -2445,18 +2445,18 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Konfiguratu alegiazko mahaigainak..."
 
-#: plugins/overview/qml/main.qml:739
+#: plugins/overview/qml/main.qml:747
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Ez dago bat datorren leihorik"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:155
+#: plugins/private/qml/WindowHeapDelegate.qml:219
 #, kde-format
 msgid "Drag Down To Close"
 msgstr "Behera arrastatu ixteko"
 
-#: plugins/private/qml/WindowHeapDelegate.qml:457
+#: plugins/private/qml/WindowHeapDelegate.qml:363
 #, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
