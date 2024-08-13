@@ -95,7 +95,6 @@ public:
     explicit SurfaceItemXwayland(X11Window *window, Item *parent = nullptr);
 
     QRegion opaque() const override;
-    QList<QRectF> shape() const override;
 
 private:
     X11Window *m_window;
