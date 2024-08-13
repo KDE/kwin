@@ -78,6 +78,9 @@ public:
      * @returns a matrix that transforms from the XYZ representation to the linear RGB representation of colors in this colorimetry
      */
     const QMatrix4x4 &fromXYZ() const;
+    QMatrix4x4 toLMS() const;
+    QMatrix4x4 fromLMS() const;
+
     bool operator==(const Colorimetry &other) const;
     bool operator==(NamedColorimetry name) const;
     /**

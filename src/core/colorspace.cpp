@@ -127,6 +127,32 @@ const QMatrix4x4 &Colorimetry::fromXYZ() const
     return m_fromXYZ;
 }
 
+// converts from XYZ to LMS suitable for ICtCp
+static const QMatrix4x4 s_xyzToDolbyLMS = []() {
+    QMatrix4x4 ret;
+    ret(0, 0) = 0.3593;
+    ret(0, 1) = 0.6976;
+    ret(0, 2) = -0.0359;
+    ret(1, 0) = -0.1921;
+    ret(1, 1) = 1.1005;
+    ret(1, 2) = 0.0754;
+    ret(2, 0) = 0.0071;
+    ret(2, 1) = 0.0748;
+    ret(2, 2) = 0.8433;
+    return ret;
+}();
+static const QMatrix4x4 s_inverseDolbyLMS = s_xyzToDolbyLMS.inverted();
+
+QMatrix4x4 Colorimetry::toLMS() const
+{
+    return s_xyzToDolbyLMS * m_toXYZ;
+}
+
+QMatrix4x4 Colorimetry::fromLMS() const
+{
+    return m_fromXYZ * s_inverseDolbyLMS;
+}
+
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
 {
     const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint);

@@ -127,7 +127,8 @@ LegacyLutColorOp::LegacyLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, 
 
 bool LegacyLutColorOp::canBeUsedFor(const ColorOp &op)
 {
-    if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)) {
+    if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
+        || std::holds_alternative<ColorTonemapper>(op.operation)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
         return m_maxSize >= 1024;
@@ -150,6 +151,8 @@ void LegacyLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp>
                 output = tf->tf.nitsToEncoded(output);
             } else if (auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
                 output *= mult->factors;
+            } else if (auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
+                output.setX(tonemap->map(output.x()));
             } else {
                 Q_UNREACHABLE();
             }

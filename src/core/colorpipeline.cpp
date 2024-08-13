@@ -8,6 +8,8 @@
 */
 #include "colorpipeline.h"
 
+#include <numbers>
+
 namespace KWin
 {
 
@@ -19,9 +21,12 @@ ValueRange ValueRange::operator*(double mult) const
     };
 }
 
+static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
+
 ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
+    const double maxOutputLuminance = to.maxHdrLuminance().value_or(to.referenceLuminance());
     ColorPipeline ret(ValueRange{
         .min = from.transferFunction().nitsToEncoded(range1.min),
         .max = from.transferFunction().nitsToEncoded(range1.max),
@@ -31,6 +36,9 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
     // FIXME this assumes that the range stays the same with matrix multiplication
     // that's not necessarily true, and figuring out the actual range could be complicated..
     ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()));
+    if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
+        ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance, 1.5);
+    }
 
     ret.addInverseTransferFunction(to.transferFunction());
     return ret;
@@ -225,6 +233,34 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
     });
 }
 
+static const QMatrix4x4 s_toICtCp = QMatrix4x4(
+    2048.0 / 4096.0,   2048.0 / 4096.0,   0.0,             0.0,
+    6610.0 / 4096.0,  -13613.0 / 4096.0,  7003.0 / 4096.0, 0.0,
+    17933.0 / 4096.0, -17390.0 / 4096.0, -543.0 / 4096.0,  0.0,
+    0.0,               0.0,               0.0,             1.0).transposed();
+static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
+
+void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom)
+{
+    // convert from rgb to ICtCp
+    addMatrix(containerColorimetry.toLMS(), currentOutputRange());
+    addTransferFunction(TransferFunction(TransferFunction::PerceptualQuantizer));
+    addMatrix(s_toICtCp, currentOutputRange());
+    // apply the tone mapping to the intensity component
+    ops.push_back(ColorOp{
+        .input = currentOutputRange(),
+        .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance, maxAddedHeadroom),
+        .output = ValueRange {
+            .min = currentOutputRange().min,
+            .max = maxOutputLuminance,
+        },
+    });
+    // convert back to rgb
+    addMatrix(s_fromICtCp, currentOutputRange());
+    addInverseTransferFunction(TransferFunction(TransferFunction::PerceptualQuantizer));
+    addMatrix(containerColorimetry.fromLMS(), currentOutputRange());
+}
+
 bool ColorPipeline::isIdentity() const
 {
     return ops.empty();
@@ -240,6 +276,8 @@ void ColorPipeline::add(const ColorOp &op)
         addTransferFunction(tf->tf);
     } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
         addInverseTransferFunction(tf->tf);
+    } else {
+        ops.push_back(op);
     }
 }
 
@@ -265,6 +303,8 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
             ret = tf->tf.encodedToNits(ret);
         } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
             ret = tf->tf.nitsToEncoded(ret);
+        } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
+            ret.setX(tonemap->map(ret.x()));
         }
     }
     return ret;
@@ -294,6 +334,29 @@ ColorMultiplier::ColorMultiplier(double factor)
     : factors(factor, factor, factor)
 {
 }
+
+ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom)
+    : m_inputReferenceLuminance(referenceLuminance)
+    , m_maxInputLuminance(maxInputLuminance)
+    , m_maxOutputLuminance(maxOutputLuminance)
+{
+    m_inputRange = maxInputLuminance / referenceLuminance;
+    const double outputRange = maxOutputLuminance / referenceLuminance;
+    // = how much dynamic range this algorithm adds, by reducing the reference luminance
+    m_addedRange = std::clamp(m_inputRange / outputRange, 1.0, maxAddedHeadroom);
+    m_outputReferenceLuminance = referenceLuminance / m_addedRange;
+}
+
+double ColorTonemapper::map(double pqEncodedLuminance) const
+{
+    const double luminance = TransferFunction(TransferFunction::PerceptualQuantizer).encodedToNits(pqEncodedLuminance);
+    // keep things linear up to the reference luminance
+    const double low = std::min(luminance / m_addedRange, m_outputReferenceLuminance);
+    // and apply a nonlinear curve above, to reduce the luminance without completely removing differences
+    const double relativeHighlight = std::clamp((luminance / m_inputReferenceLuminance - 1.0) / (m_inputRange - 1.0), 0.0, 1.0);
+    const double high = std::log(relativeHighlight * (std::numbers::e - 1) + 1) * (m_maxOutputLuminance - m_outputReferenceLuminance);
+    return TransferFunction(TransferFunction::PerceptualQuantizer).nitsToEncoded(low + high);
+}
 }
 
 QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
@@ -308,6 +371,8 @@ QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
             debug << mat->mat;
         } else if (auto mult = std::get_if<KWin::ColorMultiplier>(&op.operation)) {
             debug << mult->factors;
+        } else if (auto tonemap = std::get_if<KWin::ColorTonemapper>(&op.operation)) {
+            debug << "tonemapper(" << tonemap->m_inputReferenceLuminance << tonemap->m_maxInputLuminance << tonemap->m_maxOutputLuminance << ")";
         }
     }
     debug << ")";

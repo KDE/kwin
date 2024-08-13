@@ -217,6 +217,8 @@ void GLShader::resolveLocations()
     m_matrix4Locations[Mat4Uniform::WindowTransformation] = uniformLocation("windowTransformation");
     m_matrix4Locations[Mat4Uniform::ScreenTransformation] = uniformLocation("screenTransformation");
     m_matrix4Locations[Mat4Uniform::ColorimetryTransformation] = uniformLocation("colorimetryTransform");
+    m_matrix4Locations[Mat4Uniform::DestinationToLMS] = uniformLocation("destinationToLMS");
+    m_matrix4Locations[Mat4Uniform::LMSToDestination] = uniformLocation("lmsToDestination");
 
     m_vec2Locations[Vec2Uniform::Offset] = uniformLocation("offset");
     m_vec2Locations[Vec2Uniform::SourceTransferFunctionParams] = uniformLocation("sourceTransferFunctionParams");
@@ -230,6 +232,7 @@ void GLShader::resolveLocations()
     m_floatLocations[FloatUniform::MaxDestinationLuminance] = uniformLocation("maxDestinationLuminance");
     m_floatLocations[FloatUniform::SourceReferenceLuminance] = uniformLocation("sourceReferenceLuminance");
     m_floatLocations[FloatUniform::DestinationReferenceLuminance] = uniformLocation("destinationReferenceLuminance");
+    m_floatLocations[FloatUniform::MaxTonemappingLuminance] = uniformLocation("maxTonemappingLuminance");
 
     m_colorLocations[ColorUniform::Color] = uniformLocation("geometryColor");
 
@@ -469,6 +472,8 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     }
 }
 
+static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
+
 void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
 {
     setUniform(Mat4Uniform::ColorimetryTransformation, src.toOther(dst, intent));
@@ -479,5 +484,12 @@ void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDes
     setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance));
     setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance());
     setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
+    if (!s_disableTonemapping && intent == RenderingIntent::Perceptual) {
+        setUniform(FloatUniform::MaxTonemappingLuminance, src.maxHdrLuminance().value_or(src.referenceLuminance()) * dst.referenceLuminance() / src.referenceLuminance());
+    } else {
+        setUniform(FloatUniform::MaxTonemappingLuminance, dst.referenceLuminance());
+    }
+    setUniform(Mat4Uniform::DestinationToLMS, dst.containerColorimetry().toLMS());
+    setUniform(Mat4Uniform::LMSToDestination, dst.containerColorimetry().fromLMS());
 }
 }

@@ -64,11 +64,28 @@ public:
     QVector3D factors;
 };
 
+class KWIN_EXPORT ColorTonemapper
+{
+public:
+    explicit ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom);
+
+    double map(double pqEncodedLuminance) const;
+    bool operator==(const ColorTonemapper &) const = default;
+
+    double m_inputReferenceLuminance;
+    double m_maxInputLuminance;
+    double m_maxOutputLuminance;
+private:
+    double m_inputRange;
+    double m_addedRange;
+    double m_outputReferenceLuminance;
+};
+
 class KWIN_EXPORT ColorOp
 {
 public:
     ValueRange input;
-    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier> operation;
+    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper> operation;
     ValueRange output;
 
     bool operator==(const ColorOp &) const = default;
@@ -101,6 +118,7 @@ public:
     void addTransferFunction(TransferFunction tf);
     void addInverseTransferFunction(TransferFunction tf);
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
+    void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom);
     void add(const ColorOp &op);
 
     ValueRange inputRange;

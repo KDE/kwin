@@ -85,6 +85,8 @@ public:
         WindowTransformation,
         ScreenTransformation,
         ColorimetryTransformation,
+        DestinationToLMS,
+        LMSToDestination,
         MatrixCount
     };
 
@@ -109,6 +111,7 @@ public:
         MaxDestinationLuminance,
         SourceReferenceLuminance,
         DestinationReferenceLuminance,
+        MaxTonemappingLuminance,
         FloatUniformCount
     };
 
