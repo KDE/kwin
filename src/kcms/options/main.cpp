@@ -65,6 +65,7 @@ KWinOptions::KWinOptions(QObject *parent, const KPluginMetaData &data)
     QVBoxLayout *layout = new QVBoxLayout(widget());
     layout->setContentsMargins(0, 0, 0, 0);
     tab = new QTabWidget(widget());
+    tab->setDocumentMode(true);
     layout->addWidget(tab);
 
     const auto connectKCM = [this](KCModule *mod) {

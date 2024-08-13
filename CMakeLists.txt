@@ -110,6 +110,12 @@ if(KWIN_BUILD_KCMS)
     )
 endif()
 
+if(KWIN_BUILD_TABBOX AND KWIN_BUILD_KCMS)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+        WidgetsAddons
+    )
+endif()
+
 find_package(Threads)
 set_package_properties(Threads PROPERTIES
     PURPOSE "Needed for VirtualTerminal support in KWin Wayland"

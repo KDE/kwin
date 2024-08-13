@@ -22,6 +22,7 @@
 #include <QSpacerItem>
 #include <QStandardItemModel>
 #include <QStandardPaths>
+#include <QStyle>
 #include <QTabWidget>
 #include <QVBoxLayout>
 
@@ -29,6 +30,7 @@
 #include <KLocalizedString>
 #include <KNSWidgets/Button>
 #include <KPluginFactory>
+#include <KSeparator>
 #include <KTitleWidget>
 // Plasma
 #include <KPackage/Package>
@@ -55,6 +57,7 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     , m_data(new KWinTabboxData(this))
 {
     QTabWidget *tabWidget = new QTabWidget(widget());
+    tabWidget->setDocumentMode(true);
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main,
                                                  m_data->tabBoxConfig(),
                                                  m_data->shortcutConfig(),
@@ -74,17 +77,23 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     });
 
     QHBoxLayout *buttonBar = new QHBoxLayout();
+    QStyle *style = widget()->style();
+
+    buttonBar->setContentsMargins(style->pixelMetric(QStyle::PM_LayoutLeftMargin), 0, style->pixelMetric(QStyle::PM_LayoutRightMargin), style->pixelMetric(QStyle::PM_LayoutBottomMargin));
     QSpacerItem *buttonBarSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
     buttonBar->addItem(buttonBarSpacer);
     buttonBar->addWidget(ghnsButton);
 
     QVBoxLayout *layout = new QVBoxLayout(widget());
+    layout->setContentsMargins(0, 0, 0, 0);
     KTitleWidget *infoLabel = new KTitleWidget(tabWidget);
     infoLabel->setText(i18n("Focus policy settings limit the functionality of navigating through windows."),
                        KTitleWidget::InfoMessage);
     infoLabel->setIcon(KTitleWidget::InfoMessage, KTitleWidget::ImageLeft);
     layout->addWidget(infoLabel, 0);
     layout->addWidget(tabWidget, 1);
+    KSeparator *separator = new KSeparator();
+    layout->addWidget(separator);
     layout->addLayout(buttonBar);
     widget()->setLayout(layout);
 

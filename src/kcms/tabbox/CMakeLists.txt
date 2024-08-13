@@ -27,6 +27,7 @@ target_link_libraries(kcm_kwintabbox
     KF6::Package
     KF6::Service
     KF6::XmlGui # For kkeysequencewidget
+    KF6::WidgetsAddons
 )
 if (KWIN_BUILD_X11)
     target_link_libraries(kcm_kwintabbox

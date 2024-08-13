@@ -16,6 +16,9 @@
      <property name="title">
       <string>Titlebar Actions</string>
      </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
      <layout class="QFormLayout" name="formLayout_1">
       <property name="formAlignment">
        <set>Qt::AlignHCenter|Qt::AlignTop</set>
@@ -142,6 +145,9 @@
      <property name="title">
       <string>Titlebar and Frame Actions</string>
      </property>
+     <property name="flat">
+      <bool>true</bool>
+     </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
      </property>
@@ -223,7 +229,7 @@
         <item row="1" column="1">
          <widget class="QComboBox" name="kcfg_CommandActiveTitlebar1">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -338,7 +344,7 @@
         <item row="2" column="1">
          <widget class="QComboBox" name="kcfg_CommandActiveTitlebar2">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -453,7 +459,7 @@
         <item row="3" column="1">
          <widget class="QComboBox" name="kcfg_CommandActiveTitlebar3">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -587,6 +593,9 @@
     <widget class="QGroupBox" name="groupBox_3">
      <property name="title">
       <string>Maximize Button Actions</string>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
       <property name="formAlignment">
