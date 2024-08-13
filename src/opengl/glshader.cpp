@@ -469,15 +469,15 @@ QMatrix4x4 GLShader::getUniformMatrix4x4(const char *name)
     }
 }
 
-bool GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
+void GLShader::setColorspaceUniforms(const ColorDescription &src, const ColorDescription &dst, RenderingIntent intent)
 {
-    return setUniform(Mat4Uniform::ColorimetryTransformation, src.toOther(dst, intent))
-        && setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type)
-        && setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance))
-        && setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance())
-        && setUniform(IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type)
-        && setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance))
-        && setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance())
-        && setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
+    setUniform(Mat4Uniform::ColorimetryTransformation, src.toOther(dst, intent));
+    setUniform(IntUniform::SourceNamedTransferFunction, src.transferFunction().type);
+    setUniform(Vec2Uniform::SourceTransferFunctionParams, QVector2D(src.transferFunction().minLuminance, src.transferFunction().maxLuminance - src.transferFunction().minLuminance));
+    setUniform(FloatUniform::SourceReferenceLuminance, src.referenceLuminance());
+    setUniform(IntUniform::DestinationNamedTransferFunction, dst.transferFunction().type);
+    setUniform(Vec2Uniform::DestinationTransferFunctionParams, QVector2D(dst.transferFunction().minLuminance, dst.transferFunction().maxLuminance - dst.transferFunction().minLuminance));
+    setUniform(FloatUniform::DestinationReferenceLuminance, dst.referenceLuminance());
+    setUniform(FloatUniform::MaxDestinationLuminance, dst.maxHdrLuminance().value_or(10'000));
 }
 }
