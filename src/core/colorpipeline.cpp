@@ -167,7 +167,7 @@ static bool isFuzzyIdentity(const QMatrix4x4 &mat)
 {
     // matrix calculations with floating point numbers can result in very small errors
     // -> ignore them, as that just causes inefficiencies and more rounding errors
-    constexpr float maxResolution = 0.0000001;
+    constexpr float maxResolution = 0.00001;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             const float targetValue = i == j ? 1 : 0;
@@ -183,7 +183,7 @@ static bool isFuzzyScalingOnly(const QMatrix4x4 &mat)
 {
     // matrix calculations with floating point numbers can result in very small errors
     // -> ignore them, as that just causes inefficiencies and more rounding errors
-    constexpr float maxResolution = 0.0000001;
+    constexpr float maxResolution = 0.00001;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             if (i < 3 && i == j) {
