@@ -553,9 +553,6 @@ void Window::updateLayer()
     }
     StackingUpdatesBlocker blocker(workspace());
     m_layer = UnknownLayer; // invalidate, will be updated when doing restacking
-    for (auto it = transients().constBegin(), end = transients().constEnd(); it != end; ++it) {
-        (*it)->updateLayer();
-    }
 }
 
 Layer Window::belongsToLayer() const
