@@ -578,7 +578,7 @@ static QString sourceString(const AbstractDataSource *const source)
         if (auto dataSource = qobject_cast<const DataSourceInterface *const>(source)) {
             return QStringLiteral("wl_data_source@%1 of %2").arg(wl_resource_get_id(dataSource->resource())).arg(executable);
         } else if (qobject_cast<const PrimarySelectionSourceV1Interface *const>(source)) {
-            return QStringLiteral("zwp_primary_selection_source_v1 of %2").arg(executable);
+            return QStringLiteral("zwp_primary_selection_source_v1 of %1").arg(executable);
         } else if (qobject_cast<const DataControlSourceV1Interface *const>(source)) {
             return QStringLiteral("data control by %1").arg(executable);
         }
