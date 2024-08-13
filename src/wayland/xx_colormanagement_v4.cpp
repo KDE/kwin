@@ -30,10 +30,8 @@ void XXColorManagerV4::xx_color_manager_v4_bind_resource(Resource *resource)
     send_supported_primaries_named(resource->handle, primaries::primaries_srgb);
     send_supported_primaries_named(resource->handle, primaries::primaries_bt2020);
 
-    send_supported_tf_named(resource->handle, transfer_function::transfer_function_bt709);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_gamma22);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_srgb);
-    send_supported_tf_named(resource->handle, transfer_function::transfer_function_ext_srgb);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_st2084_pq);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_linear);
 
@@ -227,7 +225,6 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_tf_n
     }
     switch (tf) {
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_SRGB:
-    case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_BT709:
     case XX_COLOR_MANAGER_V4_TRANSFER_FUNCTION_GAMMA22:
         m_transferFunctionType = TransferFunction::gamma22;
         return;
