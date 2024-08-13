@@ -198,7 +198,7 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
     if (!ops.empty()) {
         auto *lastOp = &ops.back().operation;
         if (const auto otherMat = std::get_if<ColorMatrix>(lastOp)) {
-            otherMat->mat *= mat;
+            otherMat->mat = mat * otherMat->mat;
             ops.back().output = output;
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
