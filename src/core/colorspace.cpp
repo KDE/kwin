@@ -173,11 +173,58 @@ static const Colorimetry BT709 = Colorimetry{
     QVector2D{0.15, 0.06},
     QVector2D{0.3127, 0.3290},
 };
-
+static const Colorimetry PAL_M = Colorimetry{
+    QVector2D{0.67, 0.33},
+    QVector2D{0.21, 0.71},
+    QVector2D{0.14, 0.08},
+    QVector2D{0.310, 0.316},
+};
+static const Colorimetry PAL = Colorimetry{
+    QVector2D{0.640, 0.330},
+    QVector2D{0.290, 0.600},
+    QVector2D{0.150, 0.060},
+    QVector2D{0.3127, 0.3290},
+};
+static const Colorimetry NTSC = Colorimetry{
+    QVector2D{0.630, 0.340},
+    QVector2D{0.310, 0.595},
+    QVector2D{0.155, 0.070},
+    QVector2D{0.3127, 0.3290},
+};
+static const Colorimetry GenericFilm = Colorimetry{
+    QVector2D{0.243, 0.692},
+    QVector2D{0.145, 0.049},
+    QVector2D{0.681, 0.319},
+    QVector2D{0.310, 0.316},
+};
 static const Colorimetry BT2020 = Colorimetry{
     QVector2D{0.708, 0.292},
     QVector2D{0.170, 0.797},
     QVector2D{0.131, 0.046},
+    QVector2D{0.3127, 0.3290},
+};
+static const Colorimetry CIEXYZ = Colorimetry{
+    QVector2D{1.0, 0.0},
+    QVector2D{0.0, 1.0},
+    QVector2D(0.0, 0.0),
+    QVector2D(1 / 3.0, 1 / 3.0),
+};
+static const Colorimetry DCIP3 = Colorimetry{
+    QVector2D{0.680, 0.320},
+    QVector2D{0.265, 0.690},
+    QVector2D{0.150, 0.060},
+    QVector2D{0.314, 0.351},
+};
+static const Colorimetry DisplayP3 = Colorimetry{
+    QVector2D{0.680, 0.320},
+    QVector2D{0.265, 0.690},
+    QVector2D{0.150, 0.060},
+    QVector2D{0.3127, 0.3290},
+};
+static const Colorimetry AdobeRGB = Colorimetry{
+    QVector2D{0.6400, 0.3300},
+    QVector2D{0.2100, 0.7100},
+    QVector2D{0.1500, 0.0600},
     QVector2D{0.3127, 0.3290},
 };
 
@@ -186,8 +233,24 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
     switch (name) {
     case NamedColorimetry::BT709:
         return BT709;
+    case NamedColorimetry::PAL_M:
+        return PAL_M;
+    case NamedColorimetry::PAL:
+        return PAL;
+    case NamedColorimetry::NTSC:
+        return NTSC;
+    case NamedColorimetry::GenericFilm:
+        return GenericFilm;
     case NamedColorimetry::BT2020:
         return BT2020;
+    case NamedColorimetry::CIEXYZ:
+        return CIEXYZ;
+    case NamedColorimetry::DCIP3:
+        return DCIP3;
+    case NamedColorimetry::DisplayP3:
+        return DisplayP3;
+    case NamedColorimetry::AdobeRGB:
+        return AdobeRGB;
     }
     Q_UNREACHABLE();
 }

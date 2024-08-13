@@ -32,7 +32,15 @@ enum class RenderingIntent {
 
 enum class NamedColorimetry {
     BT709,
+    PAL_M,
+    PAL,
+    NTSC,
+    GenericFilm,
     BT2020,
+    CIEXYZ,
+    DCIP3,
+    DisplayP3,
+    AdobeRGB
 };
 
 /**

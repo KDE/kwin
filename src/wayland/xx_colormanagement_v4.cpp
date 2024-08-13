@@ -28,7 +28,15 @@ void XXColorManagerV4::xx_color_manager_v4_bind_resource(Resource *resource)
     send_supported_feature(resource->handle, feature::feature_set_luminances);
 
     send_supported_primaries_named(resource->handle, primaries::primaries_srgb);
+    send_supported_primaries_named(resource->handle, primaries::primaries_pal_m);
+    send_supported_primaries_named(resource->handle, primaries::primaries_pal);
+    send_supported_primaries_named(resource->handle, primaries::primaries_ntsc);
+    send_supported_primaries_named(resource->handle, primaries::primaries_generic_film);
     send_supported_primaries_named(resource->handle, primaries::primaries_bt2020);
+    send_supported_primaries_named(resource->handle, primaries::primaries_cie1931_xyz);
+    send_supported_primaries_named(resource->handle, primaries::primaries_dci_p3);
+    send_supported_primaries_named(resource->handle, primaries::primaries_display_p3);
+    send_supported_primaries_named(resource->handle, primaries::primaries_adobe_rgb);
 
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_gamma22);
     send_supported_tf_named(resource->handle, transfer_function::transfer_function_srgb);
@@ -252,14 +260,37 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_prim
         return;
     }
     switch (primaries) {
-    case XX_COLOR_MANAGER_V4_PRIMARIES_SRGB:
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_srgb:
         m_colorimetry = Colorimetry::fromName(NamedColorimetry::BT709);
         return;
-    case XX_COLOR_MANAGER_V4_PRIMARIES_BT2020:
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_pal_m:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::PAL_M);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_pal:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::PAL);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_ntsc:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::NTSC);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_generic_film:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::GenericFilm);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_bt2020:
         m_colorimetry = Colorimetry::fromName(NamedColorimetry::BT2020);
         return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_cie1931_xyz:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::CIEXYZ);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_dci_p3:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::DCIP3);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_display_p3:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::DisplayP3);
+        return;
+    case QtWaylandServer::xx_color_manager_v4::primaries::primaries_adobe_rgb:
+        m_colorimetry = Colorimetry::fromName(NamedColorimetry::AdobeRGB);
+        return;
     default:
-        // TODO add more named primaries
         wl_resource_post_error(resource->handle, error::error_invalid_primaries, "unsupported named primaries");
     }
 }
