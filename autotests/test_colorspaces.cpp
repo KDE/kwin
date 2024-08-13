@@ -152,6 +152,20 @@ void TestColorspaces::testColorPipeline_data()
         << QVector3D(0.217833, 0.217833, 0.217833)
         << QVector3D(1, 1, 1)
         << RenderingIntent::RelativeColorimetric;
+    QTest::addRow("sRGB -> rec.2020 relative colorimetric with bpc")
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22, 0.2, 80), 80, 0.2, std::nullopt, std::nullopt)
+        << ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer, 0.005, 10'000), 500, 0.005, std::nullopt, std::nullopt)
+        << QVector3D(0, 0, 0)
+        << QVector3D(0.51667, 0.51667, 0.51667)
+        << QVector3D(0.67658, 0.67658, 0.67658)
+        << RenderingIntent::RelativeColorimetricWithBPC;
+    QTest::addRow("scRGB -> scRGB relative colorimetric with bpc")
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), 0, std::nullopt, std::nullopt)
+        << ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 8, 80), 80, 8, std::nullopt, std::nullopt)
+        << QVector3D(0, 0, 0)
+        << QVector3D(0.5, 0.5, 0.5)
+        << QVector3D(1, 1, 1)
+        << RenderingIntent::RelativeColorimetricWithBPC;
 }
 
 void TestColorspaces::testColorPipeline()
