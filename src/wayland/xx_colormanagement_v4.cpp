@@ -381,7 +381,7 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
     auto resource = wl_resource_create(qtResource->client(), &xx_image_description_info_v4_interface, qtResource->version(), information);
     const auto c = m_description.containerColorimetry();
     const auto round = [](float f) {
-        return std::clamp(std::round(f * 10'000.0), 0.0, 1.0);
+        return std::clamp(std::round(f * 10'000.0), 0.0, 10'000.0);
     };
     xx_image_description_info_v4_send_primaries(resource,
                                                 round(c.red().x()), round(c.red().y()),
