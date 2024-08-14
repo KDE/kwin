@@ -196,6 +196,8 @@ void SurfaceItemWayland::freeze()
     for (auto &[subsurface, subsurfaceItem] : m_subsurfaces) {
         subsurfaceItem->freeze();
     }
+
+    m_surface = nullptr;
 }
 
 void SurfaceItemWayland::handleColorDescriptionChanged()
