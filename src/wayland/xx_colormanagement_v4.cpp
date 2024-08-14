@@ -447,6 +447,13 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
     if (auto name = m_description.containerColorimetry().name()) {
         xx_image_description_info_v4_send_primaries_named(resource, kwinPrimariesToProtoPrimaires(*name));
     }
+    if (auto m = m_description.masteringColorimetry()) {
+        xx_image_description_info_v4_send_target_primaries(resource,
+                                                           round(m->red().x()), round(m->red().y()),
+                                                           round(m->green().x()), round(m->green().y()),
+                                                           round(m->blue().x()), round(m->blue().y()),
+                                                           round(m->white().x()), round(m->white().y()));
+    }
     xx_image_description_info_v4_send_luminances(resource, std::round(m_description.transferFunction().minLuminance * 10'000), std::round(m_description.transferFunction().maxLuminance), std::round(m_description.referenceLuminance()));
     xx_image_description_info_v4_send_target_luminance(resource, m_description.minLuminance(), m_description.maxHdrLuminance().value_or(800));
     xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description.transferFunction()));
