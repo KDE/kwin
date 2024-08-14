@@ -309,7 +309,25 @@ std::shared_ptr<GLTexture> AbstractEglBackend::importDmaBufAsTexture(const DmaBu
 
 bool AbstractEglBackend::testImportBuffer(GraphicsBuffer *buffer)
 {
-    return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+    const auto nonExternalOnly = m_display->nonExternalOnlySupportedDrmFormats();
+    if (auto it = nonExternalOnly.find(buffer->dmabufAttributes()->format); it != nonExternalOnly.end() && it->contains(buffer->dmabufAttributes()->modifier)) {
+        return importBufferAsImage(buffer) != EGL_NO_IMAGE_KHR;
+    }
+    // external_only buffers aren't used as a single EGLImage, import them separately
+    const auto info = FormatInfo::get(buffer->dmabufAttributes()->format);
+    if (!info || !info->yuvConversion()) {
+        return false;
+    }
+    const auto planes = info->yuvConversion()->plane;
+    if (buffer->dmabufAttributes()->planeCount != planes.size()) {
+        return false;
+    }
+    for (int i = 0; i < planes.size(); i++) {
+        if (!importBufferAsImage(buffer, i, planes[i].format, QSize(buffer->size().width() / planes[i].widthDivisor, buffer->size().height() / planes[i].heightDivisor))) {
+            return false;
+        }
+    }
+    return true;
 }
 
 QHash<uint32_t, QList<uint64_t>> AbstractEglBackend::supportedFormats() const
