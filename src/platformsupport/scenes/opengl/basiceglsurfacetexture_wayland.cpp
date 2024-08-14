@@ -86,6 +86,15 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(GraphicsBuffer *buffer)
     return true;
 }
 
+static QRegion simplifyDamage(const QRegion &damage)
+{
+    if (damage.rectCount() < 3) {
+        return damage;
+    } else {
+        return damage.boundingRect();
+    }
+}
+
 void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, const QRegion &region)
 {
     if (Q_UNLIKELY(m_bufferType != BufferType::Shm)) {
@@ -99,7 +108,8 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, con
         return;
     }
 
-    for (const QRect &rect : region) {
+    const QRegion simplifiedDamage = simplifyDamage(region);
+    for (const QRect &rect : simplifiedDamage) {
         m_texture.planes[0]->update(*view.image(), rect.topLeft(), rect);
     }
 }
