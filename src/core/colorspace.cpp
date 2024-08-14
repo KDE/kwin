@@ -255,6 +255,26 @@ const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
     Q_UNREACHABLE();
 }
 
+std::optional<NamedColorimetry> Colorimetry::name() const
+{
+    constexpr std::array names = {
+        NamedColorimetry::BT709,
+        NamedColorimetry::PAL_M,
+        NamedColorimetry::PAL,
+        NamedColorimetry::NTSC,
+        NamedColorimetry::GenericFilm,
+        NamedColorimetry::BT2020,
+        NamedColorimetry::CIEXYZ,
+        NamedColorimetry::DCIP3,
+        NamedColorimetry::DisplayP3,
+        NamedColorimetry::AdobeRGB,
+    };
+    const auto it = std::ranges::find_if(names, [this](NamedColorimetry name) {
+        return *this == name;
+    });
+    return it != names.end() ? std::optional(*it) : std::nullopt;
+}
+
 const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)

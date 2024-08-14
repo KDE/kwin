@@ -405,6 +405,33 @@ static uint32_t kwinTFtoProtoTF(TransferFunction tf)
     Q_UNREACHABLE();
 }
 
+static uint32_t kwinPrimariesToProtoPrimaires(NamedColorimetry primaries)
+{
+    switch (primaries) {
+    case NamedColorimetry::BT709:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_srgb;
+    case NamedColorimetry::PAL_M:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_pal_m;
+    case NamedColorimetry::PAL:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_pal;
+    case NamedColorimetry::NTSC:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_ntsc;
+    case NamedColorimetry::GenericFilm:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_generic_film;
+    case NamedColorimetry::BT2020:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_bt2020;
+    case NamedColorimetry::CIEXYZ:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_cie1931_xyz;
+    case NamedColorimetry::DCIP3:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_dci_p3;
+    case NamedColorimetry::DisplayP3:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_display_p3;
+    case NamedColorimetry::AdobeRGB:
+        return QtWaylandServer::xx_color_manager_v4::primaries::primaries_adobe_rgb;
+    }
+    Q_UNREACHABLE();
+}
+
 void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtResource, uint32_t information)
 {
     auto resource = wl_resource_create(qtResource->client(), &xx_image_description_info_v4_interface, qtResource->version(), information);
@@ -417,6 +444,9 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
                                                 round(c.green().x()), round(c.green().y()),
                                                 round(c.blue().x()), round(c.blue().y()),
                                                 round(c.white().x()), round(c.white().y()));
+    if (auto name = m_description.containerColorimetry().name()) {
+        xx_image_description_info_v4_send_primaries_named(resource, kwinPrimariesToProtoPrimaires(*name));
+    }
     xx_image_description_info_v4_send_luminances(resource, std::round(m_description.transferFunction().minLuminance * 10'000), std::round(m_description.transferFunction().maxLuminance), std::round(m_description.referenceLuminance()));
     xx_image_description_info_v4_send_target_luminance(resource, m_description.minLuminance(), m_description.maxHdrLuminance().value_or(800));
     xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description.transferFunction()));

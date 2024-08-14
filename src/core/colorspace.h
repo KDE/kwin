@@ -94,6 +94,8 @@ public:
     const QVector2D &blue() const;
     const QVector2D &white() const;
 
+    std::optional<NamedColorimetry> name() const;
+
 private:
     QVector2D m_red;
     QVector2D m_green;
