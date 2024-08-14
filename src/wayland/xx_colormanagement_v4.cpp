@@ -454,6 +454,12 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
                                                            round(m->blue().x()), round(m->blue().y()),
                                                            round(m->white().x()), round(m->white().y()));
     }
+    if (auto maxfall = m_description.maxAverageLuminance()) {
+        xx_image_description_info_v4_send_target_max_fall(resource, *maxfall);
+    }
+    if (auto maxcll = m_description.maxHdrLuminance()) {
+        xx_image_description_info_v4_send_target_max_cll(resource, *maxcll);
+    }
     xx_image_description_info_v4_send_luminances(resource, std::round(m_description.transferFunction().minLuminance * 10'000), std::round(m_description.transferFunction().maxLuminance), std::round(m_description.referenceLuminance()));
     xx_image_description_info_v4_send_target_luminance(resource, m_description.minLuminance(), m_description.maxHdrLuminance().value_or(800));
     xx_image_description_info_v4_send_tf_named(resource, kwinTFtoProtoTF(m_description.transferFunction()));
