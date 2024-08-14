@@ -308,7 +308,11 @@ QHash<uint32_t, EglDisplay::DrmFormatInfo> EglDisplay::queryImportFormats() cons
                     if (!drmFormatInfo.allModifiers.empty()) {
                         if (!drmFormatInfo.allModifiers.contains(DRM_FORMAT_MOD_INVALID)) {
                             drmFormatInfo.allModifiers.push_back(DRM_FORMAT_MOD_INVALID);
-                            drmFormatInfo.nonExternalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                            if (!drmFormatInfo.nonExternalOnlyModifiers.empty()) {
+                                drmFormatInfo.nonExternalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                            } else {
+                                drmFormatInfo.externalOnlyModifiers.push_back(DRM_FORMAT_MOD_INVALID);
+                            }
                         }
                         ret.insert(format, drmFormatInfo);
                     }
