@@ -2,12 +2,17 @@ add_subdirectory(helper)
 
 add_library(KWinIntegrationTestFramework STATIC)
 
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
+    set(private_code_option  "PRIVATE_CODE")
+endif()
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
+    ${private_code_option}
     NO_INCLUDE_CORE_ONLY
     FILES
         ${WaylandProtocols_DATADIR}/unstable/input-method/input-method-unstable-v1.xml
 )
 qt6_generate_wayland_protocol_client_sources(KWinIntegrationTestFramework
+    ${private_code_option}
     FILES
         ${WaylandProtocols_DATADIR}/unstable/text-input/text-input-unstable-v3.xml
         ${CMAKE_SOURCE_DIR}/src/wayland/protocols/wlr-layer-shell-unstable-v1.xml

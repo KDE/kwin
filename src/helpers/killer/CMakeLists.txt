@@ -4,7 +4,14 @@ set(kwin_killer_helper_SRCS killer.cpp)
 
 add_executable(kwin_killer_helper ${kwin_killer_helper_SRCS})
 
-qt6_generate_wayland_protocol_client_sources(kwin_killer_helper FILES ${WaylandProtocols_DATADIR}/unstable/xdg-foreign/xdg-foreign-unstable-v2.xml)
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
+    set(private_code_option  "PRIVATE_CODE")
+endif()
+qt6_generate_wayland_protocol_client_sources(kwin_killer_helper
+    ${private_code_option}
+    FILES
+        ${WaylandProtocols_DATADIR}/unstable/xdg-foreign/xdg-foreign-unstable-v2.xml
+)
 
 target_link_libraries(kwin_killer_helper
     KF6::AuthCore

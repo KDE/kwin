@@ -1,3 +1,6 @@
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.8.0")
+    set(private_code_option  "PRIVATE_CODE")
+endif()
 ########################################################
 # Test WaylandOutput
 ########################################################
@@ -29,8 +32,11 @@ add_executable(testWaylandSeat)
 set( testWaylandSeat_SRCS
         test_wayland_seat.cpp
     )
-qt6_generate_wayland_protocol_client_sources(testWaylandSeat FILES
-    ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml)
+qt6_generate_wayland_protocol_client_sources(testWaylandSeat 
+    ${private_code_option}
+    FILES
+        ${WaylandProtocols_DATADIR}/unstable/pointer-gestures/pointer-gestures-unstable-v1.xml
+)
 target_sources(testWaylandSeat PRIVATE ${testWaylandSeat_SRCS})
 target_link_libraries( testWaylandSeat Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client Wayland::Server)
 add_test(NAME kwayland-testWaylandSeat COMMAND testWaylandSeat)
@@ -131,8 +137,11 @@ set( testServerSideDecoration_SRCS
         test_server_side_decoration.cpp
     )
 add_executable(testServerSideDecoration ${testServerSideDecoration_SRCS})
-qt6_generate_wayland_protocol_client_sources(testServerSideDecoration FILES
-    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration.xml)
+qt6_generate_wayland_protocol_client_sources(testServerSideDecoration 
+    ${private_code_option}
+    FILES
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration.xml
+)
 target_link_libraries( testServerSideDecoration Qt::Test Qt::Gui Plasma::KWaylandClient kwin Wayland::Client)
 add_test(NAME kwayland-testServerSideDecoration COMMAND testServerSideDecoration)
 ecm_mark_as_test(testServerSideDecoration)
@@ -264,8 +273,11 @@ set( testServerSideDecorationPalette_SRCS
         test_server_side_decoration_palette.cpp
     )
 add_executable(testServerSideDecorationPalette ${testServerSideDecorationPalette_SRCS})
-qt6_generate_wayland_protocol_client_sources(testServerSideDecorationPalette FILES
-    ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml)
+qt6_generate_wayland_protocol_client_sources(testServerSideDecorationPalette
+    ${private_code_option}
+    FILES
+        ${PLASMA_WAYLAND_PROTOCOLS_DIR}/server-decoration-palette.xml
+)
 target_link_libraries( testServerSideDecorationPalette Qt::Test Qt::Gui Plasma::KWaylandClient Wayland::Client kwin)
 add_test(NAME kwayland-testServerSideDecorationPalette COMMAND testServerSideDecorationPalette)
 ecm_mark_as_test(testServerSideDecorationPalette)
