@@ -157,6 +157,8 @@ void SurfaceItemWayland::freeze()
         SurfaceItemWayland *subsurfaceItem = it.value();
         subsurfaceItem->freeze();
     }
+
+    m_surface = nullptr;
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)
