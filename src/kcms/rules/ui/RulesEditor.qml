@@ -382,7 +382,7 @@ KCM.ScrollViewKCM {
         id: enabledRulesModel
 
         readonly property int conditionsCount: {
-            for (let row = 0; row < count; row++) {
+            for (let row = 1; row < count; row++) { // Skip row 0 ("Description")
                 if (data(index(row, 0), RulesModel.SectionRole) !== kcm.rulesModel.conditionsSection) {
                     return row;
                 }

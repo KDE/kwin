@@ -391,7 +391,7 @@ void RulesModel::populateRuleList()
     // Rule description
     auto description = addRule(new RuleItem(QLatin1String("description"),
                                             RulePolicy::NoPolicy, RuleItem::String,
-                                            i18n("Description"), conditionsSection(),
+                                            i18n("Description"), QString(),
                                             QIcon::fromTheme("entry-edit")));
     description->setFlag(RuleItem::AlwaysEnabled);
     description->setFlag(RuleItem::AffectsDescription);
