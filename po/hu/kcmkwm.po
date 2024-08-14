@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-08 00:40+0000\n"
+"POT-Creation-Date: 2024-08-14 00:40+0000\n"
 "PO-Revision-Date: 2024-01-12 11:50+0100\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -23,20 +23,20 @@ msgstr ""
 "X-Generator: Lokalize 24.01.85\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
-#: actions.ui:17
+#: actions.ui:20
 #, kde-format
 msgid "Inactive Inner Window Actions"
 msgstr "Inaktív ablakok műveletei"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:26 mouse.ui:177
+#: actions.ui:29 mouse.ui:183
 #, kde-format
 msgid "&Left click:"
 msgstr "&Bal kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow1)
-#: actions.ui:39
+#: actions.ui:42
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into an "
@@ -49,7 +49,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:43 actions.ui:83 actions.ui:123
+#: actions.ui:46 actions.ui:86 actions.ui:126
 #, kde-format
 msgid "Activate, raise and pass click"
 msgstr "Aktiválás, felemelés és a kattintás átadása"
@@ -57,7 +57,7 @@ msgstr "Aktiválás, felemelés és a kattintás átadása"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:48 actions.ui:88 actions.ui:128
+#: actions.ui:51 actions.ui:91 actions.ui:131
 #, kde-format
 msgid "Activate and pass click"
 msgstr "Aktiválás és a kattintás átadása"
@@ -68,8 +68,8 @@ msgstr "Aktiválás és a kattintás átadása"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:53 actions.ui:93 actions.ui:133 mouse.ui:293 mouse.ui:408
-#: mouse.ui:523
+#: actions.ui:56 actions.ui:96 actions.ui:136 mouse.ui:299 mouse.ui:414
+#: mouse.ui:529
 #, kde-format
 msgid "Activate"
 msgstr "Aktiválás"
@@ -80,21 +80,21 @@ msgstr "Aktiválás"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:58 actions.ui:98 actions.ui:138 mouse.ui:283 mouse.ui:398
-#: mouse.ui:513
+#: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:289 mouse.ui:404
+#: mouse.ui:519
 #, kde-format
 msgid "Activate and raise"
 msgstr "Aktiválás és felemelés"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:66 mouse.ui:200
+#: actions.ui:69 mouse.ui:206
 #, kde-format
 msgid "&Middle click:"
 msgstr "&Középső gombos kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
-#: actions.ui:79
+#: actions.ui:82
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into an "
@@ -106,13 +106,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #. i18n: ectx: property (text), widget (QLabel, label_7)
-#: actions.ui:106 mouse.ui:213
+#: actions.ui:109 mouse.ui:219
 #, kde-format
 msgid "&Right click:"
 msgstr "&Jobb gombos kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow3)
-#: actions.ui:119
+#: actions.ui:122
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into an "
@@ -124,13 +124,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #. i18n: ectx: property (text), widget (QLabel, label_2)
-#: actions.ui:146 mouse.ui:88
+#: actions.ui:149 mouse.ui:91
 #, kde-format
 msgid "Mouse &wheel:"
 msgstr "Egér&görgő:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:159
+#: actions.ui:162
 #, kde-format
 msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
@@ -140,37 +140,37 @@ msgstr ""
 "a keret által határolt területre) eső görgetések hatását."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:163
+#: actions.ui:166
 #, kde-format
 msgid "Scroll"
 msgstr "Görgetés"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:168
+#: actions.ui:171
 #, kde-format
 msgid "Activate and scroll"
 msgstr "Aktiválás és görgetés"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
-#: actions.ui:173
+#: actions.ui:176
 #, kde-format
 msgid "Activate, raise and scroll"
 msgstr "Aktiválás, felemelés és görgetés"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: actions.ui:184
+#: actions.ui:190
 #, kde-format
 msgid "Inner Window, Titlebar and Frame Actions"
 msgstr "Ablakok, címsorok és keretek műveletei"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
-#: actions.ui:195
+#: actions.ui:201
 #, kde-format
 msgid "Mo&difier key:"
 msgstr "Mó&dosítóbillentyű:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:205
+#: actions.ui:211
 #, kde-format
 msgid ""
 "Here you select whether holding the Meta key or Alt key will allow you to "
@@ -180,32 +180,32 @@ msgstr ""
 "elvégezhetők-e a következő műveletek."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:209
+#: actions.ui:215
 #, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllKey)
-#: actions.ui:214
+#: actions.ui:220
 #, kde-format
 msgid "Alt"
 msgstr "Alt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
-#: actions.ui:236
+#: actions.ui:242
 #, kde-format
 msgid "  + "
 msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:248 mouse.ui:601
+#: actions.ui:254 mouse.ui:610
 #, kde-format
 msgid "L&eft click:"
 msgstr "B&al kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll1)
-#: actions.ui:261
+#: actions.ui:267
 #, kde-format
 msgid ""
 "In this row you can customize left click behavior when clicking into the "
@@ -217,7 +217,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:265 actions.ui:335 actions.ui:405
+#: actions.ui:271 actions.ui:341 actions.ui:411
 #, kde-format
 msgid "Move"
 msgstr "Mozgatás"
@@ -225,7 +225,7 @@ msgstr "Mozgatás"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:270 actions.ui:340 actions.ui:410
+#: actions.ui:276 actions.ui:346 actions.ui:416
 #, kde-format
 msgid "Activate, raise and move"
 msgstr "Aktiválás, felemelés és mozgatás"
@@ -239,8 +239,8 @@ msgstr "Aktiválás, felemelés és mozgatás"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:275 actions.ui:345 actions.ui:415 mouse.ui:246 mouse.ui:308
-#: mouse.ui:361 mouse.ui:423 mouse.ui:476 mouse.ui:538
+#: actions.ui:281 actions.ui:351 actions.ui:421 mouse.ui:252 mouse.ui:314
+#: mouse.ui:367 mouse.ui:429 mouse.ui:482 mouse.ui:544
 #, kde-format
 msgid "Toggle raise and lower"
 msgstr "A felemelés és a lesüllyesztés átkapcsolása"
@@ -248,7 +248,7 @@ msgstr "A felemelés és a lesüllyesztés átkapcsolása"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:280 actions.ui:350 actions.ui:420
+#: actions.ui:286 actions.ui:356 actions.ui:426
 #, kde-format
 msgid "Resize"
 msgstr "Átméretezés"
@@ -262,8 +262,8 @@ msgstr "Átméretezés"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:285 actions.ui:355 actions.ui:425 mouse.ui:236 mouse.ui:298
-#: mouse.ui:351 mouse.ui:413 mouse.ui:466 mouse.ui:528
+#: actions.ui:291 actions.ui:361 actions.ui:431 mouse.ui:242 mouse.ui:304
+#: mouse.ui:357 mouse.ui:419 mouse.ui:472 mouse.ui:534
 #, kde-format
 msgid "Raise"
 msgstr "Felemelés"
@@ -279,8 +279,8 @@ msgstr "Felemelés"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:290 actions.ui:360 actions.ui:430 mouse.ui:65 mouse.ui:241
-#: mouse.ui:303 mouse.ui:356 mouse.ui:418 mouse.ui:471 mouse.ui:533
+#: actions.ui:296 actions.ui:366 actions.ui:436 mouse.ui:68 mouse.ui:247
+#: mouse.ui:309 mouse.ui:362 mouse.ui:424 mouse.ui:477 mouse.ui:539
 #, kde-format
 msgid "Lower"
 msgstr "Lesüllyesztés"
@@ -296,8 +296,8 @@ msgstr "Lesüllyesztés"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:295 actions.ui:365 actions.ui:435 mouse.ui:55 mouse.ui:251
-#: mouse.ui:313 mouse.ui:366 mouse.ui:428 mouse.ui:481 mouse.ui:543
+#: actions.ui:301 actions.ui:371 actions.ui:441 mouse.ui:58 mouse.ui:257
+#: mouse.ui:319 mouse.ui:372 mouse.ui:434 mouse.ui:487 mouse.ui:549
 #, kde-format
 msgid "Minimize"
 msgstr "Minimalizálás"
@@ -305,7 +305,7 @@ msgstr "Minimalizálás"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:300 actions.ui:370 actions.ui:440
+#: actions.ui:306 actions.ui:376 actions.ui:446
 #, kde-format
 msgid "Decrease opacity"
 msgstr "Átlátszatlanság csökkentése"
@@ -313,7 +313,7 @@ msgstr "Átlátszatlanság csökkentése"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:305 actions.ui:375 actions.ui:445
+#: actions.ui:311 actions.ui:381 actions.ui:451
 #, kde-format
 msgid "Increase opacity"
 msgstr "Átlátszatlanság növelése"
@@ -332,21 +332,21 @@ msgstr "Átlátszatlanság növelése"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: actions.ui:310 actions.ui:380 actions.ui:450 actions.ui:505 advanced.ui:154
-#: mouse.ui:80 mouse.ui:132 mouse.ui:271 mouse.ui:333 mouse.ui:386 mouse.ui:448
-#: mouse.ui:501 mouse.ui:563
+#: actions.ui:316 actions.ui:386 actions.ui:456 actions.ui:511 advanced.ui:154
+#: mouse.ui:83 mouse.ui:135 mouse.ui:277 mouse.ui:339 mouse.ui:392 mouse.ui:454
+#: mouse.ui:507 mouse.ui:569
 #, kde-format
 msgid "Do nothing"
 msgstr "Ne tegyen semmit"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
-#: actions.ui:318
+#: actions.ui:324
 #, kde-format
 msgid "Middle &click:"
 msgstr "&Középső gombos kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll2)
-#: actions.ui:331
+#: actions.ui:337
 #, kde-format
 msgid ""
 "In this row you can customize middle click behavior when clicking into the "
@@ -357,13 +357,13 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:388 mouse.ui:671
+#: actions.ui:394 mouse.ui:680
 #, kde-format
 msgid "Right clic&k:"
 msgstr "&Jobb gombos kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAll3)
-#: actions.ui:401
+#: actions.ui:407
 #, kde-format
 msgid ""
 "In this row you can customize right click behavior when clicking into the "
@@ -373,13 +373,13 @@ msgstr ""
 "keretre eső kattintások hatását."
 
 #. i18n: ectx: property (text), widget (QLabel, label_10)
-#: actions.ui:458
+#: actions.ui:464
 #, kde-format
 msgid "Mo&use wheel:"
 msgstr "&Egérgörgő:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandAllWheel)
-#: actions.ui:471
+#: actions.ui:477
 #, kde-format
 msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
@@ -390,42 +390,42 @@ msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:475 mouse.ui:102
+#: actions.ui:481 mouse.ui:105
 #, kde-format
 msgid "Raise/lower"
 msgstr "Előre hozás/hátratevés"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:480 mouse.ui:107
+#: actions.ui:486 mouse.ui:110
 #, kde-format
 msgid "Shade/unshade"
 msgstr "Felgördítés/legördítés"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:485 mouse.ui:112
+#: actions.ui:491 mouse.ui:115
 #, kde-format
 msgid "Maximize/restore"
 msgstr "Maximalizálás/visszaállítás"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:490 mouse.ui:117
+#: actions.ui:496 mouse.ui:120
 #, kde-format
 msgid "Keep above/below"
 msgstr "A többi ablak felett/alatt"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:495 mouse.ui:122
+#: actions.ui:501 mouse.ui:125
 #, kde-format
 msgid "Move to previous/next desktop"
 msgstr "Áthelyezés az előző/következő asztalra"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: actions.ui:500 mouse.ui:127
+#: actions.ui:506 mouse.ui:130
 #, kde-format
 msgid "Change opacity"
 msgstr "Az áttetszőség módosítása"
@@ -887,37 +887,37 @@ msgstr "Fókuszálás csak az &aktív képernyőn"
 msgid "Window activation policy description"
 msgstr "Ablakaktiválási szabály leírása"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgid "&Focus"
 msgstr "Fók&uszálás"
 
-#: main.cpp:84
+#: main.cpp:85
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Cí&msorműveletek"
 
-#: main.cpp:89
+#: main.cpp:90
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Ablakműv&eletek"
 
-#: main.cpp:94
+#: main.cpp:95
 #, kde-format
 msgid "Mo&vement"
 msgstr "Mo&zgatás"
 
-#: main.cpp:99
+#: main.cpp:100
 #, kde-format
 msgid "Adva&nced"
 msgstr "&Speciális"
 
-#: main.cpp:178
+#: main.cpp:179
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "A &címsor műveletei"
 
-#: main.cpp:188
+#: main.cpp:189
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Ablakműv&eletek"
@@ -929,13 +929,13 @@ msgid "Titlebar Actions"
 msgstr "Címsorműveletek"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
-#: mouse.ui:26
+#: mouse.ui:29
 #, kde-format
 msgid "&Double-click:"
 msgstr "&Dupla kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:36
+#: mouse.ui:39
 #, kde-format
 msgid "Behavior on <em>double</em> click into the titlebar."
 msgstr "A <em>dupla</em> kattintás hatása, ha az a címsorra történik."
@@ -945,7 +945,7 @@ msgstr "A <em>dupla</em> kattintás hatása, ha az a címsorra történik."
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:40 mouse.ui:615 mouse.ui:650 mouse.ui:685
+#: mouse.ui:43 mouse.ui:624 mouse.ui:659 mouse.ui:694
 #, kde-format
 msgid "Maximize"
 msgstr "Maximalizálás"
@@ -955,7 +955,7 @@ msgstr "Maximalizálás"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:45 mouse.ui:620 mouse.ui:655 mouse.ui:690
+#: mouse.ui:48 mouse.ui:629 mouse.ui:664 mouse.ui:699
 #, kde-format
 msgid "Vertically maximize"
 msgstr "Maximalizálás függőlegesen"
@@ -965,7 +965,7 @@ msgstr "Maximalizálás függőlegesen"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:50 mouse.ui:625 mouse.ui:660 mouse.ui:695
+#: mouse.ui:53 mouse.ui:634 mouse.ui:669 mouse.ui:704
 #, kde-format
 msgid "Horizontally maximize"
 msgstr "Maximalizálás vízszintesen"
@@ -978,8 +978,8 @@ msgstr "Maximalizálás vízszintesen"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:60 mouse.ui:256 mouse.ui:318 mouse.ui:371 mouse.ui:433 mouse.ui:486
-#: mouse.ui:548
+#: mouse.ui:63 mouse.ui:262 mouse.ui:324 mouse.ui:377 mouse.ui:439 mouse.ui:492
+#: mouse.ui:554
 #, kde-format
 msgid "Shade"
 msgstr "Felgördítés"
@@ -992,39 +992,39 @@ msgstr "Felgördítés"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:70 mouse.ui:261 mouse.ui:323 mouse.ui:376 mouse.ui:438 mouse.ui:491
-#: mouse.ui:553
+#: mouse.ui:73 mouse.ui:267 mouse.ui:329 mouse.ui:382 mouse.ui:444 mouse.ui:497
+#: mouse.ui:559
 #, kde-format
 msgid "Close"
 msgstr "Bezárás"
 
 #. i18n: @item:inlistbox behavior on double click
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_TitlebarDoubleClickCommand)
-#: mouse.ui:75
+#: mouse.ui:78
 #, kde-format
 msgid "Show on all desktops"
 msgstr "Megjelenítés az összes asztalon"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandTitlebarWheel)
-#: mouse.ui:98
+#: mouse.ui:101
 #, kde-format
 msgid "Behavior on <em>mouse wheel</em> scroll over the titlebar."
 msgstr "Az <em>egérgörgő</em> hatása a címsor fölött görgetéskor."
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_2)
-#: mouse.ui:143
+#: mouse.ui:146
 #, kde-format
 msgid "Titlebar and Frame Actions"
 msgstr "Címsor- és keretműveletek"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
-#: mouse.ui:167
+#: mouse.ui:173
 #, kde-format
 msgid "Active"
 msgstr "Aktív"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
-#: mouse.ui:190
+#: mouse.ui:196
 #, kde-format
 msgid "Inactive"
 msgstr "Inaktív"
@@ -1032,7 +1032,7 @@ msgstr "Inaktív"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar2)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandActiveTitlebar3)
-#: mouse.ui:232 mouse.ui:347 mouse.ui:462
+#: mouse.ui:238 mouse.ui:353 mouse.ui:468
 #, kde-format
 msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an <em>active</"
@@ -1049,8 +1049,8 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandActiveTitlebar3)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:266 mouse.ui:328 mouse.ui:381 mouse.ui:443 mouse.ui:496
-#: mouse.ui:558
+#: mouse.ui:272 mouse.ui:334 mouse.ui:387 mouse.ui:449 mouse.ui:502
+#: mouse.ui:564
 #, kde-format
 msgid "Show actions menu"
 msgstr "Műveletek menü megjelenítése"
@@ -1058,7 +1058,7 @@ msgstr "Műveletek menü megjelenítése"
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:279 mouse.ui:394 mouse.ui:509
+#: mouse.ui:285 mouse.ui:400 mouse.ui:515
 #, kde-format
 msgid ""
 "Behavior on <em>left</em> click into the titlebar or frame of an "
@@ -1070,40 +1070,40 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar1)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
-#: mouse.ui:288 mouse.ui:403 mouse.ui:518
+#: mouse.ui:294 mouse.ui:409 mouse.ui:524
 #, kde-format
 msgid "Activate and lower"
 msgstr "Aktiválás és lesüllyesztés"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_3)
-#: mouse.ui:589
+#: mouse.ui:595
 #, kde-format
 msgid "Maximize Button Actions"
 msgstr "Maximalizáló gomb műveletei"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_8)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonLeftClickCommand)
-#: mouse.ui:598 mouse.ui:611
+#: mouse.ui:607 mouse.ui:620
 #, kde-format
 msgid "Behavior on <em>left</em> click onto the maximize button."
 msgstr "A maximalizáló gombra történő <em>bal</em> kattintás hatása."
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_9)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonMiddleClickCommand)
-#: mouse.ui:633 mouse.ui:646
+#: mouse.ui:642 mouse.ui:655
 #, kde-format
 msgid "Behavior on <em>middle</em> click onto the maximize button."
 msgstr "A maximalizáló gombra történő <em>középső</em> kattintás hatása."
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
-#: mouse.ui:636
+#: mouse.ui:645
 #, kde-format
 msgid "Middle c&lick:"
 msgstr "&Középső gombos kattintás:"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label_10)
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_MaximizeButtonRightClickCommand)
-#: mouse.ui:668 mouse.ui:681
+#: mouse.ui:677 mouse.ui:690
 #, kde-format
 msgid "Behavior on <em>right</em> click onto the maximize button."
 msgstr "A maximalizáló gombra történő <em>jobb</em> kattintás hatása."
