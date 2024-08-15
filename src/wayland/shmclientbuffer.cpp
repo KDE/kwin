@@ -6,8 +6,9 @@
 
 #include "config-kwin.h"
 
-#include "wayland/shmclientbuffer.h"
+#include "utils/drm_format_helper.h"
 #include "wayland/display.h"
+#include "wayland/shmclientbuffer.h"
 #include "wayland/shmclientbuffer_p.h"
 
 #include <drm_fourcc.h>
@@ -118,12 +119,26 @@ void ShmPool::shm_pool_create_buffer(Resource *resource, uint32_t id, int32_t of
         return;
     }
 
+    const uint32_t drmFormat = shmFormatToDrmFormat(format);
+
+    if (auto formatInfo = FormatInfo::get(drmFormat)) {
+        const uint32_t bytesPerPixel = formatInfo->bitsPerPixel / 8;
+        if ((stride % bytesPerPixel) != 0) {
+            wl_resource_post_error(resource->handle,
+                                   WL_SHM_ERROR_INVALID_STRIDE,
+                                   "invalid stride, %d is not a multiple of %d",
+                                   stride,
+                                   bytesPerPixel);
+            return;
+        }
+    }
+
     ShmAttributes attributes{
         .fd = fd.duplicate(),
         .stride = stride,
         .offset = offset,
         .size = QSize(width, height),
-        .format = shmFormatToDrmFormat(format),
+        .format = drmFormat,
     };
 
     new ShmClientBuffer(this, std::move(attributes), resource->client(), id);
