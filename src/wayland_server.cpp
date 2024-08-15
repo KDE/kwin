@@ -515,9 +515,7 @@ bool WaylandServer::init()
 
     new FrogColorManagementV1(m_display, m_display);
     new PresentationTime(m_display, m_display);
-    if (qEnvironmentVariableIntValue("KWIN_ENABLE_XX_COLOR_MANAGEMENT")) {
-        m_xxColorManager = new XXColorManagerV4(m_display, m_display);
-    }
+    m_xxColorManager = new XXColorManagerV4(m_display, m_display);
     m_xdgDialogWm = new KWin::XdgDialogWmV1Interface(m_display, m_display);
     connect(m_xdgDialogWm, &KWin::XdgDialogWmV1Interface::dialogCreated, this, [this](KWin::XdgDialogV1Interface *dialog) {
         if (auto window = findXdgToplevelWindow(dialog->toplevel()->surface())) {
