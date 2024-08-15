@@ -87,7 +87,6 @@ OpenGlContext::OpenGlContext(bool EGL)
     , m_supportsTextureStorage(checkTextureStorageSupport(this))
     , m_supportsTextureSwizzle(checkTextureSwizzleSupport(this))
     , m_supportsARGB32Textures(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_format_BGRA8888")))
-    , m_supportsTextureUnpack(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_unpack_subimage")))
     , m_supportsRGTextures(hasVersion(Version(3, 0)) || hasOpenglExtension(QByteArrayLiteral("GL_ARB_texture_rg")) || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_rg")))
     , m_supports16BitTextures(!m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_texture_norm16")))
     , m_supportsBlits(!m_isOpenglES || hasVersion(Version(3, 0)))
@@ -195,11 +194,6 @@ bool OpenGlContext::supportsARGB32Textures() const
     return m_supportsARGB32Textures;
 }
 
-bool OpenGlContext::supportsTextureUnpack() const
-{
-    return m_supportsTextureUnpack;
-}
-
 bool OpenGlContext::supportsRGTextures() const
 {
     return m_supportsRGTextures;
@@ -266,8 +260,9 @@ bool OpenGlContext::checkSupported() const
     const bool supportsNonPowerOfTwoTextures = m_isOpenglES || hasOpenglExtension("GL_ARB_texture_non_power_of_two");
     const bool supports3DTextures = !m_isOpenglES || hasVersion(Version(3, 0)) || hasOpenglExtension("GL_OES_texture_3D");
     const bool supportsFBOs = m_isOpenglES || hasVersion(Version(3, 0)) || hasOpenglExtension("GL_ARB_framebuffer_object") || hasOpenglExtension(QByteArrayLiteral("GL_EXT_framebuffer_object"));
+    const bool supportsUnpack = !m_isOpenglES || hasOpenglExtension(QByteArrayLiteral("GL_EXT_unpack_subimage"));
 
-    if (!supportsGLSL || !supportsNonPowerOfTwoTextures || !supports3DTextures || !supportsFBOs) {
+    if (!supportsGLSL || !supportsNonPowerOfTwoTextures || !supports3DTextures || !supportsFBOs || !supportsUnpack) {
         return false;
     }
     // some old hardware only supports very limited shaders. To prevent the shaders KWin uses later on from not working,

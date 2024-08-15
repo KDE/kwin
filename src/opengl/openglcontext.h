@@ -59,7 +59,6 @@ public:
     bool supportsTextureSwizzle() const;
     bool supportsTextureStorage() const;
     bool supportsARGB32Textures() const;
-    bool supportsTextureUnpack() const;
     bool supportsRGTextures() const;
     bool supports16BitTextures() const;
     bool supportsBlits() const;
@@ -113,7 +112,6 @@ protected:
     const bool m_supportsTextureStorage;
     const bool m_supportsTextureSwizzle;
     const bool m_supportsARGB32Textures;
-    const bool m_supportsTextureUnpack;
     const bool m_supportsRGTextures;
     const bool m_supports16BitTextures;
     const bool m_supportsBlits;

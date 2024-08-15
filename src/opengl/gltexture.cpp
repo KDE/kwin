@@ -182,7 +182,7 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
             uploadFormat = QImage::Format_RGBA8888_Premultiplied;
         }
     }
-    bool useUnpack = context->supportsTextureUnpack() && image.format() == uploadFormat && !src.isNull();
+    bool useUnpack = image.format() == uploadFormat && !src.isNull();
 
     QImage im;
     if (useUnpack) {
