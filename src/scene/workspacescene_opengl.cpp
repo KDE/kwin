@@ -419,7 +419,7 @@ void SceneOpenGLDecorationRenderer::renderPart(const QRect &rect, const QRect &p
     if (padding.left() == 0) {
         dirtyOffset.rx() += TexturePad;
     }
-    m_texture->update(image, textureOffset + dirtyOffset);
+    m_texture->update(image, image.rect(), textureOffset + dirtyOffset);
 }
 
 const QMargins SceneOpenGLDecorationRenderer::texturePadForPart(

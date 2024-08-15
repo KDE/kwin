@@ -56,7 +56,7 @@ void ImageItemOpenGL::preprocess()
             m_texture->setFilter(GL_LINEAR);
             m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         } else {
-            m_texture->update(m_image);
+            m_texture->update(m_image, m_image.rect());
         }
     }
 }
