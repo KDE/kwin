@@ -148,6 +148,11 @@ void GLTexture::setSize(const QSize &size)
 
 void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &src)
 {
+    update(image, src.isEmpty() ? image.rect() : src, offset);
+}
+
+void GLTexture::update(const QImage &image, const QRegion &region, const QPoint &offset)
+{
     if (image.isNull() || isNull()) {
         return;
     }
@@ -188,25 +193,22 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
         im.convertTo(uploadFormat);
     }
 
-    QRect rect = src;
-    if (rect.isEmpty()) {
-        rect = im.rect();
-    }
-
-    Q_ASSERT(im.depth() % 8 == 0);
-    glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
-    glPixelStorei(GL_UNPACK_SKIP_PIXELS, rect.x());
-    glPixelStorei(GL_UNPACK_SKIP_ROWS, rect.y());
-
     bind();
 
-    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), rect.width(), rect.height(), glFormat, type, im.constBits());
+    for (const QRect &rect : region) {
+        Q_ASSERT(im.depth() % 8 == 0);
+        glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
+        glPixelStorei(GL_UNPACK_SKIP_PIXELS, rect.x());
+        glPixelStorei(GL_UNPACK_SKIP_ROWS, rect.y());
 
-    unbind();
+        glTexSubImage2D(d->m_target, 0, offset.x() + rect.x(), offset.y() + rect.y(), rect.width(), rect.height(), glFormat, type, im.constBits());
+    }
 
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
     glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
+
+    unbind();
 }
 
 void GLTexture::bind()

@@ -108,10 +108,7 @@ void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, con
         return;
     }
 
-    const QRegion simplifiedDamage = simplifyDamage(region);
-    for (const QRect &rect : simplifiedDamage) {
-        m_texture.planes[0]->update(*view.image(), rect.topLeft(), rect);
-    }
+    m_texture.planes[0]->update(*view.image(), simplifyDamage(region));
 }
 
 bool BasicEGLSurfaceTextureWayland::loadDmabufTexture(GraphicsBuffer *buffer)
