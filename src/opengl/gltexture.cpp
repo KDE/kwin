@@ -146,11 +146,6 @@ void GLTexture::setSize(const QSize &size)
     d->updateMatrix();
 }
 
-void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &src)
-{
-    update(image, src.isEmpty() ? image.rect() : src, offset);
-}
-
 void GLTexture::update(const QImage &image, const QRegion &region, const QPoint &offset)
 {
     if (image.isNull() || isNull()) {
