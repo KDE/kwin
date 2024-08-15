@@ -182,44 +182,31 @@ void GLTexture::update(const QImage &image, const QPoint &offset, const QRect &s
             uploadFormat = QImage::Format_RGBA8888_Premultiplied;
         }
     }
-    bool useUnpack = image.format() == uploadFormat && !src.isNull();
 
-    QImage im;
-    if (useUnpack) {
-        im = image;
-        Q_ASSERT(im.depth() % 8 == 0);
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
-        glPixelStorei(GL_UNPACK_SKIP_PIXELS, src.x());
-        glPixelStorei(GL_UNPACK_SKIP_ROWS, src.y());
-    } else {
-        if (src.isNull()) {
-            im = image;
-        } else {
-            im = image.copy(src);
-        }
-        if (im.format() != uploadFormat) {
-            im.convertTo(uploadFormat);
-        }
+    QImage im = image;
+    if (im.format() != uploadFormat) {
+        im.convertTo(uploadFormat);
     }
 
-    int width = image.width();
-    int height = image.height();
-    if (!src.isNull()) {
-        width = src.width();
-        height = src.height();
+    QRect rect = src;
+    if (rect.isEmpty()) {
+        rect = im.rect();
     }
+
+    Q_ASSERT(im.depth() % 8 == 0);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, rect.x());
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, rect.y());
 
     bind();
 
-    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), width, height, glFormat, type, im.constBits());
+    glTexSubImage2D(d->m_target, 0, offset.x(), offset.y(), rect.width(), rect.height(), glFormat, type, im.constBits());
 
     unbind();
 
-    if (useUnpack) {
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-        glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
-        glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
-    }
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+    glPixelStorei(GL_UNPACK_SKIP_PIXELS, 0);
+    glPixelStorei(GL_UNPACK_SKIP_ROWS, 0);
 }
 
 void GLTexture::bind()
