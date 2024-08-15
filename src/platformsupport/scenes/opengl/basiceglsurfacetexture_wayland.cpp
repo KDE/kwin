@@ -11,6 +11,7 @@
 #include "opengl/gltexture.h"
 #include "platformsupport/scenes/opengl/abstract_egl_backend.h"
 #include "utils/common.h"
+#include "utils/damagejournal.h"
 
 #include "abstract_egl_backend.h"
 #include <epoxy/egl.h>
@@ -84,15 +85,6 @@ bool BasicEGLSurfaceTextureWayland::loadShmTexture(GraphicsBuffer *buffer)
     m_bufferType = BufferType::Shm;
 
     return true;
-}
-
-static QRegion simplifyDamage(const QRegion &damage)
-{
-    if (damage.rectCount() < 3) {
-        return damage;
-    } else {
-        return damage.boundingRect();
-    }
 }
 
 void BasicEGLSurfaceTextureWayland::updateShmTexture(GraphicsBuffer *buffer, const QRegion &region)

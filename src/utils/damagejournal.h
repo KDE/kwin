@@ -86,4 +86,13 @@ private:
     int m_capacity = 10;
 };
 
+inline QRegion simplifyDamage(const QRegion &damage)
+{
+    if (damage.rectCount() < 3) {
+        return damage;
+    } else {
+        return damage.boundingRect();
+    }
+}
+
 } // namespace KWin

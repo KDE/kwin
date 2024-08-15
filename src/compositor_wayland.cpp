@@ -27,6 +27,7 @@
 #include "scene/itemrenderer_qpainter.h"
 #include "scene/workspacescene_opengl.h"
 #include "scene/workspacescene_qpainter.h"
+#include "utils/damagejournal.h"
 #include "window.h"
 #include "workspace.h"
 
@@ -358,7 +359,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
 
-                const QRegion bufferDamage = surfaceDamage.united(repaint).intersected(superLayer->rect().toAlignedRect());
+                const QRegion bufferDamage = simplifyDamage(surfaceDamage.united(repaint)).intersected(superLayer->rect().toAlignedRect());
 
                 paintPass(superLayer, renderTarget, bufferDamage);
                 primaryLayer->endFrame(bufferDamage, surfaceDamage, frame.get());
