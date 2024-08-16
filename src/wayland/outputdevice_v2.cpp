@@ -340,6 +340,9 @@ wl_resource *OutputDeviceV2InterfacePrivate::sendNewMode(Resource *resource, Out
 
 void OutputDeviceV2InterfacePrivate::sendCurrentMode(Resource *outputResource)
 {
+    if (!m_currentMode) {
+        return;
+    }
     const auto modeResource = OutputDeviceModeV2InterfacePrivate::get(m_currentMode)->findResource(outputResource);
     send_current_mode(outputResource->handle, modeResource->handle);
 }
