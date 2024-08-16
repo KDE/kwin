@@ -294,7 +294,7 @@ void DebugConsoleFilter::keyEvent(KeyEvent *event)
 
     const auto keyMetaObject = Qt::qt_getEnumMetaObject(Qt::Key());
     const auto enumerator = keyMetaObject->enumerator(keyMetaObject->indexOfEnumerator("Key"));
-    text.append(tableRow(i18nc("The code as read from the input device", "Scan code"), event->nativeScanCode()));
+    text.append(tableRow(i18nc("The code reported by the kernel", "Keycode"), event->nativeScanCode()));
     text.append(tableRow(i18nc("Key according to Qt", "Qt::Key code"),
                          enumerator.valueToKey(event->key())));
     text.append(tableRow(i18nc("The translated code to an Xkb symbol", "Xkb symbol"), event->nativeVirtualKey()));
