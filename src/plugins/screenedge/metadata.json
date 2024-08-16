@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Highlights screen edges and corners that trigger actions when touched as the cursor approaches them",
+        "Description[ar]": "يبرز حواف الشاشة والزوايا الساخنة التي ستحدث إجراءات عند لمسها عند اقتراب المؤشر منها",
         "Description[ca]": "Ressalta les vores de la pantalla i les cantonades que activen accions quan es toquen si el cursor s'hi aproxima",
         "Description[es]": "Resalta los bordes y las esquinas de la pantalla que desencadenan acciones cuando se tocan al aproximar el cursor",
         "Description[eu]": "Pantailaren ertzak eta kurtsorea hurbiltzean ukitzen dituenean ekitzak eragiten dituzten izkinak nabarmentzen ditu",
@@ -18,6 +19,7 @@
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "Highlight Screen Edges and Hot Corners",
+        "Name[ar]": "إبراز حواف الشاشة والزوايا الساخنة",
         "Name[ca]": "Ressalta les vores de la pantalla i les cantonades actives",
         "Name[cs]": "Zvýraznit okraje obrazovky a aktivní rohy",
         "Name[es]": "Resaltar los bordes y las esquinas activas de la pantalla",

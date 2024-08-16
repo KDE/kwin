@@ -2,6 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Provides the bell",
+        "Description[ar]": "يحدث صوت جرسا",
         "Description[bg]": "Предоставя системна сигнализация",
         "Description[ca@valencia]": "Proporciona el timbre",
         "Description[ca]": "Proporciona el timbre",
@@ -30,6 +31,7 @@
         "EnabledByDefault": true,
         "License": "GPL",
         "Name": "System Bell",
+        "Name[ar]": "جرس النظام",
         "Name[bg]": "Системна сигнализация",
         "Name[ca@valencia]": "Timbre del sistema",
         "Name[ca]": "Timbre del sistema",
