@@ -31,13 +31,13 @@ protected:
 class ShmPool : public QtWaylandServer::wl_shm_pool
 {
 public:
-    ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, MemoryMap &&mapping);
+    ShmPool(ShmClientBufferIntegration *integration, wl_client *client, int id, uint32_t version, FileDescriptor &&fd, std::shared_ptr<MemoryMap> mapping);
 
     void ref();
     void unref();
 
     ShmClientBufferIntegration *integration;
-    MemoryMap mapping;
+    std::shared_ptr<MemoryMap> mapping;
     FileDescriptor fd;
     int refCount = 1;
     bool sigbusImpossible = false;
