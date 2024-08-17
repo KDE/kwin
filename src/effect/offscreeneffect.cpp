@@ -32,6 +32,8 @@ public:
     std::unique_ptr<GLTexture> m_texture;
     std::unique_ptr<GLFramebuffer> m_fbo;
     bool m_isDirty = true;
+    bool m_mipmaps = false;
+    bool m_mipmapsDirty = false;
     GLShader *m_shader = nullptr;
     RenderGeometry::VertexSnappingMode m_vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
     QMetaObject::Connection m_windowDamagedConnection;
@@ -44,6 +46,7 @@ public:
     std::map<EffectWindow *, std::unique_ptr<OffscreenData>> windows;
     QMetaObject::Connection windowDeletedConnection;
     RenderGeometry::VertexSnappingMode vertexSnappingMode = RenderGeometry::VertexSnappingMode::Round;
+    bool mipmaps = false;
 };
 
 OffscreenEffect::OffscreenEffect(QObject *parent)
@@ -67,6 +70,7 @@ void OffscreenEffect::redirect(EffectWindow *window)
     }
     offscreenData = std::make_unique<OffscreenData>();
     offscreenData->setVertexSnappingMode(d->vertexSnappingMode);
+    offscreenData->m_mipmaps = d->mipmaps;
     offscreenData->m_windowEffect = ItemEffect(window->windowItem());
     offscreenData->m_windowDamagedConnection =
         connect(window, &EffectWindow::windowDamaged, this, &OffscreenEffect::handleWindowDamaged);
@@ -102,11 +106,13 @@ void OffscreenData::maybeRender(EffectWindow *window)
     const QSize textureSize = (logicalGeometry.size() * scale).toSize();
 
     if (!m_texture || m_texture->size() != textureSize) {
-        m_texture = GLTexture::allocate(GL_RGBA8, textureSize);
+        const int levels = m_mipmaps ? (std::log2(std::min(textureSize.width(), textureSize.height())) + 1) : 1;
+
+        m_texture = GLTexture::allocate(GL_RGBA8, textureSize, levels);
         if (!m_texture) {
             return;
         }
-        m_texture->setFilter(GL_LINEAR);
+        m_texture->setFilter(m_mipmaps ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
         m_texture->setWrapMode(GL_CLAMP_TO_EDGE);
         m_fbo = std::make_unique<GLFramebuffer>(m_texture.get());
         m_isDirty = true;
@@ -127,6 +133,10 @@ void OffscreenData::maybeRender(EffectWindow *window)
 
         GLFramebuffer::popFramebuffer();
         m_isDirty = false;
+
+        if (m_mipmaps) {
+            m_mipmapsDirty = true;
+        }
     }
 }
 
@@ -204,6 +214,11 @@ void OffscreenData::paint(const RenderTarget &renderTarget, const RenderViewport
     glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     m_texture->bind();
+    if (m_mipmapsDirty) {
+        m_texture->generateMipmaps();
+        m_mipmapsDirty = false;
+    }
+
     vbo->draw(clipRegion, GL_TRIANGLES, 0, geometry.count(), clipping);
     m_texture->unbind();
 
@@ -274,6 +289,11 @@ void OffscreenEffect::setVertexSnappingMode(RenderGeometry::VertexSnappingMode m
     for (auto &window : std::as_const(d->windows)) {
         window.second->setVertexSnappingMode(mode);
     }
+}
+
+void OffscreenEffect::setMipmaps(bool set)
+{
+    d->mipmaps = set;
 }
 
 bool OffscreenEffect::blocksDirectScanout() const

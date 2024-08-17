@@ -72,6 +72,11 @@ protected:
      */
     void setVertexSnappingMode(RenderGeometry::VertexSnappingMode mode);
 
+    /**
+     * Sets whether mipmaps are used.
+     */
+    void setMipmaps(bool set);
+
     bool blocksDirectScanout() const override;
 
 private Q_SLOTS:
