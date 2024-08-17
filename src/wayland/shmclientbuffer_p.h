@@ -49,6 +49,13 @@ protected:
     void shm_pool_resize(Resource *resource, int32_t size) override;
 };
 
+struct ShmAccess
+{
+    std::shared_ptr<MemoryMap> mapping;
+    int count = 0;
+    std::atomic<ShmAccess *> next = nullptr;
+};
+
 class KWIN_EXPORT ShmClientBuffer : public GraphicsBuffer
 {
     Q_OBJECT
@@ -74,6 +81,7 @@ private:
     wl_resource *m_resource = nullptr;
     ShmPool *m_shmPool;
     ShmAttributes m_shmAttributes;
+    std::optional<ShmAccess> m_shmAccess;
 };
 
 } // namespace KWin

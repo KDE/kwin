@@ -38,14 +38,7 @@ static constexpr uint32_t s_formats[] = {
     WL_SHM_FORMAT_RGB888,
 };
 
-class ShmSigbusData
-{
-public:
-    ShmPool *pool = nullptr;
-    int accessCount = 0;
-};
-
-static thread_local ShmSigbusData sigbusData;
+static std::atomic<ShmAccess *> s_accessedBuffers = nullptr;
 static struct sigaction prevSigbusAction;
 
 static uint32_t shmFormatToDrmFormat(uint32_t shmFormat)
@@ -228,21 +221,23 @@ static void sigbusHandler(int signum, siginfo_t *info, void *context)
         }
     };
 
-    const ShmPool *pool = sigbusData.pool;
-    if (!pool) {
-        reraise();
-        return;
+    MemoryMap *mapping = nullptr;
+    for (auto access = s_accessedBuffers.load(); access; access = access->next) {
+        const uchar *addr = static_cast<uchar *>(info->si_addr);
+        const uchar *mappingStart = static_cast<uchar *>(access->mapping->data());
+        if (addr >= mappingStart && addr < mappingStart + access->mapping->size()) {
+            mapping = access->mapping.get();
+            break;
+        }
     }
 
-    const uchar *addr = static_cast<uchar *>(info->si_addr);
-    const uchar *mappingStart = static_cast<uchar *>(pool->mapping->data());
-    if (addr < mappingStart || addr >= mappingStart + pool->mapping->size()) {
+    if (!mapping) {
         reraise();
         return;
     }
 
     // Replace the faulty mapping with a new one that's filled with zeros.
-    if (mmap(pool->mapping->data(), pool->mapping->size(), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS, -1, 0) == MAP_FAILED) {
+    if (mmap(mapping->data(), mapping->size(), PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_FIXED | MAP_ANONYMOUS, -1, 0) == MAP_FAILED) {
         reraise();
         return;
     }
@@ -264,29 +259,43 @@ GraphicsBuffer::Map ShmClientBuffer::map(MapFlags flags)
             action.sa_flags = SA_SIGINFO | SA_NODEFER;
             sigaction(SIGBUS, &action, &prevSigbusAction);
         });
-
-        Q_ASSERT(!sigbusData.pool || sigbusData.pool == m_shmPool);
-        sigbusData.pool = m_shmPool;
-        ++sigbusData.accessCount;
     }
 
+    if (!m_shmAccess.has_value()) {
+        ShmAccess &access = m_shmAccess.emplace(m_shmPool->mapping, 0, s_accessedBuffers.load());
+        s_accessedBuffers = &access;
+    }
+
+    m_shmAccess->count++;
     return Map{
-        .data = reinterpret_cast<uchar *>(m_shmPool->mapping->data()) + m_shmAttributes.offset,
+        .data = reinterpret_cast<uchar *>(m_shmAccess->mapping->data()) + m_shmAttributes.offset,
         .stride = uint32_t(m_shmAttributes.stride),
     };
 }
 
 void ShmClientBuffer::unmap()
 {
-    if (m_shmPool->sigbusImpossible) {
+    if (!m_shmAccess.has_value()) {
         return;
     }
 
-    Q_ASSERT(sigbusData.accessCount > 0);
-    --sigbusData.accessCount;
-    if (sigbusData.accessCount == 0) {
-        sigbusData.pool = nullptr;
+    m_shmAccess->count--;
+    if (m_shmAccess->count != 0) {
+        return;
     }
+
+    if (s_accessedBuffers == &m_shmAccess.value()) {
+        s_accessedBuffers = m_shmAccess->next.load();
+    } else {
+        for (auto access = s_accessedBuffers.load(); access; access = access->next) {
+            if (access->next == &m_shmAccess.value()) {
+                access->next = m_shmAccess->next.load();
+                break;
+            }
+        }
+    }
+
+    m_shmAccess.reset();
 }
 
 ShmClientBufferIntegrationPrivate::ShmClientBufferIntegrationPrivate(Display *display, ShmClientBufferIntegration *q)
