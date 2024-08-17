@@ -32,6 +32,7 @@ MagicLampEffect::MagicLampEffect()
     }
 
     setVertexSnappingMode(RenderGeometry::VertexSnappingMode::None);
+    setMipmaps(true);
 }
 
 bool MagicLampEffect::supported()
