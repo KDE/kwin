@@ -1023,11 +1023,11 @@ public:
     virtual bool isMaximizable() const;
     virtual MaximizeMode maximizeMode() const;
     virtual MaximizeMode requestedMaximizeMode() const;
-    virtual void maximize(MaximizeMode mode);
+    virtual void maximize(MaximizeMode mode, const QRectF &restore = QRectF());
     /**
      * Sets the maximization according to @p vertically and @p horizontally.
      */
-    Q_INVOKABLE void setMaximize(bool vertically, bool horizontally);
+    Q_INVOKABLE void setMaximize(bool vertically, bool horizontally, const QRectF &restore = QRectF());
 
     QPalette palette();
     const Decoration::DecorationPalette *decorationPalette();

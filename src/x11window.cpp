@@ -4450,7 +4450,7 @@ void X11Window::configure(const QRect &nativeFrame, const QRect &nativeWrapper, 
 }
 
 static bool changeMaximizeRecursion = false;
-void X11Window::maximize(MaximizeMode mode)
+void X11Window::maximize(MaximizeMode mode, const QRectF &restore)
 {
     if (isUnmanaged()) {
         qCWarning(KWIN_CORE) << "Cannot change maximized state of unmanaged window" << this;
@@ -4502,17 +4502,21 @@ void X11Window::maximize(MaximizeMode mode)
         sz = size();
     }
 
-    if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
-        QRectF savedGeometry = geometryRestore();
-        if (!(old_mode & MaximizeVertical)) {
-            savedGeometry.setTop(y());
-            savedGeometry.setHeight(sz.height());
+    if (!restore.isNull()) {
+        setGeometryRestore(restore);
+    } else {
+        if (quickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+            QRectF savedGeometry = geometryRestore();
+            if (!(old_mode & MaximizeVertical)) {
+                savedGeometry.setTop(y());
+                savedGeometry.setHeight(sz.height());
+            }
+            if (!(old_mode & MaximizeHorizontal)) {
+                savedGeometry.setLeft(x());
+                savedGeometry.setWidth(sz.width());
+            }
+            setGeometryRestore(savedGeometry);
         }
-        if (!(old_mode & MaximizeHorizontal)) {
-            savedGeometry.setLeft(x());
-            savedGeometry.setWidth(sz.width());
-        }
-        setGeometryRestore(savedGeometry);
     }
 
     // call into decoration update borders
