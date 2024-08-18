@@ -8,6 +8,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "effect/globals.h"
+#include "utils/common.h"
 
 #if KWIN_BUILD_ACTIVITIES
 #include "activities.h"
@@ -1251,12 +1253,16 @@ void Window::finishInteractiveMoveResize(bool cancel)
     }
 
     if (isElectricBorderMaximizing()) {
-        setQuickTileMode(electricBorderMode(), m_interactiveMoveResize.anchor);
+        if (auto quickTileMode = std::get_if<QuickTileMode>(&m_electricMode.value())) {
+            setQuickTileMode(*quickTileMode, m_interactiveMoveResize.anchor);
+        } else if (auto maximizeMode = std::get_if<MaximizeMode>(&m_electricMode.value())) {
+            maximize(*maximizeMode, m_electricGeometryRestore);
+        }
         setElectricBorderMaximizing(false);
     } else if (wasMove && (m_interactiveMoveResize.modifiers & Qt::ShiftModifier)) {
         setQuickTileMode(QuickTileFlag::Custom, m_interactiveMoveResize.anchor);
     }
-    setElectricBorderMode(QuickTileMode(QuickTileFlag::None));
+    setElectricBorderMode(std::nullopt);
     workspace()->outline()->hide();
 
     m_interactiveMoveResize.counter++;
@@ -2438,7 +2444,7 @@ void Window::doInteractiveResizeSync(const QRectF &)
 
 void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
 {
-    QuickTileMode mode = QuickTileFlag::None;
+    std::optional<ElectricBorderMode> mode = std::nullopt;
     bool innerBorder = false;
 
     const auto outputs = workspace()->outputs();
@@ -2460,24 +2466,26 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
         };
 
         QRectF area = workspace()->clientArea(MaximizeArea, this, QPointF(xroot, yroot));
+        QuickTileMode tile = QuickTileFlag::None;
         if (options->electricBorderTiling()) {
             if (xroot <= area.x() + 20) {
-                mode |= QuickTileFlag::Left;
+                tile |= QuickTileFlag::Left;
                 innerBorder = isInScreen(QPoint(area.x() - 1, yroot));
             } else if (xroot >= area.x() + area.width() - 20) {
-                mode |= QuickTileFlag::Right;
+                tile |= QuickTileFlag::Right;
                 innerBorder = isInScreen(QPoint(area.right() + 1, yroot));
             }
         }
 
-        if (mode != QuickTileMode(QuickTileFlag::None)) {
+        if (tile != QuickTileMode(QuickTileFlag::None)) {
             if (yroot <= area.y() + area.height() * options->electricBorderCornerRatio()) {
-                mode |= QuickTileFlag::Top;
+                tile |= QuickTileFlag::Top;
             } else if (yroot >= area.y() + area.height() - area.height() * options->electricBorderCornerRatio()) {
-                mode |= QuickTileFlag::Bottom;
+                tile |= QuickTileFlag::Bottom;
             }
+            mode = tile;
         } else if (options->electricBorderMaximize() && yroot <= area.y() + 5 && isMaximizable()) {
-            mode = QuickTileFlag::Maximize;
+            mode = MaximizeFull;
             innerBorder = isInScreen(QPoint(xroot, area.y() - 1));
         }
         break; // no point in checking other screens to contain this... "point"...
@@ -2491,25 +2499,25 @@ void Window::checkQuickTilingMaximizationZones(int xroot, int yroot)
                 m_electricMaximizingDelay->setSingleShot(true);
                 connect(m_electricMaximizingDelay, &QTimer::timeout, this, [this]() {
                     if (isInteractiveMove()) {
-                        setElectricBorderMaximizing(electricBorderMode() != QuickTileMode(QuickTileFlag::None));
+                        setElectricBorderMaximizing(electricBorderMode().has_value());
                     }
                 });
             }
             m_electricMaximizingDelay->start();
         } else {
-            setElectricBorderMaximizing(mode != QuickTileMode(QuickTileFlag::None));
+            setElectricBorderMaximizing(mode.has_value());
         }
     }
 }
 
 void Window::resetQuickTilingMaximizationZones()
 {
-    if (electricBorderMode() != QuickTileMode(QuickTileFlag::None)) {
+    if (electricBorderMode().has_value()) {
         if (m_electricMaximizingDelay) {
             m_electricMaximizingDelay->stop();
         }
         setElectricBorderMaximizing(false);
-        setElectricBorderMode(QuickTileFlag::None);
+        setElectricBorderMode(std::nullopt);
     }
 }
 
@@ -3360,17 +3368,20 @@ void Window::moveResize(const QRectF &rect)
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
 
-void Window::setElectricBorderMode(QuickTileMode mode)
+void Window::setElectricBorderMode(std::optional<ElectricBorderMode> mode)
 {
-    if (mode != QuickTileMode(QuickTileFlag::Maximize)) {
-        // sanitize the mode, ie. simplify "invalid" combinations
-        if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Horizontal)) {
-            mode &= ~QuickTileMode(QuickTileFlag::Horizontal);
-        }
-        if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical)) {
-            mode &= ~QuickTileMode(QuickTileFlag::Vertical);
+    if (mode.has_value()) {
+        if (auto quickTileMode = std::get_if<QuickTileMode>(&mode.value())) {
+            // sanitize the mode, ie. simplify "invalid" combinations
+            if ((*quickTileMode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Horizontal)) {
+                *quickTileMode &= ~QuickTileMode(QuickTileFlag::Horizontal);
+            }
+            if ((*quickTileMode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical)) {
+                *quickTileMode &= ~QuickTileMode(QuickTileFlag::Vertical);
+            }
         }
     }
+
     m_electricMode = mode;
 }
 
@@ -3378,7 +3389,11 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 {
     m_electricMaximizing = maximizing;
     if (maximizing) {
-        workspace()->outline()->show(quickTileGeometry(electricBorderMode(), interactiveMoveResizeAnchor()).toRect(), moveResizeGeometry().toRect());
+        if (auto quickTileMode = std::get_if<QuickTileMode>(&m_electricMode.value())) {
+            workspace()->outline()->show(quickTileGeometry(*quickTileMode, interactiveMoveResizeAnchor()).toRect(), moveResizeGeometry().toRect());
+        } else if (auto maximizeMode = std::get_if<MaximizeMode>(&m_electricMode.value())) {
+            workspace()->outline()->show(workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor()).toRect(), moveResizeGeometry().toRect());
+        }
     } else {
         workspace()->outline()->hide();
     }
@@ -3386,14 +3401,6 @@ void Window::setElectricBorderMaximizing(bool maximizing)
 
 QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 {
-    if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        if (requestedMaximizeMode() == MaximizeFull) {
-            return geometryRestore();
-        } else {
-            return workspace()->clientArea(MaximizeArea, this, pos);
-        }
-    }
-
     Output *output = workspace()->outputAt(pos);
 
     if (mode & QuickTileFlag::Custom) {
@@ -3515,22 +3522,8 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
 
     workspace()->updateFocusMousePosition(Cursors::self()->mouse()->pos()); // may cause leave event
 
-    const QuickTileMode oldMode = requestedQuickTileMode();
-
-    if (mode == QuickTileMode(QuickTileFlag::Maximize)) {
-        if (requestedMaximizeMode() == MaximizeFull) {
-            m_requestedQuickTileMode = QuickTileFlag::None;
-            setMaximize(false, false);
-        } else {
-            const QRectF effectiveGeometryRestore = quickTileGeometryRestore();
-            m_requestedQuickTileMode = QuickTileFlag::Maximize;
-            setMaximize(true, true, effectiveGeometryRestore);
-        }
-        doSetQuickTileMode();
-        return;
-    }
-
     // sanitize the mode, ie. simplify "invalid" combinations
+    const QuickTileMode oldMode = requestedQuickTileMode();
     if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Horizontal)) {
         mode &= ~QuickTileMode(QuickTileFlag::Horizontal);
     }

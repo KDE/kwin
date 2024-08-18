@@ -56,6 +56,8 @@ class DecoratedClientImpl;
 class DecorationPalette;
 }
 
+using ElectricBorderMode = std::variant<QuickTileMode, MaximizeMode>;
+
 class KWIN_EXPORT Window : public QObject
 {
     Q_OBJECT
@@ -1557,8 +1559,8 @@ protected:
     bool isActiveFullScreen() const;
 
     // electric border / quick tiling
-    void setElectricBorderMode(QuickTileMode mode);
-    QuickTileMode electricBorderMode() const
+    void setElectricBorderMode(std::optional<ElectricBorderMode> mode);
+    std::optional<ElectricBorderMode> electricBorderMode() const
     {
         return m_electricMode;
     }
@@ -1814,7 +1816,7 @@ protected:
     QPointer<Tile> m_tile;
 
     // electric border/quick tiling
-    QuickTileMode m_electricMode = QuickTileFlag::None;
+    std::optional<ElectricBorderMode> m_electricMode = std::nullopt;
     QRectF m_electricGeometryRestore;
     bool m_electricMaximizing = false;
     // The requested quick tile mode of this window.
