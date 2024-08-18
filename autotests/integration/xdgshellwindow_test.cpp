@@ -65,6 +65,8 @@ private Q_SLOTS:
     void testMaximizeHorizontal();
     void testMaximizeVertical();
     void testMaximizeFull();
+    void testMaximizeRestore_data();
+    void testMaximizeRestore();
     void testMaximizedToFullscreen_data();
     void testMaximizedToFullscreen();
     void testSendMaximizedWindowToAnotherOutput();
@@ -1758,6 +1760,70 @@ void TestXdgShellWindow::testMaximizeFull()
     shellSurface.reset();
     surface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
+}
+
+void TestXdgShellWindow::testMaximizeRestore_data()
+{
+    QTest::addColumn<QRect>("initialGeometry");
+    QTest::addColumn<QRect>("firstRestore");
+    QTest::addColumn<QRect>("secondRestore");
+    QTest::addColumn<QRect>("finalGeometry");
+
+    QTest::newRow("maximize and restore without geometryRestore") << QRect(0, 0, 100, 100) << QRect() << QRect() << QRect(0, 0, 100, 100);
+    QTest::newRow("maximize with geometryRestore") << QRect(0, 0, 100, 100) << QRect(200, 300, 100, 100) << QRect() << QRect(200, 300, 100, 100);
+    QTest::newRow("restore with geometryRestore") << QRect(0, 0, 100, 100) << QRect() << QRect(400, 500, 100, 100) << QRect(400, 500, 100, 100);
+    QTest::newRow("maximize and restore with geometryRestore") << QRect(0, 0, 100, 100) << QRect(200, 300, 100, 100) << QRect(400, 500, 100, 100) << QRect(400, 500, 100, 100);
+}
+
+void TestXdgShellWindow::testMaximizeRestore()
+{
+    // Create the test window.
+    QFETCH(QRect, initialGeometry);
+    std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
+    std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
+    auto window = Test::renderAndWaitForShown(surface.get(), initialGeometry.size(), Qt::blue);
+    window->move(initialGeometry.topLeft());
+    QVERIFY(window->isActive());
+    QVERIFY(window->isMaximizable());
+    QCOMPARE(window->frameGeometry(), initialGeometry);
+    QCOMPARE(window->maximizeMode(), MaximizeMode::MaximizeRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeMode::MaximizeRestore);
+
+    // Wait for the compositor to send a configure event with the activated state.
+    QSignalSpy toplevelConfigureRequestedSpy(shellSurface.get(), &Test::XdgToplevel::configureRequested);
+    QSignalSpy surfaceConfigureRequestedSpy(shellSurface->xdgSurface(), &Test::XdgSurface::configureRequested);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+
+    // Maximize the test window.
+    QFETCH(QRect, firstRestore);
+    window->maximize(MaximizeFull, firstRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
+
+    // Draw contents of the maximized window.
+    QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+
+    // Restore the window.
+    QFETCH(QRect, secondRestore);
+    QFETCH(QRect, finalGeometry);
+    window->maximize(MaximizeRestore, secondRestore);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->maximizeMode(), MaximizeFull);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::blue);
+    QVERIFY(frameGeometryChangedSpy.wait());
+    QCOMPARE(window->frameGeometry(), finalGeometry);
+    QCOMPARE(window->requestedMaximizeMode(), MaximizeRestore);
+    QCOMPARE(window->maximizeMode(), MaximizeRestore);
 }
 
 void TestXdgShellWindow::testSendMaximizedWindowToAnotherOutput()

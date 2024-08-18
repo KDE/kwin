@@ -1127,12 +1127,12 @@ QSizeF Window::minSize() const
     return rules()->checkMinSize(QSize(0, 0));
 }
 
-void Window::maximize(MaximizeMode mode)
+void Window::maximize(MaximizeMode mode, const QRectF &restore)
 {
     qCWarning(KWIN_CORE, "%s doesn't support setting maximized state", metaObject()->className());
 }
 
-void Window::setMaximize(bool vertically, bool horizontally)
+void Window::setMaximize(bool vertically, bool horizontally, const QRectF &restore)
 {
     MaximizeMode mode = MaximizeRestore;
     if (vertically) {
@@ -1142,7 +1142,7 @@ void Window::setMaximize(bool vertically, bool horizontally)
         mode = MaximizeMode(mode | MaximizeHorizontal);
     }
 
-    maximize(mode);
+    maximize(mode, restore);
 }
 
 bool Window::startInteractiveMoveResize()
@@ -1189,8 +1189,7 @@ bool Window::startInteractiveMoveResize()
                 QRectF originalGeometry = geometryRestore();
                 originalGeometry.setX(moveResizeGeometry().x());
                 originalGeometry.setWidth(moveResizeGeometry().width());
-                setGeometryRestore(originalGeometry);
-                maximize(requestedMaximizeMode() ^ MaximizeHorizontal);
+                maximize(requestedMaximizeMode() ^ MaximizeHorizontal, originalGeometry);
             }
             break;
         case Gravity::Top:
@@ -1200,8 +1199,7 @@ bool Window::startInteractiveMoveResize()
                 QRectF originalGeometry = geometryRestore();
                 originalGeometry.setY(moveResizeGeometry().y());
                 originalGeometry.setHeight(moveResizeGeometry().height());
-                setGeometryRestore(originalGeometry);
-                maximize(requestedMaximizeMode() ^ MaximizeVertical);
+                maximize(requestedMaximizeMode() ^ MaximizeVertical, originalGeometry);
             }
             break;
         case Gravity::TopLeft:
@@ -1209,8 +1207,7 @@ bool Window::startInteractiveMoveResize()
         case Gravity::TopRight:
         case Gravity::BottomRight:
             // Quit the maximized mode if the window is resized by dragging one of its corners.
-            setGeometryRestore(moveResizeGeometry());
-            maximize(MaximizeRestore);
+            maximize(MaximizeRestore, moveResizeGeometry());
             break;
         default:
             break;
@@ -1240,8 +1237,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
     if (cancel) {
         moveResize(initialInteractiveMoveResizeGeometry());
         if (m_interactiveMoveResize.initialMaximizeMode != MaximizeMode::MaximizeRestore) {
-            setMaximize(m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeVertical, m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeHorizontal);
-            setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
+            setMaximize(m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeVertical, m_interactiveMoveResize.initialMaximizeMode & MaximizeMode::MaximizeHorizontal, m_interactiveMoveResize.initialGeometryRestore);
         } else if (m_interactiveMoveResize.initialQuickTileMode) {
             setQuickTileMode(m_interactiveMoveResize.initialQuickTileMode, m_interactiveMoveResize.initialGeometry.center());
             setGeometryRestore(m_interactiveMoveResize.initialGeometryRestore);
@@ -3527,8 +3523,7 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
         } else {
             const QRectF effectiveGeometryRestore = quickTileGeometryRestore();
             m_requestedQuickTileMode = QuickTileFlag::Maximize;
-            setMaximize(true, true);
-            setGeometryRestore(effectiveGeometryRestore);
+            setMaximize(true, true, effectiveGeometryRestore);
         }
         doSetQuickTileMode();
         return;

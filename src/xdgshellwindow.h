@@ -154,7 +154,7 @@ public:
     bool dockWantsInput() const override;
     void setFullScreen(bool set) override;
     void closeWindow() override;
-    void maximize(MaximizeMode mode) override;
+    void maximize(MaximizeMode mode, const QRectF &restore = QRectF()) override;
 
     void installAppMenu(AppMenuInterface *appMenu);
     void installServerDecoration(ServerSideDecorationInterface *decoration);

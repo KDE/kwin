@@ -1550,7 +1550,7 @@ void XdgToplevelWindow::setFullScreen(bool set)
 }
 
 static bool changeMaximizeRecursion = false;
-void XdgToplevelWindow::maximize(MaximizeMode mode)
+void XdgToplevelWindow::maximize(MaximizeMode mode, const QRectF &restore)
 {
     if (changeMaximizeRecursion) {
         return;
@@ -1570,7 +1570,6 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         return;
     }
 
-    const auto oldQuickTileMode = requestedQuickTileMode();
     Q_EMIT maximizedAboutToChange(mode);
     m_requestedMaximizeMode = mode;
 
@@ -1594,17 +1593,21 @@ void XdgToplevelWindow::maximize(MaximizeMode mode)
         setNoBorder(m_requestedMaximizeMode == MaximizeFull);
     }
 
-    if (oldQuickTileMode == QuickTileMode(QuickTileFlag::None)) {
-        QRectF savedGeometry = geometryRestore();
-        if (!(oldMode & MaximizeVertical)) {
-            savedGeometry.setTop(oldGeometry.top());
-            savedGeometry.setBottom(oldGeometry.bottom());
+    if (!restore.isNull()) {
+        setGeometryRestore(restore);
+    } else {
+        if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::None)) {
+            QRectF savedGeometry = geometryRestore();
+            if (!(oldMode & MaximizeVertical)) {
+                savedGeometry.setTop(oldGeometry.top());
+                savedGeometry.setBottom(oldGeometry.bottom());
+            }
+            if (!(oldMode & MaximizeHorizontal)) {
+                savedGeometry.setLeft(oldGeometry.left());
+                savedGeometry.setRight(oldGeometry.right());
+            }
+            setGeometryRestore(savedGeometry);
         }
-        if (!(oldMode & MaximizeHorizontal)) {
-            savedGeometry.setLeft(oldGeometry.left());
-            savedGeometry.setRight(oldGeometry.right());
-        }
-        setGeometryRestore(savedGeometry);
     }
 
     QRectF geometry = oldGeometry;
