@@ -3370,18 +3370,6 @@ void Window::moveResize(const QRectF &rect)
 
 void Window::setElectricBorderMode(std::optional<ElectricBorderMode> mode)
 {
-    if (mode.has_value()) {
-        if (auto quickTileMode = std::get_if<QuickTileMode>(&mode.value())) {
-            // sanitize the mode, ie. simplify "invalid" combinations
-            if ((*quickTileMode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Horizontal)) {
-                *quickTileMode &= ~QuickTileMode(QuickTileFlag::Horizontal);
-            }
-            if ((*quickTileMode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical)) {
-                *quickTileMode &= ~QuickTileMode(QuickTileFlag::Vertical);
-            }
-        }
-    }
-
     m_electricMode = mode;
 }
 
