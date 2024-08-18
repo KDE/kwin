@@ -1076,17 +1076,22 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
 
     if (delta & (XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
         QuickTileMode newTileMode = QuickTileFlag::None;
-        if (states & XdgToplevelInterface::State::TiledLeft) {
-            newTileMode |= QuickTileFlag::Left;
-        }
-        if (states & XdgToplevelInterface::State::TiledTop) {
-            newTileMode |= QuickTileFlag::Top;
-        }
-        if (states & XdgToplevelInterface::State::TiledRight) {
-            newTileMode |= QuickTileFlag::Right;
-        }
-        if (states & XdgToplevelInterface::State::TiledBottom) {
-            newTileMode |= QuickTileFlag::Bottom;
+        if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
+            newTileMode = QuickTileFlag::Left;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
+            newTileMode = QuickTileFlag::Right;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledRight)) {
+            newTileMode = QuickTileFlag::Top;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledBottom | XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledRight)) {
+            newTileMode = QuickTileFlag::Bottom;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop)) {
+            newTileMode = QuickTileFlag::Left | QuickTileFlag::Top;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledBottom)) {
+            newTileMode = QuickTileFlag::Left | QuickTileFlag::Bottom;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledTop)) {
+            newTileMode = QuickTileFlag::Right | QuickTileFlag::Top;
+        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
+            newTileMode = QuickTileFlag::Right | QuickTileFlag::Bottom;
         }
 
         if (newTileMode != quickTileMode()) {
