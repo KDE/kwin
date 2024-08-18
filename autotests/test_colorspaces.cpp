@@ -113,12 +113,14 @@ void TestColorspaces::testIdentityTransformation()
 {
     QFETCH(NamedColorimetry, colorimetry);
     QFETCH(TransferFunction::Type, transferFunction);
-    const ColorDescription color(colorimetry, TransferFunction(transferFunction), 100, 0, 100, 100);
+    const TransferFunction tf(transferFunction);
+    const ColorDescription color(colorimetry, tf, 100, tf.minLuminance, tf.maxLuminance, tf.maxLuminance);
 
     constexpr std::array renderingIntents = {
         RenderingIntent::Perceptual,
         RenderingIntent::RelativeColorimetric,
         RenderingIntent::AbsoluteColorimetric,
+        RenderingIntent::RelativeColorimetricWithBPC,
     };
     for (const RenderingIntent intent : renderingIntents) {
         const auto pipeline = ColorPipeline::create(color, color, intent);
