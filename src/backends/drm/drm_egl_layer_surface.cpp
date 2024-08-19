@@ -74,7 +74,7 @@ void EglGbmLayerSurface::destroyResources()
     m_oldSurface = {};
 }
 
-std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile)
+std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(const QSize &bufferSize, OutputTransform transformation, const QHash<uint32_t, QList<uint64_t>> &formats, const ColorDescription &colorDescription, const QVector3D &channelFactors, const std::shared_ptr<IccProfile> &iccProfile, double scale)
 {
     if (!checkSurface(bufferSize, formats)) {
         return std::nullopt;
@@ -94,6 +94,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
     slot->framebuffer()->colorAttachment()->setContentTransform(transformation);
     m_surface->currentSlot = slot;
+    m_surface->scale = scale;
 
     if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
@@ -225,7 +226,7 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         glFinish();
     }
     m_surface->gbmSwapchain->release(m_surface->currentSlot, sourceFence.fileDescriptor().duplicate());
-    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.takeFileDescriptor(), frame);
+    const auto buffer = importBuffer(m_surface.get(), m_surface->currentSlot.get(), sourceFence.takeFileDescriptor(), frame, damagedRegion);
     if (buffer) {
         m_surface->currentFramebuffer = buffer;
         return true;
@@ -517,7 +518,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     if (!slot) {
         return nullptr;
     }
-    if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr)) {
+    if (const auto ret = importBuffer(surface, slot.get(), FileDescriptor{}, nullptr, infiniteRegion())) {
         surface->currentSlot = slot;
         surface->currentFramebuffer = ret;
         return ret;
@@ -526,12 +527,12 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::doRenderTestBuffer(Surface *
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surface, EglSwapchainSlot *slot, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedRegion) const
 {
     if (surface->bufferTarget == BufferTarget::Dumb || surface->importMode == MultiGpuImportMode::DumbBuffer) {
         return importWithCpu(surface, slot, frame);
     } else if (surface->importMode == MultiGpuImportMode::Egl) {
-        return importWithEgl(surface, slot->buffer(), std::move(readFence), frame);
+        return importWithEgl(surface, slot->buffer(), std::move(readFence), frame, damagedRegion);
     } else {
         const auto ret = m_gpu->importBuffer(slot->buffer(), std::move(readFence));
         if (!ret) {
@@ -541,7 +542,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
-std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence, OutputFrame *frame) const
+std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedRegion) const
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
@@ -579,9 +580,15 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
         return nullptr;
     }
 
+    QRegion deviceDamage;
+    for (const QRect &logical : damagedRegion) {
+        deviceDamage |= scaledRect(logical, surface->scale).toAlignedRect();
+    }
+    const QRegion repaint = deviceDamage | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion());
+    surface->importDamageJournal.add(deviceDamage);
+
     GLFramebuffer *fbo = slot->framebuffer();
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo->handle());
-    glViewport(0, 0, fbo->size().width(), fbo->size().height());
+    surface->importContext->pushFramebuffer(fbo);
 
     const auto shader = surface->importContext->shaderManager()->pushShader(sourceTexture->target() == GL_TEXTURE_EXTERNAL_OES ? ShaderTrait::MapExternalTexture : ShaderTrait::MapTexture);
     QMatrix4x4 mat;
@@ -590,11 +597,10 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
     sourceTexture->bind();
-    sourceTexture->render(fbo->size());
+    sourceTexture->render(repaint, fbo->size(), true);
     sourceTexture->unbind();
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+    surface->importContext->popFramebuffer();
     surface->importContext->shaderManager()->popShader();
     glFlush();
     EGLNativeFence endFence(display);

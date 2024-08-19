@@ -57,7 +57,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayer::doBeginFrame()
     m_scanoutBuffer.reset();
     m_colorPipeline = ColorPipeline{};
     return m_surface.startRendering(targetRect().size(), m_pipeline->output()->transform().combine(OutputTransform::FlipY), m_pipeline->formats(m_type), m_pipeline->output()->scanoutColorDescription(),
-                                    m_pipeline->output()->needsChannelFactorFallback() ? m_pipeline->output()->effectiveChannelFactors() : QVector3D(1, 1, 1), m_pipeline->iccProfile());
+                                    m_pipeline->output()->needsChannelFactorFallback() ? m_pipeline->output()->effectiveChannelFactors() : QVector3D(1, 1, 1), m_pipeline->iccProfile(), m_pipeline->output()->scale());
 }
 
 bool EglGbmLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
