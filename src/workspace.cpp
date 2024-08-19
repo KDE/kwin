@@ -772,8 +772,6 @@ void Workspace::removeUnmanaged(X11Window *window)
 {
     Q_ASSERT(m_windows.contains(window));
     m_windows.removeOne(window);
-    removeFromStack(window);
-    updateStackingOrder();
     Q_EMIT windowRemoved(window);
 }
 #endif
