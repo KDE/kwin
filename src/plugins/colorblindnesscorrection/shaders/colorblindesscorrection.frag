@@ -27,7 +27,7 @@ void main()
     tex = adjustSaturation(tex);
 
     vec3 LMS = srgbToLMS * tex.rgb;
-    vec3 lms = defectMatrix * lms;
+    vec3 lms = defectMatrix * LMS;
     vec3 error = errorMat * lms;
 
     vec3 diff = (tex.rgb - error) * vec3(intensity);
