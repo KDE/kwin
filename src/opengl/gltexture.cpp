@@ -571,7 +571,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
             type = GL_UNSIGNED_INT_8_8_8_8_REV;
         }
 
-        if (context->supportsARGB32Textures()) {
+        if (context->supportsTextureStorage()) {
             glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, im.width(), im.height());
             glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, im.width(), im.height(),
                             format, type, im.constBits());
