@@ -106,6 +106,7 @@ private:
         double brightness = 1.0;
         std::unique_ptr<IccShader> iccShader;
         std::shared_ptr<IccProfile> iccProfile;
+        DamageJournal shadowDamageJournal;
 
         std::unique_ptr<GLRenderTimeQuery> compositingTimeQuery;
     };

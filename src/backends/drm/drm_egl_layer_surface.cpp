@@ -98,6 +98,7 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 
     if (m_surface->targetColorDescription != colorDescription || m_surface->channelFactors != channelFactors || m_surface->iccProfile != iccProfile) {
         m_surface->damageJournal.clear();
+        m_surface->shadowDamageJournal.clear();
         m_surface->needsShadowBuffer = channelFactors != QVector3D(1, 1, 1) || iccProfile || colorDescription.transferFunction().type != TransferFunction::gamma22;
         m_surface->targetColorDescription = colorDescription;
         m_surface->channelFactors = channelFactors;
@@ -120,7 +121,6 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         }
     }
 
-    const QRegion repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), infiniteRegion()) : infiniteRegion();
     m_surface->compositingTimeQuery = std::make_unique<GLRenderTimeQuery>(m_surface->context);
     m_surface->compositingTimeQuery->begin();
     if (m_surface->needsShadowBuffer) {
@@ -173,14 +173,14 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
         m_surface->currentShadowSlot->texture()->setContentTransform(m_surface->currentSlot->framebuffer()->colorAttachment()->contentTransform());
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface->currentShadowSlot->framebuffer(), m_surface->intermediaryColorDescription),
-            .repaint = infiniteRegion(),
+            .repaint = bufferAgeEnabled ? m_surface->shadowDamageJournal.accumulate(m_surface->currentShadowSlot->age(), infiniteRegion()) : infiniteRegion(),
         };
     } else {
         m_surface->shadowSwapchain.reset();
         m_surface->currentShadowSlot.reset();
         return OutputLayerBeginFrameInfo{
             .renderTarget = RenderTarget(m_surface->currentSlot->framebuffer(), m_surface->intermediaryColorDescription),
-            .repaint = repaint,
+            .repaint = bufferAgeEnabled ? m_surface->damageJournal.accumulate(slot->age(), infiniteRegion()) : infiniteRegion(),
         };
     }
 }
@@ -188,6 +188,14 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame *frame)
 {
     if (m_surface->needsShadowBuffer) {
+        const QRegion logicalRepaint = damagedRegion | m_surface->damageJournal.accumulate(m_surface->currentSlot->age(), infiniteRegion());
+        m_surface->damageJournal.add(damagedRegion);
+        m_surface->shadowDamageJournal.add(damagedRegion);
+        QRegion repaint;
+        for (const QRect &rect : logicalRepaint) {
+            repaint |= scaledRect(rect, m_surface->scale).toAlignedRect();
+        }
+
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
         GLFramebuffer::pushFramebuffer(fbo);
         ShaderBinder binder = m_surface->iccShader ? ShaderBinder(m_surface->iccShader->shader()) : ShaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
@@ -208,12 +216,13 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
-        m_surface->currentShadowSlot->texture()->render(m_surface->gbmSwapchain->size());
+        m_surface->currentShadowSlot->texture()->render(repaint, m_surface->gbmSwapchain->size(), true);
         EGLNativeFence fence(m_surface->context->displayObject());
         m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.takeFileDescriptor());
         GLFramebuffer::popFramebuffer();
+    } else {
+        m_surface->damageJournal.add(damagedRegion);
     }
-    m_surface->damageJournal.add(damagedRegion);
     m_surface->compositingTimeQuery->end();
     if (frame) {
         frame->addRenderTimeQuery(std::move(m_surface->compositingTimeQuery));
@@ -281,6 +290,8 @@ void EglGbmLayerSurface::forgetDamage()
 {
     if (m_surface) {
         m_surface->damageJournal.clear();
+        m_surface->importDamageJournal.clear();
+        m_surface->shadowDamageJournal.clear();
     }
 }
 
