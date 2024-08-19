@@ -451,23 +451,25 @@ void Workspace::restack(Window *window, Window *under, bool force)
         qCWarning(KWIN_CORE) << "Workspace::restack: closed window" << window << "cannot be restacked";
         return;
     }
-    Q_ASSERT(unconstrained_stacking_order.contains(under));
     if (!force && !Window::belongToSameApplication(under, window)) {
         // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
             auto other = unconstrained_stacking_order.at(i);
             if (other->isClient() && other->layer() == window->layer() && Window::belongToSameApplication(under, other)) {
-                under = (window == other) ? nullptr : other;
+                under = other;
                 break;
             }
         }
     }
-    if (under) {
-        unconstrained_stacking_order.removeAll(window);
-        unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(under), window);
+
+    Q_ASSERT(unconstrained_stacking_order.contains(under));
+    if (under == window) {
+        return;
     }
 
-    Q_ASSERT(unconstrained_stacking_order.contains(window));
+    unconstrained_stacking_order.removeAll(window);
+    unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(under), window);
+
     m_focusChain->moveAfterWindow(window, under);
     updateStackingOrder();
 }
