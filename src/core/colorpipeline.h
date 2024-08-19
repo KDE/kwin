@@ -77,6 +77,13 @@ public:
 class KWIN_EXPORT ColorPipeline
 {
 public:
+    /**
+     * matrix calculations with floating point numbers can result in very small errors
+     * this value is the minimum difference we actually care about; everything below
+     * can and should be optimized out
+     */
+    static constexpr float s_maxResolution = 0.00001;
+
     explicit ColorPipeline();
     explicit ColorPipeline(const ValueRange &inputRange);
 

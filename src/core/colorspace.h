@@ -120,7 +120,7 @@ public:
     explicit TransferFunction(Type tf);
     explicit TransferFunction(Type tf, double minLuminance, double maxLuminance);
 
-    auto operator<=>(const TransferFunction &) const = default;
+    bool operator==(const TransferFunction &) const;
 
     bool isRelative() const;
     TransferFunction relativeScaledTo(double referenceLuminance) const;

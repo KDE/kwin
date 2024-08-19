@@ -71,24 +71,26 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
     if (!ops.empty()) {
         auto *lastOp = &ops.back().operation;
         if (const auto mat = std::get_if<ColorMatrix>(lastOp)) {
-            mat->mat.scale(factors);
-            ops.back().output = output;
+            auto newMat = mat->mat;
+            newMat.scale(factors);
+            ops.erase(ops.end() - 1);
+            addMatrix(newMat, output);
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
             mult->factors *= factors;
-            if (mult->factors == QVector3D(1, 1, 1)) {
+            if ((mult->factors - QVector3D(1, 1, 1)).lengthSquared() < s_maxResolution * s_maxResolution) {
                 ops.erase(ops.end() - 1);
             } else {
                 ops.back().output = output;
             }
             return;
-        } else if (factors.x() == factors.y() && factors.y() == factors.z()) {
-            if (const auto tf = std::get_if<ColorTransferFunction>(lastOp); tf && tf->tf.isRelative()) {
+        } else if (std::abs(factors.x() - factors.y()) < s_maxResolution && std::abs(factors.x() - factors.z()) < s_maxResolution) {
+            if (const auto tf = std::get_if<ColorTransferFunction>(lastOp)) {
                 tf->tf.minLuminance *= factors.x();
                 tf->tf.maxLuminance *= factors.x();
                 ops.back().output = output;
                 return;
-            } else if (const auto tf = std::get_if<InverseColorTransferFunction>(lastOp); tf && tf->tf.isRelative()) {
+            } else if (const auto tf = std::get_if<InverseColorTransferFunction>(lastOp)) {
                 tf->tf.minLuminance /= factors.x();
                 tf->tf.maxLuminance /= factors.x();
                 ops.back().output = output;
@@ -165,13 +167,10 @@ void ColorPipeline::addInverseTransferFunction(TransferFunction tf)
 
 static bool isFuzzyIdentity(const QMatrix4x4 &mat)
 {
-    // matrix calculations with floating point numbers can result in very small errors
-    // -> ignore them, as that just causes inefficiencies and more rounding errors
-    constexpr float maxResolution = 0.00001;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
             const float targetValue = i == j ? 1 : 0;
-            if (std::abs(mat(i, j) - targetValue) > maxResolution) {
+            if (std::abs(mat(i, j) - targetValue) > ColorPipeline::s_maxResolution) {
                 return false;
             }
         }
@@ -181,15 +180,12 @@ static bool isFuzzyIdentity(const QMatrix4x4 &mat)
 
 static bool isFuzzyScalingOnly(const QMatrix4x4 &mat)
 {
-    // matrix calculations with floating point numbers can result in very small errors
-    // -> ignore them, as that just causes inefficiencies and more rounding errors
-    constexpr float maxResolution = 0.00001;
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            if (i < 3 && i == j) {
+            if (i == j) {
                 continue;
             }
-            if (std::abs(mat(i, j)) > maxResolution) {
+            if (std::abs(mat(i, j)) > ColorPipeline::s_maxResolution) {
                 return false;
             }
         }
@@ -205,17 +201,15 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
     if (!ops.empty()) {
         auto *lastOp = &ops.back().operation;
         if (const auto otherMat = std::get_if<ColorMatrix>(lastOp)) {
-            otherMat->mat = mat * otherMat->mat;
-            ops.back().output = output;
+            const auto newMat = mat * otherMat->mat;
+            ops.erase(ops.end() - 1);
+            addMatrix(newMat, output);
             return;
         } else if (const auto mult = std::get_if<ColorMultiplier>(lastOp)) {
             QMatrix4x4 scaled = mat;
             scaled.scale(mult->factors);
-            ops.back() = ColorOp{
-                .input = currentOutputRange(),
-                .operation = ColorMatrix(scaled),
-                .output = output,
-            };
+            ops.erase(ops.end() - 1);
+            addMatrix(scaled, output);
             return;
         }
     }

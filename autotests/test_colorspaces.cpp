@@ -114,7 +114,9 @@ void TestColorspaces::testIdentityTransformation()
     QFETCH(NamedColorimetry, colorimetry);
     QFETCH(TransferFunction::Type, transferFunction);
     const TransferFunction tf(transferFunction);
-    const ColorDescription color(colorimetry, tf, 100, tf.minLuminance, tf.maxLuminance, tf.maxLuminance);
+    const ColorDescription src(colorimetry, tf, 100, tf.minLuminance, tf.maxLuminance, tf.maxLuminance);
+    const TransferFunction tf2(transferFunction, tf.minLuminance * 1.1, tf.maxLuminance * 1.1);
+    const ColorDescription dst(colorimetry, tf2, 110, tf2.minLuminance, tf2.maxLuminance, tf2.maxLuminance);
 
     constexpr std::array renderingIntents = {
         RenderingIntent::Perceptual,
@@ -123,7 +125,7 @@ void TestColorspaces::testIdentityTransformation()
         RenderingIntent::RelativeColorimetricWithBPC,
     };
     for (const RenderingIntent intent : renderingIntents) {
-        const auto pipeline = ColorPipeline::create(color, color, intent);
+        const auto pipeline = ColorPipeline::create(src, dst, intent);
         if (!pipeline.isIdentity()) {
             qWarning() << pipeline;
         }

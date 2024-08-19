@@ -4,8 +4,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorspace.h"
+#include "colorpipeline.h"
 
-#include <qassert.h>
+#include <QtAssert>
 
 namespace KWin
 {
@@ -432,6 +433,15 @@ double TransferFunction::defaultReferenceLuminanceFor(Type type)
         return 80;
     }
     Q_UNREACHABLE();
+}
+
+bool TransferFunction::operator==(const TransferFunction &other) const
+{
+    // allow for a greater error with large max. luminance, as floating point errors get larger there
+    // and the effect of errors is smaller too
+    return type == other.type
+        && std::abs(other.minLuminance - minLuminance) < ColorPipeline::s_maxResolution
+        && std::abs(other.maxLuminance - maxLuminance) < ColorPipeline::s_maxResolution * maxLuminance;
 }
 
 TransferFunction::TransferFunction(Type tf)
