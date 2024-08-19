@@ -587,6 +587,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     }
 
     glBindTexture(GL_TEXTURE_2D, texture);
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, im.bytesPerLine() / (im.depth() / 8));
     if (!context->isOpenGLES()) {
         if (context->supportsTextureStorage()) {
             glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, im.width(), im.height());
@@ -598,6 +599,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     } else {
         glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, im.width(), im.height(), 0, format, type, im.constBits());
     }
+    glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
 
     return std::unique_ptr<GLTexture>(new GLTexture(GL_TEXTURE_2D, texture, internalFormat, image.size(), 1, true, OutputTransform::FlipY));
