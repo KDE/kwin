@@ -161,8 +161,7 @@ void GLTexture::update(const QImage &image, const QRegion &region, const QPoint 
     if (!context->isOpenGLES()) {
         const QImage::Format index = image.format();
 
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !context->supports16BitTextures())) {
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
             glFormat = formatTable[index].format;
             type = formatTable[index].type;
             uploadFormat = index;
@@ -555,8 +554,7 @@ std::unique_ptr<GLTexture> GLTexture::upload(const QImage &image)
     QImage::Format uploadFormat;
     if (!context->isOpenGLES()) {
         const QImage::Format index = image.format();
-        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat
-            && !(formatTable[index].type == GL_UNSIGNED_SHORT && !context->supports16BitTextures())) {
+        if (index < sizeof(formatTable) / sizeof(formatTable[0]) && formatTable[index].internalFormat) {
             internalFormat = formatTable[index].internalFormat;
             format = formatTable[index].format;
             type = formatTable[index].type;
