@@ -154,7 +154,9 @@ Item *WorkspaceScene::overlayItem() const
 static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, ssize_t maxCount, QRegion &occluded)
 {
     const QList<Item *> children = item->sortedChildItems();
-    for (const auto &child : children | std::views::reverse) {
+    auto it = children.rbegin();
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
         if (child->z() < 0) {
             break;
         }
@@ -169,10 +171,8 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
     }
     candidates.push_back(item);
     occluded += item->mapToScene(item->opaque());
-    for (const auto &child : children | std::views::reverse) {
-        if (child->z() >= 0) {
-            continue;
-        }
+    for (; it != children.rend(); it++) {
+        Item *const child = *it;
         if (child->isVisible() && !occluded.contains(child->mapToScene(child->boundingRect()).toAlignedRect())) {
             if (!addCandidates(static_cast<SurfaceItem *>(child), candidates, maxCount, occluded)) {
                 return false;
