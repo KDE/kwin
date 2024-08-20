@@ -112,6 +112,19 @@ private Q_SLOTS:
     void testCloseInactiveModal();
     void testCloseGroupModal();
     void testCloseInactiveGroupModal();
+    void testStackAboveFromApplication();
+    void testStackAboveFromTool();
+    void testStackAboveSibling();
+    void testStackBelowFromApplication();
+    void testStackBelowFromTool();
+    void testStackBelowSibling();
+    void testStackTopIfFromApplication();
+    void testStackTopIfFromTool();
+    void testStackBottomIfFromApplication();
+    void testStackBottomIfFromTool();
+    void testStackOppositeFromApplication();
+    void testStackOppositeFromTool();
+    void testStackOppositeNoSibling();
 };
 
 void X11WindowTest::initTestCase_data()
@@ -2959,6 +2972,432 @@ void X11WindowTest::testCloseInactiveGroupModal()
     xcb_flush(c.get());
     QVERIFY(dialogClosedSpy.wait());
     QCOMPARE(workspace()->activeWindow(), unrelated);
+}
+
+void X11WindowTest::testStackAboveFromApplication()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window1->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    // window1 and window2 belong to the same application, window1 will be raised only above window2.
+    root.restackRequest(window1->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3, window4}));
+
+    // There are no other windows that belong to the same application as window3, so the stack won't change.
+    root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3, window4}));
+}
+
+void X11WindowTest::testStackAboveFromTool()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window1->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    // window1 and window2 belong to the same application, but window1 will be raised globally because of the from_tool flag.
+    root.restackRequest(window1->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window4, window1}));
+
+    // same with window3, whether there are other windows that belong to the same application doesn't matter.
+    root.restackRequest(window3->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window4, window1, window3}));
+}
+
+void X11WindowTest::testStackAboveSibling()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    // Restack window1 above window3.
+    root.restackRequest(window1->window(), NET::FromApplication, window3->window(), XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window1}));
+
+    // Repeat again.
+    root.restackRequest(window1->window(), NET::FromApplication, window3->window(), XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window1}));
+
+    // Restack window1 above window2. Note that since window1 is already window2, it's okay if the WM noops.
+    root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_ABOVE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
+}
+
+void X11WindowTest::testStackBelowFromApplication()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window2->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2, window4}));
+
+    root.restackRequest(window4->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window4, window3, window1, window2}));
+}
+
+void X11WindowTest::testStackBelowFromTool()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window2->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window4 = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    // window2 and window3 belong to the same application, but window3 will be lowered globally because of the from_tool flag.
+    root.restackRequest(window3->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2, window4}));
+
+    // same with window4.
+    root.restackRequest(window4->window(), NET::FromApplication, XCB_WINDOW_NONE, XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window4, window3, window1, window2}));
+}
+
+void X11WindowTest::testStackBelowSibling()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(0, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(0, 0, 100, 100));
+
+    // Restack window3 below window2.
+    root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
+
+    // Repeat again.
+    root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
+
+    // Restack window1 below window2. Note that since window1 is already window2, it's okay if the WM noops.
+    root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BELOW, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2}));
+}
+
+void X11WindowTest::testStackTopIfFromApplication()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window1->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+
+    // Restack window1 above window2, no change will occur because there's no overlap.
+    root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+
+    // Create an overlap between window1 and window2, now, TopIf should work.
+    root.moveResizeWindowRequest(window1->window(), (1 << 8) | (1 << 9), 150, 0, 0, 0);
+    root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
+
+    // Repeat again
+    root.restackRequest(window1->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
+}
+
+void X11WindowTest::testStackTopIfFromTool()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+
+    // Restack window1 above window2, no change will occur because there's no overlap.
+    root.restackRequest(window1->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+
+    // Create an overlap between window1 and window2, now, TopIf should work.
+    root.moveResizeWindowRequest(window1->window(), (1 << 8) | (1 << 9), 150, 0, 0, 0);
+    root.restackRequest(window1->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window1}));
+
+    // Repeat again
+    root.restackRequest(window1->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_TOP_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window3, window1}));
+}
+
+void X11WindowTest::testStackBottomIfFromApplication()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window2->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+
+    // Restack window3 below window2, no change will occur because there's no overlap.
+    root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+
+    // Create an overlap between window2 and window3, now, BottomIf should work.
+    root.moveResizeWindowRequest(window2->window(), (1 << 8) | (1 << 9), 250, 0, 0, 0);
+    root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2}));
+
+    // Repeat again
+    root.restackRequest(window3->window(), NET::FromApplication, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2}));
+}
+
+void X11WindowTest::testStackBottomIfFromTool()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window2->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+
+    // Restack window3 below window2, no change will occur because there's no overlap.
+    root.restackRequest(window3->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+
+    // Create an overlap between window2 and window3, now, BottomIf should work.
+    root.moveResizeWindowRequest(window2->window(), (1 << 8) | (1 << 9), 250, 0, 0, 0);
+    root.restackRequest(window3->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2}));
+
+    // Repeat again
+    root.restackRequest(window3->window(), NET::FromTool, window2->window(), XCB_STACK_MODE_BOTTOM_IF, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(!stackingOrderChangedSpy.wait(10));
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window3, window1, window2}));
+}
+
+void X11WindowTest::testStackOppositeFromApplication()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window1->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+
+    // window2 is above window1, so it will be lowered
+    root.restackRequest(window2->window(), NET::FromApplication, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
+
+    // Repeat again
+    root.restackRequest(window2->window(), NET::FromApplication, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+
+    // Other window
+    root.restackRequest(window2->window(), NET::FromApplication, window3->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
+
+    // Repeat again
+    root.restackRequest(window2->window(), NET::FromApplication, window3->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+}
+
+void X11WindowTest::testStackOppositeFromTool()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &windowId);
+    });
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100), [&](xcb_window_t windowId) {
+        xcb_window_t leaderId = window1->window();
+        xcb_change_property(c.get(), XCB_PROP_MODE_REPLACE, windowId, atoms->wm_client_leader, XCB_ATOM_WINDOW, 32, 1, &leaderId);
+    });
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+
+    // window2 is above window1, so it will be lowered
+    root.restackRequest(window2->window(), NET::FromTool, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
+
+    // Repeat again
+    root.restackRequest(window2->window(), NET::FromTool, window1->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+
+    // Other window
+    root.restackRequest(window2->window(), NET::FromTool, window3->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
+
+    // Repeat again
+    root.restackRequest(window2->window(), NET::FromTool, window3->window(), XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window2, window3}));
+}
+
+void X11WindowTest::testStackOppositeNoSibling()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+    NETRootInfo root(c.get(), NET::Properties());
+
+    X11Window *window1 = createWindow(c.get(), QRect(100, 0, 100, 100));
+    X11Window *window2 = createWindow(c.get(), QRect(200, 0, 100, 100));
+    X11Window *window3 = createWindow(c.get(), QRect(300, 0, 100, 100));
+
+    root.restackRequest(window2->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QSignalSpy stackingOrderChangedSpy(workspace(), &Workspace::stackingOrderChanged);
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
+
+    root.restackRequest(window2->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window2, window1, window3}));
+
+    root.restackRequest(window2->window(), NET::FromTool, XCB_WINDOW_NONE, XCB_STACK_MODE_OPPOSITE, XCB_CURRENT_TIME);
+    xcb_flush(c.get());
+    QVERIFY(stackingOrderChangedSpy.wait());
+    QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)
