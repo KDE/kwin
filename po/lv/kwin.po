@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2024-05-27 08:00+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -432,10 +432,12 @@ msgid "Repeat"
 msgstr "Atkārtot"
 
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "Skenēt kodu"
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Qt::Taustiņa kods"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4329,6 +4331,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "„Xwayland“ ir avarējis"
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "Skenēt kodu"
 
 #~ msgid "Surfaces"
 #~ msgstr "Virsmas"

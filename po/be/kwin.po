@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2024-06-11 08:11\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
 "Language-Team: Belarusian\n"
@@ -432,10 +432,12 @@ msgid "Repeat"
 msgstr "Паўтор"
 
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "Сканаваць код"
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Qt::код клавішы"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4339,6 +4341,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Адбыўся збой Xwayland"
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "Сканаваць код"
 
 #~ msgid "Surfaces"
 #~ msgstr "Паверхні"

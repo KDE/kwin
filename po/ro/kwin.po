@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -438,10 +438,12 @@ msgid "Repeat"
 msgstr "Repetare"
 
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Cod Qt::Key"
 
 #: debug_console.cpp:298
 #, kde-format

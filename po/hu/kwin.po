@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2024-05-31 14:36+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -427,10 +427,12 @@ msgid "Repeat"
 msgstr "Ismétlés"
 
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "Kódolvasás"
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Qt::Key kód"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4331,6 +4333,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Az Xwayland összeomlott"
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "Kódolvasás"
 
 #~ msgid "Surfaces"
 #~ msgstr "Felületek"

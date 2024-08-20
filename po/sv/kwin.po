@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2024-08-06 07:43+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -431,10 +431,12 @@ msgid "Repeat"
 msgstr "Upprepa"
 
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "Avsökningskod"
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Qt::Key-kod"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4329,6 +4331,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland har kraschat"
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "Avsökningskod"
 
 #~ msgid "Surfaces"
 #~ msgstr "Ytor"

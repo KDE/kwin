@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-02-10 00:13+0100\n"
+"PO-Revision-Date: 2024-08-20 00:25+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -75,7 +75,7 @@ msgstr "한눈에 보기"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "격자"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -226,7 +226,7 @@ msgstr "재활성화 지연 시간(&R):"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "모서리 배리어(&C):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -244,13 +244,13 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "커서가 화면 모서리에서 교차하는 것을 방지합니다."
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "경계 배리어(&E):"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -268,19 +268,19 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "화면 경계를 넘어갈 때 필요한 추가 커서 거리입니다."
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "없음"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr "픽셀"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
-"PO-Revision-Date: 2024-02-17 15:10+0100\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
+"PO-Revision-Date: 2024-08-20 00:43+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -427,10 +427,12 @@ msgid "Repeat"
 msgstr "반복"
 
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "스캔 코드"
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Qt::Key 코드"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -715,7 +717,7 @@ msgstr "태블릿 패드 링"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "효과"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -926,13 +928,13 @@ msgstr "내부 창"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "로드 해제"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "불러오기"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1709,27 +1711,26 @@ msgstr "창 닫기 애니메이션"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "하지 않음"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] "밀리초"
+msgstr[0] "%1초"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "활동 중단 시 커서 숨기기:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "입력할 때 커서 숨기기"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1846,72 +1847,72 @@ msgstr "단추 애니메이션 사용하기"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Caps Lock 키가 활성화되었습니다"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Caps Lock 키가 비활성화되었습니다"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Num Lock 키가 활성화되었습니다"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Num Lock 키가 비활성화되었습니다"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Scroll Lock 키가 활성화되었습니다"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Scroll Lock 키가 비활성화되었습니다"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Shift 키가 활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Shift 키가 비활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Control 키가 활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Control 키가 비활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Alt 키가 활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Alt 키가 비활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "메타 키가 활성화되었습니다."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "메타 키가 비활성화되었습니다."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2305,26 +2306,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "화살표 그리기 수정자 키:"
 
 #: plugins/nightlight/nightlightmanager.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "야간 조명 켜짐"
+msgstr "야간 조명 중단됨"
 
 #: plugins/nightlight/nightlightmanager.cpp:59
-#, fuzzy, kde-format
-#| msgctxt "Night Light was enabled"
-#| msgid "Night Light On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "야간 조명 켜짐"
+msgstr "야간 조명 재개됨"
 
 #: plugins/nightlight/nightlightmanager.cpp:80
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "야간 조명 중지/재개"
 
 #: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
@@ -2487,10 +2484,9 @@ msgid "Invalid region"
 msgstr "잘못된 영역"
 
 #: plugins/screencast/screencaststream.cpp:350
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "OpenGL 컴포지터가 실행 중이 아님"
+msgstr "스크린캐스팅에는 OpenGL 컴포지팅이 필요함"
 
 #: plugins/screencast/screencaststream.cpp:358
 #, kde-format
@@ -2516,11 +2512,10 @@ msgstr ""
 "Esc 키나 오른쪽 단추를 누르면 취소합니다."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "컴포지팅 중단하기"
+msgstr "컴포지팅"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -2585,31 +2580,31 @@ msgstr "바탕 화면 배경 슬라이드"
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Shift 키가 잠겨 있으며 다음 키가 눌릴 때 같이 눌립니다."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Control 키가 잠겨 있으며 다음 키가 눌릴 때 같이 눌립니다."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Alt 키가 잠겨 있으며 다음 키가 눌릴 때 같이 눌립니다."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "메타 키가 잠겨 있으며 다음 키가 눌릴 때 같이 눌립니다."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "AltGr 키가 잠겨 있으며 다음 키가 눌릴 때 같이 눌립니다."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -2661,10 +2656,9 @@ msgid "Padding:"
 msgstr "공백:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "레이아웃 불러오기..."
+msgstr "레이아웃 불러오기…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -2674,12 +2668,12 @@ msgstr "닫기"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "왼쪽/오른쪽 나누기"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "위/아래 나누기"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -4314,6 +4308,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland가 충돌함"
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "스캔 코드"
 
 #~ msgid "Surfaces"
 #~ msgstr "표면"

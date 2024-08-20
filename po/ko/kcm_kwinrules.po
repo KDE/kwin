@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-23 00:40+0000\n"
-"PO-Revision-Date: 2024-02-17 15:10+0100\n"
+"PO-Revision-Date: 2024-08-20 00:23+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 23.08.1\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -823,9 +823,7 @@ msgid "No rules for specific windows are currently set"
 msgstr "창 지정 규칙 없음"
 
 #: ui/main.qml:88
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr "<interface>새로 추가…</interface>를 클릭해서 추가하십시오"
@@ -933,18 +931,16 @@ msgid "Add property to the rule"
 msgstr "규칙에 속성 추가"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "변경된 창 속성 없음"
+msgstr "추가할 남은 속성 없음"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "변경된 창 속성 없음"
+msgstr "\"%1\"와(과) 일치하는 속성 없음"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format

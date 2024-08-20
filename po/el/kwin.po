@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2017-06-12 16:22+0200\n"
 "Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -450,9 +450,9 @@ msgstr "Επανάληψη"
 
 #: debug_console.cpp:297
 #, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "Κωδικός σάρωσης"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr ""
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4631,6 +4631,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr ""
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "Κωδικός σάρωσης"
 
 #, fuzzy
 #~| msgctxt "An orientation of a pointer axis event"

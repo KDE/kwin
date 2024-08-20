@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2008-12-27 14:55+0200\n"
 "Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian Latin <i18n@mova.org>\n"
@@ -428,8 +428,8 @@ msgstr ""
 
 #: debug_console.cpp:297
 #, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
 msgstr ""
 
 #: debug_console.cpp:298

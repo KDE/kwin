@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-17 00:40+0000\n"
+"POT-Creation-Date: 2024-08-20 00:41+0000\n"
 "PO-Revision-Date: 2023-08-14 21:55+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -435,11 +435,14 @@ msgctxt "Whether the event is an automatic key repeat"
 msgid "Repeat"
 msgstr "Wiederholen"
 
+# Ich weiß leider nicht, um welche Funktion es hier geht. Ist das der numerische Wert oder der Qt-Konstantenbezeichner? Z.B. Key_Up
 #: debug_console.cpp:297
-#, kde-format
-msgctxt "The code as read from the input device"
-msgid "Scan code"
-msgstr "Scan-Code"
+#, fuzzy, kde-format
+#| msgctxt "Key according to Qt"
+#| msgid "Qt::Key code"
+msgctxt "The code reported by the kernel"
+msgid "Keycode"
+msgstr "Qt::Key-Code"
 
 # Ich weiß leider nicht, um welche Funktion es hier geht. Ist das der numerische Wert oder der Qt-Konstantenbezeichner? Z.B. Key_Up
 #: debug_console.cpp:298
@@ -4393,6 +4396,10 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ist abgestürzt"
+
+#~ msgctxt "The code as read from the input device"
+#~ msgid "Scan code"
+#~ msgstr "Scan-Code"
 
 #~ msgid "Surfaces"
 #~ msgstr "Oberflächen"
