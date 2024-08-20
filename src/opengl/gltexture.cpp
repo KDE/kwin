@@ -42,7 +42,7 @@ struct
     {GL_RGB8, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV}, // QImage::Format_RGB32
     {0, 0, 0}, // QImage::Format_ARGB32
     {GL_RGBA8, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV}, // QImage::Format_ARGB32_Premultiplied
-    {GL_RGB8, GL_BGR, GL_UNSIGNED_SHORT_5_6_5_REV}, // QImage::Format_RGB16
+    {GL_RGB8, GL_RGB, GL_UNSIGNED_SHORT_5_6_5}, // QImage::Format_RGB16
     {0, 0, 0}, // QImage::Format_ARGB8565_Premultiplied
     {0, 0, 0}, // QImage::Format_RGB666
     {0, 0, 0}, // QImage::Format_ARGB6666_Premultiplied
