@@ -98,10 +98,6 @@ public:
 
     QImage toImage();
 
-    /** @short
-     * Make the texture fully transparent
-     */
-    void clear();
     /**
      * @deprecated track modifications to the texture yourself
      */

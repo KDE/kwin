@@ -353,17 +353,6 @@ GLenum GLTexture::internalFormat() const
     return d->m_internalFormat;
 }
 
-void GLTexture::clear()
-{
-    Q_ASSERT(d->m_owning);
-    GLFramebuffer fbo(this);
-    GLFramebuffer::pushFramebuffer(&fbo);
-    glClearColor(0, 0, 0, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, d->m_texture, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    GLFramebuffer::popFramebuffer();
-}
-
 bool GLTexture::isDirty() const
 {
     return d->m_markedDirty;
