@@ -169,6 +169,9 @@ static bool addCandidates(SurfaceItem *item, QList<SurfaceItem *> &candidates, s
     if (candidates.size() >= maxCount || item->hasEffects()) {
         return false;
     }
+    if (occluded.contains(item->mapToScene(item->boundingRect()).toAlignedRect())) {
+        return true;
+    }
     candidates.push_back(item);
     occluded += item->mapToScene(item->opaque());
     for (; it != children.rend(); it++) {
