@@ -445,21 +445,11 @@ void Workspace::lowerWindowRequest(Window *window)
     lowerWindowWithinApplication(window);
 }
 
-void Workspace::stackBelow(Window *window, Window *reference, bool force)
+void Workspace::stackBelow(Window *window, Window *reference)
 {
     if (window->isDeleted()) {
         qCWarning(KWIN_CORE) << "Workspace::stackBelow: closed window" << window << "cannot be restacked";
         return;
-    }
-    if (!force && !Window::belongToSameApplication(reference, window)) {
-        // put in the stacking order below _all_ windows belonging to the active application
-        for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
-            auto other = unconstrained_stacking_order.at(i);
-            if (other->isClient() && other->layer() == window->layer() && Window::belongToSameApplication(reference, other)) {
-                reference = other;
-                break;
-            }
-        }
     }
 
     Q_ASSERT(unconstrained_stacking_order.contains(reference));
@@ -480,7 +470,20 @@ void Workspace::restackWindowUnderActive(Window *window)
         raiseWindow(window);
         return;
     }
-    stackBelow(window, m_activeWindow);
+
+    Window *reference = m_activeWindow;
+    if (!Window::belongToSameApplication(reference, window)) {
+        // put in the stacking order below _all_ windows belonging to the active application
+        for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
+            auto other = unconstrained_stacking_order.at(i);
+            if (other->isClient() && other->layer() == window->layer() && Window::belongToSameApplication(reference, other)) {
+                reference = other;
+                break;
+            }
+        }
+    }
+
+    stackBelow(window, reference);
 }
 
 #if KWIN_BUILD_X11
