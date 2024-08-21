@@ -236,6 +236,7 @@ public:
     void lowerWindowRequest(Window *window);
     void restackWindowUnderActive(Window *window);
     void stackBelow(Window *window, Window *reference);
+    void stackAbove(Window *window, Window *reference);
     void raiseOrLowerWindow(Window *window);
     void updateStackingOrder(bool propagate_new_windows = false);
     void forceRestacking();

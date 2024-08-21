@@ -464,6 +464,25 @@ void Workspace::stackBelow(Window *window, Window *reference)
     updateStackingOrder();
 }
 
+void Workspace::stackAbove(Window *window, Window *reference)
+{
+    if (window->isDeleted()) {
+        qCWarning(KWIN_CORE) << "Workspace::stackAbove: closed window" << window << "cannot be restacked";
+        return;
+    }
+
+    Q_ASSERT(unconstrained_stacking_order.contains(reference));
+    if (reference == window) {
+        return;
+    }
+
+    unconstrained_stacking_order.removeAll(window);
+    unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(reference) + 1, window);
+
+    m_focusChain->moveBeforeWindow(window, reference);
+    updateStackingOrder();
+}
+
 void Workspace::restackWindowUnderActive(Window *window)
 {
     if (!m_activeWindow || m_activeWindow == window || m_activeWindow->layer() != window->layer()) {

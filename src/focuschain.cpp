@@ -151,6 +151,26 @@ void FocusChain::moveAfterWindow(Window *window, Window *reference)
     moveAfterWindowInChain(window, reference, m_mostRecentlyUsed);
 }
 
+void FocusChain::moveBeforeWindow(Window *window, Window *reference)
+{
+    if (window->isDeleted()) {
+        return;
+    }
+    if (!window->wantsTabFocus()) {
+        return;
+    }
+
+    for (auto it = m_desktopFocusChains.begin();
+         it != m_desktopFocusChains.end();
+         ++it) {
+        if (!window->isOnDesktop(it.key())) {
+            continue;
+        }
+        moveBeforeWindowInChain(window, reference, it.value());
+    }
+    moveBeforeWindowInChain(window, reference, m_mostRecentlyUsed);
+}
+
 void FocusChain::moveAfterWindowInChain(Window *window, Window *reference, Chain &chain)
 {
     if (window->isDeleted()) {
@@ -167,6 +187,28 @@ void FocusChain::moveAfterWindowInChain(Window *window, Window *reference, Chain
         for (int i = chain.size() - 1; i >= 0; --i) {
             if (Window::belongToSameApplication(reference, chain.at(i))) {
                 chain.insert(i, window);
+                break;
+            }
+        }
+    }
+}
+
+void FocusChain::moveBeforeWindowInChain(Window *window, Window *reference, Chain &chain)
+{
+    if (window->isDeleted()) {
+        return;
+    }
+    if (!chain.contains(reference)) {
+        return;
+    }
+    if (Window::belongToSameApplication(reference, window)) {
+        chain.removeAll(window);
+        chain.insert(chain.indexOf(reference) + 1, window);
+    } else {
+        chain.removeAll(window);
+        for (int i = chain.size() - 1; i >= 0; --i) {
+            if (Window::belongToSameApplication(reference, chain.at(i))) {
+                chain.insert(i + 1, window);
                 break;
             }
         }

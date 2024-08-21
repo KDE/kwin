@@ -80,6 +80,14 @@ public:
      */
     void moveAfterWindow(Window *window, Window *reference);
     /**
+     * @brief Moves @p window in front of the @p reference Window in all focus chains.
+     *
+     * @param window The Window to move in the chains
+     * @param reference The Window in front of which the @p window should be moved
+     * @return void
+     */
+    void moveBeforeWindow(Window *window, Window *reference);
+    /**
      * @brief Finds the best Window to become the new active Window in the focus chain for the given
      * virtual @p desktop.
      *
@@ -197,6 +205,7 @@ private:
      */
     void makeLastInChain(Window *window, Chain &chain);
     void moveAfterWindowInChain(Window *window, Window *reference, Chain &chain);
+    void moveBeforeWindowInChain(Window *window, Window *reference, Chain &chain);
     void updateWindowInChain(Window *window, Change change, Chain &chain);
     void insertWindowIntoChain(Window *window, Chain &chain);
     Chain m_mostRecentlyUsed;
