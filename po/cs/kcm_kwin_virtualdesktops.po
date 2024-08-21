@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-15 00:49+0000\n"
-"PO-Revision-Date: 2023-01-28 07:42+0100\n"
+"PO-Revision-Date: 2024-08-20 15:10+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -134,7 +134,7 @@ msgstr "%1 ms"
 #: package/contents/ui/main.qml:314
 #, kde-format
 msgid "Show desktop layout indicators"
-msgstr "Zobrazit ukazatele rozložení plochy"
+msgstr "Zobrazit ukazatele rozvržení plochy"
 
 #: virtualdesktops.cpp:33
 #, kde-format
