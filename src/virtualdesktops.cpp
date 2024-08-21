@@ -725,20 +725,31 @@ void VirtualDesktopManager::load()
 
 void VirtualDesktopManager::save()
 {
-    if (s_loadingDesktopSettings) {
-        return;
-    }
-    if (!m_config) {
+    if (s_loadingDesktopSettings || !m_config) {
         return;
     }
 
     KConfigGroup desktopsConfig = m_config->group("Desktops");
 
+    configClearOldEntries(desktopsConfig);
+    configSaveDesktopEntries(desktopsConfig);
+
+    desktopsConfig.writeEntry("Rows", m_rows);
+
+    // Save to disk
+    desktopsConfig.sync();
+}
+
+void VirtualDesktopManager::configClearOldEntries(KConfigGroup &desktopsConfig)
+{
     for (int i = count() + 1; desktopsConfig.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
         desktopsConfig.deleteEntry(QStringLiteral("Id_%1").arg(i));
         desktopsConfig.deleteEntry(QStringLiteral("Name_%1").arg(i));
     }
+}
 
+void VirtualDesktopManager::configSaveDesktopEntries(KConfigGroup &desktopsConfig)
+{
     desktopsConfig.writeEntry("Number", count());
 
     for (VirtualDesktop *desktop : std::as_const(m_desktops)) {
@@ -763,11 +774,6 @@ void VirtualDesktopManager::save()
         }
         desktopsConfig.writeEntry(QStringLiteral("Id_%1").arg(position), desktop->id());
     }
-
-    desktopsConfig.writeEntry("Rows", m_rows);
-
-    // Save to disk
-    desktopsConfig.sync();
 }
 
 QString VirtualDesktopManager::defaultName(int desktop) const
