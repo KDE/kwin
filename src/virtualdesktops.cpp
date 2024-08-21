@@ -731,43 +731,43 @@ void VirtualDesktopManager::save()
     if (!m_config) {
         return;
     }
-    KConfigGroup group(m_config, QStringLiteral("Desktops"));
 
-    for (int i = count() + 1; group.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
-        group.deleteEntry(QStringLiteral("Id_%1").arg(i));
-        group.deleteEntry(QStringLiteral("Name_%1").arg(i));
+    KConfigGroup desktopsConfig = m_config->group("Desktops");
+
+    for (int i = count() + 1; desktopsConfig.hasKey(QStringLiteral("Id_%1").arg(i)); i++) {
+        desktopsConfig.deleteEntry(QStringLiteral("Id_%1").arg(i));
+        desktopsConfig.deleteEntry(QStringLiteral("Name_%1").arg(i));
     }
 
-    group.writeEntry("Number", count());
+    desktopsConfig.writeEntry("Number", count());
+
     for (VirtualDesktop *desktop : std::as_const(m_desktops)) {
         const uint position = desktop->x11DesktopNumber();
-
-        QString s = desktop->name();
-        const QString defaultvalue = defaultName(position);
-        if (s.isEmpty()) {
-            s = defaultvalue;
+        QString desktopName = desktop->name();
+        const QString defaultValue = defaultName(position);
+        if (desktopName.isEmpty()) {
+            desktopName = defaultValue;
 #if KWIN_BUILD_X11
             if (m_rootInfo) {
-                m_rootInfo->setDesktopName(position, s.toUtf8().data());
+                m_rootInfo->setDesktopName(position, desktopName.toUtf8().data());
             }
 #endif
         }
-
-        if (s != defaultvalue) {
-            group.writeEntry(QStringLiteral("Name_%1").arg(position), s);
+        if (desktopName != defaultValue) {
+            desktopsConfig.writeEntry(QStringLiteral("Name_%1").arg(position), desktopName);
         } else {
-            QString currentvalue = group.readEntry(QStringLiteral("Name_%1").arg(position), QString());
-            if (currentvalue != defaultvalue) {
-                group.deleteEntry(QStringLiteral("Name_%1").arg(position));
+            QString currentValue = desktopsConfig.readEntry(QStringLiteral("Name_%1").arg(position), QString());
+            if (currentValue != defaultValue) {
+                desktopsConfig.deleteEntry(QStringLiteral("Name_%1").arg(position));
             }
         }
-        group.writeEntry(QStringLiteral("Id_%1").arg(position), desktop->id());
+        desktopsConfig.writeEntry(QStringLiteral("Id_%1").arg(position), desktop->id());
     }
 
-    group.writeEntry("Rows", m_rows);
+    desktopsConfig.writeEntry("Rows", m_rows);
 
     // Save to disk
-    group.sync();
+    desktopsConfig.sync();
 }
 
 QString VirtualDesktopManager::defaultName(int desktop) const
