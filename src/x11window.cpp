@@ -5437,9 +5437,8 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
 
 void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource src, xcb_timestamp_t timestamp, bool send_event)
 {
-    X11Window *other = nullptr;
+    X11Window *other = workspace()->findClient(Predicate::WindowMatch, above);
     if (detail == XCB_STACK_MODE_OPPOSITE) {
-        other = workspace()->findClient(Predicate::WindowMatch, above);
         if (!other) {
             workspace()->raiseOrLowerWindow(this);
             return;
@@ -5457,57 +5456,57 @@ void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource
             ++it;
         }
     } else if (detail == XCB_STACK_MODE_TOP_IF) {
-        other = workspace()->findClient(Predicate::WindowMatch, above);
         if (other && other->frameGeometry().intersects(frameGeometry())) {
             workspace()->raiseWindowRequest(this, src, timestamp);
         }
         return;
     } else if (detail == XCB_STACK_MODE_BOTTOM_IF) {
-        other = workspace()->findClient(Predicate::WindowMatch, above);
         if (other && other->frameGeometry().intersects(frameGeometry())) {
             workspace()->lowerWindowRequest(this, src, timestamp);
         }
         return;
     }
 
-    if (!other) {
-        other = workspace()->findClient(Predicate::WindowMatch, above);
-    }
+    if (detail == XCB_STACK_MODE_ABOVE) {
+        if (other) {
+            auto it = workspace()->stackingOrder().constEnd(),
+                 begin = workspace()->stackingOrder().constBegin();
+            while (--it != begin) {
 
-    if (other && detail == XCB_STACK_MODE_ABOVE) {
-        auto it = workspace()->stackingOrder().constEnd(),
-             begin = workspace()->stackingOrder().constBegin();
-        while (--it != begin) {
+                if (*it == other) { // the other one is top on stack
+                    it = begin; // invalidate
+                    src = NET::FromTool; // force
+                    break;
+                }
+                X11Window *window = qobject_cast<X11Window *>(*it);
 
-            if (*it == other) { // the other one is top on stack
-                it = begin; // invalidate
-                src = NET::FromTool; // force
-                break;
+                if (!window || !((*it)->isNormalWindow() && window->isShown() && (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnOutput(output()))) {
+                    continue; // irrelevant windows
+                }
+
+                if (*(it - 1) == other) {
+                    break; // "it" is the one above the target one, stack below "it"
+                }
             }
-            X11Window *window = qobject_cast<X11Window *>(*it);
 
-            if (!window || !((*it)->isNormalWindow() && window->isShown() && (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnOutput(output()))) {
-                continue; // irrelevant windows
-            }
-
-            if (*(it - 1) == other) {
-                break; // "it" is the one above the target one, stack below "it"
+            if (it != begin && (*(it - 1) == other)) {
+                other = qobject_cast<X11Window *>(*it);
+            } else {
+                other = nullptr;
             }
         }
 
-        if (it != begin && (*(it - 1) == other)) {
-            other = qobject_cast<X11Window *>(*it);
+        if (other) {
+            workspace()->stackBelow(this, other);
         } else {
-            other = nullptr;
+            workspace()->raiseWindowRequest(this, src, timestamp);
         }
-    }
-
-    if (other) {
-        workspace()->stackBelow(this, other);
     } else if (detail == XCB_STACK_MODE_BELOW) {
-        workspace()->lowerWindowRequest(this, src, timestamp);
-    } else if (detail == XCB_STACK_MODE_ABOVE) {
-        workspace()->raiseWindowRequest(this, src, timestamp);
+        if (other) {
+            workspace()->stackBelow(this, other);
+        } else {
+            workspace()->lowerWindowRequest(this, src, timestamp);
+        }
     }
 
     if (send_event) {
