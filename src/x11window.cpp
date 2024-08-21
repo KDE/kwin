@@ -5469,35 +5469,7 @@ void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource
 
     if (detail == XCB_STACK_MODE_ABOVE) {
         if (other) {
-            auto it = workspace()->stackingOrder().constEnd(),
-                 begin = workspace()->stackingOrder().constBegin();
-            while (--it != begin) {
-
-                if (*it == other) { // the other one is top on stack
-                    it = begin; // invalidate
-                    src = NET::FromTool; // force
-                    break;
-                }
-                X11Window *window = qobject_cast<X11Window *>(*it);
-
-                if (!window || !((*it)->isNormalWindow() && window->isShown() && (*it)->isOnCurrentDesktop() && (*it)->isOnCurrentActivity() && (*it)->isOnOutput(output()))) {
-                    continue; // irrelevant windows
-                }
-
-                if (*(it - 1) == other) {
-                    break; // "it" is the one above the target one, stack below "it"
-                }
-            }
-
-            if (it != begin && (*(it - 1) == other)) {
-                other = qobject_cast<X11Window *>(*it);
-            } else {
-                other = nullptr;
-            }
-        }
-
-        if (other) {
-            workspace()->stackBelow(this, other);
+            workspace()->stackAbove(this, other);
         } else {
             workspace()->raiseWindowRequest(this, src, timestamp);
         }
