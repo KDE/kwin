@@ -186,7 +186,7 @@ void RootInfo::restackWindow(xcb_window_t w, RequestSource src, xcb_window_t abo
         if (src != NET::FromApplication && src != FromTool) {
             src = NET::FromTool;
         }
-        c->restackWindow(above, detail, src, timestamp, true);
+        c->restackWindow(above, detail, src, timestamp);
     }
 }
 

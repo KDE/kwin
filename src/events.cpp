@@ -731,7 +731,7 @@ void X11Window::configureRequestEvent(xcb_configure_request_event_t *e)
                          Xcb::fromXNative(e->y), Xcb::fromXNative(e->width), Xcb::fromXNative(e->height), 0, false);
     }
     if (e->value_mask & XCB_CONFIG_WINDOW_STACK_MODE) {
-        restackWindow(e->sibling, e->stack_mode, NET::FromApplication, userTime(), false);
+        restackWindow(e->sibling, e->stack_mode, NET::FromApplication, userTime());
     }
 
     // Sending a synthetic configure notify always is fine, even in cases where

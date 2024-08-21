@@ -5435,7 +5435,7 @@ bool X11Window::allowWindowActivation(xcb_timestamp_t time, bool focus_in)
     return NET::timestampCompare(time, user_time) >= 0; // time >= user_time
 }
 
-void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource src, xcb_timestamp_t timestamp, bool send_event)
+void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource src, xcb_timestamp_t timestamp)
 {
     X11Window *other = workspace()->findClient(Predicate::WindowMatch, above);
     if (detail == XCB_STACK_MODE_OPPOSITE) {
@@ -5479,10 +5479,6 @@ void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource
         } else {
             workspace()->lowerWindowRequest(this, src, timestamp);
         }
-    }
-
-    if (send_event) {
-        sendSyntheticConfigureNotify();
     }
 }
 
