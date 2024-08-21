@@ -440,11 +440,6 @@ void Workspace::lowerWindowRequest(X11Window *window, NET::RequestSource src, xc
 }
 #endif
 
-void Workspace::lowerWindowRequest(Window *window)
-{
-    lowerWindowWithinApplication(window);
-}
-
 void Workspace::stackBelow(Window *window, Window *reference)
 {
     if (window->isDeleted()) {

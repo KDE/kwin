@@ -233,7 +233,6 @@ public:
     void lowerWindowRequest(X11Window *window, NET::RequestSource src, xcb_timestamp_t timestamp);
     void restoreSessionStackingOrder(X11Window *window);
 #endif
-    void lowerWindowRequest(Window *window);
     void restackWindowUnderActive(Window *window);
     void stackBelow(Window *window, Window *reference);
     void stackAbove(Window *window, Window *reference);
