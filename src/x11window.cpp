@@ -5443,17 +5443,15 @@ void X11Window::restackWindow(xcb_window_t above, int detail, NET::RequestSource
             workspace()->raiseOrLowerWindow(this);
             return;
         }
-        auto it = workspace()->stackingOrder().constBegin(),
-             end = workspace()->stackingOrder().constEnd();
-        while (it != end) {
-            if (*it == this) {
+        const auto stack = workspace()->stackingOrder();
+        for (Window *window : stack) {
+            if (window == this) {
                 detail = XCB_STACK_MODE_ABOVE;
                 break;
-            } else if (*it == other) {
+            } else if (window == other) {
                 detail = XCB_STACK_MODE_BELOW;
                 break;
             }
-            ++it;
         }
     } else if (detail == XCB_STACK_MODE_TOP_IF) {
         if (other && other->frameGeometry().intersects(frameGeometry())) {
