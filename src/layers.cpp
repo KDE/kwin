@@ -415,6 +415,7 @@ void Workspace::raiseWindowWithinApplication(Window *window)
     }
 }
 
+#if KWIN_BUILD_X11
 void Workspace::raiseWindowRequest(Window *window, NET::RequestSource src, xcb_timestamp_t timestamp)
 {
     if (src == NET::FromTool || allowFullClientRaising(window, timestamp)) {
@@ -425,7 +426,6 @@ void Workspace::raiseWindowRequest(Window *window, NET::RequestSource src, xcb_t
     }
 }
 
-#if KWIN_BUILD_X11
 void Workspace::lowerWindowRequest(X11Window *window, NET::RequestSource src, xcb_timestamp_t /*timestamp*/)
 {
     // If the window has support for all this focus stealing prevention stuff,

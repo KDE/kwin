@@ -228,8 +228,8 @@ public:
     QRectF adjustWindowSize(const Window *window, QRectF moveResizeGeom, Gravity gravity) const;
     void raiseWindow(Window *window, bool nogroup = false);
     void lowerWindow(Window *window, bool nogroup = false);
-    void raiseWindowRequest(Window *window, NET::RequestSource src = NET::FromApplication, uint32_t timestamp = 0);
 #if KWIN_BUILD_X11
+    void raiseWindowRequest(Window *window, NET::RequestSource src = NET::FromApplication, uint32_t timestamp = 0);
     void lowerWindowRequest(X11Window *window, NET::RequestSource src, xcb_timestamp_t timestamp);
     void restoreSessionStackingOrder(X11Window *window);
 #endif
