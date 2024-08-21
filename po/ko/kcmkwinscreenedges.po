@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2024-08-20 00:25+0200\n"
+"PO-Revision-Date: 2024-08-21 00:41+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
 "Language: ko\n"
@@ -238,6 +238,10 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"화면 간 가상 모서리 배리어를 활성화하거나 비활성화할 수 있습니다. 화면 모서리"
+"에 커서가 닿았을 때 다른 화면으로 커서가 이동하는 것을 방지합니다. 화면 여러 "
+"개를 사용할 때 최대화된 창의 닫기 단추 등 사용자 인터페이스 구성 요소에 쉽게 "
+"접근할 수 있습니다."
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
@@ -262,6 +266,10 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"화면 간 가상 경계선 배리어의 크기를 설정할 수 있습니다. 화면 경계선에 커서가 "
+"닿았을 때 다른 화면으로 커서가 이동하기 전까지 추가 거리를 더합니다. 화면 여"
+"러 개를 사용할 때 화면 경계에 위치한 Plasma 패널 등 사용자 인터페이스 구성 요"
+"소에 쉽게 접근할 수 있습니다."
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
