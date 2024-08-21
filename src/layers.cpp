@@ -445,32 +445,32 @@ void Workspace::lowerWindowRequest(Window *window)
     lowerWindowWithinApplication(window);
 }
 
-void Workspace::restack(Window *window, Window *under, bool force)
+void Workspace::stackBelow(Window *window, Window *reference, bool force)
 {
     if (window->isDeleted()) {
-        qCWarning(KWIN_CORE) << "Workspace::restack: closed window" << window << "cannot be restacked";
+        qCWarning(KWIN_CORE) << "Workspace::stackBelow: closed window" << window << "cannot be restacked";
         return;
     }
-    if (!force && !Window::belongToSameApplication(under, window)) {
+    if (!force && !Window::belongToSameApplication(reference, window)) {
         // put in the stacking order below _all_ windows belonging to the active application
         for (int i = 0; i < unconstrained_stacking_order.size(); ++i) {
             auto other = unconstrained_stacking_order.at(i);
-            if (other->isClient() && other->layer() == window->layer() && Window::belongToSameApplication(under, other)) {
-                under = other;
+            if (other->isClient() && other->layer() == window->layer() && Window::belongToSameApplication(reference, other)) {
+                reference = other;
                 break;
             }
         }
     }
 
-    Q_ASSERT(unconstrained_stacking_order.contains(under));
-    if (under == window) {
+    Q_ASSERT(unconstrained_stacking_order.contains(reference));
+    if (reference == window) {
         return;
     }
 
     unconstrained_stacking_order.removeAll(window);
-    unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(under), window);
+    unconstrained_stacking_order.insert(unconstrained_stacking_order.indexOf(reference), window);
 
-    m_focusChain->moveAfterWindow(window, under);
+    m_focusChain->moveAfterWindow(window, reference);
     updateStackingOrder();
 }
 
@@ -480,7 +480,7 @@ void Workspace::restackWindowUnderActive(Window *window)
         raiseWindow(window);
         return;
     }
-    restack(window, m_activeWindow);
+    stackBelow(window, m_activeWindow);
 }
 
 #if KWIN_BUILD_X11
