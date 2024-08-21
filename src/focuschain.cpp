@@ -139,6 +139,9 @@ void FocusChain::moveAfterWindow(Window *window, Window *reference)
     if (!window->wantsTabFocus()) {
         return;
     }
+    if (reference == window) {
+        return;
+    }
 
     for (auto it = m_desktopFocusChains.begin();
          it != m_desktopFocusChains.end();
@@ -157,6 +160,9 @@ void FocusChain::moveBeforeWindow(Window *window, Window *reference)
         return;
     }
     if (!window->wantsTabFocus()) {
+        return;
+    }
+    if (reference == window) {
         return;
     }
 
