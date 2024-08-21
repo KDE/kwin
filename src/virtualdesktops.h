@@ -482,6 +482,22 @@ private Q_SLOTS:
 
 private:
     /**
+     * Clears old desktop entries from the configuration that are in excess of the current desktop count.
+     *
+     * @param desktopsConfig The KConfigGroup object containing the desktop configuration.
+     */
+    void configClearOldEntries(KConfigGroup &desktopsConfig);
+
+    /**
+     * Saves the current desktop entries to the configuration.
+     *
+     * Updates the config file with the current desktop count, as well as the IDs and names of the desktops.
+     *
+     * @param desktopsConfig The KConfigGroup object where the desktop configuration will be saved.
+     */
+    void configSaveDesktopEntries(KConfigGroup &desktopsConfig);
+
+    /**
      * @returns A default name for the given @p desktop
      */
     QString defaultName(int desktop) const;
