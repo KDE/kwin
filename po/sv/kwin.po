@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-20 00:41+0000\n"
-"PO-Revision-Date: 2024-08-06 07:43+0200\n"
+"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"PO-Revision-Date: 2024-08-20 07:14+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
@@ -431,12 +431,10 @@ msgid "Repeat"
 msgstr "Upprepa"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key-kod"
+msgstr "Tangentkod"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4303,7 +4301,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(svarar inte)"
 
-#: workspace.cpp:1601
+#: workspace.cpp:1599
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

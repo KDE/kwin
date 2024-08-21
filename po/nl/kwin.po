@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-20 00:41+0000\n"
-"PO-Revision-Date: 2024-08-06 10:28+0200\n"
+"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"PO-Revision-Date: 2024-08-20 17:24+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -440,12 +440,10 @@ msgid "Repeat"
 msgstr "Herhalen"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key-code"
+msgstr "Key-code"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -4326,7 +4324,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Reageert niet)"
 
-#: workspace.cpp:1601
+#: workspace.cpp:1599
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

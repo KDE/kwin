@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-20 00:41+0000\n"
-"PO-Revision-Date: 2024-08-06 11:17+0200\n"
+"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"PO-Revision-Date: 2024-08-20 15:22+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -1048,13 +1048,13 @@ msgstr "Klávesnice"
 #: debug_console.ui:305
 #, kde-format
 msgid "Keymap Layouts"
-msgstr "Rozložení kláves"
+msgstr "Rozvržení kláves"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:327
 #, kde-format
 msgid "Current Layout:"
-msgstr "Současné rozložení:"
+msgstr "Současné rozvržení:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:362
@@ -2650,7 +2650,7 @@ msgstr "Odstup:"
 #: plugins/tileseditor/qml/main.qml:161
 #, kde-format
 msgid "Load Layout…"
-msgstr "Načíst rozložení..."
+msgstr "Načíst rozvržení…"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -4271,7 +4271,7 @@ msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Neodpovídá)"
 
-#: workspace.cpp:1601
+#: workspace.cpp:1599
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
