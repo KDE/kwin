@@ -184,7 +184,7 @@ void FocusChain::moveAfterWindowInChain(Window *window, Window *reference, Chain
         chain.insert(chain.indexOf(reference), window);
     } else {
         chain.removeAll(window);
-        for (int i = chain.size() - 1; i >= 0; --i) {
+        for (int i = 0; i < chain.size(); ++i) {
             if (Window::belongToSameApplication(reference, chain.at(i))) {
                 chain.insert(i, window);
                 break;
