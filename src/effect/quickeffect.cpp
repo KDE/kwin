@@ -500,6 +500,12 @@ void QuickSceneEffect::startInternal()
         return;
     }
 
+    if (!effects->grabKeyboard(this)) {
+        return;
+    }
+
+    effects->startMouseInterception(this, Qt::ArrowCursor);
+
     effects->setActiveFullScreenEffect(this);
     d->running = true;
 
@@ -516,9 +522,6 @@ void QuickSceneEffect::startInternal()
 
     connect(effects, &EffectsHandler::screenAdded, this, &QuickSceneEffect::handleScreenAdded);
     connect(effects, &EffectsHandler::screenRemoved, this, &QuickSceneEffect::handleScreenRemoved);
-
-    effects->grabKeyboard(this);
-    effects->startMouseInterception(this, Qt::ArrowCursor);
 }
 
 void QuickSceneEffect::stopInternal()
