@@ -361,9 +361,8 @@ void Placement::reinitCascading(VirtualDesktop *desktop)
     };
 }
 
-QPoint Workspace::cascadeOffset(const Window *c) const
+QPoint Workspace::cascadeOffset(const QRectF &area) const
 {
-    QRect area = clientArea(PlacementArea, c, c->frameGeometry().center()).toRect();
     return QPoint(area.width() / 48, area.height() / 48);
 }
 
@@ -379,7 +378,7 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
     }
 
     // CT how do I get from the 'Client' class the size that NW squarish "handle"
-    const QPoint delta = workspace()->cascadeOffset(c);
+    const QPoint delta = workspace()->cascadeOffset(area);
 
     VirtualDesktop *dn = c->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : c->desktops().constLast();
 
@@ -581,7 +580,7 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
  */
 void Placement::cascadeIfCovering(Window *window, const QRectF &area)
 {
-    const QPoint offset = workspace()->cascadeOffset(window);
+    const QPoint offset = workspace()->cascadeOffset(area);
 
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
 

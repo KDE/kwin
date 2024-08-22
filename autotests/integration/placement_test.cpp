@@ -310,14 +310,14 @@ void TestPlacement::testPlaceZeroCornered()
     std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
     Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window2);
-    QCOMPARE(window2->pos(), window1->pos() + workspace()->cascadeOffset(window2));
+    QCOMPARE(window2->pos(), window1->pos() + workspace()->cascadeOffset(workspace()->clientArea(PlacementArea, window2)));
     QCOMPARE(window2->size(), QSize(100, 50));
 
     std::unique_ptr<KWayland::Client::Surface> surface3(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface3(Test::createXdgToplevelSurface(surface3.get()));
     Window *window3 = Test::renderAndWaitForShown(surface3.get(), QSize(100, 50), Qt::green);
     QVERIFY(window3);
-    QCOMPARE(window3->pos(), window2->pos() + workspace()->cascadeOffset(window3));
+    QCOMPARE(window3->pos(), window2->pos() + workspace()->cascadeOffset(workspace()->clientArea(PlacementArea, window3)));
     QCOMPARE(window3->size(), QSize(100, 50));
 
     shellSurface3.reset();
@@ -421,7 +421,7 @@ void TestPlacement::testCascadeIfCovering()
     std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
     Window *window2 = Test::renderAndWaitForShown(surface2.get(), QSize(100, 50), Qt::blue);
     QVERIFY(window2);
-    QCOMPARE(window2->pos(), window1->pos() + workspace()->cascadeOffset(window2));
+    QCOMPARE(window2->pos(), window1->pos() + workspace()->cascadeOffset(workspace()->clientArea(PlacementArea, window2)));
     QCOMPARE(window2->size(), QSize(100, 50));
 
     // window should be cascaded to avoid overlapping window 1 and 2
@@ -429,7 +429,7 @@ void TestPlacement::testCascadeIfCovering()
     std::unique_ptr<Test::XdgToplevel> shellSurface3(Test::createXdgToplevelSurface(surface3.get()));
     Window *window3 = Test::renderAndWaitForShown(surface3.get(), QSize(100, 50), Qt::green);
     QVERIFY(window3);
-    QCOMPARE(window3->pos(), window2->pos() + workspace()->cascadeOffset(window3));
+    QCOMPARE(window3->pos(), window2->pos() + workspace()->cascadeOffset(workspace()->clientArea(PlacementArea, window3)));
     QCOMPARE(window3->size(), QSize(100, 50));
 
     shellSurface3.reset();

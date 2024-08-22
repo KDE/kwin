@@ -265,7 +265,7 @@ public:
     TileManager *tileManager(Output *output);
 
 public:
-    QPoint cascadeOffset(const Window *c) const;
+    QPoint cascadeOffset(const QRectF &area) const;
 
 private:
     QTimer *m_quickTileCombineTimer;
