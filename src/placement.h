@@ -38,7 +38,7 @@ public:
     void reinitCascading();
     void reinitCascading(VirtualDesktop *desktop);
 
-    void cascadeIfCovering(Window *c, const QRectF &area);
+    QRectF cascadeIfCovering(Window *c, const QRectF &geometry, const QRectF &area) const;
 
     /**
      * Cascades all clients on the current desktop

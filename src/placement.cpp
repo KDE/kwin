@@ -104,6 +104,11 @@ void Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
 {
     Q_ASSERT(area.isValid());
 
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
+        return;
+    }
+
     const int step = 24;
     static int px = step;
     static int py = 2 * step;
@@ -127,22 +132,23 @@ void Placement::placeAtRandom(Window *c, const QRect &area, PlacementPolicy /*ne
     }
     tx = px;
     ty = py;
-    if (tx + c->width() > area.right()) {
-        tx = area.right() - c->width();
+    if (tx + size.width() > area.right()) {
+        tx = area.right() - size.width();
         if (tx < 0) {
             tx = 0;
         }
         px = area.x();
     }
-    if (ty + c->height() > area.bottom()) {
-        ty = area.bottom() - c->height();
+    if (ty + size.height() > area.bottom()) {
+        ty = area.bottom() - size.height();
         if (ty < 0) {
             ty = 0;
         }
         py = area.y();
     }
-    c->move(QPoint(tx, ty));
-    cascadeIfCovering(c, area);
+
+    const QRectF placed = cascadeIfCovering(c, QRectF(QPointF(tx, ty), size), area);
+    c->move(placed.topLeft());
 }
 
 static inline bool isIrrelevant(const Window *window, const Window *regarding, VirtualDesktop *desktop)
@@ -441,16 +447,16 @@ void Placement::placeCentered(Window *c, const QRectF &area, PlacementPolicy /*n
 {
     Q_ASSERT(area.isValid());
 
-    if (!c->frameGeometry().isValid()) {
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
         return;
     }
 
-    const int xp = std::max(area.left() + (area.width() - c->width()) / 2, area.left());
-    const int yp = std::max(area.top() + (area.height() - c->height()) / 2, area.top());
+    const QPoint position(std::max(area.left() + (area.width() - size.width()) / 2, area.left()),
+                          std::max(area.top() + (area.height() - size.height()) / 2, area.top()));
 
-    // place the window
-    c->move(QPoint(xp, yp));
-    cascadeIfCovering(c, area);
+    const QRectF placed = cascadeIfCovering(c, QRectF(position, size), area);
+    c->move(placed.topLeft());
 }
 
 /**
@@ -461,8 +467,8 @@ void Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy 
     Q_ASSERT(area.isValid());
 
     // get the maximum allowed windows space and desk's origin
-    c->move(area.topLeft());
-    cascadeIfCovering(c, area);
+    const QRectF placed = cascadeIfCovering(c, QRectF(area.topLeft(), c->size()), area);
+    c->move(placed.topLeft());
 }
 
 void Placement::placeUtility(Window *c, const QRect &area, PlacementPolicy /*next*/)
@@ -498,12 +504,20 @@ void Placement::placeDialog(Window *c, const QRect &area, PlacementPolicy nextPl
 
 void Placement::placeUnderMouse(Window *c, const QRect &area, PlacementPolicy /*next*/)
 {
-    const auto screenArea = workspace()->clientArea(PlacementArea, c, Cursors::self()->mouse()->pos());
-    QRectF geom = c->frameGeometry();
-    geom.moveCenter(Cursors::self()->mouse()->pos());
-    c->move(geom.topLeft().toPoint());
-    c->moveResize(c->keepInArea(c->moveResizeGeometry(), screenArea));
-    cascadeIfCovering(c, screenArea);
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
+        return;
+    }
+
+    const QPointF cursorPos = Cursors::self()->mouse()->pos();
+    const QRectF centered(cursorPos.x() - size.width() / 2,
+                          cursorPos.y() - size.height() / 2,
+                          size.width(),
+                          size.height());
+
+    const QRectF screenArea = workspace()->clientArea(PlacementArea, c, cursorPos);
+    const QRectF placed = cascadeIfCovering(c, c->keepInArea(centered, screenArea), screenArea);
+    c->move(placed.topLeft());
 }
 
 void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy nextPlacement)
@@ -516,6 +530,12 @@ void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
     if (nextPlacement == PlacementMaximizing) { // maximize if needed
         placeMaximizing(c, area, PlacementNone);
     }
+
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
+        return;
+    }
+
     auto mainwindows = c->mainWindows();
     Window *place_on = nullptr;
     Window *place_on2 = nullptr;
@@ -553,12 +573,13 @@ void Placement::placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy 
         place(c, area, PlacementCentered);
         return;
     }
-    QRect geom = c->frameGeometry().toRect();
+
+    QRectF geom(QPointF(0, 0), size);
     geom.moveCenter(place_on->frameGeometry().center().toPoint());
-    c->move(geom.topLeft());
+
     // get area again, because the mainwindow may be on different xinerama screen
-    const QRect placementArea = workspace()->clientArea(PlacementArea, c).toRect();
-    c->moveResize(c->keepInArea(c->moveResizeGeometry(), placementArea)); // make sure it's kept inside workarea
+    const QRect placementArea = workspace()->clientArea(PlacementArea, c, geom.center()).toRect();
+    c->move(c->keepInArea(geom, placementArea).topLeft()); // make sure it's kept inside workarea
 }
 
 void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy nextPlacement)
@@ -578,13 +599,13 @@ void Placement::placeMaximizing(Window *c, const QRect &area, PlacementPolicy ne
 /**
  * Cascade the window until it no longer fully overlaps any other window
  */
-void Placement::cascadeIfCovering(Window *window, const QRectF &area)
+QRectF Placement::cascadeIfCovering(Window *window, const QRectF &geometry, const QRectF &area) const
 {
     const QPoint offset = workspace()->cascadeOffset(area);
 
     VirtualDesktop *const desktop = window->isOnCurrentDesktop() ? VirtualDesktopManager::self()->currentDesktop() : window->desktops().front();
 
-    QRectF possibleGeo = window->moveResizeGeometry();
+    QRectF possibleGeo = geometry;
     bool noOverlap = false;
 
     // cascade until confirmed no total overlap or not enough space to cascade
@@ -607,7 +628,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
                 if (possibleGeo.right() > area.right() || possibleGeo.bottom() > area.bottom()) {
                     // new cascaded geometry would be out of the bounds of the placement area:
                     // abort the cascading and keep the window in the original position
-                    return;
+                    return geometry;
                 }
                 break;
             }
@@ -622,7 +643,7 @@ void Placement::cascadeIfCovering(Window *window, const QRectF &area)
         }
     }
 
-    window->move(possibleGeo.topLeft());
+    return possibleGeo;
 }
 
 void Placement::cascadeDesktop()
