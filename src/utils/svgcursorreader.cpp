@@ -73,22 +73,26 @@ std::optional<SvgCursorMetaData> SvgCursorMetaData::parse(const QString &filePat
         return std::nullopt;
     }
 
-    QList<SvgCursorMetaDataEntry> entries;
-    if (document.isArray()) {
-        const QJsonArray array = document.array();
-        for (int i = 0; i < array.size(); ++i) {
-            const QJsonValue element = array.at(i);
-            if (!element.isObject()) {
-                return std::nullopt;
-            }
-            if (const auto entry = SvgCursorMetaDataEntry::parse(element.toObject())) {
-                entries.append(entry.value());
-            } else {
-                return std::nullopt;
-            }
-        }
-    } else {
+    if (!document.isArray()) {
         return std::nullopt;
+    }
+
+    const QJsonArray array = document.array();
+    if (array.isEmpty()) {
+        return std::nullopt;
+    }
+
+    QList<SvgCursorMetaDataEntry> entries;
+    for (int i = 0; i < array.size(); ++i) {
+        const QJsonValue element = array.at(i);
+        if (!element.isObject()) {
+            return std::nullopt;
+        }
+        if (const auto entry = SvgCursorMetaDataEntry::parse(element.toObject())) {
+            entries.append(entry.value());
+        } else {
+            return std::nullopt;
+        }
     }
 
     return SvgCursorMetaData{
