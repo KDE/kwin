@@ -74,13 +74,7 @@ std::optional<SvgCursorMetaData> SvgCursorMetaData::parse(const QString &filePat
     }
 
     QList<SvgCursorMetaDataEntry> entries;
-    if (document.isObject()) {
-        if (const auto entry = SvgCursorMetaDataEntry::parse(document.object())) {
-            entries.append(entry.value());
-        } else {
-            return std::nullopt;
-        }
-    } else if (document.isArray()) {
+    if (document.isArray()) {
         const QJsonArray array = document.array();
         for (int i = 0; i < array.size(); ++i) {
             const QJsonValue element = array.at(i);
