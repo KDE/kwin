@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-23 00:40+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-07-23 11:33+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -289,7 +289,7 @@ msgstr "Activiteiten"
 msgid "Screen"
 msgstr "Scherm"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:927
+#: rulesmodel.cpp:513 rulesmodel.cpp:932
 #, kde-format
 msgid "Fullscreen"
 msgstr "Volledig scherm"
@@ -435,7 +435,7 @@ msgstr "Geen titelbalk en rand"
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
-#: rulesmodel.cpp:725
+#: rulesmodel.cpp:725 rulesmodel.cpp:730
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Uiterlijk & reparaties"
@@ -608,12 +608,17 @@ msgstr "Laag"
 msgid "Adaptive Sync"
 msgstr "Aanpasbare synchronisatie"
 
-#: rulesmodel.cpp:777
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#: rulesmodel.cpp:782
 #, kde-format
 msgid "Window class not available"
 msgstr "Vensterklasse niet beschikbaar"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:783
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -628,195 +633,195 @@ msgstr ""
 "plaats daarvan de venstertitel.<nl/><nl/>Overweeg om deze bug aan de "
 "ontwikkelaars van de toepassing te rapporteren."
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "All Window Types"
 msgstr "Alle venstertypen"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Normal Window"
 msgstr "Normaal venster"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Dialog Window"
 msgstr "Dialoogvenster"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Utility Window"
 msgstr "Hulpmiddelenvenster"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dock (paneel)"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Toolbar"
 msgstr "Werkbalk"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Afgescheurd menu"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Splash Screen"
 msgstr "Opstartscherm"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:922
+#: rulesmodel.cpp:825 rulesmodel.cpp:927
 #, kde-format
 msgid "Desktop"
 msgstr "Bureaublad"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:827
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Losstaande menubalk"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "On Screen Display"
 msgstr "On Screen Display"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:838
 #, kde-format
 msgid "All Desktops"
 msgstr "Alle bureaubladen"
 
-#: rulesmodel.cpp:835
+#: rulesmodel.cpp:840
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Maak het venster beschikbaar op alle bureaubladen"
 
-#: rulesmodel.cpp:854
+#: rulesmodel.cpp:859
 #, kde-format
 msgid "All Activities"
 msgstr "Alle activiteiten"
 
-#: rulesmodel.cpp:856
+#: rulesmodel.cpp:861
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Maak het venster beschikbaar op alle activiteiten"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Default"
 msgstr "Standaard"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "No Placement"
 msgstr "Geen positionering"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Minimale overlapping"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Maximized"
 msgstr "Gemaximaliseerd"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Centered"
 msgstr "Gecentreerd"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "Random"
 msgstr "Willekeurig"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "In hoek linksboven"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Under Mouse"
 msgstr "Onder de muis"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "On Main Window"
 msgstr "Aan hoofdvenster"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "None"
 msgstr "Geen"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:898
 #, kde-format
 msgid "Low"
 msgstr "Laag"
 
-#: rulesmodel.cpp:894 rulesmodel.cpp:924
+#: rulesmodel.cpp:899 rulesmodel.cpp:929
 #, kde-format
 msgid "Normal"
 msgstr "Normaal"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "High"
 msgstr "Hoog"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:901
 #, kde-format
 msgid "Extreme"
 msgstr "Extreem"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Below"
 msgstr "Eronder"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "Above"
 msgstr "Boven"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Notification"
 msgstr "Melding"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:933
 #, kde-format
 msgid "Popup"
 msgstr "Popup"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Critical Notification"
 msgstr "Kritieke melding"
 
-#: rulesmodel.cpp:930
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "OSD"
 msgstr "OSD"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:936
 #, kde-format
 msgid "Overlay"
 msgstr "Overlay"
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:961
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Niet beheerd venster"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:962
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

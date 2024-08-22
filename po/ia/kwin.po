@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-07-19 14:35+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -3667,6 +3667,20 @@ msgstr "Sync Adaptative"
 msgid "AdaptiveSync rule type"
 msgstr "Typo de regula de Sync Adaptative"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Permitte rotation"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Typo de regula  de Layer"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4606,9 +4620,6 @@ msgstr "Xwayland ha fracassate"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Usa libhybris hwcomposer"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Permitte rotation"
 
 #~ msgid "Undefined"
 #~ msgstr "Non definite"

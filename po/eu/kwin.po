@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
-"PO-Revision-Date: 2024-08-06 11:40+0200\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"PO-Revision-Date: 2024-08-21 12:08+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -438,12 +438,10 @@ msgid "Repeat"
 msgstr "Errepikatzea"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key kodea"
+msgstr "Tekla-kodea"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -3674,6 +3672,20 @@ msgstr "Sinkronizatze moldakorra"
 msgid "AdaptiveSync rule type"
 msgstr "Sinkronizatze moldakorra arau mota"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Baimendu biraketa"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Geruza arau mota"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4620,9 +4632,6 @@ msgstr "Xwayland kraskatu egin da"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Erabili libhybris hwcomposer"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Baimendu biraketa"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "Pantailaren biraketa automatikoa gaituta dago"

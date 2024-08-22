@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1688224 2024-08-21 01:22:12Z scripty $
+# $Id: kwin.po 1688311 2024-08-22 01:13:59Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-08-20 07:30+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -3674,6 +3674,19 @@ msgstr "Prilagodljiva sinhronizacija"
 #, kde-format
 msgid "AdaptiveSync rule type"
 msgstr "Vrsta pravila prilagodljive sinhronizacije"
+
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Vrsta pravila plasti"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

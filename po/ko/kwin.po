@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-08-21 00:34+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -3634,6 +3634,20 @@ msgstr "적응형 동기화"
 msgid "AdaptiveSync rule type"
 msgstr "적응형 동기화 규칙 형식"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "회전 허용"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "레이어 규칙 종류"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4553,9 +4567,6 @@ msgstr "Xwayland가 충돌함"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "libhybris hwcomposer 사용"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "회전 허용"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "자동 화면 회전이 활성화되어 있음"

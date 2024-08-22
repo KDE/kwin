@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-08-06 10:18-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -3688,6 +3688,20 @@ msgstr "Sincronização Adaptativa"
 msgid "AdaptiveSync rule type"
 msgstr "Tipo de regra de Sincronização Adaptativa"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Permitir rotação"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Tipo de regra de camada"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4650,9 +4664,6 @@ msgstr "O Xwayland falhou"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Usar libhybris hwcomposer"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Permitir rotação"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "A rotação automática da tela está habilitada"

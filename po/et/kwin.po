@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -3782,6 +3782,20 @@ msgstr ""
 msgid "AdaptiveSync rule type"
 msgstr "Tegevuse reegli tüüp"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Pööramise lubamine"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Shaded rule type"
+msgid "Tearing rule type"
+msgstr "Kokkukerimise reegli tüüp"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4761,9 +4775,6 @@ msgstr ""
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Libhybris hwcomposeri kasutamine"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Pööramise lubamine"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "Automaatne ekraani pööramine on lubatud"

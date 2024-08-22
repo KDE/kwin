@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-08-03 12:44+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -3652,6 +3652,20 @@ msgstr "AdaptiveSync"
 msgid "AdaptiveSync rule type"
 msgstr "AdaptiveSync rule type"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Allow Rotation"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Layer rule type"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4601,9 +4615,6 @@ msgstr "Xwayland has crashed"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Use libhybris hwcomposer"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Allow Rotation"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "Automatic screen rotation is enabled"

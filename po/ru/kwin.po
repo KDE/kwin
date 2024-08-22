@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-05-28 11:00+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -3697,6 +3697,20 @@ msgstr "Адаптивная синхронизация"
 msgid "AdaptiveSync rule type"
 msgstr "Тип правила адаптивной синхронизации"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Разрешить поворот"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Тип правила назначения слоя"
+
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -4651,9 +4665,6 @@ msgstr "Произошло аварийное завершение Xwayland"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Отрисовка через libhybris."
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Разрешить поворот"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "Автоматический поворот экрана включён"

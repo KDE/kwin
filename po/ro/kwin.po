@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -3917,6 +3917,19 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Keep above others"
 msgid "AdaptiveSync rule type"
+msgstr "Ține deasupra celorlalte"
+
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Keep above others"
+msgid "Tearing rule type"
 msgstr "Ține deasupra celorlalte"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)

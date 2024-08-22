@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2012-06-14 11:29+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -3776,6 +3776,19 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Keep &Above Others"
 msgid "AdaptiveSync rule type"
+msgstr "ដាក់​លើ​គេ"
+
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Keep &Above Others"
+msgid "Tearing rule type"
 msgstr "ដាក់​លើ​គេ"
 
 #  i18n: file ./plastik/config/configdialog.ui line 16

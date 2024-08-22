@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
-"PO-Revision-Date: 2024-08-06 13:29+0200\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"PO-Revision-Date: 2024-08-20 09:38+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -438,12 +438,10 @@ msgid "Repeat"
 msgstr "Repetició"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Codi Qt::Key"
+msgstr "Codi de tecla"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -3682,6 +3680,19 @@ msgstr "Sincronització adaptativa"
 msgid "AdaptiveSync rule type"
 msgstr "Tipus de regla de sincronització adaptativa"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Tipus de regla de capa"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4359,7 +4370,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgctxt "The code as read from the input device"
-#~ msgid "Scan code"
-#~ msgstr "Codi escanejat"

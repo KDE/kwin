@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-23 00:40+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-05-28 11:02+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -289,7 +289,7 @@ msgstr "Комнаты"
 msgid "Screen"
 msgstr "Экран"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:927
+#: rulesmodel.cpp:513 rulesmodel.cpp:932
 #, kde-format
 msgid "Fullscreen"
 msgstr "Полный экран"
@@ -436,7 +436,7 @@ msgstr "Скрыть заголовок и границы окна"
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
-#: rulesmodel.cpp:725
+#: rulesmodel.cpp:725 rulesmodel.cpp:730
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Внешний вид и обход проблем"
@@ -616,12 +616,17 @@ msgstr "Слой"
 msgid "Adaptive Sync"
 msgstr "Адаптивная синхронизация"
 
-#: rulesmodel.cpp:777
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#: rulesmodel.cpp:782
 #, kde-format
 msgid "Window class not available"
 msgstr "Класс окна недоступен"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:783
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -636,195 +641,195 @@ msgstr ""
 "попробуйте вместо этого сопоставить другие свойства, такие как заголовок "
 "окна.Пожалуйста, сообщите об этой ошибке разработчикам приложения."
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "All Window Types"
 msgstr "Все типы окон"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Normal Window"
 msgstr "Обычное окно"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Dialog Window"
 msgstr "Окно диалога"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Utility Window"
 msgstr "Служебное окно"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Панель"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Toolbar"
 msgstr "Панель инструментов"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Отрывное меню"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Splash Screen"
 msgstr "Заставка"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:922
+#: rulesmodel.cpp:825 rulesmodel.cpp:927
 #, kde-format
 msgid "Desktop"
 msgstr "Рабочий стол"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:827
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Автономное меню"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "On Screen Display"
 msgstr "Экранное уведомление"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:838
 #, kde-format
 msgid "All Desktops"
 msgstr "Все рабочие столы"
 
-#: rulesmodel.cpp:835
+#: rulesmodel.cpp:840
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Показывать окно на всех рабочих столах"
 
-#: rulesmodel.cpp:854
+#: rulesmodel.cpp:859
 #, kde-format
 msgid "All Activities"
 msgstr "Во всех комнатах"
 
-#: rulesmodel.cpp:856
+#: rulesmodel.cpp:861
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Показывать окно во всех комнатах"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Default"
 msgstr "По умолчанию"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "No Placement"
 msgstr "Нет размещения"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "С минимальным перекрытием"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Maximized"
 msgstr "Распахнуто"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Centered"
 msgstr "По центру"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "Random"
 msgstr "Случайно"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "В верхнем левом углу"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Under Mouse"
 msgstr "Под мышью"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "On Main Window"
 msgstr "Поверх главного окна"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "None"
 msgstr "Отключить"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:898
 #, kde-format
 msgid "Low"
 msgstr "Низкий приоритет"
 
-#: rulesmodel.cpp:894 rulesmodel.cpp:924
+#: rulesmodel.cpp:899 rulesmodel.cpp:929
 #, kde-format
 msgid "Normal"
 msgstr "Обычный приоритет"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "High"
 msgstr "Высокий приоритет"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:901
 #, kde-format
 msgid "Extreme"
 msgstr "Не передавать фокус автоматически"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Below"
 msgstr "Снизу"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "Above"
 msgstr "Сверху"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Notification"
 msgstr "Уведомление"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:933
 #, kde-format
 msgid "Popup"
 msgstr "Всплывающее окно"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Critical Notification"
 msgstr "Критичное уведомление"
 
-#: rulesmodel.cpp:930
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "OSD"
 msgstr "Индикатор на экране"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:936
 #, kde-format
 msgid "Overlay"
 msgstr "Наложение"
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:961
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Без элементов управления"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:962
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Не удалось определить свойства окна, окно не управляется KWin."

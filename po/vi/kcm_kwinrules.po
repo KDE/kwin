@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-23 00:40+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2023-02-20 11:18+0100\n"
 "Last-Translator: Phu Hung Nguyen <phu.nguyen@kdemail.net>\n"
 "Language-Team: Vietnamese <kde-l10n-vi@kde.org>\n"
@@ -278,7 +278,7 @@ msgstr "Hoạt động"
 msgid "Screen"
 msgstr "Màn hình"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:927
+#: rulesmodel.cpp:513 rulesmodel.cpp:932
 #, kde-format
 msgid "Fullscreen"
 msgstr "Toàn màn hình"
@@ -417,7 +417,7 @@ msgstr "Không có thanh tiêu đề và khung"
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
-#: rulesmodel.cpp:725
+#: rulesmodel.cpp:725 rulesmodel.cpp:730
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Diện mạo & Chỉnh sửa"
@@ -545,12 +545,17 @@ msgstr ""
 msgid "Adaptive Sync"
 msgstr ""
 
-#: rulesmodel.cpp:777
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#: rulesmodel.cpp:782
 #, kde-format
 msgid "Window class not available"
 msgstr "Lớp cửa sổ không khả dụng"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:783
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -564,196 +569,196 @@ msgstr ""
 "cho nó, thay vào đó hãy thử khớp các thuộc tính khác như tiêu đề cửa sổ.<nl/"
 "><nl/>Vui lòng cân nhắc báo lỗi này cho các nhà phát triển ứng dụng."
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "All Window Types"
 msgstr "Tất cả các kiểu cửa sổ"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Normal Window"
 msgstr "Cửa sổ thường"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Dialog Window"
 msgstr "Cửa sổ thoại"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Utility Window"
 msgstr "Cửa sổ tiện ích"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Giá (bảng)"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Toolbar"
 msgstr "Thanh công cụ"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "Trình đơn xé tách"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Splash Screen"
 msgstr "Màn hình khởi động"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:922
+#: rulesmodel.cpp:825 rulesmodel.cpp:927
 #, kde-format
 msgid "Desktop"
 msgstr "Bàn làm việc"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:827
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "Thanh trình đơn độc lập"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "On Screen Display"
 msgstr "Ô hiện nổi"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:838
 #, kde-format
 msgid "All Desktops"
 msgstr "Tất cả các bàn làm việc"
 
-#: rulesmodel.cpp:835
+#: rulesmodel.cpp:840
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Làm cho cửa sổ có mặt trên tất cả các bàn làm việc"
 
-#: rulesmodel.cpp:854
+#: rulesmodel.cpp:859
 #, kde-format
 msgid "All Activities"
 msgstr "Tất cả các Hoạt động"
 
-#: rulesmodel.cpp:856
+#: rulesmodel.cpp:861
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Làm cho cửa sổ có mặt trên tất cả các Hoạt động"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Default"
 msgstr "Mặc định"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "No Placement"
 msgstr "Không xếp chỗ"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "Chồng lấn tối thiểu"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Maximized"
 msgstr "Tối đa hoá"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Centered"
 msgstr "Ở giữa"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "Random"
 msgstr "Ngẫu nhiên"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "Ở góc trái trên"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Under Mouse"
 msgstr "Dưới chuột"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "On Main Window"
 msgstr "Trên cửa sổ chính"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "None"
 msgstr "Không"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:898
 #, kde-format
 msgid "Low"
 msgstr "Thấp"
 
-#: rulesmodel.cpp:894 rulesmodel.cpp:924
+#: rulesmodel.cpp:899 rulesmodel.cpp:929
 #, kde-format
 msgid "Normal"
 msgstr "Trung bình"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "High"
 msgstr "Cao"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:901
 #, kde-format
 msgid "Extreme"
 msgstr "Cực độ"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, fuzzy, kde-format
 #| msgid "Position"
 msgid "Notification"
 msgstr "Vị trí"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:933
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Critical Notification"
 msgstr ""
 
-#: rulesmodel.cpp:930
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "OSD"
 msgstr ""
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:936
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:961
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Cửa sổ vô quản lí"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:962
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

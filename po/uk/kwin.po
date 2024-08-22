@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-08-20 09:39+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -3672,6 +3672,20 @@ msgstr "Адаптивна синхронізація"
 msgid "AdaptiveSync rule type"
 msgstr "Тип правила адаптивної синхронізації"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "Дозволити обертання"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "Тип правила шарів"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4615,9 +4629,6 @@ msgstr "Xwayland завершив роботу в аварійному режи�
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "Використовувати апаратний композитор libhybris"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "Дозволити обертання"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "Увімкнено автоматичне обертання екрана"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-07-23 00:40+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-07-23 05:28+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -280,7 +280,7 @@ msgstr "ქმედებები"
 msgid "Screen"
 msgstr "ეკრანი"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:927
+#: rulesmodel.cpp:513 rulesmodel.cpp:932
 #, kde-format
 msgid "Fullscreen"
 msgstr "მთელ ეკრანზე"
@@ -425,7 +425,7 @@ msgstr "სათაურისა და ჩარჩოს გარეშე
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
-#: rulesmodel.cpp:725
+#: rulesmodel.cpp:725 rulesmodel.cpp:730
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "გარეგნობა და ჩასწორებები"
@@ -593,12 +593,17 @@ msgstr "ფენა"
 msgid "Adaptive Sync"
 msgstr "ადაპტიური სინქი"
 
-#: rulesmodel.cpp:777
+#: rulesmodel.cpp:730
+#, kde-format
+msgid "Allow Tearing"
+msgstr ""
+
+#: rulesmodel.cpp:782
 #, kde-format
 msgid "Window class not available"
 msgstr "ფანჯრის კლასი ხელმიუწვდომელია"
 
-#: rulesmodel.cpp:778
+#: rulesmodel.cpp:783
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -612,195 +617,195 @@ msgstr ""
 "თვისებები, მაგალითად ფანჯრის სათაური, დაამთხვიოთ.<nl/><nl/>კარგი იქნება, თუ "
 "ამის შესახებ აპლიკაციის ავტორსაც შეატყობინებთ."
 
-#: rulesmodel.cpp:812
+#: rulesmodel.cpp:817
 #, kde-format
 msgid "All Window Types"
 msgstr "ყველა ფანჯრის ტიპი"
 
-#: rulesmodel.cpp:813
+#: rulesmodel.cpp:818
 #, kde-format
 msgid "Normal Window"
 msgstr "ნორმალური ფანჯარა"
 
-#: rulesmodel.cpp:814
+#: rulesmodel.cpp:819
 #, kde-format
 msgid "Dialog Window"
 msgstr "დიალოგის ფანჯარა"
 
-#: rulesmodel.cpp:815
+#: rulesmodel.cpp:820
 #, kde-format
 msgid "Utility Window"
 msgstr "ხელსაწყოების ფანჯარა"
 
-#: rulesmodel.cpp:816
+#: rulesmodel.cpp:821
 #, kde-format
 msgid "Dock (panel)"
 msgstr "დოკი (პანელი)"
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:822
 #, kde-format
 msgid "Toolbar"
 msgstr "ხელსაწყოთა ზოლი"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:823
 #, kde-format
 msgid "Torn-Off Menu"
 msgstr "მოგლეჯილი მენიუ"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:824
 #, kde-format
 msgid "Splash Screen"
 msgstr "მისასალმებელი ფანჯარა"
 
-#: rulesmodel.cpp:820 rulesmodel.cpp:922
+#: rulesmodel.cpp:825 rulesmodel.cpp:927
 #, kde-format
 msgid "Desktop"
 msgstr "სამუშაო მაგიდა"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:827
 #, kde-format
 msgid "Standalone Menubar"
 msgstr "დამოუკიდებელი მენიუს ზოლი"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:828
 #, kde-format
 msgid "On Screen Display"
 msgstr "ეკრანზე ჩვენება"
 
-#: rulesmodel.cpp:833
+#: rulesmodel.cpp:838
 #, kde-format
 msgid "All Desktops"
 msgstr "ყველა სამუშაო მაგიდა"
 
-#: rulesmodel.cpp:835
+#: rulesmodel.cpp:840
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "ამ ფანჯრის ყველა სამუშაო მაგიდაზე ჩვენება"
 
-#: rulesmodel.cpp:854
+#: rulesmodel.cpp:859
 #, kde-format
 msgid "All Activities"
 msgstr "ყველა აქტივობა"
 
-#: rulesmodel.cpp:856
+#: rulesmodel.cpp:861
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "ამ ფანჯრის ყველა ქმედებაზე ჩვენება"
 
-#: rulesmodel.cpp:877
+#: rulesmodel.cpp:882
 #, kde-format
 msgid "Default"
 msgstr "ნაგულისხმები"
 
-#: rulesmodel.cpp:878
+#: rulesmodel.cpp:883
 #, kde-format
 msgid "No Placement"
 msgstr "განლაგების გარეშე"
 
-#: rulesmodel.cpp:879
+#: rulesmodel.cpp:884
 #, kde-format
 msgid "Minimal Overlapping"
 msgstr "მინიმალური გადაფარვა"
 
-#: rulesmodel.cpp:880
+#: rulesmodel.cpp:885
 #, kde-format
 msgid "Maximized"
 msgstr "გაშლილი"
 
-#: rulesmodel.cpp:881
+#: rulesmodel.cpp:886
 #, kde-format
 msgid "Centered"
 msgstr "შუაზე გასწორებული"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:887
 #, kde-format
 msgid "Random"
 msgstr "შემთხვევითი"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:888
 #, kde-format
 msgid "In Top-Left Corner"
 msgstr "ზედა მარცხენა კუთხეში"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:889
 #, kde-format
 msgid "Under Mouse"
 msgstr "თაგუნას ქვეშ"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "On Main Window"
 msgstr "მთავარ ფანჯარაზე"
 
-#: rulesmodel.cpp:892
+#: rulesmodel.cpp:897
 #, kde-format
 msgid "None"
 msgstr "არცერთი"
 
-#: rulesmodel.cpp:893
+#: rulesmodel.cpp:898
 #, kde-format
 msgid "Low"
 msgstr "დაბალი"
 
-#: rulesmodel.cpp:894 rulesmodel.cpp:924
+#: rulesmodel.cpp:899 rulesmodel.cpp:929
 #, kde-format
 msgid "Normal"
 msgstr "ნორმალური"
 
-#: rulesmodel.cpp:895
+#: rulesmodel.cpp:900
 #, kde-format
 msgid "High"
 msgstr "მაღალი"
 
-#: rulesmodel.cpp:896
+#: rulesmodel.cpp:901
 #, kde-format
 msgid "Extreme"
 msgstr "ექსტრემალური"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Below"
 msgstr "ქვემოდან"
 
-#: rulesmodel.cpp:925
+#: rulesmodel.cpp:930
 #, kde-format
 msgid "Above"
 msgstr "ზემოდან"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:931
 #, kde-format
 msgid "Notification"
 msgstr "შეტყობინება"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:933
 #, kde-format
 msgid "Popup"
 msgstr "მხტუნარა"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:934
 #, kde-format
 msgid "Critical Notification"
 msgstr "კრიტიკული გაფრთხილება"
 
-#: rulesmodel.cpp:930
+#: rulesmodel.cpp:935
 #, kde-format
 msgid "OSD"
 msgstr "OSD"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:936
 #, kde-format
 msgid "Overlay"
 msgstr "დადება"
 
-#: rulesmodel.cpp:956
+#: rulesmodel.cpp:961
 #, kde-format
 msgid "Unmanaged window"
 msgstr "უმართავი ფანჯარა"
 
-#: rulesmodel.cpp:957
+#: rulesmodel.cpp:962
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

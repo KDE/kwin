@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 00:48+0000\n"
+"POT-Creation-Date: 2024-08-22 00:40+0000\n"
 "PO-Revision-Date: 2024-08-09 03:39+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -3637,6 +3637,20 @@ msgstr "自適應同步"
 msgid "AdaptiveSync rule type"
 msgstr "自適應同步規則類型"
 
+#. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:455
+#, fuzzy, kde-format
+#| msgid "Allow Rotation"
+msgid "Allow Tearing"
+msgstr "允許旋轉"
+
+#. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
+#: rulesettings.kcfg:459
+#, fuzzy, kde-format
+#| msgid "Layer rule type"
+msgid "Tearing rule type"
+msgstr "層級規則類型"
+
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
 #, kde-format
@@ -4570,9 +4584,6 @@ msgstr "Xwayland 已崩潰"
 
 #~ msgid "Use libhybris hwcomposer"
 #~ msgstr "用 libhybris hwcomposer"
-
-#~ msgid "Allow Rotation"
-#~ msgstr "允許旋轉"
 
 #~ msgid "Automatic screen rotation is enabled"
 #~ msgstr "自動螢幕旋轉已經啟動"
