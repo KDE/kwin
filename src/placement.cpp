@@ -178,7 +178,8 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
      * with ideas from xfce.
      */
 
-    if (!window->frameGeometry().isValid()) {
+    const QSizeF size = window->size();
+    if (size.isEmpty()) {
         return;
     }
 
@@ -199,8 +200,8 @@ void Placement::placeSmart(Window *window, const QRectF &area, PlacementPolicy /
     y_optimal = y;
 
     // client gabarit
-    int ch = std::ceil(window->height());
-    int cw = std::ceil(window->width());
+    int ch = std::ceil(size.height());
+    int cw = std::ceil(size.width());
 
     // Explicitly converts those to int to avoid accidentally
     // mixing ints and qreal in the calculations below.
