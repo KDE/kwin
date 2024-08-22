@@ -379,7 +379,8 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
 {
     Q_ASSERT(area.isValid());
 
-    if (!c->frameGeometry().isValid()) {
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
         return;
     }
 
@@ -402,11 +403,11 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
     int yp = cci[dn].pos.y();
 
     // here to touch in case people vote for resize on placement
-    if ((yp + c->height()) > area.height()) {
+    if ((yp + size.height()) > area.height()) {
         yp = area.top();
     }
 
-    if ((xp + c->width()) > area.width()) {
+    if ((xp + size.width()) > area.width()) {
         if (!yp) {
             place(c, area, nextPlacement);
             return;
@@ -427,7 +428,7 @@ void Placement::placeCascaded(Window *c, const QRect &area, PlacementPolicy next
         }
 
         // last resort: if still doesn't fit, smart place it
-        if (((xp + c->width()) > area.width() - area.left()) || ((yp + c->height()) > area.height() - area.top())) {
+        if (((xp + size.width()) > area.width() - area.left()) || ((yp + size.height()) > area.height() - area.top())) {
             place(c, area, nextPlacement);
             return;
         }
