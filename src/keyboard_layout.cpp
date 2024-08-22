@@ -134,6 +134,7 @@ void KeyboardLayout::loadShortcuts()
     qDeleteAll(m_layoutShortcuts);
     m_layoutShortcuts.clear();
     const QString componentName = QStringLiteral("KDE Keyboard Layout Switcher");
+    const QString componentDisplayName = i18n("Keyboard Layout Switcher");
     const quint32 count = m_xkb->numberOfLayouts();
     for (uint i = 0; i < count; ++i) {
         // layout name is translated in the action name in keyboard kcm!
@@ -145,6 +146,7 @@ void KeyboardLayout::loadShortcuts()
         QAction *a = new QAction(this);
         a->setObjectName(action);
         a->setProperty("componentName", componentName);
+        a->setProperty("componentDisplayName", componentDisplayName);
         connect(a, &QAction::triggered, this,
                 std::bind(&KeyboardLayout::switchToLayout, this, i));
         KGlobalAccel::self()->setShortcut(a, shortcuts, KGlobalAccel::Autoloading);
