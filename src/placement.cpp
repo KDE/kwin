@@ -468,8 +468,13 @@ void Placement::placeZeroCornered(Window *c, const QRect &area, PlacementPolicy 
 {
     Q_ASSERT(area.isValid());
 
+    const QSizeF size = c->size();
+    if (size.isEmpty()) {
+        return;
+    }
+
     // get the maximum allowed windows space and desk's origin
-    const QRectF placed = cascadeIfCovering(c, QRectF(area.topLeft(), c->size()), area);
+    const QRectF placed = cascadeIfCovering(c, QRectF(area.topLeft(), size), area);
     c->move(placed.topLeft());
 }
 
