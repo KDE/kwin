@@ -28,12 +28,20 @@ static QMatrix4x4 matrixFromColumns(const QVector3D &first, const QVector3D &sec
 
 QVector3D Colorimetry::xyToXYZ(QVector2D xy)
 {
+    if (xy.y() == 0) {
+        // special case for XYZ Colorimetry
+        // where xy.y == 0 is valid
+        return QVector3D(xy.x(), 1, 0);
+    }
     return QVector3D(xy.x() / xy.y(), 1, (1 - xy.x() - xy.y()) / xy.y());
 }
 
 QVector2D Colorimetry::xyzToXY(QVector3D xyz)
 {
-    xyz /= xyz.y();
+    if (xyz.y() == 0) {
+        // this is nonsense, but at least doesn't crash
+        return QVector2D(0, 0);
+    }
     return QVector2D(xyz.x() / (xyz.x() + xyz.y() + xyz.z()), xyz.y() / (xyz.x() + xyz.y() + xyz.z()));
 }
 
@@ -76,11 +84,6 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
     return inverseBradford * adaptation * bradford;
 }
 
-static QVector3D normalizeToY1(const QVector3D &vect)
-{
-    return vect.y() == 0 ? vect : QVector3D(vect.x() / vect.y(), 1, vect.z() / vect.y());
-}
-
 QMatrix4x4 Colorimetry::calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
 {
     const auto component_scale = (matrixFromColumns(red, green, blue)).inverted() * white;
@@ -103,16 +106,6 @@ Colorimetry::Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector
     , m_blue(blue)
     , m_white(white)
     , m_toXYZ(calculateToXYZMatrix(xyToXYZ(red), xyToXYZ(green), xyToXYZ(blue), xyToXYZ(white)))
-    , m_fromXYZ(m_toXYZ.inverted())
-{
-}
-
-Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
-    : m_red(xyzToXY(red))
-    , m_green(xyzToXY(green))
-    , m_blue(xyzToXY(blue))
-    , m_white(xyzToXY(white))
-    , m_toXYZ(calculateToXYZMatrix(normalizeToY1(red), normalizeToY1(green), normalizeToY1(blue), normalizeToY1(white)))
     , m_fromXYZ(m_toXYZ.inverted())
 {
 }

@@ -68,7 +68,6 @@ public:
     static QMatrix4x4 calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
     explicit Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white);
-    explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
     /**
      * @returns a matrix that transforms from the linear RGB representation of colors in this colorimetry to the XYZ representation

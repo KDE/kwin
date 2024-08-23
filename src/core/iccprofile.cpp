@@ -263,11 +263,15 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         qCWarning(KWIN_CORE, "profile is missing the wtpt tag");
         return nullptr;
     }
+    if (whitepoint->Y == 0) {
+        qCWarning(KWIN_CORE, "profile has a zero luminance whitepoint");
+        return nullptr;
+    }
 
-    QVector3D red;
-    QVector3D green;
-    QVector3D blue;
-    QVector3D white(whitepoint->X, whitepoint->Y, whitepoint->Z);
+    QVector2D red;
+    QVector2D green;
+    QVector2D blue;
+    QVector2D white = Colorimetry::xyzToXY(QVector3D(whitepoint->X, whitepoint->Y, whitepoint->Z));
     std::optional<QMatrix4x4> chromaticAdaptationMatrix;
     if (cmsIsTag(handle, cmsSigChromaticAdaptationTag)) {
         // the chromatic adaptation tag is a 3x3 matrix that converts from the actual whitepoint to D50
@@ -284,12 +288,12 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             return nullptr;
         }
         const QVector3D D50(0.9642, 1.0, 0.8249);
-        white = *chromaticAdaptationMatrix * D50;
+        white = Colorimetry::xyzToXY(*chromaticAdaptationMatrix * D50);
     }
     if (cmsCIExyYTRIPLE *chrmTag = static_cast<cmsCIExyYTRIPLE *>(cmsReadTag(handle, cmsSigChromaticityTag))) {
-        red = Colorimetry::xyToXYZ(QVector2D(chrmTag->Red.x, chrmTag->Red.y)) * chrmTag->Red.Y;
-        green = Colorimetry::xyToXYZ(QVector2D(chrmTag->Green.x, chrmTag->Green.y)) * chrmTag->Green.Y;
-        blue = Colorimetry::xyToXYZ(QVector2D(chrmTag->Blue.x, chrmTag->Blue.y)) * chrmTag->Blue.Y;
+        red = QVector2D(chrmTag->Red.x, chrmTag->Red.y);
+        green = QVector2D(chrmTag->Green.x, chrmTag->Green.y);
+        blue = QVector2D(chrmTag->Blue.x, chrmTag->Blue.y);
     } else {
         const cmsCIEXYZ *r = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigRedColorantTag));
         const cmsCIEXYZ *g = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigGreenColorantTag));
@@ -299,9 +303,9 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             return nullptr;
         }
         if (chromaticAdaptationMatrix) {
-            red = *chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z);
-            green = *chromaticAdaptationMatrix * QVector3D(g->X, g->Y, g->Z);
-            blue = *chromaticAdaptationMatrix * QVector3D(b->X, b->Y, b->Z);
+            red = Colorimetry::xyzToXY(*chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z));
+            green = Colorimetry::xyzToXY(*chromaticAdaptationMatrix * QVector3D(g->X, g->Y, g->Z));
+            blue = Colorimetry::xyzToXY(*chromaticAdaptationMatrix * QVector3D(b->X, b->Y, b->Z));
         } else {
             // if the chromatic adaptation tag isn't available, fall back to using the media whitepoint instead
             cmsCIEXYZ adaptedR{};
@@ -313,9 +317,9 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             if (!success) {
                 return nullptr;
             }
-            red = QVector3D(adaptedR.X, adaptedR.Y, adaptedR.Z);
-            green = QVector3D(adaptedG.X, adaptedG.Y, adaptedG.Z);
-            blue = QVector3D(adaptedB.X, adaptedB.Y, adaptedB.Z);
+            red = Colorimetry::xyzToXY(QVector3D(adaptedR.X, adaptedR.Y, adaptedR.Z));
+            green = Colorimetry::xyzToXY(QVector3D(adaptedG.X, adaptedG.Y, adaptedG.Z));
+            blue = Colorimetry::xyzToXY(QVector3D(adaptedB.X, adaptedB.Y, adaptedB.Z));
         }
     }
 

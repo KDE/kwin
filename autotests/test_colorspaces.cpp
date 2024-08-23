@@ -21,7 +21,7 @@ public:
 private Q_SLOTS:
     void roundtripConversion_data();
     void roundtripConversion();
-    void nonNormalizedPrimaries();
+    void testXYZ_XYconversions();
     void testIdentityTransformation_data();
     void testIdentityTransformation();
     void testColorPipeline_data();
@@ -82,16 +82,14 @@ void TestColorspaces::roundtripConversion()
     }
 }
 
-void TestColorspaces::nonNormalizedPrimaries()
+void TestColorspaces::testXYZ_XYconversions()
 {
-    // this test ensures that non-normalized primaries don't mess up the transformations between color spaces
-    const auto &from = ColorDescription::sRGB;
-    const ColorDescription to(Colorimetry(Colorimetry::xyToXYZ(from.containerColorimetry().red()) * 2, Colorimetry::xyToXYZ(from.containerColorimetry().green()) * 2, Colorimetry::xyToXYZ(from.containerColorimetry().blue()) * 2, Colorimetry::xyToXYZ(from.containerColorimetry().white()) * 2), from.transferFunction(), from.referenceLuminance(), from.minLuminance(), from.maxAverageLuminance(), from.maxHdrLuminance());
-
-    const auto convertedWhite = from.toOther(to, RenderingIntent::RelativeColorimetric) * QVector3D(1, 1, 1);
-    QCOMPARE_LE(std::abs(1 - convertedWhite.x()), s_resolution10bit);
-    QCOMPARE_LE(std::abs(1 - convertedWhite.y()), s_resolution10bit);
-    QCOMPARE_LE(std::abs(1 - convertedWhite.z()), s_resolution10bit);
+    // this test ensures that Colorimetry::xyzToXY and Colorimetry::xyToXYZ can handle weird inputs
+    // and don't cause crashes
+    QCOMPARE(Colorimetry::xyzToXY(QVector3D(0, 0, 0)), QVector2D(0, 0));
+    QCOMPARE_LE(Colorimetry::xyzToXY(QVector3D(100, 100, 100)).y(), 1);
+    QCOMPARE(Colorimetry::xyToXYZ(QVector2D(0, 0)), QVector3D(0, 1, 0));
+    QCOMPARE(Colorimetry::xyToXYZ(QVector2D(1, 0)), QVector3D(1, 1, 0));
 }
 
 void TestColorspaces::testIdentityTransformation_data()
