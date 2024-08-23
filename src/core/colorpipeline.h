@@ -89,6 +89,7 @@ public:
     ValueRange output;
 
     bool operator==(const ColorOp &) const = default;
+    QVector3D apply(const QVector3D input) const;
 };
 
 class KWIN_EXPORT ColorPipeline
@@ -127,3 +128,4 @@ public:
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ValueRange &value);
