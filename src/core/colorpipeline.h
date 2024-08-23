@@ -119,7 +119,7 @@ public:
     explicit ColorPipeline();
     explicit ColorPipeline(const ValueRange &inputRange, ColorspaceType inputType);
 
-    static ColorPipeline create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent);
+    static ColorPipeline create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent, bool addYuvConversions = false);
 
     ColorPipeline merged(const ColorPipeline &onTop) const;
 
