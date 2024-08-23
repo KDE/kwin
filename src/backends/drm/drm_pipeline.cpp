@@ -202,10 +202,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
-    if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
-        return DrmPipeline::Error::InvalidArguments;
-    }
-    const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
+    const ColorPipeline &colorPipeline = m_pending.crtcColorPipeline;
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
@@ -258,6 +255,26 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         commit->addEnum(plane->pixelBlendMode, DrmPlane::PixelBlendMode::PreMultiplied);
     }
 
+    const auto colorPipelines = plane->colorPipelines();
+    if (layer->colorPipeline().isIdentity()) {
+        if (plane->colorPipeline.isValid()) {
+            commit->addProperty(plane->colorPipeline, 0);
+        }
+    } else {
+        const auto it = std::ranges::find_if(colorPipelines, [&](DrmColorOp *pipeline) {
+            return pipeline->colorOp()->matchPipeline(commit, layer->colorPipeline());
+        });
+        if (it == colorPipelines.end()) {
+            // TODO re-allow merging with post-blending pipeline
+            return DrmPipeline::Error::InvalidArguments;
+        }
+        commit->addProperty(plane->colorPipeline, (*it)->id());
+    }
+
+    if (plane->colorPipeline.isValid() && layer->colorDescription().yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+        // color pipelines don't support the color encoding and color range properties yet
+        return Error::InvalidArguments;
+    }
     switch (layer->colorDescription().yuvCoefficients()) {
     case YUVMatrixCoefficients::Identity:
         break;

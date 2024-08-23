@@ -78,6 +78,15 @@ void DrmPropertyList::addProperty(DrmUniquePtr<drmModePropertyRes> &&prop, uint6
     m_properties.push_back(std::make_pair(std::move(prop), value));
 }
 
+std::vector<std::string_view> DrmPropertyList::propNames() const
+{
+    std::vector<std::string_view> ret;
+    for (const auto &[ptr, val] : m_properties) {
+        ret.push_back(ptr->name);
+    }
+    return ret;
+}
+
 std::optional<std::pair<DrmUniquePtr<drmModePropertyRes>, uint64_t>> DrmPropertyList::takeProperty(const QByteArray &name)
 {
     const auto it = std::ranges::find_if(m_properties, [&name](const auto &pair) {
