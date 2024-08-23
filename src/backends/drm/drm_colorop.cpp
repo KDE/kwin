@@ -117,7 +117,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     return true;
 }
 
-LegacyLutColorOp::LegacyLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize)
+DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize)
     : DrmAbstractColorOp(next)
     , m_prop(prop)
     , m_maxSize(maxSize)
@@ -125,7 +125,7 @@ LegacyLutColorOp::LegacyLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, 
 {
 }
 
-bool LegacyLutColorOp::canBeUsedFor(const ColorOp &op)
+bool DrmLutColorOp::canBeUsedFor(const ColorOp &op)
 {
     if (std::holds_alternative<ColorTransferFunction>(op.operation) || std::holds_alternative<InverseColorTransferFunction>(op.operation)
         || std::holds_alternative<ColorTonemapper>(op.operation)) {
@@ -138,7 +138,7 @@ bool LegacyLutColorOp::canBeUsedFor(const ColorOp &op)
     return false;
 }
 
-void LegacyLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale)
+void DrmLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale)
 {
     for (uint32_t i = 0; i < m_maxSize; i++) {
         const double input = i / double(m_maxSize - 1);
@@ -167,7 +167,7 @@ void LegacyLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp>
     commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), m_components.data(), sizeof(drm_color_lut) * m_maxSize));
 }
 
-void LegacyLutColorOp::bypass(DrmAtomicCommit *commit)
+void DrmLutColorOp::bypass(DrmAtomicCommit *commit)
 {
     commit->addBlob(*m_prop, nullptr);
 }
