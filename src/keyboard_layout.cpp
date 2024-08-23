@@ -43,7 +43,7 @@ void KeyboardLayout::init()
     switchKeyboardAction->setObjectName(QStringLiteral("Switch to Next Keyboard Layout"));
     switchKeyboardAction->setProperty("componentName", QStringLiteral("KDE Keyboard Layout Switcher"));
     switchKeyboardAction->setProperty("componentDisplayName", i18n("Keyboard Layout Switcher"));
-    const QKeySequence sequence = QKeySequence(Qt::META | Qt::ALT | Qt::Key_K);
+    const QKeySequence sequence = QKeySequence(Qt::CTRL | Qt::SHIFT);
     KGlobalAccel::self()->setDefaultShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
     KGlobalAccel::self()->setShortcut(switchKeyboardAction, QList<QKeySequence>({sequence}));
 
@@ -53,7 +53,7 @@ void KeyboardLayout::init()
     switchLastUsedKeyboardAction->setObjectName(QStringLiteral("Switch to Last-Used Keyboard Layout"));
     switchLastUsedKeyboardAction->setProperty("componentName", QStringLiteral("KDE Keyboard Layout Switcher"));
     switchLastUsedKeyboardAction->setProperty("componentDisplayName", i18n("Keyboard Layout Switcher"));
-    const QKeySequence sequenceLastUsed = QKeySequence(Qt::META | Qt::ALT | Qt::Key_L);
+    const QKeySequence sequenceLastUsed = QKeySequence(Qt::META | Qt::SHIFT);
     KGlobalAccel::self()->setDefaultShortcut(switchLastUsedKeyboardAction, QList<QKeySequence>({sequenceLastUsed}));
     KGlobalAccel::self()->setShortcut(switchLastUsedKeyboardAction, QList<QKeySequence>({sequenceLastUsed}));
 
