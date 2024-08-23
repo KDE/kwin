@@ -87,11 +87,13 @@ std::optional<RenderTimeSpan> OutputFrame::queryRenderTime() const
 
 void OutputFrame::presented(std::chrono::nanoseconds timestamp, PresentationMode mode)
 {
+    Q_ASSERT(!m_presented);
+    m_presented = true;
+
     const auto renderTime = queryRenderTime();
     if (m_loop) {
         RenderLoopPrivate::get(m_loop)->notifyFrameCompleted(timestamp, renderTime, mode, this);
     }
-    m_presented = true;
     for (const auto &feedback : m_feedbacks) {
         feedback->presented(m_refreshDuration, timestamp, mode);
     }
