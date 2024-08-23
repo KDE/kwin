@@ -111,8 +111,6 @@ QList<CursorSprite> SvgCursorReader::load(const QString &containerPath, int desi
         return {};
     }
 
-    const qreal scale = desiredSize / 24.0;
-
     QList<CursorSprite> sprites;
     for (const SvgCursorMetaDataEntry &entry : metadata->entries) {
         const QString filePath = containerDir.filePath(entry.fileName);
@@ -123,13 +121,18 @@ QList<CursorSprite> SvgCursorReader::load(const QString &containerPath, int desi
             return {};
         }
 
-        const QRect bounds(QPoint(0, 0), renderer.defaultSize() * scale);
-        QImage image(bounds.size() * devicePixelRatio, QImage::Format_ARGB32_Premultiplied);
+        const QSizeF defaultSize = renderer.defaultSize();
+        const QRectF viewBox = renderer.viewBoxF();
+
+        const qreal scale = desiredSize / std::min(defaultSize.width(), defaultSize.height());
+        const QSizeF logicalSize = viewBox.size() * scale;
+
+        QImage image((logicalSize * devicePixelRatio).toSize(), QImage::Format_ARGB32_Premultiplied);
         image.fill(Qt::transparent);
         image.setDevicePixelRatio(devicePixelRatio);
 
         QPainter painter(&image);
-        renderer.render(&painter, bounds);
+        renderer.render(&painter, scaledRect(viewBox, scale));
         painter.end();
 
         sprites.append(CursorSprite(image, (entry.hotspot * scale).toPoint(), entry.delay));
