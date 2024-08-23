@@ -46,6 +46,9 @@
 #ifndef DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP
 #define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
 #endif
+#ifndef DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
+#define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE 7
+#endif
 
 namespace KWin
 {
@@ -106,6 +109,8 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     } else {
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
+
+    m_colorPipelineSupported = drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
 }
 
 DrmGpu::~DrmGpu()
@@ -690,6 +695,11 @@ bool DrmGpu::forceImplicitModifiers() const
 bool DrmGpu::asyncPageflipSupported() const
 {
     return m_asyncPageflipSupported;
+}
+
+bool DrmGpu::colorPipelineSupported() const
+{
+    return m_colorPipelineSupported;
 }
 
 bool DrmGpu::isI915() const
