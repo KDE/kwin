@@ -40,10 +40,10 @@ protected:
     std::unique_ptr<DrmAtomicCommit> m_cache;
 };
 
-class LegacyLutColorOp : public DrmAbstractColorOp
+class DrmLutColorOp : public DrmAbstractColorOp
 {
 public:
-    explicit LegacyLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize);
+    explicit DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize);
 
     bool canBeUsedFor(const ColorOp &op) override;
     void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;

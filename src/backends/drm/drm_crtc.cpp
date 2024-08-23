@@ -52,7 +52,7 @@ bool DrmCrtc::updateProperties()
     if (!postBlendingPipeline) {
         DrmAbstractColorOp *next = nullptr;
         if (gammaLut.isValid() && gammaLutSize.isValid() && gammaLutSize.value() > 0) {
-            m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &gammaLut, gammaLutSize.value()));
+            m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp>(next, &gammaLut, gammaLutSize.value()));
             next = m_postBlendingColorOps.back().get();
         }
         if (!gpu()->isNVidia() && ctm.isValid()) {
@@ -60,7 +60,7 @@ bool DrmCrtc::updateProperties()
             next = m_postBlendingColorOps.back().get();
         }
         if (!gpu()->isNVidia() && degammaLut.isValid() && degammaLutSize.isValid() && degammaLutSize.value() > 0) {
-            m_postBlendingColorOps.push_back(std::make_unique<LegacyLutColorOp>(next, &degammaLut, degammaLutSize.value()));
+            m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp>(next, &degammaLut, degammaLutSize.value()));
             next = m_postBlendingColorOps.back().get();
         }
         postBlendingPipeline = next;
