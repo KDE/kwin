@@ -70,6 +70,14 @@ void DrmProperty::update(DrmPropertyList &propertyList)
                 }
             }
         }
+        m_enumValues.clear();
+        if (prop->flags & DRM_MODE_PROP_ENUM) {
+            QList<QString> names;
+            for (const drm_mode_property_enum &en : std::span(prop->enums, prop->count_enums)) {
+                m_enumValues.push_back(en.value);
+                names.push_back(en.name);
+            }
+        }
         if ((m_flags & DRM_MODE_PROP_IMMUTABLE) && (m_flags & DRM_MODE_PROP_BLOB)) {
             if (m_current != 0) {
                 m_immutableBlob.reset(drmModeGetPropertyBlob(m_obj->gpu()->fd(), m_current));
@@ -86,6 +94,11 @@ void DrmProperty::update(DrmPropertyList &propertyList)
         m_enumToPropertyMap.clear();
         m_propertyToEnumMap.clear();
     }
+}
+
+QList<uint64_t> DrmProperty::possibleEnumValues() const
+{
+    return m_enumValues;
 }
 
 uint64_t DrmProperty::value() const

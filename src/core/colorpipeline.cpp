@@ -24,16 +24,26 @@ ValueRange ValueRange::operator*(double mult) const
 
 static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TONEMAPPING") == 1;
 
-ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
+ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent, bool addYuvConversions)
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
     const double maxOutputLuminance = to.maxHdrLuminance().value_or(to.referenceLuminance());
+    const auto rgbInputRange = ValueRange{
+        .min = from.transferFunction().nitsToEncoded(range1.min),
+        .max = from.transferFunction().nitsToEncoded(range1.max),
+    };
     const auto rgbInputSpace = from.transferFunction().type == TransferFunction::linear ? ColorspaceType::LinearRGB : ColorspaceType::NonLinearRGB;
-    ColorPipeline ret(ValueRange{
-                          .min = from.transferFunction().nitsToEncoded(range1.min),
-                          .max = from.transferFunction().nitsToEncoded(range1.max),
-                      },
-                      rgbInputSpace);
+    ColorPipeline ret(rgbInputRange, rgbInputSpace);
+    if (addYuvConversions && from.yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+        // the color pipeline patches have a bug: the kernel still does YUV->RGB despite the color pipeline being active
+        // FIXME uncomment this once the kernel is fixed
+        // ret.inputRange = ValueRange {
+        //     .min = 0,
+        //     .max = 1,
+        // };
+        // ret.inputSpace = ColorspaceType::AnyNonRGB;
+        // ret.addMatrix(from.yuvMatrix(), rgbInputRange, rgbInputSpace);
+    }
     ret.addTransferFunction(from.transferFunction(), ColorspaceType::LinearRGB);
 
     // FIXME this assumes that the range stays the same with matrix multiplication
