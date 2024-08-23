@@ -27,7 +27,7 @@ class DrmPropertyList;
 class DrmProperty
 {
 public:
-    DrmProperty(DrmObject *obj, const QByteArray &name, const QList<QByteArray> &enumNames = {});
+    explicit DrmProperty(DrmObject *obj, const QByteArray &name, const QList<QByteArray> &enumNames = {});
 
     const QByteArray &name() const;
     DrmObject *drmObject() const;
@@ -50,6 +50,8 @@ public:
     void update(DrmPropertyList &propertyList);
     bool setPropertyLegacy(uint64_t value);
 
+    QList<uint64_t> possibleEnumValues() const;
+
 protected:
     DrmObject *const m_obj;
     const QByteArray m_propName;
@@ -65,6 +67,7 @@ protected:
 
     QMap<uint64_t, uint64_t> m_enumToPropertyMap;
     QMap<uint64_t, uint64_t> m_propertyToEnumMap;
+    QList<uint64_t> m_enumValues;
     uint32_t m_flags;
 };
 
@@ -95,6 +98,11 @@ public:
         } else {
             return m_enumToPropertyMap.contains(integerValue);
         }
+    }
+
+    bool hasEnumForValue(uint64_t value) const
+    {
+        return m_propertyToEnumMap.contains(value);
     }
 
     Enum enumForValue(uint64_t value) const
