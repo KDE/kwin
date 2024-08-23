@@ -186,10 +186,24 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
-    if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {
-        return DrmPipeline::Error::InvalidArguments;
+    const auto primaryPipelines = m_pending.crtc->primaryPlane()->colorPipelines();
+    if (m_primaryLayer->colorPipeline().isIdentity()) {
+        if (m_pending.crtc->primaryPlane()->colorPipeline.isValid()) {
+            commit->addProperty(m_pending.crtc->primaryPlane()->colorPipeline, 0);
+        }
+    } else {
+        const auto it = std::ranges::find_if(primaryPipelines, [&](DrmColorOp *pipeline) {
+            return pipeline->colorOp()->matchPipeline(commit, m_primaryLayer->colorPipeline());
+        });
+        if (it == primaryPipelines.end()) {
+            // FIXME re-allow merging the pipelines with the post blending one when appropriate
+            qWarning() << "failed to match the pipeline in" << primaryPipelines.size() << "pipelines!";
+            qWarning() << m_primaryLayer->colorPipeline();
+            return DrmPipeline::Error::InvalidArguments;
+        }
+        commit->addProperty(m_pending.crtc->primaryPlane()->colorPipeline, (*it)->id());
     }
-    const ColorPipeline colorPipeline = m_primaryLayer->colorPipeline().merged(m_pending.crtcColorPipeline);
+    const ColorPipeline &colorPipeline = m_pending.crtcColorPipeline;
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
