@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-22 00:40+0000\n"
-"PO-Revision-Date: 2024-07-23 18:27+0200\n"
+"PO-Revision-Date: 2024-08-22 17:27+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -603,7 +603,7 @@ msgstr "Sincronización adaptativa"
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "Permitir «tearing»"
 
 #: rulesmodel.cpp:782
 #, kde-format

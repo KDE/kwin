@@ -427,7 +427,7 @@ msgstr "重复"
 #, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr ""
+msgstr "键码"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -3631,10 +3631,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "图层规则类型"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
