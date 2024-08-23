@@ -58,7 +58,7 @@ bool DrmCrtc::updateProperties()
     if (!postBlendingPipeline) {
         DrmAbstractColorOp *next = nullptr;
         if (gammaLut.isValid()) {
-            m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp>(next, &gammaLut, gammaRampSize()));
+            m_postBlendingColorOps.push_back(std::make_unique<DrmLutColorOp16>(next, &gammaLut, nullptr, gammaRampSize(), nullptr));
             next = m_postBlendingColorOps.back().get();
         }
         if (!gpu()->isNVidia() && ctm.isValid()) {

@@ -47,6 +47,9 @@
 #ifndef DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP
 #define DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP 0x15
 #endif
+#ifndef DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE
+#define DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE 7
+#endif
 
 using namespace std::chrono_literals;
 
@@ -109,6 +112,8 @@ DrmGpu::DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device)
     } else {
         m_asyncPageflipSupported = drmGetCap(fd, DRM_CAP_ATOMIC_ASYNC_PAGE_FLIP, &capability) == 0 && capability == 1;
     }
+
+    m_colorPipelineSupported = drmSetClientCap(fd, DRM_CLIENT_CAP_PLANE_COLOR_PIPELINE, 1) == 0;
 
     m_delayedModesetTimer.setInterval(0);
     m_delayedModesetTimer.setSingleShot(true);
@@ -709,6 +714,11 @@ bool DrmGpu::asyncPageflipSupported() const
 bool DrmGpu::sharpnessSupported() const
 {
     return m_sharpnessSupported;
+}
+
+bool DrmGpu::colorPipelineSupported() const
+{
+    return m_colorPipelineSupported;
 }
 
 bool DrmGpu::isI915() const

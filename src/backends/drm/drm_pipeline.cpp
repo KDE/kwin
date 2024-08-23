@@ -207,13 +207,7 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
     }
 
-    const bool differentPipelines = std::ranges::any_of(m_pending.layers | std::views::drop(1), [&](OutputLayer *layer) {
-        return layer->isEnabled() && layer->colorPipeline() != m_pending.layers.front()->colorPipeline();
-    });
-    if (differentPipelines) {
-        return DrmPipeline::Error::InvalidArguments;
-    }
-    const ColorPipeline colorPipeline = m_pending.layers.front()->colorPipeline().merged(m_pending.crtcColorPipeline);
+    const ColorPipeline &colorPipeline = m_pending.crtcColorPipeline;
     if (!m_pending.crtc->postBlendingPipeline) {
         if (!colorPipeline.isIdentity()) {
             return Error::InvalidArguments;
@@ -269,6 +263,26 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPlane(DrmAtomicCommit *commit, DrmP
         commit->addProperty(plane->zpos, layer->zpos());
     }
 
+    const auto colorPipelines = plane->colorPipelines();
+    if (layer->colorPipeline().isIdentity()) {
+        if (plane->colorPipeline.isValid()) {
+            commit->addProperty(plane->colorPipeline, 0);
+        }
+    } else {
+        const auto it = std::ranges::find_if(colorPipelines, [&](DrmColorOp *pipeline) {
+            return pipeline->colorOp()->matchPipeline(commit, layer->colorPipeline());
+        });
+        if (it == colorPipelines.end()) {
+            // TODO re-allow merging with post-blending pipeline
+            return DrmPipeline::Error::InvalidArguments;
+        }
+        commit->addProperty(plane->colorPipeline, (*it)->id());
+    }
+
+    if (plane->colorPipeline.isValid() && layer->colorDescription()->yuvCoefficients() != YUVMatrixCoefficients::Identity) {
+        // color pipelines don't support the color encoding and color range properties yet
+        return Error::InvalidArguments;
+    }
     DrmPlane::ColorRange range = DrmPlane::ColorRange::Limited_YCbCr;
     if (layer->colorDescription()->range() == EncodingRange::Full) {
         range = DrmPlane::ColorRange::Full_YCbCr;
