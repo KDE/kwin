@@ -70,6 +70,7 @@ DrmPlane::DrmPlane(DrmGpu *gpu, uint32_t planeId)
     , inFenceFd(this, QByteArrayLiteral("IN_FENCE_FD"))
     , sizeHints(this, QByteArrayLiteral("SIZE_HINTS"))
     , inFormatsForTearing(this, QByteArrayLiteral("IN_FORMATS_ASYNC"))
+    , colorPipeline(this, QByteArrayLiteral("COLOR_PIPELINE"))
 {
 }
 
@@ -108,6 +109,7 @@ bool DrmPlane::updateProperties()
     inFenceFd.update(props);
     sizeHints.update(props);
     inFormatsForTearing.update(props);
+    colorPipeline.update(props);
 
     if (!type.isValid() || !srcX.isValid() || !srcY.isValid() || !srcW.isValid() || !srcH.isValid()
         || !crtcX.isValid() || !crtcY.isValid() || !crtcW.isValid() || !crtcH.isValid() || !fbId.isValid()) {
@@ -165,6 +167,23 @@ bool DrmPlane::updateProperties()
         }
     } else {
         m_supportedTearingFormats = m_supportedFormats;
+    }
+    if (colorPipeline.isValid() && m_colorPipelineObjects.empty()) {
+        const QList<uint64_t> possibleValues = colorPipeline.possibleEnumValues();
+        for (const uint64_t value : possibleValues) {
+            if (value == 0) {
+                // 0 is bypass
+                continue;
+            }
+            auto pipeline = std::make_unique<DrmColorOp>(gpu(), value);
+            if (!pipeline->init()) {
+                qCWarning(KWIN_DRM, "initializing color pipeline %lu failed!", value);
+                continue;
+            }
+            m_colorPipelines.push_back(pipeline.get());
+            m_colorPipelineObjects.push_back(std::move(pipeline));
+        }
+        qCDebug(KWIN_DRM, "initialized %lld of %lld color pipelines", m_colorPipelines.size(), possibleValues.size());
     }
     return true;
 }
@@ -265,6 +284,11 @@ bool DrmPlane::supportsTransformation(OutputTransform transform) const
 QList<QSize> DrmPlane::recommendedSizes() const
 {
     return m_sizeHints;
+}
+
+QList<DrmColorOp *> DrmPlane::colorPipelines() const
+{
+    return m_colorPipelines;
 }
 }
 
