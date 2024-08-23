@@ -9,6 +9,7 @@
 #include "colorpipeline.h"
 
 #include <numbers>
+#include <qlogging.h>
 
 namespace KWin
 {
@@ -26,6 +27,9 @@ static bool s_disableTonemapping = qEnvironmentVariableIntValue("KWIN_DISABLE_TO
 ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDescription &to, RenderingIntent intent)
 {
     const auto range1 = ValueRange(from.minLuminance(), from.maxHdrLuminance().value_or(from.referenceLuminance()));
+    if (std::isnan(range1.max)) {
+        qCritical() << "this shouldn't happen!" << from.maxHdrLuminance().value_or(-1) << from.referenceLuminance();
+    }
     const double maxOutputLuminance = to.maxHdrLuminance().value_or(to.referenceLuminance());
     ColorPipeline ret(ValueRange{
         .min = from.transferFunction().nitsToEncoded(range1.min),
@@ -297,19 +301,26 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
 {
     QVector3D ret = input;
     for (const auto &op : ops) {
-        if (const auto mat = std::get_if<ColorMatrix>(&op.operation)) {
-            ret = mat->mat * ret;
-        } else if (const auto mult = std::get_if<ColorMultiplier>(&op.operation)) {
-            ret *= mult->factors;
-        } else if (const auto tf = std::get_if<ColorTransferFunction>(&op.operation)) {
-            ret = tf->tf.encodedToNits(ret);
-        } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&op.operation)) {
-            ret = tf->tf.nitsToEncoded(ret);
-        } else if (const auto tonemap = std::get_if<ColorTonemapper>(&op.operation)) {
-            ret.setX(tonemap->map(ret.x()));
-        }
+        ret = op.apply(ret);
     }
     return ret;
+}
+
+QVector3D ColorOp::apply(const QVector3D input) const
+{
+    if (const auto mat = std::get_if<ColorMatrix>(&operation)) {
+        return mat->mat * input;
+    } else if (const auto mult = std::get_if<ColorMultiplier>(&operation)) {
+        return mult->factors * input;
+    } else if (const auto tf = std::get_if<ColorTransferFunction>(&operation)) {
+        return tf->tf.encodedToNits(input);
+    } else if (const auto tf = std::get_if<InverseColorTransferFunction>(&operation)) {
+        return tf->tf.nitsToEncoded(input);
+    } else if (const auto tonemap = std::get_if<ColorTonemapper>(&operation)) {
+        return QVector3D(tonemap->map(input.x()), input.y(), input.z());
+    } else {
+        Q_UNREACHABLE();
+    }
 }
 
 ColorTransferFunction::ColorTransferFunction(TransferFunction tf)
@@ -381,5 +392,11 @@ QDebug operator<<(QDebug debug, const KWin::ColorPipeline &pipeline)
         }
     }
     debug << ")";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const KWin::ValueRange &range)
+{
+    debug << "[" << range.min << "," << range.max << "]";
     return debug;
 }
