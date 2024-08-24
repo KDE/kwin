@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-24 00:40+0000\n"
 "PO-Revision-Date: 2024-08-06 10:18-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1261,7 +1261,7 @@ msgstr "Os tablets trocaram de saídas"
 msgid "Touchpad"
 msgstr "Touchpad"
 
-#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Seletor de layouts de teclado"

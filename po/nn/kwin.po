@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-24 00:40+0000\n"
 "PO-Revision-Date: 2024-08-08 22:03+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -1249,7 +1249,7 @@ msgstr "Teikneplate fekk nye uteining"
 msgid "Touchpad"
 msgstr "Styreplate"
 
-#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Tastaturoppsett-bytar"
@@ -4345,7 +4345,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgctxt "The code as read from the input device"
-#~ msgid "Scan code"
-#~ msgstr "Skannkode"

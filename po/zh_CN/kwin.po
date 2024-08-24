@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-24 00:40+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -1237,7 +1237,7 @@ msgstr "数位板已切换输出设备"
 msgid "Touchpad"
 msgstr "触摸板"
 
-#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "键盘布局切换器"

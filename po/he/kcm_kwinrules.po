@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-22 00:40+0000\n"
-"PO-Revision-Date: 2024-07-23 08:36+0300\n"
+"PO-Revision-Date: 2024-08-23 07:08+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -573,7 +573,7 @@ msgstr "סנכרון מסתגל"
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "לאפשר חיתוך"
 
 #: rulesmodel.cpp:782
 #, kde-format

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
-"PO-Revision-Date: 2024-08-20 15:22+0200\n"
+"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"PO-Revision-Date: 2024-08-23 15:35+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -1238,7 +1238,7 @@ msgstr "Tablety si prohodily výstupy"
 msgid "Touchpad"
 msgstr "Touchpad"
 
-#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "Přepínač rozvržení klávesnice"
@@ -3630,14 +3630,13 @@ msgstr "Typ pravidla adaptivní synchronizace"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "Povolit trhání obrazovky"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Typ pravidla vrstvy"
+msgstr "Typ pravidla trhání obrazovky"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

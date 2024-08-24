@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
-"PO-Revision-Date: 2024-08-20 08:48+0300\n"
+"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"PO-Revision-Date: 2024-08-23 07:08+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -1247,7 +1247,7 @@ msgstr "מחשבי הלוח החליפו אמצעי פלט"
 msgid "Touchpad"
 msgstr "משטח מגע"
 
-#: keyboard_layout.cpp:45 keyboard_layout.cpp:55
+#: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
 #, kde-format
 msgid "Keyboard Layout Switcher"
 msgstr "מחליף פריסות מקלדת"
@@ -3652,14 +3652,13 @@ msgstr "סוג כלל סנכרון מסתגל"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "לאפשר חיתוך"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "סוג כלל שכבה"
+msgstr "סוג כלל חיתוך"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
