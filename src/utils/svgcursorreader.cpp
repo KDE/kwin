@@ -23,6 +23,7 @@ struct SvgCursorMetaDataEntry
     static std::optional<SvgCursorMetaDataEntry> parse(const QJsonObject &object);
 
     QString fileName;
+    qreal nominalSize;
     QPointF hotspot;
     std::chrono::milliseconds delay;
 };
@@ -31,6 +32,11 @@ std::optional<SvgCursorMetaDataEntry> SvgCursorMetaDataEntry::parse(const QJsonO
 {
     const QJsonValue fileName = object.value(QLatin1String("filename"));
     if (!fileName.isString()) {
+        return std::nullopt;
+    }
+
+    const QJsonValue nominalSize = object.value(QLatin1String("nominal_size"));
+    if (!nominalSize.isDouble()) {
         return std::nullopt;
     }
 
@@ -48,6 +54,7 @@ std::optional<SvgCursorMetaDataEntry> SvgCursorMetaDataEntry::parse(const QJsonO
 
     return SvgCursorMetaDataEntry{
         .fileName = fileName.toString(),
+        .nominalSize = nominalSize.toDouble(),
         .hotspot = QPointF(hotspotX.toDouble(), hotspotY.toDouble()),
         .delay = std::chrono::milliseconds(frametime.toInt()),
     };
@@ -111,11 +118,10 @@ QList<CursorSprite> SvgCursorReader::load(const QString &containerPath, int desi
         return {};
     }
 
-    const qreal scale = desiredSize / 24.0;
-
     QList<CursorSprite> sprites;
     for (const SvgCursorMetaDataEntry &entry : metadata->entries) {
         const QString filePath = containerDir.filePath(entry.fileName);
+        const qreal scale = desiredSize / entry.nominalSize;
 
         QSvgRenderer renderer(filePath);
         if (!renderer.isValid()) {
