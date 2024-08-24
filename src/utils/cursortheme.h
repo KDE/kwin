@@ -39,7 +39,7 @@ public:
     /**
      * Constructs an CursorSprite with the specified @a data, @a hotspot, and @a delay.
      */
-    CursorSprite(const QImage &data, const QPoint &hotspot, const std::chrono::milliseconds &delay);
+    CursorSprite(const QImage &data, const QPointF &hotspot, const std::chrono::milliseconds &delay);
 
     /**
      * Destructs the CursorSprite object.
@@ -61,7 +61,7 @@ public:
      *
      * The coordinates of the hotspot are in device independent pixels.
      */
-    QPoint hotspot() const;
+    QPointF hotspot() const;
 
     /**
      * Returns the time interval between this sprite and the next one, in milliseconds.

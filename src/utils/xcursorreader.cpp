@@ -44,7 +44,7 @@ QList<CursorSprite> XCursorReader::load(const QString &filePath, int desiredSize
     for (int i = 0; i < images->nimage; ++i) {
         const XcursorImage *nativeCursorImage = images->images[i];
         const qreal scale = std::max(qreal(1), qreal(nativeCursorImage->size) / desiredSize);
-        const QPoint hotspot(nativeCursorImage->xhot, nativeCursorImage->yhot);
+        const QPointF hotspot(nativeCursorImage->xhot, nativeCursorImage->yhot);
         const std::chrono::milliseconds delay(nativeCursorImage->delay);
 
         QImage data(nativeCursorImage->width, nativeCursorImage->height, QImage::Format_ARGB32_Premultiplied);

@@ -25,7 +25,7 @@ class CursorSpritePrivate : public QSharedData
 {
 public:
     QImage data;
-    QPoint hotspot;
+    QPointF hotspot;
     std::chrono::milliseconds delay;
 };
 
@@ -90,7 +90,7 @@ CursorSprite &CursorSprite::operator=(const CursorSprite &other)
     return *this;
 }
 
-CursorSprite::CursorSprite(const QImage &data, const QPoint &hotspot, const std::chrono::milliseconds &delay)
+CursorSprite::CursorSprite(const QImage &data, const QPointF &hotspot, const std::chrono::milliseconds &delay)
     : d(new CursorSpritePrivate)
 {
     d->data = data;
@@ -103,7 +103,7 @@ QImage CursorSprite::data() const
     return d->data;
 }
 
-QPoint CursorSprite::hotspot() const
+QPointF CursorSprite::hotspot() const
 {
     return d->hotspot;
 }

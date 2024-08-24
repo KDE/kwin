@@ -138,7 +138,7 @@ QList<CursorSprite> SvgCursorReader::load(const QString &containerPath, int desi
         renderer.render(&painter, bounds);
         painter.end();
 
-        sprites.append(CursorSprite(image, (entry.hotspot * scale).toPoint(), entry.delay));
+        sprites.append(CursorSprite(image, entry.hotspot * scale, entry.delay));
     }
 
     return sprites;
