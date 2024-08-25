@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-22 00:40+0000\n"
-"PO-Revision-Date: 2024-07-27 10:00+0200\n"
+"PO-Revision-Date: 2024-08-24 11:56+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -596,7 +596,7 @@ msgstr "Dostosowująca się synchronizacja"
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "Zezwól na cięcia"
 
 #: rulesmodel.cpp:782
 #, kde-format
