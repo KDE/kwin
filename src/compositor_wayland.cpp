@@ -336,7 +336,6 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             frame->setPresentationMode(tearing ? PresentationMode::Async : PresentationMode::VSync);
         }
 
-        bool directScanout = false;
         const uint32_t planeCount = 1;
         if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
             const auto sublayers = superLayer->sublayers();
