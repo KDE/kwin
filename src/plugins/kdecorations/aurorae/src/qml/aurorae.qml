@@ -42,12 +42,12 @@ Decoration {
         }
     }
     KSvg.FrameSvg {
-        property bool supportsInactive: hasElementPrefix("decoration-inactive")
-        property bool supportsMask: hasElementPrefix("mask")
-        property bool supportsMaximized: hasElementPrefix("decoration-maximized")
-        property bool supportsMaximizedInactive: hasElementPrefix("decoration-maximized-inactive")
-        property bool supportsInnerBorder: hasElementPrefix("innerborder")
-        property bool supportsInnerBorderInactive: hasElementPrefix("innerborder-inactive")
+        property bool supportsInactive: elements.hasPrefix("decoration-inactive")
+        property bool supportsMask: elements.hasPrefix("mask")
+        property bool supportsMaximized: elements.hasPrefix("decoration-maximized")
+        property bool supportsMaximizedInactive: elements.hasPrefix("decoration-maximized-inactive")
+        property bool supportsInnerBorder: elements.hasPrefix("innerborder")
+        property bool supportsInnerBorderInactive: elements.hasPrefix("innerborder-inactive")
         id: backgroundSvg
         imagePath: auroraeTheme.decorationPath
     }

@@ -80,13 +80,13 @@ DecorationButton {
     width: widthForButton() * auroraeTheme.buttonSizeFactor
     height: auroraeTheme.buttonHeight * auroraeTheme.buttonSizeFactor
     KSvg.FrameSvg {
-        property bool supportsHover: hasElementPrefix("hover")
-        property bool supportsPressed: hasElementPrefix("pressed")
-        property bool supportsDeactivated: hasElementPrefix("deactivated")
-        property bool supportsInactive: hasElementPrefix("inactive")
-        property bool supportsInactiveHover: hasElementPrefix("hover-inactive")
-        property bool supportsInactivePressed: hasElementPrefix("pressed-inactive")
-        property bool supportsInactiveDeactivated: hasElementPrefix("deactivated-inactive")
+        property bool supportsHover: elements.hasPrefix("hover")
+        property bool supportsPressed: elements.hasPrefix("pressed")
+        property bool supportsDeactivated: elements.hasPrefix("deactivated")
+        property bool supportsInactive: elements.hasPrefix("inactive")
+        property bool supportsInactiveHover: elements.hasPrefix("hover-inactive")
+        property bool supportsInactivePressed: elements.hasPrefix("pressed-inactive")
+        property bool supportsInactiveDeactivated: elements.hasPrefix("deactivated-inactive")
         id: buttonSvg
         imagePath: pathForButton()
     }
