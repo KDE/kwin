@@ -343,7 +343,7 @@ ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLumin
     m_inputRange = maxInputLuminance / referenceLuminance;
     const double outputRange = maxOutputLuminance / referenceLuminance;
     // = how much dynamic range this algorithm adds, by reducing the reference luminance
-    m_addedRange = std::clamp(m_inputRange / outputRange, 1.0, maxAddedHeadroom);
+    m_addedRange = std::min(m_inputRange, std::clamp(maxAddedHeadroom / outputRange, 1.0, maxAddedHeadroom));
     m_outputReferenceLuminance = referenceLuminance / m_addedRange;
 }
 

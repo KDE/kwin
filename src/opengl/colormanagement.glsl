@@ -117,7 +117,7 @@ vec3 doTonemapping(vec3 color) {
     // if the reference is too close to the maximum luminance, reduce it to get up to 50% headroom
     float inputRange = maxTonemappingLuminance / destinationReferenceLuminance;
     float outputRange = maxDestinationLuminance / destinationReferenceLuminance;
-    float addedRange = min(inputRange / outputRange, 1.5);
+    float addedRange = min(inputRange, clamp(1.5 / outputRange, 1.0, 1.5));
     float outputReferenceLuminance = destinationReferenceLuminance / addedRange;
 
     // keep it linear up to the reference luminance
