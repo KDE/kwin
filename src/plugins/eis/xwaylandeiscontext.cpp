@@ -32,7 +32,8 @@ XWaylandEisContext::XWaylandEisContext(EisBackend *backend)
 
 void XWaylandEisContext::connectionRequested(eis_client *client)
 {
-    if (options->xwaylandEisNoPrompt()) {
+    const QString clientName = QString::fromUtf8(eis_client_get_name(client));
+    if (options->xwaylandEisNoPrompt() || options->xwaylandEisNoPromptApps().contains(clientName)) {
         connectToClient(client);
         return;
     }
@@ -49,6 +50,8 @@ void XWaylandEisContext::connectionRequested(eis_client *client)
     icon->setPixmap(QIcon::fromTheme(QStringLiteral("krfb")).pixmap(iconSize));
     iconTextLayout->addWidget(icon);
     iconTextLayout->addWidget(new QLabel(i18nc("%1 is the app/binary", "%1 wants to control the pointer and keyboard", eis_client_get_name(client)), dialog));
+    auto allowAppCheckbox = new QCheckBox(i18nc("@option:check %1 is the app/binary", "Always allow for %1", clientName), dialog);
+    mainLayout->addWidget(allowAppCheckbox);
     auto alwaysAllowCheckbox = new QCheckBox(i18nc("@option:check", "Always allow for legacy applications"), dialog);
     mainLayout->addWidget(alwaysAllowCheckbox);
     auto buttonBox = new QDialogButtonBox(dialog);
@@ -59,13 +62,18 @@ void XWaylandEisContext::connectionRequested(eis_client *client)
     dialog->show();
     QObject::connect(buttonBox, &QDialogButtonBox::accepted, dialog, &QDialog::accept);
     QObject::connect(buttonBox, &QDialogButtonBox::rejected, dialog, &QDialog::reject);
-    QObject::connect(dialog, &QDialog::finished, [client, alwaysAllowCheckbox, this](int result) {
+    QObject::connect(dialog, &QDialog::finished, [client, clientName, alwaysAllowCheckbox, allowAppCheckbox, this](int result) {
         if (result == QDialog::Accepted) {
             connectToClient(client);
+            auto xwaylandGroup = kwinApp()->config()->group(QStringLiteral("Xwayland"));
             if (alwaysAllowCheckbox->isChecked()) {
-                kwinApp()->config()->group(QStringLiteral("Xwayland")).writeEntry(QStringLiteral("XwaylandEisNoPrompt"), true, KConfig::Notify);
-                kwinApp()->config()->sync();
+                xwaylandGroup.writeEntry(QStringLiteral("XwaylandEisNoPrompt"), true, KConfig::Notify);
             }
+            if (allowAppCheckbox->isChecked()) {
+                auto allowedApps = options->xwaylandEisNoPromptApps() << clientName;
+                xwaylandGroup.writeEntry(QStringLiteral("XwaylandEisNoPromptApps"), allowedApps, KConfig::Notify);
+            }
+            kwinApp()->config()->sync();
         } else {
             eis_client_disconnect(client);
         }

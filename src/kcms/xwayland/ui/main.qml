@@ -143,10 +143,51 @@ KCM.SimpleKCM {
         }
 
         QQC2.CheckBox {
-            Layout.margins: Kirigami.Units.gridUnit
+            Layout.leftMargin: Kirigami.Units.gridUnit
+            Layout.rightMargin: Kirigami.Units.gridUnit
             text: i18nc("@option:check", "Allow controlling the pointer and keyboard without asking for permission")
             checked: kcm.settings.xwaylandEisNoPrompt
             onToggled: kcm.settings.xwaylandEisNoPrompt = checked
+        }
+        QQC2.Button {
+            Layout.leftMargin: Kirigami.Units.gridUnit
+            Layout.rightMargin: Kirigami.Units.gridUnit
+            text: i18nc("@action:button", "Configure applications…")
+            enabled: !kcm.settings.xwaylandEisNoPrompt && kcm.settings.xwaylandEisNoPromptApps.length > 0
+            onClicked: {
+                kcm.push(appsPage)
+            }
+            KCM.ScrollViewKCM {
+                id: appsPage
+                visible: false
+                title: i18n("Applications allowed to control the pointer and keyboard")
+                view: ListView {
+                    model: kcm.settings.xwaylandEisNoPromptApps
+                    delegate: QQC2.ItemDelegate {
+                        id: delegate
+                        width: ListView.view.width
+                        text: modelData
+                        icon.name: modelData
+                        contentItem: RowLayout {
+                            spacing: Kirigami.Theme.smallSpacing
+                            Kirigami.IconTitleSubtitle {
+                                Layout.fillWidth: true
+                                icon: icon.fromControlsIcon(delegate.icon)
+                                title: delegate.text
+                                selected: delegate.highlighted || delegate.down
+                                font: delegate.font
+                            }
+                            QQC2.ToolButton {
+                                icon.name: "list-remove-symbolic"
+                                QQC2.ToolTip {
+                                    text: i18nc("@info:tooltip %1 is the name of the app/binary", "Do not allow %1 to control the pointer and keyboard without asking", modelData)
+                                }
+                                onClicked: kcm.settings.xwaylandEisNoPromptApps = kcm.settings.xwaylandEisNoPromptApps.filter(app => app != modelData)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
