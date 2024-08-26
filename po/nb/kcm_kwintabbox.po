@@ -62,7 +62,6 @@ msgstr "Innhold"
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
 #, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
 msgid "Include \"Show Desktop\" entry"
 msgstr "Ta med ikon for «Vis skrivebord»"
 
