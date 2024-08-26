@@ -203,6 +203,7 @@ target_sources(kwin PRIVATE
     tiles/customtile.cpp
     tiles/quicktile.cpp
     tiles/tile.cpp
+    tiles/tilelayout.cpp
     tiles/tilemanager.cpp
     touch_input.cpp
     useractions.cpp
