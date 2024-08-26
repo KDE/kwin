@@ -1309,8 +1309,8 @@ msgid ""
 "<em>Click to focus:</em> A window becomes active when you click into it. "
 "This behavior is common on other operating systems and likely what you want."
 msgstr ""
-"<em>Trykk for fokus:</em> Eit vindauge vert aktivt når du trykkjer på "
-"muse­knappen når muse­peikaren er over det. Denne åtferda er vanleg i andre "
+"<em>Trykk for fokus:</em> Eit vindauge vert aktivt når du trykkjer på muse­"
+"knappen når muse­peikaren er over det. Denne åtferda er vanleg i andre "
 "operativ­system og er truleg det du vil ha."
 
 #: windows.cpp:101
@@ -1324,9 +1324,9 @@ msgid ""
 msgstr ""
 "<em>Trykk for fokus (musprioritet):</em> Dette er stort sett det same som "
 "<em>Trykk for fokus</em>. Viss systemet må velja eit nytt aktivt vindauge "
-"(for eksempel fordi det gjeldande vart lukka), så er vindauget under "
-"muse­peikaren den føretrekte kandidaten. Uvanleg, men mogleg variant av "
-"<em>Trykk for fokus</em>."
+"(for eksempel fordi det gjeldande vart lukka), så er vindauget under muse­"
+"peikaren den føretrekte kandidaten. Uvanleg, men mogleg variant av <em>Trykk "
+"for fokus</em>."
 
 #: windows.cpp:106
 #, kde-format
@@ -1337,9 +1337,9 @@ msgid ""
 "to focus</em> just without having to actually click."
 msgstr ""
 "<em>Fokuset følgjer musa:</em> Eit vindauge vert aktivt når muse­peikaren "
-"vert flytta inn i det. Vindauge som tilfeldigvis dukkar opp under "
-"muse­peikaren, får ikkje fokus. Fokus­steling vert førebygd på vanleg måte. "
-"Tenk på dette som <em>Trykk for fokus</em>, men utan at det er nødvendig å "
+"vert flytta inn i det. Vindauge som tilfeldigvis dukkar opp under muse­"
+"peikaren, får ikkje fokus. Fokus­steling vert førebygd på vanleg måte. Tenk "
+"på dette som <em>Trykk for fokus</em>, men utan at det er nødvendig å "
 "trykkja."
 
 #: windows.cpp:110
