@@ -2332,7 +2332,6 @@ msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
 #, fuzzy, kde-format
-#| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Lokte dahje vuolit láse"
@@ -2369,7 +2368,6 @@ msgstr ""
 
 #: plugins/overview/overvieweffect.cpp:151
 #, fuzzy, kde-format
-#| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Lokte dahje vuolit láse"

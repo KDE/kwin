@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-24 00:40+0000\n"
-"PO-Revision-Date: 2024-08-08 22:03+0200\n"
+"PO-Revision-Date: 2024-08-25 12:21+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -433,12 +433,10 @@ msgid "Repeat"
 msgstr "Gjentaking"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key-kode"
+msgstr "Tastekode"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -3662,14 +3660,13 @@ msgstr "AdaptiveSync-regeltype"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "Tillat skjermriving"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Lag-regeltype"
+msgstr "Skjermrivings-regeltype"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

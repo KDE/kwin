@@ -1190,14 +1190,12 @@ msgstr ""
 
 #: helpers/killer/killer.cpp:216
 #, fuzzy, kde-format
-#| msgid "&Terminate Application %1"
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
 msgstr "&Avslutt program %1"
 
 #: helpers/killer/killer.cpp:217
 #, fuzzy, kde-format
-#| msgid "Wait Longer"
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
 msgstr "Vent lenger"
@@ -1216,7 +1214,6 @@ msgstr ""
 
 #: helpers/killer/killer.cpp:243
 #, fuzzy, kde-format
-#| msgid "hostname"
 msgctxt "@info"
 msgid "Host name: %1"
 msgstr "vertsnavn"
@@ -2350,7 +2347,6 @@ msgstr "Slå av/på omsnuingseffekt"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:60
 #, fuzzy, kde-format
-#| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid View is the name of a KWin effect"
 msgid "Toggle Grid View"
 msgstr "Hev eller senk vindu"
@@ -2387,7 +2383,6 @@ msgstr "Slå av/på omsnuingseffekt"
 
 #: plugins/overview/overvieweffect.cpp:151
 #, fuzzy, kde-format
-#| msgid "Toggle Window Raise/Lower"
 msgctxt "@action Grid view is the name of a Kwin effect"
 msgid "Toggle Grid View"
 msgstr "Hev eller senk vindu"
@@ -2506,7 +2501,6 @@ msgstr ""
 
 #: plugins/showcompositing/qml/main.qml:12
 #, fuzzy, kde-format
-#| msgid "Suspend Compositing"
 msgctxt "@label"
 msgid "Compositing"
 msgstr "Opphev sammensetting"
