@@ -6,13 +6,12 @@
 
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-function synchronizeSwitcher(client) {
-    client.skipSwitcher = client.skipTaskbar;
-}
 
-function setupConnection(client) {
-    synchronizeSwitcher(client);
-    client.skipTaskbarChanged.connect(client, synchronizeSwitcher);
+function setupConnection(window) {
+    window.skipSwitcher = window.skipTaskbar;
+    window.skipTaskbarChanged.connect(() => {
+        window.skipSwitcher = window.skipTaskbar;
+    });
 }
 
 workspace.windowAdded.connect(setupConnection);
