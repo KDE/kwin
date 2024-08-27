@@ -50,13 +50,13 @@ std::optional<SvgCursorMetaDataEntry> SvgCursorMetaDataEntry::parse(const QJsonO
         return std::nullopt;
     }
 
-    const QJsonValue frametime = object.value(QLatin1String("frametime"));
+    const QJsonValue delay = object.value(QLatin1String("delay"));
 
     return SvgCursorMetaDataEntry{
         .fileName = fileName.toString(),
         .nominalSize = nominalSize.toDouble(),
         .hotspot = QPointF(hotspotX.toDouble(), hotspotY.toDouble()),
-        .delay = std::chrono::milliseconds(frametime.toInt()),
+        .delay = std::chrono::milliseconds(delay.toInt()),
     };
 }
 
