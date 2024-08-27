@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-22 00:40+0000\n"
-"PO-Revision-Date: 2024-07-23 22:37+0900\n"
+"PO-Revision-Date: 2024-08-25 02:09+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -569,7 +569,7 @@ msgstr "自適應同步"
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "允許撕裂"
 
 #: rulesmodel.cpp:782
 #, kde-format

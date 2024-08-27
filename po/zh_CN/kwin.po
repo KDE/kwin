@@ -3627,13 +3627,13 @@ msgstr "自适应同步规则类型"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "允许画面撕裂"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
 #, kde-format
 msgid "Tearing rule type"
-msgstr ""
+msgstr "画面撕裂规则类型"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

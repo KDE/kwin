@@ -564,7 +564,7 @@ msgstr "自适应同步"
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "允许画面撕裂"
 
 #: rulesmodel.cpp:782
 #, kde-format
