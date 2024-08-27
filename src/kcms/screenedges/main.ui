@@ -190,12 +190,12 @@
        </item>
        <item>
         <property name="text">
-         <string>Only When Moving Windows</string>
+         <string>Only when moving windows</string>
         </property>
        </item>
        <item>
         <property name="text">
-         <string>Always Enabled</string>
+         <string>Always enabled</string>
         </property>
        </item>
       </widget>
