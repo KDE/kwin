@@ -10,6 +10,7 @@
 #include "tilemanager.h"
 #include "core/output.h"
 #include "quicktile.h"
+#include "tilelayout.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 
@@ -56,6 +57,7 @@ QDebug operator<<(QDebug debug, const TileManager *tileManager)
 TileManager::TileManager(Output *parent)
     : QObject(parent)
     , m_output(parent)
+    , m_tileLayout(new TileLayout(this))
     , m_tileModel(new TileModel(this))
 {
     m_saveTimer = std::make_unique<QTimer>(this);
@@ -86,6 +88,11 @@ bool TileManager::tearingDown() const
 Output *TileManager::output() const
 {
     return m_output;
+}
+
+TileLayout *TileManager::tileLayout() const
+{
+    return m_tileLayout;
 }
 
 Tile *TileManager::bestTileForPosition(const QPointF &pos)

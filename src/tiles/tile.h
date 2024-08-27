@@ -152,7 +152,6 @@ protected:
     void removeChild(Tile *child);
 
     QList<Tile *> m_children;
-    QList<Window *> m_windows;
     Tile *m_parentTile;
 
     TileManager *m_tiling;

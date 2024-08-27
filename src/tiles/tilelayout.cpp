@@ -75,7 +75,7 @@ Tile *TileLayout::tileForWindow(Window *window) const
     return m_tileForWindow.value(window);
 }
 
-QList<Window *> TileLayout::windowsForTile(Tile *tile) const
+QList<KWin::Window *> TileLayout::windowsForTile(Tile *tile) const
 {
     return m_windowsForTile.values(tile);
 }

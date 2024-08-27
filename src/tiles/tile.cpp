@@ -45,10 +45,11 @@ Tile::~Tile()
     if (m_tiling->tearingDown()) {
         return;
     }
-    for (auto *w : std::as_const(m_windows)) {
+    for (auto *w : m_tiling->tileLayout()->windowsForTile(this)) {
         Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
         w->setTile(tile);
     }
+    m_tiling->tileLayout()->forgetTile(this);
 }
 
 bool Tile::supportsResizeGravity(Gravity gravity)
@@ -112,7 +113,7 @@ void Tile::setRelativeGeometry(const QRectF &geom)
     Q_EMIT absoluteGeometryChanged();
     Q_EMIT windowGeometryChanged();
 
-    for (auto *w : std::as_const(m_windows)) {
+    for (auto *w : m_tiling->tileLayout()->windowsForTile(this)) {
         w->moveResize(windowGeometry());
     }
 }
@@ -188,7 +189,7 @@ void Tile::setPadding(qreal padding)
     for (auto *t : std::as_const(m_children)) {
         t->setPadding(padding);
     }
-    for (auto *w : std::as_const(m_windows)) {
+    for (auto *w : m_tiling->tileLayout()->windowsForTile(this)) {
         w->moveResize(windowGeometry());
     }
 
@@ -285,9 +286,9 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
-    if (!m_windows.contains(window)) {
+    if (m_tiling->tileLayout()->tileForWindow(window) != this) {
         window->moveResize(windowGeometry());
-        m_windows.append(window);
+        m_tiling->tileLayout()->setAssociation(window, this);
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
@@ -295,8 +296,8 @@ void Tile::addWindow(Window *window)
 
 void Tile::removeWindow(Window *window)
 {
-    // We already ensure there is a single copy of window in m_windows
-    if (m_windows.removeOne(window)) {
+    if (m_tiling->tileLayout()->tileForWindow(window) == this) {
+        m_tiling->tileLayout()->removeAssociation(window, this);
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
     }
@@ -304,7 +305,8 @@ void Tile::removeWindow(Window *window)
 
 QList<KWin::Window *> Tile::windows() const
 {
-    return m_windows;
+    // FIXME
+    return m_tiling->tileLayout()->windowsForTile(const_cast<Tile *>(this));
 }
 
 void Tile::insertChild(int position, Tile *item)
@@ -317,7 +319,7 @@ void Tile::insertChild(int position, Tile *item)
 
     if (wasEmpty) {
         Q_EMIT isLayoutChanged(true);
-        for (auto *w : std::as_const(m_windows)) {
+        for (auto *w : m_tiling->tileLayout()->windowsForTile(this)) {
             Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
             w->setTile(tile);
         }

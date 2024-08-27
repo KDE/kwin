@@ -322,10 +322,11 @@ void CustomTile::remove()
         }
     }
 
-    const auto windows = std::exchange(m_windows, {});
+    const auto windows = m_tiling->tileLayout()->windowsForTile(this);
     for (Window *window : windows) {
         window->setTile(m_tiling->bestTileForPosition(window->moveResizeGeometry().center()));
     }
+    m_tiling->tileLayout()->forgetTile(this);
 
     deleteLater(); // not using "delete this" because QQmlEngine will crash
 }

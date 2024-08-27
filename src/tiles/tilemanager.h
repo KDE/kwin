@@ -13,6 +13,7 @@
 #include "quicktile.h"
 #include "scripting/tilemodel.h"
 #include "tile.h"
+#include "tilelayout.h"
 #include "utils/common.h"
 #include <kwin_export.h>
 
@@ -29,6 +30,7 @@ namespace KWin
 
 class Output;
 class Tile;
+class TileLayout;
 class TileModel;
 
 /**
@@ -48,6 +50,7 @@ public:
 
     Output *output() const;
 
+    TileLayout *tileLayout() const;
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
     CustomTile *rootTile() const;
@@ -66,6 +69,7 @@ private:
 
     Q_DISABLE_COPY(TileManager)
 
+    TileLayout *m_tileLayout = nullptr;
     Output *m_output = nullptr;
     std::unique_ptr<QTimer> m_saveTimer;
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
