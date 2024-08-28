@@ -464,13 +464,13 @@ void RulesModel::populateRuleList()
         // Single selection of Virtual Desktop on X11
         desktops = new RuleItem(QLatin1String("desktops"),
                                 RulePolicy::SetRule, RuleItem::Option,
-                                i18n("Virtual Desktop"), i18n("Size & Position"),
+                                i18n("Virtual desktop"), i18n("Size & Position"),
                                 QIcon::fromTheme("virtual-desktops"));
     } else {
         // Multiple selection on Wayland
         desktops = new RuleItem(QLatin1String("desktops"),
                                 RulePolicy::SetRule, RuleItem::OptionList,
-                                i18n("Virtual Desktops"), i18n("Size & Position"),
+                                i18n("Virtual desktops"), i18n("Size & Position"),
                                 QIcon::fromTheme("virtual-desktops"));
     }
     addRule(desktops);
@@ -722,12 +722,12 @@ void RulesModel::populateRuleList()
 
     addRule(new RuleItem(QLatin1String("adaptivesync"),
                          RulePolicy::ForceRule, RuleItem::Boolean,
-                         i18n("Adaptive Sync"), i18n("Appearance & Fixes"),
+                         i18n("Adaptive sync"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("monitor-symbolic")));
 
     addRule(new RuleItem(QLatin1String("tearing"),
                          RulePolicy::ForceRule, RuleItem::Boolean,
-                         i18n("Allow Tearing"), i18n("Appearance & Fixes"),
+                         i18n("Allow tearing"), i18n("Appearance & Fixes"),
                          QIcon::fromTheme("monitor-symbolic")));
 }
 
@@ -814,18 +814,18 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
 {
     static const auto modelData = QList<OptionsModel::Data>{
         // TODO: Find/create better icons
-        {0, i18n("All Window Types"), {}, {}, OptionsModel::SelectAllOption},
-        {1 << NET::Normal, i18n("Normal Window"), QIcon::fromTheme("window")},
-        {1 << NET::Dialog, i18n("Dialog Window"), QIcon::fromTheme("window-duplicate")},
-        {1 << NET::Utility, i18n("Utility Window"), QIcon::fromTheme("dialog-object-properties")},
+        {0, i18n("All window types"), {}, {}, OptionsModel::SelectAllOption},
+        {1 << NET::Normal, i18n("Normal window"), QIcon::fromTheme("window")},
+        {1 << NET::Dialog, i18n("Dialog window"), QIcon::fromTheme("window-duplicate")},
+        {1 << NET::Utility, i18n("Utility window"), QIcon::fromTheme("dialog-object-properties")},
         {1 << NET::Dock, i18n("Dock (panel)"), QIcon::fromTheme("list-remove")},
         {1 << NET::Toolbar, i18n("Toolbar"), QIcon::fromTheme("tools")},
-        {1 << NET::Menu, i18n("Torn-Off Menu"), QIcon::fromTheme("overflow-menu-left")},
-        {1 << NET::Splash, i18n("Splash Screen"), QIcon::fromTheme("embosstool")},
+        {1 << NET::Menu, i18n("Torn-off menu"), QIcon::fromTheme("overflow-menu-left")},
+        {1 << NET::Splash, i18n("Splash screen"), QIcon::fromTheme("embosstool")},
         {1 << NET::Desktop, i18n("Desktop"), QIcon::fromTheme("desktop")},
         // {1 <<  NET::Override, i18n("Unmanaged Window")},  deprecated
-        {1 << NET::TopMenu, i18n("Standalone Menubar"), QIcon::fromTheme("application-menu")},
-        {1 << NET::OnScreenDisplay, i18n("On Screen Display"), QIcon::fromTheme("osd-duplicate")}};
+        {1 << NET::TopMenu, i18n("Standalone menubar"), QIcon::fromTheme("application-menu")},
+        {1 << NET::OnScreenDisplay, i18n("On-screen display"), QIcon::fromTheme("osd-duplicate")}};
 
     return modelData;
 }
@@ -835,7 +835,7 @@ QList<OptionsModel::Data> RulesModel::virtualDesktopsModelData() const
     QList<OptionsModel::Data> modelData;
     modelData << OptionsModel::Data{
         QString(),
-        i18n("All Desktops"),
+        i18n("All desktops"),
         QIcon::fromTheme("window-pin"),
         i18nc("@info:tooltip in the virtual desktop list", "Make the window available on all desktops"),
         OptionsModel::ExclusiveOption,
@@ -856,7 +856,7 @@ QList<OptionsModel::Data> RulesModel::activitiesModelData() const
 
     modelData << OptionsModel::Data{
         Activities::nullUuid(),
-        i18n("All Activities"),
+        i18n("All activities"),
         QIcon::fromTheme("activities"),
         i18nc("@info:tooltip in the activity list", "Make the window available on all activities"),
         OptionsModel::ExclusiveOption,
@@ -880,14 +880,14 @@ QList<OptionsModel::Data> RulesModel::placementModelData() const
 {
     static const auto modelData = QList<OptionsModel::Data>{
         {PlacementDefault, i18n("Default")},
-        {PlacementNone, i18n("No Placement")},
-        {PlacementSmart, i18n("Minimal Overlapping")},
+        {PlacementNone, i18n("No placement")},
+        {PlacementSmart, i18n("Minimal overlapping")},
         {PlacementMaximizing, i18n("Maximized")},
         {PlacementCentered, i18n("Centered")},
         {PlacementRandom, i18n("Random")},
-        {PlacementZeroCornered, i18n("In Top-Left Corner")},
-        {PlacementUnderMouse, i18n("Under Mouse")},
-        {PlacementOnMainWindow, i18n("On Main Window")}};
+        {PlacementZeroCornered, i18n("In top-left corner")},
+        {PlacementUnderMouse, i18n("Under mouse")},
+        {PlacementOnMainWindow, i18n("On main window")}};
     return modelData;
 }
 
@@ -931,8 +931,8 @@ QList<OptionsModel::Data> RulesModel::layerModelData() const
         {NotificationLayer, i18n("Notification")},
         {ActiveLayer, i18n("Fullscreen")},
         {PopupLayer, i18n("Popup")},
-        {CriticalNotificationLayer, i18n("Critical Notification")},
-        {OnScreenDisplayLayer, i18n("OSD")},
+        {CriticalNotificationLayer, i18n("Critical notification")},
+        {OnScreenDisplayLayer, i18n("On-screen display")},
         {OverlayLayer, i18n("Overlay")},
     };
     return modelData;

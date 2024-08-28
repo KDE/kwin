@@ -196,17 +196,17 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
 {
     static const auto stringMatchOptions = QList<RulePolicy::Data>{
         {Rules::UnimportantMatch, i18n("Unimportant")},
-        {Rules::ExactMatch, i18n("Exact Match")},
-        {Rules::SubstringMatch, i18n("Substring Match")},
-        {Rules::RegExpMatch, i18n("Regular Expression")}};
+        {Rules::ExactMatch, i18n("Exact match")},
+        {Rules::SubstringMatch, i18n("Substring match")},
+        {Rules::RegExpMatch, i18n("Regular expression")}};
 
     static const auto setRuleOptions = QList<RulePolicy::Data>{
         {Rules::Apply,
-         i18n("Apply Initially"),
+         i18n("Apply initially"),
          i18n("The window property will be only set to the given value after the window is created."
               "\nNo further changes will be affected.")},
         {Rules::ApplyNow,
-         i18n("Apply Now"),
+         i18n("Apply now"),
          i18n("The window property will be set to the given value immediately and will not be affected later"
               "\n(this action will be deleted afterwards).")},
         {Rules::Remember,
@@ -214,14 +214,14 @@ QList<RulePolicy::Data> RulePolicy::policyOptions(RulePolicy::Type type)
          i18n("The value of the window property will be remembered and, every time the window"
               " is created, the last remembered value will be applied.")},
         {Rules::DontAffect,
-         i18n("Do Not Affect"),
+         i18n("Do not affect"),
          i18n("The window property will not be affected and therefore the default handling for it will be used."
               "\nSpecifying this will block more generic window settings from taking effect.")},
         {Rules::Force,
          i18n("Force"),
          i18n("The window property will be always forced to the given value.")},
         {Rules::ForceTemporarily,
-         i18n("Force Temporarily"),
+         i18n("Force temporarily"),
          i18n("The window property will be forced to the given value until it is hidden"
               "\n(this action will be deleted after the window is hidden).")}};
 
