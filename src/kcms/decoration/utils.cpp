@@ -22,15 +22,15 @@ const QMap<QString, KDecoration2::BorderSize> s_borderSizes{
     {QStringLiteral("VeryHuge"), KDecoration2::BorderSize::VeryHuge},
     {QStringLiteral("Oversized"), KDecoration2::BorderSize::Oversized}};
 const QMap<KDecoration2::BorderSize, QString> s_borderSizeNames{
-    {KDecoration2::BorderSize::None, i18n("No Window Borders")},
-    {KDecoration2::BorderSize::NoSides, i18n("No Side Window Borders")},
-    {KDecoration2::BorderSize::Tiny, i18n("Tiny Window Borders")},
-    {KDecoration2::BorderSize::Normal, i18n("Normal Window Borders")},
-    {KDecoration2::BorderSize::Large, i18n("Large Window Borders")},
-    {KDecoration2::BorderSize::VeryLarge, i18n("Very Large Window Borders")},
-    {KDecoration2::BorderSize::Huge, i18n("Huge Window Borders")},
-    {KDecoration2::BorderSize::VeryHuge, i18n("Very Huge Window Borders")},
-    {KDecoration2::BorderSize::Oversized, i18n("Oversized Window Borders")}};
+    {KDecoration2::BorderSize::None, i18n("No window borders")},
+    {KDecoration2::BorderSize::NoSides, i18n("No side window borders")},
+    {KDecoration2::BorderSize::Tiny, i18n("Tiny window borders")},
+    {KDecoration2::BorderSize::Normal, i18n("Normal window borders")},
+    {KDecoration2::BorderSize::Large, i18n("Large window borders")},
+    {KDecoration2::BorderSize::VeryLarge, i18n("Very large window borders")},
+    {KDecoration2::BorderSize::Huge, i18n("Huge window borders")},
+    {KDecoration2::BorderSize::VeryHuge, i18n("Very huge window borders")},
+    {KDecoration2::BorderSize::Oversized, i18n("Oversized window borders")}};
 
 const QHash<KDecoration2::DecorationButtonType, QChar> s_buttonNames{
     {KDecoration2::DecorationButtonType::Menu, QChar('M')},

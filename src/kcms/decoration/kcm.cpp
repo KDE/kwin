@@ -174,7 +174,7 @@ QStringList KCMKWinDecoration::borderSizesModel() const
     // Use index 0 for borderSizeAuto == true
     // The rest of indexes get offset by 1
     QStringList model = Utils::getBorderSizeNames().values();
-    model.insert(0, i18nc("%1 is the name of a border size", "Theme's default (%1)", model.at(recommendedBorderSize())));
+    model.insert(0, i18nc("%1 is the name of a border size", "Theme default (%1)", model.at(recommendedBorderSize())));
     return model;
 }
 
