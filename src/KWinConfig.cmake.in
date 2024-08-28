@@ -1,6 +1,9 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
+find_dependency(ECM "@KF6_MIN_VERSION@")
+list(APPEND CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
+
 find_dependency(Qt6Core "@QT_MIN_VERSION@")
 find_dependency(Qt6Gui "@QT_MIN_VERSION@")
 find_dependency(Qt6Quick "@QT_MIN_VERSION@")
