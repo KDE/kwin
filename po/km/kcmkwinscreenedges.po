@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-08-28 00:40+0000\n"
 "PO-Revision-Date: 2012-06-13 15:35+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -185,14 +185,16 @@ msgstr "បាន​បិទ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, kde-format
-msgid "Only When Moving Windows"
+#, fuzzy, kde-format
+#| msgid "Only When Moving Windows"
+msgid "Only when moving windows"
 msgstr "តែ​នៅពេល​ផ្លាស់ទី​បង្អួច​ប៉ុណ្ណោះ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, kde-format
-msgid "Always Enabled"
+#, fuzzy, kde-format
+#| msgid "Always Enabled"
+msgid "Always enabled"
 msgstr "បើក​ជា​និច្ច"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)

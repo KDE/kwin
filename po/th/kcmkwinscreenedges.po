@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-08-28 00:40+0000\n"
 "PO-Revision-Date: 2010-03-25 11:46+0700\n"
 "Last-Translator: Thanomsub Noppaburana <donga.nb@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
@@ -185,14 +185,16 @@ msgstr "ปิดการใช้งาน"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, kde-format
-msgid "Only When Moving Windows"
+#, fuzzy, kde-format
+#| msgid "Only When Moving Windows"
+msgid "Only when moving windows"
 msgstr "เฉพาะเมื่อมีการย้ายหน้าต่างเท่านั้น"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, kde-format
-msgid "Always Enabled"
+#, fuzzy, kde-format
+#| msgid "Always Enabled"
+msgid "Always enabled"
 msgstr "เปิดใช้งานเสมอ"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)

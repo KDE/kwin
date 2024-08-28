@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-08-28 00:40+0000\n"
 "PO-Revision-Date: 2024-02-27 21:23+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -183,14 +183,16 @@ msgstr "Dezactivat"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, kde-format
-msgid "Only When Moving Windows"
+#, fuzzy, kde-format
+#| msgid "Only When Moving Windows"
+msgid "Only when moving windows"
 msgstr "Numai la mutarea ferestrelor"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, kde-format
-msgid "Always Enabled"
+#, fuzzy, kde-format
+#| msgid "Always Enabled"
+msgid "Always enabled"
 msgstr "Activat întotdeauna"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)

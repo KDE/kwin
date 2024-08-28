@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-08-28 00:40+0000\n"
 "PO-Revision-Date: 2014-10-20 19:32+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -188,14 +188,16 @@ msgstr "Isključeno"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, kde-format
-msgid "Only When Moving Windows"
+#, fuzzy, kde-format
+#| msgid "Only When Moving Windows"
+msgid "Only when moving windows"
 msgstr "Samo pri pomijeranju prozora"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, kde-format
-msgid "Always Enabled"
+#, fuzzy, kde-format
+#| msgid "Always Enabled"
+msgid "Always enabled"
 msgstr "Uvijek uključeno"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)

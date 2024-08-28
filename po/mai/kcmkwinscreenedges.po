@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-08-28 00:40+0000\n"
 "PO-Revision-Date: 2010-01-29 14:00+0530\n"
 "Last-Translator: Rajesh Ranjan <rajesh672@gmail.com>\n"
 "Language-Team: Maithili <maithili.sf.net>\n"
@@ -184,13 +184,13 @@ msgstr "अक्षम"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
 #, kde-format
-msgid "Only When Moving Windows"
+msgid "Only when moving windows"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
 #, kde-format
-msgid "Always Enabled"
+msgid "Always enabled"
 msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)

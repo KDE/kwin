@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-08-28 00:40+0000\n"
 "PO-Revision-Date: 2019-09-15 15:45+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -178,13 +178,13 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
 #, kde-format
-msgid "Only When Moving Windows"
+msgid "Only when moving windows"
 msgstr ""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
 #, kde-format
-msgid "Always Enabled"
+msgid "Always enabled"
 msgstr ""
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
