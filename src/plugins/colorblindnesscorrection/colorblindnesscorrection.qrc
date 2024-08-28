@@ -1,6 +1,6 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/effects/colorblindnesscorrection/">
-  <file>shaders/colorblindesscorrection.frag</file>
-  <file>shaders/colorblindesscorrection_core.frag</file>
+  <file>shaders/colorblindnesscorrection.frag</file>
+  <file>shaders/colorblindnesscorrection_core.frag</file>
 </qresource>
 </RCC>

@@ -9,7 +9,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/glshader.h"
 
-#include "colorblindnesscorrection_settings_singleton.h"
+#include "colorblindnesscorrectionconfig.h"
 
 Q_LOGGING_CATEGORY(KWIN_COLORBLINDNESS_CORRECTION, "kwin_effect_colorblindnesscorrection", QtWarningMsg)
 
