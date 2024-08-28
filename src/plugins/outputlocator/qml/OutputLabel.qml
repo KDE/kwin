@@ -16,6 +16,10 @@ Rectangle {
     property double scale;
 
     color: Kirigami.Theme.backgroundColor
+    border {
+        color: Kirigami.Theme.textColor
+        width: 2
+    }
 
     implicitWidth: childrenRect.width + 2 * childrenRect.x
     implicitHeight: childrenRect.height + 2 * childrenRect.y
