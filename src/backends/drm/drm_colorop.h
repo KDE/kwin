@@ -78,21 +78,24 @@ class DrmAtomicCommit;
 class DrmAbstractColorOp
 {
 public:
-    explicit DrmAbstractColorOp(DrmAbstractColorOp *next);
+    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, bool needsNonLinearity = false);
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
-    virtual bool canBeUsedFor(const ColorOp &op) = 0;
-    virtual void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) = 0;
+    virtual std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) = 0;
+    virtual void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) = 0;
     virtual void bypass(DrmAtomicCommit *commit) = 0;
 
     DrmAbstractColorOp *next() const;
+    bool needsNonlinearity() const;
 
 protected:
     DrmAbstractColorOp *m_next = nullptr;
 
     std::optional<ColorPipeline> m_cachedPipeline;
+    std::optional<ColorPipeline> m_cachedPipelineFail;
     std::unique_ptr<DrmAtomicCommit> m_cache;
+    bool m_needsNonLinerity = false;
 };
 
 class DrmLutColorOp : public DrmAbstractColorOp
@@ -100,8 +103,8 @@ class DrmLutColorOp : public DrmAbstractColorOp
 public:
     explicit DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize, DrmProperty *bypass);
 
-    bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
@@ -116,8 +119,8 @@ class LegacyMatrixColorOp : public DrmAbstractColorOp
 public:
     explicit LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop);
 
-    bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
@@ -129,8 +132,8 @@ class Matrix3x4ColorOp : public DrmAbstractColorOp
 public:
     explicit Matrix3x4ColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmProperty *bypass);
 
-    bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
@@ -143,8 +146,8 @@ class UnknownColorOp : public DrmAbstractColorOp
 public:
     explicit UnknownColorOp(DrmAbstractColorOp *next, DrmProperty *bypass);
 
-    bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:
@@ -156,8 +159,8 @@ class DrmLut3DColorOp : public DrmAbstractColorOp
 public:
     explicit DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *modeIndex, const QList<drm_mode_3dlut_mode> &modes, DrmProperty *bypass);
 
-    bool canBeUsedFor(const ColorOp &op) override;
-    void program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale) override;
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
     void bypass(DrmAtomicCommit *commit) override;
 
 private:

@@ -84,12 +84,14 @@ private:
 class KWIN_EXPORT ColorOp
 {
 public:
+    using Operation = std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper>;
     ValueRange input;
-    std::variant<ColorTransferFunction, InverseColorTransferFunction, ColorMatrix, ColorMultiplier, ColorTonemapper> operation;
+    Operation operation;
     ValueRange output;
 
     bool operator==(const ColorOp &) const = default;
     QVector3D apply(const QVector3D input) const;
+    static QVector3D applyOperation(const ColorOp::Operation &operation, const QVector3D &input);
 };
 
 class KWIN_EXPORT ColorPipeline
