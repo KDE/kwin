@@ -818,7 +818,7 @@ QList<OptionsModel::Data> RulesModel::windowTypesModelData() const
         {1 << NET::Normal, i18n("Normal window"), QIcon::fromTheme("window")},
         {1 << NET::Dialog, i18n("Dialog window"), QIcon::fromTheme("window-duplicate")},
         {1 << NET::Utility, i18n("Utility window"), QIcon::fromTheme("dialog-object-properties")},
-        {1 << NET::Dock, i18n("Dock (panel)"), QIcon::fromTheme("list-remove")},
+        {1 << NET::Dock, i18n("Dock (panel)"), QIcon::fromTheme("spinbox-decrease")}, // see bug 492341
         {1 << NET::Toolbar, i18n("Toolbar"), QIcon::fromTheme("tools")},
         {1 << NET::Menu, i18n("Torn-off menu"), QIcon::fromTheme("overflow-menu-left")},
         {1 << NET::Splash, i18n("Splash screen"), QIcon::fromTheme("embosstool")},
