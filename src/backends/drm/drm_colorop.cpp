@@ -30,6 +30,65 @@ DrmAbstractColorOp *DrmAbstractColorOp::next() const
     return m_next;
 }
 
+struct Program
+{
+    double inputScale;
+    std::vector<ColorOp> ops;
+    double outputScale;
+};
+
+static bool findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *, Program> &map, DrmAbstractColorOp *currentOp, std::span<const ColorOp> ops, double inputScale)
+{
+    if (ops.empty()) {
+        return true;
+    }
+    if (!currentOp) {
+        return false;
+    }
+    auto preference = currentOp->colorOpPreference(ops.front());
+    while (!preference) {
+        currentOp = currentOp->next();
+        if (!currentOp) {
+            return false;
+        }
+        preference = currentOp->colorOpPreference(ops.front());
+    }
+    // if there's a different hw op with a higher preference, try that first
+    DrmAbstractColorOp *otherOp = currentOp->next();
+    while (otherOp) {
+        const auto otherPref = otherOp->colorOpPreference(ops.front());
+        if (otherPref && *otherPref > *preference) {
+            if (findColorPipelineAssignments(map, otherOp, ops, inputScale)) {
+                return true;
+            }
+        }
+        otherOp = otherOp->next();
+    }
+    // this is the best assignment for this op, ensure the rest of the pipeline can be assigned too
+    double outputScale = 1.0 / ops.front().output.max;
+    if (ops.size() == 1) {
+        // last color op, our internal scaling needs to be undone
+        outputScale = 1.0;
+    }
+    if (!findColorPipelineAssignments(map, currentOp, ops.subspan(1), outputScale)) {
+        return false;
+    }
+    const auto it = map.find(currentOp);
+    if (it == map.end()) {
+        map.emplace(currentOp, Program{
+                                   .inputScale = inputScale,
+                                   .ops = {ops.front()},
+                                   .outputScale = outputScale,
+                               });
+    } else {
+        // note that because of the recursion above, operations must be added in the front of the vector
+        auto &program = it->second;
+        program.ops.insert(program.ops.begin(), ops.front());
+        program.inputScale = inputScale;
+    }
+    return true;
+}
+
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
 {
     if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
@@ -37,73 +96,50 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         return true;
     }
 
-    DrmAbstractColorOp *currentOp = this;
-
-    // first, only check if the pipeline can be programmed in the first place
+    std::unordered_map<DrmAbstractColorOp *, Program> assignments;
+    // first, search for the most optimal pipeline
     // don't calculate LUTs just yet
-    std::optional<ColorOp> initialOp;
-    double valueScaling = 1;
+
+    DrmAbstractColorOp *currentOp = this;
+    double inputScale = 1.0;
     if (!pipeline.ops.empty() && pipeline.ops.front().input.max > 1) {
-        valueScaling = 1.0 / pipeline.ops.front().input.max;
-        initialOp = ColorOp{
+        ColorOp initial{
             .input = pipeline.ops.front().input,
-            .operation = ColorMultiplier{valueScaling},
+            .operation = ColorMultiplier{inputScale},
             .output = ValueRange{
-                .min = pipeline.ops.front().input.min * valueScaling,
+                .min = pipeline.ops.front().input.min * inputScale,
                 .max = 1.0,
             },
         };
-        while (currentOp && !currentOp->colorOpPreference(*initialOp)) {
+        while (currentOp && !currentOp->colorOpPreference(initial)) {
             currentOp = currentOp->next();
         }
         if (!currentOp) {
             return false;
         }
-        currentOp = currentOp->next();
+        assignments[currentOp] = Program{
+            .inputScale = 1,
+            .ops = {initial},
+            .outputScale = inputScale,
+        };
     }
-    for (auto it = pipeline.ops.begin(); it != pipeline.ops.end(); it++) {
-        while (currentOp && !currentOp->colorOpPreference(*it)) {
-            currentOp = currentOp->next();
-        }
-        if (!currentOp) {
-            return false;
-        }
+
+    if (!findColorPipelineAssignments(assignments, currentOp, pipeline.ops, inputScale)) {
+        // TODO now that searching for the pipeline is a bit more expensive, maybe cache this result too?
+        return false;
     }
 
     // now actually program the properties
-    currentOp = this;
     m_cache = std::make_unique<DrmAtomicCommit>(commit->gpu());
-    if (initialOp) {
-        while (!currentOp->colorOpPreference(*initialOp)) {
-            currentOp->bypass(m_cache.get());
-            currentOp = currentOp->next();
-        }
-        currentOp->program(m_cache.get(), std::span(&*initialOp, 1), 1, 1);
-        currentOp = currentOp->next();
-    }
-    for (auto it = pipeline.ops.begin(); it != pipeline.ops.end();) {
-        while (!currentOp->colorOpPreference(*it)) {
-            currentOp->bypass(m_cache.get());
-            currentOp = currentOp->next();
-        }
-        auto firstIt = it;
-        it++;
-        // combine as many operations into one hardware operation as possible
-        while (it != pipeline.ops.end() && currentOp->colorOpPreference(*it)) {
-            it++;
-        }
-        std::span operations(firstIt, it);
-        double outputScaling = 1.0;
-        if (it != pipeline.ops.end()) {
-            // to make things easier for now, scale everything from the second to the last operation to be in [0, 1] range
-            outputScaling = 1.0 / operations.back().output.max;
-        }
-        currentOp->program(m_cache.get(), operations, valueScaling, outputScaling);
-        valueScaling = outputScaling;
-        currentOp = currentOp->next();
-    }
+    currentOp = this;
     while (currentOp) {
-        currentOp->bypass(m_cache.get());
+        const auto it = assignments.find(currentOp);
+        if (it != assignments.end()) {
+            const auto &[op, program] = *it;
+            currentOp->program(m_cache.get(), program.ops, program.inputScale, program.outputScale);
+        } else {
+            currentOp->bypass(m_cache.get());
+        }
         currentOp = currentOp->next();
     }
     commit->merge(m_cache.get());
@@ -126,11 +162,15 @@ std::optional<uint32_t> DrmLutColorOp::colorOpPreference(const ColorOp &op)
         || std::holds_alternative<ColorTonemapper>(op.operation)) {
         // the required resolution depends heavily on the function and on the input and output ranges / multipliers
         // but this is good enough for now
-        return m_maxSize >= 1024;
+        if (m_maxSize >= 1024) {
+            return 1;
+        } else {
+            return 0;
+        }
     } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+        return 0;
     }
-    return false;
+    return std::nullopt;
 }
 
 void DrmLutColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale)
@@ -173,17 +213,22 @@ std::optional<uint32_t> LegacyMatrixColorOp::colorOpPreference(const ColorOp &op
 {
     // TODO check the resolution of the matrix somehow too?
     if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
-        return matrix->mat(3, 0) == 0
+        const bool canRepresent = matrix->mat(3, 0) == 0
             && matrix->mat(3, 1) == 0
             && matrix->mat(3, 2) == 0
             && matrix->mat(3, 3) == 1
             && matrix->mat(0, 3) == 0
             && matrix->mat(1, 3) == 0
             && matrix->mat(2, 3) == 0;
+        if (!canRepresent) {
+            return std::nullopt;
+        } else {
+            return 1;
+        }
     } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+        return 0;
     }
-    return false;
+    return std::nullopt;
 }
 
 static uint64_t doubleToFixed(double value)
@@ -237,14 +282,19 @@ std::optional<uint32_t> Matrix3x4ColorOp::colorOpPreference(const ColorOp &op)
 {
     // TODO check the resolution of the matrix somehow too?
     if (auto matrix = std::get_if<ColorMatrix>(&op.operation)) {
-        return matrix->mat(0, 3) == 0
+        const bool canRepresent = matrix->mat(0, 3) == 0
             && matrix->mat(1, 3) == 0
             && matrix->mat(2, 3) == 0
             && matrix->mat(3, 3) == 1;
+        if (!canRepresent) {
+            return std::nullopt;
+        } else {
+            return 1;
+        }
     } else if (std::holds_alternative<ColorMultiplier>(op.operation)) {
-        return true;
+        return 0;
     }
-    return false;
+    return std::nullopt;
 }
 
 void Matrix3x4ColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale)
@@ -311,10 +361,9 @@ DrmLut3DColorOp::DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, D
 
 std::optional<uint32_t> DrmLut3DColorOp::colorOpPreference(const ColorOp &op)
 {
-    // FIXME return some preference value instead of just a bool
-    // and then make this prefer not to take 1D LUTs
-    // so they'd be moved to the shaper luts instead, which have a lot more resolution
-    return true;
+    // everything can be represented as a 3D lut,
+    // but resolution isn't great, so push it to other ops if possible
+    return 0;
 }
 
 void DrmLut3DColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp> operations, double inputScale, double outputScale)
