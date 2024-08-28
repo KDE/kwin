@@ -111,6 +111,16 @@ void Window::requestActivateWindow()
 #endif
 }
 
+void Window::raise()
+{
+    // Left blank intentionally to suppress warnings in QPlatformWindow::raise().
+}
+
+void Window::lower()
+{
+    // Left blank intentionally to suppress warnings in QPlatformWindow::lower().
+}
+
 void Window::setGeometry(const QRect &rect)
 {
     const QRect oldGeometry = geometry();

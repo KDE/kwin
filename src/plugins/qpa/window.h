@@ -36,6 +36,8 @@ public:
     WId winId() const override;
     qreal devicePixelRatio() const override;
     void requestActivateWindow() override;
+    void raise() override;
+    void lower() override;
 
     InternalWindow *internalWindow() const;
     Swapchain *swapchain(const std::shared_ptr<EglContext> &context, const QHash<uint32_t, QList<uint64_t>> &formats);
