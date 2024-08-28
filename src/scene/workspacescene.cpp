@@ -208,11 +208,14 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                 if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen() || window->windowItem()->hasEffects()) {
                     return {};
                 }
-                if (!windowItem->surfaceItem()) {
+
+                SurfaceItem *surfaceItem = window->surfaceItem();
+                if (!surfaceItem || !surfaceItem->isVisible()) {
                     continue;
                 }
+
                 QRegion occlusion;
-                if (!addCandidates(windowItem->surfaceItem(), ret, maxCount, occlusion)) {
+                if (!addCandidates(surfaceItem, ret, maxCount, occlusion)) {
                     return {};
                 }
                 return ret;
