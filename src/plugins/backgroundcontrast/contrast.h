@@ -76,7 +76,7 @@ private:
         QRegion contrastRegion;
         std::unique_ptr<GLTexture> texture;
         std::unique_ptr<GLFramebuffer> fbo;
-        ItemEffect surfaceEffect;
+        ItemEffect windowEffect;
     };
     std::unordered_map<const EffectWindow *, Data> m_windowData;
     static ContrastManagerInterface *s_contrastManager;

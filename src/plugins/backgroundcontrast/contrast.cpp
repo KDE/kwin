@@ -176,7 +176,7 @@ void ContrastEffect::updateContrastRegion(EffectWindow *w)
         Data &data = m_windowData[w];
         data.colorMatrix = matrix;
         data.contrastRegion = region;
-        data.surfaceEffect = ItemEffect(w->windowItem()->surfaceItem());
+        data.windowEffect = ItemEffect(w->windowItem());
     } else {
         if (auto it = m_windowData.find(w); it != m_windowData.end()) {
             effects->makeOpenGLContextCurrent();
