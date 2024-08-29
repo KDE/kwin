@@ -63,7 +63,7 @@ public:
     }
     void addBlob(const DrmProperty &prop, const std::shared_ptr<DrmBlob> &blob);
     void addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame);
-    void setVrr(DrmCrtc *crtc, bool vrr);
+    void setVrr(DrmCrtc *crtc, bool vrr, bool vrrOnTheWire);
     void setPresentationMode(PresentationMode mode);
 
     bool test();
@@ -76,6 +76,7 @@ public:
     bool areBuffersReadable() const;
     void setDeadline(std::chrono::steady_clock::time_point deadline);
     std::optional<bool> isVrr() const;
+    std::optional<bool> isVrrOnTheWire() const;
     const std::unordered_set<DrmPlane *> &modifiedPlanes() const;
 
     void merge(DrmAtomicCommit *onTop);
@@ -87,6 +88,8 @@ public:
     bool isReadyFor(std::chrono::steady_clock::time_point pageflipTarget) const;
     bool isTearing() const;
 
+    void removeFrames();
+
 private:
     bool doCommit(uint32_t flags);
 
@@ -97,6 +100,7 @@ private:
     std::unordered_map<DrmPlane *, std::shared_ptr<OutputFrame>> m_frames;
     std::unordered_set<DrmPlane *> m_planes;
     std::optional<bool> m_vrr;
+    std::optional<bool> m_vrrOnTheWire;
     std::unordered_map<uint32_t /* object */, std::unordered_map<uint32_t /* property */, uint64_t /* value */>> m_properties;
     bool m_cursorOnly = false;
     bool m_modeset = false;

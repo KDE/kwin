@@ -41,7 +41,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
             bool timeout = false;
             if (m_committed) {
                 timeout = m_commitPending.wait_for(lock, s_pageflipTimeout) == std::cv_status::timeout;
-            } else if (m_commits.empty()) {
+            } else if (m_commits.empty() && !m_fakeFixedRefresh) {
                 m_commitPending.wait(lock);
             }
             if (m_committed) {
@@ -51,7 +51,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 }
                 continue;
             }
-            if (m_commits.empty()) {
+            if (m_commits.empty() && !m_fakeFixedRefresh) {
                 continue;
             }
             const auto now = std::chrono::steady_clock::now();
@@ -61,6 +61,18 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 lock.lock();
             }
             optimizeCommits(m_targetPageflipTime);
+            if (m_commits.empty() || !m_commits.front()->isReadyFor(m_targetPageflipTime)) {
+                Q_ASSERT(m_fakeFixedRefresh);
+                // to keep the refresh rate of the display up, commit now
+                m_targetPageflipTime += m_minVblankInterval;
+                if (!m_lastCommit->commit()) {
+                    qCWarning(KWIN_DRM, "Fake FRR atomic commit failed: %s", strerror(errno));
+                    m_fakeFixedRefresh = false;
+                    continue;
+                }
+                m_committed = std::move(m_lastCommit);
+                continue;
+            }
             if (!m_commits.front()->isReadyFor(m_targetPageflipTime)) {
                 // no commit is ready yet, reschedule
                 if (m_vrr || m_tearing) {
@@ -104,10 +116,10 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
 void DrmCommitThread::submit()
 {
     auto &commit = m_commits.front();
-    const auto vrr = commit->isVrr();
     const bool success = commit->commit();
     if (success) {
-        m_vrr = vrr.value_or(m_vrr);
+        m_vrr = commit->isVrr().value_or(m_vrr);
+        m_vrrOnTheWire = commit->isVrrOnTheWire().value_or(m_vrrOnTheWire);
         m_tearing = commit->isTearing();
         m_committed = std::move(commit);
         m_commits.erase(m_commits.begin());
@@ -302,9 +314,16 @@ void DrmCommitThread::setModeInfo(uint32_t maximum, std::chrono::nanoseconds vbl
 void DrmCommitThread::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     std::unique_lock lock(m_mutex);
+    qWarning() << std::chrono::duration_cast<std::chrono::microseconds>(TimePoint(timestamp) - m_lastPageflip);
     m_lastPageflip = TimePoint(timestamp);
+    if (auto atomic = dynamic_cast<DrmAtomicCommit *>(m_committed.get())) {
+        m_lastCommit.reset(atomic);
+        m_lastCommit->removeFrames();
+        m_committed.release();
+        m_fakeFixedRefresh = !m_vrr && m_vrrOnTheWire;
+    }
     m_committed.reset();
-    if (!m_commits.empty()) {
+    if (!m_commits.empty() || m_fakeFixedRefresh) {
         m_targetPageflipTime = estimateNextVblank(std::chrono::steady_clock::now());
         m_commitPending.notify_all();
     }

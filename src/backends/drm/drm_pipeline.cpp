@@ -183,7 +183,9 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     }
 
     if (m_pending.crtc->vrrEnabled.isValid()) {
-        commit->setVrr(m_pending.crtc, m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync);
+        commit->setVrr(m_pending.crtc,
+                       m_pending.presentationMode == PresentationMode::AdaptiveSync || m_pending.presentationMode == PresentationMode::AdaptiveAsync,
+                       m_output->vrrPolicy() != VrrPolicy::Never);
     }
 
     if (m_cursorLayer->isEnabled() && m_primaryLayer->colorPipeline() != m_cursorLayer->colorPipeline()) {

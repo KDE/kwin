@@ -85,10 +85,11 @@ void DrmAtomicCommit::addBuffer(DrmPlane *plane, const std::shared_ptr<DrmFrameb
     }
 }
 
-void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr)
+void DrmAtomicCommit::setVrr(DrmCrtc *crtc, bool vrr, bool vrrOnTheWire)
 {
-    addProperty(crtc->vrrEnabled, vrr ? 1 : 0);
+    addProperty(crtc->vrrEnabled, vrrOnTheWire ? 1 : 0);
     m_vrr = vrr;
+    m_vrrOnTheWire = vrrOnTheWire;
 }
 
 void DrmAtomicCommit::setPresentationMode(PresentationMode mode)
@@ -199,6 +200,11 @@ std::optional<bool> DrmAtomicCommit::isVrr() const
     return m_vrr;
 }
 
+std::optional<bool> DrmAtomicCommit::isVrrOnTheWire() const
+{
+    return m_vrrOnTheWire;
+}
+
 const std::unordered_set<DrmPlane *> &DrmAtomicCommit::modifiedPlanes() const
 {
     return m_planes;
@@ -255,6 +261,11 @@ bool DrmAtomicCommit::isReadyFor(std::chrono::steady_clock::time_point pageflipT
 bool DrmAtomicCommit::isTearing() const
 {
     return m_mode == PresentationMode::Async || m_mode == PresentationMode::AdaptiveAsync;
+}
+
+void DrmAtomicCommit::removeFrames()
+{
+    m_frames.clear();
 }
 
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)

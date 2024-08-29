@@ -49,6 +49,7 @@ private:
     void optimizeCommits(TimePoint pageflipTarget);
     void submit();
 
+    std::unique_ptr<DrmAtomicCommit> m_lastCommit;
     std::unique_ptr<DrmCommit> m_committed;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commits;
     std::unique_ptr<QThread> m_thread;
@@ -59,7 +60,9 @@ private:
     std::chrono::nanoseconds m_minVblankInterval;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commitsToDelete;
     bool m_vrr = false;
+    bool m_vrrOnTheWire = false;
     bool m_tearing = false;
+    bool m_fakeFixedRefresh = false;
     std::chrono::nanoseconds m_safetyMargin{0};
 };
 
