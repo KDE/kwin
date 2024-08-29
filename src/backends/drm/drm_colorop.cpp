@@ -91,10 +91,10 @@ static bool findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *
 
 bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline)
 {
-    if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
-        commit->merge(m_cache.get());
-        return true;
-    }
+    // if (m_cachedPipeline && *m_cachedPipeline == pipeline) {
+    //     commit->merge(m_cache.get());
+    //     return true;
+    // }
 
     std::unordered_map<DrmAbstractColorOp *, Program> assignments;
     // first, search for the most optimal pipeline
