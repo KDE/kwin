@@ -266,12 +266,7 @@ void BlurEffect::updateBlurRegion(EffectWindow *w)
         BlurEffectData &data = m_windows[w];
         data.content = content;
         data.frame = frame;
-        if (content) {
-            data.surfaceEffect = ItemEffect(w->windowItem()->surfaceItem());
-        }
-        if (frame) {
-            data.surfaceEffect = ItemEffect(w->windowItem()->decorationItem());
-        }
+        data.windowEffect = ItemEffect(w->windowItem());
     } else {
         if (auto it = m_windows.find(w); it != m_windows.end()) {
             effects->makeOpenGLContextCurrent();

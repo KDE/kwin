@@ -32,14 +32,14 @@ struct BlurEffectData
 {
     /// The region that should be blurred behind the window
     std::optional<QRegion> content;
-    ItemEffect surfaceEffect;
 
     /// The region that should be blurred behind the frame
     std::optional<QRegion> frame;
-    ItemEffect decorationEffect;
 
     /// The render data per screen. Screens can have different color spaces.
     std::unordered_map<Output *, BlurRenderData> render;
+
+    ItemEffect windowEffect;
 };
 
 class BlurEffect : public KWin::Effect
