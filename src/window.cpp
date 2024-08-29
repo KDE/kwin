@@ -108,6 +108,7 @@ void Window::ref()
 
 void Window::unref()
 {
+    Q_ASSERT(m_refCount > 0);
     --m_refCount;
     if (m_refCount) {
         return;
