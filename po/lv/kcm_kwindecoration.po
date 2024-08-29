@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-10 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2024-05-27 07:59+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -79,9 +79,11 @@ msgid "Spacer"
 msgstr "Atdalītājs"
 
 #: kcm.cpp:177
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "%1 is the name of a border size"
+#| msgid "Theme's default (%1)"
 msgctxt "%1 is the name of a border size"
-msgid "Theme's default (%1)"
+msgid "Theme default (%1)"
 msgstr "Motīva noklusējums (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
@@ -225,48 +227,57 @@ msgid "Edit %1 Theme"
 msgstr "Rediģēt %1 motīvu"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Window Borders"
+#, fuzzy, kde-format
+#| msgid "No Window Borders"
+msgid "No window borders"
 msgstr "Bez logu apmalēm"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Window Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Window Borders"
+msgid "No side window borders"
 msgstr "Bez logu sānu apmalēm"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny Window Borders"
+#, fuzzy, kde-format
+#| msgid "Tiny Window Borders"
+msgid "Tiny window borders"
 msgstr "Mazas logu apmales"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal Window Borders"
+#, fuzzy, kde-format
+#| msgid "Normal Window Borders"
+msgid "Normal window borders"
 msgstr "Normālas logu apmales"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large Window Borders"
+#, fuzzy, kde-format
+#| msgid "Large Window Borders"
+msgid "Large window borders"
 msgstr "Lielas logu apmales"
 
 #: utils.cpp:30
-#, kde-format
-msgid "Very Large Window Borders"
+#, fuzzy, kde-format
+#| msgid "Very Large Window Borders"
+msgid "Very large window borders"
 msgstr "Ļoti lielas logu apmales"
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge Window Borders"
+#, fuzzy, kde-format
+#| msgid "Huge Window Borders"
+msgid "Huge window borders"
 msgstr "Milzīgas logu apmales"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge Window Borders"
+#, fuzzy, kde-format
+#| msgid "Very Huge Window Borders"
+msgid "Very huge window borders"
 msgstr "Pavisam milzīgas logu apmales"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized Window Borders"
+#, fuzzy, kde-format
+#| msgid "Oversized Window Borders"
+msgid "Oversized window borders"
 msgstr "Pārmērīgi lielas logu apmales"
 
 #, fuzzy

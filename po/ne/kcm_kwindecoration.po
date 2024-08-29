@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-10 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2007-08-19 16:35+0545\n"
 "Last-Translator: Nabin Gautam <nabin@mpp.org.np>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -77,7 +77,7 @@ msgstr ""
 #: kcm.cpp:177
 #, kde-format
 msgctxt "%1 is the name of a border size"
-msgid "Theme's default (%1)"
+msgid "Theme default (%1)"
 msgstr ""
 
 #: kwin-applywindowdecoration.cpp:32
@@ -214,54 +214,55 @@ msgstr ""
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "No Window Borders"
+msgid "No window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "No Side Window Borders"
+msgid "No side window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "Tiny Window Borders"
+msgid "Tiny window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "Normal Window Borders"
+msgid "Normal window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "Large Window Borders"
+msgid "Large window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:30
-#, kde-format
-msgid "Very Large Window Borders"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "B&order size:"
+msgid "Very large window borders"
+msgstr "किनारा साइज:"
 
 #: utils.cpp:31
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "Huge Window Borders"
+msgid "Huge window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "Very Huge Window Borders"
+msgid "Very huge window borders"
 msgstr "किनारा साइज:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
 #| msgid "B&order size:"
-msgid "Oversized Window Borders"
+msgid "Oversized window borders"
 msgstr "किनारा साइज:"
 
 #, fuzzy

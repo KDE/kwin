@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2022-10-17 23:50+0400\n"
 "Last-Translator: Kheyyam <xxmn77@gmail.com>\n"
 "Language-Team: Azerbaijani <kde-i18n-doc@kde.org>\n"
@@ -1225,24 +1225,24 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "host_adı"
 
-#: input.cpp:2109
+#: input.cpp:2114
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr ""
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, fuzzy, kde-format
 #| msgctxt "Name of a hardware switch"
 #| msgid "Tablet mode"
 msgid "Tablet moved to %1"
 msgstr "Planşet rejimi"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3284
+#: input.cpp:3290
 #, kde-format
 msgid "Touchpad"
 msgstr "Toxunma Paneli"
@@ -1536,56 +1536,6 @@ msgstr "Güclü"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Küy səviyyəsi:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:32
-#, kde-format
-msgid "Red"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:33
-#, kde-format
-msgid "Green"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:34
-#, kde-format
-msgid "Blue"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:35
-#, kde-format
-msgid "Purple"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:71
-#, kde-format
-msgctxt "@label"
-msgid "Mode:"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:76
-#, kde-format
-msgctxt "@option"
-msgid "Protanopia (red weak)"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:77
-#, kde-format
-msgctxt "@option"
-msgid "Deuteranopia (green weak)"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:78
-#, kde-format
-msgctxt "@option"
-msgid "Tritanopia (blue-yellow)"
-msgstr ""
-
-#: plugins/colorblindnesscorrection/ui/main.qml:85
-#, kde-format
-msgctxt "@label"
-msgid "Intensity:"
-msgstr ""
 
 #: plugins/colorpicker/colorpicker.cpp:107
 #, fuzzy, kde-format

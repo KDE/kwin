@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1688482 2024-08-24 01:14:28Z scripty $
+# $Id: kwin.po 1689015 2024-08-29 01:13:42Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2024-08-22 07:48+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1236,22 +1236,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ime gostitelja: %1"
 
-#: input.cpp:2109
+#: input.cpp:2114
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Premakni tablični računalnik na naslednji izhod"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablični računalnik prenesen na %1"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tablični računalniki so preklopili izhode"
 
-#: input.cpp:3284
+#: input.cpp:3290
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -1540,56 +1540,6 @@ msgstr "Krepko"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Moč šuma:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:32
-#, kde-format
-msgid "Red"
-msgstr "Rdeča"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:33
-#, kde-format
-msgid "Green"
-msgstr "Zelena"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:34
-#, kde-format
-msgid "Blue"
-msgstr "Modra"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:35
-#, kde-format
-msgid "Purple"
-msgstr "Vijolična"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:71
-#, kde-format
-msgctxt "@label"
-msgid "Mode:"
-msgstr "Način:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:76
-#, kde-format
-msgctxt "@option"
-msgid "Protanopia (red weak)"
-msgstr "Protanopia (šibka rdeča)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:77
-#, kde-format
-msgctxt "@option"
-msgid "Deuteranopia (green weak)"
-msgstr "Deuteranopia (šibka zelena)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:78
-#, kde-format
-msgctxt "@option"
-msgid "Tritanopia (blue-yellow)"
-msgstr "Tritanopia (modra-rumena)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:85
-#, kde-format
-msgctxt "@label"
-msgid "Intensity:"
-msgstr "Intenzivnost:"
 
 #: plugins/colorpicker/colorpicker.cpp:107
 #, kde-format
@@ -4358,6 +4308,38 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland se je sesul"
+
+#~ msgid "Red"
+#~ msgstr "Rdeča"
+
+#~ msgid "Green"
+#~ msgstr "Zelena"
+
+#~ msgid "Blue"
+#~ msgstr "Modra"
+
+#~ msgid "Purple"
+#~ msgstr "Vijolična"
+
+#~ msgctxt "@label"
+#~ msgid "Mode:"
+#~ msgstr "Način:"
+
+#~ msgctxt "@option"
+#~ msgid "Protanopia (red weak)"
+#~ msgstr "Protanopia (šibka rdeča)"
+
+#~ msgctxt "@option"
+#~ msgid "Deuteranopia (green weak)"
+#~ msgstr "Deuteranopia (šibka zelena)"
+
+#~ msgctxt "@option"
+#~ msgid "Tritanopia (blue-yellow)"
+#~ msgstr "Tritanopia (modra-rumena)"
+
+#~ msgctxt "@label"
+#~ msgid "Intensity:"
+#~ msgstr "Intenzivnost:"
 
 #~ msgctxt "The code as read from the input device"
 #~ msgid "Scan code"

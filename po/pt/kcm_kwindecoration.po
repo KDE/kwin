@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-10 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2023-02-15 15:25+0000\n"
 "Last-Translator: José Nuno Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -71,9 +71,11 @@ msgid "Spacer"
 msgstr ""
 
 #: kcm.cpp:177
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "%1 is the name of a border size"
+#| msgid "Theme's default (%1)"
 msgctxt "%1 is the name of a border size"
-msgid "Theme's default (%1)"
+msgid "Theme default (%1)"
 msgstr "Predefinição do tema (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
@@ -226,59 +228,61 @@ msgstr "Editar o Tema %1"
 #: utils.cpp:25
 #, fuzzy, kde-format
 #| msgid "No Side Borders"
-msgid "No Window Borders"
+msgid "No window borders"
 msgstr "Sem Contornos Laterais"
 
 #: utils.cpp:26
 #, fuzzy, kde-format
 #| msgid "No Side Borders"
-msgid "No Side Window Borders"
+msgid "No side window borders"
 msgstr "Sem Contornos Laterais"
 
 #: utils.cpp:27
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
-msgid "Tiny Window Borders"
+msgid "Tiny window borders"
 msgstr "Tamanho do contorno da janela:"
 
 #: utils.cpp:28
 #, fuzzy, kde-format
 #| msgid "No Side Borders"
-msgid "Normal Window Borders"
+msgid "Normal window borders"
 msgstr "Sem Contornos Laterais"
 
 #: utils.cpp:29
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
-msgid "Large Window Borders"
+msgid "Large window borders"
 msgstr "Tamanho do contorno da janela:"
 
 #: utils.cpp:30
-#, kde-format
-msgid "Very Large Window Borders"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "Selector label"
+#| msgid "Window border size:"
+msgid "Very large window borders"
+msgstr "Tamanho do contorno da janela:"
 
 #: utils.cpp:31
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
-msgid "Huge Window Borders"
+msgid "Huge window borders"
 msgstr "Tamanho do contorno da janela:"
 
 #: utils.cpp:32
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
-msgid "Very Huge Window Borders"
+msgid "Very huge window borders"
 msgstr "Tamanho do contorno da janela:"
 
 #: utils.cpp:33
 #, fuzzy, kde-format
 #| msgctxt "Selector label"
 #| msgid "Window border size:"
-msgid "Oversized Window Borders"
+msgid "Oversized window borders"
 msgstr "Tamanho do contorno da janela:"
 
 #~ msgctxt "button text"

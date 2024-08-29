@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2024-08-22 05:15+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -1218,22 +1218,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "ჰოსტის სახელი: %1"
 
-#: input.cpp:2109
+#: input.cpp:2114
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "ტაბლეტის შემდეგ გამოტანაზე გადატანა"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "ტაბლეტი გადატანილია %1-ზე"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "ტაბლეტებმა გამოტანები გადართეს"
 
-#: input.cpp:3284
+#: input.cpp:3290
 #, kde-format
 msgid "Touchpad"
 msgstr "თაჩპედი"
@@ -1519,56 +1519,6 @@ msgstr "ძლიერი"
 #, kde-format
 msgid "Noise strength:"
 msgstr "ხმაურის სიძლიერე:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:32
-#, kde-format
-msgid "Red"
-msgstr "წითელი"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:33
-#, kde-format
-msgid "Green"
-msgstr "მწვანე"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:34
-#, kde-format
-msgid "Blue"
-msgstr "ლურჯი"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:35
-#, kde-format
-msgid "Purple"
-msgstr "იისფერი"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:71
-#, kde-format
-msgctxt "@label"
-msgid "Mode:"
-msgstr "რეჟიმი:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:76
-#, kde-format
-msgctxt "@option"
-msgid "Protanopia (red weak)"
-msgstr "პროთანოპია (სუსტი წითელი)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:77
-#, kde-format
-msgctxt "@option"
-msgid "Deuteranopia (green weak)"
-msgstr "დეიტერანოპია (სუსტი მწვანე)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:78
-#, kde-format
-msgctxt "@option"
-msgid "Tritanopia (blue-yellow)"
-msgstr "ტრიტანოპია (ლურჯი-ყვითელი)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:85
-#, kde-format
-msgctxt "@label"
-msgid "Intensity:"
-msgstr "ინტენსვობა:"
 
 #: plugins/colorpicker/colorpicker.cpp:107
 #, kde-format
@@ -4337,6 +4287,38 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland ავარიულად დასრულდა"
+
+#~ msgid "Red"
+#~ msgstr "წითელი"
+
+#~ msgid "Green"
+#~ msgstr "მწვანე"
+
+#~ msgid "Blue"
+#~ msgstr "ლურჯი"
+
+#~ msgid "Purple"
+#~ msgstr "იისფერი"
+
+#~ msgctxt "@label"
+#~ msgid "Mode:"
+#~ msgstr "რეჟიმი:"
+
+#~ msgctxt "@option"
+#~ msgid "Protanopia (red weak)"
+#~ msgstr "პროთანოპია (სუსტი წითელი)"
+
+#~ msgctxt "@option"
+#~ msgid "Deuteranopia (green weak)"
+#~ msgstr "დეიტერანოპია (სუსტი მწვანე)"
+
+#~ msgctxt "@option"
+#~ msgid "Tritanopia (blue-yellow)"
+#~ msgstr "ტრიტანოპია (ლურჯი-ყვითელი)"
+
+#~ msgctxt "@label"
+#~ msgid "Intensity:"
+#~ msgstr "ინტენსვობა:"
 
 #~ msgctxt "The code as read from the input device"
 #~ msgid "Scan code"

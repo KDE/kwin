@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-02-10 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2024-02-13 16:34+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -73,9 +73,11 @@ msgid "Spacer"
 msgstr "Spatiator"
 
 #: kcm.cpp:177
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "%1 is the name of a border size"
+#| msgid "Theme's default (%1)"
 msgctxt "%1 is the name of a border size"
-msgid "Theme's default (%1)"
+msgid "Theme default (%1)"
 msgstr "Predefinition de thema (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
@@ -228,48 +230,57 @@ msgid "Edit %1 Theme"
 msgstr "Edita Thema %1"
 
 #: utils.cpp:25
-#, kde-format
-msgid "No Window Borders"
+#, fuzzy, kde-format
+#| msgid "No Window Borders"
+msgid "No window borders"
 msgstr "Necun bordos de fenestra"
 
 #: utils.cpp:26
-#, kde-format
-msgid "No Side Window Borders"
+#, fuzzy, kde-format
+#| msgid "No Side Window Borders"
+msgid "No side window borders"
 msgstr "Necun bordos lateral"
 
 #: utils.cpp:27
-#, kde-format
-msgid "Tiny Window Borders"
+#, fuzzy, kde-format
+#| msgid "Tiny Window Borders"
+msgid "Tiny window borders"
 msgstr "Bordos de fenestra minuscule"
 
 #: utils.cpp:28
-#, kde-format
-msgid "Normal Window Borders"
+#, fuzzy, kde-format
+#| msgid "Normal Window Borders"
+msgid "Normal window borders"
 msgstr "Bordos de fenestra normal"
 
 #: utils.cpp:29
-#, kde-format
-msgid "Large Window Borders"
+#, fuzzy, kde-format
+#| msgid "Large Window Borders"
+msgid "Large window borders"
 msgstr "Bordos de Fenestra grande"
 
 #: utils.cpp:30
-#, kde-format
-msgid "Very Large Window Borders"
+#, fuzzy, kde-format
+#| msgid "Very Large Window Borders"
+msgid "Very large window borders"
 msgstr "Bordos de Fenestra multe grande"
 
 #: utils.cpp:31
-#, kde-format
-msgid "Huge Window Borders"
+#, fuzzy, kde-format
+#| msgid "Huge Window Borders"
+msgid "Huge window borders"
 msgstr "Bordo de fenestra enorme"
 
 #: utils.cpp:32
-#, kde-format
-msgid "Very Huge Window Borders"
+#, fuzzy, kde-format
+#| msgid "Very Huge Window Borders"
+msgid "Very huge window borders"
 msgstr "Bordos de Fenestra multe enorme"
 
 #: utils.cpp:33
-#, kde-format
-msgid "Oversized Window Borders"
+#, fuzzy, kde-format
+#| msgid "Oversized Window Borders"
+msgid "Oversized window borders"
 msgstr "Bordos de fenestra gigante"
 
 #~ msgctxt "button text"

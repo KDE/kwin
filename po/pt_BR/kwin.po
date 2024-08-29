@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2024-08-06 10:18-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -1241,22 +1241,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nome da máquina: %1"
 
-#: input.cpp:2109
+#: input.cpp:2114
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Mover o tablet para a próxima saída"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet movido para %1"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Os tablets trocaram de saídas"
 
-#: input.cpp:3284
+#: input.cpp:3290
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -1550,56 +1550,6 @@ msgstr "Forte"
 #, kde-format
 msgid "Noise strength:"
 msgstr "Força do ruído:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:32
-#, kde-format
-msgid "Red"
-msgstr "Vermelho"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:33
-#, kde-format
-msgid "Green"
-msgstr "Verde"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:34
-#, kde-format
-msgid "Blue"
-msgstr "Azul"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:35
-#, kde-format
-msgid "Purple"
-msgstr "Roxo"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:71
-#, kde-format
-msgctxt "@label"
-msgid "Mode:"
-msgstr "Modo:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:76
-#, kde-format
-msgctxt "@option"
-msgid "Protanopia (red weak)"
-msgstr "Protanopia (vermelho fraco)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:77
-#, kde-format
-msgctxt "@option"
-msgid "Deuteranopia (green weak)"
-msgstr "Deuteranopia (verde fraco)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:78
-#, kde-format
-msgctxt "@option"
-msgid "Tritanopia (blue-yellow)"
-msgstr "Tritanopia (azul-amarelo)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:85
-#, kde-format
-msgctxt "@label"
-msgid "Intensity:"
-msgstr "Intensidade:"
 
 #: plugins/colorpicker/colorpicker.cpp:107
 #, kde-format
@@ -4378,6 +4328,38 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "O Xwayland falhou"
+
+#~ msgid "Red"
+#~ msgstr "Vermelho"
+
+#~ msgid "Green"
+#~ msgstr "Verde"
+
+#~ msgid "Blue"
+#~ msgstr "Azul"
+
+#~ msgid "Purple"
+#~ msgstr "Roxo"
+
+#~ msgctxt "@label"
+#~ msgid "Mode:"
+#~ msgstr "Modo:"
+
+#~ msgctxt "@option"
+#~ msgid "Protanopia (red weak)"
+#~ msgstr "Protanopia (vermelho fraco)"
+
+#~ msgctxt "@option"
+#~ msgid "Deuteranopia (green weak)"
+#~ msgstr "Deuteranopia (verde fraco)"
+
+#~ msgctxt "@option"
+#~ msgid "Tritanopia (blue-yellow)"
+#~ msgstr "Tritanopia (azul-amarelo)"
+
+#~ msgctxt "@label"
+#~ msgid "Intensity:"
+#~ msgstr "Intensidade:"
 
 #~ msgctxt "The code as read from the input device"
 #~ msgid "Scan code"

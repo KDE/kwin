@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-24 00:40+0000\n"
+"POT-Creation-Date: 2024-08-29 00:40+0000\n"
 "PO-Revision-Date: 2024-06-30 13:36+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1222,22 +1222,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "புரவன் பெயர்: %1"
 
-#: input.cpp:2109
+#: input.cpp:2114
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "வரைபலகையை அடுத்த திரைக்கு நகர்த்து"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட்டது"
 
-#: input.cpp:2188
+#: input.cpp:2193
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
-#: input.cpp:3284
+#: input.cpp:3290
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
@@ -1521,56 +1521,6 @@ msgstr "அதிகம்"
 #| msgid "&Strength:"
 msgid "Noise strength:"
 msgstr "&வலிமை:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:32
-#, kde-format
-msgid "Red"
-msgstr "சிவப்பு"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:33
-#, kde-format
-msgid "Green"
-msgstr "பச்சை"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:34
-#, kde-format
-msgid "Blue"
-msgstr "நீலம்"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:35
-#, kde-format
-msgid "Purple"
-msgstr "ஊதா"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:71
-#, kde-format
-msgctxt "@label"
-msgid "Mode:"
-msgstr "பயன்முறை:"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:76
-#, kde-format
-msgctxt "@option"
-msgid "Protanopia (red weak)"
-msgstr "சிகப்பு தெரியின்மை (protanopia)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:77
-#, kde-format
-msgctxt "@option"
-msgid "Deuteranopia (green weak)"
-msgstr "பச்சை தெரியின்மை (deuteranopia)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:78
-#, kde-format
-msgctxt "@option"
-msgid "Tritanopia (blue-yellow)"
-msgstr "நீலம்-மஞ்சள் வேறுபடாமை (tritanopia)"
-
-#: plugins/colorblindnesscorrection/ui/main.qml:85
-#, kde-format
-msgctxt "@label"
-msgid "Intensity:"
-msgstr "செறிவு:"
 
 #: plugins/colorpicker/colorpicker.cpp:107
 #, kde-format
@@ -4336,6 +4286,38 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland முறிவடைந்துள்ளது"
+
+#~ msgid "Red"
+#~ msgstr "சிவப்பு"
+
+#~ msgid "Green"
+#~ msgstr "பச்சை"
+
+#~ msgid "Blue"
+#~ msgstr "நீலம்"
+
+#~ msgid "Purple"
+#~ msgstr "ஊதா"
+
+#~ msgctxt "@label"
+#~ msgid "Mode:"
+#~ msgstr "பயன்முறை:"
+
+#~ msgctxt "@option"
+#~ msgid "Protanopia (red weak)"
+#~ msgstr "சிகப்பு தெரியின்மை (protanopia)"
+
+#~ msgctxt "@option"
+#~ msgid "Deuteranopia (green weak)"
+#~ msgstr "பச்சை தெரியின்மை (deuteranopia)"
+
+#~ msgctxt "@option"
+#~ msgid "Tritanopia (blue-yellow)"
+#~ msgstr "நீலம்-மஞ்சள் வேறுபடாமை (tritanopia)"
+
+#~ msgctxt "@label"
+#~ msgid "Intensity:"
+#~ msgstr "செறிவு:"
 
 #~ msgid "Inactivity duration (seconds):"
 #~ msgstr "செயலற்று இருக்கும் காலநீட்சி (நொடிகளில்):"
