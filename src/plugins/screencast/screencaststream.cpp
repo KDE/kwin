@@ -199,7 +199,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
     }
 
     if (!format || id != SPA_PARAM_Format) {
-        qCDebug(KWIN_SCREENCAST) << objectName() << "stream param request ignored, id:" << id << "and with format:"<< (format != nullptr);
+        qCDebug(KWIN_SCREENCAST) << objectName() << "stream param request ignored, id:" << id << "and with format:" << (format != nullptr);
         return;
     }
 
@@ -220,16 +220,12 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
         }
 
         if (!m_dmabufParams || m_dmabufParams->width != m_resolution.width() || m_dmabufParams->height != m_resolution.height() || !receivedModifiers.contains(m_dmabufParams->modifier)) {
-            if (modifierProperty->flags & SPA_POD_PROP_FLAG_DONT_FIXATE) {
-                // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
-                // item on the list
-                if (receivedModifiers.count() > 1) {
-                    receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
-                }
-                m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
-            } else {
-                m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, {DRM_FORMAT_MOD_INVALID});
+            // DRM_MOD_INVALID should be used as a last option. Do not just remove it it's the only
+            // item on the list
+            if (receivedModifiers.count() > 1) {
+                receivedModifiers.removeAll(DRM_FORMAT_MOD_INVALID);
             }
+            m_dmabufParams = testCreateDmaBuf(m_resolution, m_drmFormat, receivedModifiers);
 
             // In case we fail to use any modifier from the list of offered ones, remove these
             // from our all future offerings, otherwise there will be no indication that it cannot
@@ -247,7 +243,7 @@ void ScreenCastStream::onStreamParamChanged(uint32_t id, const struct spa_pod *f
             return;
         }
     } else {
-      m_dmabufParams.reset();
+        m_dmabufParams.reset();
     }
 
     qCDebug(KWIN_SCREENCAST) << objectName() << "Stream format found, defining buffers";
