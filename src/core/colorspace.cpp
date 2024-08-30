@@ -38,6 +38,11 @@ XYZ xy::toXYZ() const
     };
 }
 
+QVector2D xy::asVector() const
+{
+    return QVector2D(x, y);
+}
+
 XYZ xyY::toXYZ() const
 {
     if (y == 0) {
@@ -165,6 +170,52 @@ Colorimetry Colorimetry::interpolateGamutTo(const Colorimetry &one, double facto
         m_blue * (1 - factor) + one.blue() * factor,
         m_white, // whitepoint should stay the same
     };
+}
+
+static double triangleArea(QVector2D p1, QVector2D p2, QVector2D p3)
+{
+    return std::abs(0.5 * (p1.x() * (p2.y() - p3.y()) + p2.x() * (p3.y() - p1.y()) + p3.x() * (p1.y() - p2.y())));
+}
+
+bool Colorimetry::isValid(xy red, xy green, xy blue, xy white)
+{
+    // this is more of a heuristic than a hard rule
+    // but if the gamut is too small, it's not really usable
+    const double gamutArea = triangleArea(red.asVector(), green.asVector(), blue.asVector());
+    if (gamutArea < 0.1) {
+        return false;
+    }
+    // if the white point is inside the gamut triangle,
+    // the three triangles made up between the primaries and the whitepoint
+    // must have the same area as the gamut triangle
+    const double area1 = triangleArea(white.asVector(), green.asVector(), blue.asVector());
+    const double area2 = triangleArea(red.asVector(), white.asVector(), blue.asVector());
+    const double area3 = triangleArea(red.asVector(), green.asVector(), white.asVector());
+    if (std::abs(area1 + area2 + area3 - gamutArea) > 0.001) {
+        // this would cause terrible glitches
+        return false;
+    }
+    return true;
+}
+
+bool Colorimetry::isReal(xy red, xy green, xy blue, xy white)
+{
+    if (!isValid(red, green, blue, white)) {
+        return false;
+    }
+    // outside of XYZ definitely can't be shown on a display
+    // TODO maybe calculate if all values are within the human-visible gamut too?
+    if (red.x < 0 || red.x > 1
+        || red.y < 0 || red.y > 1
+        || green.x < 0 || green.x > 1
+        || green.y < 0 || green.y > 1
+        || blue.x < 0 || blue.x > 1
+        || blue.y < 0 || blue.y > 1
+        || white.x < 0 || white.x > 1
+        || white.y < 0 || white.y > 1) {
+        return false;
+    }
+    return true;
 }
 
 Colorimetry::Colorimetry(XYZ red, XYZ green, XYZ blue, XYZ white)
@@ -739,6 +790,12 @@ QDebug operator<<(QDebug debug, const KWin::XYZ &xyz)
 QDebug operator<<(QDebug debug, const KWin::xyY &xyY)
 {
     debug << "xyY(" << xyY.x << xyY.y << xyY.Y << ")";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const KWin::xy &xy)
+{
+    debug << "xy(" << xy.x << xy.y << ")";
     return debug;
 }
 

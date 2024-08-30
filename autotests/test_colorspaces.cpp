@@ -42,6 +42,8 @@ private Q_SLOTS:
     void testIccShader_data();
     void testIccShader();
     void dontCrashWithWeirdHdrMetadata();
+    void testColorimetryCheck_data();
+    void testColorimetryCheck();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -434,6 +436,34 @@ void TestColorspaces::dontCrashWithWeirdHdrMetadata()
     ColorDescription out(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 80), 80, 0, 40, 40);
     const auto pipeline = ColorPipeline::create(in, out, RenderingIntent::Perceptual);
     QCOMPARE(pipeline.evaluate(QVector3D()), QVector3D());
+}
+
+void TestColorspaces::testColorimetryCheck_data()
+{
+    QTest::addColumn<bool>("expectedResult");
+    QTest::addColumn<xy>("red");
+    QTest::addColumn<xy>("green");
+    QTest::addColumn<xy>("blue");
+    QTest::addColumn<xy>("white");
+
+    QTest::addRow("PAL M") << true << xy{0.67, 0.33} << xy{0.21, 0.71} << xy{0.14, 0.08} << xy{0.310, 0.316};
+    QTest::addRow("sRGB") << true << xy{0.64, 0.33} << xy{0.30, 0.60} << xy{0.15, 0.06} << xy{0.3127, 0.3290};
+    QTest::addRow("sRGB with one negative data point") << false << xy{-1, 0.33} << xy{0.30, 0.60} << xy{0.15, 0.06} << xy{0.3127, 0.3290};
+    QTest::addRow("sRGB with out of bounds white point") << false << xy{0.64, 0.33} << xy{0.30, 0.60} << xy{0.15, 0.06} << xy{0.9, 0.9};
+    QTest::addRow("all zeros") << false << xy{0, 0} << xy{0, 0} << xy{0, 0} << xy{0, 0};
+    QTest::addRow("all ones") << false << xy{1, 1} << xy{1, 1} << xy{1, 1} << xy{1, 1};
+    QTest::addRow("BT2020") << true << xy{0.708, 0.292} << xy{0.170, 0.797} << xy{0.131, 0.046} << xy{0.3127, 0.3290};
+    QTest::addRow("Display P3") << true << xy{0.680, 0.320} << xy{0.265, 0.690} << xy{0.150, 0.060} << xy{0.3127, 0.3290};
+}
+
+void TestColorspaces::testColorimetryCheck()
+{
+    QFETCH(bool, expectedResult);
+    QFETCH(xy, red);
+    QFETCH(xy, green);
+    QFETCH(xy, blue);
+    QFETCH(xy, white);
+    QCOMPARE(Colorimetry::isValid(red, green, blue, white), expectedResult);
 }
 
 QTEST_MAIN(TestColorspaces)

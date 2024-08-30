@@ -54,6 +54,7 @@ struct KWIN_EXPORT xy
     double y;
 
     XYZ toXYZ() const;
+    QVector2D asVector() const;
     auto operator<=>(const xy &) const = default;
 };
 struct KWIN_EXPORT xyY
@@ -96,6 +97,15 @@ public:
     static QMatrix4x4 chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ destinationWhitepoint);
 
     static QMatrix4x4 calculateToXYZMatrix(XYZ red, XYZ green, XYZ blue, XYZ white);
+
+    /**
+     * checks if the colorimetry is sane and won't cause crashes or glitches
+     */
+    static bool isValid(xy red, xy green, xy blue, xy white);
+    /**
+     * checks if the colorimetry could be from a real display
+     */
+    static bool isReal(xy red, xy green, xy blue, xy white);
 
     explicit Colorimetry(XYZ red, XYZ green, XYZ blue, XYZ white);
     explicit Colorimetry(xyY red, xyY green, xyY blue, xyY white);
@@ -262,5 +272,6 @@ private:
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::XYZ &xyz);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::xyY &xyY);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::xy &xy);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::Colorimetry &color);
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::ColorDescription &color);
