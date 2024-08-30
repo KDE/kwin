@@ -7,23 +7,71 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "tablet_input.h"
+#include "backends/libinput/device.h"
+#include "cursorsource.h"
 #include "decorations/decoratedclient.h"
 #include "input_event.h"
 #include "input_event_spy.h"
+#include "osd.h"
 #include "pointer_input.h"
-#include "wayland/seat.h"
-#include "wayland/surface.h"
+#include "wayland/tablet_v2.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
-// KDecoration
+
 #include <KDecoration2/Decoration>
-// Qt
+#include <KGlobalAccel>
+#include <KLocalizedString>
+
+#include <QAction>
 #include <QHoverEvent>
 #include <QWindow>
 
 namespace KWin
 {
+
+class SurfaceCursor : public Cursor
+{
+public:
+    explicit SurfaceCursor(TabletToolV2Interface *tool)
+        : Cursor()
+    {
+        setParent(tool);
+        connect(tool, &TabletToolV2Interface::cursorChanged, this, [this](const TabletCursorSourceV2 &cursor) {
+            if (auto surfaceCursor = std::get_if<TabletSurfaceCursorV2 *>(&cursor)) {
+                // If the cursor is unset, fallback to the cross cursor.
+                if ((*surfaceCursor) && (*surfaceCursor)->enteredSerial()) {
+                    if (!m_surfaceSource) {
+                        m_surfaceSource = std::make_unique<SurfaceCursorSource>();
+                    }
+                    m_surfaceSource->update((*surfaceCursor)->surface(), (*surfaceCursor)->hotspot());
+                    setSource(m_surfaceSource.get());
+                    return;
+                }
+            }
+
+            QByteArray shape;
+            if (auto shapeCursor = std::get_if<QByteArray>(&cursor)) {
+                shape = *shapeCursor;
+            } else {
+                shape = QByteArrayLiteral("cross");
+            }
+
+            static WaylandCursorImage defaultCursor;
+            if (!m_shapeSource) {
+                m_shapeSource = std::make_unique<ShapeCursorSource>();
+            }
+            m_shapeSource->setTheme(defaultCursor.theme());
+            m_shapeSource->setShape(shape);
+            setSource(m_shapeSource.get());
+        });
+    }
+
+private:
+    std::unique_ptr<ShapeCursorSource> m_shapeSource;
+    std::unique_ptr<SurfaceCursorSource> m_surfaceSource;
+};
+
 TabletInputRedirection::TabletInputRedirection(InputRedirection *parent)
     : InputDeviceHandler(parent)
 {
@@ -43,6 +91,176 @@ void TabletInputRedirection::init()
     connect(waylandServer(), &QObject::destroyed, this, [this] {
         setInited(false);
     });
+
+    const auto devices = input()->devices();
+    for (InputDevice *device : devices) {
+        integrateDevice(device);
+    }
+    connect(input(), &InputRedirection::deviceAdded, this, &TabletInputRedirection::integrateDevice);
+    connect(input(), &InputRedirection::deviceRemoved, this, &TabletInputRedirection::removeDevice);
+
+    auto tabletNextOutput = new QAction(this);
+    tabletNextOutput->setProperty("componentName", QStringLiteral("kwin"));
+    tabletNextOutput->setText(i18n("Move the tablet to the next output"));
+    tabletNextOutput->setObjectName(QStringLiteral("Move Tablet to Next Output"));
+    KGlobalAccel::setGlobalShortcut(tabletNextOutput, QList<QKeySequence>());
+    connect(tabletNextOutput, &QAction::triggered, this, &TabletInputRedirection::trackNextOutput);
+}
+
+static TabletSeatV2Interface *findTabletSeat()
+{
+    auto server = waylandServer();
+    if (!server) {
+        return nullptr;
+    }
+    TabletManagerV2Interface *manager = server->tabletManagerV2();
+    return manager->seat(waylandServer()->seat());
+}
+
+void TabletInputRedirection::integrateDevice(InputDevice *inputDevice)
+{
+    auto device = qobject_cast<LibInput::Device *>(inputDevice);
+    if (!device || (!device->isTabletTool() && !device->isTabletPad())) {
+        return;
+    }
+
+    TabletSeatV2Interface *tabletSeat = findTabletSeat();
+    if (!tabletSeat) {
+        qCCritical(KWIN_CORE) << "Could not find tablet seat";
+        return;
+    }
+    struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
+    const char *devnode = udev_device_get_syspath(udev_device);
+
+    auto deviceGroup = libinput_device_get_device_group(device->device());
+    auto tablet = static_cast<TabletV2Interface *>(libinput_device_group_get_user_data(deviceGroup));
+    if (!tablet) {
+        tablet = tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
+        libinput_device_group_set_user_data(deviceGroup, tablet);
+    }
+
+    if (device->isTabletPad()) {
+        const int buttonsCount = libinput_device_tablet_pad_get_num_buttons(device->device());
+        const int ringsCount = libinput_device_tablet_pad_get_num_rings(device->device());
+        const int stripsCount = libinput_device_tablet_pad_get_num_strips(device->device());
+        const int modes = libinput_device_tablet_pad_get_num_mode_groups(device->device());
+
+        auto firstGroup = libinput_device_tablet_pad_get_mode_group(device->device(), 0);
+        tabletSeat->addTabletPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup), tablet);
+    }
+}
+
+void TabletInputRedirection::removeDevice(InputDevice *inputDevice)
+{
+    auto device = qobject_cast<LibInput::Device *>(inputDevice);
+    if (device) {
+        auto deviceGroup = libinput_device_get_device_group(device->device());
+        libinput_device_group_set_user_data(deviceGroup, nullptr);
+
+        TabletSeatV2Interface *tabletSeat = findTabletSeat();
+        if (tabletSeat) {
+            tabletSeat->removeDevice(device->sysName());
+        } else {
+            qCCritical(KWIN_CORE) << "Could not find tablet to remove" << device->sysName();
+        }
+    }
+}
+
+void TabletInputRedirection::trackNextOutput()
+{
+    const auto outputs = workspace()->outputs();
+    if (outputs.isEmpty()) {
+        return;
+    }
+
+    int tabletToolCount = 0;
+    InputDevice *changedDevice = nullptr;
+    const auto devices = input()->devices();
+    for (const auto device : devices) {
+        if (!device->isTabletTool()) {
+            continue;
+        }
+
+        tabletToolCount++;
+        if (device->outputName().isEmpty()) {
+            device->setOutputName(outputs.constFirst()->name());
+            changedDevice = device;
+            continue;
+        }
+
+        auto it = std::find_if(outputs.begin(), outputs.end(), [device](const auto &output) {
+            return output->name() == device->outputName();
+        });
+        ++it;
+        auto nextOutput = it == outputs.end() ? outputs.first() : *it;
+        device->setOutputName(nextOutput->name());
+        changedDevice = device;
+    }
+    const QString message = tabletToolCount == 1 ? i18n("Tablet moved to %1", changedDevice->outputName()) : i18n("Tablets switched outputs");
+    OSD::show(message, QStringLiteral("input-tablet"), 5000);
+}
+
+static TabletToolV2Interface::Type getType(const TabletToolId &tabletToolId)
+{
+    using Type = TabletToolV2Interface::Type;
+    switch (tabletToolId.m_toolType) {
+    case InputRedirection::Pen:
+        return Type::Pen;
+    case InputRedirection::Eraser:
+        return Type::Eraser;
+    case InputRedirection::Brush:
+        return Type::Brush;
+    case InputRedirection::Pencil:
+        return Type::Pencil;
+    case InputRedirection::Airbrush:
+        return Type::Airbrush;
+    case InputRedirection::Finger:
+        return Type::Finger;
+    case InputRedirection::Mouse:
+        return Type::Mouse;
+    case InputRedirection::Lens:
+        return Type::Lens;
+    case InputRedirection::Totem:
+        return Type::Totem;
+    }
+    return Type::Pen;
+}
+
+TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletToolId &tabletToolId)
+{
+    TabletSeatV2Interface *tabletSeat = findTabletSeat();
+    if (auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId, getType(tabletToolId))) {
+        return tool;
+    }
+
+    const auto f = [](InputRedirection::Capability cap) {
+        switch (cap) {
+        case InputRedirection::Tilt:
+            return TabletToolV2Interface::Tilt;
+        case InputRedirection::Pressure:
+            return TabletToolV2Interface::Pressure;
+        case InputRedirection::Distance:
+            return TabletToolV2Interface::Distance;
+        case InputRedirection::Rotation:
+            return TabletToolV2Interface::Rotation;
+        case InputRedirection::Slider:
+            return TabletToolV2Interface::Slider;
+        case InputRedirection::Wheel:
+            return TabletToolV2Interface::Wheel;
+        }
+        return TabletToolV2Interface::Wheel;
+    };
+    QList<TabletToolV2Interface::Capability> ifaceCapabilities;
+    ifaceCapabilities.resize(tabletToolId.m_capabilities.size());
+    std::transform(tabletToolId.m_capabilities.constBegin(), tabletToolId.m_capabilities.constEnd(), ifaceCapabilities.begin(), f);
+
+    TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities, tabletToolId.deviceSysName);
+
+    const auto cursor = new SurfaceCursor(tool);
+    Cursors::self()->addCursor(cursor);
+    m_cursorByTool[tool] = cursor;
+
+    return tool;
 }
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
@@ -66,6 +284,17 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
         break;
     case InputRedirection::Proximity:
         t = tipNear ? QEvent::TabletEnterProximity : QEvent::TabletLeaveProximity;
+        break;
+    }
+
+    auto tool = ensureTabletTool(tabletToolId);
+    switch (t) {
+    case QEvent::TabletEnterProximity:
+    case QEvent::TabletPress:
+    case QEvent::TabletMove:
+        m_cursorByTool[tool]->setPos(pos);
+        break;
+    default:
         break;
     }
 

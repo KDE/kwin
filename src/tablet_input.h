@@ -17,8 +17,10 @@
 
 namespace KWin
 {
+class Cursor;
 class Window;
 class TabletToolId;
+class TabletToolV2Interface;
 
 namespace Decoration
 {
@@ -61,10 +63,15 @@ public:
         return m_lastPosition;
     }
 
+    TabletToolV2Interface *ensureTabletTool(const TabletToolId &id);
+
 private:
     void cleanupDecoration(Decoration::DecoratedClientImpl *old,
                            Decoration::DecoratedClientImpl *now) override;
     void focusUpdate(Window *focusOld, Window *focusNow) override;
+    void integrateDevice(InputDevice *device);
+    void removeDevice(InputDevice *device);
+    void trackNextOutput();
 
     bool m_tipDown = false;
     bool m_tipNear = false;
@@ -72,6 +79,7 @@ private:
     QPointF m_lastPosition;
     QMetaObject::Connection m_decorationGeometryConnection;
     QMetaObject::Connection m_decorationDestroyedConnection;
+    QHash<TabletToolV2Interface *, Cursor *> m_cursorByTool;
 };
 
 }
