@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-08-25 12:21+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -2448,12 +2448,12 @@ msgstr "Fann ikkje uteining"
 msgid "Invalid region"
 msgstr "Ugyldig område"
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Krev OpenGL-samansetjing for skjermdeling"
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Klarte ikkje starta PipeWire-straum"
@@ -4258,7 +4258,7 @@ msgstr "Byt til skrivebordet under"
 msgid "Switch to Desktop %1"
 msgstr "Byt til skrivebord %1"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4292,35 +4292,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland krasja"
-
-#~ msgid "Red"
-#~ msgstr "Raudt"
-
-#~ msgid "Green"
-#~ msgstr "Grønt"
-
-#~ msgid "Blue"
-#~ msgstr "Blått"
-
-#~ msgid "Purple"
-#~ msgstr "Lilla"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Modus:"
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Protanopi (raudblind)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Deuteranopi (grønblind)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Tritanopi (blåblind)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Intensitet:"

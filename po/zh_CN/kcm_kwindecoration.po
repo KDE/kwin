@@ -73,12 +73,10 @@ msgid "Spacer"
 msgstr "间隔"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr "主题默认值 (%1)"
+msgstr ""
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -216,55 +214,46 @@ msgid "Edit %1 Theme"
 msgstr "编辑 %1 主题"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
-msgstr "无窗口边框"
+msgstr ""
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
-msgstr "无窗口侧边框"
+msgstr ""
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "小窗口边框"
+msgstr ""
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
-msgstr "正常窗口边框"
+msgstr ""
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
-msgstr "大窗口边框"
+msgstr ""
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "特大窗口边框"
+msgstr ""
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
-msgstr "超大窗口边框"
+msgstr ""
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "超特大窗口边框"
+msgstr ""
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "极大窗口边框"
+msgstr ""

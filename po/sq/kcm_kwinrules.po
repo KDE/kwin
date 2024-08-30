@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2009-05-21 13:28+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -40,23 +40,26 @@ msgid "Unimportant"
 msgstr "I Parëndësishëm"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "Përputhje e Drejtpërdrejtë"
 
 #: optionsmodel.cpp:200
 #, kde-format
-msgid "Substring Match"
+msgid "Substring match"
 msgstr ""
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "Shprehje të Rregullta"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "Aplikoje Fillimisht"
 
 #: optionsmodel.cpp:206
@@ -68,8 +71,9 @@ msgid ""
 msgstr ""
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "Aplikoje Tani"
 
 #: optionsmodel.cpp:210
@@ -93,8 +97,9 @@ msgid ""
 msgstr ""
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "Mos Ndiko"
 
 #: optionsmodel.cpp:218
@@ -116,8 +121,9 @@ msgid "The window property will be always forced to the given value."
 msgstr ""
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "Detyroje Përkohësisht"
 
 #: optionsmodel.cpp:225
@@ -246,13 +252,13 @@ msgstr "Maksimizuese"
 #: rulesmodel.cpp:467
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "Të Gjithë Desktopët"
 
 #: rulesmodel.cpp:473
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "Të Gjithë Desktopët"
 
 #: rulesmodel.cpp:492
@@ -524,12 +530,12 @@ msgstr ""
 
 #: rulesmodel.cpp:725
 #, kde-format
-msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr ""
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
@@ -549,22 +555,24 @@ msgstr ""
 
 #: rulesmodel.cpp:817
 #, kde-format
-msgid "All Window Types"
+msgid "All window types"
 msgstr ""
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "Dritare Normale"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "Dialog window"
+msgstr "Në Dritaren Kryesore"
 
 #: rulesmodel.cpp:820
 #, kde-format
-msgid "Utility Window"
+msgid "Utility window"
 msgstr ""
 
 #: rulesmodel.cpp:821
@@ -579,12 +587,13 @@ msgstr "Paneli i instrumentëve"
 
 #: rulesmodel.cpp:823
 #, kde-format
-msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr ""
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "Ekrani në Nisje"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -595,17 +604,18 @@ msgstr "Desktopi"
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
 #, kde-format
-msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr ""
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
 #, kde-format
-msgid "On Screen Display"
+msgid "On-screen display"
 msgstr ""
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "Të Gjithë Desktopët"
 
 #: rulesmodel.cpp:840
@@ -616,7 +626,7 @@ msgstr ""
 
 #: rulesmodel.cpp:859
 #, kde-format
-msgid "All Activities"
+msgid "All activities"
 msgstr ""
 
 #: rulesmodel.cpp:861
@@ -631,13 +641,14 @@ msgid "Default"
 msgstr "I Parazgjedhur"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "Nuk Ka Vendosje"
 
 #: rulesmodel.cpp:884
 #, kde-format
-msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr ""
 
 #: rulesmodel.cpp:885
@@ -659,17 +670,19 @@ msgstr "Rastësore"
 #: rulesmodel.cpp:888
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
-msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "Në Cepin Sipër Majtas"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "Poshtë Miut"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "Në Dritaren Kryesore"
 
 #: rulesmodel.cpp:897
@@ -719,14 +732,10 @@ msgid "Popup"
 msgstr ""
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
-msgstr ""
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Critical notification"
+msgstr "&Pozicioni"
 
 #: rulesmodel.cpp:936
 #, kde-format

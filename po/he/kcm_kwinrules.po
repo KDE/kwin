@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-08-23 07:08+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -42,23 +42,27 @@ msgid "Unimportant"
 msgstr "לא חשוב"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "התאמה מדויקת"
 
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "התאמת תת מחרוזת"
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "ביטוי רגולרי"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "החלה בהתחלה"
 
 #: optionsmodel.cpp:206
@@ -72,8 +76,9 @@ msgstr ""
 "שינויים נוספים לא יושפעו."
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "החלה כעת"
 
 #: optionsmodel.cpp:210
@@ -99,8 +104,9 @@ msgid ""
 msgstr "ערך מאפיין החלון לא ייזכר ועם כל יצירת חלון יחול הערך האחרון שזכור."
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "לא משפיע"
 
 #: optionsmodel.cpp:218
@@ -124,8 +130,9 @@ msgid "The window property will be always forced to the given value."
 msgstr "מאפיין החלון תמיד יינעל לערך הנתון."
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "אכיפה זמנית"
 
 #: optionsmodel.cpp:225
@@ -255,13 +262,15 @@ msgid "Maximized vertically"
 msgstr "מוגדל אנכית"
 
 #: rulesmodel.cpp:467
-#, kde-format
-msgid "Virtual Desktop"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "שולחן עבודה וירטואלי"
 
 #: rulesmodel.cpp:473
-#, kde-format
-msgid "Virtual Desktops"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "שולחנות עבודה וירטואליים"
 
 #: rulesmodel.cpp:492
@@ -566,13 +575,15 @@ msgid "Layer"
 msgstr "שכבה"
 
 #: rulesmodel.cpp:725
-#, kde-format
-msgid "Adaptive Sync"
+#, fuzzy, kde-format
+#| msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr "סנכרון מסתגל"
 
 #: rulesmodel.cpp:730
-#, kde-format
-msgid "Allow Tearing"
+#, fuzzy, kde-format
+#| msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr "לאפשר חיתוך"
 
 #: rulesmodel.cpp:782
@@ -594,23 +605,27 @@ msgstr ""
 "כמו כותרת החלון במקום.<nl/><nl/>נא לשקול לדווח על זה כתקלה למפתחי היישום."
 
 #: rulesmodel.cpp:817
-#, kde-format
-msgid "All Window Types"
+#, fuzzy, kde-format
+#| msgid "All Window Types"
+msgid "All window types"
 msgstr "כל סוגי החלונות"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "חלון רגיל"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "חלונית"
 
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "חלון עזר"
 
 #: rulesmodel.cpp:821
@@ -624,13 +639,15 @@ msgid "Toolbar"
 msgstr "סרגל כלים"
 
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "תפריט צף"
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "מסך פתיח"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -640,18 +657,21 @@ msgstr "שולחן עבודה"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "תפריט עצמאי"
 
-#: rulesmodel.cpp:828
-#, kde-format
-msgid "On Screen Display"
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
+#, fuzzy, kde-format
+#| msgid "On Screen Display"
+msgid "On-screen display"
 msgstr "תצוגה על המסך"
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "בכל השולחנות עבודה"
 
 #: rulesmodel.cpp:840
@@ -661,8 +681,9 @@ msgid "Make the window available on all desktops"
 msgstr "להנגיש את החלון בכל שולחנות העבודה"
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "All activities"
 msgstr "כל הפעילויות"
 
 #: rulesmodel.cpp:861
@@ -677,13 +698,15 @@ msgid "Default"
 msgstr "ברירת מחדל"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "ללא מיקום"
 
 #: rulesmodel.cpp:884
-#, kde-format
-msgid "Minimal Overlapping"
+#, fuzzy, kde-format
+#| msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr "חפיפה מזערית"
 
 #: rulesmodel.cpp:885
@@ -702,18 +725,21 @@ msgid "Random"
 msgstr "אקראי"
 
 #: rulesmodel.cpp:888
-#, kde-format
-msgid "In Top-Left Corner"
+#, fuzzy, kde-format
+#| msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "בפינה השמאלית העליונה"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "מתחת לעכבר"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "בחלון הראש"
 
 #: rulesmodel.cpp:897
@@ -762,14 +788,10 @@ msgid "Popup"
 msgstr "חלונית צפה"
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
+#, fuzzy, kde-format
+#| msgid "Critical Notification"
+msgid "Critical notification"
 msgstr "התראה מכרעת"
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr "חיווי על המסך"
 
 #: rulesmodel.cpp:936
 #, kde-format
@@ -979,6 +1001,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "×"
+
+#~ msgid "OSD"
+#~ msgstr "חיווי על המסך"
 
 #~ msgid "Close"
 #~ msgstr "סגירה"

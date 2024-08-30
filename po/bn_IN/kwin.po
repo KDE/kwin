@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2008-12-22 16:10+0530\n"
 "Last-Translator: Runa Bhattacharjee <runab@redhat.com>\n"
 "Language-Team: Bengali INDIA <fedora-trans-bn_IN@redhat.com>\n"
@@ -2487,12 +2487,12 @@ msgstr ""
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4395,7 +4395,7 @@ msgstr "নীচের ডেস্কটপে পরিবর্তন কর
 msgid "Switch to Desktop %1"
 msgstr "ডেস্কটপ ১-এ পরিবর্তন করুন"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

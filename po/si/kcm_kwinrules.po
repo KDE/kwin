@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2009-12-28 17:56+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -38,23 +38,27 @@ msgid "Unimportant"
 msgstr "නොවැදගත්"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "හරියටම ගැලපෙන"
 
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "අනුයෙදුම් ගැලපීම"
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "සාමාන්‍ය ප්‍රකාශන"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "තනි තනිව ඇතුළත් කරන්න"
 
 #: optionsmodel.cpp:206
@@ -66,8 +70,9 @@ msgid ""
 msgstr ""
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "දැන්ම යොදන්න"
 
 #: optionsmodel.cpp:210
@@ -91,8 +96,9 @@ msgid ""
 msgstr ""
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "බල නොපාන්න"
 
 #: optionsmodel.cpp:218
@@ -114,8 +120,9 @@ msgid "The window property will be always forced to the given value."
 msgstr ""
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "තාවකාලික බලපවත්වන්න"
 
 #: optionsmodel.cpp:225
@@ -255,13 +262,13 @@ msgstr "තිරස්ව විහිදූ (&v)"
 #: rulesmodel.cpp:467
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "සියළු වැඩතල"
 
 #: rulesmodel.cpp:473
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "සියළු වැඩතල"
 
 #: rulesmodel.cpp:492
@@ -546,12 +553,12 @@ msgstr ""
 
 #: rulesmodel.cpp:725
 #, kde-format
-msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr ""
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
@@ -573,22 +580,25 @@ msgstr ""
 #: rulesmodel.cpp:817
 #, fuzzy, kde-format
 #| msgid "Window &types:"
-msgid "All Window Types"
+msgid "All window types"
 msgstr "කවුළු වර්ග (&t) :"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "සාමාන්‍ය කවුළුව "
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "සංවාද කවුළුව"
 
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "උපයෝගී කවුළුව"
 
 #: rulesmodel.cpp:821
@@ -602,13 +612,15 @@ msgid "Toolbar"
 msgstr "මෙවලම් තීරුව"
 
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "මෙනුව හකුළන්න"
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "ස්පලෑශ් තිරය"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -618,18 +630,20 @@ msgstr "වැඩතලය"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "තනිව නැගීසිටින මෙනු බාර"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
 #, kde-format
-msgid "On Screen Display"
+msgid "On-screen display"
 msgstr ""
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "සියළු වැඩතල"
 
 #: rulesmodel.cpp:840
@@ -639,9 +653,10 @@ msgid "Make the window available on all desktops"
 msgstr ""
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "A&ctive opacity in %"
+msgid "All activities"
+msgstr "සක්‍රීය පාරාන්ධතාවය % (&c)"
 
 #: rulesmodel.cpp:861
 #, kde-format
@@ -655,13 +670,14 @@ msgid "Default"
 msgstr "පෙරනිමිය"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "ස්ථානකරණයක් නොමැත"
 
 #: rulesmodel.cpp:884
 #, kde-format
-msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr ""
 
 #: rulesmodel.cpp:885
@@ -683,17 +699,19 @@ msgstr "අහඹු"
 #: rulesmodel.cpp:888
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
-msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "ඉහළ-වම් මුල්ල"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "මවුසය යට"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "ප්‍රධාන කවුළුව මත"
 
 #: rulesmodel.cpp:897
@@ -744,14 +762,10 @@ msgid "Popup"
 msgstr ""
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
-msgstr ""
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Critical notification"
+msgstr "ස්ථානය (&P)"
 
 #: rulesmodel.cpp:936
 #, kde-format

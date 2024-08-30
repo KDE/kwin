@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2023-12-03 13:43+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -45,23 +45,27 @@ msgid "Unimportant"
 msgstr "重要でない"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "完全一致"
 
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "部分一致"
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "正規表現"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "初めに適用"
 
 #: optionsmodel.cpp:206
@@ -76,8 +80,9 @@ msgstr ""
 "他の変更は影響を受けません。"
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "今すぐ適用"
 
 #: optionsmodel.cpp:210
@@ -106,8 +111,9 @@ msgstr ""
 "れた値が適用されます。"
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "作用しない"
 
 #: optionsmodel.cpp:218
@@ -131,8 +137,9 @@ msgid "The window property will be always forced to the given value."
 msgstr "ウィンドウプロパティは必ず指定された値に強制されます。"
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "一時的に強制"
 
 #: optionsmodel.cpp:225
@@ -264,13 +271,15 @@ msgid "Maximized vertically"
 msgstr "縦に最大化"
 
 #: rulesmodel.cpp:467
-#, kde-format
-msgid "Virtual Desktop"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "仮想デスクトップ"
 
 #: rulesmodel.cpp:473
-#, kde-format
-msgid "Virtual Desktops"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "仮想デスクトップ"
 
 #: rulesmodel.cpp:492
@@ -546,12 +555,12 @@ msgstr ""
 
 #: rulesmodel.cpp:725
 #, kde-format
-msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr ""
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
@@ -574,23 +583,27 @@ msgstr ""
 "アプリケーションの開発者にこのバグを報告することも検討してください。"
 
 #: rulesmodel.cpp:817
-#, kde-format
-msgid "All Window Types"
+#, fuzzy, kde-format
+#| msgid "All Window Types"
+msgid "All window types"
 msgstr "すべてのウィンドウタイプ"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "標準ウィンドウ"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "ダイアログウィンドウ"
 
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "ユーティリティウィンドウ"
 
 #: rulesmodel.cpp:821
@@ -604,13 +617,15 @@ msgid "Toolbar"
 msgstr "ツールバー"
 
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "分離されたメニュー"
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "スプラッシュスクリーン"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -620,18 +635,21 @@ msgstr "デスクトップ"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "単独メニューバー"
 
-#: rulesmodel.cpp:828
-#, kde-format
-msgid "On Screen Display"
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
+#, fuzzy, kde-format
+#| msgid "On Screen Display"
+msgid "On-screen display"
 msgstr "オンスクリーンディスプレイ"
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "すべてのデスクトップ"
 
 #: rulesmodel.cpp:840
@@ -641,8 +659,9 @@ msgid "Make the window available on all desktops"
 msgstr "すべてのデスクトップでウィンドウを利用可能にする"
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "All activities"
 msgstr "すべてのアクティビティ"
 
 #: rulesmodel.cpp:861
@@ -657,13 +676,15 @@ msgid "Default"
 msgstr "デフォルト"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "配置なし"
 
 #: rulesmodel.cpp:884
-#, kde-format
-msgid "Minimal Overlapping"
+#, fuzzy, kde-format
+#| msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr "最小限の重なり"
 
 #: rulesmodel.cpp:885
@@ -682,18 +703,21 @@ msgid "Random"
 msgstr "ランダム"
 
 #: rulesmodel.cpp:888
-#, kde-format
-msgid "In Top-Left Corner"
+#, fuzzy, kde-format
+#| msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "左上隅"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "マウスの下"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "メインウィンドウの上"
 
 #: rulesmodel.cpp:897
@@ -743,14 +767,10 @@ msgid "Popup"
 msgstr ""
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
-msgstr ""
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Position"
+msgid "Critical notification"
+msgstr "位置"
 
 #: rulesmodel.cpp:936
 #, kde-format

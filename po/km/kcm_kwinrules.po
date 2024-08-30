@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2012-06-13 15:34+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -42,26 +42,30 @@ msgstr "មិន​សំខាន់"
 
 #  i18n: file ruleswidgetbase.ui line 105
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "ផ្គូផ្គង​ត្រឹមត្រូវ"
 
 #  i18n: file ruleswidgetbase.ui line 110
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "ការ​ផ្គូផ្គង​ខ្សែ​អក្សរ​រង"
 
 #  i18n: file ruleswidgetbase.ui line 115
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "កន្សោម​ធម្មតា"
 
 #  i18n: file ruleswidgetbase.ui line 678
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "អនុវត្ត​ពី​ដំបូង"
 
 #: optionsmodel.cpp:206
@@ -74,8 +78,9 @@ msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 693
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "អនុវត្ត​ឥឡូវ"
 
 #: optionsmodel.cpp:210
@@ -101,8 +106,9 @@ msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 673
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "មិន​មាន​ឥទ្ធិពល"
 
 #: optionsmodel.cpp:218
@@ -126,8 +132,9 @@ msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 698
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "បង្ខំ​បណ្ដោះ​អាសន្ន"
 
 #: optionsmodel.cpp:225
@@ -282,13 +289,13 @@ msgstr "ពង្រីក​បញ្ឈរ​អតិបរមា"
 #: rulesmodel.cpp:467
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
 #: rulesmodel.cpp:473
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
 #: rulesmodel.cpp:492
@@ -605,12 +612,12 @@ msgstr ""
 
 #: rulesmodel.cpp:725
 #, kde-format
-msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr ""
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 58
@@ -634,25 +641,28 @@ msgstr ""
 #: rulesmodel.cpp:817
 #, fuzzy, kde-format
 #| msgid "Window &types:"
-msgid "All Window Types"
+msgid "All window types"
 msgstr "ប្រភេទ​បង្អួច ៖"
 
 #  i18n: file ruleswidgetbase.ui line 335
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "បង្អួច​ធម្មតា"
 
 #  i18n: file ruleswidgetbase.ui line 340
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "ប្រអប់​បង្អួច"
 
 #  i18n: file ruleswidgetbase.ui line 345
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "បង្អួច​ឧបករណ៍​ប្រើប្រាស់"
 
 #  i18n: file ruleswidgetbase.ui line 350
@@ -669,14 +679,16 @@ msgstr "របារ​ឧបករណ៍"
 
 #  i18n: file ruleswidgetbase.ui line 360
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "បិទ​ម៉ឺនុយ"
 
 #  i18n: file ruleswidgetbase.ui line 365
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "អេក្រង់​ស្វាគមន៍"
 
 #  i18n: file ruleswidgetbase.ui line 370
@@ -688,18 +700,20 @@ msgstr "ផ្ទៃ​តុ"
 #  i18n: file ruleswidgetbase.ui line 380
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "របារ​ម៉ឺនុយ​ឈរ​តែ​ឯង"
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
 #, kde-format
-msgid "On Screen Display"
+msgid "On-screen display"
 msgstr ""
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "ផ្ទៃតុ​ទាំងអស់"
 
 #: rulesmodel.cpp:840
@@ -709,8 +723,9 @@ msgid "Make the window available on all desktops"
 msgstr ""
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "All activities"
 msgstr "សកម្មភាព​ទាំងអស់"
 
 #: rulesmodel.cpp:861
@@ -726,13 +741,14 @@ msgstr "លំនាំ​ដើម​"
 
 #  i18n: file ruleswidgetbase.ui line 1116
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "គ្មាន​ការ​ជំនួស"
 
 #: rulesmodel.cpp:884
 #, kde-format
-msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr ""
 
 #  i18n: file ruleswidgetbase.ui line 1126
@@ -758,19 +774,21 @@ msgstr "ចៃដន្យ"
 #: rulesmodel.cpp:888
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
-msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "ជ្រុង​ឆ្វេង​កំពូល"
 
 #  i18n: file ruleswidgetbase.ui line 1151
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "ក្រោម​កណ្ដុរ"
 
 #  i18n: file ruleswidgetbase.ui line 1156
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "លើ​បង្អួច​មេ"
 
 #  i18n: file ruleswidgetbase.ui line 2115
@@ -827,15 +845,12 @@ msgstr "ទីតាំង"
 msgid "Popup"
 msgstr ""
 
+#  i18n: file ruleswidgetbase.ui line 732
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
-msgstr ""
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Critical notification"
+msgstr "ទីតាំង"
 
 #: rulesmodel.cpp:936
 #, kde-format

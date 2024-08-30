@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2420,12 +2420,12 @@ msgstr "无法找到输出"
 msgid "Invalid region"
 msgstr "无效区域"
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "OpenGL 显示特效合成是屏幕录像所必须的"
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "创建 PipeWire 流失败"
@@ -4223,7 +4223,7 @@ msgstr "切换到下方桌面"
 msgid "Switch to Desktop %1"
 msgstr "切换到桌面 %1"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4254,35 +4254,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland 已崩溃"
-
-#~ msgid "Red"
-#~ msgstr "红"
-
-#~ msgid "Green"
-#~ msgstr "绿"
-
-#~ msgid "Blue"
-#~ msgstr "蓝"
-
-#~ msgid "Purple"
-#~ msgstr "紫"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "模式："
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "甲型色盲 (红色盲)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "乙型色盲 (绿色盲)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "丙型色盲 (蓝黄色盲)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "强度："

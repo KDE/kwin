@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-08-22 05:15+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -2436,12 +2436,12 @@ msgstr "შეყვანა ვერ ვიპოვე"
 msgid "Invalid region"
 msgstr "არასწორი რეგიონი"
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "ეკრანის გადაცემისთვის აუცილებელია OpenGL-ის კომპოზიტორი"
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "PipeWire-ის ნაკადის შექმნის შეცდოა"
@@ -4253,7 +4253,7 @@ msgstr "ერთი სამუშაო მაგიდის დაბლა
 msgid "Switch to Desktop %1"
 msgstr "%1-ე სამუშაო მაგიდაზე გადართვა"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

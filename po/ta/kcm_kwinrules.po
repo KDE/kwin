@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-08-04 17:48+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -35,23 +35,27 @@ msgid "Unimportant"
 msgstr "முக்கியமில்லை"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "சரியான பொருத்தம்"
 
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "துணை சரப் பொருத்தம்"
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "வழக்கமான செய்கை"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "முதலில் பயன்படுத்து"
 
 #: optionsmodel.cpp:206
@@ -65,8 +69,9 @@ msgstr ""
 "அதற்கு பின் அந்த மதிப்பு கட்டாயப்படுத்தப்படாது."
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "இப்போது செயல்படுத்து"
 
 #: optionsmodel.cpp:210
@@ -93,8 +98,9 @@ msgid ""
 msgstr ""
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "பாதிக்காது"
 
 #: optionsmodel.cpp:218
@@ -116,8 +122,9 @@ msgid "The window property will be always forced to the given value."
 msgstr ""
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "தற்காலிகமாக கட்டாயப்படுத்து"
 
 #: optionsmodel.cpp:225
@@ -244,13 +251,15 @@ msgid "Maximized vertically"
 msgstr "நெடுக்காக அதிகபட்ச பெரிதாக்கு"
 
 #: rulesmodel.cpp:467
-#, kde-format
-msgid "Virtual Desktop"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "மெய்நிகர் பணிமேடை"
 
 #: rulesmodel.cpp:473
-#, kde-format
-msgid "Virtual Desktops"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "மெய்நிகர் பணிமேடைகள்"
 
 #: rulesmodel.cpp:492
@@ -515,13 +524,14 @@ msgid "Layer"
 msgstr "அடுக்கு"
 
 #: rulesmodel.cpp:725
-#, kde-format
-msgid "Adaptive Sync"
+#, fuzzy, kde-format
+#| msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr "சூழறி ஒத்திசைவு"
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
@@ -540,23 +550,27 @@ msgid ""
 msgstr ""
 
 #: rulesmodel.cpp:817
-#, kde-format
-msgid "All Window Types"
+#, fuzzy, kde-format
+#| msgid "All Window Types"
+msgid "All window types"
 msgstr "அனைத்து சாளர வகைகள்"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "இயல்பான சாளரம்"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "உரையாடல் பெட்டி சாளரம்"
 
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "பயனுள்ள சாளரம்"
 
 #: rulesmodel.cpp:821
@@ -570,13 +584,15 @@ msgid "Toolbar"
 msgstr "கருவிப்பட்டை"
 
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "`"
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "தோன்றும் திரை"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -586,18 +602,21 @@ msgstr "பணிமேடை"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "தனியான பட்டிப்பட்டை"
 
-#: rulesmodel.cpp:828
-#, kde-format
-msgid "On Screen Display"
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
+#, fuzzy, kde-format
+#| msgid "On Screen Display"
+msgid "On-screen display"
 msgstr "திரையில் காட்டப்படும் தகவல்"
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "அனைத்து பணிமேடைகளிலும்"
 
 #: rulesmodel.cpp:840
@@ -607,8 +626,9 @@ msgid "Make the window available on all desktops"
 msgstr ""
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "All activities"
 msgstr "அனைத்து செயல்பாடுகளிலும்"
 
 #: rulesmodel.cpp:861
@@ -623,13 +643,15 @@ msgid "Default"
 msgstr "இயல்பிருப்பு"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "ஏதுமில்லை"
 
 #: rulesmodel.cpp:884
-#, kde-format
-msgid "Minimal Overlapping"
+#, fuzzy, kde-format
+#| msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr "ஒன்றன்மேல் ஒன்று இல்லாமல்"
 
 #: rulesmodel.cpp:885
@@ -648,18 +670,21 @@ msgid "Random"
 msgstr "சமவாய்ப்பாக"
 
 #: rulesmodel.cpp:888
-#, kde-format
-msgid "In Top-Left Corner"
+#, fuzzy, kde-format
+#| msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "மேல்-இடது மூலையில்"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "சுட்டிக்கு அடியில்"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "பிரதான சாளரத்தில்"
 
 #: rulesmodel.cpp:897
@@ -708,14 +733,10 @@ msgid "Popup"
 msgstr "மேல்தோன்றுவது"
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
+#, fuzzy, kde-format
+#| msgid "Critical Notification"
+msgid "Critical notification"
 msgstr "நெருக்கடியான அறிவிப்பு"
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr "திரையில் காட்டப்படும் தகவல்"
 
 #: rulesmodel.cpp:936
 #, kde-format
@@ -925,6 +946,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "OSD"
+#~ msgstr "திரையில் காட்டப்படும் தகவல்"
 
 #~ msgid "Close"
 #~ msgstr "மூடு"

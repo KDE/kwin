@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-08-07 09:30+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -2450,12 +2450,12 @@ msgstr "Не може да намери изход"
 msgid "Invalid region"
 msgstr "Невалиден регион"
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Изисква се OpenGL композитор за предаването на екрана"
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Неуспешно създаване на PipeWire поток"
@@ -4263,7 +4263,7 @@ msgstr "Превключване един работен плот надолу"
 msgid "Switch to Desktop %1"
 msgstr "Превключване към работен плот %1"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

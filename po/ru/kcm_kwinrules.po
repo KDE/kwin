@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-05-28 11:02+0300\n"
 "Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -50,23 +50,27 @@ msgid "Unimportant"
 msgstr "Не имеет значения"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "Точное совпадение"
 
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "Совпадение с подстрокой"
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "Регулярное выражение"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "Применить изначально"
 
 #: optionsmodel.cpp:206
@@ -80,8 +84,9 @@ msgstr ""
 "Будущие изменения свойства окна не будут сохранены."
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "Применить сейчас"
 
 #: optionsmodel.cpp:210
@@ -109,8 +114,9 @@ msgstr ""
 "создании окна."
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "Не применять"
 
 #: optionsmodel.cpp:218
@@ -137,8 +143,9 @@ msgstr ""
 "Заданное значение свойства будет всегда принудительно применяться к окну."
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "Временно включить"
 
 #: optionsmodel.cpp:225
@@ -270,13 +277,15 @@ msgid "Maximized vertically"
 msgstr "Распахнуто по вертикали"
 
 #: rulesmodel.cpp:467
-#, kde-format
-msgid "Virtual Desktop"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "Виртуальный рабочий стол"
 
 #: rulesmodel.cpp:473
-#, kde-format
-msgid "Virtual Desktops"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "Виртуальные рабочие столы"
 
 #: rulesmodel.cpp:492
@@ -612,13 +621,14 @@ msgid "Layer"
 msgstr "Слой"
 
 #: rulesmodel.cpp:725
-#, kde-format
-msgid "Adaptive Sync"
+#, fuzzy, kde-format
+#| msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr "Адаптивная синхронизация"
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
@@ -642,23 +652,27 @@ msgstr ""
 "окна.Пожалуйста, сообщите об этой ошибке разработчикам приложения."
 
 #: rulesmodel.cpp:817
-#, kde-format
-msgid "All Window Types"
+#, fuzzy, kde-format
+#| msgid "All Window Types"
+msgid "All window types"
 msgstr "Все типы окон"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "Обычное окно"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "Окно диалога"
 
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "Служебное окно"
 
 #: rulesmodel.cpp:821
@@ -672,13 +686,15 @@ msgid "Toolbar"
 msgstr "Панель инструментов"
 
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "Отрывное меню"
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "Заставка"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -688,18 +704,21 @@ msgstr "Рабочий стол"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "Автономное меню"
 
-#: rulesmodel.cpp:828
-#, kde-format
-msgid "On Screen Display"
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
+#, fuzzy, kde-format
+#| msgid "On Screen Display"
+msgid "On-screen display"
 msgstr "Экранное уведомление"
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "Все рабочие столы"
 
 #: rulesmodel.cpp:840
@@ -709,8 +728,9 @@ msgid "Make the window available on all desktops"
 msgstr "Показывать окно на всех рабочих столах"
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "All activities"
 msgstr "Во всех комнатах"
 
 #: rulesmodel.cpp:861
@@ -725,13 +745,15 @@ msgid "Default"
 msgstr "По умолчанию"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "Нет размещения"
 
 #: rulesmodel.cpp:884
-#, kde-format
-msgid "Minimal Overlapping"
+#, fuzzy, kde-format
+#| msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr "С минимальным перекрытием"
 
 #: rulesmodel.cpp:885
@@ -750,18 +772,21 @@ msgid "Random"
 msgstr "Случайно"
 
 #: rulesmodel.cpp:888
-#, kde-format
-msgid "In Top-Left Corner"
+#, fuzzy, kde-format
+#| msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "В верхнем левом углу"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "Под мышью"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "Поверх главного окна"
 
 #: rulesmodel.cpp:897
@@ -810,14 +835,10 @@ msgid "Popup"
 msgstr "Всплывающее окно"
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
+#, fuzzy, kde-format
+#| msgid "Critical Notification"
+msgid "Critical notification"
 msgstr "Критичное уведомление"
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr "Индикатор на экране"
 
 #: rulesmodel.cpp:936
 #, kde-format
@@ -1031,6 +1052,9 @@ msgstr "(%1; %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "×"
+
+#~ msgid "OSD"
+#~ msgstr "Индикатор на экране"
 
 #~ msgid "Close"
 #~ msgstr "Закрыть"

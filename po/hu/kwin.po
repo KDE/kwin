@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-05-31 14:36+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -2449,13 +2449,13 @@ msgstr "A kimenet nem található"
 msgid "Invalid region"
 msgstr "Érvénytelen terület"
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, fuzzy, kde-format
 #| msgid "No OpenGL compositor running"
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Nem fut OpenGL kompozitor"
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "A PipeWire adatfolyam létrehozása sikertelen"
@@ -4264,7 +4264,7 @@ msgstr "Váltás a lefelé eső asztalra"
 msgid "Switch to Desktop %1"
 msgstr "Váltás a(z) %1. asztalra"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

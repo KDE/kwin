@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2005-10-19 21:33+0200\n"
 "Last-Translator: Mashrab Kuvatov <kmashrab@uni-bremen.de>\n"
 "Language-Team: Uzbek <floss-uz-l10n@googlegroups.com>\n"
@@ -39,22 +39,23 @@ msgstr "Муҳим эмас"
 
 #: optionsmodel.cpp:199
 #, kde-format
-msgid "Exact Match"
+msgid "Exact match"
 msgstr ""
 
 #: optionsmodel.cpp:200
 #, kde-format
-msgid "Substring Match"
+msgid "Substring match"
 msgstr ""
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "Доимий ифода"
 
 #: optionsmodel.cpp:205
 #, kde-format
-msgid "Apply Initially"
+msgid "Apply initially"
 msgstr ""
 
 #: optionsmodel.cpp:206
@@ -66,8 +67,9 @@ msgid ""
 msgstr ""
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "Дарҳол қўллаш"
 
 #: optionsmodel.cpp:210
@@ -92,7 +94,7 @@ msgstr ""
 
 #: optionsmodel.cpp:217
 #, kde-format
-msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr ""
 
 #: optionsmodel.cpp:218
@@ -115,7 +117,7 @@ msgstr ""
 
 #: optionsmodel.cpp:224
 #, kde-format
-msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr ""
 
 #: optionsmodel.cpp:225
@@ -251,13 +253,13 @@ msgstr "&Бўйига ёйилган"
 #: rulesmodel.cpp:467
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "Ҳамма иш столлари"
 
 #: rulesmodel.cpp:473
 #, fuzzy, kde-format
 #| msgid "All Desktops"
-msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "Ҳамма иш столлари"
 
 #: rulesmodel.cpp:492
@@ -531,12 +533,12 @@ msgstr ""
 
 #: rulesmodel.cpp:725
 #, kde-format
-msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr ""
 
 #: rulesmodel.cpp:730
 #, kde-format
-msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
@@ -558,22 +560,24 @@ msgstr ""
 #: rulesmodel.cpp:817
 #, fuzzy, kde-format
 #| msgid "Window &types:"
-msgid "All Window Types"
+msgid "All window types"
 msgstr "Ойнанинг &турлари:"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "Оддий ойна"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "Мулоқат ойнаси"
 
 #: rulesmodel.cpp:820
 #, kde-format
-msgid "Utility Window"
+msgid "Utility window"
 msgstr ""
 
 #: rulesmodel.cpp:821
@@ -588,12 +592,13 @@ msgstr "Асбоблар панели"
 
 #: rulesmodel.cpp:823
 #, kde-format
-msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr ""
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "Сплэш ойнаси"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -604,17 +609,18 @@ msgstr "Иш столи"
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
 #, kde-format
-msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr ""
 
-#: rulesmodel.cpp:828
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
 #, kde-format
-msgid "On Screen Display"
+msgid "On-screen display"
 msgstr ""
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "Ҳамма иш столлари"
 
 #: rulesmodel.cpp:840
@@ -625,7 +631,7 @@ msgstr ""
 
 #: rulesmodel.cpp:859
 #, kde-format
-msgid "All Activities"
+msgid "All activities"
 msgstr ""
 
 #: rulesmodel.cpp:861
@@ -640,13 +646,14 @@ msgid "Default"
 msgstr ""
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "P&lacement"
+msgid "No placement"
+msgstr "Жойл&аштириш"
 
 #: rulesmodel.cpp:884
 #, kde-format
-msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr ""
 
 #: rulesmodel.cpp:885
@@ -668,17 +675,19 @@ msgstr "Тасодифий"
 #: rulesmodel.cpp:888
 #, fuzzy, kde-format
 #| msgid "Top-Left Corner"
-msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "Юқори-чап бурчак"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "Сичқонча остида"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "Асосий ойна устида"
 
 #: rulesmodel.cpp:897
@@ -729,14 +738,10 @@ msgid "Popup"
 msgstr ""
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
-msgstr ""
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "&Position"
+msgid "Critical notification"
+msgstr "&Жойлашиши"
 
 #: rulesmodel.cpp:936
 #, kde-format

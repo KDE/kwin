@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-06-21 10:57+0200\n"
+"PO-Revision-Date: 2024-08-29 20:06+0200\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.05.2\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -75,9 +75,7 @@ msgid "Spacer"
 msgstr "Mellanrum"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Temats standardvärde (%1)"
@@ -226,56 +224,47 @@ msgid "Edit %1 Theme"
 msgstr "Redigera temat %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
 msgstr "Inga fönsterkanter"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
 msgstr "Inga fönstersidokanter"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
 msgstr "Mycket små fönsterkanter"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
 msgstr "Normala fönsterkanter"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
 msgstr "Stora fönsterkanter"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
 msgstr "Mycket stora fönsterkanter"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
 msgstr "Väldiga fönsterkanter"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
 msgstr "Enorma fönsterkanter"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
 msgstr "Överdrivna fönsterkanter"
 

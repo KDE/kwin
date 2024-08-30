@@ -179,13 +179,13 @@ msgstr "已禁用"
 #: main.ui:193
 #, kde-format
 msgid "Only when moving windows"
-msgstr ""
+msgstr "只在移动窗口时"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
 #, kde-format
 msgid "Always enabled"
-msgstr ""
+msgstr "总是启用"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, activationDelayLabel)
 #: main.ui:206

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-22 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2024-08-22 13:49+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -42,23 +42,27 @@ msgid "Unimportant"
 msgstr "Önemsiz"
 
 #: optionsmodel.cpp:199
-#, kde-format
-msgid "Exact Match"
+#, fuzzy, kde-format
+#| msgid "Exact Match"
+msgid "Exact match"
 msgstr "Tam Eşleşme"
 
 #: optionsmodel.cpp:200
-#, kde-format
-msgid "Substring Match"
+#, fuzzy, kde-format
+#| msgid "Substring Match"
+msgid "Substring match"
 msgstr "Altdizi Eşleşmesi"
 
 #: optionsmodel.cpp:201
-#, kde-format
-msgid "Regular Expression"
+#, fuzzy, kde-format
+#| msgid "Regular Expression"
+msgid "Regular expression"
 msgstr "Düzenli İfade"
 
 #: optionsmodel.cpp:205
-#, kde-format
-msgid "Apply Initially"
+#, fuzzy, kde-format
+#| msgid "Apply Initially"
+msgid "Apply initially"
 msgstr "Başlangıçta Uygula"
 
 #: optionsmodel.cpp:206
@@ -73,8 +77,9 @@ msgstr ""
 "Başka bir değişiklik bundan etkilenmeyecek."
 
 #: optionsmodel.cpp:209
-#, kde-format
-msgid "Apply Now"
+#, fuzzy, kde-format
+#| msgid "Apply Now"
+msgid "Apply now"
 msgstr "Şimdi Uygula"
 
 #: optionsmodel.cpp:210
@@ -103,8 +108,9 @@ msgstr ""
 "anımsanan değer uygulanacaktır."
 
 #: optionsmodel.cpp:217
-#, kde-format
-msgid "Do Not Affect"
+#, fuzzy, kde-format
+#| msgid "Do Not Affect"
+msgid "Do not affect"
 msgstr "Etkileme"
 
 #: optionsmodel.cpp:218
@@ -128,8 +134,9 @@ msgid "The window property will be always forced to the given value."
 msgstr "Pencere özelliği her zaman verilen değere zorlanacak."
 
 #: optionsmodel.cpp:224
-#, kde-format
-msgid "Force Temporarily"
+#, fuzzy, kde-format
+#| msgid "Force Temporarily"
+msgid "Force temporarily"
 msgstr "Geçici Olarak Zorla"
 
 #: optionsmodel.cpp:225
@@ -260,13 +267,15 @@ msgid "Maximized vertically"
 msgstr "Ekranı dikey kaplamış"
 
 #: rulesmodel.cpp:467
-#, kde-format
-msgid "Virtual Desktop"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktop"
+msgid "Virtual desktop"
 msgstr "Sanal Masaüstü"
 
 #: rulesmodel.cpp:473
-#, kde-format
-msgid "Virtual Desktops"
+#, fuzzy, kde-format
+#| msgid "Virtual Desktops"
+msgid "Virtual desktops"
 msgstr "Sanal Masaüstleri"
 
 #: rulesmodel.cpp:492
@@ -585,13 +594,15 @@ msgid "Layer"
 msgstr "Katman"
 
 #: rulesmodel.cpp:725
-#, kde-format
-msgid "Adaptive Sync"
+#, fuzzy, kde-format
+#| msgid "Adaptive Sync"
+msgid "Adaptive sync"
 msgstr "Uyarlanır Eşzamanlama"
 
 #: rulesmodel.cpp:730
-#, kde-format
-msgid "Allow Tearing"
+#, fuzzy, kde-format
+#| msgid "Allow Tearing"
+msgid "Allow tearing"
 msgstr "Yırtılmaya izin ver"
 
 #: rulesmodel.cpp:782
@@ -615,23 +626,27 @@ msgstr ""
 "geliştiricilerine bildirmeyi düşünün."
 
 #: rulesmodel.cpp:817
-#, kde-format
-msgid "All Window Types"
+#, fuzzy, kde-format
+#| msgid "All Window Types"
+msgid "All window types"
 msgstr "Tüm Pencere Türleri"
 
 #: rulesmodel.cpp:818
-#, kde-format
-msgid "Normal Window"
+#, fuzzy, kde-format
+#| msgid "Normal Window"
+msgid "Normal window"
 msgstr "Normal Pencere"
 
 #: rulesmodel.cpp:819
-#, kde-format
-msgid "Dialog Window"
+#, fuzzy, kde-format
+#| msgid "Dialog Window"
+msgid "Dialog window"
 msgstr "İletişim Kutusu"
 
 #: rulesmodel.cpp:820
-#, kde-format
-msgid "Utility Window"
+#, fuzzy, kde-format
+#| msgid "Utility Window"
+msgid "Utility window"
 msgstr "İzlence Penceresi"
 
 #: rulesmodel.cpp:821
@@ -645,13 +660,15 @@ msgid "Toolbar"
 msgstr "Araç Çubuğu"
 
 #: rulesmodel.cpp:823
-#, kde-format
-msgid "Torn-Off Menu"
+#, fuzzy, kde-format
+#| msgid "Torn-Off Menu"
+msgid "Torn-off menu"
 msgstr "Ayrılmış Menü"
 
 #: rulesmodel.cpp:824
-#, kde-format
-msgid "Splash Screen"
+#, fuzzy, kde-format
+#| msgid "Splash Screen"
+msgid "Splash screen"
 msgstr "Açılış Ekranı"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
@@ -661,18 +678,21 @@ msgstr "Masaüstü"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, kde-format
-msgid "Standalone Menubar"
+#, fuzzy, kde-format
+#| msgid "Standalone Menubar"
+msgid "Standalone menubar"
 msgstr "Bağımsız Menü Çubuğu"
 
-#: rulesmodel.cpp:828
-#, kde-format
-msgid "On Screen Display"
+#: rulesmodel.cpp:828 rulesmodel.cpp:935
+#, fuzzy, kde-format
+#| msgid "On Screen Display"
+msgid "On-screen display"
 msgstr "Ekran Üzeri Görüntü"
 
 #: rulesmodel.cpp:838
-#, kde-format
-msgid "All Desktops"
+#, fuzzy, kde-format
+#| msgid "All Desktops"
+msgid "All desktops"
 msgstr "Tüm Masaüstleri"
 
 #: rulesmodel.cpp:840
@@ -682,8 +702,9 @@ msgid "Make the window available on all desktops"
 msgstr "Pencereyi tüm masaüstlerinde kullanılabilir yap"
 
 #: rulesmodel.cpp:859
-#, kde-format
-msgid "All Activities"
+#, fuzzy, kde-format
+#| msgid "All Activities"
+msgid "All activities"
 msgstr "Tüm Etkinlikler"
 
 #: rulesmodel.cpp:861
@@ -698,13 +719,15 @@ msgid "Default"
 msgstr "Öntanımlı"
 
 #: rulesmodel.cpp:883
-#, kde-format
-msgid "No Placement"
+#, fuzzy, kde-format
+#| msgid "No Placement"
+msgid "No placement"
 msgstr "Yerleştirme yok"
 
 #: rulesmodel.cpp:884
-#, kde-format
-msgid "Minimal Overlapping"
+#, fuzzy, kde-format
+#| msgid "Minimal Overlapping"
+msgid "Minimal overlapping"
 msgstr "En az çakışan"
 
 #: rulesmodel.cpp:885
@@ -723,18 +746,21 @@ msgid "Random"
 msgstr "Rastgele"
 
 #: rulesmodel.cpp:888
-#, kde-format
-msgid "In Top-Left Corner"
+#, fuzzy, kde-format
+#| msgid "In Top-Left Corner"
+msgid "In top-left corner"
 msgstr "Sol üst köşede"
 
 #: rulesmodel.cpp:889
-#, kde-format
-msgid "Under Mouse"
+#, fuzzy, kde-format
+#| msgid "Under Mouse"
+msgid "Under mouse"
 msgstr "Farenin altında"
 
 #: rulesmodel.cpp:890
-#, kde-format
-msgid "On Main Window"
+#, fuzzy, kde-format
+#| msgid "On Main Window"
+msgid "On main window"
 msgstr "Ana pencerede"
 
 #: rulesmodel.cpp:897
@@ -783,14 +809,10 @@ msgid "Popup"
 msgstr "Açılır Pencere"
 
 #: rulesmodel.cpp:934
-#, kde-format
-msgid "Critical Notification"
+#, fuzzy, kde-format
+#| msgid "Critical Notification"
+msgid "Critical notification"
 msgstr "Kritik Bildirim"
-
-#: rulesmodel.cpp:935
-#, kde-format
-msgid "OSD"
-msgstr "Ekran Üzeri Görüntü"
 
 #: rulesmodel.cpp:936
 #, kde-format
@@ -999,6 +1021,9 @@ msgstr "(%1, %2)"
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
 msgstr "x"
+
+#~ msgid "OSD"
+#~ msgstr "Ekran Üzeri Görüntü"
 
 #~ msgid "Close"
 #~ msgstr "Kapat"

@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-05-05 12:06+0300\n"
+"PO-Revision-Date: 2024-08-29 06:53+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n == 1) ? 0 : ((n == 2) ? 1 : ((n > 10 && "
 "n % 10 == 0) ? 2 : 3));\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -86,9 +86,7 @@ msgid "Spacer"
 msgstr "ריווח"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "ברירת המחדל של ערכת העיצוב (%1)"
@@ -233,58 +231,49 @@ msgid "Edit %1 Theme"
 msgstr "עריכת ערכת העיצוב %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
 msgstr "ללא גבולות חלון"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
 msgstr "גבולות חלון ללא צדדים"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
 msgstr "גבולות חלונות מזעריים"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
 msgstr "גבולות חלונות רגילים"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
 msgstr "גבולות חלון גדולים"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
 msgstr "גבולות חלון גדולים מאוד"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
 msgstr "גבולות חלון ענקיים"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
 msgstr "גבולות חלון ענקיים בהחלט"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "גבולות חלון מוגדלים"
+msgstr "גבולות חלון מנופחים"
 
 #, fuzzy
 #~| msgid "Get New Decorations..."

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-08-30 00:40+0000\n"
 "PO-Revision-Date: 2023-12-03 14:01+0700\n"
 "Last-Translator: Linerly <linerly@linerly.xyz>\n"
 "Language-Team: Indonesian <kde-i18n-doc@kde.org>\n"
@@ -2564,13 +2564,13 @@ msgstr ""
 msgid "Invalid region"
 msgstr ""
 
-#: plugins/screencast/screencaststream.cpp:350
+#: plugins/screencast/screencaststream.cpp:346
 #, fuzzy, kde-format
 #| msgid "No OpenGL compositor running"
 msgid "OpenGL compositing is required for screencasting"
 msgstr "Tidak ada kompositor OpenGL yang berjalan"
 
-#: plugins/screencast/screencaststream.cpp:358
+#: plugins/screencast/screencaststream.cpp:354
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr ""
@@ -4504,7 +4504,7 @@ msgstr "Alihkan Satu Desktop ke Bawah"
 msgid "Switch to Desktop %1"
 msgstr "Alihkan ke Desktop %1"
 
-#: window.cpp:3100
+#: window.cpp:3101
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
