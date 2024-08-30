@@ -67,7 +67,7 @@ public:
 class KWIN_EXPORT ColorTonemapper
 {
 public:
-    explicit ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom);
+    explicit ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance);
 
     double map(double pqEncodedLuminance) const;
     bool operator==(const ColorTonemapper &) const = default;
@@ -77,7 +77,7 @@ public:
     double m_maxOutputLuminance;
 private:
     double m_inputRange;
-    double m_addedRange;
+    double m_referenceDimming;
     double m_outputReferenceLuminance;
 };
 
@@ -118,7 +118,7 @@ public:
     void addTransferFunction(TransferFunction tf);
     void addInverseTransferFunction(TransferFunction tf);
     void addMatrix(const QMatrix4x4 &mat, const ValueRange &output);
-    void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom);
+    void addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance);
     void add(const ColorOp &op);
 
     ValueRange inputRange;

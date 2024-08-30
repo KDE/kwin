@@ -37,7 +37,7 @@ ColorPipeline ColorPipeline::create(const ColorDescription &from, const ColorDes
     // that's not necessarily true, and figuring out the actual range could be complicated..
     ret.addMatrix(from.toOther(to, intent), ret.currentOutputRange() * (to.referenceLuminance() / from.referenceLuminance()));
     if (!s_disableTonemapping && ret.currentOutputRange().max > maxOutputLuminance * 1.01 && intent == RenderingIntent::Perceptual) {
-        ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance, 1.5);
+        ret.addTonemapper(to.containerColorimetry(), to.referenceLuminance(), ret.currentOutputRange().max, maxOutputLuminance);
     }
 
     ret.addInverseTransferFunction(to.transferFunction());
@@ -240,7 +240,7 @@ static const QMatrix4x4 s_toICtCp = QMatrix4x4(
     0.0,               0.0,               0.0,             1.0).transposed();
 static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
 
-void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom)
+void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
 {
     // convert from rgb to ICtCp
     addMatrix(containerColorimetry.toLMS(), currentOutputRange());
@@ -249,8 +249,8 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
     // apply the tone mapping to the intensity component
     ops.push_back(ColorOp{
         .input = currentOutputRange(),
-        .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance, maxAddedHeadroom),
-        .output = ValueRange {
+        .operation = ColorTonemapper(referenceLuminance, maxInputLuminance, maxOutputLuminance),
+        .output = ValueRange{
             .min = currentOutputRange().min,
             .max = maxOutputLuminance,
         },
@@ -335,23 +335,26 @@ ColorMultiplier::ColorMultiplier(double factor)
 {
 }
 
-ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance, double maxAddedHeadroom)
+ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
     : m_inputReferenceLuminance(referenceLuminance)
     , m_maxInputLuminance(maxInputLuminance)
     , m_maxOutputLuminance(maxOutputLuminance)
 {
     m_inputRange = maxInputLuminance / referenceLuminance;
     const double outputRange = maxOutputLuminance / referenceLuminance;
-    // = how much dynamic range this algorithm adds, by reducing the reference luminance
-    m_addedRange = std::min(m_inputRange, std::clamp(maxAddedHeadroom / outputRange, 1.0, maxAddedHeadroom));
-    m_outputReferenceLuminance = referenceLuminance / m_addedRange;
+    // how much range we need to at least decently present the content
+    // 50% HDR headroom should be enough for the tone mapper to do a good enough job, without dimming the image too much
+    const double minDecentRange = std::min(m_inputRange, 1.5);
+    // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
+    m_referenceDimming = 1.0 / std::clamp(outputRange / minDecentRange, 1.0, minDecentRange);
+    m_outputReferenceLuminance = referenceLuminance * m_referenceDimming;
 }
 
 double ColorTonemapper::map(double pqEncodedLuminance) const
 {
     const double luminance = TransferFunction(TransferFunction::PerceptualQuantizer).encodedToNits(pqEncodedLuminance);
     // keep things linear up to the reference luminance
-    const double low = std::min(luminance / m_addedRange, m_outputReferenceLuminance);
+    const double low = std::min(luminance * m_referenceDimming, m_outputReferenceLuminance);
     // and apply a nonlinear curve above, to reduce the luminance without completely removing differences
     const double relativeHighlight = std::clamp((luminance / m_inputReferenceLuminance - 1.0) / (m_inputRange - 1.0), 0.0, 1.0);
     const double high = std::log(relativeHighlight * (std::numbers::e - 1) + 1) * (m_maxOutputLuminance - m_outputReferenceLuminance);

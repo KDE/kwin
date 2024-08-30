@@ -114,14 +114,16 @@ vec3 doTonemapping(vec3 color) {
     vec3 ICtCp = toICtCp * lms_PQ;
     float luminance = singlePqToLinear(ICtCp.r) * 10000.0;
 
-    // if the reference is too close to the maximum luminance, reduce it to get up to 50% headroom
     float inputRange = maxTonemappingLuminance / destinationReferenceLuminance;
     float outputRange = maxDestinationLuminance / destinationReferenceLuminance;
-    float addedRange = min(inputRange, clamp(1.5 / outputRange, 1.0, 1.5));
-    float outputReferenceLuminance = destinationReferenceLuminance / addedRange;
+    // how much dynamic range we need to decently present the content
+    float minDecentRange = min(inputRange, 1.5);
+    // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
+    float referenceDimming = 1.0 / clamp(outputRange / minDecentRange, 1.0, minDecentRange);
+    float outputReferenceLuminance = destinationReferenceLuminance * referenceDimming;
 
     // keep it linear up to the reference luminance
-    float low = min(luminance / addedRange, outputReferenceLuminance);
+    float low = min(luminance * referenceDimming, outputReferenceLuminance);
     // and apply a nonlinear curve above, to reduce the luminance without completely removing differences
     float relativeHighlight = clamp((luminance / destinationReferenceLuminance - 1.0) / (inputRange - 1.0), 0.0, 1.0);
     const float e = 2.718281828459045;
