@@ -98,7 +98,15 @@ void InputPanelV1Window::resetPosition()
         }
 
         QRectF geo = m_windowGeometry;
-        geo.moveLeft(availableArea.left() + (availableArea.width() - geo.width()) / 2);
+
+        // if it fits, align within available area
+        if (geo.width() < availableArea.width()) {
+            geo.moveLeft(availableArea.left() + (availableArea.width() - geo.width()) / 2);
+        } else { // otherwise align to be centred within the screen
+            const QRectF outputArea = activeOutput->geometry();
+            geo.moveLeft(outputArea.left() + (outputArea.width() - geo.width()) / 2);
+        }
+
         geo.moveBottom(availableArea.bottom());
 
         moveResize(geo);
