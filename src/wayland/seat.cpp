@@ -321,7 +321,7 @@ void SeatInterfacePrivate::endDrag()
 
 void SeatInterfacePrivate::updateSelection(DataSourceInterface *dataSource, quint32 serial)
 {
-    if (currentSelectionSerial - serial < UINT32_MAX / 2) {
+    if (currentSelectionSerial - serial < UINT32_MAX / 2 && currentSelectionSerial != serial) {
         if (dataSource) {
             dataSource->cancel();
         }
@@ -332,7 +332,7 @@ void SeatInterfacePrivate::updateSelection(DataSourceInterface *dataSource, quin
 
 void SeatInterfacePrivate::updatePrimarySelection(PrimarySelectionSourceV1Interface *dataSource, quint32 serial)
 {
-    if (currentPrimarySelectionSerial - serial < UINT32_MAX / 2) {
+    if (currentPrimarySelectionSerial - serial < UINT32_MAX / 2 && currentPrimarySelectionSerial != serial) {
         if (dataSource) {
             dataSource->cancel();
         }
