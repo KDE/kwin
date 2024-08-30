@@ -1086,17 +1086,6 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     const quint32 serial = display()->nextSerial();
     d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
 
-    if (id == 0 && hasPointer() && surface) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.get());
-        if (!touchPrivate->hasTouchesForClient(effectiveTouchedSurface->client())) {
-            // If the client did not bind the touch interface fall back
-            // to at least emulating touch through pointer events.
-            d->pointer->sendEnter(effectiveTouchedSurface, pos, serial);
-            d->pointer->sendMotion(pos);
-            d->pointer->sendFrame();
-        }
-    }
-
     auto tp = std::make_unique<TouchPoint>(serial, surface, this);
     auto r = tp.get();
     d->globalTouch.ids[id] = std::move(tp);
@@ -1132,15 +1121,6 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
 
     if (id == 0) {
         interaction->second->firstTouchPos = globalPosition;
-
-        if (hasPointer() && itTouch->second->surface) {
-            TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.get());
-            if (!touchPrivate->hasTouchesForClient(itTouch->second->surface->client())) {
-                // Client did not bind touch, fall back to emulating with pointer events.
-                d->pointer->sendMotion(pos);
-                d->pointer->sendFrame();
-            }
-        }
     }
     Q_EMIT touchMoved(id, itTouch->second->serial, globalPosition);
 }
@@ -1165,15 +1145,6 @@ void SeatInterface::notifyTouchUp(qint32 id)
 
     auto client = itTouch->second->surface->client();
     d->touch->sendUp(client, id, serial);
-    if (id == 0 && hasPointer() && client) {
-        TouchInterfacePrivate *touchPrivate = TouchInterfacePrivate::get(d->touch.get());
-        if (!touchPrivate->hasTouchesForClient(client)) {
-            // Client did not bind touch, fall back to emulating with pointer events.
-            const quint32 serial = display()->nextSerial();
-            d->pointer->sendButton(BTN_LEFT, PointerButtonState::Released, serial);
-            d->pointer->sendFrame();
-        }
-    }
 
     auto it = d->globalTouch.focus.find(itTouch->second->surface);
     Q_ASSERT(it != d->globalTouch.focus.end());
