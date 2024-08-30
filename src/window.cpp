@@ -2777,6 +2777,9 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
         && com != Options::MouseOperationsMenu // actions where it's not possible to get the matching
         && com != Options::MouseMinimize) // mouse release event
     {
+        if (isInteractiveMoveResize()) {
+            return true;
+        }
         setInteractiveMoveResizeGravity(mouseGravity());
         setInteractiveMoveResizePointerButtonDown(true);
         setInteractiveMoveResizeAnchor(globalPos);
