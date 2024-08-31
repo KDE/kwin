@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-30 00:40+0000\n"
+"POT-Creation-Date: 2024-08-31 00:40+0000\n"
 "PO-Revision-Date: 2009-01-28 17:47+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -2416,28 +2416,28 @@ msgstr "डेस्कटाप मं (&D)"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटाप ग्रिड देखाव"
 
-#: plugins/overview/qml/main.qml:381
+#: plugins/overview/qml/main.qml:379
 #, fuzzy, kde-format
 #| msgid "To &Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "डेस्कटाप मं (&D)"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:385
 #, fuzzy, kde-format
 #| msgid "Show Desktop Grid"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "डेस्कटाप ग्रिड देखाव"
 
-#: plugins/overview/qml/main.qml:394
+#: plugins/overview/qml/main.qml:392
 #, fuzzy, kde-format
 #| msgid "Configur&e Window Behavior..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "विंडो बर्ताव कान्फिगर करव... (&e)"
 
-#: plugins/overview/qml/main.qml:747
+#: plugins/overview/qml/main.qml:744
 #, fuzzy, kde-format
 #| msgid "Moving windows:"
 msgctxt "@info:placeholder"

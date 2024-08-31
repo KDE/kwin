@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-30 00:40+0000\n"
+"POT-Creation-Date: 2024-08-31 00:40+0000\n"
 "PO-Revision-Date: 2024-08-23 09:20+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -2377,25 +2377,25 @@ msgstr "Вилучити віртуальну стільницю"
 msgid "Add Virtual Desktop"
 msgstr "Додати віртуальну стільницю"
 
-#: plugins/overview/qml/main.qml:381
+#: plugins/overview/qml/main.qml:379
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Немає інших віртуальних стільниць для показу"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:385
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Додати віртуальну стільницю"
 
-#: plugins/overview/qml/main.qml:394
+#: plugins/overview/qml/main.qml:392
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Налаштувати віртуальні стільниці…"
 
-#: plugins/overview/qml/main.qml:747
+#: plugins/overview/qml/main.qml:744
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"

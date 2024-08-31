@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2024-08-22 05:15+0200\n"
+"PO-Revision-Date: 2024-08-30 05:36+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -39,26 +39,22 @@ msgid "Unimportant"
 msgstr "უმნიშვნელო"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "ზუსტი დამთხვევა"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "ქვესტრიქონის დამთხვევა"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
-msgstr "რეგულარული ექსპრესია"
+msgstr "რეგულარულ გამოსახულება"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "თავიდან გადატარება"
 
@@ -74,8 +70,7 @@ msgstr ""
 "მეტი ცვლილებები არ შეიცვლება."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "ახლა გადატარება"
 
@@ -106,8 +101,7 @@ msgstr ""
 "მნიშვნელობა."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "არ შეეხო"
 
@@ -134,8 +128,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "ფანჯრის თვისება ყოველთვის მითითებულ მნიშვნელობაზე იქნება დაყენებული."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "ძალით, დროებით"
 
@@ -268,14 +261,12 @@ msgid "Maximized vertically"
 msgstr "ვერტიკალურად გაშლილი"
 
 #: rulesmodel.cpp:467
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "ვირტუალური სამუშაო მაგიდა"
 
 #: rulesmodel.cpp:473
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "ვირტუალური სამუშაო მაგიდები"
 
@@ -598,14 +589,12 @@ msgid "Layer"
 msgstr "ფენა"
 
 #: rulesmodel.cpp:725
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "ადაპტიური სინქი"
 
 #: rulesmodel.cpp:730
-#, fuzzy, kde-format
-#| msgid "Allow Tearing"
+#, kde-format
 msgid "Allow tearing"
 msgstr "ფიფქების დაშვება"
 
@@ -629,26 +618,22 @@ msgstr ""
 "ამის შესახებ აპლიკაციის ავტორსაც შეატყობინებთ."
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "ყველა ფანჯრის ტიპი"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "ნორმალური ფანჯარა"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "დიალოგის ფანჯარა"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "ხელსაწყოების ფანჯარა"
 
@@ -663,14 +648,12 @@ msgid "Toolbar"
 msgstr "ხელსაწყოთა ზოლი"
 
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "მოგლეჯილი მენიუ"
 
 #: rulesmodel.cpp:824
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "მისასალმებელი ფანჯარა"
 
@@ -681,20 +664,17 @@ msgstr "სამუშაო მაგიდა"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "დამოუკიდებელი მენიუს ზოლი"
 
 #: rulesmodel.cpp:828 rulesmodel.cpp:935
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "ეკრანზე ჩვენება"
 
 #: rulesmodel.cpp:838
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "ყველა სამუშაო მაგიდა"
 
@@ -705,8 +685,7 @@ msgid "Make the window available on all desktops"
 msgstr "ამ ფანჯრის ყველა სამუშაო მაგიდაზე ჩვენება"
 
 #: rulesmodel.cpp:859
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "ყველა აქტივობა"
 
@@ -722,14 +701,12 @@ msgid "Default"
 msgstr "ნაგულისხმები"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "განლაგების გარეშე"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "მინიმალური გადაფარვა"
 
@@ -749,20 +726,17 @@ msgid "Random"
 msgstr "შემთხვევითი"
 
 #: rulesmodel.cpp:888
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "ზედა მარცხენა კუთხეში"
 
 #: rulesmodel.cpp:889
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "თაგუნას ქვეშ"
 
 #: rulesmodel.cpp:890
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "მთავარ ფანჯარაზე"
 
@@ -812,8 +786,7 @@ msgid "Popup"
 msgstr "მხტუნარა"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "კრიტიკული გაფრთხილება"
 

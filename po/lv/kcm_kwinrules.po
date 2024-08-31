@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2024-05-27 07:59+0300\n"
+"PO-Revision-Date: 2024-08-29 15:11+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
 
@@ -609,9 +609,10 @@ msgid "Adaptive sync"
 msgstr "Adaptīvā sinhronizācija"
 
 #: rulesmodel.cpp:730
-#, kde-format
+#, fuzzy, kde-format
+#| msgid "Allow Tearing"
 msgid "Allow tearing"
-msgstr ""
+msgstr "Atļaut ekrāna pārraušanu"
 
 #: rulesmodel.cpp:782
 #, kde-format
@@ -984,18 +985,16 @@ msgid "Add property to the rule"
 msgstr "Noteikumam pievienot īpašību"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Logu īpašības nav mainītas"
+msgstr "Nav pievienojamu īpašību"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Logu īpašības nav mainītas"
+msgstr "Neviena īpašība neatbilst „%1“"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format

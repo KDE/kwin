@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-30 00:40+0000\n"
+"POT-Creation-Date: 2024-08-31 00:40+0000\n"
 "PO-Revision-Date: 2024-08-06 10:18-0300\n"
 "Last-Translator: Geraldo Simiao <geraldosimiao@fedoraproject.org>\n"
 "Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@kde.org>\n"
@@ -2393,25 +2393,25 @@ msgstr "Excluir Área de Trabalho Virtual"
 msgid "Add Virtual Desktop"
 msgstr "Adicionar área de trabalho virtual"
 
-#: plugins/overview/qml/main.qml:381
+#: plugins/overview/qml/main.qml:379
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Nenhuma outra área de trabalho virtual para mostrar"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:385
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Adicionar área de trabalho virtual"
 
-#: plugins/overview/qml/main.qml:394
+#: plugins/overview/qml/main.qml:392
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configurar áreas de trabalho virtuais…"
 
-#: plugins/overview/qml/main.qml:747
+#: plugins/overview/qml/main.qml:744
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"

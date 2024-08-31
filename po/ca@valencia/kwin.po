@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-30 00:40+0000\n"
+"POT-Creation-Date: 2024-08-31 00:40+0000\n"
 "PO-Revision-Date: 2024-08-22 10:21+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2386,25 +2386,25 @@ msgstr "Suprimix l'escriptori virtual"
 msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
-#: plugins/overview/qml/main.qml:381
+#: plugins/overview/qml/main.qml:379
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "No hi ha cap altre escriptori virtual que s'haja de mostrar"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:385
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Afig un escriptori virtual"
 
-#: plugins/overview/qml/main.qml:394
+#: plugins/overview/qml/main.qml:392
 #, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Configura els escriptoris virtuals…"
 
-#: plugins/overview/qml/main.qml:747
+#: plugins/overview/qml/main.qml:744
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"

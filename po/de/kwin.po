@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-30 00:40+0000\n"
+"POT-Creation-Date: 2024-08-31 00:40+0000\n"
 "PO-Revision-Date: 2023-08-14 21:55+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -2413,28 +2413,28 @@ msgstr "Virtuelle Arbeitsfläche löschen"
 msgid "Add Virtual Desktop"
 msgstr "Virtuelle Arbeitsfläche hinzufügen"
 
-#: plugins/overview/qml/main.qml:381
+#: plugins/overview/qml/main.qml:379
 #, fuzzy, kde-format
 #| msgid "Delete Virtual Desktop"
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
 msgstr "Virtuelle Arbeitsfläche löschen"
 
-#: plugins/overview/qml/main.qml:387
+#: plugins/overview/qml/main.qml:385
 #, fuzzy, kde-format
 #| msgid "Add Virtual Desktop"
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Virtuelle Arbeitsfläche hinzufügen"
 
-#: plugins/overview/qml/main.qml:394
+#: plugins/overview/qml/main.qml:392
 #, fuzzy, kde-format
 #| msgid "Configure virtual keyboards..."
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Virtuelle Tastaturen einrichten ..."
 
-#: plugins/overview/qml/main.qml:747
+#: plugins/overview/qml/main.qml:744
 #, fuzzy, kde-format
 #| msgid "No matching windows"
 msgctxt "@info:placeholder"
