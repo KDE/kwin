@@ -97,5 +97,8 @@
         "Name[zh_CN]": "窗口平铺展示",
         "Name[zh_TW]": "展示視窗"
     },
-    "X-KDE-ConfigModule": "kwin_windowview_config"
+    "X-KDE-ConfigModule": "kwin_windowview_config",
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
 }
