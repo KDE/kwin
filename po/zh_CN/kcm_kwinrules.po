@@ -55,7 +55,7 @@ msgstr "正则表达式"
 #: optionsmodel.cpp:205
 #, kde-format
 msgid "Apply Initially"
-msgstr "初始状态应用"
+msgstr "初始时应用"
 
 #: optionsmodel.cpp:206
 #, kde-format
@@ -633,7 +633,7 @@ msgstr "独立式菜单栏"
 #: rulesmodel.cpp:823
 #, kde-format
 msgid "On Screen Display"
-msgstr "屏上显示"
+msgstr "屏上显示 (OSD)"
 
 #: rulesmodel.cpp:833
 #, kde-format

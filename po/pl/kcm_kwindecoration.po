@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1681191 $
+# Version: $Revision: 1689183 $
 # translation of kcmkwindecoration.po to
 # SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-02-10 00:40+0000\n"
-"PO-Revision-Date: 2024-02-11 11:23+0100\n"
+"PO-Revision-Date: 2024-08-31 06:20+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -21,6 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -81,7 +82,7 @@ msgstr "Wypełniacz"
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme's default (%1)"
-msgstr "Zgodny z wyglądem (%1)"
+msgstr "Zgodne z wyglądem (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -206,7 +207,7 @@ msgstr "Pokaż podpowiedź po najechaniu na przycisk paska tytułu"
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "Rozmiar obramowania okna:"
+msgstr "Rozmiar obramowania okien:"
 
 #: ui/main.qml:48
 #, kde-format
@@ -233,42 +234,42 @@ msgstr "Bez obramowań okien"
 #: utils.cpp:26
 #, kde-format
 msgid "No Side Window Borders"
-msgstr "Bez obramowań okien z boku"
+msgstr "Bez obramowania okien po bokach"
 
 #: utils.cpp:27
 #, kde-format
 msgid "Tiny Window Borders"
-msgstr "Drobne obramowania okien"
+msgstr "Wąskie obramowanie okien"
 
 #: utils.cpp:28
 #, kde-format
 msgid "Normal Window Borders"
-msgstr "Zwykłe obramowania okien"
+msgstr "Zwykłe obramowanie okien"
 
 #: utils.cpp:29
 #, kde-format
 msgid "Large Window Borders"
-msgstr "Duże obramowania okien"
+msgstr "Szerokie obramowanie okien"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very Large Window Borders"
-msgstr "Bardzo duże obramowania okien"
+msgstr "Bardzo szerokie obramowanie okien"
 
 #: utils.cpp:31
 #, kde-format
 msgid "Huge Window Borders"
-msgstr "Ogromne obramowania okien"
+msgstr "Ogromnie szerokie obramowanie okien"
 
 #: utils.cpp:32
 #, kde-format
 msgid "Very Huge Window Borders"
-msgstr "Bardzo ogromne obramowania okien"
+msgstr "Bardziej ogromnie szerokie obramowanie okien"
 
 #: utils.cpp:33
 #, kde-format
 msgid "Oversized Window Borders"
-msgstr "Przewymiarowane obramowania okna"
+msgstr "Przewymiarowanie obramowanie okien"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"
