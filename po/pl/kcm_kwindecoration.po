@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1689015 $
+# Version: $Revision: 1689183 $
 # translation of kcmkwindecoration.po to
 # SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-02-11 11:23+0100\n"
+"PO-Revision-Date: 2024-08-31 06:20+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -21,6 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -78,9 +79,7 @@ msgid "Spacer"
 msgstr "Wypełniacz"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Zgodny z wyglądem (%1)"
@@ -208,7 +207,7 @@ msgstr "Pokaż podpowiedź po najechaniu na przycisk paska tytułu"
 #, kde-format
 msgctxt "Selector label"
 msgid "Window border size:"
-msgstr "Rozmiar obramowania okna:"
+msgstr "Rozmiar obramowania okien:"
 
 #: ui/main.qml:48
 #, kde-format
@@ -228,58 +227,49 @@ msgid "Edit %1 Theme"
 msgstr "Edytuj wygląd %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
 msgstr "Bez obramowań okien"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
-msgstr "Bez obramowań okien z boku"
+msgstr "Bez obramowania okien po bokach"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "Drobne obramowania okien"
+msgstr "Wąskie obramowanie okien"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
-msgstr "Zwykłe obramowania okien"
+msgstr "Zwykłe obramowanie okien"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
-msgstr "Duże obramowania okien"
+msgstr "Szerokie obramowanie okien"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "Bardzo duże obramowania okien"
+msgstr "Bardzo szerokie obramowanie okien"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
-msgstr "Ogromne obramowania okien"
+msgstr "Ogromnie szerokie obramowanie okien"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "Bardzo ogromne obramowania okien"
+msgstr "Bardziej ogromnie szerokie obramowanie okien"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "Przewymiarowane obramowania okna"
+msgstr "Przewymiarowanie obramowanie okien"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

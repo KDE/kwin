@@ -76,7 +76,7 @@ msgstr "间隔"
 #, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr ""
+msgstr "主题默认值 (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -216,44 +216,44 @@ msgstr "编辑 %1 主题"
 #: utils.cpp:25
 #, kde-format
 msgid "No window borders"
-msgstr ""
+msgstr "无窗口边框"
 
 #: utils.cpp:26
 #, kde-format
 msgid "No side window borders"
-msgstr ""
+msgstr "无窗口侧边框"
 
 #: utils.cpp:27
 #, kde-format
 msgid "Tiny window borders"
-msgstr ""
+msgstr "小窗口边框"
 
 #: utils.cpp:28
 #, kde-format
 msgid "Normal window borders"
-msgstr ""
+msgstr "正常窗口边框"
 
 #: utils.cpp:29
 #, kde-format
 msgid "Large window borders"
-msgstr ""
+msgstr "大窗口边框"
 
 #: utils.cpp:30
 #, kde-format
 msgid "Very large window borders"
-msgstr ""
+msgstr "特大窗口边框"
 
 #: utils.cpp:31
 #, kde-format
 msgid "Huge window borders"
-msgstr ""
+msgstr "超大窗口边框"
 
 #: utils.cpp:32
 #, kde-format
 msgid "Very huge window borders"
-msgstr ""
+msgstr "超特大窗口边框"
 
 #: utils.cpp:33
 #, kde-format
 msgid "Oversized window borders"
-msgstr ""
+msgstr "极大窗口边框"
