@@ -160,8 +160,9 @@ static std::optional<RenderingIntent> waylandToKwinIntent(uint32_t intent)
         return RenderingIntent::RelativeColorimetric;
     case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_absolute:
         return RenderingIntent::AbsoluteColorimetric;
-    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_saturation:
     case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_relative_bpc:
+        return RenderingIntent::RelativeColorimetricWithBPC;
+    case QtWaylandServer::xx_color_manager_v4::render_intent::render_intent_saturation:
         return std::nullopt;
     }
     return std::nullopt;
