@@ -362,7 +362,6 @@ private:
     bool m_hasPointer = false;
     bool m_hasTouch = false;
     bool m_hasTabletModeSwitch = false;
-    bool m_touchpadsEnabled = true;
 
     KWIN_SINGLETON(InputRedirection)
     friend InputRedirection *input();
