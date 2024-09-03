@@ -868,7 +868,7 @@ void Workspace::removeWindow(Window *window)
         setupWindowShortcutDone(false);
     }
     if (window->hasStrut()) {
-        rearrange();
+        scheduleRearrange();
     }
 
     Q_EMIT windowRemoved(window);
