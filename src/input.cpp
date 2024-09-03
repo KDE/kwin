@@ -1379,6 +1379,38 @@ public:
         input()->touch()->setInternalPressId(-1);
         return true;
     }
+    bool tabletToolEvent(TabletEvent *event) override
+    {
+        if (!input()->tablet()->focus() || !input()->tablet()->focus()->isInternal()) {
+            return false;
+        }
+
+        QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
+        const QPointF globalPos = event->globalPosition();
+        const QPointF localPos = globalPos - internal->position();
+        const TabletToolId toolId = event->tabletId();
+
+        const int deviceType = int(QPointingDevice::DeviceType::Stylus);
+        const int pointerType = int(QPointingDevice::PointerType::Pen);
+
+        switch (event->type()) {
+        case QEvent::TabletEnterProximity:
+            QWindowSystemInterface::handleTabletEnterProximityEvent(deviceType, pointerType, toolId.m_serialId);
+            break;
+        case QEvent::TabletLeaveProximity:
+            QWindowSystemInterface::handleTabletLeaveProximityEvent(deviceType, pointerType, toolId.m_serialId);
+            break;
+        case QEvent::TabletPress:
+        case QEvent::TabletRelease:
+        case QEvent::TabletMove:
+            QWindowSystemInterface::handleTabletEvent(internal, event->timestamp(), localPos, globalPos, deviceType, pointerType, event->buttons(), event->pressure(), event->xTilt(), event->yTilt(), event->tangentialPressure(), event->rotation(), event->z(), toolId.m_serialId, input()->keyboardModifiers());
+            break;
+        default:
+            break;
+        }
+        // Let TabletInputFilter receive the event, so the tablet can be registered and the cursor position can be updated.
+        return false;
+    }
 
 private:
     QSet<qint32> m_pressedIds;

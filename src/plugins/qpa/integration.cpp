@@ -29,7 +29,7 @@
 #include <qpa/qplatformaccessibility.h>
 #include <qpa/qplatformnativeinterface.h>
 #include <qpa/qplatformwindow.h>
-#include <qpa/qwindowsysteminterface.h>
+#include <qpa/qwindowsysteminterface_p.h>
 
 #include <QtGui/private/qgenericunixeventdispatcher_p.h>
 #include <QtGui/private/qgenericunixfontdatabase_p.h>
@@ -54,6 +54,7 @@ Integration::Integration()
     , m_services(new QGenericUnixServices())
     , m_clipboard(new Clipboard())
 {
+    QWindowSystemInterfacePrivate::TabletEvent::setPlatformSynthesizesMouse(false);
 }
 
 Integration::~Integration()
