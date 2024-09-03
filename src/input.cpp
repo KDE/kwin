@@ -2385,7 +2385,9 @@ public:
 
     bool emulateTabletEvent(TabletEvent *event)
     {
-        if (!workspace()) {
+        // Tablet input emulation is deprecated. It will be removed in the near future.
+        static bool emulateInput = qEnvironmentVariableIntValue("KWIN_WAYLAND_EMULATE_TABLET") == 1;
+        if (!emulateInput) {
             return false;
         }
 
