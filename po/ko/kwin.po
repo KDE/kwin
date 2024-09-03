@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 02:45+0000\n"
+"POT-Creation-Date: 2024-09-03 02:29+0000\n"
 "PO-Revision-Date: 2024-08-20 00:43+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -1223,7 +1223,7 @@ msgstr "%1(으)로 태블릿 이동됨"
 msgid "Tablets switched outputs"
 msgstr "태블릿에서 출력 변경됨"
 
-#: input.cpp:3187
+#: input.cpp:3217
 #, kde-format
 msgid "Touchpad"
 msgstr "터치패드"

@@ -1,5 +1,5 @@
 # translation of kwin.po to
-# Version: $Revision: 1688236 $
+# Version: $Revision: 1689422 $
 # translation of kwin.po to Polish
 # translation of kwin.po to
 # SPDX-FileCopyrightText: 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-21 02:45+0000\n"
+"POT-Creation-Date: 2024-09-03 02:29+0000\n"
 "PO-Revision-Date: 2024-07-21 06:45+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -1233,7 +1233,7 @@ msgstr "Tablet przeniósł się na %1"
 msgid "Tablets switched outputs"
 msgstr "Tablet przełączył wyjście"
 
-#: input.cpp:3187
+#: input.cpp:3217
 #, kde-format
 msgid "Touchpad"
 msgstr "Gładzik"
