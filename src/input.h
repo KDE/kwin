@@ -240,6 +240,7 @@ public:
     void startInteractivePositionSelection(std::function<void(const QPoint &)> callback);
     bool isSelectingWindow() const;
 
+    void enableOrDisableTouchpads(bool enable);
     void toggleTouchpads();
     void enableTouchpads();
     void disableTouchpads();

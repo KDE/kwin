@@ -3220,6 +3220,30 @@ void InputRedirection::updateAvailableInputDevices()
     }
 }
 
+void InputRedirection::enableOrDisableTouchpads(bool enable)
+{
+
+    bool changed = false;
+    for (InputDevice *device : std::as_const(m_inputDevices)) {
+        if (!device->isTouchpad()) {
+            continue;
+        }
+        if (device->isEnabled() != enable) {
+            device->setEnabled(enable);
+            changed = true;
+        }
+    }
+    // send OSD message
+    if (changed) {
+        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
+                                                          QStringLiteral("/org/kde/osdService"),
+                                                          QStringLiteral("org.kde.osdService"),
+                                                          QStringLiteral("touchpadEnabledChanged"));
+        msg.setArguments({enable});
+        QDBusConnection::sessionBus().asyncCall(msg);
+    }
+}
+
 void InputRedirection::toggleTouchpads()
 {
     bool enabled = true;
@@ -3234,59 +3258,17 @@ void InputRedirection::toggleTouchpads()
         }
     }
 
-    if (enabled) {
-        disableTouchpads();
-    } else {
-        enableTouchpads();
-    }
+    enableOrDisableTouchpads(!enabled);
 }
 
 void InputRedirection::enableTouchpads()
 {
-    bool changed = false;
-    for (InputDevice *device : std::as_const(m_inputDevices)) {
-        if (!device->isTouchpad()) {
-            continue;
-        }
-        if (device->isEnabled()) {
-            continue;
-        }
-        device->setEnabled(true);
-        changed = true;
-    }
-    // send OSD message
-    if (changed) {
-        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                          QStringLiteral("/org/kde/osdService"),
-                                                          QStringLiteral("org.kde.osdService"),
-                                                          QStringLiteral("touchpadEnabledChanged"));
-        msg.setArguments({true});
-        QDBusConnection::sessionBus().asyncCall(msg);
-    }
+    enableOrDisableTouchpads(true);
 }
 
 void InputRedirection::disableTouchpads()
 {
-    bool changed = false;
-    for (InputDevice *device : std::as_const(m_inputDevices)) {
-        if (!device->isTouchpad()) {
-            continue;
-        }
-        if (!device->isEnabled()) {
-            continue;
-        }
-        device->setEnabled(false);
-        changed = true;
-    }
-    // send OSD message
-    if (changed) {
-        QDBusMessage msg = QDBusMessage::createMethodCall(QStringLiteral("org.kde.plasmashell"),
-                                                          QStringLiteral("/org/kde/osdService"),
-                                                          QStringLiteral("org.kde.osdService"),
-                                                          QStringLiteral("touchpadEnabledChanged"));
-        msg.setArguments({false});
-        QDBusConnection::sessionBus().asyncCall(msg);
-    }
+    enableOrDisableTouchpads(false);
 }
 
 void InputRedirection::addInputBackend(std::unique_ptr<InputBackend> &&inputBackend)
