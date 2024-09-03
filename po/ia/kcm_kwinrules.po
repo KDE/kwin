@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2024-07-23 11:38+0200\n"
+"PO-Revision-Date: 2024-09-02 15:44+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -38,26 +38,22 @@ msgid "Unimportant"
 msgstr "Non importante"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
-msgstr "Exacte coincidentia"
+msgstr "Coincidentia exacte"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "Coincidentia de sub catena"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "Expression regular"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "Applica initialmente"
 
@@ -73,8 +69,7 @@ msgstr ""
 "Necun ulterior modificationes essera influentiate."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "Applica hora"
 
@@ -104,8 +99,7 @@ msgstr ""
 "fenestra es create, le ultime valor memorate ssera applicate."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "Non influentia"
 
@@ -132,8 +126,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "Le proprietate de fenestra essera sempre fortiate al valor date."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "Fortia temporaneemente"
 
@@ -267,14 +260,12 @@ msgid "Maximized vertically"
 msgstr "Maximizate verticalmente"
 
 #: rulesmodel.cpp:467
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "Scriptorio Virtual"
 
 #: rulesmodel.cpp:473
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "Scriptorios virtual"
 
@@ -598,15 +589,14 @@ msgid "Layer"
 msgstr "Layer"
 
 #: rulesmodel.cpp:725
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "Sync Adaptive"
 
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "Permitte lacerar (tearing)"
 
 #: rulesmodel.cpp:782
 #, kde-format
@@ -629,26 +619,22 @@ msgstr ""
 "reportar iste bug al dispeloppatores del application."
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "Omne typos de fenestra"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "Fenestra Normal"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "Fenestra de Dialogo"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "Fenestra de Utilitate"
 
@@ -663,16 +649,14 @@ msgid "Toolbar"
 msgstr "Barra de Instrumento"
 
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "Menu per stoppar"
 
 #: rulesmodel.cpp:824
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
-msgstr "Schermo Splash"
+msgstr "Schermo splash"
 
 #: rulesmodel.cpp:825 rulesmodel.cpp:927
 #, kde-format
@@ -681,20 +665,17 @@ msgstr "Scriptorio"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "Barra de menu a parte"
 
 #: rulesmodel.cpp:828 rulesmodel.cpp:935
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "Monstrator de supra schermo"
 
 #: rulesmodel.cpp:838
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "Omne scriptorios"
 
@@ -705,8 +686,7 @@ msgid "Make the window available on all desktops"
 msgstr "Face le fenestra disponibile sur omne scriptorios"
 
 #: rulesmodel.cpp:859
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "Omne Activitates"
 
@@ -722,14 +702,12 @@ msgid "Default"
 msgstr "Predefinite"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "Nulle placiamento"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "Copertura o imbricatura minime"
 
@@ -749,20 +727,17 @@ msgid "Random"
 msgstr "Casual"
 
 #: rulesmodel.cpp:888
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "In angulo culmine sinistre"
 
 #: rulesmodel.cpp:889
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "Infra mus"
 
 #: rulesmodel.cpp:890
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "Sur fenestra principal"
 
@@ -812,8 +787,7 @@ msgid "Popup"
 msgstr "Popup"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "Notification critic"
 

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-31 00:40+0000\n"
-"PO-Revision-Date: 2024-07-19 14:35+0200\n"
+"POT-Creation-Date: 2024-09-03 00:40+0000\n"
+"PO-Revision-Date: 2024-09-02 15:48+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -428,12 +428,10 @@ msgid "Repeat"
 msgstr "Repete"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Codice Clave"
+msgstr "Keycode"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -1239,7 +1237,7 @@ msgstr "Tabletta movite a %1"
 msgid "Tablets switched outputs"
 msgstr "Exitos commutate de tablettas"
 
-#: input.cpp:3290
+#: input.cpp:3320
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -2479,11 +2477,10 @@ msgstr ""
 "Escappa o clicca a dextere pro cancellar."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Bloca composition"
+msgstr "Composition"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -3619,17 +3616,15 @@ msgstr "Typo de regula de Sync Adaptative"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Permitte rotation"
+msgstr "Permitte lacerar (tearing)"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Typo de regula  de Layer"
+msgstr "Typo de regula  de Lacerar"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
