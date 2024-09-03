@@ -2314,6 +2314,16 @@ public:
             tool = createTool(event->tabletId());
         }
 
+        switch (event->type()) {
+        case QEvent::TabletEnterProximity:
+        case QEvent::TabletPress:
+        case QEvent::TabletMove:
+            m_cursorByTool[tool]->setPos(event->globalPosition());
+            break;
+        default:
+            break;
+        }
+
         // NOTE: tablet will be nullptr as the device is removed (see ::removeDevice) but events from the tool
         // may still happen (e.g. Release or ProximityOut events)
         auto tablet = static_cast<TabletV2Interface *>(event->tabletId().m_deviceGroupData);
@@ -2334,12 +2344,9 @@ public:
         case QEvent::TabletMove: {
             const auto pos = window->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(event->globalPosF());
             break;
         }
         case QEvent::TabletEnterProximity: {
-            const QPointF pos = event->globalPosF();
-            m_cursorByTool[tool]->setPos(pos);
             tool->sendProximityIn(tablet);
             tool->sendMotion(window->mapToLocal(event->globalPosF()));
             break;
@@ -2350,7 +2357,6 @@ public:
         case QEvent::TabletPress: {
             const auto pos = window->mapToLocal(event->globalPosF());
             tool->sendMotion(pos);
-            m_cursorByTool[tool]->setPos(event->globalPosF());
             tool->sendDown();
             break;
         }
