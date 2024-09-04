@@ -275,7 +275,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         return;
     }
 
-    ShaderTraits baseShaderTraits = ShaderTrait::MapTexture;
+    ShaderTraits baseShaderTraits;
     if (data.brightness() != 1.0) {
         baseShaderTraits |= ShaderTrait::Modulate;
     }
@@ -349,6 +349,16 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (!colorTransformation.isIdentity()) {
             traits |= ShaderTrait::TransformColorspace;
         }
+        if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
+            traits |= ShaderTrait::MapTexture;
+        } else {
+            const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
+            if (contents.planes.size() == 1) {
+                traits |= ShaderTrait::MapTexture;
+            } else {
+                traits |= ShaderTrait::MapYUVTexture;
+            }
+        }
         if (!shader || traits != lastTraits) {
             lastTraits = traits;
             if (shader) {
@@ -362,6 +372,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             }
 
             if (traits & ShaderTrait::MapTexture) {
+                shader->setUniform(GLShader::IntUniform::Sampler, 0);
+            } else if (traits & ShaderTrait::MapYUVTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
                 shader->setUniform(GLShader::IntUniform::Sampler1, 1);
             }
@@ -377,11 +389,9 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (std::holds_alternative<GLTexture *>(renderNode.texture)) {
             const auto texture = std::get<GLTexture *>(renderNode.texture);
             glActiveTexture(GL_TEXTURE0);
-            shader->setUniform("converter", 0);
             texture->bind();
         } else {
             const auto contents = std::get<OpenGLSurfaceContents>(renderNode.texture);
-            shader->setUniform("converter", contents.planes.count() > 1);
             for (int plane = 0; plane < contents.planes.count(); ++plane) {
                 glActiveTexture(GL_TEXTURE0 + plane);
                 contents.planes[plane]->bind();
