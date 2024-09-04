@@ -289,6 +289,11 @@ std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
     }
 }
 
+QMatrix4x4 SurfaceItem::yuvConversionMatrix() const
+{
+    return m_yuvConversionMatrix;
+}
+
 std::shared_ptr<SyncReleasePoint> SurfaceItem::bufferReleasePoint() const
 {
     return m_bufferReleasePoint;

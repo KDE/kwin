@@ -32,6 +32,7 @@ public:
         ColorDescription colorDescription;
         RenderingIntent renderingIntent;
         std::shared_ptr<SyncReleasePoint> bufferReleasePoint;
+        QMatrix4x4 yuvConversionMatrix;
     };
 
     struct RenderContext
