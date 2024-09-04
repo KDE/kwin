@@ -51,6 +51,7 @@ private Q_SLOTS:
     void handlePresentationModeHintChanged();
     void handleReleasePointChanged();
     void handleAlphaMultiplierChanged();
+    void handleYuvToRgbChanged();
 
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;

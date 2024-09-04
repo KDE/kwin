@@ -27,10 +27,10 @@
 #include "utils/resource.h"
 #include "xx_colormanagement_v4.h"
 
-#include <wayland-server.h>
-// std
 #include <algorithm>
 #include <cmath>
+#include <drm_fourcc.h>
+#include <wayland-server.h>
 
 namespace KWin
 {
@@ -349,6 +349,23 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         return;
     }
 
+    // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
+    // matrix and color space to be attached to YUV formats
+    if (bufferRef && bufferRef->dmabufAttributes()) {
+        switch (bufferRef->dmabufAttributes()->format) {
+        case DRM_FORMAT_NV12:
+            pending->yuvCoefficients = YUVMatrixCoefficients::BT601;
+            pending->yuvCoefficientsIsSet = true;
+            break;
+        default:
+            pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+            pending->yuvCoefficientsIsSet = true;
+        }
+    } else {
+        pending->yuvCoefficients = YUVMatrixCoefficients::Identity;
+        pending->yuvCoefficientsIsSet = true;
+    }
+
     Transaction *transaction;
     if (sync) {
         if (!subsurface.transaction) {
@@ -593,6 +610,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->alphaMultiplier = alphaMultiplier;
         target->alphaMultiplierIsSet = true;
     }
+    if (yuvCoefficientsIsSet) {
+        target->yuvCoefficients = yuvCoefficients;
+        target->yuvCoefficientsIsSet = true;
+    }
     target->presentationFeedback = std::move(presentationFeedback);
 
     *this = SurfaceState{};
@@ -616,6 +637,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
     const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = next->alphaMultiplierIsSet;
+    const bool yuvCoefficientsChanged = next->yuvCoefficientsIsSet && (current->yuvCoefficients != next->yuvCoefficients);
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QRectF oldBufferSourceBox = bufferSourceBox;
@@ -710,6 +732,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (alphaMultiplierChanged) {
         Q_EMIT q->alphaMultiplierChanged();
+    }
+    if (yuvCoefficientsChanged) {
+        Q_EMIT q->yuvCoefficientsChanged();
     }
 
     if (bufferChanged) {
@@ -1218,6 +1243,11 @@ std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
 double SurfaceInterface::alphaMultiplier() const
 {
     return d->current->alphaMultiplier;
+}
+
+YUVMatrixCoefficients SurfaceInterface::yuvCoefficients() const
+{
+    return d->current->yuvCoefficients;
 }
 
 } // namespace KWin

@@ -305,6 +305,11 @@ std::chrono::nanoseconds SurfaceItem::frameTimeEstimation() const
     }
 }
 
+YUVMatrixCoefficients SurfaceItem::yuvCoefficients() const
+{
+    return m_yuvCoefficients;
+}
+
 std::shared_ptr<SyncReleasePoint> SurfaceItem::bufferReleasePoint() const
 {
     return m_bufferReleasePoint;

@@ -348,6 +348,8 @@ public:
      */
     std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
+    YUVMatrixCoefficients yuvCoefficients() const;
+
     /**
      * Traverses the surface sub-tree with this surface as the root.
      */
@@ -436,6 +438,7 @@ Q_SIGNALS:
     void presentationModeHintChanged();
     void bufferReleasePointChanged();
     void alphaMultiplierChanged();
+    void yuvCoefficientsChanged();
 
     /**
      * Emitted when the Surface has been committed.

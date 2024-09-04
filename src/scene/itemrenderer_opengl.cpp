@@ -167,6 +167,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
+                .yuvCoefficients = YUVMatrixCoefficients::Identity,
             });
         }
     } else if (auto decorationItem = qobject_cast<DecorationItem *>(item)) {
@@ -181,6 +182,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
+                .yuvCoefficients = YUVMatrixCoefficients::Identity,
             });
         }
     } else if (auto surfaceItem = qobject_cast<SurfaceItem *>(item)) {
@@ -197,6 +199,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                     .colorDescription = item->colorDescription(),
                     .renderingIntent = item->renderingIntent(),
                     .bufferReleasePoint = surfaceItem->bufferReleasePoint(),
+                    .yuvCoefficients = surfaceItem->yuvCoefficients(),
                 });
             }
         }
@@ -211,6 +214,7 @@ void ItemRendererOpenGL::createRenderNode(Item *item, RenderContext *context)
                 .colorDescription = item->colorDescription(),
                 .renderingIntent = item->renderingIntent(),
                 .bufferReleasePoint = nullptr,
+                .yuvCoefficients = YUVMatrixCoefficients::Identity,
             });
         }
     }
@@ -376,6 +380,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             } else if (traits & ShaderTrait::MapYUVTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
                 shader->setUniform(GLShader::IntUniform::Sampler1, 1);
+                shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, getYUVMatrix(renderNode.yuvCoefficients));
             }
         }
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);

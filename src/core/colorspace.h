@@ -268,6 +268,17 @@ private:
     std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxHdrLuminance;
 };
+
+enum class YUVMatrixCoefficients {
+    Identity,
+    BT601,
+};
+
+/**
+ * @returns the matrix for converting YCbCr into RGB
+ */
+QMatrix4x4 getYUVMatrix(YUVMatrixCoefficients coefficients);
+
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);

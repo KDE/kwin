@@ -18,6 +18,8 @@
 #include "x11window.h"
 #endif
 
+#include <drm_fourcc.h>
+
 namespace KWin
 {
 
@@ -48,6 +50,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
     connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
     connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
+    connect(surface, &SurfaceInterface::yuvCoefficientsChanged, this, &SurfaceItemWayland::handleYuvToRgbChanged);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -221,6 +224,12 @@ void SurfaceItemWayland::handleReleasePointChanged()
 void SurfaceItemWayland::handleAlphaMultiplierChanged()
 {
     setOpacity(m_surface->alphaMultiplier());
+}
+
+void SurfaceItemWayland::handleYuvToRgbChanged()
+{
+    m_yuvCoefficients = m_surface->yuvCoefficients();
+    scheduleRepaint(boundingRect());
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item)

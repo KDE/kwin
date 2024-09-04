@@ -789,6 +789,24 @@ TransferFunction TransferFunction::relativeScaledTo(double referenceLuminance) c
         return *this;
     }
 }
+
+QMatrix4x4 getYUVMatrix(YUVMatrixCoefficients coefficients)
+{
+    // clang-format off
+    switch (coefficients) {
+    case YUVMatrixCoefficients::Identity:
+        return QMatrix4x4();
+    case YUVMatrixCoefficients::BT601:
+        return QMatrix4x4{
+            1.16438356f,  0.0f,         1.59602678f, -0.874202218f,
+            1.16438356f, -0.39176229f, -0.81296764f,  0.531667823f,
+            1.16438356f,  2.01723214f,  0.0f,        -1.085630789f,
+            0.0f,         0.0f,         0.0f,         1.0f,
+        };
+    }
+    Q_UNREACHABLE();
+    // clang-format on
+}
 }
 
 QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
