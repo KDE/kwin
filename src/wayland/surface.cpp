@@ -352,6 +352,7 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
     // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
     // matrix and color space to be attached to YUV formats
     if (bufferRef && bufferRef->dmabufAttributes()) {
+        const bool hasColorManagementProtocol = xxColorSurface || frogColorManagement;
         // clang-format off
         switch (bufferRef->dmabufAttributes()->format) {
         case DRM_FORMAT_NV12:
@@ -363,7 +364,30 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
                 0.0f,         0.0f,         0.0f,         1.0f,
             };
             pending->yuvToRgbMatrixIsSet = true;
+            if (!hasColorManagementProtocol) {
+                pending->colorDescription = ColorDescription::sRGB;
+                pending->colorDescriptionIsSet = true;
+            }
             break;
+        case DRM_FORMAT_P010:
+            // limited range bt.2020 YUV -> full range bt.2020 RGB
+            pending->yuvToRgbMatrix = QMatrix4x4{
+                1.16438356f,  0.0f,         1.67878795f, -0.915745075f,
+                1.16438356f, -0.18732610f, -0.65046843f,  0.347480639f,
+                1.16438356f,  2.14177232f,  0.0f,        -1.148145075f,
+                0.0f,         0.0f,         0.0f,         1.0f,
+            };
+            pending->yuvToRgbMatrixIsSet = true;
+            if (!hasColorManagementProtocol) {
+                pending->colorDescription = ColorDescription(NamedColorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
+                pending->colorDescriptionIsSet = true;
+            }
+            break;
+        default:
+            if (!hasColorManagementProtocol) {
+                pending->colorDescription = ColorDescription::sRGB;
+                pending->colorDescriptionIsSet = true;
+            }
         }
         // clang-format on
     }
@@ -635,11 +659,11 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool slideChanged = next->slideIsSet;
     const bool subsurfaceOrderChanged = next->subsurfaceOrderChanged;
     const bool visibilityChanged = bufferChanged && bool(current->buffer) != bool(next->buffer);
-    const bool colorDescriptionChanged = next->colorDescriptionIsSet;
+    const bool colorDescriptionChanged = next->colorDescriptionIsSet && (current->colorDescription != next->colorDescription);
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
     const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = next->alphaMultiplierIsSet;
-    const bool yuvToRgbMatrixChanged = next->yuvToRgbMatrixIsSet;
+    const bool yuvToRgbMatrixChanged = next->yuvToRgbMatrixIsSet && (current->yuvToRgbMatrix != next->yuvToRgbMatrix);
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;

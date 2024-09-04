@@ -239,6 +239,13 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
         }
         commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
         commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+    } else if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_P010) {
+        if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
+            // don't allow P010 direct scanout if we can't tell the driver what to do with it
+            return Error::InvalidArguments;
+        }
+        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT2020_YCbCr);
+        commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
     }
     return Error::None;
 }
