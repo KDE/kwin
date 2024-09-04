@@ -67,12 +67,20 @@ void OutputScreenCastSource::render(GLFramebuffer *target)
         return;
     }
 
-    ShaderBinder shaderBinder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+    const bool yuv = colorDescription.yuvCoefficients() != YUVMatrixCoefficients::Identity;
+    ShaderBinder shaderBinder((yuv ? ShaderTrait::MapYUVTexture : ShaderTrait::MapTexture) | ShaderTrait::TransformColorspace);
     QMatrix4x4 projectionMatrix;
     projectionMatrix.scale(1, -1);
     projectionMatrix.ortho(QRect(QPoint(), textureSize()));
     shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
     shaderBinder.shader()->setColorspaceUniforms(colorDescription, ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
+    if (yuv) {
+        shaderBinder.shader()->setUniform(GLShader::Mat4Uniform::YuvToRgb, colorDescription.yuvMatrix());
+        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
+        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler1, 1);
+    } else {
+        shaderBinder.shader()->setUniform(GLShader::IntUniform::Sampler, 0);
+    }
 
     GLFramebuffer::pushFramebuffer(target);
     outputTexture->render(textureSize());

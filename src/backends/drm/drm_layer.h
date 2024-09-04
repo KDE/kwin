@@ -41,6 +41,7 @@ public:
     virtual bool checkTestBuffer() = 0;
     virtual std::shared_ptr<DrmFramebuffer> currentBuffer() const = 0;
     virtual const ColorPipeline &colorPipeline() const;
+    virtual ColorDescription colorDescription() const = 0;
 
 protected:
     DrmPipeline *const m_pipeline;

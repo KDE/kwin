@@ -32,7 +32,7 @@ public:
     bool checkTestBuffer() override;
     std::shared_ptr<DrmFramebuffer> currentBuffer() const override;
     std::shared_ptr<GLTexture> texture() const override;
-    ColorDescription colorDescription() const;
+    ColorDescription colorDescription() const override;
     void releaseBuffers() override;
     DrmDevice *scanoutDevice() const override;
     QHash<uint32_t, QList<uint64_t>> supportedDrmFormats() const override;
@@ -43,6 +43,7 @@ private:
     bool doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame) override;
 
     std::shared_ptr<DrmFramebuffer> m_scanoutBuffer;
+    ColorDescription m_scanoutColor = ColorDescription::sRGB;
     ColorPipeline m_colorPipeline;
 
     EglGbmLayerSurface m_surface;

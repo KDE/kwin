@@ -87,6 +87,7 @@ public:
         ColorimetryTransformation,
         DestinationToLMS,
         LMSToDestination,
+        YuvToRgb,
         MatrixCount
     };
 
