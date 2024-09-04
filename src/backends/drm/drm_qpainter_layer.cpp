@@ -11,6 +11,7 @@
 #include "drm_buffer.h"
 #include "drm_gpu.h"
 #include "drm_logging.h"
+#include "drm_output.h"
 #include "drm_pipeline.h"
 #include "drm_virtual_output.h"
 #include "platformsupport/scenes/qpainter/qpainterswapchain.h"
@@ -107,6 +108,11 @@ QHash<uint32_t, QList<uint64_t>> DrmQPainterLayer::supportedDrmFormats() const
 QList<QSize> DrmQPainterLayer::recommendedSizes() const
 {
     return m_pipeline->recommendedSizes(m_type);
+}
+
+ColorDescription DrmQPainterLayer::colorDescription() const
+{
+    return m_pipeline->output()->scanoutColorDescription();
 }
 
 DrmVirtualQPainterLayer::DrmVirtualQPainterLayer(DrmVirtualOutput *output)

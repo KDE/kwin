@@ -62,6 +62,7 @@ struct SurfaceState
     bool presentationModeHintIsSet = false;
     bool colorDescriptionIsSet = false;
     bool alphaMultiplierIsSet = false;
+    bool yuvCoefficientsIsSet = false;
     qint32 bufferScale = 1;
     OutputTransform bufferTransform = OutputTransform::Normal;
     wl_list frameCallbacks;
@@ -83,6 +84,7 @@ struct SurfaceState
     } acquirePoint;
     std::shared_ptr<SyncReleasePoint> releasePoint;
     double alphaMultiplier = 1;
+    YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity;
 
     struct
     {

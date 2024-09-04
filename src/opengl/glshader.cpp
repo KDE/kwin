@@ -223,6 +223,7 @@ void GLShader::resolveLocations()
     m_matrix4Locations[Mat4Uniform::ColorimetryTransformation] = uniformLocation("colorimetryTransform");
     m_matrix4Locations[Mat4Uniform::DestinationToLMS] = uniformLocation("destinationToLMS");
     m_matrix4Locations[Mat4Uniform::LMSToDestination] = uniformLocation("lmsToDestination");
+    m_matrix4Locations[Mat4Uniform::YuvToRgb] = uniformLocation("yuvToRgb");
 
     m_vec2Locations[Vec2Uniform::Offset] = uniformLocation("offset");
     m_vec2Locations[Vec2Uniform::SourceTransferFunctionParams] = uniformLocation("sourceTransferFunctionParams");

@@ -488,17 +488,17 @@ std::optional<NamedColorimetry> Colorimetry::name() const
 
 const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
-    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients)
+    : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709), yuvCoefficients)
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
-    : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients)
+    : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709), yuvCoefficients)
 {
 }
 
-ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients)
     : m_containerColorimetry(containerColorimetry)
     , m_masteringColorimetry(masteringColorimetry)
     , m_transferFunction(tf)
@@ -507,11 +507,12 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Tran
     , m_minLuminance(minLuminance)
     , m_maxAverageLuminance(maxAverageLuminance)
     , m_maxHdrLuminance(maxHdrLuminance)
+    , m_yuvCoefficients(yuvCoefficients)
 {
 }
 
-ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
-    : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, masteringColorimetry, sdrColorimetry)
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients)
+    : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, masteringColorimetry, sdrColorimetry, yuvCoefficients)
 {
 }
 
@@ -553,6 +554,29 @@ std::optional<double> ColorDescription::maxAverageLuminance() const
 std::optional<double> ColorDescription::maxHdrLuminance() const
 {
     return m_maxHdrLuminance;
+}
+
+YUVMatrixCoefficients ColorDescription::yuvCoefficients() const
+{
+    return m_yuvCoefficients;
+}
+
+QMatrix4x4 ColorDescription::yuvMatrix() const
+{
+    // clang-format off
+    switch (m_yuvCoefficients) {
+    case YUVMatrixCoefficients::Identity:
+        return QMatrix4x4();
+    case YUVMatrixCoefficients::BT601:
+        return QMatrix4x4{
+            1.16438356f,  0.0f,         1.59602678f, -0.874202218f,
+            1.16438356f, -0.39176229f, -0.81296764f,  0.531667823f,
+            1.16438356f,  2.01723214f,  0.0f,        -1.085630789f,
+            0.0f,         0.0f,         0.0f,         1.0f,
+        };
+    }
+    Q_UNREACHABLE();
+    // clang-format on
 }
 
 QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingIntent intent) const
@@ -635,6 +659,21 @@ ColorDescription ColorDescription::dimmed(double brightnessFactor) const
     }),
         m_masteringColorimetry,
         m_sdrColorimetry,
+    };
+}
+
+ColorDescription ColorDescription::withYuvCoefficients(YUVMatrixCoefficients coefficient) const
+{
+    return ColorDescription{
+        m_containerColorimetry,
+        m_transferFunction,
+        m_referenceLuminance,
+        m_minLuminance,
+        m_maxAverageLuminance,
+        m_maxHdrLuminance,
+        m_masteringColorimetry,
+        m_sdrColorimetry,
+        coefficient,
     };
 }
 

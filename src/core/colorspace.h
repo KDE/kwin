@@ -197,6 +197,11 @@ public:
     static double defaultReferenceLuminanceFor(Type type);
 };
 
+enum class YUVMatrixCoefficients {
+    Identity,
+    BT601,
+};
+
 /**
  * Describes the meaning of encoded color values, with additional metadata for how to convert between different encodings
  * Note that not all properties of this description are relevant in all contexts
@@ -213,10 +218,10 @@ public:
      * @param maxHdrLuminance the maximum brightness of HDR content, for a small part of the screen only
      * @param sdrColorimetry
      */
-    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
-    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
-    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
-    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
+    explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry, YUVMatrixCoefficients yuvCoefficients = YUVMatrixCoefficients::Identity);
 
     /**
      * The primaries and whitepoint that colors are encoded for. This is used to convert between different colorspaces.
@@ -235,6 +240,13 @@ public:
     double minLuminance() const;
     std::optional<double> maxAverageLuminance() const;
     std::optional<double> maxHdrLuminance() const;
+    YUVMatrixCoefficients yuvCoefficients() const;
+
+    /**
+     * @returns the yuv->rgb matrix for the yuv coefficients of this color description
+     * TODO move this to ColorPipeline, to deal with ICtCp
+     */
+    QMatrix4x4 yuvMatrix() const;
 
     bool operator==(const ColorDescription &other) const = default;
 
@@ -245,6 +257,7 @@ public:
      */
     ColorDescription withWhitepoint(xyY newWhitePoint) const;
     ColorDescription dimmed(double brightnessFactor) const;
+    ColorDescription withYuvCoefficients(YUVMatrixCoefficients coefficient) const;
 
     /**
      * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one
@@ -266,6 +279,7 @@ private:
     double m_minLuminance;
     std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxHdrLuminance;
+    YUVMatrixCoefficients m_yuvCoefficients = YUVMatrixCoefficients::Identity;
 };
 }
 
