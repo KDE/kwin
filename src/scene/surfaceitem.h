@@ -62,6 +62,7 @@ public:
     virtual void freeze();
 
     std::chrono::nanoseconds frameTimeEstimation() const;
+    QMatrix4x4 yuvConversionMatrix() const;
 
 Q_SIGNALS:
     void damaged();
@@ -86,6 +87,7 @@ protected:
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
     std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
+    QMatrix4x4 m_yuvConversionMatrix;
 };
 
 class KWIN_EXPORT SurfaceTexture

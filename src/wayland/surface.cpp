@@ -27,10 +27,10 @@
 #include "utils/resource.h"
 #include "xx_colormanagement_v4.h"
 
-#include <wayland-server.h>
-// std
 #include <algorithm>
 #include <cmath>
+#include <drm_fourcc.h>
+#include <wayland-server.h>
 
 namespace KWin
 {
@@ -349,6 +349,25 @@ void SurfaceInterfacePrivate::surface_commit(Resource *resource)
         return;
     }
 
+    // unless a protocol overrides the properties, we need to assume some YUV->RGB conversion
+    // matrix and color space to be attached to YUV formats
+    if (bufferRef && bufferRef->dmabufAttributes()) {
+        // clang-format off
+        switch (bufferRef->dmabufAttributes()->format) {
+        case DRM_FORMAT_NV12:
+            // limited range bt601 -> full range rec.709 RGB
+            pending->yuvToRgbMatrix = QMatrix4x4{
+                1.16438356f,  0.0f,         1.59602678f, -0.874202218f,
+                1.16438356f, -0.39176229f, -0.81296764f,  0.531667823f,
+                1.16438356f,  2.01723214f,  0.0f,        -1.085630789f,
+                0.0f,         0.0f,         0.0f,         1.0f,
+            };
+            pending->yuvToRgbMatrixIsSet = true;
+            break;
+        }
+        // clang-format on
+    }
+
     Transaction *transaction;
     if (sync) {
         if (!subsurface.transaction) {
@@ -593,6 +612,10 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->alphaMultiplier = alphaMultiplier;
         target->alphaMultiplierIsSet = true;
     }
+    if (yuvToRgbMatrixIsSet) {
+        target->yuvToRgbMatrix = yuvToRgbMatrix;
+        target->yuvToRgbMatrixIsSet = true;
+    }
     target->presentationFeedback = std::move(presentationFeedback);
 
     *this = SurfaceState{};
@@ -616,6 +639,7 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     const bool presentationModeHintChanged = next->presentationModeHintIsSet;
     const bool bufferReleasePointChanged = next->bufferIsSet && current->releasePoint != next->releasePoint;
     const bool alphaMultiplierChanged = next->alphaMultiplierIsSet;
+    const bool yuvToRgbMatrixChanged = next->yuvToRgbMatrixIsSet;
 
     const QSizeF oldSurfaceSize = surfaceSize;
     const QSize oldBufferSize = bufferSize;
@@ -713,6 +737,9 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
     }
     if (alphaMultiplierChanged) {
         Q_EMIT q->alphaMultiplierChanged();
+    }
+    if (yuvToRgbMatrixChanged) {
+        Q_EMIT q->yuvToRgbMatrixChanged();
     }
 
     if (bufferChanged) {
@@ -1226,6 +1253,11 @@ std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
 double SurfaceInterface::alphaMultiplier() const
 {
     return d->current->alphaMultiplier;
+}
+
+QMatrix4x4 SurfaceInterface::yuvToRgbMatrix() const
+{
+    return d->current->yuvToRgbMatrix;
 }
 
 } // namespace KWin
