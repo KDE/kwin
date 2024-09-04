@@ -354,6 +354,8 @@ public:
      */
     std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
+    QMatrix4x4 yuvToRgbMatrix() const;
+
     /**
      * Traverses the surface sub-tree with this surface as the root.
      */
@@ -445,6 +447,7 @@ Q_SIGNALS:
     void presentationModeHintChanged();
     void bufferReleasePointChanged();
     void alphaMultiplierChanged();
+    void yuvToRgbMatrixChanged();
 
     /**
      * Emitted when the Surface has been committed.
