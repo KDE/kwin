@@ -29,6 +29,7 @@ enum class ShaderTrait {
     AdjustSaturation = (1 << 3),
     TransformColorspace = (1 << 4),
     MapExternalTexture = (1 << 5),
+    MapYUVTexture = (1 << 6),
 };
 
 Q_DECLARE_FLAGS(ShaderTraits, ShaderTrait)
