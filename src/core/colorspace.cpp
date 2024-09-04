@@ -474,7 +474,7 @@ std::optional<NamedColorimetry> Colorimetry::name() const
     return it != names.end() ? std::optional(*it) : std::nullopt;
 }
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
+const ColorDescription ColorDescription::sRGB = ColorDescription(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance)
     : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::fromName(NamedColorimetry::BT709))
@@ -500,6 +500,11 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Tran
 
 ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry)
     : ColorDescription(Colorimetry::fromName(containerColorimetry), tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, masteringColorimetry, sdrColorimetry)
+{
+}
+
+ColorDescription::ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf)
+    : ColorDescription(containerColorimetry, tf, TransferFunction::defaultReferenceLuminanceFor(tf.type), tf.minLuminance, tf.maxLuminance, tf.maxLuminance)
 {
 }
 
@@ -801,6 +806,13 @@ QMatrix4x4 getYUVMatrix(YUVMatrixCoefficients coefficients)
             1.16438356f,  0.0f,         1.59602678f, -0.874202218f,
             1.16438356f, -0.39176229f, -0.81296764f,  0.531667823f,
             1.16438356f,  2.01723214f,  0.0f,        -1.085630789f,
+            0.0f,         0.0f,         0.0f,         1.0f,
+        };
+    case YUVMatrixCoefficients::BT2020:
+        return QMatrix4x4{
+            1.16438356f,  0.0f,         1.67878795f, -0.915745075f,
+            1.16438356f, -0.18732610f, -0.65046843f,  0.347480639f,
+            1.16438356f,  2.14177232f,  0.0f,        -1.148145075f,
             0.0f,         0.0f,         0.0f,         1.0f,
         };
     }

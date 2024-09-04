@@ -218,6 +218,7 @@ public:
     explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance);
     explicit ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
     explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, std::optional<Colorimetry> masteringColorimetry, const Colorimetry &sdrColorimetry);
+    explicit ColorDescription(NamedColorimetry containerColorimetry, TransferFunction tf);
 
     /**
      * The primaries and whitepoint that colors are encoded for. This is used to convert between different colorspaces.
@@ -272,6 +273,7 @@ private:
 enum class YUVMatrixCoefficients {
     Identity,
     BT601,
+    BT2020,
 };
 
 /**
