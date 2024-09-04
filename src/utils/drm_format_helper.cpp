@@ -135,6 +135,15 @@ std::optional<FormatInfo> FormatInfo::get(uint32_t drmFormat)
             .openglFormat = GL_R8,
             .floatingPoint = false,
         };
+    case DRM_FORMAT_P010:
+        return FormatInfo{
+            .drmFormat = drmFormat,
+            .bitsPerColor = 10,
+            .alphaBits = 0,
+            .bitsPerPixel = 48,
+            .openglFormat = GL_R16,
+            .floatingPoint = false,
+        };
     default:
         return std::nullopt;
     }

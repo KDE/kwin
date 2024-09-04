@@ -434,7 +434,7 @@ const Colorimetry Colorimetry::AdobeRGB = Colorimetry{
     xy{0.3127, 0.3290},
 };
 
-const ColorDescription ColorDescription::sRGB = ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::gamma22), TransferFunction::defaultReferenceLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMinLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22), TransferFunction::defaultMaxLuminanceFor(TransferFunction::gamma22));
+const ColorDescription ColorDescription::sRGB = ColorDescription(Colorimetry::BT709, TransferFunction(TransferFunction::gamma22));
 
 ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, double referenceLuminance, double minLuminance, std::optional<double> maxAverageLuminance, std::optional<double> maxHdrLuminance, YUVMatrixCoefficients yuvCoefficients)
     : ColorDescription(containerColorimetry, tf, referenceLuminance, minLuminance, maxAverageLuminance, maxHdrLuminance, std::nullopt, Colorimetry::BT709, yuvCoefficients)
@@ -451,6 +451,11 @@ ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, Tran
     , m_maxAverageLuminance(maxAverageLuminance)
     , m_maxHdrLuminance(maxHdrLuminance)
     , m_yuvCoefficients(yuvCoefficients)
+{
+}
+
+ColorDescription::ColorDescription(const Colorimetry &containerColorimetry, TransferFunction tf, YUVMatrixCoefficients yuvCoefficients)
+    : ColorDescription(containerColorimetry, tf, TransferFunction::defaultReferenceLuminanceFor(tf.type), tf.minLuminance, tf.maxLuminance, tf.maxLuminance, yuvCoefficients)
 {
 }
 
