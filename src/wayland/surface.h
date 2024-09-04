@@ -348,6 +348,8 @@ public:
      */
     std::shared_ptr<SyncReleasePoint> bufferReleasePoint() const;
 
+    YUVMatrixCoefficients yuvCoefficients() const;
+
     /**
      * Traverses the surface sub-tree with this surface as the root.
      */

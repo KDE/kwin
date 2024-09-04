@@ -376,6 +376,7 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
             } else if (traits & ShaderTrait::MapYUVTexture) {
                 shader->setUniform(GLShader::IntUniform::Sampler, 0);
                 shader->setUniform(GLShader::IntUniform::Sampler1, 1);
+                shader->setUniform(GLShader::Mat4Uniform::YuvToRgb, renderNode.colorDescription.yuvMatrix());
             }
         }
         shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, renderContext.projectionMatrix * renderNode.transformMatrix);

@@ -89,7 +89,11 @@ std::shared_ptr<GLTexture> EglGbmLayer::texture() const
 
 ColorDescription EglGbmLayer::colorDescription() const
 {
-    return m_surface.colorDescription();
+    if (m_scanoutBuffer) {
+        return m_scanoutColor;
+    } else {
+        return m_surface.colorDescription();
+    }
 }
 
 bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescription &color, RenderingIntent intent, const std::shared_ptr<OutputFrame> &frame)
@@ -115,6 +119,7 @@ bool EglGbmLayer::doImportScanoutBuffer(GraphicsBuffer *buffer, const ColorDescr
         pipeline.addInverseTransferFunction(m_pipeline->output()->scanoutColorDescription().transferFunction());
     }
     m_colorPipeline = pipeline;
+    m_scanoutColor = color;
     // kernel documentation says that
     // "Devices that don’t support subpixel plane coordinates can ignore the fractional part."
     // so we need to make sure that doesn't cause a difference vs the composited result

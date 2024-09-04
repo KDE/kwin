@@ -218,13 +218,16 @@ DrmPipeline::Error DrmPipeline::prepareAtomicPresentation(DrmAtomicCommit *commi
     }
     primary->set(commit, m_primaryLayer->sourceRect().toRect(), m_primaryLayer->targetRect());
     commit->addBuffer(m_pending.crtc->primaryPlane(), fb, frame);
-    if (fb->buffer()->dmabufAttributes()->format == DRM_FORMAT_NV12) {
+    switch (m_primaryLayer->colorDescription().yuvCoefficients()) {
+    case YUVMatrixCoefficients::Identity:
+        break;
+    case YUVMatrixCoefficients::BT601:
         if (!primary->colorEncoding.isValid() || !primary->colorRange.isValid()) {
-            // don't allow NV12 direct scanout if we don't know what the driver will do
             return Error::InvalidArguments;
         }
-        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT709_YCbCr);
+        commit->addEnum(primary->colorEncoding, DrmPlane::ColorEncoding::BT601_YCbCr);
         commit->addEnum(primary->colorRange, DrmPlane::ColorRange::Limited_YCbCr);
+        break;
     }
     return Error::None;
 }
