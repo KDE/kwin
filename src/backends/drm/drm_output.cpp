@@ -306,8 +306,13 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
         DrmPipeline::Error err = m_pipeline->present(frame);
+        if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+            // tearing can fail in various circumstances, but vrr shouldn't
+            m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
+            err = m_pipeline->present(frame);
+        }
         if (err != DrmPipeline::Error::None && frame->presentationMode() != PresentationMode::VSync) {
-            // retry with a more basic presentation mode
+            // retry with the most basic presentation mode
             m_pipeline->setPresentationMode(PresentationMode::VSync);
             err = m_pipeline->present(frame);
         }
