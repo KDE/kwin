@@ -192,6 +192,10 @@ set_package_properties(epoxy PROPERTIES
     PURPOSE "OpenGL dispatch library"
 )
 
+find_package(spirv_cross_core)
+find_package(spirv_cross_glsl)
+find_package(spirv_cross_cpp)
+
 set(HAVE_DL_LIBRARY FALSE)
 if (epoxy_HAS_GLX)
     find_library(DL_LIBRARY dl)

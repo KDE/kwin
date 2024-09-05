@@ -3,30 +3,32 @@ const int linear_EOTF = 1;
 const int PQ_EOTF = 2;
 const int gamma22_EOTF = 3;
 
-uniform mat4 colorimetryTransform;
+layout(set = 2, binding = 0) uniform ColorManagementUniforms {
+    mat4 colorimetryTransform;
 
-uniform int sourceNamedTransferFunction;
-/**
- * x: min luminance
- * y: max luminance - min luminance
- */
-uniform vec2 sourceTransferFunctionParams;
+    int sourceNamedTransferFunction;
+    /**
+     * x: min luminance
+     * y: max luminance - min luminance
+     */
+    vec2 sourceTransferFunctionParams;
 
-uniform int destinationNamedTransferFunction;
-/**
- * x: min luminance
- * y: max luminance - min luminance
- */
-uniform vec2 destinationTransferFunctionParams;
+    int destinationNamedTransferFunction;
+    /**
+     * x: min luminance
+     * y: max luminance - min luminance
+     */
+    vec2 destinationTransferFunctionParams;
 
-// in nits
-uniform float sourceReferenceLuminance;
-uniform float maxTonemappingLuminance;
-uniform float destinationReferenceLuminance;
-uniform float maxDestinationLuminance;
+    // in nits
+    float sourceReferenceLuminance;
+    float maxTonemappingLuminance;
+    float destinationReferenceLuminance;
+    float maxDestinationLuminance;
 
-uniform mat4 destinationToLMS;
-uniform mat4 lmsToDestination;
+    mat4 destinationToLMS;
+    mat4 lmsToDestination;
+} colorManagementUniforms;
 
 vec3 linearToPq(vec3 linear) {
     const float c1 = 0.8359375;
@@ -94,45 +96,49 @@ vec3 linearToSrgb(vec3 color) {
 #endif
 }
 
-const mat3 toICtCp = transpose(mat3(
-    2048.0 / 4096.0,   2048.0 / 4096.0,   0.0,
-    6610.0 / 4096.0,  -13613.0 / 4096.0,  7003.0 / 4096.0,
-    17933.0 / 4096.0, -17390.0 / 4096.0, -543.0 / 4096.0
-));
-const mat3 fromICtCp = inverse(toICtCp);
+const mat3 toICtCp = mat3(
+    2048.0 / 4096.0,   6610.0 / 4096.0,   17933.0 / 4096.0,
+    2048.0 / 4096.0,  -13613.0 / 4096.0, -17390.0 / 4096.0,
+    0.0,               7003.0 / 4096.0,  -543.0 / 4096.0
+);
+const mat3 fromICtCp = mat3(
+    1.014505508,  0.985494492,  0.958111538,
+    0.008484159, -0.008484159,  0.560391955,
+    0.109419083, -0.109419084, -0.315976315
+);
 
 vec3 doTonemapping(vec3 color) {
-    if (maxTonemappingLuminance < maxDestinationLuminance * 1.01) {
+    if (colorManagementUniforms.maxTonemappingLuminance < colorManagementUniforms.maxDestinationLuminance * 1.01) {
         // clipping is enough
-        return clamp(color.rgb, vec3(0.0), vec3(maxDestinationLuminance));
+        return clamp(color.rgb, vec3(0.0), vec3(colorManagementUniforms.maxDestinationLuminance));
     }
 
     // first, convert to ICtCp, to properly split luminance and color
     // intensity is PQ-encoded luminance
-    vec3 lms = (destinationToLMS * vec4(color, 1.0)).rgb;
+    vec3 lms = (colorManagementUniforms.destinationToLMS * vec4(color, 1.0)).rgb;
     vec3 lms_PQ = linearToPq(lms / 10000.0);
     vec3 ICtCp = toICtCp * lms_PQ;
     float luminance = singlePqToLinear(ICtCp.r) * 10000.0;
 
-    float inputRange = maxTonemappingLuminance / destinationReferenceLuminance;
-    float outputRange = maxDestinationLuminance / destinationReferenceLuminance;
+    float inputRange = colorManagementUniforms.maxTonemappingLuminance / colorManagementUniforms.destinationReferenceLuminance;
+    float outputRange = colorManagementUniforms.maxDestinationLuminance / colorManagementUniforms.destinationReferenceLuminance;
     // how much dynamic range we need to decently present the content
     float minDecentRange = min(inputRange, 1.5);
     // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
     float referenceDimming = 1.0 / clamp(outputRange / minDecentRange, 1.0, minDecentRange);
-    float outputReferenceLuminance = destinationReferenceLuminance * referenceDimming;
+    float outputReferenceLuminance = colorManagementUniforms.destinationReferenceLuminance * referenceDimming;
 
     // keep it linear up to the reference luminance
     float low = min(luminance * referenceDimming, outputReferenceLuminance);
     // and apply a nonlinear curve above, to reduce the luminance without completely removing differences
-    float relativeHighlight = clamp((luminance / destinationReferenceLuminance - 1.0) / (inputRange - 1.0), 0.0, 1.0);
+    float relativeHighlight = clamp((luminance / colorManagementUniforms.destinationReferenceLuminance - 1.0) / (inputRange - 1.0), 0.0, 1.0);
     const float e = 2.718281828459045;
-    float high = log(relativeHighlight * (e - 1.0) + 1.0) * (maxDestinationLuminance - outputReferenceLuminance);
+    float high = log(relativeHighlight * (e - 1.0) + 1.0) * (colorManagementUniforms.maxDestinationLuminance - outputReferenceLuminance);
     luminance = low + high;
 
     // last, convert back to rgb
     ICtCp.r = singleLinearToPq(luminance / 10000.0);
-    return (lmsToDestination * vec4(pqToLinear(fromICtCp * ICtCp), 1.0)).rgb * 10000.0;
+    return (colorManagementUniforms.lmsToDestination * vec4(pqToLinear(fromICtCp * ICtCp), 1.0)).rgb * 10000.0;
 }
 
 vec4 encodingToNits(vec4 color, int sourceTransferFunction, float luminanceOffset, float luminanceScale) {
@@ -155,8 +161,8 @@ vec4 encodingToNits(vec4 color, int sourceTransferFunction, float luminanceOffse
 }
 
 vec4 sourceEncodingToNitsInDestinationColorspace(vec4 color) {
-    color = encodingToNits(color, sourceNamedTransferFunction, sourceTransferFunctionParams.x, sourceTransferFunctionParams.y);
-    color.rgb = (colorimetryTransform * vec4(color.rgb, 1.0)).rgb;
+    color = encodingToNits(color, colorManagementUniforms.sourceNamedTransferFunction, colorManagementUniforms.sourceTransferFunctionParams.x, colorManagementUniforms.sourceTransferFunctionParams.y);
+    color.rgb = (colorManagementUniforms.colorimetryTransform * vec4(color.rgb, 1.0)).rgb;
     return vec4(doTonemapping(color.rgb), color.a);
 }
 
@@ -180,5 +186,5 @@ vec4 nitsToEncoding(vec4 color, int destinationTransferFunction, float luminance
 }
 
 vec4 nitsToDestinationEncoding(vec4 color) {
-    return nitsToEncoding(color, destinationNamedTransferFunction, destinationTransferFunctionParams.x, destinationTransferFunctionParams.y);
+    return nitsToEncoding(color, colorManagementUniforms.destinationNamedTransferFunction, colorManagementUniforms.destinationTransferFunctionParams.x, colorManagementUniforms.destinationTransferFunctionParams.y);
 }

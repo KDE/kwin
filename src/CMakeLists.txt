@@ -375,6 +375,8 @@ if (KWIN_BUILD_TABBOX)
     endif()
 endif()
 
+add_subdirectory(opengl)
+
 qt_generate_dbus_interface(virtualkeyboard_dbus.h org.kde.kwin.VirtualKeyboard.xml OPTIONS -A)
 qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xml OPTIONS -A)
 
