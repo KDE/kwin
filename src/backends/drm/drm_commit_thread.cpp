@@ -24,6 +24,7 @@ namespace KWin
 
 DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
     : m_gpu(gpu)
+    , m_targetPageflipTime(std::chrono::steady_clock::now())
 {
     if (!gpu->atomicModeSetting()) {
         return;
@@ -314,13 +315,15 @@ void DrmCommitThread::addCommit(std::unique_ptr<DrmAtomicCommit> &&commit)
     std::unique_lock lock(m_mutex);
     m_commits.push_back(std::move(commit));
     const auto now = std::chrono::steady_clock::now();
+    TimePoint newTarget;
     if (m_tearing) {
-        m_targetPageflipTime = now;
+        newTarget = now;
     } else if (m_vrr && now >= m_lastPageflip + m_minVblankInterval) {
-        m_targetPageflipTime = now;
+        newTarget = now;
     } else {
-        m_targetPageflipTime = estimateNextVblank(now);
+        newTarget = estimateNextVblank(now);
     }
+    m_targetPageflipTime = std::max(m_targetPageflipTime, newTarget);
     m_commits.back()->setDeadline(m_targetPageflipTime - m_safetyMargin);
     m_commitPending.notify_all();
 }
