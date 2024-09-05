@@ -235,6 +235,9 @@ void DrmOutput::updateConnectorProperties()
         m_pipeline->setMode(std::static_pointer_cast<DrmConnectorMode>(next.currentMode));
         m_pipeline->applyPendingChanges();
     }
+    if (!next.modes.contains(next.currentMode)) {
+        next.modes.push_front(next.currentMode);
+    }
 
     setState(next);
 }
