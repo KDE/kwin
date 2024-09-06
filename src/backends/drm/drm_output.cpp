@@ -397,6 +397,19 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     return true;
 }
 
+static ColorDescription applyNightLight(const ColorDescription &input, const QVector3D &sRGBchannelFactors)
+{
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(input, RenderingIntent::RelativeColorimetric) * sRGBchannelFactors;
+    // normalize to red = 1, and clamp green and blue to ]0; 1]
+    // otherwise the white point might end up on or outside the edges of the gamut,
+    // which leads to terrible glitches
+    adaptedChannelFactors /= adaptedChannelFactors.x();
+    adaptedChannelFactors.setY(std::clamp(adaptedChannelFactors.y(), 0.01f, 1.0f));
+    adaptedChannelFactors.setZ(std::clamp(adaptedChannelFactors.z(), 0.01f, 1.0f));
+    const xyY newWhite = XYZ::fromVector(input.containerColorimetry().toXYZ() * adaptedChannelFactors).toxyY();
+    return input.withWhitepoint(newWhite);
+}
+
 ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const
 {
     const auto colorSource = props->colorProfileSource.value_or(colorProfileSource());
@@ -406,6 +419,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
+        // TODO properly apply night light here as well, somehow
         return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness);
     }
     const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
@@ -425,7 +439,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
-    return ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
+    return applyNightLight(ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry), m_channelFactors);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -527,6 +541,9 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
     if (rgb != m_channelFactors) {
         m_channelFactors = rgb;
+        State next = m_state;
+        next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
+        setState(next);
         tryKmsColorOffloading();
     }
     return true;
@@ -577,8 +594,12 @@ bool DrmOutput::needsChannelFactorFallback() const
 QVector3D DrmOutput::effectiveChannelFactors() const
 {
     QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(colorDescription(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
-    // normalize red to be the original brightness value again
-    adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
+    // normalize to red = 1, and clamp green and blue to ]0; 1]
+    // otherwise the white point might end up on or outside the edges of the gamut,
+    // which leads to terrible glitches
+    adaptedChannelFactors /= adaptedChannelFactors.x();
+    adaptedChannelFactors.setY(std::clamp(adaptedChannelFactors.y(), 0.01f, 1.0f));
+    adaptedChannelFactors.setZ(std::clamp(adaptedChannelFactors.z(), 0.01f, 1.0f));
     if (m_state.highDynamicRange || !m_brightnessDevice) {
         // enforce a minimum of 25 nits for the reference luminance
         constexpr double minLuminance = 25;

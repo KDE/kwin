@@ -245,6 +245,17 @@ Colorimetry Colorimetry::adaptedTo(xyY newWhitepoint) const
     };
 }
 
+Colorimetry Colorimetry::withWhitepoint(xyY newWhitePoint) const
+{
+    newWhitePoint.Y = 1;
+    return Colorimetry{
+        m_red,
+        m_green,
+        m_blue,
+        newWhitePoint.toXYZ(),
+    };
+}
+
 bool Colorimetry::operator==(const Colorimetry &other) const
 {
     return red() == other.red() && green() == other.green() && blue() == other.blue() && white() == other.white();
@@ -503,6 +514,20 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst, Re
 ColorDescription ColorDescription::withTransferFunction(const TransferFunction &func) const
 {
     return ColorDescription(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
+}
+
+ColorDescription ColorDescription::withWhitepoint(xyY newWhitePoint) const
+{
+    return ColorDescription{
+        m_containerColorimetry.withWhitepoint(newWhitePoint),
+        m_transferFunction,
+        m_referenceLuminance,
+        m_minLuminance,
+        m_maxAverageLuminance,
+        m_maxHdrLuminance,
+        m_masteringColorimetry ? std::optional(m_masteringColorimetry->withWhitepoint(newWhitePoint)) : std::nullopt,
+        m_sdrColorimetry,
+    };
 }
 
 double TransferFunction::defaultMinLuminanceFor(Type type)
