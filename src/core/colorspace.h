@@ -118,6 +118,11 @@ public:
      */
     Colorimetry adaptedTo(xyY newWhitepoint) const;
     /**
+     * replaces the current whitepoint with the new one
+     * this does not do whitepoint adaptation!
+     */
+    Colorimetry withWhitepoint(xyY newWhitePoint) const;
+    /**
      * interpolates the primaries depending on the passed factor. The whitepoint stays unchanged
      */
     Colorimetry interpolateGamutTo(const Colorimetry &one, double factor) const;
@@ -219,6 +224,11 @@ public:
     bool operator==(const ColorDescription &other) const = default;
 
     ColorDescription withTransferFunction(const TransferFunction &func) const;
+    /**
+     * replaces the current whitepoint with the new one
+     * this does not do whitepoint adaptation!
+     */
+    ColorDescription withWhitepoint(xyY newWhitePoint) const;
 
     /**
      * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one

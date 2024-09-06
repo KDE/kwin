@@ -379,6 +379,24 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     return true;
 }
 
+static QVector3D adaptChannelFactors(const ColorDescription &color, const QVector3D &sRGBchannelFactors)
+{
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(color, RenderingIntent::RelativeColorimetric) * sRGBchannelFactors;
+    // normalize to red = 1, and clamp green and blue to ]0; 1]
+    // otherwise the white point might end up on or outside the edges of the gamut,
+    // which leads to terrible glitches
+    adaptedChannelFactors /= adaptedChannelFactors.x();
+    adaptedChannelFactors.setY(std::clamp(adaptedChannelFactors.y(), 0.01f, 1.0f));
+    adaptedChannelFactors.setZ(std::clamp(adaptedChannelFactors.z(), 0.01f, 1.0f));
+    return adaptedChannelFactors;
+}
+
+static ColorDescription applyNightLight(const ColorDescription &input, const QVector3D &sRGBchannelFactors)
+{
+    const xyY newWhite = XYZ::fromVector(input.containerColorimetry().toXYZ() * adaptChannelFactors(input, sRGBchannelFactors)).toxyY();
+    return input.withWhitepoint(newWhite);
+}
+
 ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const
 {
     const auto colorSource = props->colorProfileSource.value_or(colorProfileSource());
@@ -388,6 +406,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
+        // TODO properly apply night light here as well, somehow
         return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness);
     }
     const bool supportsHdr = (capabilities() & Capability::HighDynamicRange) && (capabilities() & Capability::WideColorGamut);
@@ -409,7 +428,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
 
     const double brightnessFactor = !m_brightnessDevice || effectiveHdr ? props->brightness.value_or(m_state.brightness) : 1.0;
     const double effectiveReferenceLuminance = 25 + (referenceLuminance - 25) * brightnessFactor;
-    return ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
+    return applyNightLight(ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry), m_channelFactors);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -503,6 +522,9 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
     if (rgb != m_channelFactors) {
         m_channelFactors = rgb;
+        State next = m_state;
+        next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
+        setState(next);
         tryKmsColorOffloading();
     }
     return true;
@@ -552,9 +574,7 @@ bool DrmOutput::needsChannelFactorFallback() const
 
 QVector3D DrmOutput::adaptedChannelFactors() const
 {
-    const QVector3D ret = ColorDescription::sRGB.toOther(colorDescription(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
-    // normalize red to be the original brightness value again
-    return ret * m_channelFactors.x() / ret.x();
+    return adaptChannelFactors(colorDescription(), m_channelFactors);
 }
 
 const ColorDescription &DrmOutput::scanoutColorDescription() const
