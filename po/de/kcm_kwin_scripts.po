@@ -3,7 +3,7 @@
 # Jannick Kuhr <opensource@kuhr.org>, 2023.
 msgid ""
 msgstr ""
-"Project-Id-Version: kcm-kwin-scripts\n"
+"Project-Id-Version: kcm_kwin_scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
 "PO-Revision-Date: 2023-06-07 19:58+0200\n"
