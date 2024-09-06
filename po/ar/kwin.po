@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-04 00:40+0000\n"
-"PO-Revision-Date: 2024-08-15 10:30+0400\n"
+"PO-Revision-Date: 2024-09-05 09:53+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -423,12 +423,10 @@ msgid "Repeat"
 msgstr "التكرار"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "رمز Qt::Key"
+msgstr "رمز المفتاح"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -3595,14 +3593,13 @@ msgstr "نوع القاعدة للتزامن المتكيف"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "اسمح بالتمزيق"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "نوع القاعدة الطبقة"
+msgstr "نوع القاعدة التمزيق"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

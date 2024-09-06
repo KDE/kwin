@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2024-07-28 12:37+0400\n"
+"PO-Revision-Date: 2024-09-05 09:54+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -41,28 +41,24 @@ msgid "Unimportant"
 msgstr "غير مهم"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "تطابق تام"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "تطابق السلسلة الفرعية"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "التعبير النمطي"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
-msgstr "طبّق مبدئياً"
+msgstr "طبّق مبدئيًا"
 
 #: optionsmodel.cpp:206
 #, kde-format
@@ -75,8 +71,7 @@ msgstr ""
 "لن تتأثر أي تغييرات أخرى."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "طبّق الآن"
 
@@ -105,8 +100,7 @@ msgstr ""
 "قيمة محفوظة."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "لا يتأثر"
 
@@ -132,8 +126,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "ستفرض القيمة المعطاة لخاصية النافذة بشكل دائم"
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "أجبر بشكل مؤقت"
 
@@ -265,14 +258,12 @@ msgid "Maximized vertically"
 msgstr "مكبّرة عمودياً"
 
 #: rulesmodel.cpp:467
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "كلّ أسطح المكتب الافتراضية"
 
 #: rulesmodel.cpp:473
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "أسطح المكتب الافتراضية"
 
@@ -589,15 +580,14 @@ msgid "Layer"
 msgstr "الطبقة"
 
 #: rulesmodel.cpp:725
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "التزامن المتكيف"
 
 #: rulesmodel.cpp:730
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "اسمح بالتمزيق"
 
 #: rulesmodel.cpp:782
 #, kde-format
@@ -619,26 +609,22 @@ msgstr ""
 "التفكير في الإبلاغ عن هذا الخطأ لمطوري التطبيق."
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "جميع أنواع النافذة"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "نافذة عادية"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "نافذة الحوار"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "أداة النافذة"
 
@@ -653,14 +639,12 @@ msgid "Toolbar"
 msgstr "شريط الأدوات"
 
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "قائمة ممزقة"
 
 #: rulesmodel.cpp:824
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "شاشة البداية"
 
@@ -671,20 +655,17 @@ msgstr "سطح المكتب"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "شريط أدوات مستقل"
 
 #: rulesmodel.cpp:828 rulesmodel.cpp:935
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "على شاشة العرض"
 
 #: rulesmodel.cpp:838
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "كلّ أسطح المكتب"
 
@@ -695,8 +676,7 @@ msgid "Make the window available on all desktops"
 msgstr "اجعل النافذة متوفرة على كلّ أسطح المكتب"
 
 #: rulesmodel.cpp:859
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "كلّ الأنشطة"
 
@@ -712,14 +692,12 @@ msgid "Default"
 msgstr "افتراضي"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "موضع غير محدد"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "الحد الأدنى من التراكب"
 
@@ -739,20 +717,17 @@ msgid "Random"
 msgstr "عشوائي"
 
 #: rulesmodel.cpp:888
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "في زاوِيَة أعلى اليسار"
 
 #: rulesmodel.cpp:889
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "تحت الفأرة"
 
 #: rulesmodel.cpp:890
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "على النافذة الرئيسية"
 
@@ -802,8 +777,7 @@ msgid "Popup"
 msgstr "منبثق"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "تحذير حَرِج"
 
