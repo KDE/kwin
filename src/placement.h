@@ -30,10 +30,10 @@ class KWIN_EXPORT Placement
 public:
     explicit Placement();
 
-    void place(Window *c, const QRectF &area);
-    void placeSmart(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
+    bool place(Window *c, const QRectF &area);
+    bool placeSmart(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
-    void placeCentered(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
+    bool placeCentered(Window *c, const QRectF &area, PlacementPolicy next = PlacementUnknown);
 
     void reinitCascading();
     void reinitCascading(VirtualDesktop *desktop);
@@ -52,18 +52,17 @@ public:
     static const char *policyToString(PlacementPolicy policy);
 
 private:
-    void place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);
-    void placeUnderMouse(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeTransient(Window *c);
-
-    void placeAtRandom(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeCascaded(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeMaximizing(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeZeroCornered(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeDialog(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeUtility(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
-    void placeOnScreenDisplay(Window *c, const QRect &area);
+    bool place(Window *c, const QRectF &area, PlacementPolicy policy, PlacementPolicy nextPlacement = PlacementUnknown);
+    bool placeUnderMouse(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeOnMainWindow(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeTransient(Window *c);
+    bool placeAtRandom(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeCascaded(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeMaximizing(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeZeroCornered(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeDialog(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeUtility(Window *c, const QRect &area, PlacementPolicy next = PlacementUnknown);
+    bool placeOnScreenDisplay(Window *c, const QRect &area);
 
     // CT needed for cascading+
     struct DesktopCascadingInfo
