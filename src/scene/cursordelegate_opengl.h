@@ -5,10 +5,8 @@
 */
 
 #pragma once
-#include <QObject>
-#include <memory>
 
-#include "core/renderlayerdelegate.h"
+#include "scene/scene.h"
 
 namespace KWin
 {
@@ -17,12 +15,12 @@ class GLFramebuffer;
 class GLTexture;
 class Output;
 
-class CursorDelegateOpenGL final : public QObject, public RenderLayerDelegate
+class CursorDelegateOpenGL final : public QObject, public SceneDelegate
 {
     Q_OBJECT
 
 public:
-    CursorDelegateOpenGL(Output *output);
+    CursorDelegateOpenGL(Scene *scene, Output *output);
     ~CursorDelegateOpenGL() override;
 
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;

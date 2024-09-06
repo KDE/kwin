@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "core/renderlayerdelegate.h"
+#include "scene/scene.h"
 
 #include <QImage>
 
@@ -15,10 +15,10 @@ namespace KWin
 
 class Output;
 
-class CursorDelegateQPainter final : public RenderLayerDelegate
+class CursorDelegateQPainter final : public SceneDelegate
 {
 public:
-    CursorDelegateQPainter(Output *output);
+    CursorDelegateQPainter(Scene *scene, Output *output);
 
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
 

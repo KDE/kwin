@@ -48,7 +48,7 @@ QRegion CursorScene::prePaint(SceneDelegate *delegate)
 {
     resetRepaintsHelper(m_rootItem.get(), delegate);
     m_paintedOutput = delegate->output();
-    return QRegion();
+    return m_rootItem->boundingRect().translated(-delegate->viewport().topLeft()).toAlignedRect();
 }
 
 void CursorScene::postPaint()

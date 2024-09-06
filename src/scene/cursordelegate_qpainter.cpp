@@ -18,8 +18,9 @@
 namespace KWin
 {
 
-CursorDelegateQPainter::CursorDelegateQPainter(Output *output)
-    : m_output(output)
+CursorDelegateQPainter::CursorDelegateQPainter(Scene *scene, Output *output)
+    : SceneDelegate(scene, nullptr)
+    , m_output(output)
 {
 }
 

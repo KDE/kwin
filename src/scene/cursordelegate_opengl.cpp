@@ -21,8 +21,9 @@
 namespace KWin
 {
 
-CursorDelegateOpenGL::CursorDelegateOpenGL(Output *output)
-    : m_output(output)
+CursorDelegateOpenGL::CursorDelegateOpenGL(Scene *scene, Output *output)
+    : SceneDelegate(scene, nullptr)
+    , m_output(output)
 {
 }
 
