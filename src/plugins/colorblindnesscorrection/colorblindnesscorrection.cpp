@@ -84,7 +84,7 @@ void ColorBlindnessCorrectionEffect::loadData()
         break;
     }
 
-    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/colorblindnesscorrection/shaders/colorblindesscorrection.frag"));
+    m_shader = ShaderManager::instance()->generateShaderFromFile(ShaderTrait::MapTexture, QString(), QStringLiteral(":/effects/colorblindnesscorrection/shaders/colorblindnesscorrection.frag"));
 
     if (!m_shader->isValid()) {
         qCCritical(KWIN_COLORBLINDNESS_CORRECTION) << "Failed to load the shader!";
