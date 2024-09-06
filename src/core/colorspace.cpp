@@ -500,6 +500,19 @@ ColorDescription ColorDescription::withTransferFunction(const TransferFunction &
     return ColorDescription(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
 }
 
+ColorDescription ColorDescription::adaptedTo(xyY newWhitePoint) const
+{
+    return ColorDescription(
+        m_containerColorimetry.adaptedTo(newWhitePoint),
+        m_transferFunction,
+        m_referenceLuminance,
+        m_minLuminance,
+        m_maxAverageLuminance,
+        m_maxHdrLuminance,
+        m_masteringColorimetry ? std::optional(m_masteringColorimetry->adaptedTo(newWhitePoint)) : std::nullopt,
+        m_sdrColorimetry);
+}
+
 double TransferFunction::defaultMinLuminanceFor(Type type)
 {
     switch (type) {

@@ -45,7 +45,7 @@ static const XYZ D50{
     .Z = 0.8249,
 };
 
-bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
+bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor)
 {
     if (!profile) {
         m_toXYZD50.setToIdentity();
@@ -56,7 +56,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
         m_A.reset();
         return false;
     }
-    if (m_profile != profile) {
+    if (m_profile != profile || m_inputColor != inputColor) {
         const auto vcgt = profile->vcgt();
         QMatrix4x4 toXYZD50;
         std::unique_ptr<GlLookUpTable> B;
@@ -65,7 +65,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
         std::unique_ptr<GlLookUpTable3D> C;
         std::unique_ptr<GlLookUpTable> A;
         if (const IccProfile::BToATagData *tag = profile->BtToATag()) {
-            toXYZD50 = Colorimetry::chromaticAdaptationMatrix(profile->colorimetry().white(), D50) * profile->colorimetry().toXYZ();
+            toXYZD50 = Colorimetry::chromaticAdaptationMatrix(inputColor.containerColorimetry().white(), D50) * inputColor.containerColorimetry().toXYZ();
             if (tag->B) {
                 const auto sample = [&tag](size_t x) {
                     const float relativeX = x / double(lutSize - 1);
@@ -139,6 +139,7 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
         m_C = std::move(C);
         m_A = std::move(A);
         m_profile = profile;
+        m_inputColor = inputColor;
     }
     return true;
 }
@@ -151,7 +152,7 @@ GLShader *IccShader::shader() const
 void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, const QVector3D &channelFactors)
 {
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
-    setProfile(profile);
+    setProfile(profile, inputColor);
 
     QMatrix4x4 nightColor;
     nightColor(0, 0) = channelFactors.x();

@@ -29,10 +29,11 @@ public:
     void setUniforms(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor, const QVector3D &channelFactors);
 
 private:
-    bool setProfile(const std::shared_ptr<IccProfile> &profile);
+    bool setProfile(const std::shared_ptr<IccProfile> &profile, const ColorDescription &inputColor);
 
     std::unique_ptr<GLShader> m_shader;
     std::shared_ptr<IccProfile> m_profile;
+    ColorDescription m_inputColor = ColorDescription::sRGB;
 
     QMatrix4x4 m_toXYZD50;
     std::unique_ptr<GlLookUpTable> m_B;

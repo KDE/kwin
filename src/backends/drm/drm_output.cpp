@@ -371,6 +371,15 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     return true;
 }
 
+static ColorDescription applyNightLight(const ColorDescription &input, const QVector3D &sRGBchannelFactors)
+{
+    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(input, RenderingIntent::RelativeColorimetric) * sRGBchannelFactors;
+    // normalize red to be at 100% brightness again
+    adaptedChannelFactors *= 1.0 / adaptedChannelFactors.x();
+    const xyY whitePoint = XYZ::fromVector(input.containerColorimetry().toXYZ() * adaptedChannelFactors).toxyY();
+    return input.adaptedTo(whitePoint);
+}
+
 ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputChangeSet> &props) const
 {
     const auto colorSource = props->colorProfileSource.value_or(colorProfileSource());
@@ -380,7 +389,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
-        return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness);
+        return applyNightLight(ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness), m_channelFactors);
     }
     const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
     const bool driverSupportsHdr = m_connector->colorspace.isValid() && m_connector->hdrMetadata.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC));
@@ -399,7 +408,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
-    return ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
+    return applyNightLight(ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry), m_channelFactors);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -490,6 +499,9 @@ bool DrmOutput::setChannelFactors(const QVector3D &rgb)
 {
     if (rgb != m_channelFactors) {
         m_channelFactors = rgb;
+        State next = m_state;
+        next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
+        setState(next);
         tryKmsColorOffloading();
     }
     return true;

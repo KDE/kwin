@@ -219,6 +219,7 @@ public:
     bool operator==(const ColorDescription &other) const = default;
 
     ColorDescription withTransferFunction(const TransferFunction &func) const;
+    ColorDescription adaptedTo(xyY newWhitePoint) const;
 
     /**
      * @returns a matrix that transforms from linear RGB in this color description to linear RGB in the other one
