@@ -8,7 +8,7 @@
 # Automatically generated, 2022.
 msgid ""
 msgstr ""
-"Project-Id-Version: kwin\n"
+"Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-17 00:51+0000\n"
 "PO-Revision-Date: 2023-12-21 17:47+0100\n"
