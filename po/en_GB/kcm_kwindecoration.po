@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-05-24 16:44+0100\n"
+"PO-Revision-Date: 2024-09-07 12:07+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
 #, kde-format
@@ -75,12 +75,10 @@ msgid "Spacer"
 msgstr "Spacer"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr "Theme's default (%1)"
+msgstr "Theme default (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -227,58 +225,49 @@ msgid "Edit %1 Theme"
 msgstr "Edit %1 Theme"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
-msgstr "No Window Borders"
+msgstr "No window borders"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
-msgstr "No Side Window Borders"
+msgstr "No side window borders"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "Tiny Window Borders"
+msgstr "Tiny window borders"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
-msgstr "Normal Window Borders"
+msgstr "Normal window borders"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
-msgstr "Large Window Borders"
+msgstr "Large window borders"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "Very Large Window Borders"
+msgstr "Very large window borders"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
-msgstr "Huge Window Borders"
+msgstr "Huge window borders"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "Very Huge Window Borders"
+msgstr "Very huge window borders"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
-msgstr "Oversized Window Borders"
+msgstr "Oversized window borders"
 
 #~ msgctxt "button text"
 #~ msgid "Get New Window Decorations…"

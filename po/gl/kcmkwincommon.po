@@ -78,7 +78,7 @@ msgstr "Animación de apertura e peche de xanela"
 #: effectsmodel.cpp:232
 #, kde-format
 msgid "KWin development team"
-msgstr "O equipo de desenvolvemento de KWin"
+msgstr "O equipo desenvolvedor de KWin"
 
 #: genericscriptedconfig.cpp:71
 #, kde-format
