@@ -261,7 +261,7 @@ void ScreenCastStream::onStreamAddBuffer(pw_buffer *pwBuffer)
         if (auto dmabuf = DmaBufScreenCastBuffer::create(pwBuffer, GraphicsBufferOptions{
                                                                        .size = QSize(m_videoFormat.size.width, m_videoFormat.size.height),
                                                                        .format = spaVideoFormatToDrmFormat(m_videoFormat.format),
-                                                                       .modifiers = {m_videoFormat.modifier},
+                                                                       .modifiers = {uint64_t(m_videoFormat.modifier)},
                                                                    })) {
             pwBuffer->user_data = dmabuf;
             return;
