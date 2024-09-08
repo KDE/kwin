@@ -78,7 +78,7 @@ msgstr "Animación de apertura e peche de xanela"
 #: effectsmodel.cpp:241
 #, kde-format
 msgid "KWin development team"
-msgstr "O equipo de desenvolvemento de KWin"
+msgstr "O equipo desenvolvedor de KWin"
 
 #~ msgctxt "Category of Desktop Effects, used as section header"
 #~ msgid "Candy"
