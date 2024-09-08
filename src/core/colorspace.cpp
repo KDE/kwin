@@ -45,7 +45,7 @@ QVector2D Colorimetry::xyzToXY(QVector3D xyz)
     return QVector2D(xyz.x() / (xyz.x() + xyz.y() + xyz.z()), xyz.y() / (xyz.x() + xyz.y() + xyz.z()));
 }
 
-QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint)
+QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector3D sourceWhitepoint, QVector3D destinationWhitepoint)
 {
     static const QMatrix4x4 bradford = []() {
         QMatrix4x4 ret;
@@ -76,7 +76,7 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QV
     if (sourceWhitepoint == destinationWhitepoint) {
         return QMatrix4x4{};
     }
-    const QVector3D factors = (bradford * xyToXYZ(destinationWhitepoint)) / (bradford * xyToXYZ(sourceWhitepoint));
+    const QVector3D factors = (bradford * destinationWhitepoint) / (bradford * sourceWhitepoint);
     QMatrix4x4 adaptation{};
     adaptation(0, 0) = factors.x();
     adaptation(1, 1) = factors.y();
@@ -100,12 +100,20 @@ Colorimetry Colorimetry::interpolateGamutTo(const Colorimetry &one, double facto
     };
 }
 
-Colorimetry::Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white)
-    : m_red(red)
-    , m_green(green)
-    , m_blue(blue)
-    , m_white(white)
-    , m_toXYZ(calculateToXYZMatrix(xyToXYZ(red), xyToXYZ(green), xyToXYZ(blue), xyToXYZ(white)))
+static QVector3D normalizeToY1(const QVector3D &xyz)
+{
+    if (xyz.y() == 0) {
+        return QVector3D(0, 0, 0);
+    }
+    return xyz / xyz.y();
+}
+
+Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
+    : m_red(normalizeToY1(red))
+    , m_green(normalizeToY1(green))
+    , m_blue(normalizeToY1(blue))
+    , m_white(normalizeToY1(white))
+    , m_toXYZ(calculateToXYZMatrix(red, green, blue, white))
     , m_fromXYZ(m_toXYZ.inverted())
 {
 }
@@ -148,12 +156,12 @@ QMatrix4x4 Colorimetry::fromLMS() const
 
 Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
 {
-    const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint);
+    const auto mat = chromaticAdaptationMatrix(this->white(), xyToXYZ(newWhitepoint));
     return Colorimetry{
-        xyzToXY(mat * xyToXYZ(red())),
-        xyzToXY(mat * xyToXYZ(green())),
-        xyzToXY(mat * xyToXYZ(blue())),
-        newWhitepoint,
+        mat * red(),
+        mat * green(),
+        mat * blue(),
+        Colorimetry::xyToXYZ(newWhitepoint),
     };
 }
 
@@ -167,85 +175,85 @@ bool Colorimetry::operator==(NamedColorimetry name) const
     return *this == fromName(name);
 }
 
-const QVector2D &Colorimetry::red() const
+const QVector3D &Colorimetry::red() const
 {
     return m_red;
 }
 
-const QVector2D &Colorimetry::green() const
+const QVector3D &Colorimetry::green() const
 {
     return m_green;
 }
 
-const QVector2D &Colorimetry::blue() const
+const QVector3D &Colorimetry::blue() const
 {
     return m_blue;
 }
 
-const QVector2D &Colorimetry::white() const
+const QVector3D &Colorimetry::white() const
 {
     return m_white;
 }
 
 static const Colorimetry BT709 = Colorimetry{
-    QVector2D{0.64, 0.33},
-    QVector2D{0.30, 0.60},
-    QVector2D{0.15, 0.06},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::xyToXYZ(QVector2D{0.64, 0.33}),
+    Colorimetry::xyToXYZ(QVector2D{0.30, 0.60}),
+    Colorimetry::xyToXYZ(QVector2D{0.15, 0.06}),
+    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
 };
 static const Colorimetry PAL_M = Colorimetry{
-    QVector2D{0.67, 0.33},
-    QVector2D{0.21, 0.71},
-    QVector2D{0.14, 0.08},
-    QVector2D{0.310, 0.316},
+    Colorimetry::xyToXYZ(QVector2D{0.67, 0.33}),
+    Colorimetry::xyToXYZ(QVector2D{0.21, 0.71}),
+    Colorimetry::xyToXYZ(QVector2D{0.14, 0.08}),
+    Colorimetry::xyToXYZ(QVector2D{0.310, 0.316}),
 };
 static const Colorimetry PAL = Colorimetry{
-    QVector2D{0.640, 0.330},
-    QVector2D{0.290, 0.600},
-    QVector2D{0.150, 0.060},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::xyToXYZ(QVector2D{0.640, 0.330}),
+    Colorimetry::xyToXYZ(QVector2D{0.290, 0.600}),
+    Colorimetry::xyToXYZ(QVector2D{0.150, 0.060}),
+    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
 };
 static const Colorimetry NTSC = Colorimetry{
-    QVector2D{0.630, 0.340},
-    QVector2D{0.310, 0.595},
-    QVector2D{0.155, 0.070},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::xyToXYZ(QVector2D{0.630, 0.340}),
+    Colorimetry::xyToXYZ(QVector2D{0.310, 0.595}),
+    Colorimetry::xyToXYZ(QVector2D{0.155, 0.070}),
+    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
 };
 static const Colorimetry GenericFilm = Colorimetry{
-    QVector2D{0.243, 0.692},
-    QVector2D{0.145, 0.049},
-    QVector2D{0.681, 0.319},
-    QVector2D{0.310, 0.316},
+    Colorimetry::xyToXYZ(QVector2D{0.243, 0.692}),
+    Colorimetry::xyToXYZ(QVector2D{0.145, 0.049}),
+    Colorimetry::xyToXYZ(QVector2D{0.681, 0.319}),
+    Colorimetry::xyToXYZ(QVector2D{0.310, 0.316}),
 };
 static const Colorimetry BT2020 = Colorimetry{
-    QVector2D{0.708, 0.292},
-    QVector2D{0.170, 0.797},
-    QVector2D{0.131, 0.046},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::xyToXYZ(QVector2D{0.708, 0.292}),
+    Colorimetry::xyToXYZ(QVector2D{0.170, 0.797}),
+    Colorimetry::xyToXYZ(QVector2D{0.131, 0.046}),
+    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
 };
 static const Colorimetry CIEXYZ = Colorimetry{
-    QVector2D{1.0, 0.0},
-    QVector2D{0.0, 1.0},
-    QVector2D(0.0, 0.0),
-    QVector2D(1 / 3.0, 1 / 3.0),
+    QVector3D(1.0, 0.0, 0.0),
+    QVector3D(0.0, 1.0, 0.0),
+    QVector3D(0.0, 0.0, 1.0),
+    Colorimetry::xyToXYZ(QVector2D{1.0 / 3.0, 1.0 / 3.0}),
 };
 static const Colorimetry DCIP3 = Colorimetry{
-    QVector2D{0.680, 0.320},
-    QVector2D{0.265, 0.690},
-    QVector2D{0.150, 0.060},
-    QVector2D{0.314, 0.351},
+    Colorimetry::xyToXYZ(QVector2D{0.680, 0.320}),
+    Colorimetry::xyToXYZ(QVector2D{0.265, 0.690}),
+    Colorimetry::xyToXYZ(QVector2D{0.150, 0.060}),
+    Colorimetry::xyToXYZ(QVector2D{0.314, 0.351}),
 };
 static const Colorimetry DisplayP3 = Colorimetry{
-    QVector2D{0.680, 0.320},
-    QVector2D{0.265, 0.690},
-    QVector2D{0.150, 0.060},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::xyToXYZ(QVector2D{0.680, 0.320}),
+    Colorimetry::xyToXYZ(QVector2D{0.265, 0.690}),
+    Colorimetry::xyToXYZ(QVector2D{0.150, 0.060}),
+    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
 };
 static const Colorimetry AdobeRGB = Colorimetry{
-    QVector2D{0.6400, 0.3300},
-    QVector2D{0.2100, 0.7100},
-    QVector2D{0.1500, 0.0600},
-    QVector2D{0.3127, 0.3290},
+    Colorimetry::xyToXYZ(QVector2D{0.6400, 0.3300}),
+    Colorimetry::xyToXYZ(QVector2D{0.2100, 0.7100}),
+    Colorimetry::xyToXYZ(QVector2D{0.1500, 0.0600}),
+    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
 };
 
 const Colorimetry &Colorimetry::fromName(NamedColorimetry name)

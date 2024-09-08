@@ -39,7 +39,7 @@ IccShader::~IccShader()
 {
 }
 
-static const QVector2D D50 = Colorimetry::xyzToXY(QVector3D(0.9642, 1.0, 0.8249));
+static const QVector3D D50 = QVector3D(0.9642, 1.0, 0.8249);
 
 bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
 {

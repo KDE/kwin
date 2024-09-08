@@ -26,6 +26,7 @@ private Q_SLOTS:
     void testIdentityTransformation();
     void testColorPipeline_data();
     void testColorPipeline();
+    void testXYZ();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -188,6 +189,26 @@ void TestColorspaces::testColorPipeline()
     QVERIFY(compareVectors(inversePipeline.evaluate(dstBlack), QVector3D(0, 0, 0), s_resolution10bit));
     QVERIFY(compareVectors(inversePipeline.evaluate(dstGray), QVector3D(0.5, 0.5, 0.5), s_resolution10bit));
     QVERIFY(compareVectors(inversePipeline.evaluate(dstWhite), QVector3D(1, 1, 1), s_resolution10bit));
+}
+
+static bool isFuzzyIdentity(const QMatrix4x4 &mat)
+{
+    for (int i = 0; i < 4; i++) {
+        for (int j = 0; j < 4; j++) {
+            const float targetValue = i == j ? 1 : 0;
+            if (std::abs(mat(i, j) - targetValue) > ColorPipeline::s_maxResolution) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void TestColorspaces::testXYZ()
+{
+    Colorimetry xyz = Colorimetry::fromName(NamedColorimetry::CIEXYZ);
+    QVERIFY(isFuzzyIdentity(xyz.toXYZ()));
+    QVERIFY(isFuzzyIdentity(xyz.fromXYZ()));
 }
 
 QTEST_MAIN(TestColorspaces)

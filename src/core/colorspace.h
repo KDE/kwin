@@ -63,11 +63,14 @@ public:
     /**
      * @returns a matrix adapting XYZ values from the source whitepoint to the destination whitepoint with the Bradford transform
      */
-    static QMatrix4x4 chromaticAdaptationMatrix(QVector2D sourceWhitepoint, QVector2D destinationWhitepoint);
+    static QMatrix4x4 chromaticAdaptationMatrix(QVector3D sourceWhitepoint, QVector3D destinationWhitepoint);
 
     static QMatrix4x4 calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
-    explicit Colorimetry(QVector2D red, QVector2D green, QVector2D blue, QVector2D white);
+    /**
+     * constructs the colorimetry object from primaries in the XYZ color space
+     */
+    explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
 
     /**
      * @returns a matrix that transforms from the linear RGB representation of colors in this colorimetry to the XYZ representation
@@ -91,18 +94,30 @@ public:
      */
     Colorimetry interpolateGamutTo(const Colorimetry &one, double factor) const;
 
-    const QVector2D &red() const;
-    const QVector2D &green() const;
-    const QVector2D &blue() const;
-    const QVector2D &white() const;
+    /**
+     * @returns the red primary in XYZ, normalized to Y=1
+     */
+    const QVector3D &red() const;
+    /**
+     * @returns the green primary in XYZ, normalized to Y=1
+     */
+    const QVector3D &green() const;
+    /**
+     * @returns the blue primary in XYZ, normalized to Y=1
+     */
+    const QVector3D &blue() const;
+    /**
+     * @returns the white point in XYZ, normalized to Y=1
+     */
+    const QVector3D &white() const;
 
     std::optional<NamedColorimetry> name() const;
 
 private:
-    QVector2D m_red;
-    QVector2D m_green;
-    QVector2D m_blue;
-    QVector2D m_white;
+    QVector3D m_red;
+    QVector3D m_green;
+    QVector3D m_blue;
+    QVector3D m_white;
     QMatrix4x4 m_toXYZ;
     QMatrix4x4 m_fromXYZ;
 };

@@ -159,10 +159,10 @@ Edid::Edid(const void *data, uint32_t size)
     const auto chromaticity = di_edid_get_chromaticity_coords(edid);
     if (chromaticity) {
         m_colorimetry = Colorimetry{
-            QVector2D{chromaticity->red_x, chromaticity->red_y},
-            QVector2D{chromaticity->green_x, chromaticity->green_y},
-            QVector2D{chromaticity->blue_x, chromaticity->blue_y},
-            QVector2D{chromaticity->white_x, chromaticity->white_y},
+            Colorimetry::xyToXYZ(QVector2D{chromaticity->red_x, chromaticity->red_y}),
+            Colorimetry::xyToXYZ(QVector2D{chromaticity->green_x, chromaticity->green_y}),
+            Colorimetry::xyToXYZ(QVector2D{chromaticity->blue_x, chromaticity->blue_y}),
+            Colorimetry::xyToXYZ(QVector2D{chromaticity->white_x, chromaticity->white_y}),
         };
     } else {
         m_colorimetry.reset();

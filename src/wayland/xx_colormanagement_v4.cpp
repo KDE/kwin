@@ -308,15 +308,23 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_prim
         return;
     }
     m_colorimetry = Colorimetry{
-        QVector2D(r_x / 10'000.0, r_y / 10'000.0),
-        QVector2D(g_x / 10'000.0, g_y / 10'000.0),
-        QVector2D(b_x / 10'000.0, b_y / 10'000.0),
-        QVector2D(w_x / 10'000.0, w_y / 10'000.0),
+        Colorimetry::xyToXYZ(QVector2D(r_x / 10'000.0, r_y / 10'000.0)),
+        Colorimetry::xyToXYZ(QVector2D(g_x / 10'000.0, g_y / 10'000.0)),
+        Colorimetry::xyToXYZ(QVector2D(b_x / 10'000.0, b_y / 10'000.0)),
+        Colorimetry::xyToXYZ(QVector2D(w_x / 10'000.0, w_y / 10'000.0)),
     };
 }
 
 void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_luminances(Resource *resource, uint32_t min_lum, uint32_t max_lum, uint32_t reference_lum)
 {
+    if (max_lum < min_lum) {
+        wl_resource_post_error(resource->handle, error::error_invalid_luminance, "max. luminance is lower than the min. luminance");
+        return;
+    }
+    if (reference_lum < min_lum) {
+        wl_resource_post_error(resource->handle, error::error_invalid_luminance, "reference luminance is lower than the min. luminance");
+        return;
+    }
     m_transferFunctionLuminances = Luminances{
         .min = min_lum / 10'000.0,
         .max = double(max_lum),
@@ -331,10 +339,10 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_mast
         return;
     }
     m_masteringColorimetry = Colorimetry{
-        QVector2D(r_x / 10'000.0, r_y / 10'000.0),
-        QVector2D(g_x / 10'000.0, g_y / 10'000.0),
-        QVector2D(b_x / 10'000.0, b_y / 10'000.0),
-        QVector2D(w_x / 10'000.0, w_y / 10'000.0),
+        Colorimetry::xyToXYZ(QVector2D(r_x / 10'000.0, r_y / 10'000.0)),
+        Colorimetry::xyToXYZ(QVector2D(g_x / 10'000.0, g_y / 10'000.0)),
+        Colorimetry::xyToXYZ(QVector2D(b_x / 10'000.0, b_y / 10'000.0)),
+        Colorimetry::xyToXYZ(QVector2D(w_x / 10'000.0, w_y / 10'000.0)),
     };
 }
 
@@ -436,24 +444,31 @@ static uint32_t kwinPrimariesToProtoPrimaires(NamedColorimetry primaries)
 void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtResource, uint32_t information)
 {
     auto resource = wl_resource_create(qtResource->client(), &xx_image_description_info_v4_interface, qtResource->version(), information);
-    const auto c = m_description.containerColorimetry();
     const auto round = [](float f) {
         return std::clamp(std::round(f * 10'000.0), 0.0, 10'000.0);
     };
+    const QVector2D containerRed = Colorimetry::xyzToXY(m_description.containerColorimetry().red());
+    const QVector2D containerGreen = Colorimetry::xyzToXY(m_description.containerColorimetry().green());
+    const QVector2D containerBlue = Colorimetry::xyzToXY(m_description.containerColorimetry().blue());
+    const QVector2D containerWhite = Colorimetry::xyzToXY(m_description.containerColorimetry().white());
     xx_image_description_info_v4_send_primaries(resource,
-                                                round(c.red().x()), round(c.red().y()),
-                                                round(c.green().x()), round(c.green().y()),
-                                                round(c.blue().x()), round(c.blue().y()),
-                                                round(c.white().x()), round(c.white().y()));
+                                                round(containerRed.x()), round(containerRed.y()),
+                                                round(containerGreen.x()), round(containerGreen.y()),
+                                                round(containerBlue.x()), round(containerBlue.y()),
+                                                round(containerWhite.x()), round(containerWhite.y()));
     if (auto name = m_description.containerColorimetry().name()) {
         xx_image_description_info_v4_send_primaries_named(resource, kwinPrimariesToProtoPrimaires(*name));
     }
     if (auto m = m_description.masteringColorimetry()) {
+        const QVector2D masterRed = Colorimetry::xyzToXY(m->red());
+        const QVector2D masterGreen = Colorimetry::xyzToXY(m->green());
+        const QVector2D masterBlue = Colorimetry::xyzToXY(m->blue());
+        const QVector2D masterWhite = Colorimetry::xyzToXY(m->white());
         xx_image_description_info_v4_send_target_primaries(resource,
-                                                           round(m->red().x()), round(m->red().y()),
-                                                           round(m->green().x()), round(m->green().y()),
-                                                           round(m->blue().x()), round(m->blue().y()),
-                                                           round(m->white().x()), round(m->white().y()));
+                                                           round(masterRed.x()), round(masterRed.y()),
+                                                           round(masterGreen.x()), round(masterGreen.y()),
+                                                           round(masterBlue.x()), round(masterBlue.y()),
+                                                           round(masterWhite.x()), round(masterWhite.y()));
     }
     if (auto maxfall = m_description.maxAverageLuminance()) {
         xx_image_description_info_v4_send_target_max_fall(resource, *maxfall);
