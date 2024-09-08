@@ -22,6 +22,7 @@ include(CMakePackageConfigHelpers)
 include(FeatureSummary)
 include(WriteBasicConfigVersionFile)
 include(GenerateExportHeader)
+include(CheckCXXSourceCompiles)
 include(CheckCXXCompilerFlag)
 include(CheckIncludeFile)
 include(CheckIncludeFiles)
@@ -432,6 +433,22 @@ check_symbol_exists(SCHED_RESET_ON_FORK "sched.h" HAVE_SCHED_RESET_ON_FORK)
 add_feature_info("SCHED_RESET_ON_FORK"
                  HAVE_SCHED_RESET_ON_FORK
                  "Required for running kwin_wayland with real-time scheduling")
+
+# clang < 16 does not support ranges and compiling KWin will fail in the middle of the build.
+# clang 14 is still the default clang version on KDE Neon and Clazy is build with it
+check_cxx_source_compiles("
+#include <ranges>
+#include <vector>
+
+int main() {
+    std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    auto even_numbers = numbers | std::views::filter([](int n) { return n % 2 == 0; });
+    auto squared_numbers = even_numbers | std::views::transform([](int n) { return n * n; });
+}
+" HAS_RANGES_SUPPORT)
+if(NOT HAS_RANGES_SUPPORT)
+    message(FATAL_ERROR "Compiler does not support C++20 ranges")
+endif()
 
 check_cxx_source_compiles("
 #include <fcntl.h>
