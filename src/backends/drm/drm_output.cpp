@@ -336,10 +336,10 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         constexpr double relativeLuminanceAtZeroBrightness = 0.04;
         // the higher this is, the more likely the user is to notice the change in backlight brightness
         // at the same time, if it's too low, it takes ages until the user sees the HDR effect
-        constexpr double changePerSecond = 0.5;
+        constexpr double changePerSecond = 0.3;
         // to restrict HDR videos from using all the battery and burning your eyes
         // TODO make it a setting, and/or dependent on the power management state?
-        constexpr double maxHdrHeadroom = 3.0;
+        constexpr double maxHdrHeadroom = 4.0;
         // = the headroom at 100% backlight
         const double maxPossibleHeadroom = (1 + relativeLuminanceAtZeroBrightness) / (relativeLuminanceAtZeroBrightness + m_state.brightness);
         const double desiredHeadroom = std::clamp(*frame->desiredHdrHeadroom(), 1.0, std::min(maxPossibleHeadroom, maxHdrHeadroom));
