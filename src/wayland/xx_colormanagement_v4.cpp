@@ -223,7 +223,7 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_create(R
         func.maxLuminance = m_transferFunctionLuminances->max;
         referenceLuminance = m_transferFunctionLuminances->reference;
     }
-    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(0), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
+    new XXImageDescriptionV4(resource->client(), image_description, resource->version(), ColorDescription(*m_colorimetry, func, referenceLuminance, m_minMasteringLuminance.value_or(func.minLuminance), maxFrameAverageLuminance, maxHdrLuminance, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709)));
     wl_resource_destroy(resource->handle);
 }
 
