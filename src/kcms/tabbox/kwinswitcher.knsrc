@@ -1,5 +1,20 @@
 [KNewStuff3]
 Name=Task Switcher Styles
+Name[ar]=أنماط مبدّل المهام
+Name[ca]=Estils del commutador de tasques
+Name[en_GB]=Task Switcher Styles
+Name[es]=Estilos del selector de tareas
+Name[eu]=Ataza-aldarazlearen estiloak
+Name[gl]=Estilos de selector de tarefa
+Name[he]=סגנונות מחליף משימות
+Name[ka]=ამოცანების გადამრთველის სტილები
+Name[lt]=Užduočių perjungiklio stiliai
+Name[nl]=Stijlen van taakschakelaar
+Name[pl]=Wyglądy przełącznika zadań
+Name[sv]=Stilar för aktivitetsbyte
+Name[ta]=பணி மாற்றி வகைகள்
+Name[tr]=Görev Değiştiricisi Biçemleri
+Name[x-test]=xxTask Switcher Stylesxx
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
 ContentWarning=Executables
