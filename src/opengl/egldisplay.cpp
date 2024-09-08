@@ -78,7 +78,8 @@ EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions
     , m_extensions(extensions)
     , m_owning(owning)
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
-    , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")))
+    , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync"))
+                            && extensions.contains(QByteArrayLiteral("EGL_ANDROID_sync_wait")))
 {
     m_functions.createImageKHR = reinterpret_cast<PFNEGLCREATEIMAGEKHRPROC>(eglGetProcAddress("eglCreateImageKHR"));
     m_functions.destroyImageKHR = reinterpret_cast<PFNEGLDESTROYIMAGEKHRPROC>(eglGetProcAddress("eglDestroyImageKHR"));
