@@ -444,6 +444,7 @@ int main() {
     std::vector<int> numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     auto even_numbers = numbers | std::views::filter([](int n) { return n % 2 == 0; });
     auto squared_numbers = even_numbers | std::views::transform([](int n) { return n * n; });
+    return 0;
 }
 " HAS_RANGES_SUPPORT)
 if(NOT HAS_RANGES_SUPPORT)
@@ -461,6 +462,7 @@ int main() {
     ftruncate(fd, size);
     fcntl(fd, F_ADD_SEALS, F_SEAL_SHRINK | F_SEAL_GROW | F_SEAL_WRITE | F_SEAL_SEAL);
     mmap(nullptr, size, PROT_WRITE, MAP_SHARED, fd, 0);
+    return 0;
 }" HAVE_MEMFD)
 
 check_cxx_compiler_flag(-Wno-unused-parameter COMPILER_UNUSED_PARAMETER_SUPPORTED)
