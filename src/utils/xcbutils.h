@@ -488,12 +488,12 @@ public:
 class Atom
 {
 public:
-    explicit Atom(const QByteArray &name, bool onlyIfExists = false, xcb_connection_t *c = connection())
+    explicit Atom(QByteArray &&name, bool onlyIfExists = false, xcb_connection_t *c = connection())
         : m_connection(c)
         , m_retrieved(false)
         , m_cookie(xcb_intern_atom_unchecked(m_connection, onlyIfExists, name.length(), name.constData()))
         , m_atom(XCB_ATOM_NONE)
-        , m_name(name)
+        , m_name(std::move(name))
     {
     }
     Atom() = delete;
