@@ -18,6 +18,7 @@
 #include "wayland_server.h"
 
 #include <fcntl.h>
+#include <span>
 #include <unistd.h>
 
 #include <xwayland_logging.h>
@@ -213,35 +214,35 @@ void X11Source::handleTargets()
 
     Mimes all;
     xcb_atom_t *value = static_cast<xcb_atom_t *>(xcb_get_property_value(reply));
-    for (uint32_t i = 0; i < reply->value_len; i++) {
-        if (value[i] == XCB_ATOM_NONE) {
+    for (xcb_atom_t value : std::span(value, reply->value_len)) {
+        if (value == XCB_ATOM_NONE) {
             continue;
         }
 
-        const auto mimeStrings = Selection::atomToMimeTypes(value[i]);
+        const auto mimeStrings = Selection::atomToMimeTypes(value);
         if (mimeStrings.isEmpty()) {
             // TODO: this should never happen? assert?
             continue;
         }
 
         const auto mimeIt = std::find_if(m_offers.begin(), m_offers.end(),
-                                         [value, i](const Mime &mime) {
-                                             return mime.second == value[i];
-                                         });
+                                         [value](const Mime &mime) {
+            return mime.second == value;
+        });
 
-        auto mimePair = Mime(mimeStrings[0], value[i]);
+        auto mimePair = Mime(mimeStrings[0], value);
         if (mimeIt == m_offers.end()) {
             added << mimePair.first;
         } else {
             m_offers.removeAll(mimePair);
         }
-        all << mimePair;
+        all << std::move(mimePair);
     }
     // all left in m_offers are not in the updated targets
     for (const auto &mimePair : std::as_const(m_offers)) {
         removed << mimePair.first;
     }
-    m_offers = all;
+    m_offers = std::move(all);
 
     if (!added.isEmpty() || !removed.isEmpty()) {
         Q_EMIT offersChanged(added, removed);
