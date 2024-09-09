@@ -65,12 +65,12 @@ QStringList Selection::atomToMimeTypes(xcb_atom_t atom)
     QStringList mimeTypes;
 
     if (atom == atoms->utf8_string) {
-        mimeTypes << QString::fromLatin1("text/plain;charset=utf-8");
+        mimeTypes << QStringLiteral("text/plain;charset=utf-8");
     } else if (atom == atoms->text) {
-        mimeTypes << QString::fromLatin1("text/plain");
+        mimeTypes << QStringLiteral("text/plain");
     } else if (atom == atoms->uri_list) {
-        mimeTypes << "text/uri-list"
-                  << "text/x-uri";
+        mimeTypes << QStringLiteral("text/uri-list")
+                  << QStringLiteral("text/x-uri");
     } else {
         mimeTypes << atomName(atom);
     }
