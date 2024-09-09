@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-04 00:40+0000\n"
-"PO-Revision-Date: 2024-09-07 21:46+0200\n"
+"POT-Creation-Date: 2024-09-09 00:40+0000\n"
+"PO-Revision-Date: 2024-09-08 12:57+0200\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -927,13 +927,13 @@ msgstr "உள்ளக சாளரங்கள்"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "ஏற்றல்நீக்கு"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "ஏற்று"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1047,7 +1047,7 @@ msgstr "விசைப்பலகை"
 #: debug_console.ui:305
 #, kde-format
 msgid "Keymap Layouts"
-msgstr ""
+msgstr "விசைத் தளவமைப்புகள்"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:327
@@ -1237,7 +1237,7 @@ msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட�
 msgid "Tablets switched outputs"
 msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
-#: input.cpp:3302
+#: input.cpp:3308
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
@@ -1801,72 +1801,72 @@ msgstr "பட்டன்களுக்கு அசைவூட்டு"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Caps Lock விசை இப்போது செயலிலுள்ளது"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Caps Lock விசை இப்போது செயலிலில்லை"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Num Lock விசை இப்போது செயலிலுள்ளது"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Num Lock விசை இப்போது செயலிலில்லை"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Scroll Lock விசை இப்போது செயலிலுள்ளது"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Scroll Lock விசை இப்போது செயலிலில்லை"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Shift விசை செயலில் உள்ளது."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Shift விசை செயலிலில்லை."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Control விசை செயலில் உள்ளது."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Control விசை செயலிலில்லை."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Alt விசை செயலில் உள்ளது."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Alt விசை செயலிலில்லை."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Meta விசை செயலில் உள்ளது."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Meta விசை செயலிலில்லை."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2536,31 +2536,31 @@ msgstr "பின்புலப்படத்தை நழுவச்செ�
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Shift விசை பூட்டப்பட்டுள்ளது; பின்வரும் அனைத்து விசையழுத்தல்களுக்கும் செயல்படும்."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Control விசை பூட்டப்பட்டுள்ளது; பின்வரும் அனைத்து விசையழுத்தல்களுக்கும் செயல்படும்."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Alt விசை பூட்டப்பட்டுள்ளது; பின்வரும் அனைத்து விசையழுத்தல்களுக்கும் செயல்படும்."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Meta விசை பூட்டப்பட்டுள்ளது; பின்வரும் அனைத்து விசையழுத்தல்களுக்கும் செயல்படும்."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "AltGr விசை பூட்டப்பட்டுள்ளது; பின்வரும் அனைத்து விசையழுத்தல்களுக்கும் செயல்படும்."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -3604,7 +3604,7 @@ msgstr "மற்றவைகளுக்கு மேலே வைக்கு�
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "உருக்குலைவை அனுமதி"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
