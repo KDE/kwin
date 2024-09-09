@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-03 02:29+0000\n"
+"POT-Creation-Date: 2024-09-09 02:31+0000\n"
 "PO-Revision-Date: 2024-05-25 16:16+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -1219,7 +1219,7 @@ msgstr "انتقل اللوحي إلى %1"
 msgid "Tablets switched outputs"
 msgstr "بدلت اللوحيات المخرجات"
 
-#: input.cpp:3217
+#: input.cpp:3223
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-03 02:29+0000\n"
+"POT-Creation-Date: 2024-09-09 02:31+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -1228,7 +1228,7 @@ msgstr "ਟੇਬਲੇਟ ਮੋਡ"
 msgid "Tablets switched outputs"
 msgstr ""
 
-#: input.cpp:3217
+#: input.cpp:3223
 #, kde-format
 msgid "Touchpad"
 msgstr "ਟੱਚਪੈਡ"

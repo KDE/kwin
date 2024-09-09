@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-03 02:29+0000\n"
+"POT-Creation-Date: 2024-09-09 02:31+0000\n"
 "PO-Revision-Date: 2024-08-17 15:20+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1231,7 +1231,7 @@ msgstr "Teikniborð fært í %1"
 msgid "Tablets switched outputs"
 msgstr "Teikniborð skiptu um úttak"
 
-#: input.cpp:3217
+#: input.cpp:3223
 #, kde-format
 msgid "Touchpad"
 msgstr "Snertiplatti"
