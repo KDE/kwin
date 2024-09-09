@@ -11,9 +11,11 @@ Name[ka]=ამოცანების გადამრთველის ს
 Name[lt]=Užduočių perjungiklio stiliai
 Name[nl]=Stijlen van taakschakelaar
 Name[pl]=Wyglądy przełącznika zadań
+Name[sl]=Slogi preklopa med opravili
 Name[sv]=Stilar för aktivitetsbyte
 Name[ta]=பணி மாற்றி வகைகள்
 Name[tr]=Görev Değiştiricisi Biçemleri
+Name[uk]=Стилі перемикання задач
 Name[x-test]=xxTask Switcher Stylesxx
 
 ProvidersUrl=https://autoconfig.kde.org/ocs/providers.xml
