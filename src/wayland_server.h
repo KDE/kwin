@@ -52,6 +52,7 @@ class XwaylandShellV1Interface;
 class OutputOrderV1Interface;
 class XdgDialogWmV1Interface;
 class ExternalBrightnessV1;
+class PointerWarpV1;
 
 class Window;
 class Output;
@@ -220,6 +221,7 @@ public:
 
     LinuxDrmSyncObjV1Interface *linuxSyncObj() const;
     ExternalBrightnessV1 *externalBrightness() const;
+    PointerWarpV1 *pointerWarp() const;
 
     void setRenderBackend(RenderBackend *backend);
 
@@ -293,6 +295,7 @@ private:
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
     ExternalBrightnessV1 *m_externalBrightness = nullptr;
     AlphaModifierManagerV1 *m_alphaModifierManager = nullptr;
+    PointerWarpV1 *m_pointerWarp = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

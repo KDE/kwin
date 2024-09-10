@@ -50,6 +50,7 @@
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
+#include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "tabletmodemanager.h"
 #include "tiles/tilemanager.h"
@@ -59,6 +60,7 @@
 #include "virtualdesktops.h"
 #include "was_user_interaction_x11_filter.h"
 #include "wayland/externalbrightness_v1.h"
+#include "wayland/pointerwarp_v1.h"
 #include "wayland_server.h"
 #if KWIN_BUILD_X11
 #include "atoms.h"
@@ -261,6 +263,14 @@ void Workspace::init()
 
     if (waylandServer()) {
         connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::assignBrightnessDevices);
+        connect(waylandServer()->pointerWarp(), &PointerWarpV1::warpRequested, this, [](SurfaceInterface *surface, PointerInterface *pointer, QPointF point) {
+            Window *window = waylandServer()->findWindow(surface);
+            if (!window || input()->pointer()->focus() != window) {
+                return;
+            }
+            // FIXME this ignores subsurfaces...
+            input()->pointer()->warp(window->mapFromLocal(point));
+        });
     }
 }
 

@@ -305,6 +305,10 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
     BASENAME alpha-modifier-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/pointer-warp-v1.xml
+    BASENAME pointer-warp-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -354,6 +358,7 @@ target_sources(kwin PRIVATE
     pointer.cpp
     pointerconstraints_v1.cpp
     pointergestures_v1.cpp
+    pointerwarp_v1.cpp
     presentationtime.cpp
     primaryselectiondevice_v1.cpp
     primaryselectiondevicemanager_v1.cpp
@@ -436,6 +441,7 @@ install(FILES
     pointer.h
     pointerconstraints_v1.h
     pointergestures_v1.h
+    pointerwarp_v1.h
     presentationtime.h
     primaryselectiondevice_v1.h
     primaryselectiondevicemanager_v1.h
@@ -477,6 +483,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v4.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-pointer-warp-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
@@ -484,5 +491,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v4-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-pointer-warp-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)
