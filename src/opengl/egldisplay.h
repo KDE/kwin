@@ -59,10 +59,12 @@ public:
 
 private:
     QHash<uint32_t, DrmFormatInfo> queryImportFormats() const;
+    QString determineRenderNode() const;
 
     const ::EGLDisplay m_handle;
     const QList<QByteArray> m_extensions;
     const bool m_owning;
+    const QString m_renderNode;
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;

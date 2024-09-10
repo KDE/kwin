@@ -407,6 +407,13 @@ std::unique_ptr<EglGbmLayerSurface::Surface> EglGbmLayerSurface::createSurface(c
         if (m_gpu == m_eglBackend->gpu()) {
             return doTestFormats(formats, MultiGpuImportMode::None);
         }
+        // special case, we're using different display devices but the same render device
+        const auto display = m_eglBackend->displayForGpu(m_gpu);
+        if (display && !display->renderNode().isEmpty() && display->renderNode() == m_eglBackend->eglDisplayObject()->renderNode()) {
+            if (auto surface = doTestFormats(formats, MultiGpuImportMode::None)) {
+                return surface;
+            }
+        }
         if (auto surface = doTestFormats(formats, MultiGpuImportMode::Egl)) {
             qCDebug(KWIN_DRM) << "chose egl import with format" << formatName(surface->gbmSwapchain->format()).name << "and modifier" << surface->gbmSwapchain->modifier();
             return surface;
