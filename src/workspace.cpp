@@ -51,6 +51,7 @@
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
+#include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "tabletmodemanager.h"
 #include "tiles/tilemanager.h"
@@ -59,6 +60,8 @@
 #include "utils/orientationsensor.h"
 #include "virtualdesktops.h"
 #include "wayland/externalbrightness_v1.h"
+#include "wayland/pointerwarp_v1.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #if KWIN_BUILD_X11
 #include "atoms.h"
@@ -280,6 +283,13 @@ void Workspace::init()
             if (group.name() == "KScreen" && names.contains(QByteArrayLiteral("XwaylandClientsScale"))) {
                 updateXwaylandScale();
             }
+        });
+        connect(waylandServer()->pointerWarp(), &PointerWarpV1::warpRequested, this, [](SurfaceInterface *surface, PointerInterface *pointer, QPointF point) {
+            Window *window = waylandServer()->findWindow(surface->mainSurface());
+            if (!window || input()->pointer()->focus() != window) {
+                return;
+            }
+            input()->pointer()->warp(window->mapFromLocal(surface->mapToMainSurface(point)));
         });
     }
 
