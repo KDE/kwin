@@ -26,6 +26,7 @@
 #include "wayland/display.h"
 #include "wayland/pointer.h"
 #include "wayland/pointerconstraints_v1.h"
+#include "wayland/pointerwarp_v1.h"
 #include "wayland/seat.h"
 #include "wayland/surface.h"
 #include "wayland_server.h"
@@ -147,6 +148,20 @@ void PointerInputRedirection::init()
         warp(output->geometry().center());
     }
     updateAfterScreenChange();
+
+    connect(waylandServer()->pointerWarp(), &PointerWarpV1::warpRequested, this, [](SurfaceInterface *surface, PointerInterface *pointer, const QPointF &point, uint32_t serial) {
+        if (serial != waylandServer()->seat()->pointer()->focusedSerial()) {
+            return;
+        }
+        if (!surface->boundingRect().contains(point)) {
+            return;
+        }
+        Window *window = waylandServer()->findWindow(surface->mainSurface());
+        if (!window) {
+            return;
+        }
+        input()->pointer()->warp(window->mapFromLocal(surface->mapToMainSurface(point)));
+    });
 }
 
 void PointerInputRedirection::updateOnStartMoveResize()
