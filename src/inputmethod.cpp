@@ -932,6 +932,10 @@ void InputMethod::startInputMethod()
     // animation.
     environment.insert(QStringLiteral("MALIIT_ENABLE_ANIMATIONS"), QStringLiteral("0"));
 
+    if (qEnvironmentVariableIntValue("KWIN_IM_WAYLAND_DEBUG") == 1) {
+        environment.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
+    }
+
     m_inputMethodProcess = new QProcess(this);
     m_inputMethodProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_inputMethodProcess->setProcessEnvironment(environment);
