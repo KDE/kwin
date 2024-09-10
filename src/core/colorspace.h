@@ -43,6 +43,43 @@ enum class NamedColorimetry {
     AdobeRGB
 };
 
+struct XYZ;
+/**
+ * xyY, with Y unspecified
+ */
+struct KWIN_EXPORT xy
+{
+    double x;
+    double y;
+
+    XYZ toXYZ() const;
+    auto operator<=>(const xy &) const = default;
+};
+struct KWIN_EXPORT xyY
+{
+    double x;
+    double y;
+    double Y;
+
+    XYZ toXYZ() const;
+    auto operator<=>(const xyY &) const = default;
+};
+struct KWIN_EXPORT XYZ
+{
+    double X;
+    double Y;
+    double Z;
+
+    xyY toxyY() const;
+    QVector3D asVector() const;
+    XYZ operator*(double factor) const;
+    XYZ operator/(double factor) const;
+    XYZ operator+(const XYZ &other) const;
+    auto operator<=>(const XYZ &) const = default;
+
+    static XYZ fromVector(const QVector3D &vector);
+};
+
 /**
  * Describes the definition of colors in a color space.
  * Red, green and blue define the chromaticities ("absolute colors") of the red, green and blue LEDs on a display in xy coordinates
@@ -53,24 +90,15 @@ class KWIN_EXPORT Colorimetry
 public:
     static const Colorimetry &fromName(NamedColorimetry name);
     /**
-     * @returns the XYZ representation of the xyY color passed in. Y is assumed to be one
-     */
-    static QVector3D xyToXYZ(QVector2D xy);
-    /**
-     * @returns the xyY representation of the XYZ color passed in. Y is normalized to be one
-     */
-    static QVector2D xyzToXY(QVector3D xyz);
-    /**
      * @returns a matrix adapting XYZ values from the source whitepoint to the destination whitepoint with the Bradford transform
      */
-    static QMatrix4x4 chromaticAdaptationMatrix(QVector3D sourceWhitepoint, QVector3D destinationWhitepoint);
+    static QMatrix4x4 chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ destinationWhitepoint);
 
-    static QMatrix4x4 calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+    static QMatrix4x4 calculateToXYZMatrix(XYZ red, XYZ green, XYZ blue, XYZ white);
 
-    /**
-     * constructs the colorimetry object from primaries in the XYZ color space
-     */
-    explicit Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white);
+    explicit Colorimetry(XYZ red, XYZ green, XYZ blue, XYZ white);
+    explicit Colorimetry(xyY red, xyY green, xyY blue, xyY white);
+    explicit Colorimetry(xy red, xy green, xy blue, xy white);
 
     /**
      * @returns a matrix that transforms from the linear RGB representation of colors in this colorimetry to the XYZ representation
@@ -88,36 +116,24 @@ public:
     /**
      * @returns this colorimetry, adapted to the new whitepoint using the Bradford transform
      */
-    Colorimetry adaptedTo(QVector2D newWhitepoint) const;
+    Colorimetry adaptedTo(xyY newWhitepoint) const;
     /**
      * interpolates the primaries depending on the passed factor. The whitepoint stays unchanged
      */
     Colorimetry interpolateGamutTo(const Colorimetry &one, double factor) const;
 
-    /**
-     * @returns the red primary in XYZ, normalized to Y=1
-     */
-    const QVector3D &red() const;
-    /**
-     * @returns the green primary in XYZ, normalized to Y=1
-     */
-    const QVector3D &green() const;
-    /**
-     * @returns the blue primary in XYZ, normalized to Y=1
-     */
-    const QVector3D &blue() const;
-    /**
-     * @returns the white point in XYZ, normalized to Y=1
-     */
-    const QVector3D &white() const;
+    const XYZ &red() const;
+    const XYZ &green() const;
+    const XYZ &blue() const;
+    const XYZ &white() const;
 
     std::optional<NamedColorimetry> name() const;
 
 private:
-    QVector3D m_red;
-    QVector3D m_green;
-    QVector3D m_blue;
-    QVector3D m_white;
+    XYZ m_red;
+    XYZ m_green;
+    XYZ m_blue;
+    XYZ m_white;
     QMatrix4x4 m_toXYZ;
     QMatrix4x4 m_fromXYZ;
 };
@@ -228,3 +244,4 @@ private:
 }
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf);
+KWIN_EXPORT QDebug operator<<(QDebug debug, const KWin::XYZ &xyz);

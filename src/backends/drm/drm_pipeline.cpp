@@ -662,10 +662,10 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction transfe
         return nullptr;
     }
     const auto colorimetry = m_connector->edid()->colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
-    const QVector2D red = Colorimetry::xyzToXY(colorimetry.red());
-    const QVector2D green = Colorimetry::xyzToXY(colorimetry.green());
-    const QVector2D blue = Colorimetry::xyzToXY(colorimetry.blue());
-    const QVector2D white = Colorimetry::xyzToXY(colorimetry.white());
+    const xyY red = colorimetry.red().toxyY();
+    const xyY green = colorimetry.green().toxyY();
+    const xyY blue = colorimetry.blue().toxyY();
+    const xyY white = colorimetry.white().toxyY();
     const auto to16Bit = [](float value) {
         return uint16_t(std::round(value / 0.00002));
     };
@@ -683,11 +683,11 @@ std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction transfe
             .metadata_type = 0,
             // in 0.00002 nits
             .display_primaries = {
-                {to16Bit(red.x()), to16Bit(red.y())},
-                {to16Bit(green.x()), to16Bit(green.y())},
-                {to16Bit(blue.x()), to16Bit(blue.y())},
+                {to16Bit(red.x), to16Bit(red.y)},
+                {to16Bit(green.x), to16Bit(green.y)},
+                {to16Bit(blue.x), to16Bit(blue.y)},
             },
-            .white_point = {to16Bit(white.x()), to16Bit(white.y())},
+            .white_point = {to16Bit(white.x), to16Bit(white.y)},
             // in nits
             .max_display_mastering_luminance = uint16_t(std::round(m_connector->edid()->desiredMaxFrameAverageLuminance().value_or(0))),
             // in 0.0001 nits

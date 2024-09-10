@@ -308,10 +308,10 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_prim
         return;
     }
     m_colorimetry = Colorimetry{
-        Colorimetry::xyToXYZ(QVector2D(r_x / 10'000.0, r_y / 10'000.0)),
-        Colorimetry::xyToXYZ(QVector2D(g_x / 10'000.0, g_y / 10'000.0)),
-        Colorimetry::xyToXYZ(QVector2D(b_x / 10'000.0, b_y / 10'000.0)),
-        Colorimetry::xyToXYZ(QVector2D(w_x / 10'000.0, w_y / 10'000.0)),
+        xy{r_x / 10'000.0, r_y / 10'000.0},
+        xy{g_x / 10'000.0, g_y / 10'000.0},
+        xy{b_x / 10'000.0, b_y / 10'000.0},
+        xy{w_x / 10'000.0, w_y / 10'000.0},
     };
 }
 
@@ -339,10 +339,10 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_set_mast
         return;
     }
     m_masteringColorimetry = Colorimetry{
-        Colorimetry::xyToXYZ(QVector2D(r_x / 10'000.0, r_y / 10'000.0)),
-        Colorimetry::xyToXYZ(QVector2D(g_x / 10'000.0, g_y / 10'000.0)),
-        Colorimetry::xyToXYZ(QVector2D(b_x / 10'000.0, b_y / 10'000.0)),
-        Colorimetry::xyToXYZ(QVector2D(w_x / 10'000.0, w_y / 10'000.0)),
+        xy{r_x / 10'000.0, r_y / 10'000.0},
+        xy{g_x / 10'000.0, g_y / 10'000.0},
+        xy{b_x / 10'000.0, b_y / 10'000.0},
+        xy{w_x / 10'000.0, w_y / 10'000.0},
     };
 }
 
@@ -447,28 +447,28 @@ void XXImageDescriptionV4::xx_image_description_v4_get_information(Resource *qtR
     const auto round = [](float f) {
         return std::clamp(std::round(f * 10'000.0), 0.0, 10'000.0);
     };
-    const QVector2D containerRed = Colorimetry::xyzToXY(m_description.containerColorimetry().red());
-    const QVector2D containerGreen = Colorimetry::xyzToXY(m_description.containerColorimetry().green());
-    const QVector2D containerBlue = Colorimetry::xyzToXY(m_description.containerColorimetry().blue());
-    const QVector2D containerWhite = Colorimetry::xyzToXY(m_description.containerColorimetry().white());
+    const xyY containerRed = m_description.containerColorimetry().red().toxyY();
+    const xyY containerGreen = m_description.containerColorimetry().green().toxyY();
+    const xyY containerBlue = m_description.containerColorimetry().blue().toxyY();
+    const xyY containerWhite = m_description.containerColorimetry().white().toxyY();
     xx_image_description_info_v4_send_primaries(resource,
-                                                round(containerRed.x()), round(containerRed.y()),
-                                                round(containerGreen.x()), round(containerGreen.y()),
-                                                round(containerBlue.x()), round(containerBlue.y()),
-                                                round(containerWhite.x()), round(containerWhite.y()));
+                                                round(containerRed.x), round(containerRed.y),
+                                                round(containerGreen.x), round(containerGreen.y),
+                                                round(containerBlue.x), round(containerBlue.y),
+                                                round(containerWhite.x), round(containerWhite.y));
     if (auto name = m_description.containerColorimetry().name()) {
         xx_image_description_info_v4_send_primaries_named(resource, kwinPrimariesToProtoPrimaires(*name));
     }
     if (auto m = m_description.masteringColorimetry()) {
-        const QVector2D masterRed = Colorimetry::xyzToXY(m->red());
-        const QVector2D masterGreen = Colorimetry::xyzToXY(m->green());
-        const QVector2D masterBlue = Colorimetry::xyzToXY(m->blue());
-        const QVector2D masterWhite = Colorimetry::xyzToXY(m->white());
+        const xyY masterRed = m->red().toxyY();
+        const xyY masterGreen = m->green().toxyY();
+        const xyY masterBlue = m->blue().toxyY();
+        const xyY masterWhite = m->white().toxyY();
         xx_image_description_info_v4_send_target_primaries(resource,
-                                                           round(masterRed.x()), round(masterRed.y()),
-                                                           round(masterGreen.x()), round(masterGreen.y()),
-                                                           round(masterBlue.x()), round(masterBlue.y()),
-                                                           round(masterWhite.x()), round(masterWhite.y()));
+                                                           round(masterRed.x), round(masterRed.y),
+                                                           round(masterGreen.x), round(masterGreen.y),
+                                                           round(masterBlue.x), round(masterBlue.y),
+                                                           round(masterWhite.x), round(masterWhite.y));
     }
     if (auto maxfall = m_description.maxAverageLuminance()) {
         xx_image_description_info_v4_send_target_max_fall(resource, *maxfall);

@@ -39,7 +39,11 @@ IccShader::~IccShader()
 {
 }
 
-static const QVector3D D50 = QVector3D(0.9642, 1.0, 0.8249);
+static const XYZ D50{
+    .X = 0.9642,
+    .Y = 1.0,
+    .Z = 0.8249,
+};
 
 bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile)
 {

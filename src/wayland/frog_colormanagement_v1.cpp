@@ -73,15 +73,15 @@ uint16_t encodePrimary(float primary)
 void FrogColorManagementSurfaceV1::setPreferredColorDescription(const ColorDescription &colorDescription)
 {
     const auto color = colorDescription.masteringColorimetry().value_or(colorDescription.containerColorimetry());
-    const QVector2D red = Colorimetry::xyzToXY(color.red());
-    const QVector2D green = Colorimetry::xyzToXY(color.green());
-    const QVector2D blue = Colorimetry::xyzToXY(color.blue());
-    const QVector2D white = Colorimetry::xyzToXY(color.white());
+    const xyY red = color.red().toxyY();
+    const xyY green = color.green().toxyY();
+    const xyY blue = color.blue().toxyY();
+    const xyY white = color.white().toxyY();
     send_preferred_metadata(kwinToFrogTransferFunction(colorDescription.transferFunction()),
-                            encodePrimary(red.x()), encodePrimary(red.y()),
-                            encodePrimary(green.x()), encodePrimary(green.y()),
-                            encodePrimary(blue.x()), encodePrimary(blue.y()),
-                            encodePrimary(white.x()), encodePrimary(white.y()),
+                            encodePrimary(red.x), encodePrimary(red.y),
+                            encodePrimary(green.x), encodePrimary(green.y),
+                            encodePrimary(blue.x), encodePrimary(blue.y),
+                            encodePrimary(white.x), encodePrimary(white.y),
                             std::round(colorDescription.maxHdrLuminance().value_or(0)),
                             std::round(colorDescription.minLuminance() / 0.0001),
                             std::round(colorDescription.maxAverageLuminance().value_or(0)));
@@ -150,10 +150,10 @@ void FrogColorManagementSurfaceV1::frog_color_managed_surface_set_hdr_metadata(R
     }
     if (mastering_display_primary_red_x > 0 && mastering_display_primary_red_y > 0 && mastering_display_primary_green_x > 0 && mastering_display_primary_green_y > 0 && mastering_display_primary_blue_x > 0 && mastering_display_primary_blue_y > 0 && mastering_white_point_x > 0 && mastering_white_point_y > 0) {
         m_masteringColorimetry = Colorimetry{
-            Colorimetry::xyToXYZ(QVector2D(mastering_display_primary_red_x / 10'000.0, mastering_display_primary_red_y / 10'000.0)),
-            Colorimetry::xyToXYZ(QVector2D(mastering_display_primary_green_x / 10'000.0, mastering_display_primary_green_y / 10'000.0)),
-            Colorimetry::xyToXYZ(QVector2D(mastering_display_primary_blue_x / 10'000.0, mastering_display_primary_blue_y / 10'000.0)),
-            Colorimetry::xyToXYZ(QVector2D(mastering_white_point_x / 10'000.0, mastering_white_point_y / 10'000.0)),
+            xy{mastering_display_primary_red_x / 10'000.0, mastering_display_primary_red_y / 10'000.0},
+            xy{mastering_display_primary_green_x / 10'000.0, mastering_display_primary_green_y / 10'000.0},
+            xy{mastering_display_primary_blue_x / 10'000.0, mastering_display_primary_blue_y / 10'000.0},
+            xy{mastering_white_point_x / 10'000.0, mastering_white_point_y / 10'000.0},
         };
     }
     updateColorDescription();

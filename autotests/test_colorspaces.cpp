@@ -85,12 +85,12 @@ void TestColorspaces::roundtripConversion()
 
 void TestColorspaces::testXYZ_XYconversions()
 {
-    // this test ensures that Colorimetry::xyzToXY and Colorimetry::xyToXYZ can handle weird inputs
+    // this test ensures that xyY<->XYZ conversions can handle weird inputs
     // and don't cause crashes
-    QCOMPARE(Colorimetry::xyzToXY(QVector3D(0, 0, 0)), QVector2D(0, 0));
-    QCOMPARE_LE(Colorimetry::xyzToXY(QVector3D(100, 100, 100)).y(), 1);
-    QCOMPARE(Colorimetry::xyToXYZ(QVector2D(0, 0)), QVector3D(0, 1, 0));
-    QCOMPARE(Colorimetry::xyToXYZ(QVector2D(1, 0)), QVector3D(1, 1, 0));
+    QCOMPARE(XYZ(0, 0, 0).toxyY(), xyY(0, 0, 1));
+    QCOMPARE_LE(XYZ(100, 100, 100).toxyY().y, 1);
+    QCOMPARE(xyY(0, 0, 1).toXYZ(), XYZ(0, 0, 0));
+    QCOMPARE(xyY(1, 0, 1).toXYZ(), XYZ(0, 0, 0));
 }
 
 void TestColorspaces::testIdentityTransformation_data()

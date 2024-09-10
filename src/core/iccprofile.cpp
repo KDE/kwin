@@ -268,10 +268,10 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         return nullptr;
     }
 
-    QVector3D red;
-    QVector3D green;
-    QVector3D blue;
-    QVector3D white = QVector3D(whitepoint->X, whitepoint->Y, whitepoint->Z);
+    XYZ red;
+    XYZ green;
+    XYZ blue;
+    XYZ white = XYZ{whitepoint->X, whitepoint->Y, whitepoint->Z};
     std::optional<QMatrix4x4> chromaticAdaptationMatrix;
     if (cmsIsTag(handle, cmsSigChromaticAdaptationTag)) {
         // the chromatic adaptation tag is a 3x3 matrix that converts from the actual whitepoint to D50
@@ -288,12 +288,12 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             return nullptr;
         }
         const QVector3D D50(0.9642, 1.0, 0.8249);
-        white = *chromaticAdaptationMatrix * D50;
+        white = XYZ::fromVector(*chromaticAdaptationMatrix * D50);
     }
     if (cmsCIExyYTRIPLE *chrmTag = static_cast<cmsCIExyYTRIPLE *>(cmsReadTag(handle, cmsSigChromaticityTag))) {
-        red = Colorimetry::xyToXYZ(QVector2D(chrmTag->Red.x, chrmTag->Red.y));
-        green = Colorimetry::xyToXYZ(QVector2D(chrmTag->Green.x, chrmTag->Green.y));
-        blue = Colorimetry::xyToXYZ(QVector2D(chrmTag->Blue.x, chrmTag->Blue.y));
+        red = xyY{chrmTag->Red.x, chrmTag->Red.y, chrmTag->Red.Y}.toXYZ();
+        green = xyY{chrmTag->Green.x, chrmTag->Green.y, chrmTag->Green.Y}.toXYZ();
+        blue = xyY{chrmTag->Blue.x, chrmTag->Blue.y, chrmTag->Blue.Y}.toXYZ();
     } else {
         const cmsCIEXYZ *r = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigRedColorantTag));
         const cmsCIEXYZ *g = static_cast<cmsCIEXYZ *>(cmsReadTag(handle, cmsSigGreenColorantTag));
@@ -303,9 +303,9 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             return nullptr;
         }
         if (chromaticAdaptationMatrix) {
-            red = *chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z);
-            green = *chromaticAdaptationMatrix * QVector3D(g->X, g->Y, g->Z);
-            blue = *chromaticAdaptationMatrix * QVector3D(b->X, b->Y, b->Z);
+            red = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(r->X, r->Y, r->Z));
+            green = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(g->X, g->Y, g->Z));
+            blue = XYZ::fromVector(*chromaticAdaptationMatrix * QVector3D(b->X, b->Y, b->Z));
         } else {
             // if the chromatic adaptation tag isn't available, fall back to using the media whitepoint instead
             cmsCIEXYZ adaptedR{};
@@ -317,13 +317,13 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
             if (!success) {
                 return nullptr;
             }
-            red = QVector3D(adaptedR.X, adaptedR.Y, adaptedR.Z);
-            green = QVector3D(adaptedG.X, adaptedG.Y, adaptedG.Z);
-            blue = QVector3D(adaptedB.X, adaptedB.Y, adaptedB.Z);
+            red = XYZ(adaptedR.X, adaptedR.Y, adaptedR.Z);
+            green = XYZ(adaptedG.X, adaptedG.Y, adaptedG.Z);
+            blue = XYZ(adaptedB.X, adaptedB.Y, adaptedB.Z);
         }
     }
 
-    if (red.y() == 0 || green.y() == 0 || blue.y() == 0 || white.y() == 0) {
+    if (red.Y == 0 || green.Y == 0 || blue.Y == 0 || white.Y == 0) {
         qCWarning(KWIN_CORE, "Profile has invalid primaries");
         return nullptr;
     }

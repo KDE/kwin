@@ -26,26 +26,90 @@ static QMatrix4x4 matrixFromColumns(const QVector3D &first, const QVector3D &sec
     return ret;
 }
 
-QVector3D Colorimetry::xyToXYZ(QVector2D xy)
+XYZ xy::toXYZ() const
 {
-    if (xy.y() == 0) {
-        // special case for XYZ Colorimetry
-        // where xy.y == 0 is valid
-        return QVector3D(xy.x(), 1, 0);
+    if (y == 0) {
+        return XYZ{0, 0, 0};
     }
-    return QVector3D(xy.x() / xy.y(), 1, (1 - xy.x() - xy.y()) / xy.y());
+    return XYZ{
+        .X = x / y,
+        .Y = 1.0,
+        .Z = (1 - x - y) / y,
+    };
 }
 
-QVector2D Colorimetry::xyzToXY(QVector3D xyz)
+XYZ xyY::toXYZ() const
 {
-    if (xyz.y() == 0) {
-        // this is nonsense, but at least doesn't crash
-        return QVector2D(0, 0);
+    if (y == 0) {
+        return XYZ{0, 0, 0};
     }
-    return QVector2D(xyz.x() / (xyz.x() + xyz.y() + xyz.z()), xyz.y() / (xyz.x() + xyz.y() + xyz.z()));
+    return XYZ{
+        .X = Y * x / y,
+        .Y = Y,
+        .Z = Y * (1 - x - y) / y,
+    };
 }
 
-QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector3D sourceWhitepoint, QVector3D destinationWhitepoint)
+xyY XYZ::toxyY() const
+{
+    const double sum = X + Y + Z;
+    if (qFuzzyIsNull(sum)) {
+        // this is nonsense, but at least won't crash
+        return xyY{
+            .x = 0,
+            .y = 0,
+            .Y = 1,
+        };
+    }
+    return xyY{
+        .x = X / sum,
+        .y = Y / sum,
+        .Y = Y,
+    };
+}
+
+XYZ XYZ::operator*(double factor) const
+{
+    return XYZ{
+        .X = X * factor,
+        .Y = Y * factor,
+        .Z = Z * factor,
+    };
+}
+
+XYZ XYZ::operator/(double divisor) const
+{
+    return XYZ{
+        .X = X / divisor,
+        .Y = Y / divisor,
+        .Z = Z / divisor,
+    };
+}
+
+XYZ XYZ::operator+(const XYZ &other) const
+{
+    return XYZ{
+        .X = X + other.X,
+        .Y = Y + other.Y,
+        .Z = Z + other.Z,
+    };
+}
+
+QVector3D XYZ::asVector() const
+{
+    return QVector3D(X, Y, Z);
+}
+
+XYZ XYZ::fromVector(const QVector3D &vector)
+{
+    return XYZ{
+        .X = vector.x(),
+        .Y = vector.y(),
+        .Z = vector.z(),
+    };
+}
+
+QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(XYZ sourceWhitepoint, XYZ destinationWhitepoint)
 {
     static const QMatrix4x4 bradford = []() {
         QMatrix4x4 ret;
@@ -76,7 +140,7 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector3D sourceWhitepoint, QV
     if (sourceWhitepoint == destinationWhitepoint) {
         return QMatrix4x4{};
     }
-    const QVector3D factors = (bradford * destinationWhitepoint) / (bradford * sourceWhitepoint);
+    const QVector3D factors = (bradford * destinationWhitepoint.asVector()) / (bradford * sourceWhitepoint.asVector());
     QMatrix4x4 adaptation{};
     adaptation(0, 0) = factors.x();
     adaptation(1, 1) = factors.y();
@@ -84,10 +148,13 @@ QMatrix4x4 Colorimetry::chromaticAdaptationMatrix(QVector3D sourceWhitepoint, QV
     return inverseBradford * adaptation * bradford;
 }
 
-QMatrix4x4 Colorimetry::calculateToXYZMatrix(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
+QMatrix4x4 Colorimetry::calculateToXYZMatrix(XYZ red, XYZ green, XYZ blue, XYZ white)
 {
-    const auto component_scale = (matrixFromColumns(red, green, blue)).inverted() * white;
-    return matrixFromColumns(red * component_scale.x(), green * component_scale.y(), blue * component_scale.z());
+    const QVector3D r = red.asVector();
+    const QVector3D g = green.asVector();
+    const QVector3D b = blue.asVector();
+    const auto component_scale = (matrixFromColumns(r, g, b)).inverted() * white.asVector();
+    return matrixFromColumns(r * component_scale.x(), g * component_scale.y(), b * component_scale.z());
 }
 
 Colorimetry Colorimetry::interpolateGamutTo(const Colorimetry &one, double factor) const
@@ -100,22 +167,35 @@ Colorimetry Colorimetry::interpolateGamutTo(const Colorimetry &one, double facto
     };
 }
 
-static QVector3D normalizeToY1(const QVector3D &xyz)
-{
-    if (xyz.y() == 0) {
-        return QVector3D(0, 0, 0);
-    }
-    return xyz / xyz.y();
-}
-
-Colorimetry::Colorimetry(QVector3D red, QVector3D green, QVector3D blue, QVector3D white)
-    : m_red(normalizeToY1(red))
-    , m_green(normalizeToY1(green))
-    , m_blue(normalizeToY1(blue))
-    , m_white(normalizeToY1(white))
+Colorimetry::Colorimetry(XYZ red, XYZ green, XYZ blue, XYZ white)
+    : m_red(red)
+    , m_green(green)
+    , m_blue(blue)
+    , m_white(white)
     , m_toXYZ(calculateToXYZMatrix(red, green, blue, white))
     , m_fromXYZ(m_toXYZ.inverted())
 {
+}
+
+Colorimetry::Colorimetry(xyY red, xyY green, xyY blue, xyY white)
+    : Colorimetry(red.toXYZ(), green.toXYZ(), blue.toXYZ(), white.toXYZ())
+{
+}
+
+Colorimetry::Colorimetry(xy red, xy green, xy blue, xy white)
+    : m_white(xyY(white.x, white.y, 1.0).toXYZ())
+{
+    const auto brightness = (matrixFromColumns(
+                                 xyY(red.x, red.y, 1.0).toXYZ().asVector(),
+                                 xyY(green.x, green.y, 1.0).toXYZ().asVector(),
+                                 xyY(blue.x, blue.y, 1.0).toXYZ().asVector()))
+                                .inverted()
+        * xyY(white.x, white.y, 1.0).toXYZ().asVector();
+    m_red = xyY(red.x, red.y, brightness.x()).toXYZ();
+    m_green = xyY(green.x, green.y, brightness.y()).toXYZ();
+    m_blue = xyY(blue.x, blue.y, brightness.z()).toXYZ();
+    m_toXYZ = calculateToXYZMatrix(m_red, m_green, m_blue, m_white);
+    m_fromXYZ = m_toXYZ.inverted();
 }
 
 const QMatrix4x4 &Colorimetry::toXYZ() const
@@ -154,14 +234,14 @@ QMatrix4x4 Colorimetry::fromLMS() const
     return m_fromXYZ * s_inverseDolbyLMS;
 }
 
-Colorimetry Colorimetry::adaptedTo(QVector2D newWhitepoint) const
+Colorimetry Colorimetry::adaptedTo(xyY newWhitepoint) const
 {
-    const auto mat = chromaticAdaptationMatrix(this->white(), xyToXYZ(newWhitepoint));
+    const auto mat = chromaticAdaptationMatrix(this->white(), newWhitepoint.toXYZ());
     return Colorimetry{
-        mat * red(),
-        mat * green(),
-        mat * blue(),
-        Colorimetry::xyToXYZ(newWhitepoint),
+        XYZ::fromVector(mat * red().asVector()),
+        XYZ::fromVector(mat * green().asVector()),
+        XYZ::fromVector(mat * blue().asVector()),
+        newWhitepoint.toXYZ(),
     };
 }
 
@@ -175,85 +255,85 @@ bool Colorimetry::operator==(NamedColorimetry name) const
     return *this == fromName(name);
 }
 
-const QVector3D &Colorimetry::red() const
+const XYZ &Colorimetry::red() const
 {
     return m_red;
 }
 
-const QVector3D &Colorimetry::green() const
+const XYZ &Colorimetry::green() const
 {
     return m_green;
 }
 
-const QVector3D &Colorimetry::blue() const
+const XYZ &Colorimetry::blue() const
 {
     return m_blue;
 }
 
-const QVector3D &Colorimetry::white() const
+const XYZ &Colorimetry::white() const
 {
     return m_white;
 }
 
 static const Colorimetry BT709 = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.64, 0.33}),
-    Colorimetry::xyToXYZ(QVector2D{0.30, 0.60}),
-    Colorimetry::xyToXYZ(QVector2D{0.15, 0.06}),
-    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
+    xy{0.64, 0.33},
+    xy{0.30, 0.60},
+    xy{0.15, 0.06},
+    xy{0.3127, 0.3290},
 };
 static const Colorimetry PAL_M = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.67, 0.33}),
-    Colorimetry::xyToXYZ(QVector2D{0.21, 0.71}),
-    Colorimetry::xyToXYZ(QVector2D{0.14, 0.08}),
-    Colorimetry::xyToXYZ(QVector2D{0.310, 0.316}),
+    xy{0.67, 0.33},
+    xy{0.21, 0.71},
+    xy{0.14, 0.08},
+    xy{0.310, 0.316},
 };
 static const Colorimetry PAL = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.640, 0.330}),
-    Colorimetry::xyToXYZ(QVector2D{0.290, 0.600}),
-    Colorimetry::xyToXYZ(QVector2D{0.150, 0.060}),
-    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
+    xy{0.640, 0.330},
+    xy{0.290, 0.600},
+    xy{0.150, 0.060},
+    xy{0.3127, 0.3290},
 };
 static const Colorimetry NTSC = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.630, 0.340}),
-    Colorimetry::xyToXYZ(QVector2D{0.310, 0.595}),
-    Colorimetry::xyToXYZ(QVector2D{0.155, 0.070}),
-    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
+    xy{0.630, 0.340},
+    xy{0.310, 0.595},
+    xy{0.155, 0.070},
+    xy{0.3127, 0.3290},
 };
 static const Colorimetry GenericFilm = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.243, 0.692}),
-    Colorimetry::xyToXYZ(QVector2D{0.145, 0.049}),
-    Colorimetry::xyToXYZ(QVector2D{0.681, 0.319}),
-    Colorimetry::xyToXYZ(QVector2D{0.310, 0.316}),
+    xy{0.243, 0.692},
+    xy{0.145, 0.049},
+    xy{0.681, 0.319},
+    xy{0.310, 0.316},
 };
 static const Colorimetry BT2020 = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.708, 0.292}),
-    Colorimetry::xyToXYZ(QVector2D{0.170, 0.797}),
-    Colorimetry::xyToXYZ(QVector2D{0.131, 0.046}),
-    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
+    xy{0.708, 0.292},
+    xy{0.170, 0.797},
+    xy{0.131, 0.046},
+    xy{0.3127, 0.3290},
 };
 static const Colorimetry CIEXYZ = Colorimetry{
-    QVector3D(1.0, 0.0, 0.0),
-    QVector3D(0.0, 1.0, 0.0),
-    QVector3D(0.0, 0.0, 1.0),
-    Colorimetry::xyToXYZ(QVector2D{1.0 / 3.0, 1.0 / 3.0}),
+    XYZ{1.0, 0.0, 0.0},
+    XYZ{0.0, 1.0, 0.0},
+    XYZ{0.0, 0.0, 1.0},
+    xy{1.0 / 3.0, 1.0 / 3.0}.toXYZ(),
 };
 static const Colorimetry DCIP3 = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.680, 0.320}),
-    Colorimetry::xyToXYZ(QVector2D{0.265, 0.690}),
-    Colorimetry::xyToXYZ(QVector2D{0.150, 0.060}),
-    Colorimetry::xyToXYZ(QVector2D{0.314, 0.351}),
+    xy{0.680, 0.320},
+    xy{0.265, 0.690},
+    xy{0.150, 0.060},
+    xy{0.314, 0.351},
 };
 static const Colorimetry DisplayP3 = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.680, 0.320}),
-    Colorimetry::xyToXYZ(QVector2D{0.265, 0.690}),
-    Colorimetry::xyToXYZ(QVector2D{0.150, 0.060}),
-    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
+    xy{0.680, 0.320},
+    xy{0.265, 0.690},
+    xy{0.150, 0.060},
+    xy{0.3127, 0.3290},
 };
 static const Colorimetry AdobeRGB = Colorimetry{
-    Colorimetry::xyToXYZ(QVector2D{0.6400, 0.3300}),
-    Colorimetry::xyToXYZ(QVector2D{0.2100, 0.7100}),
-    Colorimetry::xyToXYZ(QVector2D{0.1500, 0.0600}),
-    Colorimetry::xyToXYZ(QVector2D{0.3127, 0.3290}),
+    xy{0.6400, 0.3300},
+    xy{0.2100, 0.7100},
+    xy{0.1500, 0.0600},
+    xy{0.3127, 0.3290},
 };
 
 const Colorimetry &Colorimetry::fromName(NamedColorimetry name)
@@ -578,5 +658,11 @@ TransferFunction TransferFunction::relativeScaledTo(double referenceLuminance) c
 QDebug operator<<(QDebug debug, const KWin::TransferFunction &tf)
 {
     debug << "TransferFunction(" << tf.type << ", [" << tf.minLuminance << "," << tf.maxLuminance << "] )";
+    return debug;
+}
+
+QDebug operator<<(QDebug debug, const KWin::XYZ &xyz)
+{
+    debug << "XYZ(" << xyz.X << xyz.Y << xyz.Z << ")";
     return debug;
 }
