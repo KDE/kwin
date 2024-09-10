@@ -54,6 +54,7 @@ class OutputOrderV1Interface;
 class XdgDialogWmV1Interface;
 class ExternalBrightnessV1;
 class XdgToplevelTagManagerV1;
+class PointerWarpV1;
 
 class Window;
 class Output;
@@ -222,6 +223,7 @@ public:
 
     LinuxDrmSyncObjV1Interface *linuxSyncObj() const;
     ExternalBrightnessV1 *externalBrightness() const;
+    PointerWarpV1 *pointerWarp() const;
 
     void setRenderBackend(RenderBackend *backend);
 
@@ -299,6 +301,7 @@ private:
     SinglePixelBufferManagerV1 *m_singlePixelBuffer = nullptr;
     XdgToplevelTagManagerV1 *m_toplevelTag = nullptr;
     ColorRepresentationManagerV1 *m_colorRepresentation = nullptr;
+    PointerWarpV1 *m_pointerWarp = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

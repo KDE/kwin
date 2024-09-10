@@ -939,6 +939,15 @@ SurfaceInterface *SurfaceInterface::mainSurface()
     return subSurface() ? subSurface()->mainSurface() : this;
 }
 
+QPointF SurfaceInterface::mapToMainSurface(const QPointF &localPoint) const
+{
+    if (subSurface()) {
+        return subSurface()->parentSurface()->mapToMainSurface(localPoint + subSurface()->position());
+    } else {
+        return localPoint;
+    }
+}
+
 QSizeF SurfaceInterface::size() const
 {
     return d->surfaceSize;
