@@ -58,6 +58,7 @@
 #include "wayland/plasmawindowmanagement.h"
 #include "wayland/pointerconstraints_v1.h"
 #include "wayland/pointergestures_v1.h"
+#include "wayland/pointerwarp_v1.h"
 #include "wayland/presentationtime.h"
 #include "wayland/primaryselectiondevicemanager_v1.h"
 #include "wayland/relativepointer_v1.h"
@@ -526,6 +527,7 @@ bool WaylandServer::init()
 
     m_externalBrightness = new ExternalBrightnessV1(m_display, m_display);
     m_alphaModifierManager = new AlphaModifierManagerV1(m_display, m_display);
+    m_pointerWarp = new PointerWarpV1(m_display, m_display);
     return true;
 }
 
@@ -835,6 +837,11 @@ LinuxDrmSyncObjV1Interface *WaylandServer::linuxSyncObj() const
 ExternalBrightnessV1 *WaylandServer::externalBrightness() const
 {
     return m_externalBrightness;
+}
+
+PointerWarpV1 *WaylandServer::pointerWarp() const
+{
+    return m_pointerWarp;
 }
 
 void WaylandServer::setRenderBackend(RenderBackend *backend)
