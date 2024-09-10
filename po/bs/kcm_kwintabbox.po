@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:40+0000\n"
+"POT-Creation-Date: 2024-09-10 00:40+0000\n"
 "PO-Revision-Date: 2014-10-20 19:41+0000\n"
 "Last-Translator: Admir Salkanović <asalkanovi2@etf.unsa.ba>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -46,7 +46,7 @@ msgstr "Alternativa"
 #: main.cpp:72
 #, fuzzy, kde-format
 #| msgid "Get New Window Switcher Layout"
-msgid "Get New Task Switchers…"
+msgid "Get New Task Switcher Styles…"
 msgstr "Nabavite Novi Prozor Switcher Izgled"
 
 #: main.cpp:90

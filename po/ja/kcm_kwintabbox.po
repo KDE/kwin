@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:40+0000\n"
+"POT-Creation-Date: 2024-09-10 00:40+0000\n"
 "PO-Revision-Date: 2024-02-15 12:45+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -42,7 +42,7 @@ msgstr "代替"
 #: main.cpp:72
 #, fuzzy, kde-format
 #| msgid "Get New Task Switchers..."
-msgid "Get New Task Switchers…"
+msgid "Get New Task Switcher Styles…"
 msgstr "新しいタスクスイッチャーを入手..."
 
 #: main.cpp:90

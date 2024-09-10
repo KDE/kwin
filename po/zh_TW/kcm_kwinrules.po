@@ -14,14 +14,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2024-08-25 02:09+0900\n"
+"PO-Revision-Date: 2024-09-10 02:36+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: kcmrules.cpp:228
@@ -45,28 +45,24 @@ msgid "Unimportant"
 msgstr "不重要"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "完全符合"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
-msgstr "字串符合"
+msgstr "子字串符合"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "正則表達式"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
-msgstr "初始化套用"
+msgstr "一開始套用"
 
 #: optionsmodel.cpp:206
 #, kde-format
@@ -79,8 +75,7 @@ msgstr ""
 "不會影響後續變更。"
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "立刻套用"
 
@@ -107,8 +102,7 @@ msgid ""
 msgstr "視窗屬性的值將被記住，且每當視窗建立時，皆會套用上次記住的值。"
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "不影響"
 
@@ -133,8 +127,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "將視窗屬性永遠強制設定為指定值。"
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "暫時強制"
 
@@ -263,14 +256,12 @@ msgid "Maximized vertically"
 msgstr "垂直最大化"
 
 #: rulesmodel.cpp:467
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "虛擬桌面"
 
 #: rulesmodel.cpp:473
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "虛擬桌面"
 
@@ -571,14 +562,12 @@ msgid "Layer"
 msgstr "層級"
 
 #: rulesmodel.cpp:725
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "自適應同步"
 
 #: rulesmodel.cpp:730
-#, fuzzy, kde-format
-#| msgid "Allow Tearing"
+#, kde-format
 msgid "Allow tearing"
 msgstr "允許撕裂"
 
@@ -601,33 +590,29 @@ msgstr ""
 "<nl/><nl/>請考慮將此問題回報給該應用程式的開發者。"
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "所有視窗類型"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "正常視窗"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "對話框視窗"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "工具視窗"
 
 #: rulesmodel.cpp:821
 #, kde-format
 msgid "Dock (panel)"
-msgstr "Dock (panel)"
+msgstr "Dock（面板）"
 
 #: rulesmodel.cpp:822
 #, kde-format
@@ -635,14 +620,12 @@ msgid "Toolbar"
 msgstr "工具列"
 
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
-msgstr "撕下的選單"
+msgstr "脫出式選單"
 
 #: rulesmodel.cpp:824
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "啟動畫面"
 
@@ -653,20 +636,17 @@ msgstr "桌面"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "獨立選單"
 
 #: rulesmodel.cpp:828 rulesmodel.cpp:935
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "螢幕顯示 (OSD)"
 
 #: rulesmodel.cpp:838
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "所有桌面"
 
@@ -677,10 +657,9 @@ msgid "Make the window available on all desktops"
 msgstr "讓視窗顯示在所有桌面上"
 
 #: rulesmodel.cpp:859
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
-msgstr "所有的活動"
+msgstr "所有活動"
 
 #: rulesmodel.cpp:861
 #, kde-format
@@ -694,16 +673,14 @@ msgid "Default"
 msgstr "預設"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "無特定放置"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
-msgstr "最小化重疊"
+msgstr "儘量降低重疊"
 
 #: rulesmodel.cpp:885
 #, kde-format
@@ -721,20 +698,17 @@ msgid "Random"
 msgstr "隨機"
 
 #: rulesmodel.cpp:888
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
-msgstr "於左上角"
+msgstr "在左上角"
 
 #: rulesmodel.cpp:889
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
-msgstr "在滑鼠下"
+msgstr "游標下"
 
 #: rulesmodel.cpp:890
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "在主視窗上"
 
@@ -784,8 +758,7 @@ msgid "Popup"
 msgstr "彈出視窗"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "緊急通知"
 

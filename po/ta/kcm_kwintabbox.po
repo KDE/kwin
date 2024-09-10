@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:40+0000\n"
+"POT-Creation-Date: 2024-09-10 00:40+0000\n"
 "PO-Revision-Date: 2024-02-18 17:42+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -41,7 +41,7 @@ msgstr "இன்னொன்று"
 #: main.cpp:72
 #, fuzzy, kde-format
 #| msgid "Get New Task Switchers..."
-msgid "Get New Task Switchers…"
+msgid "Get New Task Switcher Styles…"
 msgstr "புதிய சாளர மாற்றிகளை பெறுங்கள்…"
 
 #: main.cpp:90

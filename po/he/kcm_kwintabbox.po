@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:40+0000\n"
+"POT-Creation-Date: 2024-09-10 00:40+0000\n"
 "PO-Revision-Date: 2024-03-01 11:08+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -46,8 +46,9 @@ msgid "Alternative"
 msgstr "חלופי"
 
 #: main.cpp:72
-#, kde-format
-msgid "Get New Task Switchers…"
+#, fuzzy, kde-format
+#| msgid "Get New Task Switchers…"
+msgid "Get New Task Switcher Styles…"
 msgstr "הורדת מחליפי משימות חדשים…"
 
 #: main.cpp:90
