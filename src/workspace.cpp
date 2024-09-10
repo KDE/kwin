@@ -51,6 +51,7 @@
 #include "placeholderinputeventfilter.h"
 #include "placeholderoutput.h"
 #include "placementtracker.h"
+#include "pointer_input.h"
 #include "scene/workspacescene.h"
 #include "tabletmodemanager.h"
 #include "tiles/tilemanager.h"
@@ -59,6 +60,7 @@
 #include "utils/orientationsensor.h"
 #include "virtualdesktops.h"
 #include "wayland/externalbrightness_v1.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #if KWIN_BUILD_X11
 #include "atoms.h"
