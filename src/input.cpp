@@ -1207,6 +1207,10 @@ public:
     InternalWindowEventFilter()
         : InputEventFilter(InputFilterOrder::InternalWindow)
     {
+        m_touchDevice = std::make_unique<QPointingDevice>(QLatin1String("some touchscreen"), 0, QInputDevice::DeviceType::TouchScreen,
+                                                          QPointingDevice::PointerType::Finger, QInputDevice::Capability::Position,
+                                                          10, 0, kwinApp()->session()->seat(), QPointingDeviceUniqueId());
+        QWindowSystemInterface::registerInputDevice(m_touchDevice.get());
     }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
@@ -1308,19 +1312,23 @@ public:
             return false;
         }
         touch->setInternalPressId(id);
-        // Qt's touch event API is rather complex, let's do fake mouse events instead
+
+        const qreal contactAreaWidth = 8;
+        const qreal contactAreaHeight = 8;
+
+        auto &touchPoint = m_touchPoints.emplaceBack(QWindowSystemInterface::TouchPoint{});
+        touchPoint.id = id;
+        touchPoint.area = QRectF(pos.x() - contactAreaWidth / 2, pos.y() - contactAreaHeight / 2, contactAreaWidth, contactAreaHeight);
+        touchPoint.state = QEventPoint::State::Pressed;
+        touchPoint.pressure = 1;
+
         QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
-        m_lastGlobalTouchPos = pos;
-        m_lastLocalTouchPos = pos - internal->position();
+        QWindowSystemInterface::handleTouchEvent(internal, m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
 
-        QEnterEvent enterEvent(m_lastLocalTouchPos, m_lastLocalTouchPos, pos);
-        QCoreApplication::sendEvent(internal, &enterEvent);
-
-        QMouseEvent e(QEvent::MouseButtonPress, m_lastLocalTouchPos, pos, Qt::LeftButton, Qt::LeftButton, input()->keyboardModifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(internal, &e);
+        touchPoint.state = QEventPoint::State::Stationary;
         return true;
     }
+
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
         auto touch = input()->touch();
@@ -1335,12 +1343,21 @@ public:
             // ignore, but filter out
             return true;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
-        m_lastGlobalTouchPos = pos;
-        m_lastLocalTouchPos = pos - QPointF(internal->x(), internal->y());
 
-        QMouseEvent e(QEvent::MouseMove, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::LeftButton, input()->keyboardModifiers());
-        QCoreApplication::instance()->sendEvent(internal, &e);
+        auto it = std::ranges::find_if(m_touchPoints, [id](const auto &touchPoint) {
+            return touchPoint.id == id;
+        });
+        if (it == m_touchPoints.end()) {
+            return false;
+        }
+
+        it->area.moveCenter(pos);
+        it->state = QEventPoint::State::Updated;
+
+        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
+        QWindowSystemInterface::handleTouchEvent(internal, m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
+
+        it->state = QEventPoint::State::Stationary;
         return true;
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
@@ -1358,18 +1375,22 @@ public:
         if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return removed;
         }
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
-        // send mouse up
-        QMouseEvent e(QEvent::MouseButtonRelease, m_lastLocalTouchPos, m_lastGlobalTouchPos, Qt::LeftButton, Qt::MouseButtons(), input()->keyboardModifiers());
-        e.setAccepted(false);
-        QCoreApplication::sendEvent(internal, &e);
-
-        QEvent leaveEvent(QEvent::Leave);
-        QCoreApplication::sendEvent(internal, &leaveEvent);
-
-        m_lastGlobalTouchPos = QPointF();
-        m_lastLocalTouchPos = QPointF();
         input()->touch()->setInternalPressId(-1);
+
+        auto it = std::ranges::find_if(m_touchPoints, [id](const auto &touchPoint) {
+            return touchPoint.id == id;
+        });
+        if (it == m_touchPoints.end()) {
+            return false;
+        }
+
+        it->pressure = 0;
+        it->state = QEventPoint::State::Released;
+
+        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
+        QWindowSystemInterface::handleTouchEvent(internal, m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
+
+        m_touchPoints.erase(it);
         return true;
     }
     bool tabletToolEvent(TabletEvent *event) override
@@ -1405,9 +1426,9 @@ public:
     }
 
 private:
+    std::unique_ptr<QPointingDevice> m_touchDevice;
+    QList<QWindowSystemInterface::TouchPoint> m_touchPoints;
     QSet<qint32> m_pressedIds;
-    QPointF m_lastGlobalTouchPos;
-    QPointF m_lastLocalTouchPos;
 };
 
 class MouseWheelAccumulator
