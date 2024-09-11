@@ -85,6 +85,9 @@ Q_SIGNALS:
     void wheel();
     void keyPressed();
     void keyReleased();
+    void touchDown(int id, const QPointF &pos);
+    void touchUp(int id);
+    void touchMotion(int id, const QPointF &pos);
 
 protected:
     void paintEvent(QPaintEvent *event) override;
@@ -95,6 +98,7 @@ protected:
     void wheelEvent(QWheelEvent *event) override;
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
+    void touchEvent(QTouchEvent *event) override;
 
 private:
     QPoint m_latestGlobalMousePos;
@@ -159,6 +163,28 @@ void HelperWindow::keyPressEvent(QKeyEvent *event)
 void HelperWindow::keyReleaseEvent(QKeyEvent *event)
 {
     Q_EMIT keyReleased();
+}
+
+void HelperWindow::touchEvent(QTouchEvent *event)
+{
+    for (int i = 0; i < event->pointCount(); ++i) {
+        QEventPoint &point = event->point(i);
+
+        switch (point.state()) {
+        case QEventPoint::Unknown:
+        case QEventPoint::Stationary:
+            break;
+        case QEventPoint::Pressed:
+            Q_EMIT touchDown(point.id(), point.position());
+            break;
+        case QEventPoint::Updated:
+            Q_EMIT touchMotion(point.id(), point.position());
+            break;
+        case QEventPoint::Released:
+            Q_EMIT touchUp(point.id());
+            break;
+        }
+    }
 }
 
 void InternalWindowTest::initTestCase()
@@ -408,56 +434,24 @@ void InternalWindowTest::testTouch()
     win.show();
     QTRY_COMPARE(windowAddedSpy.count(), 1);
 
-    QSignalSpy pressSpy(&win, &HelperWindow::mousePressed);
-    QSignalSpy releaseSpy(&win, &HelperWindow::mouseReleased);
-    QSignalSpy moveSpy(&win, &HelperWindow::mouseMoved);
+    QSignalSpy touchDownSpy(&win, &HelperWindow::touchDown);
+    QSignalSpy touchUpSpy(&win, &HelperWindow::touchUp);
+    QSignalSpy touchMotionSpy(&win, &HelperWindow::touchMotion);
 
     quint32 timestamp = 1;
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
-    Test::touchDown(0, QPointF(50, 50), timestamp++);
-    QCOMPARE(pressSpy.count(), 1);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
+    Test::touchDown(1, QPointF(50, 50), timestamp++);
+    QCOMPARE(touchDownSpy.count(), 1);
+    QCOMPARE(touchDownSpy.last().at(0).toInt(), 1);
+    QCOMPARE(touchDownSpy.last().at(1).toPointF(), QPointF(50, 50));
 
-    // further touch down should not trigger
-    Test::touchDown(1, QPointF(75, 75), timestamp++);
-    QCOMPARE(pressSpy.count(), 1);
+    Test::touchMotion(1, QPointF(90, 80), timestamp++);
+    QCOMPARE(touchMotionSpy.count(), 1);
+    QCOMPARE(touchMotionSpy.last().at(0).toInt(), 1);
+    QCOMPARE(touchMotionSpy.last().at(1).toPointF(), QPointF(90, 80));
+
     Test::touchUp(1, timestamp++);
-    QCOMPARE(releaseSpy.count(), 0);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
-
-    // another press
-    Test::touchDown(1, QPointF(10, 10), timestamp++);
-    QCOMPARE(pressSpy.count(), 1);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(50, 50));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
-
-    // simulate the move
-    QCOMPARE(moveSpy.count(), 0);
-    Test::touchMotion(0, QPointF(80, 90), timestamp++);
-    QCOMPARE(moveSpy.count(), 1);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
-
-    // move on other ID should not do anything
-    Test::touchMotion(1, QPointF(20, 30), timestamp++);
-    QCOMPARE(moveSpy.count(), 1);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons(Qt::LeftButton));
-
-    // now up our main point
-    Test::touchUp(0, timestamp++);
-    QCOMPARE(releaseSpy.count(), 1);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
-
-    // and up the additional point
-    Test::touchUp(1, timestamp++);
-    QCOMPARE(releaseSpy.count(), 1);
-    QCOMPARE(moveSpy.count(), 1);
-    QCOMPARE(win.latestGlobalMousePos(), QPoint(80, 90));
-    QCOMPARE(win.pressedButtons(), Qt::MouseButtons());
+    QCOMPARE(touchUpSpy.count(), 1);
+    QCOMPARE(touchUpSpy.last().at(0).toInt(), 1);
 }
 
 void InternalWindowTest::testOpacity()
