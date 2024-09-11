@@ -136,8 +136,8 @@ ExpoCell {
             Drag.supportedActions: Qt.MoveAction
             Drag.source: thumb.window
             Drag.hotSpot: Qt.point(
-                thumb.activeDragHandler.centroid.pressPosition.x * thumb.targetScale,
-                thumb.activeDragHandler.centroid.pressPosition.y * thumb.targetScale)
+                thumb.activeDragHandler.centroid.pressPosition.x,
+                thumb.activeDragHandler.centroid.pressPosition.y)
             Drag.keys: ["kwin-window"]
 
             onXChanged: effect.checkItemDraggedOutOfScreen(thumbSource)
