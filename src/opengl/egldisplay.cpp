@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "egldisplay.h"
+#include "core/drmdevice.h"
 #include "core/graphicsbuffer.h"
 #include "opengl/eglutils_p.h"
 #include "opengl/glutils.h"
@@ -73,11 +74,23 @@ std::unique_ptr<EglDisplay> EglDisplay::create(::EGLDisplay display, bool owning
     return std::make_unique<EglDisplay>(display, extensions, owning);
 }
 
+static std::optional<dev_t> devIdForFileName(const QString &path)
+{
+    auto device = DrmDevice::open(path);
+    if (device) {
+        return device->deviceId();
+    } else {
+        qCWarning(KWIN_OPENGL, "couldn't find dev node for drm device %s", qPrintable(path));
+        return std::nullopt;
+    }
+}
+
 EglDisplay::EglDisplay(::EGLDisplay display, const QList<QByteArray> &extensions, bool owning)
     : m_handle(display)
     , m_extensions(extensions)
     , m_owning(owning)
     , m_renderNode(determineRenderNode())
+    , m_renderDevNode(devIdForFileName(m_renderNode))
     , m_supportsBufferAge(extensions.contains(QByteArrayLiteral("EGL_EXT_buffer_age")) && qgetenv("KWIN_USE_BUFFER_AGE") != "0")
     , m_supportsNativeFence(extensions.contains(QByteArrayLiteral("EGL_ANDROID_native_fence_sync")))
 {
@@ -332,6 +345,11 @@ QString EglDisplay::determineRenderNode() const
         }
     }
     return QString();
+}
+
+std::optional<dev_t> EglDisplay::renderDevNode() const
+{
+    return m_renderDevNode;
 }
 
 EGLImageKHR EglDisplay::createImage(EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLint *attrib_list) const

@@ -174,17 +174,17 @@ void AbstractEglBackend::initWayland()
         };
 
         m_tranches.append({
-            .device = scanoutDevice->deviceId(),
+            .device = m_display->renderDevNode().value_or(scanoutDevice->deviceId()),
             .flags = {},
             .formatTable = filterFormats(10, false),
         });
         m_tranches.append({
-            .device = scanoutDevice->deviceId(),
+            .device = m_display->renderDevNode().value_or(scanoutDevice->deviceId()),
             .flags = {},
             .formatTable = filterFormats(8, false),
         });
         m_tranches.append({
-            .device = scanoutDevice->deviceId(),
+            .device = m_display->renderDevNode().value_or(scanoutDevice->deviceId()),
             .flags = {},
             .formatTable = includeShaderConversions(filterFormats({}, true)),
         });

@@ -40,6 +40,7 @@ public:
     bool hasExtension(const QByteArray &name) const;
 
     QString renderNode() const;
+    std::optional<dev_t> renderDevNode() const;
 
     bool supportsBufferAge() const;
     bool supportsNativeFence() const;
@@ -65,6 +66,7 @@ private:
     const QList<QByteArray> m_extensions;
     const bool m_owning;
     const QString m_renderNode;
+    const std::optional<dev_t> m_renderDevNode;
 
     const bool m_supportsBufferAge;
     const bool m_supportsNativeFence;
