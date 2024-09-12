@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-10 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 18:38+0100\n"
+"PO-Revision-Date: 2024-09-11 01:37+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Language: Spanish\n"
 "X-Poedit-Country: SPAIN\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.08.0\n"
 
 #: layoutpreview.cpp:127
 #, kde-format
@@ -44,10 +44,9 @@ msgid "Alternative"
 msgstr "Alternativo"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Obtener nuevos selectores de tareas..."
+msgstr "Obtener nuevos estilos de selectores de tareas..."
 
 #: main.cpp:90
 #, kde-format
