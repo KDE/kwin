@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "colorpipeline.h"
+#include "core/colorspace.h"
 
 #include <numbers>
 #include <qlogging.h>
@@ -238,10 +239,10 @@ void ColorPipeline::addMatrix(const QMatrix4x4 &mat, const ValueRange &output)
 }
 
 static const QMatrix4x4 s_toICtCp = QMatrix4x4(
-    2048.0 / 4096.0,   2048.0 / 4096.0,   0.0,             0.0,
-    6610.0 / 4096.0,  -13613.0 / 4096.0,  7003.0 / 4096.0, 0.0,
-    17933.0 / 4096.0, -17390.0 / 4096.0, -543.0 / 4096.0,  0.0,
-    0.0,               0.0,               0.0,             1.0).transposed();
+    2048.0 / 4096.0, 2048.0 / 4096.0, 0.0, 0.0,
+    6610.0 / 4096.0, -13613.0 / 4096.0, 7003.0 / 4096.0, 0.0,
+    17933.0 / 4096.0, -17390.0 / 4096.0, -543.0 / 4096.0, 0.0,
+    0.0, 0.0, 0.0, 1.0);
 static const QMatrix4x4 s_fromICtCp = s_toICtCp.inverted();
 
 void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, double referenceLuminance, double maxInputLuminance, double maxOutputLuminance)
