@@ -7,6 +7,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "drm_colorop.h"
+#include "core/colorpipeline.h"
 #include "drm_blob.h"
 #include "drm_commit.h"
 #include "drm_object.h"
@@ -125,7 +126,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
     }
 
     if (!findColorPipelineAssignments(assignments, currentOp, pipeline.ops, inputScale)) {
-        // TODO now that searching for the pipeline is a bit more expensive, maybe cache this result too?
+        // TODO now that searching for the pipeline is a bit more expensive, maybe cache this failure result too?
         return false;
     }
 
@@ -136,12 +137,17 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         const auto it = assignments.find(currentOp);
         if (it != assignments.end()) {
             const auto &[op, program] = *it;
+            ColorPipeline fmt;
+            fmt.ops = program.ops;
+            qWarning() << "programming operations" << fmt << "with i" << program.inputScale << "o" << program.outputScale << "into" << currentOp;
             currentOp->program(m_cache.get(), program.ops, program.inputScale, program.outputScale);
         } else {
+            qWarning() << "bypassing" << currentOp;
             currentOp->bypass(m_cache.get());
         }
         currentOp = currentOp->next();
     }
+    qWarning() << "total pipeline:" << pipeline;
     commit->merge(m_cache.get());
     m_cachedPipeline = pipeline;
     return true;
