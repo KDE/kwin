@@ -13,6 +13,7 @@
 #include "screenshotlogging.h"
 #include "utils/filedescriptor.h"
 #include "utils/serviceutils.h"
+#include "window.h"
 
 #include <KLocalizedString>
 
@@ -169,7 +170,7 @@ class ScreenShotSourceScreen2 : public ScreenShotSource2
     Q_OBJECT
 
 public:
-    ScreenShotSourceScreen2(ScreenShotEffect *effect, Output *screen, ScreenShotFlags flags);
+    ScreenShotSourceScreen2(ScreenShotEffect *effect, Output *screen, ScreenShotFlags flags, const ColorDescription &colorspace);
 
     QVariantMap attributes() const override;
 
@@ -182,7 +183,7 @@ class ScreenShotSourceArea2 : public ScreenShotSource2
     Q_OBJECT
 
 public:
-    ScreenShotSourceArea2(ScreenShotEffect *effect, const QRect &area, ScreenShotFlags flags);
+    ScreenShotSourceArea2(ScreenShotEffect *effect, const QRect &area, ScreenShotFlags flags, const ColorDescription &colorspace);
 };
 
 class ScreenShotSourceWindow2 : public ScreenShotSource2
@@ -190,7 +191,7 @@ class ScreenShotSourceWindow2 : public ScreenShotSource2
     Q_OBJECT
 
 public:
-    ScreenShotSourceWindow2(ScreenShotEffect *effect, EffectWindow *window, ScreenShotFlags flags);
+    ScreenShotSourceWindow2(ScreenShotEffect *effect, EffectWindow *window, ScreenShotFlags flags, const ColorDescription &colorspace);
 
     QVariantMap attributes() const override;
 
@@ -239,8 +240,9 @@ void ScreenShotSource2::marshal(ScreenShotSinkPipe2 *sink)
 
 ScreenShotSourceScreen2::ScreenShotSourceScreen2(ScreenShotEffect *effect,
                                                  Output *screen,
-                                                 ScreenShotFlags flags)
-    : ScreenShotSource2(effect->scheduleScreenShot(screen, flags))
+                                                 ScreenShotFlags flags,
+                                                 const ColorDescription &colorspace)
+    : ScreenShotSource2(effect->scheduleScreenShot(screen, flags, colorspace))
     , m_name(screen->name())
 {
 }
@@ -254,15 +256,17 @@ QVariantMap ScreenShotSourceScreen2::attributes() const
 
 ScreenShotSourceArea2::ScreenShotSourceArea2(ScreenShotEffect *effect,
                                              const QRect &area,
-                                             ScreenShotFlags flags)
-    : ScreenShotSource2(effect->scheduleScreenShot(area, flags))
+                                             ScreenShotFlags flags,
+                                             const ColorDescription &colorspace)
+    : ScreenShotSource2(effect->scheduleScreenShot(area, flags, colorspace))
 {
 }
 
 ScreenShotSourceWindow2::ScreenShotSourceWindow2(ScreenShotEffect *effect,
                                                  EffectWindow *window,
-                                                 ScreenShotFlags flags)
-    : ScreenShotSource2(effect->scheduleScreenShot(window, flags))
+                                                 ScreenShotFlags flags,
+                                                 const ColorDescription &colorspace)
+    : ScreenShotSource2(effect->scheduleScreenShot(window, flags, colorspace))
     , m_internalId(window->internalId())
 {
 }
@@ -325,7 +329,7 @@ ScreenShotDBusInterface2::~ScreenShotDBusInterface2()
 
 int ScreenShotDBusInterface2::version() const
 {
-    return 4;
+    return 5;
 }
 
 bool ScreenShotDBusInterface2::checkPermissions() const
@@ -354,6 +358,21 @@ bool ScreenShotDBusInterface2::checkPermissions() const
     return true;
 }
 
+static ColorDescription chooseColorDescription(const QVariantMap &options)
+{
+    const auto supported = options.find(QStringLiteral("supported-colorspaces"));
+    if (supported == options.end()) {
+        return ColorDescription::sRGB;
+    }
+    const auto supportedColorspaceNames = supported->toStringList();
+    // for simplicity, just choose the biggest colorspace in the list for now
+    if (supportedColorspaceNames.contains("BT2020-PQ")) {
+        return ColorDescription(Colorimetry::BT2020, TransferFunction(TransferFunction::PerceptualQuantizer));
+    } else {
+        return ColorDescription::sRGB;
+    }
+}
+
 QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &options,
                                                           QDBusUnixFileDescriptor pipe)
 {
@@ -373,7 +392,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveWindow(const QVariantMap &opt
         return QVariantMap();
     }
 
-    takeScreenShot(window, screenShotFlagsFromOptions(options),
+    takeScreenShot(window, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                    new ScreenShotSinkPipe2(fileDescriptor, message()));
 
     setDelayedReply(true);
@@ -409,7 +428,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWindow(const QString &handle,
         return QVariantMap();
     }
 
-    takeScreenShot(window, screenShotFlagsFromOptions(options),
+    takeScreenShot(window, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                    new ScreenShotSinkPipe2(fileDescriptor, message()));
 
     setDelayedReply(true);
@@ -436,7 +455,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureArea(int x, int y, int width, int h
         return QVariantMap();
     }
 
-    takeScreenShot(area, screenShotFlagsFromOptions(options),
+    takeScreenShot(area, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                    new ScreenShotSinkPipe2(fileDescriptor, message()));
 
     setDelayedReply(true);
@@ -463,7 +482,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureScreen(const QString &name,
         return QVariantMap();
     }
 
-    takeScreenShot(screen, screenShotFlagsFromOptions(options),
+    takeScreenShot(screen, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                    new ScreenShotSinkPipe2(fileDescriptor, message()));
 
     setDelayedReply(true);
@@ -489,7 +508,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureActiveScreen(const QVariantMap &opt
         return QVariantMap();
     }
 
-    takeScreenShot(screen, screenShotFlagsFromOptions(options),
+    takeScreenShot(screen, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                    new ScreenShotSinkPipe2(fileDescriptor, message()));
 
     setDelayedReply(true);
@@ -518,7 +537,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                 QDBusConnection bus = QDBusConnection::sessionBus();
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
-                takeScreenShot(window, screenShotFlagsFromOptions(options),
+                takeScreenShot(window, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
             }
         });
@@ -536,7 +555,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureInteractive(uint kind,
                 bus.send(replyMessage.createErrorReply(s_errorCancelled, s_errorCancelledMessage));
             } else {
                 Output *screen = effects->screenAt(point.toPoint());
-                takeScreenShot(screen, screenShotFlagsFromOptions(options),
+                takeScreenShot(screen, screenShotFlagsFromOptions(options), chooseColorDescription(options),
                                new ScreenShotSinkPipe2(fileDescriptor, replyMessage));
             }
         });
@@ -561,7 +580,7 @@ QVariantMap ScreenShotDBusInterface2::CaptureWorkspace(const QVariantMap &option
         return QVariantMap();
     }
 
-    takeScreenShot(effects->virtualScreenGeometry(), screenShotFlagsFromOptions(options),
+    takeScreenShot(effects->virtualScreenGeometry(), screenShotFlagsFromOptions(options), ColorDescription::sRGB,
                    new ScreenShotSinkPipe2(fileDescriptor, message()));
 
     setDelayedReply(true);
@@ -585,22 +604,22 @@ void ScreenShotDBusInterface2::bind(ScreenShotSinkPipe2 *sink, ScreenShotSource2
     });
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(Output *screen, ScreenShotFlags flags, const ColorDescription &colorspace,
                                               ScreenShotSinkPipe2 *sink)
 {
-    bind(sink, new ScreenShotSourceScreen2(m_effect, screen, flags));
+    bind(sink, new ScreenShotSourceScreen2(m_effect, screen, flags, colorspace));
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(const QRect &area, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(const QRect &area, ScreenShotFlags flags, const ColorDescription &colorspace,
                                               ScreenShotSinkPipe2 *sink)
 {
-    bind(sink, new ScreenShotSourceArea2(m_effect, area, flags));
+    bind(sink, new ScreenShotSourceArea2(m_effect, area, flags, colorspace));
 }
 
-void ScreenShotDBusInterface2::takeScreenShot(EffectWindow *window, ScreenShotFlags flags,
+void ScreenShotDBusInterface2::takeScreenShot(EffectWindow *window, ScreenShotFlags flags, const ColorDescription &colorspace,
                                               ScreenShotSinkPipe2 *sink)
 {
-    bind(sink, new ScreenShotSourceWindow2(m_effect, window, flags));
+    bind(sink, new ScreenShotSourceWindow2(m_effect, window, flags, colorspace));
 }
 
 } // namespace KWin

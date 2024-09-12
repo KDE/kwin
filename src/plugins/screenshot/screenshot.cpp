@@ -29,6 +29,7 @@ struct ScreenShotWindowData
     QPromise<QImage> promise;
     ScreenShotFlags flags;
     EffectWindow *window = nullptr;
+    ColorDescription colorspace = ColorDescription::sRGB;
 };
 
 struct ScreenShotAreaData
@@ -38,6 +39,7 @@ struct ScreenShotAreaData
     QRect area;
     QImage result;
     QList<Output *> screens;
+    ColorDescription colorspace = ColorDescription::sRGB;
 };
 
 struct ScreenShotScreenData
@@ -45,6 +47,7 @@ struct ScreenShotScreenData
     QPromise<QImage> promise;
     ScreenShotFlags flags;
     Output *screen = nullptr;
+    ColorDescription colorspace = ColorDescription::sRGB;
 };
 
 static void convertFromGLImage(QImage &img, int w, int h, const OutputTransform &renderTargetTransformation)
@@ -109,7 +112,7 @@ ScreenShotEffect::~ScreenShotEffect()
     cancelScreenScreenShots();
 }
 
-QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotFlags flags)
+QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotFlags flags, const ColorDescription &colorspace)
 {
     for (const ScreenShotScreenData &data : m_screenScreenShots) {
         if (data.screen == screen && data.flags == flags) {
@@ -120,6 +123,7 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotF
     ScreenShotScreenData data;
     data.screen = screen;
     data.flags = flags;
+    data.colorspace = colorspace;
 
     data.promise.start();
     QFuture<QImage> future = data.promise.future();
@@ -130,7 +134,7 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(Output *screen, ScreenShotF
     return future;
 }
 
-QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenShotFlags flags)
+QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenShotFlags flags, const ColorDescription &colorspace)
 {
     for (const ScreenShotAreaData &data : m_areaScreenShots) {
         if (data.area == area && data.flags == flags) {
@@ -141,6 +145,7 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenSh
     ScreenShotAreaData data;
     data.area = area;
     data.flags = flags;
+    data.colorspace = colorspace;
 
     const QList<Output *> screens = effects->screens();
     for (Output *screen : screens) {
@@ -171,7 +176,7 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(const QRect &area, ScreenSh
     return future;
 }
 
-QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags)
+QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags, const ColorDescription &colorspace)
 {
     for (const ScreenShotWindowData &data : m_windowScreenShots) {
         if (data.window == window && data.flags == flags) {
@@ -182,6 +187,7 @@ QFuture<QImage> ScreenShotEffect::scheduleScreenShot(EffectWindow *window, Scree
     ScreenShotWindowData data;
     data.window = window;
     data.flags = flags;
+    data.colorspace = colorspace;
 
     data.promise.start();
     QFuture<QImage> future = data.promise.future();
@@ -268,7 +274,7 @@ void ScreenShotEffect::takeScreenShot(ScreenShotWindowData *screenshot)
         int mask = PAINT_WINDOW_TRANSFORMED | PAINT_WINDOW_TRANSLUCENT;
         QImage img;
         if (const auto context = effects->openglContext()) {
-            RenderTarget renderTarget(target.get());
+            RenderTarget renderTarget(target.get(), screenshot->colorspace);
             RenderViewport viewport(geometry, devicePixelRatio, renderTarget);
             GLFramebuffer::pushFramebuffer(target.get());
             glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -308,7 +314,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
         sourceDevicePixelRatio = m_paintedScreen->scale();
     }
 
-    const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio);
+    const QImage snapshot = blitScreenshot(renderTarget, viewport, sourceRect, sourceDevicePixelRatio, screenshot->colorspace);
     const QSize nativeAreaSize = snapToPixelGrid(scaledRect(screenshot->area, screenshot->result.devicePixelRatio())).size();
     const QRect nativeArea(screenshot->area.topLeft(), nativeAreaSize);
 
@@ -341,7 +347,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
         devicePixelRatio = screenshot->screen->scale();
     }
 
-    QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->screen->geometry(), devicePixelRatio);
+    QImage snapshot = blitScreenshot(renderTarget, viewport, screenshot->screen->geometry(), devicePixelRatio, screenshot->colorspace);
     if (screenshot->flags & ScreenShotIncludeCursor) {
         const int xOffset = screenshot->screen->geometry().x();
         const int yOffset = screenshot->screen->geometry().y();
@@ -354,7 +360,7 @@ bool ScreenShotEffect::takeScreenShot(const RenderTarget &renderTarget, const Re
     return true;
 }
 
-QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio) const
+QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio, const ColorDescription &colorspace) const
 {
     QImage image;
 
@@ -374,7 +380,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
         if (renderTarget.texture()) {
             GLFramebuffer::pushFramebuffer(&target);
             ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
-            binder.shader()->setColorspaceUniforms(renderTarget.colorDescription(), ColorDescription::sRGB, RenderingIntent::RelativeColorimetricWithBPC);
+            binder.shader()->setColorspaceUniforms(renderTarget.colorDescription(), colorspace, RenderingIntent::RelativeColorimetricWithBPC);
             QMatrix4x4 projectionMatrix;
             projectionMatrix.scale(1, -1);
             projectionMatrix *= renderTarget.transform().toMatrix();
@@ -383,6 +389,7 @@ QImage ScreenShotEffect::blitScreenshot(const RenderTarget &renderTarget, const 
             binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, projectionMatrix);
             renderTarget.texture()->render(viewport.mapToRenderTargetTexture(geometry), infiniteRegion(), nativeSize);
         } else {
+            // this path is only used on X11, ignoring colorspace is acceptable here
             target.blitFromFramebuffer(viewport.mapToRenderTarget(geometry));
             GLFramebuffer::pushFramebuffer(&target);
         }

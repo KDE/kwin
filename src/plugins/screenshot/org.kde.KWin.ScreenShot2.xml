@@ -42,6 +42,7 @@
                                     Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -60,6 +61,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
         -->
         <method name="CaptureWindow">
             <arg name="handle" type="s" direction="in" />
@@ -92,6 +96,7 @@
                                     Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -110,6 +115,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
         -->
         <method name="CaptureActiveWindow">
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />
@@ -139,6 +147,7 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -155,6 +164,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
         -->
         <method name="CaptureArea">
             <arg name="x" type="i" direction="in" />
@@ -185,6 +197,7 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -203,6 +216,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
         -->
         <method name="CaptureScreen">
             <arg name="name" type="s" direction="in" />
@@ -231,6 +247,7 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -249,6 +266,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
         -->
         <method name="CaptureActiveScreen">
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />
@@ -276,6 +296,7 @@
                                     Defaults to true
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -292,6 +313,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
 
             The following results get returned when taking a window screenshot:
 
@@ -330,6 +354,7 @@
                                     Defaults to false
             * "native-resolution" (b): Whether the screenshot should be in
                                        native size. Defaults to false
+            * "supported-colorspaces" (as): can be sRGB or BT2020-PQ
 
             The following results get returned via the @results vardict:
 
@@ -346,6 +371,9 @@
             * "scale" (d): The ratio between the native size and the logical
                            size of the contents, corresponds to QImage::devicePixelRatio().
                            Available since version 4.
+            * "colorspace" (s): the colorspace of the window. Has the same possible values
+                                as "supported-colorspaces".
+                                Available since version 5
         -->
         <method name="CaptureWorkspace">
             <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap" />

@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include "core/colorspace.h"
 #include "effect/effect.h"
 
 #include <QFuture>
@@ -56,20 +57,20 @@ public:
      * the image data. If the screen is removed before the screenshot is taken, the future will
      * be cancelled.
      */
-    QFuture<QImage> scheduleScreenShot(Output *screen, ScreenShotFlags flags = {});
+    QFuture<QImage> scheduleScreenShot(Output *screen, ScreenShotFlags flags, const ColorDescription &colorspace);
 
     /**
      * Schedules a screenshot of the given @a area. The returned QFuture can be used to query the
      * image data.
      */
-    QFuture<QImage> scheduleScreenShot(const QRect &area, ScreenShotFlags flags = {});
+    QFuture<QImage> scheduleScreenShot(const QRect &area, ScreenShotFlags flags, const ColorDescription &colorspace);
 
     /**
      * Schedules a screenshot of the given @a window. The returned QFuture can be used to query
      * the image data. If the window is removed before the screenshot is taken, the future will
      * be cancelled.
      */
-    QFuture<QImage> scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags = {});
+    QFuture<QImage> scheduleScreenShot(EffectWindow *window, ScreenShotFlags flags, const ColorDescription &colorspace);
 
     void paintScreen(const RenderTarget &renderTarget, const RenderViewport &viewport, int mask, const QRegion &region, Output *screen) override;
     bool isActive() const override;
@@ -92,7 +93,7 @@ private:
     void cancelScreenScreenShots();
 
     void grabPointerImage(QImage &snapshot, int xOffset, int yOffset) const;
-    QImage blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio = 1.0) const;
+    QImage blitScreenshot(const RenderTarget &renderTarget, const RenderViewport &viewport, const QRect &geometry, qreal devicePixelRatio, const ColorDescription &colorspace) const;
 
     std::vector<ScreenShotWindowData> m_windowScreenShots;
     std::vector<ScreenShotAreaData> m_areaScreenShots;
