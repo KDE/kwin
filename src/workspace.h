@@ -267,10 +267,6 @@ public:
 public:
     QPoint cascadeOffset(const QRectF &area) const;
 
-private:
-    QTimer *m_quickTileCombineTimer;
-    QuickTileMode m_lastTilingMode;
-
     //-------------------------------------------------
     // Unsorted
 

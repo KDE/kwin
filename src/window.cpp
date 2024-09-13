@@ -3451,46 +3451,84 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
     }
     QPointF tileAtPoint = moveResizeGeometry().center();
     if (mode != QuickTileFlag::None) {
-        // If trying to tile to the side that the window is already tiled to move the window to the next
-        // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
         const QuickTileMode oldMode = requestedQuickTileMode();
-        if (oldMode == mode) {
-            Output *currentOutput = moveResizeOutput();
-            Output *nextOutput = currentOutput;
-            Output *candidateOutput = currentOutput;
-            if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
-                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionWest);
-            } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
-                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionEast);
-            }
-            bool shiftHorizontal = candidateOutput != nextOutput;
-            nextOutput = candidateOutput;
-            if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Top)) {
-                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionNorth);
-            } else if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Bottom)) {
-                candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionSouth);
-            }
-            bool shiftVertical = candidateOutput != nextOutput;
-            nextOutput = candidateOutput;
-
-            if (nextOutput == currentOutput) {
-                mode = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
-            } else {
-                // Move to other screen
-                tileAtPoint = nextOutput->geometry().center();
-
-                // Swap sides
-                if (shiftHorizontal) {
-                    mode = (~mode & QuickTileFlag::Horizontal) | (mode & QuickTileFlag::Vertical);
-                }
-                if (shiftVertical) {
-                    mode = (~mode & QuickTileFlag::Vertical) | (mode & QuickTileFlag::Horizontal);
-                }
-            }
-        } else if (oldMode == QuickTileMode(QuickTileFlag::None) && requestedMaximizeMode() == MaximizeMode::MaximizeRestore) {
+        if (oldMode == QuickTileMode(QuickTileFlag::None) && requestedMaximizeMode() == MaximizeMode::MaximizeRestore) {
             // Not coming out of an existing tile, not shifting monitors, we're setting a brand new tile.
             // Store geometry first, so we can go out of this tile later.
             setGeometryRestore(quickTileGeometryRestore());
+        } else {
+            QuickTileMode combined = oldMode;
+
+            if (mode & QuickTileFlag::Left) {
+                if (oldMode & QuickTileFlag::Right) {
+                    combined.setFlag(QuickTileFlag::Right, false);
+                } else {
+                    combined.setFlag(QuickTileFlag::Left);
+                }
+            }
+
+            if (mode & QuickTileFlag::Right) {
+                if (oldMode & QuickTileFlag::Left) {
+                    combined.setFlag(QuickTileFlag::Left, false);
+                } else {
+                    combined.setFlag(QuickTileFlag::Right);
+                }
+            }
+
+            if (mode & QuickTileFlag::Top) {
+                if (oldMode & QuickTileFlag::Bottom) {
+                    combined.setFlag(QuickTileFlag::Bottom, false);
+                } else {
+                    combined.setFlag(QuickTileFlag::Top);
+                }
+            }
+
+            if (mode & QuickTileFlag::Bottom) {
+                if (oldMode & QuickTileFlag::Top) {
+                    combined.setFlag(QuickTileFlag::Top, false);
+                } else {
+                    combined.setFlag(QuickTileFlag::Bottom);
+                }
+            }
+
+            // If trying to tile to the side that the window is already tiled to move the window to the next
+            // screen near the tile if it exists and swap the tile side, otherwise toggle the mode (set QuickTileFlag::None)
+            if (combined == oldMode) {
+                Output *currentOutput = moveResizeOutput();
+                Output *nextOutput = currentOutput;
+                Output *candidateOutput = currentOutput;
+                if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Left)) {
+                    candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionWest);
+                } else if ((mode & QuickTileFlag::Horizontal) == QuickTileMode(QuickTileFlag::Right)) {
+                    candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionEast);
+                }
+                bool shiftHorizontal = candidateOutput != nextOutput;
+                nextOutput = candidateOutput;
+                if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Top)) {
+                    candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionNorth);
+                } else if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Bottom)) {
+                    candidateOutput = workspace()->findOutput(nextOutput, Workspace::DirectionSouth);
+                }
+                bool shiftVertical = candidateOutput != nextOutput;
+                nextOutput = candidateOutput;
+
+                if (nextOutput == currentOutput) {
+                    combined = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
+                } else {
+                    // Move to other screen
+                    tileAtPoint = nextOutput->geometry().center();
+
+                    // Swap sides
+                    if (shiftHorizontal) {
+                        combined = (~combined & QuickTileFlag::Horizontal) | (combined & QuickTileFlag::Vertical);
+                    }
+                    if (shiftVertical) {
+                        combined = (~combined & QuickTileFlag::Vertical) | (combined & QuickTileFlag::Horizontal);
+                    }
+                }
+            }
+
+            mode = combined;
         }
     }
     setQuickTileMode(mode, tileAtPoint);

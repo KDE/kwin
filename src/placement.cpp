@@ -895,23 +895,6 @@ void Workspace::quickTileWindow(QuickTileMode mode)
         return;
     }
 
-    // If the user invokes two of these commands in a one second period, try to
-    // combine them together to enable easy and intuitive corner tiling
-#define FLAG(name) QuickTileMode(QuickTileFlag::name)
-    if (!m_quickTileCombineTimer->isActive()) {
-        m_quickTileCombineTimer->start(1000);
-        m_lastTilingMode = mode;
-    } else {
-        if (
-            ((m_lastTilingMode == FLAG(Left) || m_lastTilingMode == FLAG(Right)) && (mode == FLAG(Top) || mode == FLAG(Bottom)))
-            || ((m_lastTilingMode == FLAG(Top) || m_lastTilingMode == FLAG(Bottom)) && (mode == FLAG(Left) || mode == FLAG(Right)))
-#undef FLAG
-        ) {
-            mode |= m_lastTilingMode;
-        }
-        m_quickTileCombineTimer->stop();
-    }
-
     m_activeWindow->handleQuickTileShortcut(mode);
 }
 

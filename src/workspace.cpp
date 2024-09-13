@@ -99,7 +99,6 @@ Workspace *Workspace::_self = nullptr;
 Workspace::Workspace()
     : QObject(nullptr)
     // Unsorted
-    , m_quickTileCombineTimer(nullptr)
     , active_popup(nullptr)
     , m_activePopupWindow(nullptr)
     , m_initialDesktop(1)
@@ -131,9 +130,6 @@ Workspace::Workspace()
 #endif
 
     delayFocusTimer = nullptr;
-
-    m_quickTileCombineTimer = new QTimer(this);
-    m_quickTileCombineTimer->setSingleShot(true);
 
     m_rulebook = std::make_unique<RuleBook>();
     m_rulebook->load();

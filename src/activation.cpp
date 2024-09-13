@@ -355,8 +355,6 @@ void Workspace::activateWindow(Window *window, bool force)
         x11Window->updateUserTime();
     }
 #endif
-
-    m_quickTileCombineTimer->stop();
 }
 
 /**

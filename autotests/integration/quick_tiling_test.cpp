@@ -620,26 +620,96 @@ void QuickTilingTest::testX11QuickTilingAfterVertMaximize()
 
 void QuickTilingTest::testShortcut_data()
 {
-    QTest::addColumn<QStringList>("shortcutList");
+    const auto N = QuickTileMode(QuickTileFlag::None);
+    const auto L = QuickTileMode(QuickTileFlag::Left);
+    const auto R = QuickTileMode(QuickTileFlag::Right);
+    const auto T = QuickTileMode(QuickTileFlag::Top);
+    const auto B = QuickTileMode(QuickTileFlag::Bottom);
+    const auto TL = T | L;
+    const auto TR = T | R;
+    const auto BL = B | L;
+    const auto BR = B | R;
+
+    // The transition table for quick tile mode:
+    // _            mode1       mode2       mode3...
+    // oldMode1     newMode1    newMode2    newMode3...
+    // oldMode2     newMode1    newMode2    newMode3...
+    const QuickTileMode quickTileTransition[][9] = {
+        {N, L, R, T, B, TL, TR, BL, BR}, // transition from N
+        {L, L, N, TL, BL, TL, T, BL, B}, // transition from L
+        {R, N, R, TR, BR, T, TR, B, BR},
+        {T, TL, TR, T, N, TL, TR, L, R},
+        {B, BL, BR, N, B, L, R, BL, BR},
+        {TL, TL, T, TL, L, TL, T, L, N},
+        {TR, T, TR, TR, R, T, TR, N, R},
+        {BL, BL, B, L, BL, L, N, BL, B},
+        {BR, B, BR, R, BR, N, R, B, BR},
+    };
+
+    const QHash<QuickTileMode, QRect> geometries = {
+        {N, QRect()},
+        {L, QRect(0, 0, 640, 1024)},
+        {R, QRect(640, 0, 640, 1024)},
+        {T, QRect(0, 0, 1280, 512)},
+        {B, QRect(0, 512, 1280, 512)},
+        {TL, QRect(0, 0, 640, 512)},
+        {TR, QRect(640, 0, 640, 512)},
+        {BL, QRect(0, 512, 640, 512)},
+        {BR, QRect(640, 512, 640, 512)},
+    };
+
+    const QHash<QuickTileMode, QString> shortcuts = {
+        {L, QStringLiteral("Window Quick Tile Left")},
+        {R, QStringLiteral("Window Quick Tile Right")},
+        {T, QStringLiteral("Window Quick Tile Top")},
+        {B, QStringLiteral("Window Quick Tile Bottom")},
+        {TL, QStringLiteral("Window Quick Tile Top Left")},
+        {TR, QStringLiteral("Window Quick Tile Top Right")},
+        {BL, QStringLiteral("Window Quick Tile Bottom Left")},
+        {BR, QStringLiteral("Window Quick Tile Bottom Right")},
+    };
+
+    const QHash<QuickTileMode, QString> names = {
+        {N, QStringLiteral("None")},
+        {L, QStringLiteral("Left")},
+        {R, QStringLiteral("Right")},
+        {T, QStringLiteral("Top")},
+        {B, QStringLiteral("Bottom")},
+        {TL, QStringLiteral("TopLeft")},
+        {TR, QStringLiteral("TopRight")},
+        {BL, QStringLiteral("BottomLeft")},
+        {BR, QStringLiteral("BottomRight")},
+    };
+
+    QTest::addColumn<QuickTileMode>("oldMode");
+    QTest::addColumn<QString>("shortcut");
     QTest::addColumn<QuickTileMode>("expectedMode");
     QTest::addColumn<QRect>("expectedGeometry");
 
-#define FLAG(name) QuickTileMode(QuickTileFlag::name)
-    QTest::newRow("top") << QStringList{QStringLiteral("Window Quick Tile Top")} << FLAG(Top) << QRect(0, 0, 1280, 512);
-    QTest::newRow("bottom") << QStringList{QStringLiteral("Window Quick Tile Bottom")} << FLAG(Bottom) << QRect(0, 512, 1280, 512);
-    QTest::newRow("top right") << QStringList{QStringLiteral("Window Quick Tile Top Right")} << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
-    QTest::newRow("top left") << QStringList{QStringLiteral("Window Quick Tile Top Left")} << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
-    QTest::newRow("bottom right") << QStringList{QStringLiteral("Window Quick Tile Bottom Right")} << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
-    QTest::newRow("bottom left") << QStringList{QStringLiteral("Window Quick Tile Bottom Left")} << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
-    QTest::newRow("left") << QStringList{QStringLiteral("Window Quick Tile Left")} << FLAG(Left) << QRect(0, 0, 640, 1024);
-    QTest::newRow("right") << QStringList{QStringLiteral("Window Quick Tile Right")} << FLAG(Right) << QRect(640, 0, 640, 1024);
+    for (size_t row = 0; row < sizeof(quickTileTransition) / sizeof(quickTileTransition[0]); ++row) {
+        for (size_t col = 1; col < sizeof(quickTileTransition[0]) / sizeof(quickTileTransition[0][0]); ++col) {
+            const auto oldMode = quickTileTransition[row][0];
+            auto newMode = quickTileTransition[row][col];
+            const auto action = quickTileTransition[0][col];
+            const auto shortcut = shortcuts[action];
+            auto geometry = geometries[newMode];
 
-    // Test combined actions for corner tiling
-    QTest::newRow("top left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Top")} << (FLAG(Top) | FLAG(Left)) << QRect(0, 0, 640, 512);
-    QTest::newRow("top right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Top")} << (FLAG(Top) | FLAG(Right)) << QRect(640, 0, 640, 512);
-    QTest::newRow("bottom left combined") << QStringList{QStringLiteral("Window Quick Tile Left"), QStringLiteral("Window Quick Tile Bottom")} << (FLAG(Bottom) | FLAG(Left)) << QRect(0, 512, 640, 512);
-    QTest::newRow("bottom right combined") << QStringList{QStringLiteral("Window Quick Tile Right"), QStringLiteral("Window Quick Tile Bottom")} << (FLAG(Bottom) | FLAG(Right)) << QRect(640, 512, 640, 512);
-#undef FLAG
+            // We have another screen to the right, so when pressing right on the right edge, it goes to left
+            // edge of the next screen.
+            if (oldMode == newMode) {
+                if (action & QuickTileFlag::Right) {
+                    newMode.setFlag(QuickTileFlag::Right, false);
+                    newMode.setFlag(QuickTileFlag::Left, true);
+                    geometry.moveLeft(1280);
+                } else {
+                    newMode = QuickTileFlag::None;
+                }
+            }
+
+            QTest::newRow(QStringLiteral("%1 -> %2 = %3").arg(names[oldMode]).arg(shortcut).arg(names[newMode]).toLatin1().constData())
+                << oldMode << shortcut << newMode << geometry;
+        }
+    }
 }
 
 void QuickTilingTest::testShortcut()
@@ -655,10 +725,11 @@ void QuickTilingTest::testShortcut()
     QVERIFY(shellSurface != nullptr);
 
     // Map the window.
-    auto window = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+    const auto initialGeometry = QRect(0, 0, 100, 50);
+    auto window = Test::renderAndWaitForShown(surface.get(), initialGeometry.size(), Qt::blue);
     QVERIFY(window);
     QCOMPARE(workspace()->activeWindow(), window);
-    QCOMPARE(window->frameGeometry(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->frameGeometry(), initialGeometry);
     QCOMPARE(window->quickTileMode(), QuickTileMode(QuickTileFlag::None));
 
     // We have to receive a configure event when the window becomes active.
@@ -667,29 +738,42 @@ void QuickTilingTest::testShortcut()
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
 
-    QFETCH(QStringList, shortcutList);
+    QFETCH(QuickTileMode, oldMode);
+    QFETCH(QString, shortcut);
+    QFETCH(QuickTileMode, expectedMode);
     QFETCH(QRect, expectedGeometry);
 
-    const int numberOfQuickTileActions = shortcutList.count();
+    if (expectedMode == QuickTileMode(QuickTileFlag::None)) {
+        expectedGeometry = initialGeometry;
+    }
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
-    for (QString shortcut : shortcutList) {
-        // invoke global shortcut through dbus
-        auto msg = QDBusMessage::createMethodCall(
-            QStringLiteral("org.kde.kglobalaccel"),
-            QStringLiteral("/component/kwin"),
-            QStringLiteral("org.kde.kglobalaccel.Component"),
-            QStringLiteral("invokeShortcut"));
-        msg.setArguments(QList<QVariant>{shortcut});
-        QDBusConnection::sessionBus().asyncCall(msg);
+    int numberOfQuickTileActions = 1;
 
+    if (oldMode != QuickTileMode(QuickTileFlag::None)) {
+        window->handleQuickTileShortcut(oldMode);
         QVERIFY(surfaceConfigureRequestedSpy.wait());
         shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
         Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
         QVERIFY(quickTileChangedSpy.wait());
+        ++numberOfQuickTileActions;
     }
+
+    // invoke global shortcut through dbus
+    auto msg = QDBusMessage::createMethodCall(
+        QStringLiteral("org.kde.kglobalaccel"),
+        QStringLiteral("/component/kwin"),
+        QStringLiteral("org.kde.kglobalaccel.Component"),
+        QStringLiteral("invokeShortcut"));
+    msg.setArguments(QList<QVariant>{shortcut});
+    QDBusConnection::sessionBus().asyncCall(msg);
+
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);
+    QVERIFY(quickTileChangedSpy.wait());
 
     QCOMPARE(surfaceConfigureRequestedSpy.count(), numberOfQuickTileActions + 1);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
@@ -699,7 +783,7 @@ void QuickTilingTest::testShortcut()
     // geometry already changed
     QCOMPARE(window->frameGeometry(), expectedGeometry);
     // quick tile mode already changed
-    QTEST(window->quickTileMode(), "expectedMode");
+    QCOMPARE(window->quickTileMode(), expectedMode);
 
     QEXPECT_FAIL("maximize", "Geometry changed called twice for maximize", Continue);
     QCOMPARE(window->frameGeometry(), expectedGeometry);
