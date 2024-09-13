@@ -152,15 +152,15 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     }
 
     bool foundActions = false;
+
     const auto mouseButtonEnum = QMetaEnum::fromType<Qt::MouseButtons>();
     const auto mouseGroup = group.group(QStringLiteral("Mouse"));
-    static constexpr auto maximumQtExtraButton = 24;
-    for (int i = 1; i <= maximumQtExtraButton; ++i) {
-        const QByteArray buttonName = QByteArray("ExtraButton") + QByteArray::number(i);
-        if (mouseGroup.hasKey(buttonName.constData())) {
-            const auto entry = mouseGroup.readEntry(buttonName.constData(), QStringList());
-            const auto button = static_cast<quint32>(mouseButtonEnum.keyToValue(buttonName));
-            insert(Pointer, {QString(), button}, entry);
+    const auto mouseGroupKeys = mouseGroup.keyList();
+    for (const QString &configKey : mouseGroupKeys) {
+        const int mappedButton = mouseButtonEnum.keyToValue(configKey.toLatin1());
+        if (mappedButton != -1) {
+            const auto action = mouseGroup.readEntry(configKey, QStringList());
+            insert(Pointer, {QString(), static_cast<uint>(mappedButton)}, action);
             foundActions = true;
         }
     }
