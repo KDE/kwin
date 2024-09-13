@@ -404,7 +404,7 @@ uint VirtualDesktopManagerDBusInterface::count() const
 
 void VirtualDesktopManagerDBusInterface::setRows(uint rows)
 {
-    if (static_cast<uint>(m_manager->grid().height()) == rows) {
+    if (static_cast<uint>(m_manager->grids().first().height()) == rows) {
         return;
     }
 

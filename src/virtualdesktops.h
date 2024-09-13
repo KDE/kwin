@@ -9,7 +9,10 @@
 #pragma once
 // KWin
 #include "effect/globals.h"
+#include "workspace.h"
+#include <core/output.h>
 #include <kwin_export.h>
+
 // Qt includes
 #include <QAction>
 #include <QObject>
@@ -30,6 +33,7 @@ namespace KWin
 
 class Options;
 class PlasmaVirtualDesktopManagementInterface;
+class Workspace;
 
 class KWIN_EXPORT VirtualDesktop : public QObject
 {
@@ -37,6 +41,7 @@ class KWIN_EXPORT VirtualDesktop : public QObject
     Q_PROPERTY(QString id READ id CONSTANT)
     Q_PROPERTY(uint x11DesktopNumber READ x11DesktopNumber NOTIFY x11DesktopNumberChanged)
     Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    Q_PROPERTY(QString preferredOutput READ preferredOutput WRITE setPreferredOutput NOTIFY preferredOutputChanged)
 public:
     explicit VirtualDesktop(QObject *parent = nullptr);
     ~VirtualDesktop() override;
@@ -53,6 +58,13 @@ public:
         return m_name;
     }
 
+    void setPreferredOutput(QString preferredOutput);
+
+    QString preferredOutput() const
+    {
+        return m_preferredOutput;
+    }
+
     void setX11DesktopNumber(uint number);
     uint x11DesktopNumber() const
     {
@@ -61,6 +73,7 @@ public:
 
 Q_SIGNALS:
     void nameChanged();
+    void preferredOutputChanged();
     void x11DesktopNumberChanged();
 
     /**
@@ -71,6 +84,12 @@ Q_SIGNALS:
 private:
     QString m_id;
     QString m_name;
+
+    /**
+     * The serial number of the Output this VirtualDesktop prefers to be on.
+     */
+    QString m_preferredOutput;
+
     int m_x11DesktopNumber = 0;
 };
 
@@ -109,9 +128,28 @@ public:
     int height() const;
     const QSize &size() const;
 
+    // TODO: Doc comment
+    Output *output() const
+    {
+        return m_output;
+    }
+
+    // TODO: Doc comment
+    void setOutput(Output *output)
+    {
+        m_output = output;
+    }
+
 private:
     QSize m_size;
     QList<QList<VirtualDesktop *>> m_grid;
+
+    /**
+     * The output this grid is associated with.
+     *
+     * If we are not using desktops per output, this is the primary output.
+     */
+    Output *m_output;
 };
 
 /**
@@ -164,6 +202,9 @@ public:
      */
     void setVirtualDesktopManagement(PlasmaVirtualDesktopManagementInterface *management);
 
+    // TODO: Doc comment
+    void setDesktopsPerOutput(bool perOutput);
+
     /**
      * @internal
      */
@@ -213,9 +254,17 @@ public:
     bool isNavigationWrappingAround() const;
 
     /**
-     * @returns The layout aware virtual desktop grid used by this manager.
+     * @returns The layout aware virtual desktop grids used by this manager.
      */
-    const VirtualDesktopGrid &grid() const;
+    const QList<VirtualDesktopGrid> &grids() const;
+
+    /**
+     * @returns The currently relevant grid.
+     *
+     * If the desktops are per output, the grid for the currently active output is returned.
+     * Otherwise there should only be one grid, which is returned.
+     */
+    const VirtualDesktopGrid &currentGrid() const;
 
     enum class Direction {
         Up,
@@ -312,6 +361,9 @@ public:
      * @returns The maximum number of desktops that KWin supports.
      */
     static uint maximum();
+
+    // TODO: Doc comment
+    bool desktopsPerOutput() const;
 
 public Q_SLOTS:
     /**
@@ -529,6 +581,9 @@ private:
      */
     QAction *addAction(const QString &name, const QString &label, const QKeySequence &key, void (VirtualDesktopManager::*slot)());
 
+    // TODO: Doc comment
+    bool m_desktopsPerOutput = false;
+
     /**
      * Removes excess desktops from the virtual desktop manager.
      *
@@ -567,7 +622,11 @@ private:
 
     quint32 m_rows = 2;
     bool m_navigationWrapsAround;
-    VirtualDesktopGrid m_grid;
+
+    // VirtualDesktopGrid m_grid;
+
+    QList<VirtualDesktopGrid> m_grids;
+
     // TODO: QPointer
 #if KWIN_BUILD_X11
     NETRootInfo *m_rootInfo;
@@ -578,6 +637,9 @@ private:
     std::unique_ptr<QAction> m_swipeGestureReleasedY;
     std::unique_ptr<QAction> m_swipeGestureReleasedX;
     QPointF m_currentDesktopOffset = QPointF(0, 0);
+
+    // TODO: Doc comment
+    Workspace *const m_workspace;
 
     KWIN_SINGLETON_VARIABLE(VirtualDesktopManager, s_manager)
 };
@@ -617,9 +679,9 @@ inline void VirtualDesktopManager::setConfig(KSharedConfig::Ptr config)
     m_config = std::move(config);
 }
 
-inline const VirtualDesktopGrid &VirtualDesktopManager::grid() const
+inline const QList<VirtualDesktopGrid> &VirtualDesktopManager::grids() const
 {
-    return m_grid;
+    return m_grids;
 }
 
 } // namespace KWin
