@@ -6,19 +6,20 @@
 # Dimitrios Glentadakis <dglent@gmail.com>, 2011.
 # Stelios <sstavra@gmail.com>, 2013.
 # Dimitris Kardarakos <dimkard@gmail.com>, 2014.
+# Dimitrys Meliates <demetresmeliates+i18n@gmail.com>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2014-10-11 13:07+0300\n"
-"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
-"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"PO-Revision-Date: 2024-09-06 17:13+0300\n"
+"Last-Translator: Αντώνης Γέραλης <capoiosct@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-doc@kde.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -32,8 +33,7 @@ msgid "Your emails"
 msgstr "dglent@gmail.com"
 
 #: desktopsmodel.cpp:191
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgctxt "A numbered name for virtual desktops"
 msgid "Desktop %1"
 msgid_plural "Desktop %1"
@@ -43,48 +43,47 @@ msgstr[1] "Επιφάνεια εργασίας %1"
 #: desktopsmodel.cpp:479
 #, kde-format
 msgid "There was an error connecting to the compositor."
-msgstr ""
+msgstr "Υπήρξε σφάλμα στη σύνδεση με τον συνθέτη."
 
 #: desktopsmodel.cpp:678
 #, kde-format
 msgid "There was an error saving the settings to the compositor."
-msgstr ""
+msgstr "Υπήρξε σφάλμα κατά την αποθήκευση των ρυθμίσεων στο συνθέτη."
 
 #: desktopsmodel.cpp:681
 #, kde-format
 msgid "There was an error requesting information from the compositor."
-msgstr ""
+msgstr "Υπήρξε ένα σφάλμα που ζητούσε πληροφορίες από τον συνθέτη."
 
 #: ui/main.qml:26
 #, kde-format
 msgctxt "@text:label Number of rows, label associated to a number input field"
 msgid "Rows:"
-msgstr ""
+msgstr "Γραμμές:"
 
 #: ui/main.qml:54
-#, fuzzy, kde-format
-#| msgid "Desktops"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Desktop"
-msgstr "Επιφάνειες εργασίας"
+msgstr "Προσθήκη επιφάνειας εργασίας"
 
 #: ui/main.qml:122
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Rename"
-msgstr ""
+msgstr "Μετονομασία"
 
 #: ui/main.qml:134
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Confirm new name"
-msgstr ""
+msgstr "Επιβεβαίωση νέου ονόματος"
 
 #: ui/main.qml:143
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #: ui/main.qml:176
 #, kde-format
@@ -92,37 +91,38 @@ msgid ""
 "Virtual desktops have been changed outside this settings application. Saving "
 "now will overwrite the changes."
 msgstr ""
+"Οι εικονικές επιφάνειες εργασίας έχουν αλλάξει εκτός αυτής της εφαρμογής "
+"ρυθμίσεων. Η αποθήκευση τώρα θα αντικαταστήσει τις αλλαγές."
 
 #: ui/main.qml:192
 #, kde-format
 msgid "Row %1"
-msgstr ""
+msgstr "Γραμμή %1"
 
 #: ui/main.qml:206
 #, kde-format
 msgid "Options:"
-msgstr ""
+msgstr "Επιλογές:"
 
 #: ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "Desktop navigation wraps around"
+#, kde-format
 msgid "Navigation wraps around"
-msgstr "Η πλοήγηση επιφανειών εργασίας γίνεται κυκλικά"
+msgstr "Η πλοήγηση περιτυλίγεται γύρω του"
 
 #: ui/main.qml:226
 #, kde-format
 msgid "Show animation when switching:"
-msgstr ""
+msgstr "Εμφάνιση εφέ κίνησης κατά την εναλλαγή:"
 
 #: ui/main.qml:277
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr ""
+msgstr "Εμφάνιση απεικόνηση οθόνης κατά την εναλλαγή:"
 
 #: ui/main.qml:296
 #, kde-format
 msgid "%1 ms"
-msgstr ""
+msgstr "%1 ms"
 
 #: ui/main.qml:320
 #, kde-format

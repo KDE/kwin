@@ -20,10 +20,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: layoutpreview.cpp:127
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Show Desktop"
-msgstr "Όλων των επιφανειών εργασίας "
+msgstr "Εμφάνιση επιφάνειας εργασίας"
 
 #: layoutpreview.cpp:157
 #, kde-format
@@ -42,10 +41,9 @@ msgid "Alternative"
 msgstr "Εναλλακτική"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Window Switcher Layout"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Λήψη νέας διάταξης εναλλαγής παραθύρων"
+msgstr "Λήψη νέας διάταξης εναλλαγής παραθύρων…"
 
 #: main.cpp:90
 #, kde-format

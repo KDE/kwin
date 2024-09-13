@@ -16,20 +16,20 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2016-01-22 22:58+0200\n"
-"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
-"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"PO-Revision-Date: 2024-09-07 20:05+0300\n"
+"Last-Translator: Αντώνης Γέραλης <capoiosct@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-doc@kde.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #: kcmrules.cpp:228
 #, kde-format
 msgid "Copy of %1"
-msgstr ""
+msgstr "Αντίγραφο του %1"
 
 #: kcmrules.cpp:408
 #, kde-format
@@ -47,26 +47,22 @@ msgid "Unimportant"
 msgstr "Αδιάφορο"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "Ακριβές ταίριασμα"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "Ταίριασμα υπο-συμβολοσειράς"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "Κανονική έκφραση"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "Αρχική εφαρμογή"
 
@@ -77,10 +73,12 @@ msgid ""
 "created.\n"
 "No further changes will be affected."
 msgstr ""
+"Η ιδιότητα παραθύρου θα οριστεί στη δεδομένη τιμή μόνο μετά τη δημιουργία "
+"του παραθύρου.\n"
+"Δεν θα επηρεαστούν περαιτέρω αλλαγές."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "Εφαρμογή τώρα"
 
@@ -91,6 +89,9 @@ msgid ""
 "be affected later\n"
 "(this action will be deleted afterwards)."
 msgstr ""
+"Η ιδιότητα του παραθύρου θα οριστεί στη δεδομένη τιμή αμέσως και δεν θα "
+"επηρεαστεί αργότερα\n"
+"(αυτή η ενέργεια θα διαγραφεί αργότερα)."
 
 #: optionsmodel.cpp:213
 #, kde-format
@@ -103,10 +104,12 @@ msgid ""
 "The value of the window property will be remembered and, every time the "
 "window is created, the last remembered value will be applied."
 msgstr ""
+"Η τιμή της ιδιότητας παραθύρου θα απομνημονεύεται και, κάθε φορά που "
+"δημιουργείται το παράθυρο, θα εφαρμόζεται η τελευταία τιμή που "
+"απομνημονεύθηκε."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "Να μην επηρεαστεί"
 
@@ -117,6 +120,10 @@ msgid ""
 "for it will be used.\n"
 "Specifying this will block more generic window settings from taking effect."
 msgstr ""
+"Η ιδιότητα παραθύρου δεν θα επηρεαστεί και επομένως θα χρησιμοποιηθεί ο "
+"προεπιλεγμένος χειρισμός της.\n"
+"Ο καθορισμός αυτής της ιδιότητας θα εμποδίσει τις πιο γενικές ρυθμίσεις "
+"παραθύρου να τεθούν σε ισχύ."
 
 #: optionsmodel.cpp:221
 #, kde-format
@@ -126,11 +133,10 @@ msgstr "Εξαναγκασμός"
 #: optionsmodel.cpp:222
 #, kde-format
 msgid "The window property will be always forced to the given value."
-msgstr ""
+msgstr "Η ιδιότητα του παραθύρου θα επιβάλλεται πάντα στη δεδομένη τιμή."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "Προσωρινός εξαναγκασμός"
 
@@ -140,6 +146,9 @@ msgid ""
 "The window property will be forced to the given value until it is hidden\n"
 "(this action will be deleted after the window is hidden)."
 msgstr ""
+"Η ιδιότητα του παραθύρου θα αναγκαστεί να πάρει τη δεδομένη τιμή μέχρι να "
+"κρυφτεί\n"
+"(αυτή η ενέργεια θα διαγραφεί μετά την απόκρυψη του παραθύρου)."
 
 #: rulesmodel.cpp:224
 #, kde-format
@@ -147,10 +156,9 @@ msgid "Settings for %1"
 msgstr "Ρυθμίσεις για %1"
 
 #: rulesmodel.cpp:227
-#, fuzzy, kde-format
-#| msgid "Window settings for %1"
+#, kde-format
 msgid "New window settings"
-msgstr "Ρύθμιση παραθύρου για %1"
+msgstr "Νέες ρύθμισεις παραθύρου"
 
 #: rulesmodel.cpp:243
 #, kde-format
@@ -174,6 +182,9 @@ msgid ""
 "initial settings for size and position. To enforce these settings, also "
 "force the property \"%1\" to \"Yes\"."
 msgstr ""
+"Ορισμένες εφαρμογές ορίζουν τη δική τους γεωμετρία μετά την εκκίνηση, "
+"παρακάμπτοντας τις αρχικές σας ρυθμίσεις για το μέγεθος και τη θέση. Για να "
+"επιβάλλετε αυτές τις ρυθμίσεις, επιβάλλετε επίσης την ιδιότητα «%1» σε «Ναι»."
 
 #: rulesmodel.cpp:257
 #, kde-format
@@ -181,112 +192,97 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Η αναγνωσιμότητα μπορεί να μειωθεί με εξαιρετικά χαμηλές τιμές αδιαφάνειας. "
+"Στο 0%, το παράθυρο γίνεται αόρατο."
 
 #: rulesmodel.cpp:388
-#, fuzzy, kde-format
-#| msgid "&Description:"
+#, kde-format
 msgid "Description"
-msgstr "Πε&ριγραφή:"
+msgstr "Περιγραφή"
 
 #: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:404 rulesmodel.cpp:411
 #: rulesmodel.cpp:417 rulesmodel.cpp:425 rulesmodel.cpp:430 rulesmodel.cpp:436
-#, fuzzy, kde-format
-#| msgid "&Window matching"
+#, kde-format
 msgid "Window matching"
-msgstr "&Ταίριασμα παραθύρων"
+msgstr "Ταίριασμα παραθύρων"
 
 #: rulesmodel.cpp:396
-#, fuzzy, kde-format
-#| msgid "Window &class (application):"
+#, kde-format
 msgid "Window class (application)"
-msgstr "&Κλάση παραθύρου (εφαρμογή):"
+msgstr "Κλάση παραθύρου (εφαρμογή):"
 
 #: rulesmodel.cpp:404
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Match whole window class"
-msgstr "Ταίριασμα ολόκ&ληρης κλάσης παραθύρου"
+msgstr "Ταίριασμα ολόκληρης κλάσης παραθύρου"
 
 #: rulesmodel.cpp:411
-#, fuzzy, kde-format
-#| msgid "Match w&hole window class"
+#, kde-format
 msgid "Whole window class"
-msgstr "Ταίριασμα ολόκ&ληρης κλάσης παραθύρου"
+msgstr "Ολόκληρη κλάση παραθύρου"
 
 #: rulesmodel.cpp:417
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "Window types"
-msgstr "&Τύποι παραθύρων:"
+msgstr "Τύποι παραθύρων"
 
 #: rulesmodel.cpp:425
-#, fuzzy, kde-format
-#| msgid "Window ro&le:"
+#, kde-format
 msgid "Window role"
-msgstr "Ρό&λος παραθύρου:"
+msgstr "Ρόλος παραθύρου"
 
 #: rulesmodel.cpp:430
-#, fuzzy, kde-format
-#| msgid "Window t&itle:"
+#, kde-format
 msgid "Window title"
-msgstr "Τίτλος παραθύρο&υ:"
+msgstr "Τίτλος παραθύρου:"
 
 #: rulesmodel.cpp:436
-#, fuzzy, kde-format
-#| msgid "&Machine (hostname):"
+#, kde-format
 msgid "Machine (hostname)"
-msgstr "&Μηχάνημα (όνομα υπολογιστή):"
+msgstr "Μηχάνημα (όνομα υπολογιστή):"
 
 #: rulesmodel.cpp:442
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Position"
-msgstr "Θέ&ση"
+msgstr "Θέση"
 
 #: rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:454 rulesmodel.cpp:459
 #: rulesmodel.cpp:467 rulesmodel.cpp:473 rulesmodel.cpp:492 rulesmodel.cpp:508
 #: rulesmodel.cpp:513 rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528
 #: rulesmodel.cpp:537 rulesmodel.cpp:552 rulesmodel.cpp:557 rulesmodel.cpp:562
-#, fuzzy, kde-format
-#| msgid "&Size && Position"
+#, kde-format
 msgid "Size & Position"
-msgstr "&Μέγεθος && Θέση"
+msgstr "Μέγεθος και θέση"
 
 #: rulesmodel.cpp:448
-#, fuzzy, kde-format
-#| msgid "&Size"
+#, kde-format
 msgid "Size"
-msgstr "&Μέγεθος"
+msgstr "Μέγεθος"
 
 #: rulesmodel.cpp:454
-#, fuzzy, kde-format
-#| msgid "Maximized &horizontally"
+#, kde-format
 msgid "Maximized horizontally"
-msgstr "&Οριζόντια μεγιστοποίηση"
+msgstr "Οριζόντια μεγιστοποίηση"
 
 #: rulesmodel.cpp:459
-#, fuzzy, kde-format
-#| msgid "Maximized &vertically"
+#, kde-format
 msgid "Maximized vertically"
-msgstr "&Κατακόρυφη μεγιστοποίηση"
+msgstr "Κατακόρυφη μεγιστοποίηση"
 
 #: rulesmodel.cpp:467
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual desktop"
-msgstr "Όλες οι επιφάνειες εργασίας"
+msgstr "Επιφάνεια εργασίας"
 
 #: rulesmodel.cpp:473
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "Virtual desktops"
-msgstr "Όλες οι επιφάνειες εργασίας"
+msgstr "Επιφάνειες εργασίας"
 
 #: rulesmodel.cpp:492
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "Activities"
-msgstr "Όλες οι δραστηριότητες"
+msgstr "Δραστηριότητες"
 
 #: rulesmodel.cpp:508
 #, kde-format
@@ -294,34 +290,29 @@ msgid "Screen"
 msgstr "Οθόνη"
 
 #: rulesmodel.cpp:513 rulesmodel.cpp:932
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "&Πλήρης οθόνη"
+msgstr "Πλήρης οθόνη"
 
 #: rulesmodel.cpp:518
-#, fuzzy, kde-format
-#| msgid "M&inimized"
+#, kde-format
 msgid "Minimized"
-msgstr "Ελαχ&ιστοποιημένο"
+msgstr "Ελαχιστοποιημένο"
 
 #: rulesmodel.cpp:523
-#, fuzzy, kde-format
-#| msgid "Sh&aded"
+#, kde-format
 msgid "Shaded"
-msgstr "&Τυλιγμένο"
+msgstr "Σκιασμένο"
 
 #: rulesmodel.cpp:528
-#, fuzzy, kde-format
-#| msgid "Initial p&lacement"
+#, kde-format
 msgid "Initial placement"
-msgstr "Αρχική &Τοποθέτηση"
+msgstr "Αρχική τοποθέτηση"
 
 #: rulesmodel.cpp:537
-#, fuzzy, kde-format
-#| msgid "Ignore requested &geometry"
+#, kde-format
 msgid "Ignore requested geometry"
-msgstr "Παράβλεψη της ζητούμενης &γεωμετρίας"
+msgstr "Παράβλεψη της ζητούμενης γεωμετρίας"
 
 #: rulesmodel.cpp:540
 #, kde-kuit-format
@@ -336,16 +327,14 @@ msgid ""
 msgstr ""
 
 #: rulesmodel.cpp:552
-#, fuzzy, kde-format
-#| msgid "M&inimum size"
+#, kde-format
 msgid "Minimum Size"
-msgstr "Ελά&χιστο μέγεθος"
+msgstr "Ελάχιστο μέγεθος"
 
 #: rulesmodel.cpp:557
-#, fuzzy, kde-format
-#| msgid "M&aximum size"
+#, kde-format
 msgid "Maximum Size"
-msgstr "Μέγιστ&ο μέγεθος"
+msgstr "Μέγιστο μέγεθος"
 
 #: rulesmodel.cpp:562
 #, kde-format
@@ -368,13 +357,11 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Πχ. τερματικά ή προγράμματα αναπαραγωγής βίντεο μπορεί να ζητήσουν να\n"
-"διατηρηθεί μια ορισμένη αναλογία διαστάσεων\n"
-"ή να αυξάνονται μόνο με τιμές μεγαλύτερες της μονάδας\n"
-"(πχ. με τις διαστάσεις ενός χαρακτήρα).\n"
+"Ορισμένες εφαρμογές όπως τερματικά ή προγράμματα αναπαραγωγής βίντεο μπορεί "
+"να ζητήσουν να διατηρηθεί μια ορισμένη αναλογία διαστάσεων\n"
+"ή να αυξάνονται μόνο με τιμές μεγαλύτερες των διαστάσεων ενός χαρακτήρα.\n"
 "Αυτό ίσως να μην έχει νόημα και ο περιορισμός εμποδίζει τις αυθαίρετες "
-"διαστάσεις\n"
-"όπως την πλήρη επιφάνεια της οθόνης σας."
+"διαστάσεις όπως την πλήρη επιφάνεια της οθόνης σας."
 
 #: rulesmodel.cpp:575
 #, kde-format
@@ -383,10 +370,9 @@ msgstr ""
 
 #: rulesmodel.cpp:575 rulesmodel.cpp:580 rulesmodel.cpp:585 rulesmodel.cpp:591
 #: rulesmodel.cpp:597 rulesmodel.cpp:603
-#, fuzzy, kde-format
-#| msgid "&Arrangement && Access"
+#, kde-format
 msgid "Arrangement & Access"
-msgstr "&Διάταξη && πρόσβαση"
+msgstr "Διάταξη και πρόσβαση"
 
 #: rulesmodel.cpp:580
 #, kde-format
@@ -394,10 +380,9 @@ msgid "Keep below other windows"
 msgstr ""
 
 #: rulesmodel.cpp:585
-#, fuzzy, kde-format
-#| msgid "Skip &taskbar"
+#, kde-format
 msgid "Skip taskbar"
-msgstr "Παράλειψη &Γραμμής Εργασιών"
+msgstr "Παράλειψη γραμμής εργασιών"
 
 #: rulesmodel.cpp:587
 #, kde-format
@@ -406,10 +391,9 @@ msgid "Controls whether or not the window appears in the Task Manager."
 msgstr ""
 
 #: rulesmodel.cpp:591
-#, fuzzy, kde-format
-#| msgid "Skip pa&ger"
+#, kde-format
 msgid "Skip pager"
-msgstr "Παράλειψη προ&βολέα Επιφανειών Εργασίας"
+msgstr "Παράλειψη προβολέα επιφανειών εργασίας"
 
 #: rulesmodel.cpp:593
 #, kde-format
@@ -419,10 +403,9 @@ msgid ""
 msgstr ""
 
 #: rulesmodel.cpp:597
-#, fuzzy, kde-format
-#| msgid "Skip &switcher"
+#, kde-format
 msgid "Skip switcher"
-msgstr "Παράλειψη ενα&λλαγής"
+msgstr "Παράλειψη εναλλαγής"
 
 #: rulesmodel.cpp:599
 #, kde-kuit-format
@@ -438,43 +421,37 @@ msgid "Shortcut"
 msgstr "Συντόμευση"
 
 #: rulesmodel.cpp:609
-#, fuzzy, kde-format
-#| msgid "&No titlebar and frame"
+#, kde-format
 msgid "No titlebar and frame"
-msgstr "&Χωρίς γραμμή τίτλου και πλαίσιο"
+msgstr "Χωρίς γραμμή τίτλου και πλαίσιο"
 
 #: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
 #: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
 #: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
 #: rulesmodel.cpp:725 rulesmodel.cpp:730
-#, fuzzy, kde-format
-#| msgid "Appearance && &Fixes"
+#, kde-format
 msgid "Appearance & Fixes"
-msgstr "Εμφάνιση && &διορθώσεις"
+msgstr "Εμφάνιση και διορθώσεις"
 
 #: rulesmodel.cpp:614
-#, fuzzy, kde-format
-#| msgid "Titlebar color &scheme"
+#, kde-format
 msgid "Titlebar color scheme"
-msgstr "Χρωματικό σχήμα γραμμής τίτλου"
+msgstr "Χρωματικό θέμα γραμμής τίτλου"
 
 #: rulesmodel.cpp:620
-#, fuzzy, kde-format
-#| msgid "A&ctive opacity"
+#, kde-format
 msgid "Active opacity"
-msgstr "Ενεργή α&διαφάνεια"
+msgstr "Αδιαφάνεια ενεργού"
 
 #: rulesmodel.cpp:625
-#, fuzzy, kde-format
-#| msgid "I&nactive opacity"
+#, kde-format
 msgid "Inactive opacity"
-msgstr "Ανενεργή &αδιαφάνεια"
+msgstr "Αδιαφάνεια ανενεργού"
 
 #: rulesmodel.cpp:631
-#, fuzzy, kde-format
-#| msgid "&Focus stealing prevention"
+#, kde-format
 msgid "Focus stealing prevention"
-msgstr "&Αποτροπή κλεψίματος εστίασης"
+msgstr "Αποτροπή κλεψίματος εστίασης"
 
 #: rulesmodel.cpp:633
 #, kde-kuit-format
@@ -528,10 +505,9 @@ msgid ""
 msgstr ""
 
 #: rulesmodel.cpp:686
-#, fuzzy, kde-format
-#| msgid "Accept &focus"
+#, kde-format
 msgid "Accept focus"
-msgstr "Αποδοχή &εστίασης"
+msgstr "Αποδοχή εστίασης"
 
 #: rulesmodel.cpp:688
 #, kde-format
@@ -556,10 +532,9 @@ msgid ""
 msgstr ""
 
 #: rulesmodel.cpp:704
-#, fuzzy, kde-format
-#| msgid "&Closeable"
+#, kde-format
 msgid "Closeable"
-msgstr "&Ικανό να κλείσει"
+msgstr "Ικανό να κλείσει"
 
 #: rulesmodel.cpp:709
 #, kde-format
@@ -587,10 +562,9 @@ msgid "Allow tearing"
 msgstr ""
 
 #: rulesmodel.cpp:782
-#, fuzzy, kde-format
-#| msgid "Window &class (application):"
+#, kde-format
 msgid "Window class not available"
-msgstr "&Κλάση παραθύρου (εφαρμογή):"
+msgstr "Μη διαθέσιμη κλάση παραθύρου"
 
 #: rulesmodel.cpp:783
 #, kde-kuit-format
@@ -603,26 +577,22 @@ msgid ""
 msgstr ""
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "Window &types:"
+#, kde-format
 msgid "All window types"
-msgstr "&Τύποι παραθύρων:"
+msgstr "Όλοι οι τύποι παραθύρων"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "Κανονικό παράθυρο"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "Παράθυρο διαλόγου"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "Παράθυρο εργαλείων"
 
@@ -637,14 +607,12 @@ msgid "Toolbar"
 msgstr "Γραμμή εργαλείων"
 
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "Χωρισμός μενού"
 
 #: rulesmodel.cpp:824
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "Αρχική οθόνη"
 
@@ -655,19 +623,17 @@ msgstr "Επιφάνεια εργασίας"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
-msgstr "Αυτόνομη γραμμή Μενού"
+msgstr "Αυτόνομη γραμμή μενού"
 
 #: rulesmodel.cpp:828 rulesmodel.cpp:935
 #, kde-format
 msgid "On-screen display"
-msgstr ""
+msgstr "Επιφάνεις προβολής οθόνης"
 
 #: rulesmodel.cpp:838
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "Όλες οι επιφάνειες εργασίας"
 
@@ -678,8 +644,7 @@ msgid "Make the window available on all desktops"
 msgstr ""
 
 #: rulesmodel.cpp:859
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "Όλες οι δραστηριότητες"
 
@@ -695,21 +660,19 @@ msgid "Default"
 msgstr "Προκαθορισμένο"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
-msgstr "Μη τοποθέτηση"
+msgstr "Χωρίς τοποθέτηση"
 
 #: rulesmodel.cpp:884
 #, kde-format
 msgid "Minimal overlapping"
-msgstr ""
+msgstr "Ελάχιστη επικάλυψη"
 
 #: rulesmodel.cpp:885
-#, fuzzy, kde-format
-#| msgid "Maximizing"
+#, kde-format
 msgid "Maximized"
-msgstr "Μεγιστοποίηση"
+msgstr "Μεγιστοποιημένη"
 
 #: rulesmodel.cpp:886
 #, kde-format
@@ -722,27 +685,22 @@ msgid "Random"
 msgstr "Τυχαία"
 
 #: rulesmodel.cpp:888
-#, fuzzy, kde-format
-#| msgid "Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
-msgstr "Πάνω αριστερή γωνία"
+msgstr "Στην πάνω αριστερή γωνία"
 
 #: rulesmodel.cpp:889
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "Κάτω από το ποντίκι"
 
 #: rulesmodel.cpp:890
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "Στο κύριο παράθυρο"
 
 #: rulesmodel.cpp:897
-#, fuzzy, kde-format
-#| msgctxt "no focus stealing prevention"
-#| msgid "None"
+#, kde-format
 msgid "None"
 msgstr "Κανένα"
 
@@ -777,30 +735,27 @@ msgid "Above"
 msgstr ""
 
 #: rulesmodel.cpp:931
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Notification"
-msgstr "Θέ&ση"
+msgstr "Ειδοποίηση"
 
 #: rulesmodel.cpp:933
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Αναδυόμενο"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "&Position"
+#, kde-format
 msgid "Critical notification"
-msgstr "Θέ&ση"
+msgstr "Κρίσιμη ειδοποίηση"
 
 #: rulesmodel.cpp:936
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Επικάλυψη"
 
 #: rulesmodel.cpp:961
-#, fuzzy, kde-format
-#| msgid "Unmanaged Window"
+#, kde-format
 msgid "Unmanaged window"
 msgstr "Παράθυρο χωρίς διαχείριση"
 
@@ -812,37 +767,32 @@ msgstr ""
 #: ui/FileDialogLoader.qml:15
 #, kde-format
 msgid "Select File"
-msgstr ""
+msgstr "Επιλογή αρχείου"
 
 #: ui/FileDialogLoader.qml:27
-#, fuzzy, kde-format
-#| msgid "KWin Rule (*.kwinrule)"
+#, kde-format
 msgid "KWin Rules (*.kwinrule)"
-msgstr "Κανόνας KWin (*.kwinrule)"
+msgstr "Κανόνες KWin (*.kwinrule)"
 
 #: ui/main.qml:28
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add New…"
-msgstr "&Νέο..."
+msgstr "Προσθήκη νέου…"
 
 #: ui/main.qml:34
-#, fuzzy, kde-format
-#| msgid "&Import"
+#, kde-format
 msgid "Import…"
-msgstr "&Εισαγωγή"
+msgstr "Εισαγωγή…"
 
 #: ui/main.qml:39
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Cancel Export"
-msgstr "&Εξαγωγή"
+msgstr "Ακύρωση εξαγωγής"
 
 #: ui/main.qml:39
-#, fuzzy, kde-format
-#| msgid "&Export"
+#, kde-format
 msgid "Export…"
-msgstr "&Εξαγωγή"
+msgstr "Εξαγωγή…"
 
 #: ui/main.qml:87
 #, kde-format
@@ -896,33 +846,31 @@ msgid "Import Rules"
 msgstr "Εισαγωγή κανόνων"
 
 #: ui/main.qml:251
-#, fuzzy, kde-format
-#| msgid "Export Rule"
+#, kde-format
 msgid "Export Rules"
-msgstr "Εξαγωγή κανόνα"
+msgstr "Εξαγωγή κανόνων"
 
 #: ui/OptionsComboBox.qml:35
 #, kde-format
 msgid "None selected"
-msgstr ""
+msgstr "Δεν Επιλέχτηκε κανένα"
 
 #: ui/OptionsComboBox.qml:41
 #, kde-format
 msgid "All selected"
-msgstr ""
+msgstr "Επιλέχτηκαν όλα"
 
 #: ui/OptionsComboBox.qml:43
 #, kde-format
 msgid "%1 selected"
 msgid_plural "%1 selected"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 επιλεγμένο"
+msgstr[1] "%1 επιλεγμένα"
 
 #: ui/RulesEditor.qml:66
-#, fuzzy, kde-format
-#| msgid "&Detect Window Properties"
+#, kde-format
 msgid "No window properties changed"
-msgstr "Ανίχνευση ι&διοτήτων παραθύρου"
+msgstr "Δεν άλλαξαν οι ιδιοτήτες παραθύρου"
 
 #: ui/RulesEditor.qml:67
 #, kde-kuit-format
@@ -933,10 +881,9 @@ msgid ""
 msgstr ""
 
 #: ui/RulesEditor.qml:88
-#, fuzzy, kde-format
-#| msgid "&New..."
+#, kde-format
 msgid "Add Property..."
-msgstr "&Νέο..."
+msgstr "Προσθήκη νέας ιδιότητας..."
 
 #: ui/RulesEditor.qml:99
 #, fuzzy, kde-format
@@ -947,33 +894,33 @@ msgstr "Ανίχνευση ι&διοτήτων παραθύρου"
 #: ui/RulesEditor.qml:115 ui/RulesEditor.qml:122
 #, kde-format
 msgid "Instantly"
-msgstr ""
+msgstr "Στιγμιαία"
 
 #: ui/RulesEditor.qml:116 ui/RulesEditor.qml:127
 #, kde-format
 msgid "After %1 second"
 msgid_plural "After %1 seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Μετά από %1 second"
+msgstr[1] "Μετά από %1 seconds"
 
 #: ui/RulesEditor.qml:174
 #, kde-format
 msgid "Add property to the rule"
-msgstr ""
+msgstr "Προσθήκη ιδιοτήτας στον κανόνα"
 
 #: ui/RulesEditor.qml:267
 #, fuzzy, kde-format
 #| msgid "&Detect Window Properties"
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Ανίχνευση ι&διοτήτων παραθύρου"
+msgstr "Καμία ιδιότητα δεν έμεινε"
 
 #: ui/RulesEditor.qml:269
 #, fuzzy, kde-format
 #| msgid "&Detect Window Properties"
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Ανίχνευση ι&διοτήτων παραθύρου"
+msgstr "Καμία ιδιότητα δεν ταιρίαζει με «%1»"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
@@ -988,25 +935,25 @@ msgstr "Όχι"
 #: ui/RulesEditor.qml:292 ui/ValueEditor.qml:168 ui/ValueEditor.qml:175
 #, kde-format
 msgid "%1 %"
-msgstr ""
+msgstr "%1 %"
 
 #: ui/RulesEditor.qml:294
 #, kde-format
 msgctxt "Coordinates (x, y)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1, %2)"
 
 #: ui/RulesEditor.qml:296
 #, kde-format
 msgctxt "Size (width, height)"
 msgid "(%1, %2)"
-msgstr ""
+msgstr "(%1, %2)"
 
 #: ui/ValueEditor.qml:203
 #, kde-format
 msgctxt "(x, y) coordinates separator in size/position"
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #, fuzzy
 #~| msgid "&Closeable"

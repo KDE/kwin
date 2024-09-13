@@ -17,14 +17,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-09 00:40+0000\n"
-"PO-Revision-Date: 2017-06-12 16:22+0200\n"
-"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
-"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"PO-Revision-Date: 2024-09-07 23:21+0300\n"
+"Last-Translator: Αντώνης Γέραλης <capoiosct@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-doc@kde.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
 #, kde-format
@@ -40,44 +40,44 @@ msgstr "sng@hellug.gr, manolis@koppermind.homelinux.org"
 #: backends/wayland/wayland_output.cpp:275
 #, kde-format
 msgid "Press right control to ungrab pointer"
-msgstr ""
+msgstr "Πιέστε το δεξί control για να απελευθέρωση δείκτη"
 
 #: backends/wayland/wayland_output.cpp:277
 #, kde-format
 msgid "Press right control key to grab pointer"
-msgstr ""
+msgstr "Πατήστε το δεξί πλήκτρο control για να πιάσετε το δείκτη"
 
 #: backends/wayland/wayland_output.cpp:281
 #, kde-format
 msgctxt ""
 "Title of nested KWin Wayland with Wayland socket identifier as argument"
 msgid "KDE Wayland Compositor %1"
-msgstr ""
+msgstr "Συνθέτης Wayland του KDE %1"
 
 #: backends/wayland/wayland_output.cpp:284
 #, kde-format
 msgid "- Output disabled"
-msgstr ""
+msgstr "- έξοδος ανενεργή"
 
 #: backends/wayland/wayland_output.cpp:286
 #, kde-format
 msgid "- Output dimmed"
-msgstr ""
+msgstr "- έξοδος χαμηλωμένη"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "Press right control to ungrab input"
-msgstr ""
+msgstr "Πιέστε το δεξί control για ακύρωση εισόδου"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:511
 #, kde-format
 msgid "Press right control key to grab input"
-msgstr ""
+msgstr "Πατήστε το δεξί πλήκτρο control για να αρπάξετε την είσοδο"
 
 #: backends/x11/windowed/x11_windowed_backend.cpp:512
 #, kde-format
 msgid "KDE Wayland Compositor"
-msgstr ""
+msgstr "Συνθέτης Wayland του KDE"
 
 #: compositor_wayland.cpp:300 compositor_x11.cpp:447
 #, kde-format
@@ -91,14 +91,7 @@ msgid "Suspend Compositing"
 msgstr "Αναστολή σύνθεσης"
 
 #: compositor_x11.cpp:556
-#, fuzzy, kde-format
-#| msgid ""
-#| "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
-#| "b><br>This was most likely due to a driver bug.<p>If you think that you "
-#| "have meanwhile upgraded to a stable driver,<br>you can reset this "
-#| "protection but <b>be aware that this might result in an immediate crash!</"
-#| "b></p><p>Alternatively, you might want to use the XRender backend instead."
-#| "</p>"
+#, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
 "b><br>This was most likely due to a driver bug.<p>If you think that you have "
@@ -109,8 +102,7 @@ msgstr ""
 "παρελθόν.</b><br>Αυτό πιθανότατα να οφείλεται σε ένα σφάλμα του οδηγού.<p>Αν "
 "πιστεύεται ότι έχετε αναβαθμίσει σε έναν σταθερό οδηγό,<br>μπορείτε να "
 "επαναφέρετε αυτήν την προστασία αλλά <b>θα πρέπει να γνωρίζετε ότι μπορεί να "
-"προκαλέσει άμεση κατάρρευση!</b></p><p>Εναλλακτικά, μπορείτε να "
-"χρησιμοποιήσετε το σύστημα υποστήριξης XRender.</p>"
+"προκαλέσει άμεση κατάρρευση!</b></p>"
 
 #: compositor_x11.cpp:563
 #, kde-format
@@ -120,10 +112,9 @@ msgstr ""
 "διαθέσιμες."
 
 #: compositor_x11.cpp:566
-#, fuzzy, kde-format
-#| msgid "GLX/OpenGL and XRender/XFixes are not available."
+#, kde-format
 msgid "GLX/OpenGL is not available."
-msgstr "Τα GLX/OpenGL και XRender/XFixes δεν είναι διαθέσιμα."
+msgstr "Το GLX/OpenGL δεν είναι διαθέσιμο."
 
 #: debug_console.cpp:79
 #, kde-format
@@ -387,9 +378,7 @@ msgid "Vertical"
 msgstr "Κατακόρυφα"
 
 #: debug_console.cpp:240
-#, fuzzy, kde-format
-#| msgctxt "The relative mouse movement"
-#| msgid "Delta"
+#, kde-format
 msgctxt "The angle delta of a pointer axis event"
 msgid "Delta"
 msgstr "Διαφορά (δέλτα)"
@@ -434,13 +423,13 @@ msgstr "Meta"
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Keypad"
-msgstr ""
+msgstr "Πληκτρολόγιο"
 
 #: debug_console.cpp:287
 #, kde-format
 msgctxt "A keyboard modifier"
 msgid "Group-switch"
-msgstr ""
+msgstr "Διακόπτης ομάδας"
 
 #: debug_console.cpp:293
 #, kde-format
@@ -458,7 +447,7 @@ msgstr ""
 #, kde-format
 msgctxt "Key according to Qt"
 msgid "Qt::Key code"
-msgstr ""
+msgstr "Κωδικός Qt::Key"
 
 #: debug_console.cpp:300
 #, kde-format
@@ -512,7 +501,7 @@ msgstr "Επαφή προς τα πάνω"
 #, kde-format
 msgctxt "A pinch gesture is started"
 msgid "Pinch start"
-msgstr ""
+msgstr "Εκκίνηση τσιμπήματος"
 
 #: debug_console.cpp:359
 #, kde-format
@@ -524,7 +513,7 @@ msgstr "Καταμέτρηση δαχτύλων"
 #, kde-format
 msgctxt "A pinch gesture is updated"
 msgid "Pinch update"
-msgstr ""
+msgstr "Ενημέρωση τσιμπήματος"
 
 #: debug_console.cpp:372
 #, kde-format
@@ -554,19 +543,19 @@ msgstr "Διαφορά y"
 #, kde-format
 msgctxt "A pinch gesture ended"
 msgid "Pinch end"
-msgstr ""
+msgstr "Τέλος τσιμπήματος"
 
 #: debug_console.cpp:398
 #, kde-format
 msgctxt "A pinch gesture got cancelled"
 msgid "Pinch cancelled"
-msgstr ""
+msgstr "Τσίμπημα ακυρώθηκε"
 
 #: debug_console.cpp:410
 #, kde-format
 msgctxt "A swipe gesture is started"
 msgid "Swipe start"
-msgstr ""
+msgstr "Εκκίνηση σάρωσης"
 
 #: debug_console.cpp:412
 #, kde-format
@@ -578,7 +567,7 @@ msgstr "Καταμέτρηση δαχτύλων"
 #, kde-format
 msgctxt "A swipe gesture is updated"
 msgid "Swipe update"
-msgstr ""
+msgstr "Ενημέρωση σάρωσης"
 
 #: debug_console.cpp:425
 #, kde-format
@@ -596,13 +585,13 @@ msgstr "Διαφορά y"
 #, kde-format
 msgctxt "A swipe gesture ended"
 msgid "Swipe end"
-msgstr ""
+msgstr "Τέλος σάρωσης"
 
 #: debug_console.cpp:449
 #, kde-format
 msgctxt "A swipe gesture got cancelled"
 msgid "Swipe cancelled"
-msgstr ""
+msgstr "Σάρωση ακυρώθηκε"
 
 #: debug_console.cpp:461
 #, fuzzy, kde-format
@@ -615,142 +604,131 @@ msgstr "Εναλλαγή στην καρτέλα"
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Notebook lid"
-msgstr ""
+msgstr "Καπάκι λάπτοπ"
 
 #: debug_console.cpp:469
 #, kde-format
 msgctxt "Name of a hardware switch"
 msgid "Tablet mode"
-msgstr ""
+msgstr "Λειτουργία τάμπλετ"
 
 #: debug_console.cpp:471
-#, fuzzy, kde-format
-#| msgid "Switch to Tab"
+#, kde-format
 msgctxt "A hardware switch"
 msgid "Switch"
-msgstr "Εναλλαγή στην καρτέλα"
+msgstr "Διακόπτης"
 
 #: debug_console.cpp:475
 #, kde-format
 msgctxt "The hardware switch got turned off"
 msgid "Off"
-msgstr ""
+msgstr "Ανενεργό"
 
 #: debug_console.cpp:478
 #, kde-format
 msgctxt "The hardware switch got turned on"
 msgid "On"
-msgstr ""
+msgstr "Ενεργό"
 
 #: debug_console.cpp:483
 #, kde-format
 msgctxt "State of a hardware switch (on/off)"
 msgid "State"
-msgstr ""
+msgstr "Κατάσταση"
 
 #: debug_console.cpp:498
 #, kde-format
 msgid "Tablet Tool"
-msgstr ""
+msgstr "Εργαλείο τάμπλετ"
 
 #: debug_console.cpp:499
 #, kde-format
 msgid "EventType"
-msgstr ""
+msgstr "ΤύποςΓεγονός"
 
 #: debug_console.cpp:500 debug_console.cpp:545 debug_console.cpp:559
-#, fuzzy, kde-format
-#| msgctxt "The global mouse pointer position"
-#| msgid "Global Position"
+#, kde-format
 msgid "Position"
-msgstr "Καθολική θέση"
+msgstr "Θέση"
 
 #: debug_console.cpp:502
 #, kde-format
 msgid "Tilt"
-msgstr ""
+msgstr "Κλίση"
 
 #: debug_console.cpp:504
 #, fuzzy, kde-format
 #| msgid "caption"
 msgid "Rotation"
-msgstr "τίτλος παραθύρου"
+msgstr "Περιστροφή"
 
 #: debug_console.cpp:505
 #, kde-format
 msgid "Pressure"
-msgstr ""
+msgstr "Πίεση"
 
 #: debug_console.cpp:506
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Buttons"
-msgstr "Κουμπί"
+msgstr "Κουμπιά"
 
 #. i18n: ectx: property (title), widget (QGroupBox, modifiersBox)
 #: debug_console.cpp:507 debug_console.ui:346
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifiers"
 msgstr "Τροποποιητές"
 
 #: debug_console.cpp:516
 #, kde-format
 msgid "Tablet Tool Button"
-msgstr ""
+msgstr "Κουμπί εργαλείων tablet"
 
 #: debug_console.cpp:517 debug_console.cpp:531
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Button"
 msgstr "Κουμπί"
 
 #: debug_console.cpp:518 debug_console.cpp:532
-#, fuzzy, kde-format
-#| msgctxt "All currently pressed buttons in a mouse press/release event"
-#| msgid "Pressed Buttons"
+#, kde-format
 msgid "Pressed"
-msgstr "Κουμπιά που έχουν πιεστεί"
+msgstr "Σε πίεση"
 
 #: debug_console.cpp:519 debug_console.cpp:533 debug_console.cpp:547
 #: debug_console.cpp:561
 #, kde-format
 msgid "Tablet"
-msgstr ""
+msgstr "Tablet"
 
 #: debug_console.cpp:530
 #, kde-format
 msgid "Tablet Pad Button"
-msgstr ""
+msgstr "Κουμπί pad tablet"
 
 #: debug_console.cpp:543
 #, kde-format
 msgid "Tablet Pad Strip"
-msgstr ""
+msgstr "Λωρίδα pad tablet"
 
 #: debug_console.cpp:544 debug_console.cpp:558
 #, kde-format
 msgid "Number"
-msgstr ""
+msgstr "Αριθμός"
 
 #: debug_console.cpp:546 debug_console.cpp:560
 #, kde-format
 msgid "isFinger"
-msgstr ""
+msgstr "είναιΔάκτυλο"
 
 #: debug_console.cpp:557
 #, kde-format
 msgid "Tablet Pad Ring"
-msgstr ""
+msgstr "Δαχτυλίδι pad tablet"
 
 #: debug_console.cpp:622
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Εφέ"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -938,10 +916,9 @@ msgid "task"
 msgstr "εργασία"
 
 #: debug_console.cpp:1239
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "X11 Windows"
-msgstr "Παράθυρα"
+msgstr "Παράθυρα X11"
 
 #: debug_console.cpp:1241
 #, kde-format
@@ -962,19 +939,19 @@ msgstr "Εσωτερικά παράθυρα"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Εκφόρτωση"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Φόρτωση"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
 #, kde-format
 msgid "Quit Debug Console"
-msgstr ""
+msgstr "Έξοδος από την κονσόλα αποσφαλμάτωσης"
 
 #. i18n: ectx: attribute (title), widget (QWidget, windows)
 #: debug_console.ui:45
@@ -984,153 +961,142 @@ msgstr "Παράθυρα"
 
 #. i18n: ectx: attribute (title), widget (QWidget, input)
 #: debug_console.ui:59
-#, fuzzy, kde-format
-#| msgid "Input Device"
+#, kde-format
 msgid "Input Events"
-msgstr "Συσκευή εισόδου"
+msgstr "Γεγονότα εισόδου"
 
 #. i18n: ectx: attribute (title), widget (QWidget, inputDevices)
 #: debug_console.ui:76
-#, fuzzy, kde-format
-#| msgid "Input Device"
+#, kde-format
 msgid "Input Devices"
-msgstr "Συσκευή εισόδου"
+msgstr "Συσκευές εισόδου"
 
 #. i18n: ectx: attribute (title), widget (QWidget, tab)
 #: debug_console.ui:86
 #, kde-format
 msgid "OpenGL"
-msgstr ""
+msgstr "OpenGL"
 
 #. i18n: ectx: property (text), widget (QLabel, noOpenGLLabel)
 #: debug_console.ui:92
 #, kde-format
 msgid "No OpenGL compositor running"
-msgstr ""
+msgstr "Δεν εκτελείται συνθέτης OpenGL"
 
 #. i18n: ectx: property (title), widget (QGroupBox, driverInfoBox)
 #: debug_console.ui:120
 #, kde-format
 msgid "OpenGL (ES) driver information"
-msgstr ""
+msgstr "Πληροφορίες προγράμματος οδήγησης OpenGL (ES)"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: debug_console.ui:126
 #, kde-format
 msgid "Vendor:"
-msgstr ""
+msgstr "Προμηθευτής:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: debug_console.ui:133
 #, kde-format
 msgid "Renderer:"
-msgstr ""
+msgstr "Απεικονιστής:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: debug_console.ui:140
 #, kde-format
 msgid "Version:"
-msgstr ""
+msgstr "Έκδοση:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_4)
 #: debug_console.ui:147
 #, kde-format
 msgid "Shading Language Version:"
-msgstr ""
+msgstr "Έκδοση γλώσσας σκίασης:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_5)
 #: debug_console.ui:154
 #, kde-format
 msgid "Driver:"
-msgstr ""
+msgstr "Οδηγός:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: debug_console.ui:161
 #, kde-format
 msgid "GPU class:"
-msgstr ""
+msgstr "Κατηγορία GPU:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #: debug_console.ui:168
 #, kde-format
 msgid "OpenGL Version:"
-msgstr ""
+msgstr "Έκδοση OpenGL:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: debug_console.ui:175
 #, kde-format
 msgid "GLSL Version:"
-msgstr ""
+msgstr "Έκδοση GLSL:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, platformExtensionsBox)
 #: debug_console.ui:241
-#, fuzzy, kde-format
-#| msgid "&Extensions"
+#, kde-format
 msgid "Platform Extensions"
-msgstr "&Επεκτάσεις"
+msgstr "&Επεκτάσεις πλατφόρμας"
 
 #. i18n: ectx: property (title), widget (QGroupBox, glExtensionsBox)
 #: debug_console.ui:257
-#, fuzzy, kde-format
-#| msgid "&Extensions"
+#, kde-format
 msgid "OpenGL (ES) Extensions"
-msgstr "&Επεκτάσεις"
+msgstr "Επεκτάσεις OpenGL (ES)"
 
 #. i18n: ectx: attribute (title), widget (QWidget, keyboard)
 #: debug_console.ui:278
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard"
-msgstr "Διάταξη πληκτρολογίου"
+msgstr "Πληκτρολόγιο"
 
 #. i18n: ectx: property (title), widget (QGroupBox, layoutBox)
 #: debug_console.ui:305
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keymap Layouts"
-msgstr "Διάταξη πληκτρολογίου"
+msgstr "Διατάξεις πληκτρολογίου"
 
 #. i18n: ectx: property (text), widget (QLabel, label_9)
 #: debug_console.ui:327
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgid "Current Layout:"
-msgstr "Διαμόρφωση διατάξεων..."
+msgstr "Τρέχουσα διάταξη:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeModifiersBox)
 #: debug_console.ui:362
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Active Modifiers"
-msgstr "Τροποποιητές"
+msgstr "Ενεργοί τροποποιητές"
 
 #. i18n: ectx: property (title), widget (QGroupBox, ledsBox)
 #: debug_console.ui:378
 #, kde-format
 msgid "LEDs"
-msgstr ""
+msgstr "LEDs"
 
 #. i18n: ectx: property (title), widget (QGroupBox, activeLedsBox)
 #: debug_console.ui:394
 #, kde-format
 msgid "Active LEDs"
-msgstr ""
+msgstr "Ενεργά LED"
 
 #. i18n: ectx: attribute (title), widget (QWidget, clipboard)
 #. i18n: ectx: property (text), widget (QLabel, label_10)
 #: debug_console.ui:415 debug_console.ui:435
 #, kde-format
 msgid "Clipboard"
-msgstr ""
+msgstr "Πρόχειρο"
 
 #. i18n: ectx: property (text), widget (QLabel, label_11)
 #: debug_console.ui:481
 #, kde-format
 msgid "Primary Selection"
-msgstr ""
+msgstr "Πρωτογενής επιλογή"
 
 #: helpers/killer/killer.cpp:134
 #, kde-format
@@ -1214,6 +1180,8 @@ msgid ""
 "<para><application>%1</application> is not responding. Do you want to "
 "terminate this application?</para>"
 msgstr ""
+"<para><application>%1</application> δεν ανταποκρίνεται. Θέλετε να "
+"τερματίσετε αυτή την εφαρμογή; </para>"
 
 #: helpers/killer/killer.cpp:211
 #, kde-kuit-format
@@ -1222,86 +1190,74 @@ msgid ""
 "<para>\"%1\" of <application>%2</application> is not responding. Do you want "
 "to terminate this application?</para>"
 msgstr ""
+"<para>\"%1\" της <application>%2</application> δεν ανταποκρίνεται. Θέλετε να "
+"τερματίσετε αυτή την εφαρμογή;</para>"
 
 #: helpers/killer/killer.cpp:214
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid ""
-#| "<p>Do you want to terminate this application?</p><p><warning>Terminating "
-#| "the application will close all of its child windows. Any unsaved data "
-#| "will be lost.</warning></p>"
+#, kde-kuit-format
 msgctxt "@info"
 msgid ""
 "<para><emphasis strong='true'>Terminating this application will close all of "
 "its windows. Any unsaved data will be lost.</emphasis></para>"
 msgstr ""
-"<p>Θέλετε να τερματίσετε αυτή την εφαρμογή;</p><p><warning>Ο τερματισμός της "
-"εφαρμογής θα κλείσει όλα τα θυγατρικά παράθυρα. Όλα τα μη αποθηκευμένα "
-"δεδομένα στην εφαρμογή θα χαθούν.</warning></p>"
+"<para><emphasis strong='true'>Ο τερματισμός της εφαρμογής θα κλείσει όλα τα "
+"θυγατρικά παράθυρα. Όλα τα μη αποθηκευμένα δεδομένα στην εφαρμογή θα χαθούν."
+"</emphasis></para>"
 
 #: helpers/killer/killer.cpp:216
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Τερματισμός"
+msgstr "&Τερματισμός %1"
 
 #: helpers/killer/killer.cpp:217
-#, fuzzy, kde-format
-#| msgid "Wait Longer"
+#, kde-format
 msgctxt "@action:button Wait for frozen app to maybe respond again"
 msgid "&Wait Longer"
-msgstr "Αναμονή περισσότερο"
+msgstr "&Αναμονή περισσότερο"
 
 #: helpers/killer/killer.cpp:225
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(δεν ανταποκρίνεται)"
+msgstr "Δεν ανταποκρίνεται"
 
 #: helpers/killer/killer.cpp:241
 #, kde-format
 msgctxt "@info"
 msgid "Process ID: %1"
-msgstr ""
+msgstr "ID διεργασίας: %1"
 
 #: helpers/killer/killer.cpp:243
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "όνομα υπολογιστή"
+msgstr "Όνομα υπολογιστή: %1"
 
 #: input.cpp:2114
 #, kde-format
 msgid "Move the tablet to the next output"
-msgstr ""
+msgstr "Μετακίνηση του tablet στην επόμενη έξοδο"
 
 #: input.cpp:2193
 #, kde-format
 msgid "Tablet moved to %1"
-msgstr ""
+msgstr "Το tablet μετακινήθηκε στο %1"
 
 #: input.cpp:2193
 #, kde-format
 msgid "Tablets switched outputs"
-msgstr ""
+msgstr "Tablets με αλλαγμένες εξόδους"
 
 #: input.cpp:3308
-#, fuzzy, kde-format
-#| msgctxt "A touch up event"
-#| msgid "Touch Up"
+#, kde-format
 msgid "Touchpad"
-msgstr "Επαφή προς τα πάνω"
+msgstr "Επαφάνεια αφής"
 
 #: keyboard_layout.cpp:45 keyboard_layout.cpp:55 keyboard_layout.cpp:137
-#, fuzzy, kde-format
-#| msgctxt "tooltip title"
-#| msgid "Keyboard Layout"
+#, kde-format
 msgid "Keyboard Layout Switcher"
-msgstr "Διάταξη πληκτρολογίου"
+msgstr "Διακόπτης διάταξης πληκτρολογίου"
 
 #: killwindow.cpp:31
 #, kde-format
@@ -1333,10 +1289,9 @@ msgid "KDE window manager"
 msgstr "Ο διαχειριστής παραθύρων του KDE"
 
 #: main.cpp:199
-#, fuzzy, kde-format
-#| msgid "(c) 1999-2013, The KDE Developers"
+#, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
-msgstr "(c) 1999-2013, οι προγραμματιστές του KDE"
+msgstr "(c) 1999-2019, οι προγραμματιστές του KDE"
 
 #: main.cpp:201
 #, kde-format
@@ -1361,29 +1316,27 @@ msgstr "Luboš Luňák"
 #: main.cpp:205
 #, kde-format
 msgid "Martin Flöser"
-msgstr ""
+msgstr "Martin flöser"
 
 #: main.cpp:206
 #, kde-format
 msgid "David Edmundson"
-msgstr ""
+msgstr "David Edmundson"
 
 #: main.cpp:207
 #, kde-format
 msgid "Roman Gilg"
-msgstr ""
+msgstr "Roman Gilg"
 
 #: main.cpp:208
 #, kde-format
 msgid "Vlad Zahorodnii"
-msgstr ""
+msgstr "Vlad Zahorodnii"
 
 #: main.cpp:209
-#, fuzzy, kde-format
-#| msgctxt "@item:inlistbox Button size:"
-#| msgid "Very Huge"
+#, kde-format
 msgid "Xaver Hugl"
-msgstr "Υπερ-τεράστιο"
+msgstr "Xaver Hugl"
 
 #: main.cpp:218
 #, kde-format
@@ -1457,6 +1410,8 @@ msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
 "socket to name the socket"
 msgstr ""
+"Η υποδοχή Wayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις. "
+"Αυτό μπορεί να συνδυαστεί με -- υποδοχή για να ονομάσετε την υποδοχή"
 
 #: main_wayland.cpp:342
 #, kde-format
@@ -1464,6 +1419,8 @@ msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr ""
+"Η υποδοχή XWayland που θα χρησιμοποιείται για τις εισερχόμενες συνδέσεις της "
+"Xwayland. Αυτό μπορεί να οριστεί πολλές φορές"
 
 #: main_wayland.cpp:346
 #, kde-format
@@ -1502,16 +1459,14 @@ msgid "Starts the session in locked mode."
 msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτουργία."
 
 #: main_wayland.cpp:393
-#, fuzzy, kde-format
-#| msgid "Starts the session in locked mode."
+#, kde-format
 msgid "Starts the session without lock screen support."
-msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτουργία."
+msgstr "Εκκινεί τη συνεδρία χωρίς υποστήριξη του κλειδώματος οθόνης."
 
 #: main_wayland.cpp:398
-#, fuzzy, kde-format
-#| msgid "Starts the session in locked mode."
+#, kde-format
 msgid "Starts the session without global shortcuts support."
-msgstr "Εκκινεί τη συνεδρία σε κλειδωμένη λειτουργία."
+msgstr "Εκκινεί τη συνεδρία χωρίς υποστήριξη των καθολικών συντομεύσεων."
 
 #: main_wayland.cpp:403 main_x11.cpp:438
 #, kde-format
@@ -1567,17 +1522,14 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurDescription)
 #: plugins/blur/blur_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Blur strength:"
-msgstr "&Ισχύς:"
+msgstr "Ισχύς θολώματος:"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantBlurLight)
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseLight)
 #: plugins/blur/blur_config.ui:42 plugins/blur/blur_config.ui:108
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Light"
 msgstr "Δεξί"
 
@@ -1590,87 +1542,74 @@ msgstr "Ισχυρό"
 
 #. i18n: ectx: property (text), widget (QLabel, labelConstantNoiseDescription)
 #: plugins/blur/blur_config.ui:83
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Noise strength:"
-msgstr "&Ισχύς:"
+msgstr "Ισχύς θορύβου:"
 
 #: plugins/colorpicker/colorpicker.cpp:107
-#, fuzzy, kde-format
-#| msgid ""
-#| "Select window to force close with left click or enter.\n"
-#| "Escape or right click to cancel."
+#, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
 "Escape or right click to cancel."
 msgstr ""
-"Επιλέξτε παράθυρο για εξαναγκασμένο κλείσιμο με αριστερό κλικ ή enter.\n"
-"Esc ή δεξί κλικ για ακύρωση."
+"Επιλέξτε μία θέση για επιλογή χρώματος με αριστερό κλικ ή enter.\n"
+"Escape ή δεξί κλικ για ακύρωση."
 
 #. i18n: ectx: property (text), widget (QLabel, label_Strength)
 #: plugins/diminactive/diminactive_config.ui:17
-#, fuzzy, kde-format
-#| msgid "&Strength:"
+#, kde-format
 msgid "Strength:"
-msgstr "&Ισχύς:"
+msgstr "Ισχύς:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Dim)
 #: plugins/diminactive/diminactive_config.ui:40
 #, kde-format
 msgid "Dim:"
-msgstr ""
+msgstr "Σκίαση:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimPanels)
 #: plugins/diminactive/diminactive_config.ui:47
-#, fuzzy, kde-format
-#| msgid "Do not animate panels"
+#, kde-format
 msgid "Docks and panels"
-msgstr "Χωρίς εφέ κίνησης πινάκων"
+msgstr "Προσαρτήσεις και πίνακες"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimDesktop)
 #: plugins/diminactive/diminactive_config.ui:54
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "Desktop"
-msgstr "Ό&λες τις επιφάνειες εργασίας"
+msgstr "Επιφάνεια εργασίας"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimKeepAbove)
 #: plugins/diminactive/diminactive_config.ui:61
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above windows"
-msgstr "Διατήρηση πάνω από τα άλλα"
+msgstr "Διατήρηση πάνω από παράθυρα"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimByGroup)
 #: plugins/diminactive/diminactive_config.ui:68
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "By window group"
-msgstr "Παράθυρα"
+msgstr "Ανά ομάδα παραθύρων"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_DimFullScreen)
 #: plugins/diminactive/diminactive_config.ui:75
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen windows"
-msgstr "&Πλήρης οθόνη"
+msgstr "Παράθυρα πλήρης οθόνης"
 
 #. i18n: ectx: property (text), widget (QLabel, label_Duration)
 #: plugins/glide/glide_config.ui:19
 #: plugins/scale/package/contents/ui/config.ui:17
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Duration:"
-msgstr "τίτλος παραθύρου"
+msgstr "Διάρκεια:"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_Duration)
 #: plugins/glide/glide_config.ui:32
 #: plugins/scale/package/contents/ui/config.ui:30
-#, fuzzy, kde-format
-#| msgctxt "Duration of rotation"
-#| msgid "Default"
+#, kde-format
 msgid "Default"
-msgstr "Προκαθορισμένο"
+msgstr "Προεπιλεγμένο"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Duration)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AnimationDuration)
@@ -1682,19 +1621,16 @@ msgstr " milliseconds"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_InAnimation)
 #: plugins/glide/glide_config.ui:50
-#, fuzzy, kde-format
-#| msgctxt "The global position of the touch point"
-#| msgid "Global position"
+#, kde-format
 msgid "Window Open Animation"
-msgstr "Καθολική θέση"
+msgstr "Κίνηση άνοιγματος παραθύρου"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationEdge)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationEdge)
 #: plugins/glide/glide_config.ui:56 plugins/glide/glide_config.ui:154
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Rotation edge:"
-msgstr "τίτλος παραθύρου"
+msgstr "Άκρη περιστροφής:"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_InRotationEdge)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_OutRotationEdge)
@@ -1708,9 +1644,7 @@ msgstr "Πάνω"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignRight)
 #: plugins/glide/glide_config.ui:75 plugins/glide/glide_config.ui:173
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "Right"
 msgstr "Δεξί"
 
@@ -1726,26 +1660,23 @@ msgstr "Κάτω"
 #. i18n: ectx: property (text), widget (QRadioButton, kcfg_titleAlignLeft)
 #: plugins/glide/glide_config.ui:85 plugins/glide/glide_config.ui:183
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:29
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgid "Left"
 msgstr "Αριστερό"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InRotationAngle)
 #. i18n: ectx: property (text), widget (QLabel, label_OutRotationAngle)
 #: plugins/glide/glide_config.ui:93 plugins/glide/glide_config.ui:191
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Rotation angle:"
-msgstr "τίτλος παραθύρου"
+msgstr "Γωνία περιστροφής:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InDistance)
 #. i18n: ectx: property (text), widget (QLabel, label_OutDistance)
 #: plugins/glide/glide_config.ui:119 plugins/glide/glide_config.ui:198
 #, kde-format
 msgid "Distance:"
-msgstr ""
+msgstr "Απόσταση:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_OutAnimation)
 #: plugins/glide/glide_config.ui:148
@@ -1759,28 +1690,27 @@ msgstr "Καθολική θέση"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Ποτέ"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " milliseconds"
-msgstr[1] " milliseconds"
+msgstr[0] "%1 second"
+msgstr[1] "%1 seconds"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "Απόκρυψη δρομέα κατά την αδράνεια:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Απόκρυψη δρομέα κατά την πληκτρολόγηση"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1834,18 +1764,15 @@ msgid "Very Huge"
 msgstr "Υπερ-τεράστιο"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:54
-#, fuzzy, kde-format
-#| msgid "&Resize"
+#, kde-format
 msgctxt "@item:inlistbox Button size:"
 msgid "Oversized"
-msgstr "Αλλαγή μεγέ&θους"
+msgstr "Υπερμέγεθες"
 
 #: plugins/kdecorations/aurorae/src/config/auroraeconfig.cpp:57
-#, fuzzy, kde-format
-#| msgctxt "A button in a mouse press/release event"
-#| msgid "Button"
+#, kde-format
 msgid "Button size:"
-msgstr "Κουμπί"
+msgstr "Μέγεθος κουμπιού:"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, PlastikConfigDialog)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:14
@@ -1881,7 +1808,7 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgid "Close Window"
 msgid "Colored window border"
-msgstr "Κλείσιμο παραθύρου"
+msgstr "Έγχρωμο περίγραμμα παραθύρου"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:66
@@ -1895,225 +1822,210 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_animateButtons)
 #: plugins/kdecorations/aurorae/themes/plastik/package/contents/ui/config.ui:69
-#, fuzzy, kde-format
-#| msgid "Animate desktop changes"
+#, kde-format
 msgid "Animate buttons"
-msgstr "Εφέ κίνησης στις αλλαγές της επιφάνειας εργασίας"
+msgstr "Εφέ κίνησης κουμπιών"
 
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Το πλήκτρο Caps Lock έχει ενεργοποιηθεί"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Το πλήκτρο Caps Lock είναι τώρα ανενεργό"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Το πλήκτρο Num Lock έχει ενεργοποιηθεί"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Το πλήκτρο Num Lock είναι τώρα ανενεργό"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Το πλήκτρο Scroll Lock έχει ενεργοποιηθεί"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Το πλήκτρο Scroll Lock είναι τώρα ανενεργό"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Το πλήκτρο Shift είναι τώρα ενεργό"
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Το πλήκτρο Shift είναι τώρα ανενεργό"
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Το πλήκτρο Control είναι τώρα ενεργό"
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Το πλήκτρο Control είναι τώρα ανενεργό"
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Το πλήκτρο Alt είναι τώρα ενεργό"
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Το πλήκτρο Alt είναι τώρα ανενεργό"
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Το πλήκτρο Meta είναι τώρα ενεργό"
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Το πλήκτρο Meta είναι τώρα ανενεργό"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
-#, fuzzy, kde-format
-#| msgid "&All Activities"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "activate"
-msgstr "&Όλες οι δραστηριότητες"
+msgstr "ενεργό"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:44
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "close"
-msgstr "&Κλείσιμο"
+msgstr "κλείσε"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:47
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "min"
-msgstr ""
+msgstr "ελαχ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:50
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "minimize"
-msgstr "Ελαχιστοποίηση"
+msgstr "ελαχιστοποίηση"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:53
 #, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "max"
-msgstr ""
+msgstr "μεγ"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:56
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:58
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "maximize"
-msgstr "Μεγιστοποίηση"
+msgstr "μεγιστοποίηση"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:59
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "fullscreen"
-msgstr "&Πλήρης οθόνη"
+msgstr "πλήρης οθόνη"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:62
-#, fuzzy, kde-format
-#| msgid "Unshade"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "shade"
-msgstr "Ξετύλιγμα"
+msgstr "σκίασε"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:65
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep above"
-msgstr "Διατήρηση πάνω από τα άλλα"
+msgstr "διατήρηση πάνω"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:68
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "keep below"
-msgstr "Διατήρηση κάτω από τα άλλα"
+msgstr "διατήρηση κάτω"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:75
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "window"
-msgstr "Παράθυρα"
+msgstr "παράθυρα"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:85
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "name"
 msgstr "όνομα"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:87
-#, fuzzy, kde-format
-#| msgid "name"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "appname"
-msgstr "όνομα"
+msgstr "εφαρμογή"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:89
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:145
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgctxt "Note this is a KRunner keyword"
 msgid "desktop"
-msgstr "Ό&λες τις επιφάνειες εργασίας"
+msgstr "επιφάνεια εργασίας"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:253
-#, fuzzy, kde-format
-#| msgid "Switch to Desktop %1"
+#, kde-format
 msgid "Switch to desktop %1"
-msgstr "Εναλλαγή στην Επιφάνεια εργασίας %1"
+msgstr "Εναλλαγή στην επιφάνεια εργασίας %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:292
 #, kde-format
 msgid "Close running window on %1"
-msgstr ""
+msgstr "Κλείσιμο ενεργού παραθύρου στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:295
 #, kde-format
 msgid "(Un)minimize running window on %1"
-msgstr ""
+msgstr "(Απο)ελαχιστοποίηση ενεργού παραθύρου στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:298
 #, kde-format
 msgid "Maximize/restore running window on %1"
-msgstr ""
+msgstr "Μεγιστοποίηση/επαναφορά ενεργού παραθύρου στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:301
 #, kde-format
 msgid "Toggle fullscreen for running window on %1"
-msgstr ""
+msgstr "Εναλλαγή πλήρους οθόνης για ενεργό παράθυρο στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:304
 #, kde-format
 msgid "(Un)shade running window on %1"
-msgstr ""
+msgstr "(Απο)σκίαση ενεργού παραθύρου στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:307
 #, kde-format
 msgid "Toggle keep above for running window on %1"
-msgstr ""
+msgstr "Εναλλαγή κράτησης πάνω για ενεργό παράθυρο στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:310
 #, kde-format
 msgid "Toggle keep below running window on %1"
-msgstr ""
+msgstr "Εναλλαγή κράτησης κάτω για ενεργό παράθυρο στο %1"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:314
-#, fuzzy, kde-format
-#| msgid "Activate Window (%1)"
+#, kde-format
 msgid "Activate running window on %1"
-msgstr "Ενεργοποίηση παραθύρου (%1)"
+msgstr "Ενεργοποίηση ενεργού παραθύρου σε (%1)"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_FadeToBlack)
 #: plugins/login/package/contents/ui/config.ui:17
@@ -2152,43 +2064,34 @@ msgstr "Π&λάτος:"
 #: plugins/magnifier/magnifier_config.ui:74
 #, kde-format
 msgid " px"
-msgstr " εικ"
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #: plugins/magnifier/magnifier_config.ui:55
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgid "&Height:"
-msgstr "Δεξί"
+msgstr "Ύ&ψος"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Expose Effect"
+#, kde-format
 msgid "Toggle Mouse Click Effect"
-msgstr "Εναλλαγή εφέ έκθεσης"
+msgstr "Εναλλαγή εφέ κλικ ποντικιού"
 
 #: plugins/mouseclick/mouseclick.cpp:45
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Left"
+#, kde-format
 msgctxt "Left mouse button"
 msgid "Left"
 msgstr "Αριστερό"
 
 #: plugins/mouseclick/mouseclick.cpp:46
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Middle"
+#, kde-format
 msgctxt "Middle mouse button"
 msgid "Middle"
 msgstr "Μεσαίο"
 
 #: plugins/mouseclick/mouseclick.cpp:47
-#, fuzzy, kde-format
-#| msgctxt "A mouse button"
-#| msgid "Right"
+#, kde-format
 msgctxt "Right mouse button"
 msgid "Right"
 msgstr "Δεξί"
@@ -2201,30 +2104,25 @@ msgstr "Βασικές ρυθμίσεις"
 
 #. i18n: ectx: property (text), widget (QLabel, button1_label)
 #: plugins/mouseclick/mouseclick_config.ui:37
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Left Mouse Button Color:"
-msgstr "Χωρίς κουμπιά ποντικιού"
+msgstr "Χρώμα αριστερού κουμπιού ποντικιού:"
 
 #. i18n: ectx: property (text), widget (QLabel, button2_label)
 #: plugins/mouseclick/mouseclick_config.ui:50
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Middle Mouse Button Color:"
-msgstr "Χωρίς κουμπιά ποντικιού"
+msgstr "Χρώμα μεσαίου κουμπιού ποντικιού:"
 
 #. i18n: ectx: property (text), widget (QLabel, button3_label)
 #: plugins/mouseclick/mouseclick_config.ui:70
-#, fuzzy, kde-format
-#| msgid "No Mouse Buttons"
+#, kde-format
 msgid "Right Mouse Button Color:"
-msgstr "Χωρίς κουμπιά ποντικιού"
+msgstr "Χρώμα δεξιού κουμπιού ποντικιού:"
 
 #. i18n: ectx: attribute (title), widget (QWidget, advanced_tab)
 #: plugins/mouseclick/mouseclick_config.ui:91
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Settings"
 msgstr "Για προχωρημένους"
 
@@ -2244,11 +2142,9 @@ msgstr "Πλάτος γραμμής:"
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingSize)
 #: plugins/mouseclick/mouseclick_config.ui:119
 #: plugins/mouseclick/mouseclick_config.ui:171
-#, fuzzy, kde-format
-#| msgid " pixel"
-#| msgid_plural " pixels"
+#, kde-format
 msgid " pixel"
-msgstr " εικονοστοιχείο"
+msgstr " pixel"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_RingLife)
 #: plugins/mouseclick/mouseclick_config.ui:132
@@ -2270,11 +2166,9 @@ msgstr "Ακτίνα δαχτυλιδιού:"
 
 #. i18n: ectx: property (text), widget (QLabel, ring_count_label)
 #: plugins/mouseclick/mouseclick_config.ui:184
-#, fuzzy, kde-format
-#| msgctxt "Number of fingers in this pinch gesture"
-#| msgid "Finger count"
+#, kde-format
 msgid "Ring Count:"
-msgstr "Καταμέτρηση δαχτύλων"
+msgstr "Καταμέτρηση δαχτυλιδιού"
 
 #. i18n: ectx: property (title), widget (QGroupBox, font)
 #: plugins/mouseclick/mouseclick_config.ui:210
@@ -2290,10 +2184,9 @@ msgstr "Γραμματοσειρά:"
 
 #. i18n: ectx: property (text), widget (QLabel, showtext_label)
 #: plugins/mouseclick/mouseclick_config.ui:233
-#, fuzzy, kde-format
-#| msgid "Show Desktop"
+#, kde-format
 msgid "Show Text:"
-msgstr "Εμφάνιση επιφάνειας εργασίας"
+msgstr "Εμφάνιση κειμένου:"
 
 #: plugins/mousemark/mousemark.cpp:43
 #, kde-format
@@ -2315,8 +2208,8 @@ msgstr "Καθαρισμός σημαδιών του ποντικιού"
 msgctxt "Suffix"
 msgid " pixel"
 msgid_plural " pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " pixel"
+msgstr[1] " pixels"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox)
 #: plugins/mousemark/mousemark_config.ui:17
@@ -2339,18 +2232,17 @@ msgstr "&Χρώμα:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox2)
 #: plugins/mousemark/mousemark_config.ui:82
-#, fuzzy, kde-format
-#| msgid "Draw with the mouse by holding Shift+Meta keys and moving the mouse."
+#, kde-format
 msgid "Draw with the mouse by holding modifier keys and moving the mouse"
-msgstr "Σχεδιάστε μα το ποντίκι κρατώντας πατημένα τα πλήκτρα Shift+Meta."
+msgstr ""
+"Σχεδιάστε με το ποντίκι κρατώντας πατημένα τα πλήκτρα τροποποιητές και "
+"κουνώντας το."
 
 #. i18n: ectx: property (text), widget (QLabel, label_FreedrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Free draw modifier keys:"
-msgstr "Τροποποιητές"
+msgstr "Πλήκτρα τροποποιητές της ελεύθερης σχεδίασης:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Freedrawalt)
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Arrowdrawalt)
@@ -2358,9 +2250,7 @@ msgstr "Τροποποιητές"
 #: plugins/mousemark/mousemark_config.ui:125
 #: plugins/mousemark/mousemark_config.ui:179
 #: plugins/trackmouse/trackmouse_config.ui:65
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "Alt"
 msgstr "Alt"
 
@@ -2380,9 +2270,7 @@ msgstr "Ctrl"
 #: plugins/mousemark/mousemark_config.ui:139
 #: plugins/mousemark/mousemark_config.ui:193
 #: plugins/trackmouse/trackmouse_config.ui:79
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Shift"
+#, kde-format
 msgid "Shift"
 msgstr "Shift"
 
@@ -2392,63 +2280,57 @@ msgstr "Shift"
 #: plugins/mousemark/mousemark_config.ui:146
 #: plugins/mousemark/mousemark_config.ui:200
 #: plugins/trackmouse/trackmouse_config.ui:86
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Meta"
+#, kde-format
 msgid "Meta"
 msgstr "Meta"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ArrowdrawModifierKeys)
 #: plugins/mousemark/mousemark_config.ui:157
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Arrow draw modifier keys:"
-msgstr "Τροποποιητές"
+msgstr "Πλήκτρα τροποποιητές της σχεδίασης βέλων:"
 
 #: plugins/nightlight/nightlightmanager.cpp:58
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr ""
+msgstr "Το φως νύχτας αναστάλθηκε"
 
 #: plugins/nightlight/nightlightmanager.cpp:59
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr ""
+msgstr "Το φως νύχτας συνεχίστηκε"
 
 #: plugins/nightlight/nightlightmanager.cpp:80
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Αναστολή/Συνέχιση νυχτερινού φωτός"
 
 #: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
 msgid "Color Temperature Preview"
-msgstr ""
+msgstr "Προεπισκόπηση θερμοκρασίας χρώματος"
 
 #: plugins/outputlocator/outputlocator.cpp:50
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgctxt "@label"
 msgid "Unknown"
-msgstr "Άγνωστη"
+msgstr "Άγνωστο"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:40
 #, kde-format
 msgctxt "@action Overview and Grid View are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Εναλλαγή μεταξύ Επισκόπησης και Πλέγματος"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:46
 #: plugins/overview/overvieweffect.cpp:135
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Grid View and Overview"
-msgstr ""
+msgstr "Εναλλαγή μεταξύ Πλέγματος και Επισκόπησης"
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
 #, fuzzy, kde-format
@@ -2466,28 +2348,27 @@ msgstr "Εναλλαγή εφέ αντιστροφής"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:22
-#, fuzzy, kde-format
-#| msgid "Minimize Window"
+#, kde-format
 msgid "Ignore minimized windows:"
-msgstr "Ελαχιστοποίηση παραθύρου"
+msgstr "Αγνόηση ελαχιστοποιημένου παραθύρου"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: plugins/overview/kcm/overvieweffectkcm.ui:36
 #, kde-format
 msgid "Organize windows in the Grid View:"
-msgstr ""
+msgstr "Οργάνωση παραθύρων στην Προβολή πλέγματος:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_FilterWindows)
 #: plugins/overview/kcm/overvieweffectkcm.ui:50
 #, kde-format
 msgid "Search results include filtered windows:"
-msgstr ""
+msgstr "Τα αποτελέσματα αναζήτησης περιλαμβάνουν φιλτραρισμένα παράθυρα:"
 
 #: plugins/overview/overvieweffect.cpp:127
 #, kde-format
 msgctxt "@action Grid View and Overview are the name of KWin effects"
 msgid "Cycle through Overview and Grid View"
-msgstr ""
+msgstr "Εναλλαγή μεταξύ Επισκόπησης και Πλέγματος"
 
 #: plugins/overview/overvieweffect.cpp:143
 #, fuzzy, kde-format
@@ -2504,39 +2385,32 @@ msgid "Toggle Grid View"
 msgstr "Εναλλαγή εφέ αντιστροφής"
 
 #: plugins/overview/qml/DesktopBar.qml:165
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Delete Virtual Desktop"
-msgstr "Στην επι&φάνεια εργασίας"
+msgstr "Αφαίρεση επιφάνεια εργασίας"
 
 #: plugins/overview/qml/DesktopBar.qml:264
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgid "Add Virtual Desktop"
-msgstr "&Νέα επιφάνεια εργασίας"
+msgstr "Προσθήκη επιφάνειας εργασίας"
 
 #: plugins/overview/qml/main.qml:379
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Στην επι&φάνεια εργασίας"
+msgstr "Δεν υπάρχει άλλη επιφάνεια εργασίας για εμφάνιση"
 
 #: plugins/overview/qml/main.qml:385
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
-msgstr "&Νέα επιφάνεια εργασίας"
+msgstr "Προσθήκη επιφάνειας εργασίας"
 
 #: plugins/overview/qml/main.qml:392
-#, fuzzy, kde-format
-#| msgid "Configure Layouts..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Διαμόρφωση διατάξεων..."
+msgstr "Διαμόρφωση επιφανειών εργασίας…"
 
 #: plugins/overview/qml/main.qml:744
 #, fuzzy, kde-format
@@ -2548,28 +2422,25 @@ msgstr "Παράθυρα X11 χωρίς διαχείριση"
 #: plugins/private/qml/WindowHeapDelegate.qml:219
 #, kde-format
 msgid "Drag Down To Close"
-msgstr ""
+msgstr "Σύρετε κάτω για κλείσιμο"
 
 #: plugins/private/qml/WindowHeapDelegate.qml:363
-#, fuzzy, kde-format
-#| msgid "Close Window"
+#, kde-format
 msgctxt "@info:tooltip as in: 'close this window'"
 msgid "Close window"
 msgstr "Κλείσιμο παραθύρου"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InScale)
 #: plugins/scale/package/contents/ui/config.ui:46
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window open scale:"
-msgstr "Παράθυρα"
+msgstr "Κλίμακα άνοιγματος παραθύρου:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_OutScale)
 #: plugins/scale/package/contents/ui/config.ui:53
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window close scale:"
-msgstr "Παράθυρα"
+msgstr "Κλίμακα κλεισίματος παραθύρου:"
 
 #: plugins/screencast/pipewirecore.cpp:63
 #: plugins/screencast/pipewirecore.cpp:92
@@ -2803,10 +2674,9 @@ msgid "Load Layout…"
 msgstr ""
 
 #: plugins/tileseditor/qml/main.qml:271
-#, fuzzy, kde-format
-#| msgid "&Close"
+#, kde-format
 msgid "Close"
-msgstr "&Κλείσιμο"
+msgstr "Κλείσιμο"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
@@ -2829,7 +2699,7 @@ msgstr "Πλωτή"
 #: plugins/tileseditor/qml/TileDelegate.qml:191
 #, kde-format
 msgid "Delete"
-msgstr ""
+msgstr "Διαγραφή"
 
 #: plugins/trackmouse/trackmouse.cpp:71
 #: plugins/trackmouse/trackmouse_config.cpp:49
@@ -2901,24 +2771,21 @@ msgstr "Διαφανές"
 
 #. i18n: ectx: property (text), widget (QLabel, menus_label)
 #: plugins/translucency/package/contents/ui/config.ui:188
-#, fuzzy, kde-format
-#| msgid "Menu"
+#, kde-format
 msgid "Menus:"
-msgstr "Μενού"
+msgstr "Μενού:"
 
 #. i18n: ectx: property (text), widget (QLabel, moveresize_label)
 #: plugins/translucency/package/contents/ui/config.ui:207
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Moving windows:"
-msgstr "Μετακίνηση παραθύρου"
+msgstr "Μετακίνηση παραθύρων:"
 
 #. i18n: ectx: property (text), widget (QLabel, inactive_label)
 #: plugins/translucency/package/contents/ui/config.ui:226
-#, fuzzy, kde-format
-#| msgid "Internal Windows"
+#, kde-format
 msgid "Inactive windows:"
-msgstr "Εσωτερικά παράθυρα"
+msgstr "Ανενεργά παράθυρα:"
 
 #. i18n: ectx: property (title), widget (QGroupBox, kcfg_IndividualMenuConfig)
 #: plugins/translucency/package/contents/ui/config.ui:267
@@ -2972,9 +2839,7 @@ msgstr "Λίστα τάξεων παραθύρου με το κόμμα ως δ�
 
 #. i18n: ectx: property (text), widget (QLabel, applyLabel)
 #: plugins/videowall/package/contents/ui/config.ui:45
-#, fuzzy, kde-format
-#| msgctxt "A keyboard modifier"
-#| msgid "Alt"
+#, kde-format
 msgid "All"
 msgstr "Alt"
 
@@ -3026,25 +2891,22 @@ msgstr "Ελαχιστοποίηση παραθύρου"
 #: plugins/windowview/qml/main.qml:107
 #, kde-format
 msgid "No Matches"
-msgstr ""
+msgstr "Καμιά αντιστοιχία"
 
 #: plugins/windowview/qml/main.qml:107
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "No Windows"
-msgstr "Παράθυρα"
+msgstr "Χωρίς παράθυρα"
 
 #: plugins/windowview/qml/main.qml:122
 #, fuzzy, kde-format
 #| msgid "Internal Windows"
 msgid "Filter windows…"
-msgstr "Εσωτερικά παράθυρα"
+msgstr "Φιλτράρισμα παραθύρων…"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
-#, fuzzy, kde-format
-#| msgctxt "@title:tab Advanced Settings"
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced"
 msgstr "Για προχωρημένους"
 
@@ -4016,22 +3878,19 @@ msgid "&No Titlebar and Frame"
 msgstr ""
 
 #: useractions.cpp:258
-#, fuzzy, kde-format
-#| msgid "Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "&Συντόμευση παραθύρου..."
+msgstr "Ορισμός &συντόμευσης παραθύρου…"
 
 #: useractions.cpp:264
-#, fuzzy, kde-format
-#| msgid "Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Ειδικές ρυθμίσεις &παραθύρου..."
+msgstr "Διαμόρφωση ειδικών ρυθμίσεων &παραθύρου…"
 
 #: useractions.cpp:269
-#, fuzzy, kde-format
-#| msgid "S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "&Ειδικές ρυθμίσεις εφαρμογής..."
+msgstr "Διαμόρφωση &ειδικών ρυθμίσεων εφαρμογής…"
 
 #: useractions.cpp:275
 #, kde-format
@@ -4059,34 +3918,29 @@ msgid "&Extensions"
 msgstr "&Επεκτάσεις"
 
 #: useractions.cpp:413
-#, fuzzy, kde-format
-#| msgid "&All Desktops"
+#, kde-format
 msgid "&Desktops"
-msgstr "Ό&λες τις επιφάνειες εργασίας"
+msgstr "&Επιφάνειες εργασίας"
 
 #: useractions.cpp:427
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Move to &Desktop"
-msgstr "Στην επι&φάνεια εργασίας"
+msgstr "Μετακίνηση στην επι&φάνεια εργασίας"
 
 #: useractions.cpp:444
-#, fuzzy, kde-format
-#| msgid "Move To &Screen"
+#, kde-format
 msgid "Move to &Screen"
 msgstr "Μετακίνη&ση στην οθόνη"
 
 #: useractions.cpp:460
-#, fuzzy, kde-format
-#| msgid "Ac&tivities"
+#, kde-format
 msgid "Show in &Activities"
-msgstr "&Δραστηριότητες"
+msgstr "Εμφάνιση στις &δραστηριότητες"
 
 #: useractions.cpp:477
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgid "Move &To Current Desktop"
-msgstr "Στην επι&φάνεια εργασίας"
+msgstr "Μετακίνη στην τρέ&χουσα επιφάνεια εργασίας"
 
 #: useractions.cpp:487 useractions.cpp:546
 #, kde-format
@@ -4094,33 +3948,27 @@ msgid "&All Desktops"
 msgstr "Ό&λες τις επιφάνειες εργασίας"
 
 #: useractions.cpp:519
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window there"
 msgid "&New Desktop"
 msgstr "&Νέα επιφάνεια εργασίας"
 
 #: useractions.cpp:580 useractions.cpp:710
-#, fuzzy, kde-format
-#| msgid "Move To &Screen"
+#, kde-format
 msgid "Move to %1"
-msgstr "Μετακίνη&ση στην οθόνη"
+msgstr "Μετακίνη&ση σε %1"
 
 #: useractions.cpp:593
-#, fuzzy, kde-format
-#| msgctxt "Create a new desktop and move there the window"
-#| msgid "&New Desktop"
+#, kde-format
 msgctxt "Create a new desktop and add the window to that desktop"
 msgid "Add to &New Desktop"
-msgstr "&Νέα επιφάνεια εργασίας"
+msgstr "Προσθήκη σε &νέα επιφάνεια εργασίας"
 
 #: useractions.cpp:605
-#, fuzzy, kde-format
-#| msgid "Move To &Desktop"
+#, kde-format
 msgctxt "Create a new desktop and move the window to that desktop"
 msgid "Move to New Desktop"
-msgstr "Στην επι&φάνεια εργασίας"
+msgstr "Μετακίνη στην νέα επιφάνεια εργασίας"
 
 #: useractions.cpp:636
 #, kde-format
@@ -4239,34 +4087,29 @@ msgid "Setup Window Shortcut"
 msgstr "Ορισμός συντόμευσης παραθύρου"
 
 #: useractions.cpp:947
-#, fuzzy, kde-format
-#| msgid "Move Window to Group"
+#, kde-format
 msgid "Move Window to the Center"
-msgstr "Μετακίνηση παραθύρου στην ομάδα"
+msgstr "Μετακίνηση παραθύρου στο κέντρο"
 
 #: useractions.cpp:949
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Right"
-msgstr "Μετακίνηση παραθύρου"
+msgstr "Μετακίνηση παραθύρου στα δεξιά"
 
 #: useractions.cpp:951
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Left"
-msgstr "Μετακίνηση παραθύρου"
+msgstr "Μετακίνηση παραθύρου στα αριστερά"
 
 #: useractions.cpp:953
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Up"
-msgstr "Μετακίνηση παραθύρου"
+msgstr "Μετακίνηση παραθύρου πάνω"
 
 #: useractions.cpp:955
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Window Down"
-msgstr "Μετακίνηση παραθύρου"
+msgstr "Μετακίνηση παραθύρου κάτω"
 
 #: useractions.cpp:957
 #, fuzzy, kde-format
@@ -4552,21 +4395,10 @@ msgstr "Εναλλαγή στην Επιφάνεια εργασίας %1"
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
-msgstr "(δεν ανταποκρίνεται)"
+msgstr "(Δεν ανταποκρίνεται)"
 
 #: workspace.cpp:1599
-#, fuzzy, kde-format
-#| msgctxt "Introductory text shown in the support information."
-#| msgid ""
-#| "KWin Support Information:\n"
-#| "The following information should be used when requesting support on e.g. "
-#| "http://forum.kde.org.\n"
-#| "It provides information about the currently running instance, which "
-#| "options are used,\n"
-#| "what OpenGL driver and which effects are running.\n"
-#| "Please post the information provided underneath this introductory text to "
-#| "a paste bin service\n"
-#| "like http://paste.kde.org instead of pasting into support threads.\n"
+#, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
 "KWin Support Information:\n"
@@ -4581,7 +4413,7 @@ msgid ""
 msgstr ""
 "Πληροφορίες υποστήριξης KWin:\n"
 "Οι ακόλουθες πληροφορίες θα πρέπει να χρησιμοποιούνται όταν ζητάτε "
-"υποστήριξη π.χ. στο http://forum.kde.org.\n"
+"υποστήριξη π.χ. στο http://discuss.kde.org.\n"
 "Παρέχει πληροφορίες σχετικά με την τρέχουσα διεργασία, ποιες επιλογές "
 "χρησιμοποιούνται,\n"
 "ποιος οδηγός OpenGL και ποια εφέ εκτελούνται.\n"
@@ -4593,7 +4425,7 @@ msgstr ""
 #: xwayland/xwaylandlauncher.cpp:277
 #, kde-format
 msgid "Xwayland has crashed"
-msgstr ""
+msgstr "Το Xwayland κατάρρευσε"
 
 #~ msgctxt "The code as read from the input device"
 #~ msgid "Scan code"
