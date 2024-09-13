@@ -27,14 +27,7 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (KMessageWidget, glCrashedWarning)
 #: compositing.ui:31
-#, fuzzy, kde-format
-#| msgid ""
-#| "OpenGL compositing (the default) has crashed KWin in the past.\n"
-#| "This was most likely due to a driver bug.\n"
-#| "If you think that you have meanwhile upgraded to a stable driver,\n"
-#| "you can reset this protection but be aware that this might result in an "
-#| "immediate crash!\n"
-#| "Alternatively, you might want to use the XRender backend instead."
+#, kde-format
 msgid ""
 "OpenGL compositing (the default) has crashed KWin in the past.\n"
 "This was most likely due to a driver bug.\n"
@@ -47,8 +40,7 @@ msgstr ""
 "Αυτό πιθανότατα οφείλεται σε ένα σφάλμα του οδηγού.\n"
 "Αν πιστεύετε ότι έχετε πλέον αναβαθμίσει σε έναν σταθερό οδηγό,\n"
 "μπορείτε να επαναφέρετε αυτήν την προστασία αλλά \n"
-"θα πρέπει να γνωρίζετε ότι μπορεί να προκαλέσει άμεση κατάρρευση!\n"
-"Εναλλακτικά, μπορείτε να χρησιμοποιήσετε το σύστημα υποστήριξης XRender."
+"θα πρέπει να γνωρίζετε ότι μπορεί να προκαλέσει άμεση κατάρρευση!"
 
 #. i18n: ectx: property (text), widget (KMessageWidget, windowThumbnailWarning)
 #: compositing.ui:44
@@ -63,17 +55,15 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, compositingLabel)
 #: compositing.ui:56
-#, fuzzy, kde-format
-#| msgid "Compositing type:"
+#, kde-format
 msgid "Compositing:"
-msgstr "Τύπος σύνθεσης:"
+msgstr "Σύνθεση:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_Enabled)
 #: compositing.ui:63
-#, fuzzy, kde-format
-#| msgid "Enable compositor on startup"
+#, kde-format
 msgid "Enable on startup"
-msgstr "Ενεργοποίηση του συνθέτη κατά την εκκίνηση"
+msgstr "Ενεργοποίηση κατά την εκκίνηση"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_WindowsBlockCompositing)
 #: compositing.ui:72

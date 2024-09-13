@@ -9,15 +9,15 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-01-14 00:38+0000\n"
-"PO-Revision-Date: 2017-06-12 16:45+0200\n"
-"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
-"Language-Team: Greek <kde-i18n-el@kde.org>\n"
+"PO-Revision-Date: 2024-09-06 17:09+0300\n"
+"Last-Translator: Αντώνης Γέραλης <capoiosct@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-doc@kde.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Lokalize 24.08.0\n"
 
 #: module.cpp:49
 #, kde-format
@@ -48,25 +48,24 @@ msgstr "Το σενάριο \"%1\" εγκαταστάθηκε επιτυχώς."
 #: module.cpp:124
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
-msgstr ""
+msgstr "Σφάλμα κατά την απεγκατάσταση του σεναρίου KWin: %1"
 
 #: ui/main.qml:23
 #, kde-format
 msgid "Install from File…"
-msgstr ""
+msgstr "Εγκατάσταση από αρχείο…"
 
 #: ui/main.qml:27
-#, fuzzy, kde-format
-#| msgid "Get New Script..."
+#, kde-format
 msgctxt "@action:button get new KWin scripts"
 msgid "Get New…"
-msgstr "Λήψη νέων σεναρίων..."
+msgstr "Λήψη νέων…"
 
 #: ui/main.qml:65
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Delete…"
-msgstr ""
+msgstr "Διαγραφή…"
 
 #~ msgctxt "NAME OF TRANSLATORS"
 #~ msgid "Your names"
