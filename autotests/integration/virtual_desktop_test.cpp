@@ -35,6 +35,8 @@ private Q_SLOTS:
     void testNetCurrentDesktop();
 #endif
     void testLastDesktopRemoved();
+    void load();
+    void loadWithDesktopsPerOutput();
     void testWindowOnMultipleDesktops();
     void testRemoveDesktopWithWindow();
 };
@@ -70,6 +72,14 @@ void VirtualDesktopTest::initTestCase()
 void VirtualDesktopTest::init()
 {
     QVERIFY(Test::setupWaylandConnection());
+
+    Test::setOutputConfig({
+        QRect(0, 0, 1280, 1024),
+        QRect(1280, 0, 1280, 1024),
+    });
+
+    const QList<Output *> outputs = workspace()->outputs();
+    QCOMPARE(outputs.count(), 2);
     workspace()->setActiveOutput(QPoint(640, 512));
     VirtualDesktopManager::self()->setCount(1);
 }
@@ -148,6 +158,59 @@ void VirtualDesktopTest::testLastDesktopRemoved()
     // now the window should be moved as well
     QCOMPARE(window->desktops().count(), 1u);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), window->desktops().first());
+}
+
+/**
+ * Tests loading the saved desktops from the config file.
+ *
+ * Uses the default configuration of desktops being shared between all displays.
+ */
+void VirtualDesktopTest::load()
+{
+    const QList<Output *> outputs = workspace()->outputs();
+    QCOMPARE(outputs.count(), 2);
+    VirtualDesktopManager *vds = VirtualDesktopManager::self();
+    // Empty config should create one desktop
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    vds->setConfig(config);
+    vds->load();
+    QCOMPARE(vds->count(), (uint)1);
+    // Default should be shared virtual desktops
+    QCOMPARE(vds->desktopsPerOutput(), false);
+    // Setting a sensible number
+    config->group(QStringLiteral("Desktops")).writeEntry("Number", 4);
+    vds->load();
+    QCOMPARE(vds->count(), (uint)4);
+}
+
+/**
+ * Tests loading the saved desktops from the config file.
+ *
+ * Uses the configuration of desktops being per output.
+ */
+void VirtualDesktopTest::loadWithDesktopsPerOutput()
+{
+    VirtualDesktopManager *manager = VirtualDesktopManager::self();
+    const QList<Output *> outputs = workspace()->outputs();
+    QCOMPARE(outputs.count(), 2);
+
+    // Starting with an empty config should default to shared desktops
+    KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    manager->setConfig(config);
+    manager->load();
+    // Default should have us starting with one shared desktop
+    QCOMPARE(manager->count(), (uint)1);
+    QCOMPARE(manager->desktopsPerOutput(), false);
+
+    config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
+    // Enable desktops per output
+    config->group(QStringLiteral("Desktops")).writeEntry("DesktopsPerOutput", true);
+    manager->setConfig(config);
+    manager->load();
+    QCOMPARE(workspace()->outputs().count(), 2);
+    QCOMPARE(manager->desktopsPerOutput(), true);
+    // Because there are two outputs, we should have two desktops
+    QCOMPARE(manager->count(), (uint)2);
 }
 
 void VirtualDesktopTest::testWindowOnMultipleDesktops()

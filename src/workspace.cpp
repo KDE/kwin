@@ -2353,10 +2353,15 @@ void Workspace::rearrange()
     QHash<const VirtualDesktop *, StrutRects> restrictedAreas;
     QHash<const VirtualDesktop *, QHash<const Output *, QRectF>> screenAreas;
 
-    for (const VirtualDesktop *desktop : desktops) {
-        workAreas[desktop] = m_geometry;
-
-        for (const Output *output : std::as_const(m_outputs)) {
+    for (const Output *output : std::as_const(m_outputs)) {
+        for (const VirtualDesktop *desktop : desktops) {
+            if (VirtualDesktopManager::self()->desktopsPerOutput()) {
+                // If the desktops are per output, the work area is the output geometry
+                workAreas[desktop] = output->geometryF();
+            } else {
+                // Otherwise, the work area is the desktop geometry
+                workAreas[desktop] = m_geometry;
+            }
             screenAreas[desktop][output] = output->geometryF();
         }
     }
