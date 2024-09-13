@@ -3061,6 +3061,7 @@ void X11Window::handleSync()
 void X11Window::performInteractiveResize()
 {
     resize(moveResizeGeometry().size());
+    setAllowCommits(true);
 }
 
 bool X11Window::belongToSameApplication(const X11Window *c1, const X11Window *c2, SameApplicationChecks checks)
@@ -3933,6 +3934,22 @@ void X11Window::handleXwaylandScaleChanged()
     // while KWin implicitly considers the window already resized when the scale changes,
     // this is needed to make Xwayland actually resize it as well
     resize(moveResizeGeometry().size());
+}
+
+void X11Window::setAllowCommits(bool allow)
+{
+    if (!waylandServer()) {
+        return;
+    }
+
+    static bool disabled = qEnvironmentVariableIntValue("KWIN_NO_XWAYLAND_ALLOW_COMMITS") == 1;
+    if (disabled) {
+        return;
+    }
+
+    uint32_t value = allow;
+    xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, frameId(),
+                        atoms->xwayland_allow_commits, XCB_ATOM_CARDINAL, 32, 1, &value);
 }
 
 QPointF X11Window::gravityAdjustment(xcb_gravity_t gravity) const
@@ -4818,6 +4835,7 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     }
 
     setMoveResizeGeometry(moveResizeFrameGeometry);
+    setAllowCommits(false);
 
     if (!m_syncRequest.timeout) {
         m_syncRequest.timeout = new QTimer(this);

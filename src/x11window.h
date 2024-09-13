@@ -438,6 +438,8 @@ private:
     void associate();
     void handleXwaylandScaleChanged();
 
+    void setAllowCommits(bool allow);
+
     Xcb::Window m_client;
     Xcb::Window m_wrapper;
     Xcb::Window m_frame;

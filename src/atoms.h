@@ -82,6 +82,7 @@ public:
     Xcb::Atom wl_selection;
     Xcb::Atom primary;
     Xcb::Atom edid;
+    Xcb::Atom xwayland_allow_commits;
 
     /**
      * @internal
