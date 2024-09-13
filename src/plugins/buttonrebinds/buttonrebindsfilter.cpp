@@ -135,6 +135,14 @@ ButtonRebindsFilter::ButtonRebindsFilter()
     loadConfig(m_configWatcher->config()->group(groupName));
 }
 
+ButtonRebindsFilter::~ButtonRebindsFilter()
+{
+    // on shutdown, input is destroyed before this filter
+    if (KWin::input()) {
+        KWin::input()->removeInputDevice(&m_inputDevice);
+    }
+}
+
 void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
 {
     Q_ASSERT(QLatin1String("ButtonRebinds") == group.name());
