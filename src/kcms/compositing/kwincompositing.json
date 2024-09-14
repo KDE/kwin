@@ -98,6 +98,14 @@
     },
     "X-DocPath": "https://userbase.kde.org/Desktop_Effects_Performance#Advanced_Desktop_Effects_Settings",
     "X-KDE-Keywords": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails",
+    "X-KDE-Keywords[ca]": "kwin,finestra,gestor,composició,compositor,efecte,efectes 3D,efectes 2D,configuració de vídeo,efectes gràfics,efectes d'escriptori,gràfics,latència,vsync,esquinçament,miniatures de pantalla",
+    "X-KDE-Keywords[ia]": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails",
+    "X-KDE-Keywords[ka]": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,ფანჯარა,მართვა,კომპოზიტორი,ეფექტები,დაყოვნება",
+    "X-KDE-Keywords[sl]": "kwin,okno,upravljalnik,sestavljanje,sestavljalni,učinek,3D učinki,2D učinki,nastavitve videa,grafični učinki,namizni učinki,grafika,zakasnitev,vsync,trganje,sličice oken",
+    "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,sammansättning,sammansätta,effekt,tredimensionella effekter,tvådimensionella effekter,videoinställningar,grafiska effekter,skrivbordseffekter,grafik,latens,vsync,rivning,fönsterminiatyrbilder",
+    "X-KDE-Keywords[tr]": "kwin,pencere,yönetici,bileşikleştirme,bileşikleştirici,efekt,3b efektler,3d efektler,2d efektler,2b efektler,video ayarları,grafik efektler,masaüstü efektleri,grafikler,gecikme,vsync,yırtılma,percere küçük görselleri",
+    "X-KDE-Keywords[uk]": "kwin,window,manager,compositing,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails,вікно,керування,композитне,композиція,ефект,просторовий,ефекти,плоскі,параметри відео,графічні ефекти,ефекти стільниці,графіка,латентність,синхронізація,розрив,мініатюри",
+    "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxcompositingxx,xxcompositorxx,xxeffectxx,xx3D effectsxx,xx2D effectsxx,xxvideo settingsxx,xxgraphical effectsxx,xxdesktop effectsxx,xxgraphicsxx,xxlatencyxx,xxvsyncxx,xxtearingxx,xxwindow thumbnailsxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "xcb"
     ],

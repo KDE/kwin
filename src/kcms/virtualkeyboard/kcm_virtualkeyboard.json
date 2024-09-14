@@ -99,6 +99,14 @@
     },
     "X-DocPath": "kcontrol/kwinvirtualkeyboard/index.html",
     "X-KDE-Keywords": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods",
+    "X-KDE-Keywords[ca]": "teclat de programari,teclat virtual,teclat tàctil,teclat en pantalla,mètodes d'entrada",
+    "X-KDE-Keywords[ia]": "claviero software, claviero virtual, claviero a toccar, claviero sur schermo, methodos de entrata",
+    "X-KDE-Keywords[ka]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,პროგრამული კლავიატურა,ვირტუალური კლავიატურა,კლავიატურა ეკრანზე,შეყვანის მეთოდები",
+    "X-KDE-Keywords[sl]": "programska tipkovnica,virtualna tipkovnica,tipkovnica na dotik,zaslonska tipkovnica,načini vnosa",
+    "X-KDE-Keywords[sv]": "programvarutangentbord,virtuellt tangentbord,pektangentbord,skärmtangentbord,inmatningsmetoder",
+    "X-KDE-Keywords[tr]": "yazılım klavyesi,sanal klavye,dokunmatik klavye,ekran klavyesi,giriş yöntemi,giriş yöntemleri",
+    "X-KDE-Keywords[uk]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення",
+    "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

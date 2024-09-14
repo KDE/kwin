@@ -92,6 +92,15 @@
         "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
     "X-KDE-Keywords": "xwayland,global,keys,forward",
+    "X-KDE-Keywords[ca]": "xwayland,global,tecles,reenviament",
+    "X-KDE-Keywords[he]": "xwayland,כללי,מפתחות,העברה",
+    "X-KDE-Keywords[ia]": "xwayland,global,keys,forward",
+    "X-KDE-Keywords[ka]": "xwayland,global,keys,forward,გლობალური,ღილაკები,წინ",
+    "X-KDE-Keywords[sl]": "xwayland,globalno,tipke,naprej",
+    "X-KDE-Keywords[sv]": "xwayland,global,tangenter,vidarebefordra",
+    "X-KDE-Keywords[tr]": "xwayland,global,düğmeler,tuşlar,ileri",
+    "X-KDE-Keywords[uk]": "xwayland,global,keys,forward,іксвейленд,загальне,клавіші,переспрямування,вперед",
+    "X-KDE-Keywords[x-test]": "xxxwaylandxx,xxglobalxx,xxkeysxx,xxforwardxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

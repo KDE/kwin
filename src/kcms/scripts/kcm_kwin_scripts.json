@@ -96,6 +96,14 @@
         "Name[zh_TW]": "KWin 文稿"
     },
     "X-KDE-Keywords": "kwin script,plugins,window manager",
+    "X-KDE-Keywords[ca]": "script de kwin,connectors,gestor de finestres",
+    "X-KDE-Keywords[ia]": "script, plugins, gerente de fenestra de kwin",
+    "X-KDE-Keywords[ka]": "kwin script,plugins,window manager,დამატებები,ფანჯრების მართვა,kwin-ის სკრიპტი",
+    "X-KDE-Keywords[sl]": "skript kwin,vtičniki,upravljalnik okna",
+    "X-KDE-Keywords[sv]": "kwin-skript,insticksprogram,fönsterhanterare",
+    "X-KDE-Keywords[tr]": "kwin betiği,eklentiler,pencere yöneticisi",
+    "X-KDE-Keywords[uk]": "kwin script,plugins,window manager,скрипт квін,додатки,керування,вікна",
+    "X-KDE-Keywords[x-test]": "xxkwin scriptxx,xxpluginsxx,xxwindow managerxx",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 50
 }
