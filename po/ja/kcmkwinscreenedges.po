@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: kcmkwinscreenedges\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-28 00:40+0000\n"
-"PO-Revision-Date: 2024-02-17 14:39+0900\n"
-"Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
+"PO-Revision-Date: 2024-09-12 20:45+0900\n"
+"Last-Translator: UTUMI Hirosi <utuhiro78@yahoo.co.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: main.cpp:151 touch.cpp:118
 #, kde-format
@@ -79,7 +79,7 @@ msgstr "オーバービュー"
 #: main.cpp:166 touch.cpp:133
 #, kde-format
 msgid "Grid"
-msgstr ""
+msgstr "グリッド"
 
 #: main.cpp:168 touch.cpp:135
 #, kde-format
@@ -97,7 +97,9 @@ msgstr "ウィンドウスイッチャー (代替)"
 msgid ""
 "You can trigger an action by pushing the mouse cursor against the "
 "corresponding screen edge or corner."
-msgstr "マウスカーソルを画面の端に押し当てることでアクションを起動できます。"
+msgstr ""
+"マウスカーソルを対応する画面のエッジまたは角に当てることで、アクションを実行"
+"できます。"
 
 #. i18n: ectx: property (text), widget (QLabel, quickMaximizeLabel)
 #: main.ui:67
@@ -121,7 +123,7 @@ msgstr "タイル化(&T):"
 #: main.ui:94
 #, kde-format
 msgid "Windows dragged to left or right edge"
-msgstr "左右の端へドラッグされたウィンドウ"
+msgstr "左端または右端にドラッグされたウィンドウ"
 
 #. i18n: ectx: property (text), widget (QLabel, label)
 #: main.ui:101
@@ -157,14 +159,14 @@ msgstr "外側 "
 #: main.ui:149
 #, kde-format
 msgid "of the screen"
-msgstr " "
+msgstr "(画面の)"
 
 #. i18n: ectx: property (toolTip), widget (QLabel, desktopSwitchLabel)
 #: main.ui:174
 #, kde-format
 msgid ""
 "Change desktop when the mouse cursor is pushed against the edge of the screen"
-msgstr "マウスカーソルが画面の端に当てられたときにデスクトップを切り替えます"
+msgstr "マウスカーソルが画面の端に当てられたときにデスクトップを切り替える"
 
 #. i18n: ectx: property (text), widget (QLabel, desktopSwitchLabel)
 #: main.ui:177
@@ -181,15 +183,13 @@ msgstr "無効"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:193
-#, fuzzy, kde-format
-#| msgid "Only When Moving Windows"
+#, kde-format
 msgid "Only when moving windows"
 msgstr "ウィンドウの移動時のみ"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_ElectricBorders)
 #: main.ui:198
-#, fuzzy, kde-format
-#| msgid "Always Enabled"
+#, kde-format
 msgid "Always enabled"
 msgstr "常に有効"
 
@@ -200,8 +200,8 @@ msgid ""
 "Amount of time required for the mouse cursor to be pushed against the edge "
 "of the screen before the action is triggered"
 msgstr ""
-"アクションを起動するために必要なマウスカーソルをスクリーンエッジに当てておく"
-"時間を設定します"
+"アクションを起動するために必要な、マウスカーソルをスクリーンエッジに当ててお"
+"く時間"
 
 #. i18n: ectx: property (text), widget (QLabel, activationDelayLabel)
 #: main.ui:209
@@ -222,7 +222,7 @@ msgstr " ミリ秒"
 msgid ""
 "Amount of time required after triggering an action until the next trigger "
 "can occur"
-msgstr "一つのアクションを起動してから次に起動するまでに必要な時間を設定します"
+msgstr "アクションを起動してから次に起動するまでに必要な時間"
 
 #. i18n: ectx: property (text), widget (QLabel, triggerCooldownLabel)
 #: main.ui:241
@@ -234,7 +234,7 @@ msgstr "次の起動までの時間(&R):"
 #: main.ui:270
 #, kde-format
 msgid "&Corner barrier:"
-msgstr ""
+msgstr "コーナーバリア(&C):"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:280
@@ -246,19 +246,23 @@ msgid ""
 "interface elements like maximized windows' close buttons when using multiple "
 "screens."
 msgstr ""
+"ここでは画面間の仮想コーナーバリアを有効または無効にすることができます。バリ"
+"アは、カーソルが画面の角に触れているときに、カーソルが別の画面に移動するのを"
+"防ぎます。これにより、複数の画面を使用しているときに、最大化したウィンドウの"
+"「閉じる」ボタンなどのユーザーインターフェース要素を使用しやすくします。"
 
 #. i18n: ectx: property (toolTip), widget (QCheckBox, kcfg_CornerBarrier)
 #: main.ui:283
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Prevents cursors from crossing at screen corners."
-msgstr ""
+msgstr "カーソルが画面の角を横切るのを防ぎます。"
 
 #. i18n: ectx: property (text), widget (QLabel, EdgeBarrierLabel)
 #: main.ui:290
 #, kde-format
 msgid "&Edge barrier:"
-msgstr ""
+msgstr "エッジバリア(&E):"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:300
@@ -270,25 +274,29 @@ msgid ""
 "interface elements like Plasma Panels that are located on an edge between "
 "screens."
 msgstr ""
+"ここでは、異なる画面間のエッジバリアのサイズを設定できます。バリアにより、ポ"
+"インタがエッジを越えて他の画面に移動する際に、追加の距離が必要になります。こ"
+"れにより、画面間のエッジにあるプラズマパネルなどのユーザーインターフェース要"
+"素にアクセスしやすくなります。"
 
 #. i18n: ectx: property (toolTip), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:303
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Additional distance cursor needs to travel to cross screen edges."
-msgstr ""
+msgstr "画面のエッジを越えるときに、カーソルをさらに移動する必要があります。"
 
 #. i18n: ectx: property (specialValueText), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:306
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "なし"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_EdgeBarrier)
 #: main.ui:309
 #, kde-format
 msgid " px"
-msgstr ""
+msgstr " ピクセル"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #: touch.ui:17
