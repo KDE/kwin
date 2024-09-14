@@ -491,6 +491,7 @@ void DrmOutput::tryKmsColorOffloading()
         m_scanoutColorDescription = colorDescription();
         m_pipeline->setCrtcColorPipeline(ColorPipeline{});
         m_pipeline->applyPendingChanges();
+        m_channelFactorsNeedShaderFallback = true;
         return;
     }
     if (!m_pipeline->activePending()) {
