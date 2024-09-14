@@ -83,6 +83,7 @@
     },
     "X-DocPath": "kcontrol/kwintouchscreen/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,edge,border,action,switch,desktop,desktop edges,screen edges,side of screen,screen behavior,touch screen",
+    "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxdesktop edgesxx,xxscreen edgesxx,xxside of screenxx,xxscreen behaviorxx,xxtouch screenxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 50

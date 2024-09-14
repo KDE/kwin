@@ -86,6 +86,7 @@
     },
     "X-DocPath": "kcontrol/windowbehaviour/index.html",
     "X-KDE-Keywords": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate",
+    "X-KDE-Keywords[x-test]": "xxfocusxx,xxplacementxx,xxwindow behaviorxx,xxwindow actionsxx,xxanimationxx,xxraisexx,xxauto raisexx,xxwindowsxx,xxframexx,xxtitlebarxx,xxdoubleclickxx,xxdesktopxx,xxsnapxx,xxmovementxx,xxshadingxx,xxshadexx,xxunshadexx,xxunshadingxx,xxactivationxx,xxactivatexx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 40

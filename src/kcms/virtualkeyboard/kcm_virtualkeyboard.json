@@ -86,6 +86,7 @@
     },
     "X-DocPath": "kcontrol/kwinvirtualkeyboard/index.html",
     "X-KDE-Keywords": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods",
+    "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

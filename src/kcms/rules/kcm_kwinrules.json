@@ -90,6 +90,7 @@
     },
     "X-DocPath": "kcontrol/windowspecific/index.html",
     "X-KDE-Keywords": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications",
+    "X-KDE-Keywords[x-test]": "xxsizexx,xxpositionxx,xxstatexx,xxwindow behaviorxx,xxwindowsxx,xxspecificxx,xxworkaroundsxx,xxrememberxx,xxrulesxx,xxwindow rulesxx,xxappsxx,xxapplicationsxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 120

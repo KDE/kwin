@@ -85,6 +85,7 @@
     },
     "X-DocPath": "kcontrol/kwintabbox/index.html",
     "X-KDE-Keywords": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher",
+    "X-KDE-Keywords[x-test]": "xxwindowxx,xxwindowsxx,xxswitcherxx,xxwindow switcherxx,xxswitchingxx,xxwindow switchingxx,xxalttabxx,xxalt-tabxx,xxalt+tabxx,xxalt tabxx,xxapps changerxx,xxapplication changerxx,xxappxx,xxtaskxx,xxswitchxx,xxtask switcherxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 60

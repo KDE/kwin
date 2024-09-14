@@ -78,6 +78,7 @@
         "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
     "X-KDE-Keywords": "xwayland,global,keys,forward",
+    "X-KDE-Keywords[x-test]": "xxxwaylandxx,xxglobalxx,xxkeysxx,xxforwardxx",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

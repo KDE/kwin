@@ -89,6 +89,7 @@
     },
     "X-DocPath": "kcontrol/desktop/index.html",
     "X-KDE-Keywords": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces",
+    "X-KDE-Keywords[x-test]": "xxdesktopxx,xxdesktopsxx,xxnumberxx,xxvirtual desktopxx,xxmultiple desktopsxx,xxpagerxx,xxpager widgetxx,xxpager appletxx,xxpager settingsxx,xxindicatorxx,xxnavigationxx,xxcubexx,xxslidexx,xxworkspacesxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 60

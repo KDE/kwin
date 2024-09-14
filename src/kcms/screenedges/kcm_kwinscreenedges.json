@@ -85,6 +85,7 @@
     },
     "X-DocPath": "kcontrol/kwinscreenedges/index.html",
     "X-KDE-Keywords": "kwin,window,manager,effect,corner,edge,border,action,switch,desktop,kwin screen edges,desktop edges,screen edges,maximize windows,tile windows,side of screen,screen behavior,switch desktop,virtual desktop,screen corners,borders,screen borders,desktop borders,desktop corners,corners",
+    "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxeffectxx,xxcornerxx,xxedgexx,xxborderxx,xxactionxx,xxswitchxx,xxdesktopxx,xxkwin screen edgesxx,xxdesktop edgesxx,xxscreen edgesxx,xxmaximize windowsxx,xxtile windowsxx,xxside of screenxx,xxscreen behaviorxx,xxswitch desktopxx,xxvirtual desktopxx,xxscreen cornersxx,xxbordersxx,xxscreen bordersxx,xxdesktop bordersxx,xxdesktop cornersxx,xxcornersxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "desktopbehavior",
     "X-KDE-Weight": 50

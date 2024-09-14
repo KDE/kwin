@@ -84,6 +84,7 @@
         "Name[zh_TW]": "KWin 文稿"
     },
     "X-KDE-Keywords": "kwin script,plugins,window manager",
+    "X-KDE-Keywords[x-test]": "xxkwin scriptxx,xxpluginsxx,xxwindow managerxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 70

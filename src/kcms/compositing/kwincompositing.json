@@ -86,6 +86,7 @@
     },
     "X-DocPath": "https://userbase.kde.org/Desktop_Effects_Performance#Advanced_Desktop_Effects_Settings",
     "X-KDE-Keywords": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails",
+    "X-KDE-Keywords[x-test]": "xxkwinxx,xxwindowxx,xxmanagerxx,xxcompositingxx,xxcompositorxx,xxeffectxx,xx3D effectsxx,xx2D effectsxx,xxvideo settingsxx,xxgraphical effectsxx,xxdesktop effectsxx,xxgraphicsxx,xxlatencyxx,xxvsyncxx,xxtearingxx,xxwindow thumbnailsxx",
     "X-KDE-ParentApp": "kcontrol",
     "X-KDE-System-Settings-Parent-Category": "display",
     "X-KDE-Weight": 60
