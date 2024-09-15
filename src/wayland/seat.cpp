@@ -109,26 +109,6 @@ SeatInterface::~SeatInterface()
     }
 }
 
-void SeatInterfacePrivate::updatePointerButtonSerial(quint32 button, quint32 serial)
-{
-    auto it = globalPointer.buttonSerials.find(button);
-    if (it == globalPointer.buttonSerials.end()) {
-        globalPointer.buttonSerials.insert(button, serial);
-        return;
-    }
-    it.value() = serial;
-}
-
-void SeatInterfacePrivate::updatePointerButtonState(quint32 button, Pointer::State state)
-{
-    auto it = globalPointer.buttonStates.find(button);
-    if (it == globalPointer.buttonStates.end()) {
-        globalPointer.buttonStates.insert(button, state);
-        return;
-    }
-    it.value() = state;
-}
-
 QList<DataDeviceInterface *> SeatInterfacePrivate::dataDevicesForSurface(SurfaceInterface *surface) const
 {
     if (!surface) {
@@ -639,11 +619,7 @@ bool SeatInterface::isPointerButtonPressed(Qt::MouseButton button) const
 
 bool SeatInterface::isPointerButtonPressed(quint32 button) const
 {
-    auto it = d->globalPointer.buttonStates.constFind(button);
-    if (it == d->globalPointer.buttonStates.constEnd()) {
-        return false;
-    }
-    return it.value() == SeatInterfacePrivate::Pointer::State::Pressed;
+    return d->globalPointer.grabs.contains(button);
 }
 
 void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, bool inverted)
@@ -675,18 +651,19 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
     const quint32 serial = d->display->nextSerial();
 
     if (state == PointerButtonState::Pressed) {
-        d->updatePointerButtonSerial(button, serial);
-        d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Pressed);
+        d->globalPointer.grabs[button] = serial;
         if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
             // ignore
             return;
         }
     } else {
-        const quint32 currentButtonSerial = pointerButtonSerial(button);
-        d->updatePointerButtonSerial(button, serial);
-        d->updatePointerButtonState(button, SeatInterfacePrivate::Pointer::State::Released);
+        std::optional<quint32> implicitGrabSerial;
+        if (auto it = d->globalPointer.grabs.find(button); it != d->globalPointer.grabs.end()) {
+            implicitGrabSerial = it.value();
+            d->globalPointer.grabs.erase(it);
+        }
         if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-            if (d->drag.dragImplicitGrabSerial != currentButtonSerial) {
+            if (d->drag.dragImplicitGrabSerial != implicitGrabSerial) {
                 // not our drag button - ignore
                 return;
             }
@@ -722,8 +699,8 @@ quint32 SeatInterface::pointerButtonSerial(Qt::MouseButton button) const
 
 quint32 SeatInterface::pointerButtonSerial(quint32 button) const
 {
-    auto it = d->globalPointer.buttonSerials.constFind(button);
-    if (it == d->globalPointer.buttonSerials.constEnd()) {
+    auto it = d->globalPointer.grabs.constFind(button);
+    if (it == d->globalPointer.grabs.constEnd()) {
         return 0;
     }
     return it.value();
@@ -1067,13 +1044,9 @@ bool SeatInterface::isDragTablet() const
 
 bool SeatInterface::hasImplicitPointerGrab(quint32 serial) const
 {
-    const auto &serials = d->globalPointer.buttonSerials;
-    for (auto it = serials.constBegin(), end = serials.constEnd(); it != end; it++) {
-        if (it.value() == serial) {
-            return isPointerButtonPressed(it.key());
-        }
-    }
-    return false;
+    return std::any_of(d->globalPointer.grabs.constBegin(), d->globalPointer.grabs.constEnd(), [serial](const auto &grab) {
+        return grab == serial;
+    });
 }
 
 QMatrix4x4 SeatInterface::dragSurfaceTransformation() const
