@@ -83,12 +83,7 @@ public:
     // Pointer related members
     struct Pointer
     {
-        enum class State {
-            Released,
-            Pressed,
-        };
-        QHash<quint32, quint32> buttonSerials;
-        QHash<quint32, State> buttonStates;
+        QHash<quint32, quint32> grabs;
         QPointF pos;
         struct Focus
         {
@@ -101,8 +96,6 @@ public:
         Focus focus;
     };
     Pointer globalPointer;
-    void updatePointerButtonSerial(quint32 button, quint32 serial);
-    void updatePointerButtonState(quint32 button, Pointer::State state);
 
     // Keyboard related members
     struct Keyboard
