@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-03-09 00:39+0000\n"
-"PO-Revision-Date: 2022-12-16 21:39-0800\n"
-"Last-Translator: Japanese KDE translation team <kde-jp@kde.org>\n"
+"PO-Revision-Date: 2024-09-12 21:39+0900\n"
+"Last-Translator: UTUMI Hirosi <utuhiro78@yahoo.co.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -13,6 +13,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: ui/main.qml:32
 #, kde-format
@@ -24,37 +25,45 @@ msgid ""
 "need to use such apps, you can choose your preferred balance of security and "
 "functionality here."
 msgstr ""
+"一部のレガシー X11 アプリでは、グローバルキーボードショートカットの処理など、"
+"特定の機能のために他のアプリで入力されたキーストロークを読み取る機能が必要で"
+"す。これはデフォルトで許可されています。しかし、他の機能ではすべてのキーを読"
+"み取る機能が必要な場合があり、セキュリティ上の理由から、これはデフォルトでは"
+"無効になっています。このようなアプリを使用する必要がある場合は、ここでセキュ"
+"リティと機能のバランスを選択できます。"
 
 #: ui/main.qml:48
 #, kde-format
 msgid "Allow legacy X11 apps to read keystrokes typed in all apps:"
 msgstr ""
+"レガシー X11 アプリがすべてのアプリで入力されたキーストロークを読み取ることを"
+"許可:"
 
 #: ui/main.qml:49
 #, kde-format
 msgid "Never"
-msgstr ""
+msgstr "しない"
 
 #: ui/main.qml:55
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
-msgstr ""
+msgstr "Meta, Control, Alt, Shift キーのみ"
 
 #: ui/main.qml:61
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
-msgstr ""
+msgstr "上記に加えて、Control, Alt, Meta キーを押しながら入力したキー"
 
 #: ui/main.qml:68
 #, kde-format
 msgid "Always"
-msgstr ""
+msgstr "常に"
 
 #: ui/main.qml:78
 #, kde-format
 msgid "Additionally include mouse buttons"
-msgstr ""
+msgstr "マウスボタンも追加で含める"
 
 #: ui/main.qml:89
 #, kde-format
@@ -63,3 +72,7 @@ msgid ""
 "session by permitting malicious software to steal passwords and spy on the "
 "text that you type. Make sure you understand and accept this risk."
 msgstr ""
+"この設定を使用すると、悪意のあるソフトウェアがパスワードを盗み、入力したテキ"
+"ストを覗き見ることができるようになるため、システムのセキュリティが X11 セッ"
+"ションのセキュリティにまで低下することに注意してください。このリスクを理解"
+"し、受け入れてください。"
