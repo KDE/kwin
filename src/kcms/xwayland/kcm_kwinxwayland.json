@@ -92,6 +92,10 @@
         "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
     "X-KDE-Keywords": "xwayland,global,keys,forward",
+    "X-KDE-Keywords[ca]": "xwayland,global,tecles,reenviament",
+    "X-KDE-Keywords[sl]": "xwayland,globalno,tipke,naprej",
+    "X-KDE-Keywords[sv]": "xwayland,global,tangenter,vidarebefordra",
+    "X-KDE-Keywords[tr]": "xwayland,global,düğmeler,tuşlar,ileri",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

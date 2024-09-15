@@ -102,6 +102,10 @@
     },
     "X-DocPath": "kcontrol/windowspecific/index.html",
     "X-KDE-Keywords": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications",
+    "X-KDE-Keywords[ca]": "mida,posició,estat,comportament de les finestres,finestres,específic,solució temporal,recorda,regles,regles de finestres,apps,aplicacions",
+    "X-KDE-Keywords[sl]": "velikost,položaj,stanje,vedenje oken,okna,specifično,rešitve,zapomni si,pravila,pravila oken,aplikacije,programi",
+    "X-KDE-Keywords[sv]": "storlek,position,tillstånd,fönsterbeteende,fönster,specifik,lösningar,komma ihåg,regler,fönsterregler,program,applikationer",
+    "X-KDE-Keywords[tr]": "boyut,konum,durum,davranış,pencereler,başka yöntem,anımsa,kural,uygulama,app,uygulamalar",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 40
 }

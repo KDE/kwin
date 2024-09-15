@@ -99,6 +99,10 @@
     },
     "X-DocPath": "kcontrol/kwinvirtualkeyboard/index.html",
     "X-KDE-Keywords": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods",
+    "X-KDE-Keywords[ca]": "teclat de programari,teclat virtual,teclat tàctil,teclat en pantalla,mètodes d'entrada",
+    "X-KDE-Keywords[sl]": "programska tipkovnica,virtualna tipkovnica,tipkovnica na dotik,zaslonska tipkovnica,načini vnosa",
+    "X-KDE-Keywords[sv]": "programvarutangentbord,virtuellt tangentbord,pektangentbord,skärmtangentbord,inmatningsmetoder",
+    "X-KDE-Keywords[tr]": "yazılım klavyesi,sanal klavye,dokunmatik klavye,ekran klavyesi,giriş yöntemi,giriş yöntemleri",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
     ],

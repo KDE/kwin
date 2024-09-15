@@ -98,6 +98,10 @@
     },
     "X-DocPath": "kcontrol/windowbehaviour/index.html",
     "X-KDE-Keywords": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate",
+    "X-KDE-Keywords[ca]": "focus,emplaçament,comportament de les finestres,accions de les finestres,animació,elevació,elevació automàtica,finestres,marc,barra de títol,doble clic,escriptori,ajusta,moviment,ombreig,ombra,desombreja,desombreig,activació,activa",
+    "X-KDE-Keywords[sl]": "fokus,postavitev,vedenje okna,dejanja oken,animacija,dvig,samodejni dvig,okna,okvir,naslovna vrstica,dvoklik,namizje,pripenjanje,gibanje,senčenje,senčenje,odsenči,odsenčenje,aktivacija,aktiviraj",
+    "X-KDE-Keywords[sv]": "fokus,placering,fönsterbeteende,fönsteråtgärder,animering,höjning,automatisk höjning,fönster,ram,namnlist,dubbelklicka,skrivbord,lås,rörelse,rulla upp, rulla ner,aktivering,aktivera",
+    "X-KDE-Keywords[tr]": "odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,animasyon,yükselt,çerçeve,başlık çubuğu,çift tık,masaüstü,tuttur,hareket,taşı,panjur,etkinleştir",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 10
 }

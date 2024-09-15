@@ -102,6 +102,10 @@
     },
     "X-DocPath": "kcontrol/desktop/index.html",
     "X-KDE-Keywords": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces",
+    "X-KDE-Keywords[ca]": "escriptori,escriptoris,número,escriptori virtual,escriptoris múltiples,paginador,giny paginador,miniaplicació de paginador,configuració del paginador,indicador,navegació,cub,diapositiva,espais de treball",
+    "X-KDE-Keywords[sl]": "namizje,namizja,število,navidezno namizje,več namizij,pozivnik,pripomoček pozivnika,aplet pozivnika,nastavitve pozivnika,indikator,krmarjenje,kocka,diapozitiv,delovni prostori",
+    "X-KDE-Keywords[sv]": "skrivbord,nummer,virtuellt skrivbord,flera skrivbord,skrivbordsväljare,skrivbordsväljarkomponent, skrivbordsväljarminiprogram, skrivbordsväljarinställningar,indikator,navigering,kub,bild,arbetsytor",
+    "X-KDE-Keywords[tr]": "masaüstü,masaüstleri,sayı,numara,sanal masaüstü,çoklu masaüstleri,sayfalayıcı,araç takımı,uygulamacık,ayarlar,gösterge,dolaşım,gezinti,küp,kaydır,çalışma alanları",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 60
 }
