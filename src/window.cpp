@@ -1891,17 +1891,18 @@ void Window::setupWindowManagementInterface()
     connect(w, &PlasmaWindowInterface::enterPlasmaVirtualDesktopRequested, this, [this](const QString &desktopId) {
         VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId);
         if (vd) {
-            enterDesktop(vd);
+            Workspace::self()->addWindowToDesktop(this, vd);
         }
     });
     connect(w, &PlasmaWindowInterface::enterNewPlasmaVirtualDesktopRequested, this, [this]() {
         VirtualDesktopManager::self()->setCount(VirtualDesktopManager::self()->count() + 1);
-        enterDesktop(VirtualDesktopManager::self()->desktops().last());
+        auto vd = VirtualDesktopManager::self()->desktops().last();
+        Workspace::self()->addWindowToDesktop(this, vd);
     });
     connect(w, &PlasmaWindowInterface::leavePlasmaVirtualDesktopRequested, this, [this](const QString &desktopId) {
         VirtualDesktop *vd = VirtualDesktopManager::self()->desktopForId(desktopId);
         if (vd) {
-            leaveDesktop(vd);
+            Workspace::self()->removeWindowFromDesktop(this, vd);
         }
     });
 
