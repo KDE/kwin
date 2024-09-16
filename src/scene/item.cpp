@@ -314,7 +314,7 @@ void Item::stackBefore(Item *sibling)
     }
 
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex : siblingIndex - 1);
-    markSortedChildItemsDirty();
+    m_parentItem->markSortedChildItemsDirty();
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
@@ -342,7 +342,7 @@ void Item::stackAfter(Item *sibling)
     }
 
     m_parentItem->m_childItems.move(selfIndex, selfIndex > siblingIndex ? siblingIndex + 1 : siblingIndex);
-    markSortedChildItemsDirty();
+    m_parentItem->markSortedChildItemsDirty();
 
     scheduleRepaint(boundingRect());
     sibling->scheduleRepaint(sibling->boundingRect());
