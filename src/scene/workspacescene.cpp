@@ -102,14 +102,6 @@ WorkspaceScene::WorkspaceScene(std::unique_ptr<ItemRenderer> renderer)
         connect(waylandServer()->seat(), &SeatInterface::dragStarted, this, &WorkspaceScene::createDndIconItem);
         connect(waylandServer()->seat(), &SeatInterface::dragEnded, this, &WorkspaceScene::destroyDndIconItem);
     }
-
-    connect(m_containerItem.get(), &Item::childAdded, this, [this](Item *item) {
-        connect(item, &Item::destroyed, this, [this]() {
-            if (m_painting) {
-                qFatal("Destroyed an item while painting");
-            }
-        });
-    });
 }
 
 WorkspaceScene::~WorkspaceScene()
@@ -266,7 +258,6 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
 
 QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
-    m_painting = true;
     createStackingOrder();
 
     painted_delegate = delegate;
@@ -396,8 +387,6 @@ void WorkspaceScene::preparePaintSimpleScreen()
 
 void WorkspaceScene::postPaint()
 {
-    m_painting = false;
-
     for (WindowItem *w : std::as_const(stacking_order)) {
         effects->postPaintWindow(w->effectWindow());
     }
