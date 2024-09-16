@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-10 00:40+0000\n"
-"PO-Revision-Date: 2024-05-24 16:44+0100\n"
+"PO-Revision-Date: 2024-09-15 10:36+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: layoutpreview.cpp:127
 #, kde-format
@@ -40,10 +40,9 @@ msgid "Alternative"
 msgstr "Alternative"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Get New Task Switchers…"
+msgstr "Get New Task Switcher Styles…"
 
 #: main.cpp:90
 #, kde-format

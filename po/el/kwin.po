@@ -24,8 +24,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 24.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2515,8 +2515,7 @@ msgid "Compositing"
 msgstr "Αναστολή σύνθεσης"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
-#, fuzzy, kde-format
-#| msgid "This effect is not a benchmark"
+#, kde-format
 msgctxt "@label"
 msgid "This effect is not a benchmark"
 msgstr "Δεν είναι συγκριτική αξιολόγηση των επιδόσεων"
@@ -2566,19 +2565,15 @@ msgstr "Μεγεθύνει ολόκληρη την επιφάνεια εργασ
 
 #. i18n: ectx: property (text), widget (QLabel, label_HorizontalGap)
 #: plugins/slide/slide_config.ui:23
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Horizontal"
+#, kde-format
 msgid "Horizontal:"
-msgstr "Οριζόντια"
+msgstr "Οριζόντια:"
 
 #. i18n: ectx: property (text), widget (QLabel, label_VerticalGap)
 #: plugins/slide/slide_config.ui:46
-#, fuzzy, kde-format
-#| msgctxt "An orientation of a pointer axis event"
-#| msgid "Vertical"
+#, kde-format
 msgid "Vertical:"
-msgstr "Κατακόρυφα"
+msgstr "Κατακόρυφα:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SlideBackground)
 #: plugins/slide/slide_config.ui:72
@@ -2645,10 +2640,9 @@ msgstr " εικονοστοιχεία"
 
 #. i18n: ectx: property (text), widget (QLabel, label_3)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:68
-#, fuzzy, kde-format
-#| msgid "&Opacity"
+#, kde-format
 msgid "&Opacity:"
-msgstr "&Αδιαφάνεια"
+msgstr "&Αδιαφάνεια:"
 
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_Opacity)
 #: plugins/thumbnailaside/thumbnailaside_config.ui:87
@@ -3091,9 +3085,7 @@ msgstr "Ορατότητα του δείκτη ποντικιού."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MousePointer)
 #: plugins/zoom/zoom_config.ui:103
-#, fuzzy, kde-format
-#| msgctxt "Current scale in pinch gesture"
-#| msgid "Scale"
+#, kde-format
 msgid "Scale"
 msgstr "Κλίμακα"
 
@@ -3138,8 +3130,7 @@ msgstr "Ώθηση"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:140
-#, fuzzy, kde-format
-#| msgid "Disabled"
+#, kde-format
 msgid "Disabled"
 msgstr "Ανενεργό"
 
@@ -3505,10 +3496,9 @@ msgstr "Διατήρηση κάτω από τα άλλα"
 
 #. i18n: ectx: label, entry (fullscreen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:282
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Fullscreen"
-msgstr "&Πλήρης οθόνη"
+msgstr "Πλήρης οθόνη"
 
 #. i18n: ectx: label, entry (fullscreenrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:286
@@ -4345,11 +4335,9 @@ msgid "Activate Window (%1)"
 msgstr "Ενεργοποίηση παραθύρου (%1)"
 
 #: utils/edid.cpp:263
-#, fuzzy, kde-format
-#| msgctxt "The input device of the event is not known"
-#| msgid "Unknown"
+#, kde-format
 msgid "unknown"
-msgstr "Άγνωστη"
+msgstr "άγνωστη"
 
 #: virtualdesktops.cpp:664 virtualdesktops.cpp:739
 #, kde-format
