@@ -73,9 +73,9 @@ float singlePqToLinear(float pq) {
     return pow(num / den, m1_inv);
 }
 vec3 srgbToLinear(vec3 color) {
-    bvec3 isLow = lessThanEqual(color, vec3(0.04045f));
-    vec3 loPart = color / 12.92f;
-    vec3 hiPart = pow((color + 0.055f) / 1.055f, vec3(12.0f / 5.0f));
+    bvec3 isLow = lessThanEqual(color, vec3(0.04045));
+    vec3 loPart = color / 12.92;
+    vec3 hiPart = pow((color + 0.055) / 1.055, vec3(12.0 / 5.0));
 #if __VERSION__ >= 130
     return mix(hiPart, loPart, isLow);
 #else
@@ -84,9 +84,9 @@ vec3 srgbToLinear(vec3 color) {
 }
 
 vec3 linearToSrgb(vec3 color) {
-    bvec3 isLow = lessThanEqual(color, vec3(0.0031308f));
-    vec3 loPart = color * 12.92f;
-    vec3 hiPart = pow(color, vec3(5.0f / 12.0f)) * 1.055f - 0.055f;
+    bvec3 isLow = lessThanEqual(color, vec3(0.0031308));
+    vec3 loPart = color * 12.92;
+    vec3 hiPart = pow(color, vec3(5.0 / 12.0)) * 1.055 - 0.055;
 #if __VERSION__ >= 130
     return mix(hiPart, loPart, isLow);
 #else
