@@ -207,6 +207,9 @@ QList<Window *> TabBoxHandlerImpl::stackingOrder() const
     const QList<Window *> stacking = Workspace::self()->stackingOrder();
     QList<Window *> ret;
     for (Window *window : stacking) {
+        if (window->isDeleted()) {
+            continue;
+        }
         if (window->isClient()) {
             ret.append(window);
         }
@@ -251,6 +254,9 @@ Window *TabBoxHandlerImpl::desktopClient() const
 {
     const auto stackingOrder = Workspace::self()->stackingOrder();
     for (Window *window : stackingOrder) {
+        if (window->isDeleted()) {
+            continue;
+        }
         if (window->isClient() && window->isDesktop() && window->isOnCurrentDesktop() && window->output() == workspace()->activeOutput()) {
             return window;
         }
@@ -925,6 +931,9 @@ void TabBox::CDEWalkThroughWindows(bool forward)
     //     Q_ASSERT(Workspace::self()->block_stacking_updates == 0);
     for (int i = Workspace::self()->stackingOrder().size() - 1; i >= 0; --i) {
         auto t = Workspace::self()->stackingOrder().at(i);
+        if (t->isDeleted()) {
+            continue;
+        }
         if (t->isClient() && t->isOnCurrentActivity() && t->isOnCurrentDesktop() && !t->isSpecialWindow()
             && !t->isShade() && t->isShown() && t->wantsTabFocus()
             && !t->keepAbove() && !t->keepBelow()) {
