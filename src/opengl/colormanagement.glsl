@@ -94,12 +94,16 @@ vec3 linearToSrgb(vec3 color) {
 #endif
 }
 
-const mat3 toICtCp = transpose(mat3(
-    2048.0 / 4096.0,   2048.0 / 4096.0,   0.0,
-    6610.0 / 4096.0,  -13613.0 / 4096.0,  7003.0 / 4096.0,
-    17933.0 / 4096.0, -17390.0 / 4096.0, -543.0 / 4096.0
-));
-const mat3 fromICtCp = inverse(toICtCp);
+const mat3 toICtCp = mat3(
+    0.5,  1.613769531250,   4.378173828125,
+    0.5, -3.323486328125, -4.245605468750,
+    0.0,  1.709716796875, -0.132568359375
+);
+const mat3 fromICtCp = mat3(
+    1.0,               1.0,             1.0,
+    0.00860903703793, -0.008609037037,  0.56031335710680,
+    0.11102962500303, -0.111029625003, -0.32062717498732
+);
 
 vec3 doTonemapping(vec3 color) {
     if (maxTonemappingLuminance < maxDestinationLuminance * 1.01) {
