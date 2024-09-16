@@ -18,6 +18,7 @@
 
 #include <QAbstractItemModel>
 #include <QObject>
+#include <QPointer>
 #include <QRectF>
 
 #include <QJsonValue>
@@ -50,7 +51,14 @@ public:
 
     KWin::Tile *bestTileForPosition(const QPointF &pos);
     Q_INVOKABLE KWin::Tile *bestTileForPosition(qreal x, qreal y); // For scripting
+
+    bool isRootTile(CustomTile *rootTile) const;
+    CustomTile *createRootTile();
+    void removeRootTile(CustomTile *rootTile);
+    void setActiveRootTile(CustomTile *rootTile);
+    // The active root tile
     CustomTile *rootTile() const;
+
     KWin::Tile *quickTile(QuickTileMode mode) const;
 
     TileModel *model() const;
@@ -68,7 +76,8 @@ private:
 
     Output *m_output = nullptr;
     std::unique_ptr<QTimer> m_saveTimer;
-    std::unique_ptr<CustomTile> m_rootTile = nullptr;
+    QList<std::unique_ptr<CustomTile>> m_tileLayouts;
+    QPointer<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
     std::unique_ptr<TileModel> m_tileModel = nullptr;
     bool m_tearingDown = false;

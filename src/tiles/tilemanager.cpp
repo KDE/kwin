@@ -9,6 +9,7 @@
 
 #include "tilemanager.h"
 #include "core/output.h"
+#include "customtile.h"
 #include "quicktile.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
@@ -63,7 +64,7 @@ TileManager::TileManager(Output *parent)
     m_saveTimer->setInterval(2000);
     connect(m_saveTimer.get(), &QTimer::timeout, this, &TileManager::saveSettings);
 
-    m_rootTile = std::make_unique<RootTile>(this);
+    m_rootTile = createRootTile();
     m_rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
     connect(m_rootTile.get(), &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
     connect(m_rootTile.get(), &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
@@ -116,6 +117,35 @@ Tile *TileManager::bestTileForPosition(const QPointF &pos)
 Tile *TileManager::bestTileForPosition(qreal x, qreal y)
 {
     return bestTileForPosition({x, y});
+}
+
+bool TileManager::isRootTile(CustomTile *tile) const
+{
+    return tile->parentTile() == nullptr; // && m_tileLayouts.contains(tile);
+}
+
+CustomTile *TileManager::createRootTile()
+{
+    m_tileLayouts.append(std::make_unique<RootTile>(this));
+    return m_tileLayouts.last().get();
+}
+
+void TileManager::removeRootTile(CustomTile *tile)
+{
+    if (!isRootTile(tile)) {
+        return;
+    }
+
+    m_tileLayouts.erase(std::remove_if(m_tileLayouts.begin(),
+                                       m_tileLayouts.end(),
+                                       [tile]() {
+        return false; /*tile == candidate.get();*/
+    }));
+}
+
+void TileManager::setActiveRootTile(CustomTile *tile)
+{
+    m_rootTile = tile;
 }
 
 CustomTile *TileManager::rootTile() const
