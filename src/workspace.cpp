@@ -932,7 +932,7 @@ void Workspace::slotCurrentDesktopChanged(VirtualDesktop *oldDesktop, VirtualDes
     // Restore the focus on this desktop
     --block_focus;
 
-    activateWindowOnNewDesktop(newDesktop);
+    activateWindowOnDesktop(newDesktop);
     Q_EMIT currentDesktopChanged(oldDesktop, m_moveResizeWindow);
 }
 
@@ -985,7 +985,7 @@ void Workspace::updateWindowVisibilityOnDesktopChange(VirtualDesktop *newDesktop
     }
 }
 
-void Workspace::activateWindowOnNewDesktop(VirtualDesktop *desktop)
+void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
 {
     Window *window = nullptr;
     if (options->focusPolicyIsReasonable()) {
@@ -1476,6 +1476,7 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
 {
     const QList<VirtualDesktop *> oldDesktops = window->desktops();
     const bool wasOnCurrent = window->isOnCurrentDesktop();
+    const bool wasActive = window->isActive();
     window->setDesktops(desktops);
     if (window->desktops() != desktops) { // No change or desktop forced
         return;
@@ -1489,7 +1490,13 @@ void Workspace::sendWindowToDesktops(Window *window, const QList<VirtualDesktop 
             restackWindowUnderActive(window);
         }
     } else {
+
+        // raise the window on the desktop it has been added to
         raiseWindow(window);
+        // but set a new active window on the current desktop
+        if (wasActive) {
+            activateWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop());
+        }
     }
 
     window->checkWorkspacePosition(QRect(), oldDesktops.isEmpty() ? nullptr : oldDesktops.last());
