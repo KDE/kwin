@@ -4319,35 +4319,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Red"
-#~ msgstr "Roig"
-
-#~ msgid "Green"
-#~ msgstr "Verd"
-
-#~ msgid "Blue"
-#~ msgstr "Blau"
-
-#~ msgid "Purple"
-#~ msgstr "Porpra"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Mode:"
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Protanopia (roig dèbil)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Deuteranopia (verd dèbil)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Tritanopia (blau-groc)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Intensitat:"
