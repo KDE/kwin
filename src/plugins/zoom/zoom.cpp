@@ -540,7 +540,16 @@ void ZoomEffect::moveZoomDown()
 
 void ZoomEffect::moveMouseToFocus()
 {
-    QCursor::setPos(focusPoint.x(), focusPoint.y());
+    if (effects->waylandDisplay()) {
+        const auto window = effects->activeWindow();
+        if (!window) {
+            return;
+        }
+        const auto center = window->frameGeometry().center();
+        QCursor::setPos(center.x(), center.y());
+    } else {
+        QCursor::setPos(focusPoint.x(), focusPoint.y());
+    }
 }
 
 void ZoomEffect::moveMouseToCenter()
