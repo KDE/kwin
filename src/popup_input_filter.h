@@ -26,6 +26,8 @@ public:
 
 private:
     void handleWindowAdded(Window *client);
+
+    void focus(Window *popup);
     void cancelPopups();
 
     QList<Window *> m_popupWindows;
