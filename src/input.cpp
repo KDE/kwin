@@ -1278,16 +1278,7 @@ public:
         if (!found) {
             return false;
         }
-        auto xkb = input()->keyboard()->xkb();
-        Qt::Key key = xkb->toQtKey(xkb->toKeysym(event->nativeScanCode()),
-                                   event->nativeScanCode(),
-                                   Qt::KeyboardModifiers(),
-                                   true /* workaround for QTBUG-62102 */);
-        QKeyEvent internalEvent(event->type(), key,
-                                event->modifiers(), event->nativeScanCode(), event->nativeVirtualKey(),
-                                event->nativeModifiers(), event->text());
-        internalEvent.setAccepted(false);
-        if (QCoreApplication::sendEvent(found, &internalEvent)) {
+        if (QCoreApplication::sendEvent(found, event)) {
             waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
             passToWaylandServer(event);
             return true;
