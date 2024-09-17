@@ -1469,6 +1469,12 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
         if (!edge->activatesForPointer()) {
             continue;
         }
+        if (edge->client() && effects->activeFullScreenEffect()) {
+            if (edge->isApproaching()) {
+                edge->stopApproaching();
+            }
+            continue;
+        }
         if (edge->approachGeometry().contains(event->globalPos())) {
             if (!edge->isApproaching()) {
                 edge->startApproaching();
