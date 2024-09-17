@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-14 00:42+0000\n"
+"POT-Creation-Date: 2024-09-17 00:40+0000\n"
 "PO-Revision-Date: 2024-09-05 09:53+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -3646,35 +3646,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "لا يوجد نوافذ مفتوحة"
 
-#: tabbox/tabbox.cpp:354
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows"
 msgstr "تنقّل بين النّوافذ"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows (Reverse)"
 msgstr "تنقّل بين النّوافذ (بالعكس)"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows Alternative"
 msgstr "تنقّل بين النّوافذ البديلة"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "تنقّل بين النّوافذ البديلة (بالعكس)"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ (بالعكس)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:366
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:367
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "تنقّل بين نوافذ التّطبيق الحاليّ البديلة (بالعكس)"
 
@@ -4240,13 +4240,13 @@ msgstr "بدّل إلى سطح المكتب الأسفل"
 msgid "Switch to Desktop %1"
 msgstr "بدّل إلى سطح المكتب %1"
 
-#: window.cpp:3105
+#: window.cpp:3106
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(لا يستجيب)"
 
-#: workspace.cpp:1595
+#: workspace.cpp:1622
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

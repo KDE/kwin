@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-14 00:42+0000\n"
+"POT-Creation-Date: 2024-09-17 00:40+0000\n"
 "PO-Revision-Date: 2024-08-25 23:01+0300\n"
 "Last-Translator: Moo <<>>\n"
 "Language-Team: Lithuanian <kde-i18n-lt@kde.org>\n"
@@ -3678,35 +3678,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Nėra atvertų langų"
 
-#: tabbox/tabbox.cpp:354
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows"
 msgstr "Pereiti per langus"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows (Reverse)"
 msgstr "Pereiti per langus (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows Alternative"
 msgstr "Pereiti per langus alternatyviai"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Pereiti per langus alternatyviai (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application"
 msgstr "Pereiti per esamos programos langus"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Pereiti per esamos programos langus (atvirkščiai)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:366
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Pereiti per esamos programos langus alternatyviai"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:367
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Pereiti per esamos programos langus alternatyviai (atvirkščiai)"
 
@@ -4273,13 +4273,13 @@ msgstr "Perjungti vienu darbalaukiu į apačią"
 msgid "Switch to Desktop %1"
 msgstr "Perjungti į darbalaukį %1"
 
-#: window.cpp:3105
+#: window.cpp:3106
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Nereaguoja)"
 
-#: workspace.cpp:1595
+#: workspace.cpp:1622
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

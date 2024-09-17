@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-14 00:42+0000\n"
+"POT-Creation-Date: 2024-09-17 00:40+0000\n"
 "PO-Revision-Date: 2007-11-01 14:27+0545\n"
 "Last-Translator: Shyam Krishna Bal <shyamkrishna_bal@yahoo.com>\n"
 "Language-Team: Nepali <info@mpp.org.np>\n"
@@ -3758,45 +3758,45 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "सञ्झ्याल"
 
-#: tabbox/tabbox.cpp:354
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows"
 msgstr "सञ्झ्याल मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:362
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:363
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:364
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:365
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:366
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "सञ्झ्याल (उल्टो) मार्फत जानुहोस्"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:367
 #, fuzzy
 #| msgid "Walk Through Windows (Reverse)"
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
@@ -4414,13 +4414,13 @@ msgstr "एक डेस्कटप तल स्विच गर्नुह�
 msgid "Switch to Desktop %1"
 msgstr "डेस्कटप १ मा स्विच गर्नुहोस्"
 
-#: window.cpp:3105
+#: window.cpp:3106
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1595
+#: workspace.cpp:1622
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

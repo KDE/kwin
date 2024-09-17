@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-14 00:42+0000\n"
+"POT-Creation-Date: 2024-09-17 00:40+0000\n"
 "PO-Revision-Date: 2023-02-15 15:24+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -3797,35 +3797,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Janelas"
 
-#: tabbox/tabbox.cpp:354
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows"
 msgstr "Percorrer as Janelas"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows (Reverse)"
 msgstr "Percorrer as Janelas (Sentido Inverso)"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows Alternative"
 msgstr "Percorrer as Janelas em Alternativa"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Percorrer as Janelas em Alternativa (Sentido Inverso)"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application"
 msgstr "Percorrer as Janelas da Aplicação Actual"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Percorrer as Janelas da Aplicação Actual (Sentido Inverso)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:366
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Percorrer as Janelas da Aplicação Actual em Alternativa"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:367
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr ""
 "Percorrer as Janelas da Aplicação Actual em Alternativa (Sentido Inverso)"
@@ -4399,13 +4399,13 @@ msgstr "Mudar para um Ecrã Abaixo"
 msgid "Switch to Desktop %1"
 msgstr "Mudar para o Ecrã %1"
 
-#: window.cpp:3105
+#: window.cpp:3106
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr "(Não Responde)"
 
-#: workspace.cpp:1595
+#: workspace.cpp:1622
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

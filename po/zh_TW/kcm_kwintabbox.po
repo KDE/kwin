@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-10 00:40+0000\n"
-"PO-Revision-Date: 2024-03-01 06:21+0900\n"
+"PO-Revision-Date: 2024-09-17 07:54+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -44,10 +44,9 @@ msgid "Alternative"
 msgstr "替代"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "取得新的工作切換器…"
+msgstr "取得新的工作切換器風格…"
 
 #: main.cpp:90
 #, kde-format

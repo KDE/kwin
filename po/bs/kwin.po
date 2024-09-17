@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-14 00:42+0000\n"
+"POT-Creation-Date: 2024-09-17 00:40+0000\n"
 "PO-Revision-Date: 2014-10-20 20:21+0000\n"
 "Last-Translator: Lejla Agic <lagic1@etf.unsa.ba>\n"
 "Language-Team: bosanski <bs@li.org>\n"
@@ -3800,35 +3800,35 @@ msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
 msgstr "Pomjeri prozor"
 
-#: tabbox/tabbox.cpp:354
+#: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows"
 msgstr "Mijenjaj prozore"
 
-#: tabbox/tabbox.cpp:355
+#: tabbox/tabbox.cpp:361
 msgid "Walk Through Windows (Reverse)"
 msgstr "Mijenjaj prozore (obratno)"
 
-#: tabbox/tabbox.cpp:356
+#: tabbox/tabbox.cpp:362
 msgid "Walk Through Windows Alternative"
 msgstr "Mijenjaj prozore alternativno"
 
-#: tabbox/tabbox.cpp:357
+#: tabbox/tabbox.cpp:363
 msgid "Walk Through Windows Alternative (Reverse)"
 msgstr "Mijenjaj prozore alternativno"
 
-#: tabbox/tabbox.cpp:358
+#: tabbox/tabbox.cpp:364
 msgid "Walk Through Windows of Current Application"
 msgstr "Idi kroz prozore trenutnog programa"
 
-#: tabbox/tabbox.cpp:359
+#: tabbox/tabbox.cpp:365
 msgid "Walk Through Windows of Current Application (Reverse)"
 msgstr "Idi kroz prozore trenutnog programa (unazad)"
 
-#: tabbox/tabbox.cpp:360
+#: tabbox/tabbox.cpp:366
 msgid "Walk Through Windows of Current Application Alternative"
 msgstr "Idi kroz prozore trenutnog programa alternativno"
 
-#: tabbox/tabbox.cpp:361
+#: tabbox/tabbox.cpp:367
 msgid "Walk Through Windows of Current Application Alternative (Reverse)"
 msgstr "Idi kroz prozore trenutnog programa alternativno (unazad)"
 
@@ -4438,13 +4438,13 @@ msgstr "Na prvu površ ispod"
 msgid "Switch to Desktop %1"
 msgstr "Prebaci na površ %1"
 
-#: window.cpp:3105
+#: window.cpp:3106
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1595
+#: workspace.cpp:1622
 #, fuzzy, kde-format
 #| msgctxt "Introductory text shown in the support information."
 #| msgid ""

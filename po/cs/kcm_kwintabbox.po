@@ -42,10 +42,9 @@ msgid "Alternative"
 msgstr "Alternativní"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Získat nové přepínače úloh…"
+msgstr ""
 
 #: main.cpp:90
 #, kde-format
