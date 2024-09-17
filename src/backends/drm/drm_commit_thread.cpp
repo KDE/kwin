@@ -59,6 +59,10 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                 lock.unlock();
                 std::this_thread::sleep_until(m_targetPageflipTime - m_safetyMargin);
                 lock.lock();
+                // the main thread might've modified the list
+                if (m_commits.empty()) {
+                    continue;
+                }
             }
             optimizeCommits(m_targetPageflipTime);
             if (!m_commits.front()->isReadyFor(m_targetPageflipTime)) {
