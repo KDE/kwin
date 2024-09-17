@@ -134,7 +134,6 @@ private:
     std::unique_ptr<Item> m_containerItem;
     std::unique_ptr<Item> m_overlayItem;
     std::unique_ptr<DragAndDropIconItem> m_dndIcon;
-    bool m_painting = false;
 };
 
 } // namespace
