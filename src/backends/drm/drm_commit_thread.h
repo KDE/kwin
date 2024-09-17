@@ -43,6 +43,14 @@ public:
      */
     std::chrono::nanoseconds safetyMargin() const;
 
+    /**
+     * attempts to submit the currently scheduled commits as a single one,
+     * if there isn't already a commit pending
+     *
+     * @returns if there's a pending commit after this method returns
+     */
+    bool drain();
+
 private:
     void clearDroppedCommits();
     TimePoint estimateNextVblank(TimePoint now) const;

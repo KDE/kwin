@@ -15,6 +15,7 @@
 #include "drm_backend.h"
 #include "drm_buffer.h"
 #include "drm_commit.h"
+#include "drm_commit_thread.h"
 #include "drm_connector.h"
 #include "drm_crtc.h"
 #include "drm_egl_backend.h"
@@ -505,10 +506,10 @@ void DrmGpu::waitIdle()
 {
     m_socketNotifier->setEnabled(false);
     while (true) {
-        const bool idle = std::ranges::all_of(m_drmOutputs, [](DrmOutput *output) {
-            return !output->pipeline()->pageflipsPending();
+        const bool hasPendingCommit = std::ranges::any_of(m_pipelines, [](DrmPipeline *pipeline) {
+            return pipeline->commitThread()->drain();
         });
-        if (idle) {
+        if (!hasPendingCommit) {
             break;
         }
         pollfd pfds[1];
