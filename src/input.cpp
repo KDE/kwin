@@ -1277,48 +1277,6 @@ public:
                                                  event->inverted());
         return true;
     }
-    bool keyEvent(KeyEvent *event) override
-    {
-        const QList<Window *> windows = workspace()->windows();
-        QWindow *found = nullptr;
-        for (auto it = windows.crbegin(); it != windows.crend(); ++it) {
-            auto internal = qobject_cast<InternalWindow *>(*it);
-            if (!internal) {
-                continue;
-            }
-            if (QWindow *w = internal->handle()) {
-                if (!w->isVisible()) {
-                    continue;
-                }
-                if (!workspace()->geometry().contains(w->geometry())) {
-                    continue;
-                }
-                if (w->property("_q_showWithoutActivating").toBool()) {
-                    continue;
-                }
-                if (w->property("outputOnly").toBool()) {
-                    continue;
-                }
-                if (w->flags().testFlag(Qt::ToolTip)) {
-                    continue;
-                }
-                found = w;
-                break;
-            }
-        }
-        if (QGuiApplication::focusWindow() != found) {
-            QWindowSystemInterface::handleFocusWindowChanged(found);
-        }
-        if (!found) {
-            return false;
-        }
-        if (QCoreApplication::sendEvent(found, event)) {
-            waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-            passToWaylandServer(event);
-            return true;
-        }
-        return false;
-    }
 
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
