@@ -70,9 +70,9 @@ public:
     DrmGpu *gpu() const;
 
     void pageFlipped(std::chrono::nanoseconds timestamp);
-    bool pageflipsPending() const;
     bool modesetPresentPending() const;
     void resetModesetPresentPending();
+    DrmCommitThread *commitThread() const;
 
     QHash<uint32_t, QList<uint64_t>> formats(DrmPlane::TypeIndex planeType) const;
     bool pruneModifier();

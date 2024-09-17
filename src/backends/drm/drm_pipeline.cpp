@@ -46,7 +46,7 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
 
 DrmPipeline::~DrmPipeline()
 {
-    if (pageflipsPending()) {
+    if (m_commitThread->drain()) {
         gpu()->waitIdle();
     }
 }
@@ -511,9 +511,9 @@ void DrmPipeline::revertPendingChanges()
     m_pending = m_next;
 }
 
-bool DrmPipeline::pageflipsPending() const
+DrmCommitThread *DrmPipeline::commitThread() const
 {
-    return m_commitThread->pageflipsPending();
+    return m_commitThread.get();
 }
 
 bool DrmPipeline::modesetPresentPending() const

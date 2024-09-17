@@ -327,4 +327,21 @@ std::chrono::nanoseconds DrmCommitThread::safetyMargin() const
 {
     return m_safetyMargin;
 }
+
+bool DrmCommitThread::drain()
+{
+    std::unique_lock lock(m_mutex);
+    if (m_committed) {
+        return true;
+    }
+    if (m_commits.empty()) {
+        return false;
+    }
+    if (m_commits.size() > 1) {
+        m_commits.front() = mergeCommits(m_commits);
+        m_commits.erase(m_commits.begin() + 1, m_commits.end());
+    }
+    submit();
+    return m_committed != nullptr;
+}
 }
