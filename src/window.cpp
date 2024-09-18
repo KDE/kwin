@@ -3003,26 +3003,33 @@ QString Window::findDesktopFile(const QString &desktopFileName)
         return {};
     }
 
-    const QString desktopFileNameWithPrefix = desktopFileName + QLatin1String(".desktop");
-    QString desktopFilePath;
+    const QLatin1StringView suffix(".desktop");
+    const QString desktopFileNameWithPrefix = desktopFileName + suffix;
 
     if (QDir::isAbsolutePath(desktopFileName)) {
         if (QFile::exists(desktopFileNameWithPrefix)) {
-            desktopFilePath = desktopFileNameWithPrefix;
-        } else {
-            desktopFilePath = desktopFileName;
+            return desktopFileNameWithPrefix;
         }
+
+        if (desktopFileName.endsWith(suffix)) {
+            if (QFile::exists(desktopFileName)) {
+                return desktopFileName;
+            }
+        }
+
+        return QString();
     }
 
-    if (desktopFilePath.isEmpty()) {
-        desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                 desktopFileNameWithPrefix);
+    const QString filePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation, desktopFileNameWithPrefix);
+    if (!filePath.isEmpty()) {
+        return filePath;
     }
-    if (desktopFilePath.isEmpty()) {
-        desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                 desktopFileName);
+
+    if (desktopFileName.endsWith(suffix)) {
+        return QStandardPaths::locate(QStandardPaths::ApplicationsLocation, desktopFileName);
     }
-    return desktopFilePath;
+
+    return QString();
 }
 
 bool Window::hasApplicationMenu() const
