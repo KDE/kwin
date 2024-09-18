@@ -151,8 +151,13 @@ void WaylandWindow::updateClientOutputs()
     if (isDeleted()) {
         return;
     }
-    surface()->setOutputs(waylandServer()->display()->outputsIntersecting(frameGeometry().toAlignedRect()),
-                          waylandServer()->display()->largestIntersectingOutput(frameGeometry().toAlignedRect()));
+    const auto rect = frameGeometry().toAlignedRect();
+    if (rect.isEmpty()) {
+        return;
+    }
+
+    surface()->setOutputs(waylandServer()->display()->outputsIntersecting(rect),
+                          waylandServer()->display()->largestIntersectingOutput(rect));
 }
 
 void WaylandWindow::updateIcon()
