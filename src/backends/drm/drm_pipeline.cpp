@@ -46,9 +46,6 @@ DrmPipeline::DrmPipeline(DrmConnector *conn)
 
 DrmPipeline::~DrmPipeline()
 {
-    if (m_commitThread->drain()) {
-        gpu()->waitIdle();
-    }
 }
 
 DrmPipeline::Error DrmPipeline::present(const std::shared_ptr<OutputFrame> &frame)
