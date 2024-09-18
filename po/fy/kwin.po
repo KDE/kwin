@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 02:37+0000\n"
+"POT-Creation-Date: 2024-09-18 02:37+0000\n"
 "PO-Revision-Date: 2010-07-20 13:46+0100\n"
 "Last-Translator: Berend Ytsma <berendy@gmail.com>\n"
 "Language-Team: Frysk <kde-i18n-fry@kde.org>\n"
@@ -4426,13 +4426,13 @@ msgstr "Wikselje ien buroblêd omleech"
 msgid "Switch to Desktop %1"
 msgstr "Wikselje nei buroblêd 1"
 
-#: window.cpp:3101
+#: window.cpp:3102
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1599
+#: workspace.cpp:1626
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""

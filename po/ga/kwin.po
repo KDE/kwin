@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 02:37+0000\n"
+"POT-Creation-Date: 2024-09-18 02:37+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -4421,13 +4421,13 @@ msgstr "Téigh Síos Deasc Amháin"
 msgid "Switch to Desktop %1"
 msgstr "Téigh go Deasc %1"
 
-#: window.cpp:3101
+#: window.cpp:3102
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
 msgstr ""
 
-#: workspace.cpp:1599
+#: workspace.cpp:1626
 #, kde-format
 msgctxt "Introductory text shown in the support information."
 msgid ""
