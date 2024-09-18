@@ -3002,13 +3002,13 @@ QString Window::findDesktopFile(const QString &desktopFileName)
     if (desktopFileName.isEmpty()) {
         return {};
     }
-    const QLatin1String suffix(".desktop");
-    const QString desktopFileNameWithPrefix = desktopFileName + suffix;
+    constexpr QLatin1String suffix(".desktop");
+    const QString desktopFileNameWithSuffix = desktopFileName + suffix;
     QString desktopFilePath;
 
     if (QDir::isAbsolutePath(desktopFileName)) {
-        if (QFile::exists(desktopFileNameWithPrefix)) {
-            desktopFilePath = desktopFileNameWithPrefix;
+        if (QFile::exists(desktopFileNameWithSuffix)) {
+            desktopFilePath = desktopFileNameWithSuffix;
         } else {
             desktopFilePath = desktopFileName;
         }
@@ -3016,7 +3016,7 @@ QString Window::findDesktopFile(const QString &desktopFileName)
 
     if (desktopFilePath.isEmpty()) {
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
-                                                 desktopFileNameWithPrefix);
+                                                 desktopFileNameWithSuffix);
     }
     if (desktopFilePath.isEmpty()) {
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
