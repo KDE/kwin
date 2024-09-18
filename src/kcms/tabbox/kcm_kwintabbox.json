@@ -102,12 +102,14 @@
     "X-KDE-Keywords[en_GB]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher",
     "X-KDE-Keywords[es]": "ventana,ventanas,cambiador,selector,selector de ventana,cambiador de ventana,cambio,selección,cambio de ventana,alttab,alt-tab,alt+tab,alt tab,cambiador de aplicaciones,selector de aplicaciones,app,tarea,cambiador de tareas,selector de tareas",
     "X-KDE-Keywords[he]": "חלון,חלונות,בורר,בורר חלונות,בוחר חלונות,החלפה,מעבר,העברה,החלפת חלונות,מעבר חלונות,alttab,alt-tab,alt+tab,alt tab,בורר יישומים,מחליף יישומים,יישום,משימה,החלפה,בורר משימות",
+    "X-KDE-Keywords[ia]": "fenestra,fenestras,commutator,commutator de fenestra,commutar,commutar fenestra,alttab,alt-tab,alt+tab,alt tab, modificator de application, app, carga, commuta, commutator de carga",
     "X-KDE-Keywords[it]": "finestra,finestre,selettore,selettore delle finestre,selezione,selezione delle finestre,alttab,alt-tab,alt+tab,alt tab,selettore delle applicazioni,cambio applicazione,applicazione,attività,selettore delle attività",
     "X-KDE-Keywords[ka]": "window,windows,switcher,window switcher,switching,window switching,alttab,alt-tab,alt+tab,alt tab,apps changer,application changer,app,task,switch,task switcher,ფანჯარა,ფანჯრები,ფანჯრის გადართვა,გადართვა,აპები,ამოცანა,ამოცანის გადართვა",
     "X-KDE-Keywords[pl]": "okno,okna,przełącznik,przełącznik okien,przełączanie,przełączanie okien,alttab,alt-tab,alt+tab,alt tab,zmieniacz apek,zmieniacz aplikacji,aplikacja,zadanie,przełącz,przełącznik zadań",
     "X-KDE-Keywords[sl]": "okno,okna,preklopnik,preklopnik oken,preklapljanje,preklop oken,alttab,alt-tab,alt+tab,alt zavihek,izmenjevalec aplikacij,izmenjevalnik aplikacij, aplikacija,opravilo,stikalo,preklopnik opravil",
     "X-KDE-Keywords[sv]": "fönster,byte,fönsterbyte,alttabulator,alt-tabulator,alt+tabulator,alt tabulator,programbytare,program,aktivitet,aktivitetsbyte",
     "X-KDE-Keywords[tr]": "pencere,pencereler,değiştirici,pencere değiştiricisi,değiştirme,alttab,alt-tab,alt+tab,alt tab, uygulama değiştiricisi,uygulama,app,görev,değiştir,görev değiştiricisi,commandtab,command-tab,command+tab,command tab",
+    "X-KDE-Keywords[zh_TW]": "視窗,切換器,切換,視窗切換,alttab,應用程式切換,應用程式,程式,工作,工作切換",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 20
 }
