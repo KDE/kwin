@@ -1,5 +1,5 @@
 # translation of kcmkwindecoration.po to Polish
-# Version: $Revision: 1689183 $
+# Version: $Revision: 1690683 $
 # translation of kcmkwindecoration.po to
 # SPDX-FileCopyrightText: 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023, 2024 Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>
 # Norbert Popiołek <norbert@kde.com.pl>\n"
@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-09-18 00:41+0000\n"
 "PO-Revision-Date: 2024-08-31 06:20+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -222,8 +222,9 @@ msgid "Get New…"
 msgstr "Pobierz nowe…"
 
 #: ui/Themes.qml:93
-#, kde-format
-msgid "Edit %1 Theme"
+#, fuzzy, kde-format
+#| msgid "Edit %1 Theme"
+msgid "Edit %1 Theme…"
 msgstr "Edytuj wygląd %1"
 
 #: utils.cpp:25

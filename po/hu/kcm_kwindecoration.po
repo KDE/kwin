@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-09-18 00:41+0000\n"
 "PO-Revision-Date: 2024-05-28 22:57+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -223,8 +223,9 @@ msgid "Get New…"
 msgstr "Új letöltése…"
 
 #: ui/Themes.qml:93
-#, kde-format
-msgid "Edit %1 Theme"
+#, fuzzy, kde-format
+#| msgid "Edit %1 Theme"
+msgid "Edit %1 Theme…"
 msgstr "A(z) %1 téma szerkesztése"
 
 #: utils.cpp:25

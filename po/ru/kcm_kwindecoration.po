@@ -18,8 +18,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-08-19 09:00+0300\n"
+"POT-Creation-Date: 2024-09-18 00:41+0000\n"
+"PO-Revision-Date: 2024-09-17 12:16+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -89,9 +89,7 @@ msgid "Spacer"
 msgstr "Разделитель"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
 msgstr "Из оформления по умолчанию (%1)"
@@ -233,61 +231,53 @@ msgid "Get New…"
 msgstr "Загрузить новые оформления…"
 
 #: ui/Themes.qml:93
-#, kde-format
-msgid "Edit %1 Theme"
+#, fuzzy, kde-format
+#| msgid "Edit %1 Theme"
+msgid "Edit %1 Theme…"
 msgstr "Редактировать оформление %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
 msgstr "Без рамок"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
 msgstr "Без боковых рамок"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
 msgstr "Тонкие рамки"
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
 msgstr "Обычные рамки"
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
 msgstr "Широкие рамки"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
 msgstr "Очень широкие рамки"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
 msgstr "Огромные рамки"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
 msgstr "Гигантские рамки"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
 msgstr "Колоссальные рамки"
 
@@ -384,7 +374,6 @@ msgstr "Колоссальные рамки"
 #~ msgstr "Настроить «%1»..."
 
 #, fuzzy
-#~| msgid "Normal"
 #~ msgid "Form"
 #~ msgstr "Обычные"
 

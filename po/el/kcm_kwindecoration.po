@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-09-18 00:41+0000\n"
 "PO-Revision-Date: 2024-09-06 22:12+0300\n"
 "Last-Translator: Αντώνης Γέραλης <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
@@ -232,8 +232,9 @@ msgid "Get New…"
 msgstr "Λήψη νέων…"
 
 #: ui/Themes.qml:93
-#, kde-format
-msgid "Edit %1 Theme"
+#, fuzzy, kde-format
+#| msgid "Edit %1 Theme"
+msgid "Edit %1 Theme…"
 msgstr "Επεξεργασία θέματος %1"
 
 #: utils.cpp:25
@@ -262,10 +263,9 @@ msgid "Large window borders"
 msgstr "Μεγάλα περιγράμματα"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very huge window borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "Πολύ τεράστια περιγράμματα"
+msgstr "Πολύ μεγάλα περιγράμματα"
 
 #: utils.cpp:31
 #, kde-format

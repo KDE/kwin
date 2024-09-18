@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-29 00:40+0000\n"
+"POT-Creation-Date: 2024-09-18 00:41+0000\n"
 "PO-Revision-Date: 2024-08-29 09:12+0300\n"
 "Last-Translator: Fracture dept <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
@@ -221,8 +221,9 @@ msgid "Get New…"
 msgstr "Отримати ще…"
 
 #: ui/Themes.qml:93
-#, kde-format
-msgid "Edit %1 Theme"
+#, fuzzy, kde-format
+#| msgid "Edit %1 Theme"
+msgid "Edit %1 Theme…"
 msgstr "Редагувати тему %1"
 
 #: utils.cpp:25

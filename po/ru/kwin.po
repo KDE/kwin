@@ -16,7 +16,7 @@
 # Nick Shaforostoff <shafff@ukr.net>, 2011, 2015.
 # Julia Dronova <juliette.tux@gmail.com>, 2013.
 # Alexander Lakhin <exclusion@gmail.com>, 2013.
-# Olesya Gerasimenko <gammaray@basealt.ru>, 2018.
+# SPDX-FileCopyrightText: 2018, 2024 Olesya Gerasimenko <gammaray@basealt.ru>
 # Мария Шикунова <translation-team@basealt.ru>, 2022.
 # Alexander Yavorsky <kekcuha@gmail.com>, 2023, 2024.
 msgid ""
@@ -24,14 +24,14 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-17 00:40+0000\n"
-"PO-Revision-Date: 2024-05-28 11:00+0300\n"
-"Last-Translator: Alexander Yavorsky <kekcuha@gmail.com>\n"
-"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"PO-Revision-Date: 2024-09-17 14:30+0300\n"
+"Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
+"Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.08.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
@@ -454,12 +454,10 @@ msgid "Repeat"
 msgstr "Автоповтор"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Код Qt::Key"
+msgstr "Код клавиши"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -748,7 +746,7 @@ msgstr "Сенсорное кольцо планшета"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Эффекты"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -959,13 +957,13 @@ msgstr "Внутренние окна"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Выгрузить"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Загрузить"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1703,30 +1701,29 @@ msgstr "Анимация закрытия окна"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Никогда"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " мс"
-msgstr[1] " мс"
-msgstr[2] " мс"
-msgstr[3] " мс"
+msgstr[0] "%1 секунда"
+msgstr[1] "%1 секунды"
+msgstr[2] "%1 секунд"
+msgstr[3] "%1 секунда"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "Скрывать курсор при отсутствии активности:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Скрывать курсор при наборе"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -1844,72 +1841,72 @@ msgstr "Анимация кнопок"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "Клавиша Caps Lock активирована"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "Клавиша Caps Lock теперь неактивна"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "Клавиша Num Lock активирована"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "Клавиша Num Lock теперь неактивна"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "Клавиша Scroll Lock активирована"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "Клавиша Scroll Lock теперь неактивна"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "Клавиша Shift теперь активна"
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "Клавиша Shift теперь неактивна."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "Клавиша Control теперь активна"
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "Клавиша Control теперь неактивна"
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Клавиша Alt теперь активна"
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Клавиша Alt теперь неактивна"
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "Клавиша Meta теперь активна"
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "Клавиша Meta теперь неактивна"
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2325,7 +2322,7 @@ msgstr "Использование ночной цветовой схемы во
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Приостановить или возобновить использование ночной цветовой схемы"
 
 #: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
@@ -2488,10 +2485,9 @@ msgid "Invalid region"
 msgstr "Недопустимая область"
 
 #: plugins/screencast/screencaststream.cpp:346
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Не запущен композитный диспетчер окон на основе OpenGL."
+msgstr "Для трансляции экрана требуются графические эффекты OpenGL"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format
@@ -2519,11 +2515,10 @@ msgstr ""
 "кнопку мыши."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Не применять графические эффекты"
+msgstr "Графические эффекты"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -2589,30 +2584,35 @@ msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Клавиша Shift заблокирована и теперь активна для всех последующих нажатий"
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Клавиша Control заблокирована и теперь активна для всех последующих нажатий"
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Клавиша Alt заблокирована и теперь активна для всех последующих нажатий"
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Клавиша Meta заблокирована и теперь активна для всех последующих нажатий"
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
 msgstr ""
+"Клавиша AltGr заблокирована и теперь активна для всех последующих нажатий"
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -2676,12 +2676,12 @@ msgstr "Закрыть"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Разделить на левую и правую части"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Разделить на верхнюю и нижнюю части"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -3649,17 +3649,15 @@ msgstr "Тип правила адаптивной синхронизации"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Разрешить поворот"
+msgstr "Разрешить разрывы"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Тип правила назначения слоя"
+msgstr "Тип правила назначения разрыва"
 
 # BUGME: should not be translatable --aspotashev
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
@@ -4445,19 +4443,15 @@ msgstr "Произошло аварийное завершение Xwayland"
 #~ msgstr "&Завершить приложение «%1»"
 
 #, fuzzy
-#~| msgid "Show Desktop"
 #~ msgid "Show Desktop Grid"
 #~ msgstr "Показать рабочий стол"
 
 #, fuzzy
-#~| msgid "Tiling Disabled"
 #~ msgctxt "Desktop name alignment:"
 #~ msgid "Disabled"
 #~ msgstr "Мозаичный режим выключен"
 
 #, fuzzy
-#~| msgctxt "A mouse button"
-#~| msgid "Right"
 #~ msgid "Top-Right"
 #~ msgstr "Правая"
 
@@ -4468,8 +4462,6 @@ msgstr "Произошло аварийное завершение Xwayland"
 #~ msgstr "Внизу слева"
 
 #, fuzzy
-#~| msgctxt "A mouse button"
-#~| msgid "Left"
 #~ msgid "Top-Left"
 #~ msgstr "Левая"
 
@@ -4486,7 +4478,6 @@ msgstr "Произошло аварийное завершение Xwayland"
 #~ msgstr "Количество &строк:"
 
 #, fuzzy
-#~| msgid "Desktop file name"
 #~ msgid "Desktop &name alignment:"
 #~ msgstr "Файл .desktop"
 
@@ -4497,12 +4488,10 @@ msgstr "Произошло аварийное завершение Xwayland"
 #~ msgstr "&Режим компоновки таблицы:"
 
 #, fuzzy
-#~| msgid "Windows"
 #~ msgid "Windows layout:"
 #~ msgstr "Окна"
 
 #, fuzzy
-#~| msgid "caption"
 #~ msgid "Activation"
 #~ msgstr "заголовок"
 

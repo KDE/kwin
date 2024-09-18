@@ -657,8 +657,7 @@ msgid "Tilt"
 msgstr "Κλίση"
 
 #: debug_console.cpp:504
-#, fuzzy, kde-format
-#| msgid "caption"
+#, kde-format
 msgid "Rotation"
 msgstr "Περιστροφή"
 
@@ -2508,11 +2507,10 @@ msgstr ""
 "Esc ή δεξί κλικ για ακύρωση."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Suspend Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Αναστολή σύνθεσης"
+msgstr "Σύνθεση"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -3006,10 +3004,9 @@ msgid "Move Right"
 msgstr "Δεξιά"
 
 #: plugins/zoom/zoom_config.cpp:84
-#, fuzzy, kde-format
-#| msgid "&Move"
+#, kde-format
 msgid "Move Up"
-msgstr "&Μετακίνηση"
+msgstr "Μετακίνηση πάνω"
 
 #: plugins/zoom/zoom_config.cpp:91
 #, fuzzy, kde-format
@@ -3117,10 +3114,9 @@ msgstr "Καθολική θέση"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:130
-#, fuzzy, kde-format
-#| msgid "Center"
+#, kde-format
 msgid "Centered"
-msgstr "Κέντρο"
+msgstr "Στο κέντρο"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_MouseTracking)
 #: plugins/zoom/zoom_config.ui:135
@@ -3263,10 +3259,9 @@ msgstr "Παράθυρο στην οθόνη 0"
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window size"
-msgstr "Παράθυρα"
+msgstr "Μέγεθος παραθύρων"
 
 #. i18n: ectx: label, entry (sizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:93
@@ -3405,10 +3400,9 @@ msgstr "Οριζόντια μεγιστοποίηση παραθύρου"
 
 #. i18n: ectx: label, entry (minimize), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:205
-#, fuzzy, kde-format
-#| msgid "Minimize"
+#, kde-format
 msgid "Minimized"
-msgstr "Ελαχιστοποίηση"
+msgstr "Ελαχιστοποιημένο"
 
 #. i18n: ectx: label, entry (minimizerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:209
@@ -3418,10 +3412,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (shade), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:216
-#, fuzzy, kde-format
-#| msgid "&Shade"
+#, kde-format
 msgid "Shaded"
-msgstr "&Τύλιγμα"
+msgstr "Σκιασμένο"
 
 #. i18n: ectx: label, entry (shaderule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:220
@@ -3582,10 +3575,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (closeable), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:352
-#, fuzzy, kde-format
-#| msgid "Close"
+#, kde-format
 msgid "Closeable"
-msgstr "Κλείσιμο"
+msgstr "Μπορεί να κλειστεί"
 
 #. i18n: ectx: label, entry (closeablerule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:356
@@ -4114,16 +4106,14 @@ msgid "Expand Window Vertically"
 msgstr "Κατακόρυφη μεγιστοποίηση παραθύρου"
 
 #: useractions.cpp:961
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Horizontally"
+#, kde-format
 msgid "Shrink Window Horizontally"
-msgstr "Στοίβαξη και σμίκρυνση παραθύρου οριζόντια"
+msgstr "Σμίκρυνση παραθύρου οριζόντια"
 
 #: useractions.cpp:963
-#, fuzzy, kde-format
-#| msgid "Pack Shrink Window Vertically"
+#, kde-format
 msgid "Shrink Window Vertically"
-msgstr "Στοίβαξη και σμίκρυνση παραθύρου κατακόρυφα"
+msgstr "Σμίκρυνση παραθύρου κατακόρυφα"
 
 #: useractions.cpp:965
 #, kde-format
@@ -4186,14 +4176,12 @@ msgid "Switch to Window to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
 #: useractions.cpp:989
-#, fuzzy, kde-format
-#| msgid "Increase Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Increase Opacity of Active Window by 5%"
 msgstr "Αύξηση της αδιαφάνειας του ενεργού παραθύρου κατά 5%"
 
 #: useractions.cpp:991
-#, fuzzy, kde-format
-#| msgid "Decrease Opacity of Active Window by 5 %"
+#, kde-format
 msgid "Decrease Opacity of Active Window by 5%"
 msgstr "Μείωση της αδιαφάνειας του ενεργού παραθύρου κατά 5%"
 
@@ -4238,22 +4226,19 @@ msgid "Window One Desktop Down"
 msgstr "Μετάβαση μία επιφάνεια εργασίας κάτω"
 
 #: useractions.cpp:1019
-#, fuzzy, kde-format
-#| msgid "Window to Screen %1"
+#, kde-format
 msgid "Move Window to Screen %1"
-msgstr "Παράθυρο στην οθόνη %1"
+msgstr "Μετακίνηση παραθύρου στην οθόνη %1"
 
 #: useractions.cpp:1026
-#, fuzzy, kde-format
-#| msgid "Window to Next Screen"
+#, kde-format
 msgid "Move Window to Next Screen"
-msgstr "Παράθυρο στην επόμενη οθόνη"
+msgstr "Μετακίνηση παραθύρου στην επόμενη οθόνη"
 
 #: useractions.cpp:1028
-#, fuzzy, kde-format
-#| msgid "Window to Previous Screen"
+#, kde-format
 msgid "Move Window to Previous Screen"
-msgstr "Παράθυρο στην προηγούμενη οθόνη"
+msgstr "Μετακίνηση παραθύρου στην προηγούμενη οθόνη"
 
 #: useractions.cpp:1030
 #, fuzzy, kde-format

@@ -209,10 +209,9 @@ msgstr "Alt"
 
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: actions.ui:242
-#, fuzzy, kde-format
-#| msgid "   + "
+#, kde-format
 msgid "  + "
-msgstr "   + "
+msgstr "  + "
 
 #. i18n: ectx: property (text), widget (QLabel, label_7)
 #. i18n: ectx: property (text), widget (QLabel, label_8)
@@ -355,10 +354,9 @@ msgstr "Αύξηση αδιαφάνειας"
 #: actions.ui:316 actions.ui:386 actions.ui:456 actions.ui:511 advanced.ui:154
 #: mouse.ui:83 mouse.ui:135 mouse.ui:277 mouse.ui:339 mouse.ui:392 mouse.ui:454
 #: mouse.ui:507 mouse.ui:569
-#, fuzzy, kde-format
-#| msgid "Nothing"
+#, kde-format
 msgid "Do nothing"
-msgstr "Τίποτα"
+msgstr "Καμία ενέργεια"
 
 #. i18n: ectx: property (text), widget (QLabel, label_8)
 #: actions.ui:324
@@ -593,10 +591,9 @@ msgstr "Αρπαγή των παραθύρων &μόνο κατά την επι�
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:85
-#, fuzzy, kde-format
-#| msgid "Maximize"
+#, kde-format
 msgid "Maximized"
-msgstr "Μεγιστοποίηση"
+msgstr "Μεγιστοποιημένο"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_Placement)
 #: advanced.ui:90
@@ -924,10 +921,9 @@ msgstr ""
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
 #: focus.ui:196
-#, fuzzy, kde-format
-#| msgid "Multiscreen behaviour"
+#, kde-format
 msgid "Multiscreen behavior:"
-msgstr "Συμπεριφορά πολλαπλών οθονών"
+msgstr "Συμπεριφορά πολλαπλών οθονών:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:203
@@ -1207,10 +1203,9 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_WindowSnapZone)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_CenterSnapZone)
 #: moving.ui:36 moving.ui:68 moving.ui:100
-#, fuzzy, kde-format
-#| msgid " pixel"
+#, kde-format
 msgid " px"
-msgstr " εικονοστοιχείο"
+msgstr " px"
 
 #. i18n: ectx: property (text), widget (QLabel, windowSnapLabel)
 #: moving.ui:52
