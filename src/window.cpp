@@ -3002,8 +3002,8 @@ QString Window::findDesktopFile(const QString &desktopFileName)
     if (desktopFileName.isEmpty()) {
         return {};
     }
-
-    const QString desktopFileNameWithPrefix = desktopFileName + QLatin1String(".desktop");
+    const QLatin1String suffix(".desktop");
+    const QString desktopFileNameWithPrefix = desktopFileName + suffix;
     QString desktopFilePath;
 
     if (QDir::isAbsolutePath(desktopFileName)) {
@@ -3022,6 +3022,12 @@ QString Window::findDesktopFile(const QString &desktopFileName)
         desktopFilePath = QStandardPaths::locate(QStandardPaths::ApplicationsLocation,
                                                  desktopFileName);
     }
+
+    if (!desktopFilePath.endsWith(suffix)) {
+        // Do not return non-desktop files. We'd be at risk of routing binaries through KConfig.
+        return {};
+    }
+
     return desktopFilePath;
 }
 
