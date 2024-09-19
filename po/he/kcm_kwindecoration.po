@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-18 00:41+0000\n"
-"PO-Revision-Date: 2024-08-29 06:53+0300\n"
+"PO-Revision-Date: 2024-09-18 22:19+0300\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
 "Language: he\n"
@@ -226,10 +226,9 @@ msgid "Get New…"
 msgstr "קבלת חדשים…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "עריכת ערכת העיצוב %1"
+msgstr "עריכת ערכת העיצוב %1…"
 
 #: utils.cpp:25
 #, kde-format

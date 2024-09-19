@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -2029,8 +2029,9 @@ msgstr "高度(&H)："
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, kde-format
-msgid "Toggle Mouse Click Effect"
+#, fuzzy, kde-format
+#| msgid "Toggle Mouse Click Effect"
+msgid "Toggle Mouse Click Animation"
 msgstr "打开/关闭鼠标点击动效"
 
 #: plugins/mouseclick/mouseclick.cpp:45

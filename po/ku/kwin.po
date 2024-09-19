@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2009-01-06 03:15+0200\n"
 "Last-Translator: Omer Ensari <oensari@gmail.com>\n"
 "Language-Team: Kurdish <gnu-ku-wergerandin at lists dot sourceforge dot "
@@ -2067,7 +2067,7 @@ msgstr "Rast-Jor"
 #, fuzzy, kde-format
 #| msgctxt "@action Enables/Disables an effect that makes windows more sharp"
 #| msgid "Toggle Sharpen Effect"
-msgid "Toggle Mouse Click Effect"
+msgid "Toggle Mouse Click Animation"
 msgstr "Efekta Tûjîtî Veke/Bigire"
 
 #: plugins/mouseclick/mouseclick.cpp:45

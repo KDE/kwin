@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2009-12-23 10:11+0530\n"
 "Last-Translator: Danishka Navin <danishka@gmail.com>\n"
 "Language-Team: Sinhala <danishka@gmail.com>\n"
@@ -2088,7 +2088,7 @@ msgstr "දකුණට"
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, fuzzy, kde-format
 #| msgid "Toggle Invert Effect"
-msgid "Toggle Mouse Click Effect"
+msgid "Toggle Mouse Click Animation"
 msgstr "යටිකුරු සැරසිලි අතර මාරුවන්න"
 
 #: plugins/mouseclick/mouseclick.cpp:45

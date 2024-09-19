@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1690617 2024-09-17 01:13:49Z scripty $
+# $Id: kwin.po 1690799 2024-09-19 01:14:16Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2024-08-22 07:48+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -2067,8 +2067,9 @@ msgstr "Višina:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, kde-format
-msgid "Toggle Mouse Click Effect"
+#, fuzzy, kde-format
+#| msgid "Toggle Mouse Click Effect"
+msgid "Toggle Mouse Click Animation"
 msgstr "Preklopi učinek klika miške"
 
 #: plugins/mouseclick/mouseclick.cpp:45

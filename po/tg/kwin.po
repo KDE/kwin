@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2019-09-23 21:11+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: English <kde-i18n-doc@kde.org>\n"
@@ -2031,9 +2031,10 @@ msgstr "Рост"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, kde-format
-msgid "Toggle Mouse Click Effect"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Window to Desktop 2"
+msgid "Toggle Mouse Click Animation"
+msgstr "Ҷойивазкунии Тиреза ба Мизи кории 2"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format

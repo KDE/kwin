@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2022-12-28 21:14+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -2139,7 +2139,7 @@ msgstr "Drept"
 #: plugins/mouseclick/mouseclick_config.cpp:43
 #, fuzzy, kde-format
 #| msgid "Toggle Expose Effect"
-msgid "Toggle Mouse Click Effect"
+msgid "Toggle Mouse Click Animation"
 msgstr "Comută efectul de expunere"
 
 #: plugins/mouseclick/mouseclick.cpp:45

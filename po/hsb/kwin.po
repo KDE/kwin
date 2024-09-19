@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-17 00:40+0000\n"
+"POT-Creation-Date: 2024-09-19 00:40+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -2055,9 +2055,10 @@ msgstr ""
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, kde-format
-msgid "Toggle Mouse Click Effect"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Window Operations Menu"
+msgid "Toggle Mouse Click Animation"
+msgstr "Meni za woknowe operacije"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, fuzzy, kde-format

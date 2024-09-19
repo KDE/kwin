@@ -208,10 +208,9 @@ msgid "Get New…"
 msgstr "Získat nové…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "Upravit motiv %1"
+msgstr ""
 
 #: utils.cpp:25
 #, kde-format
