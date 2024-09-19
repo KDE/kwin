@@ -278,12 +278,14 @@ OpenGlContext *EffectsHandler::openglContext() const
 
 void EffectsHandler::unloadAllEffects()
 {
-    for (const EffectPair &pair : std::as_const(loaded_effects)) {
-        destroyEffect(pair.second);
-    }
-
+    m_activeEffects.clear();
     effect_order.clear();
     m_effectLoader->clear();
+
+    const auto loaded = std::move(loaded_effects);
+    for (const EffectPair &pair : loaded) {
+        destroyEffect(pair.second);
+    }
 
     effectsChanged();
 }
