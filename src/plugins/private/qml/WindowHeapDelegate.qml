@@ -77,7 +77,7 @@ ExpoCell {
     naturalWidth: thumb.window.width
     naturalHeight: thumb.window.height
     persistentKey: thumb.window.internalId
-    bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height : 0)
+    bottomMargin: icon.height / 4 + (thumb.windowTitleVisible ? caption.height + Kirigami.Units.smallSpacing : 0) + Kirigami.Units.largeSpacing
 
     Behavior on x {
         enabled: thumb.isReady
