@@ -35,6 +35,7 @@
 
 #include <QAction>
 #include <QOpenGLContext>
+#include <QQuickWindow>
 #include <QThread>
 
 Q_DECLARE_METATYPE(KWin::X11Compositor::SuspendReason)
@@ -299,6 +300,9 @@ void X11Compositor::start()
         case OpenGLCompositing:
             qCDebug(KWIN_CORE) << "Attempting to load the OpenGL scene";
             stop = attemptOpenGLCompositing();
+            if (stop) {
+                QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
+            }
             break;
         case QPainterCompositing:
             qCDebug(KWIN_CORE) << "QPainter compositing is unsupported on X11";
