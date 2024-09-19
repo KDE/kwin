@@ -584,8 +584,7 @@ QSize XdgToplevelInterface::minimumSize() const
 
 QSize XdgToplevelInterface::maximumSize() const
 {
-    return QSize(d->maximumSize.width() > 0 ? d->maximumSize.width() : INT_MAX,
-                 d->maximumSize.height() > 0 ? d->maximumSize.height() : INT_MAX);
+    return d->maximumSize;
 }
 
 quint32 XdgToplevelInterface::sendConfigure(const QSize &size, const States &states)
