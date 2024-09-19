@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: kcm_kwintabbox\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-10 00:40+0000\n"
-"PO-Revision-Date: 2024-02-29 23:33+0200\n"
+"PO-Revision-Date: 2024-09-19 02:01+0300\n"
 "Last-Translator: Moo\n"
 "Language-Team: lt <kde-i18n-lt@kde.org>\n"
 "Language: lt\n"
@@ -45,10 +45,9 @@ msgid "Alternative"
 msgstr "Alternatyvus"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Gauti naujus užduočių perjungiklius…"
+msgstr "Gauti naujų užduočių perjungiklių…"
 
 #: main.cpp:90
 #, kde-format
