@@ -28,12 +28,14 @@ class GraphicsBufferView;
 class KWIN_EXPORT QPainterSwapchainSlot
 {
 public:
-    QPainterSwapchainSlot(GraphicsBuffer *buffer);
+    QPainterSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GraphicsBufferView> &&view);
     ~QPainterSwapchainSlot();
 
     GraphicsBuffer *buffer() const;
     GraphicsBufferView *view() const;
     int age() const;
+
+    static std::shared_ptr<QPainterSwapchainSlot> create(GraphicsBuffer *buffer);
 
 private:
     GraphicsBuffer *m_buffer;

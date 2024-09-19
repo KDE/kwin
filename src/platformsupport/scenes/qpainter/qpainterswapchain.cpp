@@ -16,9 +16,9 @@
 namespace KWin
 {
 
-QPainterSwapchainSlot::QPainterSwapchainSlot(GraphicsBuffer *buffer)
+QPainterSwapchainSlot::QPainterSwapchainSlot(GraphicsBuffer *buffer, std::unique_ptr<GraphicsBufferView> &&view)
     : m_buffer(buffer)
-    , m_view(std::make_unique<GraphicsBufferView>(buffer, GraphicsBuffer::Read | GraphicsBuffer::Write))
+    , m_view(std::move(view))
 {
 }
 
@@ -41,6 +41,16 @@ GraphicsBufferView *QPainterSwapchainSlot::view() const
 int QPainterSwapchainSlot::age() const
 {
     return m_age;
+}
+
+std::shared_ptr<QPainterSwapchainSlot> QPainterSwapchainSlot::create(GraphicsBuffer *buffer)
+{
+    auto view = std::make_unique<GraphicsBufferView>(buffer, GraphicsBuffer::Read | GraphicsBuffer::Write);
+    if (view->isNull()) {
+        buffer->drop();
+        return nullptr;
+    }
+    return std::make_shared<QPainterSwapchainSlot>(buffer, std::move(view));
 }
 
 QPainterSwapchain::QPainterSwapchain(GraphicsBufferAllocator *allocator, const QSize &size, uint32_t format)
@@ -82,9 +92,13 @@ std::shared_ptr<QPainterSwapchainSlot> QPainterSwapchain::acquire()
         return nullptr;
     }
 
-    auto slot = std::make_shared<QPainterSwapchainSlot>(buffer);
-    m_slots.append(slot);
+    auto slot = QPainterSwapchainSlot::create(buffer);
+    if (!slot) {
+        qCWarning(KWIN_QPAINTER) << "Failed to create a qpainter swapchain slot";
+        return nullptr;
+    }
 
+    m_slots.append(slot);
     return slot;
 }
 
