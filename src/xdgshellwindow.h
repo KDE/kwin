@@ -227,6 +227,8 @@ private:
     QMap<quint32, PingReason> m_pings;
     MaximizeMode m_maximizeMode = MaximizeRestore;
     MaximizeMode m_requestedMaximizeMode = MaximizeRestore;
+    QSizeF m_minimumSize = QSizeF(0, 0);
+    QSizeF m_maximumSize = QSizeF(0, 0);
     bool m_isFullScreen = false;
     bool m_isRequestedFullScreen = false;
     bool m_isInitialized = false;
