@@ -1274,11 +1274,7 @@ public:
             }
         }
         if (QGuiApplication::focusWindow() != found) {
-#if QT_VERSION < QT_VERSION_CHECK(6, 7, 0)
-            QWindowSystemInterface::handleWindowActivated(found);
-#else
             QWindowSystemInterface::handleFocusWindowChanged(found);
-#endif
         }
         if (!found) {
             return false;
