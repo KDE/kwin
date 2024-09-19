@@ -162,10 +162,11 @@ std::optional<OutputLayerBeginFrameInfo> X11WindowedEglCursorLayer::doBeginFrame
 
 bool X11WindowedEglCursorLayer::doEndFrame(const QRegion &renderedRegion, const QRegion &damagedRegion, OutputFrame *frame)
 {
+    EglContext *context = m_backend->openglContext();
     QImage buffer(m_framebuffer->size(), QImage::Format_RGBA8888_Premultiplied);
 
     GLFramebuffer::pushFramebuffer(m_framebuffer.get());
-    glReadPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.bits());
+    context->glReadnPixels(0, 0, buffer.width(), buffer.height(), GL_RGBA, GL_UNSIGNED_BYTE, buffer.sizeInBytes(), buffer.bits());
     GLFramebuffer::popFramebuffer();
 
     static_cast<X11WindowedOutput *>(m_output)->cursor()->update(buffer.mirrored(false, true), hotspot());
