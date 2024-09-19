@@ -608,6 +608,7 @@ FocusScope {
 
                 WindowHeap {
                     id: heap
+                    visible: !effect.filterWindows ? effect.searchText.length === 0 : true
                     width: parent.width * (1 + (backgroundArea.sizeAdjust - 1))
                     height: parent.height * (1 + (backgroundArea.sizeAdjust - 1))
                     x: parent.width / 2 - width / 2
