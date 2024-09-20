@@ -304,6 +304,18 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
+static void preFifoPass(RenderLayer *layer)
+{
+    layer->delegate()->prepareFifoPresentation();
+
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        if (sublayer->isVisible()) {
+            preFifoPass(sublayer);
+        }
+    }
+}
+
 void WaylandCompositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -342,6 +354,10 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         const double current = std::pow(*output->currentBrightness(), 1.0 / 2.2);
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
+
+    // TODO do something smarter about tearing presentation here
+    // like, only do one preFifoPass once per refresh cycle?
+    preFifoPass(superLayer);
 
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();

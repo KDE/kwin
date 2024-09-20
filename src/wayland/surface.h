@@ -364,6 +364,13 @@ public:
      */
     SurfaceInterface *mainSurface();
 
+    /**
+     * Should be called immediately before compositing the next non-tearing frame
+     * but always at a minimum rate that guarantees forward progress for the application
+     * (for example 30Hz)
+     */
+    void prepareFifoPresentation();
+
 Q_SIGNALS:
     /**
      * This signal is emitted when the underlying wl_surface resource is about to be freed.
@@ -465,6 +472,12 @@ Q_SIGNALS:
      * has been applied.
      */
     void stateApplied(quint32 serial);
+
+    /**
+     * This signal is emitted when the surface is waiting on the compositor to call
+     * prepareFifoPresentation before processing the next commit
+     */
+    void waitingOnFifo();
 
 private:
     std::unique_ptr<SurfaceInterfacePrivate> d;

@@ -466,6 +466,13 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
     }
 }
 
+void Item::prepareFifoPresentation()
+{
+    for (const auto &child : m_childItems) {
+        child->prepareFifoPresentation();
+    }
+}
+
 void Item::preprocess()
 {
 }

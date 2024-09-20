@@ -23,6 +23,10 @@ void RenderLayerDelegate::frame(OutputFrame *frame)
 {
 }
 
+void RenderLayerDelegate::prepareFifoPresentation()
+{
+}
+
 QRegion RenderLayerDelegate::prePaint()
 {
     return QRegion();

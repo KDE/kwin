@@ -44,6 +44,16 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
+void CursorScene::prepareFifoPresentation(SceneDelegate *delegate)
+{
+    if (!delegate->output()) {
+        return;
+    }
+    if (m_cursorItem->mapToScene(m_cursorItem->boundingRect()).intersects(delegate->output()->geometry())) {
+        m_cursorItem->prepareFifoPresentation();
+    }
+}
+
 QRegion CursorScene::prePaint(SceneDelegate *delegate)
 {
     resetRepaintsHelper(m_rootItem.get(), delegate);

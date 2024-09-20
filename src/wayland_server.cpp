@@ -37,6 +37,7 @@
 #include "wayland/drmclientbuffer.h"
 #include "wayland/drmlease_v1.h"
 #include "wayland/externalbrightness_v1.h"
+#include "wayland/fifo_v1.h"
 #include "wayland/filtered_display.h"
 #include "wayland/fractionalscale_v1.h"
 #include "wayland/frog_colormanagement_v1.h"
@@ -506,6 +507,7 @@ bool WaylandServer::init()
 
     m_externalBrightness = new ExternalBrightnessV1(m_display, m_display);
     m_alphaModifierManager = new AlphaModifierManagerV1(m_display, m_display);
+    m_fifoManager = new FifoManagerV1(m_display, m_display);
     return true;
 }
 

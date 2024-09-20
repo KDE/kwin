@@ -48,4 +48,16 @@ private:
     QSocketNotifier m_notifier;
 };
 
+class FifoBarrier
+{
+public:
+    explicit FifoBarrier();
+    ~FifoBarrier();
+
+    void setTransaction(Transaction *transaction);
+
+private:
+    Transaction *m_nextTransaction = nullptr;
+};
+
 } // namespace KWin
