@@ -44,6 +44,16 @@ static void resetRepaintsHelper(Item *item, SceneDelegate *delegate)
     }
 }
 
+void CursorScene::prepareFifoPresentation(SceneDelegate *delegate, std::chrono::nanoseconds refreshDuration)
+{
+    if (!delegate->output() || !m_cursorItem->isVisible()) {
+        return;
+    }
+    if (m_cursorItem->mapToScene(m_cursorItem->boundingRect()).intersects(delegate->output()->geometry())) {
+        m_cursorItem->prepareFifoPresentation(refreshDuration);
+    }
+}
+
 QRegion CursorScene::prePaint(SceneDelegate *delegate)
 {
     resetRepaintsHelper(m_rootItem.get(), delegate);

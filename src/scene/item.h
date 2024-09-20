@@ -133,6 +133,7 @@ public:
     void resetRepaints(SceneDelegate *delegate);
 
     WindowQuadList quads() const;
+    virtual void prepareFifoPresentation(std::chrono::nanoseconds refreshDuration);
     virtual void preprocess();
     const ColorDescription &colorDescription() const;
     RenderingIntent renderingIntent() const;

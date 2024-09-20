@@ -8,6 +8,7 @@
 
 #include "scene/surfaceitem.h"
 
+#include <QTimer>
 #include <unordered_map>
 
 namespace KWin
@@ -33,6 +34,7 @@ public:
     ContentType contentType() const override;
     void setScanoutHint(DrmDevice *device, const QHash<uint32_t, QList<uint64_t>> &drmFormats) override;
     void freeze() override;
+    void prepareFifoPresentation(std::chrono::nanoseconds refreshDuration) override;
 
     SurfaceInterface *surface() const;
 
@@ -52,6 +54,9 @@ private Q_SLOTS:
     void handleReleasePointChanged();
     void handleAlphaMultiplierChanged();
 
+    void handleWaitingOnFifo();
+    void handleFifoFallback();
+
 protected:
     std::unique_ptr<SurfacePixmap> createPixmap() override;
 
@@ -66,6 +71,7 @@ private:
     };
     std::optional<ScanoutFeedback> m_scanoutFeedback;
     std::unordered_map<SubSurfaceInterface *, std::unique_ptr<SurfaceItemWayland>> m_subsurfaces;
+    QTimer m_fifoFallbackTimer;
 };
 
 class KWIN_EXPORT SurfacePixmapWayland final : public SurfacePixmap

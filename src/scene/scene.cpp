@@ -29,6 +29,11 @@ QList<SurfaceItem *> SceneDelegate::scanoutCandidates(ssize_t maxCount) const
     return m_scene->scanoutCandidates(maxCount);
 }
 
+void SceneDelegate::prepareFifoPresentation(std::chrono::nanoseconds refreshDuration)
+{
+    m_scene->prepareFifoPresentation(this, refreshDuration);
+}
+
 QRegion SceneDelegate::prePaint()
 {
     return m_scene->prePaint(this);

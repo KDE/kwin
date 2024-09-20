@@ -466,6 +466,13 @@ void Item::scheduleSceneRepaintInternal(const QRegion &region)
     }
 }
 
+void Item::prepareFifoPresentation(std::chrono::nanoseconds refreshDuration)
+{
+    for (const auto &child : m_childItems) {
+        child->prepareFifoPresentation(refreshDuration);
+    }
+}
+
 void Item::preprocess()
 {
 }

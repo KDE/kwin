@@ -38,6 +38,11 @@ public:
     virtual void frame(OutputFrame *frame);
 
     /**
+     * This method is called by the compositor before starting painting for a FIFO frame
+     */
+    virtual void prepareFifoPresentation(std::chrono::nanoseconds refreshDuration);
+
+    /**
      * This function is called by the compositor before starting painting. Reimplement
      * this function to do frame initialization.
      */

@@ -31,6 +31,8 @@ class XXColorSurfaceV4;
 class XXColorFeedbackSurfaceV4;
 class LinuxDrmSyncObjSurfaceV1;
 class AlphaModifierSurfaceV1;
+class FifoV1Surface;
+class FifoBarrier;
 
 struct SurfaceState
 {
@@ -83,6 +85,8 @@ struct SurfaceState
     } acquirePoint;
     std::shared_ptr<SyncReleasePoint> releasePoint;
     double alphaMultiplier = 1;
+    std::unique_ptr<FifoBarrier> fifoBarrier;
+    bool hasFifoWaitCondition = false;
 
     struct
     {
@@ -161,6 +165,7 @@ public:
 
     Transaction *firstTransaction = nullptr;
     Transaction *lastTransaction = nullptr;
+    std::unique_ptr<FifoBarrier> fifoBarrier;
 
     QList<OutputInterface *> outputs;
     QPointer<OutputInterface> primaryOutput;
@@ -185,6 +190,7 @@ public:
     QList<XXColorFeedbackSurfaceV4 *> xxColorFeedbacks;
     LinuxDrmSyncObjSurfaceV1 *syncObjV1 = nullptr;
     AlphaModifierSurfaceV1 *alphaModifier = nullptr;
+    FifoV1Surface *fifoSurface = nullptr;
 
     struct
     {

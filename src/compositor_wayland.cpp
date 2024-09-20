@@ -304,6 +304,18 @@ static bool checkForBlackBackground(SurfaceItem *background)
     return nits.lengthSquared() <= (0.1 * 0.1);
 }
 
+static void preFifoPass(RenderLayer *layer, std::chrono::nanoseconds refreshDuration)
+{
+    layer->delegate()->prepareFifoPresentation(refreshDuration);
+
+    const auto sublayers = layer->sublayers();
+    for (RenderLayer *sublayer : sublayers) {
+        if (sublayer->isVisible()) {
+            preFifoPass(sublayer, refreshDuration);
+        }
+    }
+}
+
 void WaylandCompositor::composite(RenderLoop *renderLoop)
 {
     if (m_backend->checkGraphicsReset()) {
@@ -323,7 +335,8 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
     superLayer->setOutputLayer(primaryLayer);
 
     renderLoop->prepareNewFrame();
-    auto frame = std::make_shared<OutputFrame>(renderLoop, std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate()));
+    const auto refreshDuration = std::chrono::nanoseconds(1'000'000'000'000 / output->refreshRate());
+    auto frame = std::make_shared<OutputFrame>(renderLoop, refreshDuration);
     bool directScanout = false;
     std::optional<double> desiredArtificalHdrHeadroom;
 
@@ -342,6 +355,10 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
         const double current = std::pow(*output->currentBrightness(), 1.0 / 2.2);
         frame->setBrightness(std::pow(std::clamp(std::pow(output->brightnessSetting() * output->dimming(), 1.0 / 2.2), current - maxChangePerFrame, current + maxChangePerFrame), 2.2));
     }
+
+    // TODO do something smarter about tearing presentation here
+    // like, only do one preFifoPass once per refresh cycle?
+    preFifoPass(superLayer, refreshDuration);
 
     if (primaryLayer->needsRepaint() || superLayer->needsRepaint()) {
         auto totalTimeQuery = std::make_unique<CpuRenderTimeQuery>();

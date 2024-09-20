@@ -23,6 +23,7 @@ public:
     explicit CursorScene(std::unique_ptr<ItemRenderer> &&renderer);
     ~CursorScene() override;
 
+    void prepareFifoPresentation(SceneDelegate *delegate, std::chrono::nanoseconds refreshDuration) override;
     QRegion prePaint(SceneDelegate *delegate) override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;

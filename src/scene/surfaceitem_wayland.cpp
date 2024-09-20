@@ -48,6 +48,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
     connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
     connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
+    connect(surface, &SurfaceInterface::waitingOnFifo, this, &SurfaceItemWayland::handleWaitingOnFifo);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -68,6 +69,10 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setBufferSize(surface->bufferSize());
     setColorDescription(surface->colorDescription());
     setOpacity(surface->alphaMultiplier());
+
+    m_fifoFallbackTimer.setInterval(1000 / 20);
+    m_fifoFallbackTimer.setSingleShot(true);
+    connect(&m_fifoFallbackTimer, &QTimer::timeout, this, &SurfaceItemWayland::handleFifoFallback);
 }
 
 QList<QRectF> SurfaceItemWayland::shape() const
@@ -200,6 +205,7 @@ void SurfaceItemWayland::freeze()
     }
 
     m_surface = nullptr;
+    m_fifoFallbackTimer.stop();
 }
 
 void SurfaceItemWayland::handleColorDescriptionChanged()
@@ -221,6 +227,34 @@ void SurfaceItemWayland::handleReleasePointChanged()
 void SurfaceItemWayland::handleAlphaMultiplierChanged()
 {
     setOpacity(m_surface->alphaMultiplier());
+}
+
+void SurfaceItemWayland::prepareFifoPresentation(std::chrono::nanoseconds refreshDuration)
+{
+    if (m_surface) {
+        m_surface->prepareFifoPresentation();
+        if (m_fifoFallbackTimer.isActive()) {
+            // some games don't work properly if the refresh rate goes too low with FIFO. 30Hz is assumed to be fine here.
+            // this must still be slower than the actual screen though, or fifo behavior would be broken!
+            const auto fallbackRefreshDuration = std::max(refreshDuration * 5 / 4, std::chrono::nanoseconds(1'000'000'000) / 30);
+            // reset the timer, it should only trigger if we don't present fast enough
+            m_fifoFallbackTimer.start(std::chrono::duration_cast<std::chrono::milliseconds>(fallbackRefreshDuration));
+        }
+    }
+    Item::prepareFifoPresentation(refreshDuration);
+}
+
+void SurfaceItemWayland::handleWaitingOnFifo()
+{
+    m_fifoFallbackTimer.start();
+    scheduleFrame();
+}
+
+void SurfaceItemWayland::handleFifoFallback()
+{
+    if (m_surface) {
+        m_surface->prepareFifoPresentation();
+    }
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

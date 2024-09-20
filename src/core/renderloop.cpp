@@ -185,7 +185,9 @@ void RenderLoopPrivate::dispatch()
 {
     // On X11, we want to ignore repaints that are scheduled by windows right before
     // the Compositor starts repainting.
-    pendingRepaint = true;
+    if (kwinApp()->operationMode() == Application::OperationModeX11) {
+        pendingRepaint = true;
+    }
 
     Q_EMIT q->frameRequested(q);
 

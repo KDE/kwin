@@ -23,6 +23,10 @@ void RenderLayerDelegate::frame(OutputFrame *frame)
 {
 }
 
+void RenderLayerDelegate::prepareFifoPresentation(std::chrono::nanoseconds refreshDuration)
+{
+}
+
 QRegion RenderLayerDelegate::prePaint()
 {
     return QRegion();

@@ -288,6 +288,16 @@ void WorkspaceScene::frame(SceneDelegate *delegate, OutputFrame *frame)
     }
 }
 
+void WorkspaceScene::prepareFifoPresentation(SceneDelegate *delegate, std::chrono::nanoseconds refreshDuration)
+{
+    const auto items = m_containerItem->sortedChildItems();
+    for (const auto &item : items) {
+        if (item->isVisible() && item->mapToScene(item->boundingRect()).intersects(delegate->output()->geometry())) {
+            item->prepareFifoPresentation(refreshDuration);
+        }
+    }
+}
+
 QRegion WorkspaceScene::prePaint(SceneDelegate *delegate)
 {
     createStackingOrder();

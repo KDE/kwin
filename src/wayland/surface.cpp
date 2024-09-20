@@ -24,6 +24,7 @@
 #include "subcompositor.h"
 #include "surface_p.h"
 #include "transaction.h"
+#include "transaction_p.h"
 #include "utils/resource.h"
 #include "xx_colormanagement_v4.h"
 
@@ -429,6 +430,13 @@ SurfaceInterface::SurfaceInterface(CompositorInterface *compositor, wl_resource 
 
 SurfaceInterface::~SurfaceInterface()
 {
+    // ensure that we won't wait on any pending transactions
+    Transaction *transaction = firstTransaction();
+    while (transaction) {
+        transaction->entryFor(this)->state->hasFifoWaitCondition = false;
+        transaction = transaction->next(this);
+    }
+    d->fifoBarrier.reset();
 }
 
 SurfaceRole *SurfaceInterface::role() const
@@ -593,6 +601,8 @@ void SurfaceState::mergeInto(SurfaceState *target)
         target->alphaMultiplier = alphaMultiplier;
         target->alphaMultiplierIsSet = true;
     }
+    target->fifoBarrier = std::move(fifoBarrier);
+    target->hasFifoWaitCondition = hasFifoWaitCondition;
     target->presentationFeedback = std::move(presentationFeedback);
 
     *this = SurfaceState{};
@@ -665,6 +675,8 @@ void SurfaceInterfacePrivate::applyState(SurfaceState *next)
         inputRegion = QRegion();
         opaqueRegion = QRegion();
     }
+
+    fifoBarrier = std::move(current->fifoBarrier);
 
     if (opaqueRegionChanged) {
         Q_EMIT q->opaqueChanged(opaqueRegion);
@@ -1194,6 +1206,15 @@ Transaction *SurfaceInterface::firstTransaction() const
 void SurfaceInterface::setFirstTransaction(Transaction *transaction)
 {
     d->firstTransaction = transaction;
+    if (d->fifoBarrier) {
+        const auto entry = transaction ? transaction->entryFor(this) : nullptr;
+        if (entry && entry->state->hasFifoWaitCondition && (!subSurface() || !subSurface()->isSynchronized())) {
+            d->fifoBarrier->setTransaction(transaction);
+            Q_EMIT waitingOnFifo();
+        } else {
+            d->fifoBarrier->setTransaction(nullptr);
+        }
+    }
 }
 
 Transaction *SurfaceInterface::lastTransaction() const
@@ -1226,6 +1247,17 @@ std::shared_ptr<SyncReleasePoint> SurfaceInterface::bufferReleasePoint() const
 double SurfaceInterface::alphaMultiplier() const
 {
     return d->current->alphaMultiplier;
+}
+
+void SurfaceInterface::prepareFifoPresentation()
+{
+    d->fifoBarrier.reset();
+    for (const auto &subsurface : d->current->subsurface.below) {
+        subsurface->surface()->prepareFifoPresentation();
+    }
+    for (const auto &subsurface : d->current->subsurface.above) {
+        subsurface->surface()->prepareFifoPresentation();
+    }
 }
 
 } // namespace KWin
