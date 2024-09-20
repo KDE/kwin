@@ -279,6 +279,12 @@ std::shared_ptr<GLTexture> EglGbmLayerSurface::texture() const
 
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::renderTestBuffer(const QSize &bufferSize, const QHash<uint32_t, QList<uint64_t>> &formats)
 {
+    EglContext *context = m_eglBackend->openglContext();
+    if (!context->makeCurrent()) {
+        qCWarning(KWIN_DRM) << "EglGbmLayerSurface::renderTestBuffer: failed to make opengl context current";
+        return nullptr;
+    }
+
     if (checkSurface(bufferSize, formats)) {
         return m_surface->currentFramebuffer;
     } else {
@@ -650,16 +656,17 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithCpu(Surface *surfa
     }
     const auto size = source->buffer()->size();
     const qsizetype srcStride = 4 * size.width();
+    EglContext *context = m_eglBackend->openglContext();
     GLFramebuffer::pushFramebuffer(source->framebuffer());
     QImage *const dst = slot->view()->image();
     if (dst->bytesPerLine() == srcStride) {
-        glReadPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dst->bits());
+        context->glReadnPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, dst->sizeInBytes(), dst->bits());
     } else {
         // there's padding, need to copy line by line
         if (surface->cpuCopyCache.size() != dst->size()) {
             surface->cpuCopyCache = QImage(dst->size(), QImage::Format_RGBA8888);
         }
-        glReadPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, surface->cpuCopyCache.bits());
+        context->glReadnPixels(0, 0, dst->width(), dst->height(), GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, surface->cpuCopyCache.sizeInBytes(), surface->cpuCopyCache.bits());
         for (int i = 0; i < dst->height(); i++) {
             std::memcpy(dst->scanLine(i), surface->cpuCopyCache.scanLine(i), srcStride);
         }
