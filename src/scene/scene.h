@@ -31,6 +31,7 @@ public:
 
     QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const override;
     void frame(OutputFrame *frame) override;
+    void prepareFifoPresentation() override;
     QRegion prePaint() override;
     void postPaint() override;
     void paint(const RenderTarget &renderTarget, const QRegion &region) override;
@@ -82,6 +83,7 @@ public:
     void removeDelegate(SceneDelegate *delegate);
 
     virtual QList<SurfaceItem *> scanoutCandidates(ssize_t maxCount) const;
+    virtual void prepareFifoPresentation(SceneDelegate *delegate) = 0;
     virtual QRegion prePaint(SceneDelegate *delegate) = 0;
     virtual void postPaint() = 0;
     virtual void paint(const RenderTarget &renderTarget, const QRegion &region) = 0;

@@ -302,8 +302,14 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     BASENAME kde-external-brightness-v1
 )
 ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/alpha-modifier/alpha-modifier-v1.xml
     BASENAME alpha-modifier-v1
+)
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${PROJECT_SOURCE_DIR}/src/wayland/protocols/frog-fifo-v1.xml
+    BASENAME frog-fifo-v1
 )
 
 target_sources(kwin PRIVATE
@@ -391,6 +397,7 @@ target_sources(kwin PRIVATE
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
     xx_colormanagement_v4.cpp
+    frog_fifo_v1.cpp
 )
 
 install(FILES
@@ -469,6 +476,7 @@ install(FILES
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
     xx_colormanagement_v4.h
+    frog_fifo_v1.h
 
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-alpha-modifier-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-content-type-v1.h
@@ -477,6 +485,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xx-color-management-v4.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-frog-fifo-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-color-management-v1-server-protocol.h
@@ -484,5 +493,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-xx-color-management-v4-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-frog-fifo-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

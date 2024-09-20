@@ -48,6 +48,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
             this, &SurfaceItemWayland::handlePresentationModeHintChanged);
     connect(surface, &SurfaceInterface::bufferReleasePointChanged, this, &SurfaceItemWayland::handleReleasePointChanged);
     connect(surface, &SurfaceInterface::alphaMultiplierChanged, this, &SurfaceItemWayland::handleAlphaMultiplierChanged);
+    connect(surface, &SurfaceInterface::waitingOnFifo, this, &SurfaceItemWayland::handleWaitingOnFifo);
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
@@ -68,6 +69,11 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setBufferSize(surface->bufferSize());
     setColorDescription(surface->colorDescription());
     setOpacity(surface->alphaMultiplier());
+
+    // FIFO requires some minimum refresh rate to guarantee forward progress
+    m_fifoFallbackTimer.setInterval(1000 / 20);
+    m_fifoFallbackTimer.setSingleShot(true);
+    connect(&m_fifoFallbackTimer, &QTimer::timeout, this, &SurfaceItemWayland::handleFifoFallback);
 }
 
 QList<QRectF> SurfaceItemWayland::shape() const
@@ -200,6 +206,7 @@ void SurfaceItemWayland::freeze()
     }
 
     m_surface = nullptr;
+    m_fifoFallbackTimer.stop();
 }
 
 void SurfaceItemWayland::handleColorDescriptionChanged()
@@ -221,6 +228,31 @@ void SurfaceItemWayland::handleReleasePointChanged()
 void SurfaceItemWayland::handleAlphaMultiplierChanged()
 {
     setOpacity(m_surface->alphaMultiplier());
+}
+
+void SurfaceItemWayland::prepareFifoPresentation()
+{
+    if (m_surface) {
+        m_surface->prepareFifoPresentation();
+        if (m_fifoFallbackTimer.isActive()) {
+            // reset the timer, it should only trigger if we don't present fast enough
+            m_fifoFallbackTimer.start();
+        }
+    }
+    Item::prepareFifoPresentation();
+}
+
+void SurfaceItemWayland::handleWaitingOnFifo()
+{
+    m_fifoFallbackTimer.start();
+    scheduleFrame();
+}
+
+void SurfaceItemWayland::handleFifoFallback()
+{
+    if (m_surface) {
+        m_surface->prepareFifoPresentation();
+    }
 }
 
 SurfacePixmapWayland::SurfacePixmapWayland(SurfaceItemWayland *item, QObject *parent)

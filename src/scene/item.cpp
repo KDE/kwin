@@ -408,6 +408,13 @@ void Item::scheduleFrame()
     }
 }
 
+void Item::prepareFifoPresentation()
+{
+    for (const auto &child : m_childItems) {
+        child->prepareFifoPresentation();
+    }
+}
+
 void Item::preprocess()
 {
 }

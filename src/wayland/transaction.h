@@ -110,6 +110,8 @@ public:
      */
     void commit();
 
+    const TransactionEntry *entryFor(SurfaceInterface *surface) const;
+
 private:
     void apply();
     bool tryApply();

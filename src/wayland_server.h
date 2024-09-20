@@ -64,6 +64,7 @@ class XXColorManagerV4;
 class LinuxDrmSyncObjV1Interface;
 class RenderBackend;
 class AlphaModifierManagerV1;
+class FrogFifoManagerV1;
 
 class KWIN_EXPORT WaylandServer : public QObject
 {
@@ -293,6 +294,7 @@ private:
     XdgDialogWmV1Interface *m_xdgDialogWm = nullptr;
     ExternalBrightnessV1 *m_externalBrightness = nullptr;
     AlphaModifierManagerV1 *m_alphaModifierManager = nullptr;
+    FrogFifoManagerV1 *m_fifoManager = nullptr;
     KWIN_SINGLETON(WaylandServer)
 };
 

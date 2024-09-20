@@ -96,6 +96,28 @@ void TransactionEventFdLocker::unlock()
     delete this;
 }
 
+FifoBarrier::FifoBarrier()
+{
+}
+
+FifoBarrier::~FifoBarrier()
+{
+    if (m_nextTransaction) {
+        m_nextTransaction->unlock();
+    }
+}
+
+void FifoBarrier::setTransaction(Transaction *transaction)
+{
+    if (m_nextTransaction) {
+        m_nextTransaction->unlock();
+    }
+    m_nextTransaction = transaction;
+    if (transaction) {
+        transaction->lock();
+    }
+}
+
 Transaction::Transaction()
 {
 }
@@ -298,6 +320,14 @@ void Transaction::commit()
             Q_EMIT entry.surface->stateStashed(entry.state->serial);
         }
     }
+}
+
+const TransactionEntry *Transaction::entryFor(SurfaceInterface *surface) const
+{
+    const auto it = std::ranges::find_if(m_entries, [surface](const TransactionEntry &entry) {
+        return entry.surface == surface;
+    });
+    return it == m_entries.end() ? nullptr : &(*it);
 }
 
 } // namespace KWin

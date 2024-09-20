@@ -128,6 +128,7 @@ public:
     void resetRepaints(SceneDelegate *delegate);
 
     WindowQuadList quads() const;
+    virtual void prepareFifoPresentation();
     virtual void preprocess();
     const ColorDescription &colorDescription() const;
     RenderingIntent renderingIntent() const;
