@@ -123,6 +123,11 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
         return;
     }
 
+    // TODO: Store the xdg-activation token and check it when the window is added to the workspace.
+    if (!window->readyForPainting()) {
+        return;
+    }
+
     if (!m_currentActivationToken || m_currentActivationToken->token != token) {
         qCDebug(KWIN_CORE) << "Refusing to activate " << window << " (provided token: " << token << ", current token:" << (m_currentActivationToken ? m_currentActivationToken->token : QStringLiteral("null")) << ")";
         window->demandAttention();
