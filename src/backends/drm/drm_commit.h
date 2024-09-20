@@ -114,6 +114,7 @@ public:
 
 private:
     DrmPipeline *const m_pipeline;
+    DrmCrtc *const m_crtc;
     const std::shared_ptr<DrmFramebuffer> m_buffer;
     std::shared_ptr<OutputFrame> m_frame;
     PresentationMode m_mode = PresentationMode::VSync;

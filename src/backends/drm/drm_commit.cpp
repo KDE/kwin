@@ -260,6 +260,7 @@ bool DrmAtomicCommit::isTearing() const
 DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<DrmFramebuffer> &buffer, const std::shared_ptr<OutputFrame> &frame)
     : DrmCommit(pipeline->gpu())
     , m_pipeline(pipeline)
+    , m_crtc(m_pipeline->crtc())
     , m_buffer(buffer)
     , m_frame(frame)
 {
@@ -268,8 +269,8 @@ DrmLegacyCommit::DrmLegacyCommit(DrmPipeline *pipeline, const std::shared_ptr<Dr
 bool DrmLegacyCommit::doModeset(DrmConnector *connector, DrmConnectorMode *mode)
 {
     uint32_t connectorId = connector->id();
-    if (drmModeSetCrtc(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0) {
-        m_pipeline->crtc()->setCurrent(m_buffer);
+    if (drmModeSetCrtc(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), 0, 0, &connectorId, 1, mode->nativeMode()) == 0) {
+        m_crtc->setCurrent(m_buffer);
         return true;
     } else {
         return false;
@@ -283,13 +284,13 @@ bool DrmLegacyCommit::doPageflip(PresentationMode mode)
     if (mode == PresentationMode::Async || mode == PresentationMode::AdaptiveAsync) {
         flags |= DRM_MODE_PAGE_FLIP_ASYNC;
     }
-    return drmModePageFlip(gpu()->fd(), m_pipeline->crtc()->id(), m_buffer->framebufferId(), flags, this) == 0;
+    return drmModePageFlip(gpu()->fd(), m_crtc->id(), m_buffer->framebufferId(), flags, this) == 0;
 }
 
 void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
     Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
-    m_pipeline->crtc()->setCurrent(m_buffer);
+    m_crtc->setCurrent(m_buffer);
     if (m_frame) {
         m_frame->presented(timestamp, m_mode);
         m_frame.reset();
