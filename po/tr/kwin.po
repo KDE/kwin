@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-18 02:37+0000\n"
+"POT-Creation-Date: 2024-09-20 02:40+0000\n"
 "PO-Revision-Date: 2024-08-22 13:49+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -79,17 +79,17 @@ msgstr "Girdiyi yakalamak için sağ kontrol düğmesine bas"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland Bileşikleştiricisi"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:447
+#: compositor_wayland.cpp:300 compositor_x11.cpp:451
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Grafik sıfırlaması nedeniyle masaüstü efektleri yeniden başlatıldı"
 
-#: compositor_x11.cpp:102
+#: compositor_x11.cpp:103
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Bileşikliği Askıya Al"
 
-#: compositor_x11.cpp:556
+#: compositor_x11.cpp:560
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -103,12 +103,12 @@ msgstr ""
 "düşünüyorsanız<br>bu korumayı sıfırlayabilirsiniz; ancak <b>bir hata "
 "durumunda KWin’in anında çökeceğini not edin!</b></p>"
 
-#: compositor_x11.cpp:563
+#: compositor_x11.cpp:567
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Gereken X genişletmeleri (XComposite ve XDamage) kullanılabilir değil."
 
-#: compositor_x11.cpp:566
+#: compositor_x11.cpp:570
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL, kullanılabilir değil."
@@ -1229,22 +1229,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Makine adı: %1"
 
-#: input.cpp:2114
+#: input.cpp:2110
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Tableti, sonraki çıktıya taşı"
 
-#: input.cpp:2193
+#: input.cpp:2189
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tablet şuraya taşındı: %1"
 
-#: input.cpp:2193
+#: input.cpp:2189
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Tabletler çıktılarını değiştirdiler"
 
-#: input.cpp:3308
+#: input.cpp:3304
 #, kde-format
 msgid "Touchpad"
 msgstr "Dokunmatik Yüzey"
@@ -1530,7 +1530,7 @@ msgstr "Güçlü"
 msgid "Noise strength:"
 msgstr "Gürültü sertliği:"
 
-#: plugins/colorpicker/colorpicker.cpp:107
+#: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2386,7 +2386,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Sanal Masaüstlerini Yapılandır…"
 
-#: plugins/overview/qml/main.qml:744
+#: plugins/overview/qml/main.qml:745
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -4262,7 +4262,7 @@ msgstr "Bir Alt Masaüstüne Geç"
 msgid "Switch to Desktop %1"
 msgstr "%1. Masaüstüne Geç"
 
-#: window.cpp:3102
+#: window.cpp:3109
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
