@@ -456,7 +456,8 @@ void QuickTilingTest::testQuickTilingPointerMove()
     Test::pointerMotion(pointerPos, timestamp++);
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QTEST(window->requestedQuickTileMode(), "expectedMode");
-    QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
+    const QPoint tileOutputPositon = workspace()->outputAt(pointerPos)->geometry().topLeft();
+    QCOMPARE(window->geometryRestore(), QRect(tileOutputPositon, QSize(100, 50)));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), tileSize);
@@ -492,7 +493,7 @@ void QuickTilingTest::testQuickTilingPointerMove()
     Test::pointerMotion(pointerPos, timestamp++); // tile the window again
     Test::pointerButtonReleased(BTN_LEFT, timestamp++);
     QTEST(window->requestedQuickTileMode(), "expectedMode");
-    QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 50));
+    QCOMPARE(window->geometryRestore(), QRect(tileOutputPositon, QSize(100, 50)));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
     QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), tileSize);
