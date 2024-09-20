@@ -232,10 +232,9 @@ msgid "Get New…"
 msgstr "Λήψη νέων…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "Επεξεργασία θέματος %1"
+msgstr "Επεξεργασία θέματος %1…"
 
 #: utils.cpp:25
 #, kde-format

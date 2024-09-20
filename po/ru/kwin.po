@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-19 00:40+0000\n"
+"POT-Creation-Date: 2024-09-20 00:42+0000\n"
 "PO-Revision-Date: 2024-09-17 14:30+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -92,18 +92,18 @@ msgstr "Чтобы захватить ввод нажмите правую кл�
 msgid "KDE Wayland Compositor"
 msgstr "Графический сервер Wayland для KDE"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:447
+#: compositor_wayland.cpp:300 compositor_x11.cpp:451
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr ""
 "Подсистема эффектов рабочего стола была перезапущена из-за сброса графики"
 
-#: compositor_x11.cpp:102
+#: compositor_x11.cpp:103
 #, kde-format
 msgid "Suspend Compositing"
 msgstr "Приостановить композитное расширение"
 
-#: compositor_x11.cpp:556
+#: compositor_x11.cpp:560
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -116,12 +116,12 @@ msgstr ""
 "уже был обновлён до стабильной версии,<br>то можно сбросить эту за защиту, "
 "но <b>помните, что это может привести к немедленному сбою.</b></p>"
 
-#: compositor_x11.cpp:563
+#: compositor_x11.cpp:567
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Отсутствуют необходимые расширения X-сервера (XComposite и XDamage)."
 
-#: compositor_x11.cpp:566
+#: compositor_x11.cpp:570
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "Расширение GLX/OpenGL недоступно."
@@ -1253,22 +1253,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Имя хоста: %1"
 
-#: input.cpp:2114
+#: input.cpp:2110
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Переключить планшет к следующему выходу"
 
-#: input.cpp:2193
+#: input.cpp:2189
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Планшет переключен на %1"
 
-#: input.cpp:2193
+#: input.cpp:2189
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Переключённые выводы планшета"
 
-#: input.cpp:3308
+#: input.cpp:3304
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорная панель"
@@ -1558,7 +1558,7 @@ msgstr "Сильнее"
 msgid "Noise strength:"
 msgstr "Сила шума:"
 
-#: plugins/colorpicker/colorpicker.cpp:107
+#: plugins/colorpicker/colorpicker.cpp:109
 #, kde-format
 msgid ""
 "Select a position for color picking with left click or enter.\n"
@@ -2425,7 +2425,7 @@ msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
 msgstr "Настроить рабочие столы..."
 
-#: plugins/overview/qml/main.qml:744
+#: plugins/overview/qml/main.qml:745
 #, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
@@ -4303,7 +4303,7 @@ msgstr "Переключиться на один рабочий стол вни�
 msgid "Switch to Desktop %1"
 msgstr "Переключиться на рабочий стол %1"
 
-#: window.cpp:3106
+#: window.cpp:3113
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

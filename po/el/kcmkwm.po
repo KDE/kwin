@@ -10,7 +10,7 @@
 # Spiros Georgaras <sngeorgaras@otenet.gr>, 2008.
 # Petros Vidalis <p_vidalis@hotmail.com>, 2009.
 # Dimitrios Glentadakis <dglent@gmail.com>, 2011, 2012.
-# Antonis Geralis <capoiosct@gmail.com>, 2012, 2013.
+# SPDX-FileCopyrightText: 2012, 2013, 2024 Antonis Geralis <capoiosct@gmail.com>
 # Stelios <sstavra@gmail.com>, 2012, 2013.
 # Dimitris Kardarakos <dimkard@gmail.com>, 2015.
 msgid ""
@@ -18,15 +18,15 @@ msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-14 00:40+0000\n"
-"PO-Revision-Date: 2015-02-08 11:48+0200\n"
-"Last-Translator: Dimitris Kardarakos <dimkard@gmail.com>\n"
+"PO-Revision-Date: 2024-09-19 17:37+0300\n"
+"Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
@@ -148,7 +148,7 @@ msgid ""
 "In this row you can customize behavior when scrolling into an inactive inner "
 "window ('inner' means: not titlebar, not frame)."
 msgstr ""
-"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά της κύλησης σε ένα "
+"Σε αυτή τη γραμμή μπορείτε να προσαρμόσετε τη συμπεριφορά της κύλισης σε ένα "
 "ανενεργό εσωτερικό παράθυρο ('εσωτερικό' σημαίνει: όχι γραμμή τίτλου ή "
 "πλαίσιο)."
 
@@ -405,8 +405,8 @@ msgid ""
 "Here you can customize KDE's behavior when scrolling with the mouse wheel in "
 "a window while pressing the modifier key."
 msgstr ""
-"Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του KDE όταν κάνετε κύλιση με το "
-"ροδάκι του ποντικιού πατώντας συγχρόνως κάποιο ειδικό πλήκτρο."
+"Εδώ μπορείτε να προσαρμόσετε τη συμπεριφορά του KDE όταν κάνετε κύλιση με τη "
+"ροδέλα του ποντικιού πατώντας συγχρόνως κάποιο ειδικό πλήκτρο."
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAllWheel)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandTitlebarWheel)

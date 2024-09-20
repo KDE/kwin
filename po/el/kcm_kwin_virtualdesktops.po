@@ -7,20 +7,21 @@
 # Stelios <sstavra@gmail.com>, 2013.
 # Dimitris Kardarakos <dimkard@gmail.com>, 2014.
 # Dimitrys Meliates <demetresmeliates+i18n@gmail.com>, 2024.
+# SPDX-FileCopyrightText: 2024 Antonis Geralis <capoiosct@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwindesktop\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-07-05 00:40+0000\n"
-"PO-Revision-Date: 2024-09-06 17:13+0300\n"
-"Last-Translator: Αντώνης Γέραλης <capoiosct@gmail.com>\n"
-"Language-Team: Greek <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2024-09-19 17:36+0300\n"
+"Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
+"Language-Team: Greek <kde-i18n-el@kde.org>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -117,7 +118,7 @@ msgstr "Εμφάνιση εφέ κίνησης κατά την εναλλαγή:
 #: ui/main.qml:277
 #, kde-format
 msgid "Show on-screen display when switching:"
-msgstr "Εμφάνιση απεικόνηση οθόνης κατά την εναλλαγή:"
+msgstr "Εμφάνιση απεικόνιση οθόνης κατά την εναλλαγή:"
 
 #: ui/main.qml:296
 #, kde-format
