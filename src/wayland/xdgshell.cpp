@@ -385,6 +385,8 @@ void XdgToplevelInterfacePrivate::reset()
 
     title = QString();
     appId = QString();
+    tag = QString();
+    description = QString();
     minimumSize = QSize(0, 0);
     maximumSize = QSize(0, 0);
     customIcon = QIcon();
@@ -615,6 +617,16 @@ QString XdgToplevelInterface::title() const
 QString XdgToplevelInterface::appId() const
 {
     return d->appId;
+}
+
+QString XdgToplevelInterface::tag() const
+{
+    return d->tag;
+}
+
+QString XdgToplevelInterface::description() const
+{
+    return d->description;
 }
 
 QSize XdgToplevelInterface::minimumSize() const

@@ -154,6 +154,8 @@ public:
 
     QString title;
     QString appId;
+    QString tag;
+    QString description;
     QSize minimumSize = QSize(0, 0);
     QSize maximumSize = QSize(0, 0);
     QIcon customIcon; // managed externally by the xdg_toplevel_icon interface

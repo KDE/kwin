@@ -85,7 +85,7 @@
 #include "wayland/xdgshell.h"
 #include "wayland/xdgtopleveldrag_v1.h"
 #include "wayland/xdgtoplevelicon_v1.h"
-
+#include "wayland/xdgtopleveltag_v1.h"
 #include "workspace.h"
 #include "xdgactivationv1.h"
 #include "xdgshellintegration.h"
@@ -525,6 +525,7 @@ bool WaylandServer::init()
 #endif
     m_fifoManager = new FifoManagerV1(m_display, m_display);
     m_singlePixelBuffer = new SinglePixelBufferManagerV1(m_display, m_display);
+    m_toplevelTag = new XdgToplevelTagManagerV1(m_display, m_display);
     return true;
 }
 
