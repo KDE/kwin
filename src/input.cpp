@@ -712,8 +712,7 @@ public:
         default:
             break;
         }
-        // Let TabletInputFilter receive the event, so the cursor position can be updated.
-        return false;
+        return true;
     }
 
 private:
