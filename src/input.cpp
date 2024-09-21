@@ -1407,8 +1407,7 @@ public:
         default:
             break;
         }
-        // Let TabletInputFilter receive the event, so the tablet can be registered and the cursor position can be updated.
-        return false;
+        return true;
     }
 
 private:
