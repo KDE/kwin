@@ -308,6 +308,7 @@ public:
     }
 };
 
+#if KWIN_BUILD_SCREENLOCKER
 class LockScreenFilter : public InputEventFilter
 {
 public:
@@ -384,13 +385,11 @@ public:
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
-#if KWIN_BUILD_SCREENLOCKER
         event->setAccepted(false);
         QCoreApplication::sendEvent(ScreenLocker::KSldApp::self(), event);
         if (event->isAccepted()) {
             return true;
         }
-#endif
 
         // continue normal processing
         input()->keyboard()->update();
@@ -517,6 +516,7 @@ private:
         return surfaceAllowed(waylandServer()->seat()->focusedKeyboardSurface());
     }
 };
+#endif
 
 class EffectsFilter : public InputEventFilter
 {
@@ -2811,8 +2811,10 @@ void InputRedirection::setupInputFilters()
     m_windowInteractedSpy = std::make_unique<WindowInteractedSpy>();
     installInputEventSpy(m_windowInteractedSpy.get());
 
+#if KWIN_BUILD_SCREENLOCKER
     m_lockscreenFilter = std::make_unique<LockScreenFilter>();
     installInputEventFilter(m_lockscreenFilter.get());
+#endif
 
     if (kwinApp()->supportsGlobalShortcuts()) {
         m_screenEdgeFilter = std::make_unique<ScreenEdgeInputFilter>();
