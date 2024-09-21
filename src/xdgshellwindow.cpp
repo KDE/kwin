@@ -479,6 +479,15 @@ XdgToplevelWindow::XdgToplevelWindow(XdgToplevelInterface *shellSurface)
     connect(shellSurface, &XdgToplevelInterface::customIconChanged, this, &XdgToplevelWindow::updateIcon);
     connect(this, &XdgToplevelWindow::desktopFileNameChanged, this, &XdgToplevelWindow::updateIcon);
     updateIcon();
+
+    setTag(shellSurface->windowTag());
+    setDescription(shellSurface->windowDescription());
+    connect(shellSurface, &XdgToplevelInterface::tagChanged, this, [this]() {
+        setTag(m_shellSurface->windowTag());
+    });
+    connect(shellSurface, &XdgToplevelInterface::descriptionChanged, this, [this]() {
+        setDescription(m_shellSurface->windowDescription());
+    });
 }
 
 XdgToplevelWindow::~XdgToplevelWindow()

@@ -578,6 +578,16 @@ QString XdgToplevelInterface::windowClass() const
     return d->windowClass;
 }
 
+QString XdgToplevelInterface::windowTag() const
+{
+    return d->windowTag;
+}
+
+QString XdgToplevelInterface::windowDescription() const
+{
+    return d->windowDescription;
+}
+
 QSize XdgToplevelInterface::minimumSize() const
 {
     return d->minimumSize;
