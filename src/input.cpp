@@ -1946,12 +1946,12 @@ public:
             qCCritical(KWIN_CORE) << "Could not touch down, there's no window under" << pos;
             return false;
         }
+        seat->setTimestamp(time);
         auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), id, pos);
         if (!tp) {
             qCCritical(KWIN_CORE) << "Could not touch down" << pos;
             return false;
         }
-        seat->setTimestamp(time);
         QObject::connect(w, &Window::bufferGeometryChanged, tp, [w, tp]() {
             tp->setSurfacePosition(w->bufferGeometry().topLeft());
         });
