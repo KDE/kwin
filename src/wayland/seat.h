@@ -683,7 +683,6 @@ Q_SIGNALS:
     void hasTouchChanged(bool);
     void pointerPosChanged(const QPointF &pos);
     void touchMoved(qint32 id, quint32 serial, const QPointF &globalPosition);
-    void timestampChanged();
 
     /**
      * Emitted whenever the selection changes

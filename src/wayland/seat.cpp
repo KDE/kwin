@@ -490,12 +490,7 @@ std::chrono::milliseconds SeatInterface::timestamp() const
 
 void SeatInterface::setTimestamp(std::chrono::microseconds time)
 {
-    const auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(time);
-    if (d->timestamp == milliseconds) {
-        return;
-    }
-    d->timestamp = milliseconds;
-    Q_EMIT timestampChanged();
+    d->timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(time);
 }
 
 void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
