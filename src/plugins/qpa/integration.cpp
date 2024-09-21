@@ -54,6 +54,7 @@ Integration::Integration()
     , m_services(new QGenericUnixServices())
     , m_clipboard(new Clipboard())
 {
+    QWindowSystemInterface::setSynchronousWindowSystemEvents(true);
     QWindowSystemInterfacePrivate::TabletEvent::setPlatformSynthesizesMouse(false);
 }
 
