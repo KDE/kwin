@@ -322,6 +322,8 @@ public:
             return false;
         }
 
+        ScreenLocker::KSldApp::self()->userActivity();
+
         auto window = input()->findToplevel(event->globalPosition());
         if (window && window->isClient() && window->isLockScreen()) {
             workspace()->activateWindow(window);
@@ -362,6 +364,9 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
+
+        ScreenLocker::KSldApp::self()->userActivity();
+
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
             const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
@@ -382,6 +387,9 @@ public:
             // wayland client takes care of it
             return true;
         }
+
+        ScreenLocker::KSldApp::self()->userActivity();
+
         // send event to KSldApp for global accel
         // if event is set to accepted it means a whitelisted shortcut was triggered
         // in that case we filter it out and don't process it further
@@ -416,6 +424,9 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
+
+        ScreenLocker::KSldApp::self()->userActivity();
+
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         Window *window = input()->findToplevel(pos);
@@ -429,6 +440,9 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
+
+        ScreenLocker::KSldApp::self()->userActivity();
+
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchMotion(id, pos);
@@ -439,6 +453,9 @@ public:
         if (!waylandServer()->isScreenLocked()) {
             return false;
         }
+
+        ScreenLocker::KSldApp::self()->userActivity();
+
         auto seat = waylandServer()->seat();
         seat->setTimestamp(time);
         seat->notifyTouchUp(id);

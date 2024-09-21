@@ -641,12 +641,6 @@ void WaylandServer::initScreenLocker()
 
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToLock, this, [this, screenLockerApp]() {
         new LockScreenPresentationWatcher(this);
-
-        const QList<SeatInterface *> seatIfaces = m_display->seats();
-        for (auto *seat : seatIfaces) {
-            connect(seat, &SeatInterface::timestampChanged,
-                    screenLockerApp, &ScreenLocker::KSldApp::userActivity);
-        }
     });
 
     connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::aboutToStartGreeter, this, [this]() {
@@ -662,18 +656,13 @@ void WaylandServer::initScreenLocker()
         ScreenLocker::KSldApp::self()->setWaylandFd(clientFd);
     });
 
-    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this, [this, screenLockerApp]() {
+    connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::unlocked, this, [this]() {
         if (m_screenLockerClientConnection) {
             m_screenLockerClientConnection->destroy();
             delete m_screenLockerClientConnection;
             m_screenLockerClientConnection = nullptr;
         }
 
-        const QList<SeatInterface *> seatIfaces = m_display->seats();
-        for (auto *seat : seatIfaces) {
-            disconnect(seat, &SeatInterface::timestampChanged,
-                       screenLockerApp, &ScreenLocker::KSldApp::userActivity);
-        }
         ScreenLocker::KSldApp::self()->setWaylandFd(-1);
     });
 
