@@ -84,6 +84,7 @@
         "Name[zh_TW]": "KWin 文稿"
     },
     "X-KDE-Keywords": "kwin script,plugins,window manager",
+    "X-KDE-Keywords[ar]": "كوين البرنامج النصي,والإضافات,ومدير النافذة",
     "X-KDE-Keywords[ca@valencia]": "script de kwin,connectors,gestor de finestres",
     "X-KDE-Keywords[ca]": "script de kwin,connectors,gestor de finestres",
     "X-KDE-Keywords[cs]": "skript kwinu,moduly,správce oken",

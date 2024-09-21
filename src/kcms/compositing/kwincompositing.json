@@ -86,6 +86,7 @@
     },
     "X-DocPath": "https://userbase.kde.org/Desktop_Effects_Performance#Advanced_Desktop_Effects_Settings",
     "X-KDE-Keywords": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails",
+    "X-KDE-Keywords[ar]": "كوين,نافذة,مدير,تركيب,مركب,تأثير,تأثيرات ثلاثية الأبعاد,تأثيرات ثنائية الأبعاد,إعدادات الفيديو,تأثيرات رسومية,تأثيرات سطح المكتب,رسومات,زمن الوصول,vsync,تمزيق,مصغرة للنافذة",
     "X-KDE-Keywords[ca@valencia]": "kwin,finestra,gestor,composició,compositor,efecte,efectes 3D,efectes 2D,configuració de vídeo,efectes gràfics,efectes de l'escriptori,gràfics,latència,vsync,esquinçament,miniatures de pantalla",
     "X-KDE-Keywords[ca]": "kwin,finestra,gestor,composició,compositor,efecte,efectes 3D,efectes 2D,configuració de vídeo,efectes gràfics,efectes d'escriptori,gràfics,latència,vsync,esquinçament,miniatures de pantalla",
     "X-KDE-Keywords[en_GB]": "kwin,window,manager,compositing,compositor,effect,3D effects,2D effects,video settings,graphical effects,desktop effects,graphics,latency,vsync,tearing,window thumbnails",
