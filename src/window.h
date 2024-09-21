@@ -564,6 +564,18 @@ class KWIN_EXPORT Window : public QObject
      */
     Q_PROPERTY(bool inputMethod READ isInputMethod)
 
+    /**
+     * A client-provided tag of the window.
+     * Not necessarily unique, but can be used to identify similar windows
+     * across application restarts
+     */
+    Q_PROPERTY(QString tag READ tag NOTIFY tagChanged)
+
+    /**
+     * A client-provided description of the window
+     */
+    Q_PROPERTY(QString description READ description NOTIFY descriptionChanged)
+
 public:
     ~Window() override;
 
@@ -1363,6 +1375,9 @@ public:
     const ColorDescription &preferredColorDescription() const;
     void setPreferredColorDescription(const ColorDescription &description);
 
+    QString tag() const;
+    QString description() const;
+
 public Q_SLOTS:
     virtual void closeWindow() = 0;
 
@@ -1483,6 +1498,8 @@ Q_SIGNALS:
     void targetScaleChanged();
     void nextTargetScaleChanged();
     void noBorderChanged();
+    void tagChanged();
+    void descriptionChanged();
 
 protected:
     Window();
@@ -1772,6 +1789,8 @@ protected:
     void updatePreferredColorDescription();
     void setTargetScale(qreal scale);
 
+    void setDescription(const QString &description);
+
     Output *m_output = nullptr;
     QRectF m_frameGeometry;
     QRectF m_clientGeometry;
@@ -1891,6 +1910,9 @@ protected:
     bool m_lockScreenOverlay = false;
     uint32_t m_offscreenRenderCount = 0;
     QTimer m_offscreenFramecallbackTimer;
+
+    QString m_tag;
+    QString m_description;
 };
 
 inline QRectF Window::bufferGeometry() const
