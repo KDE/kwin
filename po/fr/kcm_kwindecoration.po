@@ -18,7 +18,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-18 00:41+0000\n"
-"PO-Revision-Date: 2024-08-30 08:34+0200\n"
+"PO-Revision-Date: 2024-09-19 14:16+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -239,10 +239,9 @@ msgid "Get New…"
 msgstr "Obtenir des nouveautés…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "Éditer le thème %1"
+msgstr "Éditer le thème %1..."
 
 #: utils.cpp:25
 #, kde-format

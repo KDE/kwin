@@ -12,15 +12,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-20 00:42+0000\n"
-"PO-Revision-Date: 2024-08-22 10:21+0200\n"
+"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"PO-Revision-Date: 2024-09-19 10:02+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Accelerator-Marker: &\n"
 
@@ -2071,10 +2071,9 @@ msgstr "A&lçària:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Canvia l'efecte del clic del ratolí"
+msgstr "Canvia l'animació del clic del ratolí"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -4286,7 +4285,7 @@ msgstr "Canvia un escriptori avall"
 msgid "Switch to Desktop %1"
 msgstr "Canvia a l'escriptori %1"
 
-#: window.cpp:3113
+#: window.cpp:3120
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4320,35 +4319,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "XWayland ha fallat"
-
-#~ msgid "Red"
-#~ msgstr "Roig"
-
-#~ msgid "Green"
-#~ msgstr "Verd"
-
-#~ msgid "Blue"
-#~ msgstr "Blau"
-
-#~ msgid "Purple"
-#~ msgstr "Porpra"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Mode:"
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Protanopia (roig dèbil)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Deuteranopia (verd dèbil)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Tritanopia (blau-groc)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Intensitat:"
