@@ -92,11 +92,13 @@
         "Name[zh_TW]": "舊式 X11 應用程式支援"
     },
     "X-KDE-Keywords": "xwayland,global,keys,forward",
+    "X-KDE-Keywords[ar]": "إكسوايلاند,العالمية,مفاتيح,إلى الأمام",
     "X-KDE-Keywords[ca@valencia]": "xwayland,global,tecles,reenviament",
     "X-KDE-Keywords[ca]": "xwayland,global,tecles,reenviament",
     "X-KDE-Keywords[en_GB]": "xwayland,global,keys,forward",
     "X-KDE-Keywords[es]": "xwayland,global,teclas,reenvío",
     "X-KDE-Keywords[fr]": "xwayland, global, clés, avant",
+    "X-KDE-Keywords[he]": "xwayland,כללי,מפתחות,העברה",
     "X-KDE-Keywords[ia]": "xwayland,global,keys,forward",
     "X-KDE-Keywords[it]": "xwayland,globale,tasti,inoltro",
     "X-KDE-Keywords[ka]": "xwayland,global,keys,forward",
