@@ -4785,6 +4785,32 @@ void Window::updatePreferredColorDescription()
     setPreferredColorDescription(m_moveResizeOutput->colorDescription());
 }
 
+QString Window::tag() const
+{
+    return m_tag;
+}
+
+void Window::setTag(const QString &tag)
+{
+    if (m_tag != tag) {
+        m_tag = tag;
+        Q_EMIT tagChanged();
+    }
+}
+
+QString Window::description() const
+{
+    return m_description;
+}
+
+void Window::setDescription(const QString &description)
+{
+    if (m_description != description) {
+        m_description = description;
+        Q_EMIT descriptionChanged();
+    }
+}
+
 } // namespace KWin
 
 #include "moc_window.cpp"

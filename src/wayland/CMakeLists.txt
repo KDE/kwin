@@ -317,6 +317,11 @@ ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
     PROTOCOL ${WaylandProtocols_DATADIR}/staging/fifo/fifo-v1.xml
     BASENAME fifo-v1
 )
+ecm_add_qtwayland_server_protocol_kde(WaylandProtocols_xml
+    PRIVATE_CODE
+    PROTOCOL ${WaylandProtocols_DATADIR}/staging/xdg-toplevel-tag/xdg-toplevel-tag-v1.xml
+    BASENAME xdg-toplevel-tag-v1
+)
 
 target_sources(kwin PRIVATE
     abstract_data_source.cpp
@@ -405,6 +410,7 @@ target_sources(kwin PRIVATE
     xdgsystembell_v1.cpp
     xdgtopleveldrag_v1.cpp
     xdgtoplevelicon_v1.cpp
+    xdgtopleveltag_v1.cpp
     xwaylandkeyboardgrab_v1.cpp
     xwaylandshell_v1.cpp
 )
@@ -486,6 +492,7 @@ install(FILES
     xdgshell.h
     xdgsystembell_v1.h
     xdgtoplevelicon_v1.h
+    xdgtopleveltag_v1.h
     xwaylandkeyboardgrab_v1.h
     xwaylandshell_v1.h
 
@@ -497,6 +504,7 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-kde-external-brightness-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-linux-drm-syncobj-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-presentation-time.h
+    ${CMAKE_CURRENT_BINARY_DIR}/qwayland-server-xdg-toplevel-tag-v1.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-alpha-modifier-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-color-management-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-content-type-v1-server-protocol.h
@@ -505,5 +513,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-external-brightness-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-linux-drm-syncobj-v1-server-protocol.h
     ${CMAKE_CURRENT_BINARY_DIR}/wayland-presentation-time-server-protocol.h
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-xdg-toplevel-tag-v1-server-protocol.h
 
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin/wayland COMPONENT Devel)

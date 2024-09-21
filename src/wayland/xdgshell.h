@@ -295,6 +295,16 @@ public:
     QString appId() const;
 
     /**
+     * @returns a tag on the window, set by the client
+     */
+    QString windowTag() const;
+
+    /**
+     * @returns a description of the window, set by the client
+     */
+    QString windowDescription() const;
+
+    /**
      * Returns the minimum window geometry size of the toplevel surface.
      */
     QSize minimumSize() const;
@@ -420,6 +430,16 @@ Q_SIGNALS:
      * This signal is emitted when the parent toplevel has changed.
      */
     void parentXdgToplevelChanged();
+
+    /**
+     * This signal is emitted when the toplevel tag has changed
+     */
+    void tagChanged();
+
+    /**
+     * This signal is emitted when the toplevel description has changed
+     */
+    void descriptionChanged();
 
 private:
     std::unique_ptr<XdgToplevelInterfacePrivate> d;

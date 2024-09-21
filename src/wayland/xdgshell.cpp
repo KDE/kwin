@@ -585,6 +585,16 @@ QString XdgToplevelInterface::appId() const
     return d->appId;
 }
 
+QString XdgToplevelInterface::windowTag() const
+{
+    return d->tag;
+}
+
+QString XdgToplevelInterface::windowDescription() const
+{
+    return d->description;
+}
+
 QSize XdgToplevelInterface::minimumSize() const
 {
     return d->minimumSize;
