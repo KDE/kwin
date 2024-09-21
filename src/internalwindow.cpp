@@ -18,6 +18,8 @@
 #include <QMouseEvent>
 #include <QWindow>
 
+#include <qpa/qwindowsysteminterface.h>
+
 Q_DECLARE_METATYPE(NET::WindowType)
 
 static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
@@ -173,7 +175,7 @@ QString InternalWindow::windowRole() const
 void InternalWindow::closeWindow()
 {
     if (!isDeleted()) {
-        m_handle->hide();
+        QWindowSystemInterface::handleCloseEvent<QWindowSystemInterface::AsynchronousDelivery>(m_handle);
     }
 }
 
