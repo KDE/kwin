@@ -2056,18 +2056,6 @@ public:
         seat->cancelPointerHoldGesture();
         return true;
     }
-};
-
-/**
- * Handles input coming from a tablet device (e.g. wacom) often with a pen
- */
-class TabletInputFilter : public QObject, public InputEventFilter
-{
-public:
-    TabletInputFilter()
-        : InputEventFilter(InputFilterOrder::Tablet)
-    {
-    }
 
     bool tabletToolEvent(TabletEvent *event) override
     {
@@ -2871,9 +2859,6 @@ void InputRedirection::setupInputFilters()
 
     m_forwardFilter = std::make_unique<ForwardInputFilter>();
     installInputEventFilter(m_forwardFilter.get());
-
-    m_tabletFilter = std::make_unique<TabletInputFilter>();
-    installInputEventFilter(m_tabletFilter.get());
 }
 
 void InputRedirection::handleInputConfigChanged(const KConfigGroup &group)

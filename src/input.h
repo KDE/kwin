@@ -340,7 +340,6 @@ private:
     std::unique_ptr<InputEventFilter> m_internalWindowFilter;
     std::unique_ptr<InputEventFilter> m_inputKeyboardFilter;
     std::unique_ptr<InputEventFilter> m_forwardFilter;
-    std::unique_ptr<InputEventFilter> m_tabletFilter;
 
     std::unique_ptr<InputEventSpy> m_hideCursorSpy;
     std::unique_ptr<InputEventSpy> m_userActivitySpy;
@@ -385,7 +384,6 @@ enum Order {
     InternalWindow,
     InputMethod,
     Forward,
-    Tablet
 };
 }
 
