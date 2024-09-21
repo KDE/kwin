@@ -5,7 +5,7 @@
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
     <kcfgfile name="kwinrc"/>
     <group name="Xwayland">
-        <entry name="XwaylandEavesdrops" type="Enum">
+        <entry name="xwaylandEavesdrops" key="XwaylandEavesdrops" type="Enum">
             <choices>
                 <choice name="None"/>
                 <choice name="Modifiers"/>
@@ -14,7 +14,7 @@
             </choices>
             <default>Combinations</default>
         </entry>
-        <entry name="XwaylandEavesdropsMouse" type="Bool">
+        <entry name="xwaylandEavesdropsMouse" key="XwaylandEavesdropsMouse" type="Bool">
             <default>false</default>
         </entry>
     </group>

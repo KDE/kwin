@@ -49,18 +49,33 @@ KCM.SimpleKCM {
                 text: i18n("Never")
                 checked: kcm.settings.xwaylandEavesdrops === 0
                 onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 0
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "xwaylandEavesdrops"
+                }
             }
 
             QQC2.RadioButton {
                 text: i18n("Only Meta, Control, Alt and Shift keys")
                 checked: kcm.settings.xwaylandEavesdrops === 1
                 onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 1
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "xwaylandEavesdrops"
+                }
             }
 
             QQC2.RadioButton {
                 text: i18n("As above, plus any key typed while the Control, Alt, or Meta keys are pressed")
                 checked: kcm.settings.xwaylandEavesdrops === 2
                 onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 2
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "xwaylandEavesdrops"
+                }
             }
 
             QQC2.RadioButton {
@@ -68,6 +83,11 @@ KCM.SimpleKCM {
                 text: i18n("Always")
                 checked: kcm.settings.xwaylandEavesdrops === 3
                 onToggled: if (checked) kcm.settings.xwaylandEavesdrops = 3
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "xwaylandEavesdrops"
+                }
             }
 
             Item {
@@ -79,6 +99,11 @@ KCM.SimpleKCM {
                 checked: kcm.settings.xwaylandEavesdropsMouse
                 onToggled: kcm.settings.xwaylandEavesdropsMouse = checked
                 enabled: !never.checked
+
+                KCM.SettingStateBinding {
+                    configObject: kcm.settings
+                    settingName: "xwaylandEavesdropsMouse"
+                }
             }
         }
 
