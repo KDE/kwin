@@ -1249,14 +1249,14 @@ public:
             // the handle can be nullptr if the tooltip gets closed while focus updates are blocked
             return false;
         }
-        const bool isAccepted = QWindowSystemInterface::handleMouseEvent(internal,
-                                                                         event->position() - internal->position(),
-                                                                         event->globalPosition(),
-                                                                         event->buttons(),
-                                                                         event->button(),
-                                                                         event->type(),
-                                                                         event->modifiers());
-        return isAccepted;
+        QWindowSystemInterface::handleMouseEvent(internal,
+                                                 event->position() - internal->position(),
+                                                 event->globalPosition(),
+                                                 event->buttons(),
+                                                 event->button(),
+                                                 event->type(),
+                                                 event->modifiers());
+        return true;
     }
     bool wheelEvent(WheelEvent *event) override
     {
