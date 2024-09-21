@@ -13,7 +13,6 @@
 #include "input_event.h"
 #include "main.h"
 #include "utils/keys.h"
-#include "wayland/seat.h"
 #include "wayland_server.h"
 #include "workspace.h"
 
@@ -98,7 +97,6 @@ bool DpmsInputEventFilter::touchUp(qint32 id, std::chrono::microseconds time)
         m_touchPoints.removeAll(id);
         if (m_touchPoints.isEmpty() && m_doubleTapTimer.isValid() && m_secondTap) {
             if (m_doubleTapTimer.elapsed() < qApp->doubleClickInterval()) {
-                waylandServer()->seat()->setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time));
                 notify();
             }
             m_doubleTapTimer.invalidate();

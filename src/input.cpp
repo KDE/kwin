@@ -330,10 +330,10 @@ public:
         }
 
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         if (event->type() == QEvent::MouseMove) {
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
+                seat->setTimestamp(event->timestamp());
                 seat->notifyPointerMotion(event->screenPos());
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
@@ -343,6 +343,7 @@ public:
                 const auto state = event->type() == QEvent::MouseButtonPress
                     ? PointerButtonState::Pressed
                     : PointerButtonState::Released;
+                seat->setTimestamp(event->timestamp());
                 seat->notifyPointerButton(nativeButton, state);
             }
         }
@@ -401,12 +402,12 @@ public:
 
         // continue normal processing
         input()->keyboard()->update();
-        auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         if (!keyboardSurfaceAllowed()) {
             // don't pass event to seat
             return true;
         }
+        auto seat = waylandServer()->seat();
+        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::KeyPress:
             seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
@@ -427,10 +428,10 @@ public:
 
         ScreenLocker::KSldApp::self()->userActivity();
 
-        auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
         Window *window = input()->findToplevel(pos);
         if (window && surfaceAllowed(window->surface())) {
+            auto seat = waylandServer()->seat();
+            seat->setTimestamp(time);
             seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
         }
         return true;
@@ -1317,7 +1318,6 @@ public:
             // something else is getting the events
             return false;
         }
-        seat->setTimestamp(time);
         if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
@@ -1347,8 +1347,6 @@ public:
             return false;
         }
 
-        waylandServer()->seat()->setTimestamp(time);
-
         it->area.moveCenter(pos);
         it->state = QEventPoint::State::Updated;
 
@@ -1367,8 +1365,6 @@ public:
         if (it == m_touchPoints.end()) {
             return false;
         }
-
-        waylandServer()->seat()->setTimestamp(time);
 
         it->pressure = 0;
         it->state = QEventPoint::State::Released;
@@ -1536,7 +1532,6 @@ public:
             // already on a decoration, ignore further touch points, but filter out
             return true;
         }
-        seat->setTimestamp(time);
         auto decoration = input()->touch()->decoration();
         if (!decoration) {
             return false;
@@ -2473,7 +2468,6 @@ public:
         if (!seat->isDrag()) {
             return false;
         }
-        seat->setTimestamp(event->timestamp());
 
         seat->cancelDrag();
 
