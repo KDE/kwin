@@ -52,14 +52,6 @@ public:
     {
         return m_decorationId;
     }
-    void setInternalPressId(qint32 id)
-    {
-        m_internalId = id;
-    }
-    qint32 internalPressId() const
-    {
-        return m_internalId;
-    }
 
     QPointF position() const override
     {
@@ -78,7 +70,6 @@ private:
 
     QSet<qint32> m_activeTouchPoints;
     qint32 m_decorationId = -1;
-    qint32 m_internalId = -1;
     bool m_windowUpdatedInCycle = false;
     QPointF m_lastPosition;
 };

@@ -1300,18 +1300,10 @@ public:
             // something else is getting the events
             return false;
         }
-        auto touch = input()->touch();
-        if (touch->internalPressId() != -1) {
-            // already on internal window, ignore further touch points, but filter out
-            m_pressedIds.insert(id);
-            return true;
-        }
-        // a new touch point
         seat->setTimestamp(time);
         if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
             return false;
         }
-        touch->setInternalPressId(id);
 
         const qreal contactAreaWidth = 8;
         const qreal contactAreaHeight = 8;
@@ -1331,19 +1323,6 @@ public:
 
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
-        auto touch = input()->touch();
-        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
-            return false;
-        }
-        if (touch->internalPressId() == -1) {
-            return false;
-        }
-        waylandServer()->seat()->setTimestamp(time);
-        if (touch->internalPressId() != qint32(id) || m_pressedIds.contains(id)) {
-            // ignore, but filter out
-            return true;
-        }
-
         auto it = std::ranges::find_if(m_touchPoints, [id](const auto &touchPoint) {
             return touchPoint.id == id;
         });
@@ -1351,32 +1330,20 @@ public:
             return false;
         }
 
+        waylandServer()->seat()->setTimestamp(time);
+
         it->area.moveCenter(pos);
         it->state = QEventPoint::State::Updated;
 
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
-        QWindowSystemInterface::handleTouchEvent(internal, m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
+        if (auto internalWindow = qobject_cast<InternalWindow *>(input()->touch()->focus())) {
+            QWindowSystemInterface::handleTouchEvent(internalWindow->handle(), m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
+        }
 
         it->state = QEventPoint::State::Stationary;
         return true;
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
     {
-        auto touch = input()->touch();
-        const bool removed = m_pressedIds.remove(id);
-        if (touch->internalPressId() == -1) {
-            return removed;
-        }
-        waylandServer()->seat()->setTimestamp(time);
-        if (touch->internalPressId() != qint32(id)) {
-            // ignore, but filter out
-            return true;
-        }
-        if (!input()->touch()->focus() || !input()->touch()->focus()->isInternal()) {
-            return removed;
-        }
-        input()->touch()->setInternalPressId(-1);
-
         auto it = std::ranges::find_if(m_touchPoints, [id](const auto &touchPoint) {
             return touchPoint.id == id;
         });
@@ -1384,11 +1351,14 @@ public:
             return false;
         }
 
+        waylandServer()->seat()->setTimestamp(time);
+
         it->pressure = 0;
         it->state = QEventPoint::State::Released;
 
-        QWindow *internal = static_cast<InternalWindow *>(input()->touch()->focus())->handle();
-        QWindowSystemInterface::handleTouchEvent(internal, m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
+        if (auto internalWindow = qobject_cast<InternalWindow *>(input()->touch()->focus())) {
+            QWindowSystemInterface::handleTouchEvent(internalWindow->handle(), m_touchDevice.get(), m_touchPoints, input()->keyboardModifiers());
+        }
 
         m_touchPoints.erase(it);
         return true;
@@ -1428,7 +1398,6 @@ public:
 private:
     std::unique_ptr<QPointingDevice> m_touchDevice;
     QList<QWindowSystemInterface::TouchPoint> m_touchPoints;
-    QSet<qint32> m_pressedIds;
 };
 
 class MouseWheelAccumulator
