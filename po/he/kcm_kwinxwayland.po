@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-09-22 02:32+0000\n"
 "PO-Revision-Date: 2024-03-09 17:59+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: צוות התרגום של KDE ישראל\n"
@@ -44,28 +44,28 @@ msgstr "לאפשר ליישומי X11 מיושנים לקרוא את הקשות 
 msgid "Never"
 msgstr "אף פעם לא"
 
-#: ui/main.qml:55
+#: ui/main.qml:60
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "רק את מקשי מטא, Ctrl,‏ Alt ו־Shift"
 
-#: ui/main.qml:61
+#: ui/main.qml:71
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
 msgstr "כמו לעיל, בתוספת המקשים שנלחצים יחד עם המקשים Ctrl,‏ Alt או מטא"
 
-#: ui/main.qml:68
+#: ui/main.qml:83
 #, kde-format
 msgid "Always"
 msgstr "תמיד"
 
-#: ui/main.qml:78
+#: ui/main.qml:98
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "לכלול כפתורי עכבר בנוסף"
 
-#: ui/main.qml:89
+#: ui/main.qml:114
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 02:34+0000\n"
+"POT-Creation-Date: 2024-09-22 02:32+0000\n"
 "PO-Revision-Date: 2024-08-22 11:48+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1243,7 +1243,7 @@ msgstr "Tavoletta spostata in %1"
 msgid "Tablets switched outputs"
 msgstr "Uscite commutate delle tavolette"
 
-#: input.cpp:3304
+#: input.cpp:3306
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
