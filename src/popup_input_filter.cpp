@@ -36,7 +36,7 @@ void PopupInputFilter::handleWindowAdded(Window *window)
             // Move focus to the parent popup. If that's the last popup, then move focus back to the parent
             if (!m_popupWindows.isEmpty() && m_popupWindows.last()->surface()) {
                 auto seat = waylandServer()->seat();
-                seat->setFocusedKeyboardSurface(m_popupWindows.last()->surface());
+                seat->setFocusedKeyboardSurface(m_popupWindows.last()->surface(), input()->keyboard()->pressedKeys());
             } else {
                 input()->keyboard()->update();
             }
@@ -81,7 +81,7 @@ bool PopupInputFilter::keyEvent(KeyEvent *event)
         return false;
     }
 
-    seat->setFocusedKeyboardSurface(last->surface());
+    seat->setFocusedKeyboardSurface(last->surface(), input()->keyboard()->pressedKeys());
 
     if (!passToInputMethod(event)) {
         passToWaylandServer(event);

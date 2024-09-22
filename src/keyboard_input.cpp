@@ -72,6 +72,11 @@ KeyboardLayout *KeyboardInputRedirection::keyboardLayout() const
     return m_keyboardLayout;
 }
 
+QList<uint32_t> KeyboardInputRedirection::pressedKeys() const
+{
+    return m_pressedKeys;
+}
+
 class KeyStateChangedSpy : public InputEventSpy
 {
 public:
@@ -235,7 +240,7 @@ void KeyboardInputRedirection::update()
     Window *found = pickFocus();
     if (found && found->surface()) {
         if (found->surface() != seat->focusedKeyboardSurface()) {
-            seat->setFocusedKeyboardSurface(found->surface());
+            seat->setFocusedKeyboardSurface(found->surface(), pressedKeys());
         }
     } else {
         seat->setFocusedKeyboardSurface(nullptr);
@@ -263,6 +268,16 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
         break;
     default:
         Q_UNREACHABLE();
+    }
+
+    if (!autoRepeat) {
+        if (type == QEvent::KeyPress) {
+            if (!m_pressedKeys.contains(key)) {
+                m_pressedKeys.append(key);
+            }
+        } else {
+            m_pressedKeys.removeOne(key);
+        }
     }
 
     const quint32 previousLayout = m_xkb->currentLayout();

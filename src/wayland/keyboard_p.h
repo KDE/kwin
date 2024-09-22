@@ -37,6 +37,7 @@ public:
 
     SeatInterface *seat;
     SurfaceInterface *focusedSurface = nullptr;
+    QList<quint32> pressedKeys;
     QMetaObject::Connection destroyConnection;
     QPointer<SurfaceInterface> modifierFocusSurface;
     QByteArray keymap;
@@ -58,9 +59,7 @@ public:
     };
     Modifiers modifiers;
 
-    QHash<quint32, KeyboardKeyState> states;
     bool updateKey(quint32 key, KeyboardKeyState state);
-    QList<quint32> pressedKeys() const;
 
 protected:
     void keyboard_release(Resource *resource) override;
