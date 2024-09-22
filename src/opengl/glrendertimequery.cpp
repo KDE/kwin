@@ -25,12 +25,16 @@ GLRenderTimeQuery::~GLRenderTimeQuery()
     if (!m_gpuProbe.query) {
         return;
     }
+    const auto previousContext = OpenGlContext::currentContext();
     const auto context = m_context.lock();
     if (!context) {
         return;
     }
     context->makeCurrent();
     glDeleteQueries(1, &m_gpuProbe.query);
+    if (previousContext && previousContext != context.get()) {
+        previousContext->makeCurrent();
+    }
 }
 
 void GLRenderTimeQuery::begin()
@@ -57,6 +61,7 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
 {
     Q_ASSERT(m_hasResult);
     if (m_gpuProbe.query) {
+        const auto previousContext = OpenGlContext::currentContext();
         const auto context = m_context.lock();
         if (!context) {
             return std::nullopt;
@@ -65,6 +70,9 @@ std::optional<RenderTimeSpan> GLRenderTimeQuery::query()
         GLint64 end = 0;
         glGetQueryObjecti64v(m_gpuProbe.query, GL_QUERY_RESULT, &end);
         m_gpuProbe.end = std::chrono::nanoseconds(end);
+        if (previousContext && previousContext != context.get()) {
+            previousContext->makeCurrent();
+        }
     }
 
     // timings are pretty unpredictable in the sub-millisecond range; this minimum
