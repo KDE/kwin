@@ -50,7 +50,7 @@ void Module::importScript()
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     dialog->setFileMode(QFileDialog::ExistingFile);
     dialog->setWindowTitle(i18n("Import KWin Script"));
-    dialog->setNameFilter(i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
+    dialog->setNameFilter(i18n("KWin Script (*.kwinscript)"));
 
     connect(dialog, &QFileDialog::accepted, this, [this, dialog] {
         using namespace KPackage;
