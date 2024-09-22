@@ -664,6 +664,8 @@ void InputMethodTest::testModifierForwarding()
     shellSurface.reset();
     QVERIFY(Test::waitForWindowClosed(window));
     QVERIFY(!kwinApp()->inputMethod()->isActive());
+
+    Test::keyboardKeyReleased(KEY_A, timestamp++);
 }
 
 void InputMethodTest::testFakeEventFallback()
