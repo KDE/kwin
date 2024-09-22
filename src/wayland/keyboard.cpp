@@ -39,8 +39,7 @@ void KeyboardInterfacePrivate::keyboard_bind_resource(Resource *resource)
     }
 
     if (focusedClient && focusedClient->client() == resource->client()) {
-        const QList<quint32> keys = pressedKeys();
-        const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(keys.data()), sizeof(quint32) * keys.count());
+        const QByteArray keysData = QByteArray::fromRawData(reinterpret_cast<const char *>(pressedKeys.data()), sizeof(quint32) * pressedKeys.count());
         const quint32 serial = seat->display()->nextSerial();
 
         send_enter(resource->handle, serial, focusedSurface->resource(), keysData);
@@ -63,8 +62,7 @@ void KeyboardInterfacePrivate::sendLeave(SurfaceInterface *surface, quint32 seri
 
 void KeyboardInterfacePrivate::sendEnter(SurfaceInterface *surface, quint32 serial)
 {
-    const auto states = pressedKeys();
-    QByteArray data = QByteArray::fromRawData(reinterpret_cast<const char *>(states.constData()), sizeof(quint32) * states.size());
+    QByteArray data = QByteArray::fromRawData(reinterpret_cast<const char *>(pressedKeys.constData()), sizeof(quint32) * pressedKeys.size());
 
     const QList<Resource *> keyboards = keyboardsForClient(surface->client());
     for (Resource *keyboardResource : keyboards) {
@@ -111,16 +109,18 @@ void KeyboardInterfacePrivate::sendModifiers(SurfaceInterface *surface, quint32 
 
 bool KeyboardInterfacePrivate::updateKey(quint32 key, KeyboardKeyState state)
 {
-    auto it = states.find(key);
-    if (it == states.end()) {
-        states.insert(key, state);
+    switch (state) {
+    case KeyboardKeyState::Pressed:
+        if (pressedKeys.contains(key)) {
+            return false;
+        }
+        pressedKeys.append(key);
         return true;
+    case KeyboardKeyState::Released:
+        return pressedKeys.removeOne(key);
+    default:
+        Q_UNREACHABLE();
     }
-    if (it.value() == state) {
-        return false;
-    }
-    it.value() = state;
-    return true;
 }
 
 KeyboardInterface::KeyboardInterface(SeatInterface *seat)
@@ -135,7 +135,7 @@ void KeyboardInterfacePrivate::sendModifiers(SurfaceInterface *surface)
     sendModifiers(surface, modifiers.depressed, modifiers.latched, modifiers.locked, modifiers.group, modifiers.serial);
 }
 
-void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 serial)
+void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, const QList<quint32> &keys, quint32 serial)
 {
     if (d->focusedSurface == surface) {
         return;
@@ -147,6 +147,8 @@ void KeyboardInterface::setFocusedSurface(SurfaceInterface *surface, quint32 ser
     }
 
     d->focusedSurface = surface;
+    d->pressedKeys = keys;
+
     if (!d->focusedSurface) {
         return;
     }
@@ -171,17 +173,6 @@ void KeyboardInterface::setModifierFocusSurface(SurfaceInterface *surface)
     }
 }
 
-QList<quint32> KeyboardInterfacePrivate::pressedKeys() const
-{
-    QList<quint32> keys;
-    for (auto it = states.constBegin(); it != states.constEnd(); ++it) {
-        if (it.value() == KeyboardKeyState::Pressed) {
-            keys << it.key();
-        }
-    }
-    return keys;
-}
-
 void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client)
 {
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
@@ -193,11 +184,11 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConne
 
 void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
 {
-    if (!d->updateKey(key, state)) {
+    if (!d->focusedSurface) {
         return;
     }
 
-    if (!d->focusedSurface) {
+    if (!d->updateKey(key, state)) {
         return;
     }
 

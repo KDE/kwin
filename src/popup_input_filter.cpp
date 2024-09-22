@@ -82,7 +82,6 @@ bool PopupInputFilter::keyEvent(KeyEvent *event)
     focus(last);
 
     if (auto internalWindow = qobject_cast<InternalWindow *>(last)) {
-        passToWaylandServer(event);
         QCoreApplication::sendEvent(internalWindow->handle(), event);
     } else if (auto waylandWindow = qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
@@ -151,7 +150,7 @@ void PopupInputFilter::focus(Window *popup)
         if (QGuiApplication::focusWindow()) {
             QWindowSystemInterface::handleFocusWindowChanged(nullptr);
         }
-        waylandServer()->seat()->setFocusedKeyboardSurface(waylandWindow->surface());
+        waylandServer()->seat()->setFocusedKeyboardSurface(waylandWindow->surface(), input()->keyboard()->pressedKeys());
     }
 }
 

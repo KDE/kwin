@@ -567,7 +567,7 @@ public:
      * @see hasKeyboard
      * @see setFocusedTextInputSurface
      */
-    void setFocusedKeyboardSurface(SurfaceInterface *surface);
+    void setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys = {});
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
     void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);

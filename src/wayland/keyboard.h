@@ -60,7 +60,7 @@ public:
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client);
 
 private:
-    void setFocusedSurface(SurfaceInterface *surface, quint32 serial);
+    void setFocusedSurface(SurfaceInterface *surface, const QList<quint32> &keys, quint32 serial);
     void setModifierFocusSurface(SurfaceInterface *surface);
     friend class SeatInterface;
     friend class SeatInterfacePrivate;

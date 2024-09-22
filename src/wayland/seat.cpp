@@ -896,7 +896,7 @@ SurfaceInterface *SeatInterface::focusedKeyboardSurface() const
     return d->globalKeyboard.focus.surface;
 }
 
-void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
+void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys)
 {
     if (!d->keyboard) {
         return;
@@ -911,7 +911,7 @@ void SeatInterface::setFocusedKeyboardSurface(SurfaceInterface *surface)
     d->globalKeyboard.focus = SeatInterfacePrivate::Keyboard::Focus();
     d->globalKeyboard.focus.surface = surface;
 
-    d->keyboard->setFocusedSurface(surface, serial);
+    d->keyboard->setFocusedSurface(surface, keys, serial);
 
     if (d->globalKeyboard.focus.surface) {
         d->globalKeyboard.focus.destroyConnection = connect(surface, &QObject::destroyed, this, [this]() {

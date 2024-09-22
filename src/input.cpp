@@ -563,7 +563,6 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        passToWaylandServer(event);
         effects->grabbedKeyboardEvent(event);
         return true;
     }
@@ -776,7 +775,6 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        passToWaylandServer(event);
 
         if (event->type() == QEvent::KeyPress) {
             // x11 variant does this on key press, so do the same
@@ -1647,9 +1645,6 @@ public:
         if (!workspace()->tabbox() || !workspace()->tabbox()->isGrabbed()) {
             return false;
         }
-        // pass the key event to the seat, so that it has a proper model of the currently hold keys
-        // this is important for combinations like alt+shift to ensure that shift is not considered pressed
-        passToWaylandServer(event);
 
         if (event->type() == QEvent::KeyPress) {
             workspace()->tabbox()->keyPress(event->modifiers() | event->key());
