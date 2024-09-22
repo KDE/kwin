@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
-"PO-Revision-Date: 2024-08-23 21:45+0200\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
+"PO-Revision-Date: 2024-09-21 10:41+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -1226,22 +1226,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Gastigantnomo: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Movi la tablojdon al la sekva eligo"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "Tablojdo movita al %1"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Tablojdoj ŝanĝis elirojn"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Tuŝplato"
@@ -2054,10 +2039,9 @@ msgstr "&Alteco:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Baskuligi Musklakan Efekton"
+msgstr "Baskuligi Musklakan Vigligon"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -3708,6 +3692,21 @@ msgid ""
 msgstr ""
 "La instalaĵo de Window Switcher estas rompita, rimedoj mankas.\n"
 "Kontaktu vian distribuon pri tio."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Movi la tablojdon al la sekva eligo"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "Tablojdo movita al %1"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Tablojdoj ŝanĝis elirojn"
 
 #: useractions.cpp:162
 #, kde-format

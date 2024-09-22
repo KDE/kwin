@@ -1,7 +1,7 @@
 # translation of kwin.po to
 # Translation of kwin.po to Slovenian
 # Copyright (C) 2001, 2003, 2004, 2005, 2007 Free Software Foundation, Inc.
-# $Id: kwin.po 1690989 2024-09-21 01:15:19Z scripty $
+# $Id: kwin.po 1691065 2024-09-22 01:15:40Z scripty $
 # $Source$
 #
 #
@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 07:31+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -1236,22 +1236,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ime gostitelja: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Premakni tablični računalnik na naslednji izhod"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "Tablični računalnik prenesen na %1"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Tablični računalniki so preklopili izhode"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Drsna ploščica"
@@ -3722,6 +3707,21 @@ msgid ""
 msgstr ""
 "Namestitev preklopnika med okni je pokvarjena, manjkajo viri.\n"
 "Stopite v stik z upravitelji vaše distribucije."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Premakni tablični računalnik na naslednji izhod"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "Tablični računalnik prenesen na %1"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Tablični računalniki so preklopili izhode"
 
 #: useractions.cpp:162
 #, kde-format

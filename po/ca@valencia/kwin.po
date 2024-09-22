@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 10:02+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -1231,22 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom de l'amfitrió: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Mou la tauleta cap a l'eixida següent"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "La tauleta s'ha mogut cap a %1"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Les tauletes han intercanviat les eixides"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Ratolí tàctil"
@@ -3729,6 +3714,21 @@ msgstr ""
 "La instal·lació del commutador de finestres està trencada, no es troben els "
 "recursos.\n"
 "Contacteu amb la vostra distribució respecte a açò."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Mou la tauleta cap a l'eixida següent"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "La tauleta s'ha mogut cap a %1"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Les tauletes han intercanviat les eixides"
 
 #: useractions.cpp:162
 #, kde-format

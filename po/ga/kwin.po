@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2004-12-03 14:52-0500\n"
 "Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
 "Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
@@ -1231,22 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr ""
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr ""
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr ""
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -3822,6 +3807,21 @@ msgstr ""
 msgid ""
 "The Window Switcher installation is broken, resources are missing.\n"
 "Contact your distribution about this."
+msgstr ""
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr ""
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
 msgstr ""
 
 #: useractions.cpp:162

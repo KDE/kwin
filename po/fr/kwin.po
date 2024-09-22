@@ -24,8 +24,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
-"PO-Revision-Date: 2024-08-25 11:52+0200\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
+"PO-Revision-Date: 2024-09-20 09:21+0200\n"
 "Last-Translator: Xavier Besnard <xavier.besnard@kde.org>\n"
 "Language-Team: French <French <kde-francophone@kde.org>>\n"
 "Language: fr\n"
@@ -1250,22 +1250,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nom d'hôte : %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Déplacer la tablette vers la prochaine sortie"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "Tablette déplacée vers %1"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Sorties commutées des tablettes"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Pavé tactile"
@@ -2095,10 +2080,9 @@ msgstr "&Hauteur :"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Basculer l'effet de clic de la souris"
+msgstr "Basculer l'animation sur clic de la souris"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -3759,6 +3743,21 @@ msgstr ""
 "L'installation du changeur de fenêtre est cassée, les ressources sont "
 "manquantes.\n"
 "Vous devriez contacter votre distribution à ce sujet."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Déplacer la tablette vers la prochaine sortie"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "Tablette déplacée vers %1"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Sorties commutées des tablettes"
 
 #: useractions.cpp:162
 #, kde-format

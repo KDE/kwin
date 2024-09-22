@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2024-08-22 11:48+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1228,22 +1228,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nome host: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Sposta la tavoletta all'uscita successiva"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "Tavoletta spostata in %1"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Uscite commutate delle tavolette"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -3735,6 +3720,21 @@ msgstr ""
 "L'installazione del selettore delle finestre è danneggiata, mancano delle "
 "risorse.\n"
 "Contatta la tua distribuzione a proposito."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Sposta la tavoletta all'uscita successiva"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "Tavoletta spostata in %1"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Uscite commutate delle tavolette"
 
 #: useractions.cpp:162
 #, kde-format

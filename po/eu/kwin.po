@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2024-08-30 09:46+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -1231,22 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ostalari-izena: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Eraman tableta hurrengo irteerakora"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "Tableta %1(e)ra eraman da"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Tabletek irteerakoak trukatu dituzte"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -3723,6 +3708,21 @@ msgid ""
 msgstr ""
 "Leiho-aldatzailearen instalazioa hondatuta dago, baliabideak falta dira.\n"
 "Jarri zure banatzailearekin harremanean honi buruz."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Eraman tableta hurrengo irteerakora"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "Tableta %1(e)ra eraman da"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Tabletek irteerakoak trukatu dituzte"
 
 #: useractions.cpp:162
 #, kde-format

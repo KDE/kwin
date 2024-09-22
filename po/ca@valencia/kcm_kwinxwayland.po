@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-09-22 00:42+0000\n"
 "PO-Revision-Date: 2024-03-09 11:28+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -50,12 +50,12 @@ msgstr ""
 msgid "Never"
 msgstr "Mai"
 
-#: ui/main.qml:55
+#: ui/main.qml:60
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Només les tecles «Meta», «Control», «Alt» i «Majúscules»"
 
-#: ui/main.qml:61
+#: ui/main.qml:71
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -63,17 +63,17 @@ msgstr ""
 "Com l'anterior, a més de qualsevol tecla teclejada mentre es premen les "
 "tecles «Control», «Alt» o «Meta»"
 
-#: ui/main.qml:68
+#: ui/main.qml:83
 #, kde-format
 msgid "Always"
 msgstr "Sempre"
 
-#: ui/main.qml:78
+#: ui/main.qml:98
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Inclou de manera addicional els botons del ratolí"
 
-#: ui/main.qml:89
+#: ui/main.qml:114
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

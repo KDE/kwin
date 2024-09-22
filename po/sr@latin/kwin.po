@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2017-12-03 22:53+0100\n"
 "Last-Translator: Chusslove Illich <caslav.ilic@gmx.net>\n"
 "Language-Team: Serbian <kde-i18n-sr@kde.org>\n"
@@ -1343,23 +1343,8 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "ime domaćina"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr ""
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr ""
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr ""
-
 # >> @item
-#: input.cpp:3304
+#: input.cpp:3078
 #, fuzzy, kde-format
 #| msgctxt "A touch up event"
 #| msgid "Touch Up"
@@ -4049,6 +4034,21 @@ msgid ""
 msgstr ""
 "Instalacija menjača površi nije ispravna, nedostaju neki resursi.\n"
 "Obratite se svojoj distribuciji."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr ""
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr ""
 
 #: useractions.cpp:162
 #, kde-format

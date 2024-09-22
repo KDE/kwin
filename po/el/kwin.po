@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -1233,22 +1233,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Όνομα υπολογιστή: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "Μετακίνηση του tablet στην επόμενη έξοδο"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "Το tablet μετακινήθηκε στο %1"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "Tablets με αλλαγμένες εξόδους"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Επιφάνεια αφής"
@@ -3797,6 +3782,21 @@ msgstr ""
 "Η εγκατάσταση της εναλλαγής παραθύρων είναι σπασμένη, λόγω ελλειπόντων "
 "πηγών.\n"
 "Επικοινωνήστε με τη διανομή σας για αυτό."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "Μετακίνηση του tablet στην επόμενη έξοδο"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "Το tablet μετακινήθηκε στο %1"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "Tablets με αλλαγμένες εξόδους"
 
 #: useractions.cpp:162
 #, kde-format

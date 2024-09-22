@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm_kwinxwayland\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-09-22 00:42+0000\n"
 "PO-Revision-Date: 2024-03-10 18:32+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
@@ -46,12 +46,12 @@ msgstr ""
 msgid "Never"
 msgstr "Neniam"
 
-#: ui/main.qml:55
+#: ui/main.qml:60
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Nur klavoj Meta, Ktrl, Alt kaj Majusklig"
 
-#: ui/main.qml:61
+#: ui/main.qml:71
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -59,17 +59,17 @@ msgstr ""
 "Kiel supre, plus iu klavo tajpita dum kiam la Ctrl-, Alt- aŭ Meta-klavo "
 "estas premata"
 
-#: ui/main.qml:68
+#: ui/main.qml:83
 #, kde-format
 msgid "Always"
 msgstr "Ĉiam"
 
-#: ui/main.qml:78
+#: ui/main.qml:98
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Aldone inkluzivi musbutonojn"
 
-#: ui/main.qml:89
+#: ui/main.qml:114
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

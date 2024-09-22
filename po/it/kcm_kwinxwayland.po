@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-09-22 00:42+0000\n"
 "PO-Revision-Date: 2024-03-09 21:15+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -48,12 +48,12 @@ msgstr ""
 msgid "Never"
 msgstr "Mai"
 
-#: ui/main.qml:55
+#: ui/main.qml:60
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Solo i tasti Meta, Control, Alt e Maiusc"
 
-#: ui/main.qml:61
+#: ui/main.qml:71
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -61,17 +61,17 @@ msgstr ""
 "Come sopra, più qualsiasi tasto digitato mentre sono premuti i tasti "
 "Control, Alt, o Meta"
 
-#: ui/main.qml:68
+#: ui/main.qml:83
 #, kde-format
 msgid "Always"
 msgstr "Sempre"
 
-#: ui/main.qml:78
+#: ui/main.qml:98
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Includi inoltre i pulsanti del mouse"
 
-#: ui/main.qml:89
+#: ui/main.qml:114
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "

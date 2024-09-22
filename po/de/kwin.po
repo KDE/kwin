@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2023-08-14 21:55+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -1243,24 +1243,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Rechnername"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr ""
-
-#: input.cpp:2189
-#, fuzzy, kde-format
-#| msgctxt "Name of a hardware switch"
-#| msgid "Tablet mode"
-msgid "Tablet moved to %1"
-msgstr "Tablet-Modus"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr ""
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
@@ -3766,6 +3749,23 @@ msgstr ""
 "Die Installation des Fensterwechslers ist unvollständig, es fehlen "
 "Ressourcen.\n"
 "Nehmen Sie Kontakt mit Ihrer Distribution darüber auf."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr ""
+
+#: tablet_input.cpp:199
+#, fuzzy, kde-format
+#| msgctxt "Name of a hardware switch"
+#| msgid "Tablet mode"
+msgid "Tablet moved to %1"
+msgstr "Tablet-Modus"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr ""
 
 #: useractions.cpp:162
 #, kde-format

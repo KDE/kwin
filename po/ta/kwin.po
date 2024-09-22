@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-21 00:41+0000\n"
+"POT-Creation-Date: 2024-09-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-08 12:57+0200\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
@@ -1222,22 +1222,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "புரவன் பெயர்: %1"
 
-#: input.cpp:2110
-#, kde-format
-msgid "Move the tablet to the next output"
-msgstr "வரைபலகையை அடுத்த திரைக்கு நகர்த்து"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablet moved to %1"
-msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட்டது"
-
-#: input.cpp:2189
-#, kde-format
-msgid "Tablets switched outputs"
-msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
-
-#: input.cpp:3304
+#: input.cpp:3078
 #, kde-format
 msgid "Touchpad"
 msgstr "தொடுபலகை"
@@ -3699,6 +3684,21 @@ msgid ""
 msgstr ""
 "பணிமேடை மாற்றியின் நிறுவல் சரியாக இல்லை.\n"
 "உங்கள் இயக்குதள பராமரிப்பாளர்களை இது குறித்து அணுகுங்கள்."
+
+#: tablet_input.cpp:104
+#, kde-format
+msgid "Move the tablet to the next output"
+msgstr "வரைபலகையை அடுத்த திரைக்கு நகர்த்து"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablet moved to %1"
+msgstr "வரைபலகை %1-க்கு நகர்த்தப்பட்டது"
+
+#: tablet_input.cpp:199
+#, kde-format
+msgid "Tablets switched outputs"
+msgstr "வரைபலகை வேறு திரைக்கு மாற்றப்பட்டது"
 
 #: useractions.cpp:162
 #, kde-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-03-09 00:39+0000\n"
+"POT-Creation-Date: 2024-09-22 00:42+0000\n"
 "PO-Revision-Date: 2024-03-09 10:24+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -47,12 +47,12 @@ msgstr ""
 msgid "Never"
 msgstr "Hiçbir zaman"
 
-#: ui/main.qml:55
+#: ui/main.qml:60
 #, kde-format
 msgid "Only Meta, Control, Alt and Shift keys"
 msgstr "Yalnızca Meta, Kontrol, Seçenek ve Üst Karakter düğmeleri"
 
-#: ui/main.qml:61
+#: ui/main.qml:71
 #, kde-format
 msgid ""
 "As above, plus any key typed while the Control, Alt, or Meta keys are pressed"
@@ -60,17 +60,17 @@ msgstr ""
 "Yukarıdaki gibi; ek olarak Kontrol, Seçenek veya Meta düğmeleri basılıyken "
 "basılan herhangi bir düğme"
 
-#: ui/main.qml:68
+#: ui/main.qml:83
 #, kde-format
 msgid "Always"
 msgstr "Her zaman"
 
-#: ui/main.qml:78
+#: ui/main.qml:98
 #, kde-format
 msgid "Additionally include mouse buttons"
 msgstr "Fare düğmelerini ek olarak içer"
 
-#: ui/main.qml:89
+#: ui/main.qml:114
 #, kde-format
 msgid ""
 "Note that using this setting will reduce system security to that of the X11 "
