@@ -280,7 +280,7 @@ void Cursor::updatePos(const QPointF &pos)
 
 QString Cursor::defaultThemeName()
 {
-    return QStringLiteral("default");
+    return QStringLiteral("breeze_cursors");
 }
 
 int Cursor::defaultThemeSize()
@@ -290,7 +290,7 @@ int Cursor::defaultThemeSize()
 
 QString Cursor::fallbackThemeName()
 {
-    return QStringLiteral("breeze_cursors");
+    return QStringLiteral("Adwaita");
 }
 
 QList<QByteArray> CursorShape::alternatives(const QByteArray &name)
