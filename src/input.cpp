@@ -1233,15 +1233,18 @@ public:
             return false;
         }
         QWindow *internal = static_cast<InternalWindow *>(input()->pointer()->focus())->handle();
-        const QPointF localPos = event->globalPosition() - internal->position();
-        QWheelEvent wheelEvent(localPos, event->globalPosition(), QPoint(),
-                               event->angleDelta() * -1,
-                               event->buttons(),
-                               event->modifiers(),
-                               Qt::NoScrollPhase,
-                               false);
-        QCoreApplication::sendEvent(internal, &wheelEvent);
-        return wheelEvent.isAccepted();
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp());
+        const bool isAccepted = QWindowSystemInterface::handleWheelEvent(internal,
+                                                                         timestamp.count(),
+                                                                         event->globalPosition() - internal->position(),
+                                                                         event->globalPosition(),
+                                                                         QPoint(),
+                                                                         event->angleDelta() * -1,
+                                                                         event->modifiers(),
+                                                                         Qt::NoScrollPhase,
+                                                                         Qt::MouseEventNotSynthesized,
+                                                                         event->inverted());
+        return isAccepted;
     }
     bool keyEvent(KeyEvent *event) override
     {
