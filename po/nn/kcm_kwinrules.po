@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-30 00:40+0000\n"
-"PO-Revision-Date: 2024-08-25 12:16+0200\n"
+"PO-Revision-Date: 2024-09-22 16:17+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -43,26 +43,22 @@ msgid "Unimportant"
 msgstr "Ikkje viktig"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "Nøyaktig treff"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "Treff i delstreng"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "Regulært uttrykk"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "Bruk frå start"
 
@@ -78,8 +74,7 @@ msgstr ""
 "Ingen seinare endringar vert påverka."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "Bruk no"
 
@@ -109,8 +104,7 @@ msgstr ""
 "verdien vert brukt kvar gong vindauget vert oppretta."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "Ikkje påverk"
 
@@ -137,8 +131,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "Vindaugseigenskapen vert alltid sett til den oppgjevne verdien."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "Tving mellombels"
 
@@ -272,14 +265,12 @@ msgid "Maximized vertically"
 msgstr "Maksimert loddrett"
 
 #: rulesmodel.cpp:467
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "Virtuelt skrivebord"
 
 #: rulesmodel.cpp:473
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "Virtuelle skrivebord"
 
@@ -599,14 +590,12 @@ msgid "Layer"
 msgstr "Lag"
 
 #: rulesmodel.cpp:725
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "Adaptiv synkronisering"
 
 #: rulesmodel.cpp:730
-#, fuzzy, kde-format
-#| msgid "Allow Tearing"
+#, kde-format
 msgid "Allow tearing"
 msgstr "Tillat skjermriving"
 
@@ -631,26 +620,22 @@ msgstr ""
 "frå om denne feilen til utviklarane av programmet."
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "Alle vindaugstypar"
 
 #: rulesmodel.cpp:818
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "Normalt vindauge"
 
 #: rulesmodel.cpp:819
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "Dialogvindauge"
 
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "Verktøyvindauge"
 
@@ -665,14 +650,12 @@ msgid "Toolbar"
 msgstr "Verktøylinje"
 
 #: rulesmodel.cpp:823
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "Avriven meny"
 
 #: rulesmodel.cpp:824
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "Velkomstbilete"
 
@@ -683,20 +666,17 @@ msgstr "Skrivebord"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:827
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "Frittståande menylinje"
 
 #: rulesmodel.cpp:828 rulesmodel.cpp:935
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "På skjermmelding"
 
 #: rulesmodel.cpp:838
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "Alle skrivebord"
 
@@ -707,8 +687,7 @@ msgid "Make the window available on all desktops"
 msgstr "Vis vindauget på alle skriveborda"
 
 #: rulesmodel.cpp:859
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "Alle aktivitetar"
 
@@ -724,14 +703,12 @@ msgid "Default"
 msgstr "Standard"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "Inga plassering"
 
 #: rulesmodel.cpp:884
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "Minimalt overlapp"
 
@@ -751,20 +728,17 @@ msgid "Random"
 msgstr "Vilkårleg"
 
 #: rulesmodel.cpp:888
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "Oppe til venstre"
 
 #: rulesmodel.cpp:889
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "Under musa"
 
 #: rulesmodel.cpp:890
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "På hovudvindauget"
 
@@ -814,8 +788,7 @@ msgid "Popup"
 msgstr "Sprettopp"
 
 #: rulesmodel.cpp:934
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "Viktig varsling"
 
