@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-22 00:41+0000\n"
-"PO-Revision-Date: 2024-08-25 12:21+0200\n"
+"POT-Creation-Date: 2024-09-23 00:40+0000\n"
+"PO-Revision-Date: 2024-09-22 16:22+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
 "Language: nn\n"
@@ -1227,7 +1227,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Vertsnamn: %1"
 
-#: input.cpp:3078
+#: input.cpp:3081
 #, kde-format
 msgid "Touchpad"
 msgstr "Styreplate"
@@ -2041,10 +2041,9 @@ msgstr "&Høgd:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Slå på/av museklikk-effekt"
+msgstr "Museklikkanimasjon på/av"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
