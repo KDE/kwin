@@ -171,6 +171,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="kcfg_AutoRaiseInterval">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
          <property name="whatsThis">
           <string>This is the delay after which the window that the mouse pointer is over will automatically come to the front.</string>
          </property>
