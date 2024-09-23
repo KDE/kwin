@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Window Management",
-        "Description": "Allows you to overview virtual desktops and windows",
+        "Description": "Allows you to overview virtual desktops and windows; activated with a keyboard shortcut",
         "Description[ar]": "يسمح لك بإلقاء نظرة عامة على النوافذ وأسطح المكتب الافتراضية",
         "Description[az]": "Pəncərələrə və iş masalarına ümumi baxışa imkan yaradır",
         "Description[be]": "Агляд віртуальных працоўных сталоў і акон",

@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Accessibility",
-        "Description": "Magnify the entire desktop",
+        "Description": "Magnify the entire desktop; activated with a keyboard shortcut",
         "Description[ar]": "كبّر كلّ سطح المكتب",
         "Description[az]": "İş masasının miqyasının dəyişdirilməsi",
         "Description[be]": "Павелічэнне ўсяго працоўнага стала",

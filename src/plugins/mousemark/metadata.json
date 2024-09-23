@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Appearance",
-        "Description": "Allows you to draw lines on the desktop",
+        "Description": "Allows you to draw lines on the desktop; activated with a keyboard shortcut",
         "Description[ar]": "يسمح لك برسم خطوط على سطح المكتب",
         "Description[az]": "Siçan kursoru ilə ekranda şəkil çəkməyə imkan verir",
         "Description[be]": "Дазваляе маляваць лініі на працоўным стале",

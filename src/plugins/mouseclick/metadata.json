@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Accessibility",
-        "Description": "Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations",
+        "Description": "Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations. Activated with a keyboard shortcut",
         "Description[ar]": "ينشئ حركة عندما يُنقَر زر الفأرة. هذا مفيد لتسجيلات الشاشة/العروض التقديمية",
         "Description[az]": "Hər siçan düyməsini vurduqda animaisya yaradır. Bu adətən ekrandan video yazdıqda və ya təqdimat üçün istifadə olunur.",
         "Description[be]": "Анімацыя пры націсканні кнопкі мышы. Гэта карысна для запісаў экрана/прэзентацый",

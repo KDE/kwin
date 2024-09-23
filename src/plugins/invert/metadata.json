@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Accessibility",
-        "Description": "Inverts the color of the desktop and windows",
+        "Description": "Inverts the color of the desktop and windows; activated with a keyboard shortcut",
         "Description[ar]": "يعكس ألوان سطح المكتب والنوافذ",
         "Description[az]": "İş masası və pəncərənin neqativi",
         "Description[be]": "Інвертаванне колеру працоўнага стала і акон",

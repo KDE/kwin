@@ -1,7 +1,7 @@
 {
     "KPlugin": {
         "Category": "Appearance",
-        "Description": "Display window thumbnails on the edge of the screen",
+        "Description": "Display window thumbnails on the edge of the screen; activated with a keyboard shortcut",
         "Description[ar]": "اعرض مصغّرات النوافذ في حافة الشاشة",
         "Description[az]": "Ekranın kənarında miniatür pəncərəsini göstərir",
         "Description[be]": "Паказ міняцюр акон ля краю экрана",
