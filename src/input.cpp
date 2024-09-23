@@ -1363,6 +1363,14 @@ public:
         m_touchPoints.erase(it);
         return true;
     }
+    bool touchCancel() override
+    {
+        if (!m_touchPoints.isEmpty()) {
+            m_touchPoints.clear();
+            QWindowSystemInterface::handleTouchCancelEvent(nullptr, m_touchDevice.get());
+        }
+        return false;
+    }
     bool tabletToolEvent(TabletEvent *event) override
     {
         if (!input()->tablet()->focus() || !input()->tablet()->focus()->isInternal()) {
