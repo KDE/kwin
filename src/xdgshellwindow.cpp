@@ -1220,14 +1220,14 @@ void XdgToplevelWindow::handlePongReceived(quint32 serial)
 
 void XdgToplevelWindow::handleMaximumSizeChanged()
 {
-    m_minimumSize = m_shellSurface->minimumSize();
+    m_maximumSize = m_shellSurface->maximumSize();
     updateCapabilities();
     Q_EMIT maximizeableChanged(isMaximizable());
 }
 
 void XdgToplevelWindow::handleMinimumSizeChanged()
 {
-    m_maximumSize = m_shellSurface->maximumSize();
+    m_minimumSize = m_shellSurface->minimumSize();
     updateCapabilities();
     Q_EMIT maximizeableChanged(isMaximizable());
 }
