@@ -2594,6 +2594,9 @@ static bool canSnap(const Window *window, const Window *other)
     if (other == window) {
         return false;
     }
+    if (other->isDeleted()) {
+        return false;
+    }
     if (other->isMinimized()) {
         return false;
     }
@@ -2687,7 +2690,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
         // windows snap
         const int windowSnapZone = options->windowSnapZone() * snapAdjust;
         if (windowSnapZone > 0) {
-            for (auto l = m_windows.constBegin(); l != m_windows.constEnd(); ++l) {
+            for (auto l = stacking_order.crbegin(); l != stacking_order.crend(); ++l) {
                 if (!canSnap(window, (*l))) {
                     continue;
                 }
@@ -2865,7 +2868,7 @@ QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, 
         if (snap) {
             deltaX = int(snap);
             deltaY = int(snap);
-            for (auto l = m_windows.constBegin(); l != m_windows.constEnd(); ++l) {
+            for (auto l = stacking_order.crbegin(); l != stacking_order.crend(); ++l) {
                 if (canSnap(window, (*l))) {
                     lx = (*l)->x();
                     ly = (*l)->y();
