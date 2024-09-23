@@ -46,31 +46,38 @@ void Module::onGHNSEntriesChanged()
 
 void Module::importScript()
 {
-    QString path = QFileDialog::getOpenFileName(nullptr, i18n("Import KWin Script"), QDir::homePath(),
-                                                i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
+    QFileDialog *dialog = new QFileDialog;
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    dialog->setFileMode(QFileDialog::ExistingFile);
+    dialog->setWindowTitle(i18n("Import KWin Script"));
+    dialog->setNameFilter(i18n("*.kwinscript|KWin scripts (*.kwinscript)"));
 
-    if (path.isNull()) {
-        return;
-    }
+    connect(dialog, &QFileDialog::accepted, this, [this, dialog] {
+        using namespace KPackage;
 
-    using namespace KPackage;
-
-    auto job = PackageJob::update(QStringLiteral("KWin/Script"), path);
-    connect(job, &KJob::result, this, [job, this]() {
-        if (job->error() != KJob::NoError) {
-            setErrorMessage(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
+        if (dialog->selectedFiles().isEmpty()) {
             return;
         }
 
-        m_infoMessage = i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", job->package().metadata().name());
-        m_errorMessage.clear();
-        Q_EMIT messageChanged();
+        auto job = PackageJob::update(QStringLiteral("KWin/Script"), dialog->selectedFiles().first());
+        connect(job, &KJob::result, this, [job, this]() {
+            if (job->error() != KJob::NoError) {
+                setErrorMessage(i18nc("Placeholder is error message returned from the install service", "Cannot import selected script.\n%1", job->errorString()));
+                return;
+            }
 
-        m_model->clear();
-        m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
+            m_infoMessage = i18nc("Placeholder is name of the script that was imported", "The script \"%1\" was successfully imported.", job->package().metadata().name());
+            m_errorMessage.clear();
+            Q_EMIT messageChanged();
 
-        setNeedsSave(false);
+            m_model->clear();
+            m_model->addPlugins(m_kwinScriptsData->pluginMetaDataList(), QString());
+
+            setNeedsSave(false);
+        });
     });
+
+    dialog->open();
 }
 
 void Module::configure(const KPluginMetaData &data)
