@@ -105,6 +105,7 @@
     "X-KDE-Keywords[en_GB]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods",
     "X-KDE-Keywords[es]": "teclado por software,teclado de software,teclado software,teclado virtual,teclado táctil,teclado en pantalla,métodos de entrada",
     "X-KDE-Keywords[fr]": "clavier logiciel, clavier virtuel, clavier tactile, clavier à l'écran, méthodes de saisie",
+    "X-KDE-Keywords[gl]": "software keyboard,virtual keyboard,teclado virtual,touch keyboard,teclado táctil,on screen keyboard,teclado en pantalla,input methods,métodos de entrada",
     "X-KDE-Keywords[he]": "מקלדת תוכנה,מקלדת וירטואלית,מקלדת מגע,מקלדת על המסך,שיטות קלט",
     "X-KDE-Keywords[ia]": "claviero software, claviero virtual, claviero a toccar, claviero sur schermo, methodos de entrata",
     "X-KDE-Keywords[it]": "tastiera software,tastiera virtuale,tastiera tattile,tastiera su schermo,metodi di inserimento",
@@ -114,6 +115,7 @@
     "X-KDE-Keywords[sl]": "programska tipkovnica,virtualna tipkovnica,tipkovnica na dotik,zaslonska tipkovnica,načini vnosa",
     "X-KDE-Keywords[sv]": "programvarutangentbord,virtuellt tangentbord,pektangentbord,skärmtangentbord,inmatningsmetoder",
     "X-KDE-Keywords[tr]": "yazılım klavyesi,sanal klavye,dokunmatik klavye,ekran klavyesi,giriş yöntemi,giriş yöntemleri",
+    "X-KDE-Keywords[uk]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення",
     "X-KDE-Keywords[zh_TW]": "軟體鍵盤,虛擬鍵盤,觸控鍵盤,螢幕鍵盤,輸入法",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"

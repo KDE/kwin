@@ -109,6 +109,7 @@
     "X-KDE-Keywords[en_GB]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow",
     "X-KDE-Keywords[es]": "kwin,ventana,gestor,borde,estilo,tema,aspecto,apariencia,organización,disposición,esquema,botón,asa,tirador,borde,kwm,decoración,decoraciones de las ventanas,barra de título,botones de la ventana,borde de la ventana,piel,sombra,sombreado",
     "X-KDE-Keywords[fr]": "kwin, fenêtre, gestionnaire, bordure, style, thème, apparence, toucher, mise en page, bouton, poignée, bord, kwm, décoration, décorations de fenêtre, barre de titre, boutons de fenêtre, bordure de fenêtre, habillage, ombre",
+    "X-KDE-Keywords[gl]": "kwin,window,xanela,ventá,fiestra,manager,xestor,manexador,border,bordo,esquina,extremo,style,estilo,theme,tema,look,aparencia,feel,comportamento,layout,disposición,button,botón,handle,asa,edge,kwm,decoration,decoración,window decorations,decoracións de xanelas,decoracións de ventás,decoracións de fiestras,titlebar,barra de título,window buttons,botóns de xanelas,botóns de ventás,botóns de fiestras,window border,bordo de xanela,bordo de ventá,bordo de fiestra,skin,shadow,sombra",
     "X-KDE-Keywords[he]": "kwin,מראה,מנהל,גבול,מסגרת,סגנון,ערכת עיצוב,ערכת נושא,תחושה,פריסה,כפתור,ידית,קצה,שול,kwm,עיטור,עיטורי חלון,שורת כותרת,כפתורי חלון,גבול חלון,מסגרת חלון,מעטפת,עור,סקין,צל,הצללה,צללית",
     "X-KDE-Keywords[ia]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow",
     "X-KDE-Keywords[it]": "kwin,finestra,gestore,bordo,stile,tema,aspetto,impressione,disposizione,pulsante,maniglia,bordo,kwm,decorazione,decorazioni finestra,barra del titolo,pulsanti finestra,bordo finestra,tema,ombra",
@@ -118,6 +119,7 @@
     "X-KDE-Keywords[sl]": "kwin,okno,upravljalnik,meja,slog,tema,videz,občutek,postaviten,gumb,ročka,rob,kwm,dekoracija,okenske dekoracije,naslovna vrstica,okenski gumbi,meje oken,preobleka,senca",
     "X-KDE-Keywords[sv]": "kwin,fönster,hanterare,kant,stil,tema,utseende,känsla,layout,knapp,grepp,kant,kwm,dekoration,fönsterdekorationer,namnlist,fönsterknappar,fönsterkant,skal,skugga",
     "X-KDE-Keywords[tr]": "kwin,pencere,yönetici,kenarlık,biçem,stil,tema,görünüş,his,yerleşim,düzen,düğme,tutaç,tutamak,kenar,kwm,dekorasyon,pencere dekorasyonu,başlık çubuğu,pencere düğmeleri,pencere kenarlığı,tema,gölge",
+    "X-KDE-Keywords[uk]": "kwin,window,manager,border,style,theme,look,feel,layout,button,handle,edge,kwm,decoration,window decorations,titlebar,window buttons,window border,skin,shadow,вікно,вікна,керування,менеджер,рамка,межа,стиль,тема,вигляд,поведінка,компонування,кнопка,елемент,край,декорації,обрамлення,смужка заголовка,кнопки,рамка,оформлення,тінь",
     "X-KDE-Keywords[zh_TW]": "kwin,視窗,視窗管理員,邊框,風格,樣式,主題,佈局,配置,按鈕,邊緣,視窗裝飾,裝飾,標題列,標題欄,標題按鈕,視窗按鈕,陰影",
     "X-KDE-System-Settings-Parent-Category": "themes",
     "X-KDE-Weight": 60

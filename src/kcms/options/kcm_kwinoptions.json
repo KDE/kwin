@@ -104,6 +104,7 @@
     "X-KDE-Keywords[en_GB]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate",
     "X-KDE-Keywords[es]": "foco,colocación,ubicación,situación,comportamiento de la ventana,acciones de la ventana,animación,elevar,primer plano,elevar automáticamente,pasar a primer plano,ventanas,marco,borde,barra de título,doble clic,escritorio,ajuste,movimiento,plegar,desplegar,recoger,expandir,activación,activar",
     "X-KDE-Keywords[fr]": "focus, placement, comportement des fenêtres, actions des fenêtres, animation, relance, relance automatique, fenêtres, cadre, barre de titre, double-clic, bureau, aimantation, mouvement,ombrage, ombrer, dé-ombrer, dé-ombrage, activation, activer",
+    "X-KDE-Keywords[gl]": "foco,posicionamento,comportamento das xanelas,accións das xanelas, animación,xanelas,moldura,barra de título,marco,desktop,escritorio,snap,axustar,aliñar,movement,movemento,shading,sombra,shade,unshade,unshading,activation,activación,activate,activar",
     "X-KDE-Keywords[he]": "מיקוד,הצבה,מיקום,מקום,התנהגות חלון,פעולות חלון,הנפשה,הגבהה,הרמה,הגבהה אוטומטית,הרמה אוטומטית,חלונות,מסגרת,שורת כותרת,לחיצה כפולה,דאבלקליק,דאבל קליק,הצמדה,תנועה,תזוזה,צל,הצללה,צללית,ביטול הצללה,הפעלה,מופעל,פועל,פעיל,פעילות",
     "X-KDE-Keywords[ia]": "focus,placiamento,comportamento de fenestra,actiones de fenestra,animation,altiar,auto altiar,fenestras,quadro,barra de titulo,duple click,scriptorio, snap, movemento, umbrar, umbra,de umbra,deumbrar,activation,activar",
     "X-KDE-Keywords[it]": "fuoco,posizionamento,comportamento della finestra,azioni delle finestre,animazione,sollevamento,sollevamento automatico,finestre,riquadro,barra del titolo,doppio clic,desktop,snap,movimento,arrotolare,arrotola,srotola,srotolare,attivazione,attivare",
@@ -113,6 +114,7 @@
     "X-KDE-Keywords[sl]": "fokus,postavitev,vedenje okna,dejanja oken,animacija,dvig,samodejni dvig,okna,okvir,naslovna vrstica,dvoklik,namizje,pripenjanje,gibanje,senčenje,senčenje,odsenči,odsenčenje,aktivacija,aktiviraj",
     "X-KDE-Keywords[sv]": "fokus,placering,fönsterbeteende,fönsteråtgärder,animering,höjning,automatisk höjning,fönster,ram,namnlist,dubbelklicka,skrivbord,lås,rörelse,rulla upp, rulla ner,aktivering,aktivera",
     "X-KDE-Keywords[tr]": "odak,yerleşim,pencere davranışı,pencere eylemleri,canlandırma,animasyon,yükselt,çerçeve,başlık çubuğu,çift tık,masaüstü,tuttur,hareket,taşı,panjur,etkinleştir",
+    "X-KDE-Keywords[uk]": "focus,placement,window behavior,window actions,animation,raise,auto raise,windows,frame,titlebar,doubleclick,desktop,snap,movement,shading,shade,unshade,unshading,activation,activate,фокус,розташування,місце,вікно,поведінка,поведінка вікон,дії,реакція,дії з вікнами,реакція вікон,анімація,підняти,підняття,автоматична,автоматично,рамка,заголовок,смужка заголовка,клацання,подвійне,стільниця,прилипання,рух,тіні,тінь,активація,активувати",
     "X-KDE-Keywords[zh_TW]": "焦點,聚焦,視窗行為,視窗動作,動畫,抬升,提升,自動抬升,視窗,框架,邊框,標題列,標題欄,雙擊,連點,桌面,貼齊,移動,隱藏,觸發",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 10
