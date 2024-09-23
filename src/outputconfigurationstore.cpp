@@ -475,18 +475,34 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
     return std::make_pair(ret, outputOrder);
 }
 
+static bool findBiggestFastestMode(const std::shared_ptr<OutputMode> &left, const std::shared_ptr<OutputMode> &right)
+{
+    const uint64_t leftPixels = left->size().width() * left->size().height();
+    const uint64_t rightPixels = right->size().width() * right->size().height();
+    if (leftPixels == rightPixels) {
+        return left->refreshRate() < right->refreshRate();
+    } else {
+        return leftPixels < rightPixels;
+    }
+}
+
+static std::shared_ptr<OutputMode> maybeApply32By9Quirk(auto notPotentiallyBrokenModes)
+{
+    // 32:9 displays often advertise a lower resolution mode as preferred, special case them
+    auto only32by9 = notPotentiallyBrokenModes | std::ranges::views::filter([](const auto &mode) {
+        const double aspectRatio = mode->size().width() / double(mode->size().height());
+        return aspectRatio > 31 / 9.0 && aspectRatio < 33 / 9.0;
+    });
+    const auto best32By9 = std::ranges::max_element(only32by9, findBiggestFastestMode);
+    if (best32By9 != only32by9.end()) {
+        return *best32By9;
+    } else {
+        return nullptr;
+    }
+}
+
 std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output) const
 {
-    const auto findBiggestFastest = [](const auto &left, const auto &right) {
-        const uint64_t leftPixels = left->size().width() * left->size().height();
-        const uint64_t rightPixels = right->size().width() * right->size().height();
-        if (leftPixels == rightPixels) {
-            return left->refreshRate() < right->refreshRate();
-        } else {
-            return leftPixels < rightPixels;
-        }
-    };
-
     const auto modes = output->modes();
     auto notPotentiallyBroken = modes | std::ranges::views::filter([output](const auto &mode) {
         // generated modes aren't guaranteed to work, so don't choose one as the default.
@@ -497,24 +513,18 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
     });
     if (notPotentiallyBroken.empty()) {
         // there's nothing more we can do
-        return *std::ranges::max_element(modes, findBiggestFastest);
+        return *std::ranges::max_element(modes, findBiggestFastestMode);
     }
 
-    // 32:9 displays often advertise a lower resolution mode as preferred, special case them
-    auto only32by9 = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
-        const double aspectRatio = mode->size().width() / double(mode->size().height());
-        return aspectRatio > 31 / 9.0 && aspectRatio < 33 / 9.0;
-    });
-    const auto best32By9 = std::ranges::max_element(only32by9, findBiggestFastest);
-    if (best32By9 != only32by9.end()) {
-        return *best32By9;
+    if (auto quirkMode = maybeApply32By9Quirk(notPotentiallyBroken)) {
+        return quirkMode;
     }
 
     // try to figure out the native resolution; the biggest preferred mode usually has that
     auto preferredOnly = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
         return mode->flags() & OutputMode::Flag::Preferred;
     });
-    const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastest);
+    const auto nativeSize = std::ranges::max_element(preferredOnly, findBiggestFastestMode);
     if (nativeSize != preferredOnly.end()) {
         auto correctSize = notPotentiallyBroken | std::ranges::views::filter([size = (*nativeSize)->size()](const auto &mode) {
             return mode->size() == size;
@@ -535,11 +545,11 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
     auto usableRefreshRates = notPotentiallyBroken | std::ranges::views::filter([](const auto &mode) {
         return mode->refreshRate() >= 50000;
     });
-    const auto usable = std::ranges::max_element(usableRefreshRates, findBiggestFastest);
+    const auto usable = std::ranges::max_element(usableRefreshRates, findBiggestFastestMode);
     if (usable != usableRefreshRates.end()) {
         return *usable;
     } else {
-        return *std::ranges::max_element(notPotentiallyBroken, findBiggestFastest);
+        return *std::ranges::max_element(notPotentiallyBroken, findBiggestFastestMode);
     }
 }
 
