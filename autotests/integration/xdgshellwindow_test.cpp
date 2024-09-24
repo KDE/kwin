@@ -16,6 +16,7 @@
 #include "virtualdesktops.h"
 #include "wayland/clientconnection.h"
 #include "wayland/display.h"
+#include "wayland/surface.h"
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
@@ -108,6 +109,10 @@ private Q_SLOTS:
     void testCloseModal();
     void testCloseInactiveModal();
     void testClosePopupOnParentUnmapped();
+    void testMinimumSize();
+    void testNoMinimumSize();
+    void testMaximumSize();
+    void testNoMaximumSize();
 };
 
 void TestXdgShellWindow::testXdgPopupReactive_data()
@@ -2345,6 +2350,90 @@ void TestXdgShellWindow::testClosePopupOnParentUnmapped()
     parentToplevel.reset();
     parentSurface.reset();
     QVERIFY(childClosedSpy.wait());
+}
+
+void TestXdgShellWindow::testMinimumSize()
+{
+    // NOTE: a minimum size of 20px is forced by the compositor
+
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get(), [](Test::XdgToplevel *toplevel) {
+        toplevel->set_min_size(200, 250);
+    });
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(300, 300), Qt::cyan);
+    QCOMPARE(window->minSize(), QSizeF(200, 250));
+
+    QSignalSpy committedSpy(window->surface(), &SurfaceInterface::committed);
+
+    shellSurface->set_min_size(100, 100);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->minSize(), QSizeF(100, 100));
+
+    shellSurface->set_min_size(0, 100);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->minSize(), QSizeF(20, 100));
+
+    shellSurface->set_min_size(100, 0);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->minSize(), QSizeF(100, 20));
+
+    shellSurface->set_min_size(0, 0);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->minSize(), QSizeF(20, 20));
+}
+
+void TestXdgShellWindow::testNoMinimumSize()
+{
+    // NOTE: a minimum size of 20px is forced by the compositor
+
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get());
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(300, 300), Qt::cyan);
+    QCOMPARE(window->minSize(), QSizeF(20, 20));
+}
+
+void TestXdgShellWindow::testMaximumSize()
+{
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get(), [](Test::XdgToplevel *toplevel) {
+        toplevel->set_max_size(300, 350);
+    });
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(200, 200), Qt::cyan);
+    QCOMPARE(window->maxSize(), QSizeF(300, 350));
+
+    QSignalSpy committedSpy(window->surface(), &SurfaceInterface::committed);
+
+    shellSurface->set_max_size(400, 400);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->maxSize(), QSizeF(400, 400));
+
+    shellSurface->set_max_size(0, 400);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->maxSize(), QSizeF(INT_MAX, 400));
+
+    shellSurface->set_max_size(400, 0);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->maxSize(), QSizeF(400, INT_MAX));
+
+    shellSurface->set_max_size(0, 0);
+    surface->commit(KWayland::Client::Surface::CommitFlag::None);
+    QVERIFY(committedSpy.wait());
+    QCOMPARE(window->maxSize(), QSizeF(INT_MAX, INT_MAX));
+}
+
+void TestXdgShellWindow::testNoMaximumSize()
+{
+    auto surface = Test::createSurface();
+    auto shellSurface = Test::createXdgToplevelSurface(surface.get());
+    Window *window = Test::renderAndWaitForShown(surface.get(), QSize(300, 300), Qt::cyan);
+    QCOMPARE(window->maxSize(), QSizeF(INT_MAX, INT_MAX));
 }
 
 WAYLANDTEST_MAIN(TestXdgShellWindow)
