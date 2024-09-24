@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-09-24 00:40+0000\n"
 "PO-Revision-Date: 2024-01-19 17:12+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -18,17 +18,17 @@ msgstr ""
 "2);\n"
 "X-Generator: Lokalize 23.08.4\n"
 
-#: module.cpp:49
+#: module.cpp:52
 #, kde-format
 msgid "Import KWin Script"
 msgstr "Importēt „KWin“ skriptu"
 
-#: module.cpp:50
+#: module.cpp:53
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin skripti (*.kwinscript)"
 
-#: module.cpp:61
+#: module.cpp:65
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -38,13 +38,13 @@ msgstr ""
 "Neizdodas importēt atlasīto skriptu.\n"
 "%1"
 
-#: module.cpp:65
+#: module.cpp:69
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "Skripts „%1“ ir veiksmīgi importēts."
 
-#: module.cpp:124
+#: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "Kļūda, atinstalējot „KWin“ skriptu: %1"

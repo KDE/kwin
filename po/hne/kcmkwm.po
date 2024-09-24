@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:40+0000\n"
+"POT-Creation-Date: 2024-09-24 00:40+0000\n"
 "PO-Revision-Date: 2009-02-09 18:43+0530\n"
 "Last-Translator: Ravishankar Shrivastava <raviratlami@aol.in>\n"
 "Language-Team: Hindi <kde-i18n-doc@lists.kde.org>\n"
@@ -492,7 +492,7 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
-#: advanced.ui:45 focus.ui:85 focus.ui:178
+#: advanced.ui:45 focus.ui:85 focus.ui:181
 #, kde-format
 msgid " ms"
 msgstr "मि.से."
@@ -828,7 +828,7 @@ msgid "&Raise on hover, delayed by:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:175
+#: focus.ui:178
 #, kde-format
 msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
@@ -837,13 +837,13 @@ msgstr ""
 "ये वो अंतराल हे जेखर बाद वो विंडो, जेखर ऊपर मुसुवा सूचक रखे जाथे , वो अपने अपन सामने आथे ."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
-#: focus.ui:196
+#: focus.ui:199
 #, kde-format
 msgid "Multiscreen behavior:"
 msgstr ""
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:203
+#: focus.ui:206
 #, fuzzy, kde-format
 #| msgid ""
 #| "When this option is enabled, focus operations are limited only to the "
@@ -855,14 +855,14 @@ msgstr ""
 "जब ए विकल्प सक्छम होथे , फोकस आपरेसन सिरिफ सक्रिय सिनेरेमा स्क्रीन मं सीमित होथे ."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:206
+#: focus.ui:209
 #, fuzzy, kde-format
 #| msgid "S&eparate screen focus"
 msgid "&Separate screen focus"
 msgstr "अलग स्क्रीन फोकस (&e) "
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:219
+#: focus.ui:222
 #, kde-format
 msgid "Window activation policy description"
 msgstr ""

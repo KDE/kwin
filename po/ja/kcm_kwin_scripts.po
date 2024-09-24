@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-09-24 00:40+0000\n"
 "PO-Revision-Date: 2024-02-16 14:27+0900\n"
 "Last-Translator: Ryuichi Yamada <ryuichi_ya220@outlook.jp>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
@@ -16,17 +16,17 @@ msgstr ""
 "X-Text-Markup: kde4\n"
 "X-Generator: Lokalize 23.08.4\n"
 
-#: module.cpp:49
+#: module.cpp:52
 #, kde-format
 msgid "Import KWin Script"
 msgstr "KWin スクリプトをインポートする"
 
-#: module.cpp:50
+#: module.cpp:53
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|KWin スクリプト (*.kwinscript)"
 
-#: module.cpp:61
+#: module.cpp:65
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -36,13 +36,13 @@ msgstr ""
 "選択されたスクリプトをインポートできません。\n"
 "%1"
 
-#: module.cpp:65
+#: module.cpp:69
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "\"%1\" のインポートに成功しました。"
 
-#: module.cpp:124
+#: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "KWin スクリプト %1 のアンインストール中にエラーが発生しました: %1"

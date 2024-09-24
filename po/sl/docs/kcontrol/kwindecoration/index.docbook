@@ -1,0 +1,197 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Slovenian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwindecoration" lang="&language;">
+<articleinfo>
+<authorgroup>
+<author
+>&Rik.Hemsley; &Rik.Hemsley.mail;</author>
+<author
+>&Anne-Marie.Mahfouf; &Anne-Marie.Mahfouf.mail;</author>
+<othercredit role="translator"
+><firstname
+>Mojca</firstname
+><surname
+>Rob</surname
+><affiliation
+><address
+><email
+>mojca.rob@gmail.com</email
+></address
+></affiliation
+><contrib
+>Prevod:</contrib
+></othercredit
+> 
+</authorgroup>
+
+<date
+>09.04.2021</date>
+<releaseinfo
+>Plasma 5.21</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Nastavitve sistema</keyword>
+<keyword
+>kwin</keyword>
+<keyword
+>okno</keyword>
+<keyword
+>obroba</keyword>
+<keyword
+>tema</keyword>
+<keyword
+>slog</keyword>
+</keywordset>
+</articleinfo>
+<sect1 id="window-deco">
+<title
+>Dekoracija oken</title>
+
+<para
+>Ta modul vam omogoča izbiro sloga za gumbe in meje oken.</para>
+
+<sect2>
+<title
+>Dekoracija oken</title>
+
+<para>
+<screenshot>
+<screeninfo
+>Konfiguracijski modul dekoracij oken</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Konfiguracijski modul dekoracij oken</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+
+<para
+>Izberite slog dekoracije oken s seznama za predogled ali prenesite nov slog z gumbom <guibutton
+>Pridobi nove dekoracije oken</guibutton
+>.</para>
+
+<para
+>Privzeta dekoracija oken se imenuje <quote
+>Vetrič</quote
+>.</para>
+
+<para
+>Vsak slog ima drugačen izgled, pa tudi drugačen <quote
+>občutek</quote
+>. Nekateri imajo (včasih nevidno) <quote
+>raztegljive</quote
+> meje okoli in okoli robov, kar olajša spreminjanje velikosti, a oteži premikanje okna. Nekateri nimajo mej na določenih robovih.</para>
+
+<para
+>Spodbujamo vas k eksperimentiranju z različnimi slogi, dokler ne najdete takšnega, ki najbolje ustreza vašemu vzorcu dela.</para>
+
+<para
+>V predogledu vsakega sloga najdete <inlinemediaobject
+><imageobject
+> <imagedata fileref="configure.png" format="PNG"/></imageobject
+></inlinemediaobject
+> gumb za konfiguracijo, s katerim odprete konfiguracijska pogovorna okna za dekoracijo.</para>
+
+<para
+>Možnosti v tem konfiguracijskem pogovornem oknu se uporabljajo za vsa okna. Nekatere dekoracije oken (&eg; <quote
+>Vetrič</quote
+>) ponujajo zavihek <guilabel
+>Ročno nastavljanje oken</guilabel
+>. Na tem zavihku lahko spremenite velikost obrobe in vidnost naslovne vrstice okna za specifična okna.</para>
+
+<para
+>Različne možnosti za določena okna najdete v &systemsettings; modul <ulink url="help:/kcontrol/windowspecific"
+>Pravila oken</ulink
+>. </para>
+
+<tip>
+<para
+>Za namene dostopnosti nekatere dekoracije oken podpirajo zelo široke obrobe. Če je to na voljo, lahko tukaj izberete tudi <guilabel
+>Velikost obrobe okna</guilabel
+>. Velike obrobe so lažje vidne za slabovidne uporabnike in jih lažje primejo osebe z omejeno mobilnostjo ali težavami pri uporabi miške.</para>
+</tip>
+
+<tip>
+<para
+>Če vas zanima ustvarjanje lastne dekoracije oken, lahko izveste več o tem <ulink url="https://develop.kde.org/docs/extend/plasma/aurorae/"
+>tukaj</ulink
+>.</para>
+</tip>
+
+</sect2>
+
+<sect2>
+<title
+>Dekoracija</title>
+
+<para
+>V tem pogovornem oknu lahko spremenite dekoracijo okna. Razpoložljive možnosti so odvisne od izbranega sloga. </para>
+<para>
+<screenshot>
+<screeninfo
+>Možnosti dekoracije Vetrič</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="decoration.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Možnosti dekoracije Vetrič</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+
+<sect2>
+<title
+>Gumbi naslovne vrstice</title>
+
+<para
+>Ta stran vam omogoča prilagajanje lokacije gumba v naslovni vrstici. Lahko povlečete gumbe &eg; <guilabel
+>Meni aplikacij</guilabel
+> v naslovno vrstico, jih odstranite ali povlečete med gumbi, dokler ne najdete vrstnega reda, ki vam ustreza. </para>
+
+<screenshot>
+<screeninfo
+>Možnosti gumbov</screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="button.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+>Možnosti gumbov</phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+
+<para
+>Omogočite <guilabel
+>Zapiranje oken z dvojnim klikom na gumb menija</guilabel
+>, če želite poleg gumba Zapri imeti dodatno možnost zapiranja ali če ste gumb Zapri odstranili iz naslovne vrstice. </para>
+
+<para
+>Odkljukajte element <guilabel
+>V naslovni vrstici prikaži opise orodij gumbov</guilabel
+>, če želite videti privzete opise orodij, ko z miškinim kazalcem lebdite čez gumbe v naslovni vrstici. </para>
+
+</sect2>
+
+</sect1>
+
+</article>

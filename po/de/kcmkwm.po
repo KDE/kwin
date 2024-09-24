@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-14 00:40+0000\n"
+"POT-Creation-Date: 2024-09-24 00:40+0000\n"
 "PO-Revision-Date: 2023-04-16 14:03+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
@@ -471,7 +471,7 @@ msgstr ""
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_DelayFocusInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_AutoRaiseInterval)
 #. i18n: ectx: property (suffix), widget (QSpinBox, kcfg_ShadeHoverInterval)
-#: advanced.ui:45 focus.ui:85 focus.ui:178
+#: advanced.ui:45 focus.ui:85 focus.ui:181
 #, kde-format
 msgid " ms"
 msgstr " ms"
@@ -856,7 +856,7 @@ msgid "&Raise on hover, delayed by:"
 msgstr "Her&vorheben beim Überfahren, verzögert um:"
 
 #. i18n: ectx: property (whatsThis), widget (QSpinBox, kcfg_AutoRaiseInterval)
-#: focus.ui:175
+#: focus.ui:178
 #, kde-format
 msgid ""
 "This is the delay after which the window that the mouse pointer is over will "
@@ -866,13 +866,13 @@ msgstr ""
 "befindet, automatisch nach vorne kommt."
 
 #. i18n: ectx: property (text), widget (QLabel, multiscreenBehaviorLabel)
-#: focus.ui:196
+#: focus.ui:199
 #, kde-format
 msgid "Multiscreen behavior:"
 msgstr "Verhalten bei mehreren Bildschirmen:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:203
+#: focus.ui:206
 #, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
@@ -882,13 +882,13 @@ msgstr ""
 "den jeweils aktiven Bildschirm bezogen."
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
-#: focus.ui:206
+#: focus.ui:209
 #, kde-format
 msgid "&Separate screen focus"
 msgstr "&Aktivierungsaktionen nur für aktiven Bildschirm anwenden"
 
 #. i18n: ectx: property (text), widget (QLabel, windowFocusPolicyDescriptionLabel)
-#: focus.ui:219
+#: focus.ui:222
 #, kde-format
 msgid "Window activation policy description"
 msgstr "Beschreibung der Aktivierungsregel"

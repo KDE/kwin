@@ -16,15 +16,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-23 00:40+0000\n"
-"PO-Revision-Date: 2024-08-25 02:09+0900\n"
+"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"PO-Revision-Date: 2024-09-23 20:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.04.70\n"
+"X-Generator: Lokalize 24.08.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, kde-format
@@ -1228,7 +1228,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "主機名稱：%1"
 
-#: input.cpp:3081
+#: input.cpp:3102
 #, kde-format
 msgid "Touchpad"
 msgstr "觸控板"
@@ -2026,10 +2026,9 @@ msgstr "高度(&H)："
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "切換滑鼠點擊效果"
+msgstr "切換滑鼠點擊動畫"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format

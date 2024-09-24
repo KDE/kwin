@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-18 00:41+0000\n"
-"PO-Revision-Date: 2024-09-10 02:37+0900\n"
+"PO-Revision-Date: 2024-09-23 20:40+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "dot tw>\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 24.08.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: declarative-plugin/buttonsmodel.cpp:56
@@ -215,10 +215,9 @@ msgid "Get New…"
 msgstr "取得新的…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "編輯 %1 主題"
+msgstr "編輯 %1 主題…"
 
 #: utils.cpp:25
 #, kde-format

@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Slovenian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwinvirtualkeyboard" lang="&language;">
+<articleinfo>
+
+<title
+>Navidezna tipkovnica</title>
+<authorgroup>
+<author
+><firstname
+>Yuri</firstname
+> <surname
+>Chornoivan</surname
+> </author>
+<othercredit role="translator"
+><contrib
+>Prevod:</contrib
+><firstname
+>Mojca</firstname
+><surname
+>Rob</surname
+><affiliation
+><address
+><email
+>mojca.rob@gmail.com</email
+></address
+></affiliation
+></othercredit
+> 
+</authorgroup>
+
+<date
+>27.04.2021</date>
+<releaseinfo
+>Plasma 5.22</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Sistemske nastavitve</keyword>
+<keyword
+>virtualno</keyword>
+<keyword
+>tipkovnica</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Ta modul vam omogoča izbiro virtualne tipkovnice, ki jo boste uporabljali. Navidezna tipkovnica bo samodejno omogočena, ko strojna tipkovnica ne bo zaznana. </para>
+
+<para
+>Na seznamu izberite <ulink url="https://en.wikipedia.org/wiki/Virtual_keyboard"
+>virtualno tipkovnico</ulink
+> ali izberite <guilabel
+>Brez</guilabel
+>, če ne želite uporabljati nobene navidezne tipkovnice. </para>
+
+<para
+>Priporočljivo je, da pred uporabo tega modula namestite ustrezne "motorje vnosnih metod" (input method engines). </para>
+
+</article>

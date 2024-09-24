@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-01-14 00:38+0000\n"
+"POT-Creation-Date: 2024-09-24 00:40+0000\n"
 "PO-Revision-Date: 2023-06-08 12:05+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -17,17 +17,17 @@ msgstr ""
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
-#: module.cpp:49
+#: module.cpp:52
 #, kde-format
 msgid "Import KWin Script"
 msgstr "استورد سكرِبت نوافذك"
 
-#: module.cpp:50
+#: module.cpp:53
 #, kde-format
 msgid "*.kwinscript|KWin scripts (*.kwinscript)"
 msgstr "*.kwinscript|سكرِبتات نوافذك (*.kwinscript)"
 
-#: module.cpp:61
+#: module.cpp:65
 #, kde-format
 msgctxt "Placeholder is error message returned from the install service"
 msgid ""
@@ -37,13 +37,13 @@ msgstr ""
 "لا يمكن استيراد السكربت المحدد.\n"
 "%1"
 
-#: module.cpp:65
+#: module.cpp:69
 #, kde-format
 msgctxt "Placeholder is name of the script that was imported"
 msgid "The script \"%1\" was successfully imported."
 msgstr "استورد السّكرِبت \"%1\" بنجاح."
 
-#: module.cpp:124
+#: module.cpp:131
 #, kde-format
 msgid "Error when uninstalling KWin Script: %1"
 msgstr "خطأ عند إلغاء تثبيت سكربت كوين: %1"

@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Slovenian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<article id="kwintouchscreen" lang="&language;">
+<articleinfo>
+
+<title
+>Poteze zaslona na dotik</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<othercredit role="translator"
+><contrib
+>Prevod:</contrib
+><firstname
+>Mojca</firstname
+><surname
+>Rob</surname
+><affiliation
+><address
+><email
+>mojca.rob@gmail.com</email
+></address
+></affiliation
+></othercredit
+> 
+</authorgroup>
+
+<date
+>10.04.2021</date>
+<releaseinfo
+>Plasma 5.20</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Nastavitve sistema</keyword>
+<keyword
+>dotik</keyword>
+<keyword
+>ekran</keyword>
+</keywordset>
+</articleinfo>
+
+<para
+>Če podrsate od roba zaslona proti sredini zaslona, lahko aktivirate učinke. Tukaj lahko konfigurirate, kateri učinek bo aktiviran na vsakem robu zaslona. </para>
+
+<para
+>S poljubnim gumbom miške kliknite na kvadrat in v kontekstnem meniju izberite učinek. Robovi z modrim kvadratom že imajo priložen učinek, sivo obarvan kvadrat pomeni, da za ta rob ni izbran noben učinek.</para>
+
+<para
+>Število dostopnih elementov v kontekstnem meniju je odvisno od nastavitev v modulu <ulink url="help:/kcontrol/kwineffects/index.html"
+> <guilabel
+>Učinki na namizju</guilabel
+></ulink
+> v kategoriji <guilabel
+>Delovni prostor</guilabel
+>. Izberite svoje najljubše učinke iz skupine <guilabel
+>Upravljanje z okni</guilabel
+>. To aktivira ustrezne elemente v kontekstnem meniju.</para>
+</article>

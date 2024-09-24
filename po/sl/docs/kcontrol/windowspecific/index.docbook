@@ -1,0 +1,2211 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Slovenian "INCLUDE">
+]>
+<book id="windowspecific" lang="&language;">
+<bookinfo>
+<title
+>Pravila oken</title>
+<authorgroup>
+<author
+>&Lauri.Watts; &Lauri.Watts.mail;</author>
+<author>
+<personname
+><firstname
+>Deli te dokumentacije so bili pretvorjeni s strani KDE UserBase <ulink url="https://userbase.kde.org/KWin Rules"
+>Pravila KWin</ulink
+> in posodobljeni s strani &kde; Dokumentacijska ekipa za Plasma 5.8.</firstname
+> <surname
+></surname
+> </personname>
+      </author>
+<othercredit role="translator"
+><firstname
+>Mojca</firstname
+><surname
+>Rob</surname
+><affiliation
+><address
+><email
+>mojca.rob@gmail.com</email
+></address
+></affiliation
+><contrib
+>Prevod</contrib
+></othercredit
+> 
+      </authorgroup>
+<legalnotice
+>&FDLNotice;</legalnotice>
+<date
+>23.06.2016</date>
+      <releaseinfo
+>Plasma 5.8</releaseinfo>
+<abstract>
+<para
+>Tukaj lahko prilagodite okenske nastavitve posamezno za samo nekatera okna.</para>
+      </abstract>
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>okenske nastavitve</keyword>
+<keyword
+>postavitev oken</keyword>
+<keyword
+>velikost oken</keyword>
+</keywordset>
+</bookinfo>
+<chapter id="window-specific">
+<title
+>Nastavitve za posamezna okna: Hitri začetek</title>
+
+<para
+>Tukaj lahko prilagodite okenske nastavitve posamezno za samo nekatera okna.</para>
+
+<note>
+<para
+>Vedite, da vse nastavitve v tem modulu ne bodo učinkovale, če ne boste uporabljali &kwin; kot okenskega upravitelja. Če uporabljate drugega okenskega upravitelja, prosim preverite njegovo dokumentacijo glede prilagajanja obnašanja oken.</para>
+</note>
+
+<para
+>Večino nastavitev, ki jih nastavite tukaj, lahko v splošnem nastavite v modulu  <guilabel
+>Obnašanje oken</guilabel
+>, vendar so nekatere tukaj bolj podrobne.</para>
+
+<para
+>Vključujejo geometrijo, postavitev, ali naj bo okno nad ali pod vsemi, ravnanje s fokusiranjem in nastavitve prosojnosti.</para>
+
+<para
+>Do tega modula lahko dostopate na dva načina: iz naslovne vrstice aplikacije, ki jo želite konfigurirati, ali iz &systemsettings;. Če ga zaženete znotraj &systemsettings; lahko uporabite <guibutton
+>Novo ...</guibutton
+>, da ustvarite profil okna, in nato gumb <guibutton
+>Zaznaj lastnosti okna</guibutton
+> v pogovornem oknu, ki se odpre, kjer delno izpolnite zahtevane informacije za aplikacijo, ki jo želite konfigurirati.</para>
+
+<para
+>Kadarkoli lahko tudi uporabite gumba <guibutton
+>Spremeni ...</guibutton
+> ali <guibutton
+>Zbriši</guibutton
+> za spreminjanje shranjenih nastavitvenih profilov ali pa spremenite vrstni red v seznamu. Prerazporeditev seznama z gumboma <guibutton
+>Premakni gor</guibutton
+> in <guibutton
+>Premakni navzdol</guibutton
+> vpliva na uporabo standardnih nastavitvenih profilov.</para>
+
+</chapter>
+<!--userbase <timestamp
+>2012-03-09T20:50:14Z</timestamp
+>-->
+
+<!--userbase-content-->
+<chapter id="overview"
+><title
+>Pregled</title
+> 
+<para
+>&kwin; omogoča končnemu uporabniku, da definira pravila spreminjanja atributov okna aplikacije. </para>
+<para
+>Na primer, ko se aplikacija zažene, jo je mogoče prisiliti, da se vedno izvaja na <emphasis
+>Virtualnem namizju 2</emphasis
+>. Lahko pa se uporabi za odpravo napake v aplikaciji, da se okno vseeno prikaže nad drugimi. </para>
+<para
+>Na voljo so <link linkend="examples"
+>primeri</link
+> po korakih skupaj s podrobnimi informacijami o uporabi <link linkend="kwin-rule-editor"
+>&kwin; Urejevalnik pravil</link
+> za določitev <link linkend="window-matching"
+>Ujemanja oken</link
+> in <link linkend="window-attributes"
+>Atributov oken</link
+>. </para>
+</chapter>
+<chapter id="examples-and-application-workaround"
+><title
+>Primeri in Obhod uporabe (Application Workaround)</title
+> 
+<para
+>Če želite videti, kaj je mogoče, so na voljo podrobni <link linkend="examples"
+>primeri</link
+>, ki jih lahko uporabite tudi za modeliranje lastnih pravil. </para>
+<para
+>Posebna stran je namenjena obravnavi <link linkend="application-workarounds"
+>Obhod uporabe</link
+>. </para>
+</chapter>
+<chapter id="kwin-rule-editor"
+><title
+>KWin Urejevalnik pravil</title
+> 
+<sect1 id="invoking-the-kwin-rule-editor"
+><title
+>Priklic urejevalnika pravil KWin</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-ordering.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Obstaja več načinov za priklic &kwin; Urejevalnika pravil. Spodaj sta dve: </para>
+<itemizedlist>
+<listitem
+><para
+>Z desno tipko miške kliknite naslovno vrstico katerega koli okna, izberite <menuchoice
+><guimenu
+>Več dejanj</guimenu
+><guimenuitem
+>Nastavitve upravitelja oken ...</guimenuitem
+></menuchoice
+> in v oknu <guilabel
+>Konfiguriraj</guilabel
+>, izberite <guilabel
+>Pravila oken</guilabel
+> ali</para
+></listitem>
+</itemizedlist>
+<itemizedlist>
+<listitem
+><para
+><menuchoice
+><guimenu
+>Sistemske nastavitve</guimenu
+><guisubmenu
+>Vedenje oken</guisubmenu
+><guimenuitem
+>Pravila za okna</guimenuitem
+></menuchoice
+></para
+></listitem>
+</itemizedlist>
+<para
+>Glavno okno se uporablja za: </para>
+<itemizedlist>
+<listitem
+><para
+>Vplivajte na pravila z <guilabel
+>Novo ...</guilabel
+>, <guilabel
+>Spremeni ...</guilabel
+> in <guilabel
+>Izbriši</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Delite pravila z drugimi prek <guilabel
+>Uvozi</guilabel
+> in <guilabel
+>Izvozi</guilabel
+></para
+></listitem>
+<listitem
+><para
+>Zagotovite želeno <link linkend="rule-evaluation"
+>vrednotenje pravila</link
+> z uporabo <guilabel
+>Premakni gor</guilabel
+> in <guilabel
+>Premakni navzdol</guilabel
+></para
+></listitem>
+</itemizedlist>
+<sect2 id="rule-evaluation"
+><title
+>Vrednotenje pravil</title
+> 
+<para
+>Ko se aplikacija zažene (ali se pravila spremenijo), &kwin; ovrednoti pravila od začetka do konca seznama. Za vsa pravila, ki se ujemajo z oknom, se skupni niz atributov uporabi za okno, nato pa se okno prikaže. </para>
+<para
+>Če dve ali več ujemajočih se pravil omogočita isti atribut, se uporabi nastavitev v <emphasis
+>prvem</emphasis
+> pravilu na seznamu. </para>
+<para
+><tip
+><para
+>Otroška okna za aplikacijo lahko prilagodite tako, da najprej postavite bolj restriktivna pravila - glejte <link linkend="application-on-all-desktops-and-handle-one-child-window-uniquely"
+>Kopete in Kopete okno za klepet </link
+> primer.</para
+></tip>
+</para>
+</sect2>
+</sect1>
+<sect1 id="rule-editor"
+><title
+>Urejevalnik pravil</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Urejevalnik je sestavljen iz štirih zavihkov: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Ujemanje oken</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Velikost &amp; Položaj</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Položaj &amp; Dostop </guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Videz &amp; Popravki </guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Kot pove ime, se <guilabel
+>Ujemanje oken</guilabel
+> uporablja za podajanje kriterijev za ujemanje enega ali več oken. Ostali trije zavihki se uporabljajo za spreminjanje atributov ustreznih oken. </para>
+<para
+><tip
+><para
+>To lahko vpliva tudi na plošče.</para
+></tip>
+</para>
+<sect2 id="window-matching"
+><title
+>Ujemanje oken</title
+> 
+<para
+>Vsako pravilo za okno veljajo določena merila <link linkend="window-matching"
+>Ujemanje oken</link
+>. &kwin; uporablja merila za ugotavljanje, ali je pravilo uporabno za aplikacijo. </para>
+</sect2>
+<sect2 id="window-attributes"
+><title
+>Značilnosti oken</title
+> 
+<para
+>Poleg meril za ujemanje oken ima vsako pravilo za okno nabor <link linkend="window-attributes"
+>lastnosti oken</link
+>. Lastnosti preglasijo nastavitve ustrezne aplikacije in se uporabijo, preden &kwin; prikaže okno. </para>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="window-matching0"
+><title
+>Ujemanje oken</title
+> 
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rule-editor.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Zavihek <guilabel
+>Ujemanje oken</guilabel
+> se uporablja za določanje kriterijev, ki jih &kwin; uporablja za oceno, ali je pravilo uporabno za dano okno. </para>
+<para
+>Nastavi se lahko nič (okno se ujema s katerim koli oknom) ali kaj od naslednjega: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Razred okna (aplikacija)</guilabel
+> - ujemanje z razredom.<itemizedlist
+> <listitem
+><para
+><guilabel
+>Ujemanje celotnega razreda okna</guilabel
+> - vključi ujemanje sekundarnega razreda.</para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Vloga okna</guilabel
+> - omeji ujemanje na funkcijo okna (&eg;. <emphasis
+>glavno okno</emphasis
+>, <emphasis
+>okno za klepet</emphasis
+>, &etc;)</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Vrste oken</guilabel
+> - omejite ujemanje na vrsto okna: <guilabel
+>Običajno okno</guilabel
+>, <guilabel
+>Pogovorno okno</guilabel
+> itd.;</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Naslov okna</guilabel
+> - omeji ujemanje na naslov okna.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Naprava (ime gostitelja)</guilabel
+> - omeji ujemanje na ime gostitelja, povezano z oknom.</para
+></listitem>
+</itemizedlist>
+<para
+><tip
+><para
+>Čeprav je mogoče ročno vnesti zgornje informacije, je prednostna metoda uporaba gumba <guilabel
+>Zaznaj lastnosti okna</guilabel
+>.</para
+></tip>
+</para>
+<para
+>Za vsako polje lahko v odnosu z vrednostjo polja uporabite naslednje operatorje: </para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Nepomembno</guilabel
+> - prezri polje.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Natančno ujemanje</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Ujemanje podniza</guilabel
+></para
+></listitem>
+</itemizedlist>
+<para
+><note
+><para
+>Tako <guilabel
+>Natančno ujemanje</guilabel
+> kot <guilabel
+>Ujemanje podniza</guilabel
+> izvajata ujemanje brez razlikovanja med velikimi in malimi črkami. Na primer, <emphasis
+>AB</emphasis
+> se ujema z nizi<emphasis
+>AB</emphasis
+>, <emphasis
+>ab</emphasis
+>, <emphasis
+>Ab</emphasis
+> in <emphasis
+>aB</emphasis
+>.</para
+></note>
+</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Regularni izraz</guilabel
+> - implementirani so regularni izrazi Qt - glejte <ulink url="https://doc.qt.io/qt-5/qregexp.html"
+>ujemanje vzorcev z uporabo regularnih izrazov</ulink
+> .</para
+></listitem>
+</itemizedlist>
+<sect1 id="detect-window-properties"
+><title
+>Zaznaj lastnosti oken</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-detect-window.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Funkcija <guilabel
+>Zaznaj lastnosti okna</guilabel
+> poenostavi postopek vnosa kriterijev ujemanja. </para>
+<orderedlist>
+<listitem
+><para
+>Zaženite aplikacijo, za katero želite ustvariti pravilo.</para
+></listitem>
+<listitem
+><para
+>Nato na zavihku <guilabel
+>Ujemanje oken</guilabel
+> nastavite število sekund zakasnitve, preden se zažene funkcija <guilabel
+>Zaznaj lastnosti okna</guilabel
+>. Privzeta vrednost je nič sekund.</para
+></listitem>
+<listitem
+><para
+>Kliknite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in</para
+></listitem>
+<listitem
+><para
+>Ko se miškin kazalec spremeni v križec, ga postavite v okno aplikacije (ne v naslovno vrstico) in kliknite z levo tipko miške.</para
+></listitem>
+<listitem
+><para
+>Prikaže se novo okno z informacijami o izbranem oknu. Izberite želena polja:<itemizedlist>
+<listitem
+><para
+><guilabel
+>Ime sekundarnega razreda</guilabel
+> - nekatere aplikacije imajo ime sekundarnega razreda. To vrednost lahko uporabite za omejitev oken, ki jo zavzemajo.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Vloga okna</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Tip okna</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Naslov okna</guilabel
+></para
+></listitem>
+</itemizedlist>
+</para
+></listitem>
+</orderedlist>
+<para
+>Kliknite gumb <guilabel
+>V redu</guilabel
+>, da ponovno zapolnite kriterij <guilabel
+>Ujemanje oken</guilabel
+>. </para>
+<para
+>Z uporabo kombinacije informacij lahko pravilo velja za celotno aplikacijo (po <guilabel
+>Razredu</guilabel
+>) ali za določen  <guilabel
+>Tip</guilabel
+> okna znotraj <guilabel
+>Razreda</guilabel
+> 
+> - recimo <guilabel
+>Orodno vrstico</guilabel
+>. </para>
+</sect1>
+</chapter>
+<chapter id="window-attributes1"
+><title
+>Značilnosti oken</title>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-window-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<para
+>Atributi, ki jih je mogoče nastaviti, so razvrščeni po funkcijah v treh zavihkih: </para>
+<orderedlist>
+<listitem
+><para
+><guilabel
+>Velikost &amp; Položaj</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Položaj &amp; Dostop </guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Videz &amp; Popravki </guilabel
+></para
+></listitem>
+</orderedlist>
+<para
+>Vsak atribut ima nabor parametrov, ki določajo njegovo razporeditev. </para>
+<sect1 id="parameters"
+><title
+>Parametri</title>
+<para
+>Vsak atribut sprejme najmanj enega od naslednjih parametrov. Dodatni argumenti, specifični za atribute, so navedeni znotraj vsake definicije <link linkend="attributes"
+>atributa</link
+>. </para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ne vplivaj</emphasis
+></term>
+    <listitem>
+    <para
+>Zagotovite, da naslednje pravilo, ki se ujema z oknom, ne vpliva na atribut.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Prijavite se na začetku</emphasis
+></term>
+    <listitem>
+    <para
+>Zaženite okno z atributom in dovolite, da se spremeni med izvajanjem.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Zapomni si</emphasis
+></term>
+    <listitem>
+    <para
+>Uporabite nastavitev atributa, kot je definirana v pravilu, in če jo spremenite med izvajanjem, shranite in namesto tega uporabite novo vrednost.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Prisila</emphasis
+></term>
+    <listitem>
+    <para
+>Nastavitev ni mogoče spremeniti med izvajanjem.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Prijavite se zdaj, vsilite začasno</emphasis
+></term>
+    <listitem>
+    <para
+>Enkrat uporabite/vsilite nastavitev in razveljavite atribut. Razlika med obema je v času izvajanja, <guilabel
+>Uporabi zdaj</guilabel
+> dovoljuje spreminjanje atributa, <guilabel
+>Začasno vsili</guilabel
+> pa prepoveduje spreminjati, dokler ne zapustijo vsa okna, na katere ima nastavitev vpliv.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Za <guilabel
+>Uporabi zdaj</guilabel
+>, če pravilo nima nastavljenih drugih atributov, se pravilo izbriše po ovrednotenju, medtem ko se pri <guilabel
+>Začasno vsili</guilabel
+> pravilo izbriše, ko se konča zadnje okno, za katerega veljajo te nastvitve.</para
+></warning>
+</para>
+</sect1>
+<sect1 id="attributes"
+><title
+>Lastnosti</title>
+<para
+><tip
+><para
+>Gumb <guilabel
+>Zaznaj lastnosti okna</guilabel
+> zapolni vrednosti, specifične za lastnost - za več informacij glejte <link linkend="window-matching"
+>Ujemanje oken</link
+>. Vrednosti višine in širine lastnosti <guilabel
+>Velikost</guilabel
+> so na primer nastavljene na višino in širino zaznanega okna.</para
+></tip>
+</para>
+<para
+><tip
+><para
+>Argumenta <guilabel
+>Da/Ne</guilabel
+> se uporabljata za vklop ali izklop lastnosti. Prizanesljivost s slovnico pomaga razumeti, kako bo nastavitev obdelana. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+> Na primer, lastnost <guilabel
+>Preskoči opravilno vrstico</guilabel
+>, ko je nastavljena na <guilabel
+>Ne</guilabel
+> pomeni, da ne preskoči opravilne vrstice. Z drugimi besedami, pomeni pokaži okno v opravilni vrstici. <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+></para
+></tip>
+</para>
+<sect2 id="size--position"
+><title
+>Velikost &amp; Položaj</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Pozicija</emphasis
+></term>
+    <listitem>
+    <para
+>Postavite zgornji levi kot okna na določeno koordinato x,y.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Izvor &kwin;, (0,0), je zgornji levi del namizja.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Velikost</emphasis
+></term>
+    <listitem>
+    <para
+>Širina in višina okna.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Maksimirano vodoravno, maksimirano navpično</emphasis
+></term>
+    <listitem>
+    <para
+>Ti atributi se uporabljajo za preklop največjega vodoravnega/najmanjšega vodoravnega atributa okna.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Namizje, dejavnost, zaslon</emphasis
+></term>
+    <listitem>
+    <para
+>Postavite okno na določeno <emphasis
+>(virtualno) namizje</emphasis
+>, <emphasis
+>Dejavnost</emphasis
+> ali <emphasis
+>Zaslon</emphasis
+>. Uporabite <guilabel
+>Vsa namizja</guilabel
+>, da postavite okno na vsa <emphasis
+>Navidezna namizja</emphasis
+>.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Celozaslonsko, minimizirano, zasenčeno</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite med atributi Celozaslonski način, Minimiziraj in Senčenje okna. Na primer, okno je mogoče zagnati pomanjšano ali, če je zagnano pomanjšano, ga je mogoče prisilno zavrniti.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Maksimiran atribut je posneman z uporabo obeh <guilabel
+>Maksimizirano vodoravno</guilabel
+> in <guilabel
+>Maksimizirano navpično</guilabel
+> ali <guilabel
+>Začetne postavitve</guilabel
+> z argumentom <guilabel
+>Maksimiziranje</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Začetna postavitev</emphasis
+></term>
+    <listitem>
+    <para
+>Preglasite globalno strategijo postavitve oken z enim od naslednjega:</para>
+<itemizedlist>
+<listitem
+><para
+><guilabel
+>Privzeto</guilabel
+> - uporabite globalno strategijo postavitve oken.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Brez umestitve</guilabel
+> - zgornji levi kot.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Minimalno prekrivanje</guilabel
+> - mesto, kjer ni nobenega drugega okna.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Povečano</guilabel
+> - zaženi okno povečano.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Na sredini</guilabel
+> - sredina namizja.</para
+></listitem>
+<listitem
+><para
+><guilabel
+>Naključno</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>V zgornjem levem kotu</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>Pod miško</guilabel
+></para
+></listitem>
+<listitem
+><para
+><guilabel
+>V glavnem oknu</guilabel
+> - omeji postavitev podrejenega okna na meje nadrejenega okna.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignoriraj zahtevano geometrijo</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali želite sprejeti ali prezreti zahtevani geometrijski položaj okna. Da bi se izognili konfliktom med privzeto strategijo postavitve in zahtevo okna, je strategija postavitve prezrta, ko je zahteva okna sprejeta.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Najmanjša velikost, največja velikost</emphasis
+></term>
+    <listitem>
+    <para
+>Najmanjša in največja dovoljena velikost okna.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Upoštevajte geometrijske omejitve</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali želite upoštevati zahtevano razmerje stranic okna ali <emphasis
+>osnovni prirastek (base increment)</emphasis
+>. Za razumevanje te lastnosti je potrebno nekaj ozadja. Na kratko, okna morajo od upravitelja oken zahtevati osnovno povečanje: najmanjše število slikovnih pik <emphasis
+>višine</emphasis
+> X najmanjše število slikovnih pik <emphasis
+>širine</emphasis
+> na zahtevo za spremembo velikosti. Običajno je 1x1. Druga okna pa, na primer terminalski emulatorji ali urejevalniki, uporabljajo fiksne pisave in zahtevajo njihovo osnovno povečanje glede na velikost enega znaka.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="arrangement--access"
+><title
+>Aranžma &amp; Dostop</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Zadrži zgoraj, zadrži spodaj</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali naj bo okno nad/pod vsemi drugimi.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Avtomatsko združi z identičnimi</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite združevanje (splošno znano kot <emphasis
+>zavihki</emphasis
+>) oken.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Avtomatsko združi v ospredju</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali naj bo okno aktivno, ko je dodano v trenutno samodejno skupino.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Avtomatsko združi po ID-ju (identiteti)</emphasis
+></term>
+    <listitem>
+    <para
+>Ustvarite skupino prek uporabniško določenega ID-ja. Več kot eno pravilo lahko deli isti ID, da omogoči združevanje na videz nepovezanih oken.</para>
+     </listitem>
+  </varlistentry>
+
+  <varlistentry
+><term
+><emphasis role="bold"
+>Preskoči opravilno vrstico</emphasis
+></term>
+    <listitem>
+    <para
+>Izberite, ali naj se okno prikaže v opravilni vrstici.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Preskoči pozivnik</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali naj se okno prikaže v pozivniku.</para>
+     </listitem>
+  </varlistentry>
+    </variablelist>
+<para>
+<screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Preskoči menjalnik</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali naj se okno prikaže na <guilabel
+>ALT+TAB</guilabel
+> seznamu.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bližnjica</emphasis
+></term>
+    <listitem>
+    <para
+>Oknu dodelite bližnjico. Ko kliknete <guilabel
+>Uredi ...</guilabel
+>, se prikažejo dodatna navodila.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+<sect2 id="appearance--fixes"
+><title
+>Videz &amp; Popravki</title>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Brez naslovne vrstice in okvirja</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali želite prikazati naslovno vrstico in okvir okoli okna.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Barvna shema naslovne vrstice</emphasis
+></term>
+    <listitem>
+    <para
+>Izberite barvno shemo za naslovno vrstico okna.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Aktivna/neaktivna motnost</emphasis
+></term>
+    <listitem>
+    <para
+>Ko je okno aktivno/neaktivno, nastavite njegovo motnost na določen odstotek.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Na <guilabel
+>Aktivno/neaktivno motnost</guilabel
+> lahko vplivate le, če so omogočeni <guilabel
+>Učinki namizja</guilabel
+>.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Osredotočite se na preprečevanje kraje</emphasis
+></term>
+    <listitem>
+    <para
+>Ko okno želi fokus, nastavite na lestvici (od <guilabel
+>Brez</guilabel
+> do <guilabel
+>Ekstremno</guilabel
+>), ali želite izpolniti zahtevo in jo postaviti nad vsa druga okna ali prezreti njeno zahtevo (potencialno pustite okno za drugimi okni):</para>
+<itemizedlist>
+<listitem
+><para
+>Brez – vedno dodeli fokus oknu.</para
+></listitem>
+<listitem
+><para
+>Nizko</para
+></listitem>
+<listitem
+><para
+>Nomalno</para
+></listitem>
+<listitem
+><para
+>Visoko</para
+></listitem>
+<listitem
+><para
+>Ekstremno – zahteva za fokus okna je zavrnjena. Fokus je dodeljen le z izrecno zahtevo prek miške.</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Glejte <guilabel
+>Sprejmi fokus</guilabel
+>, da naredite okno samo za branje - ne sprejemajte nobenega vnosa s tipkovnice.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Sprejmi fokus</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali okno sprejema vnos s tipkovnico. Naredi okno samo za branje.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Ignorirajte globalne bližnjice</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite med prezrtjem globalnih bližnjic (kot je določeno z <menuchoice
+><guimenu
+>Sistemskimi nastavitvami</guimenu
+><guisubmenu
+>Bližnjice in poteze</guisubmenu
+><guimenuitem
+>Globalne bližnjice</guimenuitem
+></menuchoice
+> ali z zagonom <varname 
+>kcmshell6 keys</varname
+> v <guilabel
+>konsole</guilabel
+>), medtem ko je okno aktivno.</para>
+     </listitem>
+  </varlistentry>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Zaprljivo</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali želite prikazati gumb <guilabel
+>Zapri</guilabel
+> v naslovni vrstici.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><tip
+><para
+>Končni uporabnik lahko še vedno zapre okno terminala, če konča sejo ukazne lupine, vendar bo uporaba <guilabel
+>Sprejmi fokus</guilabel
+> za onemogočanje vnosa s tipkovnico otežila zapiranje okna.</para
+></tip>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Vrsta okna</emphasis
+></term>
+    <listitem>
+    <para
+>Spremenite okno v drugo vrsto in podedujte značilnosti tega okna:</para>
+<itemizedlist>
+<listitem
+><para
+>Normalo okno</para
+></listitem>
+<listitem
+><para
+>Pogovorno okno</para
+></listitem>
+<listitem
+><para
+>Okno pripomočka</para
+></listitem>
+<listitem
+><para
+>Dok (plošča)</para
+></listitem>
+<listitem
+><para
+>Orodna vrstica</para
+></listitem>
+<listitem
+><para
+>Odtrgan meni (torn-off menu)</para
+></listitem>
+<listitem
+><para
+>Zaslon ob zagonu</para
+></listitem>
+<listitem
+><para
+>Namizje</para
+></listitem>
+<listitem
+><para
+>Samostojna menijska vrstica</para
+></listitem>
+<listitem
+><para
+>Prikaz na zaslonu</para
+></listitem>
+</itemizedlist>
+
+     </listitem>
+  </varlistentry>
+</variablelist>
+<para
+><warning
+><para
+>Uporabljajte previdno, ker lahko pride do neželenih rezultatov. Na primer, &kwin; samodejno zapre <guilabel
+>Začetni zaslon</guilabel
+> ob kliku.</para
+></warning>
+</para>
+<variablelist>
+  <varlistentry
+><term
+><emphasis role="bold"
+>Bločno sestavljanje</emphasis
+></term>
+    <listitem>
+    <para
+>Preklopite, ali želite onemogočiti sestavljanje, medtem ko okno <emphasis
+>obstaja</emphasis
+>. Če je sestavljanje omogočeno in pravilo določa onemogočanje sestavljanja, medtem ko obstaja <emphasis
+>katero koli</emphasis
+> ustrezno okno, bo sestavljanje onemogočeno. Sestavljanje je znova omogočeno, ko se zapre zadnje okno, ujemajoče s staro nastavitvijo.</para>
+     </listitem>
+  </varlistentry>
+</variablelist>
+</sect2>
+</sect1>
+</chapter>
+<chapter id="examples"
+><title
+>Primeri</title>
+<para
+><note
+><para
+>Prvi primer podrobno opisuje vse potrebne korake za ustvarjanje pravil. Da bi ta stran ohranila obvladljivo velikost, naslednji primeri navajajo le korake, specifične za primer.</para
+></note>
+</para>
+<para
+><note
+><para
+>Atribut <guilabel
+>Pozivnik</guilabel
+> se nanaša na <guilabel
+>Upravljalnik virtualnega namizja</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="pager-4-desktops.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></note>
+</para>
+<sect1 id="pin-a-window-to-a-desktop-and-set-other-attributes"
+><title
+>Pripnite okno na namizje in nastavite druge atribute</title>
+<para
+>Pripnite &akregator; na <emphasis
+>Virtualno namizje 2</emphasis
+>. Poleg tega zaženite aplikacijo z želeno velikostjo in položajem. Za vsak atribut uporabite <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Uporabi na začetku</guilabel
+>, da ga je mogoče preglasiti med izvajanjem. </para>
+<para
+>&kwin; pravilo je ustvarjeno na naslednji način: </para>
+<orderedlist>
+<listitem
+><para
+>Zaženi &akregator; na <emphasis
+>namizju dve</emphasis
+>, v velikosti in na mestu, da ustreza: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-fav.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Z desno miškino tipko kliknite naslovno vrstico in izberite <menuchoice
+><guimenu
+>Več dejanj</guimenu
+><guimenuitem
+>Nastavitve upravitelja oken ...</guimenuitem
+></menuchoice
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="config-win-behavior.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Izberite <guilabel
+>Okenska pravila</guilabel
+> v levem stolpcu in kliknite <guilabel
+>Novo...</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Prikaže se okno <guilabel
+>Urejanje nastavitev, specifičnih za okno</guilabel
+>. <guilabel
+>Ujemanje oken</guilabel
+> je privzeti zavihek: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-init.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> z <guilabel
+>zakasnitvijo 0s</guilabel
+>, kazalec se takoj spremeni v križec. Kliknite (kamor koli) znotraj &akregator; okna (vendar ne naslovne vrstice). Predstavljeni so kriteriji okna. Ujemanje je samo z imenom primarnega razreda, zato pustite potrditvena polja nepotrjena - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akgregator-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Če kliknete <guilabel
+>V redu</guilabel
+>, prejšnje okno zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+> (ki je prikazano v oknu <guilabel
+>KWin Pravilo</guilabel
+>): <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-ready-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite atribute okna: <guilabel
+>Položaj</guilabel
+>, <guilabel
+>Velikost</guilabel
+> in <guilabel
+>Namizje</guilabel
+>. Začetne vrednosti so nastavljene v <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in jih je mogoče preglasiti: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="akregator-attributes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Če v prejšnjem oknu kliknete <guilabel
+>V redu</guilabel
+>, se vrnete na glavna <guilabel
+>Pravila KWin</guilabel
+>. Navedeno je novo pravilo z njegovim opisom: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-rules-main-n-akregator.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite <guilabel
+>V redu</guilabel
+>, da zaprete okno.</para
+></listitem>
+<listitem
+><para
+>Končano.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="application-on-all-desktops-and-handle-one-child-window-uniquely"
+><title
+>Uporaba na vseh namizjih in enolično upravljanje z enim podrejenim oknom</title>
+<para
+>Razen oken za pogovore prikažite &kopete; in njegova podrejena okna na vseh namizjih ter preskočite sistemski prikazovalnik in pozivnik. Podrejena pogovorna okna obravnavajte kot matično okno, razen da jih prikaži v sistemskem oknu. </para>
+<para
+>Za vsak atribut uporabite <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Prislila</guilabel
+>, da ga ni mogoče prepisati. </para>
+<para
+>Za izvajanje zgoraj navedenega je treba ustvariti dve pravili: </para>
+<orderedlist>
+<listitem
+><para
+>Pravilo za <guilabel
+>Kopete Chat</guilabel
+> in</para
+></listitem>
+<listitem
+><para
+>Pravilo za &kopete;</para
+></listitem>
+</orderedlist>
+<para
+>Kriteriji ujemanja pravila <guilabel
+>Klepet Kopete</guilabel
+> so bolj restriktivni kot pravilo <emphasis
+>Kopete</emphasis
+>, saj se morajo ujemati z določeno vlogo okna: oknom za klepet. Zaradi <link linkend="rule-evaluation"
+>ocenjevanja pravil</link
+> obdelave mora biti pravilo <guilabel
+>kelepeta Kopete</guilabel
+> pred pravilom &kopete; pravilo na <link linkend="kopete-kwin-rule-list"
+>seznamu pravil KWin za Kopete</link
+>. </para>
+<sect2 id="kopete-chat-rule"
+><title
+>Pravilo klepeta Kopete</title>
+<para
+>Ob predpostavki, da je odprto okno <guilabel
+>Klepet Kopete</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite okno <guilabel
+>Klepet Kopete</guilabel
+>. Označite polje <guilabel
+>Vloga okna</guilabel
+>, da omejite merila za okna za klepet - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete-chat.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite naslednje atribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-chat-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+<para
+><note
+><para
+>Atribut <guilabel
+>Preskoči opravilno vrstico</guilabel
+> je nastavljen na <guilabel
+>Ne</guilabel
+>, da prikaže okno v opravilni vrstici, kar v splošnem pomeni: <emphasis
+>ne</emphasis 
+> <emphasis
+>preskoči opravilne vrstico</emphasis
+> <inlinemediaobject
+> <imageobject
+> <imagedata fileref="Face-smile.png" format="PNG"/> </imageobject
+> </inlinemediaobject
+>.</para
+></note>
+</para>
+</sect2>
+<sect2 id="kopete-rule"
+><title
+>Pravilo Kopete</title>
+<para
+>Ob predpostavki, da je &kopete; odprt: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite datoteko &kopete; okno. Ujemanje je samo z imenom primarnega razreda, zato pustite potrditvena polja nepotrjena - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-kopete.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite naslednje atribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kopete-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="kopete-kwin-rule-list"
+><title
+>Seznam pravil Kopete KWin</title>
+<para
+>Kot že omenjeno, mora zaradi <link linkend="rule-evaluation"
+>ocenjevanja pravil</link
+> obdelave pravilo <guilabel
+>Kopete Chat</guilabel
+> biti pred pravilom &kopete;: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="kwin-kopete-rules.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect2>
+</sect1>
+<sect1 id="suppress-a-window-from-showing-on-pager"
+><title
+>Prepreči, da se okno pojavi na pozivniku</title>
+<para
+><guilabel
+>KNotes</guilabel
+> trenutno ne dovoljuje, da bi njegovi zapiski preskočili pozivnik, vendar pravilo enostavno odpravi to pomanjkljivost. </para>
+<para
+>Ob predpostavki, da je na voljo okno s <emphasis
+>samolepljivim listkom</emphasis
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite poljubno okno <emphasis
+>samolepilnega listka</emphasis
+>. Ujemanje je samo z imenom primarnega razreda, zato pustite potrditvena polja nepotrjena - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-knotes.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite atribut <guilabel
+>Preskoči pozivnik </guilabel
+> s <guilabel
+>Prisila</guilabel
+> <link linkend="parameters"
+>parametrom</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="knotes-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+</sect1>
+<sect1 id="force-a-window-to-the-top"
+><title
+>Vsili okno na vrh</title>
+<para
+>Če želite aktivno okno prikazati na vrhu, nastavite njegov atribut <guilabel
+>Preprečevanje kraje fokusa</guilabel
+> na <guilabel
+>Brez</guilabel
+>, običajno v povezavi s <link linkend="parameters"
+>parametrom</link
+> <guilabel
+>Prisila</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="focus-stealing-pop2top-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot>
+</para>
+</sect1>
+<sect1 id="multiple-rules-per-application"
+><title
+>Več pravil na posamezno uporabo</title>
+<para
+><application
+>Thunderbird</application
+> ima več različnih podrejenih oken. Ta primer: </para>
+<itemizedlist>
+<listitem
+><para
+>Pripnite glavno okno <application
+>Thunderbird</application
+> na <emphasis
+>Virtualno Namizje 1</emphasis
+> z določeno velikostjo in mestom na namizju.</para
+></listitem>
+<listitem
+><para
+>Dovolite, da se okno skladatelja <application
+>Thunderbird</application
+> nahaja na poljubnem namizju in ko je aktivirano, prisilite fokus in ga pomaknite na vrh vseh oken.</para
+></listitem>
+<listitem
+><para
+>Postavite opomnik <application
+>Thunderbird</application
+> na vrh in ga ne usmerite v fokus, da ga ne zavržete nehote.</para
+></listitem>
+</itemizedlist>
+<para
+>Kriteriji ujemanja vsakega pravila so dovolj restriktivni, tako da njihov vrstni red znotraj glavnega &kwin; okna ni pomemben in ne vplivana na <link linkend="rule-evaluation"
+>vrednotenje pravil</link
+>. </para>
+<sect2 id="thunderbird---main"
+><title
+>Thunderbird - Glavno okno</title>
+<para
+>Ob predpostavki, da je <guilabel
+>glavno okno Thunderbird</guilabel
+> odprto, velikost in položaj ustrezajo: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite <guilabel
+>Glavno okno Thunderbird</guilabel
+>. Označite polje <guilabel
+>Vloga okna</guilabel
+>, da omejite merila za glavno okno - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-main.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite naslednje atribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-main-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---composer"
+><title
+>Thunderbird - skladatelj</title>
+<para
+>Ob predpostavki, da je odprto okno <guilabel
+>Thunderbird skladatelj</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite okno <guilabel
+>Thunderbird skladatelj</guilabel
+>. Označite polji <guilabel
+>Vloga okna</guilabel
+> in <guilabel
+>Vrsta okna</guilabel
+>, da omejite merila na okna sestave - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+> : <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-compose.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite naslednje atribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-compose-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+</sect2>
+<sect2 id="thunderbird---reminder"
+><title
+>Thunderbird - opomnik</title>
+<para
+>Ob predpostavki, da je odprto okno <guilabel
+>Thunderbird opomnik</guilabel
+>: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite okno <guilabel
+>Opomnik Thunderbird</guilabel
+>. Označite polja <guilabel
+>Ime sekundarnega razreda</guilabel
+> in <guilabel
+>Vrsta okna</guilabel
+>, da omejite merila na okna opomnikov - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link 
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. Vnesite smiselno besedilo v polje <guilabel
+>Opis</guilabel
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-tbird-reminder.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Omogočite naslednje atribute: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="tbird-reminder-attribute-2.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+
+</sect2>
+</sect1>
+</chapter>
+<chapter id="application-workarounds"
+><title
+>Obhod uporabe</title>
+<para
+>Spodaj so rešitve za nepravilno delujoče aplikacije. </para>
+<para
+><tip
+><para
+>Če niste seznanjeni z ustvarjanjem &kwin; Pravili, glejte ta <link linkend="pin-a-window-to-a-desktop-and-set-other-attributes"
+>podroben primer</link
+>, ki bo podlaga za vaše novo pravilo.</para
+></tip>
+</para>
+<sect1 id="full-screen-re-size-error"
+><title
+>Napaka pri spreminjanju velikosti celotnega zaslona</title>
+<para
+>&Emacs; in <guilabel
+>gVim</guilabel
+>, ko je maksimiziran (celozaslonski način) in pod določenimi pogoji lahko, naleti na težave pri spreminjanju velikosti oken - glejte <ulink url="https://bugs.kde.org/show_bug.cgi? id=252314"
+>Emacs okno spremeni velikost ...</ulink
+> A &kwin; Pravilo bo rešilo težavo. </para>
+<para
+>Ob predpostavki, da je &Emacs; okno odprto: </para>
+<orderedlist>
+<listitem
+><para
+>Uporabite <guilabel
+>Zaznaj lastnosti okna</guilabel
+> in izberite &Emacs; okno. Ujemanje je samo po <guilabel
+>imenu primarnega razreda</guilabel
+>, zato pustite potrditvena polja nepotrjena - za dodatne informacije glejte <link linkend="window-matching"
+>ujemanje oken</link
+> <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-info.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Klik na <guilabel
+>V redu</guilabel
+> v prejšnjem oknu zapolni rezultate v zavihku <guilabel
+>Ujemanje oken</guilabel
+>. V besedilno polje <guilabel
+>Opis</guilabel
+> vnesite smiselno besedilo: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="window-matching-emacs.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Ignorirajte celozaslonsko zahtevo &Emacs; tako, da omogočite atribut <guilabel
+>Upoštevaj geometrijske omejitve</guilabel
+>, ga preklopite na izklopljeno (<guilabel
+>Ne</guilabel
+>), da prezrete, in izberete <link linkend="parameters"
+>parameter</link
+> <guilabel
+>Prisili</guilabel 
+>: <screenshot>
+<screeninfo
+></screeninfo>
+  <mediaobject>
+    <imageobject>
+      <imagedata fileref="emacs-attribute.png" format="PNG"/>
+    </imageobject>
+    <textobject>
+      <phrase
+></phrase>
+    </textobject>
+  </mediaobject>
+</screenshot
+></para
+></listitem>
+<listitem
+><para
+>Kliknite za dokončanje vnosa pravila.</para
+></listitem>
+</orderedlist>
+</sect1>
+</chapter>
+
+<!--userbase-content-->
+<chapter id="credits">
+<title
+>Zasluge in licenca</title>
+      <para
+>Avtorske pravice za dokumentacijo glejte UserBase <ulink url="https://userbase.kde.org/index.php?title=KWin Rules&amp;action=history"
+>Zgodovina strani s pravili KWin</ulink
+></para>
+      <para
+>Prevod: Mojca Rob <email
+>mojca.rob@gmail.com</email
+></para
+> &underFDL; </chapter>
+&documentation.index;
+</book>
