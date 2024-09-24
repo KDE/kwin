@@ -3,6 +3,7 @@
         "Category": "Appearance",
         "Description": "Highlights screen edges and corners that trigger actions when touched as the cursor approaches them",
         "Description[ar]": "يبرز حواف الشاشة والزوايا الساخنة التي ستحدث إجراءات عند لمسها عند اقتراب المؤشر منها",
+        "Description[bg]": "Маркира краищата и ъглите на екрана,които задействат действия при докосване,когато курсорът ги приближи",
         "Description[ca@valencia]": "Ressalta les vores de la pantalla i els cantons que activen accions quan es toquen si el cursor s'hi aproxima",
         "Description[ca]": "Ressalta les vores de la pantalla i les cantonades que activen accions quan es toquen si el cursor s'hi aproxima",
         "Description[en_GB]": "Highlights screen edges and corners that trigger actions when touched as the cursor approaches them",
