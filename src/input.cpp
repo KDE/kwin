@@ -2329,8 +2329,10 @@ public:
         case QEvent::TabletEnterProximity: {
             const QPointF pos = event->globalPosF();
             m_cursorByTool[tool]->setPos(pos);
-            tool->sendProximityIn(tablet);
-            tool->sendMotion(window->mapToLocal(event->globalPosF()));
+            if (tablet) { // There should be a tablet device, but our current code can remove it earlier than expected
+                tool->sendProximityIn(tablet);
+                tool->sendMotion(window->mapToLocal(event->globalPosF()));
+            }
             break;
         }
         case QEvent::TabletLeaveProximity:
