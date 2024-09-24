@@ -1187,45 +1187,6 @@ bool Window::startInteractiveMoveResize()
     m_interactiveMoveResize.initialQuickTileMode = quickTileMode();
     m_interactiveMoveResize.initialGeometryRestore = geometryRestore();
 
-    if (requestedMaximizeMode() != MaximizeRestore) {
-        switch (interactiveMoveResizeGravity()) {
-        case Gravity::Left:
-        case Gravity::Right:
-            // Quit maximized horizontally state if the window is resized horizontally.
-            if (requestedMaximizeMode() & MaximizeHorizontal) {
-                QRectF originalGeometry = geometryRestore();
-                originalGeometry.setX(moveResizeGeometry().x());
-                originalGeometry.setWidth(moveResizeGeometry().width());
-                maximize(requestedMaximizeMode() ^ MaximizeHorizontal, originalGeometry);
-            }
-            break;
-        case Gravity::Top:
-        case Gravity::Bottom:
-            // Quit maximized vertically state if the window is resized vertically.
-            if (requestedMaximizeMode() & MaximizeVertical) {
-                QRectF originalGeometry = geometryRestore();
-                originalGeometry.setY(moveResizeGeometry().y());
-                originalGeometry.setHeight(moveResizeGeometry().height());
-                maximize(requestedMaximizeMode() ^ MaximizeVertical, originalGeometry);
-            }
-            break;
-        case Gravity::TopLeft:
-        case Gravity::BottomLeft:
-        case Gravity::TopRight:
-        case Gravity::BottomRight:
-            // Quit the maximized mode if the window is resized by dragging one of its corners.
-            maximize(MaximizeRestore, moveResizeGeometry());
-            break;
-        default:
-            break;
-        }
-    }
-
-    if (isInteractiveResize() && m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
-        setGeometryRestore(moveResizeGeometry());
-        setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
-    }
-
     updateElectricGeometryRestore();
     checkUnrestrictedInteractiveMoveResize();
     Q_EMIT interactiveMoveResizeStarted();
@@ -1385,6 +1346,48 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
 
         nextMoveResizeGeom = nextInteractiveResizeGeometry(global);
         if (nextMoveResizeGeom != currentMoveResizeGeom) {
+            if (m_tile && !m_tile->supportsResizeGravity(gravity)) {
+                setGeometryRestore(nextMoveResizeGeom);
+                setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
+                return;
+            }
+
+            if (requestedMaximizeMode() != MaximizeRestore) {
+                switch (interactiveMoveResizeGravity()) {
+                case Gravity::Left:
+                case Gravity::Right:
+                    // Quit maximized horizontally state if the window is resized horizontally.
+                    if (requestedMaximizeMode() & MaximizeHorizontal) {
+                        QRectF originalGeometry = geometryRestore();
+                        originalGeometry.setX(nextMoveResizeGeom.x());
+                        originalGeometry.setWidth(nextMoveResizeGeom.width());
+                        maximize(requestedMaximizeMode() ^ MaximizeHorizontal, originalGeometry);
+                        return;
+                    }
+                    break;
+                case Gravity::Top:
+                case Gravity::Bottom:
+                    // Quit maximized vertically state if the window is resized vertically.
+                    if (requestedMaximizeMode() & MaximizeVertical) {
+                        QRectF originalGeometry = geometryRestore();
+                        originalGeometry.setY(nextMoveResizeGeom.y());
+                        originalGeometry.setHeight(nextMoveResizeGeom.height());
+                        maximize(requestedMaximizeMode() ^ MaximizeVertical, originalGeometry);
+                        return;
+                    }
+                    break;
+                case Gravity::TopLeft:
+                case Gravity::BottomLeft:
+                case Gravity::TopRight:
+                case Gravity::BottomRight:
+                    // Quit the maximized mode if the window is resized by dragging one of its corners.
+                    maximize(MaximizeRestore, nextMoveResizeGeom);
+                    return;
+                default:
+                    Q_UNREACHABLE();
+                }
+            }
+
             doInteractiveResizeSync(nextMoveResizeGeom);
             Q_EMIT interactiveMoveResizeStepped(nextMoveResizeGeom);
         }
