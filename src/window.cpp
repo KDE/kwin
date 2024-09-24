@@ -3587,9 +3587,7 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
                 bool shiftVertical = candidateOutput != nextOutput;
                 nextOutput = candidateOutput;
 
-                if (nextOutput == currentOutput) {
-                    combined = QuickTileFlag::None; // No other screens in the tile direction, toggle tiling
-                } else {
+                if (nextOutput != currentOutput) {
                     // Move to other screen
                     tileAtPoint = nextOutput->geometry().center();
 
