@@ -38,6 +38,7 @@
 #include "workspace.h"
 
 #if KWIN_BUILD_X11
+#include "utils/x11watchdog.h"
 #include "utils/xcbutils.h"
 #include "x11eventfilter.h"
 #endif
@@ -89,6 +90,7 @@ Application::Application(Application::OperationMode mode, int &argc, char **argv
     : QApplication(argc, argv)
 #if KWIN_BUILD_X11
     , m_eventFilter(new XcbEventFilter())
+    , m_x11Watchdog(std::make_unique<X11WatchdogThread>())
 #endif
     , m_configLock(false)
     , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
@@ -647,6 +649,11 @@ bool XcbEventFilter::nativeEventFilter(const QByteArray &eventType, void *messag
         return kwinApp()->dispatchEvent(static_cast<xcb_generic_event_t *>(message));
     }
     return false;
+}
+
+X11WatchdogThread *Application::x11Watchdog() const
+{
+    return m_x11Watchdog.get();
 }
 
 #endif

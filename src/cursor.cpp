@@ -17,6 +17,7 @@
 #include "main.h"
 #include "scene/workspacescene.h"
 #include "utils/common.h"
+#include "utils/x11watchdog.h"
 
 #if KWIN_BUILD_X11
 #include "utils/xcbutils.h"
@@ -236,6 +237,7 @@ xcb_cursor_t Cursor::x11Cursor(const QByteArray &name)
         return XCB_CURSOR_NONE;
     }
 
+    X11Watchdog watchdog;
     xcb_cursor_context_t *ctx;
     if (xcb_cursor_context_new(kwinApp()->x11Connection(), Xcb::defaultScreen(), &ctx) < 0) {
         return XCB_CURSOR_NONE;

@@ -67,6 +67,7 @@ if(KWIN_BUILD_X11)
         XCB::XFIXES
 
         ${X11_X11_LIB} # to make jenkins happy
+        kwin
     )
     add_test(NAME kwin-testClientMachine COMMAND testClientMachine)
     ecm_mark_as_test(testClientMachine)
@@ -85,6 +86,7 @@ if(KWIN_BUILD_X11)
         KF6::WindowSystem
 
         XCB::XCB
+        kwin
     )
     add_test(NAME kwin-testXcbWrapper COMMAND testXcbWrapper)
     ecm_mark_as_test(testXcbWrapper)
@@ -101,6 +103,7 @@ if(KWIN_BUILD_X11)
 
         XCB::ICCCM
         XCB::XCB
+        kwin
     )
     add_test(NAME kwin-testXcbSizeHints COMMAND testXcbSizeHints)
     ecm_mark_as_test(testXcbSizeHints)
@@ -119,6 +122,7 @@ if(KWIN_BUILD_X11)
         KF6::WindowSystem
 
         XCB::XCB
+        kwin
     )
     add_test(NAME kwin-testXcbWindow COMMAND testXcbWindow)
     ecm_mark_as_test(testXcbWindow)

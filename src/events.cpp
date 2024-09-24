@@ -148,6 +148,7 @@ static xcb_window_t findEventWindow(xcb_generic_event_t *event)
  */
 bool Workspace::workspaceEvent(xcb_generic_event_t *e)
 {
+    X11Watchdog watchdog;
     const uint8_t eventType = e->response_type & ~0x80;
 
     const xcb_window_t eventWindow = findEventWindow(e);

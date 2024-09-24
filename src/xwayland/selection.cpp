@@ -47,6 +47,7 @@ xcb_atom_t Selection::mimeTypeToAtomLiteral(const QString &mimeType)
 
 QString Selection::atomName(xcb_atom_t atom)
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_get_atom_name_cookie_t nameCookie = xcb_get_atom_name(xcbConn, atom);
     xcb_get_atom_name_reply_t *nameReply = xcb_get_atom_name_reply(xcbConn, nameCookie, nullptr);
@@ -81,6 +82,7 @@ Selection::Selection(xcb_atom_t atom, QObject *parent)
     : QObject(parent)
     , m_atom(atom)
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     m_window = xcb_generate_id(kwinApp()->x11Connection());
     m_requestorWindow = m_window;
@@ -135,6 +137,7 @@ bool Selection::filterEvent(xcb_generic_event_t *event)
 
 void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool success)
 {
+    X11Watchdog watchdog;
     // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
     // 32 unconditionally. Use a union to ensure we don't disclose stack memory.
     union {
@@ -158,6 +161,7 @@ void Selection::sendSelectionNotify(xcb_selection_request_event_t *event, bool s
 
 void Selection::registerXfixes()
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     const uint32_t mask = XCB_XFIXES_SELECTION_EVENT_MASK_SET_SELECTION_OWNER | XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_WINDOW_DESTROY | XCB_XFIXES_SELECTION_EVENT_MASK_SELECTION_CLIENT_CLOSE;
     xcb_xfixes_select_selection_input(xcbConn,
@@ -197,6 +201,7 @@ void Selection::createX11Source(xcb_xfixes_selection_notify_event_t *event)
 
 void Selection::ownSelection(bool own)
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     if (own) {
         xcb_set_selection_owner(xcbConn,

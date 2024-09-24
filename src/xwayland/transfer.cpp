@@ -103,6 +103,7 @@ void TransferWltoX::startTransferFromSource()
 int TransferWltoX::flushSourceData()
 {
     Q_ASSERT(!m_chunks.isEmpty());
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     xcb_change_property(xcbConn,
@@ -125,6 +126,7 @@ int TransferWltoX::flushSourceData()
 void TransferWltoX::startIncr()
 {
     Q_ASSERT(m_chunks.size() == 1);
+    X11Watchdog watchdog;
 
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
@@ -233,6 +235,7 @@ void TransferWltoX::handlePropertyDelete()
         if (!socketNotifier() && m_chunks.isEmpty()) {
             // transfer complete
             xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+            X11Watchdog watchdog;
 
             uint32_t mask[] = {0};
             xcb_change_window_attributes(xcbConn,
@@ -261,6 +264,7 @@ TransferXtoWl::TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, qint32 fd,
 {
     // create transfer window
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    X11Watchdog watchdog;
     m_window = xcb_generate_id(xcbConn);
     const uint32_t values[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};
     xcb_create_window(xcbConn,
@@ -287,6 +291,7 @@ TransferXtoWl::TransferXtoWl(xcb_atom_t selection, xcb_atom_t target, qint32 fd,
 TransferXtoWl::~TransferXtoWl()
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    X11Watchdog watchdog;
     xcb_destroy_window(xcbConn, m_window);
     xcb_flush(xcbConn);
 
@@ -338,6 +343,7 @@ bool TransferXtoWl::handleSelectionNotify(xcb_selection_notify_event_t *event)
 void TransferXtoWl::startTransfer()
 {
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    X11Watchdog watchdog;
     auto cookie = xcb_get_property(xcbConn,
                                    1,
                                    m_window,
@@ -375,6 +381,7 @@ void TransferXtoWl::getIncrChunk()
         return;
     }
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
+    X11Watchdog watchdog;
 
     auto cookie = xcb_get_property(xcbConn,
                                    0,
@@ -415,6 +422,7 @@ void DataReceiver::transferFromProperty(xcb_get_property_reply_t *reply)
     m_propertyStart = 0;
     m_propertyReply = reply;
 
+    X11Watchdog watchdog;
     setData(static_cast<char *>(xcb_get_property_value(reply)),
             xcb_get_property_value_length(reply));
 }
@@ -456,6 +464,7 @@ void TransferXtoWl::dataSourceWrite()
     if (len == property.size()) {
         // property completely transferred
         if (incr()) {
+            X11Watchdog watchdog;
             clearSocketNotifier();
             xcb_connection_t *xcbConn = kwinApp()->x11Connection();
             xcb_delete_property(xcbConn,

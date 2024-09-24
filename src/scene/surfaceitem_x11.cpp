@@ -7,6 +7,7 @@
 #include "scene/surfaceitem_x11.h"
 #include "compositor_x11.h"
 #include "core/renderbackend.h"
+#include "utils/x11watchdog.h"
 #include "x11syncmanager.h"
 #include "x11window.h"
 
@@ -22,6 +23,7 @@ SurfaceItemX11::SurfaceItemX11(X11Window *window, Item *parent)
     connect(window, &X11Window::shapeChanged,
             this, &SurfaceItemX11::handleShapeChanged);
 
+    X11Watchdog watchdog;
     m_damageHandle = xcb_generate_id(kwinApp()->x11Connection());
     xcb_damage_create(kwinApp()->x11Connection(), m_damageHandle, window->frameId(),
                       XCB_DAMAGE_REPORT_LEVEL_NON_EMPTY);
@@ -76,6 +78,7 @@ bool SurfaceItemX11::fetchDamage()
         return true;
     }
 
+    X11Watchdog watchdog;
     xcb_xfixes_region_t region = xcb_generate_id(kwinApp()->x11Connection());
     xcb_xfixes_create_region(kwinApp()->x11Connection(), region, 0, nullptr);
     xcb_damage_subtract(kwinApp()->x11Connection(), m_damageHandle, 0, region);
@@ -95,6 +98,7 @@ void SurfaceItemX11::waitForDamage()
     }
     m_havePendingDamageRegion = false;
 
+    X11Watchdog watchdog;
     xcb_xfixes_fetch_region_reply_t *reply =
         xcb_xfixes_fetch_region_reply(kwinApp()->x11Connection(), m_damageCookie, nullptr);
     if (!reply) {
@@ -135,6 +139,7 @@ void SurfaceItemX11::destroyDamage()
 {
     if (m_damageHandle != XCB_NONE) {
         m_isDamaged = false;
+        X11Watchdog watchdog;
         xcb_damage_destroy(kwinApp()->x11Connection(), m_damageHandle);
         m_damageHandle = XCB_NONE;
     }
@@ -193,6 +198,7 @@ SurfacePixmapX11::SurfacePixmapX11(SurfaceItemX11 *item, QObject *parent)
 SurfacePixmapX11::~SurfacePixmapX11()
 {
     if (m_pixmap != XCB_PIXMAP_NONE) {
+        X11Watchdog watchdog;
         xcb_free_pixmap(kwinApp()->x11Connection(), m_pixmap);
     }
 }
@@ -219,6 +225,7 @@ void SurfacePixmapX11::create()
         return;
     }
 
+    X11Watchdog watchdog;
     XServerGrabber grabber;
     xcb_connection_t *connection = kwinApp()->x11Connection();
     xcb_window_t frame = window->frameId();

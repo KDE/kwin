@@ -519,6 +519,7 @@ void Xwayland::dispatchEvents(DispatchEventsMode mode)
         return;
     }
 
+    X11Watchdog watchdog;
     const int connectionError = xcb_connection_has_error(connection);
     if (connectionError) {
         qCWarning(KWIN_XWL, "The X11 connection broke (error %d)", connectionError);
@@ -595,6 +596,7 @@ void Xwayland::handleXwaylandReady()
         return;
     }
 
+    X11Watchdog watchdog;
     qCInfo(KWIN_XWL) << "Xwayland server started on display" << m_launcher->displayName();
 
     m_compositingManagerSelectionOwner = std::make_unique<KSelectionOwner>("_NET_WM_CM_S0", kwinApp()->x11Connection(), kwinApp()->x11RootWindow());
@@ -651,6 +653,7 @@ void Xwayland::updatePrimary()
     if (workspace()->outputOrder().empty()) {
         return;
     }
+    X11Watchdog watchdog;
     Xcb::RandR::ScreenResources resources(kwinApp()->x11RootWindow());
     xcb_randr_crtc_t *crtcs = resources.crtcs();
     if (!crtcs) {
@@ -689,6 +692,7 @@ bool Xwayland::createX11Connection()
     m_app->setX11Connection(connection);
     m_app->setX11RootWindow(screen->root);
 
+    X11Watchdog watchdog;
     m_app->createAtoms();
     m_app->installNativeX11EventFilter();
 

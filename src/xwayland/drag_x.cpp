@@ -251,6 +251,7 @@ WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
     , m_target(target)
     , m_drag(drag)
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     m_window = xcb_generate_id(xcbConn);
@@ -287,6 +288,7 @@ WlVisit::WlVisit(Window *target, XToWlDrag *drag, Dnd *dnd)
 
 WlVisit::~WlVisit()
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_destroy_window(xcbConn, m_window);
     xcb_flush(xcbConn);
@@ -362,6 +364,7 @@ bool WlVisit::handleEnter(xcb_client_message_event_t *event)
 
 void WlVisit::getMimesFromWinProperty(Mimes &offers)
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     auto cookie = xcb_get_property(xcbConn,
                                    0,
@@ -497,6 +500,7 @@ void WlVisit::unmapProxyWindow()
     if (!m_mapped) {
         return;
     }
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_unmap_window(xcbConn, m_window);
     workspace()->removeManualOverlay(m_window);

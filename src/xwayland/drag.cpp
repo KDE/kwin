@@ -27,6 +27,7 @@ Drag::~Drag()
 
 void Drag::sendClientMessage(xcb_window_t target, xcb_atom_t type, xcb_client_message_data_t *data)
 {
+    X11Watchdog watchdog;
     xcb_client_message_event_t event{
         XCB_CLIENT_MESSAGE, // response_type
         32, // format

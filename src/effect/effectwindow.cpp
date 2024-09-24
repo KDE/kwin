@@ -359,6 +359,7 @@ QByteArray EffectWindow::readProperty(long atom, long type, int format) const
     if (!kwinApp()->x11Connection()) {
         return QByteArray();
     }
+    X11Watchdog watchdog;
     uint32_t len = 32768;
     for (;;) {
         Xcb::Property prop(false, x11Window->window(), atom, XCB_ATOM_ANY, 0, len);
@@ -386,6 +387,7 @@ void EffectWindow::deleteProperty(long int atom) const
     if (!kwinApp()->x11Connection()) {
         return;
     }
+    X11Watchdog watchdog;
     xcb_delete_property(kwinApp()->x11Connection(), x11Window->window(), atom);
 #endif
 }

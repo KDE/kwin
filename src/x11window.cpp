@@ -390,6 +390,7 @@ bool X11Window::hasScheduledRelease() const
  */
 void X11Window::releaseWindow(bool on_shutdown)
 {
+    X11Watchdog watchdog;
     destroyWindowManagementInterface();
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->destroyDamage();
@@ -473,6 +474,7 @@ void X11Window::releaseWindow(bool on_shutdown)
  */
 void X11Window::destroyWindow()
 {
+    X11Watchdog watchdog;
     destroyWindowManagementInterface();
     if (SurfaceItemX11 *item = qobject_cast<SurfaceItemX11 *>(surfaceItem())) {
         item->forgetDamage();
@@ -518,6 +520,7 @@ void X11Window::destroyWindow()
 
 bool X11Window::track(xcb_window_t w)
 {
+    X11Watchdog watchdog;
     XServerGrabber xserverGrabber;
     Xcb::WindowAttributes attr(w);
     Xcb::WindowGeometry geo(w);
@@ -594,6 +597,7 @@ bool X11Window::track(xcb_window_t w)
  */
 bool X11Window::manage(xcb_window_t w, bool isMapped)
 {
+    X11Watchdog watchdog;
     StackingUpdatesBlocker stacking_blocker(workspace());
 
     Xcb::WindowAttributes attr(w);
@@ -1538,6 +1542,7 @@ void X11Window::updateShape()
             updateDecoration(true);
         }
         if (!isDecorated()) {
+            X11Watchdog watchdog;
             xcb_shape_combine(kwinApp()->x11Connection(),
                               XCB_SHAPE_SO_SET,
                               XCB_SHAPE_SK_BOUNDING,
@@ -1548,6 +1553,7 @@ void X11Window::updateShape()
                               window());
         }
     } else if (app_noborder) {
+        X11Watchdog watchdog;
         xcb_shape_mask(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING, frameId(), 0, 0, XCB_PIXMAP_NONE);
         detectNoBorder();
         app_noborder = noborder;
@@ -1574,6 +1580,7 @@ void X11Window::updateInputShape()
         return;
     }
     if (Xcb::Extensions::self()->isShapeInputAvailable()) {
+        X11Watchdog watchdog;
         // There appears to be no way to find out if a window has input
         // shape set or not, so always propagate the input shape
         // (it's the same like the bounding shape by default).
@@ -1974,6 +1981,7 @@ void X11Window::updateHiddenPreview()
     if (hiddenPreview()) {
         workspace()->forceRestacking();
         if (Xcb::Extensions::self()->isShapeInputAvailable()) {
+            X11Watchdog watchdog;
             xcb_shape_rectangles(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_INPUT,
                                  XCB_CLIP_ORDERING_UNSORTED, frameId(), 0, 0, 0, nullptr);
         }
@@ -1985,6 +1993,7 @@ void X11Window::updateHiddenPreview()
 
 void X11Window::sendClientMessage(xcb_window_t w, xcb_atom_t a, xcb_atom_t protocol, uint32_t data1, uint32_t data2, uint32_t data3)
 {
+    X11Watchdog watchdog;
     xcb_client_message_event_t ev;
     // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
     // 32 unconditionally. Add a static_assert to ensure we don't disclose
@@ -2045,6 +2054,7 @@ void X11Window::closeWindow()
  */
 void X11Window::killWindow()
 {
+    X11Watchdog watchdog;
     qCDebug(KWIN_CORE) << "X11Window::killWindow():" << window();
     if (isUnmanaged()) {
         xcb_kill_client(kwinApp()->x11Connection(), window());
@@ -2263,6 +2273,7 @@ bool X11Window::takeFocus()
     const bool effectiveTakeFocus = rules()->checkAcceptFocus(info->supportsProtocol(NET::TakeFocusProtocol));
 
     if (effectiveAcceptFocus) {
+        X11Watchdog watchdog;
         xcb_void_cookie_t cookie = xcb_set_input_focus_checked(kwinApp()->x11Connection(),
                                                                XCB_INPUT_FOCUS_POINTER_ROOT,
                                                                window(), XCB_TIME_CURRENT_TIME);
@@ -2321,6 +2332,7 @@ void X11Window::fetchName()
 
 static inline QString readNameProperty(xcb_window_t w, xcb_atom_t atom)
 {
+    X11Watchdog watchdog;
     const auto cookie = xcb_icccm_get_text_property_unchecked(kwinApp()->x11Connection(), w, atom);
     xcb_icccm_get_text_property_reply_t reply;
     if (xcb_icccm_get_wm_name_reply(kwinApp()->x11Connection(), cookie, &reply, nullptr)) {
@@ -2514,6 +2526,7 @@ bool X11Window::wantsSyncCounter() const
     // With the addition of multiple window buffers in Xwayland 1.21, X11 clients
     // are no longer able to destroy the buffer after it's been committed and not
     // released by the compositor yet.
+    X11Watchdog watchdog;
     static const quint32 xwaylandVersion = xcb_get_setup(kwinApp()->x11Connection())->release_number;
     return xwaylandVersion >= 12100000;
 }
@@ -2523,6 +2536,7 @@ void X11Window::getSyncCounter()
     if (!Xcb::Extensions::self()->isSyncAvailable()) {
         return;
     }
+    X11Watchdog watchdog;
     if (!wantsSyncCounter()) {
         return;
     }
@@ -2970,6 +2984,7 @@ void X11Window::readShowOnScreenEdge(Xcb::Property &property)
     } else if (!property.isNull() && property->type != XCB_ATOM_NONE) {
         // property value is incorrect, delete the property
         // so that the client knows that it is not hidden
+        X11Watchdog watchdog;
         xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
     } else {
         // restore
@@ -2990,6 +3005,7 @@ void X11Window::updateShowOnScreenEdge()
 void X11Window::showOnScreenEdge()
 {
     setHidden(false);
+    X11Watchdog watchdog;
     xcb_delete_property(kwinApp()->x11Connection(), window(), atoms->kde_screen_edge_show);
 }
 
@@ -3906,6 +3922,7 @@ QSizeF X11Window::basicUnit() const
  */
 void X11Window::sendSyntheticConfigureNotify()
 {
+    X11Watchdog watchdog;
     // Every X11 event is 32 bytes (see man xcb_send_event), so XCB will copy
     // 32 unconditionally. Use a union to ensure we don't disclose stack memory.
     union {
@@ -3947,6 +3964,7 @@ void X11Window::setAllowCommits(bool allow)
         return;
     }
 
+    X11Watchdog watchdog;
     uint32_t value = allow;
     xcb_change_property(kwinApp()->x11Connection(), XCB_PROP_MODE_REPLACE, frameId(),
                         atoms->xwayland_allow_commits, XCB_ATOM_CARDINAL, 32, 1, &value);
@@ -4450,6 +4468,7 @@ void X11Window::configure(const QRect &nativeFrame, const QRect &nativeWrapper, 
         // TODO: This is not required on wayland, keep it until we support Xorg session.
         if (is_shape) {
             if (!isDecorated()) {
+                X11Watchdog watchdog;
                 xcb_shape_combine(kwinApp()->x11Connection(), XCB_SHAPE_SO_SET, XCB_SHAPE_SK_BOUNDING,
                                   XCB_SHAPE_SK_BOUNDING, frameId(), m_wrapper.x(), m_wrapper.y(), window());
             }
@@ -4784,6 +4803,7 @@ bool X11Window::doStartInteractiveMoveResize()
         m_moveResizeGrabWindow.map();
         m_moveResizeGrabWindow.raise();
         kwinApp()->updateXTime();
+        X11Watchdog watchdog;
         const xcb_grab_pointer_cookie_t cookie = xcb_grab_pointer_unchecked(kwinApp()->x11Connection(), false, m_moveResizeGrabWindow,
                                                                             XCB_EVENT_MASK_BUTTON_PRESS | XCB_EVENT_MASK_BUTTON_RELEASE | XCB_EVENT_MASK_POINTER_MOTION | XCB_EVENT_MASK_ENTER_WINDOW | XCB_EVENT_MASK_LEAVE_WINDOW,
                                                                             XCB_GRAB_MODE_ASYNC, XCB_GRAB_MODE_ASYNC, m_moveResizeGrabWindow, Cursors::self()->mouse()->x11Cursor(cursor()), xTime());
@@ -5062,6 +5082,7 @@ QList<QRectF> X11Window::shapeRegion() const
     const QRectF bufferGeometry = this->bufferGeometry();
 
     if (is_shape) {
+        X11Watchdog watchdog;
         auto cookie = xcb_shape_get_rectangles_unchecked(kwinApp()->x11Connection(), frameId(), XCB_SHAPE_SK_BOUNDING);
         UniqueCPtr<xcb_shape_get_rectangles_reply_t> reply(xcb_shape_get_rectangles_reply(kwinApp()->x11Connection(), cookie, nullptr));
         if (reply) {

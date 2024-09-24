@@ -48,6 +48,7 @@ QIcon Group::icon() const
         return leader_client->icon();
     } else if (leader_wid != XCB_WINDOW_NONE) {
         QIcon ic;
+        X11Watchdog watchdog;
         NETWinInfo info(kwinApp()->x11Connection(), leader_wid, kwinApp()->x11RootWindow(), NET::WMIcon, NET::WM2IconPixmap);
         auto readIcon = [&ic, &info, this](int size, bool scale = true) {
             const QPixmap pix = KX11Extras::icon(leader_wid, size, size, scale, KX11Extras::NETWM | KX11Extras::WMHints, &info);

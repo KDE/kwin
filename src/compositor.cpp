@@ -27,6 +27,9 @@
 #include "wayland_server.h"
 #include "window.h"
 #include "workspace.h"
+#if KWIN_BUILD_X11
+#include "utils/x11watchdog.h"
+#endif
 
 #include <KLocalizedString>
 #if KWIN_BUILD_NOTIFICATIONS
@@ -116,6 +119,7 @@ void Compositor::deleteUnusedSupportProperties()
         return;
     }
     if (auto *con = kwinApp()->x11Connection()) {
+        X11Watchdog watchdog;
         for (const xcb_atom_t &atom : std::as_const(m_unusedSupportProperties)) {
             // remove property from root window
             xcb_delete_property(con, kwinApp()->x11RootWindow(), atom);

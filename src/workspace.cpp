@@ -289,6 +289,7 @@ void Workspace::initializeX11()
     if (!kwinApp()->x11Connection()) {
         return;
     }
+    X11Watchdog watchdog;
 
     atoms->retrieveHelpers();
 
@@ -1673,6 +1674,7 @@ QString Workspace::supportInformation() const
     if (auto c = kwinApp()->x11Connection()) {
         support.append(QStringLiteral("X11\n"));
         support.append(QStringLiteral("===\n"));
+        X11Watchdog watchdog;
         auto x11setup = xcb_get_setup(c);
         support.append(QStringLiteral("Vendor: %1\n").arg(QString::fromUtf8(QByteArray::fromRawData(xcb_setup_vendor(x11setup), xcb_setup_vendor_length(x11setup)))));
         support.append(QStringLiteral("Vendor Release: %1\n").arg(x11setup->release_number));

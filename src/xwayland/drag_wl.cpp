@@ -56,6 +56,7 @@ Xvisit::Xvisit(X11Window *target, AbstractDataSource *dataSource, Dnd *dnd, QObj
     , m_target(target)
     , m_dataSource(dataSource)
 {
+    X11Watchdog watchdog;
     // first check supported DND version
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,
@@ -264,6 +265,7 @@ void Xvisit::sendEnter()
             }
         }
 
+        X11Watchdog watchdog;
         xcb_change_property(kwinApp()->x11Connection(),
                             XCB_PROP_MODE_REPLACE,
                             m_dnd->window(),

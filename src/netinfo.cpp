@@ -26,6 +26,7 @@ std::unique_ptr<RootInfo> RootInfo::s_self;
 RootInfo *RootInfo::create()
 {
     Q_ASSERT(!s_self);
+    X11Watchdog watchdog;
     xcb_window_t supportWindow = xcb_generate_id(kwinApp()->x11Connection());
     const uint32_t values[] = {true};
     xcb_create_window(kwinApp()->x11Connection(), XCB_COPY_FROM_PARENT, supportWindow, kwinApp()->x11RootWindow(),
@@ -124,6 +125,7 @@ void RootInfo::destroy()
     if (!s_self) {
         return;
     }
+    X11Watchdog watchdog;
     xcb_window_t supportWindow = s_self->supportWindow();
     s_self.reset();
     xcb_destroy_window(kwinApp()->x11Connection(), supportWindow);

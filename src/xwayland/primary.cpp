@@ -31,6 +31,7 @@ namespace Xwl
 Primary::Primary(xcb_atom_t atom, QObject *parent)
     : Selection(atom, parent)
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
 
     const uint32_t clipboardValues[] = {XCB_EVENT_MASK_SUBSTRUCTURE_NOTIFY | XCB_EVENT_MASK_PROPERTY_CHANGE};

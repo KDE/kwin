@@ -19,6 +19,7 @@
 #include "main.h"
 #include "utils/c_ptr.h"
 #include "utils/version.h"
+#include "utils/x11watchdog.h"
 
 #include <QList>
 #include <QRect>
@@ -361,6 +362,7 @@ protected:
         if (m_retrieved || !m_cookie.sequence) {
             return;
         }
+        X11Watchdog watchdog;
         m_reply = Data::replyFunc(connection(), m_cookie, nullptr);
         m_retrieved = true;
     }
@@ -491,10 +493,11 @@ public:
     explicit Atom(QByteArray &&name, bool onlyIfExists = false, xcb_connection_t *c = connection())
         : m_connection(c)
         , m_retrieved(false)
-        , m_cookie(xcb_intern_atom_unchecked(m_connection, onlyIfExists, name.length(), name.constData()))
         , m_atom(XCB_ATOM_NONE)
         , m_name(std::move(name))
     {
+        X11Watchdog watchdog;
+        m_cookie = xcb_intern_atom_unchecked(m_connection, onlyIfExists, m_name.length(), m_name.constData());
     }
     Atom() = delete;
     Atom(const Atom &) = delete;
@@ -532,6 +535,7 @@ public:
         if (m_retrieved || !m_cookie.sequence) {
             return;
         }
+        X11Watchdog watchdog;
         UniqueCPtr<xcb_intern_atom_reply_t> reply(xcb_intern_atom_reply(m_connection, m_cookie, nullptr));
         if (reply) {
             m_atom = reply->atom;

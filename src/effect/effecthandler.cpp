@@ -43,6 +43,7 @@
 #include "window_property_notify_x11_filter.h"
 #include "workspace.h"
 #if KWIN_BUILD_X11
+#include "utils/x11watchdog.h"
 #include "x11window.h"
 #endif
 #if KWIN_BUILD_ACTIVITIES
@@ -92,6 +93,7 @@ static QByteArray readWindowProperty(xcb_window_t win, xcb_atom_t atom, xcb_atom
 
 static xcb_atom_t registerSupportProperty(const QByteArray &propertyName)
 {
+    X11Watchdog watchdog;
     auto c = kwinApp()->x11Connection();
     if (!c) {
         return XCB_ATOM_NONE;

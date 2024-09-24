@@ -13,7 +13,7 @@ target_sources(kwin PRIVATE
     vsyncmonitor.cpp
 )
 if (KWIN_BUILD_X11)
-    target_sources(kwin PRIVATE xcbutils.cpp)
+    target_sources(kwin PRIVATE xcbutils.cpp x11watchdog.cpp)
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")

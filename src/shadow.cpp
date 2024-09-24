@@ -128,6 +128,7 @@ std::unique_ptr<Shadow> Shadow::createShadowFromInternalWindow(Window *window)
 #if KWIN_BUILD_X11
 QList<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
 {
+    X11Watchdog watchdog;
     QList<uint32_t> ret;
     if (id != XCB_WINDOW_NONE) {
         Xcb::Property property(false, id, atoms->kde_net_wm_shadow, XCB_ATOM_CARDINAL, 0, 12);
@@ -146,6 +147,7 @@ QList<uint32_t> Shadow::readX11ShadowProperty(xcb_window_t id)
 bool Shadow::init(const QList<uint32_t> &data)
 {
 #if KWIN_BUILD_X11
+    X11Watchdog watchdog;
     QList<Xcb::WindowGeometry> pixmapGeometries(ShadowElementsCount);
     QList<xcb_get_image_cookie_t> getImageCookies(ShadowElementsCount);
     auto *c = kwinApp()->x11Connection();

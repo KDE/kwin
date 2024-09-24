@@ -87,6 +87,7 @@ bool WlSource::handleSelectionRequest(xcb_selection_request_event_t *event)
 
 void WlSource::sendTargets(xcb_selection_request_event_t *event)
 {
+    X11Watchdog watchdog;
     QList<xcb_atom_t> targets;
     targets.resize(m_offers.size() + 2);
     targets[0] = atoms->timestamp;
@@ -109,6 +110,7 @@ void WlSource::sendTargets(xcb_selection_request_event_t *event)
 
 void WlSource::sendTimestamp(xcb_selection_request_event_t *event)
 {
+    X11Watchdog watchdog;
     const xcb_timestamp_t time = timestamp();
     xcb_change_property(kwinApp()->x11Connection(),
                         XCB_PROP_MODE_REPLACE,
@@ -174,6 +176,7 @@ X11Source::~X11Source()
 
 void X11Source::getTargets()
 {
+    X11Watchdog watchdog;
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     /* will lead to a selection request event for the new owner */
     xcb_convert_selection(xcbConn,
@@ -189,6 +192,7 @@ using Mime = QPair<QString, xcb_atom_t>;
 
 void X11Source::handleTargets()
 {
+    X11Watchdog watchdog;
     // receive targets
     xcb_connection_t *xcbConn = kwinApp()->x11Connection();
     xcb_get_property_cookie_t cookie = xcb_get_property(xcbConn,

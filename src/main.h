@@ -48,6 +48,7 @@ class OutlineVisual;
 class Compositor;
 class WorkspaceScene;
 class Window;
+class X11WatchdogThread;
 
 class XcbEventFilter : public QAbstractNativeEventFilter
 {
@@ -224,6 +225,8 @@ public:
     {
         m_compositeWindow = window;
     }
+
+    X11WatchdogThread *x11Watchdog() const;
 #endif
 
     qreal xwaylandScale() const
@@ -392,6 +395,7 @@ private:
     QList<QPointer<X11EventFilterContainer>> m_eventFilters;
     QList<QPointer<X11EventFilterContainer>> m_genericEventFilters;
     std::unique_ptr<XcbEventFilter> m_eventFilter;
+    std::unique_ptr<X11WatchdogThread> m_x11Watchdog;
 #endif
     bool m_followLocale1 = false;
     bool m_configLock;
