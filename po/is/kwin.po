@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-22 02:32+0000\n"
+"POT-Creation-Date: 2024-09-24 02:49+0000\n"
 "PO-Revision-Date: 2024-07-22 14:16+0000\n"
 "Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -1231,22 +1231,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Vélarheiti: %1"
 
-#: input.cpp:2110
+#: input.cpp:2131
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Færðu teikniborðið í næsta úttak"
 
-#: input.cpp:2189
+#: input.cpp:2210
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Teikniborð fært í %1"
 
-#: input.cpp:2189
+#: input.cpp:2210
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Teikniborð skiptu um úttak"
 
-#: input.cpp:3306
+#: input.cpp:3327
 #, kde-format
 msgid "Touchpad"
 msgstr "Snertiplatti"

@@ -1,0 +1,275 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % Slovenian "INCLUDE">
+]>
+<article id="kwintabbox" lang="&language;">
+<articleinfo>
+<title
+>Preklopnik opravil</title>
+<authorgroup>
+<author
+>&Martin.Graesslin;&Martin.Graesslin.mail;</author>
+<othercredit role="translator"
+><contrib
+>Prevod:</contrib
+><firstname
+>Mojca</firstname
+><surname
+>Rob</surname
+><affiliation
+><address
+><email
+>mojca.rob@gmail.com</email
+></address
+></affiliation
+></othercredit
+> 
+</authorgroup>
+
+<date
+>30.01.2023</date>
+<releaseinfo
+>&plasma; 5.27</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>Sistemske nastavitve</keyword>
+<keyword
+>namizje</keyword>
+<keyword
+>okno</keyword>
+<keyword
+>navigacija</keyword>
+<keyword
+>zamenjava</keyword>
+<keyword
+>alt-tab</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="windows-navigating">
+<title
+>Krmarjenje med okni</title>
+
+<para
+>Preklopnik opravil omogoča uporabniku preprosto preklapljanje med trenutno odprtimi okni s tipkovnico. Je zelo nastavljiv, saj uporabnik lahko nastavlja njegovo vedenje, videz, bližnjice na tipkovnici in filtriranje oken.</para>
+
+<para>
+  <screenshot>
+    <screeninfo
+>Posnetek zaslona privzetega preklopnika opravil</screeninfo>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="taskswitcher.png" format="PNG"/>
+      </imageobject>
+    </mediaobject>
+  </screenshot>
+</para>
+
+<para
+>Preklopnik opravil se pogosto prikliče s kombinacijo tipk <keycombo
+>&Alt;&Tab;</keycombo
+>, vendar je to mogoče spremeniti. Ko ga prikličete, se prikaže seznam vseh trenutno odprtih oken, po želji filtriranih in razširjenih glede na vaše nastavitve. Seznam je lahko na primer filtriran tako, da prikazuje samo okna, ki ustrezajo določenim kriterijem, na primer tista, ki so trenutno vidna. Ko je prikazan seznam oken, se lahko uporabnik premika naprej in nazaj skozi vsa navedena okna tako, da večkrat pritisne kombinacijo tipk za prikaz preklopnika oken. Ko spustite kombinacijo tipk, boste aktivirali okno, ki je bilo izbrano na seznamu.</para>
+
+<para
+>Ker preklopnik opravil ponuja toliko konfiguracijskih možnosti, je mogoče definirati dve različni zbirki konfiguracijskih nastavitev. Ti zbirki se imenujeta <guilabel
+>Glavna</guilabel
+> in <guilabel
+>Nadomestna</guilabel
+>, vsaki pa je lahko dodeljena edinstvena kombinacija tipk.</para>
+
+<para
+>Konfiguracijske možnosti za vsako, glavno in alternativno zbirko, so predstavljene v štirih skupinah, kot sledi:</para>
+
+<sect2 id="visualization">
+<title
+>Vizualizacija</title>
+<para
+>Ta skupina konfiguracijskih možnosti nadzoruje, kako je seznam oken prikazan na zaslonu. Privzeta vizualizacija se imenuje <guilabel 
+>Vetrič</guilabel 
+>. Na levi strani zaslona navede vsa odprta okna. Druge vizualizacije vključujejo <guilabel
+>Zasuk</guilabel
+> (3D vrtiljak), <guilabel
+>Obrat</guilabel
+> (3D kup kart) in <guilabel
+>Srednje okroglo</guilabel
+> (Microsoft &Windows; -slogovni seznam ikon). Veliko več vizualizacij lahko prenesete in namestite s klikom na gumb <guibutton
+>Pridobi nove preklopnike opravil...</guibutton
+> v spodnjem desnem kotu pogovornega okna.</para>
+
+<para
+>Ko izberete vizualizacijo iz spustnega seznama, lahko kliknete gumb na desni strani seznama, da si ogledate predogled ali konfigurirate možnosti, specifične za vizualizacijo.</para>
+
+<para
+>Potrditveno polje <guilabel
+>Prikaži izbrano okno</guilabel
+> določa, kako jasno bo uporabnik videl, katero okno bo aktivirano. Če je to polje označeno, bodo skrita vsa okna, razen tistega, ki je trenutno označeno v Preklopniku opravil.</para>
+
+<note
+><para
+>V nekaterih primerih ni mogoče prikazati želene vizualizacije preklopnika opravil. Ena od teh situacij je, ko je proces, imenovan "sestavljanje", izklopljen ali onemogočen. Če se to kdaj zgodi, bo seznam oken še vedno prikazan, vendar v zelo preprosti obliki.</para
+></note>
+</sect2>
+
+<sect2 id="shortcuts">
+<title
+>Bližnjice</title>
+<para
+>Ta razdelek vam omogoča, da določite do štiri bližnjice na tipkovnici preklopnika opravil za <guilabel
+>Glavno</guilabel
+> konfiguracijo in štiri dodatne za <guilabel
+>Nadomestno</guilabel
+> konfiguracijo. <guilabel
+>Glavne</guilabel
+> bližnjice so vnaprej določene, medtem ko morate <guilabel
+>Alternativne</guilabel
+> bližnjice določiti ročno.</para>
+<para
+>V razdelku <guilabel
+>Vsa okna</guilabel
+> se bosta bližnjici <guilabel
+>Naprej</guilabel
+> in <guilabel
+>Nazaj</guilabel
+> premikali naprej in nazaj po seznamu odprtih oken.</para>
+<para
+>V razdelku <guilabel
+>Trenutna aplikacija</guilabel
+> lahko bližnjici <guilabel
+>Naprej</guilabel
+> in <guilabel
+>Nazaj</guilabel
+> nastavite za kroženje med okni trenutno aktivne aplikacije. Na primer če imate tri &dolphin; odprta okna brskalnika datotek, potem lahko s temi bližnjicami samo krožite med tremi &dolphin; okni.</para>
+<para
+>Če želite spremeniti bližnjico na tipkovnici, kliknite gumb <guibutton
+>Naprej</guibutton
+> ali <guibutton
+>Nazaj</guibutton
+> in vnesite želeno kombinacijo bližnjic. Uporabite modifikacijsko tipko, kot je &Ctrl; ali &Alt; kot del bližnjice, sicer morda ne boste mogli pravilno krožiti po seznamu oken.</para>
+
+<note
+><para
+>Za priklic preklopnika opravil je mogoče uporabiti katero koli od definiranih bližnjic na tipkovnici. Če želite priklicati preklopnik opravil brez uporabe tipkovnice, lahko določite dejanja robov zaslona v &systemsettings; modul <ulink url="help:/kcontrol/kwinscreenedges/index.html"
+><guilabel
+>Robovi zaslona</guilabel
+></ulink
+>.</para
+></note>
+</sect2>
+
+<sect2 id="content">
+<title
+>Vsebina</title>
+<para
+>Možnosti v tem razdelku delno nadzirajo, katera okna bodo prikazana na seznamu preklopnika opravil.</para>
+
+<para
+>Spustni seznam <guilabel
+>Vrstni red</guilabel
+> določa, ali naj bodo okna navedena v <guilabel
+>Vrstnem redu zlaganja</guilabel
+> ali glede na to, kaj je bilo <guilabel
+>Nedavno uporabljeno</guilabel
+>. <guilabel
+>Vrstni red zlaganja</guilabel
+> je vrstni red, v katerem so okna prikazana eno nad drugim na zaslonu, medtem ko je vrstni red <guilabel
+>Nedavno uporabljenega</guilabel
+> vrstni red, v katerem so bila okna uporabljena. Vrstni red <guilabel
+>Nedavno uporabljeno</guilabel
+> omogoča zelo enostavno preklapljanje med dvema najpogosteje uporabljenima oknoma, ker bosta vedno prikazana na prvih dveh mestih na seznamu.</para>
+
+<para
+>Možnost <guilabel
+>Vključi ikono »Pokaži namizje«</guilabel
+> doda možnost Prikaži namizje na seznam oken. To omogoča uporabniku, da preprosto izbere namizje kot 'okno' za prikaz.</para>
+
+<para
+>Možnost <guilabel
+>Samo eno okno na aplikacijo</guilabel
+> zmanjša nered tako, da prikaže samo eno okno za vsako odprto aplikacijo. Če ima aplikacija odprtih več oken, bo na seznamu prikazano zadnje aktivirano okno, druga pa ne bodo prikazana.</para>
+
+<para
+>Možnost <guilabel
+>Razvrsti minimizirana okna za neminimiziranimi okni</guilabel
+> vam bo najprej prikazala vsa neminimizirana okna, tudi če odprta dalj časa ali dlje na dnu namizja kot nekatera minimizirana okna.</para>
+</sect2>
+
+<sect2 id="filter-windows-by">
+<title
+>Filtriraj okna po</title>
+<para
+>Ta razdelek vsebuje možnosti za dodatno filtriranje seznama oken v preklopniku opravil.</para>
+
+<para
+>Možnost <guilabel
+>Virtualna namizja</guilabel
+> filtrira seznam oken glede na to, katero virtualno namizje je trenutno aktivno. Če dosledno postavljate določena okna na določena navidezna namizja, lahko ta možnost filtriranja olajša preklop na okna znotraj ali med temi navideznimi namizji. Izberite <guilabel
+>Trenutno namizje</guilabel
+>, če želite prikazati samo okna na trenutnem virtualnem namizju. Izberite <guilabel
+>Vsa druga namizja</guilabel
+>, da prikažete samo okna na virtualnih namizjih, ki trenutno niso aktivna.</para>
+
+<para
+>Možnost <guilabel
+>D</guilabel
+> filtrira seznam oken, glede na to, katera dejavnost je trenutno aktivna. Tako kot pri filtriranju virtualnih namizij lahko ta možnost olajša preklop na aplikacije znotraj ali med vsemi dejavnostmi. Izberite <guilabel
+>Trenutna dejavnost</guilabel
+>, če želite prikazati le okna, ki so del trenutne dejavnosti. Izberite <guilabel
+>Vse druge dejavnosti</guilabel
+>, da prikažete samo okna, ki so del dejavnosti, ki trenutno niso aktivne.</para>
+
+<para
+>Možnost <guilabel
+>Zasloni</guilabel
+> filtrira seznam oken glede na to, kateri zaslon je trenutno aktiven. Izberite <guilabel
+>Trenutni zaslon</guilabel
+>, če želite prikazati samo okna, ki so na zaslonu, na katerem je trenutno miškin kazalec. Izberite <guilabel
+>Vsi drugi zasloni</guilabel
+>, da prikažete okna, ki so na vseh drugih zaslonih. Ta možnost je lahko uporabna za uporabnike, ki želijo hitro preklapljati med okni, ki so na istem monitorju, oni uporabljajo več monitorjev hkrati.</para>
+<note
+><para
+>Aktivni zaslon je tisti, na katerem je trenutno kazalec miške, in ne zaslon, na katerem je trenutno aktivno okno.</para
+></note>
+
+<para
+>Možnost <guilabel
+>Minimizacija</guilabel
+> filtrira seznam oken glede na to, ali so skrita, ali ne. Izberite <guilabel
+>Vidna okna</guilabel
+>, če želite prikazati samo okna, ki niso bila pomanjšana. Izberite <guilabel
+>Skrita okna</guilabel
+>, če želite prikazati samo pomanjšana okna.</para>
+
+<para
+>Če počistite možnost v tem razdelku, za to možnost ne bo uporabljeno nobeno filtriranje. Če na primer označite možnost Zasloni in počistite ostale tri možnosti, bo seznam oken preklopnika opravil filtriran samo glede na to, katera okna so na trenutnem zaslonu.</para>
+<para
+>Vse možnosti, opisane v zgornjih razdelkih, delujejo skupaj in zagotavljajo zelo natančen nadzor nad obnašanjem in videzom preklopnika opravil. Na primer definirate lahko zbirko nastavitev <guilabel
+>Glavne</guilabel
+>, ki se prikliče s kombinacijo tipk <keycombo
+>&Alt;&Tab;</keycombo
+>. Služi za prikaz odprtih oken v vrtiljaku, za prikaz samo enega okna na aplikacijo in za zgolj ustvarjanje seznama oken, ki so na trenutnem namizju in na trenutno aktivnem zaslonu. To zagotovi zelo hitro preklapljanje oken, ki ga jih lahko razdelite na kontekst, če imate navidezni namizji »službeno« in »domače«, nato pa na istem monitorju shranite vse svoje preglednice za delo in dom.</para>
+
+<para
+>Razpoložljivost konfiguracije <guilabel
+>Nadomestnega</guilabel
+> preklopnika opravil vam omogoča še en način za preprosto filtriranje in brskanje po seznamih oken. Z osmimi kombinacijami tipk, ki so na voljo v obeh konfiguracijah preklopnika opravil, bi moralo biti mogoče enostavno in hitro krmariti skozi veliko število oken.</para>
+</sect2>
+</sect1>
+</article>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->

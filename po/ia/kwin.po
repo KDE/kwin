@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-22 02:32+0000\n"
+"POT-Creation-Date: 2024-09-24 02:49+0000\n"
 "PO-Revision-Date: 2024-09-02 15:48+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -1222,22 +1222,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nomine de hospite: %1"
 
-#: input.cpp:2110
+#: input.cpp:2131
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Move le tabletta al proxime exito"
 
-#: input.cpp:2189
+#: input.cpp:2210
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tabletta movite a %1"
 
-#: input.cpp:2189
+#: input.cpp:2210
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Exitos commutate de tablettas"
 
-#: input.cpp:3306
+#: input.cpp:3327
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
