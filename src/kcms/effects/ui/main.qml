@@ -32,53 +32,40 @@ ScrollViewKCM {
         }
     }
 
-    header: ColumnLayout {
+    header: RowLayout {
         spacing: Kirigami.Units.smallSpacing
 
-        QQC2.Label {
-            Layout.fillWidth: true
-            Layout.leftMargin: Kirigami.Units.smallSpacing
-            Layout.rightMargin: Kirigami.Units.smallSpacing
+        Kirigami.SearchField {
+            id: searchField
 
-            wrapMode: Text.WordWrap
-            text: i18n("Hint: To find out or configure how to activate an effect, look at the effect's settings.")
+            Layout.fillWidth: true
         }
 
-        RowLayout {
-            spacing: Kirigami.Units.smallSpacing
+        QQC2.ToolButton {
+            id: filterButton
 
-            Kirigami.SearchField {
-                id: searchField
+            icon.name: "view-filter"
 
-                Layout.fillWidth: true
+            checkable: true
+            checked: menu.opened
+            onClicked: menu.popup(filterButton, filterButton.width - menu.width, filterButton.height)
+
+            QQC2.ToolTip {
+                text: i18n("Configure Filter")
             }
+        }
 
-            QQC2.ToolButton {
-                id: filterButton
+        QQC2.Menu {
+            id: menu
 
-                icon.name: "view-filter"
+            modal: true
 
+            QQC2.MenuItem {
                 checkable: true
-                checked: menu.opened
-                onClicked: menu.popup(filterButton, filterButton.width - menu.width, filterButton.height)
+                checked: searchModel.excludeUnsupported
+                text: i18n("Exclude unsupported effects")
 
-                QQC2.ToolTip {
-                    text: i18n("Configure Filter")
-                }
-            }
-
-            QQC2.Menu {
-                id: menu
-
-                modal: true
-
-                QQC2.MenuItem {
-                    checkable: true
-                    checked: searchModel.excludeUnsupported
-                    text: i18n("Exclude unsupported effects")
-
-                    onToggled: searchModel.excludeUnsupported = checked
-                }
+                onToggled: searchModel.excludeUnsupported = checked
             }
         }
     }
