@@ -1159,12 +1159,8 @@ bool Window::startInteractiveMoveResize()
     }
 
     Q_ASSERT(!isInteractiveMoveResize());
-    Q_ASSERT(QWidget::keyboardGrabber() == nullptr);
-    Q_ASSERT(QWidget::mouseGrabber() == nullptr);
     stopDelayedInteractiveMoveResize();
-    if (QApplication::activePopupWidget() != nullptr) {
-        return false; // popups have grab
-    }
+
     if (isRequestedFullScreen() && (workspace()->outputs().count() < 2 || !isMovableAcrossScreens())) {
         return false;
     }
