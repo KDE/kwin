@@ -45,7 +45,7 @@ class KWIN_EXPORT ScriptedEffect : public KWin::AnimationEffect
     Q_PROPERTY(bool isActiveFullScreenEffect READ isActiveFullScreenEffect NOTIFY isActiveFullScreenEffectChanged)
 
 public:
-    // copied from kwineffects.h
+    // copied from effecthandler.h
     enum DataRole {
         // Grab roles are used to force all other animations to ignore the window.
         // The value of the data is set to the Effect's `this` value.
@@ -54,9 +54,7 @@ public:
         WindowMinimizedGrabRole,
         WindowUnminimizedGrabRole,
         WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
-        WindowBlurBehindRole, ///< For single windows to blur behind
         WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
-        WindowBackgroundContrastRole, ///< For single windows to enable Background contrast
     };
     enum EasingCurve {
         GaussianCurve = 128
