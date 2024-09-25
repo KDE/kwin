@@ -3476,7 +3476,7 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
 
             if (mode & QuickTileFlag::Left) {
                 if (oldMode & QuickTileFlag::Right) {
-                    combined.setFlag(QuickTileFlag::Right, false);
+                    combined = mode;
                 } else {
                     combined.setFlag(QuickTileFlag::Left);
                 }
@@ -3484,7 +3484,7 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
 
             if (mode & QuickTileFlag::Right) {
                 if (oldMode & QuickTileFlag::Left) {
-                    combined.setFlag(QuickTileFlag::Left, false);
+                    combined = mode;
                 } else {
                     combined.setFlag(QuickTileFlag::Right);
                 }
@@ -3492,7 +3492,7 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
 
             if (mode & QuickTileFlag::Top) {
                 if (oldMode & QuickTileFlag::Bottom) {
-                    combined.setFlag(QuickTileFlag::Bottom, false);
+                    combined = mode;
                 } else {
                     combined.setFlag(QuickTileFlag::Top);
                 }
@@ -3500,7 +3500,7 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
 
             if (mode & QuickTileFlag::Bottom) {
                 if (oldMode & QuickTileFlag::Top) {
-                    combined.setFlag(QuickTileFlag::Top, false);
+                    combined = mode;
                 } else {
                     combined.setFlag(QuickTileFlag::Bottom);
                 }
