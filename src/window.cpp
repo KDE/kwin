@@ -8,6 +8,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 #include "window.h"
+#include "effect/effecthandler.h"
 #include "effect/globals.h"
 #include "utils/common.h"
 
@@ -709,6 +710,12 @@ void Window::demandAttention(bool set)
     m_demandsAttention = set;
     doSetDemandsAttention();
     workspace()->windowAttentionChanged(this, set);
+
+    EffectWindow *effectWindow = this->effectWindow();
+    if (effectWindow && set && !isActive()) {
+        effectWindow->setData(WindowVibrateRole, "attention");
+    }
+
     Q_EMIT demandsAttentionChanged();
 }
 
