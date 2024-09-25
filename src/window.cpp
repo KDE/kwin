@@ -3475,34 +3475,30 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
             QuickTileMode combined = oldMode;
 
             if (mode & QuickTileFlag::Left) {
+                combined.setFlag(QuickTileFlag::Left);
                 if (oldMode & QuickTileFlag::Right) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Left);
+                    combined.setFlag(QuickTileFlag::Right, false);
                 }
             }
 
             if (mode & QuickTileFlag::Right) {
+                combined.setFlag(QuickTileFlag::Right);
                 if (oldMode & QuickTileFlag::Left) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Right);
+                    combined.setFlag(QuickTileFlag::Left, false);
                 }
             }
 
             if (mode & QuickTileFlag::Top) {
+                combined.setFlag(QuickTileFlag::Top);
                 if (oldMode & QuickTileFlag::Bottom) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Top);
+                    combined.setFlag(QuickTileFlag::Bottom, false);
                 }
             }
 
             if (mode & QuickTileFlag::Bottom) {
+                combined.setFlag(QuickTileFlag::Bottom);
                 if (oldMode & QuickTileFlag::Top) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Bottom);
+                    combined.setFlag(QuickTileFlag::Top, false);
                 }
             }
 
