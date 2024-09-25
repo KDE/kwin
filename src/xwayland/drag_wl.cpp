@@ -116,7 +116,7 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
     // position round trip finished
     m_pos.pending = false;
 
-    if (!m_state.dropped) {
+    if (!m_state.dropRequested) {
         // as long as the drop is not yet done determine requested action
         m_preferredAction = Dnd::atomToClientAction(actionAtom);
         determineProposedAction();
@@ -127,7 +127,7 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
         // send cached position
         m_pos.cached = false;
         sendPosition(m_pos.cache);
-    } else if (m_state.dropped) {
+    } else if (m_state.dropRequested) {
         // drop was done in between, now close it out
         drop();
     }
@@ -143,7 +143,7 @@ bool Xvisit::handleFinished(xcb_client_message_event_t *event)
         return false;
     }
 
-    if (!m_state.dropped) {
+    if (!m_state.dropRequested) {
         // drop was never done
         doFinish();
         return true;
@@ -179,7 +179,7 @@ void Xvisit::sendPosition(const QPointF &globalPos)
 
 void Xvisit::leave()
 {
-    if (m_state.dropped) {
+    if (m_state.dropRequested) {
         // dropped, but not yet finished, it'll be cleaned up when the drag finishes
         return;
     }
@@ -339,7 +339,7 @@ void Xvisit::requestDragAndDropAction()
 void Xvisit::drop()
 {
     Q_ASSERT(!m_state.finished);
-    m_state.dropped = true;
+    m_state.dropRequested = true;
     // stop further updates
     // TODO: revisit when we allow ask action
     stopConnections();
@@ -351,14 +351,19 @@ void Xvisit::drop()
         // wait for pending position roundtrip
         return;
     }
-    if (!m_accepts) {
-        // target does not accept current action/offer
-        sendLeave();
-        doFinish();
-        return;
+
+    if (!m_state.dropCompleted) {
+        m_state.dropCompleted = true;
+
+        if (!m_accepts) {
+            // target does not accept current action/offer
+            sendLeave();
+            doFinish();
+            return;
+        }
+        // dnd session ended successfully
+        sendDrop(XCB_CURRENT_TIME);
     }
-    // dnd session ended successfully
-    sendDrop(XCB_CURRENT_TIME);
 }
 
 void Xvisit::doFinish()
