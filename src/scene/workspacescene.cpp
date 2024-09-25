@@ -193,6 +193,7 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
     }
     QList<SurfaceItem *> ret;
     if (!effects->blocksDirectScanout()) {
+        QRegion occlusion;
         for (int i = stacking_order.count() - 1; i >= 0; i--) {
             WindowItem *windowItem = stacking_order[i];
             Window *window = windowItem->window();
@@ -206,11 +207,12 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
                     continue;
                 }
 
-                QRegion occlusion;
                 if (!addCandidates(surfaceItem, ret, maxCount, occlusion)) {
                     return {};
                 }
-                return ret;
+                if (occlusion.contains(painted_screen->geometry())) {
+                    return ret;
+                }
             }
         }
     }
