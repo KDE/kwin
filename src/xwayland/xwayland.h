@@ -81,6 +81,8 @@ private:
     bool createX11Connection();
     void destroyX11Connection();
 
+    void runXWaylandStartupScripts();
+
     DragEventReply dragMoveFilter(Window *target) override;
     AbstractDropHandler *xwlDropHandler() override;
     QSocketNotifier *m_socketNotifier = nullptr;
