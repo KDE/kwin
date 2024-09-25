@@ -243,6 +243,7 @@ void DrmOutput::updateConnectorProperties()
 }
 
 static const bool s_allowColorspaceIntel = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_INTEL_COLORSPACE") == 1;
+static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_DRM_ALLOW_NVIDIA_COLORSPACE") == 1;
 
 Output::Capabilities DrmOutput::computeCapabilities() const
 {
@@ -263,7 +264,13 @@ Output::Capabilities DrmOutput::computeCapabilities() const
         capabilities |= Capability::HighDynamicRange;
     }
     if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) && m_connector->edid()->supportsBT2020()) {
-        if (!m_gpu->isI915() || s_allowColorspaceIntel) {
+        bool allowColorspace = true;
+        if (m_gpu->isI915()) {
+            allowColorspace &= s_allowColorspaceIntel;
+        } else if (m_gpu->isNVidia()) {
+            allowColorspace &= s_allowColorspaceNVidia;
+        }
+        if (allowColorspace) {
             capabilities |= Capability::WideColorGamut;
         }
     }
