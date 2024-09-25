@@ -3476,34 +3476,49 @@ void Window::handleQuickTileShortcut(QuickTileMode mode)
 
             if (mode & QuickTileFlag::Left) {
                 if (oldMode & QuickTileFlag::Right) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Left);
+                    // was on opposite side: remove the flag to flip sides
+                    combined.setFlag(QuickTileFlag::Right, false);
+                } else if (oldMode & QuickTileFlag::Top && oldMode & QuickTileFlag::Left) {
+                    // was quarter-tiled: remove the flag to make it half-tiled
+                    combined.setFlag(QuickTileFlag::Top, false);
+                } else if (oldMode & QuickTileFlag::Bottom && oldMode & QuickTileFlag::Left) {
+                    // was quarter-tiled: remove the flag to make it half-tiled
+                    combined.setFlag(QuickTileFlag::Bottom, false);
                 }
+                combined.setFlag(QuickTileFlag::Left);
             }
 
             if (mode & QuickTileFlag::Right) {
                 if (oldMode & QuickTileFlag::Left) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Right);
+                    combined.setFlag(QuickTileFlag::Left, false);
+                } else if (oldMode & QuickTileFlag::Top && oldMode & QuickTileFlag::Right) {
+                    combined.setFlag(QuickTileFlag::Top, false);
+                } else if (oldMode & QuickTileFlag::Bottom && oldMode & QuickTileFlag::Right) {
+                    combined.setFlag(QuickTileFlag::Bottom, false);
                 }
+                combined.setFlag(QuickTileFlag::Right);
             }
 
             if (mode & QuickTileFlag::Top) {
                 if (oldMode & QuickTileFlag::Bottom) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Top);
+                    combined.setFlag(QuickTileFlag::Bottom, false);
+                } else if (oldMode & QuickTileFlag::Left && oldMode & QuickTileFlag::Top) {
+                    combined.setFlag(QuickTileFlag::Left, false);
+                } else if (oldMode & QuickTileFlag::Right && oldMode & QuickTileFlag::Top) {
+                    combined.setFlag(QuickTileFlag::Right, false);
                 }
+                combined.setFlag(QuickTileFlag::Top);
             }
 
             if (mode & QuickTileFlag::Bottom) {
                 if (oldMode & QuickTileFlag::Top) {
-                    combined = mode;
-                } else {
-                    combined.setFlag(QuickTileFlag::Bottom);
+                    combined.setFlag(QuickTileFlag::Top, false);
+                } else if (oldMode & QuickTileFlag::Left && oldMode & QuickTileFlag::Bottom) {
+                    combined.setFlag(QuickTileFlag::Left, false);
+                } else if (oldMode & QuickTileFlag::Right && oldMode & QuickTileFlag::Bottom) {
+                    combined.setFlag(QuickTileFlag::Right, false);
                 }
+                combined.setFlag(QuickTileFlag::Bottom);
             }
 
             // If trying to tile to the side that the window is already tiled to move the window to the next
