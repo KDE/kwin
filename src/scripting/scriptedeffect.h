@@ -55,6 +55,7 @@ public:
         WindowUnminimizedGrabRole,
         WindowForceBlurRole, ///< For fullscreen effects to enforce blurring of windows,
         WindowForceBackgroundContrastRole, ///< For fullscreen effects to enforce the background contrast,
+        WindowVibrateRole, ///< For effects to make a window vibrate
     };
     enum EasingCurve {
         GaussianCurve = 128

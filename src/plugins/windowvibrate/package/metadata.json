@@ -1,0 +1,23 @@
+{
+    "KPackageStructure": "KWin/Effect",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "m.liu.jin@gmail.com",
+                "Name": "Jin Liu"
+            }
+        ],
+        "Category": "Focus",
+        "Description": "Make the window vibrate a few times",
+        "EnabledByDefault": true,
+        "Icon": "preferences-system-windows-script-test",
+        "Id": "windowvibrate",
+        "License": "GPL",
+        "Name": "Window Vibrate"
+    },
+    "X-KDE-Ordering": 70,
+    "X-Plasma-API": "javascript",
+    "org.kde.kwin.effect": {
+        "internal": true
+    }
+}
