@@ -98,13 +98,6 @@ private:
 
     QMetaObject::Connection m_motionConnection;
 
-    struct
-    {
-        bool pending = false;
-        bool cached = false;
-        QPoint cache;
-    } m_pos;
-
     // supported by the Wl source
     DataDeviceManagerInterface::DnDActions m_supportedActions = DataDeviceManagerInterface::DnDAction::None;
     // preferred by the X client

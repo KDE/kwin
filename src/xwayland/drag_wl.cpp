@@ -111,10 +111,6 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
     if (m_dataSource && !m_dataSource->mimeTypes().isEmpty()) {
         m_dataSource->accept(m_accepts ? m_dataSource->mimeTypes().constFirst() : QString());
     }
-    // TODO: we could optimize via rectangle in data32[2] and data32[3]
-
-    // position round trip finished
-    m_pos.pending = false;
 
     if (!m_state.dropped) {
         // as long as the drop is not yet done determine requested action
@@ -123,14 +119,6 @@ bool Xvisit::handleStatus(xcb_client_message_event_t *event)
         requestDragAndDropAction();
     }
 
-    if (m_pos.cached) {
-        // send cached position
-        m_pos.cached = false;
-        sendPosition(m_pos.cache);
-    } else if (m_state.dropped) {
-        // drop was done in between, now close it out
-        drop();
-    }
     return true;
 }
 
@@ -160,13 +148,6 @@ void Xvisit::sendPosition(const QPointF &globalPos)
 {
     const int16_t x = Xcb::toXNative(globalPos.x());
     const int16_t y = Xcb::toXNative(globalPos.y());
-
-    if (m_pos.pending) {
-        m_pos.cache = QPoint(x, y);
-        m_pos.cached = true;
-        return;
-    }
-    m_pos.pending = true;
 
     xcb_client_message_data_t data = {};
     data.data32[0] = m_dnd->window();
@@ -347,10 +328,6 @@ void Xvisit::drop()
         // wait for enter (init + offers)
         return;
     }
-    if (m_pos.pending) {
-        // wait for pending position roundtrip
-        return;
-    }
     if (!m_accepts) {
         // target does not accept current action/offer
         sendLeave();
@@ -364,7 +341,6 @@ void Xvisit::drop()
 void Xvisit::doFinish()
 {
     m_state.finished = true;
-    m_pos.cached = false;
     stopConnections();
     Q_EMIT finish(this);
 }
