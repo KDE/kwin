@@ -1222,6 +1222,7 @@ bool Window::startInteractiveMoveResize()
     }
 
     if (isInteractiveResize() && m_tile && !m_tile->supportsResizeGravity(interactiveMoveResizeGravity())) {
+        setGeometryRestore(moveResizeGeometry());
         setQuickTileModeAtCurrentPosition(QuickTileFlag::None);
     }
 
