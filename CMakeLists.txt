@@ -299,6 +299,10 @@ if (KWIN_BUILD_X11)
         URL "https://www.x.org"
         TYPE REQUIRED
     )
+
+    # Scripts to run on XWayland startup
+    set(XWAYLAND_SESSION_SCRIPTS "/etc/xdg/Xwayland-session.d")
+
 else()
     set(KWIN_BUILD_X11_BACKEND OFF CACHE BOOL "Enable building kwin_x11" FORCE)
 endif()
@@ -531,5 +535,6 @@ if (KWIN_BUILD_X11_BACKEND)
     ecm_install_configured_files(INPUT plasma-kwin_x11.service.in @ONLY
                 DESTINATION ${KDE_INSTALL_SYSTEMDUSERUNITDIR})
 endif()
+
 
 ki18n_install(po)

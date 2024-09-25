@@ -38,6 +38,7 @@
 
 #include <QAbstractEventDispatcher>
 #include <QDataStream>
+#include <QDir>
 #include <QFile>
 #include <QRandomGenerator>
 #include <QScopeGuard>
@@ -620,6 +621,8 @@ void Xwayland::handleXwaylandReady()
     connect(options, &Options::xwaylandEavesdropsChanged, this, &Xwayland::refreshEavesdropping);
     connect(options, &Options::xwaylandEavesdropsMouseChanged, this, &Xwayland::refreshEavesdropping);
 
+    runXWaylandStartupScripts();
+
     Q_EMIT started();
 }
 
@@ -719,6 +722,23 @@ void Xwayland::destroyX11Connection()
     m_app->setX11RootWindow(XCB_WINDOW_NONE);
 
     Q_EMIT m_app->x11ConnectionChanged();
+}
+
+void Xwayland::runXWaylandStartupScripts()
+{
+    QDir scriptDir(XWAYLAND_SESSION_SCRIPTS);
+    const QStringList scripts = scriptDir.entryList(QStringList(), QDir::Files, QDir::Name);
+
+    for (const QString &script : scripts) {
+        const QString path = scriptDir.filePath(script);
+        qCDebug(KWIN_XWL) << "Running Xwayland startup script" << path;
+        QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
+
+        auto *process = new QProcess;
+        process->setProcessEnvironment(environment);
+        process->start(path);
+        connect(process, &QProcess::finished, process, &QProcess::deleteLater);
+    }
 }
 
 DragEventReply Xwayland::dragMoveFilter(Window *target)
