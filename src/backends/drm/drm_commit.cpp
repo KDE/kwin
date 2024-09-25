@@ -16,7 +16,7 @@
 #include "drm_object.h"
 #include "drm_property.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QThread>
 
 using namespace std::chrono_literals;
@@ -31,7 +31,7 @@ DrmCommit::DrmCommit(DrmGpu *gpu)
 
 DrmCommit::~DrmCommit()
 {
-    Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 }
 
 DrmGpu *DrmCommit::gpu() const
@@ -162,7 +162,7 @@ bool DrmAtomicCommit::doCommit(uint32_t flags)
 
 void DrmAtomicCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
-    Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     for (const auto &[plane, buffer] : m_buffers) {
         plane->setCurrentBuffer(buffer);
     }
@@ -289,7 +289,7 @@ bool DrmLegacyCommit::doPageflip(PresentationMode mode)
 
 void DrmLegacyCommit::pageFlipped(std::chrono::nanoseconds timestamp)
 {
-    Q_ASSERT(QThread::currentThread() == QApplication::instance()->thread());
+    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
     m_crtc->setCurrent(m_buffer);
     if (m_frame) {
         m_frame->presented(timestamp, m_mode);
