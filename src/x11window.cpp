@@ -459,10 +459,18 @@ void X11Window::releaseWindow(bool on_shutdown)
         m_frame.reset();
         ungrabXServer();
     }
+
+    if (m_syncRequest.failsafeTimeout) {
+        m_syncRequest.failsafeTimeout->stop();
+    }
+    if (m_syncRequest.timeout) {
+        m_syncRequest.timeout->stop();
+    }
     if (m_syncRequest.alarm != XCB_NONE) {
         xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
         m_syncRequest.alarm = XCB_NONE;
     }
+
     unblockCompositing();
     unref();
 }
@@ -506,6 +514,13 @@ void X11Window::destroyWindow()
         m_client.reset(); // invalidate
         m_wrapper.reset();
         m_frame.reset();
+    }
+
+    if (m_syncRequest.failsafeTimeout) {
+        m_syncRequest.failsafeTimeout->stop();
+    }
+    if (m_syncRequest.timeout) {
+        m_syncRequest.timeout->stop();
     }
     if (m_syncRequest.alarm != XCB_NONE) {
         xcb_sync_destroy_alarm(kwinApp()->x11Connection(), m_syncRequest.alarm);
