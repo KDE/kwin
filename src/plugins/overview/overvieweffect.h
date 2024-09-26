@@ -8,10 +8,10 @@
 
 #include "effect/effecttogglablestate.h"
 #include "effect/quickeffect.h"
+#include <KRunner/RunnerManager>
 
 namespace KWin
 {
-
 class VirtualDesktop;
 
 class OverviewEffect : public QuickSceneEffect
@@ -29,7 +29,8 @@ class OverviewEffect : public QuickSceneEffect
     Q_PROPERTY(qreal gridPartialActivationFactor READ gridPartialActivationFactor NOTIFY gridPartialActivationFactorChanged)
     Q_PROPERTY(bool gridGestureInProgress READ gridGestureInProgress NOTIFY gridGestureInProgressChanged)
     Q_PROPERTY(QPointF desktopOffset READ desktopOffset NOTIFY desktopOffsetChanged)
-    Q_PROPERTY(QString searchText MEMBER m_searchText NOTIFY searchTextChanged)
+    Q_PROPERTY(QString searchText MEMBER m_searchText WRITE setSearchText NOTIFY searchTextChanged)
+    Q_PROPERTY(KRunner::RunnerManager *manager MEMBER m_manager CONSTANT)
 
 public:
     OverviewEffect();
@@ -55,6 +56,8 @@ public:
     int requestedEffectChainPosition() const override;
     bool borderActivated(ElectricBorder border) override;
     void reconfigure(ReconfigureFlags flags) override;
+
+    void setSearchText(const QString &text);
 
 Q_SIGNALS:
     void animationDurationChanged();
@@ -96,6 +99,7 @@ private:
     QPointF m_desktopOffset;
     bool m_filterWindows = true;
     int m_animationDuration = 400;
+    KRunner::RunnerManager *const m_manager;
 };
 
 } // namespace KWin

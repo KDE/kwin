@@ -747,8 +747,21 @@ FocusScope {
                 anchors.bottom: parent.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
-                height: effect.filterWindows ? parent.height - placeholderMessage.height - Kirigami.Units.largeSpacing : parent.height - Kirigami.Units.largeSpacing
-                queryString: effect.searchText
+                height: effect.filterWindows
+                    ? parent.height - placeholderMessage.height - Kirigami.Units.largeSpacing
+                    : parent.height - Kirigami.Units.largeSpacing
+
+                runnerManager: effect.manager
+
+                // we want this binding to apply after init
+                property bool initialized: false
+
+                // Only bind queryString after init is done
+                queryString: initialized ? effect.searchText : ""
+
+                Component.onCompleted: {
+                    initialized = true
+                }
 
                 onActivated: {
                     effect.deactivate();
