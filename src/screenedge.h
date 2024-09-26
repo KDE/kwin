@@ -30,7 +30,6 @@
 #include <xcb/xcb.h>
 
 class QAction;
-class QMouseEvent;
 
 namespace KWin
 {
@@ -330,7 +329,6 @@ public:
      * to do this if an effect input window is active.
      */
     void ensureOnTop();
-    bool isEntered(QMouseEvent *event);
 
 #if KWIN_BUILD_X11
     /**

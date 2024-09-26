@@ -1722,7 +1722,9 @@ public:
     }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
-        workspace()->screenEdges()->isEntered(event);
+        if (event->type() == QEvent::MouseMove) {
+            workspace()->screenEdges()->check(event->globalPos(), event->timestamp());
+        }
         // always forward
         return false;
     }

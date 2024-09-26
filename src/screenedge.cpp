@@ -1463,54 +1463,6 @@ bool ScreenEdges::inApproachGeometry(const QPoint &pos) const
     return false;
 }
 
-bool ScreenEdges::isEntered(QMouseEvent *event)
-{
-    if (event->type() != QEvent::MouseMove) {
-        return false;
-    }
-    bool activated = false;
-    bool activatedForClient = false;
-    for (const auto &edge : m_edges) {
-        if (!edge->isReserved() || edge->isBlocked()) {
-            continue;
-        }
-        if (!edge->activatesForPointer()) {
-            continue;
-        }
-        if (edge->client() && effects->activeFullScreenEffect()) {
-            if (edge->isApproaching()) {
-                edge->stopApproaching();
-            }
-            continue;
-        }
-        if (edge->approachGeometry().contains(event->globalPos())) {
-            if (!edge->isApproaching()) {
-                edge->startApproaching();
-            } else {
-                edge->updateApproaching(event->globalPos());
-            }
-        } else {
-            if (edge->isApproaching()) {
-                edge->stopApproaching();
-            }
-        }
-        // always send event to all edges so that they can update their state
-        if (edge->check(event->globalPos(), std::chrono::milliseconds(event->timestamp()))) {
-            if (edge->client()) {
-                activatedForClient = true;
-            }
-        }
-    }
-    if (activatedForClient) {
-        for (const auto &edge : m_edges) {
-            if (edge->client()) {
-                edge->markAsTriggered(event->globalPos(), std::chrono::milliseconds(event->timestamp()));
-            }
-        }
-    }
-    return activated;
-}
-
 #if KWIN_BUILD_X11
 bool ScreenEdges::handleEnterNotifiy(xcb_window_t window, const QPoint &point, const std::chrono::microseconds &timestamp)
 {
