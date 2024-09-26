@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-09-26 00:40+0000\n"
 "PO-Revision-Date: 2013-02-22 14:26+0530\n"
 "Last-Translator: Chetan Khona <chetan@kompkin.com>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
@@ -24,9 +24,10 @@ msgid "Import KWin Script"
 msgstr "के-विन स्क्रिप्ट आयात करा..."
 
 #: module.cpp:53
-#, kde-format
-msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "KWin Scripts"
+msgid "KWin Script (*.kwinscript)"
+msgstr "के-विन स्क्रिप्ट्स"
 
 #: module.cpp:65
 #, kde-format
@@ -76,9 +77,6 @@ msgstr ""
 #~ msgstr ""
 #~ "sandeep.shedmake@gmail.com, \n"
 #~ "chetan@kompkin.com"
-
-#~ msgid "KWin Scripts"
-#~ msgstr "के-विन स्क्रिप्ट्स"
 
 #~ msgid "Configure KWin scripts"
 #~ msgstr "के-विन स्क्रिप्ट्स संयोजीत करा"

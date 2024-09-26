@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: bosnianuniversetranslation\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-09-26 00:40+0000\n"
 "PO-Revision-Date: 2013-11-03 21:03+0000\n"
 "Last-Translator: Samir Ribić <Unknown>\n"
 "Language-Team: Bosnian <bs@li.org>\n"
@@ -26,8 +26,9 @@ msgid "Import KWin Script"
 msgstr "Uvezi KWin skriptu"
 
 #: module.cpp:53
-#, kde-format
-msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+#, fuzzy, kde-format
+#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgid "KWin Script (*.kwinscript)"
 msgstr "*.kwinscript|KWin skripte (*.kwinscript)"
 
 #: module.cpp:65

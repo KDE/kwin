@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-09-26 00:40+0000\n"
 "PO-Revision-Date: 2012-06-14 13:51+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -25,9 +25,10 @@ msgid "Import KWin Script"
 msgstr "នាំចូល​ស្គ្រីប KWin​..."
 
 #: module.cpp:53
-#, kde-format
-msgid "*.kwinscript|KWin scripts (*.kwinscript)"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "KWin Scripts"
+msgid "KWin Script (*.kwinscript)"
+msgstr "ស្គ្រិប KWin"
 
 #: module.cpp:65
 #, kde-format
@@ -75,9 +76,6 @@ msgstr ""
 #~ msgstr ""
 #~ "khoemsokhem@khmeros.info,​​mornmet@khmeros.info,sutha@khmeros.info,"
 #~ "ratanak@khmeros.info,sophea@khmeros.info"
-
-#~ msgid "KWin Scripts"
-#~ msgstr "ស្គ្រិប KWin"
 
 #~ msgid "Configure KWin scripts"
 #~ msgstr "កំណត់​រចនាសម្ព័ន្ធ​ស្គ្រីប KWin"

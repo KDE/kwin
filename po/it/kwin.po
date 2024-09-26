@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
-"PO-Revision-Date: 2024-08-22 11:48+0200\n"
+"POT-Creation-Date: 2024-09-26 00:40+0000\n"
+"PO-Revision-Date: 2024-09-20 06:25+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2057,10 +2057,9 @@ msgstr "&Altezza:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Attiva/disattiva effetto del clic del mouse"
+msgstr "Attiva/Disattiva l'animazione del clic del mouse"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -4295,7 +4294,7 @@ msgstr "Vai al desktop inferiore"
 msgid "Switch to Desktop %1"
 msgstr "Vai al desktop %1"
 
-#: window.cpp:3120
+#: window.cpp:3124
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

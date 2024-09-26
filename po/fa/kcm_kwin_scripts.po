@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-09-26 00:40+0000\n"
 "PO-Revision-Date: ۲۰۱۶-۰۸-۲۰ ۱۶:۵۲+0330\n"
 "Last-Translator: Mohi Mirdamadi <mohi@ubuntu.ir>\n"
 "Language-Team: Persian <kde-i18n-fa@kde.org>\n"
@@ -25,8 +25,9 @@ msgid "Import KWin Script"
 msgstr "وارد کردن دست‌نوشته‌ی KWin..."
 
 #: module.cpp:53
-#, kde-format
-msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+#, fuzzy, kde-format
+#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+msgid "KWin Script (*.kwinscript)"
 msgstr "*.kwinscript|KWin دست‌نوشته‌ها (*.kwinscript)"
 
 #: module.cpp:65
