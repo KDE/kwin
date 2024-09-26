@@ -474,6 +474,7 @@ FocusScope {
                     // Scales down further, still in grid, to have some gaps between
                     // the desktops.
                     Scale {
+                        id: gapsScale
                         origin.x: width / 2
                         origin.y: height / 2
                         xScale: 1 - 0.02 * gridVal
@@ -653,6 +654,7 @@ FocusScope {
                         partialActivationFactor: container.overviewVal + container.gridVal * effect.organizedGrid
                         // Parent switch needed for the option "organize windows in gridview"  to work correctly
                         contentItemParent: container.gridVal > 0 ? mainBackground : container
+                        elementScale: gridScale.xScale * gapsScale.xScale
 
                         // This is preferable over using gestureInProgress values since gridVal and
                         // overviewVal are animated even after the gesture ends, and since the partial

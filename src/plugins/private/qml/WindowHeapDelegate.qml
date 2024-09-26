@@ -27,6 +27,7 @@ ExpoCell {
     property bool gestureInProgress: effect.gestureInProgress
     // Where the internal contentItem will be parented to
     property Item contentItemParent: this
+    property real elementScale: 1
 
     // no desktops is a special value which means "All Desktops"
     readonly property bool presentOnCurrentDesktop: !window.desktops.length || window.desktops.indexOf(KWinComponents.Workspace.currentDesktop) !== -1
@@ -370,6 +371,13 @@ ExpoCell {
                 Accessible.name: text
 
                 onClicked: thumb.window.closeWindow();
+            }
+
+            transform: Scale {
+                origin.x: closeButton.width
+                origin.y: 0
+                xScale: 1 / elementScale
+                yScale: xScale
             }
         }
 
