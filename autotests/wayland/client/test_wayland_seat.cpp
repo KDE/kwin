@@ -89,7 +89,6 @@ private Q_SLOTS:
     void init();
     void cleanup();
 
-    void testName();
     void testCapabilities_data();
     void testCapabilities();
     void testPointer();
@@ -196,9 +195,8 @@ void TestWaylandSeat::init()
     registry.setup();
     QVERIFY(compositorSpy.wait());
 
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display, QStringLiteral("seat0"), m_display);
     QVERIFY(m_seatInterface);
-    m_seatInterface->setName(QStringLiteral("seat0"));
     QVERIFY(seatSpy.wait());
 
     m_compositor = new KWayland::Client::Compositor(this);
@@ -287,21 +285,6 @@ bool TestWaylandSeat::sync()
     WaylandSyncPoint syncPoint(m_connection, m_queue);
     QSignalSpy doneSpy(&syncPoint, &WaylandSyncPoint::done);
     return doneSpy.wait();
-}
-
-void TestWaylandSeat::testName()
-{
-    // no name set yet
-    QCOMPARE(m_seat->name(), QStringLiteral("seat0"));
-
-    QSignalSpy spy(m_seat, &KWayland::Client::Seat::nameChanged);
-
-    const QString name = QStringLiteral("foobar");
-    m_seatInterface->setName(name);
-    QVERIFY(spy.wait());
-    QCOMPARE(m_seat->name(), name);
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.first().first().toString(), name);
 }
 
 void TestWaylandSeat::testCapabilities_data()

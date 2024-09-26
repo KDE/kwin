@@ -195,7 +195,7 @@ void TestInputMethodInterface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = new SeatInterface(&m_display, this);
+    m_seat = new SeatInterface(&m_display, QStringLiteral("seat0"), this);
     m_serverCompositor = new CompositorInterface(&m_display, this);
     m_inputMethodIface = new InputMethodV1Interface(&m_display, this);
     m_inputPanelIface = new InputPanelV1Interface(&m_display, this);

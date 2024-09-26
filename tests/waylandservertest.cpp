@@ -106,8 +106,7 @@ int main(int argc, char **argv)
 
     QGuiApplication app(argc, argv);
 
-    SeatInterface *seat = new SeatInterface(&display);
-    seat->setName(QStringLiteral("testSeat0"));
+    new SeatInterface(&display, QStringLiteral("testSeat0"));
 
     return app.exec();
 }

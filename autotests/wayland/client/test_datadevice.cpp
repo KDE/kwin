@@ -109,7 +109,7 @@ void TestDataDevice::init()
     m_dataDeviceManager =
         registry.createDataDeviceManager(dataDeviceManagerSpy.first().first().value<quint32>(), dataDeviceManagerSpy.first().last().value<quint32>(), this);
 
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display, QStringLiteral("seat0"), m_display);
     m_seatInterface->setHasPointer(true);
 
     QVERIFY(seatSpy.wait());

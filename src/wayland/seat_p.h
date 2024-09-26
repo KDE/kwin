@@ -36,7 +36,7 @@ class SeatInterfacePrivate : public QtWaylandServer::wl_seat
 public:
     // exported for unit tests
     KWIN_EXPORT static SeatInterfacePrivate *get(SeatInterface *seat);
-    SeatInterfacePrivate(SeatInterface *q, Display *display);
+    SeatInterfacePrivate(SeatInterface *q, Display *display, const QString &name);
 
     void sendCapabilities();
     QList<DataDeviceInterface *> dataDevicesForSurface(SurfaceInterface *surface) const;

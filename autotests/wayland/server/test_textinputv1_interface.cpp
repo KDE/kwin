@@ -110,7 +110,7 @@ void TestTextInputV1Interface::initTestCase()
     m_display.start();
     QVERIFY(m_display.isRunning());
 
-    m_seat = new SeatInterface(&m_display, this);
+    m_seat = new SeatInterface(&m_display, QStringLiteral("seat0"), this);
     m_seat->setHasKeyboard(true);
 
     m_serverCompositor = new CompositorInterface(&m_display, this);

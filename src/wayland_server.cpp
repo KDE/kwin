@@ -14,6 +14,7 @@
 #include "core/drmdevice.h"
 #include "core/output.h"
 #include "core/outputbackend.h"
+#include "core/session.h"
 #include "idle_inhibition.h"
 #include "inputpanelv1integration.h"
 #include "layershellv1integration.h"
@@ -398,7 +399,7 @@ bool WaylandServer::init()
     new SecurityContextManagerV1Interface(m_display, m_display);
     new FractionalScaleManagerV1Interface(m_display, m_display);
     m_display->createShm();
-    m_seat = new SeatInterface(m_display, m_display);
+    m_seat = new SeatInterface(m_display, kwinApp()->session()->seat(), m_display);
     new PointerGesturesV1Interface(m_display, m_display);
     new PointerConstraintsV1Interface(m_display, m_display);
     new RelativePointerManagerV1Interface(m_display, m_display);

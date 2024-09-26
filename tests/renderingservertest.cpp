@@ -256,10 +256,9 @@ int main(int argc, char **argv)
 
     auto outputInterface = std::make_unique<OutputInterface>(&display, outputHandle.get());
 
-    SeatInterface *seat = new SeatInterface(&display);
+    SeatInterface *seat = new SeatInterface(&display, QStringLiteral("testSeat0"));
     seat->setHasKeyboard(true);
     seat->setHasPointer(true);
-    seat->setName(QStringLiteral("testSeat0"));
 
     CompositorWindow compositorWindow;
     compositorWindow.setSeat(seat);

@@ -69,7 +69,7 @@ void TestPointerConstraints::init()
     m_display->start();
     QVERIFY(m_display->isRunning());
     m_display->createShm();
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display, QStringLiteral("seat0"), m_display);
     m_seatInterface->setHasPointer(true);
     m_compositorInterface = new CompositorInterface(m_display, m_display);
     m_pointerConstraintsInterface = new PointerConstraintsV1Interface(m_display, m_display);

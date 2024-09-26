@@ -153,7 +153,7 @@ class KWIN_EXPORT SeatInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit SeatInterface(Display *display, QObject *parent = nullptr);
+    explicit SeatInterface(Display *display, const QString &name, QObject *parent = nullptr);
     virtual ~SeatInterface();
 
     Display *display() const;
@@ -162,7 +162,6 @@ public:
     bool hasKeyboard() const;
     bool hasTouch() const;
 
-    void setName(const QString &name);
     void setHasPointer(bool has);
     void setHasKeyboard(bool has);
     void setHasTouch(bool has);
@@ -677,7 +676,6 @@ public:
     static SeatInterface *get(wl_resource *native);
 
 Q_SIGNALS:
-    void nameChanged(const QString &);
     void hasPointerChanged(bool);
     void hasKeyboardChanged(bool);
     void hasTouchChanged(bool);

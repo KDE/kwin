@@ -59,10 +59,11 @@ SeatInterfacePrivate *SeatInterfacePrivate::get(SeatInterface *seat)
     return seat->d.get();
 }
 
-SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display)
+SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display, const QString &name)
     : QtWaylandServer::wl_seat(*display, s_version)
     , q(q)
     , display(display)
+    , name(name)
 {
     textInputV1 = new TextInputV1Interface(q);
     textInputV2 = new TextInputV2Interface(q);
@@ -103,9 +104,9 @@ void SeatInterfacePrivate::seat_release(Resource *resource)
     wl_resource_destroy(resource->handle);
 }
 
-SeatInterface::SeatInterface(Display *display, QObject *parent)
+SeatInterface::SeatInterface(Display *display, const QString &name, QObject *parent)
     : QObject(parent)
-    , d(new SeatInterfacePrivate(this, display))
+    , d(new SeatInterfacePrivate(this, display, name))
 {
     DisplayPrivate *displayPrivate = DisplayPrivate::get(d->display);
     displayPrivate->seats.append(this);
@@ -391,23 +392,6 @@ void SeatInterface::setHasTouch(bool has)
 
     d->sendCapabilities();
     Q_EMIT hasTouchChanged(has);
-}
-
-void SeatInterface::setName(const QString &name)
-{
-    if (d->name == name) {
-        return;
-    }
-    d->name = name;
-
-    const auto seatResources = d->resourceMap();
-    for (SeatInterfacePrivate::Resource *resource : seatResources) {
-        if (resource->version() >= WL_SEAT_NAME_SINCE_VERSION) {
-            d->send_name(resource->handle, d->name);
-        }
-    }
-
-    Q_EMIT nameChanged(d->name);
 }
 
 QString SeatInterface::name() const

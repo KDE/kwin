@@ -102,7 +102,7 @@ void XdgShellTest::init()
     m_output2Handle = std::make_unique<FakeOutput>();
     m_output2Handle->setMode(QSize(1024, 768), 60000);
     m_output2Interface = new OutputInterface(m_display, m_output2Handle.get(), m_display);
-    m_seatInterface = new SeatInterface(m_display, m_display);
+    m_seatInterface = new SeatInterface(m_display, QStringLiteral("seat0"), m_display);
     m_seatInterface->setHasKeyboard(true);
     m_seatInterface->setHasPointer(true);
     m_seatInterface->setHasTouch(true);
