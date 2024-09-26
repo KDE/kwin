@@ -98,6 +98,7 @@ class /*LIBAURORAE_EXPORT*/ AuroraeTheme : public QObject
     Q_PROPERTY(QString keepBelowButtonPath READ keepBelowButtonPath NOTIFY themeChanged)
     Q_PROPERTY(QString shadeButtonPath READ shadeButtonPath NOTIFY themeChanged)
     Q_PROPERTY(QString helpButtonPath READ helpButtonPath NOTIFY themeChanged)
+    Q_PROPERTY(QString appMenuButtonPath READ appMenuButtonPath NOTIFY themeChanged)
     Q_PROPERTY(QColor activeTextColor READ activeTextColor NOTIFY themeChanged)
     Q_PROPERTY(QColor inactiveTextColor READ inactiveTextColor NOTIFY themeChanged)
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ alignment NOTIFY themeChanged)
@@ -156,6 +157,7 @@ public:
     QString keepBelowButtonPath() const;
     QString shadeButtonPath() const;
     QString helpButtonPath() const;
+    QString appMenuButtonPath() const;
     QColor activeTextColor() const;
     QColor inactiveTextColor() const;
     Qt::Alignment alignment() const;

@@ -52,6 +52,9 @@ DecorationButton {
         case DecorationOptions.DecorationButtonQuickHelp:
             // help
             return auroraeTheme.helpButtonPath;
+        case DecorationOptions.DecorationButtonApplicationMenu:
+            // app menu
+            return auroraeTheme.appMenuButtonPath;
         case DecorationOptions.DecorationButtonMinimize:
             // minimize
             return auroraeTheme.minimizeButtonPath;

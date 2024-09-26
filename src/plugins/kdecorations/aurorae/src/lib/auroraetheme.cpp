@@ -120,6 +120,7 @@ void AuroraeTheme::loadTheme(const QString &name, const KConfig &config)
     d->initButtonFrame(KeepBelowButton);
     d->initButtonFrame(ShadeButton);
     d->initButtonFrame(HelpButton);
+    d->initButtonFrame(AppMenuButton);
 
     d->themeConfig.load(config);
     Q_EMIT themeChanged();
@@ -411,6 +412,7 @@ BUTTON_PATH(keepAboveButtonPath, KeepAboveButton)
 BUTTON_PATH(keepBelowButtonPath, KeepBelowButton)
 BUTTON_PATH(shadeButtonPath, ShadeButton)
 BUTTON_PATH(helpButtonPath, HelpButton)
+BUTTON_PATH(appMenuButtonPath, AppMenuButton)
 
 #undef BUTTON_PATH
 
