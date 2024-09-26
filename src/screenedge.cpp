@@ -1495,7 +1495,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     }
     if (activatedForClient) {
         for (const auto &edge : m_edges) {
-            if (edge) {
+            if (edge->client()) {
                 edge->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC));
             }
         }
