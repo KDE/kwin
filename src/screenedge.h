@@ -22,7 +22,6 @@
 // KDE includes
 #include <KSharedConfig>
 // Qt
-#include <QDateTime>
 #include <QList>
 #include <QObject>
 #include <QRect>
@@ -71,8 +70,8 @@ public:
     bool isCorner() const;
     bool isScreenEdge() const;
     bool triggersFor(const QPoint &cursorPos) const;
-    bool check(const QPoint &cursorPos, const QDateTime &triggerTime, bool forceNoPushBack = false);
-    void markAsTriggered(const QPoint &cursorPos, const QDateTime &triggerTime);
+    bool check(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime, bool forceNoPushBack = false);
+    void markAsTriggered(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime);
     bool isReserved() const;
     const QRect &approachGeometry() const;
 
@@ -136,7 +135,7 @@ protected:
 private:
     void activate();
     void deactivate();
-    bool canActivate(const QPoint &cursorPos, const QDateTime &triggerTime);
+    bool canActivate(const QPoint &cursorPos, const std::chrono::microseconds &triggerTime);
     void handle(const QPoint &cursorPos);
     bool handleAction(ElectricBorderAction action);
     bool handlePointerAction()
@@ -163,8 +162,8 @@ private:
     int m_reserved;
     QRect m_geometry;
     QRect m_approachGeometry;
-    QDateTime m_lastTrigger;
-    QDateTime m_lastReset;
+    std::optional<std::chrono::microseconds> m_lastTrigger = std::nullopt;
+    std::optional<std::chrono::microseconds> m_lastReset = std::nullopt;
     QPoint m_triggeredPoint;
     QHash<QObject *, QByteArray> m_callBacks;
     bool m_approaching;
@@ -226,8 +225,6 @@ class KWIN_EXPORT ScreenEdges : public QObject
     Q_PROPERTY(bool desktopSwitching READ isDesktopSwitching)
     Q_PROPERTY(bool desktopSwitchingMovingClients READ isDesktopSwitchingMovingClients)
     Q_PROPERTY(QSize cursorPushBackDistance READ cursorPushBackDistance)
-    Q_PROPERTY(int timeThreshold READ timeThreshold)
-    Q_PROPERTY(int reActivateThreshold READ reActivationThreshold)
     Q_PROPERTY(int actionTopLeft READ actionTopLeft)
     Q_PROPERTY(int actionTop READ actionTop)
     Q_PROPERTY(int actionTopRight READ actionTopRight)
@@ -254,7 +251,7 @@ public:
      * @param now the time when the function is called
      * @param forceNoPushBack needs to be called to workaround some DnD clients, don't use unless you want to chek on a DnD event
      */
-    void check(const QPoint &pos, const QDateTime &now, bool forceNoPushBack = false);
+    void check(const QPoint &pos, const std::chrono::microseconds &now, bool forceNoPushBack = false);
     /**
      * Check, if @p pos is in the approach geometry of any edge.
      */
@@ -351,11 +348,11 @@ public:
     /**
      * Minimum time between the push back of the cursor and the activation by re-entering the edge.
      */
-    int timeThreshold() const;
+    std::chrono::milliseconds timeThreshold() const;
     /**
      * Minimum time between triggers
      */
-    int reActivationThreshold() const;
+    std::chrono::milliseconds reActivationThreshold() const;
     ElectricBorderAction actionTopLeft() const;
     ElectricBorderAction actionTop() const;
     ElectricBorderAction actionTopRight() const;
@@ -374,7 +371,7 @@ public:
 
 #if KWIN_BUILD_X11
     bool handleDndNotify(xcb_window_t window, const QPoint &point);
-    bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const QDateTime &timestamp);
+    bool handleEnterNotifiy(xcb_window_t window, const QPoint &point, const std::chrono::microseconds &timestamp);
 #endif
     bool remainActiveOnFullscreen() const;
     const std::vector<std::unique_ptr<Edge>> &edges() const;
@@ -409,8 +406,8 @@ private:
     void setDesktopSwitching(bool enable);
     void setDesktopSwitchingMovingClients(bool enable);
     void setCursorPushBackDistance(const QSize &distance);
-    void setTimeThreshold(int threshold);
-    void setReActivationThreshold(int threshold);
+    void setTimeThreshold(std::chrono::milliseconds threshold);
+    void setReActivationThreshold(std::chrono::milliseconds threshold);
     void createHorizontalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
     void createVerticalEdge(ElectricBorder border, const QRect &screen, const QRect &fullArea, Output *output);
     std::unique_ptr<Edge> createEdge(ElectricBorder border, int x, int y, int width, int height, Output *output, bool createAction = true);
@@ -424,8 +421,8 @@ private:
     bool m_desktopSwitching;
     bool m_desktopSwitchingMovingClients;
     QSize m_cursorPushBackDistance;
-    int m_timeThreshold;
-    int m_reactivateThreshold;
+    std::chrono::milliseconds m_timeThreshold = std::chrono::milliseconds::zero();
+    std::chrono::milliseconds m_reactivateThreshold = std::chrono::milliseconds::zero();
     Qt::Orientations m_virtualDesktopLayout;
     std::vector<std::unique_ptr<Edge>> m_edges;
     KSharedConfig::Ptr m_config;
@@ -566,12 +563,12 @@ inline bool ScreenEdges::isDesktopSwitchingMovingClients() const
     return m_desktopSwitchingMovingClients;
 }
 
-inline int ScreenEdges::reActivationThreshold() const
+inline std::chrono::milliseconds ScreenEdges::reActivationThreshold() const
 {
     return m_reactivateThreshold;
 }
 
-inline int ScreenEdges::timeThreshold() const
+inline std::chrono::milliseconds ScreenEdges::timeThreshold() const
 {
     return m_timeThreshold;
 }
@@ -595,13 +592,13 @@ inline void ScreenEdges::setDesktopSwitchingMovingClients(bool enable)
     m_desktopSwitchingMovingClients = enable;
 }
 
-inline void ScreenEdges::setReActivationThreshold(int threshold)
+inline void ScreenEdges::setReActivationThreshold(std::chrono::milliseconds threshold)
 {
     Q_ASSERT(threshold >= m_timeThreshold);
     m_reactivateThreshold = threshold;
 }
 
-inline void ScreenEdges::setTimeThreshold(int threshold)
+inline void ScreenEdges::setTimeThreshold(std::chrono::milliseconds threshold)
 {
     m_timeThreshold = threshold;
 }

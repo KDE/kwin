@@ -1181,7 +1181,7 @@ bool X11Window::motionNotifyEvent(xcb_window_t w, int state, int x, int y, int x
         updateInteractiveMoveResize(QPointF(x_root, y_root), x11ToQtKeyboardModifiers(state));
 
         if (isInteractiveMove()) {
-            workspace()->screenEdges()->check(QPoint(x_root, y_root), QDateTime::fromMSecsSinceEpoch(xTime(), Qt::UTC));
+            workspace()->screenEdges()->check(QPoint(x_root, y_root), std::chrono::milliseconds(xTime()));
         }
     }
 
