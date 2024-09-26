@@ -61,7 +61,7 @@ public:
     /**
      * channel factors adapted to the target color space + brightness setting multiplied in
      */
-    QVector3D effectiveChannelFactors() const;
+    QVector3D adaptedChannelFactors() const;
     void updateConnectorProperties();
 
     /**
