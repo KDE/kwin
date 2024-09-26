@@ -3363,6 +3363,10 @@ void Window::setMoveResizeOutput(Output *output)
 
 void Window::move(const QPointF &point)
 {
+    if (isDeleted()) {
+        return;
+    }
+
     const QRectF rect = QRectF(point, m_moveResizeGeometry.size());
 
     setMoveResizeGeometry(rect);
@@ -3371,6 +3375,10 @@ void Window::move(const QPointF &point)
 
 void Window::resize(const QSizeF &size)
 {
+    if (isDeleted()) {
+        return;
+    }
+
     const QRectF rect = QRectF(m_moveResizeGeometry.topLeft(), size);
 
     setMoveResizeGeometry(rect);
@@ -3379,6 +3387,10 @@ void Window::resize(const QSizeF &size)
 
 void Window::moveResize(const QRectF &rect)
 {
+    if (isDeleted()) {
+        return;
+    }
+
     setMoveResizeGeometry(rect);
     moveResizeInternal(rect, MoveResizeMode::MoveResize);
 }
