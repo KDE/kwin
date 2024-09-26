@@ -79,6 +79,5 @@ void OverviewEffectConfig::defaults()
 
 } // namespace KWin
 
-#include "overvieweffectkcm.moc"
-
 #include "moc_overvieweffectkcm.cpp"
+#include "overvieweffectkcm.moc"
