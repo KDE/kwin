@@ -1432,6 +1432,12 @@ void ScreenEdges::check(const QPoint &pos, const std::chrono::microseconds &now,
         if (!edge->activatesForPointer()) {
             continue;
         }
+        if (edge->client() && effects->activeFullScreenEffect()) {
+            if (edge->isApproaching()) {
+                edge->stopApproaching();
+            }
+            continue;
+        }
         if (edge->approachGeometry().contains(pos)) {
             edge->startApproaching();
         }
