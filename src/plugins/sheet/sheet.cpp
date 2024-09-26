@@ -148,6 +148,7 @@ void SheetEffect::slotWindowAdded(EffectWindow *w)
     }
 
     Animation &animation = m_animations[w];
+    animation.deletedRef = EffectWindowDeletedRef(w);
     animation.parentY = 0;
     animation.timeLine.reset();
     animation.timeLine.setDuration(m_duration);
