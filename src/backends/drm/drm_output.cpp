@@ -405,7 +405,10 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
-    return ColorDescription(containerColorimetry, transferFunction, referenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
+
+    const double brightnessFactor = !m_brightnessDevice || effectiveHdr ? props->brightness.value_or(m_state.brightness) : 1.0;
+    const double effectiveReferenceLuminance = 25 + (referenceLuminance - 25) * brightnessFactor;
+    return ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry);
 }
 
 void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props)
@@ -472,9 +475,12 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
         } else {
             device->setBrightness(m_state.brightness);
         }
-        // reset the brightness factors
-        tryKmsColorOffloading();
     }
+    // reset the brightness factors
+    State next = m_state;
+    next.colorDescription = createColorDescription(std::make_shared<OutputChangeSet>());
+    setState(next);
+    tryKmsColorOffloading();
 }
 
 void DrmOutput::revertQueuedChanges()
@@ -516,7 +522,7 @@ void DrmOutput::tryKmsColorOffloading()
     }
     // TODO this doesn't allow using only a CTM for night light offloading
     // maybe relax correctness in that case and apply night light in non-linear space?
-    const QVector3D channelFactors = effectiveChannelFactors();
+    const QVector3D channelFactors = adaptedChannelFactors();
     const double maxLuminance = colorDescription().maxHdrLuminance().value_or(colorDescription().referenceLuminance());
     const ColorDescription optimal = colorDescription().transferFunction().type == TransferFunction::gamma22 ? colorDescription() : colorDescription().withTransferFunction(TransferFunction(TransferFunction::gamma22, 0, maxLuminance));
     ColorPipeline colorPipeline = ColorPipeline::create(optimal, colorDescription(), RenderingIntent::RelativeColorimetric);
@@ -543,19 +549,11 @@ bool DrmOutput::needsChannelFactorFallback() const
     return m_channelFactorsNeedShaderFallback;
 }
 
-QVector3D DrmOutput::effectiveChannelFactors() const
+QVector3D DrmOutput::adaptedChannelFactors() const
 {
-    QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(colorDescription(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
+    const QVector3D ret = ColorDescription::sRGB.toOther(colorDescription(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
     // normalize red to be the original brightness value again
-    adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
-    if (m_state.highDynamicRange || !m_brightnessDevice) {
-        // enforce a minimum of 25 nits for the reference luminance
-        constexpr double minLuminance = 25;
-        const double brightnessFactor = (m_state.brightness * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
-        return adaptedChannelFactors * brightnessFactor;
-    } else {
-        return adaptedChannelFactors;
-    }
+    return ret * m_channelFactors.x() / ret.x();
 }
 
 const ColorDescription &DrmOutput::scanoutColorDescription() const
