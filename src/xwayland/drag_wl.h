@@ -115,7 +115,8 @@ private:
     struct
     {
         bool entered = false;
-        bool dropped = false;
+        bool dropRequested = false;
+        bool dropCompleted = false;
         bool finished = false;
     } m_state;
 
