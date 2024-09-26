@@ -239,8 +239,6 @@ bool Edge::activatesForPointer() const
         return false;
     }
 
-    bool isMovingWindow = false;
-
     // Most actions do not handle drag and drop properly yet
     // but at least allow "show desktop" and "application launcher".
     if (waylandServer() && waylandServer()->seat()->isDragPointer()) {
@@ -255,12 +253,12 @@ bool Edge::activatesForPointer() const
         if (!c || c->isInteractiveResize()) {
             return false;
         }
-        isMovingWindow = true;
     }
 
     if (m_client) {
         return true;
     }
+    const bool isMovingWindow = Workspace::self()->moveResizeWindow() && !Workspace::self()->moveResizeWindow()->isInteractiveResize();
     if (m_edges->isDesktopSwitching() || (m_edges->isDesktopSwitchingMovingClients() && isMovingWindow)) {
         const bool canSwitch = (isLeft() && VirtualDesktopManager::self()->toLeft(nullptr, options->isRollOverDesktops()) != VirtualDesktopManager::self()->currentDesktop())
             || (isRight() && VirtualDesktopManager::self()->toRight(nullptr, options->isRollOverDesktops()) != VirtualDesktopManager::self()->currentDesktop())
