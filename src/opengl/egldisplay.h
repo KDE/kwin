@@ -15,6 +15,7 @@
 #include <QList>
 #include <QSize>
 #include <epoxy/egl.h>
+#include <sys/types.h>
 
 namespace KWin
 {
