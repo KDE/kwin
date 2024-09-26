@@ -53,6 +53,7 @@ option(KWIN_BUILD_X11 "Enable building X11 common code and Xwayland support" ON)
 option(KWIN_BUILD_X11_BACKEND "Enable building kwin_x11" ON)
 option(KWIN_BUILD_GLOBALSHORTCUTS "Enable building of KWin with global shortcuts support" ON)
 option(KWIN_BUILD_RUNNERS "Enable building of KWin with krunner support" ON)
+option(KWIN_BUILD_OVERVIEW "Enable building of KWin overview that integrates into KRunner" ON)
 
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
     Concurrent
@@ -109,6 +110,10 @@ if(KWIN_BUILD_KCMS)
         Service
         XmlGui
     )
+endif()
+
+if(KWIN_BUILD_OVERVIEW)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS Runner)
 endif()
 
 if(KWIN_BUILD_TABBOX AND KWIN_BUILD_KCMS)

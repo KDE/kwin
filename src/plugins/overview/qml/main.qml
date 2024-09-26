@@ -751,6 +751,8 @@ FocusScope {
                 anchors.horizontalCenter: parent.horizontalCenter
                 width: parent.width / 2
                 height: effect.filterWindows ? parent.height - placeholderMessage.height - Kirigami.Units.largeSpacing : parent.height - Kirigami.Units.largeSpacing
+                // runnerManager binding before the search text to avoid launching the query with some other internal instance
+                runnerManager: effect.manager
                 queryString: effect.searchText
 
                 onActivated: {
