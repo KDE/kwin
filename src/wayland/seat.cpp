@@ -74,11 +74,10 @@ SeatInterfacePrivate::SeatInterfacePrivate(SeatInterface *q, Display *display)
 
 void SeatInterfacePrivate::seat_bind_resource(Resource *resource)
 {
-    send_capabilities(resource->handle, capabilities);
-
     if (resource->version() >= WL_SEAT_NAME_SINCE_VERSION) {
         send_name(resource->handle, name);
     }
+    send_capabilities(resource->handle, capabilities);
 }
 
 void SeatInterfacePrivate::seat_get_pointer(Resource *resource, uint32_t id)
