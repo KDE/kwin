@@ -2625,6 +2625,8 @@ void InputRedirection::setupWorkspace()
 {
     connect(workspace(), &Workspace::outputsChanged, this, &InputRedirection::updateScreens);
     if (waylandServer()) {
+        waylandServer()->seat()->setName(kwinApp()->session()->seat());
+
         m_keyboard->init();
         m_pointer->init();
         m_touch->init();
