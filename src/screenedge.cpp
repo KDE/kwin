@@ -727,6 +727,7 @@ void Edge::updateApproaching(const QPointF &point)
     }
 }
 
+#if KWIN_BUILD_X11
 quint32 Edge::window() const
 {
     return 0;
@@ -736,6 +737,7 @@ quint32 Edge::approachWindow() const
 {
     return 0;
 }
+#endif
 
 void Edge::setBorder(ElectricBorder border)
 {
