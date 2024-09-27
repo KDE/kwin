@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-26 02:31+0000\n"
+"POT-Creation-Date: 2024-09-27 02:37+0000\n"
 "PO-Revision-Date: 2024-08-29 15:26+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -1240,7 +1240,7 @@ msgstr "Planšete ir pārvietota uz %1"
 msgid "Tablets switched outputs"
 msgstr "Planšešu pārslēgšanas izvades"
 
-#: input.cpp:3329
+#: input.cpp:3331
 #, kde-format
 msgid "Touchpad"
 msgstr "Skārienpaliktnis"

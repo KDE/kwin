@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-26 02:31+0000\n"
+"POT-Creation-Date: 2024-09-27 02:37+0000\n"
 "PO-Revision-Date: 2024-08-22 19:03+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -1251,7 +1251,7 @@ msgstr "A tableta moveuse a %1"
 msgid "Tablets switched outputs"
 msgstr "As tabletas cambiaron de saída"
 
-#: input.cpp:3329
+#: input.cpp:3331
 #, kde-format
 msgid "Touchpad"
 msgstr "Área táctil"
