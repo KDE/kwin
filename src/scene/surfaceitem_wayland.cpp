@@ -25,6 +25,10 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     : SurfaceItem(parent)
     , m_surface(surface)
 {
+    connect(surface, &SurfaceInterface::mapped,
+            this, &SurfaceItemWayland::handleSurfaceMappedChanged);
+    connect(surface, &SurfaceInterface::unmapped,
+            this, &SurfaceItemWayland::handleSurfaceMappedChanged);
     connect(surface, &SurfaceInterface::sizeChanged,
             this, &SurfaceItemWayland::handleSurfaceSizeChanged);
     connect(surface, &SurfaceInterface::bufferSizeChanged,
@@ -51,17 +55,13 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
 
     SubSurfaceInterface *subsurface = surface->subSurface();
     if (subsurface) {
-        connect(surface, &SurfaceInterface::mapped,
-                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
-        connect(surface, &SurfaceInterface::unmapped,
-                this, &SurfaceItemWayland::handleSubSurfaceMappedChanged);
         connect(subsurface, &SubSurfaceInterface::positionChanged,
                 this, &SurfaceItemWayland::handleSubSurfacePositionChanged);
-        setVisible(surface->isMapped());
         setPosition(subsurface->position());
     }
 
     handleChildSubSurfacesChanged();
+    setVisible(surface->isMapped());
     setDestinationSize(surface->size());
     setBufferTransform(surface->bufferTransform());
     setBufferSourceBox(surface->bufferSourceBox());
@@ -150,7 +150,7 @@ void SurfaceItemWayland::handleSubSurfacePositionChanged()
     setPosition(m_surface->subSurface()->position());
 }
 
-void SurfaceItemWayland::handleSubSurfaceMappedChanged()
+void SurfaceItemWayland::handleSurfaceMappedChanged()
 {
     setVisible(m_surface->isMapped());
 }

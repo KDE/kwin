@@ -39,6 +39,7 @@ public:
 private Q_SLOTS:
     void handleSurfaceCommitted();
     void handleSurfaceSizeChanged();
+    void handleSurfaceMappedChanged();
     void handleBufferSizeChanged();
     void handleBufferSourceBoxChanged();
     void handleBufferTransformChanged();
@@ -46,7 +47,6 @@ private Q_SLOTS:
     void handleChildSubSurfaceRemoved(SubSurfaceInterface *child);
     void handleChildSubSurfacesChanged();
     void handleSubSurfacePositionChanged();
-    void handleSubSurfaceMappedChanged();
     void handleColorDescriptionChanged();
     void handlePresentationModeHintChanged();
     void handleReleasePointChanged();

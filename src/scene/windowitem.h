@@ -46,6 +46,7 @@ public:
 
     ~WindowItem() override;
 
+    Item *contentItem() const;
     SurfaceItem *surfaceItem() const;
     DecorationItem *decorationItem() const;
     ShadowItem *shadowItem() const;
@@ -79,6 +80,7 @@ private:
     void freeze();
 
     Window *m_window;
+    std::unique_ptr<Item> m_contentItem;
     std::unique_ptr<SurfaceItem> m_surfaceItem;
     std::unique_ptr<DecorationItem> m_decorationItem;
     std::unique_ptr<ShadowItem> m_shadowItem;
