@@ -94,6 +94,7 @@ public:
     bool activatesForPointer() const;
     bool activatesForTouchGesture() const;
 
+#if KWIN_BUILD_X11
     /**
      * The window id of the native window representing the edge.
      * Default implementation returns @c 0, which means no window.
@@ -106,6 +107,7 @@ public:
      * The default implementation returns @c 0, which means no window.
      */
     virtual quint32 approachWindow() const;
+#endif
 
 public Q_SLOTS:
     void reserve();
