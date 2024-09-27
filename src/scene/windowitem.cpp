@@ -179,7 +179,7 @@ bool WindowItem::computeVisibility() const
             return false;
         }
     }
-    return true;
+    return m_surfaceItem && m_surfaceItem->isMapped();
 }
 
 void WindowItem::updateVisibility()
@@ -216,6 +216,7 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
         connect(m_window, &Window::shadeChanged, this, &WindowItem::updateSurfaceVisibility);
         connect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         connect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
+        connect(m_surfaceItem.get(), &SurfaceItem::mappedChanged, this, &WindowItem::updateVisibility);
         addSurfaceItemDamageConnects(m_surfaceItem.get());
 
         updateSurfacePosition();
@@ -225,6 +226,7 @@ void WindowItem::updateSurfaceItem(std::unique_ptr<SurfaceItem> &&surfaceItem)
         disconnect(m_window, &Window::bufferGeometryChanged, this, &WindowItem::updateSurfacePosition);
         disconnect(m_window, &Window::frameGeometryChanged, this, &WindowItem::updateSurfacePosition);
     }
+    updateVisibility();
 }
 
 void WindowItem::updateSurfacePosition()

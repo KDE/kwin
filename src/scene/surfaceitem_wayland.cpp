@@ -68,6 +68,7 @@ SurfaceItemWayland::SurfaceItemWayland(SurfaceInterface *surface, Item *parent)
     setBufferSize(surface->bufferSize());
     setColorDescription(surface->colorDescription());
     setOpacity(surface->alphaMultiplier());
+    setMapped(surface->isMapped());
 }
 
 QList<QRectF> SurfaceItemWayland::shape() const
@@ -110,6 +111,7 @@ void SurfaceItemWayland::handleBufferTransformChanged()
 
 void SurfaceItemWayland::handleSurfaceCommitted()
 {
+    setMapped(m_surface->isMapped());
     if (m_surface->hasFrameCallbacks()) {
         scheduleFrame();
     }

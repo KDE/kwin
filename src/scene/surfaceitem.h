@@ -63,8 +63,11 @@ public:
 
     std::chrono::nanoseconds frameTimeEstimation() const;
 
+    bool isMapped() const;
+
 Q_SIGNALS:
     void damaged();
+    void mappedChanged();
 
 protected:
     explicit SurfaceItem(Item *parent = nullptr);
@@ -72,6 +75,7 @@ protected:
     virtual std::unique_ptr<SurfacePixmap> createPixmap() = 0;
     void preprocess() override;
     WindowQuadList buildQuads() const override;
+    void setMapped(bool map);
 
     QRegion m_damage;
     OutputTransform m_bufferToSurfaceTransform;
@@ -86,6 +90,7 @@ protected:
     std::optional<std::chrono::steady_clock::time_point> m_lastDamage;
     std::chrono::nanoseconds m_frameTimeEstimation = std::chrono::days(1000);
     std::shared_ptr<SyncReleasePoint> m_bufferReleasePoint;
+    bool m_isMapped = false;
 };
 
 class KWIN_EXPORT SurfaceTexture

@@ -294,6 +294,19 @@ std::shared_ptr<SyncReleasePoint> SurfaceItem::bufferReleasePoint() const
     return m_bufferReleasePoint;
 }
 
+bool SurfaceItem::isMapped() const
+{
+    return m_isMapped;
+}
+
+void SurfaceItem::setMapped(bool map)
+{
+    if (map != m_isMapped) {
+        m_isMapped = map;
+        Q_EMIT mappedChanged();
+    }
+}
+
 SurfaceTexture::~SurfaceTexture()
 {
 }

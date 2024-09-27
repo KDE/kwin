@@ -22,6 +22,7 @@ SurfaceItemInternal::SurfaceItemInternal(InternalWindow *window, Item *parent)
     setDestinationSize(window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size() * window->bufferScale()));
     setBufferSize((window->bufferGeometry().size() * window->bufferScale()).toSize());
+    setMapped(true);
 }
 
 InternalWindow *SurfaceItemInternal::window() const

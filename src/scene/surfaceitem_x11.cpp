@@ -37,6 +37,7 @@ SurfaceItemX11::SurfaceItemX11(X11Window *window, Item *parent)
     setDestinationSize(window->bufferGeometry().size());
     setBufferSourceBox(QRectF(QPointF(0, 0), window->bufferGeometry().size()));
     setBufferSize(window->bufferGeometry().size().toSize());
+    setMapped(true);
 }
 
 SurfaceItemX11::~SurfaceItemX11()
