@@ -393,8 +393,8 @@ bool AnimationEffect::cancel(quint64 animationId)
         });
         if (anim != animations.end()) {
             EffectWindowDeletedRef ref = std::move(anim->deletedRef); // delete window once we're done updating m_animations
-            if (anim->shader && std::ranges::none_of(animations, [animationId](const auto &anim) {
-                return anim.id != animationId && anim.shader;
+            if (std::ranges::none_of(animations, [animationId](const auto &anim) {
+                return anim.id != animationId && (anim.shader || anim.attribute == AnimationEffect::CrossFadePrevious);
             })) {
                 unredirect(window);
             }
@@ -644,12 +644,11 @@ void AnimationEffect::postPaintScreen()
                 continue;
             }
             d->m_justEndedAnimation = anim->id;
-            if (anim->shader && std::ranges::none_of(entry->second.first, [anim](const auto &other) {
-                return anim->id != other.id && other.shader;
+            if (std::ranges::none_of(entry->second.first, [anim](const auto &other) {
+                return anim->id != other.id && (other.shader || other.attribute == AnimationEffect::CrossFadePrevious);
             })) {
                 unredirect(window);
             }
-            unredirect(window);
             animationEnded(window, anim->attribute, anim->meta);
             d->m_justEndedAnimation = 0;
             // NOTICE animationEnded is an external call and might have called "::animate"
