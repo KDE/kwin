@@ -2593,6 +2593,23 @@ void Workspace::setActiveOutput(const QPointF &pos)
     setActiveOutput(outputAt(pos));
 }
 
+static bool canSnap(const Window *window, const Window *other)
+{
+    if (other == window) {
+        return false;
+    }
+    if (!other->isShown()) {
+        return false;
+    }
+    if (!other->isOnCurrentDesktop()) {
+        return false;
+    }
+    if (!other->isOnCurrentActivity()) {
+        return false;
+    }
+    return !(other->isUnmanaged() || other->isDesktop() || other->isSplash() || other->isNotification() || other->isCriticalNotification() || other->isOnScreenDisplay() || other->isAppletPopup() || other->isDock());
+}
+
 /**
  * \a window is moved around to position \a pos. This gives the
  * workspace the opportunity to interveniate and to implement
@@ -2672,29 +2689,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
         const int windowSnapZone = options->windowSnapZone() * snapAdjust;
         if (windowSnapZone > 0) {
             for (auto l = m_windows.constBegin(); l != m_windows.constEnd(); ++l) {
-                if ((*l) == window) {
-                    continue;
-                }
-                if ((*l)->isMinimized()) {
-                    continue;
-                }
-                if (!(*l)->isShown()) {
-                    continue;
-                }
-                if (!(*l)->isOnCurrentDesktop()) {
-                    continue; // wrong virtual desktop
-                }
-                if (!(*l)->isOnCurrentActivity()) {
-                    continue; // wrong activity
-                }
-
-                // We do not snap to docks (i.e. panels) since the ones we actually want to snap to
-                // (i.e. always visible ones) will restrict the workspace area, and the window will
-                // snap to that, effectively snapping to the panel too. Explicitly avoiding panel
-                // snapping solves any possible issue of floating panels, since they change their
-                // size when a window gets near them.
-
-                if ((*l)->isUnmanaged() || (*l)->isDesktop() || (*l)->isSplash() || (*l)->isNotification() || (*l)->isCriticalNotification() || (*l)->isOnScreenDisplay() || (*l)->isAppletPopup() || (*l)->isDock()) {
+                if (!canSnap(window, (*l))) {
                     continue;
                 }
 
@@ -2872,8 +2867,7 @@ QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, 
             deltaX = int(snap);
             deltaY = int(snap);
             for (auto l = m_windows.constBegin(); l != m_windows.constEnd(); ++l) {
-                if ((*l)->isOnCurrentDesktop() && !(*l)->isMinimized() && !(*l)->isUnmanaged()
-                    && (*l) != window) {
+                if (canSnap(window, (*l))) {
                     lx = (*l)->x();
                     ly = (*l)->y();
                     lrx = (*l)->x() + (*l)->width();
