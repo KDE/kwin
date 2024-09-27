@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-26 00:40+0000\n"
+"POT-Creation-Date: 2024-09-27 00:41+0000\n"
 "PO-Revision-Date: 2024-09-23 15:15+0200\n"
 "Last-Translator: Mincho Kondarev <mkondarev@yahoo.de>\n"
 "Language-Team: Bulgarian <kde-i18n-doc@kde.org>\n"
@@ -1224,7 +1224,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Име на хост: %1"
 
-#: input.cpp:3102
+#: input.cpp:3104
 #, kde-format
 msgid "Touchpad"
 msgstr "Тъчпад"
@@ -4294,45 +4294,3 @@ msgstr ""
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland се срина"
-
-#~ msgid "Red"
-#~ msgstr "Червено"
-
-#~ msgid "Green"
-#~ msgstr "Зелено"
-
-#~ msgid "Blue"
-#~ msgstr "Синьо"
-
-#~ msgid "Purple"
-#~ msgstr "Пурпурно"
-
-#~ msgctxt "@label"
-#~ msgid "Mode:"
-#~ msgstr "Режим: "
-
-#~ msgctxt "@option"
-#~ msgid "Protanopia (red weak)"
-#~ msgstr "Протанопия (невъзприемане на червен цвят)"
-
-#~ msgctxt "@option"
-#~ msgid "Deuteranopia (green weak)"
-#~ msgstr "Деутеранопия (невъзприемане на зелен цвят)"
-
-#~ msgctxt "@option"
-#~ msgid "Tritanopia (blue-yellow)"
-#~ msgstr "Тританопия (невъзприемане на синьо-жълт цвят)"
-
-#~ msgctxt "@label"
-#~ msgid "Intensity:"
-#~ msgstr "Интензивност:"
-
-#~ msgctxt "The code as read from the input device"
-#~ msgid "Scan code"
-#~ msgstr "Сканиране на код"
-
-#~ msgid "Surfaces"
-#~ msgstr "Повърхности"
-
-#~ msgid "Inactivity duration (seconds):"
-#~ msgstr "Продължителност на бездействието (в секунди):"

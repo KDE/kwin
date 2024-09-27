@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-08-30 00:40+0000\n"
+"POT-Creation-Date: 2024-09-27 00:41+0000\n"
 "PO-Revision-Date: 2024-03-06 13:54+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -201,128 +201,128 @@ msgstr ""
 "Ef mjög lág gagnsæisgildi eru valin getur læsileiki versnað. Þegar 0% er "
 "valið verður glugginn ósýnilegur."
 
-#: rulesmodel.cpp:388
+#: rulesmodel.cpp:384
 #, kde-format
 msgid "Description"
 msgstr "Lýsing"
 
-#: rulesmodel.cpp:388 rulesmodel.cpp:396 rulesmodel.cpp:404 rulesmodel.cpp:411
-#: rulesmodel.cpp:417 rulesmodel.cpp:425 rulesmodel.cpp:430 rulesmodel.cpp:436
+#: rulesmodel.cpp:384 rulesmodel.cpp:392 rulesmodel.cpp:400 rulesmodel.cpp:407
+#: rulesmodel.cpp:413 rulesmodel.cpp:421 rulesmodel.cpp:426 rulesmodel.cpp:432
 #, kde-format
 msgid "Window matching"
 msgstr "Samsvörun glugga"
 
-#: rulesmodel.cpp:396
+#: rulesmodel.cpp:392
 #, kde-format
 msgid "Window class (application)"
 msgstr "Gluggaflokkur (forrit):"
 
-#: rulesmodel.cpp:404
+#: rulesmodel.cpp:400
 #, kde-format
 msgid "Match whole window class"
 msgstr "Samsvara öllum gluggaflokkinum"
 
-#: rulesmodel.cpp:411
+#: rulesmodel.cpp:407
 #, kde-format
 msgid "Whole window class"
 msgstr "Allur gluggaflokkurinn"
 
-#: rulesmodel.cpp:417
+#: rulesmodel.cpp:413
 #, kde-format
 msgid "Window types"
 msgstr "Gerðir glugga"
 
-#: rulesmodel.cpp:425
+#: rulesmodel.cpp:421
 #, kde-format
 msgid "Window role"
 msgstr "Hlutverk glugga"
 
-#: rulesmodel.cpp:430
+#: rulesmodel.cpp:426
 #, kde-format
 msgid "Window title"
 msgstr "Titill glugga"
 
-#: rulesmodel.cpp:436
+#: rulesmodel.cpp:432
 #, kde-format
 msgid "Machine (hostname)"
 msgstr "Vél (vélarheiti):"
 
-#: rulesmodel.cpp:442
+#: rulesmodel.cpp:438
 #, kde-format
 msgid "Position"
 msgstr "Staða"
 
-#: rulesmodel.cpp:442 rulesmodel.cpp:448 rulesmodel.cpp:454 rulesmodel.cpp:459
-#: rulesmodel.cpp:467 rulesmodel.cpp:473 rulesmodel.cpp:492 rulesmodel.cpp:508
-#: rulesmodel.cpp:513 rulesmodel.cpp:518 rulesmodel.cpp:523 rulesmodel.cpp:528
-#: rulesmodel.cpp:537 rulesmodel.cpp:552 rulesmodel.cpp:557 rulesmodel.cpp:562
+#: rulesmodel.cpp:438 rulesmodel.cpp:444 rulesmodel.cpp:450 rulesmodel.cpp:455
+#: rulesmodel.cpp:463 rulesmodel.cpp:469 rulesmodel.cpp:488 rulesmodel.cpp:504
+#: rulesmodel.cpp:509 rulesmodel.cpp:514 rulesmodel.cpp:519 rulesmodel.cpp:524
+#: rulesmodel.cpp:531 rulesmodel.cpp:545 rulesmodel.cpp:550 rulesmodel.cpp:555
 #, kde-format
 msgid "Size & Position"
 msgstr "Stærð og staðsetning"
 
-#: rulesmodel.cpp:448
+#: rulesmodel.cpp:444
 #, kde-format
 msgid "Size"
 msgstr "Stærð"
 
-#: rulesmodel.cpp:454
+#: rulesmodel.cpp:450
 #, kde-format
 msgid "Maximized horizontally"
 msgstr "Fullstækkaður lárétt"
 
-#: rulesmodel.cpp:459
+#: rulesmodel.cpp:455
 #, kde-format
 msgid "Maximized vertically"
 msgstr "Fullstækkaður lóðrétt"
 
-#: rulesmodel.cpp:467
+#: rulesmodel.cpp:463
 #, fuzzy, kde-format
 #| msgid "Virtual Desktop"
 msgid "Virtual desktop"
 msgstr "Sýndarskjáborð"
 
-#: rulesmodel.cpp:473
+#: rulesmodel.cpp:469
 #, fuzzy, kde-format
 #| msgid "Virtual Desktops"
 msgid "Virtual desktops"
 msgstr "Sýndarskjáborð"
 
-#: rulesmodel.cpp:492
+#: rulesmodel.cpp:488
 #, kde-format
 msgid "Activities"
 msgstr "Athafnir"
 
-#: rulesmodel.cpp:508
+#: rulesmodel.cpp:504
 #, kde-format
 msgid "Screen"
 msgstr "Skjár"
 
-#: rulesmodel.cpp:513 rulesmodel.cpp:932
+#: rulesmodel.cpp:509 rulesmodel.cpp:925
 #, kde-format
 msgid "Fullscreen"
 msgstr "Fylla skjá"
 
-#: rulesmodel.cpp:518
+#: rulesmodel.cpp:514
 #, kde-format
 msgid "Minimized"
 msgstr "Falinn"
 
-#: rulesmodel.cpp:523
+#: rulesmodel.cpp:519
 #, kde-format
 msgid "Shaded"
 msgstr "Upprúllaður"
 
-#: rulesmodel.cpp:528
+#: rulesmodel.cpp:524
 #, kde-format
 msgid "Initial placement"
 msgstr "Upprunaleg staðsetning"
 
-#: rulesmodel.cpp:537
+#: rulesmodel.cpp:531
 #, kde-format
 msgid "Ignore requested geometry"
 msgstr "Hunsa umbeðna stærð og lögun"
 
-#: rulesmodel.cpp:540
+#: rulesmodel.cpp:534
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -341,22 +341,22 @@ msgstr ""
 "><nl/>Athugaðu að einnig er hægt að nota staðsetninguna til að staðsetja á "
 "öðrum <interface>skjá</interface>"
 
-#: rulesmodel.cpp:552
+#: rulesmodel.cpp:545
 #, kde-format
 msgid "Minimum Size"
 msgstr "Lágmarksstærð"
 
-#: rulesmodel.cpp:557
+#: rulesmodel.cpp:550
 #, kde-format
 msgid "Maximum Size"
 msgstr "Hámarksstærð"
 
-#: rulesmodel.cpp:562
+#: rulesmodel.cpp:555
 #, kde-format
 msgid "Obey geometry restrictions"
 msgstr "Virða stærðartakmarkanir"
 
-#: rulesmodel.cpp:564
+#: rulesmodel.cpp:557
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -373,39 +373,39 @@ msgstr ""
 "sem er.<nl/><nl/>Þetta getur verið gagnlegt fyrir glugga sem ná ekki alveg "
 "yfir allan skjáinn við fullstækkun."
 
-#: rulesmodel.cpp:575
+#: rulesmodel.cpp:568
 #, kde-format
 msgid "Keep above other windows"
 msgstr "Hafa yfir öðrum gluggum"
 
-#: rulesmodel.cpp:575 rulesmodel.cpp:580 rulesmodel.cpp:585 rulesmodel.cpp:591
-#: rulesmodel.cpp:597 rulesmodel.cpp:603
+#: rulesmodel.cpp:568 rulesmodel.cpp:573 rulesmodel.cpp:578 rulesmodel.cpp:584
+#: rulesmodel.cpp:590 rulesmodel.cpp:596
 #, kde-format
 msgid "Arrangement & Access"
 msgstr "Uppstilling og aðgengi"
 
-#: rulesmodel.cpp:580
+#: rulesmodel.cpp:573
 #, kde-format
 msgid "Keep below other windows"
 msgstr "Hafa undir öðrum gluggum"
 
-#: rulesmodel.cpp:585
+#: rulesmodel.cpp:578
 #, kde-format
 msgid "Skip taskbar"
 msgstr "Sleppa verkstiku"
 
-#: rulesmodel.cpp:587
+#: rulesmodel.cpp:580
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
 msgstr "Stjórnar því hvort gluggi birtist í Verkefnastjóranum eða ekki."
 
-#: rulesmodel.cpp:591
+#: rulesmodel.cpp:584
 #, kde-format
 msgid "Skip pager"
 msgstr "Sleppa flettara"
 
-#: rulesmodel.cpp:593
+#: rulesmodel.cpp:586
 #, kde-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -413,12 +413,12 @@ msgid ""
 msgstr ""
 "Stjórnar því hvort glugginn birtist í sýndarskjáborðsstjóranum eða ekki."
 
-#: rulesmodel.cpp:597
+#: rulesmodel.cpp:590
 #, kde-format
 msgid "Skip switcher"
 msgstr "Sleppa verkefnaskipti"
 
-#: rulesmodel.cpp:599
+#: rulesmodel.cpp:592
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -428,45 +428,45 @@ msgstr ""
 "Stjórnar því hvort gluggi birtist í <shortcut>Alt+Tab</shortcut> "
 "gluggalistanum eða ekki."
 
-#: rulesmodel.cpp:603
+#: rulesmodel.cpp:596
 #, kde-format
 msgid "Shortcut"
 msgstr "Flýtilykill"
 
-#: rulesmodel.cpp:609
+#: rulesmodel.cpp:602
 #, kde-format
 msgid "No titlebar and frame"
 msgstr "Engin titilstika og rammi"
 
-#: rulesmodel.cpp:609 rulesmodel.cpp:614 rulesmodel.cpp:620 rulesmodel.cpp:625
-#: rulesmodel.cpp:631 rulesmodel.cpp:658 rulesmodel.cpp:686 rulesmodel.cpp:692
-#: rulesmodel.cpp:704 rulesmodel.cpp:709 rulesmodel.cpp:714 rulesmodel.cpp:719
-#: rulesmodel.cpp:725 rulesmodel.cpp:730
+#: rulesmodel.cpp:602 rulesmodel.cpp:607 rulesmodel.cpp:613 rulesmodel.cpp:618
+#: rulesmodel.cpp:624 rulesmodel.cpp:651 rulesmodel.cpp:679 rulesmodel.cpp:685
+#: rulesmodel.cpp:697 rulesmodel.cpp:702 rulesmodel.cpp:707 rulesmodel.cpp:712
+#: rulesmodel.cpp:718 rulesmodel.cpp:723
 #, kde-format
 msgid "Appearance & Fixes"
 msgstr "Útlit og umbætur"
 
-#: rulesmodel.cpp:614
+#: rulesmodel.cpp:607
 #, kde-format
 msgid "Titlebar color scheme"
 msgstr "Litastef titilstiku"
 
-#: rulesmodel.cpp:620
+#: rulesmodel.cpp:613
 #, kde-format
 msgid "Active opacity"
 msgstr "Virkt ógegnsæi"
 
-#: rulesmodel.cpp:625
+#: rulesmodel.cpp:618
 #, kde-format
 msgid "Inactive opacity"
 msgstr "Óvirkt ógegnsæi"
 
-#: rulesmodel.cpp:631
+#: rulesmodel.cpp:624
 #, kde-format
 msgid "Focus stealing prevention"
 msgstr "Vörn gegn fókusstuldi"
 
-#: rulesmodel.cpp:633
+#: rulesmodel.cpp:626
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -504,12 +504,12 @@ msgstr ""
 "fókusinn. </item><item><emphasis strong='true'>Öfgafullt:</emphasis> "
 "Glugginn birtist aldrei efst og fær ekki fókus.</item></list>"
 
-#: rulesmodel.cpp:658
+#: rulesmodel.cpp:651
 #, kde-format
 msgid "Focus protection"
 msgstr "Fókusvörn"
 
-#: rulesmodel.cpp:660
+#: rulesmodel.cpp:653
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -550,22 +550,22 @@ msgstr ""
 "emphasis> Nýopnaðir gluggar birtast aldrei efst og fá ekki fókus.</item></"
 "list>"
 
-#: rulesmodel.cpp:686
+#: rulesmodel.cpp:679
 #, kde-format
 msgid "Accept focus"
 msgstr "Samþykkja fókus"
 
-#: rulesmodel.cpp:688
+#: rulesmodel.cpp:681
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
 msgstr "Stjórnar því hvort glugginn fái fókus eða ekki þegar smellt er á hann."
 
-#: rulesmodel.cpp:692
+#: rulesmodel.cpp:685
 #, kde-format
 msgid "Ignore global shortcuts"
 msgstr "Hunsa altæka flýtilykla"
 
-#: rulesmodel.cpp:694
+#: rulesmodel.cpp:687
 #, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
@@ -583,43 +583,43 @@ msgstr ""
 "til að fara úr glugganum eða notað neina aðra almenna flýtilykla eins og "
 "<shortcut>Alt+Space</shortcut> til að keyra KRunner."
 
-#: rulesmodel.cpp:704
+#: rulesmodel.cpp:697
 #, kde-format
 msgid "Closeable"
 msgstr "Lokanlegt"
 
-#: rulesmodel.cpp:709
+#: rulesmodel.cpp:702
 #, kde-format
 msgid "Desktop file name"
 msgstr "Heiti skjáborðsskrár"
 
-#: rulesmodel.cpp:714
+#: rulesmodel.cpp:707
 #, kde-format
 msgid "Block compositing"
 msgstr "Loka á myndsmíði"
 
-#: rulesmodel.cpp:719
+#: rulesmodel.cpp:712
 #, kde-format
 msgid "Layer"
 msgstr "Lag"
 
-#: rulesmodel.cpp:725
+#: rulesmodel.cpp:718
 #, fuzzy, kde-format
 #| msgid "Adaptive Sync"
 msgid "Adaptive sync"
 msgstr "Aðlögunarsamstilling (adaptive sync)"
 
-#: rulesmodel.cpp:730
+#: rulesmodel.cpp:723
 #, kde-format
 msgid "Allow tearing"
 msgstr ""
 
-#: rulesmodel.cpp:782
+#: rulesmodel.cpp:775
 #, kde-format
 msgid "Window class not available"
 msgstr "Gluggaflokkur er ekki tiltækur"
 
-#: rulesmodel.cpp:783
+#: rulesmodel.cpp:776
 #, kde-kuit-format
 msgctxt "@info"
 msgid ""
@@ -634,206 +634,206 @@ msgstr ""
 "eiginleika í staðinn, eins og gluggatitil.<nl/><nl/>Þú mátt endilega "
 "tilkynna þessa villu til þróunaraðila forritsins."
 
-#: rulesmodel.cpp:817
+#: rulesmodel.cpp:810
 #, fuzzy, kde-format
 #| msgid "All Window Types"
 msgid "All window types"
 msgstr "Allar gerðir glugga"
 
-#: rulesmodel.cpp:818
+#: rulesmodel.cpp:811
 #, fuzzy, kde-format
 #| msgid "Normal Window"
 msgid "Normal window"
 msgstr "Venjulegur gluggi"
 
-#: rulesmodel.cpp:819
+#: rulesmodel.cpp:812
 #, fuzzy, kde-format
 #| msgid "Dialog Window"
 msgid "Dialog window"
 msgstr "Svargluggi"
 
-#: rulesmodel.cpp:820
+#: rulesmodel.cpp:813
 #, fuzzy, kde-format
 #| msgid "Utility Window"
 msgid "Utility window"
 msgstr "Verkfæragluggi"
 
-#: rulesmodel.cpp:821
+#: rulesmodel.cpp:814
 #, kde-format
 msgid "Dock (panel)"
 msgstr "Dokka (skjáborðsstika)"
 
-#: rulesmodel.cpp:822
+#: rulesmodel.cpp:815
 #, kde-format
 msgid "Toolbar"
 msgstr "Tækjastika"
 
-#: rulesmodel.cpp:823
+#: rulesmodel.cpp:816
 #, fuzzy, kde-format
 #| msgid "Torn-Off Menu"
 msgid "Torn-off menu"
 msgstr "Afrifin valmynd"
 
-#: rulesmodel.cpp:824
+#: rulesmodel.cpp:817
 #, fuzzy, kde-format
 #| msgid "Splash Screen"
 msgid "Splash screen"
 msgstr "Upphafsskjár"
 
-#: rulesmodel.cpp:825 rulesmodel.cpp:927
+#: rulesmodel.cpp:818 rulesmodel.cpp:920
 #, kde-format
 msgid "Desktop"
 msgstr "Skjáborð"
 
 #. i18n("Unmanaged Window")},  deprecated
-#: rulesmodel.cpp:827
+#: rulesmodel.cpp:820
 #, fuzzy, kde-format
 #| msgid "Standalone Menubar"
 msgid "Standalone menubar"
 msgstr "Sjálfstæð valmyndastika"
 
-#: rulesmodel.cpp:828 rulesmodel.cpp:935
+#: rulesmodel.cpp:821 rulesmodel.cpp:928
 #, fuzzy, kde-format
 #| msgid "On Screen Display"
 msgid "On-screen display"
 msgstr "Yfirlag á skjá"
 
-#: rulesmodel.cpp:838
+#: rulesmodel.cpp:831
 #, fuzzy, kde-format
 #| msgid "All Desktops"
 msgid "All desktops"
 msgstr "Öll skjáborð"
 
-#: rulesmodel.cpp:840
+#: rulesmodel.cpp:833
 #, kde-format
 msgctxt "@info:tooltip in the virtual desktop list"
 msgid "Make the window available on all desktops"
 msgstr "Hafa gluggann á öllum skjáborðum"
 
-#: rulesmodel.cpp:859
+#: rulesmodel.cpp:852
 #, fuzzy, kde-format
 #| msgid "All Activities"
 msgid "All activities"
 msgstr "Allar athafnir"
 
-#: rulesmodel.cpp:861
+#: rulesmodel.cpp:854
 #, kde-format
 msgctxt "@info:tooltip in the activity list"
 msgid "Make the window available on all activities"
 msgstr "Hafa gluggann í öllum athöfnum"
 
-#: rulesmodel.cpp:882
+#: rulesmodel.cpp:875
 #, kde-format
 msgid "Default"
 msgstr "Sjálfgefið"
 
-#: rulesmodel.cpp:883
+#: rulesmodel.cpp:876
 #, fuzzy, kde-format
 #| msgid "No Placement"
 msgid "No placement"
 msgstr "Engin staðsetning"
 
-#: rulesmodel.cpp:884
+#: rulesmodel.cpp:877
 #, fuzzy, kde-format
 #| msgid "Minimal Overlapping"
 msgid "Minimal overlapping"
 msgstr "Lágmarksskörun"
 
-#: rulesmodel.cpp:885
+#: rulesmodel.cpp:878
 #, kde-format
 msgid "Maximized"
 msgstr "Fullstækkaður"
 
-#: rulesmodel.cpp:886
+#: rulesmodel.cpp:879
 #, kde-format
 msgid "Centered"
 msgstr "Miðjaður"
 
-#: rulesmodel.cpp:887
+#: rulesmodel.cpp:880
 #, kde-format
 msgid "Random"
 msgstr "Slembið"
 
-#: rulesmodel.cpp:888
+#: rulesmodel.cpp:881
 #, fuzzy, kde-format
 #| msgid "In Top-Left Corner"
 msgid "In top-left corner"
 msgstr "Efst í vinstra horni"
 
-#: rulesmodel.cpp:889
+#: rulesmodel.cpp:882
 #, fuzzy, kde-format
 #| msgid "Under Mouse"
 msgid "Under mouse"
 msgstr "Undir mús"
 
-#: rulesmodel.cpp:890
+#: rulesmodel.cpp:883
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "On main window"
 msgstr "Á aðalglugga"
 
-#: rulesmodel.cpp:897
+#: rulesmodel.cpp:890
 #, kde-format
 msgid "None"
 msgstr "Ekkert"
 
-#: rulesmodel.cpp:898
+#: rulesmodel.cpp:891
 #, kde-format
 msgid "Low"
 msgstr "Lágt"
 
-#: rulesmodel.cpp:899 rulesmodel.cpp:929
+#: rulesmodel.cpp:892 rulesmodel.cpp:922
 #, kde-format
 msgid "Normal"
 msgstr "Venjulegt"
 
-#: rulesmodel.cpp:900
+#: rulesmodel.cpp:893
 #, kde-format
 msgid "High"
 msgstr "Hátt"
 
-#: rulesmodel.cpp:901
+#: rulesmodel.cpp:894
 #, kde-format
 msgid "Extreme"
 msgstr "Mjög hátt"
 
-#: rulesmodel.cpp:928
+#: rulesmodel.cpp:921
 #, kde-format
 msgid "Below"
 msgstr "Undir"
 
-#: rulesmodel.cpp:930
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Above"
 msgstr "Ofan á"
 
-#: rulesmodel.cpp:931
+#: rulesmodel.cpp:924
 #, kde-format
 msgid "Notification"
 msgstr "Tilkynning"
 
-#: rulesmodel.cpp:933
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Popup"
 msgstr "Sprettigluggi"
 
-#: rulesmodel.cpp:934
+#: rulesmodel.cpp:927
 #, fuzzy, kde-format
 #| msgid "Critical Notification"
 msgid "Critical notification"
 msgstr "Alvarleg viðvörun"
 
-#: rulesmodel.cpp:936
+#: rulesmodel.cpp:929
 #, kde-format
 msgid "Overlay"
 msgstr "Yfirlag"
 
-#: rulesmodel.cpp:961
+#: rulesmodel.cpp:954
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Ómeðhöndlaður gluggi"
 
-#: rulesmodel.cpp:962
+#: rulesmodel.cpp:955
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

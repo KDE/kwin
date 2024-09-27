@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: KDE 4.2\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-26 00:40+0000\n"
-"PO-Revision-Date: 2024-05-31 14:36+0200\n"
+"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"PO-Revision-Date: 2024-09-26 15:12+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.08.0\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -427,12 +427,10 @@ msgid "Repeat"
 msgstr "Ismétlés"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key kód"
+msgstr "Billentyűkód"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -717,7 +715,7 @@ msgstr "Rajztábla kör"
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Effektusok"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -928,13 +926,13 @@ msgstr "Belső ablakok"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Eltávolítás"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Betöltés"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1222,7 +1220,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Gépnév: %1"
 
-#: input.cpp:3102
+#: input.cpp:3104
 #, kde-format
 msgid "Touchpad"
 msgstr "Érintőtábla"
@@ -1656,23 +1654,21 @@ msgstr "Ablakbezárási animáció"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Soha"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
-#, fuzzy, kde-format
-#| msgid " milliseconds"
+#, kde-format
 msgid "%1 second"
 msgid_plural "%1 seconds"
-msgstr[0] " ezredmásodperc"
-msgstr[1] " ezredmásodperc"
+msgstr[0] "%1 másodperc"
+msgstr[1] "%1 másodperc"
 
 #. i18n: ectx: property (text), widget (QLabel, label_InactivityDuration)
 #: plugins/hidecursor/hidecursor_config.ui:17
-#, fuzzy, kde-format
-#| msgid "Hide cursor on typing"
+#, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr "Kurzor elrejtése gépeléskor"
+msgstr "Kurzor elrejtése inaktivitáskor:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
@@ -1796,72 +1792,72 @@ msgstr "Animált nyomógombok"
 #: plugins/keynotification/keynotification.cpp:44
 #, kde-format
 msgid "The Caps Lock key has been activated"
-msgstr ""
+msgstr "A Caps Lock most aktív"
 
 #: plugins/keynotification/keynotification.cpp:48
 #, kde-format
 msgid "The Caps Lock key is now inactive"
-msgstr ""
+msgstr "A Caps Lock most inaktív"
 
 #: plugins/keynotification/keynotification.cpp:52
 #, kde-format
 msgid "The Num Lock key has been activated"
-msgstr ""
+msgstr "A Num Lock most aktív"
 
 #: plugins/keynotification/keynotification.cpp:56
 #, kde-format
 msgid "The Num Lock key is now inactive"
-msgstr ""
+msgstr "A Num Lock most inaktív"
 
 #: plugins/keynotification/keynotification.cpp:60
 #, kde-format
 msgid "The Scroll Lock key has been activated"
-msgstr ""
+msgstr "A Scroll Lock most aktív"
 
 #: plugins/keynotification/keynotification.cpp:64
 #, kde-format
 msgid "The Scroll Lock key is now inactive"
-msgstr ""
+msgstr "A Scroll Lock most inaktív"
 
 #: plugins/keynotification/keynotification.cpp:77
 #, kde-format
 msgid "The Shift key is now active."
-msgstr ""
+msgstr "A Shift most aktív."
 
 #: plugins/keynotification/keynotification.cpp:81
 #, kde-format
 msgid "The Shift key is now inactive."
-msgstr ""
+msgstr "A Shift most inaktív."
 
 #: plugins/keynotification/keynotification.cpp:85
 #, kde-format
 msgid "The Control key is now active."
-msgstr ""
+msgstr "A Ctrl most aktív."
 
 #: plugins/keynotification/keynotification.cpp:89
 #, kde-format
 msgid "The Control key is now inactive."
-msgstr ""
+msgstr "A Ctrl most inaktív."
 
 #: plugins/keynotification/keynotification.cpp:93
 #, kde-format
 msgid "The Alt key is now active."
-msgstr ""
+msgstr "Az Alt most aktív."
 
 #: plugins/keynotification/keynotification.cpp:97
 #, kde-format
 msgid "The Alt key is now inactive."
-msgstr ""
+msgstr "Az Alt most inaktív."
 
 #: plugins/keynotification/keynotification.cpp:101
 #, kde-format
 msgid "The Meta key is now active."
-msgstr ""
+msgstr "A Meta most aktív."
 
 #: plugins/keynotification/keynotification.cpp:105
 #, kde-format
 msgid "The Meta key is now inactive."
-msgstr ""
+msgstr "A Meta most inaktív."
 
 #: plugins/krunner-integration/windowsrunnerinterface.cpp:41
 #, kde-format
@@ -2436,10 +2432,9 @@ msgid "Invalid region"
 msgstr "Érvénytelen terület"
 
 #: plugins/screencast/screencaststream.cpp:346
-#, fuzzy, kde-format
-#| msgid "No OpenGL compositor running"
+#, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr "Nem fut OpenGL kompozitor"
+msgstr "A képernyőfelvételhez OpenGL kompozitálás szükséges"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format
@@ -2465,11 +2460,10 @@ msgstr ""
 "Megszakításhoz nyomja meg az Escape-et vagy a jobb egérgombot."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Kompozitálás blokkolása"
+msgstr "Kompozitálás"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -2534,31 +2528,31 @@ msgstr "Asztalháttér csúsztatása"
 msgid ""
 "The Shift key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "A Shift zárolva lett, ezután minden billentyűleütésnél aktív lesz."
 
 #: plugins/stickykeys/stickykeys.cpp:25
 msgid ""
 "The Control key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "A Ctrl zárolva lett, ezután minden billentyűleütésnél aktív lesz."
 
 #: plugins/stickykeys/stickykeys.cpp:26
 msgid ""
 "The Alt key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Az Alt zárolva lett, ezután minden billentyűleütésnél aktív lesz."
 
 #: plugins/stickykeys/stickykeys.cpp:27
 msgid ""
 "The Meta key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "A Meta zárolva lett, ezután minden billentyűleütésnél aktív lesz."
 
 #: plugins/stickykeys/stickykeys.cpp:28
 msgid ""
 "The AltGr key has been locked and is now active for all of the following "
 "keypresses."
-msgstr ""
+msgstr "Az AltGr zárolva lett, ezután minden billentyűleütésnél aktív lesz."
 
 #: plugins/thumbnailaside/thumbnailaside.cpp:31
 #: plugins/thumbnailaside/thumbnailaside_config.cpp:50
@@ -3597,14 +3591,13 @@ msgstr "Adaptív szinkronizáció szabálytípus"
 #: rulesettings.kcfg:455
 #, kde-format
 msgid "Allow Tearing"
-msgstr ""
+msgstr "Képtörés engedélyezése"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Réteg szabálytípus"
+msgstr "Törés szabálytípus"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14

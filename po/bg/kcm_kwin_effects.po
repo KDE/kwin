@@ -62,6 +62,3 @@ msgstr "Конфигуриране на филтъра"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Изключване на неподдържаните ефекти"
-
-#~ msgid "Exclude internal effects"
-#~ msgstr "Изключване на вътрешните ефекти"

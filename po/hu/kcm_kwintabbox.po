@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-10 00:40+0000\n"
-"PO-Revision-Date: 2024-05-28 22:57+0200\n"
+"PO-Revision-Date: 2024-09-26 14:31+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 24.02.2\n"
+"X-Generator: Lokalize 24.08.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: layoutpreview.cpp:127
@@ -42,10 +42,9 @@ msgid "Alternative"
 msgstr "Alternatíva"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "Új feladatváltók letöltése…"
+msgstr "Új feladatváltó stílusok letöltése…"
 
 #: main.cpp:90
 #, kde-format

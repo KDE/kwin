@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-26 00:40+0000\n"
-"PO-Revision-Date: 2024-09-05 09:53+0400\n"
+"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"PO-Revision-Date: 2024-09-26 10:00+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -1216,7 +1216,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "اسم المضيف: %1"
 
-#: input.cpp:3102
+#: input.cpp:3104
 #, kde-format
 msgid "Touchpad"
 msgstr "لوحة اللمس"
@@ -2025,10 +2025,9 @@ msgstr "&الارتفاع:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "بدّل تأثير نقر الفأرة"
+msgstr "بدّل تحريك نقر الفأرة"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
