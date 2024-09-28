@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-09-28 00:40+0000\n"
 "PO-Revision-Date: 2008-11-21 01:39+0100\n"
 "Last-Translator: Eduard Werner <edi.werner@gmx.de>\n"
 "Language-Team: en_US <kde-i18n-doc@lists.kde.org>\n"
@@ -1221,7 +1221,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3104
+#: input.cpp:3092
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -4371,7 +4371,7 @@ msgstr "Na delni dźěłowy powjerch hić"
 msgid "Switch to Desktop %1"
 msgstr "Na dźěłowy powjerch 1 hić"
 
-#: window.cpp:3124
+#: window.cpp:3120
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

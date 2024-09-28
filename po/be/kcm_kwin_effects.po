@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fc57ad16a28d02dea100ceb1c60de14e\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-30 00:40+0000\n"
+"POT-Creation-Date: 2024-09-28 00:40+0000\n"
 "PO-Revision-Date: 2024-02-27 07:45\n"
 "Last-Translator: Zmicier <zmicerturok@gmail.com>\n"
 "Language-Team: Belarusian\n"
@@ -49,24 +49,22 @@ msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "Атрымаць новыя…"
 
-#: ui/main.qml:44
-#, kde-format
-msgid ""
-"Hint: To find out or configure how to activate an effect, look at the "
-"effect's settings."
-msgstr ""
-"Падказка: каб даведацца пра эфект або актываваць ці наладзіць яго, "
-"паглядзіце налады эфекту."
-
-#: ui/main.qml:66
+#: ui/main.qml:54
 #, kde-format
 msgid "Configure Filter"
 msgstr "Наладжванне фільтра"
 
-#: ui/main.qml:78
+#: ui/main.qml:66
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Выключыць эфекты, якія не падтрымліваюцца"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Падказка: каб даведацца пра эфект або актываваць ці наладзіць яго, "
+#~ "паглядзіце налады эфекту."
 
 #~ msgid "Exclude internal effects"
 #~ msgstr "Выключыць унутраныя эфекты"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-30 00:40+0000\n"
+"POT-Creation-Date: 2024-09-28 00:40+0000\n"
 "PO-Revision-Date: 2023-10-29 14:45+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <kde-i18n-doc@kde.org>\n"
@@ -46,22 +46,20 @@ msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "הורדת חדש…"
 
-#: ui/main.qml:44
-#, kde-format
-msgid ""
-"Hint: To find out or configure how to activate an effect, look at the "
-"effect's settings."
-msgstr "רמז: כדי למצוא או להגדיר איך להפעיל אפקט, כדאי להציץ בהגדרות האפקט."
-
-#: ui/main.qml:66
+#: ui/main.qml:54
 #, kde-format
 msgid "Configure Filter"
 msgstr "הגדרת מסנן"
 
-#: ui/main.qml:78
+#: ui/main.qml:66
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "החרגת אפקטים שלא נתמכים"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr "רמז: כדי למצוא או להגדיר איך להפעיל אפקט, כדאי להציץ בהגדרות האפקט."
 
 #~ msgid "Exclude internal effects"
 #~ msgstr "החרגת אפקטים פנימיים"

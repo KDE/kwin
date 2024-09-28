@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-09-28 00:40+0000\n"
 "PO-Revision-Date: 2024-09-19 09:06+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -1227,7 +1227,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Назва вузла: %1"
 
-#: input.cpp:3104
+#: input.cpp:3092
 #, kde-format
 msgid "Touchpad"
 msgstr "Сенсорна панель"
@@ -4275,7 +4275,7 @@ msgstr "Однією стільницею вниз"
 msgid "Switch to Desktop %1"
 msgstr "Перемкнутися до стільниці %1"
 
-#: window.cpp:3124
+#: window.cpp:3120
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

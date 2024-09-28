@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-06-30 00:40+0000\n"
+"POT-Creation-Date: 2024-09-28 00:40+0000\n"
 "PO-Revision-Date: 2023-06-06 09:54+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -48,24 +48,22 @@ msgctxt "@action:button get new KWin effects"
 msgid "Get New…"
 msgstr "Obtén nous…"
 
-#: ui/main.qml:44
-#, kde-format
-msgid ""
-"Hint: To find out or configure how to activate an effect, look at the "
-"effect's settings."
-msgstr ""
-"Consell: per a trobar els detalls o configurar la manera d'activar un "
-"efecte, examineu l'arranjament de l'efecte."
-
-#: ui/main.qml:66
+#: ui/main.qml:54
 #, kde-format
 msgid "Configure Filter"
 msgstr "Configura el filtre"
 
-#: ui/main.qml:78
+#: ui/main.qml:66
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Exclou els efectes no admesos"
+
+#~ msgid ""
+#~ "Hint: To find out or configure how to activate an effect, look at the "
+#~ "effect's settings."
+#~ msgstr ""
+#~ "Consell: per a trobar els detalls o configurar la manera d'activar un "
+#~ "efecte, examineu l'arranjament de l'efecte."
 
 #~ msgid "Exclude internal effects"
 #~ msgstr "Exclou els efectes interns"
