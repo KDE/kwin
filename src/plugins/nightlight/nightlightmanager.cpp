@@ -46,6 +46,7 @@ NightLightManager::NightLightManager()
 
     m_iface = new NightLightDBusInterface(this);
     m_skewNotifier = new ClockSkewNotifier(this);
+    connect(m_skewNotifier, &ClockSkewNotifier::clockSkewed, this, &NightLightManager::resetAllTimers);
 
     // Display a message when Night Light is (un)inhibited.
     connect(this, &NightLightManager::inhibitedChanged, this, [this] {
@@ -90,32 +91,7 @@ NightLightManager::NightLightManager()
             cancelAllTimers();
         }
     });
-
-    connect(m_skewNotifier, &ClockSkewNotifier::clockSkewed, this, [this]() {
-        // check if we're resuming from suspend - in this case do a hard reset
-        // Note: We're using the time clock to detect a suspend phase instead of connecting to the
-        //       provided logind dbus signal, because this signal would be received way too late.
-        QDBusMessage message = QDBusMessage::createMethodCall("org.freedesktop.login1",
-                                                              "/org/freedesktop/login1",
-                                                              "org.freedesktop.DBus.Properties",
-                                                              QStringLiteral("Get"));
-        message.setArguments(QVariantList({"org.freedesktop.login1.Manager", QStringLiteral("PreparingForSleep")}));
-        QDBusReply<QVariant> reply = QDBusConnection::systemBus().call(message);
-        bool comingFromSuspend;
-        if (reply.isValid()) {
-            comingFromSuspend = reply.value().toBool();
-        } else {
-            qCDebug(KWIN_NIGHTLIGHT) << "Failed to get PreparingForSleep Property of logind session:" << reply.error().message();
-            // Always do a hard reset in case we have no further information.
-            comingFromSuspend = true;
-        }
-
-        if (comingFromSuspend) {
-            hardReset();
-        } else {
-            resetAllTimers();
-        }
-    });
+    connect(kwinApp()->session(), &Session::awoke, this, &NightLightManager::hardReset);
 
     hardReset();
 }
