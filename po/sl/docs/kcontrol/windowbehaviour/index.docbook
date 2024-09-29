@@ -1,0 +1,1399 @@
+<?xml version="1.0" ?>
+<!DOCTYPE article PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN"
+"dtd/kdedbx45.dtd" [
+<!ENTITY % addindex "IGNORE">
+<!ENTITY % Slovenian "INCLUDE"
+> <!-- change language only here -->
+]>
+
+<!--copy from r308626 Tue May 4 17:11:51 2004 UTC -->
+
+<article id="windowbehaviour" lang="&language;">
+<articleinfo>
+<title
+>Obnašanje oken</title>
+<authorgroup>
+<author
+>&Mike.McBride; &Mike.McBride.mail;</author>
+<author
+>&Jost.Schenck; &Jost.Schenck.mail;</author>
+<author
+><firstname
+>Natalie</firstname
+><surname
+>Clarius</surname
+><email
+>natalie_clarius@yahoo.de</email
+></author>
+<othercredit role="translator"
+><contrib
+>Prevod:</contrib
+><firstname
+>Mojca</firstname
+><surname
+>Rob</surname
+><affiliation
+><address
+><email
+>mojca.rob@gmail.com</email
+></address
+></affiliation
+></othercredit
+> 
+</authorgroup>
+
+<date
+>31.08.2022</date>
+<releaseinfo
+>Plasma 5.26</releaseinfo>
+
+<keywordset>
+<keyword
+>KDE</keyword>
+<keyword
+>KControl</keyword>
+<keyword
+>nastavitve sistema</keyword>
+<keyword
+>dejanja</keyword>
+<keyword
+>okno</keyword>
+<keyword
+>postavitev oken</keyword>
+<keyword
+>velikost oken</keyword>
+<keyword
+>upravljanje z okni</keyword>
+<keyword
+>obnašanje oken</keyword>
+<keyword
+>fokus</keyword>
+<keyword
+>dvigni</keyword>
+<keyword
+>naslovna vrstica</keyword>
+<keyword
+>zaslon</keyword>
+<keyword
+>zaskočiti</keyword>
+</keywordset>
+</articleinfo>
+
+<sect1 id="window-behavior">
+<title
+>Obnašanje oken</title>
+
+<para
+>V zgornjem delu tega nadzornega modula lahko vidite več zavihkov: <guilabel
+>Fokus</guilabel
+>, <guilabel
+>Dejanja naslovne vrstice</guilabel
+>, <guilabel
+>Dejanja oken</guilabel
+>, <guilabel
+>Premikanje</guilabel 
+> in <guilabel
+>Napredno</guilabel
+>. V plošči <guilabel
+>Fokus</guilabel
+> lahko konfigurirate, kako okna pridobijo ali izgubijo fokus, &ie;. postanejo aktivna ali neaktivna. Z uporabo <guilabel
+>Dejanj naslovne vrstice</guilabel
+> in <guilabel
+>Dejanj oken</guilabel
+> lahko nastavite, kako se naslovne vrstice in okna odzivajo na klike miške. <guilabel
+>Premikanje</guilabel
+> vam omogoča, da nastavite, kako se okna premikajo in postavljajo ob njihovem zagonu. <guilabel
+>Napredne</guilabel
+> možnosti zajemajo nekatere posebne možnosti, kot je <quote
+>senčenje oken</quote
+>. </para>
+
+<note>
+<para
+>Upoštevajte, da konfiguracija v tem modulu ne bo začela veljati, če ne uporabljate izvornega upravitelja oken &plasma;, &kwin;. Če uporabljate drug upravljalnik oken, si oglejte njegovo dokumentacijo za prilagoditev obnašanja oken. </para>
+</note>
+
+<sect2 id="focus">
+<title
+>Fokus</title>
+
+<para
+><quote
+>Fokus</quote
+> delovnega prostora se nanaša na okno, v katerem uporabnik trenutno dela. Okno z fokusom se pogosto imenuje <quote
+>aktivno okno</quote
+>. </para>
+
+<para
+>Fokus ne pomeni nujno, da je okno spredaj &mdash; to se imenuje <quote
+>dvignjeno</quote
+>, in čeprav je to konfigurirano tudi tukaj, sta fokus in dvig oken konfigurirana neodvisno. </para>
+
+<sect3 id="focus-focuspolicy">
+<title
+>Pravila aktivacije oken</title>
+
+<para
+>Obstaja šest metod, ki jih &kwin; lahko uporabi za določitev trenutnega fokusa: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Kliknite za fokus</guilabel
+></term>
+<listitem>
+<para
+>Okno postane aktivno, ko vanj kliknete. To vedenje je običajno v drugih operacijskih sistemih in verjetno tisto, ki ga želite.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Kliknite za fokus (prednost miške)</guilabel
+></term>
+<listitem>
+<para
+>To je večinoma enako kot <guilabel
+>Kliknite za fokus</guilabel
+>. Če mora sistem izbrati aktivno okno (npr. ker je bilo trenutno aktivno zaprto), je prednostni kandidat okno pod miško. Nenavadna, a možna različica <guilabel
+>Kliknite za fokus</guilabel
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus sledi miški</guilabel
+></term>
+<listitem>
+<para
+>Aktivno premikanje kazalca miške nad običajnim oknom ga aktivira. Nova okna, kot je mini ukazna vrstica, priklicana s <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, bodo prejela fokus, ne da bi vam bilo treba izrecno usmeriti miško nanje. &npr; okna, ki se naključno pojavljajo pod miško, ne bodo pridobila fokusa. Preprečevanje kraje fokusa poteka kot običajno. Pomislite kot <guilabel
+>Kliknite za fokus</guilabel
+>, ne da bi morali dejansko klikniti. </para>
+<para
+>V drugih upravljalnikih oken je to včasih znano kot <quote
+>Površni fokus sledi miški</quote
+>. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus sledi miški (prednost miške)</guilabel
+></term>
+<listitem>
+<para
+>To je večinoma enako kot <guilabel
+>Fokus sledi miški</guilabel
+>. Če mora sistem izbrati aktivno okno (npr. ker je bilo trenutno aktivno zaprto), je prednostni kandidat okno pod miško. Izberite to, če želite fokus nadzorovati z lebdenjem miške. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus pod miško</guilabel
+></term>
+<listitem>
+<para
+>Aktivno postane okno, ki se nahaja pod kazalcem miške. Če miška ni nad oknom (na primer je nad ozadjem namizja), ima fokus zadnje okno, ki je bilo pod miško. Nova okna, kot je mini ukazna vrstica, priklicana s <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, ne bodo prejela fokusa, za tipkanje morate premakniti miško nad njimi. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus striktno pod miško</guilabel
+></term>
+<listitem>
+<para
+>Podobno kot <guilabel
+>Fokus pod miško</guilabel
+>, vendar še bolj stroga interpretacija. Aktivno je samo okno pod kazalcem miške. Če kazalec miške ni nad oknom, ni nobeno okno v fokusu. Nova okna, kot je mini ukazna vrstica, priklicana s <keycombo action="simul"
+>&Alt;<keycap
+>F2</keycap
+></keycombo
+>, ne bodo prejela fokusa, za tipkanje morate premakniti miško nad njimi. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<note>
+<para
+>Upoštevajte, da <guilabel
+>Fokus pod miško</guilabel
+> in <guilabel
+>Izostritev pod miško</guilabel
+> preprečujeta določene funkcije, kot sta <guilabel
+>Preprečevanje kraje fokusa</guilabel
+> in <keycombo action="simul"
+> &Alt;&Tab;</keycombo
+> pogovorno okno za sprehod skozi okna, da ne deluje pravilno. </para>
+</note>
+
+</sect3>
+
+<sect3 id="focus-focusdelay">
+<title
+>Zakasnitev fokusa po</title>
+
+<para
+>To je čas, po katerem bo okno, nad katerim je miškin kazalec, samodejno prejelo fokus. </para>
+
+</sect3>
+
+<sect3 id="focus-focusstealing">
+<title
+>Preprečevanje kraje fokusa</title>
+
+<para
+>Ta možnost določa, koliko bo KWin poskušal preprečiti nezaželeno krajo fokusa, ki jo povzroči nepričakovana aktivacija novih oken. </para
+> 
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Brez</guilabel
+></term>
+<listitem
+><para
+>Preprečevanje je izklopljeno in nova okna vedno postanejo aktivirana.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nizka</guilabel
+></term>
+<listitem
+><para
+>Preventiva je omogočena; ko neko okno nima podpore za osnovni mehanizem in se KWin ne more zanesljivo odločiti, ali naj okno aktivira ali ne, se bo to aktiviralo. Ta nastavitev ima lahko slabše ali boljše rezultate kot srednja raven zakasnitve, odvisno od uporabljenih aplikacij.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Srrednja</guilabel
+></term>
+<listitem
+><para
+>Preventiva je omogočena.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Visoka</guilabel
+></term>
+<listitem
+><para
+>Nova okna se aktivirajo le, če trenutno ni aktivno nobeno okno ali če pripadajo trenutno aktivni aplikaciji. Ta nastavitev verjetno ni zares uporabna, razen če uporabljate nastavitev, da okno postane aktivno šele s klikom nanj.</para
+></listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ekstemna</guilabel
+></term>
+<listitem
+><para
+>Striktno za vsako okno velja, da ga lahko aktivira zgolj uporabnik.</para
+></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Okna, ki ne morejo vkrasti fokusa, so označena kot okna, ki zahtevajo pozornost. Privzeto je, da to pomeni, da bo njihov prikaz v opravilni vrstici označen. To lahko spremenite v Modulu za nadzor obvestil. </para>
+
+</sect3>
+
+<sect3 id="focus-raisingwindow">
+<title
+>Dviganje oken</title>
+
+<para
+>Poleg tega, kdaj okna prejmejo fokus, lahko nadzorujete tudi, pod katerimi pogoji se okna dvignejo, &ie; prenesejo v ospredje. </para>
+
+<para
+>Prepričajte se, da je omogočena vsaj ena od možnosti dviga, sicer okna ne bodo nikoli ponesena v osprednje. </para>
+
+<para
+><guilabel
+>Klik dvigne aktivno okno</guilabel
+> bo okno prenesel v ospredje, ko nanj kliknete. To je privzeto omogočeno s tem, da okno postane v fokusu, ko nanj kliknete. </para>
+
+<para
+>Če aktivirate <guilabel
+>Dvig ob lebdenju z zakasnitvijo za</guilabel
+>, lahko postavite okno v ospredje, če je miškin kazalec določen čas nad tem oknom. Zakasnitev, kdaj se okno postavi v ospredje, lahko določite z uporabo vrtilnega polja. Možnost samodejnega dviga je na voljo samo z nastavitvijo, da okno postane aktivno ob kliku nanj. </para>
+
+<tip>
+<para
+>Nastavitev prekratke zakasnitve bo povzročila hitro menjavo oken, kar je lahko precej moteče. Večini ljudi je všeč zakasnitev 100-300 ms. To je odzivno na vaša dejanja, vendar vam bo omogočilo drsenje čez vogale okna na poti do cilja, ne da bi to okno postavili naprej. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="focus-multiscreen">
+<title
+>Obnašanje pri večih zaslonih</title>
+
+<para
+>Ta del nastavitev nadzoruje vedenje fokusa oken na več zaslonih. Upoštevajte, da se te možnosti prikažejo le, če imate trenutno povezan več kot en zaslon. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiven zaslon sledi miški</guilabel
+></term>
+<listitem>
+<para
+>Ko je ta možnost omogočena, je aktivni zaslon (kjer se na primer prikažejo nova okna) tisti, ki na katerem kazalec miške. Ko možnost onemogočena, je aktivni zaslon ta, na katerem se nahaja okno v fokusu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Fokus ločenih zaslonov</guilabel
+></term>
+<listitem>
+<para
+>Ko je ta možnost omogočena, so operacije ostrenja omejene samo na aktivni zaslon. Na primer ko zaprete okno, bo naslednje okno, ki bo prejelo fokus na aktivnem zaslonu, tudi če je na drugem zaslonu bolj nedavno uporabljeno okno. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="titlebar-actions">
+<title
+>Dejanja naslovne vrstice</title>
+
+<para
+>Na tej plošči lahko konfigurirate, kaj se zgodi z okni, ko kliknete gumb na miški in se z miško nahajate v njihovih naslovnih vrsticah. </para>
+
+<sect3 id="actions-titlebar">
+<title
+><guilabel
+>Dejanja naslovne vrstice</guilabel
+></title>
+
+<para
+>Ta razdelek vam omogoča, da določite, kaj se zgodi, ko dvokliknete ali pomaknete kolesce miške na naslovno vrstico nekega okna. </para>
+
+<para
+>Za <guilabel
+>Dvojni klik</guilabel
+> so na voljo naslednja dejanja: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maksimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Spremeni velikost okna, da to zapolni višino in širino zaslona. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Navpično maksimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Spremeni velikost okna, da seže do maksimalne višine ekrana. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Vodoravno maksimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Spremeni velikost okna, da zapolni širino ekrana. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Okno skrije v pomanjšano stanje, iz katerega ga je mogoče obnoviti &eg; prek Upravitelja opravil ali Preklopnika opravil. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zasenči</guilabel
+></term>
+<listitem>
+<para
+>Povzroči, da se okno zmanjša le na naslovno vrstico. Ponovni dvoklik na naslovno vrstico obnovi normalno velikost okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zapri</guilabel
+></term>
+<listitem>
+<para
+>Zapre okno. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Prikaži na vseh namizjih</guilabel
+></term>
+<listitem>
+<para
+>Naredi, da je okno vidno na vseh namizjih. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ne naredi ničesar</guilabel
+></term>
+<listitem>
+<para
+>Ob dvokliku se ne zgodi nič. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+><guilabel
+>Kolešček miške</guilabel
+> lahko uporabite za sprožitev dejanja glede na to, ali se pomaknete navzgor ali navzdol: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Dvigni/spusti</guilabel
+></term>
+<listitem>
+<para
+>S pomikanjem navzgor se okno premakne nad druga okna. </para>
+<para
+>Pomikanje navzdol bo premaknilo okno pod druga okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zasenči/razveljavi</guilabel
+></term>
+<listitem>
+<para
+>Če se s koleščkom pomaknete navzgor, se bo okno strnilo samo na naslovno vrstico. </para>
+<para
+>Če se pomaknete navzdol, boste oknu povrnili običajno velikost. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maksimiraj/obnovi</guilabel
+></term>
+<listitem>
+<para
+>Če se s koleščkom miške pomaknete navzgor, bo okno povečano, da zapolni celoten zaslon. </para>
+<para
+>Če se pomaknete navzdol, se povrne na prejš¡njo velikost. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ohrani zgoraj/spodaj</guilabel
+></term>
+<listitem>
+<para
+>Če se pomaknete navzgor, bo okno ostalo na vrhu in prekrilo druga okna. </para>
+<para
+>Če se pomaknete navzdol, bo okno ostalo pokrito pod drugimi okni. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Premik na prejšnje/naslednje namizje</guilabel
+></term>
+<listitem>
+<para
+>S pomikanjem navzgor se bo okno premaknilo na prejšnje virtualno namizje. </para>
+<para
+>Pomikanje navzdol bo premaknilo okno na naslednje virtualno namizje. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Spremeni motnost</guilabel
+></term>
+<listitem>
+<para
+>Če se pomaknete navzgor, bo okno manj pregledno. </para>
+<para
+>Če se pomaknete navzdol, bo okno bolj pregledno. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ne naredi ničesar</guilabel
+></term>
+<listitem>
+<para
+>Nič se ne zgodi, ko se pomikate gor ali dol v naslovni vrstici okna. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<tip>
+<para
+>Okna lahko samodejno prenehajo biti zasenčena, če preprosto postavite miško na njihovo zasenčeno naslovno vrstico. Preprosto označite potrditveno polje <link linkend="advanced-unshading"
+><guilabel
+>Razveljavitev senčenja oken</guilabel
+></link
+> na zavihku <guilabel
+>Napredno</guilabel
+> tega modula. To je odličen način za povrnitev prostora na zaslonu, ko na primer izrezujete in lepite med številnimi okni. </para>
+</tip>
+
+</sect3>
+
+<sect3 id="actions-titlebar-frame">
+<title
+><guilabel
+>Dejanja naslovne vrstice in okvirja</guilabel
+></title>
+
+<para
+>Ta razdelek vam omogoča, da določite, kaj se zgodi, ko enkrat kliknete na naslovno vrstico ali okvir okna. Upoštevajte, da imate lahko z istim klikom povezana različna dejanja, odvisno od tega, ali je okno aktivno ali ne. </para>
+
+<para
+>Za vsako kombinacijo gumbov miške, aktivnih in neaktivnih, lahko izberete najprimernejšo izbiro. Dejanja so naslednja: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Dvigni</guilabel
+></term>
+<listitem>
+<para
+>Okno bo postavljeno na vrh okenskega sklada. Vsa ostala okna, ki se prekrivajo s tem, bodo skrita <quote
+>pod</quote
+> njim. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nižje</guilabel
+></term>
+<listitem>
+<para
+>To okno bo premaknjeno na dno nabora oken. To bo okno odstranilo s poti. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Preklapljanje dviga in spuščanja</guilabel
+></term>
+<listitem>
+<para
+>To bo dvignilo okna, ki niso na vrhu, in znižalo okna, ki so že na vrhu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Okno skrije v pomanjšano stanje, iz katerega ga je mogoče obnoviti &eg; prek Upravitelja opravil ali Preklopnika opravil. </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+
+<term
+><guilabel
+>Zasenči</guilabel
+></term>
+<listitem>
+<para
+>Povzroči, da se okno zmanjša le na naslovno vrstico. Ponovni dvoklik na naslovno vrstico obnovi normalno velikost okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zapri</guilabel
+></term>
+<listitem>
+<para
+>Zapre okno. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pokaži meni dejanj</guilabel
+></term>
+<listitem>
+<para
+>Prikaže se majhen podmeni, kjer lahko izberete ukaze, povezane z oknom (&ie;. Premakni na namizje, Premakni na zaslon, Povečaj, Pomanjšaj, Zapri &etc;.). </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ne naredi ničesar</guilabel
+></term>
+<listitem>
+<para
+>Ob kliku se ne zgodi nič. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-maximize-button">
+<title
+><guilabel
+>Maksimiraj dejanja gumbov</guilabel
+></title>
+
+<para
+>Ta razdelek vam omogoča, da določite obnašanje treh miškinih gumbov na gumbu za povečanje. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Maksimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Spremeni velikost okna na višino in širino zaslona. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Navpično maksimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Spremeni velikost okna, da seže do maksimalne višine ekrana. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Vodoravno maksimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Spremeni velikost okna, da zapolni širino ekrana. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="window-actions">
+<title
+>Dejanja okna</title>
+
+<sect3 id="actions-inactive-inner-window">
+<title
+><guilabel
+>Neaktivno notranje okno</guilabel
+></title>
+
+<para
+>Ta del modula vam omogoča, da konfigurirate, kaj se zgodi, ko kliknete na neaktivno okno s katerim koli od treh gumbov miške ali uporabite kolesce miške. </para>
+
+<para
+>Vaše izbire so naslednje: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj, dvigni in prepusti klik</guilabel
+></term>
+<listitem>
+<para
+>To naredi okno, na katerega ste kliknili, aktivno, ga dvigne na vrh zaslona in posreduje klik miške aplikaciji v oknu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj in prepusti klik</guilabel
+></term>
+<listitem>
+<para
+>S tem okno, na katerega ste kliknili, postane aktivno, klik miške pa posreduje aplikaciji v oknu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj</guilabel
+></term>
+<listitem>
+<para
+>To preprosto naredi kliknjeno okno aktivno. Klik miške se ne posreduje aplikaciji znotraj okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj in dvigni</guilabel
+></term>
+<listitem>
+<para
+>To naredi kliknjeno okno aktivno in ga dvigne na vrh zaslona. Klik miške se ne posreduje aplikaciji znotraj okna. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Vaše možnosti za <guilabel
+>kolesce miške</guilabel
+> so naslednje: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Premik</guilabel
+></term>
+<listitem>
+<para
+>Samo premika vsebino znotraj okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj in pomikaj</guilabel
+></term>
+<listitem>
+<para
+>To naredi kliknjeno okno aktivno in pomika po vsebini. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj, dvigni in pomikaj</guilabel
+></term>
+<listitem>
+<para
+>To naredi kliknjeno okno aktivno, dvigne okno na vrh zaslona in pomika po vsebini. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="actions-inner-window-titlebar-frame">
+<title
+><guilabel
+>Notranje okno, naslovna vrstica in okvir</guilabel
+></title>
+
+<para
+>Ta spodnji del vam omogoča, da konfigurirate dodatna dejanja, ko kliknete okno s pritisnjeno modifikacijsko tipko. </para>
+
+<para
+>Kot <guilabel
+>Modifikatorsko tipko</guilabel
+> lahko izbirate med <guilabel
+>Meta</guilabel
+> (privzeto) ali <guilabel
+>Alt</guilabel
+>. </para>
+
+<para
+>Še enkrat lahko izberete različna dejanja za klike <mousebutton
+>levega</mousebutton
+>, <mousebutton
+>srednjega</mousebutton
+> in <mousebutton
+>desnega</mousebutton
+> gumba ter vrtenje <guilabel
+>miškinega kolesca</guilabel
+>. </para>
+
+<para
+>Vaše izbire za gumbe miške so: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Premakni se</guilabel
+></term>
+<listitem>
+<para
+>Omogoča vlečenje izbranega okna po delovnem prostoru. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Aktiviraj, dvigni in premakni</guilabel
+></term>
+<listitem>
+<para
+>To naredi kliknjeno okno aktivno, ga dvigne na vrh okenskega sklada in povleče okno po delovnem prostoru. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Preklapljanje dviga in spuščanja</guilabel
+></term>
+<listitem>
+<para
+>To bo dvignilo okna, ki niso na vrhu, in znižalo okna, ki so že na vrhu. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Spremeni velikost</guilabel
+></term>
+<listitem>
+<para
+>Omogoča spreminjanje velikosti izbranega okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Dvigni</guilabel
+></term>
+<listitem>
+<para
+>Okno bo postavljeno na vrh okenskega sklada. Vsa ostala okna, ki se prekrivajo s tem, bodo skrita <quote
+>pod</quote
+> njim. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Nižje</guilabel
+></term>
+<listitem>
+<para
+>To okno bo premaknjeno na dno nabora oken. To bo okno odstranilo s poti. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Minimiziraj</guilabel
+></term>
+<listitem>
+<para
+>Okno skrije v pomanjšano stanje, iz katerega ga je mogoče obnoviti &eg; prek Upravitelja opravil ali Preklopnika opravil. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zmanjšaj motnost</guilabel
+></term>
+<listitem>
+<para
+>Naredi okno bolj pregledno. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Povečaj motnost</guilabel
+></term>
+<listitem>
+<para
+>Okno naredi manj pregledno. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ne naredi ničesar</guilabel
+></term>
+<listitem>
+<para
+>Ob kliku se ne zgodi nič. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<para
+>Vaše možnosti za kolesce miške so: </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Dvigni/spusti</guilabel
+></term>
+<listitem>
+<para
+>S pomikanjem navzgor se okno premakne nad druga okna. </para>
+<para
+>Pomikanje navzdol bo premaknilo okno pod druga okna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Zasenči/razveljavi</guilabel
+></term>
+<listitem>
+<para
+>Če se s koleščkom pomaknete navzgor, se bo okno strnilo samo na naslovno vrstico. </para>
+<para
+>Če se pomaknete navzdol, boste oknu povrnili običajno velikost. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maksimiraj/obnovi</guilabel
+></term>
+<listitem>
+<para
+>Če se s koleščkom miške pomaknete navzgor, bo okno povečano, da zapolni celoten zaslon. </para>
+<para
+>Če se pomaknete navzdol, se povrne na prejš¡njo velikost. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ohrani zgoraj/spodaj</guilabel
+></term>
+<listitem>
+<para
+>Če se pomaknete navzgor, bo okno ostalo na vrhu in prekrilo druga okna. </para>
+<para
+>Če se pomaknete navzdol, bo okno ostalo pokrito pod drugimi okni. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Premik na prejšnje/naslednje namizje</guilabel
+></term>
+<listitem>
+<para
+>S pomikanjem navzgor se bo okno premaknilo na prejšnje virtualno namizje. </para>
+<para
+>Pomikanje navzdol bo premaknilo okno na naslednje virtualno namizje. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Spremeni motnost</guilabel
+></term>
+<listitem>
+<para
+>Če se pomaknete navzgor, bo okno manj pregledno. </para>
+<para
+>Če se pomaknete navzdol, bo okno bolj pregledno. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Ne naredi ničesar</guilabel
+></term>
+<listitem>
+<para
+>Nič se ne zgodi, ko se pomikate gor ali dol po naslovni vrstici okna. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+<sect2 id="movement">
+<title
+>Gibanje</title>
+
+<para
+>Ta stran vam omogoča, da konfigurirate <guilabel
+>Območja zapenjanja</guilabel
+>. Ta so kot magnetno polje vzdolž strani zaslona in vsakega okna, zaradi česar se okna zaskočijo poleg, ko jih premaknemo blizu. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Območje zaskočitve roba zaslona</guilabel
+></term>
+<listitem>
+<para
+>Tukaj lahko nastavite območje zaskočitve za robove zaslona. Če premaknete okno znotraj nastavljene razdalje, se bo zaskočilo na rob zaslona. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Območje zaskočitve okna</guilabel
+></term>
+<listitem>
+<para
+>Tukaj lahko nastavite območje zaskočitve za okna. Tako kot pri robovih zaslona se bo pri premikanju okna k drugemu okno zaskočilo na rob, kot da bi bila okna magnetna. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Centralno območje zaskočitve</guilabel
+></term>
+<listitem>
+<para
+>Tukaj lahko nastavite območje zaskočitve za sredino zaslona, &ie;. <quote
+>moč</quote
+> magnetnega polja, zaradi katerega se okna zaskočijo na sredino zaslona, ko se premaknejo blizu njega. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pripni okna: Samo pri prekrivanju</guilabel
+></term>
+<listitem>
+<para
+>Če je ta možnost označena, se okna ne bodo zaskočila skupaj, če so zgolj blizu drug drugega. Za zaskočitev se morajo prekrivati za konfigurirano količino ali manj. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+<tip>
+<para
+>V modulu z nastavitvami <guilabel
+>Robovi zaslona</guilabel
+> v razdelku <guilabel
+>Vedenje delovnega prostora</guilabel
+> sistemskih nastavitev lahko konfigurirate okna tako, da se hitro razporedijo po celem, polovici ali četrtini zaslona ko jih povlečete blizu robov zaslona. </para>
+</tip>
+
+</sect2>
+
+<sect2 id="advanced">
+<title
+>Napredno</title>
+
+<para
+>Na plošči <guilabel
+>Napredno</guilabel
+> lahko izvedete naprednejšo fino nastavitev obnašanja oken. </para>
+
+<sect3 id="advanced-unshading">
+<title
+>Odstranjevanje senčenja okna</title>
+
+<variablelist>
+<varlistentry>
+<term
+><guilabel
+>V naslovni vrstici premaknite miškin kazalec za</guilabel
+></term>
+<listitem>
+<para
+>Če je ta možnost omogočena, se zasenčenost okna samodejno odstrani, ko je kazalec miške nekaj časa nad naslovno vrstico. Uporabite spinbox, da konfigurirate zakasnitev odstranjevanja senčenja. </para>
+</listitem>
+</varlistentry>
+</variablelist>
+</sect3>
+
+<sect3 id="advanced-placement">
+<title
+>Postavitev okna</title>
+
+<para
+>Politika umestitve določa, kje na zaslonu se bo prikazalo novo okno. </para>
+
+<para
+>Pri nastavitvi z več monitorji je zaslon, na katerem se prikažejo okna, vedno aktivni zaslon (to je zaslon, na katerem je kazalec miške ali fokusirano okno; glejte <link linkend="focus-multiscreen"
+>Obnašanje pri več zaslonih</link
+>), z izjemo oken, ki si zapomnijo svoj prejšnji položaj (glejte <link linkend="advanced-remember-positions"
+>spodaj</link
+>). </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Minimalno prekrivanje</guilabel
+></term>
+<listitem>
+<para
+>Vsa nova okna bomo postavili tako, da se bodo obstoječa okna čim manj prekrivala. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Maksimirano</guilabel
+></term>
+<listitem>
+<para
+>Možnost poskusi povečati vsa nova okna do te mere, da zapolnijo celoten zaslon. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Naključno</guilabel
+></term>
+<listitem>
+<para
+>Vsa nova okna bodo postaviljena na naključne lokacije. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Na sredini</guilabel
+></term>
+<listitem>
+<para
+>Vsa nova okna bodo postavljena na sredino zaslona. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>V zgornjem levem kotu</guilabel
+></term>
+<listitem>
+<para
+>Postavi vsa nova okna z zgornjim levim kotom v zgornji levi kot zaslona. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Pod miško</guilabel
+></term>
+<listitem>
+<para
+>Vsa nova okna bodo postavljena na sredino pod kazalcem miške. </para>
+</listitem>
+</varlistentry>
+  
+</variablelist>
+
+<para id="advanced-remember-positions"
+>Označite element <guilabel
+>Dovoli aplikacijam, da si zapomnijo položaje lastnih oken</guilabel
+>, da odprejo okna tam, kjer so prej bila, namesto z zgoraj izbranim načinom postavitve. Upoštevajte, da ta zapomnjeni položaj vključuje dodelitev zaslona, zato se lahko okna odprejo na zaslonu, ki ni aktiven, če so bila na tem mestu nazadnje. Upoštevajte tudi, da je ta možnost na voljo samo na X11, ne na Waylandu, in jo podpirajo samo nekatere aplikacije KDE. </para>
+
+<tip>
+<para
+>Če želite, da se nekatera okna prikažejo na določenih položajih, zaslonih ali virtualnih namizjih, lahko nastavite <guilabel
+>Pravila za okna</guilabel
+>, da konfigurirate posebne nastavitve oken ali aplikacij. To najdete tako, da z desno miškino tipko kliknete naslovno vrstico okna in izberete <guimenu
+>Več dejanj</guimenu
+> ali v modulu <guilabel
+>Pravila za okna</guilabel
+> v <guilabel
+>Upravljanje oken</guilabel
+> v razdeleku sistemskih nastavitev. </para>
+</tip>
+
+
+</sect3>
+
+<sect3 id="advanced-special-windows">
+<title
+>Posebna okna</title>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Skrij pomožna okna za neaktivne aplikacije</guilabel
+></term>
+<listitem>
+<para
+>Ko je vklopljena, bodo pomožna okna (orodna okna, iztrgani meniji, ...) neaktivnih aplikacij skrita in prikazana šele, ko aplikacija postane aktivna. Upoštevajte, da morajo aplikacije označiti okna z ustrezno vrsto okna, da ta funkcija deluje. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+<sect3 id="advanced-virtual-desktop-behavior">
+<title
+>Vedenje navideznega namizja</title>
+
+<para
+>Včasih se s klicem aplikacije aktivira obstoječe okno, namesto da se odpre novo. Ta nastavitev nadzira, kaj naj se zgodi, če se to aktivirano okno nahaja na navideznem namizju, ki ni trenutno. </para>
+
+<variablelist>
+
+<varlistentry>
+<term
+><guilabel
+>Preklopite na to virtualno namizje</guilabel
+></term>
+<listitem>
+<para
+>Preklopi na navidezno namizje, kjer se trenutno nahaja okno. </para>
+<para
+>Izberite to možnost, če želite, da aktivno navidezno namizje samodejno sledi oknom na dodeljeno navidezno namizje. </para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term
+><guilabel
+>Prenesi okno na trenutno navidezno namizje</guilabel
+></term>
+<listitem>
+<para
+>Okno bo skočilo na aktivno navidezno namizje. </para>
+<para
+>Izberite to možnost, če želite, da se okna vedno odprejo na trenutnem navideznem namizju in da se aktivno navidezno namizje preklopi samo pri ročnem krmarjenju. </para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</sect3>
+
+</sect2>
+
+</sect1>
+
+</article>
