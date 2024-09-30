@@ -242,8 +242,8 @@ QString UdevDevice::action() const
 
 bool UdevDevice::isHotpluggable() const
 {
-    QString devPath = QString::fromUtf8(udev_device_get_devpath(m_device));
-    return devPath.toLower().contains("usb");
+    const auto devPath = QString::fromUtf8(udev_device_get_devpath(m_device));
+    return devPath.contains("usb", Qt::CaseInsensitive);
 }
 
 UdevMonitor::UdevMonitor(Udev *udev)
