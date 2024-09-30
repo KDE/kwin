@@ -56,12 +56,15 @@ private:
     TimePoint estimateNextVblank(TimePoint now) const;
     void optimizeCommits(TimePoint pageflipTarget);
     void submit();
+    void handlePing();
 
+    DrmGpu *const m_gpu;
     std::unique_ptr<DrmCommit> m_committed;
     std::vector<std::unique_ptr<DrmAtomicCommit>> m_commits;
     std::unique_ptr<QThread> m_thread;
     std::mutex m_mutex;
     std::condition_variable m_commitPending;
+    std::condition_variable m_pong;
     TimePoint m_lastPageflip;
     TimePoint m_targetPageflipTime;
     std::chrono::nanoseconds m_minVblankInterval;
@@ -69,6 +72,7 @@ private:
     bool m_vrr = false;
     bool m_tearing = false;
     std::chrono::nanoseconds m_safetyMargin{0};
+    bool m_ping = false;
 };
 
 }
