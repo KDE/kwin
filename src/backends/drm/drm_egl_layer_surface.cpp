@@ -340,7 +340,8 @@ bool EglGbmLayerSurface::doesSurfaceFit(Surface *surface, const QSize &size, con
         return formats.contains(surface->importDumbSwapchain->format());
     case MultiGpuImportMode::Egl: {
         const auto format = surface->importGbmSwapchain->format();
-        return formats.contains(format) && (surface->importGbmSwapchain->modifier() == DRM_FORMAT_MOD_INVALID || formats[format].contains(surface->importGbmSwapchain->modifier()));
+        const auto it = formats.find(format);
+        return it != formats.end() && (surface->importGbmSwapchain->modifier() == DRM_FORMAT_MOD_INVALID || it->contains(surface->importGbmSwapchain->modifier()));
     }
     }
     Q_UNREACHABLE();

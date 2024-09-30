@@ -76,12 +76,12 @@ public:
 
 bool QuickSceneEffectPrivate::isItemOnScreen(QQuickItem *item, Output *screen) const
 {
-    if (!item || !screen || !views.contains(screen)) {
+    if (!item || !screen) {
         return false;
     }
 
-    const auto &view = views.at(screen);
-    return item->window() == view->window();
+    const auto it = views.find(screen);
+    return it != views.end() && item->window() == it->second->window();
 }
 
 QuickSceneView::QuickSceneView(QuickSceneEffect *effect, Output *screen)
