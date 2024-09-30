@@ -89,6 +89,7 @@ public:
     bool isVmwgfx() const;
     bool isVirtualMachine() const;
     std::optional<Version> nvidiaDriverVersion() const;
+    QString driverName() const;
     EglDisplay *eglDisplay() const;
     DrmBackend *platform() const;
     /**
@@ -117,6 +118,7 @@ public:
     FileDescriptor createNonMasterFd() const;
     std::unique_ptr<DrmLease> leaseOutputs(const QList<DrmOutput *> &outputs);
     void waitIdle();
+    void dispatchEvents();
 
 Q_SIGNALS:
     void activeChanged(bool active);
@@ -124,7 +126,6 @@ Q_SIGNALS:
     void outputRemoved(DrmAbstractOutput *output);
 
 private:
-    void dispatchEvents();
     DrmOutput *findOutput(quint32 connector);
     void removeOutput(DrmOutput *output);
     void initDrmResources();
@@ -144,6 +145,7 @@ private:
     bool m_isAmdgpu;
     bool m_isVmwgfx;
     bool m_isVirtualMachine;
+    QString m_driverName;
     bool m_supportsCursorPlaneHotspot = false;
     bool m_asyncPageflipSupported = false;
     bool m_isRemoved = false;
