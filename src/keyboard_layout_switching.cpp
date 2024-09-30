@@ -43,13 +43,13 @@ void Policy::setLayout(uint index)
 
 std::unique_ptr<Policy> Policy::create(Xkb *xkb, KeyboardLayout *layout, const KConfigGroup &config, const QString &policy)
 {
-    if (policy.toLower() == QStringLiteral("desktop")) {
+    if (policy.toLower() == QLatin1StringView("desktop")) {
         return std::make_unique<VirtualDesktopPolicy>(xkb, layout, config);
     }
-    if (policy.toLower() == QStringLiteral("window")) {
+    if (policy.toLower() == QLatin1StringView("window")) {
         return std::make_unique<WindowPolicy>(xkb, layout);
     }
-    if (policy.toLower() == QStringLiteral("winclass")) {
+    if (policy.toLower() == QLatin1StringView("winclass")) {
         return std::make_unique<ApplicationPolicy>(xkb, layout, config);
     }
     return std::make_unique<GlobalPolicy>(xkb, layout, config);

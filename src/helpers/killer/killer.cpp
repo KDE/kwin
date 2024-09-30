@@ -187,7 +187,7 @@ int main(int argc, char *argv[])
         fprintf(stdout, "%s\n", qPrintable(i18n("This helper utility is not supposed to be called directly.")));
         parser.showHelp(1);
     }
-    bool isLocal = hostname == QStringLiteral("localhost");
+    bool isLocal = hostname == QLatin1StringView("localhost");
 
     const auto service = KService::serviceByDesktopName(appname);
     if (service) {

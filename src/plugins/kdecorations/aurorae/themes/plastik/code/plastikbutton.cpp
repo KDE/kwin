@@ -35,13 +35,13 @@ QPixmap PlastikButtonProvider::requestPixmap(const QString &id, QSize *size, con
     bool active = false;
     bool toggled = false;
     bool shadow = false;
-    if (idParts.length() > 1 && idParts.at(1) == QStringLiteral("true")) {
+    if (idParts.length() > 1 && idParts.at(1) == QLatin1StringView("true")) {
         active = true;
     }
-    if (idParts.length() > 2 && idParts.at(2) == QStringLiteral("true")) {
+    if (idParts.length() > 2 && idParts.at(2) == QLatin1StringView("true")) {
         toggled = true;
     }
-    if (idParts.length() > 3 && idParts.at(3) == QStringLiteral("true")) {
+    if (idParts.length() > 3 && idParts.at(3) == QLatin1StringView("true")) {
         shadow = true;
     }
     ButtonIcon button;

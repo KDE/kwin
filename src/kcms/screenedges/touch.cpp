@@ -303,19 +303,19 @@ void KWinScreenEdgesConfig::monitorShowEvent()
 ElectricBorderAction KWinScreenEdgesConfig::electricBorderActionFromString(const QString &string)
 {
     QString lowerName = string.toLower();
-    if (lowerName == QStringLiteral("showdesktop")) {
+    if (lowerName == QLatin1StringView("showdesktop")) {
         return ElectricActionShowDesktop;
     }
-    if (lowerName == QStringLiteral("lockscreen")) {
+    if (lowerName == QLatin1StringView("lockscreen")) {
         return ElectricActionLockScreen;
     }
-    if (lowerName == QStringLiteral("krunner")) {
+    if (lowerName == QLatin1StringView("krunner")) {
         return ElectricActionKRunner;
     }
-    if (lowerName == QStringLiteral("activitymanager")) {
+    if (lowerName == QLatin1StringView("activitymanager")) {
         return ElectricActionActivityManager;
     }
-    if (lowerName == QStringLiteral("applicationlauncher")) {
+    if (lowerName == QLatin1StringView("applicationlauncher")) {
         return ElectricActionApplicationLauncher;
     }
     return ElectricActionNone;

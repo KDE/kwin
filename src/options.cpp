@@ -706,7 +706,7 @@ void Options::loadConfig()
     config = KConfigGroup(m_settings->config(), QStringLiteral("MouseBindings"));
     // TODO: add properties for missing options
     CmdTitlebarWheel = mouseWheelCommand(config.readEntry("CommandTitlebarWheel", "Nothing"));
-    CmdAllModKey = (config.readEntry("CommandAllKey", "Meta") == QStringLiteral("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
+    CmdAllModKey = (config.readEntry("CommandAllKey", "Meta") == QLatin1StringView("Meta")) ? Qt::Key_Meta : Qt::Key_Alt;
     CmdAllWheel = mouseWheelCommand(config.readEntry("CommandAllWheel", "Nothing"));
     setCommandActiveTitlebar1(mouseCommand(config.readEntry("CommandActiveTitlebar1", "Raise"), true));
     setCommandActiveTitlebar2(mouseCommand(config.readEntry("CommandActiveTitlebar2", "Nothing"), true));
@@ -802,9 +802,9 @@ void Options::loadConfig()
         }
     };
     auto keyToInterface = [](const QString &key) {
-        if (key == QStringLiteral("glx")) {
+        if (key == QLatin1StringView("glx")) {
             return GlxPlatformInterface;
-        } else if (key == QStringLiteral("egl")) {
+        } else if (key == QLatin1StringView("egl")) {
             return EglPlatformInterface;
         }
         return defaultGlPlatformInterface();
@@ -853,27 +853,27 @@ void Options::syncFromKcfgc()
 // may not be able to move it back, unless they know about Meta+LMB)
 Options::WindowOperation Options::windowOperation(const QString &name, bool restricted)
 {
-    if (name == QStringLiteral("Move")) {
+    if (name == QLatin1StringView("Move")) {
         return restricted ? MoveOp : UnrestrictedMoveOp;
-    } else if (name == QStringLiteral("Resize")) {
+    } else if (name == QLatin1StringView("Resize")) {
         return restricted ? ResizeOp : UnrestrictedResizeOp;
-    } else if (name == QStringLiteral("Maximize")) {
+    } else if (name == QLatin1StringView("Maximize")) {
         return MaximizeOp;
-    } else if (name == QStringLiteral("Minimize")) {
+    } else if (name == QLatin1StringView("Minimize")) {
         return MinimizeOp;
-    } else if (name == QStringLiteral("Close")) {
+    } else if (name == QLatin1StringView("Close")) {
         return CloseOp;
-    } else if (name == QStringLiteral("OnAllDesktops")) {
+    } else if (name == QLatin1StringView("OnAllDesktops")) {
         return OnAllDesktopsOp;
-    } else if (name == QStringLiteral("Shade")) {
+    } else if (name == QLatin1StringView("Shade")) {
         return ShadeOp;
-    } else if (name == QStringLiteral("Operations")) {
+    } else if (name == QLatin1StringView("Operations")) {
         return OperationsOp;
-    } else if (name == QStringLiteral("Maximize (vertical only)")) {
+    } else if (name == QLatin1StringView("Maximize (vertical only)")) {
         return VMaximizeOp;
-    } else if (name == QStringLiteral("Maximize (horizontal only)")) {
+    } else if (name == QLatin1StringView("Maximize (horizontal only)")) {
         return HMaximizeOp;
-    } else if (name == QStringLiteral("Lower")) {
+    } else if (name == QLatin1StringView("Lower")) {
         return LowerOp;
     }
     return NoOp;
@@ -882,67 +882,67 @@ Options::WindowOperation Options::windowOperation(const QString &name, bool rest
 Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted)
 {
     QString lowerName = name.toLower();
-    if (lowerName == QStringLiteral("raise")) {
+    if (lowerName == QLatin1StringView("raise")) {
         return MouseRaise;
     }
-    if (lowerName == QStringLiteral("lower")) {
+    if (lowerName == QLatin1StringView("lower")) {
         return MouseLower;
     }
-    if (lowerName == QStringLiteral("operations menu")) {
+    if (lowerName == QLatin1StringView("operations menu")) {
         return MouseOperationsMenu;
     }
-    if (lowerName == QStringLiteral("toggle raise and lower")) {
+    if (lowerName == QLatin1StringView("toggle raise and lower")) {
         return MouseToggleRaiseAndLower;
     }
-    if (lowerName == QStringLiteral("activate and raise")) {
+    if (lowerName == QLatin1StringView("activate and raise")) {
         return MouseActivateAndRaise;
     }
-    if (lowerName == QStringLiteral("activate and lower")) {
+    if (lowerName == QLatin1StringView("activate and lower")) {
         return MouseActivateAndLower;
     }
-    if (lowerName == QStringLiteral("activate")) {
+    if (lowerName == QLatin1StringView("activate")) {
         return MouseActivate;
     }
-    if (lowerName == QStringLiteral("activate, raise and pass click")) {
+    if (lowerName == QLatin1StringView("activate, raise and pass click")) {
         return MouseActivateRaiseAndPassClick;
     }
-    if (lowerName == QStringLiteral("activate and pass click")) {
+    if (lowerName == QLatin1StringView("activate and pass click")) {
         return MouseActivateAndPassClick;
     }
-    if (lowerName == QStringLiteral("scroll")) {
+    if (lowerName == QLatin1StringView("scroll")) {
         return MouseNothing;
     }
-    if (lowerName == QStringLiteral("activate and scroll")) {
+    if (lowerName == QLatin1StringView("activate and scroll")) {
         return MouseActivateAndPassClick;
     }
-    if (lowerName == QStringLiteral("activate, raise and scroll")) {
+    if (lowerName == QLatin1StringView("activate, raise and scroll")) {
         return MouseActivateRaiseAndPassClick;
     }
-    if (lowerName == QStringLiteral("activate, raise and move")) {
+    if (lowerName == QLatin1StringView("activate, raise and move")) {
         return restricted ? MouseActivateRaiseAndMove : MouseActivateRaiseAndUnrestrictedMove;
     }
-    if (lowerName == QStringLiteral("move")) {
+    if (lowerName == QLatin1StringView("move")) {
         return restricted ? MouseMove : MouseUnrestrictedMove;
     }
-    if (lowerName == QStringLiteral("resize")) {
+    if (lowerName == QLatin1StringView("resize")) {
         return restricted ? MouseResize : MouseUnrestrictedResize;
     }
-    if (lowerName == QStringLiteral("shade")) {
+    if (lowerName == QLatin1StringView("shade")) {
         return MouseShade;
     }
-    if (lowerName == QStringLiteral("minimize")) {
+    if (lowerName == QLatin1StringView("minimize")) {
         return MouseMinimize;
     }
-    if (lowerName == QStringLiteral("close")) {
+    if (lowerName == QLatin1StringView("close")) {
         return MouseClose;
     }
-    if (lowerName == QStringLiteral("increase opacity")) {
+    if (lowerName == QLatin1StringView("increase opacity")) {
         return MouseOpacityMore;
     }
-    if (lowerName == QStringLiteral("decrease opacity")) {
+    if (lowerName == QLatin1StringView("decrease opacity")) {
         return MouseOpacityLess;
     }
-    if (lowerName == QStringLiteral("nothing")) {
+    if (lowerName == QLatin1StringView("nothing")) {
         return MouseNothing;
     }
     return MouseNothing;
@@ -951,25 +951,25 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
 Options::MouseWheelCommand Options::mouseWheelCommand(const QString &name)
 {
     QString lowerName = name.toLower();
-    if (lowerName == QStringLiteral("raise/lower")) {
+    if (lowerName == QLatin1StringView("raise/lower")) {
         return MouseWheelRaiseLower;
     }
-    if (lowerName == QStringLiteral("shade/unshade")) {
+    if (lowerName == QLatin1StringView("shade/unshade")) {
         return MouseWheelShadeUnshade;
     }
-    if (lowerName == QStringLiteral("maximize/restore")) {
+    if (lowerName == QLatin1StringView("maximize/restore")) {
         return MouseWheelMaximizeRestore;
     }
-    if (lowerName == QStringLiteral("above/below")) {
+    if (lowerName == QLatin1StringView("above/below")) {
         return MouseWheelAboveBelow;
     }
-    if (lowerName == QStringLiteral("previous/next desktop")) {
+    if (lowerName == QLatin1StringView("previous/next desktop")) {
         return MouseWheelPreviousNextDesktop;
     }
-    if (lowerName == QStringLiteral("change opacity")) {
+    if (lowerName == QLatin1StringView("change opacity")) {
         return MouseWheelChangeOpacity;
     }
-    if (lowerName == QStringLiteral("nothing")) {
+    if (lowerName == QLatin1StringView("nothing")) {
         return MouseWheelNothing;
     }
     return MouseWheelNothing;

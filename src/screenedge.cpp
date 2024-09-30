@@ -821,9 +821,9 @@ void ScreenEdges::init()
 static ElectricBorderAction electricBorderAction(const QString &name)
 {
     QString lowerName = name.toLower();
-    if (lowerName == QStringLiteral("showdesktop")) {
+    if (lowerName == QLatin1StringView("showdesktop")) {
         return ElectricActionShowDesktop;
-    } else if (lowerName == QStringLiteral("lockscreen")) {
+    } else if (lowerName == QLatin1StringView("lockscreen")) {
         return ElectricActionLockScreen;
     } else if (lowerName == QLatin1String("krunner")) {
         return ElectricActionKRunner;

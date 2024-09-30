@@ -81,16 +81,16 @@ WindowViewEffect::WindowViewEffect()
     });
 
     connect(KGlobalAccel::self(), &KGlobalAccel::globalShortcutChanged, this, [this](QAction *action, const QKeySequence &seq) {
-        if (action->objectName() == QStringLiteral("Expose")) {
+        if (action->objectName() == QLatin1StringView("Expose")) {
             m_shortcut.clear();
             m_shortcut.append(seq);
-        } else if (action->objectName() == QStringLiteral("ExposeAll")) {
+        } else if (action->objectName() == QLatin1StringView("ExposeAll")) {
             m_shortcutAll.clear();
             m_shortcutAll.append(seq);
-        } else if (action->objectName() == QStringLiteral("ExposeClass")) {
+        } else if (action->objectName() == QLatin1StringView("ExposeClass")) {
             m_shortcutClass.clear();
             m_shortcutClass.append(seq);
-        } else if (action->objectName() == QStringLiteral("ExposeClassCurrentDesktop")) {
+        } else if (action->objectName() == QLatin1StringView("ExposeClassCurrentDesktop")) {
             m_shortcutClassCurrentDesktop.clear();
             m_shortcutClassCurrentDesktop.append(seq);
         }

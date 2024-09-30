@@ -135,9 +135,9 @@ TileModel *TileManager::model() const
 
 Tile::LayoutDirection strToLayoutDirection(const QString &dir)
 {
-    if (dir == QStringLiteral("horizontal")) {
+    if (dir == QLatin1StringView("horizontal")) {
         return Tile::LayoutDirection::Horizontal;
-    } else if (dir == QStringLiteral("vertical")) {
+    } else if (dir == QLatin1StringView("vertical")) {
         return Tile::LayoutDirection::Vertical;
     } else {
         return Tile::LayoutDirection::Floating;

@@ -1068,7 +1068,7 @@ void Window::ensurePalette()
             m_palette = s_defaultPalette;
         }
 
-        if (m_colorScheme == QStringLiteral("kdeglobals")) {
+        if (m_colorScheme == QLatin1StringView("kdeglobals")) {
             s_defaultPalette = m_palette;
         }
     } else {

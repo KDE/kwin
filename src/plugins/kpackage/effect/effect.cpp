@@ -35,10 +35,10 @@ public:
         }
 
         const QString api = package->metadata().value(QStringLiteral("X-Plasma-API"));
-        if (api == QStringLiteral("javascript")) {
+        if (api == QLatin1StringView("javascript")) {
             package->addFileDefinition("mainscript", QStringLiteral("code/main.js"));
             package->setRequired("mainscript", true);
-        } else if (api == QStringLiteral("declarativescript")) {
+        } else if (api == QLatin1StringView("declarativescript")) {
             package->addFileDefinition("mainscript", QStringLiteral("ui/main.qml"));
             package->setRequired("mainscript", true);
         }

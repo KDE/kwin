@@ -153,7 +153,7 @@ void DrmBackend::handleUdevEvent()
             }
         }
 
-        if (device->action() == QStringLiteral("add")) {
+        if (device->action() == QLatin1StringView("add")) {
             DrmGpu *gpu = findGpu(device->devNum());
             if (gpu) {
                 qCWarning(KWIN_DRM) << "Received unexpected add udev event for:" << device->devNode();
@@ -162,7 +162,7 @@ void DrmBackend::handleUdevEvent()
             if (addGpu(device->devNode())) {
                 updateOutputs();
             }
-        } else if (device->action() == QStringLiteral("remove")) {
+        } else if (device->action() == QLatin1StringView("remove")) {
             DrmGpu *gpu = findGpu(device->devNum());
             if (gpu) {
                 if (primaryGpu() == gpu) {
@@ -174,7 +174,7 @@ void DrmBackend::handleUdevEvent()
                     updateOutputs();
                 }
             }
-        } else if (device->action() == QStringLiteral("change")) {
+        } else if (device->action() == QLatin1StringView("change")) {
             DrmGpu *gpu = findGpu(device->devNum());
             if (!gpu) {
                 gpu = addGpu(device->devNode());

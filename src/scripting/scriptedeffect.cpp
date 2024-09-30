@@ -309,7 +309,7 @@ bool ScriptedEffect::isActiveFullScreenEffect() const
 QList<int> ScriptedEffect::touchEdgesForAction(const QString &action) const
 {
     QList<int> ret;
-    if (m_exclusiveCategory == QStringLiteral("show-desktop") && action == QStringLiteral("show-desktop")) {
+    if (m_exclusiveCategory == QLatin1StringView("show-desktop") && action == QLatin1StringView("show-desktop")) {
         for (const auto b : {ElectricTop, ElectricRight, ElectricBottom, ElectricLeft}) {
             if (workspace()->screenEdges()->actionForTouchBorder(b) == ElectricActionShowDesktop) {
                 ret.append(b);

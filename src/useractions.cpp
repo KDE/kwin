@@ -158,7 +158,7 @@ void UserActionsMenu::helperDialog(const QString &message)
         const auto shortcuts = KGlobalAccel::self()->shortcut(action);
         return QStringLiteral("%1 (%2)").arg(action->text(), shortcuts.isEmpty() ? QString() : shortcuts.first().toString(QKeySequence::NativeText));
     };
-    if (message == QStringLiteral("noborderaltf3")) {
+    if (message == QLatin1StringView("noborderaltf3")) {
         args << QStringLiteral("--msgbox") << i18n("You have selected to show a window without its border.\n"
                                                    "Without the border, you will not be able to enable the border "
                                                    "again using the mouse: use the window operations menu instead, "
