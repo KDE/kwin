@@ -25,9 +25,9 @@ PlacementTracker::WindowData PlacementTracker::dataForWindow(Window *window) con
         .outputUuid = window->moveResizeOutput()->uuid(),
         .geometry = window->moveResizeGeometry(),
         .maximize = window->requestedMaximizeMode(),
-        .quickTile = window->quickTileMode(),
+        .quickTile = window->requestedQuickTileMode(),
         .geometryRestore = window->geometryRestore(),
-        .fullscreen = window->isFullScreen(),
+        .fullscreen = window->isRequestedFullScreen(),
         .fullscreenGeometryRestore = window->fullscreenGeometryRestore(),
         .interactiveMoveResizeCount = window->interactiveMoveResizeCount(),
     };
