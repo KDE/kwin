@@ -3589,6 +3589,10 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
     if (requestedMaximizeMode() != MaximizeRestore) {
         m_requestedQuickTileMode = QuickTileFlag::None;
         setMaximize(false, false);
+        if (requestedMaximizeMode() != MaximizeRestore) {
+            // window rules may enforce a different maximize mode, we can't do anything here
+            return;
+        }
         setQuickTileMode(mode, tileAtPoint);
         return;
     }
