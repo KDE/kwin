@@ -34,6 +34,8 @@ void PopupInputFilter::handleWindowAdded(Window *window)
     if (window->hasPopupGrab()) {
         // TODO: verify that the Window is allowed as a popup
         m_popupWindows << window;
+        focus(window);
+
         connect(window, &Window::closed, this, [this, window]() {
             m_popupWindows.removeOne(window);
             // Move focus to the parent popup. If that's the last popup, then move focus back to the parent
