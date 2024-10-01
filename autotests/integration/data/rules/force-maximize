@@ -1,0 +1,14 @@
+[$Version]
+update_info=kwinrules.upd:replace-placement-string-to-enum,kwinrules.upd:use-virtual-desktop-ids
+
+[General]
+count=1
+rules=ad6fd81c-6dea-46e6-a652-dbffe0aeb7d7
+
+[ad6fd81c-6dea-46e6-a652-dbffe0aeb7d7]
+Description=force maximize everything
+maximizehoriz=true
+maximizehorizrule=2
+maximizevert=true
+maximizevertrule=2
+types=1
