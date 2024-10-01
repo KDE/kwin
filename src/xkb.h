@@ -66,8 +66,7 @@ public:
     QString toString(xkb_keysym_t keysym);
     Qt::Key toQtKey(xkb_keysym_t keysym,
                     uint32_t scanCode = 0,
-                    Qt::KeyboardModifiers modifiers = Qt::KeyboardModifiers(),
-                    bool superAsMeta = false) const;
+                    Qt::KeyboardModifiers modifiers = Qt::KeyboardModifiers()) const;
     Qt::KeyboardModifiers modifiers() const;
     Qt::KeyboardModifiers modifiersRelevantForGlobalShortcuts(uint32_t scanCode = 0) const;
     bool shouldKeyRepeat(quint32 key) const;
