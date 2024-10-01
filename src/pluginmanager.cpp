@@ -101,7 +101,7 @@ bool PluginManager::loadPlugin(const KPluginMetaData &metadata)
 
     const QString pluginId = metadata.pluginId();
     QPluginLoader pluginLoader(metadata.fileName());
-    if (pluginLoader.metaData().value("IID").toString() != PluginFactory_iid) {
+    if (pluginLoader.metaData().value(QStringLiteral("IID")).toString() != QLatin1StringView(PluginFactory_iid)) {
         qCWarning(KWIN_CORE) << pluginId << "has mismatching plugin version";
         return false;
     }

@@ -541,7 +541,7 @@ bool Output::isEnabled() const
 
 QString Output::description() const
 {
-    return manufacturer() + ' ' + model();
+    return manufacturer() + u' ' + model();
 }
 
 static QUuid generateOutputId(const QString &eisaId, const QString &model,
@@ -550,7 +550,7 @@ static QUuid generateOutputId(const QString &eisaId, const QString &model,
     static const QUuid urlNs = QUuid("6ba7b811-9dad-11d1-80b4-00c04fd430c8"); // NameSpace_URL
     static const QUuid kwinNs = QUuid::createUuidV5(urlNs, QStringLiteral("https://kwin.kde.org/o/"));
 
-    const QString payload = QStringList{name, eisaId, model, serialNumber}.join(':');
+    const QString payload = QStringList{name, eisaId, model, serialNumber}.join(u':');
     return QUuid::createUuidV5(kwinNs, payload);
 }
 
@@ -725,7 +725,7 @@ QString Output::iccProfilePath() const
     return m_state.iccProfilePath;
 }
 
-QByteArray Output::mstPath() const
+QString Output::mstPath() const
 {
     return m_information.mstPath;
 }

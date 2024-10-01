@@ -49,7 +49,7 @@ private:
 
     std::shared_ptr<GLTexture> m_offscreenTexture;
     std::unique_ptr<GLFramebuffer> m_offscreenTarget;
-    GLsync m_acquireFence = 0;
+    GLsync m_acquireFence = nullptr;
     bool m_dirty = true;
 };
 

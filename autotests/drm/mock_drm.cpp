@@ -215,7 +215,7 @@ void MockConnector::addMode(uint32_t width, uint32_t height, float refreshRate, 
 void MockConnector::setVrrCapable(bool cap)
 {
     auto &prop = *std::ranges::find_if(props, [](const auto &prop) {
-        return prop.name == "vrr_capable";
+        return prop.name == u"vrr_capable";
     });
     prop.value = cap ? 1 : 0;
 }

@@ -71,7 +71,7 @@ void SecurityContextTest::testSecurityContext()
 
     sockaddr_un sockaddr;
     sockaddr.sun_family = AF_UNIX;
-    snprintf(sockaddr.sun_path, sizeof(sockaddr.sun_path), "%s", tempDir.filePath("socket").toUtf8().constData());
+    snprintf(sockaddr.sun_path, sizeof(sockaddr.sun_path), "%s", QFile::encodeName(tempDir.filePath(QStringLiteral("socket"))).constData());
     qDebug() << "listening socket:" << sockaddr.sun_path;
     QVERIFY(bind(listenFd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) == 0);
     QVERIFY(listen(listenFd, 0) == 0);
@@ -84,14 +84,14 @@ void SecurityContextTest::testSecurityContext()
     auto securityContext = new QtWayland::wp_security_context_v1(securityContextManager->create_listener(listenFd, closeFdToGiveToKwin));
     close(closeFdToGiveToKwin);
     close(listenFd);
-    securityContext->set_instance_id("kde.unitest.instance_id");
-    securityContext->set_app_id("kde.unittest.app_id");
-    securityContext->set_sandbox_engine("test_sandbox_engine");
+    securityContext->set_instance_id(QStringLiteral("kde.unitest.instance_id"));
+    securityContext->set_app_id(QStringLiteral("kde.unittest.app_id"));
+    securityContext->set_sandbox_engine(QStringLiteral("test_sandbox_engine"));
     securityContext->commit();
     securityContext->destroy();
     delete securityContext;
 
-    qputenv("WAYLAND_DISPLAY", tempDir.filePath("socket").toUtf8());
+    qputenv("WAYLAND_DISPLAY", QFile::encodeName(tempDir.filePath(QStringLiteral("socket"))));
     QSignalSpy clientConnectedspy(waylandServer()->display(), &Display::clientConnected);
 
     // connect a client using the newly created listening socket
@@ -109,7 +109,7 @@ void SecurityContextTest::testSecurityContext()
 
     // verify that our new restricted client is seen by kwin with the right security context
     QVERIFY(clientConnectedspy.count());
-    QCOMPARE(clientConnectedspy.first().first().value<KWin::ClientConnection *>()->securityContextAppId(), "kde.unittest.app_id");
+    QCOMPARE(clientConnectedspy.first().first().value<KWin::ClientConnection *>()->securityContextAppId(), QStringLiteral("kde.unittest.app_id"));
 
     // verify that the globals for the restricted client does not contain the security context
     KWayland::Client::Registry registry;
@@ -119,7 +119,7 @@ void SecurityContextTest::testSecurityContext()
     registry.setup();
     QVERIFY(allAnnouncedSpy.wait());
     for (auto interfaceSignal : interfaceAnnounced) {
-        QVERIFY(interfaceSignal.first().toString() != "wp_security_context_manager_v1");
+        QVERIFY(interfaceSignal.first().toString() != u"wp_security_context_manager_v1");
     }
 
     // close the mock flatpak closeFDs
@@ -127,7 +127,7 @@ void SecurityContextTest::testSecurityContext()
 
     // security context properties should have not changed after close-fd is closed
     QVERIFY(Test::waylandSync());
-    QCOMPARE(clientConnectedspy.first().first().value<KWin::ClientConnection *>()->securityContextAppId(), "kde.unittest.app_id");
+    QCOMPARE(clientConnectedspy.first().first().value<KWin::ClientConnection *>()->securityContextAppId(), QStringLiteral("kde.unittest.app_id"));
 
     // new clients can't connect anymore
     KWayland::Client::ConnectionThread restrictedClientConnection2;
@@ -158,7 +158,7 @@ void SecurityContextTest::testClosedCloseFdOnStartup()
 
     sockaddr_un sockaddr;
     sockaddr.sun_family = AF_UNIX;
-    snprintf(sockaddr.sun_path, sizeof(sockaddr.sun_path), "%s", tempDir.filePath("socket").toUtf8().constData());
+    snprintf(sockaddr.sun_path, sizeof(sockaddr.sun_path), "%s", QFile::encodeName(tempDir.filePath(QStringLiteral("socket"))).constData());
     qDebug() << "listening socket:" << sockaddr.sun_path;
     QVERIFY(bind(listenFd, (struct sockaddr *)&sockaddr, sizeof(sockaddr)) == 0);
     QVERIFY(listen(listenFd, 0) == 0);
@@ -173,16 +173,16 @@ void SecurityContextTest::testClosedCloseFdOnStartup()
     auto securityContext = new QtWayland::wp_security_context_v1(securityContextManager->create_listener(listenFd, closeFdToGiveToKwin));
     close(closeFdToGiveToKwin);
     close(listenFd);
-    securityContext->set_instance_id("kde.unitest.instance_id");
-    securityContext->set_app_id("kde.unittest.app_id");
-    securityContext->set_sandbox_engine("test_sandbox_engine");
+    securityContext->set_instance_id(QStringLiteral("kde.unitest.instance_id"));
+    securityContext->set_app_id(QStringLiteral("kde.unittest.app_id"));
+    securityContext->set_sandbox_engine(QStringLiteral("test_sandbox_engine"));
     securityContext->commit();
     securityContext->destroy();
     delete securityContext;
 
     QVERIFY(Test::waylandSync());
 
-    qputenv("WAYLAND_DISPLAY", tempDir.filePath("socket").toUtf8());
+    qputenv("WAYLAND_DISPLAY", QFile::encodeName(tempDir.filePath(QStringLiteral("socket"))));
     QSignalSpy clientConnectedspy(waylandServer()->display(), &Display::clientConnected);
 
     // new clients can't connect anymore

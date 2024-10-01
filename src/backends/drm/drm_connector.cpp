@@ -175,7 +175,7 @@ QString DrmConnector::connectorName() const
     if (!connectorName) {
         connectorName = "Unknown";
     }
-    return QStringLiteral("%1-%2").arg(connectorName).arg(m_conn->connector_type_id);
+    return QStringLiteral("%1-%2").arg(QString::fromUtf8(connectorName)).arg(m_conn->connector_type_id);
 }
 
 QString DrmConnector::modelName() const
@@ -198,7 +198,7 @@ QSize DrmConnector::physicalSize() const
     return m_physicalSize;
 }
 
-QByteArray DrmConnector::mstPath() const
+QString DrmConnector::mstPath() const
 {
     return m_mstPath;
 }
@@ -308,13 +308,13 @@ bool DrmConnector::updateProperties()
 
     m_mstPath.clear();
     if (auto blob = path.immutableBlob()) {
-        QByteArray value = QByteArray(static_cast<const char *>(blob->data), blob->length);
+        auto value = QByteArrayView(static_cast<const char *>(blob->data), blob->length);
         if (value.startsWith("mst:")) {
             // for backwards compatibility reasons the string also contains the drm connector id
             // remove that to get a more stable identifier
             const ssize_t firstHyphen = value.indexOf('-');
             if (firstHyphen > 0) {
-                m_mstPath = value.mid(firstHyphen);
+                m_mstPath = QString::fromUtf8(value.mid(firstHyphen));
             } else {
                 qCWarning(KWIN_DRM) << "Unexpected format in path property:" << value;
             }

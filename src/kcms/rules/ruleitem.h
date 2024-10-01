@@ -52,7 +52,7 @@ public:
              const QString &name,
              const QString &section,
              const QIcon &icon = QIcon::fromTheme("window"),
-             const QString &description = QString(""));
+             const QString &description = QStringLiteral(""));
 
     QString key() const;
     QString name() const;

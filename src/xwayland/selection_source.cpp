@@ -135,9 +135,9 @@ bool WlSource::checkStartTransfer(xcb_selection_request_event_t *event)
     const auto firstTarget = targets[0];
 
     auto cmp = [firstTarget](const QString &b) {
-        if (firstTarget == "text/uri-list") {
+        if (firstTarget == u"text/uri-list") {
             // Wayland sources might announce the old mime or the new standard
-            return firstTarget == b || b == "text/x-uri";
+            return firstTarget == b || b == u"text/x-uri";
         }
         return firstTarget == b;
     };

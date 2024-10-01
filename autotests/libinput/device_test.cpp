@@ -284,13 +284,13 @@ void TestLibinputDevice::testNames()
     Device d(&device);
     QCOMPARE(d.name().toUtf8(), name);
     QCOMPARE(d.property("name").toString().toUtf8(), name);
-    QCOMPARE(dbusProperty<QString>(d.sysName(), "name"), name);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), "name"), QString::fromUtf8(name));
     QCOMPARE(d.sysName().toUtf8(), sysName);
     QCOMPARE(d.property("sysName").toString().toUtf8(), sysName);
-    QCOMPARE(dbusProperty<QString>(d.sysName(), "sysName"), sysName);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), "sysName"), QString::fromUtf8(sysName));
     QCOMPARE(d.outputName().toUtf8(), outputName);
     QCOMPARE(d.property("outputName").toString().toUtf8(), outputName);
-    QCOMPARE(dbusProperty<QString>(d.sysName(), "outputName"), outputName);
+    QCOMPARE(dbusProperty<QString>(d.sysName(), "outputName"), QString::fromUtf8(outputName));
 }
 
 void TestLibinputDevice::testProduct()
@@ -1755,24 +1755,24 @@ void TestLibinputDevice::testLoadPointerAccelerationProfile()
     device.setPointerAccelerationProfileReturnValue = false;
 
     Device d(&device);
-    QCOMPARE(d.property(initValuePropName).toBool(), true);
-    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), true);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), initValue == configValue);
     // no config group set, should not change
     d.loadConfiguration();
-    QCOMPARE(d.property(initValuePropName).toBool(), true);
-    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), true);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), initValue == configValue);
 
     // set the group
     d.setConfig(inputConfig);
     d.loadConfiguration();
-    QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
-    QCOMPARE(d.property(configValuePropName).toBool(), true);
-    QCOMPARE(dbusProperty<bool>(d.sysName(), initValuePropName), initValue == configValue);
-    QCOMPARE(dbusProperty<bool>(d.sysName(), configValuePropName), true);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), initValue == configValue);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), true);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), initValuePropName.constData()), initValue == configValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), configValuePropName.constData()), true);
 
     // and try to store
     if (configValue != initValue) {
-        d.setProperty(initValuePropName, true);
+        d.setProperty(initValuePropName.constData(), true);
         QCOMPARE(inputConfig.readEntry("PointerAccelerationProfile", configValue), initValue);
     }
 }
@@ -1818,24 +1818,24 @@ void TestLibinputDevice::testLoadClickMethod()
     device.setClickMethodReturnValue = false;
 
     Device d(&device);
-    QCOMPARE(d.property(initValuePropName).toBool(), true);
-    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), true);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), initValue == configValue);
     // no config group set, should not change
     d.loadConfiguration();
-    QCOMPARE(d.property(initValuePropName).toBool(), true);
-    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), true);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), initValue == configValue);
 
     // set the group
     d.setConfig(inputConfig);
     d.loadConfiguration();
-    QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
-    QCOMPARE(d.property(configValuePropName).toBool(), true);
-    QCOMPARE(dbusProperty<bool>(d.sysName(), initValuePropName), initValue == configValue);
-    QCOMPARE(dbusProperty<bool>(d.sysName(), configValuePropName), true);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), initValue == configValue);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), true);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), initValuePropName.constData()), initValue == configValue);
+    QCOMPARE(dbusProperty<bool>(d.sysName(), configValuePropName.constData()), true);
 
     // and try to store
     if (configValue != initValue) {
-        d.setProperty(initValuePropName, true);
+        d.setProperty(initValuePropName.constData(), true);
         QCOMPARE(inputConfig.readEntry("ClickMethod", configValue), initValue);
     }
 }
@@ -2080,22 +2080,22 @@ void TestLibinputDevice::testLoadScrollMethod()
     device.setScrollMethodReturnValue = false;
 
     Device d(&device);
-    QCOMPARE(d.property(initValuePropName).toBool(), true);
-    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), true);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), initValue == configValue);
     // no config group set, should not change
     d.loadConfiguration();
-    QCOMPARE(d.property(initValuePropName).toBool(), true);
-    QCOMPARE(d.property(configValuePropName).toBool(), initValue == configValue);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), true);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), initValue == configValue);
 
     // set the group
     d.setConfig(inputConfig);
     d.loadConfiguration();
-    QCOMPARE(d.property(initValuePropName).toBool(), initValue == configValue);
-    QCOMPARE(d.property(configValuePropName).toBool(), true);
+    QCOMPARE(d.property(initValuePropName.constData()).toBool(), initValue == configValue);
+    QCOMPARE(d.property(configValuePropName.constData()).toBool(), true);
 
     // and try to store
     if (configValue != initValue) {
-        d.setProperty(initValuePropName, true);
+        d.setProperty(initValuePropName.constData(), true);
         QCOMPARE(inputConfig.readEntry("ScrollMethod", configValue), initValue);
     }
 }

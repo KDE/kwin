@@ -51,7 +51,7 @@ static std::unique_ptr<MockGpu> findPrimaryDevice(int crtcCount)
         if (device->available_nodes & (1 << DRM_NODE_PRIMARY)) {
             int fd = open(device->nodes[DRM_NODE_PRIMARY], O_RDWR | O_CLOEXEC);
             if (fd != -1) {
-                return std::make_unique<MockGpu>(fd, device->nodes[DRM_NODE_PRIMARY], crtcCount);
+                return std::make_unique<MockGpu>(fd, QString::fromUtf8(device->nodes[DRM_NODE_PRIMARY]), crtcCount);
             }
         }
     }

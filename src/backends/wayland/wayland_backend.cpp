@@ -25,6 +25,7 @@
 #include <KWayland/Client/touch.h>
 
 #include <QAbstractEventDispatcher>
+#include <QFile>
 
 #include <drm_fourcc.h>
 #include <fcntl.h>
@@ -446,7 +447,7 @@ bool WaylandBackend::initialize()
     }
 
     if (WaylandLinuxDmabufV1 *dmabuf = m_display->linuxDmabuf()) {
-        m_drmDevice = DrmDevice::open(dmabuf->mainDevice());
+        m_drmDevice = DrmDevice::open(QFile::decodeName(dmabuf->mainDevice()));
         if (!m_drmDevice) {
             qCWarning(KWIN_WAYLAND_BACKEND) << "Failed to open drm render node" << dmabuf->mainDevice();
         }

@@ -175,7 +175,7 @@ void WaylandWindow::updateResourceName()
 {
     const QFileInfo fileInfo(surface()->client()->executablePath());
     if (fileInfo.exists()) {
-        const QByteArray executableFileName = fileInfo.fileName().toUtf8();
+        const QString executableFileName = fileInfo.fileName();
         setResourceClass(executableFileName, executableFileName);
     }
 }

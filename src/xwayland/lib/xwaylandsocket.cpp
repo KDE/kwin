@@ -244,7 +244,7 @@ int XwaylandSocket::display() const
 
 QString XwaylandSocket::name() const
 {
-    return ":" + QString::number(m_display);
+    return u':' + QString::number(m_display);
 }
 
 } // namespace KWin

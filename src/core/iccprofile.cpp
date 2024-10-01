@@ -13,6 +13,8 @@
 #include <span>
 #include <tuple>
 
+#include <QFile>
+
 namespace KWin
 {
 
@@ -224,7 +226,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
     if (path.isEmpty()) {
         return nullptr;
     }
-    cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
+    cmsHPROFILE handle = cmsOpenProfileFromFile(QFile::encodeName(path).constData(), "r");
     if (!handle) {
         qCWarning(KWIN_CORE) << "Failed to open color profile file:" << path;
         return nullptr;

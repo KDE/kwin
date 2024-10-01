@@ -194,9 +194,9 @@ bool XwaylandLauncher::start()
     m_xwaylandProcess->setProcessChannelMode(QProcess::ForwardedErrorChannel);
     m_xwaylandProcess->setProgram(QStringLiteral("Xwayland"));
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
-    env.insert("WAYLAND_SOCKET", QByteArray::number(wlfd));
+    env.insert(QStringLiteral("WAYLAND_SOCKET"), QString::number(wlfd));
     if (qEnvironmentVariableIntValue("KWIN_XWAYLAND_DEBUG") == 1) {
-        env.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
+        env.insert(QStringLiteral("WAYLAND_DEBUG"), QStringLiteral("1"));
     }
     m_xwaylandProcess->setProcessEnvironment(env);
     m_xwaylandProcess->setArguments(arguments);

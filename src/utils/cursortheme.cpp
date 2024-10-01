@@ -203,7 +203,7 @@ static QStringList defaultSearchPaths()
     static QStringList paths;
     if (paths.isEmpty()) {
         if (const QString env = qEnvironmentVariable("XCURSOR_PATH"); !env.isEmpty()) {
-            const QStringList rawPaths = env.split(':', Qt::SkipEmptyParts);
+            const QStringList rawPaths = env.split(u':', Qt::SkipEmptyParts);
             for (const QString &rawPath : rawPaths) {
                 paths.append(KShell::tildeExpand(rawPath));
             }

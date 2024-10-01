@@ -73,7 +73,7 @@ WindowThumbnailSource::~WindowThumbnailSource()
 
     if (m_acquireFence) {
         glDeleteSync(m_acquireFence);
-        m_acquireFence = 0;
+        m_acquireFence = nullptr;
     }
 }
 

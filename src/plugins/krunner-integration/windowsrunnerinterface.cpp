@@ -201,8 +201,7 @@ void WindowsRunner::Run(const QString &id, const QString &actionId)
     auto objectId = parts[1];
 
     if (action == ActivateDesktopAction) {
-        QByteArray desktopId = objectId.toLocal8Bit();
-        auto desktop = VirtualDesktopManager::self()->desktopForId(desktopId);
+        auto desktop = VirtualDesktopManager::self()->desktopForId(objectId);
         VirtualDesktopManager::self()->setCurrent(desktop);
         return;
     }

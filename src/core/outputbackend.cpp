@@ -89,7 +89,7 @@ void OutputBackend::removeVirtualOutput(Output *output)
 
 QString OutputBackend::supportInformation() const
 {
-    return QStringLiteral("Name: %1\n").arg(metaObject()->className());
+    return QStringLiteral("Name: %1\n").arg(QString::fromUtf8(metaObject()->className()));
 }
 
 ::EGLContext OutputBackend::sceneEglGlobalShareContext() const

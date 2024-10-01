@@ -219,13 +219,13 @@ void TestTextInputV1Interface::testEnableDisable()
     // Now enable the textInput, we should not get event just yet
     m_clientTextInputV1->activate(*m_clientSeat, *clientSurface);
     m_clientTextInputV1->set_cursor_rectangle(0, 0, 20, 20);
-    m_clientTextInputV1->set_surrounding_text("KDE Plasma Desktop", 0, 3);
+    m_clientTextInputV1->set_surrounding_text(QStringLiteral("KDE Plasma Desktop"), 0, 3);
     QVERIFY(surfaceEnterSpy.wait());
 
     QCOMPARE(textInputEnabledSpy.count(), 1);
     QCOMPARE(cursorRectangleChangedSpy.count(), 1);
     QCOMPARE(m_serverTextInputV1->cursorRectangle(), QRect(0, 0, 20, 20));
-    QCOMPARE(m_serverTextInputV1->surroundingText(), QString("KDE Plasma Desktop"));
+    QCOMPARE(m_serverTextInputV1->surroundingText(), QStringLiteral("KDE Plasma Desktop"));
     QCOMPARE(m_serverTextInputV1->surroundingTextCursorPosition(), 0);
     QCOMPARE(m_serverTextInputV1->surroundingTextSelectionAnchor(), 3);
 
@@ -272,16 +272,16 @@ void TestTextInputV1Interface::testEvents()
     QSignalSpy commitStringSpy(m_clientTextInputV1, &TextInputV1::commit_string);
     QSignalSpy deleteSurroundingSpy(m_clientTextInputV1, &TextInputV1::delete_surrounding_text);
 
-    m_serverTextInputV1->preEdit("Hello KDE community!", "Hello");
+    m_serverTextInputV1->preEdit(QStringLiteral("Hello KDE community!"), QStringLiteral("Hello"));
     m_serverTextInputV1->deleteSurroundingText(6, 10);
-    m_serverTextInputV1->commitString("Plasma");
+    m_serverTextInputV1->commitString(QStringLiteral("Plasma"));
 
     // Wait for the last update
     QVERIFY(commitStringSpy.wait());
 
-    QCOMPARE(preEditSpy.last().at(0).value<QString>(), "Hello KDE community!");
-    QCOMPARE(preEditSpy.last().at(1).value<QString>(), "Hello");
-    QCOMPARE(commitStringSpy.last().at(0).value<QString>(), "Plasma");
+    QCOMPARE(preEditSpy.last().at(0).value<QString>(), QStringLiteral("Hello KDE community!"));
+    QCOMPARE(preEditSpy.last().at(1).value<QString>(), QStringLiteral("Hello"));
+    QCOMPARE(commitStringSpy.last().at(0).value<QString>(), QStringLiteral("Plasma"));
     QCOMPARE(deleteSurroundingSpy.last().at(0).value<quint32>(), 6);
     QCOMPARE(deleteSurroundingSpy.last().at(1).value<quint32>(), 10);
 

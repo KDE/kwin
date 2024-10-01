@@ -138,9 +138,9 @@ bool Activities::start(const QString &id)
 
     ws->sessionManager()->loadSubSessionInfo(id);
 
-    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
+    QDBusInterface ksmserver(QStringLiteral("org.kde.ksmserver"), QStringLiteral("/KSMServer"), QStringLiteral("org.kde.KSMServerInterface"));
     if (ksmserver.isValid()) {
-        ksmserver.asyncCall("restoreSubSession", id);
+        ksmserver.asyncCall(QStringLiteral("restoreSubSession"), id);
     } else {
         qCDebug(KWIN_CORE) << "couldn't get ksmserver interface";
         return false;
@@ -217,18 +217,18 @@ void Activities::reallyStop(const QString &id)
     QStringList saveOnly;
     for (const QByteArray &sessionId : std::as_const(saveSessionIds)) {
         if (dontCloseSessionIds.contains(sessionId)) {
-            saveOnly << sessionId;
+            saveOnly << QString::fromUtf8(sessionId);
         } else {
-            saveAndClose << sessionId;
+            saveAndClose << QString::fromUtf8(sessionId);
         }
     }
 
     qCDebug(KWIN_CORE) << "saveActivity" << id << saveAndClose << saveOnly;
 
     // pass off to ksmserver
-    QDBusInterface ksmserver("org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface");
+    QDBusInterface ksmserver(QStringLiteral("org.kde.ksmserver"), QStringLiteral("/KSMServer"), QStringLiteral("org.kde.KSMServerInterface"));
     if (ksmserver.isValid()) {
-        ksmserver.asyncCall("saveSubSession", id, saveAndClose, saveOnly);
+        ksmserver.asyncCall(QStringLiteral("saveSubSession"), id, saveAndClose, saveOnly);
     } else {
         qCDebug(KWIN_CORE) << "couldn't get ksmserver interface";
     }

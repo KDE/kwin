@@ -14,7 +14,7 @@
 
 KWinScriptsData::KWinScriptsData(QObject *parent)
     : KCModuleData(parent)
-    , m_kwinConfig(KSharedConfig::openConfig("kwinrc"))
+    , m_kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
 {
 }
 

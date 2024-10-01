@@ -60,7 +60,7 @@ void TestClientMachine::initTestCase()
 #endif
     if (gethostname(hostnamebuf, sizeof hostnamebuf) >= 0) {
         hostnamebuf[sizeof(hostnamebuf) - 1] = 0;
-        m_hostName = hostnamebuf;
+        m_hostName = QString::fromLocal8Bit(hostnamebuf);
     }
     addrinfo *res;
     addrinfo addressHints;
@@ -96,7 +96,7 @@ void TestClientMachine::hostName_data()
     QString cutted(m_hostName);
     cutted.remove(0, 1);
     QTest::newRow("ostname") << cutted << cutted << false;
-    QString domain("random.name.not.exist.tld");
+    QString domain = QStringLiteral("random.name.not.exist.tld");
     QTest::newRow("domain") << domain << domain << false;
     QTest::newRow("fqdn") << m_fqdn << m_fqdn << true;
     QTest::newRow("FQDN") << m_fqdn.toUpper() << m_fqdn.toUpper() << true;

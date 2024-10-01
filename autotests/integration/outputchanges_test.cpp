@@ -1085,7 +1085,7 @@ void OutputChangesTest::testLaptopLidClosed()
 
     auto lidSwitch = std::make_unique<Test::VirtualInputDevice>();
     lidSwitch->setLidSwitch(true);
-    lidSwitch->setName("virtual lid switch");
+    lidSwitch->setName(QStringLiteral("virtual lid switch"));
     input()->addInputDevice(lidSwitch.get());
 
     auto timestamp = 1ms;

@@ -368,7 +368,7 @@ void X11StandaloneBackend::doUpdateOutputs()
                     auto edidProperty = Xcb::RandR::OutputProperty(xcbOutput, atoms->edid, XCB_ATOM_INTEGER, 0, 100, false, false);
                     bool ok;
                     if (auto data = edidProperty.toByteArray(&ok); ok && !data.isEmpty()) {
-                        if (auto edid = Edid(data, edidProperty.data()->num_items); edid.isValid()) {
+                        if (auto edid = Edid(data.data(), edidProperty.data()->num_items); edid.isValid()) {
                             information.manufacturer = edid.manufacturerString();
                             information.model = edid.monitorName();
                             information.serialNumber = edid.serialNumber();

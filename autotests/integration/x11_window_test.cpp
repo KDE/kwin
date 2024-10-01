@@ -2068,7 +2068,7 @@ void X11WindowTest::testTrimCaption()
     xcb_icccm_set_wm_normal_hints(c.get(), windowId, &hints);
     NETWinInfo winInfo(c.get(), windowId, rootWindow(), NET::Properties(), NET::Properties2());
     QFETCH(QByteArray, originalTitle);
-    winInfo.setName(originalTitle);
+    winInfo.setName(originalTitle.constData());
     xcb_map_window(c.get(), windowId);
     xcb_flush(c.get());
 

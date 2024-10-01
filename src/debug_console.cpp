@@ -296,7 +296,7 @@ void DebugConsoleFilter::keyEvent(KeyEvent *event)
     const auto enumerator = keyMetaObject->enumerator(keyMetaObject->indexOfEnumerator("Key"));
     text.append(tableRow(i18nc("The code reported by the kernel", "Keycode"), event->nativeScanCode()));
     text.append(tableRow(i18nc("Key according to Qt", "Qt::Key code"),
-                         enumerator.valueToKey(event->key())));
+                         QString::fromUtf8(enumerator.valueToKey(event->key()))));
     text.append(tableRow(i18nc("The translated code to an Xkb symbol", "Xkb symbol"), event->nativeVirtualKey()));
     text.append(tableRow(i18nc("The translated code interpreted as text", "Utf8"), event->text()));
     text.append(tableRow(i18nc("The currently active modifiers", "Modifiers"), modifiersToString()));
@@ -586,7 +586,7 @@ static QString sourceString(const AbstractDataSource *const source)
         return QStringLiteral("unknown source of").arg(executable);
     }
 
-    return QStringLiteral("%1(0x%2)").arg(source->metaObject()->className()).arg(qulonglong(source), 0, 16);
+    return QStringLiteral("%1(0x%2)").arg(QString::fromUtf8(source->metaObject()->className())).arg(qulonglong(source), 0, 16);
 }
 
 DebugConsole::DebugConsole()
@@ -717,7 +717,7 @@ void DebugConsole::updateKeyboardTab()
     xkb_keymap *map = xkb->keymap();
     xkb_state *state = xkb->state();
     m_ui->layoutsLabel->setText(keymapComponentToString<xkb_layout_index_t>(map, xkb_keymap_num_layouts(map), &xkb_keymap_layout_get_name));
-    m_ui->currentLayoutLabel->setText(xkb_keymap_layout_get_name(map, xkb->currentLayout()));
+    m_ui->currentLayoutLabel->setText(QString::fromUtf8(xkb_keymap_layout_get_name(map, xkb->currentLayout())));
     m_ui->modifiersLabel->setText(keymapComponentToString<xkb_mod_index_t>(map, xkb_keymap_num_mods(map), &xkb_keymap_mod_get_name));
     m_ui->ledsLabel->setText(keymapComponentToString<xkb_led_index_t>(map, xkb_keymap_num_leds(map), &xkb_keymap_led_get_name));
     m_ui->activeLedsLabel->setText(stateActiveComponents<xkb_led_index_t>(state, xkb_keymap_num_leds(map), &xkb_state_led_index_is_active, &xkb_keymap_led_get_name));
@@ -1154,7 +1154,7 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
 {
     const auto property = object->metaObject()->property(index.row());
     if (index.column() == 0) {
-        return property.name();
+        return QString::fromUtf8(property.name());
     } else {
         const QVariant value = property.read(object);
         if (qstrcmp(property.name(), "windowType") == 0) {
@@ -1202,7 +1202,7 @@ QVariant DebugConsoleModel::propertyData(QObject *object, const QModelIndex &ind
                 return QStringLiteral("NET::Unknown");
             }
         } else if (qstrcmp(property.name(), "layer") == 0) {
-            return QMetaEnum::fromType<Layer>().valueToKey(value.value<Layer>());
+            return QString::fromUtf8(QMetaEnum::fromType<Layer>().valueToKey(value.value<Layer>()));
         }
         return value;
     }
@@ -1382,7 +1382,7 @@ QVariant InputDeviceModel::data(const QModelIndex &index, int role) const
             const auto device = m_devices.at(index.parent().row());
             const auto property = device->metaObject()->property(index.row());
             if (index.column() == 0) {
-                return property.name();
+                return QString::fromUtf8(property.name());
             } else if (index.column() == 1) {
                 return device->property(property.name());
             }

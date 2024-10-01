@@ -376,7 +376,7 @@ void EffectsModel::loadPluginEffects(const KConfigGroup &kwinConfig)
 
 void EffectsModel::load(LoadOptions options)
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
+    KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), QStringLiteral("Plugins"));
 
     m_pendingEffects.clear();
     loadBuiltInEffects(kwinConfig);
@@ -483,7 +483,7 @@ void EffectsModel::updateEffectStatus(const QModelIndex &rowIndex, Status effect
 
 void EffectsModel::save()
 {
-    KConfigGroup kwinConfig(KSharedConfig::openConfig("kwinrc"), QStringLiteral("Plugins"));
+    KConfigGroup kwinConfig(KSharedConfig::openConfig(QStringLiteral("kwinrc")), QStringLiteral("Plugins"));
 
     QList<EffectData> dirtyEffects;
 

@@ -208,7 +208,7 @@ class VirtualDesktopManagerDBusInterface : public QObject
     /**
      * list of key/value pairs which every one of them is representing a desktop
      */
-    Q_PROPERTY(KWin::DBusDesktopDataVector desktops READ desktops NOTIFY desktopsChanged);
+    Q_PROPERTY(KWin::DBusDesktopDataVector desktops READ desktops NOTIFY desktopsChanged)
 
 public:
     VirtualDesktopManagerDBusInterface(VirtualDesktopManager *parent);

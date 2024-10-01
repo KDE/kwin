@@ -51,12 +51,12 @@ Version Version::parseString(QByteArrayView versionString)
 
     // Strip any non digit, non '.' characters from the end
     int end = start;
-    while (end < versionString.length() && (versionString[end] == '.' || QChar::fromLatin1(versionString[end]).isDigit())) {
+    while (end < versionString.length() && (versionString[end] == u'.' || QChar::fromLatin1(versionString[end]).isDigit())) {
         end++;
     }
 
     const QByteArray result = versionString.toByteArray().mid(start, end - start);
-    const QList<QByteArray> tokens = result.split('.');
+    const QList<QByteArray> tokens = result.split(u'.');
     if (tokens.empty()) {
         return Version(0, 0, 0);
     }
@@ -70,9 +70,9 @@ Version Version::parseString(QByteArrayView versionString)
 QString Version::toString() const
 {
     if (m_patch == 0) {
-        return QString::number(m_major) + '.' + QString::number(m_minor);
+        return QString::number(m_major) + u'.' + QString::number(m_minor);
     } else {
-        return QString::number(m_major) + '.' + QString::number(m_minor) + '.' + QString::number(m_patch);
+        return QString::number(m_major) + u'.' + QString::number(m_minor) + u'.' + QString::number(m_patch);
     }
 }
 

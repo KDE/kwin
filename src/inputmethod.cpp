@@ -569,7 +569,7 @@ void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool
     waylandServer()->seat()->notifyKeyboardKey(keysymToKeycode(sym), state);
 }
 
-void InputMethod::commitString(qint32 serial, const QString &text)
+void InputMethod::commitString(quint32 serial, const QString &text)
 {
     if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
         t1->commitString(text);
@@ -933,7 +933,7 @@ void InputMethod::startInputMethod()
     environment.insert(QStringLiteral("MALIIT_ENABLE_ANIMATIONS"), QStringLiteral("0"));
 
     if (qEnvironmentVariableIntValue("KWIN_IM_WAYLAND_DEBUG") == 1) {
-        environment.insert("WAYLAND_DEBUG", QByteArrayLiteral("1"));
+        environment.insert(QStringLiteral("WAYLAND_DEBUG"), QStringLiteral("1"));
     }
 
     m_inputMethodProcess = new QProcess(this);

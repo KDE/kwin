@@ -18,7 +18,7 @@ int main()
         return EXIT_SUCCESS;
     }
 
-    if (windows.hasKey(QStringLiteral("LayoutName")) && windows.readEntry(QStringLiteral("LayoutName"), QString()) == QString("org.kde.breeze.desktop")) {
+    if (windows.hasKey(QStringLiteral("LayoutName")) && windows.readEntry(QStringLiteral("LayoutName"), QString()) == QLatin1StringView("org.kde.breeze.desktop")) {
         windows.deleteEntry(QStringLiteral("LayoutName"));
         needsSync = true;
     }

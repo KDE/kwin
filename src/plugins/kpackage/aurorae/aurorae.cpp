@@ -38,7 +38,7 @@ public:
             return;
         }
 
-        const QString configrc = package->metadata().pluginId() + "rc";
+        const QString configrc = package->metadata().pluginId() + u"rc";
         package->addFileDefinition("configrc", configrc);
     }
 };

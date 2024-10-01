@@ -362,7 +362,7 @@ Device::Device(libinput_device *device, QObject *parent)
     }
 
     libinput_device_group *group = libinput_device_get_device_group(device);
-    m_deviceGroupId = QCryptographicHash::hash(QString::asprintf("%p", group).toLatin1(), QCryptographicHash::Sha1).toBase64();
+    m_deviceGroupId = QString::fromLatin1(QCryptographicHash::hash(QString::asprintf("%p", (void *)group).toLatin1(), QCryptographicHash::Sha1).toBase64());
 
     qDBusRegisterMetaType<QMatrix4x4>();
 

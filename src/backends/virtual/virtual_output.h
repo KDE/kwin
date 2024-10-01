@@ -37,7 +37,7 @@ public:
 private:
     void vblank(std::chrono::nanoseconds timestamp);
 
-    Q_DISABLE_COPY(VirtualOutput);
+    Q_DISABLE_COPY(VirtualOutput)
     friend class VirtualBackend;
 
     VirtualBackend *m_backend;

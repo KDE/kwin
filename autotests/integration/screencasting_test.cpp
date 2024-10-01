@@ -72,8 +72,8 @@ public:
 
         // If I run this outside the CI, it breaks the system's pipewire
         if (qgetenv("KDECI_BUILD") == "TRUE") {
-            wrap("pipewire");
-            wrap("dbus-launch", {"wireplumber"});
+            wrap(QStringLiteral("pipewire"));
+            wrap(QStringLiteral("dbus-launch"), {QStringLiteral("wireplumber")});
         }
     }
 private Q_SLOTS:

@@ -17,6 +17,8 @@
 #include <gbm.h>
 #include <xf86drm.h>
 
+#include <QFile>
+
 namespace KWin
 {
 
@@ -46,7 +48,7 @@ static std::unique_ptr<DrmDevice> findRenderDevice()
         }
 
         if (device->available_nodes & (1 << nodeType)) {
-            if (auto ret = DrmDevice::open(device->nodes[nodeType])) {
+            if (auto ret = DrmDevice::open(QFile::decodeName(device->nodes[nodeType]))) {
                 return ret;
             }
         }

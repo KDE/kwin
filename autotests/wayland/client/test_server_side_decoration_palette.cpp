@@ -174,7 +174,7 @@ void TestServerSideDecorationPalette::testCreateAndSet()
     QSignalSpy changedSpy(paletteInterface, &KWin::ServerSideDecorationPaletteInterface::paletteChanged);
     palette->set_palette(QStringLiteral("foobar"));
     QVERIFY(changedSpy.wait());
-    QCOMPARE(paletteInterface->palette(), QString("foobar"));
+    QCOMPARE(paletteInterface->palette(), QStringLiteral("foobar"));
 
     // and destroy
     QSignalSpy destroyedSpy(paletteInterface, &QObject::destroyed);

@@ -98,7 +98,7 @@ void TestButtonRebind::testKey()
 {
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
     QFETCH(QKeySequence, boundKeys);
-    buttonGroup.writeEntry("ExtraButton7", QStringList{"Key", boundKeys.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.writeEntry("ExtraButton7", QStringList{QStringLiteral("Key"), boundKeys.toString(QKeySequence::PortableText)}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
@@ -139,7 +139,7 @@ void TestButtonRebind::testMouse()
 {
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
     QFETCH(int, mouseButton);
-    buttonGroup.writeEntry("ExtraButton7", QStringList{"MouseButton", QString::number(mouseButton)}, KConfig::Notify);
+    buttonGroup.writeEntry("ExtraButton7", QStringList{QStringLiteral("MouseButton"), QString::number(mouseButton)}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
@@ -190,7 +190,7 @@ void TestButtonRebind::testMouseKeyboardMod()
     QFETCH(Qt::KeyboardModifiers, modifiers);
 
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletTool")).group(QStringLiteral("Virtual Tablet Tool 1"));
-    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{"MouseButton", QString::number(BTN_LEFT), QString::number(modifiers.toInt())}, KConfig::Notify);
+    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{QStringLiteral("MouseButton"), QString::number(BTN_LEFT), QString::number(modifiers.toInt())}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
@@ -237,7 +237,7 @@ void TestButtonRebind::testMouseKeyboardMod()
 void TestButtonRebind::testDisabled()
 {
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Mouse"));
-    buttonGroup.writeEntry("ExtraButton7", QStringList{"Disabled"}, KConfig::Notify);
+    buttonGroup.writeEntry("ExtraButton7", QStringList{QStringLiteral("Disabled")}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
@@ -271,7 +271,7 @@ void TestButtonRebind::testBindingTabletPad()
     const QKeySequence sequence(Qt::Key_A);
 
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("Tablet")).group(QStringLiteral("Virtual Tablet Pad 1"));
-    buttonGroup.writeEntry("1", QStringList{"Key", sequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.writeEntry("1", QStringList{QStringLiteral("Key"), sequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
@@ -300,7 +300,7 @@ void TestButtonRebind::testBindingTabletTool()
     const QKeySequence sequence(Qt::Key_A);
 
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletTool")).group(QStringLiteral("Virtual Tablet Tool 1"));
-    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{"Key", sequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{QStringLiteral("Key"), sequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
@@ -330,7 +330,7 @@ void TestButtonRebind::testBindingTabletTool()
 void TestButtonRebind::testMouseTabletCursorSync()
 {
     KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletTool")).group(QStringLiteral("Virtual Tablet Tool 1"));
-    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{"MouseButton", QString::number(BTN_LEFT)}, KConfig::Notify);
+    buttonGroup.writeEntry(QString::number(BTN_STYLUS), QStringList{QStringLiteral("MouseButton"), QString::number(BTN_LEFT)}, KConfig::Notify);
     buttonGroup.sync();
 
     kwinApp()->pluginManager()->unloadPlugin(s_pluginName);

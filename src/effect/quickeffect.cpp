@@ -429,8 +429,8 @@ void QuickSceneEffect::handleScreenRemoved(Output *screen)
 void QuickSceneEffect::addScreen(Output *screen)
 {
     auto properties = initialProperties(screen);
-    properties["width"] = screen->geometry().width();
-    properties["height"] = screen->geometry().height();
+    properties[QStringLiteral("width")] = screen->geometry().width();
+    properties[QStringLiteral("height")] = screen->geometry().height();
 
     auto incubator = new QuickSceneViewIncubator(this, screen, [this, screen](QuickSceneViewIncubator *incubator) {
         if (incubator->isReady()) {

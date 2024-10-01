@@ -51,7 +51,7 @@ static QStringList splitPathList(const QString &input, const QChar delimiter)
     QString tmp;
     for (int i = 0; i < input.size(); i++) {
         if (input[i] == delimiter) {
-            if (i > 0 && input[i - 1] == '\\') {
+            if (i > 0 && input[i - 1] == u'\\') {
                 tmp[tmp.size() - 1] = delimiter;
             } else if (!tmp.isEmpty()) {
                 ret.append(tmp);
@@ -72,7 +72,7 @@ DrmBackend::DrmBackend(Session *session, QObject *parent)
     , m_udev(std::make_unique<Udev>())
     , m_udevMonitor(m_udev->monitor())
     , m_session(session)
-    , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), ':'))
+    , m_explicitGpus(splitPathList(qEnvironmentVariable("KWIN_DRM_DEVICES"), u':'))
 {
 }
 

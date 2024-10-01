@@ -167,7 +167,7 @@ TestScreencastV1Interface::~TestScreencastV1Interface()
 
 void TestScreencastV1Interface::testCreate()
 {
-    auto stream = m_screencast->createWindowStream("3");
+    auto stream = m_screencast->createWindowStream(QStringLiteral("3"));
     QVERIFY(stream);
 
     QSignalSpy spyWorking(stream, &ScreencastStreamV1::created);

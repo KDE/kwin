@@ -45,7 +45,6 @@ protected:
     virtual const QString defaultLayoutEntryKey() const;
     void clearLayouts();
 
-    static const char defaultLayoutEntryKeyPrefix[];
     Xkb *m_xkb;
 
 private:

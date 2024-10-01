@@ -60,7 +60,7 @@ int main(int argc, char **argv)
                     QString file(QStringLiteral("aurorae/themes/%1/metadata.desktop").arg(splitTheme.last()));
                     QString path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, file);
                     if (!path.isEmpty() && path == QStringLiteral("%1/metadata.desktop").arg(requestedTheme)) {
-                        requestedTheme = QString("__aurorae__svg__").append(splitTheme.last());
+                        requestedTheme = QStringLiteral("__aurorae__svg__").append(splitTheme.last());
                         themeResolved = true;
                         ts << i18n("Resolved %1 to the KWin Aurorae theme \"%2\", and will attempt to set that as your current theme.")
                                   .arg(parser->positionalArguments().first(), requestedTheme)

@@ -201,7 +201,7 @@ void KWin::Script::slotScriptLoadedFromFile()
         watcher->deleteLater();
 
         if (m_invocationContext.type() == QDBusMessage::MethodCallMessage) {
-            auto reply = m_invocationContext.createErrorReply("org.kde.kwin.Scripting.FileError", QString("Could not open %1").arg(fileName()));
+            auto reply = m_invocationContext.createErrorReply(QStringLiteral("org.kde.kwin.Scripting.FileError"), QStringLiteral("Could not open %1").arg(fileName()));
             QDBusConnection::sessionBus().send(reply);
             m_invocationContext = QDBusMessage();
         }
@@ -214,7 +214,7 @@ void KWin::Script::slotScriptLoadedFromFile()
 
     // Make the timer visible to QJSEngine.
     QJSValue timerMetaObject = m_engine->newQMetaObject(&ScriptTimer::staticMetaObject);
-    m_engine->globalObject().setProperty("QTimer", timerMetaObject);
+    m_engine->globalObject().setProperty(QStringLiteral("QTimer"), timerMetaObject);
 
     // Expose enums.
     m_engine->globalObject().setProperty(QStringLiteral("KWin"), m_engine->newQMetaObject(&QtScriptWorkspaceWrapper::staticMetaObject));

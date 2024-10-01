@@ -588,40 +588,40 @@ void OutputConfigurationStore::load()
         return json.toObject();
     });
     const auto outputsIt = std::find_if(objects.begin(), objects.end(), [](const auto &obj) {
-        return obj["name"].toString() == "outputs" && obj["data"].isArray();
+        return obj[u"name"].toString() == u"outputs" && obj[u"data"].isArray();
     });
     const auto setupsIt = std::find_if(objects.begin(), objects.end(), [](const auto &obj) {
-        return obj["name"].toString() == "setups" && obj["data"].isArray();
+        return obj[u"name"].toString() == u"setups" && obj[u"data"].isArray();
     });
     if (outputsIt == objects.end() || setupsIt == objects.end()) {
         return;
     }
-    const auto outputs = (*outputsIt)["data"].toArray();
+    const auto outputs = (*outputsIt)[u"data"].toArray();
 
     std::vector<std::optional<OutputState>> outputDatas;
     for (const auto &output : outputs) {
         const auto data = output.toObject();
         OutputState state;
         bool hasIdentifier = false;
-        if (const auto it = data.find("edidIdentifier"); it != data.end()) {
+        if (const auto it = data.find(u"edidIdentifier"); it != data.end()) {
             if (const auto str = it->toString(); !str.isEmpty()) {
                 state.edidIdentifier = str;
                 hasIdentifier = true;
             }
         }
-        if (const auto it = data.find("edidHash"); it != data.end()) {
+        if (const auto it = data.find(u"edidHash"); it != data.end()) {
             if (const auto str = it->toString(); !str.isEmpty()) {
                 state.edidHash = str;
                 hasIdentifier = true;
             }
         }
-        if (const auto it = data.find("connectorName"); it != data.end()) {
+        if (const auto it = data.find(u"connectorName"); it != data.end()) {
             if (const auto str = it->toString(); !str.isEmpty()) {
                 state.connectorName = str;
                 hasIdentifier = true;
             }
         }
-        if (const auto it = data.find("mstPath"); it != data.end()) {
+        if (const auto it = data.find(u"mstPath"); it != data.end()) {
             if (const auto str = it->toString(); !str.isEmpty()) {
                 state.mstPath = str;
                 hasIdentifier = true;
@@ -642,15 +642,15 @@ void OutputConfigurationStore::load()
                 && data->connectorName == state.connectorName;
         });
         if (hasDuplicate) {
-            qCWarning(KWIN_CORE) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier.value_or("<empty>") << "; connectorName:" << state.connectorName.value_or("<empty>") << "; mstPath:" << state.mstPath;
+            qCWarning(KWIN_CORE) << "Duplicate output found in config for edidIdentifier:" << state.edidIdentifier << "; connectorName:" << state.connectorName << "; mstPath:" << state.mstPath;
             outputDatas.push_back(std::nullopt);
             continue;
         }
-        if (const auto it = data.find("mode"); it != data.end()) {
+        if (const auto it = data.find(u"mode"); it != data.end()) {
             const auto obj = it->toObject();
-            const int width = obj["width"].toInt(0);
-            const int height = obj["height"].toInt(0);
-            const int refreshRate = obj["refreshRate"].toInt(0);
+            const int width = obj[u"width"].toInt(0);
+            const int height = obj[u"height"].toInt(0);
+            const int refreshRate = obj[u"refreshRate"].toInt(0);
             if (width > 0 && height > 0 && refreshRate > 0) {
                 state.mode = ModeData{
                     .size = QSize(width, height),
@@ -658,99 +658,99 @@ void OutputConfigurationStore::load()
                 };
             }
         }
-        if (const auto it = data.find("scale"); it != data.end()) {
+        if (const auto it = data.find(u"scale"); it != data.end()) {
             const double scale = it->toDouble(0);
             if (scale > 0 && scale <= 3) {
                 state.scale = scale;
             }
         }
-        if (const auto it = data.find("transform"); it != data.end()) {
+        if (const auto it = data.find(u"transform"); it != data.end()) {
             const auto str = it->toString();
-            if (str == "Normal") {
+            if (str == u"Normal") {
                 state.transform = state.manualTransform = OutputTransform::Kind::Normal;
-            } else if (str == "Rotated90") {
+            } else if (str == u"Rotated90") {
                 state.transform = state.manualTransform = OutputTransform::Kind::Rotate90;
-            } else if (str == "Rotated180") {
+            } else if (str == u"Rotated180") {
                 state.transform = state.manualTransform = OutputTransform::Kind::Rotate180;
-            } else if (str == "Rotated270") {
+            } else if (str == u"Rotated270") {
                 state.transform = state.manualTransform = OutputTransform::Kind::Rotate270;
-            } else if (str == "Flipped") {
+            } else if (str == u"Flipped") {
                 state.transform = state.manualTransform = OutputTransform::Kind::FlipX;
-            } else if (str == "Flipped90") {
+            } else if (str == u"Flipped90") {
                 state.transform = state.manualTransform = OutputTransform::Kind::FlipX90;
-            } else if (str == "Flipped180") {
+            } else if (str == u"Flipped180") {
                 state.transform = state.manualTransform = OutputTransform::Kind::FlipX180;
-            } else if (str == "Flipped270") {
+            } else if (str == u"Flipped270") {
                 state.transform = state.manualTransform = OutputTransform::Kind::FlipX270;
             }
         }
-        if (const auto it = data.find("overscan"); it != data.end()) {
+        if (const auto it = data.find(u"overscan"); it != data.end()) {
             const int overscan = it->toInt(-1);
             if (overscan >= 0 && overscan <= 100) {
                 state.overscan = overscan;
             }
         }
-        if (const auto it = data.find("rgbRange"); it != data.end()) {
+        if (const auto it = data.find(u"rgbRange"); it != data.end()) {
             const auto str = it->toString();
-            if (str == "Automatic") {
+            if (str == u"Automatic") {
                 state.rgbRange = Output::RgbRange::Automatic;
-            } else if (str == "Limited") {
+            } else if (str == u"Limited") {
                 state.rgbRange = Output::RgbRange::Limited;
-            } else if (str == "Full") {
+            } else if (str == u"Full") {
                 state.rgbRange = Output::RgbRange::Full;
             }
         }
-        if (const auto it = data.find("vrrPolicy"); it != data.end()) {
+        if (const auto it = data.find(u"vrrPolicy"); it != data.end()) {
             const auto str = it->toString();
-            if (str == "Never") {
+            if (str == u"Never") {
                 state.vrrPolicy = VrrPolicy::Never;
-            } else if (str == "Automatic") {
+            } else if (str == u"Automatic") {
                 state.vrrPolicy = VrrPolicy::Automatic;
-            } else if (str == "Always") {
+            } else if (str == u"Always") {
                 state.vrrPolicy = VrrPolicy::Always;
             }
         }
-        if (const auto it = data.find("highDynamicRange"); it != data.end() && it->isBool()) {
+        if (const auto it = data.find(u"highDynamicRange"); it != data.end() && it->isBool()) {
             state.highDynamicRange = it->toBool();
         }
-        if (const auto it = data.find("sdrBrightness"); it != data.end() && it->isDouble()) {
+        if (const auto it = data.find(u"sdrBrightness"); it != data.end() && it->isDouble()) {
             state.referenceLuminance = it->toInt(200);
         }
-        if (const auto it = data.find("wideColorGamut"); it != data.end() && it->isBool()) {
+        if (const auto it = data.find(u"wideColorGamut"); it != data.end() && it->isBool()) {
             state.wideColorGamut = it->toBool();
         }
-        if (const auto it = data.find("autoRotation"); it != data.end()) {
+        if (const auto it = data.find(u"autoRotation"); it != data.end()) {
             const auto str = it->toString();
-            if (str == "Never") {
+            if (str == u"Never") {
                 state.autoRotation = Output::AutoRotationPolicy::Never;
-            } else if (str == "InTabletMode") {
+            } else if (str == u"InTabletMode") {
                 state.autoRotation = Output::AutoRotationPolicy::InTabletMode;
-            } else if (str == "Always") {
+            } else if (str == u"Always") {
                 state.autoRotation = Output::AutoRotationPolicy::Always;
             }
         }
-        if (const auto it = data.find("iccProfilePath"); it != data.end()) {
+        if (const auto it = data.find(u"iccProfilePath"); it != data.end()) {
             state.iccProfilePath = it->toString();
         }
-        if (const auto it = data.find("maxPeakBrightnessOverride"); it != data.end() && it->isDouble()) {
+        if (const auto it = data.find(u"maxPeakBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.maxPeakBrightnessOverride = it->toDouble();
         }
-        if (const auto it = data.find("maxAverageBrightnessOverride"); it != data.end() && it->isDouble()) {
+        if (const auto it = data.find(u"maxAverageBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.maxAverageBrightnessOverride = it->toDouble();
         }
-        if (const auto it = data.find("minBrightnessOverride"); it != data.end() && it->isDouble()) {
+        if (const auto it = data.find(u"minBrightnessOverride"); it != data.end() && it->isDouble()) {
             state.minBrightnessOverride = it->toDouble();
         }
-        if (const auto it = data.find("sdrGamutWideness"); it != data.end() && it->isDouble()) {
+        if (const auto it = data.find(u"sdrGamutWideness"); it != data.end() && it->isDouble()) {
             state.sdrGamutWideness = it->toDouble();
         }
-        if (const auto it = data.find("colorProfileSource"); it != data.end()) {
+        if (const auto it = data.find(u"colorProfileSource"); it != data.end()) {
             const auto str = it->toString();
-            if (str == "sRGB") {
+            if (str == u"sRGB") {
                 state.colorProfileSource = Output::ColorProfileSource::sRGB;
-            } else if (str == "ICC") {
+            } else if (str == u"ICC") {
                 state.colorProfileSource = Output::ColorProfileSource::ICC;
-            } else if (str == "EDID") {
+            } else if (str == u"EDID") {
                 state.colorProfileSource = Output::ColorProfileSource::EDID;
             }
         } else {
@@ -761,28 +761,28 @@ void OutputConfigurationStore::load()
                 state.colorProfileSource = Output::ColorProfileSource::sRGB;
             }
         }
-        if (const auto it = data.find("brightness"); it != data.end() && it->isDouble()) {
+        if (const auto it = data.find(u"brightness"); it != data.end() && it->isDouble()) {
             state.brightness = std::clamp(it->toDouble(), 0.0, 1.0);
         }
         outputDatas.push_back(state);
     }
 
-    const auto setups = (*setupsIt)["data"].toArray();
+    const auto setups = (*setupsIt)[u"data"].toArray();
     for (const auto &s : setups) {
         const auto data = s.toObject();
-        const auto outputs = data["outputs"].toArray();
+        const auto outputs = data[u"outputs"].toArray();
         Setup setup;
         bool fail = false;
         for (const auto &output : outputs) {
             const auto outputData = output.toObject();
             SetupState state;
-            if (const auto it = outputData.find("enabled"); it != outputData.end() && it->isBool()) {
+            if (const auto it = outputData.find(u"enabled"); it != outputData.end() && it->isBool()) {
                 state.enabled = it->toBool();
             } else {
                 fail = true;
                 break;
             }
-            if (const auto it = outputData.find("outputIndex"); it != outputData.end()) {
+            if (const auto it = outputData.find(u"outputIndex"); it != outputData.end()) {
                 const int index = it->toInt(-1);
                 if (index <= -1 || size_t(index) >= outputDatas.size()) {
                     fail = true;
@@ -798,10 +798,10 @@ void OutputConfigurationStore::load()
                 }
                 state.outputIndex = index;
             }
-            if (const auto it = outputData.find("position"); it != outputData.end()) {
+            if (const auto it = outputData.find(u"position"); it != outputData.end()) {
                 const auto obj = it->toObject();
-                const auto x = obj.find("x");
-                const auto y = obj.find("y");
+                const auto x = obj.find(u"x");
+                const auto y = obj.find(u"y");
                 if (x == obj.end() || !x->isDouble() || y == obj.end() || !y->isDouble()) {
                     fail = true;
                     break;
@@ -811,7 +811,7 @@ void OutputConfigurationStore::load()
                 fail = true;
                 break;
             }
-            if (const auto it = outputData.find("priority"); it != outputData.end()) {
+            if (const auto it = outputData.find(u"priority"); it != outputData.end()) {
                 state.priority = it->toInt(-1);
                 if (state.priority < 0 && state.enabled) {
                     fail = true;
@@ -830,7 +830,7 @@ void OutputConfigurationStore::load()
         if (noneEnabled) {
             continue;
         }
-        setup.lidClosed = data["lidClosed"].toBool(false);
+        setup.lidClosed = data[u"lidClosed"].toBool(false);
         // there must be only one setup that refers to a given set of outputs
         const bool alreadyExists = std::any_of(m_setups.begin(), m_setups.end(), [&setup](const auto &other) {
             if (setup.lidClosed != other.lidClosed || setup.outputs.size() != other.outputs.size()) {
@@ -883,152 +883,152 @@ void OutputConfigurationStore::save()
     QJsonDocument document;
     QJsonArray array;
     QJsonObject outputs;
-    outputs["name"] = "outputs";
+    outputs[u"name"] = QStringLiteral("outputs");
     QJsonArray outputsData;
     for (const auto &output : m_outputs) {
         QJsonObject o;
         if (output.edidIdentifier) {
-            o["edidIdentifier"] = *output.edidIdentifier;
+            o[u"edidIdentifier"] = *output.edidIdentifier;
         }
         if (!output.edidHash.isEmpty()) {
-            o["edidHash"] = output.edidHash;
+            o[u"edidHash"] = output.edidHash;
         }
         if (output.connectorName) {
-            o["connectorName"] = *output.connectorName;
+            o[u"connectorName"] = *output.connectorName;
         }
         if (!output.mstPath.isEmpty()) {
-            o["mstPath"] = output.mstPath;
+            o[u"lmstPath"] = output.mstPath;
         }
         if (output.mode) {
             QJsonObject mode;
-            mode["width"] = output.mode->size.width();
-            mode["height"] = output.mode->size.height();
-            mode["refreshRate"] = int(output.mode->refreshRate);
-            o["mode"] = mode;
+            mode[u"width"] = output.mode->size.width();
+            mode[u"height"] = output.mode->size.height();
+            mode[u"refreshRate"] = int(output.mode->refreshRate);
+            o[u"mode"] = mode;
         }
         if (output.scale) {
-            o["scale"] = *output.scale;
+            o[u"scale"] = *output.scale;
         }
         if (output.manualTransform == OutputTransform::Kind::Normal) {
-            o["transform"] = "Normal";
+            o[u"transform"] = QStringLiteral("Normal");
         } else if (output.manualTransform == OutputTransform::Kind::Rotate90) {
-            o["transform"] = "Rotated90";
+            o[u"transform"] = QStringLiteral("Rotated90");
         } else if (output.manualTransform == OutputTransform::Kind::Rotate180) {
-            o["transform"] = "Rotated180";
+            o[u"transform"] = QStringLiteral("Rotated180");
         } else if (output.manualTransform == OutputTransform::Kind::Rotate270) {
-            o["transform"] = "Rotated270";
+            o[u"transform"] = QStringLiteral("Rotated270");
         } else if (output.manualTransform == OutputTransform::Kind::FlipX) {
-            o["transform"] = "Flipped";
+            o[u"transform"] = QStringLiteral("Flipped");
         } else if (output.manualTransform == OutputTransform::Kind::FlipX90) {
-            o["transform"] = "Flipped90";
+            o[u"transform"] = QStringLiteral("Flipped90");
         } else if (output.manualTransform == OutputTransform::Kind::FlipX180) {
-            o["transform"] = "Flipped180";
+            o[u"transform"] = QStringLiteral("Flipped180");
         } else if (output.manualTransform == OutputTransform::Kind::FlipX270) {
-            o["transform"] = "Flipped270";
+            o[u"transform"] = QStringLiteral("Flipped270");
         }
         if (output.overscan) {
-            o["overscan"] = int(*output.overscan);
+            o[u"overscan"] = int(*output.overscan);
         }
         if (output.rgbRange == Output::RgbRange::Automatic) {
-            o["rgbRange"] = "Automatic";
+            o[u"rgbRange"] = QStringLiteral("Automatic");
         } else if (output.rgbRange == Output::RgbRange::Limited) {
-            o["rgbRange"] = "Limited";
+            o[u"rgbRange"] = QStringLiteral("Limited");
         } else if (output.rgbRange == Output::RgbRange::Full) {
-            o["rgbRange"] = "Full";
+            o[u"rgbRange"] = QStringLiteral("Full");
         }
         if (output.vrrPolicy == VrrPolicy::Never) {
-            o["vrrPolicy"] = "Never";
+            o[u"vrrPolicy"] = QStringLiteral("Never");
         } else if (output.vrrPolicy == VrrPolicy::Automatic) {
-            o["vrrPolicy"] = "Automatic";
+            o[u"vrrPolicy"] = QStringLiteral("Automatic");
         } else if (output.vrrPolicy == VrrPolicy::Always) {
-            o["vrrPolicy"] = "Always";
+            o[u"vrrPolicy"] = QStringLiteral("Always");
         }
         if (output.highDynamicRange) {
-            o["highDynamicRange"] = *output.highDynamicRange;
+            o[u"highDynamicRange"] = *output.highDynamicRange;
         }
         if (output.referenceLuminance) {
-            o["sdrBrightness"] = int(*output.referenceLuminance);
+            o[u"sdrBrightness"] = int(*output.referenceLuminance);
         }
         if (output.wideColorGamut) {
-            o["wideColorGamut"] = *output.wideColorGamut;
+            o[u"wideColorGamut"] = *output.wideColorGamut;
         }
         if (output.autoRotation) {
             switch (*output.autoRotation) {
             case Output::AutoRotationPolicy::Never:
-                o["autoRotation"] = "Never";
+                o[u"autoRotation"] = QStringLiteral("Never");
                 break;
             case Output::AutoRotationPolicy::InTabletMode:
-                o["autoRotation"] = "InTabletMode";
+                o[u"autoRotation"] = QStringLiteral("InTabletMode");
                 break;
             case Output::AutoRotationPolicy::Always:
-                o["autoRotation"] = "Always";
+                o[u"autoRotation"] = QStringLiteral("Always");
                 break;
             }
         }
         if (output.iccProfilePath) {
-            o["iccProfilePath"] = *output.iccProfilePath;
+            o[u"iccProfilePath"] = *output.iccProfilePath;
         }
         if (output.maxPeakBrightnessOverride) {
-            o["maxPeakBrightnessOverride"] = *output.maxPeakBrightnessOverride;
+            o[u"maxPeakBrightnessOverride"] = *output.maxPeakBrightnessOverride;
         }
         if (output.maxAverageBrightnessOverride) {
-            o["maxAverageBrightnessOverride"] = *output.maxAverageBrightnessOverride;
+            o[u"maxAverageBrightnessOverride"] = *output.maxAverageBrightnessOverride;
         }
         if (output.minBrightnessOverride) {
-            o["minBrightnessOverride"] = *output.minBrightnessOverride;
+            o[u"minBrightnessOverride"] = *output.minBrightnessOverride;
         }
         if (output.sdrGamutWideness) {
-            o["sdrGamutWideness"] = *output.sdrGamutWideness;
+            o[u"sdrGamutWideness"] = *output.sdrGamutWideness;
         }
         if (output.colorProfileSource) {
             switch (*output.colorProfileSource) {
             case Output::ColorProfileSource::sRGB:
-                o["colorProfileSource"] = "sRGB";
+                o[u"colorProfileSource"] = QStringLiteral("sRGB");
                 break;
             case Output::ColorProfileSource::ICC:
-                o["colorProfileSource"] = "ICC";
+                o[u"colorProfileSource"] = QStringLiteral("ICC");
                 break;
             case Output::ColorProfileSource::EDID:
-                o["colorProfileSource"] = "EDID";
+                o[u"colorProfileSource"] = QStringLiteral("EDID");
                 break;
             }
         }
         if (output.brightness) {
-            o["brightness"] = *output.brightness;
+            o[u"brightness"] = *output.brightness;
         }
         outputsData.append(o);
     }
-    outputs["data"] = outputsData;
+    outputs[u"data"] = outputsData;
     array.append(outputs);
 
     QJsonObject setups;
-    setups["name"] = "setups";
+    setups[u"name"] = QStringLiteral("setups");
     QJsonArray setupData;
     for (const auto &setup : m_setups) {
         QJsonObject o;
-        o["lidClosed"] = setup.lidClosed;
+        o[u"lidClosed"] = setup.lidClosed;
         QJsonArray outputs;
         for (ssize_t i = 0; i < setup.outputs.size(); i++) {
             const auto &output = setup.outputs[i];
             QJsonObject o;
-            o["enabled"] = output.enabled;
-            o["outputIndex"] = int(output.outputIndex);
-            o["priority"] = output.priority;
+            o[u"enabled"] = output.enabled;
+            o[u"outputIndex"] = int(output.outputIndex);
+            o[u"priority"] = output.priority;
             QJsonObject pos;
-            pos["x"] = output.position.x();
-            pos["y"] = output.position.y();
-            o["position"] = pos;
+            pos[u"x"] = output.position.x();
+            pos[u"y"] = output.position.y();
+            o[u"position"] = pos;
 
             outputs.append(o);
         }
-        o["outputs"] = outputs;
+        o[u"outputs"] = outputs;
 
         setupData.append(o);
     }
-    setups["data"] = setupData;
+    setups[u"data"] = setupData;
     array.append(setups);
 
-    const QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/kwinoutputconfig.json";
+    const QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + u"/kwinoutputconfig.json";
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly)) {
         qCWarning(KWIN_CORE, "Couldn't open output config file %s", qPrintable(path));

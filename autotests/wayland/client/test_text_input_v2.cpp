@@ -385,7 +385,7 @@ void TextInputTest::testPreferredLanguage()
     QSignalSpy preferredLanguageChangedSpy(ti, &TextInputV2Interface::preferredLanguageChanged);
     textInput->setPreferredLanguage(QStringLiteral("foo"));
     QVERIFY(preferredLanguageChangedSpy.wait());
-    QCOMPARE(ti->preferredLanguage(), QStringLiteral("foo").toUtf8());
+    QCOMPARE(ti->preferredLanguage(), QStringLiteral("foo"));
 }
 
 void TextInputTest::testReset()
@@ -435,7 +435,7 @@ void TextInputTest::testSurroundingText()
 
     textInput->setSurroundingText(QStringLiteral("100 €, 100 $"), 5, 6);
     QVERIFY(surroundingTextChangedSpy.wait());
-    QCOMPARE(ti->surroundingText(), QStringLiteral("100 €, 100 $").toUtf8());
+    QCOMPARE(ti->surroundingText(), QStringLiteral("100 €, 100 $"));
     QCOMPARE(ti->surroundingTextCursorPosition(), QStringLiteral("100 €, 100 $").toUtf8().indexOf(','));
     QCOMPARE(ti->surroundingTextSelectionAnchor(), QStringLiteral("100 €, 100 $").toUtf8().indexOf(' ', ti->surroundingTextCursorPosition()));
 }
@@ -636,16 +636,16 @@ void TextInputTest::testLanguage()
 
     // let's send the new language
     QSignalSpy langugageChangedSpy(textInput.get(), &KWayland::Client::TextInput::languageChanged);
-    ti->setLanguage(QByteArrayLiteral("foo"));
+    ti->setLanguage(QStringLiteral("foo"));
     QVERIFY(langugageChangedSpy.wait());
-    QCOMPARE(textInput->language(), QByteArrayLiteral("foo"));
+    QCOMPARE(textInput->language(), "foo");
     // setting to same should not trigger
-    ti->setLanguage(QByteArrayLiteral("foo"));
+    ti->setLanguage(QStringLiteral("foo"));
     QVERIFY(!langugageChangedSpy.wait(100));
     // but to something else should trigger again
-    ti->setLanguage(QByteArrayLiteral("bar"));
+    ti->setLanguage(QStringLiteral("bar"));
     QVERIFY(langugageChangedSpy.wait());
-    QCOMPARE(textInput->language(), QByteArrayLiteral("bar"));
+    QCOMPARE(textInput->language(), "bar");
 }
 
 void TextInputTest::testKeyEvent()
@@ -712,7 +712,7 @@ void TextInputTest::testPreEdit()
     // now let's pass through some pre-edit events
     QSignalSpy composingTextChangedSpy(textInput.get(), &KWayland::Client::TextInput::composingTextChanged);
     ti->setPreEditCursor(1);
-    ti->preEdit(QByteArrayLiteral("foo"), QByteArrayLiteral("bar"));
+    ti->preEdit(QStringLiteral("foo"), QStringLiteral("bar"));
     QVERIFY(composingTextChangedSpy.wait());
     QCOMPARE(composingTextChangedSpy.count(), 1);
     QCOMPARE(textInput->composingText(), QByteArrayLiteral("foo"));
@@ -720,7 +720,7 @@ void TextInputTest::testPreEdit()
     QCOMPARE(textInput->composingTextCursorPosition(), 1);
 
     // when no pre edit cursor is sent, it's at end of text
-    ti->preEdit(QByteArrayLiteral("foobar"), QByteArray());
+    ti->preEdit(QStringLiteral("foobar"), {});
     QVERIFY(composingTextChangedSpy.wait());
     QCOMPARE(composingTextChangedSpy.count(), 2);
     QCOMPARE(textInput->composingText(), QByteArrayLiteral("foobar"));
@@ -756,7 +756,7 @@ void TextInputTest::testCommit()
     QSignalSpy committedSpy(textInput.get(), &KWayland::Client::TextInput::committed);
     ti->setCursorPosition(3, 4);
     ti->deleteSurroundingText(2, 1);
-    ti->commitString(QByteArrayLiteral("foo"));
+    ti->commitString(QStringLiteral("foo"));
 
     QVERIFY(committedSpy.wait());
     QCOMPARE(textInput->commitText(), QByteArrayLiteral("foo"));

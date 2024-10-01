@@ -22,7 +22,7 @@ namespace QPA
 
 bool isOpenGLES()
 {
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+    if (qgetenv("KWIN_COMPOSE") == "O2ES") {
         return true;
     }
 

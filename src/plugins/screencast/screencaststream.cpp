@@ -375,7 +375,7 @@ uint ScreenCastStream::nodeId()
 bool ScreenCastStream::createStream()
 {
     const QByteArray objname = "kwin-screencast-" + objectName().toUtf8();
-    m_pwStream = pw_stream_new(m_pwCore->pwCore, objname, nullptr);
+    m_pwStream = pw_stream_new(m_pwCore->pwCore, objname.constData(), nullptr);
 
     const auto supported = Compositor::self()->backend()->supportedFormats();
     auto itModifiers = supported.constFind(m_source->drmFormat());

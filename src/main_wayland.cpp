@@ -179,7 +179,7 @@ void ApplicationWayland::continueStartupWithScene()
 
 void ApplicationWayland::refreshSettings(const KConfigGroup &group, const QByteArrayList &names)
 {
-    if (group.name() == "Wayland" && names.contains("InputMethod")) {
+    if (group.name() == u"Wayland" && names.contains("InputMethod")) {
         KDesktopFile file(group.readPathEntry("InputMethod", QString()));
         kwinApp()->inputMethod()->setInputMethodCommand(file.desktopGroup().readEntry("Exec", QString()));
     }
@@ -344,11 +344,11 @@ int main(int argc, char *argv[])
 
     QCommandLineOption xwaylandDisplayOption(QStringLiteral("xwayland-display"),
                                              i18n("Name of the xwayland display that has been pre-set up"),
-                                             "xwayland-display");
+                                             QStringLiteral("xwayland-display"));
 
     QCommandLineOption xwaylandXAuthorityOption(QStringLiteral("xwayland-xauthority"),
                                                 i18n("Name of the xauthority file "),
-                                                "xwayland-xauthority");
+                                                QStringLiteral("xwayland-xauthority"));
 
     QCommandLineOption replaceOption(QStringLiteral("replace"),
                                      i18n("Exits this instance so it can be restarted by kwin_wayland_wrapper."));
@@ -526,7 +526,7 @@ int main(int argc, char *argv[])
     case BackendType::X11: {
         QString display = parser.value(x11DisplayOption);
         if (display.isEmpty()) {
-            display = qgetenv("DISPLAY");
+            display = qEnvironmentVariable("DISPLAY");
         }
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setOutputBackend(std::make_unique<KWin::X11WindowedBackend>(KWin::X11WindowedBackendOptions{
@@ -541,7 +541,7 @@ int main(int argc, char *argv[])
     case BackendType::Wayland: {
         QString socketName = parser.value(waylandDisplayOption);
         if (socketName.isEmpty()) {
-            socketName = qgetenv("WAYLAND_DISPLAY");
+            socketName = qEnvironmentVariable("WAYLAND_DISPLAY");
         }
         a.setSession(KWin::Session::create(KWin::Session::Type::Noop));
         a.setOutputBackend(std::make_unique<KWin::Wayland::WaylandBackend>(KWin::Wayland::WaylandBackendOptions{

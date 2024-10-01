@@ -299,11 +299,11 @@ bool WaylandEglBackend::initializeEgl()
 void WaylandEglBackend::init()
 {
     if (!initializeEgl()) {
-        setFailed("Could not initialize egl");
+        setFailed(QStringLiteral("Could not initialize egl"));
         return;
     }
     if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
+        setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
 

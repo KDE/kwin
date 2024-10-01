@@ -121,7 +121,7 @@ bool InputDevice::isTouchpad() const
 
 ButtonRebindsFilter::ButtonRebindsFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::ButtonRebind)
-    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kcminputrc")))
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kcminputrc"))))
 {
     KWin::input()->addInputDevice(&m_inputDevice);
     const QLatin1String groupName("ButtonRebinds");
@@ -157,7 +157,7 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
     const auto mouseGroup = group.group(QStringLiteral("Mouse"));
     const auto mouseGroupKeys = mouseGroup.keyList();
     for (const QString &configKey : mouseGroupKeys) {
-        const int mappedButton = mouseButtonEnum.keyToValue(configKey.toLatin1());
+        const int mappedButton = mouseButtonEnum.keyToValue(configKey.toLatin1().constData());
         if (mappedButton != -1) {
             const auto action = mouseGroup.readEntry(configKey, QStringList());
             insert(Pointer, {QString(), static_cast<uint>(mappedButton)}, action);

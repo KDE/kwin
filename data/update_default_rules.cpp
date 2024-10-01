@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QCoreApplication::setApplicationName("kwin_update_default_rules");
+    QCoreApplication::setApplicationName(QStringLiteral("kwin_update_default_rules"));
 
-    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QString("kwin/default_rules/%1").arg(argv[1]));
+    QString file = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kwin/default_rules/%1").arg(QString::fromLocal8Bit(argv[1])));
     if (file.isEmpty()) {
         qWarning() << "File " << argv[1] << " not found!";
         return 1;
@@ -54,6 +54,6 @@ int main(int argc, char *argv[])
     dcg.sync();
     // Send signal to all kwin instances
     QDBusMessage message =
-        QDBusMessage::createSignal("/KWin", "org.kde.KWin", "reloadConfig");
+        QDBusMessage::createSignal(QStringLiteral("/KWin"), QStringLiteral("org.kde.KWin"), QStringLiteral("reloadConfig"));
     QDBusConnection::sessionBus().send(message);
 }

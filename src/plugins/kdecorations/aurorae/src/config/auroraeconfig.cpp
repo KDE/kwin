@@ -93,14 +93,14 @@ void ConfigurationModule::initQml()
 
     KLocalizedTranslator *translator = new KLocalizedTranslator(this);
     QCoreApplication::instance()->installTranslator(translator);
-    const QString translationDomain = metaData.value("X-KWin-Config-TranslationDomain");
+    const QString translationDomain = metaData.value(QStringLiteral("X-KWin-Config-TranslationDomain"));
     if (!translationDomain.isEmpty()) {
         translator->setTranslationDomain(translationDomain);
     }
 
     // load the KConfigSkeleton
     QFile configFile(xml);
-    KSharedConfigPtr auroraeConfig = KSharedConfig::openConfig("auroraerc");
+    KSharedConfigPtr auroraeConfig = KSharedConfig::openConfig(QStringLiteral("auroraerc"));
     KConfigGroup configGroup = auroraeConfig->group(m_theme);
     m_skeleton = new KConfigLoader(configGroup, &configFile, this);
     // load the ui file

@@ -250,7 +250,7 @@ void SessionManager::addSessionInfo(KConfigGroup &cg)
         session.append(info);
         info->sessionId = cg.readEntry(QLatin1String("sessionId") + n, QString()).toLatin1();
         info->windowRole = cg.readEntry(QLatin1String("windowRole") + n, QString());
-        info->wmCommand = cg.readEntry(QLatin1String("wmCommand") + n, QString()).toLatin1();
+        info->wmCommand = cg.readEntry(QLatin1String("wmCommand") + n, QString());
         info->resourceName = cg.readEntry(QLatin1String("resourceName") + n, QString());
         info->resourceClass = cg.readEntry(QLatin1String("resourceClass") + n, QString()).toLower();
         info->geometry = cg.readEntry(QLatin1String("geometry") + n, QRect());
@@ -475,8 +475,8 @@ bool SessionManager::closeWaylandWindows()
         });
         apps.removeDuplicates();
         qCDebug(KWIN_CORE) << "Not closed windows" << apps;
-        auto notification = new KNotification("cancellogout", KNotification::DefaultEvent | KNotification::Persistent);
-        notification->setText(i18n("The following applications did not close:\n%1", apps.join('\n')));
+        auto notification = new KNotification(QStringLiteral("cancellogout"), KNotification::DefaultEvent | KNotification::Persistent);
+        notification->setText(i18n("The following applications did not close:\n%1", apps.join(u'\n')));
         auto cancel = notification->addAction(i18nc("@action:button", "Cancel Logout"));
         auto quit = notification->addAction(i18nc("@action::button", "Log Out Anyway"));
         connect(cancel, &KNotificationAction::activated, m_closingWindowsGuard.get(), [dbusMessage, this] {

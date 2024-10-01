@@ -238,8 +238,8 @@ void NightLightManager::readConfig()
     }
 
     // fixed timings
-    QTime morning = QTime::fromString(settings->morningBeginFixed(), "hhmm");
-    QTime evening = QTime::fromString(settings->eveningBeginFixed(), "hhmm");
+    QTime morning = QTime::fromString(settings->morningBeginFixed(), u"hhmm");
+    QTime evening = QTime::fromString(settings->eveningBeginFixed(), u"hhmm");
 
     const int dayDuration = morning < evening ? morning.msecsTo(evening) : (MSC_DAY - evening.msecsTo(morning));
     const int nightDuration = MSC_DAY - dayDuration;

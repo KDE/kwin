@@ -61,7 +61,7 @@ void EisBackend::initialize()
         }
     });
 
-    QDBusConnection::sessionBus().registerObject("/org/kde/KWin/EIS/RemoteDesktop", "org.kde.KWin.EIS.RemoteDesktop", this, QDBusConnection::ExportAllInvokables);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/org/kde/KWin/EIS/RemoteDesktop"), QStringLiteral("org.kde.KWin.EIS.RemoteDesktop"), this, QDBusConnection::ExportAllInvokables);
 }
 
 void EisBackend::updateScreens()

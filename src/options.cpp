@@ -645,10 +645,10 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
     // check environment variable
     const QByteArray envOpenGLInterface(qgetenv("KWIN_OPENGL_INTERFACE"));
     if (!envOpenGLInterface.isEmpty()) {
-        if (qstrcmp(envOpenGLInterface, "egl") == 0) {
+        if (envOpenGLInterface == "egl") {
             qCDebug(KWIN_CORE) << "Forcing EGL native interface through environment variable";
             interface = EglPlatformInterface;
-        } else if (qstrcmp(envOpenGLInterface, "glx") == 0) {
+        } else if (envOpenGLInterface == "glx") {
             qCDebug(KWIN_CORE) << "Forcing GLX native interface through environment variable";
             interface = GlxPlatformInterface;
         }
@@ -665,7 +665,7 @@ void Options::setGlPlatformInterface(OpenGLPlatformInterface interface)
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
         qCDebug(KWIN_CORE) << "Forcing EGL native interface as Qt uses OpenGL ES";
         interface = EglPlatformInterface;
-    } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+    } else if (qgetenv("KWIN_COMPOSE") == "O2ES") {
         qCDebug(KWIN_CORE) << "Forcing EGL native interface as OpenGL ES requested through KWIN_COMPOSE environment variable.";
         interface = EglPlatformInterface;
     }
@@ -727,7 +727,7 @@ void Options::loadConfig()
     bool useCompositing = false;
     CompositingType compositingMode = NoCompositing;
     QString compositingBackend = config.readEntry("Backend", "OpenGL");
-    if (compositingBackend == "QPainter") {
+    if (compositingBackend == u"QPainter") {
         compositingMode = QPainterCompositing;
     } else {
         compositingMode = OpenGLCompositing;

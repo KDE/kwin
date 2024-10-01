@@ -11,14 +11,14 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     QWidget window1(nullptr, Qt::Window);
-    window1.setWindowTitle("Window 1");
+    window1.setWindowTitle(QStringLiteral("Window 1"));
     window1.setLayout(new QVBoxLayout);
-    QPushButton p("Raise the Window 2");
+    QPushButton p(QStringLiteral("Raise the Window 2"));
     window1.layout()->addWidget(&p);
     window1.show();
 
     QWidget window2(nullptr, Qt::Window);
-    window2.setWindowTitle("Window 2");
+    window2.setWindowTitle(QStringLiteral("Window 2"));
     window2.show();
 
     QObject::connect(&p, &QPushButton::clicked, window2.windowHandle(), &QWindow::requestActivate);

@@ -63,9 +63,9 @@ void TestXdgOutput::init()
     m_outputHandle->setMode(QSize(1920, 1080), 60000);
     m_outputHandle->moveTo(QPoint(11, 12)); // not a sensible value for one monitor, but works for this test
     m_outputHandle->setScale(1.5);
-    m_outputHandle->setName("testName");
-    m_outputHandle->setManufacturer("foo");
-    m_outputHandle->setModel("bar");
+    m_outputHandle->setName(QStringLiteral("testName"));
+    m_outputHandle->setManufacturer(QStringLiteral("foo"));
+    m_outputHandle->setModel(QStringLiteral("bar"));
 
     m_serverOutput = new OutputInterface(m_display, m_outputHandle.get(), this);
 
@@ -147,8 +147,8 @@ void TestXdgOutput::testChanges()
     xdgOutputChanged.clear();
     QCOMPARE(xdgOutput->logicalPosition(), QPoint(11, 12));
     QCOMPARE(xdgOutput->logicalSize(), QSize(1280, 720));
-    QCOMPARE(xdgOutput->name(), "testName");
-    QCOMPARE(xdgOutput->description(), "foo bar");
+    QCOMPARE(xdgOutput->name(), QStringLiteral("testName"));
+    QCOMPARE(xdgOutput->description(), QStringLiteral("foo bar"));
 
     // change the logical position
     m_outputHandle->moveTo(QPoint(1000, 2000));

@@ -30,7 +30,7 @@ namespace KWin
 class KWIN_EXPORT FTraceLogger : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.FTrace");
+    Q_CLASSINFO("D-Bus Interface", "org.kde.kwin.FTrace")
     Q_PROPERTY(bool isEnabled READ isEnabled NOTIFY enabledChanged)
 
 public:

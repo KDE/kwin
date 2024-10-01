@@ -47,7 +47,7 @@ void TestWaylandServerDisplay::testSocketName()
 void TestWaylandServerDisplay::testStartStop()
 {
     const QString testSocketName = QStringLiteral("kwin-wayland-server-display-test-0");
-    QDir runtimeDir(qgetenv("XDG_RUNTIME_DIR"));
+    QDir runtimeDir(qEnvironmentVariable("XDG_RUNTIME_DIR"));
     QVERIFY(runtimeDir.exists());
     QVERIFY(!runtimeDir.exists(testSocketName));
 

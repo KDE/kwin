@@ -177,7 +177,7 @@ void TestWindowManagement::testReallyLongTitle()
     QSignalSpy titleSpy(m_window, &KWayland::Client::PlasmaWindow::titleChanged);
 
     QVERIFY(titleSpy.wait());
-    QVERIFY(m_window->title().startsWith("t"));
+    QVERIFY(m_window->title().startsWith(u"t"));
 }
 
 void TestWindowManagement::testMinimizedGeometry()

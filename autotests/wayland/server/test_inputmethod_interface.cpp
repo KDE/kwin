@@ -350,11 +350,11 @@ void TestInputMethodInterface::testContext()
 
     // commit some text
     QSignalSpy commitStringSpy(serverContext, &KWin::InputMethodContextV1Interface::commitString);
-    imContext->commit_string(serial, "hello");
+    imContext->commit_string(serial, QStringLiteral("hello"));
     QVERIFY(commitStringSpy.wait());
     QCOMPARE(commitStringSpy.count(), serial);
     QCOMPARE(commitStringSpy.last().at(0).value<quint32>(), serial);
-    QCOMPARE(commitStringSpy.last().at(1).value<QString>(), "hello");
+    QCOMPARE(commitStringSpy.last().at(1).value<QString>(), QStringLiteral("hello"));
     serial++;
 
     // preedit styling event
@@ -376,12 +376,12 @@ void TestInputMethodInterface::testContext()
 
     // commit preedit_string
     QSignalSpy preeditStringSpy(serverContext, &KWin::InputMethodContextV1Interface::preeditString);
-    imContext->preedit_string(serial, "hello", "kde");
+    imContext->preedit_string(serial, QStringLiteral("hello"), QStringLiteral("kde"));
     QVERIFY(preeditStringSpy.wait());
     QCOMPARE(preeditStringSpy.count(), 1);
     QCOMPARE(preeditStringSpy.last().at(0).value<quint32>(), serial);
-    QCOMPARE(preeditStringSpy.last().at(1).value<QString>(), "hello");
-    QCOMPARE(preeditStringSpy.last().at(2).value<QString>(), "kde");
+    QCOMPARE(preeditStringSpy.last().at(1).value<QString>(), QStringLiteral("hello"));
+    QCOMPARE(preeditStringSpy.last().at(2).value<QString>(), QStringLiteral("kde"));
     serial++;
 
     // delete surrounding text
@@ -410,17 +410,17 @@ void TestInputMethodInterface::testContext()
 
     // preferred language
     QSignalSpy preferredLanguageSpy(imContext, &InputMethodV1Context::preferred_language);
-    serverContext->sendPreferredLanguage("gu_IN");
+    serverContext->sendPreferredLanguage(QStringLiteral("gu_IN"));
     QVERIFY(preferredLanguageSpy.wait());
     QCOMPARE(preferredLanguageSpy.count(), 1);
-    QCOMPARE(preferredLanguageSpy.last().at(0).value<QString>(), "gu_IN");
+    QCOMPARE(preferredLanguageSpy.last().at(0).value<QString>(), QStringLiteral("gu_IN"));
 
     // surrounding text
     QSignalSpy surroundingTextSpy(imContext, &InputMethodV1Context::surrounding_text);
-    serverContext->sendSurroundingText("Hello Plasma!", 2, 4);
+    serverContext->sendSurroundingText(QStringLiteral("Hello Plasma!"), 2, 4);
     QVERIFY(surroundingTextSpy.wait());
     QCOMPARE(surroundingTextSpy.count(), 1);
-    QCOMPARE(surroundingTextSpy.last().at(0).value<QString>(), "Hello Plasma!");
+    QCOMPARE(surroundingTextSpy.last().at(0).value<QString>(), QStringLiteral("Hello Plasma!"));
     QCOMPARE(surroundingTextSpy.last().at(1).value<quint32>(), 2);
     QCOMPARE(surroundingTextSpy.last().at(2).value<quint32>(), 4);
 

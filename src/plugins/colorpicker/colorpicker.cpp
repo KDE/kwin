@@ -82,7 +82,7 @@ QColor ColorPickerEffect::pick()
         return QColor();
     }
     if (m_picking) {
-        sendErrorReply(QDBusError::Failed, "Color picking is already in progress");
+        sendErrorReply(QDBusError::Failed, QStringLiteral("Color picking is already in progress"));
         return QColor();
     }
     setPicking(true);
@@ -94,7 +94,7 @@ QColor ColorPickerEffect::pick()
             hideInfoMessage();
             if (p == QPointF(-1, -1)) {
                 // error condition
-                QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), "Color picking got cancelled"));
+                QDBusConnection::sessionBus().send(m_replyMessage.createErrorReply(QStringLiteral("org.kde.kwin.ColorPicker.Error.Cancelled"), QStringLiteral("Color picking got cancelled")));
                 setPicking(false);
             } else {
                 m_scheduledPosition = p;

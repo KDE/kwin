@@ -98,8 +98,8 @@ bool ScriptedEffectWithDebugSpy::load(const QString &name)
 {
     auto selfContext = engine()->newQObject(this);
     QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
-    const QString path = QFINDTESTDATA("./scripts/" + name + ".js");
-    engine()->globalObject().setProperty("sendTestResponse", selfContext.property("sendTestResponse"));
+    const QString path = QFINDTESTDATA(QLatin1StringView("./scripts/") + name + QLatin1StringView(".js"));
+    engine()->globalObject().setProperty(QStringLiteral("sendTestResponse"), selfContext.property(QStringLiteral("sendTestResponse")));
     if (!init(name, path)) {
         return false;
     }
@@ -175,7 +175,7 @@ void ScriptedEffectsTest::testEffectsHandler()
         QCOMPARE(effectOutputSpy.first().first(), expected);
         effectOutputSpy.removeFirst();
     };
-    QVERIFY(effect->load("effectsHandler"));
+    QVERIFY(effect->load(QStringLiteral("effectsHandler")));
 
     // trigger windowAdded signal
 
@@ -184,27 +184,27 @@ void ScriptedEffectsTest::testEffectsHandler()
     QVERIFY(surface);
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
-    shellSurface->set_title("WindowA");
+    shellSurface->set_title(QStringLiteral("WindowA"));
     auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);
 
-    waitFor("windowAdded - WindowA");
-    waitFor("stackingOrder - 1 WindowA");
+    waitFor(QStringLiteral("windowAdded - WindowA"));
+    waitFor(QStringLiteral("stackingOrder - 1 WindowA"));
 
     // windowMinimsed
     c->setMinimized(true);
-    waitFor("windowMinimized - WindowA");
+    waitFor(QStringLiteral("windowMinimized - WindowA"));
 
     c->setMinimized(false);
-    waitFor("windowUnminimized - WindowA");
+    waitFor(QStringLiteral("windowUnminimized - WindowA"));
 
     surface.reset();
-    waitFor("windowClosed - WindowA");
+    waitFor(QStringLiteral("windowClosed - WindowA"));
 
     // desktop management
     KWin::VirtualDesktopManager::self()->setCurrent(2);
-    waitFor("desktopChanged - 1 2");
+    waitFor(QStringLiteral("desktopChanged - 1 2"));
 }
 
 void ScriptedEffectsTest::testEffectsContext()
@@ -213,11 +213,11 @@ void ScriptedEffectsTest::testEffectsContext()
 
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effect->load("effectContext"));
-    QCOMPARE(effectOutputSpy[0].first(), "1280x1024");
-    QCOMPARE(effectOutputSpy[1].first(), "100");
-    QCOMPARE(effectOutputSpy[2].first(), "2");
-    QCOMPARE(effectOutputSpy[3].first(), "0");
+    QVERIFY(effect->load(QStringLiteral("effectContext")));
+    QCOMPARE(effectOutputSpy[0].first(), QStringLiteral("1280x1024"));
+    QCOMPARE(effectOutputSpy[1].first(), QStringLiteral("100"));
+    QCOMPARE(effectOutputSpy[2].first(), QStringLiteral("2"));
+    QCOMPARE(effectOutputSpy[3].first(), QStringLiteral("0"));
 }
 
 void ScriptedEffectsTest::testShortcuts()
@@ -230,14 +230,14 @@ void ScriptedEffectsTest::testShortcuts()
     // this tests method registerShortcut
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effect->load("shortcutsTest"));
+    QVERIFY(effect->load(QStringLiteral("shortcutsTest")));
     QCOMPARE(effect->actions().count(), 1);
     auto action = effect->actions()[0];
-    QCOMPARE(action->objectName(), "testShortcut");
-    QCOMPARE(action->text(), "Test Shortcut");
-    QCOMPARE(KGlobalAccel::self()->shortcut(action).first(), QKeySequence("Meta+Shift+Y"));
+    QCOMPARE(action->objectName(), QStringLiteral("testShortcut"));
+    QCOMPARE(action->text(), QStringLiteral("Test Shortcut"));
+    QCOMPARE(KGlobalAccel::self()->shortcut(action).first(), QKeySequence(QStringLiteral("Meta+Shift+Y")));
     action->trigger();
-    QCOMPARE(effectOutputSpy[0].first(), "shortcutTriggered");
+    QCOMPARE(effectOutputSpy[0].first(), QStringLiteral("shortcutTriggered"));
 }
 
 void ScriptedEffectsTest::testAnimations_data()
@@ -267,7 +267,7 @@ void ScriptedEffectsTest::testAnimations()
     QVERIFY(surface);
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
-    shellSurface->set_title("Window 1");
+    shellSurface->set_title(QStringLiteral("Window 1"));
     auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);
@@ -293,7 +293,7 @@ void ScriptedEffectsTest::testAnimations()
                      AnimationEffect::TerminateAtSource | AnimationEffect::TerminateAtTarget);
         }
     }
-    QCOMPARE(effectOutputSpy[0].first(), "true");
+    QCOMPARE(effectOutputSpy[0].first(), QStringLiteral("true"));
 
     // window state changes, scale should be retargetted
 
@@ -328,7 +328,7 @@ void ScriptedEffectsTest::testScreenEdge()
     // this test checks registerScreenEdge functions
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effect->load("screenEdgeTest"));
+    QVERIFY(effect->load(QStringLiteral("screenEdgeTest")));
     effect->borderActivated(KWin::ElectricTopRight);
     QCOMPARE(effectOutputSpy.count(), 1);
 }
@@ -338,7 +338,7 @@ void ScriptedEffectsTest::testScreenEdgeTouch()
     // this test checks registerTouchScreenEdge functions
     auto *effect = new ScriptedEffectWithDebugSpy; // cleaned up in ::clean
     QSignalSpy effectOutputSpy(effect, &ScriptedEffectWithDebugSpy::testOutput);
-    QVERIFY(effect->load("screenEdgeTouchTest"));
+    QVERIFY(effect->load(QStringLiteral("screenEdgeTouchTest")));
     effect->actions()[0]->trigger();
     QCOMPARE(effectOutputSpy.count(), 1);
 }
@@ -366,14 +366,14 @@ void ScriptedEffectsTest::testFullScreenEffect()
     // load any random effect from another test to confirm fullscreen effect state is correctly
     // shown as being someone else
     auto effectOther = new ScriptedEffectWithDebugSpy();
-    QVERIFY(effectOther->load("screenEdgeTouchTest"));
+    QVERIFY(effectOther->load(QStringLiteral("screenEdgeTouchTest")));
     QSignalSpy isActiveFullScreenEffectSpyOther(effectOther, &ScriptedEffect::isActiveFullScreenEffectChanged);
 
     std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
     QVERIFY(surface);
     std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
     QVERIFY(shellSurface);
-    shellSurface->set_title("Window 1");
+    shellSurface->set_title(QStringLiteral("Window 1"));
     auto *c = Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
     QVERIFY(c);
     QCOMPARE(workspace()->activeWindow(), c);

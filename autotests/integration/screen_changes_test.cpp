@@ -134,7 +134,7 @@ void ScreenChangesTest::testScreenAddRemove()
     QCOMPARE(xdgO2->logicalPosition(), serverOutput2->geometry().topLeft());
     QCOMPARE(xdgO2->logicalSize(), serverOutput2->geometry().size());
 
-    QVERIFY(xdgO1->name().startsWith("Virtual-"));
+    QVERIFY(xdgO1->name().startsWith(u"Virtual-"));
     QVERIFY(xdgO1->name() != xdgO2->name());
     QVERIFY(!xdgO1->description().isEmpty());
 

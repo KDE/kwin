@@ -173,7 +173,7 @@ void TestVirtualDesktop::testCreate()
 
     // on this createDesktop bind() isn't called already, the desktopadded signals will be sent after bind happened
     KWin::PlasmaVirtualDesktopInterface *desktop1Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-1"));
-    desktop1Int->setName("Desktop 1");
+    desktop1Int->setName(QStringLiteral("Desktop 1"));
 
     QVERIFY(desktopCreatedSpy.wait());
     QList<QVariant> arguments = desktopCreatedSpy.takeFirst();
@@ -194,7 +194,7 @@ void TestVirtualDesktop::testCreate()
 
     // on those createDesktop the bind will already be done
     KWin::PlasmaVirtualDesktopInterface *desktop2Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-2"));
-    desktop2Int->setName("Desktop 2");
+    desktop2Int->setName(QStringLiteral("Desktop 2"));
     QVERIFY(desktopCreatedSpy.wait());
     arguments = desktopCreatedSpy.takeFirst();
     QCOMPARE(arguments.at(0).toString(), QStringLiteral("0-2"));
@@ -202,7 +202,7 @@ void TestVirtualDesktop::testCreate()
     QCOMPARE(m_plasmaVirtualDesktopManagement->desktops().length(), 2);
 
     KWin::PlasmaVirtualDesktopInterface *desktop3Int = m_plasmaVirtualDesktopManagementInterface->createDesktop(QStringLiteral("0-3"));
-    desktop3Int->setName("Desktop 3");
+    desktop3Int->setName(QStringLiteral("Desktop 3"));
     QVERIFY(desktopCreatedSpy.wait());
     arguments = desktopCreatedSpy.takeFirst();
     QCOMPARE(arguments.at(0).toString(), QStringLiteral("0-3"));

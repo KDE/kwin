@@ -91,7 +91,7 @@ void InputMethodTest::initTestCase()
         QRect(1280, 0, 1280, 1024),
     });
 
-    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
+    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart(QStringLiteral("internal"));
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
     const auto outputs = workspace()->outputs();
@@ -490,7 +490,7 @@ void InputMethodTest::testV3Styling()
     zwp_input_method_context_v1_preedit_styling(context, 0, 3, 7);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCD", "ABCD");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCD"));
+    QCOMPARE(textInputPreeditSpy.last().at(0), QStringLiteral("ABCD"));
     QCOMPARE(textInputPreeditSpy.last().at(1), 0);
     QCOMPARE(textInputPreeditSpy.last().at(2), 0);
 
@@ -498,7 +498,7 @@ void InputMethodTest::testV3Styling()
     zwp_input_method_context_v1_preedit_styling(context, 0, 3, 7);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCDE", "ABCDE");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDE"));
+    QCOMPARE(textInputPreeditSpy.last().at(0), QStringLiteral("ABCDE"));
     QCOMPARE(textInputPreeditSpy.last().at(1), 1);
     QCOMPARE(textInputPreeditSpy.last().at(2), 1);
 
@@ -509,7 +509,7 @@ void InputMethodTest::testV3Styling()
     zwp_input_method_context_v1_preedit_styling(context, 3, 3, 4);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    QCOMPARE(textInputPreeditSpy.last().at(0), QStringLiteral("ABCDEF"));
     // Merged range should be [2, 6)
     QCOMPARE(textInputPreeditSpy.last().at(1), 2);
     QCOMPARE(textInputPreeditSpy.last().at(2), 6);
@@ -521,7 +521,7 @@ void InputMethodTest::testV3Styling()
     zwp_input_method_context_v1_preedit_styling(context, 3, 3, 4);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    QCOMPARE(textInputPreeditSpy.last().at(0), QStringLiteral("ABCDEF"));
     // Merged range should be none, because of the disjunction highlight.
     QCOMPARE(textInputPreeditSpy.last().at(1), 2);
     QCOMPARE(textInputPreeditSpy.last().at(2), 2);
@@ -533,7 +533,7 @@ void InputMethodTest::testV3Styling()
     zwp_input_method_context_v1_preedit_styling(context, 2, 3, 4);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    QCOMPARE(textInputPreeditSpy.last().at(0), QStringLiteral("ABCDEF"));
     // Merged range should be none, starting offset does not match.
     QCOMPARE(textInputPreeditSpy.last().at(1), 1);
     QCOMPARE(textInputPreeditSpy.last().at(2), 1);
@@ -546,7 +546,7 @@ void InputMethodTest::testV3Styling()
     zwp_input_method_context_v1_preedit_styling(context, 1, 2, 6);
     zwp_input_method_context_v1_preedit_string(context, 0, "ABCDEF", "ABCDEF");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last().at(0), QString("ABCDEF"));
+    QCOMPARE(textInputPreeditSpy.last().at(0), QStringLiteral("ABCDEF"));
     // Merged range should be [1,6).
     QCOMPARE(textInputPreeditSpy.last().at(1), 1);
     QCOMPARE(textInputPreeditSpy.last().at(2), 6);
@@ -842,7 +842,7 @@ void InputMethodTest::testV3AutoCommit()
     Test::keyboardKeyPressed(KEY_A, timestamp++);
     Test::keyboardKeyReleased(KEY_A, timestamp++);
     QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit1");
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), QStringLiteral("commit1"));
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
     // ******************
@@ -852,7 +852,7 @@ void InputMethodTest::testV3AutoCommit()
     zwp_input_method_context_v1_preedit_string(context, 1, "preedit2", "commit2");
 
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit2"));
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QStringLiteral("preedit2"));
 
     // a key does nothing, it will go to the input method
     Test::keyboardKeyPressed(KEY_B, timestamp++);
@@ -864,7 +864,7 @@ void InputMethodTest::testV3AutoCommit()
     zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Released));
 
     QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit2");
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), QStringLiteral("commit2"));
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
     // **************
@@ -882,7 +882,7 @@ void InputMethodTest::testV3AutoCommit()
     textInputV3->commit();
     zwp_input_method_context_v1_preedit_string(context, 1, "preedit3", "commit3");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit3"));
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QStringLiteral("preedit3"));
 
     // mouse clicks on a VK does not submit
     Test::pointerMotion(textInputWindow->frameGeometry().center(), timestamp++);
@@ -896,7 +896,7 @@ void InputMethodTest::testV3AutoCommit()
     Test::pointerButtonReleased(1, timestamp++);
 
     QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit3");
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), QStringLiteral("commit3"));
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
     // *****************
@@ -904,7 +904,7 @@ void InputMethodTest::testV3AutoCommit()
     textInputV3->commit();
     zwp_input_method_context_v1_preedit_string(context, 1, "preedit4", "commit4");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit4"));
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QStringLiteral("preedit4"));
 
     std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
@@ -913,7 +913,7 @@ void InputMethodTest::testV3AutoCommit()
 
     // these variables refer to the old window
     QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit4");
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), QStringLiteral("commit4"));
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
     shellSurface.reset();

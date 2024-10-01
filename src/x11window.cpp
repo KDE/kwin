@@ -3158,8 +3158,8 @@ bool X11Window::sameAppWindowRoleMatch(const X11Window *c1, const X11Window *c2,
         || c1->group()->leaderClient() == c1 || c2->group()->leaderClient() == c2;
 #endif
     }
-    int pos1 = c1->windowRole().indexOf('#');
-    int pos2 = c2->windowRole().indexOf('#');
+    int pos1 = c1->windowRole().indexOf(u'#');
+    int pos2 = c2->windowRole().indexOf(u'#');
     if ((pos1 >= 0 && pos2 >= 0)) {
         if (!active_hack) { // without the active hack for focus stealing prevention,
             return c1 == c2; // different mainwindows are always different apps
@@ -5155,7 +5155,7 @@ QString X11Window::wmCommand()
         result = Xcb::StringProperty(m_wmClientLeader, XCB_ATOM_WM_COMMAND);
     }
     result.replace(0, ' ');
-    return result;
+    return QString::fromUtf8(result);
 }
 
 /**

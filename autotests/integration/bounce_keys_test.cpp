@@ -38,7 +38,7 @@ private Q_SLOTS:
 
 void BounceKeysTest::initTestCase()
 {
-    KConfig kaccessConfig("kaccessrc");
+    KConfig kaccessConfig(QStringLiteral("kaccessrc"));
     kaccessConfig.group(QStringLiteral("Keyboard")).writeEntry("BounceKeys", true);
     kaccessConfig.group(QStringLiteral("Keyboard")).writeEntry("BounceKeysDelay", 200);
     kaccessConfig.sync();

@@ -22,7 +22,7 @@
 
 Q_DECLARE_METATYPE(NET::WindowType)
 
-static const QByteArray s_skipClosePropertyName = QByteArrayLiteral("KWIN_SKIP_CLOSE_ANIMATION");
+static const QByteArray s_skipClosePropertyName("KWIN_SKIP_CLOSE_ANIMATION");
 static const QByteArray s_shadowEnabledPropertyName = QByteArrayLiteral("kwin_shadow_enabled");
 
 namespace KWin
@@ -46,7 +46,7 @@ InternalWindow::InternalWindow(QWindow *handle)
     setIcon(QIcon::fromTheme(QStringLiteral("kwin")));
     setOnAllDesktops(true);
     setOpacity(m_handle->opacity());
-    setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName).toBool());
+    setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName.constData()).toBool());
     updateColorScheme();
     updateShadow();
 
@@ -112,7 +112,7 @@ bool InternalWindow::eventFilter(QObject *watched, QEvent *event)
     if (watched == m_handle && event->type() == QEvent::DynamicPropertyChange) {
         QDynamicPropertyChangeEvent *pe = static_cast<QDynamicPropertyChangeEvent *>(event);
         if (pe->propertyName() == s_skipClosePropertyName) {
-            setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName).toBool());
+            setSkipCloseAnimation(m_handle->property(s_skipClosePropertyName.constData()).toBool());
         }
         if (pe->propertyName() == s_shadowEnabledPropertyName) {
             updateShadow();

@@ -140,7 +140,7 @@ void GLPlatformTest::testDetect_data()
 
 static Version readVersion(const KConfigGroup &group, const char *entry)
 {
-    const QStringList parts = group.readEntry(entry, QString()).split(',');
+    const QStringList parts = group.readEntry(entry, QString()).split(u',');
     if (parts.count() < 2) {
         return Version();
     }

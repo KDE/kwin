@@ -30,7 +30,7 @@ extern "C" {
 namespace KWin
 {
 
-static QByteArray parsePnpId(const uint8_t *data)
+static QString parsePnpId(const uint8_t *data)
 {
     // Decode PNP ID from three 5 bit words packed into 2 bytes:
     //
@@ -45,16 +45,15 @@ static QByteArray parsePnpId(const uint8_t *data)
     // ----------------------------------------
     const uint offset = 0x8;
 
-    char pnpId[4];
-    pnpId[0] = 'A' + ((data[offset + 0] >> 2) & 0x1f) - 1;
-    pnpId[1] = 'A' + (((data[offset + 0] & 0x3) << 3) | ((data[offset + 1] >> 5) & 0x7)) - 1;
-    pnpId[2] = 'A' + (data[offset + 1] & 0x1f) - 1;
-    pnpId[3] = '\0';
-
-    return QByteArray(pnpId);
+    QString pnpId;
+    pnpId.reserve(3);
+    pnpId.append(QLatin1Char('A' + ((data[offset + 0] >> 2) & 0x1f) - 1));
+    pnpId.append(QLatin1Char('A' + (((data[offset + 0] & 0x3) << 3) | ((data[offset + 1] >> 5) & 0x7)) - 1));
+    pnpId.append(QLatin1Char('A' + (data[offset + 1] & 0x1f) - 1));
+    return pnpId;
 }
 
-static QByteArray parseEisaId(const uint8_t *data)
+static QString parseEisaId(const uint8_t *data)
 {
     for (int i = 72; i <= 108; i += 18) {
         // Skip the block if it isn't used as monitor descriptor.
@@ -67,7 +66,7 @@ static QByteArray parseEisaId(const uint8_t *data)
 
         // We have found the EISA ID, it's stored as ASCII.
         if (data[i + 3] == 0xfe) {
-            return QByteArray(reinterpret_cast<const char *>(&data[i + 5]), 13).trimmed();
+            return QString::fromLatin1(QByteArrayView(reinterpret_cast<const char *>(&data[i + 5]), 13).trimmed());
         }
     }
 
@@ -75,15 +74,16 @@ static QByteArray parseEisaId(const uint8_t *data)
     return parsePnpId(data);
 }
 
-static QByteArray parseVendor(const uint8_t *data)
+static QString parseVendor(const uint8_t *data)
 {
     const auto pnpId = parsePnpId(data);
 
     // Map to vendor name
     QFile pnpFile(QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("hwdata/pnp.ids")));
     if (pnpFile.exists() && pnpFile.open(QIODevice::ReadOnly)) {
-        while (!pnpFile.atEnd()) {
-            const auto line = pnpFile.readLine();
+        QTextStream stream(&pnpFile);
+        QString line;
+        while (stream.readLineInto(&line)) {
             if (line.startsWith(pnpId)) {
                 return line.mid(4).trimmed();
             }
@@ -144,16 +144,16 @@ Edid::Edid(const void *data, uint32_t size)
     m_physicalSize = determineScreenPhysicalSizeMm(edid);
     m_eisaId = parseEisaId(bytes);
     UniqueCPtr<char> monitorName{di_info_get_model(info)};
-    m_monitorName = QByteArray(monitorName.get());
+    m_monitorName = QString::fromLatin1(monitorName.get());
     UniqueCPtr<char> serial{di_info_get_serial(info)};
-    m_serialNumber = QByteArray(serial.get());
+    m_serialNumber = QString::fromLatin1(serial.get());
     m_vendor = parseVendor(bytes);
     QCryptographicHash hash(QCryptographicHash::Md5);
     hash.addData(m_raw);
     m_hash = QString::fromLatin1(hash.result().toHex());
 
-    m_identifier = QByteArray(productInfo->manufacturer, 3) + " " + QByteArray::number(productInfo->product) + " " + QByteArray::number(productInfo->serial) + " "
-        + QByteArray::number(productInfo->manufacture_week) + " " + QByteArray::number(productInfo->manufacture_year) + " " + QByteArray::number(productInfo->model_year);
+    m_identifier = QString::fromLatin1(QByteArrayView(productInfo->manufacturer, 3)) + u' ' + QString::number(productInfo->product) + u' ' + QString::number(productInfo->serial) + u' '
+        + QString::number(productInfo->manufacture_week) + u' ' + QString::number(productInfo->manufacture_year) + u' ' + QString::number(productInfo->model_year);
 
     // colorimetry and HDR metadata
     const auto chromaticity = di_edid_get_chromaticity_coords(edid);
@@ -212,22 +212,22 @@ QSize Edid::physicalSize() const
     return m_physicalSize;
 }
 
-QByteArray Edid::eisaId() const
+QString Edid::eisaId() const
 {
     return m_eisaId;
 }
 
-QByteArray Edid::monitorName() const
+QString Edid::monitorName() const
 {
     return m_monitorName;
 }
 
-QByteArray Edid::serialNumber() const
+QString Edid::serialNumber() const
 {
     return m_serialNumber;
 }
 
-QByteArray Edid::vendor() const
+QString Edid::vendor() const
 {
     return m_vendor;
 }
@@ -241,9 +241,9 @@ QString Edid::manufacturerString() const
 {
     QString manufacturer;
     if (!m_vendor.isEmpty()) {
-        manufacturer = QString::fromLatin1(m_vendor);
+        manufacturer = m_vendor;
     } else if (!m_eisaId.isEmpty()) {
-        manufacturer = QString::fromLatin1(m_eisaId);
+        manufacturer = m_eisaId;
     }
     return manufacturer;
 }
@@ -251,14 +251,14 @@ QString Edid::manufacturerString() const
 QString Edid::nameString() const
 {
     if (!m_monitorName.isEmpty()) {
-        QString m = QString::fromLatin1(m_monitorName);
+        QString m = m_monitorName;
         if (!m_serialNumber.isEmpty()) {
-            m.append('/');
-            m.append(QString::fromLatin1(m_serialNumber));
+            m.append(u'/');
+            m.append(m_serialNumber);
         }
         return m;
     } else if (!m_serialNumber.isEmpty()) {
-        return QString::fromLatin1(m_serialNumber);
+        return m_serialNumber;
     } else {
         return i18n("unknown");
     }
@@ -299,7 +299,7 @@ bool Edid::supportsBT2020() const
     return m_hdrMetadata && m_hdrMetadata->supportsBT2020;
 }
 
-QByteArray Edid::identifier() const
+QString Edid::identifier() const
 {
     return m_identifier;
 }

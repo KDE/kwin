@@ -86,7 +86,7 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     , m_lastPresentTime(std::chrono::milliseconds::zero())
     , m_type(BouncingFeedback)
     , m_cursorSize(24)
-    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("klaunchrc", KConfig::NoGlobals)))
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("klaunchrc"), KConfig::NoGlobals)))
     , m_splashVisible(false)
 {
 #if KWIN_BUILD_X11
@@ -97,14 +97,14 @@ StartupFeedbackEffect::StartupFeedbackEffect()
     }
     connect(m_startupInfo, &KStartupInfo::gotNewStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
         const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
-        Q_EMIT effects->startupAdded(id.id(), icon);
+        Q_EMIT effects->startupAdded(QString::fromUtf8(id.id()), icon);
     });
     connect(m_startupInfo, &KStartupInfo::gotRemoveStartup, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
-        Q_EMIT effects->startupRemoved(id.id());
+        Q_EMIT effects->startupRemoved(QString::fromUtf8(id.id()));
     });
     connect(m_startupInfo, &KStartupInfo::gotStartupChange, this, [](const KStartupInfoId &id, const KStartupInfoData &data) {
         const auto icon = QIcon::fromTheme(data.findIcon(), QIcon::fromTheme(QStringLiteral("system-run")));
-        Q_EMIT effects->startupChanged(id.id(), icon);
+        Q_EMIT effects->startupChanged(QString::fromUtf8(id.id()), icon);
     });
 #endif
 

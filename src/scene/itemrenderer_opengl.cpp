@@ -28,7 +28,7 @@ ItemRendererOpenGL::ItemRendererOpenGL(EglDisplay *eglDisplay)
 {
     const QString visualizeOptionsString = qEnvironmentVariable("KWIN_SCENE_VISUALIZE");
     if (!visualizeOptionsString.isEmpty()) {
-        const QStringList visualtizeOptions = visualizeOptionsString.split(';');
+        const QStringList visualtizeOptions = visualizeOptionsString.split(u';');
         m_debug.fractionalEnabled = visualtizeOptions.contains(QLatin1StringView("fractional"));
     }
 }

@@ -369,7 +369,7 @@ bool Rules::matchWMClass(const QString &match_class, const QString &match_name) 
     if (wmclassmatch != UnimportantMatch) {
         // TODO optimize?
         QString cwmclass = wmclasscomplete
-            ? match_name + ' ' + match_class
+            ? match_name + u' ' + match_class
             : match_class;
         if (wmclassmatch == RegExpMatch && !QRegularExpression(wmclass).match(cwmclass).hasMatch()) {
             return false;
@@ -420,8 +420,8 @@ bool Rules::matchClientMachine(const QString &match_machine, bool local) const
 {
     if (clientmachinematch != UnimportantMatch) {
         // if it's localhost, check also "localhost" before checking hostname
-        if (match_machine != "localhost" && local
-            && matchClientMachine("localhost", true)) {
+        if (match_machine != QLatin1StringView("localhost") && local
+            && matchClientMachine(QStringLiteral("localhost"), true)) {
             return true;
         }
         if (clientmachinematch == RegExpMatch
@@ -945,9 +945,9 @@ void RuleBook::edit(Window *c, bool whole_app)
         args << QStringLiteral("whole-app");
     }
     QProcess *p = new QProcess(this);
-    p->setArguments({"kcm_kwinrules", "--args", args.join(QLatin1Char(' '))});
+    p->setArguments({QStringLiteral("kcm_kwinrules"), QStringLiteral("--args"), args.join(QLatin1Char(' '))});
     p->setProcessEnvironment(kwinApp()->processStartupEnvironment());
-    p->setProgram(QStandardPaths::findExecutable("kcmshell6"));
+    p->setProgram(QStandardPaths::findExecutable(QStringLiteral("kcmshell6")));
     p->setProcessChannelMode(QProcess::MergedChannels);
     connect(p, static_cast<void (QProcess::*)(int, QProcess::ExitStatus)>(&QProcess::finished), p, &QProcess::deleteLater);
     connect(p, &QProcess::errorOccurred, this, [p](QProcess::ProcessError e) {

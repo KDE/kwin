@@ -208,7 +208,7 @@ void Helper::init()
             break;
         }
     }
-    m_engine->importPlugin(pluginPath, "org.kde.kwin.decoration", nullptr);
+    m_engine->importPlugin(pluginPath, QStringLiteral("org.kde.kwin.decoration"), nullptr);
     qmlRegisterType<KWin::Borders>("org.kde.kwin.decoration", 0, 1, "Borders");
 
     qmlRegisterAnonymousType<KDecoration2::Decoration>("org.kde.kwin.decoration", 0);
@@ -616,7 +616,7 @@ void ThemeProvider::findAllQmlThemes()
         data.setThemeName(offer.pluginId());
         data.setVisibleName(offer.name());
         if (hasConfiguration(offer.pluginId())) {
-            data.setConfigurationName("kcm_auroraedecoration");
+            data.setConfigurationName(QStringLiteral("kcm_auroraedecoration"));
         }
         m_themes.append(data);
     }
@@ -635,13 +635,13 @@ void ThemeProvider::findAllSvgThemes()
     }
     for (const QString &dir : themeDirectories) {
         for (const QString &file : QDir(dir).entryList(QStringList() << QStringLiteral("metadata.desktop"))) {
-            themes.append(dir + '/' + file);
+            themes.append(dir + u'/' + file);
         }
     }
     for (const QString &theme : themes) {
-        int themeSepIndex = theme.lastIndexOf('/', -1);
+        int themeSepIndex = theme.lastIndexOf(u'/', -1);
         QString themeRoot = theme.left(themeSepIndex);
-        int themeNameSepIndex = themeRoot.lastIndexOf('/', -1);
+        int themeNameSepIndex = themeRoot.lastIndexOf(u'/', -1);
         QString packageName = themeRoot.right(themeRoot.length() - themeNameSepIndex - 1);
 
         KDesktopFile df(theme);
@@ -655,7 +655,7 @@ void ThemeProvider::findAllSvgThemes()
         data.setThemeName(QLatin1String("__aurorae__svg__") + packageName);
         data.setVisibleName(name);
         if (hasConfiguration(data.themeName())) {
-            data.setConfigurationName("kcm_auroraedecoration");
+            data.setConfigurationName(QStringLiteral("kcm_auroraedecoration"));
         }
         m_themes.append(data);
     }

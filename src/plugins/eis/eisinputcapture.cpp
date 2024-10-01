@@ -47,7 +47,7 @@ static eis_device *createDevice(eis_seat *seat, const QByteArray &name)
     auto client = eis_seat_get_client(seat);
     const char *clientName = eis_client_get_name(client);
     const QByteArray deviceName = clientName + (' ' + name);
-    eis_device_configure_name(device, deviceName);
+    eis_device_configure_name(device, qPrintable(deviceName));
     return device;
 }
 

@@ -318,18 +318,18 @@ int main(int argc, char **argv)
 
     QToolButton *edgeButton = new QToolButton(widget.get());
 
-    QCheckBox *raiseCheckBox = new QCheckBox("Raise:", widget.get());
+    QCheckBox *raiseCheckBox = new QCheckBox(QStringLiteral("Raise:"), widget.get());
     QObject::connect(raiseCheckBox, &QCheckBox::toggled, helper, &ScreenEdgeHelper::raiseOrShow);
 
     edgeButton->setText(QStringLiteral("Edge"));
     edgeButton->setPopupMode(QToolButton::MenuButtonPopup);
     QMenu *edgeButtonMenu = new QMenu(edgeButton);
-    QObject::connect(edgeButtonMenu->addAction("Top"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToTop);
-    QObject::connect(edgeButtonMenu->addAction("Right"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToRight);
-    QObject::connect(edgeButtonMenu->addAction("Bottom"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToBottom);
-    QObject::connect(edgeButtonMenu->addAction("Left"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToLeft);
+    QObject::connect(edgeButtonMenu->addAction(QStringLiteral("Top")), &QAction::triggered, helper, &ScreenEdgeHelper::moveToTop);
+    QObject::connect(edgeButtonMenu->addAction(QStringLiteral("Right")), &QAction::triggered, helper, &ScreenEdgeHelper::moveToRight);
+    QObject::connect(edgeButtonMenu->addAction(QStringLiteral("Bottom")), &QAction::triggered, helper, &ScreenEdgeHelper::moveToBottom);
+    QObject::connect(edgeButtonMenu->addAction(QStringLiteral("Left")), &QAction::triggered, helper, &ScreenEdgeHelper::moveToLeft);
     edgeButtonMenu->addSeparator();
-    QObject::connect(edgeButtonMenu->addAction("Floating"), &QAction::triggered, helper, &ScreenEdgeHelper::moveToFloating);
+    QObject::connect(edgeButtonMenu->addAction(QStringLiteral("Floating")), &QAction::triggered, helper, &ScreenEdgeHelper::moveToFloating);
     edgeButton->setMenu(edgeButtonMenu);
 
     QHBoxLayout *layout = new QHBoxLayout(widget.get());

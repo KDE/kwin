@@ -304,7 +304,7 @@ void TestXdgShellWindowRules::setWindowRule(const QString &property, const T &va
 
 void TestXdgShellWindowRules::testPositionDontAffect()
 {
-    setWindowRule("position", QPoint(42, 42), int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("position"), QPoint(42, 42), int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -319,7 +319,7 @@ void TestXdgShellWindowRules::testPositionDontAffect()
 
 void TestXdgShellWindowRules::testPositionApply()
 {
-    setWindowRule("position", QPoint(42, 42), int(Rules::Apply));
+    setWindowRule(QStringLiteral("position"), QPoint(42, 42), int(Rules::Apply));
 
     createTestWindow();
 
@@ -369,7 +369,7 @@ void TestXdgShellWindowRules::testPositionApply()
 
 void TestXdgShellWindowRules::testPositionRemember()
 {
-    setWindowRule("position", QPoint(42, 42), int(Rules::Remember));
+    setWindowRule(QStringLiteral("position"), QPoint(42, 42), int(Rules::Remember));
     createTestWindow();
 
     // The window should be moved to the position specified by the rule.
@@ -418,7 +418,7 @@ void TestXdgShellWindowRules::testPositionRemember()
 
 void TestXdgShellWindowRules::testPositionForce()
 {
-    setWindowRule("position", QPoint(42, 42), int(Rules::Force));
+    setWindowRule(QStringLiteral("position"), QPoint(42, 42), int(Rules::Force));
 
     createTestWindow();
 
@@ -461,7 +461,7 @@ void TestXdgShellWindowRules::testPositionApplyNow()
 
     QSignalSpy frameGeometryChangedSpy(m_window, &Window::frameGeometryChanged);
 
-    setWindowRule("position", QPoint(42, 42), int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("position"), QPoint(42, 42), int(Rules::ApplyNow));
 
     // The window should be moved to the position specified by the rule.
     QCOMPARE(frameGeometryChangedSpy.count(), 1);
@@ -506,7 +506,7 @@ void TestXdgShellWindowRules::testPositionApplyNow()
 
 void TestXdgShellWindowRules::testPositionForceTemporarily()
 {
-    setWindowRule("position", QPoint(42, 42), int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("position"), QPoint(42, 42), int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -539,7 +539,7 @@ void TestXdgShellWindowRules::testPositionForceTemporarily()
 
 void TestXdgShellWindowRules::testSizeDontAffect()
 {
-    setWindowRule("size", QSize(480, 640), int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("size"), QSize(480, 640), int(Rules::DontAffect));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -563,7 +563,7 @@ void TestXdgShellWindowRules::testSizeDontAffect()
 
 void TestXdgShellWindowRules::testSizeApply()
 {
-    setWindowRule("size", QSize(480, 640), int(Rules::Apply));
+    setWindowRule(QStringLiteral("size"), QSize(480, 640), int(Rules::Apply));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -660,7 +660,7 @@ void TestXdgShellWindowRules::testSizeApply()
 
 void TestXdgShellWindowRules::testSizeRemember()
 {
-    setWindowRule("size", QSize(480, 640), int(Rules::Remember));
+    setWindowRule(QStringLiteral("size"), QSize(480, 640), int(Rules::Remember));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -757,7 +757,7 @@ void TestXdgShellWindowRules::testSizeRemember()
 
 void TestXdgShellWindowRules::testSizeForce()
 {
-    setWindowRule("size", QSize(480, 640), int(Rules::Force));
+    setWindowRule(QStringLiteral("size"), QSize(480, 640), int(Rules::Force));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -826,7 +826,7 @@ void TestXdgShellWindowRules::testSizeApplyNow()
     QCOMPARE(m_surfaceConfigureRequestedSpy->count(), 2);
     QCOMPARE(m_toplevelConfigureRequestedSpy->count(), 2);
 
-    setWindowRule("size", QSize(480, 640), int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("size"), QSize(480, 640), int(Rules::ApplyNow));
 
     // The compositor should send a configure event with a new size.
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
@@ -851,7 +851,7 @@ void TestXdgShellWindowRules::testSizeApplyNow()
 
 void TestXdgShellWindowRules::testSizeForceTemporarily()
 {
-    setWindowRule("size", QSize(480, 640), int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("size"), QSize(480, 640), int(Rules::ForceTemporarily));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -903,8 +903,8 @@ void TestXdgShellWindowRules::testSizeForceTemporarily()
 
 void TestXdgShellWindowRules::testMaximizeDontAffect()
 {
-    setWindowRule("maximizehoriz", true, int(Rules::DontAffect));
-    setWindowRule("maximizevert", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("maximizehoriz"), true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("maximizevert"), true, int(Rules::DontAffect));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -938,8 +938,8 @@ void TestXdgShellWindowRules::testMaximizeDontAffect()
 
 void TestXdgShellWindowRules::testMaximizeApply()
 {
-    setWindowRule("maximizehoriz", true, int(Rules::Apply));
-    setWindowRule("maximizevert", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("maximizehoriz"), true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("maximizevert"), true, int(Rules::Apply));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -1015,8 +1015,8 @@ void TestXdgShellWindowRules::testMaximizeApply()
 
 void TestXdgShellWindowRules::testMaximizeRemember()
 {
-    setWindowRule("maximizehoriz", true, int(Rules::Remember));
-    setWindowRule("maximizevert", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("maximizehoriz"), true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("maximizevert"), true, int(Rules::Remember));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -1093,8 +1093,8 @@ void TestXdgShellWindowRules::testMaximizeRemember()
 
 void TestXdgShellWindowRules::testMaximizeForce()
 {
-    setWindowRule("maximizehoriz", true, int(Rules::Force));
-    setWindowRule("maximizevert", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("maximizehoriz"), true, int(Rules::Force));
+    setWindowRule(QStringLiteral("maximizevert"), true, int(Rules::Force));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -1188,8 +1188,8 @@ void TestXdgShellWindowRules::testMaximizeApplyNow()
     QVERIFY(states.testFlag(Test::XdgToplevel::State::Activated));
     QVERIFY(!states.testFlag(Test::XdgToplevel::State::Maximized));
 
-    setWindowRule("maximizehoriz", true, int(Rules::ApplyNow));
-    setWindowRule("maximizevert", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("maximizehoriz"), true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("maximizevert"), true, int(Rules::ApplyNow));
 
     // We should receive a configure event with a new surface size.
     QVERIFY(m_surfaceConfigureRequestedSpy->wait());
@@ -1242,8 +1242,8 @@ void TestXdgShellWindowRules::testMaximizeApplyNow()
 
 void TestXdgShellWindowRules::testMaximizeForceTemporarily()
 {
-    setWindowRule("maximizehoriz", true, int(Rules::ForceTemporarily));
-    setWindowRule("maximizevert", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("maximizehoriz"), true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("maximizevert"), true, int(Rules::ForceTemporarily));
 
     createTestWindow(ReturnAfterSurfaceConfiguration);
 
@@ -1319,7 +1319,7 @@ void TestXdgShellWindowRules::testDesktopsDontAffect()
     VirtualDesktopManager::self()->setCurrent(vd1);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
-    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("desktops"), QStringList{vd2->id()}, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -1341,7 +1341,7 @@ void TestXdgShellWindowRules::testDesktopsApply()
     VirtualDesktopManager::self()->setCurrent(vd1);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
-    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::Apply));
+    setWindowRule(QStringLiteral("desktops"), QStringList{vd2->id()}, int(Rules::Apply));
 
     createTestWindow();
 
@@ -1377,7 +1377,7 @@ void TestXdgShellWindowRules::testDesktopsRemember()
     VirtualDesktopManager::self()->setCurrent(vd1);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
-    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::Remember));
+    setWindowRule(QStringLiteral("desktops"), QStringList{vd2->id()}, int(Rules::Remember));
 
     createTestWindow();
 
@@ -1410,7 +1410,7 @@ void TestXdgShellWindowRules::testDesktopsForce()
     VirtualDesktopManager::self()->setCurrent(vd1);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
-    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::Force));
+    setWindowRule(QStringLiteral("desktops"), QStringList{vd2->id()}, int(Rules::Force));
 
     createTestWindow();
 
@@ -1451,7 +1451,7 @@ void TestXdgShellWindowRules::testDesktopsApplyNow()
     QCOMPARE(m_window->desktops(), {vd1});
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
-    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("desktops"), QStringList{vd2->id()}, int(Rules::ApplyNow));
 
     // The window should have been moved to the second virtual desktop.
     QCOMPARE(m_window->desktops(), {vd2});
@@ -1481,7 +1481,7 @@ void TestXdgShellWindowRules::testDesktopsForceTemporarily()
     VirtualDesktopManager::self()->setCurrent(vd1);
     QCOMPARE(VirtualDesktopManager::self()->currentDesktop(), vd1);
 
-    setWindowRule("desktops", QStringList{vd2->id()}, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("desktops"), QStringList{vd2->id()}, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -1517,7 +1517,7 @@ void TestXdgShellWindowRules::testDesktopsForceTemporarily()
 
 void TestXdgShellWindowRules::testMinimizeDontAffect()
 {
-    setWindowRule("minimize", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("minimize"), true, int(Rules::DontAffect));
 
     createTestWindow();
     QVERIFY(m_window->isMinimizable());
@@ -1530,7 +1530,7 @@ void TestXdgShellWindowRules::testMinimizeDontAffect()
 
 void TestXdgShellWindowRules::testMinimizeApply()
 {
-    setWindowRule("minimize", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("minimize"), true, int(Rules::Apply));
 
     createTestWindow(ClientShouldBeInactive);
     QVERIFY(m_window->isMinimizable());
@@ -1553,7 +1553,7 @@ void TestXdgShellWindowRules::testMinimizeApply()
 
 void TestXdgShellWindowRules::testMinimizeRemember()
 {
-    setWindowRule("minimize", false, int(Rules::Remember));
+    setWindowRule(QStringLiteral("minimize"), false, int(Rules::Remember));
 
     createTestWindow();
     QVERIFY(m_window->isMinimizable());
@@ -1574,7 +1574,7 @@ void TestXdgShellWindowRules::testMinimizeRemember()
 
 void TestXdgShellWindowRules::testMinimizeForce()
 {
-    setWindowRule("minimize", false, int(Rules::Force));
+    setWindowRule(QStringLiteral("minimize"), false, int(Rules::Force));
 
     createTestWindow();
     QVERIFY(!m_window->isMinimizable());
@@ -1601,7 +1601,7 @@ void TestXdgShellWindowRules::testMinimizeApplyNow()
     QVERIFY(m_window->isMinimizable());
     QVERIFY(!m_window->isMinimized());
 
-    setWindowRule("minimize", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("minimize"), true, int(Rules::ApplyNow));
 
     // The window should be minimized now.
     QVERIFY(m_window->isMinimizable());
@@ -1621,7 +1621,7 @@ void TestXdgShellWindowRules::testMinimizeApplyNow()
 
 void TestXdgShellWindowRules::testMinimizeForceTemporarily()
 {
-    setWindowRule("minimize", false, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("minimize"), false, int(Rules::ForceTemporarily));
 
     createTestWindow();
     QVERIFY(!m_window->isMinimizable());
@@ -1644,7 +1644,7 @@ void TestXdgShellWindowRules::testMinimizeForceTemporarily()
 
 void TestXdgShellWindowRules::testSkipTaskbarDontAffect()
 {
-    setWindowRule("skiptaskbar", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("skiptaskbar"), true, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -1656,7 +1656,7 @@ void TestXdgShellWindowRules::testSkipTaskbarDontAffect()
 
 void TestXdgShellWindowRules::testSkipTaskbarApply()
 {
-    setWindowRule("skiptaskbar", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("skiptaskbar"), true, int(Rules::Apply));
 
     createTestWindow();
 
@@ -1677,7 +1677,7 @@ void TestXdgShellWindowRules::testSkipTaskbarApply()
 
 void TestXdgShellWindowRules::testSkipTaskbarRemember()
 {
-    setWindowRule("skiptaskbar", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("skiptaskbar"), true, int(Rules::Remember));
 
     createTestWindow();
 
@@ -1700,7 +1700,7 @@ void TestXdgShellWindowRules::testSkipTaskbarRemember()
 
 void TestXdgShellWindowRules::testSkipTaskbarForce()
 {
-    setWindowRule("skiptaskbar", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("skiptaskbar"), true, int(Rules::Force));
 
     createTestWindow();
 
@@ -1726,7 +1726,7 @@ void TestXdgShellWindowRules::testSkipTaskbarApplyNow()
     createTestWindow();
     QVERIFY(!m_window->skipTaskbar());
 
-    setWindowRule("skiptaskbar", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("skiptaskbar"), true, int(Rules::ApplyNow));
 
     // The window should not be on a taskbar now.
     QVERIFY(m_window->skipTaskbar());
@@ -1744,7 +1744,7 @@ void TestXdgShellWindowRules::testSkipTaskbarApplyNow()
 
 void TestXdgShellWindowRules::testSkipTaskbarForceTemporarily()
 {
-    setWindowRule("skiptaskbar", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("skiptaskbar"), true, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -1769,7 +1769,7 @@ void TestXdgShellWindowRules::testSkipTaskbarForceTemporarily()
 
 void TestXdgShellWindowRules::testSkipPagerDontAffect()
 {
-    setWindowRule("skippager", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("skippager"), true, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -1781,7 +1781,7 @@ void TestXdgShellWindowRules::testSkipPagerDontAffect()
 
 void TestXdgShellWindowRules::testSkipPagerApply()
 {
-    setWindowRule("skippager", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("skippager"), true, int(Rules::Apply));
 
     createTestWindow();
 
@@ -1802,7 +1802,7 @@ void TestXdgShellWindowRules::testSkipPagerApply()
 
 void TestXdgShellWindowRules::testSkipPagerRemember()
 {
-    setWindowRule("skippager", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("skippager"), true, int(Rules::Remember));
 
     createTestWindow();
 
@@ -1825,7 +1825,7 @@ void TestXdgShellWindowRules::testSkipPagerRemember()
 
 void TestXdgShellWindowRules::testSkipPagerForce()
 {
-    setWindowRule("skippager", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("skippager"), true, int(Rules::Force));
 
     createTestWindow();
 
@@ -1851,7 +1851,7 @@ void TestXdgShellWindowRules::testSkipPagerApplyNow()
     createTestWindow();
     QVERIFY(!m_window->skipPager());
 
-    setWindowRule("skippager", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("skippager"), true, int(Rules::ApplyNow));
 
     // The window should not be on a pager now.
     QVERIFY(m_window->skipPager());
@@ -1869,7 +1869,7 @@ void TestXdgShellWindowRules::testSkipPagerApplyNow()
 
 void TestXdgShellWindowRules::testSkipPagerForceTemporarily()
 {
-    setWindowRule("skippager", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("skippager"), true, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -1894,7 +1894,7 @@ void TestXdgShellWindowRules::testSkipPagerForceTemporarily()
 
 void TestXdgShellWindowRules::testSkipSwitcherDontAffect()
 {
-    setWindowRule("skipswitcher", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("skipswitcher"), true, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -1906,7 +1906,7 @@ void TestXdgShellWindowRules::testSkipSwitcherDontAffect()
 
 void TestXdgShellWindowRules::testSkipSwitcherApply()
 {
-    setWindowRule("skipswitcher", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("skipswitcher"), true, int(Rules::Apply));
 
     createTestWindow();
 
@@ -1927,7 +1927,7 @@ void TestXdgShellWindowRules::testSkipSwitcherApply()
 
 void TestXdgShellWindowRules::testSkipSwitcherRemember()
 {
-    setWindowRule("skipswitcher", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("skipswitcher"), true, int(Rules::Remember));
 
     createTestWindow();
 
@@ -1950,7 +1950,7 @@ void TestXdgShellWindowRules::testSkipSwitcherRemember()
 
 void TestXdgShellWindowRules::testSkipSwitcherForce()
 {
-    setWindowRule("skipswitcher", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("skipswitcher"), true, int(Rules::Force));
 
     createTestWindow();
 
@@ -1976,7 +1976,7 @@ void TestXdgShellWindowRules::testSkipSwitcherApplyNow()
     createTestWindow();
     QVERIFY(!m_window->skipSwitcher());
 
-    setWindowRule("skipswitcher", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("skipswitcher"), true, int(Rules::ApplyNow));
 
     // The window should be excluded from window switching effects now.
     QVERIFY(m_window->skipSwitcher());
@@ -1994,7 +1994,7 @@ void TestXdgShellWindowRules::testSkipSwitcherApplyNow()
 
 void TestXdgShellWindowRules::testSkipSwitcherForceTemporarily()
 {
-    setWindowRule("skipswitcher", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("skipswitcher"), true, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -2019,7 +2019,7 @@ void TestXdgShellWindowRules::testSkipSwitcherForceTemporarily()
 
 void TestXdgShellWindowRules::testKeepAboveDontAffect()
 {
-    setWindowRule("above", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -2031,7 +2031,7 @@ void TestXdgShellWindowRules::testKeepAboveDontAffect()
 
 void TestXdgShellWindowRules::testKeepAboveApply()
 {
-    setWindowRule("above", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::Apply));
 
     createTestWindow();
 
@@ -2052,7 +2052,7 @@ void TestXdgShellWindowRules::testKeepAboveApply()
 
 void TestXdgShellWindowRules::testKeepAboveRemember()
 {
-    setWindowRule("above", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::Remember));
 
     createTestWindow();
 
@@ -2073,7 +2073,7 @@ void TestXdgShellWindowRules::testKeepAboveRemember()
 
 void TestXdgShellWindowRules::testKeepAboveForce()
 {
-    setWindowRule("above", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::Force));
 
     createTestWindow();
 
@@ -2097,7 +2097,7 @@ void TestXdgShellWindowRules::testKeepAboveApplyNow()
     createTestWindow();
     QVERIFY(!m_window->keepAbove());
 
-    setWindowRule("above", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::ApplyNow));
 
     // The window should now be kept above other windows.
     QVERIFY(m_window->keepAbove());
@@ -2115,7 +2115,7 @@ void TestXdgShellWindowRules::testKeepAboveApplyNow()
 
 void TestXdgShellWindowRules::testKeepAboveForceTemporarily()
 {
-    setWindowRule("above", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -2142,7 +2142,7 @@ void TestXdgShellWindowRules::testKeepAboveForceTemporarily()
 
 void TestXdgShellWindowRules::testKeepBelowDontAffect()
 {
-    setWindowRule("below", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("below"), true, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -2154,7 +2154,7 @@ void TestXdgShellWindowRules::testKeepBelowDontAffect()
 
 void TestXdgShellWindowRules::testKeepBelowApply()
 {
-    setWindowRule("below", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("below"), true, int(Rules::Apply));
 
     createTestWindow();
 
@@ -2175,7 +2175,7 @@ void TestXdgShellWindowRules::testKeepBelowApply()
 
 void TestXdgShellWindowRules::testKeepBelowRemember()
 {
-    setWindowRule("below", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("below"), true, int(Rules::Remember));
 
     createTestWindow();
 
@@ -2196,7 +2196,7 @@ void TestXdgShellWindowRules::testKeepBelowRemember()
 
 void TestXdgShellWindowRules::testKeepBelowForce()
 {
-    setWindowRule("below", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("below"), true, int(Rules::Force));
 
     createTestWindow();
 
@@ -2220,7 +2220,7 @@ void TestXdgShellWindowRules::testKeepBelowApplyNow()
     createTestWindow();
     QVERIFY(!m_window->keepBelow());
 
-    setWindowRule("below", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("below"), true, int(Rules::ApplyNow));
 
     // The window should now be kept below other windows.
     QVERIFY(m_window->keepBelow());
@@ -2238,7 +2238,7 @@ void TestXdgShellWindowRules::testKeepBelowApplyNow()
 
 void TestXdgShellWindowRules::testKeepBelowForceTemporarily()
 {
-    setWindowRule("below", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("below"), true, int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -2270,7 +2270,7 @@ void TestXdgShellWindowRules::testShortcutDontAffect()
     return;
 #endif
 
-    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("shortcut"), "Ctrl+Alt+1", int(Rules::DontAffect));
 
     createTestWindow();
     QCOMPARE(m_window->shortcut(), QKeySequence());
@@ -2298,7 +2298,7 @@ void TestXdgShellWindowRules::testShortcutApply()
     QSKIP("Can't test shortcuts without shortcuts");
     return;
 #endif
-    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Apply));
+    setWindowRule(QStringLiteral("shortcut"), "Ctrl+Alt+1", int(Rules::Apply));
 
     createTestWindow();
 
@@ -2357,7 +2357,7 @@ void TestXdgShellWindowRules::testShortcutRemember()
 {
     QSKIP("KWin core doesn't try to save the last used window shortcut");
 
-    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Remember));
+    setWindowRule(QStringLiteral("shortcut"), "Ctrl+Alt+1", int(Rules::Remember));
 
     createTestWindow();
 
@@ -2404,7 +2404,7 @@ void TestXdgShellWindowRules::testShortcutForce()
 {
     QSKIP("KWin core can't release forced window shortcuts");
 
-    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::Force));
+    setWindowRule(QStringLiteral("shortcut"), "Ctrl+Alt+1", int(Rules::Force));
 
     createTestWindow();
 
@@ -2457,7 +2457,7 @@ void TestXdgShellWindowRules::testShortcutApplyNow()
     createTestWindow();
     QVERIFY(m_window->shortcut().isEmpty());
 
-    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("shortcut"), "Ctrl+Alt+1", int(Rules::ApplyNow));
 
     // The window should now have a window shortcut assigned.
     QCOMPARE(m_window->shortcut(), (QKeySequence{Qt::CTRL | Qt::ALT | Qt::Key_1}));
@@ -2499,7 +2499,7 @@ void TestXdgShellWindowRules::testShortcutForceTemporarily()
 {
     QSKIP("KWin core can't release forced window shortcuts");
 
-    setWindowRule("shortcut", "Ctrl+Alt+1", int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("shortcut"), "Ctrl+Alt+1", int(Rules::ForceTemporarily));
 
     createTestWindow();
 
@@ -2590,7 +2590,7 @@ void TestXdgShellWindowRules::testDesktopFileForceTemporarily()
 
 void TestXdgShellWindowRules::testActiveOpacityDontAffect()
 {
-    setWindowRule("opacityactive", 90, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("opacityactive"), 90, int(Rules::DontAffect));
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2603,7 +2603,7 @@ void TestXdgShellWindowRules::testActiveOpacityDontAffect()
 
 void TestXdgShellWindowRules::testActiveOpacityForce()
 {
-    setWindowRule("opacityactive", 90, int(Rules::Force));
+    setWindowRule(QStringLiteral("opacityactive"), 90, int(Rules::Force));
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2614,7 +2614,7 @@ void TestXdgShellWindowRules::testActiveOpacityForce()
 
 void TestXdgShellWindowRules::testActiveOpacityForceTemporarily()
 {
-    setWindowRule("opacityactive", 90, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("opacityactive"), 90, int(Rules::ForceTemporarily));
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2631,7 +2631,7 @@ void TestXdgShellWindowRules::testActiveOpacityForceTemporarily()
 
 void TestXdgShellWindowRules::testInactiveOpacityDontAffect()
 {
-    setWindowRule("opacityinactive", 80, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("opacityinactive"), 80, int(Rules::DontAffect));
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2648,7 +2648,7 @@ void TestXdgShellWindowRules::testInactiveOpacityDontAffect()
 
 void TestXdgShellWindowRules::testInactiveOpacityForce()
 {
-    setWindowRule("opacityinactive", 80, int(Rules::Force));
+    setWindowRule(QStringLiteral("opacityinactive"), 80, int(Rules::Force));
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2666,7 +2666,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForce()
 
 void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
 {
-    setWindowRule("opacityinactive", 80, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("opacityinactive"), 80, int(Rules::ForceTemporarily));
 
     createTestWindow();
     QVERIFY(m_window->isActive());
@@ -2694,7 +2694,7 @@ void TestXdgShellWindowRules::testInactiveOpacityForceTemporarily()
 
 void TestXdgShellWindowRules::testNoBorderDontAffect()
 {
-    setWindowRule("noborder", true, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("noborder"), true, int(Rules::DontAffect));
     createTestWindow(ServerSideDecoration);
 
     // The window should not be affected by the rule.
@@ -2705,7 +2705,7 @@ void TestXdgShellWindowRules::testNoBorderDontAffect()
 
 void TestXdgShellWindowRules::testNoBorderApply()
 {
-    setWindowRule("noborder", true, int(Rules::Apply));
+    setWindowRule(QStringLiteral("noborder"), true, int(Rules::Apply));
     createTestWindow(ServerSideDecoration);
 
     // Initially, the window should not be decorated.
@@ -2727,7 +2727,7 @@ void TestXdgShellWindowRules::testNoBorderApply()
 
 void TestXdgShellWindowRules::testNoBorderRemember()
 {
-    setWindowRule("noborder", true, int(Rules::Remember));
+    setWindowRule(QStringLiteral("noborder"), true, int(Rules::Remember));
     createTestWindow(ServerSideDecoration);
 
     // Initially, the window should not be decorated.
@@ -2750,7 +2750,7 @@ void TestXdgShellWindowRules::testNoBorderRemember()
 
 void TestXdgShellWindowRules::testNoBorderForce()
 {
-    setWindowRule("noborder", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("noborder"), true, int(Rules::Force));
     createTestWindow(ServerSideDecoration);
 
     // The window should not be decorated.
@@ -2777,7 +2777,7 @@ void TestXdgShellWindowRules::testNoBorderApplyNow()
     QVERIFY(!m_window->noBorder());
 
     // Initialize RuleBook with the test rule.
-    setWindowRule("noborder", true, int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("noborder"), true, int(Rules::ApplyNow));
 
     // The "no border" property should be set now.
     QVERIFY(m_window->noBorder());
@@ -2795,7 +2795,7 @@ void TestXdgShellWindowRules::testNoBorderApplyNow()
 
 void TestXdgShellWindowRules::testNoBorderForceTemporarily()
 {
-    setWindowRule("noborder", true, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("noborder"), true, int(Rules::ForceTemporarily));
     createTestWindow(ServerSideDecoration);
 
     // The "no border" property should be set.
@@ -2823,7 +2823,7 @@ void TestXdgShellWindowRules::testScreenDontAffect()
 {
     const QList<KWin::Output *> outputs = workspace()->outputs();
 
-    setWindowRule("screen", int(1), int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("screen"), int(1), int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -2841,7 +2841,7 @@ void TestXdgShellWindowRules::testScreenApply()
 {
     const QList<KWin::Output *> outputs = workspace()->outputs();
 
-    setWindowRule("screen", int(1), int(Rules::Apply));
+    setWindowRule(QStringLiteral("screen"), int(1), int(Rules::Apply));
 
     createTestWindow();
 
@@ -2860,7 +2860,7 @@ void TestXdgShellWindowRules::testScreenRemember()
 {
     const QList<KWin::Output *> outputs = workspace()->outputs();
 
-    setWindowRule("screen", int(1), int(Rules::Remember));
+    setWindowRule(QStringLiteral("screen"), int(1), int(Rules::Remember));
 
     createTestWindow();
 
@@ -2889,7 +2889,7 @@ void TestXdgShellWindowRules::testScreenForce()
     createTestWindow();
     QVERIFY(m_window->isActive());
 
-    setWindowRule("screen", int(1), int(Rules::Force));
+    setWindowRule(QStringLiteral("screen"), int(1), int(Rules::Force));
 
     // The window should be forced to the screen specified by the rule.
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
@@ -2933,7 +2933,7 @@ void TestXdgShellWindowRules::testScreenApplyNow()
     QCOMPARE(m_window->output()->name(), outputs.at(0)->name());
 
     // Set the rule so the window should move to the screen specified by the rule.
-    setWindowRule("screen", int(1), int(Rules::ApplyNow));
+    setWindowRule(QStringLiteral("screen"), int(1), int(Rules::ApplyNow));
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
 
     // The user can move the window to another screen.
@@ -2953,7 +2953,7 @@ void TestXdgShellWindowRules::testScreenForceTemporarily()
 
     createTestWindow();
 
-    setWindowRule("screen", int(1), int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("screen"), int(1), int(Rules::ForceTemporarily));
 
     // The window should be forced the second screen
     QCOMPARE(m_window->output()->name(), outputs.at(1)->name());
@@ -2975,7 +2975,7 @@ void TestXdgShellWindowRules::testScreenForceTemporarily()
 
 void TestXdgShellWindowRules::testMatchAfterNameChange()
 {
-    setWindowRule("above", true, int(Rules::Force));
+    setWindowRule(QStringLiteral("above"), true, int(Rules::Force));
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -2994,7 +2994,7 @@ void TestXdgShellWindowRules::testMatchAfterNameChange()
 
 void TestXdgShellWindowRules::testLayerDontAffect()
 {
-    setWindowRule("layer", QStringLiteral("overlay"), int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("layer"), QStringLiteral("overlay"), int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -3006,7 +3006,7 @@ void TestXdgShellWindowRules::testLayerDontAffect()
 
 void TestXdgShellWindowRules::testLayerForce()
 {
-    setWindowRule("layer", QStringLiteral("overlay"), int(Rules::Force));
+    setWindowRule(QStringLiteral("layer"), QStringLiteral("overlay"), int(Rules::Force));
 
     createTestWindow();
     QCOMPARE(m_window->layer(), OverlayLayer);
@@ -3016,7 +3016,7 @@ void TestXdgShellWindowRules::testLayerForce()
 
 void TestXdgShellWindowRules::testLayerForceTemporarily()
 {
-    setWindowRule("layer", QStringLiteral("overlay"), int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("layer"), QStringLiteral("overlay"), int(Rules::ForceTemporarily));
 
     createTestWindow();
     QCOMPARE(m_window->layer(), OverlayLayer);
@@ -3031,7 +3031,7 @@ void TestXdgShellWindowRules::testLayerForceTemporarily()
 
 void TestXdgShellWindowRules::testCloseableDontAffect()
 {
-    setWindowRule("closeable", false, int(Rules::DontAffect));
+    setWindowRule(QStringLiteral("closeable"), false, int(Rules::DontAffect));
 
     createTestWindow();
 
@@ -3042,7 +3042,7 @@ void TestXdgShellWindowRules::testCloseableDontAffect()
 
 void TestXdgShellWindowRules::testCloseableForce()
 {
-    setWindowRule("closeable", false, int(Rules::Force));
+    setWindowRule(QStringLiteral("closeable"), false, int(Rules::Force));
 
     createTestWindow();
     QVERIFY(!m_window->isCloseable());
@@ -3052,7 +3052,7 @@ void TestXdgShellWindowRules::testCloseableForce()
 
 void TestXdgShellWindowRules::testCloseableForceTemporarily()
 {
-    setWindowRule("closeable", false, int(Rules::ForceTemporarily));
+    setWindowRule(QStringLiteral("closeable"), false, int(Rules::ForceTemporarily));
 
     createTestWindow();
     QVERIFY(!m_window->isCloseable());

@@ -30,7 +30,7 @@ static const std::array<Modifier, 5> modifiers = {
 
 StickyKeysFilter::StickyKeysFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::StickyKeys)
-    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kaccessrc"))))
 {
     const QLatin1String groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
@@ -129,8 +129,8 @@ bool StickyKeysFilter::keyEvent(KWin::KeyEvent *event)
 
                     if (m_showNotificationForLockedKeys) {
 #if KWIN_BUILD_NOTIFICATIONS
-                        KNotification *noti = new KNotification("modifierkey-locked");
-                        noti->setComponentName("kaccess");
+                        KNotification *noti = new KNotification(QStringLiteral("modifierkey-locked"));
+                        noti->setComponentName(QStringLiteral("kaccess"));
 
                         for (const auto mod : modifiers) {
                             if (mod.key == event->key()) {

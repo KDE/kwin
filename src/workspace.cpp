@@ -1722,7 +1722,7 @@ QString Workspace::supportInformation() const
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(options->property(property.name()))));
+        support.append(QStringLiteral("%1: %2\n").arg(QString::fromUtf8(property.name()), printProperty(options->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreen Edges\n"));
     support.append(QStringLiteral("============\n"));
@@ -1732,7 +1732,7 @@ QString Workspace::supportInformation() const
         if (QLatin1String(property.name()) == QLatin1String("objectName")) {
             continue;
         }
-        support.append(QStringLiteral("%1: %2\n").arg(property.name(), printProperty(m_screenEdges->property(property.name()))));
+        support.append(QStringLiteral("%1: %2\n").arg(QString::fromUtf8(property.name()), printProperty(m_screenEdges->property(property.name()))));
     }
     support.append(QStringLiteral("\nScreens\n"));
     support.append(QStringLiteral("=======\n"));
@@ -1842,7 +1842,7 @@ QString Workspace::supportInformation() const
             break;
         }
         case QPainterCompositing:
-            support.append("Compositing Type: QPainter\n");
+            support.append(QStringLiteral("Compositing Type: QPainter\n"));
             break;
         case NoCompositing:
         default:

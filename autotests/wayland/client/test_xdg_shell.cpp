@@ -222,7 +222,7 @@ void XdgShellTest::testCreateSurface()
     auto serverToplevel = xdgSurfaceCreatedSpy.first().first().value<XdgToplevelInterface *>();
     QVERIFY(serverToplevel);
     QCOMPARE(serverToplevel->windowTitle(), QString());
-    QCOMPARE(serverToplevel->windowClass(), QByteArray());
+    QCOMPARE(serverToplevel->windowClass(), QString());
     QCOMPARE(serverToplevel->parentXdgToplevel(), nullptr);
     QCOMPARE(serverToplevel->surface(), serverSurface);
 
@@ -257,15 +257,15 @@ void XdgShellTest::testWindowClass()
     SURFACE
 
     // should not have a window class yet
-    QCOMPARE(serverXdgToplevel->windowClass(), QByteArray());
+    QCOMPARE(serverXdgToplevel->windowClass(), QString());
 
     // let's change the window class
     QSignalSpy windowClassChanged(serverXdgToplevel, &XdgToplevelInterface::windowClassChanged);
     xdgSurface->setAppId(QByteArrayLiteral("org.kde.xdgsurfacetest"));
     QVERIFY(windowClassChanged.wait());
     QCOMPARE(windowClassChanged.count(), 1);
-    QCOMPARE(windowClassChanged.first().first().toByteArray(), QByteArrayLiteral("org.kde.xdgsurfacetest"));
-    QCOMPARE(serverXdgToplevel->windowClass(), QByteArrayLiteral("org.kde.xdgsurfacetest"));
+    QCOMPARE(windowClassChanged.first().first().toString(), QStringLiteral("org.kde.xdgsurfacetest"));
+    QCOMPARE(serverXdgToplevel->windowClass(), QStringLiteral("org.kde.xdgsurfacetest"));
 }
 
 void XdgShellTest::testMaximize()

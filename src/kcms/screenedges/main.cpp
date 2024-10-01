@@ -34,7 +34,7 @@ namespace KWin
 KWinScreenEdgesConfig::KWinScreenEdgesConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
     , m_form(new KWinScreenEdgesConfigForm(widget()))
-    , m_config(KSharedConfig::openConfig("kwinrc"))
+    , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_data(new KWinScreenEdgeData(this))
 {
     QVBoxLayout *layout = new QVBoxLayout(widget());

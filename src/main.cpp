@@ -427,7 +427,7 @@ void Application::applyXwaylandScale()
 #if KWIN_BUILD_X11
     if (x11Connection()) {
         // rerun the fonts kcm init that does the appropriate xrdb call with the new settings
-        QProcess::startDetached("kcminit", {"kcm_fonts_init", "kcm_style_init"});
+        QProcess::startDetached(QStringLiteral("kcminit"), {QStringLiteral("kcm_fonts_init"), QStringLiteral("kcm_style_init")});
     }
 #endif
 }

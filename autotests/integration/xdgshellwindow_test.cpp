@@ -682,7 +682,7 @@ void TestXdgShellWindow::testDesktopFileName()
     QVERIFY(window);
     QCOMPARE(window->desktopFileName(), QStringLiteral("org.kde.foo"));
     QCOMPARE(window->resourceClass(), QStringLiteral("org.kde.foo"));
-    QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
+    QVERIFY(window->resourceName().startsWith(u"testXdgShellWindow"));
     // the desktop file does not exist, so icon should be generic Wayland
     QCOMPARE(window->icon().name(), QStringLiteral("wayland"));
 
@@ -692,13 +692,13 @@ void TestXdgShellWindow::testDesktopFileName()
     QVERIFY(desktopFileNameChangedSpy.wait());
     QCOMPARE(window->desktopFileName(), QStringLiteral("org.kde.bar"));
     QCOMPARE(window->resourceClass(), QStringLiteral("org.kde.bar"));
-    QVERIFY(window->resourceName().startsWith("testXdgShellWindow"));
+    QVERIFY(window->resourceName().startsWith(u"testXdgShellWindow"));
     // icon should still be wayland
     QCOMPARE(window->icon().name(), QStringLiteral("wayland"));
     QVERIFY(iconChangedSpy.isEmpty());
 
     const QString dfPath = QFINDTESTDATA("data/example.desktop");
-    shellSurface->set_app_id(dfPath.toUtf8());
+    shellSurface->set_app_id(dfPath);
     QVERIFY(desktopFileNameChangedSpy.wait());
     QCOMPARE(iconChangedSpy.count(), 1);
     QCOMPARE(window->desktopFileName(), dfPath);
@@ -742,17 +742,17 @@ void TestXdgShellWindow::testUnresponsiveWindow()
 
     QFETCH(QString, shellInterface);
     QFETCH(bool, socketMode);
-    env.insert("QT_WAYLAND_SHELL_INTEGRATION", shellInterface);
+    env.insert(QStringLiteral("QT_WAYLAND_SHELL_INTEGRATION"), shellInterface);
     if (socketMode) {
         int sx[2];
         QVERIFY(socketpair(AF_UNIX, SOCK_STREAM | SOCK_CLOEXEC, 0, sx) >= 0);
         waylandServer()->display()->createClient(sx[0]);
         int socket = dup(sx[1]);
         QVERIFY(socket != -1);
-        env.insert(QStringLiteral("WAYLAND_SOCKET"), QByteArray::number(socket));
-        env.remove("WAYLAND_DISPLAY");
+        env.insert(QStringLiteral("WAYLAND_SOCKET"), QString::number(socket));
+        env.remove(QStringLiteral("WAYLAND_DISPLAY"));
     } else {
-        env.insert("WAYLAND_DISPLAY", s_socketName);
+        env.insert(QStringLiteral("WAYLAND_DISPLAY"), s_socketName);
     }
     process->setProcessEnvironment(env);
     process->setProcessChannelMode(QProcess::ForwardedChannels);
@@ -807,7 +807,7 @@ void TestXdgShellWindow::testUnresponsiveWindow()
 void TestXdgShellWindow::testAppMenu()
 {
     // register a faux appmenu client
-    QVERIFY(QDBusConnection::sessionBus().registerService("org.kde.kappmenu"));
+    QVERIFY(QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.kappmenu")));
 
     std::unique_ptr<KWayland::Client::Surface> surface(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface(Test::createXdgToplevelSurface(surface.get()));
@@ -815,13 +815,13 @@ void TestXdgShellWindow::testAppMenu()
     QVERIFY(window);
     std::unique_ptr<KWayland::Client::AppMenu> menu(Test::waylandAppMenuManager()->create(surface.get()));
     QSignalSpy spy(window, &Window::hasApplicationMenuChanged);
-    menu->setAddress("service.name", "object/path");
+    menu->setAddress(QStringLiteral("service.name"), QStringLiteral("object/path"));
     spy.wait();
     QCOMPARE(window->hasApplicationMenu(), true);
-    QCOMPARE(window->applicationMenuServiceName(), QString("service.name"));
-    QCOMPARE(window->applicationMenuObjectPath(), QString("object/path"));
+    QCOMPARE(window->applicationMenuServiceName(), QStringLiteral("service.name"));
+    QCOMPARE(window->applicationMenuObjectPath(), QStringLiteral("object/path"));
 
-    QVERIFY(QDBusConnection::sessionBus().unregisterService("org.kde.kappmenu"));
+    QVERIFY(QDBusConnection::sessionBus().unregisterService(QStringLiteral("org.kde.kappmenu")));
 }
 
 void TestXdgShellWindow::testSendClientWithTransientToDesktop()

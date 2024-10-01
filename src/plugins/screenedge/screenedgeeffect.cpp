@@ -58,7 +58,7 @@ void ScreenEdgeEffect::ensureGlowSvg()
         m_configWatcher = KConfigWatcher::create(config);
 
         connect(m_configWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
-            if (group.name() != QStringLiteral("Theme") || !names.contains(QStringLiteral("name"))) {
+            if (group.name() != QStringLiteral("Theme") || !names.contains("name")) {
                 return;
             }
             m_glow->imageSet()->setImageSetName(group.readEntry("name", QStringLiteral("default")));

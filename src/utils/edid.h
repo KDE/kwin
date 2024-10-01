@@ -44,22 +44,22 @@ public:
     /**
      * Returns EISA ID of the manufacturer of the monitor.
      */
-    QByteArray eisaId() const;
+    QString eisaId() const;
 
     /**
      * Returns the product name of the monitor.
      */
-    QByteArray monitorName() const;
+    QString monitorName() const;
 
     /**
      * Returns the serial number of the monitor.
      */
-    QByteArray serialNumber() const;
+    QString serialNumber() const;
 
     /**
      * Returns the name of the vendor.
      */
-    QByteArray vendor() const;
+    QString vendor() const;
 
     /**
      * Returns the raw edid
@@ -91,14 +91,14 @@ public:
      * @returns a string that is intended to identify the monitor uniquely.
      * Note that multiple monitors can have the same EDID, so this is not always actually unique
      */
-    QByteArray identifier() const;
+    QString identifier() const;
 
 private:
     QSize m_physicalSize;
-    QByteArray m_vendor;
-    QByteArray m_eisaId;
-    QByteArray m_monitorName;
-    QByteArray m_serialNumber;
+    QString m_vendor;
+    QString m_eisaId;
+    QString m_monitorName;
+    QString m_serialNumber;
     QString m_hash;
     std::optional<Colorimetry> m_colorimetry;
     struct HDRMetadata
@@ -111,7 +111,7 @@ private:
     };
     std::optional<HDRMetadata> m_hdrMetadata;
 
-    QByteArray m_identifier;
+    QString m_identifier;
 
     QByteArray m_raw;
     bool m_isValid = false;

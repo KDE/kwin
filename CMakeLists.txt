@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(PROJECT_DEP_VERSION "6.1.80")
 set(QT_MIN_VERSION "6.7.0")
 set(KF6_MIN_VERSION "6.5.0")
-set(KDE_COMPILERSETTINGS_LEVEL "5.82")
+set(KDE_COMPILERSETTINGS_LEVEL "6.0")
 
 find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 
@@ -400,7 +400,7 @@ if (NOT libdisplayinfo_FOUND)
 endif()
 add_feature_info(libdisplayinfo libdisplayinfo_FOUND "EDID and DisplayID library: https://gitlab.freedesktop.org/emersion/libdisplay-info")
 
-pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.65)
+pkg_check_modules(PipeWire IMPORTED_TARGET libpipewire-0.3>=0.3.0)
 add_feature_info(PipeWire PipeWire_FOUND "Required for Wayland screencasting")
 
 if (KWIN_BUILD_NOTIFICATIONS)

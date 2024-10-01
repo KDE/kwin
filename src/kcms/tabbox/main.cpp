@@ -53,7 +53,7 @@ using namespace TabBox;
 
 KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
-    , m_config(KSharedConfig::openConfig("kwinrc"))
+    , m_config(KSharedConfig::openConfig(QStringLiteral("kwinrc")))
     , m_data(new KWinTabboxData(this))
 {
     QTabWidget *tabWidget = new QTabWidget(widget());

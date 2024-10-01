@@ -21,6 +21,7 @@
 #include <KLocalizedString>
 #include <QAbstractEventDispatcher>
 #include <QCoreApplication>
+#include <QFile>
 #include <QSocketNotifier>
 // xcb
 #include <xcb/dri3.h>
@@ -171,7 +172,7 @@ X11WindowedBackend::~X11WindowedBackend()
 
 bool X11WindowedBackend::initialize()
 {
-    m_connection = xcb_connect(m_options.display.toLatin1(), &m_screenNumber);
+    m_connection = xcb_connect(qPrintable(m_options.display), &m_screenNumber);
     if (!m_connection) {
         return false;
     }
@@ -295,7 +296,7 @@ void X11WindowedBackend::initDri3()
         UniqueCPtr<xcb_dri3_open_reply_t> reply(xcb_dri3_open_reply(m_connection, cookie, nullptr));
         if (reply && reply->nfd == 1) {
             int fd = xcb_dri3_open_reply_fds(m_connection, reply.get())[0];
-            m_drmDevice = DrmDevice::open(QByteArray(drmGetDeviceNameFromFd2(fd)));
+            m_drmDevice = DrmDevice::open(QFile::decodeName(drmGetDeviceNameFromFd2(fd)));
             ::close(fd);
         }
     }

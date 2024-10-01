@@ -211,12 +211,12 @@ std::optional<QByteArray> ShaderManager::preprocess(const QByteArray &src, int r
     const auto split = src.split('\n');
     for (auto it = split.begin(); it != split.end(); it++) {
         const auto &line = *it;
-        if (line.startsWith("#include \"") && line.endsWith("\"")) {
+        if (line.startsWith("#include \"") && line.endsWith('\"')) {
             static constexpr ssize_t includeLength = QByteArrayView("#include \"").size();
-            const QByteArray path = ":/opengl/" + line.mid(includeLength, line.size() - includeLength - 1);
+            const QString path = QLatin1StringView(":/opengl/") + QString::fromUtf8(line.mid(includeLength, line.size() - includeLength - 1));
             QFile file(path);
             if (!file.open(QIODevice::ReadOnly)) {
-                qCWarning(KWIN_OPENGL, "failed to read include line %s", qPrintable(line));
+                qCWarning(KWIN_OPENGL) << "Failed to read include line" << line;
                 return std::nullopt;
             }
             const auto processed = preprocess(file.readAll(), recursionDepth);

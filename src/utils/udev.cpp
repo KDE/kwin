@@ -228,7 +228,7 @@ bool UdevDevice::isBootVga() const
 
 QString UdevDevice::seat() const
 {
-    QString deviceSeat = udev_device_get_property_value(m_device, "ID_SEAT");
+    QString deviceSeat = QString::fromUtf8(udev_device_get_property_value(m_device, "ID_SEAT"));
     if (deviceSeat.isEmpty()) {
         deviceSeat = QStringLiteral("seat0");
     }
@@ -243,7 +243,7 @@ QString UdevDevice::action() const
 bool UdevDevice::isHotpluggable() const
 {
     const auto devPath = QString::fromUtf8(udev_device_get_devpath(m_device));
-    return devPath.contains("usb", Qt::CaseInsensitive);
+    return devPath.contains(u"usb", Qt::CaseInsensitive);
 }
 
 UdevMonitor::UdevMonitor(Udev *udev)

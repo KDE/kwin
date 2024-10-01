@@ -211,7 +211,7 @@ bool X11Compositor::attemptOpenGLCompositing()
 
     const QByteArray forceEnv = qgetenv("KWIN_COMPOSE");
     if (!forceEnv.isEmpty()) {
-        if (qstrcmp(forceEnv, "O2") == 0 || qstrcmp(forceEnv, "O2ES") == 0) {
+        if (forceEnv == "O2" || forceEnv == "O2ES") {
             qCDebug(KWIN_CORE) << "OpenGL 2 compositing enforced by environment variable";
         } else {
             // OpenGL 2 disabled by environment variable
@@ -594,7 +594,7 @@ bool X11Compositor::compositingPossible() const
     }
     if (QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES) {
         return true;
-    } else if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+    } else if (qgetenv("KWIN_COMPOSE") == "O2ES") {
         return true;
     }
     qCWarning(KWIN_CORE) << "Compositing disabled: no OpenGL support";

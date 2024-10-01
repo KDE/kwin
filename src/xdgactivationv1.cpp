@@ -41,7 +41,7 @@ static const QString windowDesktopFileName(Window *window)
     // Fallback to StartupWMClass for legacy apps
     const auto resourceName = window->resourceName();
     const auto service = KApplicationTrader::query([&resourceName](const KService::Ptr &service) {
-        return service->property<QString>("StartupWMClass").compare(resourceName, Qt::CaseInsensitive) == 0;
+        return service->property<QString>(QStringLiteral("StartupWMClass")).compare(resourceName, Qt::CaseInsensitive) == 0;
     });
 
     if (!service.isEmpty()) {
@@ -134,7 +134,7 @@ void XdgActivationV1Integration::activateSurface(SurfaceInterface *surface, cons
     if (!ws->activeWindow() || ws->activeWindow() == ownerWindow || ws->activeWindow()->lastUsageSerial() < m_currentActivationToken->serial || m_currentActivationToken->isPrivileged) {
         ws->activateWindow(window);
     } else {
-        qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << (ownerWindow ? ownerWindow->desktopFileName() : "null")
+        qCWarning(KWIN_CORE) << "Activation requested while owner isn't active" << (ownerWindow ? ownerWindow->desktopFileName() : QStringLiteral("null"))
                              << m_currentActivationToken->applicationId;
         window->demandAttention();
         clear();

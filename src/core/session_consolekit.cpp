@@ -16,6 +16,7 @@
 #include <QDBusObjectPath>
 #include <QDBusPendingCall>
 #include <QDBusUnixFileDescriptor>
+#include <QFile>
 
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -163,7 +164,7 @@ uint ConsoleKitSession::terminal() const
 int ConsoleKitSession::openRestricted(const QString &fileName)
 {
     struct stat st;
-    if (stat(fileName.toUtf8(), &st) < 0) {
+    if (stat(QFile::encodeName(fileName).constData(), &st) < 0) {
         return -1;
     }
 

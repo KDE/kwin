@@ -49,7 +49,7 @@ void VirtualKeyboardDBusTest::initTestCase()
         QRect(1280, 0, 1280, 1024),
     });
 
-    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart("internal");
+    static_cast<WaylandTestApplication *>(kwinApp())->setInputMethodServerToStart(QStringLiteral("internal"));
     kwinApp()->start();
     QVERIFY(applicationStartedSpy.wait());
 

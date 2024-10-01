@@ -105,22 +105,22 @@ KWinWrapper::~KWinWrapper()
 
 void KWinWrapper::run()
 {
-    m_kwinProcess->setProgram("kwin_wayland");
+    m_kwinProcess->setProgram(QStringLiteral("kwin_wayland"));
 
     QStringList args;
 
-    args << "--wayland-fd" << QString::number(wl_socket_get_fd(m_socket));
-    args << "--socket" << QString::fromUtf8(wl_socket_get_display_name(m_socket));
+    args << QStringLiteral("--wayland-fd") << QString::number(wl_socket_get_fd(m_socket));
+    args << QStringLiteral("--socket") << QString::fromUtf8(wl_socket_get_display_name(m_socket));
 
 #if KWIN_BUILD_X11
     if (m_xwlSocket) {
         const auto xwaylandFileDescriptors = m_xwlSocket->fileDescriptors();
         for (const int &fileDescriptor : xwaylandFileDescriptors) {
-            args << "--xwayland-fd" << QString::number(fileDescriptor);
+            args << QStringLiteral("--xwayland-fd") << QString::number(fileDescriptor);
         }
-        args << "--xwayland-display" << m_xwlSocket->name();
+        args << QStringLiteral("--xwayland-display") << m_xwlSocket->name();
         if (m_xauthorityFile.open()) {
-            args << "--xwayland-xauthority" << m_xauthorityFile.fileName();
+            args << QStringLiteral("--xwayland-xauthority") << m_xauthorityFile.fileName();
         }
     }
 #endif
@@ -154,12 +154,12 @@ void KWinWrapper::run()
     m_kwinProcess->start();
 
     QProcessEnvironment env;
-    env.insert("WAYLAND_DISPLAY", QString::fromUtf8(wl_socket_get_display_name(m_socket)));
+    env.insert(QStringLiteral("WAYLAND_DISPLAY"), QString::fromUtf8(wl_socket_get_display_name(m_socket)));
 #if KWIN_BUILD_X11
     if (m_xwlSocket) {
-        env.insert("DISPLAY", m_xwlSocket->name());
+        env.insert(QStringLiteral("DISPLAY"), m_xwlSocket->name());
         if (m_xauthorityFile.open()) {
-            env.insert("XAUTHORITY", m_xauthorityFile.fileName());
+            env.insert(QStringLiteral("XAUTHORITY"), m_xauthorityFile.fileName());
         }
     }
 #endif

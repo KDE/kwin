@@ -42,13 +42,13 @@ private Q_SLOTS:
 
 void StickyKeysTest::initTestCase()
 {
-    KConfig kaccessConfig("kaccessrc");
+    KConfig kaccessConfig(QStringLiteral("kaccessrc"));
     kaccessConfig.group(QStringLiteral("Keyboard")).writeEntry("StickyKeys", true);
     kaccessConfig.group(QStringLiteral("Keyboard")).writeEntry("StickyKeysAutoOff", true);
     kaccessConfig.sync();
 
     // Use a keyboard layout where right alt triggers Mod5/AltGr
-    KConfig kxkbrc("kxkbrc");
+    KConfig kxkbrc(QStringLiteral("kxkbrc"));
     kxkbrc.group(QStringLiteral("Layout")).writeEntry("LayoutList", "us");
     kxkbrc.group(QStringLiteral("Layout")).writeEntry("VariantList", "altgr-intl");
     kxkbrc.sync();
@@ -149,13 +149,13 @@ void StickyKeysTest::testLock()
     QFETCH(int, modifierKey);
     QFETCH(int, expectedMods);
 
-    KConfig kaccessConfig("kaccessrc");
+    KConfig kaccessConfig(QStringLiteral("kaccessrc"));
     kaccessConfig.group(QStringLiteral("Keyboard")).writeEntry("StickyKeysLatch", true);
     kaccessConfig.sync();
 
     // reload the plugin to pick up the new config
-    kwinApp()->pluginManager()->unloadPlugin("StickyKeysPlugin");
-    kwinApp()->pluginManager()->loadPlugin("StickyKeysPlugin");
+    kwinApp()->pluginManager()->unloadPlugin(QStringLiteral("StickyKeysPlugin"));
+    kwinApp()->pluginManager()->loadPlugin(QStringLiteral("StickyKeysPlugin"));
 
     QVERIFY(Test::waylandSeat()->hasKeyboard());
     std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());

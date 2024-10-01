@@ -69,18 +69,18 @@ bool FTraceLogger::open()
 QString FTraceLogger::filePath()
 {
     if (qEnvironmentVariableIsSet("KWIN_PERF_FTRACE_FILE")) {
-        return qgetenv("KWIN_PERF_FTRACE_FILE");
+        return qEnvironmentVariable("KWIN_PERF_FTRACE_FILE");
     }
 
-    QFile mountsFile("/proc/mounts");
+    QFile mountsFile(QStringLiteral("/proc/mounts"));
     if (!mountsFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "No access to mounts file. Can not determine trace marker file location.";
         return QString();
     }
 
     auto lineInfo = [](const QString &line) {
-        const int start = line.indexOf(' ') + 1;
-        const int end = line.indexOf(' ', start);
+        const int start = line.indexOf(u' ') + 1;
+        const int end = line.indexOf(u' ', start);
         const QString dirPath(line.mid(start, end - start));
         if (dirPath.isEmpty() || !QFileInfo::exists(dirPath)) {
             return QFileInfo();
@@ -92,14 +92,14 @@ QString FTraceLogger::filePath()
     QString mountsLine = mountsIn.readLine();
 
     while (!mountsLine.isNull()) {
-        if (mountsLine.startsWith("tracefs")) {
+        if (mountsLine.startsWith(u"tracefs")) {
             const auto info = lineInfo(mountsLine);
             if (info.exists()) {
                 markerFileInfo = info;
                 break;
             }
         }
-        if (mountsLine.startsWith("debugfs")) {
+        if (mountsLine.startsWith(u"debugfs")) {
             markerFileInfo = lineInfo(mountsLine);
         }
         mountsLine = mountsIn.readLine();

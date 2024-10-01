@@ -727,8 +727,8 @@ bool ScriptedEffect::registerRealtimeScreenEdge(int edge, const QJSValue &callba
             if (it != realtimeScreenEdgeCallbacks().constEnd()) {
                 for (const QJSValue &callback : it.value()) {
                     QJSValue delta = m_engine->newObject();
-                    delta.setProperty("width", deltaProgress.x());
-                    delta.setProperty("height", deltaProgress.y());
+                    delta.setProperty(QStringLiteral("width"), deltaProgress.x());
+                    delta.setProperty(QStringLiteral("height"), deltaProgress.y());
 
                     QJSValue(callback).call({border, QJSValue(delta), m_engine->newQObject(screen)});
                 }

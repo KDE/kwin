@@ -9,7 +9,7 @@
 
 BounceKeysFilter::BounceKeysFilter()
     : KWin::InputEventFilter(KWin::InputFilterOrder::BounceKeys)
-    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
+    , m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kaccessrc"))))
 {
     const QLatin1String groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {

@@ -141,11 +141,11 @@ void GetAddrInfo::compare()
     }
     addrinfo *address = m_address;
     while (address) {
-        if (address->ai_canonname && m_hostName == QByteArray(address->ai_canonname).toLower()) {
+        if (address->ai_canonname && m_hostName == QString::fromLocal8Bit(address->ai_canonname).toLower()) {
             addrinfo *ownAddress = m_ownAddress;
             bool localFound = false;
             while (ownAddress) {
-                if (ownAddress->ai_canonname && QByteArray(ownAddress->ai_canonname).toLower() == m_hostName) {
+                if (ownAddress->ai_canonname && QString::fromLocal8Bit(ownAddress->ai_canonname).toLower() == m_hostName) {
                     localFound = true;
                     break;
                 }
@@ -179,9 +179,9 @@ void ClientMachine::resolve(xcb_window_t window, xcb_window_t clientLeader)
     if (m_resolved) {
         return;
     }
-    QString name = NETWinInfo(connection(), window, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine();
+    QString name = QString::fromLocal8Bit(NETWinInfo(connection(), window, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine());
     if (name.isEmpty() && clientLeader && clientLeader != window) {
-        name = NETWinInfo(connection(), clientLeader, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine();
+        name = QString::fromLocal8Bit(NETWinInfo(connection(), clientLeader, rootWindow(), NET::Properties(), NET::WM2ClientMachine).clientMachine());
     }
     if (name.isEmpty()) {
         name = localhost();
@@ -210,7 +210,7 @@ void ClientMachine::checkForLocalhost()
             setLocal();
             return;
         }
-        if (int index = host.indexOf('.'); index != -1) {
+        if (int index = host.indexOf(u'.'); index != -1) {
             if (QStringView(host).left(index) == lowerHostName) {
                 setLocal();
                 return;

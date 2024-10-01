@@ -18,6 +18,7 @@
 #include <KWayland/Client/xdgdecoration.h>
 #include <KWayland/Client/xdgshell.h>
 
+#include <QFile>
 #include <QMutex>
 #include <QThread>
 #include <QWaitCondition>
@@ -349,7 +350,7 @@ void WaylandDisplay::flush()
 
 bool WaylandDisplay::initialize(const QString &socketName)
 {
-    m_display = wl_display_connect(socketName.toUtf8());
+    m_display = wl_display_connect(QFile::encodeName(socketName).constData());
     if (!m_display) {
         return false;
     }

@@ -345,7 +345,7 @@ public:
     /**
      * @returns the mst path of this output. Is empty if invalid
      */
-    QByteArray mstPath() const;
+    QString mstPath() const;
 
     virtual bool setChannelFactors(const QVector3D &rgb);
 
@@ -449,7 +449,7 @@ protected:
         bool internal = false;
         bool placeholder = false;
         bool nonDesktop = false;
-        QByteArray mstPath;
+        QString mstPath;
         std::optional<double> maxPeakBrightness;
         std::optional<double> maxAverageBrightness;
         double minBrightness = 0;

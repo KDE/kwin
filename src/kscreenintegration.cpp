@@ -166,9 +166,9 @@ OutputTransform toKWinTransform(int rotation)
 
 std::shared_ptr<OutputMode> parseMode(Output *output, const QJsonObject &modeInfo)
 {
-    const QJsonObject size = modeInfo["size"].toObject();
-    const QSize modeSize = QSize(size["width"].toInt(), size["height"].toInt());
-    const uint32_t refreshRate = std::round(modeInfo["refresh"].toDouble() * 1000);
+    const QJsonObject size = modeInfo[u"size"].toObject();
+    const QSize modeSize = QSize(size[u"width"].toInt(), size[u"height"].toInt());
+    const uint32_t refreshRate = std::round(modeInfo[u"refresh"].toDouble() * 1000);
 
     const auto modes = output->modes();
     auto it = std::find_if(modes.begin(), modes.end(), [&modeSize, &refreshRate](const auto &mode) {
@@ -197,14 +197,14 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(
         qCDebug(KWIN_CORE) << "Reading output configuration for " << output;
         if (!outputInfo.isEmpty() || globalOutputInfo.has_value()) {
             // settings that are per output setup:
-            props->enabled = outputInfo["enabled"].toBool(true);
-            if (outputInfo["primary"].toBool()) {
+            props->enabled = outputInfo[u"enabled"].toBool(true);
+            if (outputInfo[u"primary"].toBool()) {
                 outputOrder.push_back(std::make_pair(1, output));
                 if (!props->enabled) {
                     qCWarning(KWIN_CORE) << "KScreen config would disable the primary output!";
                     return std::nullopt;
                 }
-            } else if (int prio = outputInfo["priority"].toInt(); prio > 0) {
+            } else if (int prio = outputInfo[u"priority"].toInt(); prio > 0) {
                 outputOrder.push_back(std::make_pair(prio, output));
                 if (!props->enabled) {
                     qCWarning(KWIN_CORE) << "KScreen config would disable an output with priority!";
@@ -213,30 +213,30 @@ std::optional<std::pair<OutputConfiguration, QList<Output *>>> readOutputConfig(
             } else {
                 outputOrder.push_back(std::make_pair(0, output));
             }
-            if (const QJsonObject pos = outputInfo["pos"].toObject(); !pos.isEmpty()) {
-                props->pos = QPoint(pos["x"].toInt(), pos["y"].toInt());
+            if (const QJsonObject pos = outputInfo[u"pos"].toObject(); !pos.isEmpty()) {
+                props->pos = QPoint(pos[u"x"].toInt(), pos[u"y"].toInt());
             }
 
             // settings that are independent of per output setups:
             const auto &globalInfo = globalOutputInfo ? globalOutputInfo.value() : outputInfo;
-            if (const QJsonValue scale = globalInfo["scale"]; !scale.isUndefined()) {
+            if (const QJsonValue scale = globalInfo[u"scale"]; !scale.isUndefined()) {
                 props->scale = scale.toDouble(1.);
             }
-            if (const QJsonValue rotation = globalInfo["rotation"]; !rotation.isUndefined()) {
+            if (const QJsonValue rotation = globalInfo[u"rotation"]; !rotation.isUndefined()) {
                 props->transform = KScreenIntegration::toKWinTransform(rotation.toInt());
                 props->manualTransform = props->transform;
             }
-            if (const QJsonValue overscan = globalInfo["overscan"]; !overscan.isUndefined()) {
-                props->overscan = globalInfo["overscan"].toInt();
+            if (const QJsonValue overscan = globalInfo[u"overscan"]; !overscan.isUndefined()) {
+                props->overscan = globalInfo[u"overscan"].toInt();
             }
-            if (const QJsonValue vrrpolicy = globalInfo["vrrpolicy"]; !vrrpolicy.isUndefined()) {
+            if (const QJsonValue vrrpolicy = globalInfo[u"vrrpolicy"]; !vrrpolicy.isUndefined()) {
                 props->vrrPolicy = static_cast<VrrPolicy>(vrrpolicy.toInt());
             }
-            if (const QJsonValue rgbrange = globalInfo["rgbrange"]; !rgbrange.isUndefined()) {
+            if (const QJsonValue rgbrange = globalInfo[u"rgbrange"]; !rgbrange.isUndefined()) {
                 props->rgbRange = static_cast<Output::RgbRange>(rgbrange.toInt());
             }
 
-            if (const QJsonObject modeInfo = globalInfo["mode"].toObject(); !modeInfo.isEmpty()) {
+            if (const QJsonObject modeInfo = globalInfo[u"mode"].toObject(); !modeInfo.isEmpty()) {
                 if (auto mode = KScreenIntegration::parseMode(output, modeInfo)) {
                     props->mode = mode;
                 }

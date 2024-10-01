@@ -66,7 +66,7 @@ void TestPointerConstraints::initTestCase()
     // set custom config which disables the OnScreenNotification
     KSharedConfig::Ptr config = KSharedConfig::openConfig(QString(), KConfig::SimpleConfig);
     KConfigGroup group = config->group(QStringLiteral("OnScreenNotification"));
-    group.writeEntry(QStringLiteral("QmlPath"), QString("/does/not/exist.qml"));
+    group.writeEntry(QStringLiteral("QmlPath"), QStringLiteral("/does/not/exist.qml"));
     group.sync();
 
     kwinApp()->setConfig(config);

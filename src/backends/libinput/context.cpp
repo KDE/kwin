@@ -13,10 +13,11 @@
 #include "core/session.h"
 #include "utils/udev.h"
 
+#include <cerrno>
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <cerrno>
+#include <QFile>
 
 namespace KWin
 {
@@ -103,7 +104,7 @@ void Context::closeRestrictedCallBack(int fd, void *user_data)
 
 int Context::openRestricted(const char *path, int flags)
 {
-    int fd = m_session->openRestricted(path);
+    int fd = m_session->openRestricted(QFile::decodeName(path));
     if (fd < 0) {
         // failed
         return fd;

@@ -126,16 +126,16 @@ bool VirtualEglBackend::initializeEgl()
 void VirtualEglBackend::init()
 {
     if (!initializeEgl()) {
-        setFailed("Could not initialize egl");
+        setFailed(QStringLiteral("Could not initialize egl"));
         return;
     }
     if (!initRenderingContext()) {
-        setFailed("Could not initialize rendering context");
+        setFailed(QStringLiteral("Could not initialize rendering context"));
         return;
     }
 
     if (checkGLError("Init")) {
-        setFailed("Error during init of EglGbmBackend");
+        setFailed(QStringLiteral("Error during init of EglGbmBackend"));
         return;
     }
 

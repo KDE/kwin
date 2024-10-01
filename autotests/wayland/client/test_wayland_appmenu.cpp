@@ -154,11 +154,11 @@ void TestAppmenu::testCreateAndSet()
 
     QSignalSpy appMenuChangedSpy(appMenuInterface, &KWin::AppMenuInterface::addressChanged);
 
-    appmenu->setAddress("net.somename", "/test/path");
+    appmenu->setAddress(QStringLiteral("net.somename"), QStringLiteral("/test/path"));
 
     QVERIFY(appMenuChangedSpy.wait());
-    QCOMPARE(appMenuInterface->address().serviceName, QString("net.somename"));
-    QCOMPARE(appMenuInterface->address().objectPath, QString("/test/path"));
+    QCOMPARE(appMenuInterface->address().serviceName, QStringLiteral("net.somename"));
+    QCOMPARE(appMenuInterface->address().objectPath, QStringLiteral("/test/path"));
 
     // and destroy
     QSignalSpy destroyedSpy(appMenuInterface, &QObject::destroyed);

@@ -55,10 +55,11 @@ std::unique_ptr<Policy> Policy::create(Xkb *xkb, KeyboardLayout *layout, const K
     return std::make_unique<GlobalPolicy>(xkb, layout, config);
 }
 
-const char Policy::defaultLayoutEntryKeyPrefix[] = "LayoutDefault";
+static constexpr QLatin1StringView defaultLayoutEntryKeyPrefix("LayoutDefault");
+
 const QString Policy::defaultLayoutEntryKey() const
 {
-    return QLatin1String(defaultLayoutEntryKeyPrefix) % name() % QLatin1Char('_');
+    return defaultLayoutEntryKeyPrefix % name() % QLatin1Char('_');
 }
 
 void Policy::clearLayouts()
@@ -71,7 +72,7 @@ void Policy::clearLayouts()
 
 const QString GlobalPolicy::defaultLayoutEntryKey() const
 {
-    return QLatin1String(defaultLayoutEntryKeyPrefix) % name();
+    return defaultLayoutEntryKeyPrefix % name();
 }
 
 GlobalPolicy::GlobalPolicy(Xkb *xkb, KeyboardLayout *_layout, const KConfigGroup &config)
@@ -249,7 +250,7 @@ ApplicationPolicy::ApplicationPolicy(KWin::Xkb *xkb, KWin::KeyboardLayout *layou
             const QStringList keyList = m_config.keyList().filter(keyPrefix);
             for (const QString &key : keyList) {
                 m_layoutsRestored.insert(
-                    QStringView(key).mid(keyPrefix.size()).toLatin1(),
+                    key.mid(keyPrefix.size()),
                     m_config.readEntry(key, 0));
             }
         }

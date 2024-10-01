@@ -128,7 +128,7 @@ bool EglContext::isValid() const
 
 static inline bool shouldUseOpenGLES()
 {
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+    if (qgetenv("KWIN_COMPOSE") == "O2ES") {
         return true;
     }
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;

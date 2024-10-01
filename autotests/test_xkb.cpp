@@ -517,10 +517,10 @@ void XkbTest::testFromQtKey()
     QFETCH(int, keyQt);
     QList<xkb_keysym_t> keys = xkb.keysymsFromQtKey(keyQt);
 
-    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Super_L, 16), "keysymsFromQtKey doesn't map super to meta", Continue);
-    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Super_R, 16), "keysymsFromQtKey doesn't map super to meta", Continue);
-    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Hyper_L, 16), "keysymsFromQtKey doesn't map hyper to meta", Continue);
-    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Hyper_R, 16), "keysymsFromQtKey doesn't map hyper to meta", Continue);
+    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Super_L, 16).constData(), "keysymsFromQtKey doesn't map super to meta", Continue);
+    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Super_R, 16).constData(), "keysymsFromQtKey doesn't map super to meta", Continue);
+    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Hyper_L, 16).constData(), "keysymsFromQtKey doesn't map hyper to meta", Continue);
+    QEXPECT_FAIL(QByteArray::number(XKB_KEY_Hyper_R, 16).constData(), "keysymsFromQtKey doesn't map hyper to meta", Continue);
 #if QT_VERSION < QT_VERSION_CHECK(6, 7, 1)
     QEXPECT_FAIL(QByteArray::number(XKB_KEY_KP_Equal, 16), "KP_Equal is not correctly identified as keypad key in Qt 6.7.0; fixed in 6.7.1: https://codereview.qt-project.org/c/qt/qtbase/+/546889", Continue);
 #endif

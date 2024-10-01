@@ -70,17 +70,17 @@ static void initButtons()
     if (!s_buttonNames.isEmpty()) {
         return;
     }
-    s_buttonNames[KDecoration2::DecorationButtonType::Menu] = QChar('M');
-    s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = QChar('N');
-    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops] = QChar('S');
-    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp] = QChar('H');
-    s_buttonNames[KDecoration2::DecorationButtonType::Minimize] = QChar('I');
-    s_buttonNames[KDecoration2::DecorationButtonType::Maximize] = QChar('A');
-    s_buttonNames[KDecoration2::DecorationButtonType::Close] = QChar('X');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove] = QChar('F');
-    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow] = QChar('B');
-    s_buttonNames[KDecoration2::DecorationButtonType::Shade] = QChar('L');
-    s_buttonNames[KDecoration2::DecorationButtonType::Spacer] = QChar('_');
+    s_buttonNames[KDecoration2::DecorationButtonType::Menu] = u'M';
+    s_buttonNames[KDecoration2::DecorationButtonType::ApplicationMenu] = u'N';
+    s_buttonNames[KDecoration2::DecorationButtonType::OnAllDesktops] = u'S';
+    s_buttonNames[KDecoration2::DecorationButtonType::ContextHelp] = u'H';
+    s_buttonNames[KDecoration2::DecorationButtonType::Minimize] = u'I';
+    s_buttonNames[KDecoration2::DecorationButtonType::Maximize] = u'A';
+    s_buttonNames[KDecoration2::DecorationButtonType::Close] = u'X';
+    s_buttonNames[KDecoration2::DecorationButtonType::KeepAbove] = u'F';
+    s_buttonNames[KDecoration2::DecorationButtonType::KeepBelow] = u'B';
+    s_buttonNames[KDecoration2::DecorationButtonType::Shade] = u'L';
+    s_buttonNames[KDecoration2::DecorationButtonType::Spacer] = u'_';
 }
 
 static QString buttonsToString(const QList<KDecoration2::DecorationButtonType> &buttons)

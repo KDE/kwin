@@ -35,7 +35,7 @@ Q_LOGGING_CATEGORY(KWIN_XKB, "kwin_xkbcommon", QtWarningMsg)
 /* The offset between KEY_* numbering, and keycodes in the XKB evdev
  * dataset. */
 static const int EVDEV_OFFSET = 8;
-static const char *s_locale1Interface = "org.freedesktop.locale1";
+static const QString s_locale1Interface = QStringLiteral("org.freedesktop.locale1");
 
 namespace KWin
 {
@@ -480,7 +480,7 @@ Xkb::Xkb(bool followLocale1)
     }
 
     if (m_followLocale1) {
-        bool connected = QDBusConnection::systemBus().connect(s_locale1Interface, "/org/freedesktop/locale1", QStringLiteral("org.freedesktop.DBus.Properties"),
+        bool connected = QDBusConnection::systemBus().connect(s_locale1Interface, QStringLiteral("/org/freedesktop/locale1"), QStringLiteral("org.freedesktop.DBus.Properties"),
                                                               QStringLiteral("PropertiesChanged"),
                                                               this,
                                                               SLOT(reconfigure()));
@@ -604,13 +604,13 @@ xkb_keymap *Xkb::loadDefaultKeymap()
 
 xkb_keymap *Xkb::loadKeymapFromLocale1()
 {
-    OrgFreedesktopDBusPropertiesInterface locale1Properties(s_locale1Interface, "/org/freedesktop/locale1", QDBusConnection::systemBus(), this);
+    OrgFreedesktopDBusPropertiesInterface locale1Properties(s_locale1Interface, QStringLiteral("/org/freedesktop/locale1"), QDBusConnection::systemBus(), this);
     const QVariantMap properties = locale1Properties.GetAll(s_locale1Interface);
 
-    const QByteArray model = properties["X11Model"].toByteArray();
-    const QByteArray layout = properties["X11Layout"].toByteArray();
-    const QByteArray variant = properties["X11Variant"].toByteArray();
-    const QByteArray options = properties["X11Options"].toByteArray();
+    const QByteArray model = properties[QStringLiteral("X11Model")].toByteArray();
+    const QByteArray layout = properties[QStringLiteral("X11Layout")].toByteArray();
+    const QByteArray variant = properties[QStringLiteral("X11Variant")].toByteArray();
+    const QByteArray options = properties[QStringLiteral("X11Options")].toByteArray();
 
     xkb_rule_names ruleNames = {
         .rules = nullptr,

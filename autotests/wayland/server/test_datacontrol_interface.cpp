@@ -124,7 +124,7 @@ public:
     void cancel() override{};
     QStringList mimeTypes() const override
     {
-        return {"text/test1", "text/test2"};
+        return {QStringLiteral("text/test1"), QStringLiteral("text/test2")};
     }
 };
 
@@ -267,8 +267,8 @@ void DataControlInterfaceTest::testCopyToControl()
     QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
-    QCOMPARE(offer->receivedOffers()[0], "text/test1");
-    QCOMPARE(offer->receivedOffers()[1], "text/test2");
+    QCOMPARE(offer->receivedOffers()[0], QStringLiteral("text/test1"));
+    QCOMPARE(offer->receivedOffers()[1], QStringLiteral("text/test2"));
 }
 
 void DataControlInterfaceTest::testCopyToControlPrimarySelection()
@@ -293,8 +293,8 @@ void DataControlInterfaceTest::testCopyToControlPrimarySelection()
     QCOMPARE(selectionSpy.first().first().value<struct ::zwlr_data_control_offer_v1 *>(), offer->object());
 
     QCOMPARE(offer->receivedOffers().count(), 2);
-    QCOMPARE(offer->receivedOffers()[0], "text/test1");
-    QCOMPARE(offer->receivedOffers()[1], "text/test2");
+    QCOMPARE(offer->receivedOffers()[0], QStringLiteral("text/test1"));
+    QCOMPARE(offer->receivedOffers()[1], QStringLiteral("text/test2"));
 }
 
 void DataControlInterfaceTest::testCopyFromControl()
@@ -308,14 +308,14 @@ void DataControlInterfaceTest::testCopyFromControl()
 
     std::unique_ptr<DataControlSource> source(new DataControlSource);
     source->init(m_dataControlDeviceManager->create_data_source());
-    source->offer("cheese/test1");
-    source->offer("cheese/test2");
+    source->offer(QStringLiteral("cheese/test1"));
+    source->offer(QStringLiteral("cheese/test2"));
 
     dataControlDevice->set_selection(source->object());
 
     serverSelectionChangedSpy.wait();
     QVERIFY(m_seat->selection());
-    QCOMPARE(m_seat->selection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
+    QCOMPARE(m_seat->selection()->mimeTypes(), QStringList({QStringLiteral("cheese/test1"), QStringLiteral("cheese/test2")}));
 }
 
 void DataControlInterfaceTest::testCopyFromControlPrimarySelection()
@@ -329,14 +329,14 @@ void DataControlInterfaceTest::testCopyFromControlPrimarySelection()
 
     std::unique_ptr<DataControlSource> source(new DataControlSource);
     source->init(m_dataControlDeviceManager->create_data_source());
-    source->offer("cheese/test1");
-    source->offer("cheese/test2");
+    source->offer(QStringLiteral("cheese/test1"));
+    source->offer(QStringLiteral("cheese/test2"));
 
     dataControlDevice->set_primary_selection(source->object());
 
     serverSelectionChangedSpy.wait();
     QVERIFY(m_seat->primarySelection());
-    QCOMPARE(m_seat->primarySelection()->mimeTypes(), QStringList({"cheese/test1", "cheese/test2"}));
+    QCOMPARE(m_seat->primarySelection()->mimeTypes(), QStringList({QStringLiteral("cheese/test1"), QStringLiteral("cheese/test2")}));
 }
 
 void DataControlInterfaceTest::testKlipperCase()
@@ -371,8 +371,8 @@ void DataControlInterfaceTest::testKlipperCase()
     // Meanwhile klipper updates with the old content
     std::unique_ptr<DataControlSource> source(new DataControlSource);
     source->init(m_dataControlDeviceManager->create_data_source());
-    source->offer("fromKlipper/test1");
-    source->offer("application/x-kde-onlyReplaceEmpty");
+    source->offer(QStringLiteral("fromKlipper/test1"));
+    source->offer(QStringLiteral("application/x-kde-onlyReplaceEmpty"));
 
     dataControlDevice->set_selection(source->object());
 

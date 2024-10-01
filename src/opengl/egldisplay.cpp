@@ -26,7 +26,7 @@ namespace KWin
 
 bool EglDisplay::shouldUseOpenGLES()
 {
-    if (qstrcmp(qgetenv("KWIN_COMPOSE"), "O2ES") == 0) {
+    if (qgetenv("KWIN_COMPOSE") == "O2ES") {
         return true;
     }
     return QOpenGLContext::openGLModuleType() == QOpenGLContext::LibGLES;

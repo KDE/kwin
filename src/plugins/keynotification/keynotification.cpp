@@ -15,7 +15,7 @@
 namespace KWin
 {
 KeyNotificationPlugin::KeyNotificationPlugin()
-    : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig("kaccessrc")))
+    : m_configWatcher(KConfigWatcher::create(KSharedConfig::openConfig(QStringLiteral("kaccessrc"))))
 {
     const QLatin1String groupName("Keyboard");
     connect(m_configWatcher.get(), &KConfigWatcher::configChanged, this, [this, groupName](const KConfigGroup &group) {
@@ -41,27 +41,27 @@ void KeyNotificationPlugin::ledsChanged(LEDs leds)
 
     if (m_enabled) {
         if (!m_currentLEDs.testFlag(LED::CapsLock) && leds.testFlag(LED::CapsLock)) {
-            sendNotification("lockkey-locked", i18n("The Caps Lock key has been activated"));
+            sendNotification(QStringLiteral("lockkey-locked"), i18n("The Caps Lock key has been activated"));
         }
 
         if (m_currentLEDs.testFlag(LED::CapsLock) && !leds.testFlag(LED::CapsLock)) {
-            sendNotification("lockkey-unlocked", i18n("The Caps Lock key is now inactive"));
+            sendNotification(QStringLiteral("lockkey-unlocked"), i18n("The Caps Lock key is now inactive"));
         }
 
         if (!m_currentLEDs.testFlag(LED::NumLock) && leds.testFlag(LED::NumLock)) {
-            sendNotification("lockkey-locked", i18n("The Num Lock key has been activated"));
+            sendNotification(QStringLiteral("lockkey-locked"), i18n("The Num Lock key has been activated"));
         }
 
         if (m_currentLEDs.testFlag(LED::NumLock) && !leds.testFlag(LED::NumLock)) {
-            sendNotification("lockkey-unlocked", i18n("The Num Lock key is now inactive"));
+            sendNotification(QStringLiteral("lockkey-unlocked"), i18n("The Num Lock key is now inactive"));
         }
 
         if (!m_currentLEDs.testFlag(LED::ScrollLock) && leds.testFlag(LED::ScrollLock)) {
-            sendNotification("lockkey-locked", i18n("The Scroll Lock key has been activated"));
+            sendNotification(QStringLiteral("lockkey-locked"), i18n("The Scroll Lock key has been activated"));
         }
 
         if (m_currentLEDs.testFlag(LED::ScrollLock) && !leds.testFlag(LED::ScrollLock)) {
-            sendNotification("lockkey-unlocked", i18n("The Scroll Lock key is now inactive"));
+            sendNotification(QStringLiteral("lockkey-unlocked"), i18n("The Scroll Lock key is now inactive"));
         }
     }
 
@@ -74,35 +74,35 @@ void KeyNotificationPlugin::modifiersChanged()
 
     if (m_enabled) {
         if (!m_currentModifiers.testFlag(Qt::ShiftModifier) && mods.testFlag(Qt::ShiftModifier)) {
-            sendNotification("modifierkey-latched", i18n("The Shift key is now active."));
+            sendNotification(QStringLiteral("modifierkey-latched"), i18n("The Shift key is now active."));
         }
 
         if (m_currentModifiers.testFlag(Qt::ShiftModifier) && !mods.testFlag(Qt::ShiftModifier)) {
-            sendNotification("modifierkey-unlatched", i18n("The Shift key is now inactive."));
+            sendNotification(QStringLiteral("modifierkey-unlatched"), i18n("The Shift key is now inactive."));
         }
 
         if (!m_currentModifiers.testFlag(Qt::ControlModifier) && mods.testFlag(Qt::ControlModifier)) {
-            sendNotification("modifierkey-latched", i18n("The Control key is now active."));
+            sendNotification(QStringLiteral("modifierkey-latched"), i18n("The Control key is now active."));
         }
 
         if (m_currentModifiers.testFlag(Qt::ControlModifier) && !mods.testFlag(Qt::ControlModifier)) {
-            sendNotification("modifierkey-unlatched", i18n("The Control key is now inactive."));
+            sendNotification(QStringLiteral("modifierkey-unlatched"), i18n("The Control key is now inactive."));
         }
 
         if (!m_currentModifiers.testFlag(Qt::AltModifier) && mods.testFlag(Qt::AltModifier)) {
-            sendNotification("modifierkey-latched", i18n("The Alt key is now active."));
+            sendNotification(QStringLiteral("modifierkey-latched"), i18n("The Alt key is now active."));
         }
 
         if (m_currentModifiers.testFlag(Qt::AltModifier) && !mods.testFlag(Qt::AltModifier)) {
-            sendNotification("modifierkey-unlatched", i18n("The Alt key is now inactive."));
+            sendNotification(QStringLiteral("modifierkey-unlatched"), i18n("The Alt key is now inactive."));
         }
 
         if (!m_currentModifiers.testFlag(Qt::MetaModifier) && mods.testFlag(Qt::MetaModifier)) {
-            sendNotification("modifierkey-latched", i18n("The Meta key is now active."));
+            sendNotification(QStringLiteral("modifierkey-latched"), i18n("The Meta key is now active."));
         }
 
         if (m_currentModifiers.testFlag(Qt::MetaModifier) && !mods.testFlag(Qt::AltModifier)) {
-            sendNotification("modifierkey-unlatched", i18n("The Meta key is now inactive."));
+            sendNotification(QStringLiteral("modifierkey-unlatched"), i18n("The Meta key is now inactive."));
         }
     }
 
