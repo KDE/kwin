@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:40+0000\n"
 "PO-Revision-Date: 2024-09-19 17:40+0300\n"
 "Last-Translator: Antonis Geralis <capoiosct@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-el@kde.org>\n"
@@ -2275,25 +2275,25 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Πλήκτρα τροποποιητές της σχεδίασης βέλων:"
 
-#: plugins/nightlight/nightlightmanager.cpp:58
+#: plugins/nightlight/nightlightmanager.cpp:59
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "Ο νυχτερινός φωτισμός αναστάλθηκε"
 
-#: plugins/nightlight/nightlightmanager.cpp:59
+#: plugins/nightlight/nightlightmanager.cpp:60
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "Ο νυχτερινός φωτισμός συνεχίστηκε"
 
-#: plugins/nightlight/nightlightmanager.cpp:80
+#: plugins/nightlight/nightlightmanager.cpp:81
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Αναστολή/Συνέχιση νυχτερινού φωτισμού"
 
-#: plugins/nightlight/nightlightmanager.cpp:435
+#: plugins/nightlight/nightlightmanager.cpp:411
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Προεπισκόπηση θερμοκρασίας χρώματος"

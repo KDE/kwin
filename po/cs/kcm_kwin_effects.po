@@ -53,8 +53,3 @@ msgstr "Nastavení filtru"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "Vyjmout nepodporované efekty"
-
-#~ msgid ""
-#~ "Hint: To find out or configure how to activate an effect, look at the "
-#~ "effect's settings."
-#~ msgstr "Rada: více informací o efektu najdete v jeho nastavení."

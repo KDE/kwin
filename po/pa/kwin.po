@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:40+0000\n"
 "PO-Revision-Date: 2024-01-03 14:00-0600\n"
 "Last-Translator: A S Alam <aalam@punlinux.org>\n"
 "Language-Team: Punjabi <kde-i18n-doc@kde.org>\n"
@@ -2294,7 +2294,7 @@ msgstr "ਮੇਟਾ"
 msgid "Arrow draw modifier keys:"
 msgstr "ਸੋਧਕ"
 
-#: plugins/nightlight/nightlightmanager.cpp:58
+#: plugins/nightlight/nightlightmanager.cpp:59
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
@@ -2302,7 +2302,7 @@ msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "ਰਾਤ ਦੇ ਰੰਗ ਚਾਲੂ"
 
-#: plugins/nightlight/nightlightmanager.cpp:59
+#: plugins/nightlight/nightlightmanager.cpp:60
 #, fuzzy, kde-format
 #| msgctxt "Night Color was enabled"
 #| msgid "Night Color On"
@@ -2310,13 +2310,13 @@ msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "ਰਾਤ ਦੇ ਰੰਗ ਚਾਲੂ"
 
-#: plugins/nightlight/nightlightmanager.cpp:80
+#: plugins/nightlight/nightlightmanager.cpp:81
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr ""
 
-#: plugins/nightlight/nightlightmanager.cpp:435
+#: plugins/nightlight/nightlightmanager.cpp:411
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "ਰੰਗ ਤਾਪਮਾਨ ਝਲਕ"

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:40+0000\n"
 "PO-Revision-Date: 2024-08-21 00:34+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -2239,25 +2239,25 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "화살표 그리기 수정자 키:"
 
-#: plugins/nightlight/nightlightmanager.cpp:58
+#: plugins/nightlight/nightlightmanager.cpp:59
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "야간 조명 중단됨"
 
-#: plugins/nightlight/nightlightmanager.cpp:59
+#: plugins/nightlight/nightlightmanager.cpp:60
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "야간 조명 재개됨"
 
-#: plugins/nightlight/nightlightmanager.cpp:80
+#: plugins/nightlight/nightlightmanager.cpp:81
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "야간 조명 중지/재개"
 
-#: plugins/nightlight/nightlightmanager.cpp:435
+#: plugins/nightlight/nightlightmanager.cpp:411
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "색 온도 미리 보기"

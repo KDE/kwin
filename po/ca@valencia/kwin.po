@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-28 00:40+0000\n"
+"POT-Creation-Date: 2024-10-01 00:40+0000\n"
 "PO-Revision-Date: 2024-09-19 10:02+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -2271,25 +2271,25 @@ msgstr "Meta"
 msgid "Arrow draw modifier keys:"
 msgstr "Tecles modificadores de dibuix amb fletxes:"
 
-#: plugins/nightlight/nightlightmanager.cpp:58
+#: plugins/nightlight/nightlightmanager.cpp:59
 #, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
 msgstr "S'ha suspés la llum de nit"
 
-#: plugins/nightlight/nightlightmanager.cpp:59
+#: plugins/nightlight/nightlightmanager.cpp:60
 #, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
 msgstr "S'ha représ la llum de nit"
 
-#: plugins/nightlight/nightlightmanager.cpp:80
+#: plugins/nightlight/nightlightmanager.cpp:81
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
 msgstr "Suspén/reprén la llum de nit"
 
-#: plugins/nightlight/nightlightmanager.cpp:435
+#: plugins/nightlight/nightlightmanager.cpp:411
 #, kde-format
 msgid "Color Temperature Preview"
 msgstr "Vista prèvia de la temperatura de color"
