@@ -281,6 +281,7 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
                    autoRepeat,
                    time,
                    device);
+    event.setAccepted(false);
     event.setModifiersRelevantForGlobalShortcuts(globalShortcutsModifiers);
 
     m_input->processSpies(std::bind(&InputEventSpy::keyEvent, std::placeholders::_1, &event));
