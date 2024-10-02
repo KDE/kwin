@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
 # Thomas Diehl <thd@kde.org>, 2004.
 # Stephan Johach <hunsum@gmx.de>, 2005.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2010.
@@ -10,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-25 02:43+0000\n"
-"PO-Revision-Date: 2023-02-20 18:06+0100\n"
-"Last-Translator: Jannick Kuhr <opensource@kuhr.org>\n"
+"PO-Revision-Date: 2024-09-29 16:09+0200\n"
+"Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.07.70\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -233,7 +234,7 @@ msgstr "Es sind keine Regeln für bestimmte Fenster festgelegt"
 msgctxt "@info"
 msgid "Click the <interface>Add New...</interface> button below to add some"
 msgstr ""
-"Klicken Sie auf den Knopf <interface>Hinzufügen ...</interface>, um Regeln "
+"Auf den Knopf <interface>Hinzufügen …</interface> klicken, um Regeln "
 "hinzuzufügen"
 
 #: package/contents/ui/main.qml:68
@@ -259,12 +260,12 @@ msgstr "Regeln speichern"
 #: package/contents/ui/main.qml:97
 #, kde-format
 msgid "Add New..."
-msgstr "Neu hinzufügen ..."
+msgstr "Neu hinzufügen …"
 
 #: package/contents/ui/main.qml:108
 #, kde-format
 msgid "Import..."
-msgstr "Importieren ..."
+msgstr "Importieren …"
 
 #: package/contents/ui/main.qml:116
 #, kde-format
@@ -274,7 +275,7 @@ msgstr "Export abbrechen"
 #: package/contents/ui/main.qml:116
 #, kde-format
 msgid "Export..."
-msgstr "Exportieren ..."
+msgstr "Exportieren …"
 
 #: package/contents/ui/main.qml:206
 #, kde-format
@@ -330,9 +331,9 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"Klicken Sie auf den Knopf <interface>Eigenschaft hinzufügen ...</interface> "
-"unten, um einige Fenstereigenschaften hinzuzufügen, die von der Regel "
-"beeinflusst werden sollen"
+"Auf den Knopf <interface>Eigenschaft hinzufügen …</interface> unten klicken, "
+"um einige Fenstereigenschaften hinzuzufügen, die von der Regel beeinflusst "
+"werden sollen"
 
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
@@ -342,7 +343,7 @@ msgstr "Schließen"
 #: package/contents/ui/RulesEditor.qml:85
 #, kde-format
 msgid "Add Property..."
-msgstr "Eigenschaft hinzufügen ..."
+msgstr "Eigenschaft hinzufügen …"
 
 #: package/contents/ui/RulesEditor.qml:98
 #, kde-format
@@ -802,6 +803,11 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Diese Anwendung stellt keine Fensterklasse bereit, also kann KWin diese "
+"nicht einem Fenster zuordnen und Regeln darauf anwenden. Wenn Sie trotzdem "
+"Regeln anwenden wollen, versuchen Sie stattdessen, andere Eigenschaften wie "
+"den Fenstertitel zuzuordnen.<nl/><nl/>Ziehen Sie bitte in Erwägung, diesen "
+"Fehler an die Entwickler der Anwendung zu melden."
 
 #: rulesmodel.cpp:738
 #, kde-format
