@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-01 00:40+0000\n"
-"PO-Revision-Date: 2024-08-30 09:46+0200\n"
+"POT-Creation-Date: 2024-10-02 00:40+0000\n"
+"PO-Revision-Date: 2024-10-01 18:42+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -1231,7 +1231,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Ostalari-izena: %1"
 
-#: input.cpp:3092
+#: input.cpp:3090
 #, kde-format
 msgid "Touchpad"
 msgstr "Ukimen-sagua"
@@ -2048,10 +2048,9 @@ msgstr "&Altuera:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Txandakatu saguaren klik efektua"
+msgstr "Txandakatu Saguaren Klik animazioa"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format

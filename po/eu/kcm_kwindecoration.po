@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-18 00:41+0000\n"
-"PO-Revision-Date: 2024-08-30 09:50+0200\n"
+"PO-Revision-Date: 2024-10-01 18:41+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -225,10 +225,9 @@ msgid "Get New…"
 msgstr "Eskuratu ... berria"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "Editatu %1 gaia"
+msgstr "Editatu %1 gaia..."
 
 #: utils.cpp:25
 #, kde-format
