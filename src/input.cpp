@@ -1164,13 +1164,15 @@ enum class MouseAction {
     ModifierOnly,
     ModifierAndWindow
 };
-std::pair<bool, bool> performWindowMouseAction(QMouseEvent *event, Window *window, MouseAction action = MouseAction::ModifierOnly)
+/**
+ * @returns if a command was performed, whether or not the event should be filtered out
+ *          if no command was performed, std::nullopt
+ */
+std::optional<bool> performWindowMouseAction(QMouseEvent *event, Window *window, MouseAction action = MouseAction::ModifierOnly)
 {
-    Options::MouseCommand command = Options::MouseNothing;
-    bool wasAction = false;
+    std::optional<Options::MouseCommand> command;
     if (static_cast<MouseEvent *>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
         if (!input()->pointer()->isConstrained() && !workspace()->globalShortcutsDisabled()) {
-            wasAction = true;
             switch (event->button()) {
             case Qt::LeftButton:
                 command = options->commandAll1();
@@ -1182,39 +1184,42 @@ std::pair<bool, bool> performWindowMouseAction(QMouseEvent *event, Window *windo
                 command = options->commandAll3();
                 break;
             default:
-                // nothing
-                break;
+                return std::nullopt;
             }
         }
     } else {
         if (action == MouseAction::ModifierAndWindow) {
-            command = window->getMouseCommand(event->button(), &wasAction);
+            command = window->getMouseCommand(event->button());
         }
     }
-    if (wasAction) {
-        return std::make_pair(wasAction, !window->performMouseCommand(command, event->globalPosition()));
+    if (command) {
+        return !window->performMouseCommand(*command, event->globalPosition());
+    } else {
+        return std::nullopt;
     }
-    return std::make_pair(wasAction, false);
 }
 
-std::pair<bool, bool> performWindowWheelAction(QWheelEvent *event, Window *window, MouseAction action = MouseAction::ModifierOnly)
+/**
+ * @returns if a command was performed, whether or not the event should be filtered out
+ *          if no command was performed, std::nullopt
+ */
+std::optional<bool> performWindowWheelAction(QWheelEvent *event, Window *window, MouseAction action = MouseAction::ModifierOnly)
 {
-    bool wasAction = false;
-    Options::MouseCommand command = Options::MouseNothing;
+    std::optional<Options::MouseCommand> command;
     if (static_cast<WheelEvent *>(event)->modifiersRelevantForGlobalShortcuts() == options->commandAllModifier()) {
         if (!input()->pointer()->isConstrained() && !workspace()->globalShortcutsDisabled()) {
-            wasAction = true;
             command = options->operationWindowMouseWheel(-1 * event->angleDelta().y());
         }
     } else {
         if (action == MouseAction::ModifierAndWindow) {
-            command = window->getWheelCommand(Qt::Vertical, &wasAction);
+            command = window->getWheelCommand(Qt::Vertical);
         }
     }
-    if (wasAction) {
-        return std::make_pair(wasAction, !window->performMouseCommand(command, event->globalPosition()));
+    if (command) {
+        return !window->performMouseCommand(*command, event->globalPosition());
+    } else {
+        return std::nullopt;
     }
-    return std::make_pair(wasAction, false);
 }
 
 }
@@ -1468,8 +1473,8 @@ public:
         case QEvent::MouseButtonPress:
         case QEvent::MouseButtonRelease: {
             const auto actionResult = performWindowMouseAction(event, decoration->window());
-            if (actionResult.first) {
-                return actionResult.second;
+            if (actionResult) {
+                return *actionResult;
             }
             QMouseEvent e(event->type(), p, event->screenPos(), event->button(), event->buttons(), event->modifiers());
             e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp()).count());
@@ -1497,8 +1502,8 @@ public:
         if (event->angleDelta().y() != 0) {
             // client window action only on vertical scrolling
             const auto actionResult = performWindowWheelAction(event, decoration->window());
-            if (actionResult.first) {
-                return actionResult.second;
+            if (actionResult) {
+                return *actionResult;
             }
         }
         const QPointF localPos = event->globalPosition() - decoration->window()->pos();
@@ -1760,7 +1765,7 @@ private:
 
 /**
  * This filter implements window actions. If the event should not be passed to the
- * current pointer window it will filter out the event
+ * current window it will filter out the event
  */
 class WindowActionInputFilter : public InputEventFilter
 {
@@ -1779,10 +1784,7 @@ public:
             return false;
         }
         const auto actionResult = performWindowMouseAction(event, window, MouseAction::ModifierAndWindow);
-        if (actionResult.first) {
-            return actionResult.second;
-        }
-        return false;
+        return actionResult.value_or(false);
     }
     bool wheelEvent(WheelEvent *event) override
     {
@@ -1795,10 +1797,7 @@ public:
             return false;
         }
         const auto actionResult = performWindowWheelAction(event, window, MouseAction::ModifierAndWindow);
-        if (actionResult.first) {
-            return actionResult.second;
-        }
-        return false;
+        return actionResult.value_or(false);
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
@@ -1810,10 +1809,9 @@ public:
         if (!window || !window->isClient()) {
             return false;
         }
-        bool wasAction = false;
-        const Options::MouseCommand command = window->getMouseCommand(Qt::LeftButton, &wasAction);
-        if (wasAction) {
-            return !window->performMouseCommand(command, pos);
+        const auto command = window->getMouseCommand(Qt::LeftButton);
+        if (command) {
+            return !window->performMouseCommand(*command, pos);
         }
         return false;
     }
@@ -1826,10 +1824,9 @@ public:
         if (!window || !window->isClient()) {
             return false;
         }
-        bool wasAction = false;
-        const Options::MouseCommand command = window->getMouseCommand(Qt::LeftButton, &wasAction);
-        if (wasAction) {
-            return !window->performMouseCommand(command, event->globalPosF());
+        const auto command = window->getMouseCommand(Qt::LeftButton);
+        if (command) {
+            return !window->performMouseCommand(*command, event->globalPosF());
         }
         return false;
     }
