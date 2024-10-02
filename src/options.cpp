@@ -714,7 +714,7 @@ void Options::loadConfig()
     setCommandInactiveTitlebar1(mouseCommand(config.readEntry("CommandInactiveTitlebar1", "Activate and raise"), true));
     setCommandInactiveTitlebar2(mouseCommand(config.readEntry("CommandInactiveTitlebar2", "Nothing"), true));
     setCommandInactiveTitlebar3(mouseCommand(config.readEntry("CommandInactiveTitlebar3", "Operations menu"), true));
-    setCommandWindow1(mouseCommand(config.readEntry("CommandWindow1", "Activate, raise and pass click"), false));
+    setCommandWindow1(mouseCommand(config.readEntry("CommandWindow1", "Activate, pass click and raise on release"), false));
     setCommandWindow2(mouseCommand(config.readEntry("CommandWindow2", "Activate and pass click"), false));
     setCommandWindow3(mouseCommand(config.readEntry("CommandWindow3", "Activate and pass click"), false));
     setCommandWindowWheel(mouseCommand(config.readEntry("CommandWindowWheel", "Scroll"), false));
@@ -902,6 +902,9 @@ Options::MouseCommand Options::mouseCommand(const QString &name, bool restricted
     }
     if (lowerName == QLatin1StringView("activate")) {
         return MouseActivate;
+    }
+    if (lowerName == QLatin1StringView("activate, pass click and raise on release")) {
+        return MouseActivateRaiseOnReleaseAndPassClick;
     }
     if (lowerName == QLatin1StringView("activate, raise and pass click")) {
         return MouseActivateRaiseAndPassClick;

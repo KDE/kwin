@@ -43,6 +43,11 @@
         </property>
         <item>
          <property name="text">
+          <string>Activate, pass click and raise on release</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
           <string>Activate, raise and pass click</string>
          </property>
         </item>

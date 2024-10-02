@@ -1163,8 +1163,10 @@ public:
      * Determines the mouse command for the given @p button in the current state.
      */
     std::optional<Options::MouseCommand> getMouseCommand(Qt::MouseButton button) const;
+    std::optional<Options::MouseCommand> getReleaseMouseCommand(Qt::MouseButton button) const;
     std::optional<Options::MouseCommand> getWheelCommand(Qt::Orientation orientation) const;
     bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
+    bool performMouseReleaseCommand(Options::MouseCommand, const QPointF &globalPos);
 
     // decoration related
     Qt::Edge titlebarPosition() const;

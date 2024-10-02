@@ -1780,14 +1780,18 @@ public:
     }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
-        if (event->type() != QEvent::MouseButtonPress) {
-            return false;
-        }
         Window *window = input()->pointer()->focus();
         if (!window || !window->isClient()) {
             return false;
         }
-        return performWindowMouseAction(event, window).value_or(false);
+        if (event->type() == QEvent::MouseButtonPress) {
+            return performWindowMouseAction(event, window).value_or(false);
+        } else if (event->type() == QEvent::MouseButtonRelease) {
+            if (const auto command = window->getReleaseMouseCommand(event->button())) {
+                return !window->performMouseReleaseCommand(*command, event->globalPosition());
+            }
+        }
+        return false;
     }
     bool wheelEvent(WheelEvent *event) override
     {
