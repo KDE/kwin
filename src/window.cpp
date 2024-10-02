@@ -1977,6 +1977,20 @@ std::optional<Options::MouseCommand> Window::getMouseCommand(Qt::MouseButton but
     return std::nullopt;
 }
 
+std::optional<Options::MouseCommand> Window::getReleaseMouseCommand(Qt::MouseButton button) const
+{
+    switch (button) {
+    case Qt::LeftButton:
+        return options->commandWindow1();
+    case Qt::MiddleButton:
+        return options->commandWindow2();
+    case Qt::RightButton:
+        return options->commandWindow3();
+    default:
+        return std::nullopt;
+    }
+}
+
 std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation orientation) const
 {
     if (orientation != Qt::Vertical || isActive()) {
@@ -2046,6 +2060,11 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
+        workspace()->setActiveOutput(globalPos);
+        replay = true;
+        break;
+    case Options::MouseActivateRaiseOnReleaseAndPassClick:
+        workspace()->takeActivity(this, Workspace::ActivityFocus);
         workspace()->setActiveOutput(globalPos);
         replay = true;
         break;
@@ -2180,6 +2199,20 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         break;
     }
     return replay;
+}
+
+bool Window::performMouseReleaseCommand(Options::MouseCommand command, const QPointF &globalPos)
+{
+    switch (command) {
+    case Options::MouseActivateRaiseOnReleaseAndPassClick:
+        if (isActive()) {
+            workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
+        }
+        workspace()->setActiveOutput(globalPos);
+        return true;
+    default:
+        return true;
+    }
 }
 
 void Window::setTransientFor(Window *transientFor)
