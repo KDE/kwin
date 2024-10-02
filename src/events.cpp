@@ -1012,14 +1012,14 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
         } else {
             if (w == wrapperId()) {
                 if (button < 4) {
-                    command = getMouseCommand(x11ToQtMouseButton(button));
+                    command = getMousePressCommand(x11ToQtMouseButton(button));
                 } else if (button < 6) {
                     command = getWheelCommand(Qt::Vertical);
                 }
             }
         }
         if (command) {
-            bool replay = performMouseCommand(*command, QPoint(x_root, y_root));
+            bool replay = performMousePressCommand(*command, QPoint(x_root, y_root));
             if (isSpecialWindow()) {
                 replay = true;
             }
@@ -1060,7 +1060,7 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
             QCoreApplication::sendEvent(decoration(), &event);
             if (!event.isAccepted() && !hor) {
                 if (titlebarPositionUnderMouse()) {
-                    performMouseCommand(options->operationTitlebarMouseWheel(delta), QPoint(x_root, y_root));
+                    performMousePressCommand(options->operationTitlebarMouseWheel(delta), QPoint(x_root, y_root));
                 }
             }
         } else {
@@ -1301,7 +1301,7 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
             // the expectation is that the cursor is already at the provided position,
             // thus it's more a safety measurement
             Cursors::self()->mouse()->setPos(QPointF(x_root, y_root));
-            performMouseCommand(Options::MouseMove, QPointF(x_root, y_root));
+            performMousePressCommand(Options::MouseMove, QPointF(x_root, y_root));
         } else {
             static const Gravity convert[] = {
                 Gravity::TopLeft,
@@ -1332,11 +1332,11 @@ void X11Window::NETMoveResize(qreal x_root, qreal y_root, NET::Direction directi
     } else if (direction == NET::KeyboardMove) {
         // ignore mouse coordinates given in the message, mouse position is used by the moving algorithm
         Cursors::self()->mouse()->setPos(frameGeometry().center());
-        performMouseCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
+        performMousePressCommand(Options::MouseUnrestrictedMove, frameGeometry().center());
     } else if (direction == NET::KeyboardSize) {
         // ignore mouse coordinates given in the message, mouse position is used by the resizing algorithm
         Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
-        performMouseCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
+        performMousePressCommand(Options::MouseUnrestrictedResize, frameGeometry().bottomRight());
     }
 }
 
