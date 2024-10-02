@@ -1952,19 +1952,16 @@ void Window::destroyWindowManagementInterface()
     m_windowManagementInterface = nullptr;
 }
 
-Options::MouseCommand Window::getMouseCommand(Qt::MouseButton button, bool *handled) const
+std::optional<Options::MouseCommand> Window::getMouseCommand(Qt::MouseButton button) const
 {
-    *handled = false;
     if (button == Qt::NoButton) {
-        return Options::MouseNothing;
+        return std::nullopt;
     }
     if (isActive()) {
         if (options->isClickRaise() && !isMostRecentlyRaised()) {
-            *handled = true;
             return Options::MouseActivateRaiseAndPassClick;
         }
     } else {
-        *handled = true;
         switch (button) {
         case Qt::LeftButton:
             return options->commandWindow1();
@@ -1977,20 +1974,15 @@ Options::MouseCommand Window::getMouseCommand(Qt::MouseButton button, bool *hand
             return Options::MouseActivateAndPassClick;
         }
     }
-    return Options::MouseNothing;
+    return std::nullopt;
 }
 
-Options::MouseCommand Window::getWheelCommand(Qt::Orientation orientation, bool *handled) const
+std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation orientation) const
 {
-    *handled = false;
-    if (orientation != Qt::Vertical) {
-        return Options::MouseNothing;
+    if (orientation != Qt::Vertical || isActive()) {
+        return std::nullopt;
     }
-    if (!isActive()) {
-        *handled = true;
-        return options->commandWindowWheel();
-    }
-    return Options::MouseNothing;
+    return options->commandWindowWheel();
 }
 
 bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globalPos)

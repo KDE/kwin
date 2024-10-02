@@ -18,6 +18,7 @@
 
 #include <functional>
 #include <memory>
+#include <optional>
 
 #include <QElapsedTimer>
 #include <QIcon>
@@ -1160,13 +1161,9 @@ public:
 
     /**
      * Determines the mouse command for the given @p button in the current state.
-     *
-     * The @p handled argument specifies whether the button was handled or not.
-     * This value should be used to determine whether the mouse button should be
-     * passed to the Window or being filtered out.
      */
-    Options::MouseCommand getMouseCommand(Qt::MouseButton button, bool *handled) const;
-    Options::MouseCommand getWheelCommand(Qt::Orientation orientation, bool *handled) const;
+    std::optional<Options::MouseCommand> getMouseCommand(Qt::MouseButton button) const;
+    std::optional<Options::MouseCommand> getWheelCommand(Qt::Orientation orientation) const;
     bool performMouseCommand(Options::MouseCommand, const QPointF &globalPos);
 
     // decoration related

@@ -992,41 +992,37 @@ bool X11Window::buttonPressEvent(xcb_window_t w, int button, int state, int x, i
             return true;
         }
 
-        Options::MouseCommand com = Options::MouseNothing;
-        bool was_action = false;
+        std::optional<Options::MouseCommand> command;
         if (bModKeyHeld) {
-            was_action = true;
             switch (button) {
             case XCB_BUTTON_INDEX_1:
-                com = options->commandAll1();
+                command = options->commandAll1();
                 break;
             case XCB_BUTTON_INDEX_2:
-                com = options->commandAll2();
+                command = options->commandAll2();
                 break;
             case XCB_BUTTON_INDEX_3:
-                com = options->commandAll3();
+                command = options->commandAll3();
                 break;
             case XCB_BUTTON_INDEX_4:
             case XCB_BUTTON_INDEX_5:
-                com = options->operationWindowMouseWheel(button == XCB_BUTTON_INDEX_4 ? 120 : -120);
+                command = options->operationWindowMouseWheel(button == XCB_BUTTON_INDEX_4 ? 120 : -120);
                 break;
             }
         } else {
             if (w == wrapperId()) {
                 if (button < 4) {
-                    com = getMouseCommand(x11ToQtMouseButton(button), &was_action);
+                    command = getMouseCommand(x11ToQtMouseButton(button));
                 } else if (button < 6) {
-                    com = getWheelCommand(Qt::Vertical, &was_action);
+                    command = getWheelCommand(Qt::Vertical);
                 }
             }
         }
-        if (was_action) {
-            bool replay = performMouseCommand(com, QPoint(x_root, y_root));
-
+        if (command) {
+            bool replay = performMouseCommand(*command, QPoint(x_root, y_root));
             if (isSpecialWindow()) {
                 replay = true;
             }
-
             if (w == wrapperId()) { // these can come only from a grab
                 xcb_allow_events(kwinApp()->x11Connection(), replay ? XCB_ALLOW_REPLAY_POINTER : XCB_ALLOW_SYNC_POINTER, XCB_TIME_CURRENT_TIME); // xTime());
             }
