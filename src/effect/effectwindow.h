@@ -319,6 +319,16 @@ class KWIN_EXPORT EffectWindow : public QObject
     Q_PROPERTY(bool lockScreen READ isLockScreen CONSTANT)
 
     /**
+     * Whether the window is an applet popup.
+     *
+     * An applet popup is created by an applet to show its
+     * fullRepresentation.
+     *
+     * @since 6.3
+     */
+    Q_PROPERTY(bool appletPopup READ isAppletPopup CONSTANT)
+
+    /**
      * Whether this EffectWindow is hidden because the show desktop mode is active.
      */
     Q_PROPERTY(bool hiddenByShowDesktop READ isHiddenByShowDesktop)
