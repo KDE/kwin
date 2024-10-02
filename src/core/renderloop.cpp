@@ -34,6 +34,11 @@ RenderLoopPrivate::RenderLoopPrivate(RenderLoop *q, Output *output)
     QObject::connect(&compositeTimer, &QTimer::timeout, q, [this]() {
         dispatch();
     });
+    delayedVrrTimer.setSingleShot(true);
+    delayedVrrTimer.setInterval(1'000 / 30);
+    QObject::connect(&delayedVrrTimer, &QTimer::timeout, q, [q]() {
+        q->scheduleRepaint(nullptr, nullptr);
+    });
 }
 
 void RenderLoopPrivate::scheduleNextRepaint()
@@ -256,9 +261,11 @@ void RenderLoop::scheduleRepaint(Item *item, RenderLayer *layer)
     if ((vrr || tearing) && workspace()->activeWindow() && d->output) {
         Window *const activeWindow = workspace()->activeWindow();
         if ((item || layer) && activeWindow->isOnOutput(d->output) && activeWindow->surfaceItem() && item != activeWindow->surfaceItem() && activeWindow->surfaceItem()->frameTimeEstimation() <= std::chrono::nanoseconds(1'000'000'000) / 30) {
+            d->delayedVrrTimer.start();
             return;
         }
     }
+    d->delayedVrrTimer.stop();
     const int effectiveMaxPendingFrameCount = (vrr || tearing) ? 1 : d->maxPendingFrameCount;
     if (d->pendingFrameCount < effectiveMaxPendingFrameCount && !d->inhibitCount) {
         d->scheduleNextRepaint();

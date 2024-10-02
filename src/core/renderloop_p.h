@@ -55,6 +55,8 @@ public:
 
     PresentationMode presentationMode = PresentationMode::VSync;
     int maxPendingFrameCount = 1;
+
+    QTimer delayedVrrTimer;
 };
 
 } // namespace KWin
