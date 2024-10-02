@@ -16,7 +16,6 @@ namespace KWin
 class GraphicsBuffer;
 class SubSurfaceInterface;
 class SurfaceInterface;
-class X11Window;
 
 /**
  * The SurfaceItemWayland class represents a Wayland surface in the scene.
@@ -82,23 +81,5 @@ public:
 private:
     SurfaceItemWayland *m_item;
 };
-
-#if KWIN_BUILD_X11
-/**
- * The SurfaceItemXwayland class represents an Xwayland surface in the scene.
- */
-class KWIN_EXPORT SurfaceItemXwayland : public SurfaceItemWayland
-{
-    Q_OBJECT
-
-public:
-    explicit SurfaceItemXwayland(X11Window *window, Item *parent = nullptr);
-
-    QRegion opaque() const override;
-
-private:
-    X11Window *m_window;
-};
-#endif
 
 } // namespace KWin

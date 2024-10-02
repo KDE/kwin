@@ -323,7 +323,7 @@ void WindowItemX11::initialize()
         if (!window()->surface()) {
             updateSurfaceItem(nullptr);
         } else {
-            updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), this));
+            updateSurfaceItem(std::make_unique<SurfaceItemWayland>(window()->surface(), this));
         }
         break;
     case Application::OperationModeWaylandOnly:
