@@ -1152,16 +1152,16 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
     }
     switch (op) {
     case Options::MoveOp:
-        window->performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
+        window->performMousePressCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
         break;
     case Options::UnrestrictedMoveOp:
-        window->performMouseCommand(Options::MouseUnrestrictedMove, Cursors::self()->mouse()->pos());
+        window->performMousePressCommand(Options::MouseUnrestrictedMove, Cursors::self()->mouse()->pos());
         break;
     case Options::ResizeOp:
-        window->performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
+        window->performMousePressCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
         break;
     case Options::UnrestrictedResizeOp:
-        window->performMouseCommand(Options::MouseUnrestrictedResize, Cursors::self()->mouse()->pos());
+        window->performMousePressCommand(Options::MouseUnrestrictedResize, Cursors::self()->mouse()->pos());
         break;
     case Options::CloseOp:
         QMetaObject::invokeMethod(window, &Window::closeWindow, Qt::QueuedConnection);
@@ -1188,7 +1188,7 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         window->setMinimized(true);
         break;
     case Options::ShadeOp:
-        window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
+        window->performMousePressCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
         break;
     case Options::OnAllDesktopsOp:
         window->setOnAllDesktops(!window->isOnAllDesktops());
@@ -1220,7 +1220,7 @@ void Workspace::performWindowOperation(Window *window, Options::WindowOperation 
         break;
     }
     case Options::OperationsOp:
-        window->performMouseCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
+        window->performMousePressCommand(Options::MouseShade, Cursors::self()->mouse()->pos());
         break;
     case Options::WindowRulesOp:
         m_rulebook->edit(window, false);

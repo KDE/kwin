@@ -1839,7 +1839,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeFull()
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
-    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    window->performMousePressCommand(Options::MouseMove, input()->pointer()->pos());
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
@@ -1905,7 +1905,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeInitiallyFull()
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
-    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    window->performMousePressCommand(Options::MouseMove, input()->pointer()->pos());
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeFull);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeFull);
@@ -1983,7 +1983,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeHorizontal()
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
-    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    window->performMousePressCommand(Options::MouseMove, input()->pointer()->pos());
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeHorizontal);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeHorizontal);
@@ -2065,7 +2065,7 @@ void TestXdgShellWindow::testInteractiveMoveUnmaximizeVertical()
     const qreal yOffset = 0.5;
     quint32 timestamp = 0;
     Test::pointerMotion(QPointF(window->x() + window->width() * xOffset, window->y() + window->height() * yOffset), timestamp++);
-    window->performMouseCommand(Options::MouseMove, input()->pointer()->pos());
+    window->performMousePressCommand(Options::MouseMove, input()->pointer()->pos());
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(window->maximizeMode(), MaximizeVertical);
     QCOMPARE(window->requestedMaximizeMode(), MaximizeVertical);
