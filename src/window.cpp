@@ -1853,11 +1853,11 @@ void Window::setupWindowManagementInterface()
     });
     connect(w, &PlasmaWindowInterface::moveRequested, this, [this]() {
         Cursors::self()->mouse()->setPos(frameGeometry().center());
-        performMouseCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
+        performMousePressCommand(Options::MouseMove, Cursors::self()->mouse()->pos());
     });
     connect(w, &PlasmaWindowInterface::resizeRequested, this, [this]() {
         Cursors::self()->mouse()->setPos(frameGeometry().bottomRight());
-        performMouseCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
+        performMousePressCommand(Options::MouseResize, Cursors::self()->mouse()->pos());
     });
     connect(w, &PlasmaWindowInterface::fullscreenRequested, this, [this](bool set) {
         setFullScreen(set);
@@ -1955,7 +1955,7 @@ void Window::destroyWindowManagementInterface()
     m_windowManagementInterface = nullptr;
 }
 
-std::optional<Options::MouseCommand> Window::getMouseCommand(Qt::MouseButton button) const
+std::optional<Options::MouseCommand> Window::getMousePressCommand(Qt::MouseButton button) const
 {
     if (button == Qt::NoButton) {
         return std::nullopt;
@@ -1980,6 +1980,20 @@ std::optional<Options::MouseCommand> Window::getMouseCommand(Qt::MouseButton but
     return std::nullopt;
 }
 
+std::optional<Options::MouseCommand> Window::getMouseReleaseCommand(Qt::MouseButton button) const
+{
+    switch (button) {
+    case Qt::LeftButton:
+        return options->commandWindow1();
+    case Qt::MiddleButton:
+        return options->commandWindow2();
+    case Qt::RightButton:
+        return options->commandWindow3();
+    default:
+        return std::nullopt;
+    }
+}
+
 std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation orientation) const
 {
     if (orientation != Qt::Vertical || isActive()) {
@@ -1988,7 +2002,7 @@ std::optional<Options::MouseCommand> Window::getWheelCommand(Qt::Orientation ori
     return options->commandWindowWheel();
 }
 
-bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globalPos)
+bool Window::performMousePressCommand(Options::MouseCommand cmd, const QPointF &globalPos)
 {
     bool replay = false;
     switch (cmd) {
@@ -2049,6 +2063,11 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         break;
     case Options::MouseActivateRaiseAndPassClick:
         workspace()->takeActivity(this, Workspace::ActivityFocus | Workspace::ActivityRaise);
+        workspace()->setActiveOutput(globalPos);
+        replay = true;
+        break;
+    case Options::MouseActivateRaiseOnReleaseAndPassClick:
+        workspace()->takeActivity(this, Workspace::ActivityFocus);
         workspace()->setActiveOutput(globalPos);
         replay = true;
         break;
@@ -2183,6 +2202,20 @@ bool Window::performMouseCommand(Options::MouseCommand cmd, const QPointF &globa
         break;
     }
     return replay;
+}
+
+bool Window::performMouseReleaseCommand(Options::MouseCommand command, const QPointF &globalPos)
+{
+    switch (command) {
+    case Options::MouseActivateRaiseOnReleaseAndPassClick:
+        if (isActive()) {
+            workspace()->takeActivity(this, Workspace::ActivityRaise);
+        }
+        workspace()->setActiveOutput(globalPos);
+        return true;
+    default:
+        return true;
+    }
 }
 
 void Window::setTransientFor(Window *transientFor)
@@ -2792,7 +2825,7 @@ bool Window::processDecorationButtonPress(const QPointF &localPos, const QPointF
     // In the new API the decoration may process the menu action to display an inactive tab's menu.
     // If the event is unhandled then the core will create one for the active window in the group.
     if (!ignoreMenu || com != Options::MouseOperationsMenu) {
-        performMouseCommand(com, globalPos);
+        performMousePressCommand(com, globalPos);
     }
     return !( // Return events that should be passed to the decoration in the new API
         com == Options::MouseRaise || com == Options::MouseOperationsMenu || com == Options::MouseActivateAndRaise || com == Options::MouseActivate || com == Options::MouseActivateRaiseAndPassClick || com == Options::MouseActivateAndPassClick || com == Options::MouseNothing);

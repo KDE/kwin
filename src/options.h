@@ -489,7 +489,8 @@ public:
         MouseOpacityMore,
         MouseOpacityLess,
         MouseClose,
-        MouseNothing
+        MouseNothing,
+        MouseActivateRaiseOnReleaseAndPassClick,
     };
     Q_ENUM(MouseCommand)
 
@@ -798,7 +799,7 @@ public:
     }
     static MouseCommand defaultCommandWindow1()
     {
-        return MouseActivateRaiseAndPassClick;
+        return MouseActivateRaiseOnReleaseAndPassClick;
     }
     static MouseCommand defaultCommandWindow2()
     {

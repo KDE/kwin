@@ -1150,11 +1150,11 @@ std::optional<bool> performModifierWindowMouseAction(MouseEvent *event, Window *
     }
     switch (event->button()) {
     case Qt::LeftButton:
-        return !window->performMouseCommand(options->commandAll1(), event->globalPosition());
+        return !window->performMousePressCommand(options->commandAll1(), event->globalPosition());
     case Qt::MiddleButton:
-        return !window->performMouseCommand(options->commandAll2(), event->globalPosition());
+        return !window->performMousePressCommand(options->commandAll2(), event->globalPosition());
     case Qt::RightButton:
-        return !window->performMouseCommand(options->commandAll3(), event->globalPosition());
+        return !window->performMousePressCommand(options->commandAll3(), event->globalPosition());
     default:
         return std::nullopt;
     }
@@ -1167,8 +1167,8 @@ std::optional<bool> performWindowMouseAction(MouseEvent *event, Window *window)
 {
     if (const auto globalAction = performModifierWindowMouseAction(event, window)) {
         return globalAction;
-    } else if (const auto command = window->getMouseCommand(event->button())) {
-        return !window->performMouseCommand(*command, event->globalPosition());
+    } else if (const auto command = window->getMousePressCommand(event->button())) {
+        return !window->performMousePressCommand(*command, event->globalPosition());
     } else {
         return std::nullopt;
     }
@@ -1186,7 +1186,7 @@ std::optional<bool> performModifierWindowWheelAction(WheelEvent *event, Window *
     if (input()->pointer()->isConstrained() || workspace()->globalShortcutsDisabled()) {
         return std::nullopt;
     }
-    return !window->performMouseCommand(options->operationWindowMouseWheel(-1 * event->angleDelta().y()), event->globalPosition());
+    return !window->performMousePressCommand(options->operationWindowMouseWheel(-1 * event->angleDelta().y()), event->globalPosition());
 }
 /**
  * @returns if a command was performed, whether or not the event should be filtered out
@@ -1197,7 +1197,7 @@ std::optional<bool> performWindowWheelAction(WheelEvent *event, Window *window)
     if (const auto globalAction = performModifierWindowWheelAction(event, window)) {
         return globalAction;
     } else if (const auto command = window->getWheelCommand(Qt::Vertical)) {
-        return !window->performMouseCommand(*command, event->globalPosition());
+        return !window->performMousePressCommand(*command, event->globalPosition());
     } else {
         return std::nullopt;
     }
@@ -1459,8 +1459,8 @@ public:
         }
         if ((orientation == Qt::Vertical) && decoration->window()->titlebarPositionUnderMouse()) {
             if (float delta = m_accumulator.accumulate(event)) {
-                decoration->window()->performMouseCommand(options->operationTitlebarMouseWheel(delta * -1),
-                                                          event->globalPosition());
+                decoration->window()->performMousePressCommand(options->operationTitlebarMouseWheel(delta * -1),
+                                                               event->globalPosition());
             }
         }
         return true;
@@ -1711,14 +1711,24 @@ public:
     }
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
-        if (event->type() != QEvent::MouseButtonPress) {
-            return false;
+        if (event->type() == QEvent::MouseButtonPress) {
+            Window *window = input()->pointer()->focus();
+            if (!window || !window->isClient()) {
+                return false;
+            }
+            return performWindowMouseAction(event, window).value_or(false);
+        } else if (event->type() == QEvent::MouseButtonRelease) {
+            // because of implicit pointer grab while a button is pressed, this may need to
+            // target a different window than the one with pointer focus
+            Window *window = input()->pointer()->hover();
+            if (!window || !window->isClient()) {
+                return false;
+            }
+            if (const auto command = window->getMouseReleaseCommand(event->button())) {
+                return !window->performMouseReleaseCommand(*command, event->globalPosition());
+            }
         }
-        Window *window = input()->pointer()->focus();
-        if (!window || !window->isClient()) {
-            return false;
-        }
-        return performWindowMouseAction(event, window).value_or(false);
+        return false;
     }
     bool wheelEvent(WheelEvent *event) override
     {
@@ -1742,9 +1752,25 @@ public:
         if (!window || !window->isClient()) {
             return false;
         }
-        const auto command = window->getMouseCommand(Qt::LeftButton);
+        const auto command = window->getMousePressCommand(Qt::LeftButton);
         if (command) {
-            return !window->performMouseCommand(*command, pos);
+            return !window->performMousePressCommand(*command, pos);
+        }
+        return false;
+    }
+    bool touchUp(int32_t id, std::chrono::microseconds time) override
+    {
+        auto seat = waylandServer()->seat();
+        if (seat->isTouchSequence()) {
+            return false;
+        }
+        Window *window = input()->touch()->focus();
+        if (!window || !window->isClient()) {
+            return false;
+        }
+        const auto command = window->getMouseReleaseCommand(Qt::LeftButton);
+        if (command) {
+            return !window->performMouseReleaseCommand(*command, input()->touch()->position());
         }
         return false;
     }
@@ -1757,9 +1783,9 @@ public:
         if (!window || !window->isClient()) {
             return false;
         }
-        const auto command = window->getMouseCommand(Qt::LeftButton);
+        const auto command = window->getMousePressCommand(Qt::LeftButton);
         if (command) {
-            return !window->performMouseCommand(*command, event->globalPosF());
+            return !window->performMousePressCommand(*command, event->globalPosF());
         }
         return false;
     }

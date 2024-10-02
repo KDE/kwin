@@ -949,7 +949,7 @@ void XdgToplevelWindow::handleWindowClassChanged()
 void XdgToplevelWindow::handleWindowMenuRequested(SeatInterface *seat, const QPoint &surfacePos,
                                                   quint32 serial)
 {
-    performMouseCommand(Options::MouseOperationsMenu, mapFromLocal(surfacePos));
+    performMousePressCommand(Options::MouseOperationsMenu, mapFromLocal(surfacePos));
 }
 
 void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
@@ -967,7 +967,7 @@ void XdgToplevelWindow::handleMoveRequested(SeatInterface *seat, quint32 serial)
         } else {
             cursorPos = input()->tablet()->position();
         }
-        performMouseCommand(Options::MouseMove, cursorPos);
+        performMousePressCommand(Options::MouseMove, cursorPos);
     } else {
         qCDebug(KWIN_CORE) << this << "is immovable, ignoring the move request";
     }
