@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
 # Thomas Diehl <thd@kde.org>, 2004.
 # Stephan Johach <hunsum@gmx.de>, 2005.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2010.
@@ -10,15 +11,15 @@ msgstr ""
 "Project-Id-Version: kcm_kwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-27 02:37+0000\n"
-"PO-Revision-Date: 2023-06-12 00:18+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2024-09-29 16:09+0200\n"
+"Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.07.70\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #: kcmrules.cpp:228
 #, kde-format
@@ -41,26 +42,22 @@ msgid "Unimportant"
 msgstr "Unwichtig"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "Exakte Übereinstimmung"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "Übereinstimmung bei enthaltener Zeichenfolge"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "Regulärer Ausdruck"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "Bei Initialisierung anwenden"
 
@@ -75,8 +72,7 @@ msgstr ""
 "das Fenster erstellt wurde.Weitere Änderungen sind davon nicht betroffen."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "Jetzt anwenden"
 
@@ -105,8 +101,7 @@ msgstr ""
 "des Fensters wird der zuletzt gespeicherte Wert angewendet."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "Ohne Auswirkung"
 
@@ -133,8 +128,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "Die Fenstereigenschaft wird immer auf den angegebenen Wert gesetzt."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "Temporär erzwingen"
 
@@ -191,6 +185,8 @@ msgid ""
 "Readability may be impaired with extremely low opacity values. At 0%, the "
 "window becomes invisible."
 msgstr ""
+"Bei extrem niedrigen Transparenzwerten kann die Lesbarkeit beeinträchtigt "
+"werden. Bei 0 % wird das Fenster unsichtbar."
 
 #: rulesmodel.cpp:384
 #, kde-format
@@ -267,14 +263,12 @@ msgid "Maximized vertically"
 msgstr "Senkrecht maximiert"
 
 #: rulesmodel.cpp:463
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "Virtuelle Arbeitsfläche"
 
 #: rulesmodel.cpp:469
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "Virtuelle Arbeitsflächen"
 
@@ -324,6 +318,14 @@ msgid ""
 "<interface>Fullscreen</interface> states.<nl/><nl/>Note that the position "
 "can also be used to map to a different <interface>Screen</interface>"
 msgstr ""
+"Manche Anwendungen bestimmen ihre eigene Geometrie, was die Einstellungen "
+"der Fensterverwaltung überschreibt. Mit dieser Eigenschaft werden "
+"Platzierungsanfragen überschrieben.<nl/><nl/>Dies beeinflusst die "
+"<interface>Größe</interface> und <interface>Position</interface>, aber nicht "
+"die Zustände <interface>maximiert</interface> oder <interface>Vollbild</"
+"interface>.<nl/><nl/>Beachten Sie, dass die Position auch dafür verwendet "
+"werden kann, das Fenster auf einem anderem <interface>Bildschirm</interface> "
+"darzustellen."
 
 #: rulesmodel.cpp:545
 #, kde-format
@@ -341,13 +343,7 @@ msgid "Obey geometry restrictions"
 msgstr "Größeneinschränkungen beachten"
 
 #: rulesmodel.cpp:557
-#, fuzzy, kde-kuit-format
-#| msgid ""
-#| "Eg. terminals or video players can ask to keep a certain aspect ratio\n"
-#| "or only grow by values larger than one\n"
-#| "(eg. by the dimensions of one character).\n"
-#| "This may be pointless and the restriction prevents arbitrary dimensions\n"
-#| "like your complete screen area."
+#, kde-kuit-format
 msgctxt "@info:tooltip"
 msgid ""
 "Some apps like video players or terminals can ask KWin to constrain them to "
@@ -356,11 +352,12 @@ msgid ""
 "windows to be resized to arbitrary sizes.<nl/><nl/>This can be helpful for "
 "windows that can't quite fit the full screen area when maximized."
 msgstr ""
-"Z. B. können Terminals oder Videoplayer ein bestimmtes Seitenverhältnis "
-"erzwingen oder nur um Schritte größer als eins vergrößert werden (z. B. um "
-"die Größe eines Zeichens).\n"
-"Dies könnte zwecklos sein und die Beschränkung verhindert beliebige Größen "
-"wie die Ihres gesamten Bildschirms."
+"Manche Anwendungen wie z. B. Videospieler oder Terminals können KWin "
+"auffordern sie auf ein bestimmtes Seitenverhältnis zu beschränken oder nur "
+"um Schritte größer als ein Textzeichen vergrößert zu werden. Verwenden Sie "
+"diese Eigenschaft, um solche Beschränkungen zu ignorieren und die Größe der "
+"Fenster beliebig anzupassen.<nl/><nl/>Dies kann hilfreich sein, wenn "
+"maximierte Fenster nicht ganz in den kompletten Bildschirmbereich passen."
 
 #: rulesmodel.cpp:568
 #, kde-format
@@ -387,7 +384,7 @@ msgstr "Nicht in Kontrollleiste"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Controls whether or not the window appears in the Task Manager."
-msgstr ""
+msgstr "Legt fest, ob das Fenster in der Fensterleiste angezeigt wird."
 
 #: rulesmodel.cpp:584
 #, kde-format
@@ -400,6 +397,8 @@ msgctxt "@info:tooltip"
 msgid ""
 "Controls whether or not the window appears in the Virtual Desktop manager."
 msgstr ""
+"Legt fest, ob das Fenster in der Verwaltung für virtuelle Arbeitsflächen "
+"angezeigt wird."
 
 #: rulesmodel.cpp:590
 #, kde-format
@@ -413,6 +412,8 @@ msgid ""
 "Controls whether or not the window appears in the <shortcut>Alt+Tab</"
 "shortcut> window list."
 msgstr ""
+"Legt fest, ob das Fenster in der <shortcut>Alt+Tab</shortcut>-Fensterliste "
+"angezeigt wird."
 
 #: rulesmodel.cpp:596
 #, kde-format
@@ -511,7 +512,7 @@ msgstr "Aktivierung zulassen"
 #: rulesmodel.cpp:681
 #, kde-format
 msgid "Controls whether or not the window becomes focused when clicked."
-msgstr ""
+msgstr "Legt fest, ob das Fenster beim Anklicken aktiviert wird."
 
 #: rulesmodel.cpp:685
 #, kde-format
@@ -529,6 +530,12 @@ msgid ""
 "use any other global shortcuts such as <shortcut>Alt+Space</shortcut> to "
 "activate KRunner."
 msgstr ""
+"Nutzen Sie diese Eigenschaft, um globale Kurzbefehle in aktivierten Fenstern "
+"zu unterbinden. Dies kann nützlich für Emulatoren oder virtuelle Maschinen "
+"sein, die dieselben Kurzbefehle selbst verarbeiten.<nl/><nl/>Beachten Sie, "
+"dass Sie nicht mit <shortcut>Alt+Tab</shortcut> das Fenster wechseln können "
+"oder irgendwelche anderen globalen Kurzbefehle, wie <shortcut>Alt+Leertaste</"
+"shortcut>, um Krunner zu aktivieren, benutzen können."
 
 #: rulesmodel.cpp:697
 #, kde-format
@@ -548,17 +555,17 @@ msgstr "Compositing blockieren"
 #: rulesmodel.cpp:712
 #, kde-format
 msgid "Layer"
-msgstr ""
+msgstr "Schicht"
 
 #: rulesmodel.cpp:718
 #, kde-format
 msgid "Adaptive sync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #: rulesmodel.cpp:723
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "Tearing erlauben"
 
 #: rulesmodel.cpp:775
 #, kde-format
@@ -574,28 +581,29 @@ msgid ""
 "it, try to match other properties like the window title instead.<nl/><nl/"
 ">Please consider reporting this bug to the application's developers."
 msgstr ""
+"Diese Anwendung stellt keine Fensterklasse bereit, also kann KWin diese "
+"nicht einem Fenster zuordnen und Regeln darauf anwenden. Wenn Sie trotzdem "
+"Regeln anwenden wollen, versuchen Sie stattdessen, andere Eigenschaften wie "
+"den Fenstertitel zuzuordnen.<nl/><nl/>Ziehen Sie bitte in Erwägung, diesen "
+"Fehler an die Entwickler der Anwendung zu melden."
 
 #: rulesmodel.cpp:810
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "Alle Fenstertypen"
 
 #: rulesmodel.cpp:811
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "Normales Fenster"
 
 #: rulesmodel.cpp:812
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "Dialogfenster"
 
 #: rulesmodel.cpp:813
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "Dienstprogrammfenster"
 
@@ -610,14 +618,12 @@ msgid "Toolbar"
 msgstr "Werkzeugleiste"
 
 #: rulesmodel.cpp:816
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "Abreißmenü"
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "Begrüßungsbildschirm"
 
@@ -628,20 +634,17 @@ msgstr "Arbeitsfläche"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "Selbständige Menüleiste"
 
 #: rulesmodel.cpp:821 rulesmodel.cpp:928
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "OnScreen-Anzeige"
 
 #: rulesmodel.cpp:831
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "Alle Arbeitsflächen"
 
@@ -652,8 +655,7 @@ msgid "Make the window available on all desktops"
 msgstr "Fenster soll auf allen Arbeitsflächen verfügbar sein"
 
 #: rulesmodel.cpp:852
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "Alle Aktivitäten"
 
@@ -669,14 +671,12 @@ msgid "Default"
 msgstr "Voreinstellung"
 
 #: rulesmodel.cpp:876
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
-msgstr "Ohne feste Position"
+msgstr "Keine Platzierung"
 
 #: rulesmodel.cpp:877
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "Minimale Überlappung"
 
@@ -696,22 +696,19 @@ msgid "Random"
 msgstr "Zufällig"
 
 #: rulesmodel.cpp:881
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
-msgstr "Links oben"
+msgstr "In der oberen linken Ecke"
 
 #: rulesmodel.cpp:882
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "Unter Mauszeiger"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
-msgstr "Über Hauptfenster"
+msgstr "Auf Hauptfenster"
 
 #: rulesmodel.cpp:890
 #, kde-format
@@ -741,34 +738,32 @@ msgstr "Extrem"
 #: rulesmodel.cpp:921
 #, kde-format
 msgid "Below"
-msgstr ""
+msgstr "im Hintergrund"
 
 #: rulesmodel.cpp:923
 #, kde-format
 msgid "Above"
-msgstr ""
+msgstr "im Vordergrund"
 
 #: rulesmodel.cpp:924
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Notification"
-msgstr "Position"
+msgstr "Benachrichtigung"
 
 #: rulesmodel.cpp:926
 #, kde-format
 msgid "Popup"
-msgstr ""
+msgstr "Aufklappfenster"
 
 #: rulesmodel.cpp:927
-#, fuzzy, kde-format
-#| msgid "Position"
+#, kde-format
 msgid "Critical notification"
-msgstr "Position"
+msgstr "Kritische Benachrichtigung"
 
 #: rulesmodel.cpp:929
 #, kde-format
 msgid "Overlay"
-msgstr ""
+msgstr "Überlagerung"
 
 #: rulesmodel.cpp:954
 #, kde-format
@@ -795,12 +790,12 @@ msgstr "KWin-Regeln (*.kwinrule)"
 #: ui/main.qml:28
 #, kde-format
 msgid "Add New…"
-msgstr "Neu hinzufügen ..."
+msgstr "Neu hinzufügen …"
 
 #: ui/main.qml:34
 #, kde-format
 msgid "Import…"
-msgstr "Importieren ..."
+msgstr "Importieren …"
 
 #: ui/main.qml:39
 #, kde-format
@@ -810,7 +805,7 @@ msgstr "Export abbrechen"
 #: ui/main.qml:39
 #, kde-format
 msgid "Export…"
-msgstr "Exportieren ..."
+msgstr "Exportieren …"
 
 #: ui/main.qml:87
 #, kde-format
@@ -818,13 +813,11 @@ msgid "No rules for specific windows are currently set"
 msgstr "Es sind keine Regeln für bestimmte Fenster festgelegt"
 
 #: ui/main.qml:88
-#, fuzzy, kde-kuit-format
-#| msgctxt "@info"
-#| msgid "Click the <interface>Add New…</interface> button below to add some"
+#, kde-kuit-format
 msgctxt "@info"
 msgid "Click <interface>Add New…</interface> to add some"
 msgstr ""
-"Klicken Sie auf den Knopf <interface>Hinzufügen ...</interface>, um Regeln "
+"Auf den Knopf <interface>Neue hinzufügen</interface> klicken um Regeln "
 "hinzuzufügen"
 
 #: ui/main.qml:96
@@ -901,14 +894,14 @@ msgid ""
 "Click the <interface>Add Property...</interface> button below to add some "
 "window properties that will be affected by the rule"
 msgstr ""
-"Klicken Sie auf den Knopf <interface>Eigenschaft hinzufügen ...</interface> "
-"unten, um einige Fenstereigenschaften hinzuzufügen, die von der Regel "
-"beeinflusst werden sollen"
+"Auf den Knopf <interface>Eigenschaft hinzufügen …</interface> unten klicken, "
+"um einige Fenstereigenschaften hinzuzufügen, die von der Regel beeinflusst "
+"werden sollen"
 
 #: ui/RulesEditor.qml:88
 #, kde-format
 msgid "Add Property..."
-msgstr "Eigenschaft hinzufügen ..."
+msgstr "Eigenschaft hinzufügen …"
 
 #: ui/RulesEditor.qml:99
 #, kde-format
@@ -933,18 +926,16 @@ msgid "Add property to the rule"
 msgstr "Eigenschaft für die Regel hinzufügen"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Keine Fenstereigenschaften wurden geändert"
+msgstr "Es sind keine Eigenschaften zum Hinzufügen übrig"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Keine Fenstereigenschaften wurden geändert"
+msgstr "Keine Eigenschaften stimmen mit „%1“ überein"
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format
