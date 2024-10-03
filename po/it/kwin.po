@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 02:37+0000\n"
+"POT-Creation-Date: 2024-10-03 02:31+0000\n"
 "PO-Revision-Date: 2024-08-22 11:48+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -1228,22 +1228,22 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nome host: %1"
 
-#: input.cpp:2131
+#: input.cpp:2122
 #, kde-format
 msgid "Move the tablet to the next output"
 msgstr "Sposta la tavoletta all'uscita successiva"
 
-#: input.cpp:2210
+#: input.cpp:2201
 #, kde-format
 msgid "Tablet moved to %1"
 msgstr "Tavoletta spostata in %1"
 
-#: input.cpp:2210
+#: input.cpp:2201
 #, kde-format
 msgid "Tablets switched outputs"
 msgstr "Uscite commutate delle tavolette"
 
-#: input.cpp:3331
+#: input.cpp:3322
 #, kde-format
 msgid "Touchpad"
 msgstr "Touchpad"
