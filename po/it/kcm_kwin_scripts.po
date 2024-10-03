@@ -1,14 +1,14 @@
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
 # Nicola Ruggero <nicola@nxnt.org>, 2012.
-# Vincenzo Reale <smart2128vr@gmail.com>, 2014, 2017, 2018, 2020, 2022, 2023.
+# SPDX-FileCopyrightText: 2014, 2017, 2018, 2020, 2022, 2023, 2024 Vincenzo Reale <smart2128vr@gmail.com>
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: kcm-kwin-scripts\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-26 00:40+0000\n"
-"PO-Revision-Date: 2023-06-03 02:25+0200\n"
+"PO-Revision-Date: 2024-09-27 03:30+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #: module.cpp:52
 #, kde-format
@@ -24,10 +24,9 @@ msgid "Import KWin Script"
 msgstr "Importa script di KWin"
 
 #: module.cpp:53
-#, fuzzy, kde-format
-#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+#, kde-format
 msgid "KWin Script (*.kwinscript)"
-msgstr "*.kwinscript|Script di KWin (*.kwinscript)"
+msgstr "Script di KWin (*.kwinscript)"
 
 #: module.cpp:65
 #, kde-format
