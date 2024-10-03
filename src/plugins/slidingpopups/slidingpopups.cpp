@@ -366,17 +366,17 @@ void SlidingPopupsEffect::setupAnimData(EffectWindow *w)
     // sanitize
     switch (animData.location) {
     case Location::Left:
-        animData.offset = std::max<qreal>(windowGeo.left() - screenRect.left(), animData.offset);
+        animData.offset = std::max<qreal>(0, animData.offset);
         break;
     case Location::Top:
-        animData.offset = std::max<qreal>(windowGeo.top() - screenRect.top(), animData.offset);
+        animData.offset = std::max<qreal>(0, animData.offset);
         break;
     case Location::Right:
-        animData.offset = std::max<qreal>(screenRect.right() - windowGeo.right(), animData.offset);
+        animData.offset = std::max<qreal>(0, animData.offset);
         break;
     case Location::Bottom:
     default:
-        animData.offset = std::max<qreal>(screenRect.bottom() - windowGeo.bottom(), animData.offset);
+        animData.offset = std::max<qreal>(0, animData.offset);
         break;
     }
 
