@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Magnify the entire desktop; activated with a keyboard shortcut",
-        "Description[ar]": "كبّر كلّ سطح المكتب، مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "كبّر كلّ سطح المكتب، تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Увеличаване на целия работен плот, активирано с клавишна комбинация",
         "Description[ca]": "Amplia tot l'escriptori; activat amb una drecera de teclat",
         "Description[es]": "Ampliar todo el escritorio; se activa con un atajo de teclado",
@@ -11,6 +11,7 @@
         "Description[ia]": "Aggrandi le integre scriptorio; activate con un via breve de claviero",
         "Description[it]": "Ingrandisci l'intero desktop; attivato con una scorciatoia da tastiera",
         "Description[ka]": "მთელი სამუშაო მაგიდის გადიდება. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Tuvina visu darbvirsmu; ieslēdz ar tastatūras saīsni",
         "Description[nl]": "Het gehele bureaublad vergroten; geactiveerd met een sneltoets",
         "Description[pl]": "Powiększa cały pulpit; uruchamiane skrótem klawiszowym",
         "Description[sl]": "Povečaj celotno namizje; aktivirano z bližnjico tipkovnice",

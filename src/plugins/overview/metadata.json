@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Window Management",
         "Description": "Allows you to overview virtual desktops and windows; activated with a keyboard shortcut",
-        "Description[ar]": "يسمح لك بإلقاء نظرة عامة على النوافذ وأسطح المكتب الافتراضية، مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "يسمح لك بإلقاء نظرة عامة على النوافذ وأسطح المكتب الافتراضية، تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Позволява ви да преглеждате работните плотове и прозорци, активирано с клавишна комбинация",
         "Description[ca]": "Permet una vista general dels escriptoris virtuals i les finestres; activat amb una drecera de teclat",
         "Description[es]": "Le permite mostrar una vista general de los escritorios virtuales y de las ventanas; se activa con un atajo de teclado",
@@ -11,6 +11,7 @@
         "Description[ia]": "Permitte te a supervider scriptorios virtual e fenestre; activate con un via breve de claviero",
         "Description[it]": "Consente di visualizzare una panoramica di desktop e finestre virtuali; attivato con una scorciatoia da tastiera",
         "Description[ka]": "ვირტუალური სამუშაო მაგიდებისა და ფანჯრების გადახედვის დაშვება. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Ļauj pārskatīt virtuālās darbvirsmas un logus; ieslēdz ar tastatūras saīsni",
         "Description[nl]": "Biedt u een overzicht van virtuele bureaubladen en vensters; geactiveerd met een sneltoets",
         "Description[pl]": "Umożliwia przeglądanie wirtualnych pulpitów i okien; uruchamiane skrótem klawiszowym",
         "Description[sl]": "Omogoča pregled navideznih namizij in oken; aktivirano z bližnjico tipkovnice",

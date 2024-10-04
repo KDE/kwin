@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Display window thumbnails on the edge of the screen; activated with a keyboard shortcut",
-        "Description[ar]": "اعرض مصغّرات النوافذ في حافة الشاشة، مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "اعرض مصغّرات النوافذ في حافة الشاشة، تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Показване на миниатюри на прозореца в края на екрана, активирано с клавишна комбинация",
         "Description[ca]": "Mostra les miniatures de les finestres a la vora de la pantalla; activat amb una drecera de teclat",
         "Description[es]": "Mostrar miniaturas de las ventanas en el borde de la pantalla; se activa con un atajo de teclado",
@@ -11,6 +11,7 @@
         "Description[ia]": "Monstra miniaturas de fenestra al margine del schermo; activate con un via breve de claviero",
         "Description[it]": "Visualizza anteprime delle finestre sul bordo delle schermo; attivato con una scorciatoia da tastiera",
         "Description[ka]": "ფანჯრის მინიატურების ჩვენება ეკრანის კიდეზე. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Ekrāna malā parāda logu sīktēlus; ieslēdz ar tastatūras saīsni",
         "Description[nl]": "Toont vensterminiaturen langs de rand van het scherm; geactiveerd met een sneltoets",
         "Description[pl]": "Wyświetla miniatury okien na krawędzi ekranu; uruchamiane skrótem klawiszowym",
         "Description[sl]": "Prikažite predogledne sličice oken na robu zaslona; aktivirano z bližnjico tipkovnice",

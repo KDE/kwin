@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Appearance",
         "Description": "Allows you to draw lines on the desktop; activated with a keyboard shortcut",
-        "Description[ar]": "يسمح لك برسم خطوط على سطح المكتب، مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "يسمح لك برسم خطوط على سطح المكتب، تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Позволява ви да чертаете линии на работния плот, активирано с клавишна комбинация",
         "Description[ca]": "Permet dibuixar línies a l'escriptori; activat amb una drecera de teclat",
         "Description[es]": "Le permite dibujar líneas en el escritorio; se activa con un atajo de teclado",
@@ -11,6 +11,7 @@
         "Description[ia]": "Permitte te designar lineas super le scriptorio; activate con un via breve de claviero",
         "Description[it]": "Consente di tracciare linee sul desktop; attivato con una scorciatoia da tastiera",
         "Description[ka]": "სამუშაო მაგიდაზე ხაზების დახატვის უფლება. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Ļauj darbvirsmā zīmēt līnijas; ieslēdz ar tastatūras saīsni",
         "Description[nl]": "Laat u lijnen tekenen op het bureaublad; geactiveerd met een sneltoets",
         "Description[pl]": "Umożliwia rysowanie linii na pulpicie; uruchamiane skrótem klawiszowym",
         "Description[sl]": "Omogoča risanje črt na namizju; aktivirano z bližnjico tipkovnice",

@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Magnify the section of the screen that is near the mouse cursor; activated with a keyboard shortcut",
-        "Description[ar]": "كبّر قسم الشاشة القريب من مؤشّر الفأرة، مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "كبّر قسم الشاشة القريب من مؤشّر الفأرة، تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Увеличаване на секцията на екрана, която е близо до курсора на мишката, активирано с клавишна комбинация",
         "Description[ca]": "Amplia la secció de la pantalla que està prop del cursor del ratolí; activat amb una drecera de teclat",
         "Description[es]": "Ampliar la sección de la pantalla que está cerca del cursor del ratón; se activa con un atajo de teclado",
@@ -11,6 +11,7 @@
         "Description[ia]": "Aggrandi le section del schermo que es vicin al cursor del mus; activate con un via breve de claviero",
         "Description[it]": "Ingrandisci la sezione dello schermo nei pressi del puntatore del mouse; attivato con una scorciatoia da tastiera",
         "Description[ka]": "თაგუნას კურსორის ახლომდებარე ეკრანის მონაკვეთის გადიდება. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Pietuvina ekrāna daļu, kas atrodas pie peles kursora; ieslēdz ar tastatūras saīsni",
         "Description[nl]": "Vergroot het deel van het scherm dat zich onder de muis bevindt; geactiveerd met een sneltoets",
         "Description[pl]": "Powiększa obszar ekranu znajdujący się pod wskaźnikiem myszy; uruchamiane skrótem klawiszowym",
         "Description[sl]": "Povečajte del zaslona, ki je blizu miškinega kazalca; aktivirano z bližnjico tipkovnice",

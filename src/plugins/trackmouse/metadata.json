@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Display a mouse cursor locating effect; activated with a keyboard shortcut",
-        "Description[ar]": "اعرض تأثير تحديد موقع مؤشر الفأرة عند التنشيط، مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "اعرض تأثير تحديد موقع مؤشر الفأرة عند التنشيط، تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Показва ефект на локализиране на показалеца на мишката, активиран с клавишна комбинация",
         "Description[ca]": "Mostra un efecte de posició del cursor del ratolí; activat amb una drecera de teclat",
         "Description[es]": "Muestra un efecto de localización del cursor del ratón; se activa con un atajo de teclado",
@@ -11,6 +11,7 @@
         "Description[ia]": "Monstra un effecto de location de mus; activate con un via breve de claviero",
         "Description[it]": "Visualizza un effetto di posizionamento del puntatore del mouse quando è attivato; attivato con una scorciatoia da tastiera",
         "Description[ka]": "აქტივაციისას თაგუნას კურსორის მდებარეობის ეფექტის ჩვენება. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Aktivizējot parāda peles kursora atrašanas efektu; aktivizē ar tastatūras saīsni",
         "Description[nl]": "Toont het effect van de positie van de muisaanwijzer; geactiveerd met een sneltoets",
         "Description[pl]": "Wyświetla efekt wskazujący położenie wskaźnika myszy; uruchamiane skrótem klawiszowym",
         "Description[sl]": "Prikaži učinek lociranja kazalca miške; aktivirano z bližnjico tipkovnice",

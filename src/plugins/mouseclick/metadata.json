@@ -2,7 +2,7 @@
     "KPlugin": {
         "Category": "Accessibility",
         "Description": "Creates an animation whenever a mouse button is clicked. This is useful for screenrecordings/presentations. Activated with a keyboard shortcut",
-        "Description[ar]": "ينشئ حركة عندما يُنقَر زر الفأرة. هذا مفيد لتسجيلات الشاشة/العروض التقديمية. مفعلة باختصار لوحة المفاتيح",
+        "Description[ar]": "ينشئ حركة عندما يُنقَر زر الفأرة. هذا مفيد لتسجيلات الشاشة/العروض التقديمية. تفعّل باختصار لوحة المفاتيح",
         "Description[bg]": "Създава анимация при всяко щракване на бутон на мишката. Това е полезно за екранни записи/презентации. Активирано с клавишна комбинация",
         "Description[ca]": "Crea una animació quan es fa clic amb un botó del ratolí. Això és útil per a enregistrar la pantalla o en presentacions. Activat amb una drecera de teclat",
         "Description[es]": "Crea una animación cada vez que se pulsa un botón del ratón. Resulta útil durante la grabación de la pantalla y las presentaciones. Se activa con un atajo de teclado.",
@@ -11,6 +11,7 @@
         "Description[ia]": "Crea un animation quando un button de mus es pressate. Isto es util pro registrationes de schermo/presentationes. Activate con un via breve de claviero",
         "Description[it]": "Crea un'animazione nel momento in cui viene premuto un pulsante del mouse. Ciò è utile per la registrazione dello schermo o per le presentazioni. Attivato con una scorciatoia da tastiera",
         "Description[ka]": "ქმნის ანიმაციას, როცა თაგუნას ღილაკს დააწკაპუნებთ. სასარგებლოა ეკრანის ჩაწერისას/პრეზენტაციებისას. აქტიურდება კლავიატურის მალსახმობით",
+        "Description[lv]": "Izveido animāciju, kad noklikšķina peles pogu. Noderīgi ekrāna ierakstiem/prezentācijām. Aktivizē ar tastatūras saīsni",
         "Description[nl]": "Maakt een animatie wanneer op een muisknop wordt geklikt. Dit is nuttig voor schermopnamen/presentaties. Geactiveerd met een sneltoets",
         "Description[pl]": "Tworzy animację przy każdym kliknięciu klawiszem myszy. Jest to użyteczne przy nagrywaniu ekranu/prezentacjach. Włączane skrótem klawiszowym",
         "Description[sl]": "Ustvari animacijo, ko kliknete miškin gumb. To je koristno za posnetke zaslona/predstavitve. Aktivirano z bližnjico tipkovnice",
