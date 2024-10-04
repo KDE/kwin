@@ -284,7 +284,8 @@ public:
         xcb_sync_int64_t value;
         xcb_sync_alarm_t alarm;
         xcb_timestamp_t lastTimestamp;
-        QTimer *timeout, *failsafeTimeout;
+        QTimer *timeout;
+        bool enabled;
         bool pending;
         bool interactiveResize;
     };
@@ -294,6 +295,7 @@ public:
     }
     void ackSync();
     void ackSyncTimeout();
+    void finishSync();
 
     bool allowWindowActivation(xcb_timestamp_t time = -1U, bool focus_in = false);
 
@@ -383,7 +385,6 @@ private:
     void getSyncCounter();
     void sendSyncRequest();
     void leaveInteractiveMoveResize() override;
-    void performInteractiveResize();
     void establishCommandWindowGrab(uint8_t button);
     void establishCommandAllGrab(uint8_t button);
 
