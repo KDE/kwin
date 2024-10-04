@@ -87,8 +87,8 @@ void RelativePointerV1Interface::sendRelativeMotion(const QPointF &delta, const 
                                  time.count() & 0xffffffff,
                                  wl_fixed_from_double(delta.x() * scaleOverride),
                                  wl_fixed_from_double(delta.y() * scaleOverride),
-                                 wl_fixed_from_double(deltaNonAccelerated.x() * scaleOverride),
-                                 wl_fixed_from_double(deltaNonAccelerated.y() * scaleOverride));
+                                 wl_fixed_from_double(deltaNonAccelerated.x()),
+                                 wl_fixed_from_double(deltaNonAccelerated.y()));
         }
     }
 }
