@@ -456,19 +456,20 @@ QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingInt
 {
     QMatrix4x4 luminanceBefore;
     QMatrix4x4 luminanceAfter;
+    const double reference = m_hdrPassthrough ? other.referenceLuminance() : referenceLuminance();
     if (intent == RenderingIntent::Perceptual || intent == RenderingIntent::RelativeColorimetricWithBPC) {
         // add black point compensation: black and reference white from the source color space
         // should both be mapped to black and reference white in the destination color space
 
         // before color conversions, map [src min, src ref] to [0, 1]
-        luminanceBefore.scale(1.0 / (referenceLuminance() - minLuminance()));
+        luminanceBefore.scale(1.0 / (reference - minLuminance()));
         luminanceBefore.translate(-minLuminance(), -minLuminance(), -minLuminance());
         // afterwards, map [0, 1] again to [dst min, dst ref]
         luminanceAfter.translate(other.minLuminance(), other.minLuminance(), other.minLuminance());
         luminanceAfter.scale(other.referenceLuminance() - other.minLuminance());
     } else {
         // map only the reference luminance
-        luminanceBefore.scale(other.referenceLuminance() / referenceLuminance());
+        luminanceBefore.scale(other.referenceLuminance() / reference);
     }
     switch (intent) {
     case RenderingIntent::Perceptual: {
@@ -498,6 +499,11 @@ QVector3D ColorDescription::mapTo(QVector3D rgb, const ColorDescription &dst, Re
 ColorDescription ColorDescription::withTransferFunction(const TransferFunction &func) const
 {
     return ColorDescription(m_containerColorimetry, func, m_referenceLuminance, m_minLuminance, m_maxAverageLuminance, m_maxHdrLuminance, m_masteringColorimetry, m_sdrColorimetry);
+}
+
+void ColorDescription::setHdrPassthrough(bool passthrough)
+{
+    m_hdrPassthrough = passthrough;
 }
 
 double TransferFunction::defaultMinLuminanceFor(Type type)

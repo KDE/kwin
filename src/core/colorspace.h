@@ -226,6 +226,8 @@ public:
     QMatrix4x4 toOther(const ColorDescription &other, RenderingIntent intent) const;
     QVector3D mapTo(QVector3D rgb, const ColorDescription &other, RenderingIntent intent) const;
 
+    void setHdrPassthrough(bool passthrough);
+
     /**
      * This color description describes display-referred sRGB, with a gamma22 transfer function
      */
@@ -240,6 +242,7 @@ private:
     double m_minLuminance;
     std::optional<double> m_maxAverageLuminance;
     std::optional<double> m_maxHdrLuminance;
+    bool m_hdrPassthrough = false;
 };
 }
 

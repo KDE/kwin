@@ -173,11 +173,9 @@ void FrogColorManagementSurfaceV1::updateColorDescription()
 {
     if (m_surface) {
         SurfaceInterfacePrivate *priv = SurfaceInterfacePrivate::get(m_surface);
-        double referenceLuminance = m_transferFunction.maxLuminance;
-        if (!m_transferFunction.isRelative()) {
-            referenceLuminance = priv->preferredColorDescription.value_or(ColorDescription::sRGB).referenceLuminance();
-        }
+        const double referenceLuminance = TransferFunction::defaultReferenceLuminanceFor(m_transferFunction.type);
         priv->pending->colorDescription = ColorDescription(m_containerColorimetry, m_transferFunction, referenceLuminance, m_minMasteringLuminance.value_or(m_transferFunction.minLuminance), m_maxAverageLuminance, m_maxPeakBrightness, m_masteringColorimetry, Colorimetry::fromName(NamedColorimetry::BT709));
+        priv->pending->colorDescription.setHdrPassthrough(!m_transferFunction.isRelative());
         priv->pending->colorDescriptionIsSet = true;
     }
 }
