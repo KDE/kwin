@@ -2599,7 +2599,7 @@ void X11Window::sendSyncRequest()
         kwinApp()->updateXTime();
     }
 
-    // Send the message to client
+    setAllowCommits(false);
     sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request,
                       m_syncRequest.value.lo, m_syncRequest.value.hi);
     m_syncRequest.pending = true;
@@ -3044,6 +3044,7 @@ void X11Window::ackSync()
     }
 
     finishSync();
+    setAllowCommits(true);
 }
 
 void X11Window::ackSyncTimeout()
@@ -3051,6 +3052,7 @@ void X11Window::ackSyncTimeout()
     m_syncRequest.enabled = false;
 
     finishSync();
+    setAllowCommits(true);
 }
 
 void X11Window::finishSync()
@@ -3062,7 +3064,6 @@ void X11Window::finishSync()
 
         moveResize(moveResizeGeometry());
         updateWindowPixmap();
-        setAllowCommits(true);
     }
 }
 
@@ -4840,8 +4841,6 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
         moveResize(rect);
     } else {
         setMoveResizeGeometry(moveResizeFrameGeometry);
-        setAllowCommits(false);
-
         sendSyncRequest();
         configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
     }
