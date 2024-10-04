@@ -308,8 +308,9 @@ X11Window::X11Window()
 
     // TODO: Do all as initialization
     m_syncRequest.counter = m_syncRequest.alarm = XCB_NONE;
-    m_syncRequest.timeout = m_syncRequest.failsafeTimeout = nullptr;
+    m_syncRequest.timeout = nullptr;
     m_syncRequest.lastTimestamp = xTime();
+    m_syncRequest.enabled = false;
     m_syncRequest.pending = false;
     m_syncRequest.interactiveResize = false;
 
@@ -461,9 +462,6 @@ void X11Window::releaseWindow(bool on_shutdown)
         ungrabXServer();
     }
 
-    if (m_syncRequest.failsafeTimeout) {
-        m_syncRequest.failsafeTimeout->stop();
-    }
     if (m_syncRequest.timeout) {
         m_syncRequest.timeout->stop();
     }
@@ -517,9 +515,6 @@ void X11Window::destroyWindow()
         m_frame.reset();
     }
 
-    if (m_syncRequest.failsafeTimeout) {
-        m_syncRequest.failsafeTimeout->stop();
-    }
     if (m_syncRequest.timeout) {
         m_syncRequest.timeout->stop();
     }
@@ -2535,6 +2530,7 @@ void X11Window::getSyncCounter()
     Xcb::Property syncProp(false, window(), atoms->net_wm_sync_request_counter, XCB_ATOM_CARDINAL, 0, 1);
     const xcb_sync_counter_t counter = syncProp.value<xcb_sync_counter_t>(XCB_NONE);
     if (counter != XCB_NONE) {
+        m_syncRequest.enabled = true;
         m_syncRequest.counter = counter;
         m_syncRequest.value.hi = 0;
         m_syncRequest.value.lo = 0;
@@ -2570,35 +2566,16 @@ void X11Window::getSyncCounter()
  */
 void X11Window::sendSyncRequest()
 {
-    if (m_syncRequest.counter == XCB_NONE || m_syncRequest.pending) {
+    if (!m_syncRequest.enabled || m_syncRequest.pending) {
         return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
     }
 
-    if (!m_syncRequest.failsafeTimeout) {
-        m_syncRequest.failsafeTimeout = new QTimer(this);
-        connect(m_syncRequest.failsafeTimeout, &QTimer::timeout, this, [this]() {
-            // client does not respond to XSYNC requests in reasonable time, remove support
-            if (!ready_for_painting) {
-                // failed on initial pre-show request
-                setReadyForPainting();
-                return;
-            }
-            // failed during resize
-            m_syncRequest.pending = false;
-            m_syncRequest.interactiveResize = false;
-            m_syncRequest.counter = XCB_NONE;
-            m_syncRequest.alarm = XCB_NONE;
-            delete m_syncRequest.timeout;
-            delete m_syncRequest.failsafeTimeout;
-            m_syncRequest.timeout = nullptr;
-            m_syncRequest.failsafeTimeout = nullptr;
-            m_syncRequest.lastTimestamp = XCB_CURRENT_TIME;
-        });
-        m_syncRequest.failsafeTimeout->setSingleShot(true);
+    if (!m_syncRequest.timeout) {
+        m_syncRequest.timeout = new QTimer(this);
+        m_syncRequest.timeout->setSingleShot(true);
+        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::ackSyncTimeout);
     }
-    // if there's no response within 10 seconds, sth. went wrong and we remove XSYNC support from this client.
-    // see events.cpp X11Window::syncEvent()
-    m_syncRequest.failsafeTimeout->start(ready_for_painting ? 10000 : 1000);
+    m_syncRequest.timeout->start(ready_for_painting ? 10000 : 1000);
 
     // We increment before the notify so that after the notify
     // syncCounterSerial will equal the value we are expecting
@@ -3046,27 +3023,38 @@ void X11Window::checkApplicationMenuObjectPath()
 
 void X11Window::ackSync()
 {
-    setReadyForPainting();
+    // Note that a sync request can be ack'ed after the timeout. If that happens, just re-enable
+    // XSync back and do nothing more.
     m_syncRequest.pending = false;
-    if (m_syncRequest.failsafeTimeout) {
-        m_syncRequest.failsafeTimeout->stop();
+    if (!m_syncRequest.enabled) {
+        m_syncRequest.enabled = true;
+        return;
     }
 
-    // Sync request can be acknowledged shortly after finishing resize.
-    if (m_syncRequest.interactiveResize) {
-        m_syncRequest.interactiveResize = false;
-        if (m_syncRequest.timeout) {
-            m_syncRequest.timeout->stop();
-        }
-        performInteractiveResize();
-        updateWindowPixmap();
-    }
+    m_syncRequest.timeout->stop();
+
+    finishSync();
 }
 
-void X11Window::performInteractiveResize()
+void X11Window::ackSyncTimeout()
 {
-    resize(moveResizeGeometry().size());
-    setAllowCommits(true);
+    // If a sync request times out, disable XSync temporarily until the client comes back to its senses.
+    m_syncRequest.enabled = false;
+
+    finishSync();
+}
+
+void X11Window::finishSync()
+{
+    setReadyForPainting();
+
+    if (m_syncRequest.interactiveResize) {
+        m_syncRequest.interactiveResize = false;
+
+        moveResize(moveResizeGeometry());
+        updateWindowPixmap();
+        setAllowCommits(true);
+    }
 }
 
 bool X11Window::belongToSameApplication(const X11Window *c1, const X11Window *c2, SameApplicationChecks checks)
@@ -4822,7 +4810,7 @@ void X11Window::leaveInteractiveMoveResize()
 
 bool X11Window::isWaitingForInteractiveResizeSync() const
 {
-    return m_syncRequest.pending && m_syncRequest.interactiveResize;
+    return m_syncRequest.enabled && m_syncRequest.pending && m_syncRequest.interactiveResize;
 }
 
 void X11Window::doInteractiveResizeSync(const QRectF &rect)
@@ -4839,28 +4827,15 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
         return;
     }
 
-    if (m_syncRequest.counter == XCB_NONE) {
+    if (!m_syncRequest.enabled) {
         moveResize(rect);
     } else {
-        if (!m_syncRequest.timeout) {
-            m_syncRequest.timeout = new QTimer(this);
-            connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::ackSyncTimeout);
-            m_syncRequest.timeout->setSingleShot(true);
-        }
-
         setMoveResizeGeometry(moveResizeFrameGeometry);
         setAllowCommits(false);
 
         sendSyncRequest();
         configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
-
-        m_syncRequest.timeout->start(250);
     }
-}
-
-void X11Window::ackSyncTimeout()
-{
-    performInteractiveResize();
 }
 
 NETExtendedStrut X11Window::strut() const
@@ -4973,7 +4948,7 @@ void X11Window::damageNotifyEvent()
     Q_ASSERT(kwinApp()->operationMode() == Application::OperationModeX11);
 
     if (!readyForPainting()) { // avoid "setReadyForPainting()" function calling overhead
-        if (m_syncRequest.counter == XCB_NONE) { // cannot detect complete redraw, consider done now
+        if (!m_syncRequest.enabled) { // cannot detect complete redraw, consider done now
             setReadyForPainting();
         }
     }
@@ -5007,7 +4982,7 @@ void X11Window::updateWindowPixmap()
 void X11Window::associate()
 {
     auto handleMapped = [this]() {
-        if (syncRequest().counter == XCB_NONE) { // cannot detect complete redraw, consider done now
+        if (!m_syncRequest.enabled) { // cannot detect complete redraw, consider done now
             setReadyForPainting();
         }
     };
