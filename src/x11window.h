@@ -285,7 +285,7 @@ public:
         xcb_sync_alarm_t alarm;
         xcb_timestamp_t lastTimestamp;
         QTimer *timeout, *failsafeTimeout;
-        bool isPending;
+        bool pending;
         bool interactiveResize;
     };
     const SyncRequest &syncRequest() const
