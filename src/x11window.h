@@ -292,8 +292,8 @@ public:
     {
         return m_syncRequest;
     }
-    void handleSync();
-    void handleSyncTimeout();
+    void ackSync();
+    void ackSyncTimeout();
 
     bool allowWindowActivation(xcb_timestamp_t time = -1U, bool focus_in = false);
 
