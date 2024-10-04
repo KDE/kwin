@@ -310,7 +310,7 @@ X11Window::X11Window()
     m_syncRequest.counter = m_syncRequest.alarm = XCB_NONE;
     m_syncRequest.timeout = m_syncRequest.failsafeTimeout = nullptr;
     m_syncRequest.lastTimestamp = xTime();
-    m_syncRequest.isPending = false;
+    m_syncRequest.pending = false;
     m_syncRequest.interactiveResize = false;
 
     // Set the initial mapping state
@@ -2570,7 +2570,7 @@ void X11Window::getSyncCounter()
  */
 void X11Window::sendSyncRequest()
 {
-    if (m_syncRequest.counter == XCB_NONE || m_syncRequest.isPending) {
+    if (m_syncRequest.counter == XCB_NONE || m_syncRequest.pending) {
         return; // do NOT, NEVER send a sync request when there's one on the stack. the clients will just stop respoding. FOREVER! ...
     }
 
@@ -2584,7 +2584,7 @@ void X11Window::sendSyncRequest()
                 return;
             }
             // failed during resize
-            m_syncRequest.isPending = false;
+            m_syncRequest.pending = false;
             m_syncRequest.interactiveResize = false;
             m_syncRequest.counter = XCB_NONE;
             m_syncRequest.alarm = XCB_NONE;
@@ -2615,7 +2615,7 @@ void X11Window::sendSyncRequest()
     // Send the message to client
     sendClientMessage(window(), atoms->wm_protocols, atoms->net_wm_sync_request,
                       m_syncRequest.value.lo, m_syncRequest.value.hi);
-    m_syncRequest.isPending = true;
+    m_syncRequest.pending = true;
     m_syncRequest.interactiveResize = isInteractiveResize();
     m_syncRequest.lastTimestamp = xTime();
 }
@@ -3047,7 +3047,7 @@ void X11Window::checkApplicationMenuObjectPath()
 void X11Window::ackSync()
 {
     setReadyForPainting();
-    m_syncRequest.isPending = false;
+    m_syncRequest.pending = false;
     if (m_syncRequest.failsafeTimeout) {
         m_syncRequest.failsafeTimeout->stop();
     }
@@ -4822,7 +4822,7 @@ void X11Window::leaveInteractiveMoveResize()
 
 bool X11Window::isWaitingForInteractiveResizeSync() const
 {
-    return m_syncRequest.isPending && m_syncRequest.interactiveResize;
+    return m_syncRequest.pending && m_syncRequest.interactiveResize;
 }
 
 void X11Window::doInteractiveResizeSync(const QRectF &rect)
