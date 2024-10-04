@@ -312,6 +312,7 @@ X11Window::X11Window()
     m_syncRequest.lastTimestamp = xTime();
     m_syncRequest.enabled = false;
     m_syncRequest.pending = false;
+    m_syncRequest.acked = false;
     m_syncRequest.interactiveResize = false;
 
     // Set the initial mapping state
@@ -3031,9 +3032,13 @@ void X11Window::ackSync()
         return;
     }
 
+    m_syncRequest.acked = true;
     m_syncRequest.timeout->stop();
 
-    finishSync();
+    // With Xwayland, the sync request will be completed after the wl_surface is committed.
+    if (!waylandServer()) {
+        finishSync();
+    }
     setAllowCommits(true);
 }
 
@@ -3056,6 +3061,8 @@ void X11Window::finishSync()
         moveResize(moveResizeGeometry());
         updateWindowPixmap();
     }
+
+    m_syncRequest.acked = false;
 }
 
 bool X11Window::belongToSameApplication(const X11Window *c1, const X11Window *c2, SameApplicationChecks checks)
@@ -3928,6 +3935,19 @@ void X11Window::handleXwaylandScaleChanged()
     // while KWin implicitly considers the window already resized when the scale changes,
     // this is needed to make Xwayland actually resize it as well
     resize(moveResizeGeometry().size());
+}
+
+void X11Window::handleCommitted()
+{
+    if (surface()->isMapped()) {
+        if (m_syncRequest.acked) {
+            finishSync();
+        }
+
+        if (!m_syncRequest.enabled) {
+            setReadyForPainting();
+        }
+    }
 }
 
 void X11Window::setAllowCommits(bool allow)
@@ -4811,7 +4831,7 @@ void X11Window::leaveInteractiveMoveResize()
 
 bool X11Window::isWaitingForInteractiveResizeSync() const
 {
-    return m_syncRequest.enabled && m_syncRequest.pending && m_syncRequest.interactiveResize;
+    return m_syncRequest.enabled && m_syncRequest.interactiveResize && (m_syncRequest.pending || m_syncRequest.acked);
 }
 
 void X11Window::doInteractiveResizeSync(const QRectF &rect)
@@ -4980,17 +5000,17 @@ void X11Window::updateWindowPixmap()
 
 void X11Window::associate()
 {
-    auto handleMapped = [this]() {
-        if (!m_syncRequest.enabled) { // cannot detect complete redraw, consider done now
+    if (surface()->isMapped()) {
+        if (m_syncRequest.acked) {
+            finishSync();
+        }
+
+        if (!m_syncRequest.enabled) {
             setReadyForPainting();
         }
-    };
-
-    if (surface()->isMapped()) {
-        handleMapped();
-    } else {
-        connect(surface(), &SurfaceInterface::mapped, this, handleMapped);
     }
+
+    connect(surface(), &SurfaceInterface::committed, this, &X11Window::handleCommitted);
 }
 
 QWindow *X11Window::findInternalWindow() const
