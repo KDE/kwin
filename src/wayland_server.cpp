@@ -333,38 +333,8 @@ bool WaylandServer::init(const QString &socketName)
 bool WaylandServer::init()
 {
     m_compositor = new CompositorInterface(m_display, m_display);
+
 #if KWIN_BUILD_X11
-    connect(m_compositor, &CompositorInterface::surfaceCreated, this, [this](SurfaceInterface *surface) {
-        // check whether we have a Window with the Surface's id
-        Workspace *ws = Workspace::self();
-        if (!ws) {
-            // it's possible that a Surface gets created before Workspace is created
-            return;
-        }
-        if (surface->client() != xWaylandConnection()) {
-            // setting surface is only relevant for Xwayland clients
-            return;
-        }
-
-        X11Window *window = ws->findClient([surface](const X11Window *window) {
-            return window->pendingSurfaceId() == surface->id();
-        });
-        if (window) {
-            window->setSurface(surface);
-            return;
-        }
-
-        X11Window *unmanaged = ws->findUnmanaged([surface](const X11Window *unmanaged) {
-            return unmanaged->pendingSurfaceId() == surface->id();
-        });
-        if (unmanaged) {
-            unmanaged->setSurface(surface);
-            return;
-        }
-
-        // The surface will be bound later when a WL_SURFACE_ID message is received.
-    });
-
     m_xwaylandShell = new XwaylandShellV1Interface(m_display, m_display);
     connect(m_xwaylandShell, &XwaylandShellV1Interface::surfaceAssociated, this, [](XwaylandSurfaceV1Interface *surface) {
         X11Window *window = workspace()->findClient([&surface](const X11Window *window) {
