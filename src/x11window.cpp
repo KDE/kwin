@@ -4839,36 +4839,27 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
         return;
     }
 
-    setMoveResizeGeometry(moveResizeFrameGeometry);
-    setAllowCommits(false);
-
-    if (!m_syncRequest.timeout) {
-        m_syncRequest.timeout = new QTimer(this);
-        connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::handleSyncTimeout);
-        m_syncRequest.timeout->setSingleShot(true);
-    }
-
-    if (m_syncRequest.counter != XCB_NONE) {
-        m_syncRequest.timeout->start(250);
-        sendSyncRequest();
+    if (m_syncRequest.counter == XCB_NONE) {
+        moveResize(rect);
     } else {
-        // For clients not supporting the XSYNC protocol, we limit the resizes to 30Hz
-        // to take pointless load from X11 and the client, the mouse is still moved at
-        // full speed and no human can control faster resizes anyway.
-        m_syncRequest.isPending = true;
-        m_syncRequest.interactiveResize = true;
-        m_syncRequest.timeout->start(33);
-    }
+        if (!m_syncRequest.timeout) {
+            m_syncRequest.timeout = new QTimer(this);
+            connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::handleSyncTimeout);
+            m_syncRequest.timeout->setSingleShot(true);
+        }
 
-    configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
+        setMoveResizeGeometry(moveResizeFrameGeometry);
+        setAllowCommits(false);
+
+        sendSyncRequest();
+        configure(nativeFrameGeometry, nativeWrapperGeometry, nativeClientGeometry);
+
+        m_syncRequest.timeout->start(250);
+    }
 }
 
 void X11Window::handleSyncTimeout()
 {
-    if (m_syncRequest.counter == XCB_NONE) { // client w/o XSYNC support. allow the next resize event
-        m_syncRequest.isPending = false; // NEVER do this for clients with a valid counter
-        m_syncRequest.interactiveResize = false; // (leads to sync request races in some clients)
-    }
     performInteractiveResize();
 }
 
