@@ -1492,7 +1492,6 @@ void X11WindowTest::testNetWmKeyboardResize()
     QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
-    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1503,7 +1502,6 @@ void X11WindowTest::testNetWmKeyboardResize()
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(0, 0, 8, 0));
 
     // Finish the interactive move.
@@ -1531,7 +1529,6 @@ void X11WindowTest::testNetWmKeyboardResizeCancel()
     QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
-    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1542,7 +1539,6 @@ void X11WindowTest::testNetWmKeyboardResizeCancel()
     Test::keyboardKeyPressed(KEY_RIGHT, timestamp++);
     Test::keyboardKeyReleased(KEY_RIGHT, timestamp++);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(0, 0, 8, 0));
 
     // Cancel the interactive move.
@@ -1741,7 +1737,6 @@ void X11WindowTest::testNetWmButtonSize()
     QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
-    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1750,7 +1745,6 @@ void X11WindowTest::testNetWmButtonSize()
     // Resize the window a tiny bit.
     Test::pointerMotionRelative(directionToVector(direction, QSizeF(8, 8)), timestamp++);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), expandRect(originalGeometry, direction, QSizeF(8, 8)));
 
     // Finish the interactive move.
@@ -1803,7 +1797,6 @@ void X11WindowTest::testNetWmButtonSizeCancel()
     QSignalSpy interactiveMoveResizeStartedSpy(window, &X11Window::interactiveMoveResizeStarted);
     QSignalSpy interactiveMoveResizeFinishedSpy(window, &X11Window::interactiveMoveResizeFinished);
     QSignalSpy interactiveMoveResizeSteppedSpy(window, &X11Window::interactiveMoveResizeStepped);
-    QSignalSpy frameGeometryChangedSpy(window, &X11Window::frameGeometryChanged);
     QVERIFY(interactiveMoveResizeStartedSpy.wait());
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 0);
     QVERIFY(window->isInteractiveResize());
@@ -1811,7 +1804,6 @@ void X11WindowTest::testNetWmButtonSizeCancel()
     // Resize the window a tiny bit.
     Test::pointerMotionRelative(QPointF(-8, -8), timestamp++);
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
     QCOMPARE(window->frameGeometry(), originalGeometry.adjusted(-8, -8, 0, 0));
 
     // Cancel the interactive resize.
@@ -1888,7 +1880,7 @@ void X11WindowTest::testMinimumSize()
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(!frameGeometryChangedSpy.wait(10));
     // whilst X11 window size goes through scale, the increment is a logical value kwin side
     QCOMPARE(window->clientSize().width(), 100 / scale + 8);
 
@@ -1910,7 +1902,7 @@ void X11WindowTest::testMinimumSize()
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(8, 8));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().height(), 200 / scale + 8);
 
     // Finish the resize operation.
@@ -1993,7 +1985,7 @@ void X11WindowTest::testMaximumSize()
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, 0));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 1);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().width(), 100 / scale - 8);
 
     window->keyPressEvent(Qt::Key_Down);
@@ -2014,7 +2006,7 @@ void X11WindowTest::testMaximumSize()
     window->updateInteractiveMoveResize(KWin::Cursors::self()->mouse()->pos(), Qt::KeyboardModifiers());
     QCOMPARE(KWin::Cursors::self()->mouse()->pos(), cursorPos + QPoint(-8, -8));
     QCOMPARE(interactiveMoveResizeSteppedSpy.count(), 2);
-    QVERIFY(frameGeometryChangedSpy.wait());
+    QVERIFY(!frameGeometryChangedSpy.wait(10));
     QCOMPARE(window->clientSize().height(), 200 / scale - 8);
 
     // Finish the resize operation.
