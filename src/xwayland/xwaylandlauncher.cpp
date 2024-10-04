@@ -175,11 +175,7 @@ bool XwaylandLauncher::start()
         for (int socket : std::as_const(m_listenFds)) {
             int dupSocket = dup(socket);
             fdsToClose << dupSocket;
-#if HAVE_XWAYLAND_LISTENFD
             arguments << QStringLiteral("-listenfd") << QString::number(dupSocket);
-#else
-            arguments << QStringLiteral("-listen") << QString::number(dupSocket);
-#endif
         }
     }
 
