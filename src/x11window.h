@@ -287,6 +287,7 @@ public:
         QTimer *timeout;
         bool enabled;
         bool pending;
+        bool acked;
         bool interactiveResize;
     };
     const SyncRequest &syncRequest() const
@@ -438,6 +439,7 @@ private:
     void checkOutput();
     void associate();
     void handleXwaylandScaleChanged();
+    void handleCommitted();
 
     void setAllowCommits(bool allow);
 
