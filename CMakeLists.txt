@@ -280,7 +280,6 @@ if (KWIN_BUILD_X11)
         TYPE RUNTIME
         PURPOSE "Needed for running kwin_wayland"
     )
-    set(HAVE_XWAYLAND_LISTENFD ${Xwayland_HAVE_LISTENFD})
     set(HAVE_XWAYLAND_ENABLE_EI_PORTAL ${Xwayland_HAVE_ENABLE_EI_PORTAL})
 
     set(HAVE_GLX ${epoxy_HAS_GLX})
