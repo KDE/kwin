@@ -28,7 +28,7 @@ bool SyncAlarmX11Filter::event(xcb_generic_event_t *event)
         return alarmEvent->alarm == syncRequest.alarm && alarmEvent->counter_value.hi == syncRequest.value.hi && alarmEvent->counter_value.lo == syncRequest.value.lo;
     });
     if (client) {
-        client->handleSync();
+        client->ackSync();
     }
     return false;
 }

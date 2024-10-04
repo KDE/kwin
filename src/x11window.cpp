@@ -3034,7 +3034,7 @@ void X11Window::checkApplicationMenuObjectPath()
     readApplicationMenuObjectPath(property);
 }
 
-void X11Window::handleSync()
+void X11Window::ackSync()
 {
     setReadyForPainting();
     m_syncRequest.isPending = false;
@@ -4834,7 +4834,7 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     } else {
         if (!m_syncRequest.timeout) {
             m_syncRequest.timeout = new QTimer(this);
-            connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::handleSyncTimeout);
+            connect(m_syncRequest.timeout, &QTimer::timeout, this, &X11Window::ackSyncTimeout);
             m_syncRequest.timeout->setSingleShot(true);
         }
 
@@ -4848,7 +4848,7 @@ void X11Window::doInteractiveResizeSync(const QRectF &rect)
     }
 }
 
-void X11Window::handleSyncTimeout()
+void X11Window::ackSyncTimeout()
 {
     performInteractiveResize();
 }
