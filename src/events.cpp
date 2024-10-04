@@ -659,13 +659,6 @@ void X11Window::clientMessageEvent(xcb_client_message_event_t *e)
                 setSurface(xwaylandSurface->surface());
             }
         }
-    } else if (e->type == atoms->wl_surface_id) {
-        m_pendingSurfaceId = e->data.data32[0];
-        if (auto w = waylandServer()) {
-            if (auto s = SurfaceInterface::get(m_pendingSurfaceId, w->xWaylandConnection())) {
-                setSurface(s);
-            }
-        }
     }
 
     if (e->window != window()) {

@@ -301,7 +301,6 @@ public:
     static void cleanupX11();
 
     quint64 surfaceSerial() const;
-    quint32 pendingSurfaceId() const;
 
 public Q_SLOTS:
     void closeWindow() override;
@@ -529,7 +528,6 @@ private:
 
     bool m_unmanaged = false;
     bool m_outline = false;
-    quint32 m_pendingSurfaceId = 0;
     quint64 m_surfaceSerial = 0;
 };
 
@@ -651,11 +649,6 @@ inline bool X11Window::hiddenPreview() const
 inline quint64 X11Window::surfaceSerial() const
 {
     return m_surfaceSerial;
-}
-
-inline quint32 X11Window::pendingSurfaceId() const
-{
-    return m_pendingSurfaceId;
 }
 
 inline bool X11Window::areGeometryUpdatesBlocked() const

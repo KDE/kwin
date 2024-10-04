@@ -273,7 +273,7 @@ if (KWIN_BUILD_X11)
         TYPE OPTIONAL
     )
 
-    find_package(Xwayland)
+    find_package(Xwayland 23.1.0)
     set_package_properties(Xwayland PROPERTIES
         URL "https://x.org"
         DESCRIPTION "Xwayland X server"

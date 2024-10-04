@@ -5036,8 +5036,6 @@ void X11Window::associate()
     } else {
         connect(surface(), &SurfaceInterface::mapped, this, handleMapped);
     }
-
-    m_pendingSurfaceId = 0;
 }
 
 QWindow *X11Window::findInternalWindow() const
