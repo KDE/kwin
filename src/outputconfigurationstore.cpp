@@ -453,6 +453,9 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::genera
             .referenceLuminance = existingData.referenceLuminance.value_or(std::clamp(output->maxAverageBrightness().value_or(200), 200.0, 500.0)),
             .wideColorGamut = existingData.wideColorGamut.value_or(false),
             .autoRotationPolicy = existingData.autoRotation.value_or(Output::AutoRotationPolicy::InTabletMode),
+            // HDR screens are weird, sending them the min. luminance from the EDID does *not* make all of them present the darkest luminance the display can show
+            // to work around that, override it with the min. luminance of the transfer function instead
+            .minBrightnessOverride = existingData.minBrightnessOverride.value_or(0.005),
             .colorProfileSource = existingData.colorProfileSource.value_or(Output::ColorProfileSource::sRGB),
             .brightness = existingData.brightness.value_or(1.0),
         };
@@ -596,6 +599,11 @@ void OutputConfigurationStore::load()
     if (outputsIt == objects.end() || setupsIt == objects.end()) {
         return;
     }
+    const auto versionIt = std::ranges::find_if(objects, [](const QJsonObject &obj) {
+        return obj.contains("version");
+    });
+    const int version = versionIt == objects.end() ? 1 : (*versionIt)["version"].toInt(1);
+
     const auto outputs = (*outputsIt)["data"].toArray();
 
     std::vector<std::optional<OutputState>> outputDatas;
@@ -872,6 +880,15 @@ void OutputConfigurationStore::load()
         }
     }
 
+    // apply version updates
+    if (version == 1) {
+        for (auto &output : outputDatas) {
+            if (!output->minBrightnessOverride) {
+                output->minBrightnessOverride = 0.005;
+            }
+        }
+    }
+
     for (const auto &o : outputDatas) {
         Q_ASSERT(o);
         m_outputs.push_back(*o);
@@ -882,6 +899,9 @@ void OutputConfigurationStore::save()
 {
     QJsonDocument document;
     QJsonArray array;
+    QJsonObject version;
+    version["version"] = 2;
+    array.append(version);
     QJsonObject outputs;
     outputs["name"] = "outputs";
     QJsonArray outputsData;
