@@ -25,6 +25,7 @@
 #include "windowthumbnailitem.h"
 #include "workspace_wrapper.h"
 
+#include "core/box.h"
 #include "core/output.h"
 #include "input.h"
 #include "options.h"
@@ -69,6 +70,22 @@ static QRectF scriptValueToRectF(const QJSValue &value)
                   value.property(QStringLiteral("y")).toNumber(),
                   value.property(QStringLiteral("width")).toNumber(),
                   value.property(QStringLiteral("height")).toNumber());
+}
+
+static KWin::Box scriptValueToBox(const QJSValue &value)
+{
+    return KWin::Box(value.property(QStringLiteral("x")).toInt(),
+                     value.property(QStringLiteral("y")).toInt(),
+                     value.property(QStringLiteral("width")).toInt(),
+                     value.property(QStringLiteral("height")).toInt());
+}
+
+static KWin::BoxF scriptValueToBoxF(const QJSValue &value)
+{
+    return KWin::BoxF(value.property(QStringLiteral("x")).toNumber(),
+                      value.property(QStringLiteral("y")).toNumber(),
+                      value.property(QStringLiteral("width")).toNumber(),
+                      value.property(QStringLiteral("height")).toNumber());
 }
 
 static QPoint scriptValueToPoint(const QJSValue &value)
@@ -154,6 +171,13 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     }
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QSizeF>()) {
         QMetaType::registerConverter<QJSValue, QSizeF>(scriptValueToSizeF);
+    }
+
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, Box>()) {
+        QMetaType::registerConverter<QJSValue, Box>(scriptValueToBox);
+    }
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, BoxF>()) {
+        QMetaType::registerConverter<QJSValue, BoxF>(scriptValueToBoxF);
     }
 }
 

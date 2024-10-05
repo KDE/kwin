@@ -8,6 +8,7 @@
 
 #include "kwin_export.h"
 
+#include <QObject>
 #include <QRect>
 
 namespace KWin
@@ -15,6 +16,12 @@ namespace KWin
 
 class KWIN_EXPORT Box
 {
+    Q_GADGET
+    Q_PROPERTY(int x MEMBER m_x)
+    Q_PROPERTY(int y MEMBER m_y)
+    Q_PROPERTY(int width MEMBER m_width)
+    Q_PROPERTY(int height MEMBER m_height)
+
 public:
     constexpr Box() noexcept;
     constexpr Box(int x, int y, int width, int height) noexcept;
@@ -109,6 +116,12 @@ private:
 
 class KWIN_EXPORT BoxF
 {
+    Q_GADGET
+    Q_PROPERTY(qreal x MEMBER m_x)
+    Q_PROPERTY(qreal y MEMBER m_y)
+    Q_PROPERTY(qreal width MEMBER m_width)
+    Q_PROPERTY(qreal height MEMBER m_height)
+
 public:
     constexpr BoxF() noexcept;
     constexpr BoxF(qreal x, qreal y, qreal width, qreal height) noexcept;
