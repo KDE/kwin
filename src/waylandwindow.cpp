@@ -46,6 +46,7 @@ WaylandWindow::WaylandWindow(SurfaceInterface *surface)
 
     updateResourceName();
     updateIcon();
+    updateShadow();
 }
 
 std::unique_ptr<WindowItem> WaylandWindow::createItem(Item *parentItem)
