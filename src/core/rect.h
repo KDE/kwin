@@ -9,6 +9,7 @@
 #include "kwin_export.h"
 
 #include <QDataStream>
+#include <QObject>
 #include <QRect>
 
 namespace KWin
@@ -18,6 +19,12 @@ class RectF;
 
 class KWIN_EXPORT Rect
 {
+    Q_GADGET
+    Q_PROPERTY(int x READ x WRITE setX)
+    Q_PROPERTY(int y READ y WRITE setY)
+    Q_PROPERTY(int width READ width WRITE setWidth)
+    Q_PROPERTY(int height READ height WRITE setHeight)
+
 public:
     constexpr Rect() noexcept;
     constexpr Rect(int x, int y, int width, int height) noexcept;
@@ -119,6 +126,12 @@ private:
 
 class KWIN_EXPORT RectF
 {
+    Q_GADGET
+    Q_PROPERTY(qreal x READ x WRITE setX)
+    Q_PROPERTY(qreal y READ y WRITE setY)
+    Q_PROPERTY(qreal width READ width WRITE setWidth)
+    Q_PROPERTY(qreal height READ height WRITE setHeight)
+
 public:
     constexpr RectF() noexcept;
     constexpr RectF(qreal x, qreal y, qreal width, qreal height) noexcept;
