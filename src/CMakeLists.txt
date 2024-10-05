@@ -42,6 +42,7 @@ target_sources(kwin PRIVATE
     colors/colormanager.cpp
     compositor.cpp
     compositor_wayland.cpp
+    core/box.cpp
     core/brightnessdevice.cpp
     core/colorlut3d.cpp
     core/colorpipeline.cpp
@@ -549,6 +550,7 @@ install(FILES
     DESTINATION ${KDE_INSTALL_INCLUDEDIR}/kwin COMPONENT Devel)
 
 install(FILES
+    core/box.h
     core/colorlut3d.h
     core/colorpipeline.h
     core/colorpipelinestage.h
