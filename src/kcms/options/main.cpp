@@ -66,6 +66,7 @@ KWinOptions::KWinOptions(QObject *parent, const KPluginMetaData &data)
     layout->setContentsMargins(0, 0, 0, 0);
     tab = new QTabWidget(widget());
     tab->setDocumentMode(true);
+    tab->tabBar()->setExpanding(true);
     layout->addWidget(tab);
 
     const auto connectKCM = [this](KCModule *mod) {

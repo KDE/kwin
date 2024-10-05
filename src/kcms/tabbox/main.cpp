@@ -44,6 +44,8 @@
 #include "layoutpreview.h"
 #include "shortcutsettings.h"
 
+#include <QTabBar>
+
 K_PLUGIN_FACTORY_WITH_JSON(KWinTabBoxConfigFactory, "kcm_kwintabbox.json", registerPlugin<KWin::KWinTabBoxConfig>(); registerPlugin<KWin::TabBox::KWinTabboxData>();)
 
 namespace KWin
@@ -58,6 +60,8 @@ KWinTabBoxConfig::KWinTabBoxConfig(QObject *parent, const KPluginMetaData &data)
 {
     QTabWidget *tabWidget = new QTabWidget(widget());
     tabWidget->setDocumentMode(true);
+    tabWidget->tabBar()->setExpanding(true);
+
     m_primaryTabBoxUi = new KWinTabBoxConfigForm(KWinTabBoxConfigForm::TabboxType::Main,
                                                  m_data->tabBoxConfig(),
                                                  m_data->shortcutConfig(),
