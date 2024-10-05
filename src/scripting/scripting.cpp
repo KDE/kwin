@@ -26,6 +26,7 @@
 #include "workspace_wrapper.h"
 
 #include "core/output.h"
+#include "core/rect.h"
 #include "input.h"
 #include "options.h"
 #include "screenedge.h"
@@ -56,7 +57,7 @@
 
 #include "scriptadaptor.h"
 
-static QRect scriptValueToRect(const QJSValue &value)
+static QRect scriptValueToQRect(const QJSValue &value)
 {
     return QRect(value.property(QStringLiteral("x")).toInt(),
                  value.property(QStringLiteral("y")).toInt(),
@@ -64,12 +65,28 @@ static QRect scriptValueToRect(const QJSValue &value)
                  value.property(QStringLiteral("height")).toInt());
 }
 
-static QRectF scriptValueToRectF(const QJSValue &value)
+static QRectF scriptValueToQRectF(const QJSValue &value)
 {
     return QRectF(value.property(QStringLiteral("x")).toNumber(),
                   value.property(QStringLiteral("y")).toNumber(),
                   value.property(QStringLiteral("width")).toNumber(),
                   value.property(QStringLiteral("height")).toNumber());
+}
+
+static KWin::Rect scriptValueToRect(const QJSValue &value)
+{
+    return KWin::Rect(value.property(QStringLiteral("x")).toInt(),
+                      value.property(QStringLiteral("y")).toInt(),
+                      value.property(QStringLiteral("width")).toInt(),
+                      value.property(QStringLiteral("height")).toInt());
+}
+
+static KWin::RectF scriptValueToRectF(const QJSValue &value)
+{
+    return KWin::RectF(value.property(QStringLiteral("x")).toNumber(),
+                       value.property(QStringLiteral("y")).toNumber(),
+                       value.property(QStringLiteral("width")).toNumber(),
+                       value.property(QStringLiteral("height")).toNumber());
 }
 
 static QPoint scriptValueToPoint(const QJSValue &value)
@@ -137,10 +154,10 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
 {
     // TODO: Remove in kwin 6. We have these converters only for compatibility reasons.
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QRect>()) {
-        QMetaType::registerConverter<QJSValue, QRect>(scriptValueToRect);
+        QMetaType::registerConverter<QJSValue, QRect>(scriptValueToQRect);
     }
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QRectF>()) {
-        QMetaType::registerConverter<QJSValue, QRectF>(scriptValueToRectF);
+        QMetaType::registerConverter<QJSValue, QRectF>(scriptValueToQRectF);
     }
 
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QPoint>()) {
@@ -155,6 +172,13 @@ KWin::Script::Script(int id, QString scriptName, QString pluginName, QObject *pa
     }
     if (!QMetaType::hasRegisteredConverterFunction<QJSValue, QSizeF>()) {
         QMetaType::registerConverter<QJSValue, QSizeF>(scriptValueToSizeF);
+    }
+
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, Rect>()) {
+        QMetaType::registerConverter<QJSValue, Rect>(scriptValueToRect);
+    }
+    if (!QMetaType::hasRegisteredConverterFunction<QJSValue, RectF>()) {
+        QMetaType::registerConverter<QJSValue, RectF>(scriptValueToRectF);
     }
 }
 
