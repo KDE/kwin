@@ -251,3 +251,25 @@ target_link_libraries(testSerial
 )
 add_test(NAME kwin-testSerial COMMAND testSerial)
 ecm_mark_as_test(testSerial)
+
+########################################################
+# Test Box
+########################################################
+add_executable(testRect test_rect.cpp)
+target_link_libraries(testRect
+    Qt::Test
+    kwin
+)
+add_test(NAME kwin-testRect COMMAND testRect)
+ecm_mark_as_test(testRect)
+
+########################################################
+# Test BoxF
+########################################################
+add_executable(testRectF test_rectf.cpp)
+target_link_libraries(testRectF
+    Qt::Test
+    kwin
+)
+add_test(NAME kwin-testRectF COMMAND testRectF)
+ecm_mark_as_test(testRectF)
