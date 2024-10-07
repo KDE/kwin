@@ -310,11 +310,11 @@ bool DrmPipeline::prepareAtomicModeset(DrmAtomicCommit *commit)
         commit->addProperty(m_connector->maxBpc, std::clamp<uint32_t>(bpc, m_connector->maxBpc.minValue(), m_connector->maxBpc.maxValue()));
     }
     if (m_connector->hdrMetadata.isValid()) {
-        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.colorDescription.transferFunction()));
-    } else if (m_pending.colorDescription.transferFunction().type != TransferFunction::gamma22) {
+        commit->addBlob(m_connector->hdrMetadata, createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22));
+    } else if (m_pending.hdr) {
         return false;
     }
-    if (m_pending.colorDescription.containerColorimetry() == NamedColorimetry::BT2020) {
+    if (m_pending.wcg) {
         if (!m_connector->colorspace.isValid() || !m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB)) {
             return false;
         }
@@ -594,11 +594,6 @@ DrmConnector::DrmContentType DrmPipeline::contentType() const
     return m_pending.contentType;
 }
 
-const ColorDescription &DrmPipeline::colorDescription() const
-{
-    return m_pending.colorDescription;
-}
-
 const std::shared_ptr<IccProfile> &DrmPipeline::iccProfile() const
 {
     return m_pending.iccProfile;
@@ -655,9 +650,14 @@ void DrmPipeline::setCrtcColorPipeline(const ColorPipeline &pipeline)
     m_pending.crtcColorPipeline = pipeline;
 }
 
-void DrmPipeline::setColorDescription(const ColorDescription &description)
+void DrmPipeline::setHighDynamicRange(bool hdr)
 {
-    m_pending.colorDescription = description;
+    m_pending.hdr = hdr;
+}
+
+void DrmPipeline::setWideColorGamut(bool wcg)
+{
+    m_pending.wcg = wcg;
 }
 
 void DrmPipeline::setContentType(DrmConnector::DrmContentType type)
@@ -670,9 +670,9 @@ void DrmPipeline::setIccProfile(const std::shared_ptr<IccProfile> &profile)
     m_pending.iccProfile = profile;
 }
 
-std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction transferFunction) const
+std::shared_ptr<DrmBlob> DrmPipeline::createHdrMetadata(TransferFunction::Type transferFunction) const
 {
-    if (transferFunction.type != TransferFunction::PerceptualQuantizer) {
+    if (transferFunction != TransferFunction::PerceptualQuantizer) {
         // for sRGB / gamma 2.2, don't send any metadata, to ensure the non-HDR experience stays the same
         return nullptr;
     }
