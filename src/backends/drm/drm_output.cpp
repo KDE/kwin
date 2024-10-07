@@ -354,7 +354,8 @@ bool DrmOutput::queueChanges(const std::shared_ptr<OutputChangeSet> &props)
     m_pipeline->setOverscan(props->overscan.value_or(m_pipeline->overscan()));
     m_pipeline->setRgbRange(props->rgbRange.value_or(m_pipeline->rgbRange()));
     m_pipeline->setEnable(props->enabled.value_or(m_pipeline->enabled()));
-    m_pipeline->setColorDescription(createColorDescription(props));
+    m_pipeline->setHighDynamicRange(hdr);
+    m_pipeline->setWideColorGamut(bt2020);
     if (bt2020 || hdr || props->colorProfileSource.value_or(m_state.colorProfileSource) != ColorProfileSource::ICC) {
         // ICC profiles don't support HDR (yet)
         m_pipeline->setIccProfile(nullptr);
@@ -427,7 +428,7 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.sdrGamutWideness = props->sdrGamutWideness.value_or(m_state.sdrGamutWideness);
     next.iccProfilePath = props->iccProfilePath.value_or(m_state.iccProfilePath);
     next.iccProfile = props->iccProfile.value_or(m_state.iccProfile);
-    next.colorDescription = m_pipeline->colorDescription();
+    next.colorDescription = createColorDescription(props);
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightness = props->brightness.value_or(m_state.brightness);
