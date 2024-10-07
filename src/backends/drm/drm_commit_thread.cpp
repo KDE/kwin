@@ -107,13 +107,13 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
 
 void DrmCommitThread::submit()
 {
-    auto &commit = m_commits.front();
+    DrmAtomicCommit *commit = m_commits.front().get();
     const auto vrr = commit->isVrr();
     const bool success = commit->commit();
     if (success) {
         m_vrr = vrr.value_or(m_vrr);
         m_tearing = commit->isTearing();
-        m_committed = std::move(commit);
+        m_committed = std::move(m_commits.front());
         m_commits.erase(m_commits.begin());
     } else {
         if (m_commits.size() > 1) {
@@ -122,7 +122,7 @@ void DrmCommitThread::submit()
             while (m_commits.size() > 1) {
                 auto toMerge = std::move(m_commits[1]);
                 m_commits.erase(m_commits.begin() + 1);
-                m_commits.front()->merge(toMerge.get());
+                commit->merge(toMerge.get());
                 m_commitsToDelete.push_back(std::move(toMerge));
             }
             if (commit->test()) {
