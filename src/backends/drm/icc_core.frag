@@ -29,6 +29,11 @@ uniform sampler3D Csampler;
 uniform int Asize;
 uniform sampler2D Asampler;
 
+uniform int TRCsize;
+uniform sampler2D TRC;
+uniform mat4 nightLightMat;
+uniform sampler2D inverseTRC;
+
 vec3 sample1DLut(in vec3 srcColor, in sampler2D lut, in int lutSize) {
     float lutOffset = 0.5 / float(lutSize);
     float lutScale = 1.0 - lutOffset * 2.0;
@@ -59,6 +64,11 @@ void main()
     }
     if (Asize > 0) {
         tex.rgb = sample1DLut(tex.rgb, Asampler, Asize);
+    }
+    if (TRCsize > 0) {
+        tex.rgb = sample1DLut(tex.rgb, TRC, TRCsize);
+        tex.rgb = (nightLightMat * vec4(tex.rgb, 1.0)).rgb;
+        tex.rgb = sample1DLut(tex.rgb, inverseTRC, TRCsize);
     }
     tex.rgb *= tex.a;
     fragColor = tex;

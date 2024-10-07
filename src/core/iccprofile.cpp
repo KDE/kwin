@@ -16,19 +16,11 @@
 namespace KWin
 {
 
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
+IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<BToATagData> &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness, const std::shared_ptr<ColorTransformation> &EOTF, const std::shared_ptr<ColorTransformation> &inverseEOTF)
     : m_handle(handle)
     , m_colorimetry(colorimetry)
     , m_bToATag(std::move(bToATag))
-    , m_vcgt(vcgt)
-    , m_minBrightness(minBrightness)
-    , m_maxBrightness(maxBrightness)
-{
-}
-
-IccProfile::IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness)
-    : m_handle(handle)
-    , m_colorimetry(colorimetry)
+    , m_EOTF(EOTF)
     , m_inverseEOTF(inverseEOTF)
     , m_vcgt(vcgt)
     , m_minBrightness(minBrightness)
@@ -54,6 +46,11 @@ std::optional<double> IccProfile::maxBrightness() const
 const Colorimetry &IccProfile::colorimetry() const
 {
     return m_colorimetry;
+}
+
+std::shared_ptr<ColorTransformation> IccProfile::EOTF() const
+{
+    return m_EOTF;
 }
 
 std::shared_ptr<ColorTransformation> IccProfile::inverseEOTF() const
@@ -340,6 +337,30 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         }
     }
 
+    cmsToneCurve *r = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigRedTRCTag));
+    cmsToneCurve *g = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigGreenTRCTag));
+    cmsToneCurve *b = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigBlueTRCTag));
+    if (!r || !g || !b) {
+        qCWarning(KWIN_CORE) << "ICC profile is missing at least one TRC tag";
+        return nullptr;
+    }
+    std::vector<std::unique_ptr<ColorPipelineStage>> stages;
+    cmsToneCurve *toneCurves[] = {
+        cmsDupToneCurve(r),
+        cmsDupToneCurve(g),
+        cmsDupToneCurve(b),
+    };
+    stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves)));
+    std::shared_ptr<ColorTransformation> EOTF = std::make_shared<ColorTransformation>(std::move(stages));
+
+    cmsToneCurve *inverseToneCurves[] = {
+        cmsReverseToneCurveEx(4096, r),
+        cmsReverseToneCurveEx(4096, g),
+        cmsReverseToneCurveEx(4096, b),
+    };
+    stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, inverseToneCurves)));
+    std::shared_ptr<ColorTransformation> inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
+
     BToATagData lutData;
     if (cmsIsTag(handle, cmsSigBToD1Tag) && !cmsIsTag(handle, cmsSigBToA1Tag) && !cmsIsTag(handle, cmsSigBToA0Tag)) {
         qCWarning(KWIN_CORE, "Profiles with only BToD tags aren't supported yet");
@@ -349,7 +370,7 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         // lut based profile, with relative colorimetric intent supported
         auto data = parseBToATag(handle, cmsSigBToA1Tag);
         if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness);
+            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness, EOTF, inverseEOTF);
         } else {
             qCWarning(KWIN_CORE, "Parsing BToA1 tag failed");
             return nullptr;
@@ -359,30 +380,14 @@ std::unique_ptr<IccProfile> IccProfile::load(const QString &path)
         // lut based profile, with perceptual intent. The ICC docs say to use this as a fallback
         auto data = parseBToATag(handle, cmsSigBToA0Tag);
         if (data) {
-            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(*data), vcgt, minBrightness, maxBrightness);
+            return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::move(data), vcgt, minBrightness, maxBrightness, EOTF, inverseEOTF);
         } else {
             qCWarning(KWIN_CORE, "Parsing BToA0 tag failed");
             return nullptr;
         }
     }
-    // matrix based profile. The matrix is already read out for the colorimetry above
-    // All that's missing is the EOTF, which is stored in the rTRC, gTRC and bTRC tags
-    cmsToneCurve *r = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigRedTRCTag));
-    cmsToneCurve *g = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigGreenTRCTag));
-    cmsToneCurve *b = static_cast<cmsToneCurve *>(cmsReadTag(handle, cmsSigBlueTRCTag));
-    if (!r || !g || !b) {
-        qCWarning(KWIN_CORE) << "ICC profile is missing at least one TRC tag";
-        return nullptr;
-    }
-    cmsToneCurve *toneCurves[] = {
-        cmsReverseToneCurveEx(4096, r),
-        cmsReverseToneCurveEx(4096, g),
-        cmsReverseToneCurveEx(4096, b),
-    };
-    std::vector<std::unique_ptr<ColorPipelineStage>> stages;
-    stages.push_back(std::make_unique<ColorPipelineStage>(cmsStageAllocToneCurves(nullptr, 3, toneCurves)));
-    const auto inverseEOTF = std::make_shared<ColorTransformation>(std::move(stages));
-    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), inverseEOTF, vcgt, minBrightness, maxBrightness);
+    // matrix based profile, we only get a matrix + the EOTF
+    return std::make_unique<IccProfile>(handle, Colorimetry(red, green, blue, white), std::nullopt, vcgt, minBrightness, maxBrightness, EOTF, inverseEOTF);
 }
 
 }

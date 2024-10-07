@@ -392,8 +392,7 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     if (colorSource == ColorProfileSource::ICC && !hdr && !wcg && iccProfile) {
         const double minBrightness = iccProfile->minBrightness().value_or(0);
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
-        // TODO properly apply night light here as well, somehow
-        return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness);
+        return applyNightLight(ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness), m_channelFactors);
     }
     const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
     const bool driverSupportsHdr = m_connector->colorspace.isValid() && m_connector->hdrMetadata.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC));

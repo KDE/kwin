@@ -32,6 +32,10 @@ IccShader::IccShader()
         .csampler = m_shader->uniformLocation("Csampler"),
         .asize = m_shader->uniformLocation("Asize"),
         .asampler = m_shader->uniformLocation("Asampler"),
+        .trcSize = m_shader->uniformLocation("TRCsize"),
+        .trcSampler = m_shader->uniformLocation("TRC"),
+        .invTrcSampler = m_shader->uniformLocation("inverseTRC"),
+        .nightLightMatrix = m_shader->uniformLocation("nightLightMat"),
     };
 }
 
@@ -132,6 +136,18 @@ bool IccShader::setProfile(const std::shared_ptr<IccProfile> &profile, const Col
                 return false;
             }
         }
+        const auto eotf = profile->EOTF();
+        const auto sampleTRC = [&eotf](size_t x) {
+            const float relativeX = x / double(lutSize - 1);
+            return eotf->transform(QVector3D(relativeX, relativeX, relativeX));
+        };
+        m_TRC = GlLookUpTable::create(sampleTRC, lutSize);
+        const auto inverseEOTF = profile->inverseEOTF();
+        const auto sampleInverseTRC = [&inverseEOTF](size_t x) {
+            const float relativeX = x / double(lutSize - 1);
+            return inverseEOTF->transform(QVector3D(relativeX, relativeX, relativeX));
+        };
+        m_invTRC = GlLookUpTable::create(sampleInverseTRC, lutSize);
         m_toXYZD50 = toXYZD50;
         m_B = std::move(B);
         m_matrix2 = matrix2;
@@ -154,11 +170,7 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const Co
     // this failing can be silently ignored, it should only happen with GPU resets and gets corrected later
     setProfile(profile, inputColor);
 
-    QMatrix4x4 nightColor;
-    nightColor(0, 0) = channelFactors.x();
-    nightColor(1, 1) = channelFactors.y();
-    nightColor(2, 2) = channelFactors.z();
-    m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50 * nightColor);
+    m_shader->setUniform(m_locations.toXYZD50, m_toXYZD50);
     m_shader->setUniform(GLShader::IntUniform::SourceNamedTransferFunction, inputColor.transferFunction().type);
     m_shader->setUniform(GLShader::Vec2Uniform::SourceTransferFunctionParams, QVector2D(inputColor.transferFunction().minLuminance, inputColor.transferFunction().maxLuminance - inputColor.transferFunction().minLuminance));
     m_shader->setUniform(GLShader::FloatUniform::SourceReferenceLuminance, inputColor.referenceLuminance());
@@ -208,6 +220,26 @@ void IccShader::setUniforms(const std::shared_ptr<IccProfile> &profile, const Co
     } else {
         m_shader->setUniform(m_locations.asize, 0);
         m_shader->setUniform(m_locations.asampler, 4);
+        glBindTexture(GL_TEXTURE_1D, 0);
+    }
+
+    glActiveTexture(GL_TEXTURE5);
+    if (m_TRC && !qFuzzyCompare(channelFactors.lengthSquared(), 1)) {
+        m_shader->setUniform(m_locations.trcSize, int(m_TRC->size()));
+        m_shader->setUniform(m_locations.trcSampler, 5);
+        m_shader->setUniform(m_locations.invTrcSampler, 6);
+        QMatrix4x4 nightColor = Colorimetry::chromaticAdaptationMatrix(profile->colorimetry().white(), inputColor.containerColorimetry().white());
+        nightColor.scale(channelFactors);
+        m_shader->setUniform(m_locations.nightLightMatrix, nightColor);
+        m_TRC->bind();
+        glActiveTexture(GL_TEXTURE6);
+        m_invTRC->bind();
+    } else {
+        m_shader->setUniform(m_locations.trcSize, 0);
+        m_shader->setUniform(m_locations.trcSampler, 0);
+        m_shader->setUniform(m_locations.invTrcSampler, 0);
+        glBindTexture(GL_TEXTURE_1D, 0);
+        glActiveTexture(GL_TEXTURE6);
         glBindTexture(GL_TEXTURE_1D, 0);
     }
 

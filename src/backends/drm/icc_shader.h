@@ -41,6 +41,8 @@ private:
     std::unique_ptr<GlLookUpTable> m_M;
     std::unique_ptr<GlLookUpTable3D> m_C;
     std::unique_ptr<GlLookUpTable> m_A;
+    std::unique_ptr<GlLookUpTable> m_TRC;
+    std::unique_ptr<GlLookUpTable> m_invTRC;
     struct Locations
     {
         int src;
@@ -54,6 +56,10 @@ private:
         int csampler;
         int asize;
         int asampler;
+        int trcSize;
+        int trcSampler;
+        int invTrcSampler;
+        int nightLightMatrix;
     };
     Locations m_locations;
 };

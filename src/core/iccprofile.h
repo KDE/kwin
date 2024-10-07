@@ -33,8 +33,7 @@ public:
         std::unique_ptr<ColorTransformation> A;
     };
 
-    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, BToATagData &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness);
-    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, const std::shared_ptr<ColorTransformation> &inverseEOTF, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness);
+    explicit IccProfile(cmsHPROFILE handle, const Colorimetry &colorimetry, std::optional<BToATagData> &&bToATag, const std::shared_ptr<ColorTransformation> &vcgt, std::optional<double> minBrightness, std::optional<double> maxBrightness, const std::shared_ptr<ColorTransformation> &EOTF, const std::shared_ptr<ColorTransformation> &inverseEOTF);
     ~IccProfile();
 
     /**
@@ -42,6 +41,10 @@ public:
      * to the display color space. May be nullptr!
      */
     const BToATagData *BtToATag() const;
+    /**
+     * Contains the transformation in the TRC tags. May be nullptr!
+     */
+    std::shared_ptr<ColorTransformation> EOTF() const;
     /**
      * Contains the inverse of the TRC tags. May be nullptr!
      */
@@ -61,6 +64,7 @@ private:
     cmsHPROFILE const m_handle;
     const Colorimetry m_colorimetry;
     const std::optional<BToATagData> m_bToATag;
+    const std::shared_ptr<ColorTransformation> m_EOTF;
     const std::shared_ptr<ColorTransformation> m_inverseEOTF;
     const std::shared_ptr<ColorTransformation> m_vcgt;
     const std::optional<double> m_minBrightness;
