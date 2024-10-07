@@ -5012,9 +5012,7 @@ void X11Window::associate()
     if (surface()->isMapped()) {
         handleMapped();
     } else {
-        // Queued connection because we want to mark the window ready for painting after
-        // the associated surface item has processed the new surface state.
-        connect(surface(), &SurfaceInterface::mapped, this, handleMapped, Qt::QueuedConnection);
+        connect(surface(), &SurfaceInterface::mapped, this, handleMapped);
     }
 
     m_pendingSurfaceId = 0;
