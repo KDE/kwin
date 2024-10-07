@@ -129,15 +129,15 @@ DrmPipeline::Error DrmPipeline::applyPendingChangesLegacy()
             m_connector->scalingMode.setEnumLegacy(DrmConnector::ScalingMode::None);
         }
         if (m_connector->hdrMetadata.isValid()) {
-            const auto blob = createHdrMetadata(m_pending.colorDescription.transferFunction());
+            const auto blob = createHdrMetadata(m_pending.hdr ? TransferFunction::PerceptualQuantizer : TransferFunction::gamma22);
             m_connector->hdrMetadata.setPropertyLegacy(blob ? blob->blobId() : 0);
+        } else if (m_pending.hdr) {
+            return DrmPipeline::Error::InvalidArguments;
         }
         if (m_connector->colorspace.isValid()) {
-            if (m_pending.colorDescription.containerColorimetry() == NamedColorimetry::BT2020) {
-                m_connector->colorspace.setEnumLegacy(DrmConnector::Colorspace::BT2020_RGB);
-            } else {
-                m_connector->colorspace.setEnumLegacy(DrmConnector::Colorspace::Default);
-            }
+            m_connector->colorspace.setEnumLegacy(m_pending.wcg ? DrmConnector::Colorspace::BT2020_RGB : DrmConnector::Colorspace::Default);
+        } else if (m_pending.wcg) {
+            return DrmPipeline::Error::InvalidArguments;
         }
         const auto currentModeContent = m_pending.crtc->queryCurrentMode();
         if (m_pending.crtc != m_next.crtc || *m_pending.mode != currentModeContent) {
