@@ -95,7 +95,6 @@ public:
     uint32_t overscan() const;
     Output::RgbRange rgbRange() const;
     DrmConnector::DrmContentType contentType() const;
-    const ColorDescription &colorDescription() const;
     const std::shared_ptr<IccProfile> &iccProfile() const;
 
     void setCrtc(DrmCrtc *crtc);
@@ -107,8 +106,9 @@ public:
     void setRgbRange(Output::RgbRange range);
     void setCrtcColorPipeline(const ColorPipeline &pipeline);
     void setContentType(DrmConnector::DrmContentType type);
-    void setColorDescription(const ColorDescription &description);
     void setIccProfile(const std::shared_ptr<IccProfile> &profile);
+    void setHighDynamicRange(bool hdr);
+    void setWideColorGamut(bool wcg);
 
     /**
      * amdgpu drops cursor updates with adaptive sync: https://gitlab.freedesktop.org/drm/amd/-/issues/2186
@@ -127,7 +127,7 @@ private:
     bool isBufferForDirectScanout() const;
     uint32_t calculateUnderscan();
     static Error errnoToError();
-    std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction transferFunction) const;
+    std::shared_ptr<DrmBlob> createHdrMetadata(TransferFunction::Type transferFunction) const;
 
     // legacy only
     Error presentLegacy(const std::shared_ptr<OutputFrame> &frame);
@@ -167,7 +167,8 @@ private:
         DrmConnector::DrmContentType contentType = DrmConnector::DrmContentType::Graphics;
 
         std::shared_ptr<IccProfile> iccProfile;
-        ColorDescription colorDescription = ColorDescription::sRGB;
+        bool hdr = false;
+        bool wcg = false;
     };
     // the state that is to be tested next
     State m_pending;
