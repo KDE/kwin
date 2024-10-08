@@ -4,10 +4,16 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
+#include <QImage>
 #include <QTest>
 
 #include "core/colorpipeline.h"
 #include "core/colorspace.h"
+#include "opengl/eglcontext.h"
+#include "opengl/egldisplay.h"
+#include "opengl/glframebuffer.h"
+#include "opengl/glshader.h"
+#include "opengl/glshadermanager.h"
 
 using namespace KWin;
 
@@ -27,6 +33,8 @@ private Q_SLOTS:
     void testColorPipeline_data();
     void testColorPipeline();
     void testXYZ();
+    void testOpenglShader_data();
+    void testOpenglShader();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -209,6 +217,79 @@ void TestColorspaces::testXYZ()
     Colorimetry xyz = Colorimetry::fromName(NamedColorimetry::CIEXYZ);
     QVERIFY(isFuzzyIdentity(xyz.toXYZ()));
     QVERIFY(isFuzzyIdentity(xyz.fromXYZ()));
+}
+
+void TestColorspaces::testOpenglShader_data()
+{
+    QTest::addColumn<RenderingIntent>("intent");
+    QTest::addColumn<double>("maxError");
+
+    // the allowed error here needs to be this high because of llvmpipe. With real GPU drivers it's lower
+    QTest::addRow("Perceptual") << RenderingIntent::Perceptual << 6.5;
+    QTest::addRow("RelativeColorimetric") << RenderingIntent::RelativeColorimetric << 1.5;
+    QTest::addRow("AbsoluteColorimetric") << RenderingIntent::AbsoluteColorimetric << 1.5;
+    QTest::addRow("RelativeColorimetricWithBPC") << RenderingIntent::RelativeColorimetricWithBPC << 1.5;
+}
+
+void TestColorspaces::testOpenglShader()
+{
+    QFETCH(RenderingIntent, intent);
+    QFETCH(double, maxError);
+
+    const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY));
+    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+
+    const ColorDescription src(NamedColorimetry::BT709, TransferFunction(TransferFunction::linear, 0, 400), 100, 0, 200, 400);
+    const ColorDescription dst(NamedColorimetry::BT709, TransferFunction(TransferFunction::gamma22), 100, 0, 100, 100);
+
+    QImage input(255, 255, QImage::Format_RGBA8888_Premultiplied);
+    for (int x = 0; x < input.width(); x++) {
+        for (int y = 0; y < input.height(); y++) {
+            input.setPixel(x, y, qRgba(x, y, 0, 255));
+        }
+    }
+
+    QImage openGlResult;
+    {
+        ShaderBinder binder(ShaderTrait::MapTexture | ShaderTrait::TransformColorspace);
+        QMatrix4x4 proj;
+        proj.ortho(QRectF(0, 0, input.width(), input.height()));
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+        binder.shader()->setColorspaceUniforms(src, dst, intent);
+        const auto target = GLTexture::allocate(GL_RGBA8, input.size());
+        GLFramebuffer buffer(target.get());
+        context->pushFramebuffer(&buffer);
+
+        const auto srcColor = GLTexture::upload(input);
+        srcColor->render(input.size());
+
+        context->popFramebuffer();
+        openGlResult = target->toImage();
+        openGlResult.mirror();
+    }
+    QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
+    {
+        const auto pipeline = ColorPipeline::create(src, dst, intent);
+        for (int x = 0; x < input.width(); x++) {
+            for (int y = 0; y < input.height(); y++) {
+                const auto pixel = input.pixel(x, y);
+                const QVector3D colors = QVector3D(qRed(pixel), qGreen(pixel), qBlue(pixel)) / 255;
+                const QVector3D output = pipeline.evaluate(colors) * 255;
+                pipelineResult.setPixel(x, y, qRgba(std::round(output.x()), std::round(output.y()), std::round(output.z()), 255));
+            }
+        }
+    }
+
+    for (int x = 0; x < input.width(); x++) {
+        for (int y = 0; y < input.height(); y++) {
+            const auto glPixel = openGlResult.pixel(x, y);
+            const QVector3D glColors = QVector3D(qRed(glPixel), qGreen(glPixel), qBlue(glPixel));
+            const auto pipePixel = pipelineResult.pixel(x, y);
+            const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
+            const QVector3D difference = (glColors - pipeColors);
+            QCOMPARE_LE(difference.length(), maxError);
+        }
+    }
 }
 
 QTEST_MAIN(TestColorspaces)
