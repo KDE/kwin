@@ -308,6 +308,11 @@ QVector3D ColorPipeline::evaluate(const QVector3D &input) const
 
 QVector3D ColorOp::apply(const QVector3D input) const
 {
+    return applyOperation(operation, input);
+}
+
+QVector3D ColorOp::applyOperation(const ColorOp::Operation &operation, const QVector3D &input)
+{
     if (const auto mat = std::get_if<ColorMatrix>(&operation)) {
         return mat->mat * input;
     } else if (const auto mult = std::get_if<ColorMultiplier>(&operation)) {
