@@ -485,7 +485,7 @@ public:
 
 protected:
     void passToWaylandServer(QKeyEvent *event);
-    bool passToInputMethod(QKeyEvent *event);
+    bool passToInputMethod(KeyEvent *event);
 
 private:
     int m_weight = 0;
