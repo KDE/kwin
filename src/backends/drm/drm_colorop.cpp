@@ -17,9 +17,13 @@
 namespace KWin
 {
 
-DrmAbstractColorOp::DrmAbstractColorOp(DrmAbstractColorOp *next)
+DrmAbstractColorOp::DrmAbstractColorOp(DrmAbstractColorOp *next, bool needsNonLinearity)
     : m_next(next)
+    , m_needsNonLinerity(needsNonLinearity)
 {
+    if (m_next) {
+        m_next->m_last = this;
+    }
 }
 
 DrmAbstractColorOp::~DrmAbstractColorOp()
@@ -31,6 +35,16 @@ DrmAbstractColorOp *DrmAbstractColorOp::next() const
     return m_next;
 }
 
+bool DrmAbstractColorOp::needsNonlinearity() const
+{
+    return m_needsNonLinerity;
+}
+
+DrmAbstractColorOp *DrmAbstractColorOp::last() const
+{
+    return m_last;
+}
+
 struct Program
 {
     double inputScale;
@@ -38,7 +52,7 @@ struct Program
     double outputScale;
 };
 
-static bool findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *, Program> &map, DrmAbstractColorOp *currentOp, std::span<const ColorOp> ops, double inputScale)
+static bool findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *, Program> &map, DrmAbstractColorOp *lastOp, DrmAbstractColorOp *currentOp, std::span<const ColorOp> ops, double inputScale)
 {
     if (ops.empty()) {
         return true;
@@ -59,11 +73,46 @@ static bool findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *
     while (otherOp) {
         const auto otherPref = otherOp->colorOpPreference(ops.front());
         if (otherPref && *otherPref > *preference) {
-            if (findColorPipelineAssignments(map, otherOp, ops, inputScale)) {
+            if (findColorPipelineAssignments(map, currentOp, otherOp, ops, inputScale)) {
                 return true;
             }
         }
         otherOp = otherOp->next();
+    }
+    DrmAbstractColorOp *lastLut = currentOp->last();
+    DrmAbstractColorOp *nextLut = currentOp->next();
+    std::optional<ColorOp> nonLinearity;
+    std::optional<ColorOp> undoNonLinearity;
+    if (currentOp->needsNonlinearity() && currentOp != lastOp) {
+        // find a previous !D lut to add a nonlinearity to
+        // and a following 1D lut to remove the nonlinearity
+        const auto tf = TransferFunction(TransferFunction::PerceptualQuantizer, ops.front().input.min, ops.front().input.max);
+        nonLinearity = ColorOp{
+            .input = ops.front().input,
+            .operation = InverseColorTransferFunction{tf},
+            .output = ValueRange{
+                .min = 0,
+                .max = 1,
+            }};
+        while (!lastLut->colorOpPreference(*nonLinearity)) {
+            lastLut = lastLut->last();
+            if (!lastLut) {
+                return false;
+            }
+        }
+        undoNonLinearity = ColorOp{
+            .input = ops.front().output,
+            .operation = ColorTransferFunction{tf},
+            .output = ValueRange{
+                .min = ops.front().output.min,
+                .max = ops.front().output.max,
+            }};
+        while (!nextLut->colorOpPreference(*undoNonLinearity)) {
+            nextLut = nextLut->next();
+            if (!nextLut) {
+                return false;
+            }
+        }
     }
     // this is the best assignment for this op, ensure the rest of the pipeline can be assigned too
     double outputScale = 1.0 / ops.front().output.max;
@@ -71,21 +120,37 @@ static bool findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *
         // last color op, our internal scaling needs to be undone
         outputScale = 1.0;
     }
-    if (!findColorPipelineAssignments(map, currentOp, ops.subspan(1), outputScale)) {
+    if (!findColorPipelineAssignments(map, currentOp, currentOp, ops.subspan(1), outputScale)) {
         return false;
     }
-    const auto it = map.find(currentOp);
+    auto it = map.find(currentOp);
     if (it == map.end()) {
-        map.emplace(currentOp, Program{
-                                   .inputScale = inputScale,
-                                   .ops = {ops.front()},
-                                   .outputScale = outputScale,
-                               });
+        it = map.emplace(currentOp, Program{
+                                        .inputScale = inputScale,
+                                        .ops = {ops.front()},
+                                        .outputScale = outputScale,
+                                    })
+                 .first;
     } else {
         // note that because of the recursion above, operations must be added in the front of the vector
         auto &program = it->second;
         program.ops.insert(program.ops.begin(), ops.front());
         program.inputScale = inputScale;
+    }
+    if (nonLinearity) {
+        auto &nextLutProgram = map[nextLut];
+        nextLutProgram.ops.insert(nextLutProgram.ops.begin(), *undoNonLinearity);
+        auto &lastLutProgram = map[lastLut];
+        lastLutProgram.ops.push_back(*nonLinearity);
+        auto &program = it->second;
+        program.ops.insert(program.ops.begin(), *undoNonLinearity);
+        program.ops.push_back(*nonLinearity);
+
+        // all values are in the [0; 1] range, disable scaling
+        lastLutProgram.outputScale = 1.0;
+        program.inputScale = 1.0;
+        program.outputScale = 1.0;
+        nextLutProgram.inputScale = 1.0;
     }
     return true;
 }
@@ -125,11 +190,13 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         };
     }
 
-    if (!findColorPipelineAssignments(assignments, currentOp, pipeline.ops, inputScale)) {
+    if (!findColorPipelineAssignments(assignments, nullptr, currentOp, pipeline.ops, inputScale)) {
         // TODO now that searching for the pipeline is a bit more expensive, maybe cache this failure result too?
         return false;
     }
 
+    qWarning() << "programming pipeline" << pipeline;
+    qWarning() << "-----------------------:";
     // now actually program the properties
     m_cache = std::make_unique<DrmAtomicCommit>(commit->gpu());
     currentOp = this;
@@ -147,7 +214,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         }
         currentOp = currentOp->next();
     }
-    qWarning() << "total pipeline:" << pipeline;
+    qWarning() << "-----------------------:";
     commit->merge(m_cache.get());
     m_cachedPipeline = pipeline;
     return true;
@@ -354,7 +421,7 @@ void UnknownColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 DrmLut3DColorOp::DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *modeIndex, const QList<drm_mode_3dlut_mode> &modes, DrmProperty *bypass)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, true)
     , m_value(value)
     , m_bypass(bypass)
     , m_3dLutModeIndex(modeIndex)

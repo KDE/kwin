@@ -78,7 +78,7 @@ class DrmAtomicCommit;
 class DrmAbstractColorOp
 {
 public:
-    explicit DrmAbstractColorOp(DrmAbstractColorOp *next);
+    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, bool needsNonLinearity = false);
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
@@ -87,12 +87,16 @@ public:
     virtual void bypass(DrmAtomicCommit *commit) = 0;
 
     DrmAbstractColorOp *next() const;
+    DrmAbstractColorOp *last() const;
+    bool needsNonlinearity() const;
 
 protected:
     DrmAbstractColorOp *m_next = nullptr;
+    DrmAbstractColorOp *m_last = nullptr;
 
     std::optional<ColorPipeline> m_cachedPipeline;
     std::unique_ptr<DrmAtomicCommit> m_cache;
+    bool m_needsNonLinerity = false;
 };
 
 class DrmLutColorOp : public DrmAbstractColorOp
