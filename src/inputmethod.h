@@ -30,6 +30,8 @@ class Window;
 class InputPanelV1Window;
 class InputMethodGrabV1;
 
+class InputDevice;
+
 /**
  * This class implements the zwp_input_method_unstable_v1, which is currently used to provide
  * the Virtual Keyboard using supported input method client (maliit-keyboard e.g.)
@@ -72,6 +74,12 @@ public:
     void forceActivate();
 
     void commitPendingText();
+
+    // keyboard used for key events sent from the input method
+    InputDevice *inputMethodKeyboard() const
+    {
+        return m_inputMethodKeyboard;
+    }
 
 Q_SIGNALS:
     void panelChanged();
@@ -147,6 +155,8 @@ private:
     bool m_hasPendingModifiers = false;
     bool m_activeClientSupportsTextInput = false;
     bool m_shouldShowPanel = false;
+
+    InputDevice *m_inputMethodKeyboard = nullptr;
 };
 
 }

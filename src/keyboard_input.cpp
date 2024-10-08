@@ -249,6 +249,8 @@ void KeyboardInputRedirection::update()
 
 void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::KeyboardKeyState state, std::chrono::microseconds time, InputDevice *device)
 {
+    Q_ASSERT(device);
+
     input()->setLastInputHandler(this);
     if (!m_inited) {
         return;
@@ -281,7 +283,10 @@ void KeyboardInputRedirection::processKey(uint32_t key, InputRedirection::Keyboa
     }
 
     const quint32 previousLayout = m_xkb->currentLayout();
-    if (!autoRepeat) {
+
+    InputDevice *inputMethodKeyboard = kwinApp()->inputMethod() ? kwinApp()->inputMethod()->inputMethodKeyboard() : nullptr;
+
+    if (!autoRepeat && device != inputMethodKeyboard) {
         m_xkb->updateKey(key, state);
     }
 
