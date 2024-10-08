@@ -22,6 +22,7 @@
 #if KWIN_BUILD_SCREENLOCKER
 #include "screenlockerwatcher.h"
 #endif
+#include "core/inputdevice.h"
 #include "pointer_input.h"
 #include "tablet_input.h"
 #include "touch_input.h"
@@ -50,6 +51,98 @@
 
 namespace KWin
 {
+
+class InputMethodKeyboard : public InputDevice
+{
+    Q_OBJECT
+public:
+    explicit InputMethodKeyboard(InputMethod *parent)
+        : InputDevice(parent)
+    {
+    }
+
+    QString sysName() const override
+    {
+        return QStringLiteral("Virtual Keyboard");
+    }
+
+    QString name() const override
+    {
+        return QStringLiteral("Virtual Keyboard");
+    }
+
+    bool isEnabled() const override
+    {
+        return true;
+    }
+
+    void setEnabled(bool enabled) override
+    {
+    }
+
+    LEDs leds() const override
+    {
+        return LEDs();
+    }
+
+    void setLeds(LEDs leds) override
+    {
+    }
+
+    bool isKeyboard() const override
+    {
+        return true;
+    }
+
+    bool isPointer() const override
+    {
+        return false;
+    }
+
+    bool isTouchpad() const override
+    {
+        return false;
+    }
+
+    bool isTouch() const override
+    {
+        return false;
+    }
+
+    bool isTabletTool() const override
+    {
+        return false;
+    }
+
+    bool isTabletPad() const override
+    {
+        return false;
+    }
+
+    bool isTabletModeSwitch() const override
+    {
+        return false;
+    }
+
+    bool isLidSwitch() const override
+    {
+        return false;
+    }
+
+    QString outputName() const override
+    {
+        return QString();
+    }
+
+    void setOutputName(const QString &outputName) override
+    {
+    }
+
+    bool isNaturalScroll() const override
+    {
+        return false;
+    }
+};
 
 static std::vector<quint32> textToKey(const QString &text)
 {
@@ -88,6 +181,9 @@ static std::vector<quint32> textToKey(const QString &text)
 
 InputMethod::InputMethod()
 {
+    m_inputMethodKeyboard = new InputMethodKeyboard(this);
+    input()->addInputDevice(m_inputMethodKeyboard);
+
     m_enabled = kwinApp()->config()->group(QStringLiteral("Wayland")).readEntry("VirtualKeyboardEnabled", true);
     // this is actually too late. Other processes are started before init,
     // so might miss the availability of text input
@@ -762,10 +858,9 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
     resetPendingPreedit();
 }
 
-void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
+void InputMethod::key(quint32 /*serial*/, quint32 time, quint32 keyCode, bool pressed)
 {
-    waylandServer()->seat()->notifyKeyboardKey(keyCode,
-                                               pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
+    m_inputMethodKeyboard->keyChanged(keyCode, pressed ? InputRedirection::KeyboardKeyPressed : InputRedirection::KeyboardKeyReleased, std::chrono::milliseconds(time), m_inputMethodKeyboard);
 }
 
 void InputMethod::modifiers(quint32 serial, quint32 mods_depressed, quint32 mods_latched, quint32 mods_locked, quint32 group)
@@ -1017,4 +1112,5 @@ void InputMethod::textInputInterfaceV3EnableRequested()
 }
 }
 
+#include "inputmethod.moc"
 #include "moc_inputmethod.cpp"

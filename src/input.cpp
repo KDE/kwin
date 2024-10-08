@@ -269,17 +269,19 @@ void InputEventFilter::passToWaylandServer(QKeyEvent *event)
     }
 }
 
-bool InputEventFilter::passToInputMethod(QKeyEvent *event)
+bool InputEventFilter::passToInputMethod(KeyEvent *event)
 {
     if (!kwinApp()->inputMethod()) {
         return false;
     }
-    if (auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab()) {
+
+    auto keyboardGrab = kwinApp()->inputMethod()->keyboardGrab();
+    if (keyboardGrab && event->device() != kwinApp()->inputMethod()->inputMethodKeyboard()) {
         if (event->isAutoRepeat()) {
             return true;
         }
         auto newState = event->type() == QEvent::KeyPress ? KeyboardKeyState::Pressed : KeyboardKeyState::Released;
-        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
+        keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->QKeyEvent::timestamp(), event->nativeScanCode(), newState);
         return true;
     } else {
         kwinApp()->inputMethod()->commitPendingText();
@@ -562,7 +564,9 @@ public:
             return false;
         }
         waylandServer()->seat()->setFocusedKeyboardSurface(nullptr);
-        effects->grabbedKeyboardEvent(event);
+        if (!passToInputMethod(event)) {
+            effects->grabbedKeyboardEvent(event);
+        }
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
