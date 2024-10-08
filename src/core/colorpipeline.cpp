@@ -346,7 +346,7 @@ ColorTonemapper::ColorTonemapper(double referenceLuminance, double maxInputLumin
     // 50% HDR headroom should be enough for the tone mapper to do a good enough job, without dimming the image too much
     const double minDecentRange = std::min(m_inputRange, 1.5);
     // if the output doesn't provide enough HDR headroom for the tone mapper to do a good job, dim the image to create some
-    m_referenceDimming = 1.0 / std::clamp(outputRange / minDecentRange, 1.0, minDecentRange);
+    m_referenceDimming = 1.0 / std::clamp(minDecentRange / outputRange, 1.0, minDecentRange);
     m_outputReferenceLuminance = referenceLuminance * m_referenceDimming;
 }
 
