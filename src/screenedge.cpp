@@ -258,15 +258,12 @@ bool Edge::activatesForPointer() const
     if (m_client) {
         return true;
     }
+    if (m_edges->isDesktopSwitching()) {
+        return true;
+    }
     const bool isMovingWindow = Workspace::self()->moveResizeWindow() && !Workspace::self()->moveResizeWindow()->isInteractiveResize();
-    if (m_edges->isDesktopSwitching() || (m_edges->isDesktopSwitchingMovingClients() && isMovingWindow)) {
-        const bool canSwitch = (isLeft() && VirtualDesktopManager::self()->toLeft(nullptr, options->isRollOverDesktops()) != VirtualDesktopManager::self()->currentDesktop())
-            || (isRight() && VirtualDesktopManager::self()->toRight(nullptr, options->isRollOverDesktops()) != VirtualDesktopManager::self()->currentDesktop())
-            || (isBottom() && VirtualDesktopManager::self()->below(nullptr, options->isRollOverDesktops()) != VirtualDesktopManager::self()->currentDesktop())
-            || (isTop() && VirtualDesktopManager::self()->above(nullptr, options->isRollOverDesktops()) != VirtualDesktopManager::self()->currentDesktop());
-        if (canSwitch) {
-            return true;
-        }
+    if (m_edges->isDesktopSwitchingMovingClients() && isMovingWindow) {
+        return true;
     }
     if (!m_callBacks.isEmpty()) {
         return true;
