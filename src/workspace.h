@@ -314,7 +314,7 @@ public:
 
     Window *topWindowOnDesktop(VirtualDesktop *desktop, Output *output = nullptr, bool unconstrained = false,
                                bool only_normal = true) const;
-    Window *findDesktop(bool topmost, VirtualDesktop *desktop) const;
+    Window *findDesktop(bool topmost, VirtualDesktop *desktop, Output *output) const;
     void addWindowToDesktop(Window *window, VirtualDesktop *desktop);
     void removeWindowFromDesktop(Window *window, VirtualDesktop *desktop);
     void sendWindowToDesktops(Window *window, const QList<VirtualDesktop *> &desktops, bool dont_activate);
