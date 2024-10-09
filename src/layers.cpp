@@ -256,7 +256,7 @@ Window *Workspace::topWindowOnDesktop(VirtualDesktop *desktop, Output *output, b
     return nullptr;
 }
 
-Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
+Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop, Output *output) const
 {
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
     if (topmost) {
@@ -265,7 +265,7 @@ Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
             if (window->isDeleted()) {
                 continue;
             }
-            if (window->isClient() && window->isOnDesktop(desktop) && window->isDesktop() && window->isShown()) {
+            if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown()) {
                 return window;
             }
         }
@@ -274,7 +274,7 @@ Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop) const
             if (window->isDeleted()) {
                 continue;
             }
-            if (window->isClient() && window->isOnDesktop(desktop) && window->isDesktop() && window->isShown()) {
+            if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown()) {
                 return window;
             }
         }
