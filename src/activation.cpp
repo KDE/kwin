@@ -495,7 +495,7 @@ bool Workspace::activateNextWindow(Window *window)
     Output *output = window ? window->output() : workspace()->activeOutput();
 
     if (!focusCandidate && showingDesktop()) {
-        focusCandidate = findDesktop(true, desktop, output); // to not break the state
+        focusCandidate = findDesktop(desktop, output); // to not break the state
     }
 
     if (!focusCandidate && options->isNextFocusPrefersMouse()) {
@@ -522,7 +522,7 @@ bool Workspace::activateNextWindow(Window *window)
     }
 
     if (focusCandidate == nullptr) { // last chance: focus the desktop
-        focusCandidate = findDesktop(true, desktop, output);
+        focusCandidate = findDesktop(desktop, output);
     }
 
     if (focusCandidate != nullptr) {
@@ -543,7 +543,7 @@ void Workspace::switchToOutput(Output *output)
     VirtualDesktop *desktop = VirtualDesktopManager::self()->currentDesktop();
     Window *get_focus = m_focusChain->getForActivation(desktop, output);
     if (get_focus == nullptr) {
-        get_focus = findDesktop(true, desktop, output);
+        get_focus = findDesktop(desktop, output);
     }
     if (get_focus != nullptr && get_focus != mostRecentlyActivatedWindow()) {
         requestFocus(get_focus);

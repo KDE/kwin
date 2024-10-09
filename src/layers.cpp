@@ -256,27 +256,16 @@ Window *Workspace::topWindowOnDesktop(VirtualDesktop *desktop, Output *output, b
     return nullptr;
 }
 
-Window *Workspace::findDesktop(bool topmost, VirtualDesktop *desktop, Output *output) const
+Window *Workspace::findDesktop(VirtualDesktop *desktop, Output *output) const
 {
     // TODO    Q_ASSERT( block_stacking_updates == 0 );
-    if (topmost) {
-        for (int i = stacking_order.size() - 1; i >= 0; i--) {
-            auto window = stacking_order.at(i);
-            if (window->isDeleted()) {
-                continue;
-            }
-            if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown()) {
-                return window;
-            }
+    for (int i = stacking_order.size() - 1; i >= 0; i--) {
+        auto window = stacking_order.at(i);
+        if (window->isDeleted()) {
+            continue;
         }
-    } else { // bottom-most
-        for (Window *window : std::as_const(stacking_order)) {
-            if (window->isDeleted()) {
-                continue;
-            }
-            if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown()) {
-                return window;
-            }
+        if (window->isClient() && window->isOnDesktop(desktop) && window->isOnOutput(output) && window->isDesktop() && window->isShown()) {
+            return window;
         }
     }
     return nullptr;
