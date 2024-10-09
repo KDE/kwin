@@ -79,8 +79,9 @@ void ColorPipeline::addMultiplier(const QVector3D &factors)
     if (!ops.empty()) {
         auto *lastOp = &ops.back().operation;
         if (const auto mat = std::get_if<ColorMatrix>(lastOp)) {
-            auto newMat = mat->mat;
+            QMatrix4x4 newMat;
             newMat.scale(factors);
+            newMat *= mat->mat;
             ops.erase(ops.end() - 1);
             addMatrix(newMat, output);
             return;
