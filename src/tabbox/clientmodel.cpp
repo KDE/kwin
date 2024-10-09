@@ -167,6 +167,9 @@ void ClientModel::createStackingOrderClientList(Window *start)
 {
     // TODO: needs improvement
     const QList<Window *> stacking = tabBox->stackingOrder();
+    if (stacking.isEmpty()) {
+        return;
+    }
     auto c = stacking.first();
     auto stop = c;
     int index = 0;
