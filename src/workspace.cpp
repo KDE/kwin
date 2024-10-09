@@ -410,7 +410,7 @@ void Workspace::initializeX11()
             newActiveWindow = topWindowOnDesktop(VirtualDesktopManager::self()->currentDesktop());
         }
         if (newActiveWindow == nullptr) {
-            newActiveWindow = findDesktop(true, VirtualDesktopManager::self()->currentDesktop(), activeOutput());
+            newActiveWindow = findDesktop(VirtualDesktopManager::self()->currentDesktop(), activeOutput());
         }
     }
     if (newActiveWindow != nullptr) {
@@ -730,7 +730,7 @@ void Workspace::addX11Window(X11Window *window)
         raiseWindow(window);
         // If there's no active window, make this desktop the active one
         if (activeWindow() == nullptr && should_get_focus.count() == 0) {
-            activateWindow(findDesktop(true, VirtualDesktopManager::self()->currentDesktop(), window->output()));
+            activateWindow(findDesktop(VirtualDesktopManager::self()->currentDesktop(), window->output()));
         }
     }
     window->checkActiveModal();
@@ -995,7 +995,7 @@ void Workspace::activateWindowOnDesktop(VirtualDesktop *desktop)
     }
 
     if (!window) {
-        window = findDesktop(true, desktop, activeOutput());
+        window = findDesktop(desktop, activeOutput());
     }
 
     if (window != m_activeWindow) {
@@ -1111,7 +1111,7 @@ void Workspace::updateCurrentActivity(const QString &new_activity)
     }
 
     if (!window) {
-        window = findDesktop(true, VirtualDesktopManager::self()->currentDesktop(), activeOutput());
+        window = findDesktop(VirtualDesktopManager::self()->currentDesktop(), activeOutput());
     }
 
     if (window != m_activeWindow) {
@@ -1578,7 +1578,7 @@ void Workspace::setShowingDesktop(bool showing, bool animated)
     }
 
     if (showing_desktop) {
-        Window *desktop = findDesktop(true, VirtualDesktopManager::self()->currentDesktop(), activeOutput());
+        Window *desktop = findDesktop(VirtualDesktopManager::self()->currentDesktop(), activeOutput());
         if (desktop) {
             requestFocus(desktop);
         }
