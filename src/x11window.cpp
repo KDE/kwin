@@ -4683,9 +4683,11 @@ void X11Window::maximize(MaximizeMode mode)
     updateAllowedActions();
     updateWindowRules(Rules::MaximizeVert | Rules::MaximizeHoriz | Rules::Position | Rules::Size);
 
-    static bool awtQuirkDisabled = qEnvironmentVariableIntValue("KWIN_NO_AWT_QUIRK") == 1;
-    if (!awtQuirkDisabled) {
-        sendSyntheticConfigureNotify();
+    if (!areGeometryUpdatesBlocked()) {
+        static bool awtQuirkDisabled = qEnvironmentVariableIntValue("KWIN_NO_AWT_QUIRK") == 1;
+        if (!awtQuirkDisabled) {
+            sendSyntheticConfigureNotify();
+        }
     }
 
     if (max_mode != old_mode) {
