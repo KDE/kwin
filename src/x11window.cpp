@@ -1156,6 +1156,11 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     m_managed = true;
     blockGeometryUpdates(false);
 
+    static bool awtQuirkDisabled = qEnvironmentVariableIntValue("KWIN_NO_AWT_QUIRK") == 1;
+    if (!awtQuirkDisabled) {
+        sendSyntheticConfigureNotify();
+    }
+
     if (m_userTime == XCB_TIME_CURRENT_TIME || m_userTime == -1U) {
         // No known user time, set something old
         m_userTime = xTime() - 1000000;
