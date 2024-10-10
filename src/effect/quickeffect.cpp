@@ -15,6 +15,7 @@
 #include <QQmlIncubator>
 #include <QQuickItem>
 #include <QQuickWindow>
+#include <qpa/qwindowsysteminterface.h>
 
 namespace KWin
 {
@@ -361,11 +362,7 @@ void QuickSceneEffect::activateView(QuickSceneView *view)
 
     for (const auto &[screen, otherView] : d->views) {
         if (otherView.get() == view && !view->window()->activeFocusItem()) {
-            QFocusEvent focusEvent(QEvent::FocusIn, Qt::ActiveWindowFocusReason);
-            qApp->sendEvent(view->window(), &focusEvent);
-        } else if (otherView.get() != view && otherView->window()->activeFocusItem()) {
-            QFocusEvent focusEvent(QEvent::FocusOut, Qt::ActiveWindowFocusReason);
-            qApp->sendEvent(otherView->window(), &focusEvent);
+            QWindowSystemInterface::handleFocusWindowChanged(view->window());
         }
     }
 
