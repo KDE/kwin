@@ -246,7 +246,7 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
     // convert from rgb to ICtCp
     addMatrix(containerColorimetry.toLMS(), currentOutputRange());
     const TransferFunction PQ(TransferFunction::PerceptualQuantizer, 0, 10'000);
-    addTransferFunction(PQ);
+    addInverseTransferFunction(PQ);
     addMatrix(s_toICtCp, currentOutputRange());
     // apply the tone mapping to the intensity component
     ops.push_back(ColorOp{
@@ -259,7 +259,7 @@ void ColorPipeline::addTonemapper(const Colorimetry &containerColorimetry, doubl
     });
     // convert back to rgb
     addMatrix(s_fromICtCp, currentOutputRange());
-    addInverseTransferFunction(PQ);
+    addTransferFunction(PQ);
     addMatrix(containerColorimetry.fromLMS(), currentOutputRange());
 }
 
