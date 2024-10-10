@@ -198,10 +198,12 @@ QList<SurfaceItem *> WorkspaceScene::scanoutCandidates(ssize_t maxCount) const
             WindowItem *windowItem = stacking_order[i];
             Window *window = windowItem->window();
             if (window->isOnOutput(painted_screen) && window->opacity() > 0 && windowItem->isVisible()) {
-                if (!window->isClient() || window->opacity() != 1.0 || !window->isFullScreen() || window->windowItem()->hasEffects()) {
+                if (!window->isClient() || window->opacity() != 1.0 || window->windowItem()->hasEffects()) {
                     return {};
                 }
-
+                if (window->windowItem()->decorationItem()) {
+                    return {};
+                }
                 SurfaceItem *surfaceItem = window->surfaceItem();
                 if (!surfaceItem || !surfaceItem->isVisible()) {
                     continue;
