@@ -230,6 +230,9 @@ QPlatformNativeInterface *Integration::nativeInterface() const
 
 QPlatformInputContext *Integration::inputContext() const
 {
+    if (!kwinApp()->inputMethod()) { // for some unit tests
+        return nullptr;
+    }
     return kwinApp()->inputMethod()->internalContext();
 }
 
