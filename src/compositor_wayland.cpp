@@ -258,21 +258,6 @@ void WaylandCompositor::stop()
     Q_EMIT compositingToggled(false);
 }
 
-static QRect centerBuffer(const QSizeF &bufferSize, const QSize &modeSize)
-{
-    const double widthScale = bufferSize.width() / double(modeSize.width());
-    const double heightScale = bufferSize.height() / double(modeSize.height());
-    if (widthScale > heightScale) {
-        const QSize size = (bufferSize / widthScale).toSize();
-        const uint32_t yOffset = (modeSize.height() - size.height()) / 2;
-        return QRect(QPoint(0, yOffset), size);
-    } else {
-        const QSize size = (bufferSize / heightScale).toSize();
-        const uint32_t xOffset = (modeSize.width() - size.width()) / 2;
-        return QRect(QPoint(xOffset, 0), size);
-    }
-}
-
 static bool checkForBlackBackground(SurfaceItem *background)
 {
     if (!background->pixmap()
@@ -305,6 +290,7 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
 
     Output *output = findOutput(renderLoop);
     OutputLayer *primaryLayer = m_backend->primaryLayer(output);
+    OutputLayer *overlayLayer = m_backend->overlayLayer(output);
     fTraceDuration("Paint (", output->name(), ")");
 
     RenderLayer *superLayer = m_superlayers[renderLoop];
@@ -345,18 +331,35 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             }
         }
 
-        const uint32_t planeCount = 1;
-        if (const auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
+        const uint32_t planeCount = overlayLayer ? 2 : 1;
+        if (auto scanoutCandidates = superLayer->delegate()->scanoutCandidates(planeCount + 1); !scanoutCandidates.isEmpty()) {
             const auto sublayers = superLayer->sublayers();
             bool scanoutPossible = std::none_of(sublayers.begin(), sublayers.end(), [](RenderLayer *sublayer) {
                 return sublayer->isVisible();
             });
             if (scanoutCandidates.size() > planeCount) {
                 scanoutPossible &= checkForBlackBackground(scanoutCandidates.back());
+                scanoutCandidates.pop_back();
             }
             if (scanoutPossible) {
-                primaryLayer->setTargetRect(centerBuffer(output->transform().map(scanoutCandidates.front()->size()), output->modeSize()));
-                directScanout = primaryLayer->importScanoutBuffer(scanoutCandidates.front(), frame);
+                QVector<OutputLayer *> layers;
+                if (overlayLayer) {
+                    layers = {overlayLayer, primaryLayer};
+                } else {
+                    layers = {primaryLayer};
+                }
+                directScanout = true;
+                for (int i = 0; i < layers.size(); i++) {
+                    if (i < scanoutCandidates.size() && directScanout) {
+                        const auto target = scanoutCandidates[i]->mapToScene(QRectF(QPointF(0, 0), scanoutCandidates[i]->size())).toRect();
+                        layers[i]->setTargetRect(scaledRect(target, output->scale()).toRect());
+                        layers[i]->setEnabled(true);
+                        directScanout &= layers[i]->importScanoutBuffer(scanoutCandidates[i], frame);
+                    } else {
+                        layers[i]->setEnabled(false);
+                        layers[i]->notifyNoScanoutCandidate();
+                    }
+                }
                 if (directScanout) {
                     // if present works, we don't want to touch the frame object again afterwards,
                     // so end the time query here instead of later
@@ -369,9 +372,15 @@ void WaylandCompositor::composite(RenderLoop *renderLoop)
             }
         } else {
             primaryLayer->notifyNoScanoutCandidate();
+            if (overlayLayer) {
+                overlayLayer->notifyNoScanoutCandidate();
+            }
         }
 
         if (!directScanout) {
+            if (overlayLayer) {
+                overlayLayer->setEnabled(false);
+            }
             primaryLayer->setTargetRect(QRect(QPoint(0, 0), output->modeSize()));
             if (auto beginInfo = primaryLayer->beginFrame()) {
                 auto &[renderTarget, repaint] = beginInfo.value();
