@@ -477,47 +477,6 @@ void WorkspaceScene::paintSimpleScreen(const RenderTarget &renderTarget, const R
 void WorkspaceScene::createStackingOrder()
 {
     QList<Item *> items = m_containerItem->sortedChildItems();
-
-    // NOTE: this ugly chunk of code is to help us debug a random crash that is extremely difficult
-    // to reproduce and that affects many users. Debugging in production builds is absolutely terrible
-    // and you should never ever do it, but we are out of options. :(
-    {
-        const QList<Window *> mapped = workspace()->windows();
-        const QList<Window *> closed = workspace()->closed();
-
-        QList<WindowItem *> aliveWindowItems;
-        for (Window *window : mapped) {
-            if (auto windowItem = window->windowItem()) {
-                aliveWindowItems << windowItem;
-            }
-        }
-        for (Window *window : closed) {
-            if (auto windowItem = window->windowItem()) {
-                aliveWindowItems << windowItem;
-            }
-        }
-        std::sort(aliveWindowItems.begin(), aliveWindowItems.end());
-
-        QList<WindowItem *> sortedWindowItems;
-        for (Item *item : std::as_const(items)) {
-            sortedWindowItems << static_cast<WindowItem *>(item);
-        }
-        std::sort(sortedWindowItems.begin(), sortedWindowItems.end());
-
-        QList<WindowItem *> windowItems;
-        for (Item *item : m_containerItem->childItems()) {
-            windowItems << static_cast<WindowItem *>(item);
-        }
-        std::sort(windowItems.begin(), windowItems.end());
-
-        if (aliveWindowItems != sortedWindowItems) {
-            qFatal("workspaceWindowItems != sortedWindowItems");
-        }
-        if (sortedWindowItems != windowItems) {
-            qFatal("sortedWindowItems != windowItems");
-        }
-    }
-
     for (Item *item : std::as_const(items)) {
         WindowItem *windowItem = static_cast<WindowItem *>(item);
         if (windowItem->isVisible()) {

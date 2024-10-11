@@ -119,10 +119,6 @@ void Window::unref()
         workspace()->removeDeleted(this);
     }
     delete this;
-
-    if (workspace()->stackingOrder().contains(this)) {
-        qFatal("a deleted window is still in the stack");
-    }
 }
 
 QDebug operator<<(QDebug debug, const Window *window)

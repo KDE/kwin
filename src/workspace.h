@@ -253,11 +253,6 @@ public:
         return m_windows;
     }
 
-    QList<Window *> closed() const
-    {
-        return deleted;
-    }
-
 #if KWIN_BUILD_X11
     void stackScreenEdgesUnderOverrideRedirect();
 #endif
