@@ -27,8 +27,8 @@
 // Qt
 #include <QAction>
 #include <QFile>
+#include <QJSEngine>
 #include <QList>
-#include <QQmlEngine>
 #include <QStandardPaths>
 
 #include <optional>
@@ -235,11 +235,11 @@ bool ScriptedEffect::init(const QString &effectName, const QString &pathToScript
     QJSValue globalObject = m_engine->globalObject();
 
     QJSValue effectsObject = m_engine->newQObject(effects);
-    QQmlEngine::setObjectOwnership(effects, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(effects, QJSEngine::CppOwnership);
     globalObject.setProperty(QStringLiteral("effects"), effectsObject);
 
     QJSValue selfObject = m_engine->newQObject(this);
-    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
     globalObject.setProperty(QStringLiteral("effect"), selfObject);
 
     globalObject.setProperty(QStringLiteral("Effect"),
@@ -647,7 +647,7 @@ void ScriptedEffect::registerShortcut(const QString &objectName, const QString &
     KGlobalAccel::self()->setShortcut(action, QList<QKeySequence>() << shortcut);
     connect(action, &QAction::triggered, this, [this, action, callback]() {
         QJSValue actionObject = m_engine->newQObject(action);
-        QQmlEngine::setObjectOwnership(action, QQmlEngine::CppOwnership);
+        QJSEngine::setObjectOwnership(action, QJSEngine::CppOwnership);
         QJSValue(callback).call(QJSValueList{actionObject});
     });
 }

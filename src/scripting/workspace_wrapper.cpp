@@ -26,7 +26,7 @@
 #include "x11window.h"
 #endif
 
-#include <QQmlEngine>
+#include <QJSEngine>
 
 namespace KWin
 {
@@ -304,7 +304,7 @@ void WorkspaceWrapper::raiseWindow(KWin::Window *window)
 Window *WorkspaceWrapper::getClient(qulonglong windowId)
 {
     auto window = Workspace::self()->findClient(Predicate::WindowMatch, windowId);
-    QQmlEngine::setObjectOwnership(window, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(window, QJSEngine::CppOwnership);
     return window;
 }
 #endif
@@ -384,7 +384,7 @@ QList<Output *> WorkspaceWrapper::screens() const
 Output *WorkspaceWrapper::screenAt(const QPointF &pos) const
 {
     auto output = workspace()->outputAt(pos);
-    QQmlEngine::setObjectOwnership(output, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(output, QJSEngine::CppOwnership);
     return output;
 }
 
@@ -408,7 +408,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
     Output *output = kwinApp()->outputBackend()->findOutput(screenName);
     if (output) {
         auto tileManager = workspace()->tileManager(output);
-        QQmlEngine::setObjectOwnership(tileManager, QQmlEngine::CppOwnership);
+        QJSEngine::setObjectOwnership(tileManager, QJSEngine::CppOwnership);
         return tileManager;
     }
     return nullptr;
@@ -417,7 +417,7 @@ KWin::TileManager *WorkspaceWrapper::tilingForScreen(const QString &screenName) 
 KWin::TileManager *WorkspaceWrapper::tilingForScreen(Output *output) const
 {
     auto tileManager = workspace()->tileManager(output);
-    QQmlEngine::setObjectOwnership(tileManager, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(tileManager, QJSEngine::CppOwnership);
     return tileManager;
 }
 

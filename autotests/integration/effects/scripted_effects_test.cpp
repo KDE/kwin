@@ -26,8 +26,8 @@
 #include <KWayland/Client/slide.h>
 #include <KWayland/Client/surface.h>
 
+#include <QJSEngine>
 #include <QJSValue>
-#include <QQmlEngine>
 
 using namespace KWin;
 using namespace std::chrono_literals;
@@ -97,7 +97,7 @@ ScriptedEffectWithDebugSpy::ScriptedEffectWithDebugSpy()
 bool ScriptedEffectWithDebugSpy::load(const QString &name)
 {
     auto selfContext = engine()->newQObject(this);
-    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
     const QString path = QFINDTESTDATA("./scripts/" + name + ".js");
     engine()->globalObject().setProperty("sendTestResponse", selfContext.property("sendTestResponse"));
     if (!init(name, path)) {

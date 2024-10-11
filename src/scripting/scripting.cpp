@@ -221,16 +221,16 @@ void KWin::Script::slotScriptLoadedFromFile()
 
     // Make the options object visible to QJSEngine.
     QJSValue optionsObject = m_engine->newQObject(options);
-    QQmlEngine::setObjectOwnership(options, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(options, QJSEngine::CppOwnership);
     m_engine->globalObject().setProperty(QStringLiteral("options"), optionsObject);
 
     // Make the workspace visible to QJSEngine.
     QJSValue workspaceObject = m_engine->newQObject(Scripting::self()->workspaceWrapper());
-    QQmlEngine::setObjectOwnership(Scripting::self()->workspaceWrapper(), QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(Scripting::self()->workspaceWrapper(), QJSEngine::CppOwnership);
     m_engine->globalObject().setProperty(QStringLiteral("workspace"), workspaceObject);
 
     QJSValue self = m_engine->newQObject(this);
-    QQmlEngine::setObjectOwnership(this, QQmlEngine::CppOwnership);
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
 
     static const QStringList globalProperties{
         QStringLiteral("readConfig"),
