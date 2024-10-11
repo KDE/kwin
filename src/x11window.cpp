@@ -2516,29 +2516,9 @@ void X11Window::getIcons()
     setIcon(icon);
 }
 
-/**
- * Returns \c true if X11Client wants to throttle resizes; otherwise returns \c false.
- */
-bool X11Window::wantsSyncCounter() const
-{
-    if (!waylandServer()) {
-        return true;
-    }
-    // When the frame window is resized, the attached buffer will be destroyed by
-    // Xwayland, causing unexpected invalid previous and current window pixmaps.
-    // With the addition of multiple window buffers in Xwayland 1.21, X11 clients
-    // are no longer able to destroy the buffer after it's been committed and not
-    // released by the compositor yet.
-    static const quint32 xwaylandVersion = xcb_get_setup(kwinApp()->x11Connection())->release_number;
-    return xwaylandVersion >= 12100000;
-}
-
 void X11Window::getSyncCounter()
 {
     if (!Xcb::Extensions::self()->isSyncAvailable()) {
-        return;
-    }
-    if (!wantsSyncCounter()) {
         return;
     }
 

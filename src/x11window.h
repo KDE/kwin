@@ -292,7 +292,6 @@ public:
     {
         return m_syncRequest;
     }
-    bool wantsSyncCounter() const;
     void handleSync();
     void handleSyncTimeout();
 
