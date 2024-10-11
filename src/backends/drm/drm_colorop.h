@@ -10,6 +10,7 @@
 #include "core/colorpipeline.h"
 #include "drm_object.h"
 
+#include <QObject>
 #include <drm.h>
 #include <memory>
 #include <span>
@@ -77,8 +78,15 @@ class DrmAtomicCommit;
 
 class DrmAbstractColorOp
 {
+    Q_GADGET
 public:
-    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, bool needsNonLinearity = false);
+    enum class Feature {
+        NonLinear = 1 << 0,
+        Bypass = 1 << 1,
+    };
+    Q_DECLARE_FLAGS(Features, Feature);
+
+    explicit DrmAbstractColorOp(DrmAbstractColorOp *next, Features features);
     virtual ~DrmAbstractColorOp();
 
     bool matchPipeline(DrmAtomicCommit *commit, const ColorPipeline &pipeline);
@@ -88,14 +96,15 @@ public:
 
     DrmAbstractColorOp *next() const;
     bool needsNonlinearity() const;
+    bool canBypass() const;
 
 protected:
-    DrmAbstractColorOp *m_next = nullptr;
+    DrmAbstractColorOp *const m_next;
+    const Features m_features;
 
     std::optional<ColorPipeline> m_cachedPipeline;
     std::optional<ColorPipeline> m_cachedPipelineFail;
     std::unique_ptr<DrmAtomicCommit> m_cache;
-    bool m_needsNonLinerity = false;
 };
 
 class DrmLutColorOp : public DrmAbstractColorOp

@@ -17,9 +17,9 @@
 namespace KWin
 {
 
-DrmAbstractColorOp::DrmAbstractColorOp(DrmAbstractColorOp *next, bool needsNonLinearity)
+DrmAbstractColorOp::DrmAbstractColorOp(DrmAbstractColorOp *next, Features features)
     : m_next(next)
-    , m_needsNonLinerity(needsNonLinearity)
+    , m_features(features)
 {
 }
 
@@ -34,7 +34,12 @@ DrmAbstractColorOp *DrmAbstractColorOp::next() const
 
 bool DrmAbstractColorOp::needsNonlinearity() const
 {
-    return m_needsNonLinerity;
+    return m_features & Feature::NonLinear;
+}
+
+bool DrmAbstractColorOp::canBypass() const
+{
+    return m_features & Feature::Bypass;
 }
 
 static std::pair<bool, std::optional<ColorOp::Operation>> findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *, std::vector<ColorOp::Operation>> &map, DrmAbstractColorOp *lastOp, DrmAbstractColorOp *currentOp, std::span<const ColorOp> ops, std::optional<ColorOp::Operation> inputScale)
@@ -64,16 +69,22 @@ static std::pair<bool, std::optional<ColorOp::Operation>> findColorPipelineAssig
             return std::make_pair(false, std::nullopt);
         }
         preference = currentOp->colorOpPreference(ops.front().operation);
+        if (!preference && !currentOp->canBypass()) {
+            return std::make_pair(false, std::nullopt);
+        }
     }
     // if there's a different hw op with a higher preference, try that first
     DrmAbstractColorOp *otherOp = currentOp->next();
     while (otherOp) {
         const auto otherPref = otherOp->colorOpPreference(ops.front().operation);
-        if (otherPref && *otherPref > *preference) {
+        if (otherPref && (*otherPref > *preference || !otherOp->canBypass())) {
             const auto [success, scaleOp] = findColorPipelineAssignments(map, currentOp, otherOp, ops, inputScale);
             if (success && (!scaleOp || currentOp->colorOpPreference(*scaleOp))) {
                 return std::make_pair(true, scaleOp);
             }
+        }
+        if (!otherOp->canBypass()) {
+            break;
         }
         otherOp = otherOp->next();
     }
@@ -166,7 +177,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
 }
 
 DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize, DrmProperty *bypass)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
     , m_prop(prop)
     , m_bypass(bypass)
     , m_maxSize(maxSize)
@@ -221,7 +232,7 @@ void DrmLutColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 LegacyMatrixColorOp::LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, Feature::Bypass)
     , m_prop(prop)
 {
 }
@@ -287,7 +298,7 @@ void LegacyMatrixColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 Matrix3x4ColorOp::Matrix3x4ColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmProperty *bypass)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
     , m_prop(prop)
     , m_bypass(bypass)
 {
@@ -331,7 +342,9 @@ void Matrix3x4ColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp:
         doubleToFixed(result(2, 0)), doubleToFixed(result(2, 1)), doubleToFixed(result(2, 2)), doubleToFixed(result(2, 3)), //
     };
     commit->addBlob(*m_prop, DrmBlob::create(m_prop->drmObject()->gpu(), data.data(), sizeof(uint64_t) * data.size()));
-    commit->addProperty(*m_bypass, 0);
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
 }
 
 void Matrix3x4ColorOp::bypass(DrmAtomicCommit *commit)
@@ -340,7 +353,7 @@ void Matrix3x4ColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 UnknownColorOp::UnknownColorOp(DrmAbstractColorOp *next, DrmProperty *bypass)
-    : DrmAbstractColorOp(next)
+    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
     , m_bypass(bypass)
 {
 }
@@ -361,7 +374,7 @@ void UnknownColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 DrmLut3DColorOp::DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *modeIndex, const QList<drm_mode_3dlut_mode> &modes, DrmProperty *bypass)
-    : DrmAbstractColorOp(next, true)
+    : DrmAbstractColorOp(next, Features{Feature::NonLinear} | (bypass ? Feature::Bypass : Features{}))
     , m_value(value)
     , m_bypass(bypass)
     , m_3dLutModeIndex(modeIndex)
@@ -407,7 +420,9 @@ void DrmLut3DColorOp::program(DrmAtomicCommit *commit, std::span<const ColorOp::
     }
     commit->addBlob(*m_value, DrmBlob::create(m_value->drmObject()->gpu(), m_components.data(), m_components.size() * sizeof(drm_color_lut)));
     commit->addProperty(*m_3dLutModeIndex, 0);
-    commit->addProperty(*m_bypass, 0);
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
 }
 
 void DrmLut3DColorOp::bypass(DrmAtomicCommit *commit)
@@ -468,19 +483,15 @@ bool DrmColorOp::updateProperties()
         }
     }
 
-    if (!m_bypass.isValid()) {
-        qCWarning(KWIN_DRM, "Bypass property is invalid, skipping color pipeline!");
-        // TODO handle this; as long as the operation matches what we want to use, we could still make it work
-        return false;
-    }
     if (m_op) {
         return true;
     }
     const auto next = m_nextOp ? m_nextOp->colorOp() : nullptr;
+    const auto bypassProp = m_bypass.isValid() ? &m_bypass : nullptr;
     if (!m_type.hasEnumForValue(m_type.value())) {
         // we don't know this color operation type (yet)
         // but we have a bypass, so it's fine
-        m_op = std::make_unique<UnknownColorOp>(next, &m_bypass);
+        m_op = std::make_unique<UnknownColorOp>(next, bypassProp);
         qCDebug(KWIN_DRM, "skipping unknown color op %lu", m_type.value());
         return true;
     }
@@ -488,13 +499,13 @@ bool DrmColorOp::updateProperties()
     case Type::Lut1D:
         if (!m_1dlutSize.isValid() || !m_1dlutSize.value()) {
             qCWarning(KWIN_DRM, "skipping 1D lut with invalid size property");
-            m_op = std::make_unique<UnknownColorOp>(next, &m_bypass);
+            m_op = std::make_unique<UnknownColorOp>(next, bypassProp);
             return true;
         }
-        m_op = std::make_unique<DrmLutColorOp>(next, &m_data, m_1dlutSize.value(), &m_bypass);
+        m_op = std::make_unique<DrmLutColorOp>(next, &m_data, m_1dlutSize.value(), bypassProp);
         return true;
     case Type::Matrix3x4:
-        m_op = std::make_unique<Matrix3x4ColorOp>(next, &m_data, &m_bypass);
+        m_op = std::make_unique<Matrix3x4ColorOp>(next, &m_data, bypassProp);
         return true;
     case Type::Lut3D:
         QList<drm_mode_3dlut_mode> modes;
@@ -511,10 +522,10 @@ bool DrmColorOp::updateProperties()
         }
         if (!m_3dLutModeIndex.isValid() || modes.empty()) {
             qCDebug(KWIN_DRM, "skipping 3D lut with invalid mode index, mode blob or exclusively unsupported modes");
-            m_op = std::make_unique<UnknownColorOp>(next, &m_bypass);
+            m_op = std::make_unique<UnknownColorOp>(next, bypassProp);
             return true;
         }
-        m_op = std::make_unique<DrmLut3DColorOp>(next, &m_data, &m_3dLutModeIndex, modes, &m_bypass);
+        m_op = std::make_unique<DrmLut3DColorOp>(next, &m_data, &m_3dLutModeIndex, modes, bypassProp);
         return true;
     }
     Q_UNREACHABLE();
