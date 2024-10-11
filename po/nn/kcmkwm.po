@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2024-07-12 20:45+0200\n"
 "Last-Translator: Karl Ove Hufthammer <karl@huftis.org>\n"
 "Language-Team: Norwegian Nynorsk <l10n-no@lister.huftis.org>\n"
@@ -875,37 +875,37 @@ msgstr "&Skild skjermfokus"
 msgid "Window activation policy description"
 msgstr "Reglar for vindaugsaktivering"
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokus"
 
-#: main.cpp:85
+#: main.cpp:86
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Handlingar for &tittellinja"
 
-#: main.cpp:90
+#: main.cpp:91
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Handlingar for &vindauge"
 
-#: main.cpp:95
+#: main.cpp:96
 #, kde-format
 msgid "Mo&vement"
 msgstr "Fl&ytting"
 
-#: main.cpp:100
+#: main.cpp:101
 #, kde-format
 msgid "Adva&nced"
 msgstr "A&vansert"
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Handlingar for &tittellinja"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Handlingar for &vindauge"

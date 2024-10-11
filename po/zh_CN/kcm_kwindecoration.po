@@ -209,10 +209,9 @@ msgid "Get New…"
 msgstr "获取新窗口装饰…"
 
 #: ui/Themes.qml:93
-#, fuzzy, kde-format
-#| msgid "Edit %1 Theme"
+#, kde-format
 msgid "Edit %1 Theme…"
-msgstr "编辑 %1 主题"
+msgstr "编辑 %1 主题…"
 
 #: utils.cpp:25
 #, kde-format

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2023-05-14 16:06+0200\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -870,37 +870,37 @@ msgstr "Oddeliť zamerenie obrazoviek"
 msgid "Window activation policy description"
 msgstr "Popis politiky aktivácie okna"
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "&Zameranie"
 
-#: main.cpp:85
+#: main.cpp:86
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "Akcie záhlavia okna"
 
-#: main.cpp:90
+#: main.cpp:91
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Akcie ok&na"
 
-#: main.cpp:95
+#: main.cpp:96
 #, kde-format
 msgid "Mo&vement"
 msgstr "Pohyb"
 
-#: main.cpp:100
+#: main.cpp:101
 #, kde-format
 msgid "Adva&nced"
 msgstr "&Pokročilé"
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Akcie záhlavia okna"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Akcie ok&na"

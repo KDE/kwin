@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2022-12-04 02:30+0000\n"
 "Last-Translator: Pedro Morais <morais@kde.org>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -896,37 +896,37 @@ msgstr "S&eparar o foco de cada ecrã"
 msgid "Window activation policy description"
 msgstr "Descrição da política de activação da janela"
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "&Foco"
 
-#: main.cpp:85
+#: main.cpp:86
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "A&cções da Barra de Título"
 
-#: main.cpp:90
+#: main.cpp:91
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Acções da Ja&nela"
 
-#: main.cpp:95
+#: main.cpp:96
 #, kde-format
 msgid "Mo&vement"
 msgstr "Mo&vimento"
 
-#: main.cpp:100
+#: main.cpp:101
 #, kde-format
 msgid "Adva&nced"
 msgstr "Ava&nçado"
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Acções da Barra de &Título"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Acções da Ja&nela"

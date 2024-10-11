@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2023-09-20 21:23+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -893,37 +893,37 @@ msgstr "&Separa el focus de cada pantalla"
 msgid "Window activation policy description"
 msgstr "Descripció de la política d'activació de les finestres"
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "&Focus"
 
-#: main.cpp:85
+#: main.cpp:86
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr "A&ccions de la barra de títol"
 
-#: main.cpp:90
+#: main.cpp:91
 #, kde-format
 msgid "W&indow Actions"
 msgstr "Accions de la f&inestra"
 
-#: main.cpp:95
+#: main.cpp:96
 #, kde-format
 msgid "Mo&vement"
 msgstr "Mo&viment"
 
-#: main.cpp:100
+#: main.cpp:101
 #, kde-format
 msgid "Adva&nced"
 msgstr "Ava&nçat"
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "Accions de la barra de &títol"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "Accio&ns de la finestra"

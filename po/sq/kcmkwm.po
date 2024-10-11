@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2009-05-21 16:13+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -801,39 +801,39 @@ msgstr ""
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "&Fokus"
 
-#: main.cpp:85
+#: main.cpp:86
 #, kde-format
 msgid "Titlebar A&ctions"
 msgstr ""
 
-#: main.cpp:90
+#: main.cpp:91
 #, fuzzy, kde-format
 #| msgid "Windows"
 msgid "W&indow Actions"
 msgstr "Dritaret"
 
-#: main.cpp:95
+#: main.cpp:96
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "&Vendosja:"
 
-#: main.cpp:100
+#: main.cpp:101
 #, kde-format
 msgid "Adva&nced"
 msgstr ""
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr ""
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
 msgstr ""

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2013-06-23 13:10-0500\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
@@ -839,41 +839,41 @@ msgstr "ਵੱਖਰਾ ਸਕਰੀਨ ਫੋਕਸ(&e)"
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "ਫੋਕਸ(&F)"
 
-#: main.cpp:85
+#: main.cpp:86
 #, fuzzy, kde-format
 #| msgid "&Titlebar Actions"
 msgid "Titlebar A&ctions"
 msgstr "ਟਾਇਟਲਬਾਰ ਐਕਸ਼ਨ(&T)"
 
-#: main.cpp:90
+#: main.cpp:91
 #, fuzzy, kde-format
 #| msgid "Window Actio&ns"
 msgid "W&indow Actions"
 msgstr "ਵਿੰਡੋ ਐਕਸ਼ਨ(&n)"
 
-#: main.cpp:95
+#: main.cpp:96
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "ਸਥਿਤ(&P):"
 
-#: main.cpp:100
+#: main.cpp:101
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "ਤਕਨੀਕੀ(&v)"
 
-#: main.cpp:179
+#: main.cpp:180
 #, kde-format
 msgid "&Titlebar Actions"
 msgstr "ਟਾਇਟਲਬਾਰ ਐਕਸ਼ਨ(&T)"
 
-#: main.cpp:189
+#: main.cpp:190
 #, kde-format
 msgid "Window Actio&ns"
 msgstr "ਵਿੰਡੋ ਐਕਸ਼ਨ(&n)"

@@ -23,10 +23,9 @@ msgid "Import KWin Script"
 msgstr "导入 KWin 脚本"
 
 #: module.cpp:53
-#, fuzzy, kde-format
-#| msgid "*.kwinscript|KWin scripts (*.kwinscript)"
+#, kde-format
 msgid "KWin Script (*.kwinscript)"
-msgstr "*.kwinscript|KWin 脚本 (*.kwinscript)"
+msgstr "KWin 脚本 (*.kwinscript)"
 
 #: module.cpp:65
 #, kde-format

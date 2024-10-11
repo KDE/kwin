@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwm\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-24 00:40+0000\n"
+"POT-Creation-Date: 2024-10-11 00:41+0000\n"
 "PO-Revision-Date: 2002-10-24 12:06SAST\n"
 "Last-Translator: Lwandle Mgidlana <lwandle@translate.org.za>\n"
 "Language-Team: Xhosa <xhosa@translate.org.za>\n"
@@ -853,39 +853,39 @@ msgstr ""
 msgid "Window activation policy description"
 msgstr ""
 
-#: main.cpp:80
+#: main.cpp:81
 #, kde-format
 msgid "&Focus"
 msgstr "&Qwalasela"
 
-#: main.cpp:85
+#: main.cpp:86
 #, fuzzy, kde-format
 msgid "Titlebar A&ctions"
 msgstr "&Unqakrazo kabini lwe bar yewonga:"
 
-#: main.cpp:90
+#: main.cpp:91
 #, fuzzy, kde-format
 msgid "W&indow Actions"
 msgstr "Iintshuku&mo"
 
-#: main.cpp:95
+#: main.cpp:96
 #, fuzzy, kde-format
 #| msgid "&Placement:"
 msgid "Mo&vement"
 msgstr "&Ubeko:"
 
-#: main.cpp:100
+#: main.cpp:101
 #, fuzzy, kde-format
 #| msgid "Ad&vanced"
 msgid "Adva&nced"
 msgstr "Eb&hekisa phambili"
 
-#: main.cpp:179
+#: main.cpp:180
 #, fuzzy, kde-format
 msgid "&Titlebar Actions"
 msgstr "&Unqakrazo kabini lwe bar yewonga:"
 
-#: main.cpp:189
+#: main.cpp:190
 #, fuzzy, kde-format
 msgid "Window Actio&ns"
 msgstr "Iintshuku&mo"

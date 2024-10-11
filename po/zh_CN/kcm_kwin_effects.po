@@ -53,9 +53,3 @@ msgstr "过滤条件"
 #, kde-format
 msgid "Exclude unsupported effects"
 msgstr "排除不支持的特效"
-
-#~ msgid ""
-#~ "Hint: To find out or configure how to activate an effect, look at the "
-#~ "effect's settings."
-#~ msgstr ""
-#~ "提示：要了解或配置特效的工作方式，请选中一种特效并点击列表右侧的配置按钮。"

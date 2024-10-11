@@ -2014,8 +2014,7 @@ msgstr "高度(&H)："
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
 msgstr "打开/关闭鼠标点击动效"
 
