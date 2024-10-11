@@ -104,6 +104,7 @@
     "X-KDE-Keywords[he]": "xwayland,כללי,מפתחות,העברה",
     "X-KDE-Keywords[hu]": "xwayland,globális,billentyűk,továbbítás",
     "X-KDE-Keywords[ia]": "xwayland,global,keys,forward",
+    "X-KDE-Keywords[is]": "xwayland,altækt,lyklar,áfram",
     "X-KDE-Keywords[it]": "xwayland,globale,tasti,inoltro",
     "X-KDE-Keywords[ka]": "xwayland,global,keys,forward,გლობალური,ღილაკები,წინ",
     "X-KDE-Keywords[lv]": "xwayland,globāli,taustiņi,uz priekšu",
@@ -116,6 +117,7 @@
     "X-KDE-Keywords[tr]": "xwayland,global,düğmeler,tuşlar,ileri",
     "X-KDE-Keywords[uk]": "xwayland,global,keys,forward,іксвейленд,загальне,клавіші,переспрямування,вперед",
     "X-KDE-Keywords[x-test]": "xxxwaylandxx,xxglobalxx,xxkeysxx,xxforwardxx",
+    "X-KDE-Keywords[zh_CN]": "xwayland,global,keys,forward,quanju,anjian,jian,jianwei,zhuanfa,chuandi,全局,按键,键,键位,转发,传递",
     "X-KDE-Keywords[zh_TW]": "xwayland,全域,案件,轉送",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"

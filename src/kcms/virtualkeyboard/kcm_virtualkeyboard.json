@@ -111,6 +111,7 @@
     "X-KDE-Keywords[he]": "מקלדת תוכנה,מקלדת וירטואלית,מקלדת מגע,מקלדת על המסך,שיטות קלט",
     "X-KDE-Keywords[hu]": "szoftveres billentyűzet,virtuális billentyűzet,érintőbillentyűzet,képernyőbillentyűzet,beviteli módok",
     "X-KDE-Keywords[ia]": "claviero software, claviero virtual, claviero a toccar, claviero sur schermo, methodos de entrata",
+    "X-KDE-Keywords[is]": "lyklaborðsforrit,sýndarlyklaborð,snertilyklaborð,lyklaborð á skjá, innsláttaraðferð",
     "X-KDE-Keywords[it]": "tastiera software,tastiera virtuale,tastiera tattile,tastiera su schermo,metodi di inserimento",
     "X-KDE-Keywords[ka]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,პროგრამული კლავიატურა,ვირტუალური კლავიატურა,კლავიატურა ეკრანზე,შეყვანის მეთოდები",
     "X-KDE-Keywords[lv]": "programmatūras tastatūra,virtuālā tastatūra,skārienjutīga tastatūra,ekrāna tastatūra,ievades metodes",
@@ -123,6 +124,7 @@
     "X-KDE-Keywords[tr]": "yazılım klavyesi,sanal klavye,dokunmatik klavye,ekran klavyesi,giriş yöntemi,giriş yöntemleri",
     "X-KDE-Keywords[uk]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,програмна клавіатура,віртуальна клавіатура,сенсорна клавіатура,екранна клавіатура,способи введення",
     "X-KDE-Keywords[x-test]": "xxsoftware keyboardxx,xxvirtual keyboardxx,xxtouch keyboardxx,xxon screen keyboardxx,xxinput methodsxx",
+    "X-KDE-Keywords[zh_CN]": "software keyboard,virtual keyboard,touch keyboard,on screen keyboard,input methods,ruanjianjianpan,xunijianpan,pingmujianpan,pingshangjianpan,shurufangshi,shurufa,软件键盘,虚拟键盘,屏幕键盘,屏上键盘,输入方式,输入法",
     "X-KDE-Keywords[zh_TW]": "軟體鍵盤,虛擬鍵盤,觸控鍵盤,螢幕鍵盤,輸入法",
     "X-KDE-OnlyShowOnQtPlatforms": [
         "wayland"
