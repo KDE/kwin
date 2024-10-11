@@ -180,6 +180,20 @@ private:
     QList<drm_color_lut> m_components;
 };
 
+class DrmMultiplier : public DrmAbstractColorOp
+{
+public:
+    explicit DrmMultiplier(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass);
+
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    DrmProperty *const m_value;
+    DrmProperty *const m_bypass;
+};
+
 class DrmColorOp : public DrmObject
 {
 public:
@@ -195,8 +209,8 @@ private:
         Lut1D,
         Matrix3x4,
         Lut3D,
-        // TODO NamedLut for completion, plus multiplier to make it more useful
-        // NOTE that it doesn't do gamma 2.2 rn, but instead the (inverse) piece-wise sRGB TF, which is completely useless :/
+        Multiplier,
+        // TODO NamedLut for completion
     };
     DrmProperty m_next;
     DrmEnumProperty<Type> m_type;

@@ -430,6 +430,44 @@ void DrmLut3DColorOp::bypass(DrmAtomicCommit *commit)
     commit->addProperty(*m_bypass, 1);
 }
 
+DrmMultiplier::DrmMultiplier(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass)
+    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
+    , m_value(value)
+    , m_bypass(bypass)
+{
+}
+
+std::optional<uint32_t> DrmMultiplier::colorOpPreference(const ColorOp::Operation &op)
+{
+    if (const auto mult = std::get_if<ColorMultiplier>(&op)) {
+        const float diff1 = std::abs(mult->factors.x() - mult->factors.y());
+        const float diff2 = std::abs(mult->factors.y() - mult->factors.z());
+        const float diff3 = std::abs(mult->factors.z() - mult->factors.x());
+        const float maxDiff = std::max({diff1, diff2, diff3});
+        if (maxDiff < 0.00001) {
+            return 1;
+        }
+    }
+    return std::nullopt;
+}
+
+void DrmMultiplier::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+{
+    double factor = 1;
+    for (const auto &op : operations) {
+        factor *= std::get<ColorMultiplier>(op).factors.x();
+    }
+    commit->addProperty(*m_value, doubleToFixed(factor));
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
+}
+
+void DrmMultiplier::bypass(DrmAtomicCommit *commit)
+{
+    commit->addProperty(*m_bypass, 1);
+}
+
 DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
     : DrmObject(gpu, objectId, DRM_MODE_OBJECT_ANY)
     , m_next(this, "NEXT")
@@ -437,6 +475,7 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                "1D Curve Custom LUT",
                                "3x4 Matrix",
                                "3D LUT",
+                               "Multiplier",
                            })
     , m_data(this, "DATA")
     , m_1dlutSize(this, "SIZE")
@@ -507,7 +546,7 @@ bool DrmColorOp::updateProperties()
     case Type::Matrix3x4:
         m_op = std::make_unique<Matrix3x4ColorOp>(next, &m_data, bypassProp);
         return true;
-    case Type::Lut3D:
+    case Type::Lut3D: {
         QList<drm_mode_3dlut_mode> modes;
         if (auto blob = m_3dLutModesBlob.immutableBlob()) {
             std::span blobContents(reinterpret_cast<drm_mode_3dlut_mode *>(blob->data), blob->length / sizeof(drm_mode_3dlut_mode));
@@ -526,6 +565,10 @@ bool DrmColorOp::updateProperties()
             return true;
         }
         m_op = std::make_unique<DrmLut3DColorOp>(next, &m_data, &m_3dLutModeIndex, modes, bypassProp);
+        return true;
+    }
+    case Type::Multiplier:
+        m_op = std::make_unique<DrmMultiplier>(next, &m_data, bypassProp);
         return true;
     }
     Q_UNREACHABLE();
