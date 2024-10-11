@@ -10,7 +10,7 @@
 namespace KWin
 {
 
-static constexpr uint32_t s_version = 1;
+static constexpr uint32_t s_version = 2;
 
 ExternalBrightnessV1::ExternalBrightnessV1(Display *display, QObject *parent)
     : QObject(parent)
@@ -60,9 +60,21 @@ ExternalBrightnessDeviceV1::~ExternalBrightnessDeviceV1()
 
 void ExternalBrightnessDeviceV1::setBrightness(double brightness)
 {
+    m_observedBrightness.reset();
+
     const uint32_t minBrightness = m_internal ? 1 : 0; // some laptop screens turn off at brightness 0
     const uint32_t val = std::round(std::lerp(minBrightness, m_maxBrightness, std::clamp(brightness, 0.0, 1.0)));
     send_requested_brightness(val);
+}
+
+std::optional<double> ExternalBrightnessDeviceV1::observedBrightness() const
+{
+    std::optional<double> fractional = std::nullopt;
+    if (m_observedBrightness.has_value()) {
+        const uint32_t minBrightness = m_internal ? 1 : 0; // some laptop screens turn off at brightness 0
+        fractional = std::clamp((*m_observedBrightness - minBrightness) / static_cast<double>(m_maxBrightness - minBrightness), 0.0, 1.0);
+    }
+    return fractional;
 }
 
 bool ExternalBrightnessDeviceV1::isInternal() const
@@ -103,6 +115,11 @@ void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_set_edid(Reso
 void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_set_max_brightness(Resource *resource, uint32_t value)
 {
     m_maxBrightness = value;
+}
+
+void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_set_observed_brightness(Resource *resource, uint32_t value)
+{
+    m_observedBrightness = value;
 }
 
 void ExternalBrightnessDeviceV1::kde_external_brightness_device_v1_commit(Resource *resource)

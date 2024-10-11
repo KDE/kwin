@@ -508,6 +508,16 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
 void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 {
     Output::setBrightnessDevice(device);
+
+    if (device && m_state.allowSdrSoftwareBrightness && device->observedBrightness().has_value()) {
+        // adopt the screen's initial brightness value if this brightness device is seen for the first time.
+        // This can't be done in output configuration store as we're not necessarily aware of the brightness device
+        // at that point
+        State next = m_state;
+        next.currentBrightness = device->observedBrightness();
+        next.brightnessSetting = *next.currentBrightness;
+        setState(next);
+    }
     updateBrightness(m_state.currentBrightness.value_or(m_state.brightnessSetting), m_state.artificialHdrHeadroom);
 }
 

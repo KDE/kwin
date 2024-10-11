@@ -49,6 +49,7 @@ public:
 
     void setBrightness(double brightness) override;
 
+    std::optional<double> observedBrightness() const override;
     bool isInternal() const override;
     QByteArray edidBeginning() const override;
     int brightnessSteps() const override;
@@ -59,12 +60,14 @@ private:
     void kde_external_brightness_device_v1_set_internal(Resource *resource, uint32_t internal) override;
     void kde_external_brightness_device_v1_set_edid(Resource *resource, const QString &string) override;
     void kde_external_brightness_device_v1_set_max_brightness(Resource *resource, uint32_t value) override;
+    void kde_external_brightness_device_v1_set_observed_brightness(Resource *resource, uint32_t value) override;
     void kde_external_brightness_device_v1_commit(Resource *resource) override;
 
     QPointer<ExternalBrightnessV1> m_global;
+    QByteArray m_edidBeginning;
+    std::optional<uint32_t> m_observedBrightness;
     uint32_t m_maxBrightness = 1;
     bool m_internal = false;
-    QByteArray m_edidBeginning;
     bool m_done = false;
 };
 

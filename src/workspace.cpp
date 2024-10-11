@@ -556,6 +556,7 @@ void Workspace::updateOutputConfiguration()
     for (Output *output : outputs) {
         if (output->brightnessDevice()) {
             cfg.changeSet(output)->allowSdrSoftwareBrightness = false;
+            cfg.changeSet(output)->brightness = output->brightnessSetting();
         }
     }
 
