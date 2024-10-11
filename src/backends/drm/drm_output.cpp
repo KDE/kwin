@@ -499,15 +499,19 @@ void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 {
     Output::setBrightnessDevice(device);
 
+    double newBrightness = m_state.currentBrightness.value_or(m_state.brightnessSetting);
+
     if (device && !m_state.brightnessDeviceEverAssigned) {
         State next = m_state;
+        next.brightnessSetting = device->observedBrightness().value_or(m_state.brightnessSetting);
         next.brightnessDeviceEverAssigned = true;
         setState(next);
+        newBrightness = next.brightnessSetting;
     }
     if (m_state.brightnessDeviceEverAssigned) {
         updateInformation(); // Capability::BrightnessControl depends on m_brightnessDevice
     }
-    updateBrightness(m_state.currentBrightness.value_or(m_state.brightnessSetting));
+    updateBrightness(newBrightness);
 }
 
 void DrmOutput::updateBrightness(double newBrightness)
