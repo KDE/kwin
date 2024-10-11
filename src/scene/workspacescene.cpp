@@ -510,11 +510,11 @@ void WorkspaceScene::createStackingOrder()
         }
         std::sort(windowItems.begin(), windowItems.end());
 
-        if (sortedWindowItems != windowItems) {
-            qFatal("sortedWindowItems != windowItems");
-        }
         if (aliveWindowItems != sortedWindowItems) {
             qFatal("workspaceWindowItems != sortedWindowItems");
+        }
+        if (sortedWindowItems != windowItems) {
+            qFatal("sortedWindowItems != windowItems");
         }
     }
 
