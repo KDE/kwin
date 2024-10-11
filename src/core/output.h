@@ -367,6 +367,7 @@ public:
 
     BrightnessDevice *brightnessDevice() const;
     virtual void setBrightnessDevice(BrightnessDevice *device);
+    bool brightnessDeviceEverAssigned() const;
 
 Q_SIGNALS:
     /**
@@ -484,6 +485,7 @@ protected:
         double sdrGamutWideness = 0;
         VrrPolicy vrrPolicy = VrrPolicy::Automatic;
         double brightness = 1.0;
+        bool brightnessDeviceEverAssigned = false;
     };
 
     void setInformation(const Information &information);

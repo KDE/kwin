@@ -1359,7 +1359,10 @@ void Workspace::assignBrightnessDevices()
         return;
     }
     QList<Output *> candidates = m_outputs;
+    OutputConfiguration configUpdates;
+    bool hasConfigUpdates = false;
     const auto devices = waylandServer()->externalBrightness()->devices();
+
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
         const auto it = std::ranges::find_if(candidates, [device](Output *output) {
@@ -1378,6 +1381,11 @@ void Workspace::assignBrightnessDevices()
             if (oldOutput && oldOutput != output) {
                 oldOutput->setBrightnessDevice(nullptr);
             }
+            if (!output->brightnessDeviceEverAssigned()) {
+                auto changeSet = configUpdates.changeSet(output);
+                changeSet->brightnessDeviceEverAssigned = true;
+                hasConfigUpdates = true;
+            }
             output->setBrightnessDevice(device);
             device->setOutput(output);
             candidates.erase(it);
@@ -1387,6 +1395,10 @@ void Workspace::assignBrightnessDevices()
                 oldOutput->setBrightnessDevice(nullptr);
             }
         }
+    }
+
+    if (hasConfigUpdates && kwinApp()->outputBackend()->applyOutputChanges(configUpdates)) {
+        m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), configUpdates, m_outputOrder);
     }
 }
 

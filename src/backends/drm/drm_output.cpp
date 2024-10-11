@@ -248,7 +248,7 @@ static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_D
 
 Output::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::BrightnessControl;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }
@@ -278,6 +278,11 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->isInternal()) {
         // TODO only set this if an orientation sensor is available?
         capabilities |= Capability::AutoRotation;
+    }
+    if (m_brightnessDevice || !m_state.brightnessDeviceEverAssigned) {
+        // Don't offer software brightness controls for an output that has lost its known hardware
+        // brightness controls. Mixing both is usually unwanted and transitions can be jarring.
+        capabilities |= Capability::BrightnessControl;
     }
     return capabilities;
 }
@@ -408,6 +413,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     Q_EMIT aboutToChange(props.get());
     m_pipeline->applyPendingChanges();
 
+    auto previousBrightnessDeviceEverAssigned = m_state.brightnessDeviceEverAssigned;
+
     State next = m_state;
     next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
     next.position = props->pos.value_or(m_state.position);
@@ -431,9 +438,14 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightness = props->brightness.value_or(m_state.brightness);
+    next.brightnessDeviceEverAssigned = props->brightnessDeviceEverAssigned.value_or(m_state.brightnessDeviceEverAssigned);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
+
+    if (m_state.brightnessDeviceEverAssigned && !previousBrightnessDeviceEverAssigned) {
+        updateInformation(); // Capability::BrightnessControl now depends on m_brightnessDevice
+    }
 
     if (m_brightnessDevice) {
         if (m_state.highDynamicRange) {
@@ -458,6 +470,11 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
 void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 {
     Output::setBrightnessDevice(device);
+
+    if (m_state.brightnessDeviceEverAssigned) {
+        updateInformation(); // Capability::BrightnessControl now depends on m_brightnessDevice
+    }
+
     if (device) {
         if (m_state.highDynamicRange) {
             device->setBrightness(1);
@@ -540,7 +557,7 @@ QVector3D DrmOutput::effectiveChannelFactors() const
     QVector3D adaptedChannelFactors = ColorDescription::sRGB.toOther(colorDescription(), RenderingIntent::RelativeColorimetric) * m_channelFactors;
     // normalize red to be the original brightness value again
     adaptedChannelFactors *= m_channelFactors.x() / adaptedChannelFactors.x();
-    if (m_state.highDynamicRange || !m_brightnessDevice) {
+    if (m_state.highDynamicRange || ((m_information.capabilities & Capability::BrightnessControl) && !m_brightnessDevice)) {
         // enforce a minimum of 25 nits for the reference luminance
         constexpr double minLuminance = 25;
         const double brightnessFactor = (m_state.brightness * (1 - (minLuminance / m_state.referenceLuminance))) + (minLuminance / m_state.referenceLuminance);
