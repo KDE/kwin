@@ -1388,6 +1388,9 @@ void Workspace::assignBrightnessDevices()
             }
         }
     }
+
+    // brightnessDeviceEverAssigned or brightness value itself could have changed
+    m_outputConfigStore->storeConfig(kwinApp()->outputBackend()->outputs(), m_lidSwitchTracker->isLidClosed(), OutputConfiguration(), m_outputOrder);
 }
 
 void Workspace::slotDesktopAdded(VirtualDesktop *desktop)

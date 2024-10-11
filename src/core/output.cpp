@@ -799,6 +799,11 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
 {
     m_brightnessDevice = device;
 }
+
+bool Output::brightnessDeviceEverAssigned() const
+{
+    return m_state.brightnessDeviceEverAssigned;
+}
 } // namespace KWin
 
 #include "moc_output.cpp"

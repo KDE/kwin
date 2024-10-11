@@ -248,7 +248,7 @@ static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_D
 
 Output::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::BrightnessControl;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }
@@ -278,6 +278,11 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->isInternal()) {
         // TODO only set this if an orientation sensor is available?
         capabilities |= Capability::AutoRotation;
+    }
+    if (m_brightnessDevice || !m_state.brightnessDeviceEverAssigned) {
+        // Don't offer software brightness controls for an output that has lost its known hardware
+        // brightness controls. Mixing both is usually unwanted and transitions can be jarring.
+        capabilities |= Capability::BrightnessControl;
     }
     return capabilities;
 }
@@ -430,7 +435,8 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
 
-    const double brightnessFactor = !m_brightnessDevice || effectiveHdr ? brightness : 1.0;
+    const bool shouldApplyBrightnessFactor = ((m_information.capabilities & Capability::BrightnessControl) && !m_brightnessDevice) || effectiveHdr;
+    const double brightnessFactor = shouldApplyBrightnessFactor ? brightness : 1.0;
     const double effectiveReferenceLuminance = 25 + (referenceLuminance - 25) * brightnessFactor;
     return applyNightLight(ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry), m_channelFactors);
 }
@@ -442,6 +448,8 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     }
     Q_EMIT aboutToChange(props.get());
     m_pipeline->applyPendingChanges();
+
+    auto previousBrightnessDeviceEverAssigned = m_state.brightnessDeviceEverAssigned;
 
     State next = m_state;
     next.enabled = props->enabled.value_or(m_state.enabled) && m_pipeline->crtc();
@@ -466,9 +474,14 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.vrrPolicy = props->vrrPolicy.value_or(m_state.vrrPolicy);
     next.colorProfileSource = props->colorProfileSource.value_or(m_state.colorProfileSource);
     next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
+    next.brightnessDeviceEverAssigned = props->brightnessDeviceEverAssigned.value_or(m_state.brightnessDeviceEverAssigned);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
     setState(next);
+
+    if (m_state.brightnessDeviceEverAssigned && !previousBrightnessDeviceEverAssigned) {
+        updateInformation(); // Capability::BrightnessControl now depends on m_brightnessDevice
+    }
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset(nullptr);
@@ -485,6 +498,15 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
 void DrmOutput::setBrightnessDevice(BrightnessDevice *device)
 {
     Output::setBrightnessDevice(device);
+
+    if (device && !m_state.brightnessDeviceEverAssigned) {
+        State next = m_state;
+        next.brightnessDeviceEverAssigned = true;
+        setState(next);
+    }
+    if (m_state.brightnessDeviceEverAssigned) {
+        updateInformation(); // Capability::BrightnessControl depends on m_brightnessDevice
+    }
     updateBrightness(m_state.currentBrightness.value_or(m_state.brightnessSetting));
 }
 

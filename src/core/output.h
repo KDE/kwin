@@ -368,6 +368,7 @@ public:
 
     BrightnessDevice *brightnessDevice() const;
     virtual void setBrightnessDevice(BrightnessDevice *device);
+    bool brightnessDeviceEverAssigned() const;
 
 Q_SIGNALS:
     /**
@@ -488,6 +489,7 @@ protected:
         double brightnessSetting = 1.0;
         /// the actually applied brightness level
         std::optional<double> currentBrightness;
+        bool brightnessDeviceEverAssigned = false;
     };
 
     void setInformation(const Information &information);
