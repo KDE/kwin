@@ -20,6 +20,8 @@
 #include "x11window.h"
 #endif
 
+#include <QJSEngine>
+
 namespace KWin
 {
 
@@ -47,6 +49,8 @@ EffectWindow::Private::Private(EffectWindow *q, WindowItem *windowItem)
 EffectWindow::EffectWindow(WindowItem *windowItem)
     : d(new Private(this, windowItem))
 {
+    QJSEngine::setObjectOwnership(this, QJSEngine::CppOwnership);
+
     // Deleted windows are not managed. So, when windowClosed signal is
     // emitted, effects can't distinguish managed windows from unmanaged
     // windows(e.g. combo box popups, popup menus, etc). Save value of the
