@@ -13,14 +13,14 @@ msgstr ""
 "Project-Id-Version: kcmkwindecoration\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-08-29 00:40+0000\n"
-"PO-Revision-Date: 2024-02-19 18:17+0000\n"
-"Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
+"PO-Revision-Date: 2024-09-29 17:55+0000\n"
+"Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -82,12 +82,10 @@ msgid "Spacer"
 msgstr "Bil"
 
 #: kcm.cpp:177
-#, fuzzy, kde-format
-#| msgctxt "%1 is the name of a border size"
-#| msgid "Theme's default (%1)"
+#, kde-format
 msgctxt "%1 is the name of a border size"
 msgid "Theme default (%1)"
-msgstr "Sjálfgildi fyrir þemað (%1)"
+msgstr "Sjálfgildi fyrir þema (%1)"
 
 #: kwin-applywindowdecoration.cpp:32
 #, kde-format
@@ -231,56 +229,47 @@ msgid "Edit %1 Theme"
 msgstr "Breyta þemanu %1"
 
 #: utils.cpp:25
-#, fuzzy, kde-format
-#| msgid "No Window Borders"
+#, kde-format
 msgid "No window borders"
-msgstr "Enginn rammi utan um glugga"
+msgstr "Engir gluggarammar"
 
 #: utils.cpp:26
-#, fuzzy, kde-format
-#| msgid "No Side Window Borders"
+#, kde-format
 msgid "No side window borders"
-msgstr "Engar rammalínur á hliðum glugga"
+msgstr "Engar útlínur á hliðum glugga"
 
 #: utils.cpp:27
-#, fuzzy, kde-format
-#| msgid "Tiny Window Borders"
+#, kde-format
 msgid "Tiny window borders"
-msgstr "Mjór rammi utan um glugga"
+msgstr "Mjór gluggarammi "
 
 #: utils.cpp:28
-#, fuzzy, kde-format
-#| msgid "Normal Window Borders"
+#, kde-format
 msgid "Normal window borders"
-msgstr "Venjulegur rammi utan um glugga"
+msgstr "Venjulegur gluggarammi "
 
 #: utils.cpp:29
-#, fuzzy, kde-format
-#| msgid "Large Window Borders"
+#, kde-format
 msgid "Large window borders"
-msgstr "Breiður rammi utan um glugga"
+msgstr "Breiður gluggarammi"
 
 #: utils.cpp:30
-#, fuzzy, kde-format
-#| msgid "Very Large Window Borders"
+#, kde-format
 msgid "Very large window borders"
-msgstr "Mjög breiður rammi utan um glugga"
+msgstr "Mjög breiður gluggarammi"
 
 #: utils.cpp:31
-#, fuzzy, kde-format
-#| msgid "Huge Window Borders"
+#, kde-format
 msgid "Huge window borders"
-msgstr "Mjög þykkur rammi utan um glugga"
+msgstr "Mjög þykkur gluggarammi"
 
 #: utils.cpp:32
-#, fuzzy, kde-format
-#| msgid "Very Huge Window Borders"
+#, kde-format
 msgid "Very huge window borders"
-msgstr "Gríðarlega þykkur rammi utan um glugga"
+msgstr "Gríðarlega þykkur gluggarammi"
 
 #: utils.cpp:33
-#, fuzzy, kde-format
-#| msgid "Oversized Window Borders"
+#, kde-format
 msgid "Oversized window borders"
 msgstr "Gluggarammi í yfirstærð"
 

@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-27 02:37+0000\n"
-"PO-Revision-Date: 2024-03-06 13:54+0000\n"
-"Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
+"PO-Revision-Date: 2024-09-29 17:56+0000\n"
+"Last-Translator: Gummi <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
 "Language: is\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 23.08.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 "Plural-Forms: Plural-Forms: nplurals=2; plural=n != 1;\n"
 "\n"
 "\n"
@@ -47,26 +47,22 @@ msgid "Unimportant"
 msgstr "Ekki mikilvægt"
 
 #: optionsmodel.cpp:199
-#, fuzzy, kde-format
-#| msgid "Exact Match"
+#, kde-format
 msgid "Exact match"
 msgstr "Nákvæm samsvörun"
 
 #: optionsmodel.cpp:200
-#, fuzzy, kde-format
-#| msgid "Substring Match"
+#, kde-format
 msgid "Substring match"
 msgstr "Samsvörun undirstrengs"
 
 #: optionsmodel.cpp:201
-#, fuzzy, kde-format
-#| msgid "Regular Expression"
+#, kde-format
 msgid "Regular expression"
 msgstr "Regluleg segð"
 
 #: optionsmodel.cpp:205
-#, fuzzy, kde-format
-#| msgid "Apply Initially"
+#, kde-format
 msgid "Apply initially"
 msgstr "Virkja í upphafi"
 
@@ -82,8 +78,7 @@ msgstr ""
 "Engar frekari breytingar verða gerðar."
 
 #: optionsmodel.cpp:209
-#, fuzzy, kde-format
-#| msgid "Apply Now"
+#, kde-format
 msgid "Apply now"
 msgstr "Virkja núna"
 
@@ -113,8 +108,7 @@ msgstr ""
 "minni verður notað í hvert sinn sem glugginn er búinn til."
 
 #: optionsmodel.cpp:217
-#, fuzzy, kde-format
-#| msgid "Do Not Affect"
+#, kde-format
 msgid "Do not affect"
 msgstr "Hafa ekki áhrif"
 
@@ -141,8 +135,7 @@ msgid "The window property will be always forced to the given value."
 msgstr "Gluggaeiginleikinn verður alltaf þvingaður á tilgreinda gildið."
 
 #: optionsmodel.cpp:224
-#, fuzzy, kde-format
-#| msgid "Force Temporarily"
+#, kde-format
 msgid "Force temporarily"
 msgstr "Þvinga tímabundið"
 
@@ -276,14 +269,12 @@ msgid "Maximized vertically"
 msgstr "Fullstækkaður lóðrétt"
 
 #: rulesmodel.cpp:463
-#, fuzzy, kde-format
-#| msgid "Virtual Desktop"
+#, kde-format
 msgid "Virtual desktop"
 msgstr "Sýndarskjáborð"
 
 #: rulesmodel.cpp:469
-#, fuzzy, kde-format
-#| msgid "Virtual Desktops"
+#, kde-format
 msgid "Virtual desktops"
 msgstr "Sýndarskjáborð"
 
@@ -604,15 +595,14 @@ msgid "Layer"
 msgstr "Lag"
 
 #: rulesmodel.cpp:718
-#, fuzzy, kde-format
-#| msgid "Adaptive Sync"
+#, kde-format
 msgid "Adaptive sync"
 msgstr "Aðlögunarsamstilling (adaptive sync)"
 
 #: rulesmodel.cpp:723
 #, kde-format
 msgid "Allow tearing"
-msgstr ""
+msgstr "Leyfa rifgalla"
 
 #: rulesmodel.cpp:775
 #, kde-format
@@ -635,26 +625,22 @@ msgstr ""
 "tilkynna þessa villu til þróunaraðila forritsins."
 
 #: rulesmodel.cpp:810
-#, fuzzy, kde-format
-#| msgid "All Window Types"
+#, kde-format
 msgid "All window types"
 msgstr "Allar gerðir glugga"
 
 #: rulesmodel.cpp:811
-#, fuzzy, kde-format
-#| msgid "Normal Window"
+#, kde-format
 msgid "Normal window"
 msgstr "Venjulegur gluggi"
 
 #: rulesmodel.cpp:812
-#, fuzzy, kde-format
-#| msgid "Dialog Window"
+#, kde-format
 msgid "Dialog window"
 msgstr "Svargluggi"
 
 #: rulesmodel.cpp:813
-#, fuzzy, kde-format
-#| msgid "Utility Window"
+#, kde-format
 msgid "Utility window"
 msgstr "Verkfæragluggi"
 
@@ -669,14 +655,12 @@ msgid "Toolbar"
 msgstr "Tækjastika"
 
 #: rulesmodel.cpp:816
-#, fuzzy, kde-format
-#| msgid "Torn-Off Menu"
+#, kde-format
 msgid "Torn-off menu"
 msgstr "Afrifin valmynd"
 
 #: rulesmodel.cpp:817
-#, fuzzy, kde-format
-#| msgid "Splash Screen"
+#, kde-format
 msgid "Splash screen"
 msgstr "Upphafsskjár"
 
@@ -687,20 +671,17 @@ msgstr "Skjáborð"
 
 #. i18n("Unmanaged Window")},  deprecated
 #: rulesmodel.cpp:820
-#, fuzzy, kde-format
-#| msgid "Standalone Menubar"
+#, kde-format
 msgid "Standalone menubar"
 msgstr "Sjálfstæð valmyndastika"
 
 #: rulesmodel.cpp:821 rulesmodel.cpp:928
-#, fuzzy, kde-format
-#| msgid "On Screen Display"
+#, kde-format
 msgid "On-screen display"
 msgstr "Yfirlag á skjá"
 
 #: rulesmodel.cpp:831
-#, fuzzy, kde-format
-#| msgid "All Desktops"
+#, kde-format
 msgid "All desktops"
 msgstr "Öll skjáborð"
 
@@ -711,8 +692,7 @@ msgid "Make the window available on all desktops"
 msgstr "Hafa gluggann á öllum skjáborðum"
 
 #: rulesmodel.cpp:852
-#, fuzzy, kde-format
-#| msgid "All Activities"
+#, kde-format
 msgid "All activities"
 msgstr "Allar athafnir"
 
@@ -728,14 +708,12 @@ msgid "Default"
 msgstr "Sjálfgefið"
 
 #: rulesmodel.cpp:876
-#, fuzzy, kde-format
-#| msgid "No Placement"
+#, kde-format
 msgid "No placement"
 msgstr "Engin staðsetning"
 
 #: rulesmodel.cpp:877
-#, fuzzy, kde-format
-#| msgid "Minimal Overlapping"
+#, kde-format
 msgid "Minimal overlapping"
 msgstr "Lágmarksskörun"
 
@@ -755,20 +733,17 @@ msgid "Random"
 msgstr "Slembið"
 
 #: rulesmodel.cpp:881
-#, fuzzy, kde-format
-#| msgid "In Top-Left Corner"
+#, kde-format
 msgid "In top-left corner"
 msgstr "Efst í vinstra horni"
 
 #: rulesmodel.cpp:882
-#, fuzzy, kde-format
-#| msgid "Under Mouse"
+#, kde-format
 msgid "Under mouse"
 msgstr "Undir mús"
 
 #: rulesmodel.cpp:883
-#, fuzzy, kde-format
-#| msgid "On Main Window"
+#, kde-format
 msgid "On main window"
 msgstr "Á aðalglugga"
 
@@ -818,8 +793,7 @@ msgid "Popup"
 msgstr "Sprettigluggi"
 
 #: rulesmodel.cpp:927
-#, fuzzy, kde-format
-#| msgid "Critical Notification"
+#, kde-format
 msgid "Critical notification"
 msgstr "Alvarleg viðvörun"
 
@@ -985,18 +959,16 @@ msgid "Add property to the rule"
 msgstr "Bæta eiginleika við regluna"
 
 #: ui/RulesEditor.qml:267
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No properties left to add"
-msgstr "Engum gluggaeiginleikum breytt"
+msgstr "Engir eiginleikar eftir til að bæta við"
 
 #: ui/RulesEditor.qml:269
-#, fuzzy, kde-format
-#| msgid "No window properties changed"
+#, kde-format
 msgctxt "@info:placeholder %1 is a filter text introduced by the user"
 msgid "No properties match \"%1\""
-msgstr "Engum gluggaeiginleikum breytt"
+msgstr "Enginn eiginleiki samsvarar \"%1\""
 
 #: ui/RulesEditor.qml:290 ui/ValueEditor.qml:54
 #, kde-format

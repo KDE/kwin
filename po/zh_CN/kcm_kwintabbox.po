@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwintabbox.pot\n"
-"X-Crowdin-File-ID: 43359\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kcm_kwintabbox.pot\n"
+"X-Crowdin-File-ID: 51698\n"
 
 #: layoutpreview.cpp:127
 #, kde-format
@@ -39,10 +39,9 @@ msgid "Alternative"
 msgstr "候选窗口"
 
 #: main.cpp:72
-#, fuzzy, kde-format
-#| msgid "Get New Task Switchers…"
+#, kde-format
 msgid "Get New Task Switcher Styles…"
-msgstr "获取新任务切换器…"
+msgstr "获取新任务切换器样式…"
 
 #: main.cpp:90
 #, kde-format

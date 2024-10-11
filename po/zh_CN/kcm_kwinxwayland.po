@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/kwin/kcm_kwinxwayland.pot\n"
-"X-Crowdin-File-ID: 43323\n"
+"X-Crowdin-File: /kf6-stable/messages/kwin/kcm_kwinxwayland.pot\n"
+"X-Crowdin-File-ID: 52300\n"
 
 #: ui/main.qml:32
 #, kde-format
