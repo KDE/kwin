@@ -214,13 +214,6 @@ void DrmGpu::initDrmResources()
             if (connected != list.end()) {
                 return *connected;
             }
-            // don't take away planes from other crtcs. The kernel currently rejects such commits
-            const auto notconnected = std::ranges::find_if(list, [](DrmPlane *plane) {
-                return plane->crtcId.value() == 0;
-            });
-            if (notconnected != list.end()) {
-                return *notconnected;
-            }
             return list.empty() ? nullptr : list.front();
         };
         DrmPlane *primary = findBestPlane(primaryCandidates);
