@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:40+0000\n"
+"POT-Creation-Date: 2024-10-12 00:40+0000\n"
 "PO-Revision-Date: 2024-08-29 15:26+0300\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
@@ -4262,7 +4262,7 @@ msgstr "Pārslēgties vienu darbvirsmu uz leju"
 msgid "Switch to Desktop %1"
 msgstr "Pārslēgties uz %1. darbvirsmu"
 
-#: window.cpp:3120
+#: window.cpp:3116
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4292,7 +4292,7 @@ msgstr ""
 "piemēram, https://paste.kde.org, tā vietā, lai tekstu ielīmētu pašās "
 "atbalsta ziņās.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:273
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "„Xwayland“ ir avarējis"

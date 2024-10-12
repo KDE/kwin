@@ -21,7 +21,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-02 00:40+0000\n"
+"POT-Creation-Date: 2024-10-12 00:40+0000\n"
 "PO-Revision-Date: 2024-09-20 10:05+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
@@ -4271,7 +4271,7 @@ msgstr "Ir un escritorio cara baixo"
 msgid "Switch to Desktop %1"
 msgstr "Ir ao escritorio %1"
 
-#: window.cpp:3120
+#: window.cpp:3116
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
@@ -4300,7 +4300,7 @@ msgstr ""
 "servizo de almacenamento de texto\n"
 "como https://paste.kde.org no canto de pegala no fío de asistencia técnica.\n"
 
-#: xwayland/xwaylandlauncher.cpp:277
+#: xwayland/xwaylandlauncher.cpp:273
 #, kde-format
 msgid "Xwayland has crashed"
 msgstr "Xwayland quebrou."
