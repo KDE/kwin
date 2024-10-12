@@ -188,39 +188,26 @@ void DrmGpu::initDrmResources()
     QList<DrmPlane *> assignedPlanes;
     for (int i = 0; i < resources->count_crtcs; ++i) {
         uint32_t crtcId = resources->crtcs[i];
-        QList<DrmPlane *> primaryCandidates;
-        QList<DrmPlane *> cursorCandidates;
-        QList<DrmPlane *> overlayCandidates;
-        for (const auto &plane : m_planes) {
-            if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
-                if (plane->type.enumValue() == DrmPlane::TypeIndex::Primary) {
-                    primaryCandidates.push_back(plane.get());
-                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
-                    cursorCandidates.push_back(plane.get());
-                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Overlay) {
-                    overlayCandidates.push_back(plane.get());
-                }
-            }
-        }
-        if (m_atomicModeSetting && primaryCandidates.empty()) {
-            qCWarning(KWIN_DRM) << "Could not find a suitable primary plane for crtc" << resources->crtcs[i];
-            continue;
-        }
-        const auto findBestPlane = [crtcId](const QList<DrmPlane *> &list) {
+        const auto findBestPlane = [&](DrmPlane::TypeIndex type) {
+            auto available = m_planes | std::views::filter([&](const auto &plane) {
+                return plane->isCrtcSupported(i)
+                    && !assignedPlanes.contains(plane.get())
+                    && plane->type.enumValue() == type;
+            });
             // if the plane is already used with this crtc, prefer it
-            const auto connected = std::ranges::find_if(list, [crtcId](DrmPlane *plane) {
+            const auto connected = std::ranges::find_if(available, [crtcId](const auto &plane) {
                 return plane->crtcId.value() == crtcId;
             });
-            if (connected != list.end()) {
-                return *connected;
+            if (connected != available.end()) {
+                return connected->get();
             }
-            return list.empty() ? nullptr : list.front();
+            return available.empty() ? nullptr : available.front().get();
         };
-        DrmPlane *primary = findBestPlane(primaryCandidates);
+        DrmPlane *primary = findBestPlane(DrmPlane::TypeIndex::Primary);
         assignedPlanes.push_back(primary);
-        DrmPlane *cursor = findBestPlane(cursorCandidates);
+        DrmPlane *cursor = findBestPlane(DrmPlane::TypeIndex::Cursor);
         if (!cursor) {
-            cursor = findBestPlane(overlayCandidates);
+            cursor = findBestPlane(DrmPlane::TypeIndex::Overlay);
         }
         if (cursor) {
             assignedPlanes.push_back(cursor);
