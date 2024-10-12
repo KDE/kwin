@@ -114,6 +114,7 @@
     "X-KDE-Keywords[he]": "שולחן עבודה,שולחנות עבודה,דסקטופ,דסקטופים,שולחן עבודה וירטואלי,ריבוי שולחנות עבודה,דפדפן,וידג׳ט דפדפן,יישומון דפדוף,יישומונית דפדוף,הגדרות דפדפן,מחוון,ניווט,קובייה,שקופית,מרחבי עבודה",
     "X-KDE-Keywords[hu]": "asztal,asztalok,szám,virtuális asztal,több asztal,lapozó,lapozó elem,lapozó kisalkalmazás,lapozóbeállítások,jelző,navigáció,kocka,csúszás,munkaterületek",
     "X-KDE-Keywords[ia]": "scriptorio,scriptorios,numero,scriptorio virtual,scriptorio multiple,pager, widget de pager, applet de pager, preferentias de pager, indicator, navigation, cubo, glissamento, spatios de labor",
+    "X-KDE-Keywords[is]": "skjáborð,fjöldi,sýndarskjábroð,mörg skjáborð,flettir,flettigræja,flettismáforrit,stillinger flettis,vísir,flakk,teningur,renna,vinnusvæði",
     "X-KDE-Keywords[it]": "desktop,desktop,numero,desktop virtuale,desktop multipli,selettore dei desktop,oggetto del selettore dei desktop,applet selettore dei desktop,impostazioni selettore dei desktop,indicatore,navigazione,cubo,diapositiva,aree di lavoro",
     "X-KDE-Keywords[ka]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,სამუშაო მაგიდა,ვიჯეტები,ვირტუალური სამუშაო მაგიდა,რიცხვი,აპლეტები",
     "X-KDE-Keywords[nn]": "skrivebord,mengd,tal,virtuelt skrivebord,fleire skrivebord,vekslar,vekslarelement,vekslarelement,vekslerinnstillinger,vekslaroppsett,indikator,navigering,navigasjon,kube,gliding,arbeidsområde",
@@ -123,6 +124,7 @@
     "X-KDE-Keywords[sv]": "skrivbord,nummer,virtuellt skrivbord,flera skrivbord,skrivbordsväljare,skrivbordsväljarkomponent, skrivbordsväljarminiprogram, skrivbordsväljarinställningar,indikator,navigering,kub,bild,arbetsytor",
     "X-KDE-Keywords[tr]": "masaüstü,masaüstleri,sayı,numara,sanal masaüstü,çoklu masaüstleri,sayfalayıcı,araç takımı,uygulamacık,ayarlar,gösterge,dolaşım,gezinti,küp,kaydır,çalışma alanları",
     "X-KDE-Keywords[uk]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,indicator,navigation,cube,slide,workspaces,стільниця,стільниці,кількість,віртуальна стільниця,перемикач,пейджер,віджет перемикача,віджет пейджера,аплет перемикання,аплет перемикача,параметри перемикання,параметри перемикача,індикатор,навігація,куб,ковзання,слайд,простори",
+    "X-KDE-Keywords[zh_CN]": "desktop,desktops,number,virtual desktop,multiple desktops,pager,pager widget,pager applet,pager settings,zhuomian,xunizhuomian,duozhuomian,qiehuan,xunizhuomianqiehuanqi,qiehuanqi,qiehuanqizujian,qiehuanqishezhi,zhishiqi,zhishise,tishiqi,tishise,daohang,fangkuai,zhengfangti,huadong,gongzuoqu,gongzuokongjian,桌面,虚拟桌面,多桌面,切换,虚拟桌面切换器,切换器,切换器组件,切换器设置,指示器,指示色,提示器,提示色,导航,方块,正方体,滑动,工作区,工作空间",
     "X-KDE-Keywords[zh_TW]": "桌面,虛擬桌面,桌面管理器,虛擬桌面管理器,指示器,瀏覽,工作空間",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 60

@@ -109,6 +109,7 @@
     "X-KDE-Keywords[he]": "סקריפט kwin,תוספים,מנהל חלונות",
     "X-KDE-Keywords[hu]": "kwin parancsfájlok,bővítmények,ablakkezelő",
     "X-KDE-Keywords[ia]": "script, plugins, gerente de fenestra de kwin",
+    "X-KDE-Keywords[is]": "kwin-skrifta,viðbætur,gluggastjóri",
     "X-KDE-Keywords[it]": "script di kwin,estensioni,gestore delle finestre",
     "X-KDE-Keywords[ka]": "kwin script,plugins,window manager,დამატებები,ფანჯრების მართვა,kwin-ის სკრიპტი",
     "X-KDE-Keywords[lt]": "kwin scenarijus,kwin scenarijai,įskiepiai,iskiepiai,langų tvarkytuvė,langu tvarkytuve",
@@ -119,6 +120,7 @@
     "X-KDE-Keywords[sv]": "kwin-skript,insticksprogram,fönsterhanterare",
     "X-KDE-Keywords[tr]": "kwin betiği,eklentiler,pencere yöneticisi",
     "X-KDE-Keywords[uk]": "kwin script,plugins,window manager,скрипт квін,додатки,керування,вікна",
+    "X-KDE-Keywords[zh_CN]": "kwin script,plugins,window manager,jiaoben,chajian,chuangkouguanliqi,kwin 脚本,插件,窗口管理器",
     "X-KDE-Keywords[zh_TW]": "kwin 文稿,kwin 指令稿,插件,外掛程式,視窗管理員",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 50

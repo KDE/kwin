@@ -114,6 +114,7 @@
     "X-KDE-Keywords[he]": "גודל,מקום,מיקום,הצבה,מצב,התנהגות חלון,חלונות,מסוים,מסוימים,מעקפים,שמירה,זכירה,כללי חלון,יישומים,יישומונים",
     "X-KDE-Keywords[hu]": "méret,pozíció,állapot,ablakműködés,ablakok,specifikus,kerülőút,emlékeztető,szabályok,ablakszabályok,alkalmazások",
     "X-KDE-Keywords[ia]": "grandor,position,stato,comportamento de fenestra,fenestras,specific,workarounds,memora,regulas, regulas de fenestra,apps,applicationes",
+    "X-KDE-Keywords[is]": "stærð,staðsetning,staða,gluggahegðun,gluggar,tilgreint,aukalausnir,muna,reglur,gluggareglur,forrit,hugbúnaður",
     "X-KDE-Keywords[it]": "dimensione,posizione,stato,comportamento della finestra,finestre,specifico,espedienti,ricorda,regole,regole delle finestre,applicazioni",
     "X-KDE-Keywords[ka]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,აპლიკაციები,აპები,ფანჯრის წესები,წესები,დამახსოვრება,ფანჯრები,ფანჯრების ქცევა,მდებარეობა,ზომა",
     "X-KDE-Keywords[nn]": "storleik,plassering,tilstand,vindaugsåtferd,vindauge,einskild,løysingar,unntak,hugs,reglar,vindaugsreglar,appar,applikasjonar,program,brukarprogram",
@@ -123,6 +124,7 @@
     "X-KDE-Keywords[sv]": "storlek,position,tillstånd,fönsterbeteende,fönster,specifik,lösningar,komma ihåg,regler,fönsterregler,program,applikationer",
     "X-KDE-Keywords[tr]": "boyut,konum,durum,davranış,pencereler,başka yöntem,anımsa,kural,uygulama,app,uygulamalar",
     "X-KDE-Keywords[uk]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,window rules,apps,applications,розмір,розташування,місце,стан,поведінка,вікно,вікна,поведінка вікон,окрема,специфічна,окремо,запам’ятати,пам’ять,правило,правила,правила вікон,програми",
+    "X-KDE-Keywords[zh_CN]": "size,position,state,window behavior,windows,specific,workarounds,remember,rules,daxiao,weizhi,chuangkouxingwei,teding,gebie,zhiding,jizhu,jiyi,jilu,guize,chuangkouguize,yingyong,yingyongchengxu,大小,位置,窗口行为,特定,个别,指定,记住,记忆,记录,规则,窗口规则,应用,应用程序",
     "X-KDE-Keywords[zh_TW]": "大小,尺寸,位置,狀態,視窗行為,視窗,特定,專用,記住,規則,視窗規則,應用程式,程式",
     "X-KDE-System-Settings-Parent-Category": "windowmanagement",
     "X-KDE-Weight": 40
