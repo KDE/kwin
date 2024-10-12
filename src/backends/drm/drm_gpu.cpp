@@ -183,12 +183,15 @@ void DrmGpu::initDrmResources()
         uint32_t crtcId = resources->crtcs[i];
         QList<DrmPlane *> primaryCandidates;
         QList<DrmPlane *> cursorCandidates;
+        QList<DrmPlane *> overlayCandidates;
         for (const auto &plane : m_planes) {
             if (plane->isCrtcSupported(i) && !assignedPlanes.contains(plane.get())) {
                 if (plane->type.enumValue() == DrmPlane::TypeIndex::Primary) {
                     primaryCandidates.push_back(plane.get());
                 } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Cursor) {
                     cursorCandidates.push_back(plane.get());
+                } else if (plane->type.enumValue() == DrmPlane::TypeIndex::Overlay) {
+                    overlayCandidates.push_back(plane.get());
                 }
             }
         }
@@ -214,8 +217,11 @@ void DrmGpu::initDrmResources()
             return list.empty() ? nullptr : list.front();
         };
         DrmPlane *primary = findBestPlane(primaryCandidates);
-        DrmPlane *cursor = findBestPlane(cursorCandidates);
         assignedPlanes.push_back(primary);
+        DrmPlane *cursor = findBestPlane(cursorCandidates);
+        if (!cursor) {
+            cursor = findBestPlane(overlayCandidates);
+        }
         if (cursor) {
             assignedPlanes.push_back(cursor);
         }
