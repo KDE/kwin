@@ -83,6 +83,7 @@ public:
     enum class Feature {
         NonLinear = 1 << 0,
         Bypass = 1 << 1,
+        MultipleOps = 1 << 2,
     };
     Q_DECLARE_FLAGS(Features, Feature);
 
@@ -97,6 +98,7 @@ public:
     DrmAbstractColorOp *next() const;
     bool needsNonlinearity() const;
     bool canBypass() const;
+    bool supportsMultipleOps() const;
 
 protected:
     DrmAbstractColorOp *const m_next;
@@ -194,6 +196,27 @@ private:
     DrmProperty *const m_bypass;
 };
 
+enum class Named1DLutType {
+    sRGB_EOTF,
+    sRGB_Inverse_EOTF,
+};
+
+class DrmNamed1DLut : public DrmAbstractColorOp
+{
+public:
+    explicit DrmNamed1DLut(DrmAbstractColorOp *next, DrmEnumProperty<Named1DLutType> *value, DrmProperty *bypass);
+
+    std::optional<uint32_t> colorOpPreference(const ColorOp::Operation &op) override;
+    void program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations) override;
+    void bypass(DrmAtomicCommit *commit) override;
+
+private:
+    std::optional<Named1DLutType> getType(const ColorOp::Operation &op) const;
+
+    DrmEnumProperty<Named1DLutType> *const m_value;
+    DrmProperty *const m_bypass;
+};
+
 class DrmColorOp : public DrmObject
 {
 public:
@@ -210,7 +233,7 @@ private:
         Matrix3x4,
         Lut3D,
         Multiplier,
-        // TODO NamedLut for completion
+        NamedLut1D,
     };
     DrmProperty m_next;
     DrmEnumProperty<Type> m_type;
@@ -219,6 +242,7 @@ private:
     DrmProperty m_bypass;
     DrmProperty m_3dLutModeIndex;
     DrmProperty m_3dLutModesBlob;
+    DrmEnumProperty<Named1DLutType> m_1dNamedLutType;
     std::unique_ptr<DrmAbstractColorOp> m_op;
     std::unique_ptr<DrmColorOp> m_nextOp;
 };

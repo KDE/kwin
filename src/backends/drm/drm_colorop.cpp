@@ -42,6 +42,11 @@ bool DrmAbstractColorOp::canBypass() const
     return m_features & Feature::Bypass;
 }
 
+bool DrmAbstractColorOp::supportsMultipleOps() const
+{
+    return m_features & Feature::MultipleOps;
+}
+
 static std::pair<bool, std::optional<ColorOp::Operation>> findColorPipelineAssignments(std::unordered_map<DrmAbstractColorOp *, std::vector<ColorOp::Operation>> &map, DrmAbstractColorOp *lastOp, DrmAbstractColorOp *currentOp, std::span<const ColorOp> ops, std::optional<ColorOp::Operation> inputScale)
 {
     if (ops.empty()) {
@@ -109,7 +114,8 @@ static std::pair<bool, std::optional<ColorOp::Operation>> findColorPipelineAssig
             invOutputScale.reset();
         }
     }
-    const auto [success, scaleOp] = findColorPipelineAssignments(map, currentOp, currentOp, ops.subspan(1), invOutputScale);
+    const auto nextOp = currentOp->supportsMultipleOps() ? currentOp : currentOp->next();
+    const auto [success, scaleOp] = findColorPipelineAssignments(map, currentOp, nextOp, ops.subspan(1), invOutputScale);
     if (!success || (scaleOp && !currentOp->colorOpPreference(*scaleOp))) {
         return std::make_pair(false, std::nullopt);
     }
@@ -177,7 +183,7 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
 }
 
 DrmLutColorOp::DrmLutColorOp(DrmAbstractColorOp *next, DrmProperty *prop, uint32_t maxSize, DrmProperty *bypass)
-    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
+    : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | (bypass ? Feature::Bypass : Features{}))
     , m_prop(prop)
     , m_bypass(bypass)
     , m_maxSize(maxSize)
@@ -232,7 +238,7 @@ void DrmLutColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 LegacyMatrixColorOp::LegacyMatrixColorOp(DrmAbstractColorOp *next, DrmProperty *prop)
-    : DrmAbstractColorOp(next, Feature::Bypass)
+    : DrmAbstractColorOp(next, Features{Feature::Bypass} | Feature::MultipleOps)
     , m_prop(prop)
 {
 }
@@ -298,7 +304,7 @@ void LegacyMatrixColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 Matrix3x4ColorOp::Matrix3x4ColorOp(DrmAbstractColorOp *next, DrmProperty *prop, DrmProperty *bypass)
-    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
+    : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | (bypass ? Feature::Bypass : Features{}))
     , m_prop(prop)
     , m_bypass(bypass)
 {
@@ -374,7 +380,7 @@ void UnknownColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 DrmLut3DColorOp::DrmLut3DColorOp(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *modeIndex, const QList<drm_mode_3dlut_mode> &modes, DrmProperty *bypass)
-    : DrmAbstractColorOp(next, Features{Feature::NonLinear} | (bypass ? Feature::Bypass : Features{}))
+    : DrmAbstractColorOp(next, Features{Feature::NonLinear} | Feature::MultipleOps | (bypass ? Feature::Bypass : Features{}))
     , m_value(value)
     , m_bypass(bypass)
     , m_3dLutModeIndex(modeIndex)
@@ -431,7 +437,7 @@ void DrmLut3DColorOp::bypass(DrmAtomicCommit *commit)
 }
 
 DrmMultiplier::DrmMultiplier(DrmAbstractColorOp *next, DrmProperty *value, DrmProperty *bypass)
-    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
+    : DrmAbstractColorOp(next, Features{Feature::MultipleOps} | (bypass ? Feature::Bypass : Features{}))
     , m_value(value)
     , m_bypass(bypass)
 {
@@ -468,6 +474,61 @@ void DrmMultiplier::bypass(DrmAtomicCommit *commit)
     commit->addProperty(*m_bypass, 1);
 }
 
+DrmNamed1DLut::DrmNamed1DLut(DrmAbstractColorOp *next, DrmEnumProperty<Named1DLutType> *value, DrmProperty *bypass)
+    : DrmAbstractColorOp(next, bypass ? Feature::Bypass : Features{})
+    , m_value(value)
+    , m_bypass(bypass)
+{
+}
+
+std::optional<Named1DLutType> DrmNamed1DLut::getType(const ColorOp::Operation &op) const
+{
+    // TODO support PQ 125 EOTF and PQ 125 Inverse EOTF -> need to support >1 scaling
+    if (const auto tf = std::get_if<ColorTransferFunction>(&op)) {
+        switch (tf->tf.type) {
+        case TransferFunction::sRGB:
+            return Named1DLutType::sRGB_EOTF;
+        default:
+            return std::nullopt;
+        }
+    } else if (const auto invTf = std::get_if<InverseColorTransferFunction>(&op)) {
+        switch (invTf->tf.type) {
+        case TransferFunction::sRGB:
+            return Named1DLutType::sRGB_Inverse_EOTF;
+        default:
+            return std::nullopt;
+        }
+    } else {
+        return std::nullopt;
+    }
+}
+
+std::optional<uint32_t> DrmNamed1DLut::colorOpPreference(const ColorOp::Operation &op)
+{
+    const auto namedLut = getType(op);
+    if (!namedLut) {
+        return std::nullopt;
+    }
+    if (m_value->hasEnum(*namedLut)) {
+        return 2;
+    } else {
+        return std::nullopt;
+    }
+}
+
+void DrmNamed1DLut::program(DrmAtomicCommit *commit, std::span<const ColorOp::Operation> operations)
+{
+    commit->addEnum(*m_value, *getType(operations.front()));
+    if (m_bypass) {
+        commit->addProperty(*m_bypass, 0);
+    }
+}
+
+void DrmNamed1DLut::bypass(DrmAtomicCommit *commit)
+{
+    commit->addProperty(*m_bypass, 1);
+}
+
 DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
     : DrmObject(gpu, objectId, DRM_MODE_OBJECT_ANY)
     , m_next(this, "NEXT")
@@ -476,12 +537,14 @@ DrmColorOp::DrmColorOp(DrmGpu *gpu, uint32_t objectId)
                                "3x4 Matrix",
                                "3D LUT",
                                "Multiplier",
+                               "1D Curve",
                            })
     , m_data(this, "DATA")
     , m_1dlutSize(this, "SIZE")
     , m_bypass(this, "BYPASS")
     , m_3dLutModeIndex(this, "3DLUT_MODE_INDEX")
     , m_3dLutModesBlob(this, "3DLUT_MODES")
+    , m_1dNamedLutType(this, "CURVE_1D_TYPE", {"sRGB EOTF", "sRGB Inverse EOTF"})
 {
 }
 
@@ -507,6 +570,7 @@ bool DrmColorOp::updateProperties()
     m_bypass.update(props);
     m_3dLutModeIndex.update(props);
     m_3dLutModesBlob.update(props);
+    m_1dNamedLutType.update(props);
 
     if (!m_type.isValid()) {
         return false;
@@ -569,6 +633,12 @@ bool DrmColorOp::updateProperties()
     }
     case Type::Multiplier:
         m_op = std::make_unique<DrmMultiplier>(next, &m_data, bypassProp);
+        return true;
+    case Type::NamedLut1D:
+        if (!m_1dNamedLutType.isValid()) {
+            return false;
+        }
+        m_op = std::make_unique<DrmNamed1DLut>(next, &m_1dNamedLutType, bypassProp);
         return true;
     }
     Q_UNREACHABLE();
