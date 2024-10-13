@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdebase-workspace\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-12 00:40+0000\n"
+"POT-Creation-Date: 2024-10-13 00:40+0000\n"
 "PO-Revision-Date: 2010-02-21 05:14+0000\n"
 "Last-Translator: Vilson Gjeci <vilsongjeci@gmail.com>\n"
 "Language-Team: Albanian <sq@li.org>\n"
@@ -1216,7 +1216,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr ""
 
-#: input.cpp:3090
+#: input.cpp:3089
 #, kde-format
 msgid "Touchpad"
 msgstr ""
@@ -4322,7 +4322,7 @@ msgstr ""
 msgid "Switch to Desktop %1"
 msgstr "Ndrysho në Desktopin 1"
 
-#: window.cpp:3116
+#: window.cpp:3108
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"

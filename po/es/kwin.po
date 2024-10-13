@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-12 00:40+0000\n"
+"POT-Creation-Date: 2024-10-13 00:40+0000\n"
 "PO-Revision-Date: 2024-09-20 02:05+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1238,7 +1238,7 @@ msgctxt "@info"
 msgid "Host name: %1"
 msgstr "Nombre de máquina: %1"
 
-#: input.cpp:3090
+#: input.cpp:3089
 #, kde-format
 msgid "Touchpad"
 msgstr "Panel táctil"
@@ -4290,7 +4290,7 @@ msgstr "Cambiar al escritorio inferior"
 msgid "Switch to Desktop %1"
 msgstr "Cambiar al escritorio %1"
 
-#: window.cpp:3116
+#: window.cpp:3108
 #, kde-format
 msgctxt "Application is not responding, appended to window title"
 msgid "(Not Responding)"
