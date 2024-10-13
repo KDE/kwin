@@ -4323,7 +4323,7 @@ bool Window::isOffscreenRendering() const
 void Window::maybeSendFrameCallback()
 {
     if (m_surface && !m_windowItem->isVisible()) {
-        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
         m_surface->traverseTree([this, &timestamp](SurfaceInterface *surface) {
             surface->frameRendered(timestamp);
             const auto feedback = surface->takePresentationFeedback(nullptr);
