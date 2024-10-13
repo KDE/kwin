@@ -863,9 +863,7 @@ void InputMethodTest::testV3AutoCommit()
     zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Pressed));
     zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Released));
 
-    QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit2");
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
+    QVERIFY(!textInputCommitTextSpy.wait());
 
     // **************
     // Mouse clicks

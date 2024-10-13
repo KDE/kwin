@@ -538,9 +538,6 @@ static quint32 keysymToKeycode(quint32 sym)
 
 void InputMethod::keysymReceived(quint32 serial, quint32 time, quint32 sym, bool pressed, quint32 modifiers)
 {
-    if (pressed) {
-        commitPendingText();
-    }
     if (auto t1 = waylandServer()->seat()->textInputV1(); t1 && t1->isEnabled()) {
         if (pressed) {
             t1->keysymPressed(time, sym, modifiers);
@@ -767,9 +764,6 @@ void InputMethod::setPreeditString(uint32_t serial, const QString &text, const Q
 
 void InputMethod::key(quint32 /*serial*/, quint32 /*time*/, quint32 keyCode, bool pressed)
 {
-    if (pressed) {
-        commitPendingText();
-    }
     waylandServer()->seat()->notifyKeyboardKey(keyCode,
                                                pressed ? KeyboardKeyState::Pressed : KeyboardKeyState::Released);
 }
