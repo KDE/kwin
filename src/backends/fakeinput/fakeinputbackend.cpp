@@ -90,7 +90,7 @@ FakeInputDevice *FakeInputBackendPrivate::findDevice(Resource *resource)
 
 std::chrono::microseconds FakeInputBackendPrivate::currentTime() const
 {
-    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 void FakeInputBackendPrivate::org_kde_kwin_fake_input_authenticate(Resource *resource, const QString &application, const QString &reason)
