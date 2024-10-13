@@ -13,7 +13,7 @@ namespace KWin
 
 static std::chrono::microseconds currentTime()
 {
-    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now().time_since_epoch());
 }
 
 EisDevice::EisDevice(eis_device *device, QObject *parent)
