@@ -50,6 +50,25 @@ void EffectsKeyboardInterceptionX11Filter::processKey(bool press, xcb_keycode_t 
     }
 
     const int qtKey = QXkbCommon::keysymToQtKey(keysym, modifiers, m_keyboard->xkbState(), keycode);
+
+    switch (qtKey) {
+    case Qt::Key_Shift:
+        modifiers |= Qt::ShiftModifier;
+        break;
+    case Qt::Key_Control:
+        modifiers |= Qt::ControlModifier;
+        break;
+    case Qt::Key_Alt:
+        modifiers |= Qt::AltModifier;
+        break;
+    case Qt::Key_Meta:
+        modifiers |= Qt::MetaModifier;
+        break;
+    case Qt::Key_Mode_switch:
+        modifiers |= Qt::GroupSwitchModifier;
+        break;
+    }
+
     const QString text = QXkbCommon::lookupString(m_keyboard->xkbState(), keycode);
 
     QKeyEvent keyEvent(press ? QEvent::KeyPress : QEvent::KeyRelease, qtKey, modifiers, text);
