@@ -100,6 +100,7 @@ Window::Window()
 
 Window::~Window()
 {
+    Q_ASSERT(m_deleted);
     Q_ASSERT(!m_tile);
 }
 
@@ -115,9 +116,8 @@ void Window::unref()
     if (m_refCount) {
         return;
     }
-    if (m_deleted) {
-        workspace()->removeDeleted(this);
-    }
+
+    workspace()->removeDeleted(this);
     delete this;
 }
 
