@@ -248,6 +248,11 @@ bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinge
     return false;
 }
 
+bool InputEventFilter::tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+    return false;
+}
+
 void InputEventFilter::passToWaylandServer(QKeyEvent *event)
 {
     Q_ASSERT(waylandServer());
@@ -2908,6 +2913,8 @@ void InputRedirection::addInputDevice(InputDevice *device)
             m_tablet, &TabletInputRedirection::tabletPadRingEvent);
     connect(device, &InputDevice::tabletPadStripEvent,
             m_tablet, &TabletInputRedirection::tabletPadStripEvent);
+    connect(device, &InputDevice::tabletPadDialEvent,
+            m_tablet, &TabletInputRedirection::tabletPadDialEvent);
 
     device->setLeds(m_leds);
 

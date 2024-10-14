@@ -84,6 +84,7 @@ public:
     virtual void tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     virtual void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     virtual void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    virtual void tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time);
 };
 
 } // namespace KWin

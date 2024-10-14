@@ -51,6 +51,7 @@ public:
     void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    void tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time);
 
     bool positionValid() const override
     {

@@ -482,6 +482,7 @@ public:
     virtual bool tabletPadButtonEvent(uint button, bool pressed, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     virtual bool tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
     virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
+    virtual bool tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time);
 
 protected:
     void passToWaylandServer(QKeyEvent *event);

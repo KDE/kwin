@@ -114,4 +114,8 @@ void InputEventSpy::tabletPadStripEvent(int number, int position, bool isFinger,
 void InputEventSpy::tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time)
 {
 }
+
+void InputEventSpy::tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+}
 }

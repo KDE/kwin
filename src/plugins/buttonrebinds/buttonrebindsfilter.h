@@ -43,6 +43,7 @@ struct Trigger
 {
     QString device;
     uint button;
+    bool positive;
     bool operator==(const Trigger &o) const
     {
         return button == o.button && device == o.device;
@@ -57,6 +58,8 @@ public:
         Pointer,
         TabletPad,
         TabletToolButtonType,
+        TabletDialUp,
+        TabletDialDown,
         LastType
     };
     Q_ENUM(TriggerType)
@@ -79,6 +82,7 @@ public:
     bool tabletToolEvent(KWin::TabletEvent *event) override;
     bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
     bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time) override;
+    bool tabletPadDialEvent(double delta, unsigned int number, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
