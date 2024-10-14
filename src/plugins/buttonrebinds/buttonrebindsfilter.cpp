@@ -183,6 +183,30 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto tabletDialsGroup = group.group(QStringLiteral("TabletDial"));
+    const auto tabletDials = tabletDialsGroup.groupList();
+    for (const auto &tabletDialName : tabletDials) {
+        const auto dialGroup = tabletDialsGroup.group(tabletDialName);
+        const auto tabletDialButtons = dialGroup.keyList();
+        for (const auto &buttonName : tabletDialButtons) {
+            // Tablet dial keys are 0-up, 0-down, 1-up, 1-down, and so on. "Up" here means a negative delta, and "Down" here means a positive delta.
+            QStringList nameParts = buttonName.split(QLatin1Char('-'));
+            if (nameParts.length() != 2) {
+                continue;
+            }
+
+            const bool positive = nameParts[1] == "down";
+
+            const auto entry = dialGroup.readEntry(buttonName, QStringList());
+            bool ok = false;
+            const uint button = nameParts[0].toUInt(&ok);
+            if (ok) {
+                foundActions = true;
+                insert(positive ? TabletDialUp : TabletDialDown, {tabletDialName, button, positive}, entry);
+            }
+        }
+    }
+
     if (foundActions) {
         KWin::input()->installInputEventFilter(this);
     }
@@ -239,6 +263,16 @@ bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *eve
     }
     m_tabletTool = event->tool;
     return send(TabletToolButtonType, {event->device->name(), event->button}, event->pressed, event->time);
+}
+
+bool ButtonRebindsFilter::tabletPadDialEvent(double delta, unsigned int number, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+    bool handled = send(delta > 0 ? TabletDialUp : TabletDialDown, {tabletPadId.name, number}, true, time);
+    handled |= send(delta > 0 ? TabletDialUp : TabletDialDown, {tabletPadId.name, number}, false, time);
+    return handled;
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)

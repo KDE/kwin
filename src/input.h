@@ -432,6 +432,7 @@ public:
     virtual bool tabletPadButtonEvent(TabletPadButtonEvent *event);
     virtual bool tabletPadStripEvent(TabletPadStripEvent *event);
     virtual bool tabletPadRingEvent(TabletPadRingEvent *event);
+    virtual bool tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time);
 
 protected:
     bool passToInputMethod(KeyboardKeyEvent *event);

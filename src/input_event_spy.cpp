@@ -126,4 +126,8 @@ void InputEventSpy::tabletPadStripEvent(TabletPadStripEvent *event)
 void InputEventSpy::tabletPadRingEvent(TabletPadRingEvent *event)
 {
 }
+
+void InputEventSpy::tabletPadDialEvent(double delta, uint number, const TabletPadId &tabletPadId, std::chrono::microseconds time)
+{
+}
 }
