@@ -1886,6 +1886,12 @@ void tabletPadButtonReleased(quint32 button, quint32 time)
     Q_EMIT virtualTabletPad->tabletPadButtonEvent(button, false, 0, 0, false, std::chrono::milliseconds(time), virtualTabletPad);
 }
 
+void tabletPadDialEvent(double delta, int number, quint32 time)
+{
+    auto virtualTabletPad = static_cast<WaylandTestApplication *>(kwinApp())->virtualTabletPad();
+    Q_EMIT virtualTabletPad->tabletPadDialEvent(number, delta, 0, std::chrono::milliseconds(time), virtualTabletPad);
+}
+
 void tabletToolButtonPressed(quint32 button, quint32 time)
 {
     auto tablet = static_cast<WaylandTestApplication *>(kwinApp())->virtualTablet();

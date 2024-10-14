@@ -47,6 +47,8 @@ private Q_SLOTS:
     // NOTE: Mouse buttons are not tested because those are used in the other tests
     void testBindingTabletPad();
     void testBindingTabletTool();
+    void testBindingTabletPadDialScroll();
+    void testBindingTabletPadDialKey();
 
     void testMouseTabletCursorSync();
 
@@ -291,6 +293,79 @@ void TestButtonRebind::testBindingTabletPad()
     QCOMPARE(keyChangedSpy.at(0).at(0), KEY_A);
 
     Test::tabletPadButtonReleased(1, timestamp++);
+}
+
+void TestButtonRebind::testBindingTabletPadDialScroll()
+{
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletDial")).group(QStringLiteral("Virtual Tablet Pad 1"));
+    buttonGroup.writeEntry("0", QStringList{"Scroll"}, KConfig::Notify);
+    buttonGroup.sync();
+
+    kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
+    kwinApp()->pluginManager()->loadPlugin(s_pluginName);
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Pointer> pointer(Test::waylandSeat()->createPointer());
+    QSignalSpy enteredSpy(pointer.get(), &KWayland::Client::Pointer::entered);
+    QSignalSpy axisChangedSpy(pointer.get(), &KWayland::Client::Pointer::axisChanged);
+    QVERIFY(enteredSpy.wait());
+
+    // twisting the dial "up"
+    Test::tabletPadDialEvent(120.0, 0, timestamp++);
+
+    using KWayland::Client::Keyboard;
+
+    QVERIFY(axisChangedSpy.wait());
+    QCOMPARE(axisChangedSpy.count(), 1);
+    QCOMPARE(axisChangedSpy.at(0).at(2).value<qreal>(), 15);
+
+    // twisting the dial "down"
+    axisChangedSpy.clear();
+    Test::tabletPadDialEvent(-120.0, 0, timestamp++);
+
+    QVERIFY(axisChangedSpy.wait());
+    QCOMPARE(axisChangedSpy.count(), 1);
+    QCOMPARE(axisChangedSpy.at(0).at(2).value<qreal>(), -15);
+}
+
+void TestButtonRebind::testBindingTabletPadDialKey()
+{
+    const QKeySequence upSequence(Qt::Key_BracketLeft);
+    const QKeySequence downSequence(Qt::Key_BracketRight);
+
+    KConfigGroup buttonGroup = KSharedConfig::openConfig(QStringLiteral("kcminputrc"))->group(QStringLiteral("ButtonRebinds")).group(QStringLiteral("TabletDial")).group(QStringLiteral("Virtual Tablet Pad 1"));
+    buttonGroup.writeEntry("0", QStringList{"AxisKey", upSequence.toString(QKeySequence::PortableText), downSequence.toString(QKeySequence::PortableText)}, KConfig::Notify);
+    buttonGroup.sync();
+
+    kwinApp()->pluginManager()->unloadPlugin(s_pluginName);
+    kwinApp()->pluginManager()->loadPlugin(s_pluginName);
+
+    std::unique_ptr<KWayland::Client::Surface> surface = Test::createSurface();
+    std::unique_ptr<Test::XdgToplevel> shellSurface = Test::createXdgToplevelSurface(surface.get());
+    Test::renderAndWaitForShown(surface.get(), QSize(100, 50), Qt::blue);
+
+    std::unique_ptr<KWayland::Client::Keyboard> keyboard(Test::waylandSeat()->createKeyboard());
+    QSignalSpy enteredSpy(keyboard.get(), &KWayland::Client::Keyboard::entered);
+    QSignalSpy keyChangedSpy(keyboard.get(), &KWayland::Client::Keyboard::keyChanged);
+    QVERIFY(enteredSpy.wait());
+
+    // twisting the dial "up"
+    Test::tabletPadDialEvent(120.0, 0, timestamp++);
+
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 2); // two events are reported because it emulates a press then release
+    QCOMPARE(keyChangedSpy.at(0).at(0), KEY_LEFTBRACE);
+
+    // twisting the dial "down"
+    keyChangedSpy.clear();
+    Test::tabletPadDialEvent(-120.0, 0, timestamp++);
+
+    QVERIFY(keyChangedSpy.wait());
+    QCOMPARE(keyChangedSpy.count(), 2);
+    QCOMPARE(keyChangedSpy.at(0).at(0), KEY_RIGHTBRACE);
 }
 
 void TestButtonRebind::testBindingTabletTool()

@@ -186,6 +186,22 @@ void ButtonRebindsFilter::loadConfig(const KConfigGroup &group)
         }
     }
 
+    const auto tabletDialsGroup = group.group(QStringLiteral("TabletDial"));
+    const auto tabletDials = tabletDialsGroup.groupList();
+    for (const auto &tabletDialName : tabletDials) {
+        const auto dialGroup = tabletDialsGroup.group(tabletDialName);
+        const auto tabletDialButtons = dialGroup.keyList();
+        for (const auto &buttonName : tabletDialButtons) {
+            const auto entry = dialGroup.readEntry(buttonName, QStringList());
+            bool ok = false;
+            const uint button = buttonName.toUInt(&ok);
+            if (ok) {
+                foundActions = true;
+                insert(TabletDial, {tabletDialName, button}, entry);
+            }
+        }
+    }
+
     if (foundActions) {
         KWin::input()->installInputEventFilter(this);
 
@@ -200,7 +216,7 @@ bool ButtonRebindsFilter::pointerButton(KWin::PointerButtonEvent *event)
         return false;
     }
 
-    return send(Pointer, {{}, event->button}, event->state == KWin::PointerButtonState::Pressed, event->timestamp);
+    return send(Pointer, {{}, event->button}, event->state == KWin::PointerButtonState::Pressed, 0, event->timestamp);
 }
 
 bool ButtonRebindsFilter::tabletToolProximityEvent(KWin::TabletToolProximityEvent *event)
@@ -235,7 +251,7 @@ bool ButtonRebindsFilter::tabletPadButtonEvent(KWin::TabletPadButtonEvent *event
     if (RebindScope::isRebinding()) {
         return false;
     }
-    return send(TabletPad, {event->device->name(), event->button}, event->pressed, event->time);
+    return send(TabletPad, {event->device->name(), event->button}, event->pressed, 0, event->time);
 }
 
 bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *event)
@@ -244,7 +260,15 @@ bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *eve
         return false;
     }
     m_tabletTool = event->tool;
-    return send(TabletToolButtonType, {event->device->name(), event->button}, event->pressed, event->time);
+    return send(TabletToolButtonType, {event->device->name(), event->button}, event->pressed, 0, event->time);
+}
+
+bool ButtonRebindsFilter::tabletPadDialEvent(KWin::TabletPadDialEvent *event)
+{
+    if (RebindScope::isRebinding()) {
+        return false;
+    }
+    return send(TabletDial, {event->device->name(), static_cast<uint>(event->number)}, false, event->delta, event->time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
@@ -262,6 +286,18 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         const auto keys = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
         if (!keys.isEmpty()) {
             m_actions.at(type).insert(trigger, keys);
+        }
+    } else if (entry.first() == QLatin1String("AxisKey")) {
+        if (entry.size() != 3) {
+            qCWarning(KWIN_BUTTONREBINDS) << "Invalid axis key" << entry;
+            return;
+        }
+
+        const auto upKey = QKeySequence::fromString(entry.at(1), QKeySequence::PortableText);
+        const auto downKey = QKeySequence::fromString(entry.at(2), QKeySequence::PortableText);
+
+        if (!upKey.isEmpty() && !downKey.isEmpty()) {
+            m_actions.at(type).insert(trigger, AxisKeybind{upKey, downKey});
         }
     } else if (entry.first() == QLatin1String("MouseButton")) {
         if (entry.size() < 2) {
@@ -297,12 +333,14 @@ void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const
         } else {
             qCWarning(KWIN_BUTTONREBINDS) << "Could not convert" << entry << "into a mouse button";
         }
+    } else if (entry.first() == QLatin1String("Scroll")) {
+        m_actions.at(type).insert(trigger, ScrollWheel{});
     } else if (entry.first() == QLatin1String("Disabled")) {
         m_actions.at(type).insert(trigger, DisabledButton{});
     }
 }
 
-bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pressed, std::chrono::microseconds timestamp)
+bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pressed, double delta, std::chrono::microseconds timestamp)
 {
     const auto &typeActions = m_actions.at(type);
     if (typeActions.isEmpty()) {
@@ -310,8 +348,16 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     }
 
     const auto &action = typeActions[trigger];
-    if (const QKeySequence *seq = std::get_if<QKeySequence>(&action)) {
+    if (const QKeySequence *seq = std::get_if<SingleKeybind>(&action)) {
         return sendKeySequence(*seq, pressed, timestamp);
+    }
+    if (const AxisKeybind *bind = std::get_if<AxisKeybind>(&action)) {
+        const auto sequence = delta > 0 ? bind->up : bind->down;
+
+        bool sentKeyEvent = false;
+        sentKeyEvent |= sendKeySequence(sequence, true, timestamp);
+        sentKeyEvent |= sendKeySequence(sequence, false, timestamp);
+        return sentKeyEvent;
     }
     if (const auto mb = std::get_if<MouseButton>(&action)) {
         bool sentMouseEvent = false;
@@ -327,6 +373,17 @@ bool ButtonRebindsFilter::send(TriggerType type, const Trigger &trigger, bool pr
     }
     if (const auto tb = std::get_if<TabletToolButton>(&action)) {
         return sendTabletToolButton(tb->button, pressed, timestamp);
+    }
+    if (std::get_if<ScrollWheel>(&action)) {
+        bool sentMouseEvent = false;
+        if (type != Pointer) {
+            sentMouseEvent |= sendMousePosition(m_tabletCursorPos, timestamp);
+        }
+        sentMouseEvent |= sendScrollWheel(delta, timestamp);
+        if (sentMouseEvent) {
+            sendMouseFrame();
+        }
+        return sentMouseEvent;
     }
     if (std::get_if<DisabledButton>(&action)) {
         // Intentional, we don't want to anything to anybody
@@ -470,6 +527,14 @@ bool ButtonRebindsFilter::sendTabletToolButton(quint32 button, bool pressed, std
     }
     RebindScope scope;
     Q_EMIT m_inputDevice->tabletToolButtonEvent(button, pressed, m_tabletTool, time, m_inputDevice.get());
+    return true;
+}
+
+bool ButtonRebindsFilter::sendScrollWheel(double delta, std::chrono::microseconds time)
+{
+    RebindScope scope;
+    Q_EMIT m_inputDevice->pointerAxisChanged(KWin::PointerAxis::Vertical, delta > 0 ? 15 : -15, delta, KWin::PointerAxisSource::Wheel, false, time, m_inputDevice.get());
+    Q_EMIT m_inputDevice->pointerFrame(m_inputDevice.get());
     return true;
 }
 

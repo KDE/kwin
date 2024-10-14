@@ -53,9 +53,16 @@ public:
         Pointer,
         TabletPad,
         TabletToolButtonType,
+        TabletDial,
         LastType
     };
     Q_ENUM(TriggerType)
+    using SingleKeybind = QKeySequence;
+    struct AxisKeybind
+    {
+        QKeySequence up;
+        QKeySequence down;
+    };
     struct TabletToolButton
     {
         quint32 button;
@@ -68,6 +75,9 @@ public:
     struct DisabledButton
     {
     };
+    struct ScrollWheel
+    {
+    };
 
     explicit ButtonRebindsFilter();
     ~ButtonRebindsFilter() override;
@@ -77,20 +87,22 @@ public:
     bool tabletToolTipEvent(KWin::TabletToolTipEvent *event) override;
     bool tabletPadButtonEvent(KWin::TabletPadButtonEvent *event) override;
     bool tabletToolButtonEvent(KWin::TabletToolButtonEvent *event) override;
+    bool tabletPadDialEvent(KWin::TabletPadDialEvent *event) override;
 
 private:
     void loadConfig(const KConfigGroup &group);
     void insert(TriggerType type, const Trigger &trigger, const QStringList &action);
-    bool send(TriggerType type, const Trigger &trigger, bool pressed, std::chrono::microseconds timestamp);
+    bool send(TriggerType type, const Trigger &trigger, bool pressed, double delta, std::chrono::microseconds timestamp);
     bool sendKeySequence(const QKeySequence &sequence, bool pressed, std::chrono::microseconds time);
     bool sendKeyModifiers(const Qt::KeyboardModifiers &modifiers, bool pressed, std::chrono::microseconds time);
     bool sendMouseButton(quint32 button, bool pressed, std::chrono::microseconds time);
     bool sendMousePosition(QPointF position, std::chrono::microseconds time);
     bool sendMouseFrame();
     bool sendTabletToolButton(quint32 button, bool pressed, std::chrono::microseconds time);
+    bool sendScrollWheel(double delta, std::chrono::microseconds time);
 
     std::unique_ptr<InputDevice> m_inputDevice;
-    std::array<QHash<Trigger, std::variant<QKeySequence, MouseButton, TabletToolButton, DisabledButton>>, LastType> m_actions;
+    std::array<QHash<Trigger, std::variant<SingleKeybind, AxisKeybind, MouseButton, TabletToolButton, DisabledButton, ScrollWheel>>, LastType> m_actions;
     KConfigWatcher::Ptr m_configWatcher;
     QPointer<KWin::InputDeviceTabletTool> m_tabletTool;
     QPointF m_cursorPos, m_tabletCursorPos;
