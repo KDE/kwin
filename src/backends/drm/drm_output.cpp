@@ -220,16 +220,6 @@ void DrmOutput::updateConnectorProperties()
 
     State next = m_state;
     next.modes = getModes();
-
-    if (m_pipeline->crtc()) {
-        const auto currentMode = m_pipeline->connector()->findMode(m_pipeline->crtc()->queryCurrentMode());
-        if (currentMode != m_pipeline->mode()) {
-            // DrmConnector::findCurrentMode might fail
-            m_pipeline->setMode(currentMode ? currentMode : m_pipeline->connector()->modes().constFirst());
-        }
-    }
-
-    next.currentMode = m_pipeline->mode();
     if (!next.currentMode) {
         // some mode needs to be set
         next.currentMode = next.modes.constFirst();
@@ -238,7 +228,6 @@ void DrmOutput::updateConnectorProperties()
         next.currentMode->setRemoved();
         next.modes.push_front(next.currentMode);
     }
-
     setState(next);
 }
 

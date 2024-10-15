@@ -309,6 +309,7 @@ bool DrmGpu::updateOutputs()
             pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
             pipeline->setActive(true);
             pipeline->setEnable(false);
+            pipeline->setMode(conn->modes().front());
             pipeline->applyPendingChanges();
         } else {
             output->updateConnectorProperties();
@@ -318,52 +319,6 @@ bool DrmGpu::updateOutputs()
         } else {
             m_allObjects.removeOne(it->get());
             it = m_connectors.erase(it);
-        }
-    }
-
-    // try to apply mode changes triggered above
-    DrmPipeline::Error err = testPendingConfiguration();
-    if (err == DrmPipeline::Error::None) {
-        for (const auto &pipeline : std::as_const(m_pipelines)) {
-            pipeline->applyPendingChanges();
-        }
-    } else {
-        for (const auto &pipeline : std::as_const(m_pipelines)) {
-            pipeline->revertPendingChanges();
-        }
-        // try again, with the mode changes reverted
-        err = testPendingConfiguration();
-    }
-    if (err == DrmPipeline::Error::None) {
-        for (const auto &pipeline : std::as_const(m_pipelines)) {
-            pipeline->applyPendingChanges();
-            if (pipeline->output() && !pipeline->crtc()) {
-                pipeline->setEnable(false);
-                pipeline->output()->updateEnabled(false);
-            }
-        }
-    } else if (err == DrmPipeline::Error::NoPermission) {
-        for (const auto &pipeline : std::as_const(m_pipelines)) {
-            pipeline->revertPendingChanges();
-        }
-        for (const auto &output : std::as_const(addedOutputs)) {
-            removeOutput(output);
-            const auto it = std::ranges::find_if(m_connectors, [output](const auto &conn) {
-                return conn.get() == output->connector();
-            });
-            Q_ASSERT(it != m_connectors.end());
-            m_allObjects.removeOne(it->get());
-            m_connectors.erase(it);
-        }
-    } else {
-        qCWarning(KWIN_DRM, "Failed to find a working setup for new outputs!");
-        for (const auto &pipeline : std::as_const(m_pipelines)) {
-            pipeline->revertPendingChanges();
-        }
-        for (const auto &output : std::as_const(addedOutputs)) {
-            output->updateEnabled(false);
-            output->pipeline()->setEnable(false);
-            output->pipeline()->applyPendingChanges();
         }
     }
     return true;
