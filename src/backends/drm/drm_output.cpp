@@ -264,7 +264,7 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->hdrMetadata.isValid() && m_connector->edid()->supportsPQ()) {
         capabilities |= Capability::HighDynamicRange;
     }
-    if (m_connector->colorspace.isValid() && m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) && m_connector->edid()->supportsBT2020()) {
+    if (m_connector->colorspace.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC)) && m_connector->edid()->supportsBT2020()) {
         bool allowColorspace = true;
         if (m_gpu->isI915()) {
             allowColorspace &= s_allowColorspaceIntel;
@@ -381,10 +381,9 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
         const double maxBrightness = iccProfile->maxBrightness().value_or(200);
         return ColorDescription(iccProfile->colorimetry(), TransferFunction(TransferFunction::gamma22, minBrightness, maxBrightness), maxBrightness, minBrightness, maxBrightness, maxBrightness);
     }
-    const bool screenSupportsHdr = m_connector->edid()->isValid() && m_connector->edid()->supportsBT2020() && m_connector->edid()->supportsPQ();
-    const bool driverSupportsHdr = m_connector->colorspace.isValid() && m_connector->hdrMetadata.isValid() && (m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_RGB) || m_connector->colorspace.hasEnum(DrmConnector::Colorspace::BT2020_YCC));
-    const bool effectiveHdr = hdr && screenSupportsHdr && driverSupportsHdr;
-    const bool effectiveWcg = wcg && screenSupportsHdr && driverSupportsHdr;
+    const bool supportsHdr = (capabilities() & Capability::HighDynamicRange) && (capabilities() & Capability::WideColorGamut);
+    const bool effectiveHdr = hdr && supportsHdr;
+    const bool effectiveWcg = wcg && supportsHdr;
     const Colorimetry nativeColorimetry = m_information.edid.colorimetry().value_or(Colorimetry::fromName(NamedColorimetry::BT709));
 
     const Colorimetry containerColorimetry = effectiveWcg ? Colorimetry::fromName(NamedColorimetry::BT2020) : (colorSource == ColorProfileSource::EDID ? nativeColorimetry : Colorimetry::fromName(NamedColorimetry::BT709));
