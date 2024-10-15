@@ -86,6 +86,7 @@ bool PopupInputFilter::keyEvent(KeyEvent *event)
         QCoreApplication::sendEvent(internalWindow->handle(), event);
     } else if (auto waylandWindow = qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
+            waylandServer()->seat()->setTimestamp(event->timestamp());
             passToWaylandServer(event);
         }
     }
