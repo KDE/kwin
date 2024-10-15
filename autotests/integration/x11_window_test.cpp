@@ -125,6 +125,7 @@ private Q_SLOTS:
     void testStackOppositeFromApplication();
     void testStackOppositeFromTool();
     void testStackOppositeNoSibling();
+    void testOverrideRedirectReparent();
 };
 
 void X11WindowTest::initTestCase_data()
@@ -3398,6 +3399,23 @@ void X11WindowTest::testStackOppositeNoSibling()
     xcb_flush(c.get());
     QVERIFY(stackingOrderChangedSpy.wait());
     QCOMPARE(workspace()->stackingOrder(), (QList<Window *>{window1, window3, window2}));
+}
+
+void X11WindowTest::testOverrideRedirectReparent()
+{
+    Test::XcbConnectionPtr c = Test::createX11Connection();
+    QVERIFY(!xcb_connection_has_error(c.get()));
+
+    X11Window *parent = createWindow(c.get(), QRect(0, 0, 200, 200));
+    X11Window *child = createWindow(c.get(), QRect(0, 0, 100, 100), [&](xcb_window_t windowId) {
+        quint32 value = 1;
+        xcb_change_window_attributes(c.get(), windowId, XCB_CW_OVERRIDE_REDIRECT, &value);
+    });
+
+    xcb_reparent_window(c.get(), child->window(), parent->window(), 0, 0);
+    xcb_flush(c.get());
+    QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
+    QVERIFY(!windowAddedSpy.wait(10));
 }
 
 WAYLANDTEST_MAIN(X11WindowTest)
