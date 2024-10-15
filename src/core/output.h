@@ -110,6 +110,7 @@ public:
     enum class Flag : uint {
         Preferred = 0x1,
         Generated = 0x2,
+        Removed = 0x4,
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -120,10 +121,12 @@ public:
     uint32_t refreshRate() const;
     Flags flags() const;
 
+    void setRemoved();
+
 private:
     const QSize m_size;
     const uint32_t m_refreshRate;
-    const Flags m_flags;
+    Flags m_flags;
 };
 
 /**
