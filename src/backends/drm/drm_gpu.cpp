@@ -307,9 +307,8 @@ bool DrmGpu::updateOutputs()
             addedOutputs << output;
             Q_EMIT outputAdded(output);
             pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
-            pipeline->setActive(!conn->isNonDesktop());
-            // only "enable" VR headsets here; Workspace makes this decision for normal outputs
-            pipeline->setEnable(conn->isNonDesktop());
+            pipeline->setActive(true);
+            pipeline->setEnable(false);
             pipeline->applyPendingChanges();
         } else {
             output->updateConnectorProperties();
@@ -612,9 +611,25 @@ const QList<DrmPipeline *> DrmGpu::pipelines() const
 
 std::unique_ptr<DrmLease> DrmGpu::leaseOutputs(const QList<DrmOutput *> &outputs)
 {
+    const bool alreadyLeased = std::ranges::any_of(outputs, [](DrmOutput *output) {
+        return output->lease();
+    });
+    if (alreadyLeased) {
+        return nullptr;
+    }
+
+    // allocate crtcs for the outputss
+    for (DrmOutput *output : outputs) {
+        output->pipeline()->setEnable(true);
+        output->pipeline()->setActive(false);
+    }
+    if (testPendingConfiguration() != DrmPipeline::Error::None) {
+        return nullptr;
+    }
+
     QList<uint32_t> objects;
     for (DrmOutput *output : outputs) {
-        if (output->lease() || !output->addLeaseObjects(objects)) {
+        if (!output->addLeaseObjects(objects)) {
             return nullptr;
         }
     }
@@ -929,6 +944,7 @@ DrmLease::~DrmLease()
     drmModeRevokeLease(m_gpu->fd(), m_lesseeId);
     for (const auto &output : m_outputs) {
         output->leaseEnded();
+        output->pipeline()->setEnable(false);
     }
 }
 
