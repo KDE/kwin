@@ -547,8 +547,8 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
         }
     }
 
-    // Implicit sync is broken on Nvidia.
-    if (context->glPlatform()->isNvidia()) {
+    // Implicit sync is broken on Nvidia and with llvmpipe
+    if (context->glPlatform()->isNvidia() || context->isSoftwareRenderer()) {
         glFinish();
     } else {
         glFlush();
