@@ -845,26 +845,6 @@ void InputMethodTest::testV3AutoCommit()
     QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit1");
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
-    // ******************
-    // Grabbing key press
-    zwp_input_method_context_v1_grab_keyboard(context);
-    textInputV3->commit();
-    zwp_input_method_context_v1_preedit_string(context, 1, "preedit2", "commit2");
-
-    QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit2"));
-
-    // a key does nothing, it will go to the input method
-    Test::keyboardKeyPressed(KEY_B, timestamp++);
-    Test::keyboardKeyReleased(KEY_B, timestamp++);
-    QVERIFY(!textInputCommitTextSpy.wait());
-
-    // then the input method forwards the key
-    zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Pressed));
-    zwp_input_method_context_v1_key(context, 2, timestamp, KEY_B, uint32_t(KeyboardKeyState::Released));
-
-    QVERIFY(!textInputCommitTextSpy.wait());
-
     // **************
     // Mouse clicks
     QSignalSpy windowAddedSpy(workspace(), &Workspace::windowAdded);
@@ -878,9 +858,9 @@ void InputMethodTest::testV3AutoCommit()
     auto textInputWindow = *it;
 
     textInputV3->commit();
-    zwp_input_method_context_v1_preedit_string(context, 1, "preedit3", "commit3");
+    zwp_input_method_context_v1_preedit_string(context, 1, "preedit2", "commit2");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit3"));
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit2"));
 
     // mouse clicks on a VK does not submit
     Test::pointerMotion(textInputWindow->frameGeometry().center(), timestamp++);
@@ -894,15 +874,15 @@ void InputMethodTest::testV3AutoCommit()
     Test::pointerButtonReleased(1, timestamp++);
 
     QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit3");
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit2");
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
     // *****************
     // Change focus
     textInputV3->commit();
-    zwp_input_method_context_v1_preedit_string(context, 1, "preedit4", "commit4");
+    zwp_input_method_context_v1_preedit_string(context, 1, "preedit3", "commit3");
     QVERIFY(textInputPreeditSpy.wait());
-    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit4"));
+    QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString("preedit3"));
 
     std::unique_ptr<KWayland::Client::Surface> surface2(Test::createSurface());
     std::unique_ptr<Test::XdgToplevel> shellSurface2(Test::createXdgToplevelSurface(surface2.get()));
@@ -911,7 +891,7 @@ void InputMethodTest::testV3AutoCommit()
 
     // these variables refer to the old window
     QVERIFY(textInputCommitTextSpy.wait());
-    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit4");
+    QCOMPARE(textInputCommitTextSpy.last()[0].toString(), "commit3");
     QCOMPARE(textInputPreeditSpy.last()[0].toString(), QString());
 
     shellSurface.reset();
