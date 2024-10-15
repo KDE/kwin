@@ -185,6 +185,61 @@ std::optional<OutputLayerBeginFrameInfo> EglGbmLayerSurface::startRendering(cons
     }
 }
 
+static GLVertexBuffer *uploadGeometry(const QRegion &devicePixels, const QSize &fboSize)
+{
+    GLVertexBuffer *vbo = GLVertexBuffer::streamingBuffer();
+    vbo->reset();
+    vbo->setAttribLayout(std::span(GLVertexBuffer::GLVertex2DLayout), sizeof(GLVertex2D));
+    const auto optMap = vbo->map<GLVertex2D>(devicePixels.rectCount() * 6);
+    if (!optMap) {
+        return nullptr;
+    }
+    const auto map = *optMap;
+    size_t vboIndex = 0;
+    for (QRectF rect : devicePixels) {
+        const float x0 = rect.left();
+        const float y0 = rect.top();
+        const float x1 = rect.right();
+        const float y1 = rect.bottom();
+
+        const float u0 = x0 / fboSize.width();
+        const float v0 = y0 / fboSize.height();
+        const float u1 = x1 / fboSize.width();
+        const float v1 = y1 / fboSize.height();
+
+        // first triangle
+        map[vboIndex++] = GLVertex2D{
+            .position = QVector2D(x0, y0),
+            .texcoord = QVector2D(u0, v0),
+        };
+        map[vboIndex++] = GLVertex2D{
+            .position = QVector2D(x1, y1),
+            .texcoord = QVector2D(u1, v1),
+        };
+        map[vboIndex++] = GLVertex2D{
+            .position = QVector2D(x0, y1),
+            .texcoord = QVector2D(u0, v1),
+        };
+
+        // second triangle
+        map[vboIndex++] = GLVertex2D{
+            .position = QVector2D(x0, y0),
+            .texcoord = QVector2D(u0, v0),
+        };
+        map[vboIndex++] = GLVertex2D{
+            .position = QVector2D(x1, y0),
+            .texcoord = QVector2D(u1, v0),
+        };
+        map[vboIndex++] = GLVertex2D{
+            .position = QVector2D(x1, y1),
+            .texcoord = QVector2D(u1, v1),
+        };
+    }
+    vbo->unmap();
+    vbo->setVertexCount(vboIndex);
+    return vbo;
+}
+
 bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame *frame)
 {
     if (m_surface->needsShadowBuffer) {
@@ -216,7 +271,11 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         mat.ortho(QRectF(QPointF(), fbo->size()));
         binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
         glDisable(GL_BLEND);
-        m_surface->currentShadowSlot->texture()->render(repaint, m_surface->gbmSwapchain->size(), true);
+        if (const auto vbo = uploadGeometry(repaint, m_surface->gbmSwapchain->size())) {
+            m_surface->currentShadowSlot->texture()->bind();
+            vbo->render(GL_TRIANGLES);
+            m_surface->currentShadowSlot->texture()->unbind();
+        }
         EGLNativeFence fence(m_surface->context->displayObject());
         m_surface->shadowSwapchain->release(m_surface->currentShadowSlot, fence.takeFileDescriptor());
         GLFramebuffer::popFramebuffer();
@@ -620,9 +679,11 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     mat.ortho(QRect(QPoint(), fbo->size()));
     shader->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, mat);
 
-    sourceTexture->bind();
-    sourceTexture->render(repaint, fbo->size(), true);
-    sourceTexture->unbind();
+    if (const auto vbo = uploadGeometry(repaint, fbo->size())) {
+        sourceTexture->bind();
+        vbo->render(GL_TRIANGLES);
+        sourceTexture->unbind();
+    }
 
     surface->importContext->popFramebuffer();
     surface->importContext->shaderManager()->popShader();
