@@ -202,6 +202,7 @@ target_sources(kwin PRIVATE
     tabletmodemanager.cpp
     tiles/customtile.cpp
     tiles/quicktile.cpp
+    tiles/quicktilelayout.cpp
     tiles/tile.cpp
     tiles/tilemanager.cpp
     touch_input.cpp

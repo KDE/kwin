@@ -10,6 +10,7 @@
 #pragma once
 
 #include "effect/globals.h"
+#include "quicktilelayout.h"
 #include <kwin_export.h>
 #include <utils/common.h>
 
@@ -107,9 +108,9 @@ public:
 
     Q_INVOKABLE void resizeByPixels(qreal delta, Qt::Edge edge);
 
-    void addWindow(Window *window);
-    void removeWindow(Window *window);
-    QList<KWin::Window *> windows() const;
+    virtual void addWindow(Window *window);
+    virtual void removeWindow(Window *window);
+    virtual QList<KWin::Window *> windows() const;
 
     int row() const;
     int childCount() const;
@@ -152,8 +153,8 @@ protected:
     void removeChild(Tile *child);
 
     QList<Tile *> m_children;
-    QList<Window *> m_windows;
     Tile *m_parentTile;
+    std::shared_ptr<QuickTileLayout> m_quickLayout;
 
     TileManager *m_tiling;
     QRectF m_relativeGeometry;

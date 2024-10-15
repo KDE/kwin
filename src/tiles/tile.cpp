@@ -9,6 +9,7 @@
 
 #include "tile.h"
 #include "core/output.h"
+#include "quicktilelayout.h"
 #include "tilemanager.h"
 #include "virtualdesktops.h"
 #include "window.h"
@@ -24,6 +25,7 @@ QSizeF Tile::s_minimumSize = QSizeF(0.15, 0.15);
 Tile::Tile(TileManager *tiling, Tile *parent)
     : QObject(parent)
     , m_parentTile(parent)
+    , m_quickLayout(tiling->quickLayout())
     , m_tiling(tiling)
 {
     if (m_parentTile) {
@@ -45,7 +47,7 @@ Tile::~Tile()
     if (m_tiling->tearingDown()) {
         return;
     }
-    for (auto *w : std::as_const(m_windows)) {
+    for (auto *w : windows()) {
         Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
         w->setTile(tile);
     }
@@ -112,7 +114,7 @@ void Tile::setRelativeGeometry(const QRectF &geom)
     Q_EMIT absoluteGeometryChanged();
     Q_EMIT windowGeometryChanged();
 
-    for (auto *w : std::as_const(m_windows)) {
+    for (auto *w : windows()) {
         w->moveResize(windowGeometry());
     }
 }
@@ -188,7 +190,7 @@ void Tile::setPadding(qreal padding)
     for (auto *t : std::as_const(m_children)) {
         t->setPadding(padding);
     }
-    for (auto *w : std::as_const(m_windows)) {
+    for (auto *w : windows()) {
         w->moveResize(windowGeometry());
     }
 
@@ -285,9 +287,9 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
-    if (!m_windows.contains(window)) {
+    if (m_quickLayout->modeForWindow(window) != QuickTileFlag::None) {
         window->moveResize(windowGeometry());
-        m_windows.append(window);
+        m_quickLayout->setAssociation(window, m_quickTileMode);
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
@@ -296,7 +298,7 @@ void Tile::addWindow(Window *window)
 void Tile::removeWindow(Window *window)
 {
     // We already ensure there is a single copy of window in m_windows
-    if (m_windows.removeOne(window)) {
+    if (m_quickLayout->removeAssociation(window)) {
         Q_EMIT windowRemoved(window);
         Q_EMIT windowsChanged();
     }
@@ -304,7 +306,7 @@ void Tile::removeWindow(Window *window)
 
 QList<KWin::Window *> Tile::windows() const
 {
-    return m_windows;
+    return m_quickLayout->windowsForMode(m_quickTileMode);
 }
 
 void Tile::insertChild(int position, Tile *item)
@@ -317,7 +319,7 @@ void Tile::insertChild(int position, Tile *item)
 
     if (wasEmpty) {
         Q_EMIT isLayoutChanged(true);
-        for (auto *w : std::as_const(m_windows)) {
+        for (auto *w : windows()) {
             Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
             w->setTile(tile);
         }
