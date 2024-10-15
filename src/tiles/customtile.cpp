@@ -391,6 +391,30 @@ CustomTile *CustomTile::nextTileAt(Qt::Edge edge) const
     }
 }
 
+void CustomTile::addWindow(Window *window)
+{
+    if (!m_windows.contains(window)) {
+        window->moveResize(windowGeometry());
+        m_windows.append(window);
+        Q_EMIT windowAdded(window);
+        Q_EMIT windowsChanged();
+    }
+}
+
+void CustomTile::removeWindow(Window *window)
+{
+    // We already ensure there is a single copy of window in m_windows
+    if (m_windows.removeOne(window)) {
+        Q_EMIT windowRemoved(window);
+        Q_EMIT windowsChanged();
+    }
+}
+
+QList<KWin::Window *> CustomTile::windows() const
+{
+    return m_windows;
+}
+
 void CustomTile::setLayoutDirection(Tile::LayoutDirection dir)
 {
     if (m_layoutDirection == dir) {

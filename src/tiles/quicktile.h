@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "quicktilelayout.h"
 #include "tile.h"
 #include "utils/common.h"
 #include <kwin_export.h>

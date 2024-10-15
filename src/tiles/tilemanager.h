@@ -11,6 +11,7 @@
 
 #include "customtile.h"
 #include "quicktile.h"
+#include "quicktilelayout.h"
 #include "scripting/tilemodel.h"
 #include "tile.h"
 #include "utils/common.h"
@@ -55,6 +56,8 @@ public:
 
     TileModel *model() const;
 
+    std::shared_ptr<QuickTileLayout> quickLayout() const;
+
 Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
 
@@ -67,6 +70,7 @@ private:
     Q_DISABLE_COPY(TileManager)
 
     Output *m_output = nullptr;
+    std::shared_ptr<QuickTileLayout> m_quickLayout;
     std::unique_ptr<QTimer> m_saveTimer;
     std::unique_ptr<CustomTile> m_rootTile = nullptr;
     std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;

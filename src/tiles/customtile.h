@@ -42,11 +42,16 @@ public:
 
     CustomTile *nextTileAt(Qt::Edge edge) const;
 
+    void addWindow(Window *window) override;
+    void removeWindow(Window *window) override;
+    QList<KWin::Window *> windows() const override;
+
 Q_SIGNALS:
     void layoutDirectionChanged(Tile::LayoutDirection direction);
     void layoutModified();
 
 private:
+    QList<Window *> m_windows;
     Tile::LayoutDirection m_layoutDirection = LayoutDirection::Floating;
     bool m_geometryLock = false;
 };
