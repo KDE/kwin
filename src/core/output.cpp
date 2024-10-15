@@ -62,6 +62,11 @@ OutputMode::Flags OutputMode::flags() const
     return m_flags;
 }
 
+void OutputMode::setRemoved()
+{
+    m_flags |= OutputMode::Flag::Removed;
+}
+
 OutputTransform::Kind OutputTransform::kind() const
 {
     return m_kind;

@@ -304,7 +304,7 @@ std::pair<OutputConfiguration, QList<Output *>> OutputConfigurationStore::setupT
                 && mode->refreshRate() == state.mode->refreshRate;
         });
         std::optional<std::shared_ptr<OutputMode>> mode = modeIt == modes.end() ? std::nullopt : std::optional(*modeIt);
-        if (!mode.has_value()) {
+        if (!mode.has_value() || !*mode || ((*mode)->flags() & OutputMode::Flag::Removed)) {
             mode = chooseMode(output);
         }
         *ret.changeSet(output) = OutputChangeSet{
@@ -481,7 +481,8 @@ std::shared_ptr<OutputMode> OutputConfigurationStore::chooseMode(Output *output)
     // some displays advertise bigger modes than their native resolution
     // to avoid that, take the preferred mode into account, which is usually the native one
     const auto preferred = std::find_if(modes.begin(), modes.end(), [](const auto &mode) {
-        return mode->flags() & OutputMode::Flag::Preferred;
+        return (mode->flags() & OutputMode::Flag::Preferred)
+            && !(mode->flags() & OutputMode::Flag::Removed);
     });
     if (preferred != modes.end()) {
         // some high refresh rate displays advertise a 60Hz mode as preferred for compatibility reasons
