@@ -214,8 +214,18 @@ void XXColorParametricCreatorV4::xx_image_description_creator_params_v4_create(R
         wl_resource_post_error(resource->handle, error::error_inconsistent_set, "max_cll and max_fall must only be set with the PQ transfer function");
         return;
     }
-    const std::optional<double> maxFrameAverageLuminance = m_maxFall ? m_maxFall : m_maxMasteringLuminance;
-    const std::optional<double> maxHdrLuminance = m_maxCll ? m_maxCll : m_maxMasteringLuminance;
+    std::optional<double> maxFrameAverageLuminance = m_maxFall ? m_maxFall : m_maxMasteringLuminance;
+    std::optional<double> maxHdrLuminance = m_maxCll ? m_maxCll : m_maxMasteringLuminance;
+
+    // some applications provide truly nonsensical luminance values, like 10 million nits.
+    // this is just a basic sanity check to not make use of that
+    const bool hasSaneMetadata = m_maxFall <= 10'000 && m_maxCll <= 10'000 && m_maxMasteringLuminance <= 10'000;
+    if (!hasSaneMetadata) {
+        maxFrameAverageLuminance.reset();
+        maxHdrLuminance.reset();
+        m_minMasteringLuminance.reset();
+    }
+
     TransferFunction func{*m_transferFunctionType};
     double referenceLuminance = TransferFunction::defaultReferenceLuminanceFor(func.type);
     if (m_transferFunctionLuminances) {
