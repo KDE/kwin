@@ -48,6 +48,9 @@ public:
     explicit Tile(TileManager *tiling, Tile *parentItem = nullptr);
     ~Tile();
 
+    VirtualDesktop *desktop();
+    bool isActive() const;
+
     void setGeometryFromWindow(const QRectF &geom);
     void setGeometryFromAbsolute(const QRectF &geom);
     virtual void setRelativeGeometry(const QRectF &geom);
@@ -142,6 +145,7 @@ public:
     }
 
 Q_SIGNALS:
+    void activeChanged(bool active);
     void relativeGeometryChanged();
     void absoluteGeometryChanged();
     void windowGeometryChanged();
@@ -161,6 +165,7 @@ protected:
     Tile *m_parentTile;
     std::shared_ptr<QuickTileLayout> m_quickLayout;
 
+    VirtualDesktop *m_desktop = nullptr;
     TileManager *m_tiling;
     QRectF m_relativeGeometry;
     static QSizeF s_minimumSize;

@@ -430,11 +430,27 @@ Tile::LayoutDirection CustomTile::layoutDirection() const
     return m_layoutDirection;
 }
 
-RootTile::RootTile(TileManager *tiling)
+RootTile::RootTile(TileManager *tiling, VirtualDesktop *desktop)
     : CustomTile(tiling, nullptr)
 {
+    m_desktop = desktop;
     setParent(tiling);
     setRelativeGeometry({0, 0, 1, 1});
+}
+
+Tile *RootTile::windowOwner(Window *window)
+{
+    if (windows().contains(window)) {
+        return this;
+    }
+
+    for (Tile *tile : descendants()) {
+        if (tile->windows().contains(window)) {
+            return tile;
+        }
+    }
+
+    return nullptr;
 }
 
 } // namespace KWin

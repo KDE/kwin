@@ -60,7 +60,9 @@ class RootTile : public CustomTile
 {
     Q_OBJECT
 public:
-    RootTile(TileManager *tiling);
+    RootTile(TileManager *tiling, VirtualDesktop *desktop);
+
+    Tile *windowOwner(Window *window);
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const CustomTile *tile);
