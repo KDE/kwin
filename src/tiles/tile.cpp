@@ -306,7 +306,7 @@ void Tile::resizeByPixels(qreal delta, Qt::Edge edge)
 
 void Tile::addWindow(Window *window)
 {
-    if (m_quickLayout->modeForWindow(window) != QuickTileFlag::None) {
+    if (m_quickLayout->modeForWindow(window) != m_quickTileMode) {
         // Don't resize the window here, it was already resized in the configureEvent
         m_quickLayout->setAssociation(window, m_quickTileMode);
         Q_EMIT windowAdded(window);
