@@ -522,7 +522,7 @@ void DrmGpu::waitIdle()
         pfds[0].fd = m_fd;
         pfds[0].events = POLLIN;
 
-        const int ready = poll(pfds, 1, 30000);
+        const int ready = poll(pfds, 1, s_pageflipTimeout.count());
         if (ready < 0) {
             if (errno != EINTR) {
                 qCWarning(KWIN_DRM) << Q_FUNC_INFO << "poll() failed:" << strerror(errno);

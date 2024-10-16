@@ -19,11 +19,6 @@ using namespace std::chrono_literals;
 namespace KWin
 {
 
-/**
- * This should always be longer than any real pageflip can take, even with PSR and modesets
- */
-static constexpr auto s_pageflipTimeout = 5s;
-
 DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
 {
     if (!gpu->atomicModeSetting()) {
@@ -40,7 +35,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
             std::unique_lock lock(m_mutex);
             bool timeout = false;
             if (m_committed) {
-                timeout = m_commitPending.wait_for(lock, s_pageflipTimeout) == std::cv_status::timeout;
+                timeout = m_commitPending.wait_for(lock, DrmGpu::s_pageflipTimeout) == std::cv_status::timeout;
             } else if (m_commits.empty()) {
                 m_commitPending.wait(lock);
             }
