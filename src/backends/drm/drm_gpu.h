@@ -18,6 +18,7 @@
 #include <QSocketNotifier>
 #include <qobject.h>
 
+#include <chrono>
 #include <epoxy/egl.h>
 #include <sys/types.h>
 
@@ -62,6 +63,11 @@ class DrmGpu : public QObject
 {
     Q_OBJECT
 public:
+    /**
+     * This should always be longer than any real pageflip can take, even with PSR and modesets
+     */
+    static constexpr std::chrono::milliseconds s_pageflipTimeout = std::chrono::seconds(1);
+
     DrmGpu(DrmBackend *backend, int fd, std::unique_ptr<DrmDevice> &&device);
     ~DrmGpu();
 
