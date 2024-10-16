@@ -5,6 +5,7 @@
 */
 
 #include "scene/itemrenderer_opengl.h"
+#include "core/colorpipeline.h"
 #include "core/pixelgrid.h"
 #include "core/rendertarget.h"
 #include "core/renderviewport.h"
@@ -344,7 +345,8 @@ void ItemRendererOpenGL::renderItem(const RenderTarget &renderTarget, const Rend
         if (renderNode.opacity != 1.0) {
             traits |= ShaderTrait::Modulate;
         }
-        if (renderNode.colorDescription != renderTarget.colorDescription()) {
+        const auto colorTransformation = ColorPipeline::create(renderNode.colorDescription, renderTarget.colorDescription(), item->renderingIntent());
+        if (!colorTransformation.isIdentity()) {
             traits |= ShaderTrait::TransformColorspace;
         }
         if (!shader || traits != lastTraits) {
