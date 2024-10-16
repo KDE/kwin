@@ -54,7 +54,6 @@ void TestDbusInterface::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
 
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -62,7 +61,6 @@ void TestDbusInterface::initTestCase()
     });
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     VirtualDesktopManager::self()->setCount(4);
 }
 

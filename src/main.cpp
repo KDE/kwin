@@ -156,11 +156,6 @@ Application::~Application()
     m_session.reset();
 }
 
-void Application::notifyStarted()
-{
-    Q_EMIT started();
-}
-
 void Application::destroyAtoms()
 {
 #if KWIN_BUILD_X11

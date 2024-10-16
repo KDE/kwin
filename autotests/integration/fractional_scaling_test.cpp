@@ -51,7 +51,6 @@ void TestFractionalScale::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWayland::Client::Output *>();
 
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         Test::OutputInfo{
@@ -65,7 +64,6 @@ void TestFractionalScale::initTestCase()
     });
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1024, 819));

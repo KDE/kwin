@@ -46,7 +46,6 @@ void KeymapCreationFailureTest::initTestCase()
     qputenv("XKB_DEFAULT_OPTIONS", "no");
 
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -62,7 +61,6 @@ void KeymapCreationFailureTest::initTestCase()
     layoutGroup.sync();
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void KeymapCreationFailureTest::init()

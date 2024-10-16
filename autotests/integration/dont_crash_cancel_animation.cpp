@@ -53,8 +53,6 @@ void DontCrashCancelAnimationFromAnimationEndedTest::initTestCase()
     });
     kwinApp()->start();
     QVERIFY(Compositor::self());
-    QSignalSpy compositorToggledSpy(Compositor::self(), &Compositor::compositingToggled);
-    QVERIFY(compositorToggledSpy.wait());
     QVERIFY(effects);
 }
 

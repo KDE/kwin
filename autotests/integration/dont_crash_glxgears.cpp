@@ -33,14 +33,12 @@ private Q_SLOTS:
 void DontCrashGlxgearsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
         QRect(1280, 0, 1280, 1024),
     });
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void DontCrashGlxgearsTest::testGlxgears()

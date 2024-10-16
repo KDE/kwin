@@ -52,7 +52,6 @@ void XwaylandSelectionsTest::initTestCase()
     //    QSKIP("Skipped as it fails for unknown reasons on build.kde.org");
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<QProcess::ExitStatus>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     //    QSignalSpy clipboardSyncDevicedCreated{waylandServer(), &WaylandServer::xclipboardSyncDataDeviceCreated};
     //    QVERIFY(clipboardSyncDevicedCreated.isValid());
     QVERIFY(waylandServer()->init(s_socketName));
@@ -62,7 +61,6 @@ void XwaylandSelectionsTest::initTestCase()
     });
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));

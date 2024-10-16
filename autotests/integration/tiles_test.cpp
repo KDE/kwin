@@ -44,8 +44,6 @@ private:
 void TilesTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
-    QVERIFY(applicationStartedSpy.isValid());
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -53,7 +51,6 @@ void TilesTest::initTestCase()
     });
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);
     QCOMPARE(outputs[0]->geometry(), QRect(0, 0, 1280, 1024));

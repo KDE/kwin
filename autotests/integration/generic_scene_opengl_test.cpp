@@ -43,7 +43,6 @@ void GenericSceneOpenGLTest::initTestCase()
         return;
     }
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -66,7 +65,6 @@ void GenericSceneOpenGLTest::initTestCase()
     qputenv("KWIN_COMPOSE", m_envVariable);
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Compositor::self());
 
     QCOMPARE(Compositor::self()->backend()->compositingType(), KWin::OpenGLCompositing);

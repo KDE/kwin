@@ -23,9 +23,10 @@ public:
     static WaylandCompositor *create(QObject *parent = nullptr);
     ~WaylandCompositor() override;
 
-protected:
     void start() override;
     void stop() override;
+
+protected:
     void composite(RenderLoop *loop) override;
 
 private:

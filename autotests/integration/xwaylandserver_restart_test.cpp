@@ -33,7 +33,6 @@ private Q_SLOTS:
 
 void XwaylandServerRestartTest::initTestCase()
 {
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -47,7 +46,6 @@ void XwaylandServerRestartTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 static void kwin_safe_kill(QProcess *process)

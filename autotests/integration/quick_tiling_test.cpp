@@ -82,7 +82,6 @@ void QuickTilingTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::MaximizeMode>("MaximizeMode");
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -100,7 +99,6 @@ void QuickTilingTest::initTestCase()
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 
     const auto outputs = workspace()->outputs();
     QCOMPARE(outputs.count(), 2);

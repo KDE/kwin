@@ -59,7 +59,6 @@ void GlobalShortcutsTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::InternalWindow *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -72,7 +71,6 @@ void GlobalShortcutsTest::initTestCase()
     qputenv("XKB_DEFAULT_LAYOUT", "us,ru");
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void GlobalShortcutsTest::init()

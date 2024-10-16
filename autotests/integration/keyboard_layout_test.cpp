@@ -129,7 +129,6 @@ void KeyboardLayoutTest::callSession(const QString &method)
 void KeyboardLayoutTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -144,7 +143,6 @@ void KeyboardLayoutTest::initTestCase()
     layoutGroup.deleteGroup();
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 
     // don't get DBus signal on one-layout configuration
     //    QVERIFY(layoutsReconfiguredSpy.wait());

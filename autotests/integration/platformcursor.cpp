@@ -28,7 +28,6 @@ private Q_SLOTS:
 
 void PlatformCursorTest::initTestCase()
 {
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -36,7 +35,10 @@ void PlatformCursorTest::initTestCase()
     });
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
+
+    // QCursor requires QScreen but our QPA will create QScreen later on a timer timeout.
+    QSignalSpy screenAddedSpy(qGuiApp, &QGuiApplication::screenAdded);
+    QVERIFY(screenAddedSpy.wait());
 }
 
 void PlatformCursorTest::testPos()

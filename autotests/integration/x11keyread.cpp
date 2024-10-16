@@ -73,7 +73,6 @@ void X11KeyReadTest::initTestCase_data()
 
 void X11KeyReadTest::initTestCase()
 {
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -83,7 +82,6 @@ void X11KeyReadTest::initTestCase()
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 
     Test::XcbConnectionPtr c = Test::createX11Connection();
     QVERIFY(!xcb_connection_has_error(c.get()));

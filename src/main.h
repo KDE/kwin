@@ -355,13 +355,11 @@ Q_SIGNALS:
     void xwaylandScaleChanged();
     void workspaceCreated();
     void virtualTerminalCreated();
-    void started();
 
 protected:
     Application(OperationMode mode, int &argc, char **argv);
     virtual void performStartup() = 0;
 
-    void notifyStarted();
     void createInput();
     void createWorkspace();
     void createOptions();

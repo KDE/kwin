@@ -75,7 +75,6 @@ void ScreenEdgesTest::initTestCase()
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
 
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
@@ -91,7 +90,6 @@ void ScreenEdgesTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void ScreenEdgesTest::init()

@@ -47,7 +47,6 @@ private:
 
 void ScreenEdgeTest::initTestCase()
 {
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
 
@@ -69,7 +68,6 @@ void ScreenEdgeTest::initTestCase()
     kwinApp()->setConfig(config);
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(Scripting::self());
 
     workspace()->screenEdges()->setTimeThreshold(0);

@@ -109,7 +109,6 @@ protected:
     void performStartup() override;
 
 private:
-    void continueStartupWithScene();
     void finalizeStartup();
 
     void createVirtualInputDevices();

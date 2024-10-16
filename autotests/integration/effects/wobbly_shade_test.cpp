@@ -47,7 +47,6 @@ void WobblyWindowsShadeTest::initTestCase()
     }
     qRegisterMetaType<KWin::Window *>();
     qRegisterMetaType<KWin::Effect *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -68,7 +67,6 @@ void WobblyWindowsShadeTest::initTestCase()
     qputenv("KWIN_COMPOSE", QByteArrayLiteral("O2"));
     qputenv("KWIN_EFFECTS_FORCE_ANIMATIONS", "1");
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void WobblyWindowsShadeTest::init()

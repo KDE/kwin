@@ -26,10 +26,8 @@ private Q_SLOTS:
 
 void XineramaTest::initTestCase()
 {
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void XineramaTest::indexToOutput()

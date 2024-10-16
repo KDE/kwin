@@ -138,13 +138,11 @@ void X11WindowTest::initTestCase_data()
 void X11WindowTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({QRect(0, 0, 1280, 1024)});
     kwinApp()->setConfig(KSharedConfig::openConfig(QString(), KConfig::SimpleConfig));
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
     QVERIFY(KWin::Compositor::self());
 }
 

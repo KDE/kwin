@@ -61,7 +61,6 @@ protected:
     void performStartup() override;
 
 private:
-    void continueStartupWithScene();
     void startSession();
     void refreshSettings(const KConfigGroup &group, const QByteArrayList &names);
 

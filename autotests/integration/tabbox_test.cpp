@@ -43,7 +43,6 @@ private Q_SLOTS:
 void TabBoxTest::initTestCase()
 {
     qRegisterMetaType<KWin::Window *>();
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
         QRect(0, 0, 1280, 1024),
@@ -57,7 +56,6 @@ void TabBoxTest::initTestCase()
     qputenv("KWIN_XKB_DEFAULT_KEYMAP", "1");
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void TabBoxTest::init()

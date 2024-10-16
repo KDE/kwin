@@ -309,7 +309,6 @@ void ApplicationX11::performStartup()
         Xcb::sync(); // Trigger possible errors, there's still a chance to abort
 
         notifyKSplash();
-        notifyStarted();
 
         connect(Cursors::self()->mouse(), &Cursor::posChanged, workspace(), qOverload<const QPointF &>(&Workspace::setActiveOutput));
     });

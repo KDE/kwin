@@ -79,7 +79,6 @@ void Target::shortcut()
 void NoGlobalShortcutsTest::initTestCase()
 {
     qRegisterMetaType<KWin::ElectricBorder>("ElectricBorder");
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     kwinApp()->setSupportsGlobalShortcuts(false);
     QVERIFY(waylandServer()->init(s_socketName));
     Test::setOutputConfig({
@@ -92,7 +91,6 @@ void NoGlobalShortcutsTest::initTestCase()
     qputenv("XKB_DEFAULT_RULES", "evdev");
 
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void NoGlobalShortcutsTest::init()

@@ -104,6 +104,12 @@ X11Compositor::X11Compositor(QObject *parent)
     KGlobalAccel::self()->setDefaultShortcut(toggleAction, QList<QKeySequence>() << (Qt::SHIFT | Qt::ALT | Qt::Key_F12));
     KGlobalAccel::self()->setShortcut(toggleAction, QList<QKeySequence>() << (Qt::SHIFT | Qt::ALT | Qt::Key_F12));
     connect(toggleAction, &QAction::triggered, this, &X11Compositor::toggle);
+
+    // Delay the call to start by one event cycle.
+    // The ctor of this class is invoked from the Workspace ctor, that means before
+    // Workspace is completely constructed, so calling Workspace::self() would result
+    // in undefined behavior. This is fixed by using a delayed invocation.
+    QTimer::singleShot(0, this, &Compositor::start);
 }
 
 X11Compositor::~X11Compositor()

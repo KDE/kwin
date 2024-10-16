@@ -40,10 +40,8 @@ private Q_SLOTS:
 
 void SecurityContextTest::initTestCase()
 {
-    QSignalSpy applicationStartedSpy(kwinApp(), &Application::started);
     QVERIFY(waylandServer()->init(s_socketName));
     kwinApp()->start();
-    QVERIFY(applicationStartedSpy.wait());
 }
 
 void SecurityContextTest::init()
