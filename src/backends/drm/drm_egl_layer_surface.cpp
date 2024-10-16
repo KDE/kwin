@@ -668,7 +668,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     for (const QRect &logical : damagedRegion) {
         deviceDamage |= scaledRect(logical, surface->scale).toAlignedRect();
     }
-    const QRegion repaint = (deviceDamage | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion())) & QRect(QPoint(), m_surface->gbmSwapchain->size());
+    const QRegion repaint = (deviceDamage | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion())) & QRect(QPoint(), surface->gbmSwapchain->size());
     surface->importDamageJournal.add(deviceDamage);
 
     GLFramebuffer *fbo = slot->framebuffer();
