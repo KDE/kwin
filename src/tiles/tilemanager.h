@@ -57,6 +57,7 @@ public:
     TileModel *model() const;
 
     std::shared_ptr<QuickTileLayout> quickLayout() const;
+    Tile *windowOwner(Window *window);
 
 Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
@@ -72,9 +73,13 @@ private:
     Output *m_output = nullptr;
     std::shared_ptr<QuickTileLayout> m_quickLayout;
     std::unique_ptr<QTimer> m_saveTimer;
-    std::unique_ptr<CustomTile> m_rootTile = nullptr;
-    std::unique_ptr<QuickRootTile> m_quickRootTile = nullptr;
+    RootTile *m_rootTile = nullptr;
+    QuickRootTile *m_quickRootTile = nullptr;
     std::unique_ptr<TileModel> m_tileModel = nullptr;
+
+    QHash<VirtualDesktop *, RootTile *> m_rootTiles;
+    QHash<VirtualDesktop *, QuickRootTile *> m_quickRootTiles;
+
     bool m_tearingDown = false;
     friend class CustomTile;
 };

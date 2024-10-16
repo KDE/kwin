@@ -8,13 +8,15 @@
 */
 
 #include "quicktile.h"
+#include "virtualdesktops.h"
 
 namespace KWin
 {
 
-QuickRootTile::QuickRootTile(TileManager *tiling, Tile *parentItem)
+QuickRootTile::QuickRootTile(TileManager *tiling, VirtualDesktop *desktop, Tile *parentItem)
     : Tile(tiling, parentItem)
 {
+    m_desktop = desktop;
     setPadding(0.0);
     setRelativeGeometry(QRectF(0, 0, 1, 1));
     setQuickTileMode(QuickTileFlag::None);
@@ -227,6 +229,11 @@ void QuickRootTile::tryReset()
     if (m_topHorizontalTile->windows().isEmpty() && m_bottomHorizontalTile->windows().isEmpty()) {
         setVerticalSplit(0.5);
     }
+}
+
+Tile *QuickRootTile::windowOwner(Window *window)
+{
+    return tileForMode(m_quickLayout->modeForWindow(window));
 }
 
 } // namespace KWin

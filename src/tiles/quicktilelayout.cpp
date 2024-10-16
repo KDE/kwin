@@ -13,6 +13,8 @@
 namespace KWin
 {
 
+QuickTileLayout *QuickTileLayout::s_self = new QuickTileLayout;
+
 QDebug operator<<(QDebug debug, const QuickTileLayout *tileLayout)
 {
     if (tileLayout) {

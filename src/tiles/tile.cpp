@@ -30,6 +30,7 @@ Tile::Tile(TileManager *tiling, Tile *parent)
 {
     if (m_parentTile) {
         m_padding = m_parentTile->padding();
+        m_desktop = m_parentTile->desktop();
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
 }
@@ -51,6 +52,16 @@ Tile::~Tile()
         Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
         w->setTile(tile);
     }
+}
+
+VirtualDesktop *Tile::desktop()
+{
+    return m_desktop;
+}
+
+bool Tile::isActive() const
+{
+    return m_desktop == VirtualDesktopManager::self()->currentDesktop();
 }
 
 bool Tile::supportsResizeGravity(Gravity gravity)
@@ -152,13 +163,13 @@ QRectF Tile::windowGeometry() const
     effectiveMargins.setBottom(m_relativeGeometry.bottom() < 1.0 ? m_padding / 2.0 : m_padding);
 
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop())) - effectiveMargins;
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop)) - effectiveMargins;
 }
 
 QRectF Tile::maximizedWindowGeometry() const
 {
     const auto geom = absoluteGeometry();
-    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), VirtualDesktopManager::self()->currentDesktop()));
+    return geom.intersected(workspace()->clientArea(MaximizeArea, m_tiling->output(), m_desktop));
 }
 
 bool Tile::isLayout() const
@@ -306,7 +317,13 @@ void Tile::removeWindow(Window *window)
 
 QList<KWin::Window *> Tile::windows() const
 {
-    return m_quickLayout->windowsForMode(m_quickTileMode);
+    QList<KWin::Window *> windows = m_quickLayout->windowsForMode(m_quickTileMode);
+    QList<KWin::Window *> filteredWindows;
+    std::copy_if(windows.begin(), windows.end(), std::back_inserter(filteredWindows),
+                 [this](Window *win) {
+        return win->isOnAllDesktops() || win->desktops().contains(m_desktop);
+    });
+    return filteredWindows;
 }
 
 void Tile::insertChild(int position, Tile *item)

@@ -37,6 +37,11 @@ public:
 
     QHash<Window *, QuickTileMode> windowTileMap() const;
 
+    static QuickTileLayout *self()
+    {
+        return s_self;
+    }
+
 Q_SIGNALS:
     void windowAssociated(Window *window, KWin::QuickTileMode tile);
     void associationRemoved(Window *window, KWin::QuickTileMode tile);
@@ -44,6 +49,7 @@ Q_SIGNALS:
 private:
     QHash<Window *, QuickTileMode> m_modeForWindow;
     QMultiHash<QuickTileMode, Window *> m_windowsForMode;
+    static QuickTileLayout *s_self;
 };
 
 KWIN_EXPORT QDebug operator<<(QDebug debug, const QuickTileLayout *tileLayout);
