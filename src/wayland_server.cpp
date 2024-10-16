@@ -322,7 +322,6 @@ bool WaylandServer::start()
     QProcessEnvironment environment = kwinApp()->processStartupEnvironment();
     if (!socketName().isEmpty()) {
         environment.insert(QStringLiteral("WAYLAND_DISPLAY"), socketName());
-        qputenv("WAYLAND_DISPLAY", socketName().toUtf8());
     }
     kwinApp()->setProcessStartupEnvironment(environment);
 

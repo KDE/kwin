@@ -554,6 +554,11 @@ int main(int argc, char *argv[])
     }
     }
 
+    qunsetenv("WAYLAND_DISPLAY");
+    qunsetenv("WAYLAND_SOCKET");
+    qunsetenv("DISPLAY");
+    qunsetenv("XAUTHORITY");
+
     KWin::WaylandServer *server = KWin::WaylandServer::create();
 #if KWIN_BUILD_SCREENLOCKER
     if (parser.isSet(screenLockerOption)) {

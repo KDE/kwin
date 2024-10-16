@@ -502,8 +502,6 @@ void Xwayland::init()
     auto env = m_app->processStartupEnvironment();
     env.insert(QStringLiteral("DISPLAY"), m_launcher->displayName());
     env.insert(QStringLiteral("XAUTHORITY"), m_launcher->xauthority());
-    qputenv("DISPLAY", m_launcher->displayName().toLatin1());
-    qputenv("XAUTHORITY", m_launcher->xauthority().toLatin1());
     m_app->setProcessStartupEnvironment(env);
 }
 
