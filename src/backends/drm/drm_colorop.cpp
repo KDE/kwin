@@ -73,7 +73,6 @@ bool DrmAbstractColorOp::matchPipeline(DrmAtomicCommit *commit, const ColorPipel
         if (!currentOp) {
             return false;
         }
-        currentOp = currentOp->next();
     }
 
     // now actually program the properties
