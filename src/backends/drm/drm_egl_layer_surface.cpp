@@ -247,8 +247,12 @@ bool EglGbmLayerSurface::endRendering(const QRegion &damagedRegion, OutputFrame 
         m_surface->damageJournal.add(damagedRegion);
         m_surface->shadowDamageJournal.add(damagedRegion);
         QRegion repaint;
-        for (const QRect &rect : logicalRepaint) {
-            repaint |= scaledRect(rect, m_surface->scale).toAlignedRect() & QRect(QPoint(), m_surface->gbmSwapchain->size());
+        if (logicalRepaint == infiniteRegion()) {
+            repaint = QRect(QPoint(), m_surface->gbmSwapchain->size());
+        } else {
+            for (const QRect rect : logicalRepaint) {
+                repaint |= scaledRect(rect, m_surface->scale).toAlignedRect() & QRect(QPoint(), m_surface->gbmSwapchain->size());
+            }
         }
 
         GLFramebuffer *fbo = m_surface->currentSlot->framebuffer();
@@ -664,8 +668,12 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     }
 
     QRegion deviceDamage;
-    for (const QRect &logical : damagedRegion) {
-        deviceDamage |= scaledRect(logical, surface->scale).toAlignedRect();
+    if (damagedRegion == infiniteRegion()) {
+        deviceDamage = QRect(QPoint(), surface->gbmSwapchain->size());
+    } else {
+        for (const QRect &logical : damagedRegion) {
+            deviceDamage |= scaledRect(logical, surface->scale).toAlignedRect();
+        }
     }
     const QRegion repaint = (deviceDamage | surface->importDamageJournal.accumulate(slot->age(), infiniteRegion())) & QRect(QPoint(), surface->gbmSwapchain->size());
     surface->importDamageJournal.add(deviceDamage);
