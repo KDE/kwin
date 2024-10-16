@@ -39,6 +39,9 @@ public:
 
     X11SyncManager *syncManager() const;
 
+    void start() override;
+    void stop() override;
+
     /**
      * Toggles compositing, that is if the Compositor is suspended it will be resumed
      * and if the Compositor is active it will be suspended.
@@ -105,8 +108,6 @@ public:
     static X11Compositor *self();
 
 protected:
-    void start() override;
-    void stop() override;
     void composite(RenderLoop *renderLoop) override;
 
 private:

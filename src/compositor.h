@@ -49,6 +49,9 @@ public:
     ~Compositor() override;
     static Compositor *self();
 
+    virtual void start() = 0;
+    virtual void stop() = 0;
+
     /**
      * Re-initializes the Compositor completely.
      * Connected to the D-Bus signal org.kde.KWin /KWin reinitCompositing
@@ -127,9 +130,6 @@ Q_SIGNALS:
 
 protected:
     explicit Compositor(QObject *parent = nullptr);
-
-    virtual void start() = 0;
-    virtual void stop() = 0;
 
     static Compositor *s_compositor;
 

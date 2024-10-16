@@ -188,17 +188,12 @@ void WaylandTestApplication::performStartup()
     createVirtualInputDevices();
     createTabletModeManager();
 
-    WaylandCompositor::create();
+    auto compositor = WaylandCompositor::create();
     createWorkspace();
     createColorManager();
     createPlugins();
 
-    connect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
-}
-
-void WaylandTestApplication::continueStartupWithScene()
-{
-    disconnect(Compositor::self(), &Compositor::sceneCreated, this, &WaylandTestApplication::continueStartupWithScene);
+    compositor->start();
 
     waylandServer()->initWorkspace();
 
