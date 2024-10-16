@@ -281,10 +281,8 @@ bool InputEventFilter::passToInputMethod(QKeyEvent *event)
         auto newState = event->type() == QEvent::KeyPress ? KeyboardKeyState::Pressed : KeyboardKeyState::Released;
         keyboardGrab->sendKey(waylandServer()->display()->nextSerial(), event->timestamp(), event->nativeScanCode(), newState);
         return true;
-    } else {
-        kwinApp()->inputMethod()->commitPendingText();
-        return false;
     }
+    return false;
 }
 
 class VirtualTerminalFilter : public InputEventFilter
