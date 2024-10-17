@@ -461,11 +461,14 @@ QMatrix4x4 ColorDescription::toOther(const ColorDescription &other, RenderingInt
         // add black point compensation: black and reference white from the source color space
         // should both be mapped to black and reference white in the destination color space
 
+        const double effectiveMin = std::max(minLuminance(), m_transferFunction.minLuminance);
+        const double otherEffectiveMin = std::max(other.minLuminance(), other.m_transferFunction.minLuminance);
+
         // before color conversions, map [src min, src ref] to [0, 1]
         luminanceBefore.scale(1.0 / (reference - minLuminance()));
-        luminanceBefore.translate(-minLuminance(), -minLuminance(), -minLuminance());
+        luminanceBefore.translate(-effectiveMin, -effectiveMin, -effectiveMin);
         // afterwards, map [0, 1] again to [dst min, dst ref]
-        luminanceAfter.translate(other.minLuminance(), other.minLuminance(), other.minLuminance());
+        luminanceAfter.translate(otherEffectiveMin, otherEffectiveMin, otherEffectiveMin);
         luminanceAfter.scale(other.referenceLuminance() - other.minLuminance());
     } else {
         // map only the reference luminance

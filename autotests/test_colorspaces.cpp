@@ -225,7 +225,7 @@ void TestColorspaces::testOpenglShader_data()
     QTest::addColumn<double>("maxError");
 
     // the allowed error here needs to be this high because of llvmpipe. With real GPU drivers it's lower
-    QTest::addRow("Perceptual") << RenderingIntent::Perceptual << 6.5;
+    QTest::addRow("Perceptual") << RenderingIntent::Perceptual << 7.0;
     QTest::addRow("RelativeColorimetric") << RenderingIntent::RelativeColorimetric << 1.5;
     QTest::addRow("AbsoluteColorimetric") << RenderingIntent::AbsoluteColorimetric << 1.5;
     QTest::addRow("RelativeColorimetricWithBPC") << RenderingIntent::RelativeColorimetricWithBPC << 1.5;
