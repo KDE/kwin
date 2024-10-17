@@ -484,7 +484,6 @@ public:
     virtual bool tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time);
 
 protected:
-    void passToWaylandServer(QKeyEvent *event);
     bool passToInputMethod(QKeyEvent *event);
 
 private:

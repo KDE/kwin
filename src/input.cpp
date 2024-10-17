@@ -248,27 +248,6 @@ bool InputEventFilter::tabletPadRingEvent(int number, int position, bool isFinge
     return false;
 }
 
-void InputEventFilter::passToWaylandServer(QKeyEvent *event)
-{
-    Q_ASSERT(waylandServer());
-    if (event->isAutoRepeat()) {
-        return;
-    }
-
-    SeatInterface *seat = waylandServer()->seat();
-    const int keyCode = event->nativeScanCode();
-    switch (event->type()) {
-    case QEvent::KeyPress:
-        seat->notifyKeyboardKey(keyCode, KeyboardKeyState::Pressed);
-        break;
-    case QEvent::KeyRelease:
-        seat->notifyKeyboardKey(keyCode, KeyboardKeyState::Released);
-        break;
-    default:
-        break;
-    }
-}
-
 bool InputEventFilter::passToInputMethod(QKeyEvent *event)
 {
     if (!kwinApp()->inputMethod()) {
@@ -1891,10 +1870,19 @@ public:
             // handled by Wayland client
             return false;
         }
-        auto seat = waylandServer()->seat();
         input()->keyboard()->update();
+        auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
-        passToWaylandServer(event);
+        switch (event->type()) {
+        case QEvent::KeyPress:
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+            break;
+        case QEvent::KeyRelease:
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+            break;
+        default:
+            break;
+        }
         return true;
     }
     bool touchDown(qint32 id, const QPointF &pos, std::chrono::microseconds time) override

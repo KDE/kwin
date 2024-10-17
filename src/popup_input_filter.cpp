@@ -93,8 +93,21 @@ bool PopupInputFilter::keyEvent(KeyEvent *event)
                                                        event->isAutoRepeat());
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
+            if (event->isAutoRepeat()) {
+                return true;
+            }
+
             waylandServer()->seat()->setTimestamp(event->timestamp());
-            passToWaylandServer(event);
+            switch (event->type()) {
+            case QEvent::KeyPress:
+                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+                break;
+            case QEvent::KeyRelease:
+                waylandServer()->seat()->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+                break;
+            default:
+                break;
+            }
         }
     }
 
