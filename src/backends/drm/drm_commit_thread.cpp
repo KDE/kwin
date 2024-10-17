@@ -97,6 +97,9 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                         continue;
                     }
                 }
+                if (m_commits.empty()) {
+                    continue;
+                }
             }
             submit();
         }
