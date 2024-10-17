@@ -200,7 +200,7 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
     QWidget::mousePressEvent(event);
     if (!m_seat->focusedPointerSurface()) {
         if (!m_stackingOrder.isEmpty()) {
-            m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPos());
+            m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPosition());
         }
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));

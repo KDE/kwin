@@ -349,7 +349,7 @@ bool MouseClickEffect::tabletToolEvent(QTabletEvent *event)
     default:
         break;
     }
-    tabletEvent.m_globalPosition = event->globalPos();
+    tabletEvent.m_globalPosition = event->globalPosition();
     tabletEvent.m_pressure = event->pressure();
 
     return false;

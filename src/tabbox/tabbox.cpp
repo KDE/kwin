@@ -622,14 +622,14 @@ bool TabBox::handleMouseEvent(QMouseEvent *event)
     }
     switch (event->type()) {
     case QEvent::MouseMove:
-        if (!m_tabBox->containsPos(event->globalPos())) {
+        if (!m_tabBox->containsPos(event->globalPosition().toPoint())) {
             // filter out all events which are not on the TabBox window.
             // We don't want windows to react on the mouse events
             return true;
         }
         return false;
     case QEvent::MouseButtonPress:
-        if ((!m_isShown && isDisplayed()) || !m_tabBox->containsPos(event->globalPos())) {
+        if ((!m_isShown && isDisplayed()) || !m_tabBox->containsPos(event->globalPosition().toPoint())) {
             close(); // click outside closes tab
             return true;
         }

@@ -56,7 +56,7 @@ void InputEventsTest::testInitMouseEvent()
                      Qt::ShiftModifier | Qt::ControlModifier, 300ms, QPointF(1, 2), QPointF(3, 4), &d, false);
     // and verify the contract of QMouseEvent
     QCOMPARE(event.type(), type);
-    QCOMPARE(event.globalPos(), QPoint(100, 200));
+    QCOMPARE(event.globalPosition(), QPoint(100, 200));
     QCOMPARE(event.screenPos(), QPointF(100, 200));
     QCOMPARE(event.localPos(), QPointF(100, 200));
     QCOMPARE(event.button(), Qt::LeftButton);

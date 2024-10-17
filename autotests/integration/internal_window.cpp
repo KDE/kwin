@@ -128,20 +128,20 @@ bool HelperWindow::event(QEvent *event)
 
 void HelperWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    m_latestGlobalMousePos = event->globalPos();
-    Q_EMIT mouseMoved(event->globalPos());
+    m_latestGlobalMousePos = event->globalPosition().toPoint();
+    Q_EMIT mouseMoved(m_latestGlobalMousePos);
 }
 
 void HelperWindow::mousePressEvent(QMouseEvent *event)
 {
-    m_latestGlobalMousePos = event->globalPos();
+    m_latestGlobalMousePos = event->globalPosition().toPoint();
     m_pressedButtons = event->buttons();
     Q_EMIT mousePressed();
 }
 
 void HelperWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    m_latestGlobalMousePos = event->globalPos();
+    m_latestGlobalMousePos = event->globalPosition().toPoint();
     m_pressedButtons = event->buttons();
     Q_EMIT mouseReleased();
 }

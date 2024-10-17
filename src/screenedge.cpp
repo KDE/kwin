@@ -1481,11 +1481,11 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
             }
             continue;
         }
-        if (edge->approachGeometry().contains(event->globalPos())) {
+        if (edge->approachGeometry().contains(event->globalPosition().toPoint())) {
             if (!edge->isApproaching()) {
                 edge->startApproaching();
             } else {
-                edge->updateApproaching(event->globalPos());
+                edge->updateApproaching(event->globalPosition());
             }
         } else {
             if (edge->isApproaching()) {
@@ -1493,7 +1493,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
             }
         }
         // always send event to all edges so that they can update their state
-        if (edge->check(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC))) {
+        if (edge->check(event->globalPosition().toPoint(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC))) {
             if (edge->client()) {
                 activatedForClient = true;
             }
@@ -1502,7 +1502,7 @@ bool ScreenEdges::isEntered(QMouseEvent *event)
     if (activatedForClient) {
         for (const auto &edge : m_edges) {
             if (edge->client()) {
-                edge->markAsTriggered(event->globalPos(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC));
+                edge->markAsTriggered(event->globalPosition().toPoint(), QDateTime::fromMSecsSinceEpoch(event->timestamp(), Qt::UTC));
             }
         }
     }

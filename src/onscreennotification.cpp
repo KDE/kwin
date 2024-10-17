@@ -49,7 +49,7 @@ void OnScreenNotificationInputEventSpy::pointerEvent(MouseEvent *event)
         return;
     }
 
-    m_parent->setContainsPointer(m_parent->geometry().contains(event->globalPos()));
+    m_parent->setContainsPointer(m_parent->geometry().contains(event->globalPosition().toPoint()));
 }
 
 OnScreenNotification::OnScreenNotification(QObject *parent)
