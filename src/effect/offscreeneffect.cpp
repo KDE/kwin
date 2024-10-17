@@ -11,6 +11,7 @@
 #include "effect/effecthandler.h"
 #include "opengl/gltexture.h"
 #include "opengl/glutils.h"
+#include "opengl/openglcontext.h"
 #include "scene/windowitem.h"
 
 namespace KWin
@@ -78,7 +79,16 @@ void OffscreenEffect::redirect(EffectWindow *window)
 
 void OffscreenEffect::unredirect(EffectWindow *window)
 {
-    d->windows.erase(window);
+    auto it = d->windows.find(window);
+    if (it == d->windows.end()) {
+        return;
+    }
+
+    if (!OpenGlContext::currentContext()) {
+        effects->openglContext()->makeCurrent();
+    }
+
+    d->windows.erase(it);
     if (d->windows.empty()) {
         destroyConnections();
     }
@@ -251,7 +261,6 @@ void OffscreenEffect::handleWindowDamaged(EffectWindow *window)
 
 void OffscreenEffect::handleWindowDeleted(EffectWindow *window)
 {
-    effects->makeOpenGLContextCurrent();
     unredirect(window);
 }
 
@@ -383,7 +392,16 @@ void CrossFadeEffect::redirect(EffectWindow *window)
 
 void CrossFadeEffect::unredirect(EffectWindow *window)
 {
-    d->windows.erase(window);
+    auto it = d->windows.find(window);
+    if (it == d->windows.end()) {
+        return;
+    }
+
+    if (!OpenGlContext::currentContext()) {
+        effects->openglContext()->makeCurrent();
+    }
+
+    d->windows.erase(it);
     if (d->windows.empty()) {
         disconnect(effects, &EffectsHandler::windowDeleted, this, &CrossFadeEffect::handleWindowDeleted);
     }
