@@ -57,7 +57,6 @@ void InputEventsTest::testInitMouseEvent()
     // and verify the contract of QMouseEvent
     QCOMPARE(event.type(), type);
     QCOMPARE(event.globalPosition(), QPoint(100, 200));
-    QCOMPARE(event.screenPos(), QPointF(100, 200));
     QCOMPARE(event.position(), QPointF(100, 200));
     QCOMPARE(event.button(), Qt::LeftButton);
     QCOMPARE(event.buttons(), Qt::LeftButton | Qt::RightButton);

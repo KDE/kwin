@@ -334,7 +334,7 @@ public:
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
                 seat->setTimestamp(event->timestamp());
-                seat->notifyPointerMotion(event->screenPos());
+                seat->notifyPointerMotion(event->globalPosition());
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
             if (pointerSurfaceAllowed()) {
@@ -639,7 +639,7 @@ public:
         }
         switch (event->type()) {
         case QEvent::MouseMove:
-            window->updateInteractiveMoveResize(event->screenPos(), input()->keyboardModifiers());
+            window->updateInteractiveMoveResize(event->globalPosition(), input()->keyboardModifiers());
             break;
         case QEvent::MouseButtonRelease:
             if (event->buttons() == Qt::NoButton) {
@@ -1421,13 +1421,13 @@ public:
         if (!decoration) {
             return false;
         }
-        const QPointF globalPos = event->screenPos();
-        const QPointF p = event->screenPos() - decoration->window()->pos();
+        const QPointF globalPos = event->globalPosition();
+        const QPointF p = event->globalPosition() - decoration->window()->pos();
         switch (event->type()) {
         case QEvent::MouseMove: {
             QHoverEvent e(QEvent::HoverMove, p, p);
             QCoreApplication::instance()->sendEvent(decoration->decoration(), &e);
-            decoration->window()->processDecorationMove(p, event->screenPos());
+            decoration->window()->processDecorationMove(p, event->globalPosition());
             return true;
         }
         case QEvent::MouseButtonPress:
@@ -1436,7 +1436,7 @@ public:
             if (actionResult) {
                 return *actionResult;
             }
-            QMouseEvent e(event->type(), p, event->screenPos(), event->button(), event->buttons(), event->modifiers());
+            QMouseEvent e(event->type(), p, event->globalPosition(), event->button(), event->buttons(), event->modifiers());
             e.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp()).count());
             e.setAccepted(false);
             QCoreApplication::sendEvent(decoration->decoration(), &e);
