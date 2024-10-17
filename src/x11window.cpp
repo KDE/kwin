@@ -4835,7 +4835,7 @@ void X11Window::leaveInteractiveMoveResize()
 
 bool X11Window::isWaitingForInteractiveResizeSync() const
 {
-    return m_syncRequest.enabled && m_syncRequest.interactiveResize && (m_syncRequest.pending || m_syncRequest.acked);
+    return m_syncRequest.enabled && (m_syncRequest.pending || m_syncRequest.acked);
 }
 
 void X11Window::doInteractiveResizeSync(const QRectF &rect)
