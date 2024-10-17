@@ -33,6 +33,18 @@ Tile::Tile(TileManager *tiling, Tile *parent)
         m_desktop = m_parentTile->desktop();
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
+    /*  connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
+              this, [this](VirtualDesktop *oldDesk, VirtualDesktop *newDesk) {
+                  if (oldDesk == m_desktop || newDesk == m_desktop) {
+                      Q_EMIT activeChanged(newDesk == m_desktop);
+                      if (newDesk == m_desktop) {
+                          for (auto *w : windows()) {
+                              qWarning()<<"AAAAsetting new tile"<<this;
+                              w->setTile(this);
+                          }
+                      }
+                  }
+              });*/
 }
 
 Tile::~Tile()
@@ -323,6 +335,7 @@ void Tile::addWindow(Window *window)
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
+    window->moveResize(windowGeometry());
 }
 
 void Tile::removeWindow(Window *window)

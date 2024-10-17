@@ -31,6 +31,7 @@
 #if KWIN_BUILD_TABBOX
 #include "tabbox/tabbox.h"
 #endif
+#include "tiles/quicktilelayout.h"
 #include "tiles/tilemanager.h"
 #include "useractions.h"
 #include "virtualdesktops.h"
@@ -3610,13 +3611,18 @@ void Window::commitTile(Tile *tile)
 
     m_tile = tile;
 
+    if (!tile) {
+        QuickTileLayout::self()->removeAssociation(this);
+        moveResize(m_maximizeGeometryRestore);
+    }
+
+    if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
+        oldTile->removeWindow(this);
+    }
+
     if (m_tile) {
         Q_ASSERT(!isDeleted());
         m_tile->addWindow(this);
-    }
-
-    if (oldTile) {
-        oldTile->removeWindow(this);
     }
 
     Q_EMIT tileChanged(tile);
