@@ -44,8 +44,10 @@ DrmPipeline::Error DrmPipeline::presentLegacy(const std::shared_ptr<OutputFrame>
 
 void DrmPipeline::forceLegacyModeset()
 {
-    legacyModeset();
-    setLegacyGamma();
+    if (activePending()) {
+        legacyModeset();
+        setLegacyGamma();
+    }
 }
 
 DrmPipeline::Error DrmPipeline::legacyModeset()
