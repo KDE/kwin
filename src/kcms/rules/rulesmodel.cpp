@@ -899,8 +899,7 @@ QList<OptionsModel::Data> RulesModel::colorSchemesModelData() const
 {
     QList<OptionsModel::Data> modelData;
 
-    KColorSchemeManager schemes;
-    QAbstractItemModel *schemesModel = schemes.model();
+    QAbstractItemModel *schemesModel = KColorSchemeManager::instance()->model();
 
     // Skip row 0, which is Default scheme
     for (int r = 1; r < schemesModel->rowCount(); r++) {
