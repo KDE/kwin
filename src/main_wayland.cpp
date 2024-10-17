@@ -262,6 +262,7 @@ XwaylandInterface *ApplicationWayland::xwayland() const
 int main(int argc, char *argv[])
 {
     KWin::Application::setupMalloc();
+    KWin::Application::setupDBusLibrary();
     KWin::Application::setupLocalizedString();
     KWin::gainRealTime();
 

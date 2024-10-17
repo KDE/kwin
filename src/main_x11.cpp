@@ -382,6 +382,7 @@ void ApplicationX11::crashHandler(int signal)
 int main(int argc, char *argv[])
 {
     KWin::Application::setupMalloc();
+    KWin::Application::setupDBusLibrary();
     KWin::Application::setupLocalizedString();
 
     signal(SIGPIPE, SIG_IGN);

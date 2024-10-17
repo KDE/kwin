@@ -293,6 +293,7 @@ public:
     virtual void createEffectsHandler(Compositor *compositor, WorkspaceScene *scene);
 
     static void setupMalloc();
+    static void setupDBusLibrary();
     static void setupLocalizedString();
 
     PluginManager *pluginManager() const;

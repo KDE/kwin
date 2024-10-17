@@ -74,6 +74,8 @@
 #endif
 #endif
 
+#include <dbus-1.0/dbus/dbus.h>
+
 Q_DECLARE_METATYPE(KSharedConfigPtr)
 
 namespace KWin
@@ -244,6 +246,21 @@ void Application::setupMalloc()
     const int pagesize = sysconf(_SC_PAGESIZE);
     mallopt(M_TRIM_THRESHOLD, 5 * pagesize);
 #endif // M_TRIM_THRESHOLD
+}
+
+void Application::setupDBusLibrary()
+{
+    setenv("DBUS_FATAL_WARNINGS", "0", true);
+    // We need this call to fail, so libdbus-1 reads the environment variable
+    // and initializes its internal error handler to not abort on warnings.
+    // Otherwise, KWin might crash on bad `callDBus` calls in KWin scripts.
+    // See: dbus-internal.c:init_warnings() in libdbus-1
+    DBusMessage *p = dbus_message_new_method_call("bad", "bad", "bad", "bad");
+    if (p) {
+        dbus_message_unref(p);
+        qCWarning(KWIN_CORE, "libdbus-1 fatal warnings are not disabled. KWin might crash on bad `callDBus` calls in KWin scripts.");
+    }
+    qunsetenv("DBUS_FATAL_WARNINGS");
 }
 
 void Application::setupLocalizedString()

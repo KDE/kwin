@@ -363,6 +363,12 @@ set_package_properties(Fontconfig PROPERTIES
     PURPOSE "Needed for KWin's QPA plugin."
 )
 
+find_package(DBus1)
+set_package_properties(DBus1 PROPERTIES
+    TYPE REQUIRED
+    PURPOSE "Needed for preventing libdbus-1 from aborting on error"
+)
+
 find_package(Libcap)
 set_package_properties(Libcap PROPERTIES
     TYPE OPTIONAL
