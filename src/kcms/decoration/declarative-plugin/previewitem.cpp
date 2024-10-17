@@ -275,7 +275,7 @@ static QMouseEvent cloneEventWithPadding(QMouseEvent *event, int paddingLeft, in
 {
     return QMouseEvent(
         event->type(),
-        event->localPos() - QPointF(paddingLeft, paddingTop),
+        event->position() - QPointF(paddingLeft, paddingTop),
         event->button(),
         event->buttons(),
         event->modifiers());

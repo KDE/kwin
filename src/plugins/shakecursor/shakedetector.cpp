@@ -60,9 +60,9 @@ bool ShakeDetector::update(QMouseEvent *event)
     if (m_history.size() >= 2) {
         HistoryItem &last = m_history[m_history.size() - 1];
         const HistoryItem &prev = m_history[m_history.size() - 2];
-        if (sameSign(last.position.x() - prev.position.x(), event->localPos().x() - last.position.x()) && sameSign(last.position.y() - prev.position.y(), event->localPos().y() - last.position.y())) {
+        if (sameSign(last.position.x() - prev.position.x(), event->position().x() - last.position.x()) && sameSign(last.position.y() - prev.position.y(), event->position().y() - last.position.y())) {
             last = HistoryItem{
-                .position = event->localPos(),
+                .position = event->position(),
                 .timestamp = event->timestamp(),
             };
             return false;
@@ -70,7 +70,7 @@ bool ShakeDetector::update(QMouseEvent *event)
     }
 
     m_history.emplace_back(HistoryItem{
-        .position = event->localPos(),
+        .position = event->position(),
         .timestamp = event->timestamp(),
     });
 

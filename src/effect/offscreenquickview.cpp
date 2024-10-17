@@ -293,7 +293,7 @@ void OffscreenQuickView::forwardMouseEvent(QEvent *e)
             d->lastMousePressButton = me->button();
             if (doubleClick) {
                 d->lastMousePressButton = Qt::NoButton;
-                QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->localPos(), me->windowPos(), me->screenPos(), me->button(), me->buttons(), me->modifiers());
+                QMouseEvent doubleClickEvent(QEvent::MouseButtonDblClick, me->position(), me->windowPos(), me->screenPos(), me->button(), me->buttons(), me->modifiers());
                 QCoreApplication::sendEvent(d->m_view.get(), &doubleClickEvent);
             }
         }

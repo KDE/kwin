@@ -191,7 +191,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
         updateFocus();
     }
     m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerMotion(event->localPos().toPoint());
+    m_seat->notifyPointerMotion(event->position().toPoint());
     m_seat->notifyPointerFrame();
 }
 
