@@ -3397,7 +3397,7 @@ void Window::setElectricBorderMaximizing(bool maximizing)
     if (maximizing) {
         if (auto quickTileMode = std::get_if<QuickTileMode>(&m_electricMode.value())) {
             workspace()->outline()->show(quickTileGeometry(*quickTileMode, interactiveMoveResizeAnchor()).toRect(), moveResizeGeometry().toRect());
-        } else if (auto maximizeMode = std::get_if<MaximizeMode>(&m_electricMode.value())) {
+        } else if (std::get_if<MaximizeMode>(&m_electricMode.value())) {
             workspace()->outline()->show(workspace()->clientArea(MaximizeArea, this, interactiveMoveResizeAnchor()).toRect(), moveResizeGeometry().toRect());
         }
     } else {
