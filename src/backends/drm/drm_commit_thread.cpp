@@ -88,7 +88,7 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                     }
                 } else {
                     bool timeout = true;
-                    while (std::chrono::steady_clock::now() < cursorTarget && timeout && m_commits.front()->isCursorOnly()) {
+                    while (std::chrono::steady_clock::now() < cursorTarget && timeout && !m_commits.empty() && m_commits.front()->isCursorOnly()) {
                         timeout = m_commitPending.wait_for(lock, 50us) == std::cv_status::timeout;
                         optimizeCommits(cursorTarget);
                     }
@@ -96,6 +96,9 @@ DrmCommitThread::DrmCommitThread(DrmGpu *gpu, const QString &name)
                         // some new commit was added, process that
                         continue;
                     }
+                }
+                if (m_commits.empty()) {
+                    continue;
                 }
             }
             submit();
