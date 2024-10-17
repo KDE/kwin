@@ -82,7 +82,15 @@ bool PopupInputFilter::keyEvent(KeyEvent *event)
     focus(last);
 
     if (auto internalWindow = qobject_cast<InternalWindow *>(last)) {
-        QCoreApplication::sendEvent(internalWindow->handle(), event);
+        QWindowSystemInterface::handleExtendedKeyEvent(internalWindow->handle(),
+                                                       event->type(),
+                                                       event->key(),
+                                                       event->modifiers(),
+                                                       event->nativeScanCode(),
+                                                       event->nativeVirtualKey(),
+                                                       event->nativeModifiers(),
+                                                       event->text(),
+                                                       event->isAutoRepeat());
     } else if (qobject_cast<WaylandWindow *>(last)) {
         if (!passToInputMethod(event)) {
             waylandServer()->seat()->setTimestamp(event->timestamp());
