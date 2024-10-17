@@ -74,14 +74,18 @@ TileManager::TileManager(Output *parent)
         rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
         connect(rootTile, &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
         connect(rootTile, &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
+        if (desk == VirtualDesktopManager::self()->currentDesktop()) {
+            m_rootTile = rootTile;
+            m_quickRootTile = m_quickRootTiles[desk];
+        }
     };
 
     for (VirtualDesktop *desk : VirtualDesktopManager::self()->desktops()) {
         addDesktop(desk);
     }
 
-    m_rootTile = new RootTile(this, nullptr); // m_rootTiles[VirtualDesktopManager::self()->currentDesktop()];
-    m_quickRootTile = new QuickRootTile(this, nullptr); // m_quickRootTiles[VirtualDesktopManager::self()->currentDesktop()];
+    m_rootTile = nullptr; // new RootTile(this, nullptr); // m_rootTiles[VirtualDesktopManager::self()->currentDesktop()];
+    m_quickRootTile = nullptr; // new QuickRootTile(this, nullptr); // m_quickRootTiles[VirtualDesktopManager::self()->currentDesktop()];
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopAdded, this, addDesktop);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopRemoved,
             this, [this](VirtualDesktop *desk) {
@@ -96,7 +100,13 @@ TileManager::TileManager(Output *parent)
         m_quickRootTile = m_quickRootTiles[newDesk];
     });
 
-    readSettings();
+    connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
+            this, [this](VirtualDesktop *oldDesk, VirtualDesktop *newDesk) {
+        for (auto *w : Workspace::self()->windows()) {
+            w->setTile(windowOwner(w));
+        }
+    });
+    // readSettings(); FIXME
 }
 
 TileManager::~TileManager()

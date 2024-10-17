@@ -9,6 +9,7 @@
 
 #include "customtile.h"
 #include "core/output.h"
+#include "effect/globals.h"
 #include "tilemanager.h"
 #include "window.h"
 
@@ -34,6 +35,10 @@ CustomTile::CustomTile(TileManager *tiling, CustomTile *parentItem)
 {
     setQuickTileMode(QuickTileFlag::Custom);
     m_geometryLock = true;
+
+    connect(m_quickLayout.get(), &QuickTileLayout::windowAssociated, this, [this](Window *win) {
+        m_windows.removeAll(win);
+    });
 }
 
 CustomTile *CustomTile::createChildAt(const QRectF &relativeGeometry, LayoutDirection layoutDirection, int position)
@@ -394,11 +399,12 @@ CustomTile *CustomTile::nextTileAt(Qt::Edge edge) const
 void CustomTile::addWindow(Window *window)
 {
     if (!m_windows.contains(window)) {
-        window->moveResize(windowGeometry());
+        m_quickLayout->removeAssociation(window);
         m_windows.append(window);
         Q_EMIT windowAdded(window);
         Q_EMIT windowsChanged();
     }
+    window->moveResize(windowGeometry());
 }
 
 void CustomTile::removeWindow(Window *window)
