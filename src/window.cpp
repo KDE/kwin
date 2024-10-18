@@ -3613,7 +3613,7 @@ void Window::commitTile(Tile *tile)
 
     if (!tile) {
         QuickTileLayout::self()->removeAssociation(this);
-        moveResize(m_maximizeGeometryRestore);
+        moveResize(quickTileGeometryRestore());
     }
 
     if (oldTile && oldTile->desktop() == VirtualDesktopManager::self()->currentDesktop()) {
