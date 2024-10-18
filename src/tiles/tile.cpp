@@ -25,7 +25,7 @@ QSizeF Tile::s_minimumSize = QSizeF(0.15, 0.15);
 Tile::Tile(TileManager *tiling, Tile *parent)
     : QObject(parent)
     , m_parentTile(parent)
-    , m_quickLayout(tiling->quickLayout())
+    , m_quickLayout(QuickTileLayout::self())
     , m_tiling(tiling)
 {
     if (m_parentTile) {
@@ -33,18 +33,6 @@ Tile::Tile(TileManager *tiling, Tile *parent)
         m_desktop = m_parentTile->desktop();
     }
     connect(Workspace::self(), &Workspace::configChanged, this, &Tile::windowGeometryChanged);
-    /*  connect(VirtualDesktopManager::self(), &VirtualDesktopManager::currentChanged,
-              this, [this](VirtualDesktop *oldDesk, VirtualDesktop *newDesk) {
-                  if (oldDesk == m_desktop || newDesk == m_desktop) {
-                      Q_EMIT activeChanged(newDesk == m_desktop);
-                      if (newDesk == m_desktop) {
-                          for (auto *w : windows()) {
-                              qWarning()<<"AAAAsetting new tile"<<this;
-                              w->setTile(this);
-                          }
-                      }
-                  }
-              });*/
 }
 
 Tile::~Tile()

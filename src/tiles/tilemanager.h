@@ -56,7 +56,6 @@ public:
 
     TileModel *model() const;
 
-    std::shared_ptr<QuickTileLayout> quickLayout() const;
     Tile *windowOwner(Window *window);
 
 Q_SIGNALS:
