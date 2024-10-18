@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-10-18 00:41+0000\n"
 "PO-Revision-Date: 2024-02-27 21:36+0000\n"
 "Last-Translator: Sergiu Bivol <sergiu@cip.md>\n"
 "Language-Team: Romanian <kde-i18n-ro@kde.org>\n"
@@ -288,7 +288,7 @@ msgstr "Activități"
 msgid "Screen"
 msgstr "Ecran"
 
-#: rulesmodel.cpp:509 rulesmodel.cpp:925
+#: rulesmodel.cpp:509 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "Pe tot ecranul"
@@ -623,7 +623,7 @@ msgstr "Meniu „rupt”"
 msgid "Splash screen"
 msgstr "Imagine de întâmpinare"
 
-#: rulesmodel.cpp:818 rulesmodel.cpp:920
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "Birou"
@@ -635,7 +635,7 @@ msgstr "Birou"
 msgid "Standalone menubar"
 msgstr "Bară de meniu independentă"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, fuzzy, kde-format
 #| msgid "On Screen Display"
 msgid "On-screen display"
@@ -725,7 +725,7 @@ msgstr "Niciuna"
 msgid "Low"
 msgstr "Mic"
 
-#: rulesmodel.cpp:892 rulesmodel.cpp:922
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
@@ -740,43 +740,43 @@ msgstr "Mare"
 msgid "Extreme"
 msgstr "Extrem"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "Sub"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "Deasupra"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "Notificare"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "Indiciu"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:926
 #, fuzzy, kde-format
 #| msgid "Critical Notification"
 msgid "Critical notification"
 msgstr "Notificare critică"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "Suprapunere"
 
-#: rulesmodel.cpp:954
+#: rulesmodel.cpp:953
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Fereastră neadministrată"
 
-#: rulesmodel.cpp:955
+#: rulesmodel.cpp:954
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

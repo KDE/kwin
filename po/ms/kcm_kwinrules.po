@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-10-18 00:41+0000\n"
 "PO-Revision-Date: 2010-07-24 23:55+0800\n"
 "Last-Translator: Sharuzzaman Ahmat Raslan <sharuzzaman@gmail.com>\n"
 "Language-Team: Malay <kedidiemas@yahoogroups.com>\n"
@@ -284,7 +284,7 @@ msgstr "Kelegapan &aktif dalam %"
 msgid "Screen"
 msgstr "Skrin Alu-aluan"
 
-#: rulesmodel.cpp:509 rulesmodel.cpp:925
+#: rulesmodel.cpp:509 rulesmodel.cpp:924
 #, fuzzy, kde-format
 #| msgid "&Fullscreen"
 msgid "Fullscreen"
@@ -624,7 +624,7 @@ msgstr "Menu Koyak"
 msgid "Splash screen"
 msgstr "Skrin Alu-aluan"
 
-#: rulesmodel.cpp:818 rulesmodel.cpp:920
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "Desktop"
@@ -636,7 +636,7 @@ msgstr "Desktop"
 msgid "Standalone menubar"
 msgstr "Barmenu Sendirian"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, kde-format
 msgid "On-screen display"
 msgstr ""
@@ -727,7 +727,7 @@ msgstr "Tiada"
 msgid "Low"
 msgstr "Rendah"
 
-#: rulesmodel.cpp:892 rulesmodel.cpp:922
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "Normal"
@@ -742,45 +742,45 @@ msgstr "Tinggi"
 msgid "Extreme"
 msgstr "Ekstrim"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr ""
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr ""
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:923
 #, fuzzy, kde-format
 #| msgid "&Position"
 msgid "Notification"
 msgstr "&Posisi"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr ""
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:926
 #, fuzzy, kde-format
 #| msgid "&Position"
 msgid "Critical notification"
 msgstr "&Posisi"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr ""
 
-#: rulesmodel.cpp:954
+#: rulesmodel.cpp:953
 #, fuzzy, kde-format
 #| msgid "On Main Window"
 msgid "Unmanaged window"
 msgstr "Dalam Tetingkap Utama"
 
-#: rulesmodel.cpp:955
+#: rulesmodel.cpp:954
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr ""

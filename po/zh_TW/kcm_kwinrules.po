@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-10-18 00:41+0000\n"
 "PO-Revision-Date: 2024-09-10 02:36+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -275,7 +275,7 @@ msgstr "活動"
 msgid "Screen"
 msgstr "螢幕"
 
-#: rulesmodel.cpp:509 rulesmodel.cpp:925
+#: rulesmodel.cpp:509 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "全螢幕"
@@ -629,7 +629,7 @@ msgstr "脫出式選單"
 msgid "Splash screen"
 msgstr "啟動畫面"
 
-#: rulesmodel.cpp:818 rulesmodel.cpp:920
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "桌面"
@@ -640,7 +640,7 @@ msgstr "桌面"
 msgid "Standalone menubar"
 msgstr "獨立選單"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, kde-format
 msgid "On-screen display"
 msgstr "螢幕顯示 (OSD)"
@@ -722,7 +722,7 @@ msgstr "無"
 msgid "Low"
 msgstr "低"
 
-#: rulesmodel.cpp:892 rulesmodel.cpp:922
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "正常"
@@ -737,42 +737,42 @@ msgstr "高"
 msgid "Extreme"
 msgstr "極高"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "在下方"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "在上方"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "通知"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "彈出視窗"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Critical notification"
 msgstr "緊急通知"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "覆蓋"
 
-#: rulesmodel.cpp:954
+#: rulesmodel.cpp:953
 #, kde-format
 msgid "Unmanaged window"
 msgstr "未管理視窗"
 
-#: rulesmodel.cpp:955
+#: rulesmodel.cpp:954
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "無法偵測視窗屬性。視窗未被 KWin 管理。"

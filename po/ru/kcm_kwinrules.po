@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-10-18 00:41+0000\n"
 "PO-Revision-Date: 2024-09-17 13:42+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -290,7 +290,7 @@ msgstr "Комнаты"
 msgid "Screen"
 msgstr "Экран"
 
-#: rulesmodel.cpp:509 rulesmodel.cpp:925
+#: rulesmodel.cpp:509 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "Полный экран"
@@ -682,7 +682,7 @@ msgstr "Отрывное меню"
 msgid "Splash screen"
 msgstr "Заставка"
 
-#: rulesmodel.cpp:818 rulesmodel.cpp:920
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "Рабочий стол"
@@ -693,7 +693,7 @@ msgstr "Рабочий стол"
 msgid "Standalone menubar"
 msgstr "Автономное меню"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, kde-format
 msgid "On-screen display"
 msgstr "Экранное уведомление"
@@ -775,7 +775,7 @@ msgstr "Отключить"
 msgid "Low"
 msgstr "Низкий приоритет"
 
-#: rulesmodel.cpp:892 rulesmodel.cpp:922
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "Обычный приоритет"
@@ -790,42 +790,42 @@ msgstr "Высокий приоритет"
 msgid "Extreme"
 msgstr "Не передавать фокус автоматически"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "Снизу"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "Сверху"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "Уведомление"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "Всплывающее окно"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:926
 #, kde-format
 msgid "Critical notification"
 msgstr "Критичное уведомление"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "Наложение"
 
-#: rulesmodel.cpp:954
+#: rulesmodel.cpp:953
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Без элементов управления"
 
-#: rulesmodel.cpp:955
+#: rulesmodel.cpp:954
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Не удалось определить свойства окна, окно не управляется KWin."

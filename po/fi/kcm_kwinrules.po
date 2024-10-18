@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kcmkwinrules\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-27 00:41+0000\n"
+"POT-Creation-Date: 2024-10-18 00:41+0000\n"
 "PO-Revision-Date: 2024-04-18 17:30+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -293,7 +293,7 @@ msgstr "Aktiviteetit"
 msgid "Screen"
 msgstr "Näyttö"
 
-#: rulesmodel.cpp:509 rulesmodel.cpp:925
+#: rulesmodel.cpp:509 rulesmodel.cpp:924
 #, kde-format
 msgid "Fullscreen"
 msgstr "Koko näyttö"
@@ -674,7 +674,7 @@ msgstr "Irrotettu valikko"
 msgid "Splash screen"
 msgstr "Tervetuloikkuna"
 
-#: rulesmodel.cpp:818 rulesmodel.cpp:920
+#: rulesmodel.cpp:818 rulesmodel.cpp:919
 #, kde-format
 msgid "Desktop"
 msgstr "Työpöytä"
@@ -686,7 +686,7 @@ msgstr "Työpöytä"
 msgid "Standalone menubar"
 msgstr "Irrallinen valikkorivi"
 
-#: rulesmodel.cpp:821 rulesmodel.cpp:928
+#: rulesmodel.cpp:821 rulesmodel.cpp:927
 #, fuzzy, kde-format
 #| msgid "On Screen Display"
 msgid "On-screen display"
@@ -776,7 +776,7 @@ msgstr "Ei mitään"
 msgid "Low"
 msgstr "Alhainen"
 
-#: rulesmodel.cpp:892 rulesmodel.cpp:922
+#: rulesmodel.cpp:892 rulesmodel.cpp:921
 #, kde-format
 msgid "Normal"
 msgstr "Normaali"
@@ -791,43 +791,43 @@ msgstr "Korkea"
 msgid "Extreme"
 msgstr "Äärimmäinen"
 
-#: rulesmodel.cpp:921
+#: rulesmodel.cpp:920
 #, kde-format
 msgid "Below"
 msgstr "Alla"
 
-#: rulesmodel.cpp:923
+#: rulesmodel.cpp:922
 #, kde-format
 msgid "Above"
 msgstr "Yllä"
 
-#: rulesmodel.cpp:924
+#: rulesmodel.cpp:923
 #, kde-format
 msgid "Notification"
 msgstr "Ilmoitus"
 
-#: rulesmodel.cpp:926
+#: rulesmodel.cpp:925
 #, kde-format
 msgid "Popup"
 msgstr "Ponnahdusikkuna"
 
-#: rulesmodel.cpp:927
+#: rulesmodel.cpp:926
 #, fuzzy, kde-format
 #| msgid "Critical Notification"
 msgid "Critical notification"
 msgstr "Vakava ilmoitus"
 
-#: rulesmodel.cpp:929
+#: rulesmodel.cpp:928
 #, kde-format
 msgid "Overlay"
 msgstr "Kerrostus"
 
-#: rulesmodel.cpp:954
+#: rulesmodel.cpp:953
 #, kde-format
 msgid "Unmanaged window"
 msgstr "Ei-hallittu ikkuna"
 
-#: rulesmodel.cpp:955
+#: rulesmodel.cpp:954
 #, kde-format
 msgid "Could not detect window properties. The window is not managed by KWin."
 msgstr "Ikkunan ominaisuuksia ei voitu tunnistaa. KWin ei hallitse ikkunaa."
