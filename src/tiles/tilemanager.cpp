@@ -84,8 +84,8 @@ TileManager::TileManager(Output *parent)
         addDesktop(desk);
     }
 
-    m_rootTile = nullptr; // new RootTile(this, nullptr); // m_rootTiles[VirtualDesktopManager::self()->currentDesktop()];
-    m_quickRootTile = nullptr; // new QuickRootTile(this, nullptr); // m_quickRootTiles[VirtualDesktopManager::self()->currentDesktop()];
+    m_rootTile = m_rootTiles.value(VirtualDesktopManager::self()->currentDesktop());
+    m_quickRootTile = m_quickRootTiles.value(VirtualDesktopManager::self()->currentDesktop());
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopAdded, this, addDesktop);
     connect(VirtualDesktopManager::self(), &VirtualDesktopManager::desktopRemoved,
             this, [this](VirtualDesktop *desk) {
