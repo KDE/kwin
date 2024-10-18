@@ -74,6 +74,9 @@ bool OutputLayer::importScanoutBuffer(SurfaceItem *surfaceItem, const std::share
         return false;
     }
     const auto buffer = wayland->surface()->buffer();
+    if (!buffer) {
+        return false;
+    }
     const auto attrs = buffer->dmabufAttributes();
     if (!attrs) {
         return false;
