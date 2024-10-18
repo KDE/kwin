@@ -63,7 +63,7 @@ Q_SIGNALS:
     void tileRemoved(KWin::Tile *tile);
 
 private:
-    void readSettings();
+    void readSettings(VirtualDesktop *desk);
     void saveSettings();
     QJsonObject tileToJSon(CustomTile *parentTile);
     CustomTile *parseTilingJSon(const QJsonValue &val, const QRectF &availableArea, CustomTile *parentTile);
