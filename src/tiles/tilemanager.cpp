@@ -74,11 +74,11 @@ TileManager::TileManager(Output *parent)
         rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
         connect(rootTile, &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
         connect(rootTile, &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
-        readSettings(desk);
         if (desk == VirtualDesktopManager::self()->currentDesktop()) {
             m_rootTile = rootTile;
             m_quickRootTile = m_quickRootTiles[desk];
         }
+        readSettings(desk);
     };
 
     for (VirtualDesktop *desk : VirtualDesktopManager::self()->desktops()) {
