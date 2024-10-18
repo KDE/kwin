@@ -74,6 +74,7 @@ TileManager::TileManager(Output *parent)
         rootTile->setRelativeGeometry(QRectF(0, 0, 1, 1));
         connect(rootTile, &CustomTile::paddingChanged, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
         connect(rootTile, &CustomTile::layoutModified, m_saveTimer.get(), static_cast<void (QTimer::*)()>(&QTimer::start));
+        readSettings(desk);
         if (desk == VirtualDesktopManager::self()->currentDesktop()) {
             m_rootTile = rootTile;
             m_quickRootTile = m_quickRootTiles[desk];
@@ -274,21 +275,25 @@ CustomTile *TileManager::parseTilingJSon(const QJsonValue &val, const QRectF &av
     return nullptr;
 }
 
-void TileManager::readSettings()
+void TileManager::readSettings(VirtualDesktop *desk)
 {
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     qreal padding = cg.readEntry("padding", 4);
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
+    cg = KConfigGroup(&cg, desk->id());
 
-    auto createDefaultSetup = [this]() {
-        Q_ASSERT(m_rootTile->childCount() == 0);
+    Q_ASSERT(m_rootTiles.contains(desk));
+    RootTile *rootTile = m_rootTiles[desk];
+
+    auto createDefaultSetup = [this](RootTile *rootTile) {
+        Q_ASSERT(rootTile->childCount() == 0);
         // If empty create an horizontal 3 columns layout
-        m_rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
-        m_rootTile->split(Tile::LayoutDirection::Horizontal);
-        static_cast<CustomTile *>(m_rootTile->childTile(0))->split(Tile::LayoutDirection::Horizontal);
-        Q_ASSERT(m_rootTile->childCount() == 3);
+        rootTile->setLayoutDirection(Tile::LayoutDirection::Horizontal);
+        rootTile->split(Tile::LayoutDirection::Horizontal);
+        static_cast<CustomTile *>(rootTile->childTile(0))->split(Tile::LayoutDirection::Horizontal);
+        Q_ASSERT(rootTile->childCount() == 3);
         // Resize middle column, the other two will be auto resized accordingly
-        m_rootTile->childTile(1)->setRelativeGeometry({0.25, 0.0, 0.5, 1.0});
+        rootTile->childTile(1)->setRelativeGeometry({0.25, 0.0, 0.5, 1.0});
     };
 
     QJsonParseError error;
@@ -296,26 +301,26 @@ void TileManager::readSettings()
     if (tiles.isEmpty()) {
         qCDebug(KWIN_CORE) << "Empty tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":"
                            << "Creating default setup";
-        createDefaultSetup();
+        createDefaultSetup(rootTile);
         return;
     }
     QJsonDocument doc = QJsonDocument::fromJson(tiles, &error);
 
     if (error.error != QJsonParseError::NoError) {
         qCWarning(KWIN_CORE) << "Parse error in tiles configuration for monitor" << m_output->uuid().toString(QUuid::WithoutBraces) << ":" << error.errorString() << "Creating default setup";
-        createDefaultSetup();
+        createDefaultSetup(rootTile);
         return;
     }
 
     if (doc.object().contains(QStringLiteral("tiles"))) {
         const auto arr = doc.object().value(QStringLiteral("tiles"));
         if (arr.isArray() && arr.toArray().count() > 0) {
-            m_rootTile->setLayoutDirection(strToLayoutDirection(doc.object().value(QStringLiteral("layoutDirection")).toString()));
-            parseTilingJSon(arr, QRectF(0, 0, 1, 1), m_rootTile);
+            rootTile->setLayoutDirection(strToLayoutDirection(doc.object().value(QStringLiteral("layoutDirection")).toString()));
+            parseTilingJSon(arr, QRectF(0, 0, 1, 1), rootTile);
         }
     }
 
-    m_rootTile->setPadding(padding);
+    rootTile->setPadding(padding);
 }
 
 QJsonObject TileManager::tileToJSon(CustomTile *tile)
@@ -368,12 +373,18 @@ QJsonObject TileManager::tileToJSon(CustomTile *tile)
 
 void TileManager::saveSettings()
 {
-    auto obj = tileToJSon(m_rootTile);
-    QJsonDocument doc(obj);
     KConfigGroup cg = kwinApp()->config()->group(QStringLiteral("Tiling"));
     cg.writeEntry("padding", m_rootTile->padding());
     cg = KConfigGroup(&cg, m_output->uuid().toString(QUuid::WithoutBraces));
-    cg.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
+
+    for (auto it = m_rootTiles.constBegin(); it != m_rootTiles.constEnd(); it++) {
+        VirtualDesktop *desk = it.key();
+        RootTile *rootTile = it.value();
+        auto obj = tileToJSon(rootTile);
+        QJsonDocument doc(obj);
+        KConfigGroup tileGroup(&cg, desk->id());
+        tileGroup.writeEntry("tiles", doc.toJson(QJsonDocument::Compact));
+    }
     cg.sync(); // FIXME: less frequent?
 }
 
