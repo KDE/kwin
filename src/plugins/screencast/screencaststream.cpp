@@ -634,20 +634,22 @@ void ScreenCastStream::record(const QRegion &damage, Contents contents)
         }
     }
 
-    if (synctmeta) {
-        EGLNativeFence fence(backend->eglDisplayObject());
+    if (spa_data[0].type == SPA_DATA_DmaBuf) {
+        if (synctmeta) {
+            EGLNativeFence fence(backend->eglDisplayObject());
 
-        synctmeta->acquire_point = synctmeta->release_point + 1;
-        synctmeta->release_point = synctmeta->acquire_point + 1;
+            synctmeta->acquire_point = synctmeta->release_point + 1;
+            synctmeta->release_point = synctmeta->acquire_point + 1;
 
-        auto dmabuf = static_cast<DmaBufScreenCastBuffer *>(buffer);
-        dmabuf->synctimeline->moveInto(synctmeta->acquire_point, fence.takeFileDescriptor());
-    } else {
-        // Implicit sync is broken on Nvidia and with llvmpipe
-        if (context->glPlatform()->isNvidia() || context->isSoftwareRenderer()) {
-            glFinish();
+            auto dmabuf = static_cast<DmaBufScreenCastBuffer *>(buffer);
+            dmabuf->synctimeline->moveInto(synctmeta->acquire_point, fence.takeFileDescriptor());
         } else {
-            glFlush();
+            // Implicit sync is broken on Nvidia and with llvmpipe
+            if (context->glPlatform()->isNvidia() || context->isSoftwareRenderer()) {
+                glFinish();
+            } else {
+                glFlush();
+            }
         }
     }
 
