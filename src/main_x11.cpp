@@ -324,6 +324,7 @@ void ApplicationX11::performStartup()
 
 void ApplicationX11::setupCrashHandler()
 {
+    KCrash::initialize();
     KCrash::setEmergencySaveFunction(ApplicationX11::crashHandler);
 }
 
