@@ -10,7 +10,6 @@
 #include "tilemanager.h"
 #include "core/output.h"
 #include "quicktile.h"
-#include "quicktilelayout.h"
 #include "virtualdesktops.h"
 #include "workspace.h"
 
@@ -57,8 +56,6 @@ QDebug operator<<(QDebug debug, const TileManager *tileManager)
 TileManager::TileManager(Output *parent)
     : QObject(parent)
     , m_output(parent)
-    //, m_quickLayout(std::make_shared<QuickTileLayout>(this))
-    , m_quickLayout(QuickTileLayout::self())
     , m_tileModel(new TileModel(this))
 {
     m_saveTimer = std::make_unique<QTimer>(this);
@@ -168,11 +165,6 @@ Tile *TileManager::quickTile(QuickTileMode mode) const
 TileModel *TileManager::model() const
 {
     return m_tileModel.get();
-}
-
-std::shared_ptr<QuickTileLayout> TileManager::quickLayout() const
-{
-    return m_quickLayout;
 }
 
 Tile *TileManager::windowOwner(Window *window)
