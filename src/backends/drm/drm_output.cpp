@@ -313,6 +313,14 @@ bool DrmOutput::present(const std::shared_ptr<OutputFrame> &frame)
         success = m_pipeline->maybeModeset(frame);
     } else {
         m_pipeline->setPresentationMode(frame->presentationMode());
+        if (m_pipeline->cursorLayer()->isEnabled()) {
+            // the cursor plane needs to be disabled before we enable tearing; see DrmOutput::updateCursorLayer
+            if (frame->presentationMode() == PresentationMode::AdaptiveAsync) {
+                m_pipeline->setPresentationMode(PresentationMode::AdaptiveSync);
+            } else if (frame->presentationMode() == PresentationMode::Async) {
+                m_pipeline->setPresentationMode(PresentationMode::VSync);
+            }
+        }
         DrmPipeline::Error err = m_pipeline->present(frame);
         if (err != DrmPipeline::Error::None && frame->presentationMode() == PresentationMode::AdaptiveAsync) {
             // tearing can fail in various circumstances, but vrr shouldn't
