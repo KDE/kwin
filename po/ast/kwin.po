@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-16 02:36+0000\n"
+"POT-Creation-Date: 2024-10-19 02:37+0000\n"
 "PO-Revision-Date: 2023-12-14 22:56+0100\n"
 "Last-Translator: Enol P. <enolp@softastur.org>\n"
 "Language-Team: Assamese <alministradores@softastur.org>\n"
@@ -1426,7 +1426,7 @@ msgstr ""
 msgid "Starts the session without global shortcuts support."
 msgstr ""
 
-#: main_wayland.cpp:403 main_x11.cpp:438
+#: main_wayland.cpp:403 main_x11.cpp:439
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr ""
@@ -1466,7 +1466,7 @@ msgstr ""
 "kwin: hai otru xestor de ventanes n'execución (prueba a usar la opción --"
 "replace)\n"
 
-#: main_x11.cpp:431
+#: main_x11.cpp:432
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

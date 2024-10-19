@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-16 02:36+0000\n"
+"POT-Creation-Date: 2024-10-19 02:37+0000\n"
 "PO-Revision-Date: 2024-08-22 17:28+0200\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -1474,7 +1474,7 @@ msgstr "Inicia la sesión sin permitir el bloqueo de pantalla."
 msgid "Starts the session without global shortcuts support."
 msgstr "Inicia la sesión sin usar los atajos de teclado globales."
 
-#: main_wayland.cpp:403 main_x11.cpp:438
+#: main_wayland.cpp:403 main_x11.cpp:439
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Desactivar la integración con KActivities."
@@ -1515,7 +1515,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: hay otro gestor de ventanas en marcha (intente usar --replace)\n"
 
-#: main_x11.cpp:431
+#: main_x11.cpp:432
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr ""

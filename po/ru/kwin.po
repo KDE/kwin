@@ -23,7 +23,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-16 02:36+0000\n"
+"POT-Creation-Date: 2024-10-19 02:37+0000\n"
 "PO-Revision-Date: 2024-09-17 14:30+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -1487,7 +1487,7 @@ msgstr "Запустить сеанс без поддержки блокиров
 msgid "Starts the session without global shortcuts support."
 msgstr "Запустить сеанс без поддержки глобальных комбинаций клавиш."
 
-#: main_wayland.cpp:403 main_x11.cpp:438
+#: main_wayland.cpp:403 main_x11.cpp:439
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Выключить интеграцию с комнатами KDE."
@@ -1527,7 +1527,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: запущен другой диспетчер окон (попробуйте параметр --replace)\n"
 
-#: main_x11.cpp:431
+#: main_x11.cpp:432
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Заменить уже запущенный ICCCM2.0-совместимый диспетчер окон."

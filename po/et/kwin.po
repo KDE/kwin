@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-16 02:36+0000\n"
+"POT-Creation-Date: 2024-10-19 02:37+0000\n"
 "PO-Revision-Date: 2022-11-14 01:16+0100\n"
 "Last-Translator: Mihkel Tõnnov <mihhkel@gmail.com>\n"
 "Language-Team: Estonian <>\n"
@@ -1459,7 +1459,7 @@ msgstr "Seansi käivitamine ekraani lukustamise toetuseta."
 msgid "Starts the session without global shortcuts support."
 msgstr "Seansi käivitamine globaalsete kiirklahvide toetuseta."
 
-#: main_wayland.cpp:403 main_x11.cpp:438
+#: main_wayland.cpp:403 main_x11.cpp:439
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivitiesi lõimimise keelamine"
@@ -1500,7 +1500,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: muu aknahaldur töötab (proovi kasutada võtit --replace)\n"
 
-#: main_x11.cpp:431
+#: main_x11.cpp:432
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Asendab juba töötava ICCCM2.0 ühilduva aknahalduri"

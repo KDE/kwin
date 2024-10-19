@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
 # Thomas Diehl <thd@kde.org>, 2002, 2003, 2004.
 # Stephan Johach <hunsum@gmx.de>, 2005, 2006.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2009, 2010.
@@ -10,16 +11,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-16 02:36+0000\n"
-"PO-Revision-Date: 2023-08-14 21:55+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"POT-Creation-Date: 2024-10-19 02:37+0000\n"
+"PO-Revision-Date: 2024-09-17 14:52+0200\n"
+"Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -731,7 +732,7 @@ msgstr ""
 #, kde-format
 msgctxt "@label"
 msgid "Effects"
-msgstr ""
+msgstr "Effekte"
 
 #: debug_console.cpp:796
 #, kde-format
@@ -942,13 +943,13 @@ msgstr "Interne Fenster"
 #, kde-format
 msgctxt "@action:button unload an effect"
 msgid "Unload"
-msgstr ""
+msgstr "Entladen"
 
 #: debug_console.cpp:1587 debug_console.cpp:1601
 #, kde-format
 msgctxt "@action:button load an effect"
 msgid "Load"
-msgstr ""
+msgstr "Laden"
 
 #. i18n: ectx: property (text), widget (QPushButton, quitButton)
 #: debug_console.ui:32
@@ -1209,11 +1210,10 @@ msgstr ""
 "ungespeicherte Daten gehen verloren.</warning></para>"
 
 #: helpers/killer/killer.cpp:216
-#, fuzzy, kde-format
-#| msgid "Terminate"
+#, kde-format
 msgctxt "@action:button Terminate app"
 msgid "&Terminate %1"
-msgstr "Beenden"
+msgstr "Anwendung %1 &beenden"
 
 #: helpers/killer/killer.cpp:217
 #, fuzzy, kde-format
@@ -1223,12 +1223,10 @@ msgid "&Wait Longer"
 msgstr "Länger warten"
 
 #: helpers/killer/killer.cpp:225
-#, fuzzy, kde-format
-#| msgctxt "Application is not responding, appended to window title"
-#| msgid "(Not Responding)"
+#, kde-format
 msgctxt "@title:window"
 msgid "Not Responding"
-msgstr "(Reagiert nicht)"
+msgstr "Reagiert nicht"
 
 #: helpers/killer/killer.cpp:241
 #, kde-format
@@ -1237,11 +1235,10 @@ msgid "Process ID: %1"
 msgstr ""
 
 #: helpers/killer/killer.cpp:243
-#, fuzzy, kde-format
-#| msgid "hostname"
+#, kde-format
 msgctxt "@info"
 msgid "Host name: %1"
-msgstr "Rechnername"
+msgstr "Rechnername: „%1“"
 
 #: input.cpp:2122
 #, kde-format
@@ -1479,7 +1476,7 @@ msgstr "Startet die Sitzung ohne Unterstützung für Bildschirmsperre."
 msgid "Starts the session without global shortcuts support."
 msgstr "Startet die Sitzung mit Unterstützung für globale Kurzbefehle."
 
-#: main_wayland.cpp:403 main_x11.cpp:438
+#: main_wayland.cpp:403 main_x11.cpp:439
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "KActivities-Integration deaktivieren."
@@ -1525,7 +1522,7 @@ msgstr ""
 "KWin: Ein anderes Fensterverwaltungsprogramm läuft (Versuchen Sie es mit --"
 "replace)\n"
 
-#: main_x11.cpp:431
+#: main_x11.cpp:432
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Bereits laufende ICCCM2.0-kompatible Fensterverwaltung ersetzen"
@@ -1698,7 +1695,7 @@ msgstr "Animation beim Schließen von Fenstern"
 #, kde-format
 msgctxt "@item:inmenu never hide cursor on inactivity"
 msgid "Never"
-msgstr ""
+msgstr "Niemals"
 
 #: plugins/hidecursor/hidecursor_config.cpp:58
 #: plugins/hidecursor/hidecursor_config.cpp:62
@@ -1713,13 +1710,13 @@ msgstr[1] " Millisekunden"
 #: plugins/hidecursor/hidecursor_config.ui:17
 #, kde-format
 msgid "Hide cursor on inactivity:"
-msgstr ""
+msgstr "Cursor bei Inaktivität ausblenden:"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_HideOnTyping)
 #: plugins/hidecursor/hidecursor_config.ui:24
 #, kde-format
 msgid "Hide cursor on typing"
-msgstr ""
+msgstr "Cursor beim Tippen ausblenden"
 
 #: plugins/invert/invert.cpp:43 plugins/invert/invert_config.cpp:38
 #, kde-format
@@ -2306,26 +2303,22 @@ msgid "Arrow draw modifier keys:"
 msgstr "Sondertasten:"
 
 #: plugins/nightlight/nightlightmanager.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was temporarily disabled"
 msgid "Night Light Suspended"
-msgstr "Nachtfarben ein"
+msgstr "Nachtlicht ausgesetzt"
 
 #: plugins/nightlight/nightlightmanager.cpp:59
-#, fuzzy, kde-format
-#| msgctxt "Night Color was enabled"
-#| msgid "Night Color On"
+#, kde-format
 msgctxt "Night Light was reenabled from temporary suspension"
 msgid "Night Light Resumed"
-msgstr "Nachtfarben ein"
+msgstr "Nachtlicht fortgesetzt"
 
 #: plugins/nightlight/nightlightmanager.cpp:80
 #, kde-format
 msgctxt "Temporarily disable/reenable Night Light"
 msgid "Suspend/Resume Night Light"
-msgstr ""
+msgstr "Nachtlicht aussetzen/fortsetzen"
 
 #: plugins/nightlight/nightlightmanager.cpp:435
 #, kde-format
@@ -2352,8 +2345,7 @@ msgid "Cycle through Grid View and Overview"
 msgstr ""
 
 #: plugins/overview/kcm/overvieweffectkcm.cpp:53
-#, fuzzy, kde-format
-#| msgid "Toggle Overview"
+#, kde-format
 msgctxt "@action Overview is the name of a KWin effect"
 msgid "Toggle Overview"
 msgstr "Übersicht umschalten"
@@ -2414,29 +2406,25 @@ msgid "Add Virtual Desktop"
 msgstr "Virtuelle Arbeitsfläche hinzufügen"
 
 #: plugins/overview/qml/main.qml:379
-#, fuzzy, kde-format
-#| msgid "Delete Virtual Desktop"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No other Virtual Desktops to show"
-msgstr "Virtuelle Arbeitsfläche löschen"
+msgstr "Keine anderen virtuellen Arbeitsflächen zum Anzeigen"
 
 #: plugins/overview/qml/main.qml:385
-#, fuzzy, kde-format
-#| msgid "Add Virtual Desktop"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Virtual Desktop"
 msgstr "Virtuelle Arbeitsfläche hinzufügen"
 
 #: plugins/overview/qml/main.qml:392
-#, fuzzy, kde-format
-#| msgid "Configure virtual keyboards..."
+#, kde-format
 msgctxt "@action:button"
 msgid "Configure Virtual Desktops…"
-msgstr "Virtuelle Tastaturen einrichten ..."
+msgstr "Virtuelle Arbeitsflächen einrichten …"
 
 #: plugins/overview/qml/main.qml:745
-#, fuzzy, kde-format
-#| msgid "No matching windows"
+#, kde-format
 msgctxt "@info:placeholder"
 msgid "No matching windows"
 msgstr "Keine passenden Fenster"
@@ -2676,10 +2664,9 @@ msgid "Padding:"
 msgstr "Zwischenraum:"
 
 #: plugins/tileseditor/qml/main.qml:161
-#, fuzzy, kde-format
-#| msgid "Load Layout..."
+#, kde-format
 msgid "Load Layout…"
-msgstr "Layout laden ..."
+msgstr "Layout laden …"
 
 #: plugins/tileseditor/qml/main.qml:271
 #, kde-format
@@ -2689,12 +2676,12 @@ msgstr "Schließen"
 #: plugins/tileseditor/qml/TileDelegate.qml:167
 #, kde-format
 msgid "Split Left/Right"
-msgstr ""
+msgstr "Nach Links/Rechts teilen"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:174
 #, kde-format
 msgid "Split Top/Bottom"
-msgstr ""
+msgstr "Nach Oben/Unten teilen"
 
 #: plugins/tileseditor/qml/TileDelegate.qml:182
 #: plugins/tileseditor/qml/TileDelegate.qml:211
@@ -2900,7 +2887,7 @@ msgstr "Keine Fenster"
 #: plugins/windowview/qml/main.qml:122
 #, kde-format
 msgid "Filter windows…"
-msgstr "Fenster filtern ..."
+msgstr "Fenster filtern …"
 
 #. i18n: ectx: property (title), widget (QGroupBox, advancedGroup)
 #: plugins/wobblywindows/wobblywindows_config.ui:20
@@ -3655,28 +3642,25 @@ msgstr "Regelart für Eingefahren"
 #: rulesettings.kcfg:446
 #, kde-format
 msgid "AdaptiveSync"
-msgstr ""
+msgstr "AdaptiveSync"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Activity rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "Regelart für Aktivität"
+msgstr "Regelart für AdaptiveSync"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Drehung erlauben"
+msgstr "Tearing erlauben"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Shaded rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Regelart für Eingefahren"
+msgstr "Regelart für Tearing"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
@@ -3696,18 +3680,20 @@ msgid ""
 "The following applications did not close:\n"
 "%1"
 msgstr ""
+"Die folgenden Anwendungen haben sich nicht beendet:\n"
+"%1"
 
 #: sm.cpp:480
 #, kde-format
 msgctxt "@action:button"
 msgid "Cancel Logout"
-msgstr ""
+msgstr "Abmelden abbrechen"
 
 #: sm.cpp:481
 #, kde-format
 msgctxt "@action::button"
 msgid "Log Out Anyway"
-msgstr ""
+msgstr "Trotzdem abmelden"
 
 #: tabbox/clientmodel.cpp:58
 #, kde-format
@@ -3716,11 +3702,10 @@ msgid "Show Desktop"
 msgstr "Arbeitsfläche anzeigen"
 
 #: tabbox/switchers/thumbnail_grid/contents/ui/main.qml:208
-#, fuzzy, kde-format
-#| msgid "No Windows"
+#, kde-format
 msgctxt "@info:placeholder no entries in the task switcher"
 msgid "No open windows"
-msgstr "Keine Fenster"
+msgstr "Keine offenen Fenster"
 
 #: tabbox/tabbox.cpp:360
 msgid "Walk Through Windows"
@@ -3831,22 +3816,19 @@ msgid "&No Titlebar and Frame"
 msgstr "Ohne &Titelleiste und Rahmen"
 
 #: useractions.cpp:258
-#, fuzzy, kde-format
-#| msgid "Set Window Short&cut..."
+#, kde-format
 msgid "Set Window Short&cut…"
-msgstr "&Kurzbefehl für Fenster festlegen ..."
+msgstr "&Kurzbefehl für Fenster festlegen …"
 
 #: useractions.cpp:264
-#, fuzzy, kde-format
-#| msgid "Configure Special &Window Settings..."
+#, kde-format
 msgid "Configure Special &Window Settings…"
-msgstr "Spezielle Einstellungen für dieses &Fenster einrichten ..."
+msgstr "Spezielle Einstellungen für dieses &Fenster einrichten …"
 
 #: useractions.cpp:269
-#, fuzzy, kde-format
-#| msgid "Configure S&pecial Application Settings..."
+#, kde-format
 msgid "Configure S&pecial Application Settings…"
-msgstr "Spezielle Einstellungen für dieses &Programm einrichten ..."
+msgstr "Spezielle Einstellungen für diese &Anwendung einrichten …"
 
 #: useractions.cpp:275
 #, kde-format
