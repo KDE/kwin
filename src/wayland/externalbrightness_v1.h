@@ -44,7 +44,7 @@ private:
 class ExternalBrightnessDeviceV1 : private QtWaylandServer::kde_external_brightness_device_v1, public BrightnessDevice
 {
 public:
-    explicit ExternalBrightnessDeviceV1(ExternalBrightnessV1 *global, wl_client *client, uint32_t version, uint32_t id);
+    explicit ExternalBrightnessDeviceV1(ExternalBrightnessV1 *global, wl_client *client, uint32_t id, uint32_t version);
     ~ExternalBrightnessDeviceV1() override;
 
     void setBrightness(double brightness) override;
