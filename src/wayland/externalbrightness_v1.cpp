@@ -45,8 +45,8 @@ QList<BrightnessDevice *> ExternalBrightnessV1::devices() const
     return m_devices;
 }
 
-ExternalBrightnessDeviceV1::ExternalBrightnessDeviceV1(ExternalBrightnessV1 *global, wl_client *client, uint32_t version, uint32_t id)
-    : QtWaylandServer::kde_external_brightness_device_v1(client, version, id)
+ExternalBrightnessDeviceV1::ExternalBrightnessDeviceV1(ExternalBrightnessV1 *global, wl_client *client, uint32_t id, uint32_t version)
+    : QtWaylandServer::kde_external_brightness_device_v1(client, id, version)
     , m_global(global)
 {
 }
