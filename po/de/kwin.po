@@ -1,3 +1,4 @@
+# SPDX-FileCopyrightText: 2024 Flori G <Renner03@protonmail.com>
 # Thomas Diehl <thd@kde.org>, 2002, 2003, 2004.
 # Stephan Johach <hunsum@gmx.de>, 2005, 2006.
 # Thomas Reitelbach <tr@erdfunkstelle.de>, 2005, 2006, 2007, 2008, 2009, 2010.
@@ -11,15 +12,15 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-20 02:27+0000\n"
-"PO-Revision-Date: 2023-08-14 21:55+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
+"PO-Revision-Date: 2024-09-17 14:52+0200\n"
+"Last-Translator: Flori G <Renner03@protonmail.com>\n"
 "Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.11.70\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -1164,7 +1165,7 @@ msgstr ""
 #: helpers/killer/killer.cpp:94
 #, kde-format
 msgid "&Terminate Application %1"
-msgstr "Programm %1 &beenden"
+msgstr "Anwendung %1 &beenden"
 
 #: helpers/killer/killer.cpp:95
 #, kde-format
@@ -2297,17 +2298,17 @@ msgstr "Ohne &Titelleiste und Rahmen"
 #: useractions.cpp:280
 #, kde-format
 msgid "Set Window Short&cut..."
-msgstr "&Kurzbefehl für Fenster festlegen ..."
+msgstr "&Kurzbefehl für Fenster festlegen …"
 
 #: useractions.cpp:286
 #, kde-format
 msgid "Configure Special &Window Settings..."
-msgstr "Spezielle Einstellungen für dieses &Fenster einrichten ..."
+msgstr "Spezielle Einstellungen für dieses &Fenster einrichten …"
 
 #: useractions.cpp:291
 #, kde-format
 msgid "Configure S&pecial Application Settings..."
-msgstr "Spezielle Einstellungen für dieses &Programm einrichten ..."
+msgstr "Spezielle Einstellungen für diese &Anwendung einrichten …"
 
 #: useractions.cpp:298
 #, kde-format
@@ -2315,7 +2316,7 @@ msgctxt ""
 "Entry in context menu of window decoration to open the configuration module "
 "of KWin"
 msgid "Configure W&indow Manager..."
-msgstr "Fensterverwaltung einr&ichten ..."
+msgstr "Fensterverwaltung einr&ichten …"
 
 #: useractions.cpp:325
 #, kde-format
