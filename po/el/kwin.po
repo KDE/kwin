@@ -2701,11 +2701,9 @@ msgstr "Διάταξη πληκτρολογίου"
 
 #. i18n: ectx: property (text), widget (QLabel, label_ModifierKeys)
 #: plugins/trackmouse/trackmouse_config.ui:43
-#, fuzzy, kde-format
-#| msgctxt "The currently active modifiers"
-#| msgid "Modifiers"
+#, kde-format
 msgid "Modifier keys:"
-msgstr "Τροποποιητές"
+msgstr "Πλήκτρα τροποποίησης"
 
 #. i18n: ectx: property (windowTitle), widget (QWidget, KWin::TranslucencyEffectConfigForm)
 #: plugins/translucency/package/contents/ui/config.ui:14
@@ -2978,16 +2976,14 @@ msgid "Move Mouse to Center"
 msgstr "Μετακίνηση παραθύρου στην ομάδα"
 
 #: plugins/zoom/zoom_config.cpp:70
-#, fuzzy, kde-format
-#| msgid "Left"
+#, kde-format
 msgid "Move Left"
-msgstr "Αριστερά"
+msgstr "Μετακίνηση αριστερά"
 
 #: plugins/zoom/zoom_config.cpp:77
-#, fuzzy, kde-format
-#| msgid "Right"
+#, kde-format
 msgid "Move Right"
-msgstr "Δεξιά"
+msgstr "Μετακίνηση δεξιά"
 
 #: plugins/zoom/zoom_config.cpp:84
 #, kde-format
@@ -2995,10 +2991,9 @@ msgid "Move Up"
 msgstr "Μετακίνηση πάνω"
 
 #: plugins/zoom/zoom_config.cpp:91
-#, fuzzy, kde-format
-#| msgid "Move Window"
+#, kde-format
 msgid "Move Down"
-msgstr "Μετακίνηση παραθύρου"
+msgstr "Μετακίνηση κάτω"
 
 #. i18n: ectx: property (whatsThis), widget (QLabel, label)
 #. i18n: ectx: property (whatsThis), widget (QDoubleSpinBox, kcfg_ZoomFactor)
@@ -3172,10 +3167,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (windowrole), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:34
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window role"
-msgstr "Παράθυρα"
+msgstr "Ρόλος παραθύρου"
 
 #. i18n: ectx: label, entry (windowrolematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:37
@@ -3185,10 +3179,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (title), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:44
-#, fuzzy, kde-format
-#| msgid "Windows"
+#, kde-format
 msgid "Window title"
-msgstr "Παράθυρα"
+msgstr "Τίτλος παραθύρου"
 
 #. i18n: ectx: label, entry (titlematch), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:47
@@ -3447,10 +3440,9 @@ msgstr ""
 
 #. i18n: ectx: label, entry (above), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:260
-#, fuzzy, kde-format
-#| msgid "Keep above others"
+#, kde-format
 msgid "Keep above"
-msgstr "Διατήρηση πάνω από τα άλλα"
+msgstr "Διατήρηση από πάνω"
 
 #. i18n: ectx: label, entry (aboverule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:264
@@ -3461,10 +3453,9 @@ msgstr "Διατήρηση πάνω από τα άλλα"
 
 #. i18n: ectx: label, entry (below), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:271
-#, fuzzy, kde-format
-#| msgid "Keep below others"
+#, kde-format
 msgid "Keep below"
-msgstr "Διατήρηση κάτω από τα άλλα"
+msgstr "Διατήρηση από κάτω"
 
 #. i18n: ectx: label, entry (belowrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:275
@@ -4293,16 +4284,14 @@ msgid "Switch to Screen to the Left"
 msgstr "Εναλλαγή στο παράθυρο αριστερά"
 
 #: useractions.cpp:1053
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Above"
-msgstr "Εναλλαγή στην οθόνη 0"
+msgstr "Εναλλαγή στην οθόνη από πάνω"
 
 #: useractions.cpp:1055
-#, fuzzy, kde-format
-#| msgid "Switch to Screen 0"
+#, kde-format
 msgid "Switch to Screen Below"
-msgstr "Εναλλαγή στην οθόνη 0"
+msgstr "Εναλλαγή στην οθόνη από κάτω"
 
 #: useractions.cpp:1058
 #, fuzzy, kde-format

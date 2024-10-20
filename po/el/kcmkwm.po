@@ -30,10 +30,9 @@ msgstr ""
 
 #. i18n: ectx: property (title), widget (QGroupBox, groupBox_1)
 #: actions.ui:20
-#, fuzzy, kde-format
-#| msgid "Inactive Inner Window"
+#, kde-format
 msgid "Inactive Inner Window Actions"
-msgstr "Ανενεργό εσωτερικό παράθυρο"
+msgstr "Ενέργειες ανενεργού εσωτερικού παράθυρου"
 
 #. i18n: ectx: property (text), widget (QLabel, label_1)
 #. i18n: ectx: property (text), widget (QLabel, label_5)
@@ -58,8 +57,7 @@ msgstr ""
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:46 actions.ui:86 actions.ui:126
-#, fuzzy, kde-format
-#| msgid "Activate, Raise & Pass Click"
+#, kde-format
 msgid "Activate, raise and pass click"
 msgstr "Ενεργοποίηση, ανύψωση & πέρασμα του κλικ"
 
@@ -67,8 +65,7 @@ msgstr "Ενεργοποίηση, ανύψωση & πέρασμα του κλι�
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindow3)
 #: actions.ui:51 actions.ui:91 actions.ui:131
-#, fuzzy, kde-format
-#| msgid "Activate & Pass Click"
+#, kde-format
 msgid "Activate and pass click"
 msgstr "Ενεργοποίηση & πέρασμα του κλικ"
 
@@ -92,18 +89,16 @@ msgstr "Ενεργοποίηση"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:61 actions.ui:101 actions.ui:141 mouse.ui:289 mouse.ui:404
 #: mouse.ui:519
-#, fuzzy, kde-format
-#| msgid "Activate & Raise"
+#, kde-format
 msgid "Activate and raise"
 msgstr "Ενεργοποίηση & ανύψωση"
 
 #. i18n: ectx: property (text), widget (QLabel, label_2)
 #. i18n: ectx: property (text), widget (QLabel, label_6)
 #: actions.ui:69 mouse.ui:206
-#, fuzzy, kde-format
-#| msgid "&Double-click:"
+#, kde-format
 msgid "&Middle click:"
-msgstr "Διπ&λό κλικ:"
+msgstr "Με&σαίο κλικ:"
 
 #. i18n: ectx: property (whatsThis), widget (QComboBox, kcfg_CommandWindow2)
 #: actions.ui:82
@@ -160,15 +155,13 @@ msgstr "Κύλιση"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:171
-#, fuzzy, kde-format
-#| msgid "Activate & Scroll"
+#, kde-format
 msgid "Activate and scroll"
 msgstr "Ενεργοποίηση & κύλιση"
 
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandWindowWheel)
 #: actions.ui:176
-#, fuzzy, kde-format
-#| msgid "Activate, Raise & Scroll"
+#, kde-format
 msgid "Activate, raise and scroll"
 msgstr "Ενεργοποίηση, ανύψωση & κύλιση"
 
@@ -243,8 +236,7 @@ msgstr "Μετακίνηση"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll2)
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandAll3)
 #: actions.ui:276 actions.ui:346 actions.ui:416
-#, fuzzy, kde-format
-#| msgid "Activate, Raise & Move"
+#, kde-format
 msgid "Activate, raise and move"
 msgstr "Ενεργοποίηση, ανύψωση & μετακίνηση"
 
@@ -259,8 +251,7 @@ msgstr "Ενεργοποίηση, ανύψωση & μετακίνηση"
 #. i18n: ectx: property (text), item, widget (QComboBox, kcfg_CommandInactiveTitlebar3)
 #: actions.ui:281 actions.ui:351 actions.ui:421 mouse.ui:252 mouse.ui:314
 #: mouse.ui:367 mouse.ui:429 mouse.ui:482 mouse.ui:544
-#, fuzzy, kde-format
-#| msgid "Toggle Raise & Lower"
+#, kde-format
 msgid "Toggle raise and lower"
 msgstr "Εναλλαγή ανύψωσης & χαμηλώματος"
 
@@ -927,16 +918,13 @@ msgstr "Συμπεριφορά πολλαπλών οθονών:"
 
 #. i18n: ectx: property (whatsThis), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:206
-#, fuzzy, kde-format
-#| msgid ""
-#| "When this option is enabled, focus operations are limited only to the "
-#| "active Xinerama screen"
+#, kde-format
 msgid ""
 "When this option is enabled, focus operations are limited only to the active "
 "screen"
 msgstr ""
 "Όταν αυτή η επιλογή είναι ενεργοποιημένη, οι λειτουργίες εστίασης θα "
-"περιορίζονται μόνο στην ενεργή οθόνη Xinerama"
+"περιορίζονται μόνο στην ενεργή οθόνη"
 
 #. i18n: ectx: property (text), widget (QCheckBox, kcfg_SeparateScreenFocus)
 #: focus.ui:209

@@ -61,10 +61,9 @@ msgstr "Περιεχόμενο"
 
 #. i18n: ectx: property (text), widget (QCheckBox, showDesktop)
 #: main.ui:41
-#, fuzzy, kde-format
-#| msgid "Include \"Show Desktop\" icon"
+#, kde-format
 msgid "Include \"Show Desktop\" entry"
-msgstr "Συμπερίληψη του εικονιδίου \"Εμφάνιση της επιφάνειας εργασίας\""
+msgstr "Συμπερίληψη της καταχώρισης \"Εμφάνιση της επιφάνειας εργασίας\""
 
 #. i18n: ectx: property (text), item, widget (QComboBox, switchingModeCombo)
 #: main.ui:55
