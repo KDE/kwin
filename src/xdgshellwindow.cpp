@@ -824,10 +824,34 @@ static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
     return anchors;
 }
 
+static Qt::Edges anchorsForCustomTile(Tile *tile)
+{
+    Qt::Edges anchors = Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge;
+    const QRectF geom = tile->relativeGeometry();
+
+    if (!qFuzzyCompare(geom.left(), 0)) {
+        anchors &= ~Qt::LeftEdge;
+    }
+    if (!qFuzzyCompare(geom.top(), 0)) {
+        anchors &= ~Qt::TopEdge;
+    }
+    if (!qFuzzyCompare(geom.right(), 1)) {
+        anchors &= ~Qt::RightEdge;
+    }
+    if (!qFuzzyCompare(geom.top(), 1)) {
+        anchors &= ~Qt::BottomEdge;
+    }
+    return anchors;
+}
+
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    // TODO: still needs anchorsForCustomTile
-    const Qt::Edges anchors = anchorsForQuickTileMode(requestedQuickTileMode());
+    Qt::Edges anchors;
+    if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::Custom)) {
+        anchors = anchorsForCustomTile(requestedTile());
+    } else {
+        anchors = anchorsForQuickTileMode(requestedQuickTileMode());
+    }
 
     if (anchors & Qt::LeftEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledLeft;
@@ -1078,34 +1102,9 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
         updateFullScreenMode(states & XdgToplevelInterface::State::FullScreen);
     }
 
-    // FIXME: it does an unconditional commitTile, because the tile instance
+    // It does an unconditional commitTile, because the tile instance
     // can change even if the tile flags don't change:
     // ie same quicktilemode screen has changed, a different custom tile with same flags
-    if (delta & (XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
-        QuickTileMode newTileMode = QuickTileFlag::None;
-        if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Left;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Right;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledRight)) {
-            newTileMode = QuickTileFlag::Top;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledBottom | XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledRight)) {
-            newTileMode = QuickTileFlag::Bottom;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop)) {
-            newTileMode = QuickTileFlag::Left | QuickTileFlag::Top;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Left | QuickTileFlag::Bottom;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledTop)) {
-            newTileMode = QuickTileFlag::Right | QuickTileFlag::Top;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Right | QuickTileFlag::Bottom;
-        }
-
-        if (newTileMode != quickTileMode()) {
-            //   setTile(workspace()->tileManager(output())->quickTile(newTileMode));
-        }
-    }
-
     commitTile();
 
     m_acknowledgedStates = states;
