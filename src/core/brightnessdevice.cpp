@@ -18,9 +18,6 @@ BrightnessDevice::BrightnessDevice()
 
 BrightnessDevice::~BrightnessDevice()
 {
-    if (m_output) {
-        m_output->setBrightnessDevice(nullptr);
-    }
 }
 
 void BrightnessDevice::setOutput(Output *output)

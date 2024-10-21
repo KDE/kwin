@@ -46,6 +46,7 @@ public:
     std::optional<double> sdrGamutWideness;
     std::optional<Output::ColorProfileSource> colorProfileSource;
     std::optional<double> brightness;
+    std::optional<bool> allowSdrSoftwareBrightness;
 };
 
 class KWIN_EXPORT OutputConfiguration
