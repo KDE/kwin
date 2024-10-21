@@ -582,7 +582,7 @@ bool X11Window::track(xcb_window_t w)
     }
 
     switch (kwinApp()->operationMode()) {
-    case Application::OperationModeWaylandOnly:
+    case Application::OperationModeWayland:
         // The wayland surface is associated with the override-redirect window asynchronously.
         if (surface()) {
             associate();
@@ -1188,7 +1188,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     });
 
     switch (kwinApp()->operationMode()) {
-    case Application::OperationModeWaylandOnly:
+    case Application::OperationModeWayland:
         // The wayland surface is associated with the window asynchronously.
         if (surface()) {
             associate();

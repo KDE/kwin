@@ -114,7 +114,7 @@ Application::OperationMode Application::operationMode() const
 
 bool Application::shouldUseWaylandForCompositing() const
 {
-    return m_operationMode == OperationModeWaylandOnly;
+    return m_operationMode == OperationModeWayland;
 }
 
 void Application::start()
@@ -547,7 +547,7 @@ void Application::updateXTime()
         setX11Time(QX11Info::getTimestamp(), TimestampUpdate::Always);
         break;
 
-    case Application::OperationModeWaylandOnly:
+    case Application::OperationModeWayland:
         setX11Time(monotonicTime(), TimestampUpdate::Always);
         break;
 

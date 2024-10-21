@@ -19,7 +19,7 @@ public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
         switch (KWin::kwinApp()->operationMode()) {
-        case KWin::Application::OperationModeWaylandOnly:
+        case KWin::Application::OperationModeWayland:
             return std::make_unique<KWin::KeyNotificationPlugin>();
         case KWin::Application::OperationModeX11:
         default:
