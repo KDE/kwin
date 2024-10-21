@@ -804,6 +804,11 @@ void Output::setBrightnessDevice(BrightnessDevice *device)
 {
     m_brightnessDevice = device;
 }
+
+bool Output::allowSdrSoftwareBrightness() const
+{
+    return m_state.allowSdrSoftwareBrightness;
+}
 } // namespace KWin
 
 #include "moc_output.cpp"

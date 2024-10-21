@@ -236,7 +236,7 @@ static const bool s_allowColorspaceNVidia = qEnvironmentVariableIntValue("KWIN_D
 
 Output::Capabilities DrmOutput::computeCapabilities() const
 {
-    Capabilities capabilities = Capability::Dpms | Capability::IccProfile | Capability::BrightnessControl;
+    Capabilities capabilities = Capability::Dpms | Capability::IccProfile;
     if (m_connector->overscan.isValid() || m_connector->underscan.isValid()) {
         capabilities |= Capability::Overscan;
     }
@@ -266,6 +266,9 @@ Output::Capabilities DrmOutput::computeCapabilities() const
     if (m_connector->isInternal()) {
         // TODO only set this if an orientation sensor is available?
         capabilities |= Capability::AutoRotation;
+    }
+    if (m_state.highDynamicRange || m_brightnessDevice || m_state.allowSdrSoftwareBrightness) {
+        capabilities |= Capability::BrightnessControl;
     }
     return capabilities;
 }
@@ -418,7 +421,8 @@ ColorDescription DrmOutput::createColorDescription(const std::shared_ptr<OutputC
     // to work around that, (unless overridden by the user), assume the min. luminance of the transfer function instead
     const double minBrightness = effectiveHdr ? props->minBrightnessOverride.value_or(m_state.minBrightnessOverride).value_or(TransferFunction::defaultMinLuminanceFor(TransferFunction::PerceptualQuantizer)) : transferFunction.minLuminance;
 
-    const double brightnessFactor = !m_brightnessDevice || effectiveHdr ? brightness : 1.0;
+    const bool allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
+    const double brightnessFactor = (!m_brightnessDevice && allowSdrSoftwareBrightness) || effectiveHdr ? brightness : 1.0;
     const double effectiveReferenceLuminance = 25 + (referenceLuminance - 25) * brightnessFactor;
     return applyNightLight(ColorDescription(containerColorimetry, transferFunction, effectiveReferenceLuminance, minBrightness, maxAverageBrightness, maxPeakBrightness, masteringColorimetry, sdrColorimetry), m_channelFactors);
 }
@@ -456,7 +460,13 @@ void DrmOutput::applyQueuedChanges(const std::shared_ptr<OutputChangeSet> &props
     next.brightnessSetting = props->brightness.value_or(m_state.brightnessSetting);
     next.desiredModeSize = props->desiredModeSize.value_or(m_state.desiredModeSize);
     next.desiredModeRefreshRate = props->desiredModeRefreshRate.value_or(m_state.desiredModeRefreshRate);
+    next.allowSdrSoftwareBrightness = props->allowSdrSoftwareBrightness.value_or(m_state.allowSdrSoftwareBrightness);
     setState(next);
+
+    // allowSdrSoftwareBrightness might change our capabilities
+    Information newInfo = m_information;
+    newInfo.capabilities = computeCapabilities();
+    setInformation(newInfo);
 
     if (!isEnabled() && m_pipeline->needsModeset()) {
         m_gpu->maybeModeset(nullptr);

@@ -83,6 +83,7 @@ private:
         std::optional<double> minBrightnessOverride;
         std::optional<double> sdrGamutWideness;
         std::optional<double> brightness;
+        std::optional<bool> allowSdrSoftwareBrightness;
     };
     struct SetupState
     {
