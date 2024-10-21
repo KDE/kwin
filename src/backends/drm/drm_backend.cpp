@@ -133,6 +133,23 @@ bool DrmBackend::initialize()
         }
     }
     updateOutputs();
+
+    if (m_explicitGpus.empty() && m_gpus.size() > 1) {
+        std::ranges::sort(m_gpus, [](const auto &gpu1, const auto &gpu2) {
+            const size_t internalOutputs1 = std::ranges::count_if(gpu1->drmOutputs(), &Output::isInternal);
+            const size_t internalOutputs2 = std::ranges::count_if(gpu2->drmOutputs(), &Output::isInternal);
+            if (internalOutputs1 != internalOutputs2) {
+                return internalOutputs1 > internalOutputs2;
+            }
+            const size_t desktopOutputs1 = std::ranges::count_if(gpu1->drmOutputs(), std::not_fn(&Output::isNonDesktop));
+            const size_t desktopOutputs2 = std::ranges::count_if(gpu2->drmOutputs(), std::not_fn(&Output::isNonDesktop));
+            if (desktopOutputs1 != desktopOutputs2) {
+                return desktopOutputs1 > desktopOutputs2;
+            }
+            return gpu1->drmOutputs().size() > gpu2->drmOutputs().size();
+        });
+        qCDebug(KWIN_DRM) << "chose" << m_gpus.front()->drmDevice()->path() << "as the primary GPU";
+    }
     return true;
 }
 
