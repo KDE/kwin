@@ -961,7 +961,7 @@ Q_DECLARE_METATYPE(QtWayland::zxdg_toplevel_decoration_v1::mode)
         qunsetenv("KDE_SESSION_VERSION");                                                                                                 \
         qunsetenv("XDG_SESSION_DESKTOP");                                                                                                 \
         qunsetenv("XDG_CURRENT_DESKTOP");                                                                                                 \
-        KWin::WaylandTestApplication app(KWin::Application::OperationModeXwayland, argc, argv);                                           \
+        KWin::WaylandTestApplication app(KWin::Application::OperationModeWaylandOnly, argc, argv);                                        \
         app.setAttribute(Qt::AA_Use96Dpi, true);                                                                                          \
         TestObject tc;                                                                                                                    \
         return QTest::qExec(&tc, argc, argv);                                                                                             \

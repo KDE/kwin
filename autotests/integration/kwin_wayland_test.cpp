@@ -207,10 +207,8 @@ void WaylandTestApplication::performStartup()
     }
 
 #if KWIN_BUILD_X11
-    if (operationMode() == OperationModeXwayland) {
-        m_xwayland = std::make_unique<Xwl::Xwayland>(this);
-        m_xwayland->init();
-    }
+    m_xwayland = std::make_unique<Xwl::Xwayland>(this);
+    m_xwayland->init();
 #endif
 }
 

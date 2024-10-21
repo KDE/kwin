@@ -399,7 +399,7 @@ void UserActionsMenu::showHideActivityMenu()
 
 void UserActionsMenu::initDesktopPopup()
 {
-    if (kwinApp()->operationMode() == Application::OperationModeWaylandOnly || kwinApp()->operationMode() == Application::OperationModeXwayland) {
+    if (kwinApp()->operationMode() == Application::OperationModeWaylandOnly) {
         if (m_multipleDesktopsMenu) {
             return;
         }

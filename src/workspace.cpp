@@ -1676,13 +1676,10 @@ QString Workspace::supportInformation() const
     support.append(QStringLiteral("Operation Mode: "));
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
-        support.append(QStringLiteral("X11 only"));
+        support.append(QStringLiteral("X11"));
         break;
     case Application::OperationModeWaylandOnly:
-        support.append(QStringLiteral("Wayland Only"));
-        break;
-    case Application::OperationModeXwayland:
-        support.append(QStringLiteral("Xwayland"));
+        support.append(QStringLiteral("Wayland"));
         break;
     }
     support.append(QStringLiteral("\n\n"));
