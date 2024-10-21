@@ -154,7 +154,7 @@ void TilesTest::testWindowInteraction()
     auto leftTile = qobject_cast<CustomTile *>(m_rootTile->childTiles().first());
     QVERIFY(leftTile);
 
-    rootWindow->setTile(leftTile);
+    rootWindow->requestTile(leftTile);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -225,7 +225,7 @@ void TilesTest::testAssignedTileDeletion()
     auto middleBottomTile = qobject_cast<CustomTile *>(m_rootTile->childTiles()[1]->childTiles()[1]);
     QVERIFY(middleBottomTile);
 
-    rootWindow->setTile(middleBottomTile);
+    rootWindow->requestTile(middleBottomTile);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -302,7 +302,7 @@ void TilesTest::resizeTileFromWindow()
     QVERIFY(bottomLeftTile);
     QCOMPARE(bottomLeftTile->windowGeometry(), QRectF(4, 514, 506, 506));
 
-    window->setTile(topLeftTile);
+    window->requestTile(topLeftTile);
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 2);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 2);
@@ -331,7 +331,7 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 1);
     QCOMPARE(moveResizedChangedSpy.count(), 1);
     QCOMPARE(window->isInteractiveResize(), true);
-    QCOMPARE(window->geometryRestore(), QRect());
+    QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 100));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 3);
@@ -372,7 +372,7 @@ void TilesTest::resizeTileFromWindow()
     QCOMPARE(interactiveMoveResizeStartedSpy.count(), 2);
     QCOMPARE(moveResizedChangedSpy.count(), 3);
     QCOMPARE(window->isInteractiveResize(), true);
-    QCOMPARE(window->geometryRestore(), QRect());
+    QCOMPARE(window->geometryRestore(), QRect(0, 0, 100, 100));
     QVERIFY(surfaceConfigureRequestedSpy.wait());
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 5);
     QCOMPARE(toplevelConfigureRequestedSpy.count(), 5);

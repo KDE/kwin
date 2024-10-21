@@ -298,7 +298,8 @@ void XdgSurfaceWindow::destroyWindow()
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
     }
-    setTile(nullptr);
+    m_requestedTile = nullptr;
+    commitTile();
     m_configureTimer->stop();
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
@@ -825,7 +826,8 @@ static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
 
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    const Qt::Edges anchors = anchorsForQuickTileMode(m_requestedQuickTileMode);
+    // TODO: still needs anchorsForCustomTile
+    const Qt::Edges anchors = anchorsForQuickTileMode(requestedQuickTileMode());
 
     if (anchors & Qt::LeftEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledLeft;
@@ -1076,6 +1078,9 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
         updateFullScreenMode(states & XdgToplevelInterface::State::FullScreen);
     }
 
+    // FIXME: it does an unconditional commitTile, because the tile instance
+    // can change even if the tile flags don't change:
+    // ie same quicktilemode screen has changed, a different custom tile with same flags
     if (delta & (XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
         QuickTileMode newTileMode = QuickTileFlag::None;
         if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
@@ -1097,9 +1102,11 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
         }
 
         if (newTileMode != quickTileMode()) {
-            setTile(workspace()->tileManager(output())->quickTile(newTileMode));
+            //   setTile(workspace()->tileManager(output())->quickTile(newTileMode));
         }
     }
+
+    commitTile();
 
     m_acknowledgedStates = states;
 }

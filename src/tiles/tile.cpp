@@ -47,7 +47,7 @@ Tile::~Tile()
     }
     for (auto *w : std::as_const(m_windows)) {
         Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
-        w->setTile(tile);
+        w->requestTile(tile);
     }
 }
 
@@ -319,7 +319,7 @@ void Tile::insertChild(int position, Tile *item)
         Q_EMIT isLayoutChanged(true);
         for (auto *w : std::as_const(m_windows)) {
             Tile *tile = m_tiling->bestTileForPosition(w->moveResizeGeometry().center());
-            w->setTile(tile);
+            w->requestTile(tile);
         }
     }
 

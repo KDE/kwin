@@ -3425,10 +3425,10 @@ QRectF Window::quickTileGeometry(QuickTileMode mode, const QPointF &pos) const
 
 void Window::updateQuickTileMode(QuickTileMode newMode)
 {
-    if (m_requestedQuickTileMode == newMode) {
+    if ((!m_requestedTile && newMode == QuickTileMode(QuickTileFlag::None)) || m_requestedTile->quickTileMode() == newMode) {
         return;
     }
-    m_requestedQuickTileMode = newMode;
+    requestTile(workspace()->tileManager(output())->quickTile(newMode));
     doSetQuickTileMode();
 }
 
@@ -3574,12 +3574,11 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
     if ((mode & QuickTileFlag::Vertical) == QuickTileMode(QuickTileFlag::Vertical)) {
         mode &= ~QuickTileMode(QuickTileFlag::Vertical);
     }
-    m_requestedQuickTileMode = mode;
 
     // restore from maximized so that it is possible to tile maximized windows with one hit or by dragging
     if (requestedMaximizeMode() != MaximizeRestore) {
-        m_requestedQuickTileMode = QuickTileFlag::None;
         setMaximize(false, false);
+        m_requestedTile = nullptr;
         if (requestedMaximizeMode() != MaximizeRestore) {
             // window rules may enforce a different maximize mode, we can't do anything here
             return;
@@ -3588,40 +3587,13 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
         return;
     }
 
-    if (oldMode == QuickTileFlag::None) {
-        setGeometryRestore(quickTileGeometryRestore());
-    }
-    if (mode == QuickTileMode(QuickTileFlag::None)) {
-        QRectF geometry = moveResizeGeometry();
-        if (geometryRestore().isValid()) {
-            geometry = geometryRestore();
-        }
-        if (isInteractiveMove()) {
-            const QPointF anchor = interactiveMoveResizeAnchor();
-            const QPointF offset = interactiveMoveOffset();
-            geometry.moveTopLeft(QPointF(anchor.x() - geometry.width() * offset.x(),
-                                         anchor.y() - geometry.height() * offset.y()));
-        }
-        moveResize(geometry);
-        // Custom tiles need to be untiled immediately
-        if (oldMode == QuickTileFlag::Custom) {
-            setTile(nullptr);
-            return;
-        }
-    } else if (mode == QuickTileMode(QuickTileFlag::Custom)) {
+    if (mode == QuickTileMode(QuickTileFlag::Custom)) {
         // Custom tileMode is the only one that gets immediately assigned without a roundtrip
-        setTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
-        // Don't go into setTileMode as custom tiles don't go trough configure events
-        return;
+        // setTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
+        requestTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
     } else {
-        Tile *newTile = workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(m_requestedQuickTileMode);
-        if (newTile) {
-            moveResize(newTile->absoluteGeometry());
-        } else if (tile()) {
-            moveResize(quickTileGeometryRestore());
-        }
+        requestTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(mode));
     }
-    doSetQuickTileMode();
 }
 
 QuickTileMode Window::quickTileMode() const
@@ -3635,19 +3607,23 @@ QuickTileMode Window::quickTileMode() const
 
 QuickTileMode Window::requestedQuickTileMode() const
 {
-    return m_requestedQuickTileMode;
+    if (m_requestedTile) {
+        return m_requestedTile->quickTileMode();
+    }
+
+    return QuickTileFlag::None;
 }
 
-void Window::setTile(Tile *tile)
+void Window::commitTile()
 {
-    if (m_tile == tile) {
+    if (m_tile == m_requestedTile) {
         return;
     }
 
     Tile *oldTile = m_tile;
     QuickTileMode oldTileMode = quickTileMode();
 
-    m_tile = tile;
+    m_tile = m_requestedTile;
 
     if (m_tile) {
         Q_ASSERT(!isDeleted());
@@ -3658,16 +3634,64 @@ void Window::setTile(Tile *tile)
         oldTile->removeWindow(this);
     }
 
-    Q_EMIT tileChanged(tile);
+    Q_EMIT tileChanged(m_requestedTile);
 
     if (oldTileMode != quickTileMode()) {
         Q_EMIT quickTileModeChanged();
     }
 }
 
+void Window::cleanupTile()
+{
+    m_requestedTile = nullptr;
+    commitTile();
+}
+
 Tile *Window::tile() const
 {
     return m_tile;
+}
+
+Tile *Window::requestedTile() const
+{
+    return m_requestedTile;
+}
+
+void Window::requestTile(Tile *tile)
+{
+    if (m_requestedTile == tile) {
+        return;
+    }
+
+    if (requestedMaximizeMode() != MaximizeRestore) {
+        setMaximize(false, false);
+        if (requestedMaximizeMode() != MaximizeRestore) {
+            // window rules may enforce a different maximize mode, we can't do anything here
+            return;
+        }
+    }
+
+    if (tile && !m_requestedTile && !m_tile) {
+        setGeometryRestore(quickTileGeometryRestore());
+    }
+
+    m_requestedTile = tile;
+    if (tile) {
+        moveResize(tile->windowGeometry());
+    } else {
+        QRectF geometry = moveResizeGeometry();
+        if (geometryRestore().isValid()) {
+            geometry = geometryRestore();
+        }
+        if (isInteractiveMove()) {
+            const QPointF anchor = interactiveMoveResizeAnchor();
+            const QPointF offset = interactiveMoveOffset();
+            geometry.moveTopLeft(QPointF(anchor.x() - geometry.width() * offset.x(),
+                                         anchor.y() - geometry.height() * offset.y()));
+        }
+        moveResize(geometry);
+    }
+    doSetQuickTileMode();
 }
 
 void Window::doSetQuickTileMode()
@@ -3745,10 +3769,10 @@ void Window::sendToOutput(Output *newOutput)
     const QRectF screenArea = workspace()->clientArea(MaximizeArea, this, newOutput);
 
     if (requestedQuickTileMode() == QuickTileMode(QuickTileFlag::Custom)) {
-        setTile(nullptr);
+        requestTile(nullptr);
     } else {
         Tile *newTile = workspace()->tileManager(newOutput)->quickTile(requestedQuickTileMode());
-        setTile(newTile);
+        requestTile(newTile);
     }
 
     QRectF newGeom = moveToArea(oldGeom, oldScreenArea, screenArea);
