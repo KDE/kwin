@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-19 02:37+0000\n"
-"PO-Revision-Date: 2024-09-08 12:57+0200\n"
+"PO-Revision-Date: 2024-10-20 14:28+0530\n"
 "Last-Translator: Kishore G <kishore96@gmail.com>\n"
 "Language-Team: Tamil <kde-i18n-doc@kde.org>\n"
 "Language: ta\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -2441,7 +2441,7 @@ msgstr "செல்லுபடியாகாத பரப்பளவு"
 #: plugins/screencast/screencaststream.cpp:346
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
-msgstr ""
+msgstr "திரைப்பகிர்வுக்கு OpenGL compositing தேவை"
 
 #: plugins/screencast/screencaststream.cpp:354
 #, kde-format
@@ -2467,11 +2467,10 @@ msgstr ""
 "கைவிட escape விசையை அல்லது வலது க்ளிக்கை பயன்படுத்துங்கள்."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "சாளரநிரலைத் தடு"
+msgstr ""
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -3159,10 +3158,9 @@ msgstr "துவக்கத்தில் வைக்கப்படுவ�
 
 #. i18n: ectx: label, entry (placementrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:74
-#, fuzzy, kde-format
-#| msgid "&Fullscreen"
+#, kde-format
 msgid "Initial placement rule type"
-msgstr "&முழுத்திரை"
+msgstr ""
 
 #. i18n: ectx: label, entry (position), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:79
@@ -3172,10 +3170,9 @@ msgstr "சாளர இருப்பிடம்"
 
 #. i18n: ectx: label, entry (positionrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:83
-#, fuzzy, kde-format
-#| msgid "Window to Desktop 10"
+#, kde-format
 msgid "Window position rule type"
-msgstr "சாளரத்தை 10வது மேசைக்கு"
+msgstr ""
 
 #. i18n: ectx: label, entry (size), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:90
@@ -3257,10 +3254,9 @@ msgstr "பணிமேடை எண்களின் பட்டியல்"
 
 #. i18n: ectx: label, entry (desktopsrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:155
-#, fuzzy, kde-format
-#| msgid "Desktop %1"
+#, kde-format
 msgid "Desktop Ids rule type"
-msgstr "மேசை %1"
+msgstr ""
 
 #. i18n: ectx: label, entry (screen), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:162
@@ -3582,10 +3578,9 @@ msgstr "அடுக்கு"
 
 #. i18n: ectx: label, entry (layerrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:441
-#, fuzzy, kde-format
-#| msgid "Keep above rule type"
+#, kde-format
 msgid "Layer rule type"
-msgstr "மற்றவைகளுக்கு மேலே வைக்கும் விதி"
+msgstr ""
 
 #. i18n: ectx: label, entry (adaptivesync), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:446
@@ -3595,10 +3590,9 @@ msgstr "சூழறி ஒத்திசைவு"
 
 #. i18n: ectx: label, entry (adaptivesyncrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:450
-#, fuzzy, kde-format
-#| msgid "Keep above rule type"
+#, kde-format
 msgid "AdaptiveSync rule type"
-msgstr "மற்றவைகளுக்கு மேலே வைக்கும் விதி"
+msgstr ""
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
@@ -3608,10 +3602,9 @@ msgstr "உருக்குலைவை அனுமதி"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Keep above rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "மற்றவைகளுக்கு மேலே வைக்கும் விதி"
+msgstr ""
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
