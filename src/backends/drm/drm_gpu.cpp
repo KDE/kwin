@@ -306,7 +306,6 @@ bool DrmGpu::updateOutputs()
             m_drmOutputs << output;
             addedOutputs << output;
             Q_EMIT outputAdded(output);
-            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
             pipeline->setActive(true);
             pipeline->setEnable(false);
             pipeline->setMode(conn->modes().front());
@@ -415,6 +414,11 @@ DrmPipeline::Error DrmGpu::testPendingConfiguration()
         std::sort(connectors.begin(), connectors.end(), [](auto c1, auto c2) {
             return c1->crtcId.value() > c2->crtcId.value();
         });
+    }
+    for (DrmPipeline *pipeline : m_pipelines) {
+        if (!pipeline->primaryLayer()) {
+            pipeline->setLayers(m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Primary), m_platform->renderBackend()->createDrmPlaneLayer(pipeline, DrmPlane::TypeIndex::Cursor));
+        }
     }
     // reset all outputs to their most basic configuration (primary plane without scaling)
     // for the test, and set the target rects appropriately
