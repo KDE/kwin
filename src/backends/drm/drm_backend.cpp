@@ -132,6 +132,7 @@ bool DrmBackend::initialize()
             m_udevMonitor->enable();
         }
     }
+    updateOutputs();
     return true;
 }
 
@@ -294,15 +295,11 @@ std::unique_ptr<OpenGLBackend> DrmBackend::createOpenGLBackend()
 
 void DrmBackend::sceneInitialized()
 {
-    if (m_outputs.isEmpty()) {
-        updateOutputs();
-    } else {
-        for (const auto &gpu : m_gpus) {
-            gpu->recreateSurfaces();
-        }
-        for (const auto &virt : std::as_const(m_virtualOutputs)) {
-            virt->recreateSurface();
-        }
+    for (const auto &gpu : m_gpus) {
+        gpu->recreateSurfaces();
+    }
+    for (const auto &virt : std::as_const(m_virtualOutputs)) {
+        virt->recreateSurface();
     }
 }
 

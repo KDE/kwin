@@ -154,7 +154,6 @@ void ApplicationWayland::performStartup()
     createPlugins();
 
     compositor->start();
-    outputBackend()->sceneInitialized();
 
     // Note that we start accepting client connections after creating the Workspace.
     if (!waylandServer()->start()) {
