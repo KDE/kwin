@@ -30,6 +30,7 @@ class ServerSideDecorationPaletteInterface;
 class XdgDialogV1Interface;
 class XdgToplevelDecorationV1Interface;
 class Output;
+class Tile;
 
 class XdgSurfaceConfigure
 {
@@ -104,6 +105,7 @@ class XdgToplevelConfigure final : public XdgSurfaceConfigure
 public:
     std::shared_ptr<KDecoration2::Decoration> decoration;
     XdgToplevelInterface::States states;
+    QPointer<Tile> tile = nullptr;
 };
 
 class XdgToplevelWindow final : public XdgSurfaceWindow

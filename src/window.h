@@ -543,7 +543,7 @@ class KWIN_EXPORT Window : public QObject
     /**
      * The Tile this window is associated to, if any
      */
-    Q_PROPERTY(KWin::Tile *tile READ tile WRITE setTile NOTIFY tileChanged)
+    Q_PROPERTY(KWin::Tile *tile READ requestedTile WRITE requestTile NOTIFY tileChanged)
 
     /**
      * Returns whether this window is a input method window.
@@ -1104,7 +1104,9 @@ public:
     void packTo(qreal left, qreal top);
 
     Tile *tile() const;
-    void setTile(Tile *tile);
+    void commitTile(Tile *tile);
+    Tile *requestedTile() const;
+    void requestTile(Tile *tile);
 
     void handleQuickTileShortcut(QuickTileMode mode);
     void setQuickTileModeAtCurrentPosition(QuickTileMode mode);
@@ -1810,14 +1812,13 @@ protected:
     QList<Window *> m_transients;
     bool m_modal = false;
     Layer m_layer = UnknownLayer;
+    QPointer<Tile> m_requestedTile;
     QPointer<Tile> m_tile;
 
     // electric border/quick tiling
     std::optional<ElectricBorderMode> m_electricMode = std::nullopt;
     QRectF m_electricGeometryRestore;
     bool m_electricMaximizing = false;
-    // The requested quick tile mode of this window.
-    QuickTileMode m_requestedQuickTileMode = QuickTileFlag::None;
     QTimer *m_electricMaximizingDelay = nullptr;
 
     // geometry

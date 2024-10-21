@@ -324,7 +324,7 @@ void CustomTile::remove()
 
     const auto windows = std::exchange(m_windows, {});
     for (Window *window : windows) {
-        window->setTile(m_tiling->bestTileForPosition(window->moveResizeGeometry().center()));
+        window->requestTile(m_tiling->bestTileForPosition(window->moveResizeGeometry().center()));
     }
 
     deleteLater(); // not using "delete this" because QQmlEngine will crash

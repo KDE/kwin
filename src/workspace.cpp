@@ -1295,7 +1295,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
         tileManager->rootTile()->visitDescendants([](const Tile *child) {
             const QList<Window *> windows = child->windows();
             for (Window *window : windows) {
-                window->setTile(nullptr);
+                window->requestTile(nullptr);
             }
         });
 
@@ -1322,7 +1322,7 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
             Tile *bestTile = m_tileManagers[bestOutput]->quickTile(quickTileMode);
 
             for (Window *window : windows) {
-                window->setTile(bestTile);
+                window->requestTile(bestTile);
             }
         }
     }

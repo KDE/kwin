@@ -298,7 +298,7 @@ void XdgSurfaceWindow::destroyWindow()
         leaveInteractiveMoveResize();
         Q_EMIT interactiveMoveResizeFinished();
     }
-    setTile(nullptr);
+    commitTile(nullptr);
     m_configureTimer->stop();
     qDeleteAll(m_configureEvents);
     m_configureEvents.clear();
@@ -713,6 +713,7 @@ XdgSurfaceConfigure *XdgToplevelWindow::sendRoleConfigure() const
     configureEvent->states = m_nextStates;
     configureEvent->decoration = m_nextDecoration;
     configureEvent->serial = serial;
+    configureEvent->tile = m_requestedTile;
 
     return configureEvent;
 }
@@ -739,6 +740,7 @@ void XdgToplevelWindow::handleRoleCommit()
     auto configureEvent = static_cast<XdgToplevelConfigure *>(lastAcknowledgedConfigure());
     if (configureEvent) {
         handleStatesAcknowledged(configureEvent->states);
+        commitTile(configureEvent->tile);
     }
 }
 
@@ -798,34 +800,9 @@ void XdgToplevelWindow::doSetMaximized()
     scheduleConfigure();
 }
 
-static Qt::Edges anchorsForQuickTileMode(QuickTileMode mode)
-{
-    if (mode == QuickTileMode(QuickTileFlag::None)) {
-        return Qt::Edges();
-    }
-
-    Qt::Edges anchors = Qt::LeftEdge | Qt::TopEdge | Qt::RightEdge | Qt::BottomEdge;
-
-    if ((mode & QuickTileFlag::Left) && !(mode & QuickTileFlag::Right)) {
-        anchors &= ~Qt::RightEdge;
-    }
-    if ((mode & QuickTileFlag::Right) && !(mode & QuickTileFlag::Left)) {
-        anchors &= ~Qt::LeftEdge;
-    }
-
-    if ((mode & QuickTileFlag::Top) && !(mode & QuickTileFlag::Bottom)) {
-        anchors &= ~Qt::BottomEdge;
-    }
-    if ((mode & QuickTileFlag::Bottom) && !(mode & QuickTileFlag::Top)) {
-        anchors &= ~Qt::TopEdge;
-    }
-
-    return anchors;
-}
-
 void XdgToplevelWindow::doSetQuickTileMode()
 {
-    const Qt::Edges anchors = anchorsForQuickTileMode(m_requestedQuickTileMode);
+    const Qt::Edges anchors = requestedTile() ? requestedTile()->anchors() : Qt::Edges();
 
     if (anchors & Qt::LeftEdge) {
         m_nextStates |= XdgToplevelInterface::State::TiledLeft;
@@ -1074,31 +1051,6 @@ void XdgToplevelWindow::handleStatesAcknowledged(const XdgToplevelInterface::Sta
     }
     if (delta & XdgToplevelInterface::State::FullScreen) {
         updateFullScreenMode(states & XdgToplevelInterface::State::FullScreen);
-    }
-
-    if (delta & (XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
-        QuickTileMode newTileMode = QuickTileFlag::None;
-        if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Left;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Right;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledTop | XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledRight)) {
-            newTileMode = QuickTileFlag::Top;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledBottom | XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledRight)) {
-            newTileMode = QuickTileFlag::Bottom;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledTop)) {
-            newTileMode = QuickTileFlag::Left | QuickTileFlag::Top;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledLeft | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Left | QuickTileFlag::Bottom;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledTop)) {
-            newTileMode = QuickTileFlag::Right | QuickTileFlag::Top;
-        } else if (states.testFlags(XdgToplevelInterface::State::TiledRight | XdgToplevelInterface::State::TiledBottom)) {
-            newTileMode = QuickTileFlag::Right | QuickTileFlag::Bottom;
-        }
-
-        if (newTileMode != quickTileMode()) {
-            setTile(workspace()->tileManager(output())->quickTile(newTileMode));
-        }
     }
 
     m_acknowledgedStates = states;

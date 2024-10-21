@@ -166,6 +166,7 @@ void QuickTilingTest::testQuickTiling()
     QCOMPARE(surfaceConfigureRequestedSpy.count(), 1);
 
     QSignalSpy quickTileChangedSpy(window, &Window::quickTileModeChanged);
+    QSignalSpy tileChangedSpy(window, &Window::tileChanged);
     QSignalSpy frameGeometryChangedSpy(window, &Window::frameGeometryChanged);
 
     QFETCH(QuickTileMode, mode);
@@ -198,7 +199,15 @@ void QuickTilingTest::testQuickTiling()
     // send window to other screen
     QList<Output *> outputs = workspace()->outputs();
     QCOMPARE(window->output(), outputs[0]);
+
     window->sendToOutput(outputs[1]);
+    QVERIFY(surfaceConfigureRequestedSpy.wait());
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(toplevelConfigureRequestedSpy.last().at(0).toSize(), expectedGeometry.size());
+    // attach a new image
+    shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
+    Test::render(surface.get(), expectedGeometry.size().toSize(), Qt::red);
+    QVERIFY(tileChangedSpy.wait());
     QCOMPARE(window->output(), outputs[1]);
     // quick tile should not be changed
     QCOMPARE(window->quickTileMode(), mode);
@@ -210,7 +219,7 @@ void QuickTilingTest::testQuickTiling()
     window->handleQuickTileShortcut(mode);
     QTEST(window->requestedQuickTileMode(), "expectedModeAfterToggle");
     QVERIFY(surfaceConfigureRequestedSpy.wait());
-    QCOMPARE(surfaceConfigureRequestedSpy.count(), 3);
+    QCOMPARE(surfaceConfigureRequestedSpy.count(), 4);
 
     shellSurface->xdgSurface()->ack_configure(surfaceConfigureRequestedSpy.last().at(0).value<quint32>());
     Test::render(surface.get(), toplevelConfigureRequestedSpy.last().at(0).toSize(), Qt::red);

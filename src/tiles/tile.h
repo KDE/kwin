@@ -79,6 +79,11 @@ public:
      */
     QRectF maximizedWindowGeometry() const;
 
+    /**
+     * Which edges of the tile touches an edge of the screen
+     */
+    Qt::Edges anchors() const;
+
     bool isLayout() const;
     bool canBeRemoved() const;
 

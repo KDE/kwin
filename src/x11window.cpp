@@ -412,7 +412,7 @@ void X11Window::releaseWindow(bool on_shutdown)
         if (isInteractiveMoveResize()) {
             Q_EMIT interactiveMoveResizeFinished();
         }
-        setTile(nullptr);
+        commitTile(nullptr);
         workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
         StackingUpdatesBlocker blocker(workspace());
         stopDelayedInteractiveMoveResize();
@@ -497,7 +497,7 @@ void X11Window::destroyWindow()
         if (isInteractiveMoveResize()) {
             Q_EMIT interactiveMoveResizeFinished();
         }
-        setTile(nullptr);
+        commitTile(nullptr);
         workspace()->rulebook()->discardUsed(this, true); // Remove ForceTemporarily rules
         StackingUpdatesBlocker blocker(workspace());
         stopDelayedInteractiveMoveResize();
@@ -2622,7 +2622,7 @@ bool X11Window::acceptsFocus() const
 
 void X11Window::doSetQuickTileMode()
 {
-    setTile(workspace()->tileManager(output())->quickTile(m_requestedQuickTileMode));
+    commitTile(requestedTile());
 }
 
 void X11Window::setBlockingCompositing(bool block)
