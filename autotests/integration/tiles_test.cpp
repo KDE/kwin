@@ -132,6 +132,8 @@ void TilesTest::createSampleLayout()
     QCOMPARE(verticalBottomTile->relativeGeometry(), QRectF(0.5, 0.5, 0.25, 0.5));
     QCOMPARE(verticalTopTile->windowGeometry(), QRectF(642, 4, 316, 506));
     QCOMPARE(verticalBottomTile->windowGeometry(), QRectF(642, 514, 316, 506));
+
+    // TODO: add tests for the tile flags
 }
 
 void TilesTest::testWindowInteraction()
