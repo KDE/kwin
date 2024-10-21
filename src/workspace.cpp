@@ -264,7 +264,7 @@ void Workspace::init()
     m_placementTracker->init(getPlacementTrackerHash());
 
     if (waylandServer()) {
-        connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::assignBrightnessDevices);
+        connect(waylandServer()->externalBrightness(), &ExternalBrightnessV1::devicesChanged, this, &Workspace::updateOutputConfiguration);
     }
 }
 
@@ -542,11 +542,19 @@ void Workspace::updateOutputConfiguration()
         setOutputOrder(newOrder);
     };
 
-    const auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
+    auto opt = m_outputConfigStore->queryConfig(outputs, m_lidSwitchTracker->isLidClosed(), m_orientationSensor->reading(), kwinApp()->tabletModeManager()->effectiveTabletMode());
     if (!opt) {
         return;
     }
-    const auto &[cfg, order, type] = *opt;
+    auto &[cfg, order, type] = *opt;
+
+    assignBrightnessDevices();
+    for (Output *output : outputs) {
+        if (output->brightnessDevice()) {
+            cfg.changeSet(output)->allowSdrSoftwareBrightness = false;
+        }
+    }
+
     if (!applyOutputConfiguration(cfg, order)) {
         qCWarning(KWIN_CORE) << "Applying output config failed!";
         setFallbackOutputOrder();
@@ -1328,10 +1336,6 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
     m_placementTracker->uninhibit();
     m_placementTracker->restore(getPlacementTrackerHash());
 
-    if (!added.isEmpty() || !removed.isEmpty()) {
-        assignBrightnessDevices();
-    }
-
     for (Output *output : removed) {
         output->unref();
     }
@@ -1362,7 +1366,7 @@ void Workspace::assignBrightnessDevices()
     if (!waylandServer()) {
         return;
     }
-    QList<Output *> candidates = m_outputs;
+    QList<Output *> candidates = kwinApp()->outputBackend()->outputs();
     const auto devices = waylandServer()->externalBrightness()->devices();
     for (BrightnessDevice *device : devices) {
         // assign the device to the most fitting output
@@ -1391,6 +1395,9 @@ void Workspace::assignBrightnessDevices()
                 oldOutput->setBrightnessDevice(nullptr);
             }
         }
+    }
+    for (Output *output : candidates) {
+        output->setBrightnessDevice(nullptr);
     }
 }
 
