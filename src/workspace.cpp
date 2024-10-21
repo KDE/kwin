@@ -529,8 +529,8 @@ void Workspace::updateOutputConfiguration()
     const auto setFallbackOutputOrder = [this, &outputs]() {
         auto newOrder = outputs;
         newOrder.erase(std::remove_if(newOrder.begin(), newOrder.end(), [](Output *o) {
-                           return !o->isEnabled();
-                       }),
+            return !o->isEnabled();
+        }),
                        newOrder.end());
         std::sort(newOrder.begin(), newOrder.end(), [](Output *left, Output *right) {
             return left->name() < right->name();
@@ -1254,8 +1254,8 @@ void Workspace::updateOutputs(const std::optional<QList<Output *>> &outputOrder)
             }
         }
         m_outputOrder.erase(std::remove_if(m_outputOrder.begin(), m_outputOrder.end(), [this](Output *output) {
-                                return !m_outputs.contains(output);
-                            }),
+            return !m_outputs.contains(output);
+        }),
                             m_outputOrder.end());
     }
 
@@ -1970,8 +1970,8 @@ void Workspace::forEachWindow(std::function<void(Window *)> func)
 bool Workspace::hasWindow(const Window *c)
 {
     return findWindow([&c](const Window *test) {
-               return test == c;
-           })
+        return test == c;
+    })
         != nullptr;
 }
 
@@ -2005,8 +2005,8 @@ void Workspace::setWasUserInteraction()
 #if KWIN_BUILD_X11
     QTimer::singleShot(0, this,
                        [this] {
-                           m_wasUserInteractionFilter.reset();
-                       });
+        m_wasUserInteractionFilter.reset();
+    });
 #endif
 }
 
