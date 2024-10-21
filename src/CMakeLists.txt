@@ -380,7 +380,7 @@ qt_generate_dbus_interface(tabletmodemanager.h org.kde.KWin.TabletModeManager.xm
 
 generate_export_header(kwin EXPORT_FILE_NAME kwin_export.h)
 
-if (KWIN_BUILD_X11)
+if (KWIN_BUILD_X11 AND KWIN_BUILD_X11_BACKEND)
     add_executable(kwin_x11 main_x11.cpp)
     target_link_libraries(kwin_x11
         KWinX11Platform
