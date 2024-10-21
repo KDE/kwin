@@ -91,6 +91,7 @@ void EglGbmBackend::init()
         return;
     }
     initWayland();
+    m_backend->createLayers();
 }
 
 bool EglGbmBackend::initRenderingContext()

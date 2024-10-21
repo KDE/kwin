@@ -24,6 +24,7 @@ DrmQPainterBackend::DrmQPainterBackend(DrmBackend *backend)
     , m_backend(backend)
 {
     m_backend->setRenderBackend(this);
+    m_backend->createLayers();
 }
 
 DrmQPainterBackend::~DrmQPainterBackend()

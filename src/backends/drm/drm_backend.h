@@ -62,13 +62,11 @@ public:
     void setRenderBackend(DrmRenderBackend *backend);
     DrmRenderBackend *renderBackend() const;
 
+    void createLayers();
     void releaseBuffers();
     void updateOutputs();
 
     const std::vector<std::unique_ptr<DrmGpu>> &gpus() const;
-
-public Q_SLOTS:
-    void sceneInitialized() override;
 
 Q_SIGNALS:
     void gpuAdded(DrmGpu *gpu);

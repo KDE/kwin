@@ -96,9 +96,6 @@ public:
 
     virtual Session *session() const;
 
-public Q_SLOTS:
-    virtual void sceneInitialized(){};
-
 Q_SIGNALS:
     void outputsQueried();
     /**

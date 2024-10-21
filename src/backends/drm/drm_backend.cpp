@@ -132,6 +132,7 @@ bool DrmBackend::initialize()
             m_udevMonitor->enable();
         }
     }
+    updateOutputs();
     return true;
 }
 
@@ -292,20 +293,6 @@ std::unique_ptr<OpenGLBackend> DrmBackend::createOpenGLBackend()
     return std::make_unique<EglGbmBackend>(this);
 }
 
-void DrmBackend::sceneInitialized()
-{
-    if (m_outputs.isEmpty()) {
-        updateOutputs();
-    } else {
-        for (const auto &gpu : m_gpus) {
-            gpu->recreateSurfaces();
-        }
-        for (const auto &virt : std::as_const(m_virtualOutputs)) {
-            virt->recreateSurface();
-        }
-    }
-}
-
 QList<CompositingType> DrmBackend::supportedCompositors() const
 {
     return QList<CompositingType>{OpenGLCompositing, QPainterCompositing};
@@ -417,6 +404,16 @@ void DrmBackend::setRenderBackend(DrmRenderBackend *backend)
 DrmRenderBackend *DrmBackend::renderBackend() const
 {
     return m_renderBackend;
+}
+
+void DrmBackend::createLayers()
+{
+    for (const auto &gpu : m_gpus) {
+        gpu->recreateSurfaces();
+    }
+    for (const auto &virt : std::as_const(m_virtualOutputs)) {
+        virt->recreateSurface();
+    }
 }
 
 void DrmBackend::releaseBuffers()
