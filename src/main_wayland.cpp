@@ -148,6 +148,7 @@ void ApplicationWayland::performStartup()
     createTabletModeManager();
 
     auto compositor = WaylandCompositor::create();
+    compositor->createRenderer();
     createWorkspace();
     createColorManager();
     createPlugins();
