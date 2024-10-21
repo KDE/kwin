@@ -582,7 +582,7 @@ bool X11Window::track(xcb_window_t w)
     }
 
     switch (kwinApp()->operationMode()) {
-    case Application::OperationModeXwayland:
+    case Application::OperationModeWaylandOnly:
         // The wayland surface is associated with the override-redirect window asynchronously.
         if (surface()) {
             associate();
@@ -595,8 +595,6 @@ bool X11Window::track(xcb_window_t w)
         // as ready for painting after synthetic 50ms delay.
         QTimer::singleShot(50, this, &X11Window::setReadyForPainting);
         break;
-    case Application::OperationModeWaylandOnly:
-        Q_UNREACHABLE();
     }
 
     return true;
@@ -1190,7 +1188,7 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
     });
 
     switch (kwinApp()->operationMode()) {
-    case Application::OperationModeXwayland:
+    case Application::OperationModeWaylandOnly:
         // The wayland surface is associated with the window asynchronously.
         if (surface()) {
             associate();
@@ -1201,8 +1199,6 @@ bool X11Window::manage(xcb_window_t w, bool isMapped)
         break;
     case Application::OperationModeX11:
         break;
-    case Application::OperationModeWaylandOnly:
-        Q_UNREACHABLE();
     }
 
     return true;

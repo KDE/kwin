@@ -133,7 +133,6 @@ void ApplicationWayland::performStartup()
 {
 #if KWIN_BUILD_X11
     if (m_startXWayland) {
-        setOperationMode(OperationModeXwayland);
         setXwaylandScale(config()->group(QStringLiteral("Xwayland")).readEntry("Scale", 1.0));
     }
 #endif
@@ -161,7 +160,7 @@ void ApplicationWayland::performStartup()
     }
 
 #if KWIN_BUILD_X11
-    if (operationMode() == OperationModeXwayland) {
+    if (m_startXWayland) {
         m_xwayland = std::make_unique<Xwl::Xwayland>(this);
         m_xwayland->xwaylandLauncher()->setListenFDs(m_xwaylandListenFds);
         m_xwayland->xwaylandLauncher()->setDisplayName(m_xwaylandDisplay);

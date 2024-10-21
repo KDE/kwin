@@ -19,7 +19,6 @@ public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
         switch (KWin::kwinApp()->operationMode()) {
-        case KWin::Application::OperationModeXwayland:
         case KWin::Application::OperationModeWaylandOnly:
             return std::make_unique<BounceKeysFilter>();
         case KWin::Application::OperationModeX11:

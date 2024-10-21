@@ -19,8 +19,6 @@ public:
     std::unique_ptr<KWin::Plugin> create() const override
     {
         switch (KWin::kwinApp()->operationMode()) {
-        case KWin::Application::OperationModeXwayland:
-            [[fallthrough]];
         case KWin::Application::OperationModeWaylandOnly:
             return std::make_unique<ButtonRebindsFilter>();
         case KWin::Application::OperationModeX11:

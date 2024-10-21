@@ -319,15 +319,13 @@ void WindowItemX11::initialize()
     case Application::OperationModeX11:
         updateSurfaceItem(std::make_unique<SurfaceItemX11>(static_cast<X11Window *>(window()), this));
         break;
-    case Application::OperationModeXwayland:
+    case Application::OperationModeWaylandOnly:
         if (!window()->surface()) {
             updateSurfaceItem(nullptr);
         } else {
             updateSurfaceItem(std::make_unique<SurfaceItemXwayland>(static_cast<X11Window *>(window()), this));
         }
         break;
-    case Application::OperationModeWaylandOnly:
-        Q_UNREACHABLE();
     }
 }
 #endif

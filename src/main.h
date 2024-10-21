@@ -94,10 +94,6 @@ public:
          * @brief KWin uses only Wayland
          */
         OperationModeWaylandOnly,
-        /**
-         * @brief KWin uses Wayland and controls a nested Xwayland server.
-         */
-        OperationModeXwayland
     };
     Q_ENUM(OperationMode)
     ~Application() override;
@@ -138,7 +134,6 @@ public:
      * @return OperationMode
      */
     OperationMode operationMode() const;
-    void setOperationMode(OperationMode mode);
     bool shouldUseWaylandForCompositing() const;
 
     void setupCommandLine(QCommandLineParser *parser);
