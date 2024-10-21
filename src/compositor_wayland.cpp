@@ -92,11 +92,7 @@ bool WaylandCompositor::attemptOpenGLCompositing()
         qCDebug(KWIN_CORE) << "OpenGL 2.0 is not supported";
         return false;
     }
-
-    m_scene = std::make_unique<WorkspaceSceneOpenGL>(backend.get());
-    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(backend->eglDisplayObject()));
     m_backend = std::move(backend);
-
     qCDebug(KWIN_CORE) << "OpenGL compositing has been successfully initialized";
     return true;
 }
@@ -107,27 +103,13 @@ bool WaylandCompositor::attemptQPainterCompositing()
     if (!backend || backend->isFailed()) {
         return false;
     }
-
-    m_scene = std::make_unique<WorkspaceSceneQPainter>(backend.get());
-    m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererQPainter>());
     m_backend = std::move(backend);
-
     qCDebug(KWIN_CORE) << "QPainter compositing has been successfully initialized";
     return true;
 }
 
-void WaylandCompositor::start()
+void WaylandCompositor::createRenderer()
 {
-    if (kwinApp()->isTerminating()) {
-        return;
-    }
-    if (m_state != State::Off) {
-        return;
-    }
-
-    Q_EMIT aboutToToggleCompositing();
-    m_state = State::Starting;
-
     // If compositing has been restarted, try to use the last used compositing type.
     const QList<CompositingType> availableCompositors = kwinApp()->outputBackend()->supportedCompositors();
     QList<CompositingType> candidateCompositors;
@@ -170,6 +152,36 @@ void WaylandCompositor::start()
             qApp->quit();
         }
     }
+}
+
+void WaylandCompositor::createScene()
+{
+    if (const auto openglBackend = qobject_cast<OpenGLBackend *>(m_backend.get())) {
+        m_scene = std::make_unique<WorkspaceSceneOpenGL>(openglBackend);
+        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererOpenGL>(openglBackend->eglDisplayObject()));
+    } else {
+        const auto qpainterBackend = static_cast<QPainterBackend *>(m_backend.get());
+        m_scene = std::make_unique<WorkspaceSceneQPainter>(qpainterBackend);
+        m_cursorScene = std::make_unique<CursorScene>(std::make_unique<ItemRendererQPainter>());
+    }
+    Q_EMIT sceneCreated();
+}
+
+void WaylandCompositor::start()
+{
+    if (kwinApp()->isTerminating()) {
+        return;
+    }
+    if (m_state != State::Off) {
+        return;
+    }
+
+    Q_EMIT aboutToToggleCompositing();
+    m_state = State::Starting;
+
+    if (!m_backend) {
+        createRenderer();
+    }
 
     if (!m_backend) {
         m_state = State::Off;
@@ -195,7 +207,7 @@ void WaylandCompositor::start()
         }
     }
 
-    Q_EMIT sceneCreated();
+    createScene();
 
     const QList<Output *> outputs = workspace()->outputs();
     for (Output *output : outputs) {
