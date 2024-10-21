@@ -28,7 +28,7 @@ std::unique_ptr<Plugin> ScreencastManagerFactory::create() const
     switch (kwinApp()->operationMode()) {
     case Application::OperationModeX11:
         return nullptr;
-    case Application::OperationModeWaylandOnly:
+    case Application::OperationModeWayland:
         return std::make_unique<ScreencastManager>();
     default:
         return nullptr;

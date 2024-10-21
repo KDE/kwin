@@ -1678,7 +1678,7 @@ QString Workspace::supportInformation() const
     case Application::OperationModeX11:
         support.append(QStringLiteral("X11"));
         break;
-    case Application::OperationModeWaylandOnly:
+    case Application::OperationModeWayland:
         support.append(QStringLiteral("Wayland"));
         break;
     }

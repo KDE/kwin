@@ -91,9 +91,9 @@ public:
          */
         OperationModeX11,
         /**
-         * @brief KWin uses only Wayland
+         * @brief KWin uses Wayland
          */
-        OperationModeWaylandOnly,
+        OperationModeWayland,
     };
     Q_ENUM(OperationMode)
     ~Application() override;

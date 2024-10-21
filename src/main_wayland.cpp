@@ -99,7 +99,7 @@ static void restoreNofileLimit()
 //************************************
 
 ApplicationWayland::ApplicationWayland(int &argc, char **argv)
-    : Application(OperationModeWaylandOnly, argc, argv)
+    : Application(OperationModeWayland, argc, argv)
 {
 }
 
