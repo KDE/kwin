@@ -2694,7 +2694,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
                 lrx = lx + (*l)->width();
                 lry = ly + (*l)->height();
 
-                if (!(guideMaximized & MaximizeHorizontal) && (((cy <= lry) && (cy >= ly)) || ((ry >= ly) && (ry <= lry)) || ((cy <= ly) && (ry >= lry)))) {
+                if (!(guideMaximized & MaximizeHorizontal) && (cy <= lry) && (ly <= ry)) {
                     if ((sOWO ? (cx < lrx) : true) && (std::abs(lrx - cx) < windowSnapZone) && (std::abs(lrx - cx) < deltaX)) {
                         deltaX = std::abs(lrx - cx);
                         nx = lrx;
@@ -2705,7 +2705,7 @@ QPointF Workspace::adjustWindowPosition(const Window *window, QPointF pos, bool 
                     }
                 }
 
-                if (!(guideMaximized & MaximizeVertical) && (((cx <= lrx) && (cx >= lx)) || ((rx >= lx) && (rx <= lrx)) || ((cx <= lx) && (rx >= lrx)))) {
+                if (!(guideMaximized & MaximizeVertical) && (cx <= lrx) && (lx <= rx)) {
                     if ((sOWO ? (cy < lry) : true) && (std::abs(lry - cy) < windowSnapZone) && (std::abs(lry - cy) < deltaY)) {
                         deltaY = std::abs(lry - cy);
                         ny = lry;
@@ -2869,9 +2869,9 @@ QRectF Workspace::adjustWindowSize(const Window *window, QRectF moveResizeGeom, 
                     lrx = (*l)->x() + (*l)->width();
                     lry = (*l)->y() + (*l)->height();
 
-#define WITHIN_HEIGHT (((newcy <= lry) && (newcy >= ly)) || ((newry >= ly) && (newry <= lry)) || ((newcy <= ly) && (newry >= lry)))
+#define WITHIN_HEIGHT ((newcy <= lry) && (ly <= newry))
 
-#define WITHIN_WIDTH (((cx <= lrx) && (cx >= lx)) || ((rx >= lx) && (rx <= lrx)) || ((cx <= lx) && (rx >= lrx)))
+#define WITHIN_WIDTH ((cx <= lrx) && (lx <= rx))
 
 #define SNAP_WINDOW_TOP                        \
     if ((sOWO ? (newcy < lry) : true)          \
