@@ -19,7 +19,7 @@ class GlLookUpTable;
 class GlLookUpTable3D;
 class GLTexture;
 
-class IccShader
+class KWIN_EXPORT IccShader
 {
 public:
     explicit IccShader();

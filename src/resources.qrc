@@ -1,6 +1,8 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource prefix="/">
   <file>opengl/colormanagement.glsl</file>
+  <file>opengl/icc.frag</file>
+  <file>opengl/icc_core.frag</file>
   <file>opengl/saturation.glsl</file>
   <file>scene/shaders/debug_fractional.frag</file>
   <file>scene/shaders/debug_fractional.vert</file>
