@@ -1,6 +1,0 @@
-File=kwinpluginssettings.kcfg
-NameSpace=KWin::TabBox
-ClassName=PluginsSettings
-Mutators=true
-DefaultValueGetters=true
-ParentInConstructor=true

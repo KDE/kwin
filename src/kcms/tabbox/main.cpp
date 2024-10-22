@@ -37,7 +37,6 @@
 #include <KPackage/PackageLoader>
 
 // own
-#include "kwinpluginssettings.h"
 #include "kwintabboxconfigform.h"
 #include "kwintabboxdata.h"
 #include "kwintabboxsettings.h"
@@ -229,8 +228,6 @@ void KWinTabBoxConfig::load()
     m_data->tabBoxAlternativeConfig()->load();
     m_data->shortcutConfig()->load();
 
-    m_data->pluginsConfig()->load();
-
     m_primaryTabBoxUi->updateUiFromConfig();
     m_alternativeTabBoxUi->updateUiFromConfig();
 
@@ -239,13 +236,6 @@ void KWinTabBoxConfig::load()
 
 void KWinTabBoxConfig::save()
 {
-    // effects
-    const bool highlightWindows = m_primaryTabBoxUi->highlightWindows() || m_alternativeTabBoxUi->highlightWindows();
-
-    // activate effects if they are used otherwise deactivate them.
-    m_data->pluginsConfig()->setHighlightwindowEnabled(highlightWindows);
-    m_data->pluginsConfig()->save();
-
     m_data->tabBoxConfig()->save();
     m_data->tabBoxAlternativeConfig()->save();
     m_data->shortcutConfig()->save();
