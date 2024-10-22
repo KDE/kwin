@@ -9,11 +9,15 @@
 
 #include "core/colorpipeline.h"
 #include "core/colorspace.h"
+#include "core/iccprofile.h"
 #include "opengl/eglcontext.h"
 #include "opengl/egldisplay.h"
 #include "opengl/glframebuffer.h"
 #include "opengl/glshader.h"
 #include "opengl/glshadermanager.h"
+#include "opengl/icc_shader.h"
+
+#include <lcms2.h>
 
 using namespace KWin;
 
@@ -35,6 +39,7 @@ private Q_SLOTS:
     void testXYZ();
     void testOpenglShader_data();
     void testOpenglShader();
+    void testIccShader();
 };
 
 static bool compareVectors(const QVector3D &one, const QVector3D &two, float maxDifference)
@@ -288,6 +293,108 @@ void TestColorspaces::testOpenglShader()
             const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
             const QVector3D difference = (glColors - pipeColors);
             QCOMPARE_LE(difference.length(), maxError);
+        }
+    }
+}
+
+void TestColorspaces::testIccShader()
+{
+    const auto display = EglDisplay::create(eglGetDisplay(EGL_DEFAULT_DISPLAY));
+    const auto context = EglContext::create(display.get(), EGL_NO_CONFIG_KHR, EGL_NO_CONTEXT);
+
+    QImage input(255, 255, QImage::Format_RGBA8888_Premultiplied);
+    for (int x = 0; x < input.width(); x++) {
+        for (int y = 0; y < input.height(); y++) {
+            input.setPixel(x, y, qRgba(x, y, (x + y) / 2, 255));
+        }
+    }
+
+    const QString path = QFINDTESTDATA("data/Framework 13.icc");
+
+    QImage pipelineResult(input.width(), input.height(), QImage::Format_RGBA8888_Premultiplied);
+    {
+        const auto toCmsxyY = [](const xyY &primary) {
+            return cmsCIExyY{
+                .x = primary.x,
+                .y = primary.y,
+                .Y = primary.Y,
+            };
+        };
+        const cmsCIExyY sRGBWhite = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).white().toxyY());
+        const cmsCIExyYTRIPLE sRGBPrimaries{
+            .Red = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).red().toxyY()),
+            .Green = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).green().toxyY()),
+            .Blue = toCmsxyY(Colorimetry::fromName(NamedColorimetry::BT709).blue().toxyY()),
+        };
+        const std::array<double, 10> params = {2.2};
+        const std::array toneCurves = {
+            cmsBuildParametricToneCurve(nullptr, 1, params.data()),
+            cmsBuildParametricToneCurve(nullptr, 1, params.data()),
+            cmsBuildParametricToneCurve(nullptr, 1, params.data()),
+        };
+        // note that we can't just use cmsCreate_sRGBProfile here
+        // as that uses the sRGB piece-wise transfer function, which is not correct for our use case
+        cmsHPROFILE sRGBHandle = cmsCreateRGBProfile(&sRGBWhite, &sRGBPrimaries, toneCurves.data());
+
+        cmsHPROFILE handle = cmsOpenProfileFromFile(path.toUtf8(), "r");
+        QVERIFY(handle);
+
+        const auto transform = cmsCreateTransform(sRGBHandle, TYPE_RGB_8, handle, TYPE_RGB_8, INTENT_RELATIVE_COLORIMETRIC, cmsFLAGS_NOOPTIMIZE);
+        QVERIFY(transform);
+
+        for (int x = 0; x < input.width(); x++) {
+            for (int y = 0; y < input.height(); y++) {
+                const auto pixel = input.pixel(x, y);
+                std::array<uint8_t, 3> in = {
+                    uint8_t(qRed(pixel)),
+                    uint8_t(qGreen(pixel)),
+                    uint8_t(qBlue(pixel)),
+                };
+                std::array<uint8_t, 3> out = {0, 0, 0};
+                cmsDoTransform(transform, in.data(), out.data(), 1);
+                pipelineResult.setPixel(x, y, qRgba(out[0], out[1], out[2], 255));
+            }
+        }
+        cmsDeleteTransform(transform);
+        cmsCloseProfile(sRGBHandle);
+        cmsCloseProfile(handle);
+    }
+
+    const std::shared_ptr<IccProfile> profile = IccProfile::load(path);
+    QVERIFY(profile);
+
+    QImage openGlResult;
+    {
+        IccShader shader;
+        ShaderBinder binder{shader.shader()};
+        shader.setUniforms(profile, ColorDescription::sRGB, QVector3D(1, 1, 1));
+
+        QMatrix4x4 proj;
+        proj.ortho(QRectF(0, 0, input.width(), input.height()));
+        binder.shader()->setUniform(GLShader::Mat4Uniform::ModelViewProjectionMatrix, proj);
+        const auto target = GLTexture::allocate(GL_RGBA8, input.size());
+        GLFramebuffer buffer(target.get());
+        context->pushFramebuffer(&buffer);
+
+        const auto srcColor = GLTexture::upload(input);
+        srcColor->render(input.size());
+
+        context->popFramebuffer();
+        openGlResult = target->toImage();
+        openGlResult.mirror();
+    }
+
+    for (int x = 0; x < input.width(); x++) {
+        for (int y = 0; y < input.height(); y++) {
+            const auto glPixel = openGlResult.pixel(x, y);
+            const QVector3D glColors = QVector3D(qRed(glPixel), qGreen(glPixel), qBlue(glPixel));
+            const auto pipePixel = pipelineResult.pixel(x, y);
+            const QVector3D pipeColors = QVector3D(qRed(pipePixel), qGreen(pipePixel), qBlue(pipePixel));
+            const QVector3D difference = (glColors - pipeColors);
+
+            // TODO get this difference down!
+            // Can most likely be achieved with tetrahedal interpolation for the 3D LUT
+            QCOMPARE_LE(difference.length(), 6);
         }
     }
 }
