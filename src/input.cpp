@@ -370,12 +370,11 @@ public:
 
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
-            const WheelEvent *wheelEvent = static_cast<WheelEvent *>(event);
-            seat->setTimestamp(wheelEvent->timestamp());
-            seat->notifyPointerAxis(wheelEvent->orientation(), wheelEvent->delta(),
-                                    wheelEvent->deltaV120(),
-                                    kwinAxisSourceToKWaylandAxisSource(wheelEvent->axisSource()),
-                                    wheelEvent->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+            seat->setTimestamp(event->timestamp());
+            seat->notifyPointerAxis(event->orientation(), event->delta(),
+                                    event->deltaV120(),
+                                    kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
+                                    event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         }
         return true;
     }
@@ -945,7 +944,7 @@ public:
     bool keyEvent(KeyEvent *event) override
     {
         if (event->key() == Qt::Key_PowerOff) {
-            const auto modifiers = static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts();
+            const auto modifiers = event->modifiersRelevantForGlobalShortcuts();
             if (event->type() == QEvent::KeyPress && !event->isAutoRepeat()) {
                 auto passToShortcuts = [modifiers] {
                     input()->shortcuts()->processKey(modifiers, Qt::Key_PowerDown);
@@ -960,11 +959,11 @@ public:
             }
         } else if (event->type() == QEvent::KeyPress) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKey(static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
+                return input()->shortcuts()->processKey(event->modifiersRelevantForGlobalShortcuts(), event->key());
             }
         } else if (event->type() == QEvent::KeyRelease) {
             if (!waylandServer()->isKeyboardShortcutsInhibited()) {
-                return input()->shortcuts()->processKeyRelease(static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts(), event->key());
+                return input()->shortcuts()->processKeyRelease(event->modifiersRelevantForGlobalShortcuts(), event->key());
             }
         }
         return false;
@@ -1648,7 +1647,7 @@ public:
 
         if (event->type() == QEvent::KeyPress) {
             workspace()->tabbox()->keyPress(event->modifiers() | event->key());
-        } else if (static_cast<KeyEvent *>(event)->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
+        } else if (event->modifiersRelevantForGlobalShortcuts() == Qt::NoModifier) {
             workspace()->tabbox()->modifiersReleased();
             return false;
         }
@@ -1851,13 +1850,12 @@ public:
         switch (event->type()) {
         case QEvent::MouseMove: {
             seat->notifyPointerMotion(event->globalPosition());
-            MouseEvent *e = static_cast<MouseEvent *>(event);
             // absolute motion events confuse games and Wayland doesn't have a warp event yet
             // -> send a relative motion event with a zero delta to signal the warp instead
-            if (e->isWarp()) {
-                seat->relativePointerMotion(QPointF(0, 0), QPointF(0, 0), e->timestamp());
-            } else if (!e->delta().isNull()) {
-                seat->relativePointerMotion(e->delta(), e->deltaUnaccelerated(), e->timestamp());
+            if (event->isWarp()) {
+                seat->relativePointerMotion(QPointF(0, 0), QPointF(0, 0), event->timestamp());
+            } else if (!event->delta().isNull()) {
+                seat->relativePointerMotion(event->delta(), event->deltaUnaccelerated(), event->timestamp());
             }
             break;
         }
@@ -1882,10 +1880,9 @@ public:
     {
         auto seat = waylandServer()->seat();
         seat->setTimestamp(event->timestamp());
-        auto _event = static_cast<WheelEvent *>(event);
-        seat->notifyPointerAxis(_event->orientation(), _event->delta(), _event->deltaV120(),
-                                kwinAxisSourceToKWaylandAxisSource(_event->axisSource()),
-                                _event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
+        seat->notifyPointerAxis(event->orientation(), event->delta(), event->deltaV120(),
+                                kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
+                                event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         return true;
     }
     bool keyEvent(KeyEvent *event) override
