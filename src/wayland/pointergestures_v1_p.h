@@ -11,6 +11,8 @@
 
 #include <QPointer>
 
+#include <chrono>
+
 namespace KWin
 {
 class ClientConnection;
@@ -37,10 +39,10 @@ public:
 
     static PointerSwipeGestureV1Interface *get(PointerInterface *pointer);
 
-    void sendBegin(quint32 serial, quint32 fingerCount);
-    void sendUpdate(const QPointF &delta);
-    void sendEnd(quint32 serial);
-    void sendCancel(quint32 serial);
+    void sendBegin(quint32 serial, quint32 fingerCount, std::chrono::milliseconds timestamp);
+    void sendUpdate(const QPointF &delta, std::chrono::milliseconds timestamp);
+    void sendEnd(quint32 serial, std::chrono::milliseconds timestamp);
+    void sendCancel(quint32 serial, std::chrono::milliseconds timestamp);
 
 protected:
     void zwp_pointer_gesture_swipe_v1_destroy(Resource *resource) override;
@@ -57,10 +59,10 @@ public:
 
     static PointerPinchGestureV1Interface *get(PointerInterface *pointer);
 
-    void sendBegin(quint32 serial, quint32 fingerCount);
-    void sendUpdate(const QPointF &delta, qreal scale, qreal rotation);
-    void sendEnd(quint32 serial);
-    void sendCancel(quint32 serial);
+    void sendBegin(quint32 serial, quint32 fingerCount, std::chrono::milliseconds timestamp);
+    void sendUpdate(const QPointF &delta, qreal scale, qreal rotation, std::chrono::milliseconds timestamp);
+    void sendEnd(quint32 serial, std::chrono::milliseconds timestamp);
+    void sendCancel(quint32 serial, std::chrono::milliseconds timestamp);
 
 protected:
     void zwp_pointer_gesture_pinch_v1_destroy(Resource *resource) override;
@@ -77,9 +79,9 @@ public:
 
     static PointerHoldGestureV1Interface *get(PointerInterface *pointer);
 
-    void sendBegin(quint32 serial, quint32 fingerCount);
-    void sendEnd(quint32 serial);
-    void sendCancel(quint32 serial);
+    void sendBegin(quint32 serial, quint32 fingerCount, std::chrono::milliseconds timestamp);
+    void sendEnd(quint32 serial, std::chrono::milliseconds timestamp);
+    void sendCancel(quint32 serial, std::chrono::milliseconds timestamp);
 
 protected:
     void zwp_pointer_gesture_hold_v1_destroy(Resource *resource) override;

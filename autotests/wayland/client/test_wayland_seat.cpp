@@ -408,8 +408,7 @@ void TestWaylandSeat::testPointer()
 
     auto timestamp = 1ms;
     // test motion
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPoint(10, 16));
+    m_seatInterface->notifyPointerMotion(QPoint(10, 16), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
     QCOMPARE(frameSpy.count(), 4);
@@ -427,13 +426,11 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(relativeMotionSpy.first().at(2).value<quint64>(), 1234);
 
     // test axis
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 10, 120, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 10, 120, PointerAxisSource::Wheel, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(axisSpy.wait());
     QCOMPARE(frameSpy.count(), 6);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 20, 240, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 20, 240, PointerAxisSource::Wheel, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(axisSpy.wait());
     QCOMPARE(frameSpy.count(), 7);
@@ -446,26 +443,22 @@ void TestWaylandSeat::testPointer()
     QCOMPARE(axisSpy.last().at(2).value<qreal>(), qreal(20));
 
     // test button
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 8);
     QCOMPARE(buttonSpy.at(0).at(0).value<quint32>(), m_display->serial());
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 9);
     QCOMPARE(buttonSpy.at(1).at(0).value<quint32>(), m_display->serial());
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(2, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Released, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 10);
     QCOMPARE(buttonSpy.at(2).at(0).value<quint32>(), m_display->serial());
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(frameSpy.count(), 11);
@@ -589,8 +582,7 @@ void TestWaylandSeat::testPointerTransformation()
     QCOMPARE(cp.enteredSurface(), s);
 
     // test motion
-    m_seatInterface->setTimestamp(std::chrono::milliseconds(1));
-    m_seatInterface->notifyPointerMotion(QPoint(10, 16));
+    m_seatInterface->notifyPointerMotion(QPoint(10, 16), std::chrono::milliseconds(1));
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
     QTEST(motionSpy.first().first().toPointF(), "expectedMovePoint");
@@ -684,8 +676,7 @@ void TestWaylandSeat::testPointerButton()
     std::chrono::milliseconds timestamp(1);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
-    m_seatInterface->setTimestamp(timestamp);
-    m_seatInterface->notifyPointerButton(qtButton, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(qtButton, PointerButtonState::Pressed, timestamp);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), true);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), true);
@@ -696,9 +687,7 @@ void TestWaylandSeat::testPointerButton()
     QCOMPARE(buttonChangedSpy.last().at(1).value<quint32>(), timestamp.count());
     QCOMPARE(buttonChangedSpy.last().at(2).value<quint32>(), waylandButton);
     QCOMPARE(buttonChangedSpy.last().at(3).value<KWayland::Client::Pointer::ButtonState>(), KWayland::Client::Pointer::ButtonState::Pressed);
-    timestamp++;
-    m_seatInterface->setTimestamp(timestamp);
-    m_seatInterface->notifyPointerButton(qtButton, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(qtButton, PointerButtonState::Released, ++timestamp);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(m_seatInterface->isPointerButtonPressed(waylandButton), false);
     QCOMPARE(m_seatInterface->isPointerButtonPressed(qtButton), false);
@@ -758,7 +747,6 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QSignalSpy motionSpy(pointer.get(), &KWayland::Client::Pointer::motion);
     // first to the grandChild2 in the overlapped area
     std::chrono::milliseconds timestamp(1);
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(25, 50));
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
@@ -767,8 +755,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(enteredSpy.last().last().toPointF(), QPointF(25, 25));
     QCOMPARE(pointer->enteredSurface(), grandChild2Surface.get());
     // a motion on grandchild2
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(25, 60));
+    m_seatInterface->notifyPointerMotion(QPointF(25, 60), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(motionSpy.wait());
     QCOMPARE(enteredSpy.count(), 1);
@@ -776,8 +763,7 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(motionSpy.count(), 1);
     QCOMPARE(motionSpy.last().first().toPointF(), QPointF(25, 35));
     // motion which changes to childSurface
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(25, 80));
+    m_seatInterface->notifyPointerMotion(QPointF(25, 80), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
@@ -786,14 +772,12 @@ void TestWaylandSeat::testPointerSubSurfaceTree()
     QCOMPARE(enteredSpy.last().last().toPointF(), QPointF(25, 80));
     QCOMPARE(pointer->enteredSurface(), childSurface.get());
     // a leave for the whole surface
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerLeave();
     QVERIFY(leftSpy.wait());
     QCOMPARE(enteredSpy.count(), 2);
     QCOMPARE(leftSpy.count(), 2);
     QCOMPARE(motionSpy.count(), 2);
     // a new enter on the main surface
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(75, 50));
     QVERIFY(enteredSpy.wait());
     QCOMPARE(enteredSpy.count(), 3);
@@ -854,8 +838,7 @@ void TestWaylandSeat::testPointerSwipeGesture()
 
     // send in the start
     std::chrono::milliseconds timestamp(1);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->startPointerSwipeGesture(2);
+    m_seatInterface->startPointerSwipeGesture(2, timestamp++);
     QVERIFY(startSpy.wait());
     QCOMPARE(startSpy.count(), 1);
     QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
@@ -864,32 +847,29 @@ void TestWaylandSeat::testPointerSwipeGesture()
     QCOMPARE(gesture->surface().data(), surface.get());
 
     // another start should not be possible
-    m_seatInterface->startPointerSwipeGesture(2);
+    m_seatInterface->startPointerSwipeGesture(2, timestamp++);
     QVERIFY(sync());
     QCOMPARE(startSpy.count(), 1);
 
     // send in some updates
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerSwipeGesture(QPointF(2, 3));
+    m_seatInterface->updatePointerSwipeGesture(QPointF(2, 3), timestamp++);
     QVERIFY(updateSpy.wait());
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerSwipeGesture(QPointF(4, 5));
+    m_seatInterface->updatePointerSwipeGesture(QPointF(4, 5), timestamp++);
     QVERIFY(updateSpy.wait());
     QCOMPARE(updateSpy.count(), 2);
     QCOMPARE(updateSpy.at(0).at(0).toSizeF(), QSizeF(2, 3));
-    QCOMPARE(updateSpy.at(0).at(1).value<quint32>(), 2u);
+    QCOMPARE(updateSpy.at(0).at(1).value<quint32>(), 3u);
     QCOMPARE(updateSpy.at(1).at(0).toSizeF(), QSizeF(4, 5));
-    QCOMPARE(updateSpy.at(1).at(1).value<quint32>(), 3u);
+    QCOMPARE(updateSpy.at(1).at(1).value<quint32>(), 4u);
 
     // now end or cancel
     QFETCH(bool, cancel);
     QSignalSpy *spy;
-    m_seatInterface->setTimestamp(timestamp++);
     if (cancel) {
-        m_seatInterface->cancelPointerSwipeGesture();
+        m_seatInterface->cancelPointerSwipeGesture(timestamp++);
         spy = &cancelledSpy;
     } else {
-        m_seatInterface->endPointerSwipeGesture();
+        m_seatInterface->endPointerSwipeGesture(timestamp++);
         spy = &endSpy;
     }
     QVERIFY(spy->wait());
@@ -899,27 +879,24 @@ void TestWaylandSeat::testPointerSwipeGesture()
     QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
     QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
-    QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
+    QCOMPARE(spy->first().at(1).value<quint32>(), 5u);
 
     QCOMPARE(gesture->fingerCount(), 0u);
     QVERIFY(gesture->surface().isNull());
 
     // now a start should be possible again
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->startPointerSwipeGesture(2);
+    m_seatInterface->startPointerSwipeGesture(2, timestamp++);
     QVERIFY(startSpy.wait());
 
     // unsetting the focused pointer surface should not change anything
     m_seatInterface->notifyPointerLeave();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerSwipeGesture(QPointF(6, 7));
+    m_seatInterface->updatePointerSwipeGesture(QPointF(6, 7), timestamp++);
     QVERIFY(updateSpy.wait());
     // and end
-    m_seatInterface->setTimestamp(timestamp++);
     if (cancel) {
-        m_seatInterface->cancelPointerSwipeGesture();
+        m_seatInterface->cancelPointerSwipeGesture(timestamp++);
     } else {
-        m_seatInterface->endPointerSwipeGesture();
+        m_seatInterface->endPointerSwipeGesture(timestamp++);
     }
     QVERIFY(spy->wait());
 }
@@ -975,8 +952,7 @@ void TestWaylandSeat::testPointerPinchGesture()
 
     // send in the start
     std::chrono::milliseconds timestamp(1);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->startPointerPinchGesture(3);
+    m_seatInterface->startPointerPinchGesture(3, timestamp++);
     QVERIFY(startSpy.wait());
     QCOMPARE(startSpy.count(), 1);
     QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
@@ -985,36 +961,33 @@ void TestWaylandSeat::testPointerPinchGesture()
     QCOMPARE(gesture->surface().data(), surface.get());
 
     // another start should not be possible
-    m_seatInterface->startPointerPinchGesture(3);
+    m_seatInterface->startPointerPinchGesture(3, timestamp++);
     QVERIFY(sync());
     QCOMPARE(startSpy.count(), 1);
 
     // send in some updates
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerPinchGesture(QPointF(2, 3), 2, 45);
+    m_seatInterface->updatePointerPinchGesture(QPointF(2, 3), 2, 45, timestamp++);
     QVERIFY(updateSpy.wait());
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerPinchGesture(QPointF(4, 5), 1, 90);
+    m_seatInterface->updatePointerPinchGesture(QPointF(4, 5), 1, 90, timestamp++);
     QVERIFY(updateSpy.wait());
     QCOMPARE(updateSpy.count(), 2);
     QCOMPARE(updateSpy.at(0).at(0).toSizeF(), QSizeF(2, 3));
     QCOMPARE(updateSpy.at(0).at(1).value<quint32>(), 2u);
     QCOMPARE(updateSpy.at(0).at(2).value<quint32>(), 45u);
-    QCOMPARE(updateSpy.at(0).at(3).value<quint32>(), 2u);
+    QCOMPARE(updateSpy.at(0).at(3).value<quint32>(), 3u);
     QCOMPARE(updateSpy.at(1).at(0).toSizeF(), QSizeF(4, 5));
     QCOMPARE(updateSpy.at(1).at(1).value<quint32>(), 1u);
     QCOMPARE(updateSpy.at(1).at(2).value<quint32>(), 90u);
-    QCOMPARE(updateSpy.at(1).at(3).value<quint32>(), 3u);
+    QCOMPARE(updateSpy.at(1).at(3).value<quint32>(), 4u);
 
     // now end or cancel
     QFETCH(bool, cancel);
     QSignalSpy *spy;
-    m_seatInterface->setTimestamp(timestamp++);
     if (cancel) {
-        m_seatInterface->cancelPointerPinchGesture();
+        m_seatInterface->cancelPointerPinchGesture(timestamp++);
         spy = &cancelledSpy;
     } else {
-        m_seatInterface->endPointerPinchGesture();
+        m_seatInterface->endPointerPinchGesture(timestamp++);
         spy = &endSpy;
     }
     QVERIFY(spy->wait());
@@ -1024,27 +997,24 @@ void TestWaylandSeat::testPointerPinchGesture()
     QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
     QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
-    QCOMPARE(spy->first().at(1).value<quint32>(), 4u);
+    QCOMPARE(spy->first().at(1).value<quint32>(), 5u);
 
     QCOMPARE(gesture->fingerCount(), 0u);
     QVERIFY(gesture->surface().isNull());
 
     // now a start should be possible again
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->startPointerPinchGesture(3);
+    m_seatInterface->startPointerPinchGesture(3, timestamp++);
     QVERIFY(startSpy.wait());
 
     // unsetting the focused pointer surface should not change anything
     m_seatInterface->notifyPointerLeave();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->updatePointerPinchGesture(QPointF(6, 7), 2, -45);
+    m_seatInterface->updatePointerPinchGesture(QPointF(6, 7), 2, -45, timestamp++);
     QVERIFY(updateSpy.wait());
     // and end
-    m_seatInterface->setTimestamp(timestamp++);
     if (cancel) {
-        m_seatInterface->cancelPointerPinchGesture();
+        m_seatInterface->cancelPointerPinchGesture(timestamp++);
     } else {
-        m_seatInterface->endPointerPinchGesture();
+        m_seatInterface->endPointerPinchGesture(timestamp++);
     }
     QVERIFY(spy->wait());
 }
@@ -1121,8 +1091,7 @@ void TestWaylandSeat::testPointerHoldGesture()
 
     // send in the start
     std::chrono::milliseconds timestamp(1);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->startPointerHoldGesture(3);
+    m_seatInterface->startPointerHoldGesture(3, timestamp++);
     QVERIFY(startSpy.wait());
     QCOMPARE(startSpy.count(), 1);
     QCOMPARE(startSpy.first().at(0).value<quint32>(), m_display->serial());
@@ -1131,19 +1100,18 @@ void TestWaylandSeat::testPointerHoldGesture()
     QCOMPARE(startSpy.first().at(3).value<quint32>(), 3);
 
     // another start should not be possible
-    m_seatInterface->startPointerPinchGesture(3);
+    m_seatInterface->startPointerPinchGesture(3, timestamp++);
     QVERIFY(sync());
     QCOMPARE(startSpy.count(), 1);
 
     // now end or cancel
     QFETCH(bool, cancel);
     QSignalSpy *spy;
-    m_seatInterface->setTimestamp(timestamp++);
     if (cancel) {
-        m_seatInterface->cancelPointerHoldGesture();
+        m_seatInterface->cancelPointerHoldGesture(timestamp++);
         spy = &cancelledSpy;
     } else {
-        m_seatInterface->endPointerHoldGesture();
+        m_seatInterface->endPointerHoldGesture(timestamp++);
         spy = &endSpy;
     }
     QVERIFY(spy->wait());
@@ -1153,19 +1121,17 @@ void TestWaylandSeat::testPointerHoldGesture()
     QCOMPARE(cancelledSpy.count(), expectedCancelCount);
     QCOMPARE(spy->count(), 1);
     QCOMPARE(spy->first().at(0).value<quint32>(), m_display->serial());
-    QCOMPARE(spy->first().at(1).value<quint32>(), 2);
+    QCOMPARE(spy->first().at(1).value<quint32>(), 3);
 
     // now a start should be possible again
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->startPointerHoldGesture(3);
+    m_seatInterface->startPointerHoldGesture(3, timestamp++);
     QVERIFY(startSpy.wait());
 
     // and end
-    m_seatInterface->setTimestamp(timestamp++);
     if (cancel) {
-        m_seatInterface->cancelPointerHoldGesture();
+        m_seatInterface->cancelPointerHoldGesture(timestamp++);
     } else {
-        m_seatInterface->endPointerHoldGesture();
+        m_seatInterface->endPointerHoldGesture(timestamp++);
     }
     QVERIFY(spy->wait());
 }
@@ -1209,8 +1175,7 @@ void TestWaylandSeat::testPointerAxis()
     QSignalSpy axisStoppedSpy(pointer.get(), &KWayland::Client::Pointer::axisStopped);
 
     std::chrono::milliseconds timestamp(1);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 10, 120, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 10, 120, PointerAxisSource::Wheel, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 2);
@@ -1226,8 +1191,7 @@ void TestWaylandSeat::testPointerAxis()
     QCOMPARE(axisStoppedSpy.count(), 0);
 
     // let's scroll using fingers
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 0, PointerAxisSource::Finger);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 0, PointerAxisSource::Finger, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 3);
@@ -1241,8 +1205,7 @@ void TestWaylandSeat::testPointerAxis()
     QCOMPARE(axisStoppedSpy.count(), 0);
 
     // lift the fingers off the device
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 0, 0, PointerAxisSource::Finger);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 0, 0, PointerAxisSource::Finger, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 4);
@@ -1255,8 +1218,7 @@ void TestWaylandSeat::testPointerAxis()
     QCOMPARE(axisStoppedSpy.last().at(1).value<KWayland::Client::Pointer::Axis>(), KWayland::Client::Pointer::Axis::Horizontal);
 
     // if the device is unknown, no axis_source event should be sent
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 120, PointerAxisSource::Unknown);
+    m_seatInterface->notifyPointerAxis(Qt::Horizontal, 42, 120, PointerAxisSource::Unknown, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(frameSpy.wait());
     QCOMPARE(frameSpy.count(), 5);
@@ -1406,20 +1368,15 @@ void TestWaylandSeat::testKeyboard()
     QSignalSpy keyChangedSpy(keyboard, &KWayland::Client::Keyboard::keyChanged);
 
     std::chrono::milliseconds time(1);
-    m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_E, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_E, KeyboardKeyState::Released, time++);
     QVERIFY(keyChangedSpy.wait());
-    m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_D, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_D, KeyboardKeyState::Released, time++);
     QVERIFY(keyChangedSpy.wait());
-    m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_K, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_K, KeyboardKeyState::Released, time++);
     QVERIFY(keyChangedSpy.wait());
-    m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, time++);
     QVERIFY(keyChangedSpy.wait());
-    m_seatInterface->setTimestamp(time++);
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, time++);
     QVERIFY(keyChangedSpy.wait());
 
     QCOMPARE(keyChangedSpy.count(), 5);
@@ -1440,19 +1397,19 @@ void TestWaylandSeat::testKeyboard()
     QCOMPARE(keyChangedSpy.at(4).at(2).value<quint32>(), quint32(5));
 
     // releasing a key which is already released should not set a key changed
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, time++);
     QVERIFY(sync());
     QCOMPARE(keyChangedSpy.count(), 5);
     // let's press it again
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, time++);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 6);
     // press again should be ignored
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Pressed, time++);
     QVERIFY(sync());
     QCOMPARE(keyChangedSpy.count(), 6);
     // and release
-    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released);
+    m_seatInterface->notifyKeyboardKey(KEY_F1, KeyboardKeyState::Released, time++);
     QVERIFY(keyChangedSpy.wait());
     QCOMPARE(keyChangedSpy.count(), 7);
 
@@ -1736,8 +1693,7 @@ void TestWaylandSeat::testTouch()
 
     // try a few things
     const QPointF surfacePosition(10, 20);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, QPointF(10, 20), 0, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, QPointF(10, 20), 0, QPointF(15, 26), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
     QCOMPARE(sequenceEndedSpy.count(), 0);
@@ -1766,8 +1722,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(frameEndedSpy.count(), 1);
 
     // move the one point
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchMotion(0, QPointF(10, 20));
+    m_seatInterface->notifyTouchMotion(0, QPointF(10, 20), timestamp++);
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1789,8 +1744,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(tp->surface().data(), s);
 
     // add onther point
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26), timestamp++);
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1815,8 +1769,7 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(tp2->surface().data(), s);
 
     // send it an up
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(1);
+    m_seatInterface->notifyTouchUp(1, timestamp++);
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1837,13 +1790,11 @@ void TestWaylandSeat::testTouch()
     QCOMPARE(tp2->surface().data(), s);
 
     // send another down and up
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, surfacePosition, 1, QPointF(15, 26), timestamp++);
     m_seatInterface->notifyTouchFrame();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(1);
+    m_seatInterface->notifyTouchUp(1, timestamp++);
     // and send an up for the first point
-    m_seatInterface->notifyTouchUp(0);
+    m_seatInterface->notifyTouchUp(0, timestamp++);
     m_seatInterface->notifyTouchFrame();
     QVERIFY(frameEndedSpy.wait());
     QCOMPARE(sequenceStartedSpy.count(), 1);
@@ -1860,8 +1811,7 @@ void TestWaylandSeat::testTouch()
     QVERIFY(!m_seatInterface->isTouchSequence());
 
     // try cancel
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchDown(serverSurface, QPointF(15, 26), 0, QPointF(15, 26));
+    m_seatInterface->notifyTouchDown(serverSurface, QPointF(15, 26), 0, QPointF(15, 26), timestamp++);
     m_seatInterface->notifyTouchFrame();
     m_seatInterface->notifyTouchCancel();
     QVERIFY(sequenceCanceledSpy.wait());

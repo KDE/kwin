@@ -222,9 +222,8 @@ void TestDragAndDrop::testPointerDragAndDrop()
 
     // now we need to pass pointer focus to the Surface and simulate a button press
     QSignalSpy buttonPressSpy(m_pointer, &KWayland::Client::Pointer::buttonStateChanged);
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonPressSpy.wait());
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
@@ -265,8 +264,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     QCOMPARE(m_dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
 
     // simulate motion
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(3, 3));
+    m_seatInterface->notifyPointerMotion(QPointF(3, 3), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(dragMotionSpy.wait());
     QCOMPARE(dragMotionSpy.count(), 1);
@@ -276,8 +274,7 @@ void TestDragAndDrop::testPointerDragAndDrop()
     // simulate drop
     QSignalSpy serverDragEndedSpy(m_seatInterface, &SeatInterface::dragEnded);
     QSignalSpy droppedSpy(m_dataDevice, &KWayland::Client::DataDevice::dropped);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(sourceDropSpy.isEmpty());
     QVERIFY(droppedSpy.wait());
@@ -320,9 +317,8 @@ void TestDragAndDrop::testTouchSubsurfacesDragAndDrop()
     // now we need to pass touch focus to the Surface and simulate a touch down
     QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
     QSignalSpy pointAddedSpy(m_touch, &KWayland::Client::Touch::pointAdded);
-    m_seatInterface->setTimestamp(timestamp++);
     const qint32 touchId = 0;
-    m_seatInterface->notifyTouchDown(serverSurface, QPoint(0, 0), touchId, QPointF(50, 50));
+    m_seatInterface->notifyTouchDown(serverSurface, QPoint(0, 0), touchId, QPointF(50, 50), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
 
     std::unique_ptr<KWayland::Client::TouchPoint> tp(sequenceStartedSpy.first().at(0).value<KWayland::Client::TouchPoint *>());
@@ -365,8 +361,7 @@ void TestDragAndDrop::testTouchSubsurfacesDragAndDrop()
     QCOMPARE(m_dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
 
     // simulate motion
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchMotion(touchId, QPointF(75, 75));
+    m_seatInterface->notifyTouchMotion(touchId, QPointF(75, 75), timestamp++);
     QVERIFY(dragMotionSpy.wait());
     QCOMPARE(dragMotionSpy.count(), 1);
     QCOMPARE(dragMotionSpy.first().first().toPointF(), QPointF(75, 75));
@@ -375,8 +370,7 @@ void TestDragAndDrop::testTouchSubsurfacesDragAndDrop()
     // simulate drop
     QSignalSpy serverDragEndedSpy(m_seatInterface, &SeatInterface::dragEnded);
     QSignalSpy droppedSpy(m_dataDevice, &KWayland::Client::DataDevice::dropped);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(touchId);
+    m_seatInterface->notifyTouchUp(touchId, timestamp++);
     QVERIFY(sourceDropSpy.isEmpty());
     QVERIFY(droppedSpy.wait());
     QCOMPARE(sourceDropSpy.count(), 1);
@@ -409,9 +403,8 @@ void TestDragAndDrop::testTouchDragAndDrop()
     // now we need to pass touch focus to the Surface and simulate a touch down
     QSignalSpy sequenceStartedSpy(m_touch, &KWayland::Client::Touch::sequenceStarted);
     QSignalSpy pointAddedSpy(m_touch, &KWayland::Client::Touch::pointAdded);
-    m_seatInterface->setTimestamp(timestamp++);
     const qint32 touchId = 0;
-    m_seatInterface->notifyTouchDown(serverSurface, QPoint(0, 0), touchId, QPointF(50, 50));
+    m_seatInterface->notifyTouchDown(serverSurface, QPoint(0, 0), touchId, QPointF(50, 50), timestamp++);
     QVERIFY(sequenceStartedSpy.wait());
 
     std::unique_ptr<KWayland::Client::TouchPoint> tp(sequenceStartedSpy.first().at(0).value<KWayland::Client::TouchPoint *>());
@@ -454,8 +447,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     QCOMPARE(m_dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
 
     // simulate motion
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchMotion(touchId, QPointF(75, 75));
+    m_seatInterface->notifyTouchMotion(touchId, QPointF(75, 75), timestamp++);
     QVERIFY(dragMotionSpy.wait());
     QCOMPARE(dragMotionSpy.count(), 1);
     QCOMPARE(dragMotionSpy.first().first().toPointF(), QPointF(75, 75));
@@ -464,8 +456,7 @@ void TestDragAndDrop::testTouchDragAndDrop()
     // simulate drop
     QSignalSpy serverDragEndedSpy(m_seatInterface, &SeatInterface::dragEnded);
     QSignalSpy droppedSpy(m_dataDevice, &KWayland::Client::DataDevice::dropped);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyTouchUp(touchId);
+    m_seatInterface->notifyTouchUp(touchId, timestamp++);
     QVERIFY(sourceDropSpy.isEmpty());
     QVERIFY(droppedSpy.wait());
     QCOMPARE(sourceDropSpy.count(), 1);
@@ -496,9 +487,8 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
 
     // now we need to pass pointer focus to the Surface and simulate a button press
     QSignalSpy buttonPressSpy(m_pointer, &KWayland::Client::Pointer::buttonStateChanged);
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonPressSpy.wait());
     QCOMPARE(buttonPressSpy.first().at(1).value<quint32>(), quint32(2));
@@ -543,8 +533,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
     QCOMPARE(m_dataSource->selectedDragAndDropAction(), KWayland::Client::DataDeviceManager::DnDAction::Move);
 
     // simulate motion
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(3, 3));
+    m_seatInterface->notifyPointerMotion(QPointF(3, 3), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(dragMotionSpy.wait());
     QCOMPARE(dragMotionSpy.count(), 1);
@@ -562,8 +551,7 @@ void TestDragAndDrop::testDragAndDropWithCancelByDestroyDataSource()
 
     // simulate drop
     QSignalSpy droppedSpy(m_dataDevice, &KWayland::Client::DataDevice::dropped);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(!droppedSpy.wait(500));
 
@@ -593,10 +581,8 @@ void TestDragAndDrop::testPointerEventsIgnored()
 
     // first simulate a few things
     auto timestamp = 1ms;
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(10, 10));
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 120, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerMotion(QPointF(10, 10), timestamp++);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 120, PointerAxisSource::Wheel, timestamp++);
     m_seatInterface->notifyPointerFrame();
     // verify that we have those
     QVERIFY(axisSpy.wait());
@@ -607,8 +593,7 @@ void TestDragAndDrop::testPointerEventsIgnored()
     QVERIFY(pointerLeftSpy.isEmpty());
 
     // let's start the drag
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Pressed, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(buttonSpy.wait());
     QCOMPARE(buttonSpy.count(), 1);
@@ -616,32 +601,24 @@ void TestDragAndDrop::testPointerEventsIgnored()
     QVERIFY(dragEnteredSpy.wait());
 
     // now simulate all the possible pointer interactions
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Pressed, timestamp++);
     m_seatInterface->notifyPointerFrame();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(2, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(2, PointerButtonState::Released, timestamp++);
     m_seatInterface->notifyPointerFrame();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel, timestamp++);
     m_seatInterface->notifyPointerFrame();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel);
+    m_seatInterface->notifyPointerAxis(Qt::Vertical, 5, 1, PointerAxisSource::Wheel, timestamp++);
     m_seatInterface->notifyPointerFrame();
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerLeave();
     m_seatInterface->notifyPointerFrame();
-    m_seatInterface->setTimestamp(timestamp++);
     m_seatInterface->notifyPointerEnter(serverSurface, m_seatInterface->pointerPos());
     m_seatInterface->notifyPointerFrame();
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerMotion(QPointF(50, 50));
+    m_seatInterface->notifyPointerMotion(QPointF(50, 50), timestamp++);
     m_seatInterface->notifyPointerFrame();
 
     // last but not least, simulate the drop
     QSignalSpy cancelledSpy(m_dataSource, &KWayland::Client::DataSource::cancelled);
-    m_seatInterface->setTimestamp(timestamp++);
-    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released);
+    m_seatInterface->notifyPointerButton(1, PointerButtonState::Released, timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(cancelledSpy.wait());
 

@@ -224,16 +224,17 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(serverLockedPointer->region(), QRegion(0, 0, 100, 100));
 
     // let's lock the surface
+    std::chrono::milliseconds timestamp(1);
     QSignalSpy lockedChangedSpy(serverLockedPointer, &LockedPointerV1Interface::lockedChanged);
     m_seatInterface->notifyPointerEnter(serverSurface, QPointF(0, 0));
     QSignalSpy pointerMotionSpy(m_pointer, &KWayland::Client::Pointer::motion);
-    m_seatInterface->notifyPointerMotion(QPoint(0, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(0, 1), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(pointerMotionSpy.wait());
 
     serverLockedPointer->setLocked(true);
     QCOMPARE(serverLockedPointer->isLocked(), true);
-    m_seatInterface->notifyPointerMotion(QPoint(1, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(1, 1), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QCOMPARE(lockedChangedSpy.count(), 1);
     QCOMPARE(pointerMotionSpy.count(), 1);
@@ -262,7 +263,7 @@ void TestPointerConstraints::testLockPointer()
     QCOMPARE(lockedSpy.count(), 1);
 
     // now motion should work again
-    m_seatInterface->notifyPointerMotion(QPoint(0, 1));
+    m_seatInterface->notifyPointerMotion(QPoint(0, 1), timestamp++);
     m_seatInterface->notifyPointerFrame();
     QVERIFY(pointerMotionSpy.wait());
     QCOMPARE(pointerMotionSpy.count(), 2);

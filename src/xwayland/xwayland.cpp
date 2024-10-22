@@ -101,7 +101,7 @@ public:
                 // Xwayland client and the state is correctly restored.
                 for (auto it = m_states.constBegin(); it != m_states.constEnd(); ++it) {
                     if (it.value() == KeyboardKeyState::Pressed) {
-                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection());
+                        keyboard->sendKey(it.key(), KeyboardKeyState::Released, waylandServer()->xWaylandConnection(), waylandServer()->seat()->timestamp());
                     }
                 }
                 m_modifiers = {};
@@ -395,7 +395,7 @@ public:
 
         auto xkb = input()->keyboard()->xkb();
 
-        keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient);
+        keyboard->sendKey(event->nativeScanCode(), state, xwaylandClient, waylandServer()->seat()->timestamp());
 
         bool changed = false;
         if (m_modifiers.depressed != xkb->modifierState().depressed) {
@@ -451,7 +451,8 @@ public:
         }
 
         PointerButtonState state{event->type() == QEvent::MouseButtonPress};
-        pointer->sendButton(event->nativeButton(), state, xwaylandClient);
+        const auto timestamp = std::chrono::duration_cast<std::chrono::milliseconds>(event->timestamp());
+        pointer->sendButton(event->nativeButton(), state, xwaylandClient, timestamp);
         return false;
     }
 

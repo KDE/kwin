@@ -312,8 +312,7 @@ public:
         if (event->type() == QEvent::MouseMove) {
             if (pointerSurfaceAllowed()) {
                 // TODO: should the pointer position always stay in sync, i.e. not do the check?
-                seat->setTimestamp(event->timestamp());
-                seat->notifyPointerMotion(event->globalPosition());
+                seat->notifyPointerMotion(event->globalPosition(), event->timestamp());
             }
         } else if (event->type() == QEvent::MouseButtonPress || event->type() == QEvent::MouseButtonRelease) {
             if (pointerSurfaceAllowed()) {
@@ -322,8 +321,7 @@ public:
                 const auto state = event->type() == QEvent::MouseButtonPress
                     ? PointerButtonState::Pressed
                     : PointerButtonState::Released;
-                seat->setTimestamp(event->timestamp());
-                seat->notifyPointerButton(nativeButton, state);
+                seat->notifyPointerButton(nativeButton, state, event->timestamp());
             }
         }
         return true;
@@ -349,10 +347,10 @@ public:
 
         auto seat = waylandServer()->seat();
         if (pointerSurfaceAllowed()) {
-            seat->setTimestamp(event->timestamp());
             seat->notifyPointerAxis(event->orientation(), event->delta(),
                                     event->deltaV120(),
                                     kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
+                                    event->timestamp(),
                                     event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         }
         return true;
@@ -385,13 +383,12 @@ public:
             return true;
         }
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::KeyPress:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed, event->timestamp());
             break;
         case QEvent::KeyRelease:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released, event->timestamp());
             break;
         default:
             break;
@@ -409,8 +406,7 @@ public:
         Window *window = input()->findToplevel(pos);
         if (window && surfaceAllowed(window->surface())) {
             auto seat = waylandServer()->seat();
-            seat->setTimestamp(time);
-            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
+            seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos, time);
         }
         return true;
     }
@@ -423,8 +419,7 @@ public:
         ScreenLocker::KSldApp::self()->userActivity();
 
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->notifyTouchMotion(id, pos);
+        seat->notifyTouchMotion(id, pos, time);
         return true;
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
@@ -436,8 +431,7 @@ public:
         ScreenLocker::KSldApp::self()->userActivity();
 
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->notifyTouchUp(id);
+        seat->notifyTouchUp(id, time);
         return true;
     }
     bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
@@ -1825,10 +1819,9 @@ public:
     bool pointerEvent(MouseEvent *event, quint32 nativeButton) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
-            seat->notifyPointerMotion(event->globalPosition());
+            seat->notifyPointerMotion(event->globalPosition(), event->timestamp());
             // absolute motion events confuse games and Wayland doesn't have a warp event yet
             // -> send a relative motion event with a zero delta to signal the warp instead
             if (event->isWarp()) {
@@ -1839,10 +1832,10 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Pressed);
+            seat->notifyPointerButton(nativeButton, PointerButtonState::Pressed, event->timestamp());
             break;
         case QEvent::MouseButtonRelease:
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Released);
+            seat->notifyPointerButton(nativeButton, PointerButtonState::Released, event->timestamp());
             break;
         default:
             break;
@@ -1858,9 +1851,9 @@ public:
     bool wheelEvent(WheelEvent *event) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         seat->notifyPointerAxis(event->orientation(), event->delta(), event->deltaV120(),
                                 kwinAxisSourceToKWaylandAxisSource(event->axisSource()),
+                                event->timestamp(),
                                 event->inverted() ? PointerAxisRelativeDirection::Inverted : PointerAxisRelativeDirection::Normal);
         return true;
     }
@@ -1872,13 +1865,12 @@ public:
         }
         input()->keyboard()->update();
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::KeyPress:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed);
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Pressed, event->timestamp());
             break;
         case QEvent::KeyRelease:
-            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released);
+            seat->notifyKeyboardKey(event->nativeScanCode(), KeyboardKeyState::Released, event->timestamp());
             break;
         default:
             break;
@@ -1893,8 +1885,7 @@ public:
             qCCritical(KWIN_CORE) << "Could not touch down, there's no window under" << pos;
             return false;
         }
-        seat->setTimestamp(time);
-        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), id, pos);
+        auto tp = seat->notifyTouchDown(w->surface(), w->bufferGeometry().topLeft(), id, pos, time);
         if (!tp) {
             qCCritical(KWIN_CORE) << "Could not touch down" << pos;
             return false;
@@ -1907,15 +1898,13 @@ public:
     bool touchMotion(qint32 id, const QPointF &pos, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->notifyTouchMotion(id, pos);
+        seat->notifyTouchMotion(id, pos, time);
         return true;
     }
     bool touchUp(qint32 id, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->notifyTouchUp(id);
+        seat->notifyTouchUp(id, time);
         return true;
     }
     bool touchCancel() override
@@ -1931,79 +1920,68 @@ public:
     bool pinchGestureBegin(int fingerCount, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->startPointerPinchGesture(fingerCount);
+        seat->startPointerPinchGesture(fingerCount, time);
         return true;
     }
     bool pinchGestureUpdate(qreal scale, qreal angleDelta, const QPointF &delta, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->updatePointerPinchGesture(delta, scale, angleDelta);
+        seat->updatePointerPinchGesture(delta, scale, angleDelta, time);
         return true;
     }
     bool pinchGestureEnd(std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->endPointerPinchGesture();
+        seat->endPointerPinchGesture(time);
         return true;
     }
     bool pinchGestureCancelled(std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->cancelPointerPinchGesture();
+        seat->cancelPointerPinchGesture(time);
         return true;
     }
 
     bool swipeGestureBegin(int fingerCount, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->startPointerSwipeGesture(fingerCount);
+        seat->startPointerSwipeGesture(fingerCount, time);
         return true;
     }
     bool swipeGestureUpdate(const QPointF &delta, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->updatePointerSwipeGesture(delta);
+        seat->updatePointerSwipeGesture(delta, time);
         return true;
     }
     bool swipeGestureEnd(std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->endPointerSwipeGesture();
+        seat->endPointerSwipeGesture(time);
         return true;
     }
     bool swipeGestureCancelled(std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->cancelPointerSwipeGesture();
+        seat->cancelPointerSwipeGesture(time);
         return true;
     }
     bool holdGestureBegin(int fingerCount, std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->startPointerHoldGesture(fingerCount);
+        seat->startPointerHoldGesture(fingerCount, time);
         return true;
     }
     bool holdGestureEnd(std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->endPointerHoldGesture();
+        seat->endPointerHoldGesture(time);
         return true;
     }
     bool holdGestureCancelled(std::chrono::microseconds time) override
     {
         auto seat = waylandServer()->seat();
-        seat->setTimestamp(time);
-        seat->cancelPointerHoldGesture();
+        seat->cancelPointerHoldGesture(time);
         return true;
     }
 
@@ -2241,7 +2219,6 @@ public:
         if (seat->isDragTouch()) {
             return true;
         }
-        seat->setTimestamp(event->timestamp());
         switch (event->type()) {
         case QEvent::MouseMove: {
             const auto pos = input()->globalPointer();
@@ -2250,7 +2227,7 @@ public:
                 dragToplevel(pos, seat->xdgTopleveldrag());
             }
 
-            seat->notifyPointerMotion(pos);
+            seat->notifyPointerMotion(pos, event->timestamp());
 
             Window *dragTarget = pickDragTarget(pos);
             if (dragTarget) {
@@ -2288,12 +2265,12 @@ public:
             break;
         }
         case QEvent::MouseButtonPress:
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Pressed);
+            seat->notifyPointerButton(nativeButton, PointerButtonState::Pressed, event->timestamp());
             break;
         case QEvent::MouseButtonRelease:
             raiseDragTarget();
             m_dragTarget = nullptr;
-            seat->notifyPointerButton(nativeButton, PointerButtonState::Released);
+            seat->notifyPointerButton(nativeButton, PointerButtonState::Released, event->timestamp());
             break;
         default:
             break;
@@ -2329,8 +2306,7 @@ public:
             return true;
         }
         Window *window = input()->findToplevel(pos);
-        seat->setTimestamp(time);
-        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos);
+        seat->notifyTouchDown(window->surface(), window->bufferGeometry().topLeft(), id, pos, time);
         m_lastPos = pos;
         return true;
     }
@@ -2357,8 +2333,7 @@ public:
             dragToplevel(pos, seat->xdgTopleveldrag());
         }
 
-        seat->setTimestamp(time);
-        seat->notifyTouchMotion(id, pos);
+        seat->notifyTouchMotion(id, pos, time);
 
         if (Window *t = pickDragTarget(pos)) {
             // TODO: consider decorations
@@ -2387,8 +2362,7 @@ public:
         if (!seat->isDragTouch()) {
             return false;
         }
-        seat->setTimestamp(time);
-        seat->notifyTouchUp(id);
+        seat->notifyTouchUp(id, time);
         if (m_touchId == id) {
             m_touchId = -1;
             raiseDragTarget();

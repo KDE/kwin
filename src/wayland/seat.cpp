@@ -432,11 +432,14 @@ QPointF SeatInterface::pointerPos() const
     return d->globalPointer.pos;
 }
 
-void SeatInterface::notifyPointerMotion(const QPointF &pos)
+void SeatInterface::notifyPointerMotion(const QPointF &pos, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
+
     if (d->globalPointer.pos == pos) {
         return;
     }
@@ -464,7 +467,7 @@ void SeatInterface::notifyPointerMotion(const QPointF &pos)
         }
     }
 
-    d->pointer->sendMotion(localPosition);
+    d->pointer->sendMotion(localPosition, d->timestamp);
 }
 
 std::chrono::milliseconds SeatInterface::timestamp() const
@@ -497,10 +500,10 @@ void SeatInterface::setDragTarget(AbstractDropHandler *dropTarget,
     d->drag.target = dropTarget;
 
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
-        notifyPointerMotion(globalPosition);
+        notifyPointerMotion(globalPosition, d->timestamp);
         notifyPointerFrame();
     } else if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Touch && firstTouchPointPosition(surface) != globalPosition) {
-        notifyTouchMotion(d->globalTouch.ids.begin()->second->serial, globalPosition);
+        notifyTouchMotion(d->globalTouch.ids.begin()->second->serial, globalPosition, d->timestamp);
     }
 
     if (d->drag.target) {
@@ -664,33 +667,38 @@ bool SeatInterface::isPointerButtonPressed(quint32 button) const
     return it.value() == SeatInterfacePrivate::Pointer::State::Pressed;
 }
 
-void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction)
+void SeatInterface::notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, std::chrono::microseconds timestamp, PointerAxisRelativeDirection direction)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
+
     if (d->drag.mode == SeatInterfacePrivate::Drag::Mode::Pointer) {
         // ignore
         return;
     }
-    d->pointer->sendAxis(orientation, delta, deltaV120, source, direction);
+    d->pointer->sendAxis(orientation, delta, deltaV120, source, direction, d->timestamp);
 }
 
-void SeatInterface::notifyPointerButton(Qt::MouseButton button, PointerButtonState state)
+void SeatInterface::notifyPointerButton(Qt::MouseButton button, PointerButtonState state, std::chrono::microseconds timestamp)
 {
     const quint32 nativeButton = qtToWaylandButton(button);
     if (nativeButton == 0) {
         return;
     }
-    notifyPointerButton(nativeButton, state);
+    notifyPointerButton(nativeButton, state, timestamp);
 }
 
-void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state)
+void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
     const quint32 serial = d->display->nextSerial();
+    setTimestamp(timestamp);
 
     if (state == PointerButtonState::Pressed) {
         d->updatePointerButtonSerial(button, serial);
@@ -711,14 +719,14 @@ void SeatInterface::notifyPointerButton(quint32 button, PointerButtonState state
 
             SurfaceInterface *focusedSurface = focusedPointerSurface();
             if (focusedSurface && !d->dragInhibitsPointer(focusedSurface)) {
-                d->pointer->sendButton(button, state, serial);
+                d->pointer->sendButton(button, state, serial, d->timestamp);
             }
             d->endDrag();
             return;
         }
     }
 
-    d->pointer->sendButton(button, state, serial);
+    d->pointer->sendButton(button, state, serial, d->timestamp);
 }
 
 void SeatInterface::notifyPointerFrame()
@@ -753,141 +761,165 @@ void SeatInterface::relativePointerMotion(const QPointF &delta, const QPointF &d
         return;
     }
 
+    setTimestamp(time);
+
     auto relativePointer = RelativePointerV1Interface::get(pointer());
     if (relativePointer) {
         relativePointer->sendRelativeMotion(delta, deltaNonAccelerated, time);
     }
 }
 
-void SeatInterface::startPointerSwipeGesture(quint32 fingerCount)
+void SeatInterface::startPointerSwipeGesture(quint32 fingerCount, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendBegin(d->display->nextSerial(), fingerCount);
+        swipeGesture->sendBegin(d->display->nextSerial(), fingerCount, d->timestamp);
     }
 }
 
-void SeatInterface::updatePointerSwipeGesture(const QPointF &delta)
+void SeatInterface::updatePointerSwipeGesture(const QPointF &delta, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendUpdate(delta);
+        swipeGesture->sendUpdate(delta, d->timestamp);
     }
 }
 
-void SeatInterface::endPointerSwipeGesture()
+void SeatInterface::endPointerSwipeGesture(std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendEnd(d->display->nextSerial());
+        swipeGesture->sendEnd(d->display->nextSerial(), d->timestamp);
     }
 }
 
-void SeatInterface::cancelPointerSwipeGesture()
+void SeatInterface::cancelPointerSwipeGesture(std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto swipeGesture = PointerSwipeGestureV1Interface::get(pointer());
     if (swipeGesture) {
-        swipeGesture->sendCancel(d->display->nextSerial());
+        swipeGesture->sendCancel(d->display->nextSerial(), d->timestamp);
     }
 }
 
-void SeatInterface::startPointerPinchGesture(quint32 fingerCount)
+void SeatInterface::startPointerPinchGesture(quint32 fingerCount, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendBegin(d->display->nextSerial(), fingerCount);
+        pinchGesture->sendBegin(d->display->nextSerial(), fingerCount, d->timestamp);
     }
 }
 
-void SeatInterface::updatePointerPinchGesture(const QPointF &delta, qreal scale, qreal rotation)
+void SeatInterface::updatePointerPinchGesture(const QPointF &delta, qreal scale, qreal rotation, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendUpdate(delta, scale, rotation);
+        pinchGesture->sendUpdate(delta, scale, rotation, d->timestamp);
     }
 }
 
-void SeatInterface::endPointerPinchGesture()
+void SeatInterface::endPointerPinchGesture(std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendEnd(d->display->nextSerial());
+        pinchGesture->sendEnd(d->display->nextSerial(), d->timestamp);
     }
 }
 
-void SeatInterface::cancelPointerPinchGesture()
+void SeatInterface::cancelPointerPinchGesture(std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto pinchGesture = PointerPinchGestureV1Interface::get(pointer());
     if (pinchGesture) {
-        pinchGesture->sendCancel(d->display->nextSerial());
+        pinchGesture->sendCancel(d->display->nextSerial(), d->timestamp);
     }
 }
 
-void SeatInterface::startPointerHoldGesture(quint32 fingerCount)
+void SeatInterface::startPointerHoldGesture(quint32 fingerCount, std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
     if (holdGesture) {
-        holdGesture->sendBegin(d->display->nextSerial(), fingerCount);
+        holdGesture->sendBegin(d->display->nextSerial(), fingerCount, d->timestamp);
     }
 }
 
-void SeatInterface::endPointerHoldGesture()
+void SeatInterface::endPointerHoldGesture(std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
 
+    setTimestamp(timestamp);
+
     auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
     if (holdGesture) {
-        holdGesture->sendEnd(d->display->nextSerial());
+        holdGesture->sendEnd(d->display->nextSerial(), d->timestamp);
     }
 }
 
-void SeatInterface::cancelPointerHoldGesture()
+void SeatInterface::cancelPointerHoldGesture(std::chrono::microseconds timestamp)
 {
     if (!d->pointer) {
         return;
     }
 
+    setTimestamp(timestamp);
+
     auto holdGesture = PointerHoldGestureV1Interface::get(pointer());
     if (holdGesture) {
-        holdGesture->sendCancel(d->display->nextSerial());
+        holdGesture->sendCancel(d->display->nextSerial(), d->timestamp);
     }
 }
 
@@ -949,12 +981,15 @@ KeyboardInterface *SeatInterface::keyboard() const
     return d->keyboard.get();
 }
 
-void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state)
+void SeatInterface::notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, std::chrono::microseconds timestamp)
 {
     if (!d->keyboard) {
         return;
     }
-    d->keyboard->sendKey(keyCode, state);
+
+    setTimestamp(timestamp);
+
+    d->keyboard->sendKey(keyCode, state, d->timestamp);
 }
 
 void SeatInterface::notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)
@@ -1037,12 +1072,14 @@ void SeatInterface::discardSurfaceTouches(SurfaceInterface *surface)
     d->globalTouch.focus.erase(it);
 }
 
-TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition)
+TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition, std::chrono::microseconds timestamp)
 {
     Q_ASSERT(!d->globalTouch.ids.contains(id));
     if (!d->touch || !surface) {
         return {};
     }
+
+    setTimestamp(timestamp);
 
     auto it = d->globalTouch.focus.find(surface);
     if (it == d->globalTouch.focus.end()) {
@@ -1062,7 +1099,7 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     auto pos = globalPosition - it->second->offset;
     SurfaceInterface *effectiveTouchedSurface = mapToSurfaceInPosition(surface, pos);
     const quint32 serial = display()->nextSerial();
-    d->touch->sendDown(effectiveTouchedSurface, id, serial, pos);
+    d->touch->sendDown(effectiveTouchedSurface, id, serial, d->timestamp, pos);
 
     auto tp = std::make_unique<TouchPoint>(serial, surface, this);
     auto r = tp.get();
@@ -1070,11 +1107,14 @@ TouchPoint *SeatInterface::notifyTouchDown(SurfaceInterface *surface, const QPoi
     return r;
 }
 
-void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
+void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition, std::chrono::microseconds timestamp)
 {
     if (!d->touch) {
         return;
     }
+
+    setTimestamp(timestamp);
+
     auto itTouch = d->globalTouch.ids.find(id);
     if (itTouch == d->globalTouch.ids.cend()) {
         // This can happen in cases where the interaction started while the device was asleep
@@ -1094,7 +1134,7 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
     if (isDragTouch()) {
         // handled by DataDevice
     } else {
-        d->touch->sendMotion(effectiveTouchedSurface, id, pos);
+        d->touch->sendMotion(effectiveTouchedSurface, id, pos, d->timestamp);
     }
 
     if (id == 0) {
@@ -1103,11 +1143,13 @@ void SeatInterface::notifyTouchMotion(qint32 id, const QPointF &globalPosition)
     Q_EMIT touchMoved(id, itTouch->second->serial, globalPosition);
 }
 
-void SeatInterface::notifyTouchUp(qint32 id)
+void SeatInterface::notifyTouchUp(qint32 id, std::chrono::microseconds timestamp)
 {
     if (!d->touch) {
         return;
     }
+
+    setTimestamp(timestamp);
 
     auto itTouch = d->globalTouch.ids.find(id);
     if (itTouch == d->globalTouch.ids.end()) {
@@ -1122,7 +1164,7 @@ void SeatInterface::notifyTouchUp(qint32 id)
     }
 
     auto client = itTouch->second->surface->client();
-    d->touch->sendUp(client, id, serial);
+    d->touch->sendUp(client, id, serial, d->timestamp);
 
     auto it = d->globalTouch.focus.find(itTouch->second->surface);
     Q_ASSERT(it != d->globalTouch.focus.end());

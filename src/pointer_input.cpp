@@ -118,8 +118,8 @@ void PointerInputRedirection::init()
     if (kwinApp()->supportsLockScreen()) {
         connect(ScreenLocker::KSldApp::self(), &ScreenLocker::KSldApp::lockStateChanged, this, [this]() {
             if (waylandServer()->seat()->hasPointer()) {
-                waylandServer()->seat()->cancelPointerPinchGesture();
-                waylandServer()->seat()->cancelPointerSwipeGesture();
+                waylandServer()->seat()->cancelPointerPinchGesture(waylandServer()->seat()->timestamp());
+                waylandServer()->seat()->cancelPointerSwipeGesture(waylandServer()->seat()->timestamp());
             }
             update();
         });

@@ -166,7 +166,6 @@ public:
     void setHasKeyboard(bool has);
     void setHasTouch(bool has);
 
-    void setTimestamp(std::chrono::microseconds time);
     std::chrono::milliseconds timestamp() const;
 
     /**
@@ -246,7 +245,7 @@ public:
      *
      * Sends a pointer motion event to the focused pointer surface.
      */
-    void notifyPointerMotion(const QPointF &pos);
+    void notifyPointerMotion(const QPointF &pos, std::chrono::microseconds timestamp);
     /**
      * @returns the global pointer position
      */
@@ -349,11 +348,11 @@ public:
     /**
      * Marks the specified @a button as pressed or released based on @a state.
      */
-    void notifyPointerButton(quint32 button, PointerButtonState state);
+    void notifyPointerButton(quint32 button, PointerButtonState state, std::chrono::microseconds timestamp);
     /**
      * @overload
      */
-    void notifyPointerButton(Qt::MouseButton button, PointerButtonState state);
+    void notifyPointerButton(Qt::MouseButton button, PointerButtonState state, std::chrono::microseconds timestamp);
     void notifyPointerFrame();
     /**
      * @returns whether the @p button is pressed
@@ -379,7 +378,7 @@ public:
      * @param deltaV120 The high-resolution scrolling axis value.
      * @param source Describes how the axis event was physically generated.
      */
-    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction = PointerAxisRelativeDirection::Normal);
+    void notifyPointerAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, std::chrono::microseconds timestamp, PointerAxisRelativeDirection direction = PointerAxisRelativeDirection::Normal);
     /**
      * @returns true if there is a pressed button with the given @p serial
      */
@@ -441,7 +440,7 @@ public:
      * @see cancelPointerSwipeGesture
      * @see startPointerPinchGesture
      */
-    void startPointerSwipeGesture(quint32 fingerCount);
+    void startPointerSwipeGesture(quint32 fingerCount, std::chrono::microseconds timestamp);
 
     /**
      * The position of the logical center of the currently active multi-finger swipe gesture changes.
@@ -451,7 +450,7 @@ public:
      * @see endPointerSwipeGesture
      * @see cancelPointerSwipeGesture
      */
-    void updatePointerSwipeGesture(const QPointF &delta);
+    void updatePointerSwipeGesture(const QPointF &delta, std::chrono::microseconds timestamp);
 
     /**
      * The multi-finger swipe gesture ended. This may happen when one or more fingers are lifted.
@@ -460,7 +459,7 @@ public:
      * @see cancelPointerSwipeGesture
      * @see 5.29
      */
-    void endPointerSwipeGesture();
+    void endPointerSwipeGesture(std::chrono::microseconds timestamp);
 
     /**
      * The multi-finger swipe gestures ended and got cancelled by the Wayland compositor.
@@ -468,7 +467,7 @@ public:
      * @see updatePointerSwipeGesture
      * @see endPointerSwipeGesture
      */
-    void cancelPointerSwipeGesture();
+    void cancelPointerSwipeGesture(std::chrono::microseconds timestamp);
 
     /**
      * Starts a multi-finch pinch gesture for the currently focused pointer surface.
@@ -491,7 +490,7 @@ public:
      * @see cancelPointerPinchGesture
      * @see startPointerSwipeGesture
      */
-    void startPointerPinchGesture(quint32 fingerCount);
+    void startPointerPinchGesture(quint32 fingerCount, std::chrono::microseconds timestamp);
 
     /**
      * The position of the logical center, the rotation or the relative scale of this
@@ -504,7 +503,7 @@ public:
      * @see endPointerPinchGesture
      * @see cancelPointerPinchGesture
      */
-    void updatePointerPinchGesture(const QPointF &delta, qreal scale, qreal rotation);
+    void updatePointerPinchGesture(const QPointF &delta, qreal scale, qreal rotation, std::chrono::microseconds timestamp);
 
     /**
      *
@@ -512,7 +511,7 @@ public:
      * @see updatePointerPinchGesture
      * @see cancelPointerPinchGesture
      */
-    void endPointerPinchGesture();
+    void endPointerPinchGesture(std::chrono::microseconds timestamp);
 
     /**
      *
@@ -520,7 +519,7 @@ public:
      * @see updatePointerPinchGesture
      * @see endPointerPinchGesture
      */
-    void cancelPointerPinchGesture();
+    void cancelPointerPinchGesture(std::chrono::microseconds timestamp);
 
     /**
      * Starts a multi-finger hold gesture for the currently focused pointer surface.
@@ -540,21 +539,21 @@ public:
      * @see endPointerHoldeGesture
      * @see cancelPointerHoldGesture
      */
-    void startPointerHoldGesture(quint32 fingerCount);
+    void startPointerHoldGesture(quint32 fingerCount, std::chrono::microseconds timestamp);
 
     /**
      * The multi-finger hold gesture ended. This may happen when one or more fingers are lifted.
      * @see startPointerHoldGesture
      * @see cancelPointerHoldGesture
      */
-    void endPointerHoldGesture();
+    void endPointerHoldGesture(std::chrono::microseconds timestamp);
 
     /**
      * The multi-finger swipe gestures ended and got cancelled by the Wayland compositor.
      * @see startPointerHoldGesture
      * @see endPointerHoldGesture
      */
-    void cancelPointerHoldGesture();
+    void cancelPointerHoldGesture(std::chrono::microseconds timestamp);
     ///@}
 
     /**
@@ -570,7 +569,7 @@ public:
     void setFocusedKeyboardSurface(SurfaceInterface *surface, const QList<quint32> &keys = {});
     SurfaceInterface *focusedKeyboardSurface() const;
     KeyboardInterface *keyboard() const;
-    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state);
+    void notifyKeyboardKey(quint32 keyCode, KeyboardKeyState state, std::chrono::microseconds timestamp);
     void notifyKeyboardModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     ///@}
 
@@ -580,9 +579,9 @@ public:
     ///@{
     TouchInterface *touch() const;
     bool isSurfaceTouched(SurfaceInterface *surface) const;
-    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition);
-    void notifyTouchUp(qint32 id);
-    void notifyTouchMotion(qint32 id, const QPointF &globalPosition);
+    TouchPoint *notifyTouchDown(SurfaceInterface *surface, const QPointF &surfacePosition, qint32 id, const QPointF &globalPosition, std::chrono::microseconds timestamp);
+    void notifyTouchUp(qint32 id, std::chrono::microseconds timestamp);
+    void notifyTouchMotion(qint32 id, const QPointF &globalPosition, std::chrono::microseconds timestamp);
     void notifyTouchFrame();
     void notifyTouchCancel();
     bool isTouchSequence() const;
@@ -727,6 +726,7 @@ Q_SIGNALS:
     void focusedKeyboardSurfaceAboutToChange(SurfaceInterface *nextSurface);
 
 private:
+    void setTimestamp(std::chrono::microseconds time);
     void discardSurfaceTouches(SurfaceInterface *surface);
 
     std::unique_ptr<SeatInterfacePrivate> d;

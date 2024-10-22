@@ -30,10 +30,10 @@ class KWIN_EXPORT TouchInterface : public QObject
 public:
     ~TouchInterface() override;
 
-    void sendDown(SurfaceInterface *surface, qint32 id, quint32 serial, const QPointF &localPos);
-    void sendUp(ClientConnection *client, qint32 id, quint32 serial);
+    void sendDown(SurfaceInterface *surface, qint32 id, quint32 serial, std::chrono::milliseconds time, const QPointF &localPos);
+    void sendUp(ClientConnection *client, qint32 id, quint32 serial, std::chrono::milliseconds time);
     void sendCancel(SurfaceInterface *surface);
-    void sendMotion(SurfaceInterface *surface, qint32 id, const QPointF &localPos);
+    void sendMotion(SurfaceInterface *surface, qint32 id, const QPointF &localPos, std::chrono::milliseconds time);
     void sendFrame();
 
 private:

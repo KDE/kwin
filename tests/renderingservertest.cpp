@@ -170,8 +170,7 @@ void CompositorWindow::keyPressEvent(QKeyEvent *event)
     if (!m_seat->focusedKeyboardSurface()) {
         updateFocus();
     }
-    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Pressed, std::chrono::milliseconds(event->timestamp()));
 }
 
 void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
@@ -180,8 +179,7 @@ void CompositorWindow::keyReleaseEvent(QKeyEvent *event)
     if (!m_seat) {
         return;
     }
-    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released);
+    m_seat->notifyKeyboardKey(event->nativeScanCode() - 8, KWin::KeyboardKeyState::Released, std::chrono::milliseconds(event->timestamp()));
 }
 
 void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
@@ -190,8 +188,7 @@ void CompositorWindow::mouseMoveEvent(QMouseEvent *event)
     if (!m_seat->focusedPointerSurface()) {
         updateFocus();
     }
-    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerMotion(event->position().toPoint());
+    m_seat->notifyPointerMotion(event->position().toPoint(), std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyPointerFrame();
 }
 
@@ -203,29 +200,26 @@ void CompositorWindow::mousePressEvent(QMouseEvent *event)
             m_seat->notifyPointerEnter(m_stackingOrder.last()->surface(), event->globalPosition());
         }
     }
-    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Pressed);
+    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Pressed, std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyPointerFrame();
 }
 
 void CompositorWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QWidget::mouseReleaseEvent(event);
-    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
-    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Released);
+    m_seat->notifyPointerButton(event->button(), KWin::PointerButtonState::Released, std::chrono::milliseconds(event->timestamp()));
     m_seat->notifyPointerFrame();
 }
 
 void CompositorWindow::wheelEvent(QWheelEvent *event)
 {
     QWidget::wheelEvent(event);
-    m_seat->setTimestamp(std::chrono::milliseconds(event->timestamp()));
     const QPoint &angle = event->angleDelta() / (8 * 15);
     if (angle.x() != 0) {
-        m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWin::PointerAxisSource::Wheel);
+        m_seat->notifyPointerAxis(Qt::Horizontal, angle.x(), 1, KWin::PointerAxisSource::Wheel, std::chrono::milliseconds(event->timestamp()));
     }
     if (angle.y() != 0) {
-        m_seat->notifyPointerAxis(Qt::Vertical, angle.y(), 1, KWin::PointerAxisSource::Wheel);
+        m_seat->notifyPointerAxis(Qt::Vertical, angle.y(), 1, KWin::PointerAxisSource::Wheel, std::chrono::milliseconds(event->timestamp()));
     }
     m_seat->notifyPointerFrame();
 }

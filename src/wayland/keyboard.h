@@ -54,8 +54,8 @@ public:
      */
     void setRepeatInfo(qint32 charactersPerSecond, qint32 delay);
 
-    void sendKey(quint32 key, KeyboardKeyState state);
-    void sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client);
+    void sendKey(quint32 key, KeyboardKeyState state, std::chrono::milliseconds timestamp);
+    void sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client, std::chrono::milliseconds timestamp);
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group);
     void sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group, ClientConnection *client);
 

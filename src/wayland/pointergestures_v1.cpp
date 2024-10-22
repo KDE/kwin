@@ -93,7 +93,7 @@ void PointerSwipeGestureV1Interface::zwp_pointer_gesture_swipe_v1_destroy(Resour
     wl_resource_destroy(resource->handle);
 }
 
-void PointerSwipeGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount)
+void PointerSwipeGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount, std::chrono::milliseconds timestamp)
 {
     if (focusedClient) {
         return;
@@ -104,56 +104,49 @@ void PointerSwipeGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCou
 
     const SurfaceInterface *focusedSurface = pointer->focusedSurface();
     focusedClient = focusedSurface->client();
-    SeatInterface *seat = pointer->seat();
 
     const QList<Resource *> swipeResources = resourceMap().values(focusedClient->client());
     for (Resource *swipeResource : swipeResources) {
-        send_begin(swipeResource->handle, serial, seat->timestamp().count(), focusedSurface->resource(), fingerCount);
+        send_begin(swipeResource->handle, serial, timestamp.count(), focusedSurface->resource(), fingerCount);
     }
 }
 
-void PointerSwipeGestureV1Interface::sendUpdate(const QPointF &delta)
+void PointerSwipeGestureV1Interface::sendUpdate(const QPointF &delta, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> swipeResources = resourceMap().values(focusedClient->client());
     for (Resource *swipeResource : swipeResources) {
-        send_update(swipeResource->handle, seat->timestamp().count(), wl_fixed_from_double(delta.x()), wl_fixed_from_double(delta.y()));
+        send_update(swipeResource->handle, timestamp.count(), wl_fixed_from_double(delta.x()), wl_fixed_from_double(delta.y()));
     }
 }
 
-void PointerSwipeGestureV1Interface::sendEnd(quint32 serial)
+void PointerSwipeGestureV1Interface::sendEnd(quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> swipeResources = resourceMap().values(focusedClient->client());
     for (Resource *swipeResource : swipeResources) {
-        send_end(swipeResource->handle, serial, seat->timestamp().count(), false);
+        send_end(swipeResource->handle, serial, timestamp.count(), false);
     }
 
     // The gesture session has been just finished, reset the cached focused client.
     focusedClient = nullptr;
 }
 
-void PointerSwipeGestureV1Interface::sendCancel(quint32 serial)
+void PointerSwipeGestureV1Interface::sendCancel(quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> swipeResources = resourceMap().values(focusedClient->client());
     for (Resource *swipeResource : swipeResources) {
-        send_end(swipeResource->handle, serial, seat->timestamp().count(), true);
+        send_end(swipeResource->handle, serial, timestamp.count(), true);
     }
 
     // The gesture session has been just finished, reset the cached focused client.
@@ -179,7 +172,7 @@ void PointerPinchGestureV1Interface::zwp_pointer_gesture_pinch_v1_destroy(Resour
     wl_resource_destroy(resource->handle);
 }
 
-void PointerPinchGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount)
+void PointerPinchGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount, std::chrono::milliseconds timestamp)
 {
     if (focusedClient) {
         return; // gesture is already active
@@ -190,26 +183,23 @@ void PointerPinchGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCou
 
     const SurfaceInterface *focusedSurface = pointer->focusedSurface();
     focusedClient = focusedSurface->client();
-    SeatInterface *seat = pointer->seat();
 
     const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
     for (Resource *pinchResource : pinchResources) {
-        send_begin(pinchResource->handle, serial, seat->timestamp().count(), focusedSurface->resource(), fingerCount);
+        send_begin(pinchResource->handle, serial, timestamp.count(), focusedSurface->resource(), fingerCount);
     }
 }
 
-void PointerPinchGestureV1Interface::sendUpdate(const QPointF &delta, qreal scale, qreal rotation)
+void PointerPinchGestureV1Interface::sendUpdate(const QPointF &delta, qreal scale, qreal rotation, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
     for (Resource *pinchResource : pinchResources) {
         send_update(pinchResource->handle,
-                    seat->timestamp().count(),
+                    timestamp.count(),
                     wl_fixed_from_double(delta.x()),
                     wl_fixed_from_double(delta.y()),
                     wl_fixed_from_double(scale),
@@ -217,34 +207,30 @@ void PointerPinchGestureV1Interface::sendUpdate(const QPointF &delta, qreal scal
     }
 }
 
-void PointerPinchGestureV1Interface::sendEnd(quint32 serial)
+void PointerPinchGestureV1Interface::sendEnd(quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
     for (Resource *pinchResource : pinchResources) {
-        send_end(pinchResource->handle, serial, seat->timestamp().count(), false);
+        send_end(pinchResource->handle, serial, timestamp.count(), false);
     }
 
     // The gesture session has been just finished, reset the cached focused client.
     focusedClient = nullptr;
 }
 
-void PointerPinchGestureV1Interface::sendCancel(quint32 serial)
+void PointerPinchGestureV1Interface::sendCancel(quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> pinchResources = resourceMap().values(*focusedClient);
     for (Resource *pinchResource : pinchResources) {
-        send_end(pinchResource->handle, serial, seat->timestamp().count(), true);
+        send_end(pinchResource->handle, serial, timestamp.count(), true);
     }
 
     // The gesture session has been just finished, reset the cached focused client.
@@ -270,7 +256,7 @@ void PointerHoldGestureV1Interface::zwp_pointer_gesture_hold_v1_destroy(Resource
     wl_resource_destroy(resource->handle);
 }
 
-void PointerHoldGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount)
+void PointerHoldGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCount, std::chrono::milliseconds timestamp)
 {
     if (focusedClient) {
         return; // gesture is already active
@@ -281,42 +267,37 @@ void PointerHoldGestureV1Interface::sendBegin(quint32 serial, quint32 fingerCoun
 
     const SurfaceInterface *focusedSurface = pointer->focusedSurface();
     focusedClient = focusedSurface->client();
-    SeatInterface *seat = pointer->seat();
 
     const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
     for (Resource *holdResource : holdResources) {
-        send_begin(holdResource->handle, serial, seat->timestamp().count(), focusedSurface->resource(), fingerCount);
+        send_begin(holdResource->handle, serial, timestamp.count(), focusedSurface->resource(), fingerCount);
     }
 }
 
-void PointerHoldGestureV1Interface::sendEnd(quint32 serial)
+void PointerHoldGestureV1Interface::sendEnd(quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
     for (Resource *holdResource : holdResources) {
-        send_end(holdResource->handle, serial, seat->timestamp().count(), false);
+        send_end(holdResource->handle, serial, timestamp.count(), false);
     }
 
     // The gesture session has been just finished, reset the cached focused client.
     focusedClient = nullptr;
 }
 
-void PointerHoldGestureV1Interface::sendCancel(quint32 serial)
+void PointerHoldGestureV1Interface::sendCancel(quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!focusedClient) {
         return;
     }
 
-    SeatInterface *seat = pointer->seat();
-
     const QList<Resource *> holdResources = resourceMap().values(*focusedClient);
     for (Resource *holdResource : holdResources) {
-        send_end(holdResource->handle, serial, seat->timestamp().count(), true);
+        send_end(holdResource->handle, serial, timestamp.count(), true);
     }
 
     // The gesture session has been just finished, reset the cached focused client.

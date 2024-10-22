@@ -236,16 +236,17 @@ void TestDataDevice::testDrag()
     QFETCH(bool, hasGrab);
     QFETCH(bool, hasPointerFocus);
     QFETCH(bool, success);
+    std::chrono::milliseconds timestamp(1);
     if (!hasGrab) {
         // in case we don't have grab, still generate a pointer serial to make it more interesting
-        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
+        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed, timestamp++);
         m_seatInterface->notifyPointerFrame();
     }
     if (hasPointerFocus) {
         m_seatInterface->notifyPointerEnter(surfaceInterface, QPointF(0, 0));
     }
     if (hasGrab) {
-        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
+        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed, timestamp++);
         m_seatInterface->notifyPointerFrame();
     }
 
@@ -313,16 +314,17 @@ void TestDataDevice::testDragInternally()
     QFETCH(bool, hasGrab);
     QFETCH(bool, hasPointerFocus);
     QFETCH(bool, success);
+    std::chrono::milliseconds timestamp(1);
     if (!hasGrab) {
         // in case we don't have grab, still generate a pointer serial to make it more interesting
-        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
+        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed, timestamp++);
         m_seatInterface->notifyPointerFrame();
     }
     if (hasPointerFocus) {
         m_seatInterface->notifyPointerEnter(surfaceInterface, QPointF(0, 0));
     }
     if (hasGrab) {
-        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed);
+        m_seatInterface->notifyPointerButton(Qt::LeftButton, PointerButtonState::Pressed, timestamp++);
         m_seatInterface->notifyPointerFrame();
     }
 

@@ -667,24 +667,20 @@ void TextInputTest::testKeyEvent()
     auto ti = m_seatInterface->textInputV2();
     QVERIFY(ti);
 
-    // TODO: test modifiers
+    // TODO: test modifiers + timestamps
     QSignalSpy keyEventSpy(textInput.get(), &KWayland::Client::TextInput::keyEvent);
-    m_seatInterface->setTimestamp(100ms);
     ti->keysymPressed(2);
     QVERIFY(keyEventSpy.wait());
     QCOMPARE(keyEventSpy.count(), 1);
     QCOMPARE(keyEventSpy.last().at(0).value<quint32>(), 2u);
     QCOMPARE(keyEventSpy.last().at(1).value<KWayland::Client::TextInput::KeyState>(), KWayland::Client::TextInput::KeyState::Pressed);
     QCOMPARE(keyEventSpy.last().at(2).value<Qt::KeyboardModifiers>(), Qt::KeyboardModifiers());
-    QCOMPARE(keyEventSpy.last().at(3).value<quint32>(), 100u);
-    m_seatInterface->setTimestamp(101ms);
     ti->keysymReleased(2);
     QVERIFY(keyEventSpy.wait());
     QCOMPARE(keyEventSpy.count(), 2);
     QCOMPARE(keyEventSpy.last().at(0).value<quint32>(), 2u);
     QCOMPARE(keyEventSpy.last().at(1).value<KWayland::Client::TextInput::KeyState>(), KWayland::Client::TextInput::KeyState::Released);
     QCOMPARE(keyEventSpy.last().at(2).value<Qt::KeyboardModifiers>(), Qt::KeyboardModifiers());
-    QCOMPARE(keyEventSpy.last().at(3).value<quint32>(), 101u);
 }
 
 void TextInputTest::testPreEdit()

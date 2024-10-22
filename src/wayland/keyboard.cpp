@@ -173,16 +173,16 @@ void KeyboardInterface::setModifierFocusSurface(SurfaceInterface *surface)
     }
 }
 
-void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client)
+void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, ClientConnection *client, std::chrono::milliseconds timestamp)
 {
     const QList<KeyboardInterfacePrivate::Resource *> keyboards = d->keyboardsForClient(client);
     const quint32 serial = d->seat->display()->nextSerial();
     for (KeyboardInterfacePrivate::Resource *keyboardResource : keyboards) {
-        d->send_key(keyboardResource->handle, serial, d->seat->timestamp().count(), key, quint32(state));
+        d->send_key(keyboardResource->handle, serial, timestamp.count(), key, quint32(state));
     }
 }
 
-void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
+void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state, std::chrono::milliseconds timestamp)
 {
     if (!d->focusedSurface) {
         return;
@@ -192,7 +192,7 @@ void KeyboardInterface::sendKey(quint32 key, KeyboardKeyState state)
         return;
     }
 
-    sendKey(key, state, d->focusedSurface->client());
+    sendKey(key, state, d->focusedSurface->client(), timestamp);
 }
 
 void KeyboardInterface::sendModifiers(quint32 depressed, quint32 latched, quint32 locked, quint32 group)

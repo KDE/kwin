@@ -60,10 +60,10 @@ public:
 
     void sendEnter(SurfaceInterface *surface, const QPointF &position, quint32 serial);
     void sendLeave(quint32 serial);
-    void sendButton(quint32 button, PointerButtonState state, quint32 serial);
-    void sendButton(quint32 button, PointerButtonState state, ClientConnection *client);
-    void sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction);
-    void sendMotion(const QPointF &position);
+    void sendButton(quint32 button, PointerButtonState state, quint32 serial, std::chrono::milliseconds timestamp);
+    void sendButton(quint32 button, PointerButtonState state, ClientConnection *client, std::chrono::milliseconds timestamp);
+    void sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction, std::chrono::milliseconds timestamp);
+    void sendMotion(const QPointF &position, std::chrono::milliseconds timestamp);
     void sendFrame();
 
 Q_SIGNALS:

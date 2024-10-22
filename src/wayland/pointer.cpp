@@ -210,7 +210,7 @@ void PointerInterface::sendLeave(quint32 serial)
     Q_EMIT focusedSurfaceChanged();
 }
 
-void PointerInterface::sendButton(quint32 button, PointerButtonState state, quint32 serial)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, quint32 serial, std::chrono::milliseconds timestamp)
 {
     if (!d->focusedSurface) {
         return;
@@ -218,29 +218,29 @@ void PointerInterface::sendButton(quint32 button, PointerButtonState state, quin
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, quint32(state));
+        d->send_button(resource->handle, serial, timestamp.count(), button, quint32(state));
     }
 }
 
-void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client)
+void PointerInterface::sendButton(quint32 button, PointerButtonState state, ClientConnection *client, std::chrono::milliseconds timestamp)
 {
     const auto pointerResources = d->pointersForClient(client);
     const quint32 serial = d->seat->display()->nextSerial();
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_button(resource->handle, serial, d->seat->timestamp().count(), button, quint32(state));
+        d->send_button(resource->handle, serial, timestamp.count(), button, quint32(state));
     }
 }
 
-static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerInterfacePrivate *d, qint32 &valueAxisLowRes, qint32 &valueDiscrete)
+static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerInterfacePrivate *d, qint32 &valueAxisLowRes, qint32 &valueDiscrete, std::chrono::milliseconds timestamp)
 {
     const int newDirection = deltaV120 > 0 ? 1 : -1;
     auto &accum = d->axisAccumulator.axis(orientation);
 
-    if (accum.shouldReset(newDirection, d->seat->timestamp())) {
+    if (accum.shouldReset(newDirection, timestamp)) {
         accum.reset();
     }
 
-    accum.timestamp = d->seat->timestamp();
+    accum.timestamp = timestamp;
     accum.direction = newDirection;
 
     accum.axis += delta;
@@ -264,7 +264,7 @@ static void updateAccumulators(Qt::Orientation orientation, qreal delta, qint32 
     }
 }
 
-void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction)
+void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32 deltaV120, PointerAxisSource source, PointerAxisRelativeDirection direction, std::chrono::milliseconds timestamp)
 {
     if (!d->focusedSurface) {
         return;
@@ -275,7 +275,7 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
 
     if (deltaV120) {
         updateAccumulators(orientation, delta, deltaV120, d.get(),
-                           valueAxisLowRes, valueDiscrete);
+                           valueAxisLowRes, valueDiscrete, timestamp);
     } else {
         valueAxisLowRes = delta;
     }
@@ -325,7 +325,7 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
                 if (version >= WL_POINTER_AXIS_VALUE120_SINCE_VERSION) {
                     // Send high resolution scroll events if client supports them
                     d->send_axis_value120(resource->handle, wlOrientation, deltaV120);
-                    d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation,
+                    d->send_axis(resource->handle, timestamp.count(), wlOrientation,
                                  wl_fixed_from_double(delta));
                 } else {
                     if (version >= WL_POINTER_AXIS_DISCRETE_SINCE_VERSION && valueDiscrete) {
@@ -334,21 +334,21 @@ void PointerInterface::sendAxis(Qt::Orientation orientation, qreal delta, qint32
                                               valueDiscrete);
                     }
                     // Send accumulated axis values
-                    d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation,
+                    d->send_axis(resource->handle, timestamp.count(), wlOrientation,
                                  wl_fixed_from_double(valueAxisLowRes));
                 }
             } else {
                 // Finger or continuous scroll
-                d->send_axis(resource->handle, d->seat->timestamp().count(), wlOrientation,
+                d->send_axis(resource->handle, timestamp.count(), wlOrientation,
                              wl_fixed_from_double(delta));
             }
         } else if (version >= WL_POINTER_AXIS_STOP_SINCE_VERSION) {
-            d->send_axis_stop(resource->handle, d->seat->timestamp().count(), wlOrientation);
+            d->send_axis_stop(resource->handle, timestamp.count(), wlOrientation);
         }
     }
 }
 
-void PointerInterface::sendMotion(const QPointF &position)
+void PointerInterface::sendMotion(const QPointF &position, std::chrono::milliseconds timestamp)
 {
     d->lastPosition = position;
 
@@ -360,7 +360,7 @@ void PointerInterface::sendMotion(const QPointF &position)
 
     const auto pointerResources = d->pointersForClient(d->focusedSurface->client());
     for (PointerInterfacePrivate::Resource *resource : pointerResources) {
-        d->send_motion(resource->handle, d->seat->timestamp().count(), wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
+        d->send_motion(resource->handle, timestamp.count(), wl_fixed_from_double(localPos.x()), wl_fixed_from_double(localPos.y()));
     }
 }
 

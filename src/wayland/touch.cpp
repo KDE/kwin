@@ -70,7 +70,7 @@ void TouchInterface::sendFrame()
     d->m_clientsInFrame.clear();
 }
 
-void TouchInterface::sendMotion(SurfaceInterface *surface, qint32 id, const QPointF &localPos)
+void TouchInterface::sendMotion(SurfaceInterface *surface, qint32 id, const QPointF &localPos, std::chrono::milliseconds time)
 {
     if (!surface) {
         return;
@@ -80,12 +80,12 @@ void TouchInterface::sendMotion(SurfaceInterface *surface, qint32 id, const QPoi
 
     const auto touchResources = d->touchesForClient(surface->client());
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_motion(resource->handle, d->seat->timestamp().count(), id, wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
+        d->send_motion(resource->handle, time.count(), id, wl_fixed_from_double(pos.x()), wl_fixed_from_double(pos.y()));
     }
     addToFrame(surface->client());
 }
 
-void TouchInterface::sendUp(ClientConnection *client, qint32 id, quint32 serial)
+void TouchInterface::sendUp(ClientConnection *client, qint32 id, quint32 serial, std::chrono::milliseconds time)
 {
     if (!client) {
         return;
@@ -93,12 +93,12 @@ void TouchInterface::sendUp(ClientConnection *client, qint32 id, quint32 serial)
 
     const auto touchResources = d->touchesForClient(client);
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
-        d->send_up(resource->handle, serial, d->seat->timestamp().count(), id);
+        d->send_up(resource->handle, serial, time.count(), id);
     }
     addToFrame(client);
 }
 
-void TouchInterface::sendDown(SurfaceInterface *surface, qint32 id, quint32 serial, const QPointF &localPos)
+void TouchInterface::sendDown(SurfaceInterface *surface, qint32 id, quint32 serial, std::chrono::milliseconds time, const QPointF &localPos)
 {
     if (!surface) {
         return;
@@ -109,7 +109,7 @@ void TouchInterface::sendDown(SurfaceInterface *surface, qint32 id, quint32 seri
     for (TouchInterfacePrivate::Resource *resource : touchResources) {
         d->send_down(resource->handle,
                      serial,
-                     d->seat->timestamp().count(),
+                     time.count(),
                      surface->resource(),
                      id,
                      wl_fixed_from_double(pos.x()),
