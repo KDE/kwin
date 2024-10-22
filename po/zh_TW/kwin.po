@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-19 00:41+0000\n"
+"POT-Creation-Date: 2024-10-22 00:41+0000\n"
 "PO-Revision-Date: 2024-09-23 20:41+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
@@ -81,7 +81,7 @@ msgstr "按下右側 Ctrl 鍵來抓取輸入"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland 合成器"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:451
+#: compositor_wayland.cpp:300 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "桌面效果會重新啟動，因為圖形已重置"
@@ -91,7 +91,7 @@ msgstr "桌面效果會重新啟動，因為圖形已重置"
 msgid "Suspend Compositing"
 msgstr "暫停合成器"
 
-#: compositor_x11.cpp:560
+#: compositor_x11.cpp:566
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -103,12 +103,12 @@ msgstr ""
 "問題。<p>如果您認為從上次崩潰到現在您已經更新到了<br>穩定的驅動程式版本，您可"
 "以重設這個保護機制，但<b>請注意這可能會馬上造成崩潰！</b></p>"
 
-#: compositor_x11.cpp:567
+#: compositor_x11.cpp:573
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "需要的 X 擴充功能（XComposite 和 XDamage）無法使用。"
 
-#: compositor_x11.cpp:570
+#: compositor_x11.cpp:576
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL 無法使用。"
@@ -1247,7 +1247,7 @@ msgstr ""
 "用滑鼠左鍵或 Enter 來選取視窗以強制關閉。\n"
 "按 Esc 或右鍵來取消。"
 
-#: main.cpp:195 plugins/invert/invert_config.cpp:35
+#: main.cpp:190 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1262,119 +1262,119 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:197 main.cpp:221
+#: main.cpp:192 main.cpp:216
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE 視窗管理程式"
 
-#: main.cpp:199
+#: main.cpp:194
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, KDE 開發團隊"
 
-#: main.cpp:201
+#: main.cpp:196
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:202
+#: main.cpp:197
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:203
+#: main.cpp:198
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:204
+#: main.cpp:199
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:205
+#: main.cpp:200
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:206
+#: main.cpp:201
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:207
+#: main.cpp:202
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:208
+#: main.cpp:203
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:209
+#: main.cpp:204
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:218
+#: main.cpp:213
 #, kde-format
 msgid "Disable configuration options"
 msgstr "取消設定選項"
 
-#: main.cpp:219
+#: main.cpp:214
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "指出 KWin 最近已經連續崩潰數次"
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:300
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "啟動 rootless Xwayland 伺服器。"
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:303
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
 msgstr "Wayland 監聽的 socket 名稱。如果沒設定，則使用 \"wayland-0\"。"
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "在 X11 平台上的視窗模式要使用的 X11 顯示。"
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr "在 Wayland 平台上的視窗模式要使用的 Wayland 顯示。"
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:313
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "成像到虛擬影格緩衝區。"
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "視窗模式的寬度。預設為 1024。"
 
-#: main_wayland.cpp:323
+#: main_wayland.cpp:319
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "視窗模式的高度。預設為 768。"
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:324
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "視窗模式的縮放係數。預設為 1。"
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
 msgstr "視窗模式輸出要開啟的視窗數。預設為 1"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1383,70 +1383,70 @@ msgstr ""
 "Wayland 接收到的連線所使用的 socket 名稱。這可以跟 --socket 一起使用來指定 "
 "socket 名稱"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
 "multiple times"
 msgstr "Xwayland 接收到的連線所使用的 socket。這可以被重複設定"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "已經先設定好的 xwayland 顯示的名稱"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "xauthority 檔案名稱"
 
-#: main_wayland.cpp:354
+#: main_wayland.cpp:350
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "離開這個實體讓它能被 kwin_wayland_wrapper 重啟。"
 
-#: main_wayland.cpp:356
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Render through drm node."
 msgstr "透過 drm 節點成像。"
 
-#: main_wayland.cpp:357
+#: main_wayland.cpp:353
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr "從 locale1 抓取地域資訊而非從使用者設定"
 
-#: main_wayland.cpp:383
+#: main_wayland.cpp:379
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "KWin 啟動的輸入法。"
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "以鎖定模式啟動工作階段."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "在無鎖定螢幕支援的情況下開啟工作階段。"
 
-#: main_wayland.cpp:398
+#: main_wayland.cpp:394
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "在無全域快速鍵支援的情況下開啟工作階段。"
 
-#: main_wayland.cpp:403 main_x11.cpp:439
+#: main_wayland.cpp:399 main_x11.cpp:438
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "關閉 KActivities 整合。"
 
-#: main_wayland.cpp:408
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "在由 KWin 啟動的工作階段應用程式關閉後離開。"
 
-#: main_wayland.cpp:413
+#: main_wayland.cpp:409
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr "Wayland 與 Xwayland 伺服器啟動後要執行的應用程式"
@@ -1475,7 +1475,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin：另一個視窗管理員正在運行中（請試著使用 --replace）\n"
 
-#: main_x11.cpp:432
+#: main_x11.cpp:431
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "置換已在執行中的 ICCCM2.0-相容視窗管理程式"
@@ -2417,12 +2417,12 @@ msgstr "找不到輸出"
 msgid "Invalid region"
 msgstr "無效的區域"
 
-#: plugins/screencast/screencaststream.cpp:346
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "需要使用 OpenGL 合成才能利用螢幕錄製"
 
-#: plugins/screencast/screencaststream.cpp:354
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "無法建立 PipeWire 串流"

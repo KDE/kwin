@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kwin\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-19 00:41+0000\n"
-"PO-Revision-Date: 2024-07-25 12:29+0200\n"
+"POT-Creation-Date: 2024-10-22 00:41+0000\n"
+"PO-Revision-Date: 2024-10-21 13:14+0200\n"
 "Last-Translator: rasmus rosendahl-kaa <rasmus@rosendahl-kaa.name>\n"
 "Language-Team: Danish <kde-i18n-doc@kde.org>\n"
 "Language: da\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
@@ -70,7 +70,7 @@ msgstr "Tryk på højre kontrol for at gribe input"
 msgid "KDE Wayland Compositor"
 msgstr "KDE Wayland-kompositør"
 
-#: compositor_wayland.cpp:300 compositor_x11.cpp:451
+#: compositor_wayland.cpp:300 compositor_x11.cpp:457
 #, kde-format
 msgid "Desktop effects were restarted due to a graphics reset"
 msgstr "Skrivebordseffekter blev genstartet pga. grafiknulstilling"
@@ -80,7 +80,7 @@ msgstr "Skrivebordseffekter blev genstartet pga. grafiknulstilling"
 msgid "Suspend Compositing"
 msgstr "Suspendér compositing"
 
-#: compositor_x11.cpp:560
+#: compositor_x11.cpp:566
 #, kde-format
 msgid ""
 "<b>OpenGL compositing (the default) has crashed KWin in the past.</"
@@ -94,12 +94,12 @@ msgstr ""
 "denne beskyttelse, men<b>vær opmærksom på at dette kan medføre et "
 "øjeblikkeligt sammenbrud!</b></p>"
 
-#: compositor_x11.cpp:567
+#: compositor_x11.cpp:573
 #, kde-format
 msgid "Required X extensions (XComposite and XDamage) are not available."
 msgstr "Påkrævede X-udvidelser (XComposite og XDamage) er ikke tilgængelige."
 
-#: compositor_x11.cpp:570
+#: compositor_x11.cpp:576
 #, kde-format
 msgid "GLX/OpenGL is not available."
 msgstr "GLX/OpenGL er ikke tilgængelige."
@@ -426,12 +426,10 @@ msgid "Repeat"
 msgstr "Gentag"
 
 #: debug_console.cpp:297
-#, fuzzy, kde-format
-#| msgctxt "Key according to Qt"
-#| msgid "Qt::Key code"
+#, kde-format
 msgctxt "The code reported by the kernel"
 msgid "Keycode"
-msgstr "Qt::Key code"
+msgstr "Tastekode"
 
 #: debug_console.cpp:298
 #, kde-format
@@ -1240,7 +1238,7 @@ msgstr ""
 "Vælg vinduet der skal tvangslukkes med venstreklik eller Retur.\n"
 "Esc eller højreklik for at annullere."
 
-#: main.cpp:195 plugins/invert/invert_config.cpp:35
+#: main.cpp:190 plugins/invert/invert_config.cpp:35
 #: plugins/magnifier/magnifier_config.cpp:46
 #: plugins/mouseclick/mouseclick_config.cpp:40
 #: plugins/mousemark/mousemark_config.cpp:43
@@ -1255,77 +1253,77 @@ msgstr ""
 msgid "KWin"
 msgstr "KWin"
 
-#: main.cpp:197 main.cpp:221
+#: main.cpp:192 main.cpp:216
 #, kde-format
 msgid "KDE window manager"
 msgstr "KDE vindueshåndtering"
 
-#: main.cpp:199
+#: main.cpp:194
 #, kde-format
 msgid "(c) 1999-2019, The KDE Developers"
 msgstr "(c) 1999-2019, KDE-udviklerne"
 
-#: main.cpp:201
+#: main.cpp:196
 #, kde-format
 msgid "Matthias Ettrich"
 msgstr "Matthias Ettrich"
 
-#: main.cpp:202
+#: main.cpp:197
 #, kde-format
 msgid "Cristian Tibirna"
 msgstr "Cristian Tibirna"
 
-#: main.cpp:203
+#: main.cpp:198
 #, kde-format
 msgid "Daniel M. Duley"
 msgstr "Daniel M. Duley"
 
-#: main.cpp:204
+#: main.cpp:199
 #, kde-format
 msgid "Luboš Luňák"
 msgstr "Luboš Luňák"
 
-#: main.cpp:205
+#: main.cpp:200
 #, kde-format
 msgid "Martin Flöser"
 msgstr "Martin Flöser"
 
-#: main.cpp:206
+#: main.cpp:201
 #, kde-format
 msgid "David Edmundson"
 msgstr "David Edmundson"
 
-#: main.cpp:207
+#: main.cpp:202
 #, kde-format
 msgid "Roman Gilg"
 msgstr "Roman Gilg"
 
-#: main.cpp:208
+#: main.cpp:203
 #, kde-format
 msgid "Vlad Zahorodnii"
 msgstr "Vlad Zahorodnii"
 
-#: main.cpp:209
+#: main.cpp:204
 #, kde-format
 msgid "Xaver Hugl"
 msgstr "Xaver Hugl"
 
-#: main.cpp:218
+#: main.cpp:213
 #, kde-format
 msgid "Disable configuration options"
 msgstr "Deaktivér indstillingstilvalg"
 
-#: main.cpp:219
+#: main.cpp:214
 #, kde-format
 msgid "Indicate that KWin has recently crashed n times"
 msgstr "Indikér at KWin for nyligt er gået ned n gange"
 
-#: main_wayland.cpp:304
+#: main_wayland.cpp:300
 #, kde-format
 msgid "Start a rootless Xwayland server."
 msgstr "Start en rodløs Xwayland-server."
 
-#: main_wayland.cpp:307
+#: main_wayland.cpp:303
 #, kde-format
 msgid ""
 "Name of the Wayland socket to listen on. If not set \"wayland-0\" is used."
@@ -1333,38 +1331,38 @@ msgstr ""
 "Navnet på den Wayland-sokkel der skal lyttes på. Hvis ikke angivet bruges "
 "\"wayland-0\"."
 
-#: main_wayland.cpp:311
+#: main_wayland.cpp:307
 #, kde-format
 msgid "The X11 Display to use in windowed mode on platform X11."
 msgstr "Den X11-visning der skal bruges i vinduestilstand på platform X11."
 
-#: main_wayland.cpp:315
+#: main_wayland.cpp:311
 #, kde-format
 msgid "The Wayland Display to use in windowed mode on platform Wayland."
 msgstr ""
 "Den Wayland-visning der skal bruges i vinduestilstand på platform Wayland."
 
-#: main_wayland.cpp:317
+#: main_wayland.cpp:313
 #, kde-format
 msgid "Render to a virtual framebuffer."
 msgstr "Rendér til en virtuel framebuffer."
 
-#: main_wayland.cpp:319
+#: main_wayland.cpp:315
 #, kde-format
 msgid "The width for windowed mode. Default width is 1024."
 msgstr "Bredde for vinduestilstand. Standardbredde er 1024."
 
-#: main_wayland.cpp:323
+#: main_wayland.cpp:319
 #, kde-format
 msgid "The height for windowed mode. Default height is 768."
 msgstr "Højde for vinduestilstand. Standardbredde er 768."
 
-#: main_wayland.cpp:328
+#: main_wayland.cpp:324
 #, kde-format
 msgid "The scale for windowed mode. Default value is 1."
 msgstr "Skala for vinduestilstand. Standardværdien er 1."
 
-#: main_wayland.cpp:333
+#: main_wayland.cpp:329
 #, kde-format
 msgid ""
 "The number of windows to open as outputs in windowed mode. Default value is 1"
@@ -1372,7 +1370,7 @@ msgstr ""
 "Antallet af vinduer der skal åbnes som output i vinduestilstand. "
 "Standardværdien er 1"
 
-#: main_wayland.cpp:338
+#: main_wayland.cpp:334
 #, kde-format
 msgid ""
 "Wayland socket to use for incoming connections. This can be combined with --"
@@ -1381,7 +1379,7 @@ msgstr ""
 "Wayland-socket, der skal bruges for indkommende forbindelser. Dette kan "
 "kombineres med -- socket for at navngive den"
 
-#: main_wayland.cpp:342
+#: main_wayland.cpp:338
 #, kde-format
 msgid ""
 "XWayland socket to use for Xwayland's incoming connections. This can be set "
@@ -1390,64 +1388,64 @@ msgstr ""
 "XWayland-socket, der skal bruges for XWaylands indkommende forbindelser. "
 "Dette kan sættes flere gange"
 
-#: main_wayland.cpp:346
+#: main_wayland.cpp:342
 #, kde-format
 msgid "Name of the xwayland display that has been pre-set up"
 msgstr "Navnet på xwayland-skærmen der er blevet forudindstillet"
 
-#: main_wayland.cpp:350
+#: main_wayland.cpp:346
 #, kde-format
 msgid "Name of the xauthority file "
 msgstr "Navnet på xauthority-filen "
 
-#: main_wayland.cpp:354
+#: main_wayland.cpp:350
 #, kde-format
 msgid "Exits this instance so it can be restarted by kwin_wayland_wrapper."
 msgstr "Afslutter denne instans så den kan genstartes af kwin_wayland_wrapper."
 
-#: main_wayland.cpp:356
+#: main_wayland.cpp:352
 #, kde-format
 msgid "Render through drm node."
 msgstr "Render igennem drm-knude."
 
-#: main_wayland.cpp:357
+#: main_wayland.cpp:353
 #, kde-format
 msgid ""
 "Extract locale information from locale1 rather than the user's configuration"
 msgstr ""
 "Uddrag lokalitetsinformation fra locale1 i stedet for brugerens konfiguration"
 
-#: main_wayland.cpp:383
+#: main_wayland.cpp:379
 #, kde-format
 msgid "Input method that KWin starts."
 msgstr "Inputmetode som KWin starter."
 
-#: main_wayland.cpp:389
+#: main_wayland.cpp:385
 #, kde-format
 msgid "Starts the session in locked mode."
 msgstr "Starter sessionen i låst tilstand."
 
-#: main_wayland.cpp:393
+#: main_wayland.cpp:389
 #, kde-format
 msgid "Starts the session without lock screen support."
 msgstr "Starter sessionen uden understøttelse af låseskærm."
 
-#: main_wayland.cpp:398
+#: main_wayland.cpp:394
 #, kde-format
 msgid "Starts the session without global shortcuts support."
 msgstr "Starter sessionen uden understøttelse af globale genveje."
 
-#: main_wayland.cpp:403 main_x11.cpp:439
+#: main_wayland.cpp:399 main_x11.cpp:438
 #, kde-format
 msgid "Disable KActivities integration."
 msgstr "Deaktivér integration med KActivities."
 
-#: main_wayland.cpp:408
+#: main_wayland.cpp:404
 #, kde-format
 msgid "Exit after the session application, which is started by KWin, closed."
 msgstr "Afslut efter sessionsprogrammet, som startes af KWin, lukkes."
 
-#: main_wayland.cpp:413
+#: main_wayland.cpp:409
 #, kde-format
 msgid "Applications to start once Wayland and Xwayland server are started"
 msgstr ""
@@ -1478,7 +1476,7 @@ msgstr ""
 msgid "kwin: another window manager is running (try using --replace)\n"
 msgstr "kwin: en anden vindueshåndtering kører (prøv at bruge --replace)\n"
 
-#: main_x11.cpp:432
+#: main_x11.cpp:431
 #, kde-format
 msgid "Replace already-running ICCCM2.0-compliant window manager"
 msgstr "Erstat allerede kørende ICCCM2.0 kompliante vindueshåndtering"
@@ -2033,10 +2031,9 @@ msgstr "&Højde:"
 
 #: plugins/mouseclick/mouseclick.cpp:38
 #: plugins/mouseclick/mouseclick_config.cpp:43
-#, fuzzy, kde-format
-#| msgid "Toggle Mouse Click Effect"
+#, kde-format
 msgid "Toggle Mouse Click Animation"
-msgstr "Slå museklik-effekt til/fra"
+msgstr "Slå museklik-animation til/fra"
 
 #: plugins/mouseclick/mouseclick.cpp:45
 #, kde-format
@@ -2426,12 +2423,12 @@ msgstr "Kunne ikke finde udgang"
 msgid "Invalid region"
 msgstr "Ugyldig region"
 
-#: plugins/screencast/screencaststream.cpp:346
+#: plugins/screencast/screencaststream.cpp:375
 #, kde-format
 msgid "OpenGL compositing is required for screencasting"
 msgstr "OpenGL-compositing er nødvendigt for skærmcasting"
 
-#: plugins/screencast/screencaststream.cpp:354
+#: plugins/screencast/screencaststream.cpp:383
 #, kde-format
 msgid "Failed to create PipeWire stream"
 msgstr "Kunne ikke starte PipeWire-stream"
@@ -2455,11 +2452,10 @@ msgstr ""
 "Esc eller højreklik for at annullere."
 
 #: plugins/showcompositing/qml/main.qml:12
-#, fuzzy, kde-format
-#| msgid "Block Compositing"
+#, kde-format
 msgctxt "@label"
 msgid "Compositing"
-msgstr "Blokér compositing"
+msgstr "Compositing"
 
 #: plugins/showfps/qml/main-fallback.qml:26 plugins/showfps/qml/main.qml:192
 #, kde-format
@@ -3584,17 +3580,15 @@ msgstr "Type af AdaptivSynkronisering-regel"
 
 #. i18n: ectx: label, entry (tearing), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:455
-#, fuzzy, kde-format
-#| msgid "Allow Rotation"
+#, kde-format
 msgid "Allow Tearing"
-msgstr "Tillad rotation"
+msgstr "Tillad flimmer"
 
 #. i18n: ectx: label, entry (tearingrule), group ($(ruleDescriptionOrNumber))
 #: rulesettings.kcfg:459
-#, fuzzy, kde-format
-#| msgid "Layer rule type"
+#, kde-format
 msgid "Tearing rule type"
-msgstr "Type af lagsregel"
+msgstr "Regeltype for flimmer"
 
 #. i18n: ectx: property (windowTitle), widget (QDialog, ShortcutDialog)
 #: shortcutdialog.ui:14
