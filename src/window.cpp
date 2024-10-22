@@ -3575,8 +3575,6 @@ void Window::setQuickTileMode(QuickTileMode mode, const QPointF &tileAtPoint)
     }
 
     if (mode == QuickTileMode(QuickTileFlag::Custom)) {
-        // Custom tileMode is the only one that gets immediately assigned without a roundtrip
-        // setTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
         requestTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->bestTileForPosition(tileAtPoint));
     } else {
         requestTile(workspace()->tileManager(workspace()->outputAt(tileAtPoint))->quickTile(mode));
