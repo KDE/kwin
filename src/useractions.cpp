@@ -1483,12 +1483,19 @@ void Workspace::slotToggleShowDesktop()
 
 void windowToDesktop(Window *window, VirtualDesktopManager::Direction direction)
 {
+    if (window->isDesktop() || window->isDock()) {
+        return;
+    }
+
     VirtualDesktopManager *vds = VirtualDesktopManager::self();
     Workspace *ws = Workspace::self();
     // TODO: why is options->isRollOverDesktops() not honored?
     const auto desktop = vds->inDirection(nullptr, direction, true);
-    if (window && !window->isDesktop()
-        && !window->isDock()) {
+    if (ws->moveResizeWindow()) {
+        if (ws->moveResizeWindow() == window) {
+            vds->setCurrent(desktop);
+        }
+    } else {
         ws->setMoveResizeWindow(window);
         vds->setCurrent(desktop);
         ws->setMoveResizeWindow(nullptr);
@@ -1534,9 +1541,15 @@ void activeWindowToDesktop(VirtualDesktopManager::Direction direction)
     if (newCurrent == current) {
         return;
     }
-    ws->setMoveResizeWindow(ws->activeWindow());
-    vds->setCurrent(newCurrent);
-    ws->setMoveResizeWindow(nullptr);
+    if (ws->moveResizeWindow()) {
+        if (ws->moveResizeWindow() == ws->activeWindow()) {
+            vds->setCurrent(newCurrent);
+        }
+    } else {
+        ws->setMoveResizeWindow(ws->activeWindow());
+        vds->setCurrent(newCurrent);
+        ws->setMoveResizeWindow(nullptr);
+    }
 }
 
 void Workspace::slotWindowToDesktopRight()
