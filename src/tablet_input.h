@@ -21,6 +21,7 @@ class Cursor;
 class Window;
 class TabletToolId;
 class TabletToolV2Interface;
+class TabletV2Interface;
 
 namespace Decoration
 {
@@ -64,6 +65,7 @@ public:
     }
 
     TabletToolV2Interface *ensureTabletTool(const TabletToolId &id);
+    TabletV2Interface *tabletForPad(InputDevice *device) const;
 
 private:
     void cleanupDecoration(Decoration::DecoratedClientImpl *old,
