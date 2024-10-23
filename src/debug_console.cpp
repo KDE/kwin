@@ -516,7 +516,7 @@ void DebugConsoleFilter::tabletToolButtonEvent(TabletToolButtonEvent *event)
     QString text = s_hr + s_tableStart + tableHeaderRow(i18n("Tablet Tool Button"))
         + tableRow(i18n("Button"), event->button)
         + tableRow(i18n("Pressed"), event->pressed)
-        + tableRow(i18n("Tablet"), qHash(event->tabletToolId.m_deviceGroupData))
+        + tableRow(i18n("Tablet"), event->device->sysName())
         + timestampRow(event->time)
         + s_tableEnd;
 
