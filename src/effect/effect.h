@@ -808,11 +808,11 @@ public:
      *
      * @param button which button
      * @param pressed true if pressed, false when released
-     * @param tabletToolId the identifier of the tool id
+     * @param toolId the identifier of the tool id
      *
      * @since 5.25
      */
-    virtual bool tabletToolButtonEvent(uint button, bool pressed, quint64 tabletToolId);
+    virtual bool tabletToolButtonEvent(uint button, bool pressed, quint64 toolId);
 
     /**
      * There has been an event from a button on a drawing tablet pad

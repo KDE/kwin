@@ -746,7 +746,7 @@ public:
     bool touchUp(qint32 id, std::chrono::microseconds time);
 
     bool tabletToolEvent(KWin::TabletEvent *event);
-    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time);
+    bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &toolId, std::chrono::microseconds time);
     bool tabletPadButtonEvent(uint button, bool pressed, std::chrono::microseconds time, InputDevice *device);
     bool tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
     bool tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);

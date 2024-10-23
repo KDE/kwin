@@ -571,11 +571,11 @@ bool EffectsHandler::tabletToolEvent(TabletEvent *event)
     return false;
 }
 
-bool EffectsHandler::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &tabletToolId, std::chrono::microseconds time)
+bool EffectsHandler::tabletToolButtonEvent(uint button, bool pressed, const TabletToolId &toolId, std::chrono::microseconds time)
 {
     // TODO: reverse call order?
     for (auto it = loaded_effects.constBegin(); it != loaded_effects.constEnd(); ++it) {
-        if (it->second->tabletToolButtonEvent(button, pressed, tabletToolId.m_uniqueId)) {
+        if (it->second->tabletToolButtonEvent(button, pressed, toolId.m_uniqueId)) {
             return true;
         }
     }

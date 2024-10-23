@@ -236,8 +236,8 @@ bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *eve
     if (RebindScope::isRebinding()) {
         return false;
     }
-    m_tabletTool = event->tabletToolId;
-    return send(TabletToolButtonType, {event->tabletToolId.m_name, event->button}, event->pressed, event->time);
+    m_tabletTool = event->toolId;
+    return send(TabletToolButtonType, {event->toolId.m_name, event->button}, event->pressed, event->time);
 }
 
 void ButtonRebindsFilter::insert(TriggerType type, const Trigger &trigger, const QStringList &entry)
