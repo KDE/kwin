@@ -200,10 +200,10 @@ void TabletInputRedirection::trackNextOutput()
     OSD::show(message, QStringLiteral("input-tablet"), 5000);
 }
 
-static TabletToolV2Interface::Type getType(const TabletToolId &tabletToolId)
+static TabletToolV2Interface::Type getType(const TabletToolId &toolId)
 {
     using Type = TabletToolV2Interface::Type;
-    switch (tabletToolId.m_toolType) {
+    switch (toolId.m_toolType) {
     case InputRedirection::Pen:
         return Type::Pen;
     case InputRedirection::Eraser:
@@ -226,10 +226,10 @@ static TabletToolV2Interface::Type getType(const TabletToolId &tabletToolId)
     return Type::Pen;
 }
 
-TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletToolId &tabletToolId)
+TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletToolId &toolId)
 {
     TabletSeatV2Interface *tabletSeat = findTabletSeat();
-    if (auto tool = tabletSeat->toolByHardwareSerial(tabletToolId.m_serialId, getType(tabletToolId))) {
+    if (auto tool = tabletSeat->toolByHardwareSerial(toolId.m_serialId, getType(toolId))) {
         return tool;
     }
 
@@ -251,10 +251,10 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletTool
         return TabletToolV2Interface::Wheel;
     };
     QList<TabletToolV2Interface::Capability> ifaceCapabilities;
-    ifaceCapabilities.resize(tabletToolId.m_capabilities.size());
-    std::transform(tabletToolId.m_capabilities.constBegin(), tabletToolId.m_capabilities.constEnd(), ifaceCapabilities.begin(), f);
+    ifaceCapabilities.resize(toolId.m_capabilities.size());
+    std::transform(toolId.m_capabilities.constBegin(), toolId.m_capabilities.constEnd(), ifaceCapabilities.begin(), f);
 
-    TabletToolV2Interface *tool = tabletSeat->addTool(getType(tabletToolId), tabletToolId.m_serialId, tabletToolId.m_uniqueId, ifaceCapabilities, tabletToolId.deviceSysName);
+    TabletToolV2Interface *tool = tabletSeat->addTool(getType(toolId), toolId.m_serialId, toolId.m_uniqueId, ifaceCapabilities, toolId.deviceSysName);
 
     const auto cursor = new SurfaceCursor(tool);
     Cursors::self()->addCursor(cursor);
@@ -265,7 +265,7 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletTool
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
                                              qreal pressure, int xTilt, int yTilt, qreal rotation, bool tipDown,
-                                             bool tipNear, const TabletToolId &tabletToolId,
+                                             bool tipNear, const TabletToolId &toolId,
                                              std::chrono::microseconds time,
                                              InputDevice *device)
 {
@@ -288,7 +288,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
         break;
     }
 
-    auto tool = ensureTabletTool(tabletToolId);
+    auto tool = ensureTabletTool(toolId);
     switch (t) {
     case QEvent::TabletEnterProximity:
     case QEvent::TabletPress:
@@ -311,7 +311,7 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
                    0, // tangentialPressure
                    rotation,
                    0, // z
-                   Qt::NoModifier, button, button, tabletToolId, device);
+                   Qt::NoModifier, button, button, toolId, device);
 
     ev.setTimestamp(std::chrono::duration_cast<std::chrono::milliseconds>(time).count());
     input()->processSpies(std::bind(&InputEventSpy::tabletToolEvent, std::placeholders::_1, &ev));
@@ -322,13 +322,13 @@ void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEvent
     m_tipNear = tipNear;
 }
 
-void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId, std::chrono::microseconds time, InputDevice *device)
+void KWin::TabletInputRedirection::tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &toolId, std::chrono::microseconds time, InputDevice *device)
 {
     TabletToolButtonEvent event{
         .device = device,
         .button = button,
         .pressed = isPressed,
-        .tabletToolId = tabletToolId,
+        .toolId = toolId,
         .time = time,
     };
 

@@ -486,7 +486,7 @@ bool Effect::tabletToolEvent(QTabletEvent *event)
     return false;
 }
 
-bool Effect::tabletToolButtonEvent(uint button, bool pressed, quint64 tabletToolId)
+bool Effect::tabletToolButtonEvent(uint button, bool pressed, quint64 toolId)
 {
     return false;
 }

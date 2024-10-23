@@ -577,7 +577,7 @@ public:
         if (!effects) {
             return false;
         }
-        return effects->tabletToolButtonEvent(event->button, event->pressed, event->tabletToolId, event->time);
+        return effects->tabletToolButtonEvent(event->button, event->pressed, event->toolId, event->time);
     }
     bool tabletPadButtonEvent(TabletPadButtonEvent *event) override
     {
@@ -1336,7 +1336,7 @@ public:
         QWindow *internal = static_cast<InternalWindow *>(input()->tablet()->focus())->handle();
         const QPointF globalPos = event->globalPosition();
         const QPointF localPos = globalPos - internal->position();
-        const TabletToolId toolId = event->tabletId();
+        const TabletToolId toolId = event->toolId();
 
         const int deviceType = int(QPointingDevice::DeviceType::Stylus);
         const int pointerType = int(QPointingDevice::PointerType::Pen);
@@ -2039,11 +2039,11 @@ public:
             return false;
         }
 
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tabletId());
+        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->toolId());
 
         // NOTE: tablet will be nullptr as the device is removed (see ::removeDevice) but events from the tool
         // may still happen (e.g. Release or ProximityOut events)
-        auto tablet = static_cast<TabletV2Interface *>(event->tabletId().m_deviceGroupData);
+        auto tablet = static_cast<TabletV2Interface *>(event->toolId().m_deviceGroupData);
 
         Window *window = input()->findToplevel(event->globalPosF());
         if (!window || !window->surface()) {
@@ -2132,7 +2132,7 @@ public:
 
     bool tabletToolButtonEvent(TabletToolButtonEvent *event) override
     {
-        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->tabletToolId);
+        TabletToolV2Interface *tool = input()->tablet()->ensureTabletTool(event->toolId);
         if (!tool->isClientSupported()) {
             return false;
         }

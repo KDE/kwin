@@ -219,7 +219,7 @@ public:
         return m_device;
     }
 
-    const TabletToolId &tabletId() const
+    const TabletToolId &toolId() const
     {
         return m_id;
     }
@@ -234,7 +234,7 @@ struct TabletToolButtonEvent
     InputDevice *device;
     uint button;
     bool pressed;
-    TabletToolId tabletToolId;
+    TabletToolId toolId;
     std::chrono::microseconds time;
 };
 
