@@ -476,6 +476,11 @@ void TabBox::setCurrentIndex(QModelIndex index, bool notifyEffects)
     }
 }
 
+bool TabBox::haveActiveClient()
+{
+    return m_tabBox->index(m_tabBox->activeClient()).isValid();
+}
+
 void TabBox::show()
 {
     Q_EMIT tabBoxAdded(m_tabBoxMode);
@@ -806,9 +811,7 @@ void TabBox::navigatingThroughWindows(bool forward, const QKeySequence &shortcut
         CDEWalkThroughWindows(forward);
     } else {
         if (areModKeysDepressed(shortcut)) {
-            if (startKDEWalkThroughWindows(mode)) {
-                KDEWalkThroughWindows(forward);
-            }
+            startKDEWalkThroughWindows(forward, mode);
         } else {
             // if the shortcut has no modifiers, don't show the tabbox,
             // don't grab, but simply go to the next window
@@ -896,7 +899,7 @@ bool TabBox::toggleMode(TabBoxMode mode)
     return true;
 }
 
-bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
+bool TabBox::startKDEWalkThroughWindows(bool forward, TabBoxMode mode)
 {
     if (!establishTabBoxGrab()) {
         return false;
@@ -909,13 +912,19 @@ bool TabBox::startKDEWalkThroughWindows(TabBoxMode mode)
 
     setMode(mode);
     reset();
+
+    if (haveActiveClient()) {
+        nextPrev(forward);
+    }
+
+    delayedShow();
+
     return true;
 }
 
 void TabBox::KDEWalkThroughWindows(bool forward)
 {
     nextPrev(forward);
-    delayedShow();
 }
 
 void TabBox::CDEWalkThroughWindows(bool forward)
@@ -977,7 +986,11 @@ void TabBox::KDEOneStepThroughWindows(bool forward, TabBoxMode mode)
 {
     setMode(mode);
     reset();
-    nextPrev(forward);
+
+    if (haveActiveClient()) {
+        nextPrev(forward);
+    }
+
     if (Window *c = currentClient()) {
         Workspace::self()->activateWindow(c);
         shadeActivate(c);

@@ -93,6 +93,11 @@ public:
      */
     void setCurrentClient(Window *newClient);
 
+    /**
+     * Return whether the active client is present in the client list.
+     */
+    bool haveActiveClient();
+
     void setMode(TabBoxMode mode);
     TabBoxMode mode() const
     {
@@ -228,7 +233,7 @@ private:
     explicit TabBox(QObject *parent);
     void loadConfig(const KConfigGroup &config, TabBoxConfig &tabBoxConfig);
 
-    bool startKDEWalkThroughWindows(TabBoxMode mode); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
+    bool startKDEWalkThroughWindows(bool forward, TabBoxMode mode); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
     void navigatingThroughWindows(bool forward, const QKeySequence &shortcut, TabBoxMode mode); // TabBoxWindowsMode | TabBoxWindowsAlternativeMode
     void KDEWalkThroughWindows(bool forward);
     void CDEWalkThroughWindows(bool forward);
