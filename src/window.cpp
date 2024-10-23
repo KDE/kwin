@@ -1223,7 +1223,7 @@ void Window::finishInteractiveMoveResize(bool cancel)
             maximize(*maximizeMode, m_electricGeometryRestore);
         }
         setElectricBorderMaximizing(false);
-    } else if (wasMove && (m_interactiveMoveResize.modifiers & Qt::ShiftModifier)) {
+    } else if (wasMove && (m_interactiveMoveResize.modifiers == Qt::ShiftModifier)) {
         setQuickTileMode(QuickTileFlag::Custom, m_interactiveMoveResize.anchor);
     }
     setElectricBorderMode(std::nullopt);
@@ -1419,7 +1419,7 @@ void Window::updateInteractiveMoveResize(const QPointF &global, Qt::KeyboardModi
         }
 
         if (!isRequestedFullScreen()) {
-            if (modifiers & Qt::ShiftModifier) {
+            if (modifiers == Qt::ShiftModifier) {
                 resetQuickTilingMaximizationZones();
                 const auto &r = quickTileGeometry(QuickTileFlag::Custom, global);
                 if (r.isEmpty()) {
