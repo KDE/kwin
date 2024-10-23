@@ -2151,11 +2151,7 @@ public:
 
         // NOTE: tablet may be nullptr when the device is removed (see ::removeDevice) but events from the tool
         // may still happen.
-        TabletV2Interface *tablet = nullptr;
-        if (auto libinputDevice = qobject_cast<LibInput::Device *>(device)) {
-            auto deviceGroup = libinput_device_get_device_group(libinputDevice->device());
-            tablet = static_cast<TabletV2Interface *>(libinput_device_group_get_user_data(deviceGroup));
-        }
+        TabletV2Interface *tablet = input()->tablet()->tabletForPad(device);
         if (!tablet) {
             return nullptr;
         }

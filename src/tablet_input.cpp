@@ -134,10 +134,7 @@ void TabletInputRedirection::integrateDevice(InputDevice *inputDevice)
         struct udev_device *const udev_device = libinput_device_get_udev_device(device->device());
         const char *devnode = udev_device_get_syspath(udev_device);
 
-        TabletV2Interface *tablet = tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
-
-        auto deviceGroup = libinput_device_get_device_group(device->device());
-        libinput_device_group_set_user_data(deviceGroup, tablet);
+        tabletSeat->addTablet(device->vendor(), device->product(), device->sysName(), device->name(), {QString::fromUtf8(devnode)});
     }
 
     if (device->isTabletPad()) {
@@ -157,11 +154,6 @@ void TabletInputRedirection::removeDevice(InputDevice *inputDevice)
 {
     auto device = qobject_cast<LibInput::Device *>(inputDevice);
     if (device) {
-        if (inputDevice->isTabletTool()) {
-            auto deviceGroup = libinput_device_get_device_group(device->device());
-            libinput_device_group_set_user_data(deviceGroup, nullptr);
-        }
-
         TabletSeatV2Interface *tabletSeat = findTabletSeat();
         if (tabletSeat) {
             tabletSeat->removeDevice(device->sysName());
@@ -266,6 +258,28 @@ TabletToolV2Interface *TabletInputRedirection::ensureTabletTool(const TabletTool
     m_cursorByTool[tool] = cursor;
 
     return tool;
+}
+
+TabletV2Interface *TabletInputRedirection::tabletForPad(InputDevice *device) const
+{
+    auto pad = qobject_cast<LibInput::Device *>(device);
+    if (!pad) {
+        return nullptr;
+    }
+
+    const auto candidates = input()->devices();
+    for (InputDevice *candidate : candidates) {
+        if (!candidate->isTabletTool()) {
+            continue;
+        }
+        if (auto libinputDevice = qobject_cast<LibInput::Device *>(candidate)) {
+            if (libinput_device_get_device_group(pad->device()) == libinput_device_get_device_group(libinputDevice->device())) {
+                return findTabletSeat()->tabletByName(libinputDevice->sysName());
+            }
+        }
+    }
+
+    return nullptr;
 }
 
 void TabletInputRedirection::tabletToolEvent(KWin::InputRedirection::TabletEventType type, const QPointF &pos,
