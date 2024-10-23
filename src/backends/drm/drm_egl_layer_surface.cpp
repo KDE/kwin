@@ -629,13 +629,15 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importBuffer(Surface *surfac
     }
 }
 
+static const bool forceGlFinish = qEnvironmentVariableIntValue("KWIN_DRM_FORCE_MGPU_GL_FINISH") == 1;
+
 std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surface, GraphicsBuffer *sourceBuffer, FileDescriptor &&readFence, OutputFrame *frame, const QRegion &damagedRegion) const
 {
     Q_ASSERT(surface->importGbmSwapchain);
 
     const auto display = m_eglBackend->displayForGpu(m_gpu);
     // older versions of the NVidia proprietary driver support neither implicit sync nor EGL_ANDROID_native_fence_sync
-    if (!readFence.isValid() || !display->supportsNativeFence()) {
+    if (forceGlFinish || !readFence.isValid() || !display->supportsNativeFence()) {
         glFinish();
     }
 
@@ -699,7 +701,7 @@ std::shared_ptr<DrmFramebuffer> EglGbmLayerSurface::importWithEgl(Surface *surfa
     surface->importContext->shaderManager()->popShader();
     glFlush();
     EGLNativeFence endFence(display);
-    if (!endFence.isValid()) {
+    if (!endFence.isValid() || forceGlFinish) {
         glFinish();
     }
     surface->importGbmSwapchain->release(slot, endFence.fileDescriptor().duplicate());
