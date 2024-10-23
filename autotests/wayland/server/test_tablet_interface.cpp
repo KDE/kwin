@@ -296,8 +296,7 @@ void TestTabletInterface::testAddPad()
     QVERIFY(seatInterface);
 
     QSignalSpy tabletPadSpy(m_tabletSeatClient, &TabletSeat::padAdded);
-    m_tabletPad =
-        seatInterface->addPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0, m_tablet);
+    m_tabletPad = seatInterface->addPad(QStringLiteral("my tablet pad"), QStringLiteral("tabletpad"), {QStringLiteral("/test/event33")}, 1, 1, 1, 1, 0);
     QVERIFY(m_tabletPad);
     QVERIFY(tabletPadSpy.wait() || tabletPadSpy.count() == 1);
     QCOMPARE(m_tabletSeatClient->m_pads.count(), 1);
