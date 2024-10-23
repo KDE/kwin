@@ -42,7 +42,6 @@ public:
     }
 
     TabletV2Interface *const q;
-    TabletPadV2Interface *m_pad = nullptr;
     const uint32_t m_vendorId;
     const uint32_t m_productId;
     const QString m_name;
@@ -66,11 +65,6 @@ TabletV2Interface::~TabletV2Interface()
 bool TabletV2Interface::isSurfaceSupported(SurfaceInterface *surface) const
 {
     return d->resourceForSurface(surface);
-}
-
-TabletPadV2Interface *TabletV2Interface::pad() const
-{
-    return d->m_pad;
 }
 
 class TabletSurfaceCursorV2Private
@@ -871,16 +865,13 @@ TabletPadV2Interface *TabletSeatV2Interface::addPad(const QString &sysname,
                                                     quint32 rings,
                                                     quint32 strips,
                                                     quint32 modes,
-                                                    quint32 currentMode,
-                                                    TabletV2Interface *tablet)
+                                                    quint32 currentMode)
 {
     auto iface = new TabletPadV2Interface(paths.at(0), buttons, rings, strips, modes, currentMode, d->m_display, this);
     iface->d->m_seat = this;
     for (auto r : d->resourceMap()) {
         d->sendPadAdded(r, iface);
     }
-
-    tablet->d->m_pad = iface;
 
     d->m_pads[sysname] = iface;
     return iface;

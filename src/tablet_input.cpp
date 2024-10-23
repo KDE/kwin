@@ -146,7 +146,7 @@ void TabletInputRedirection::integrateDevice(InputDevice *inputDevice)
         const int modes = libinput_device_tablet_pad_get_num_mode_groups(device->device());
 
         auto firstGroup = libinput_device_tablet_pad_get_mode_group(device->device(), 0);
-        tabletSeat->addPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup), tablet);
+        tabletSeat->addPad(device->sysName(), device->name(), {QString::fromUtf8(devnode)}, buttonsCount, ringsCount, stripsCount, modes, libinput_tablet_pad_mode_group_get_mode(firstGroup));
     }
 }
 

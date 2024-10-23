@@ -2160,12 +2160,11 @@ public:
             return nullptr;
         }
 
-        SurfaceInterface *surface = window->surface();
-        auto pad = tablet->pad();
+        auto pad = seat->padByName(device->sysName());
         if (!pad) {
             return nullptr;
         }
-        pad->setCurrentSurface(surface, tablet);
+        pad->setCurrentSurface(window->surface(), tablet);
         return pad;
     }
 

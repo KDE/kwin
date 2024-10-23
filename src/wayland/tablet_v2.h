@@ -258,8 +258,6 @@ public:
      */
     bool isSurfaceSupported(SurfaceInterface *surface) const;
 
-    TabletPadV2Interface *pad() const;
-
 private:
     friend class TabletSeatV2Interface;
     friend class TabletSeatV2InterfacePrivate;
@@ -283,8 +281,7 @@ public:
                                  quint32 rings,
                                  quint32 strips,
                                  quint32 modes,
-                                 quint32 currentMode,
-                                 TabletV2Interface *tablet);
+                                 quint32 currentMode);
     TabletToolV2Interface *
     addTool(TabletToolV2Interface::Type type, quint64 hardwareSerial, quint64 hardwareId, const QList<TabletToolV2Interface::Capability> &capabilities, const QString &deviceSysName);
 
