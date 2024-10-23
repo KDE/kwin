@@ -290,6 +290,7 @@ public:
 
     TabletToolV2Interface *toolByHardwareId(quint64 hardwareId) const;
     TabletToolV2Interface *toolByHardwareSerial(quint64 hardwareSerial, TabletToolV2Interface::Type type) const;
+    TabletV2Interface *tabletByName(const QString &sysname) const;
     TabletPadV2Interface *padByName(const QString &sysname) const;
 
     void removeDevice(const QString &sysname);

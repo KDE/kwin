@@ -2043,7 +2043,8 @@ public:
 
         // NOTE: tablet will be nullptr as the device is removed (see ::removeDevice) but events from the tool
         // may still happen (e.g. Release or ProximityOut events)
-        auto tablet = static_cast<TabletV2Interface *>(event->toolId().m_deviceGroupData);
+        TabletSeatV2Interface *seat = waylandServer()->tabletManagerV2()->seat(waylandServer()->seat());
+        auto tablet = seat->tabletByName(event->device()->sysName());
 
         Window *window = input()->findToplevel(event->globalPosF());
         if (!window || !window->surface()) {
