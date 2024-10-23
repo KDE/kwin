@@ -72,7 +72,6 @@ class Group;
 class Output;
 class Effect;
 class TabletEvent;
-class TabletPadId;
 class TabletToolId;
 class Window;
 class WindowItem;
@@ -80,6 +79,7 @@ class WindowPropertyNotifyX11Filter;
 class WorkspaceScene;
 class VirtualDesktop;
 class OpenGlContext;
+class InputDevice;
 
 typedef QPair<QString, Effect *> EffectPair;
 
@@ -747,9 +747,9 @@ public:
 
     bool tabletToolEvent(KWin::TabletEvent *event);
     bool tabletToolButtonEvent(uint button, bool pressed, const KWin::TabletToolId &tabletToolId, std::chrono::microseconds time);
-    bool tabletPadButtonEvent(uint button, bool pressed, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
-    bool tabletPadStripEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
-    bool tabletPadRingEvent(int number, int position, bool isFinger, const KWin::TabletPadId &tabletPadId, std::chrono::microseconds time);
+    bool tabletPadButtonEvent(uint button, bool pressed, std::chrono::microseconds time, InputDevice *device);
+    bool tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
+    bool tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
 
     void highlightWindows(const QList<EffectWindow *> &windows);
 

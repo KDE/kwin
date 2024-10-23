@@ -819,11 +819,11 @@ public:
      *
      * @param button which button
      * @param pressed true if pressed, false when released
-     * @param tabletPadId the identifier of the tool id
+     * @param device the identifier of the tool id
      *
      * @since 5.25
      */
-    virtual bool tabletPadButtonEvent(uint button, bool pressed, void *tabletPadId);
+    virtual bool tabletPadButtonEvent(uint button, bool pressed, void *device);
 
     /**
      * There has been an event from a input strip on a drawing tablet pad
@@ -831,11 +831,11 @@ public:
      * @param number which strip
      * @param position the value within the strip that was selected
      * @param isFinger if it was activated with a finger
-     * @param tabletPadId the identifier of the tool id
+     * @param device the identifier of the tool id
      *
      * @since 5.25
      */
-    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, void *tabletPadId);
+    virtual bool tabletPadStripEvent(int number, int position, bool isFinger, void *device);
 
     /**
      * There has been an event from a input ring on a drawing tablet pad
@@ -843,11 +843,11 @@ public:
      * @param number which ring
      * @param position the value within the ring that was selected
      * @param isFinger if it was activated with a finger
-     * @param tabletPadId the identifier of the tool id
+     * @param device the identifier of the tool id
      *
      * @since 5.25
      */
-    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *tabletPadId);
+    virtual bool tabletPadRingEvent(int number, int position, bool isFinger, void *device);
 
     static QPointF cursorPos();
 

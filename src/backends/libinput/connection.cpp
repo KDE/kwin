@@ -248,18 +248,6 @@ KWin::TabletToolId createTabletId(libinput_tablet_tool *tool, Device *dev)
     return {dev->sysName(), toolType, capabilities, serial, toolId, dev->groupUserData(), dev->name()};
 }
 
-static TabletPadId createTabletPadId(LibInput::Device *device)
-{
-    if (!device || !device->groupUserData()) {
-        return {};
-    }
-
-    return {
-        device->name(),
-        device->groupUserData(),
-    };
-}
-
 void Connection::processEvents()
 {
     QMutexLocker locker(&m_mutex);
@@ -556,7 +544,7 @@ void Connection::processEvents()
             auto *tabletEvent = static_cast<TabletPadButtonEvent *>(event.get());
             Q_EMIT event->device()->tabletPadButtonEvent(tabletEvent->buttonId(),
                                                          tabletEvent->isButtonPressed(),
-                                                         createTabletPadId(event->device()), tabletEvent->time(), tabletEvent->device());
+                                                         tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_RING: {
@@ -565,7 +553,7 @@ void Connection::processEvents()
             Q_EMIT event->device()->tabletPadRingEvent(tabletEvent->number(),
                                                        tabletEvent->position(),
                                                        tabletEvent->source() == LIBINPUT_TABLET_PAD_RING_SOURCE_FINGER,
-                                                       createTabletPadId(event->device()), tabletEvent->time(), tabletEvent->device());
+                                                       tabletEvent->time(), tabletEvent->device());
             break;
         }
         case LIBINPUT_EVENT_TABLET_PAD_STRIP: {
@@ -573,7 +561,7 @@ void Connection::processEvents()
             Q_EMIT event->device()->tabletPadStripEvent(tabletEvent->number(),
                                                         tabletEvent->position(),
                                                         tabletEvent->source() == LIBINPUT_TABLET_PAD_STRIP_SOURCE_FINGER,
-                                                        createTabletPadId(event->device()), tabletEvent->time(), tabletEvent->device());
+                                                        tabletEvent->time(), tabletEvent->device());
             break;
         }
         default:

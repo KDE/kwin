@@ -48,9 +48,9 @@ public:
                          std::chrono::microseconds time,
                          InputDevice *device);
     void tabletToolButtonEvent(uint button, bool isPressed, const TabletToolId &tabletToolId, std::chrono::microseconds time, InputDevice *device);
-    void tabletPadButtonEvent(uint button, bool isPressed, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device);
-    void tabletPadStripEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device);
-    void tabletPadRingEvent(int number, int position, bool isFinger, const TabletPadId &tabletPadId, std::chrono::microseconds time, InputDevice *device);
+    void tabletPadButtonEvent(uint button, bool isPressed, std::chrono::microseconds time, InputDevice *device);
+    void tabletPadStripEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
+    void tabletPadRingEvent(int number, int position, bool isFinger, std::chrono::microseconds time, InputDevice *device);
 
     bool positionValid() const override
     {

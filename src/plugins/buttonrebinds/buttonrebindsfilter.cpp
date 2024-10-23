@@ -228,7 +228,7 @@ bool ButtonRebindsFilter::tabletPadButtonEvent(KWin::TabletPadButtonEvent *event
     if (RebindScope::isRebinding()) {
         return false;
     }
-    return send(TabletPad, {event->tabletPadId.name, event->button}, event->pressed, event->time);
+    return send(TabletPad, {event->device->name(), event->button}, event->pressed, event->time);
 }
 
 bool ButtonRebindsFilter::tabletToolButtonEvent(KWin::TabletToolButtonEvent *event)
